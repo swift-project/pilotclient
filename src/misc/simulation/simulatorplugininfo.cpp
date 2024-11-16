@@ -15,7 +15,10 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorPluginInfo)
 
 namespace swift::misc::simulation
 {
-    CSimulatorPluginInfo::CSimulatorPluginInfo(const QString &identifier, const QString &name, const QString &simulator, const QString &description, bool valid) : m_identifier(identifier), m_name(name), m_simulator(simulator), m_description(description), m_info(simulator), m_valid(valid)
+    CSimulatorPluginInfo::CSimulatorPluginInfo(const QString &identifier, const QString &name, const QString &simulator,
+                                               const QString &description, bool valid)
+        : m_identifier(identifier), m_name(name), m_simulator(simulator), m_description(description), m_info(simulator),
+          m_valid(valid)
     {
         Q_ASSERT_X(m_info.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
     }
@@ -32,30 +35,18 @@ namespace swift::misc::simulation
             CValueObject::convertFromJson(json["MetaData"].toObject());
             m_valid = true;
         }
-        else
-        {
-            CValueObject::convertFromJson(json);
-        }
+        else { CValueObject::convertFromJson(json); }
 
         // set info if it wasn't set already
         if (m_info.isNoSimulator() && !m_simulator.isEmpty())
         {
-            if (!this->isEmulatedPlugin())
-            {
-                m_info = CSimulatorInfo(m_simulator);
-            }
+            if (!this->isEmulatedPlugin()) { m_info = CSimulatorInfo(m_simulator); }
         }
     }
 
-    bool CSimulatorPluginInfo::isUnspecified() const
-    {
-        return m_identifier.isEmpty();
-    }
+    bool CSimulatorPluginInfo::isUnspecified() const { return m_identifier.isEmpty(); }
 
-    bool CSimulatorPluginInfo::isEmulatedPlugin() const
-    {
-        return this->getIdentifier() == emulatedPluginIdentifier();
-    }
+    bool CSimulatorPluginInfo::isEmulatedPlugin() const { return this->getIdentifier() == emulatedPluginIdentifier(); }
 
     QString CSimulatorPluginInfo::convertToQString(bool i18n) const
     {
@@ -121,14 +112,9 @@ namespace swift::misc::simulation
 
     const QStringList &CSimulatorPluginInfo::allIdentifiers()
     {
-        static const QStringList identifiers(
-            { fsxPluginIdentifier(),
-              p3dPluginIdentifier(),
-              xplanePluginIdentifier(),
-              fs9PluginIdentifier(),
-              emulatedPluginIdentifier(),
-              fgPluginIdentifier(),
-              msfsPluginIdentifier() });
+        static const QStringList identifiers({ fsxPluginIdentifier(), p3dPluginIdentifier(), xplanePluginIdentifier(),
+                                               fs9PluginIdentifier(), emulatedPluginIdentifier(), fgPluginIdentifier(),
+                                               msfsPluginIdentifier() });
         return identifiers;
     }
 
@@ -140,12 +126,7 @@ namespace swift::misc::simulation
             return QStringList { xplanePluginIdentifier(), fgPluginIdentifier() };
         }
 
-        return QStringList {
-            fsxPluginIdentifier(),
-            msfsPluginIdentifier(),
-            p3dPluginIdentifier(),
-            xplanePluginIdentifier(),
-            fgPluginIdentifier()
-        };
+        return QStringList { fsxPluginIdentifier(), msfsPluginIdentifier(), p3dPluginIdentifier(),
+                             xplanePluginIdentifier(), fgPluginIdentifier() };
     }
 } // namespace swift::misc::simulation

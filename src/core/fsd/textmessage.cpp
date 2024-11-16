@@ -7,12 +7,10 @@
 
 namespace swift::core::fsd
 {
-    TextMessage::TextMessage() : MessageBase()
-    {}
+    TextMessage::TextMessage() : MessageBase() {}
 
     TextMessage::TextMessage(const QString &sender, const QString &receiver, const QString &message)
-        : MessageBase(sender, receiver),
-          m_message(message)
+        : MessageBase(sender, receiver), m_message(message)
     {
         if (receiver.startsWith('@'))
         {

@@ -18,20 +18,21 @@ using namespace swift::misc::simulation::settings;
 
 namespace swift::simplugin::flightgear
 {
-    CSimulatorFlightgearConfigWindow::CSimulatorFlightgearConfigWindow(QWidget *parent) : CPluginConfigWindow(parent),
-                                                                                          ui(new Ui::CSimulatorFlightgearConfigWindow)
+    CSimulatorFlightgearConfigWindow::CSimulatorFlightgearConfigWindow(QWidget *parent)
+        : CPluginConfigWindow(parent), ui(new Ui::CSimulatorFlightgearConfigWindow)
     {
         ui->setupUi(this);
         CGuiUtility::disableMinMaxCloseButtons(this);
-        ui->comp_SettingsFGSwiftBus->setDefaultP2PAddress(m_fgswiftbusServerSetting.getDefault().getDBusServerAddress());
+        ui->comp_SettingsFGSwiftBus->setDefaultP2PAddress(
+            m_fgswiftbusServerSetting.getDefault().getDBusServerAddress());
         ui->comp_SettingsFGSwiftBus->set(m_fgswiftbusServerSetting.getThreadLocal().getDBusServerAddress());
 
-        connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this, &CSimulatorFlightgearConfigWindow::onSettingsAccepted);
+        connect(ui->bb_OkCancel, &QDialogButtonBox::accepted, this,
+                &CSimulatorFlightgearConfigWindow::onSettingsAccepted);
         connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorFlightgearConfigWindow::close);
     }
 
-    CSimulatorFlightgearConfigWindow::~CSimulatorFlightgearConfigWindow()
-    {}
+    CSimulatorFlightgearConfigWindow::~CSimulatorFlightgearConfigWindow() {}
 
     CFGSwiftBusSettings CSimulatorFlightgearConfigWindow::getSettingsFromUI() const
     {
@@ -52,10 +53,7 @@ namespace swift::simplugin::flightgear
         const CFGSwiftBusSettings s = m_fgswiftbusServerSetting.getThreadLocal();
         CFGSwiftBusSettings changed = getSettingsFromUI();
 
-        if (s != changed)
-        {
-            m_fgswiftbusServerSetting.set(changed);
-        }
+        if (s != changed) { m_fgswiftbusServerSetting.set(changed); }
         close();
     }
 } // namespace swift::simplugin::flightgear

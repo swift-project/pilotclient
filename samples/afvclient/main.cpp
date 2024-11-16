@@ -41,9 +41,7 @@ int main(int argc, char *argv[])
     voiceClient->start(QThread::TimeCriticalPriority); // background thread
     CAfvClientBridge *voiceClientBridge = new CAfvClientBridge(voiceClient, &qa);
 
-    QObject::connect(&qa, &QCoreApplication::aboutToQuit, [voiceClient]() {
-        voiceClient->quitAndWait();
-    });
+    QObject::connect(&qa, &QCoreApplication::aboutToQuit, [voiceClient]() { voiceClient->quitAndWait(); });
 
     // default user name
     QString defaultUserName("1234567");

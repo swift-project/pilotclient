@@ -69,11 +69,11 @@ namespace swift::gui::views
         case CAircraftModelListModel::StashModel: m_menus = MenuDefaultNoClear; break;
         case CAircraftModelListModel::Database: m_menus = MenuDefaultDbViews; break;
         case CAircraftModelListModel::VPilotRuleModel: m_menus = MenuDefaultNoClear | MenuStashing; break;
-        case CAircraftModelListModel::OwnAircraftModelMappingTool: m_menus = MenuDefaultNoClear | MenuStashing | MenuLoadAndSave; break;
-        case CAircraftModelListModel::OwnAircraftModelClient:
-        default:
-            m_menus = MenuDefaultNoClear | MenuBackend;
+        case CAircraftModelListModel::OwnAircraftModelMappingTool:
+            m_menus = MenuDefaultNoClear | MenuStashing | MenuLoadAndSave;
             break;
+        case CAircraftModelListModel::OwnAircraftModelClient:
+        default: m_menus = MenuDefaultNoClear | MenuBackend; break;
         }
     }
 
@@ -113,49 +113,45 @@ namespace swift::gui::views
     void CAircraftModelView::setAcceptedMetaTypeIds()
     {
         Q_ASSERT(m_model);
-        m_model->setAcceptedMetaTypeIds(
-            {
-                qMetaTypeId<CAirlineIcaoCode>(),
-                qMetaTypeId<CAirlineIcaoCodeList>(),
-                qMetaTypeId<CAircraftIcaoCode>(),
-                qMetaTypeId<CAircraftIcaoCodeList>(),
-                qMetaTypeId<CLivery>(),
-                qMetaTypeId<CLiveryList>(),
-                qMetaTypeId<CDistributor>(),
-                qMetaTypeId<CDistributorList>(),
-                qMetaTypeId<CAircraftModel>(),
-                qMetaTypeId<CAircraftModelList>(),
-            });
+        m_model->setAcceptedMetaTypeIds({
+            qMetaTypeId<CAirlineIcaoCode>(),
+            qMetaTypeId<CAirlineIcaoCodeList>(),
+            qMetaTypeId<CAircraftIcaoCode>(),
+            qMetaTypeId<CAircraftIcaoCodeList>(),
+            qMetaTypeId<CLivery>(),
+            qMetaTypeId<CLiveryList>(),
+            qMetaTypeId<CDistributor>(),
+            qMetaTypeId<CDistributorList>(),
+            qMetaTypeId<CAircraftModel>(),
+            qMetaTypeId<CAircraftModelList>(),
+        });
     }
 
-    void CAircraftModelView::addFilterDialog()
-    {
-        this->setFilterDialog(new CAircraftModelFilterDialog(this));
-    }
+    void CAircraftModelView::addFilterDialog() { this->setFilterDialog(new CAircraftModelFilterDialog(this)); }
 
     CAircraftModelFilterDialog *CAircraftModelView::getFilterDialog() const
     {
         return qobject_cast<CAircraftModelFilterDialog *>(this->getFilterWidget());
     }
 
-    int CAircraftModelView::removeModelsWithModelString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity)
+    int CAircraftModelView::removeModelsWithModelString(const QStringList &modelStrings,
+                                                        Qt::CaseSensitivity sensitivity)
     {
         if (modelStrings.isEmpty()) { return 0; }
         CAircraftModelList copy(this->container());
         const int delta = copy.removeModelsWithString(modelStrings, sensitivity);
-        if (delta > 0)
-        {
-            this->updateContainerMaybeAsync(copy);
-        }
+        if (delta > 0) { this->updateContainerMaybeAsync(copy); }
         return delta;
     }
 
-    int CAircraftModelView::removeModelsWithModelString(const CAircraftModelList &models, Qt::CaseSensitivity sensitivity)
+    int CAircraftModelView::removeModelsWithModelString(const CAircraftModelList &models,
+                                                        Qt::CaseSensitivity sensitivity)
     {
         return this->removeModelsWithModelString(models.getModelStringList(), sensitivity);
     }
 
-    int CAircraftModelView::replaceOrAddModelsWithString(const CAircraftModelList &models, Qt::CaseSensitivity sensitivity)
+    int CAircraftModelView::replaceOrAddModelsWithString(const CAircraftModelList &models,
+                                                         Qt::CaseSensitivity sensitivity)
     {
         if (models.isEmpty()) { return 0; }
         CAircraftModelList copy(this->container());
@@ -192,20 +188,11 @@ namespace swift::gui::views
         this->derivedModel()->setHighlightModels(highlightModels);
     }
 
-    void CAircraftModelView::setHighlight(bool highlight)
-    {
-        this->derivedModel()->setHighlight(highlight);
-    }
+    void CAircraftModelView::setHighlight(bool highlight) { this->derivedModel()->setHighlight(highlight); }
 
-    void CAircraftModelView::setHighlightColor(const QBrush &brush)
-    {
-        this->derivedModel()->setHighlightColor(brush);
-    }
+    void CAircraftModelView::setHighlightColor(const QBrush &brush) { this->derivedModel()->setHighlightColor(brush); }
 
-    bool CAircraftModelView::highlightModels() const
-    {
-        return this->derivedModel()->highlightModels();
-    }
+    bool CAircraftModelView::highlightModels() const { return this->derivedModel()->highlightModels(); }
 
     void CAircraftModelView::setCorrespondingSimulator(const CSimulatorInfo &simulator, const QString &simDir)
     {
@@ -297,7 +284,8 @@ namespace swift::gui::views
                 {
                     const CAirlineIcaoCode airline = valueVariant.value<CAirlineIcaoCode>();
                     if (airline.validate().hasErrorMessages()) { return; }
-                    emit requestHandlingOfStashDrop(airline); // I need to convert to stanard livery, which I can`t do here
+                    emit requestHandlingOfStashDrop(
+                        airline); // I need to convert to stanard livery, which I can`t do here
                 }
                 else if (valueVariant.canConvert<CAirlineIcaoCodeList>())
                 {
@@ -305,14 +293,12 @@ namespace swift::gui::views
                     if (airlines.size() != 1) { return; }
                     const CAirlineIcaoCode airline = airlines.front();
                     if (airline.validate().hasErrorMessages()) { return; }
-                    emit requestHandlingOfStashDrop(airline); // I need to convert to stanard livery, which I can`t do here
+                    emit requestHandlingOfStashDrop(
+                        airline); // I need to convert to stanard livery, which I can`t do here
                 }
             }
         }
-        else
-        {
-            CViewBase::dropEvent(event);
-        }
+        else { CViewBase::dropEvent(event); }
     }
 
     void CAircraftModelView::customMenu(CMenuActions &menuActions)
@@ -320,18 +306,22 @@ namespace swift::gui::views
         // Statistics and validation
         if (!this->isEmpty())
         {
-            menuActions.addAction(CIcons::appAircraft16(), "Model statistics", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelStatisticsDialog });
+            menuActions.addAction(CIcons::appAircraft16(), "Model statistics", CMenuAction::pathModel(),
+                                  { this, &CAircraftModelView::displayModelStatisticsDialog });
             if (m_withValidationContextMenu)
             {
                 QDialog *parentDialog = CGuiUtility::findParentDialog(this);
                 if (!(parentDialog && (qobject_cast<CAircraftModelValidationDialog *>(parentDialog))))
                 {
-                    menuActions.addAction(CIcons::disk16(), "Model validation (selected)", CMenuAction::pathModel(), { this, &CAircraftModelView::displayModelValidationDialog });
+                    menuActions.addAction(CIcons::disk16(), "Model validation (selected)", CMenuAction::pathModel(),
+                                          { this, &CAircraftModelView::displayModelValidationDialog });
                 }
             }
             if (CAircraftModelList::hasInvalidModelFile())
             {
-                menuActions.addAction(CIcons::disk16(), "Highlight invalid models (from file)", CMenuAction::pathModel(), { this, &CAircraftModelView::setHighlightModelsForInvalidModels });
+                menuActions.addAction(CIcons::disk16(), "Highlight invalid models (from file)",
+                                      CMenuAction::pathModel(),
+                                      { this, &CAircraftModelView::setHighlightModelsForInvalidModels });
             }
         }
 
@@ -342,8 +332,11 @@ namespace swift::gui::views
             if (!m_menuFlagActions.contains(MenuCanStashModels))
             {
                 CMenuActions ma;
-                ma.addAction(CIcons::appDbStash16(), "Stash selected", CMenuAction::pathModelStash(), { this, &CAircraftModelView::requestedStash });
-                QAction *added = ma.addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)", CMenuAction::pathModelStash(), { this, &CAircraftModelView::stashingClearsSelection });
+                ma.addAction(CIcons::appDbStash16(), "Stash selected", CMenuAction::pathModelStash(),
+                             { this, &CAircraftModelView::requestedStash });
+                QAction *added =
+                    ma.addAction(CIcons::appDbStash16(), "Stashing clears selection (on/off)",
+                                 CMenuAction::pathModelStash(), { this, &CAircraftModelView::stashingClearsSelection });
                 added->setCheckable(true);
                 m_menuFlagActions.insert(MenuCanStashModels, ma);
             }
@@ -364,7 +357,9 @@ namespace swift::gui::views
             if (!m_menuFlagActions.contains(MenuHighlightStashed))
             {
                 CMenuActions ma;
-                QAction *added = ma.addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", CMenuAction::pathModelStash(), { this, &CAircraftModelView::toggleHighlightStashedModels });
+                QAction *added =
+                    ma.addAction(CIcons::appDbStash16(), "Highlight stashed (on/off)", CMenuAction::pathModelStash(),
+                                 { this, &CAircraftModelView::toggleHighlightStashedModels });
                 added->setCheckable(true);
                 m_menuFlagActions.insert(MenuHighlightStashed, ma);
             }
@@ -379,7 +374,8 @@ namespace swift::gui::views
             if (!m_menuFlagActions.contains(MenuDisableModelsTemp))
             {
                 CMenuActions ma;
-                ma.addAction(CIcons::delete16(), "Temp.disable model", CMenuAction::pathModel(), { this, &CAircraftModelView::requestTempDisable });
+                ma.addAction(CIcons::delete16(), "Temp.disable model", CMenuAction::pathModel(),
+                             { this, &CAircraftModelView::requestTempDisable });
                 m_menuFlagActions.insert(MenuDisableModelsTemp, ma);
             }
             menuActions.addActions(initMenuActions(CViewBaseNonTemplate::MenuDisableModelsTemp));
@@ -399,30 +395,31 @@ namespace swift::gui::views
         // multiple sims with same count
         const int removed = models.removeIfNotMatchingSimulator(m_correspondingSimulator);
         if (removed < 1) { return {}; }
-        return CStatusMessage(this, CStatusMessage::SeverityWarning, u"Reduced by %1 model(s) to only use %2 models", true) << removed << m_correspondingSimulator.toQString(true);
+        return CStatusMessage(this, CStatusMessage::SeverityWarning, u"Reduced by %1 model(s) to only use %2 models",
+                              true)
+               << removed << m_correspondingSimulator.toQString(true);
     }
 
     CStatusMessage CAircraftModelView::validateLoadedJsonData(const CAircraftModelList &models) const
     {
         if (models.isEmpty()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
-        if (m_correspondingSimulator.isNoSimulator()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
+        if (m_correspondingSimulator.isNoSimulator())
+        {
+            return COrderableViewWithDbObjects::validateLoadedJsonData(models);
+        }
         if (models.containsNotMatchingSimulator(m_correspondingSimulator))
         {
-            return CStatusMessage(this, CStatusMessage::SeverityError, u"Found entry not matching %1 in model data", true) << m_correspondingSimulator.toQString();
+            return CStatusMessage(this, CStatusMessage::SeverityError, u"Found entry not matching %1 in model data",
+                                  true)
+                   << m_correspondingSimulator.toQString();
         }
         return COrderableViewWithDbObjects::validateLoadedJsonData(models);
     }
 
     void CAircraftModelView::jsonLoadedAndModelUpdated(const CAircraftModelList &models)
     {
-        if (models.isEmpty())
-        {
-            emit this->jsonModelsForSimulatorLoaded(CSimulatorInfo());
-        }
-        else
-        {
-            emit this->jsonModelsForSimulatorLoaded(models.simulatorsWithMaxEntries());
-        }
+        if (models.isEmpty()) { emit this->jsonModelsForSimulatorLoaded(CSimulatorInfo()); }
+        else { emit this->jsonModelsForSimulatorLoaded(models.simulatorsWithMaxEntries()); }
     }
 
     void CAircraftModelView::toggleHighlightStashedModels()
@@ -438,10 +435,7 @@ namespace swift::gui::views
         this->setHighlight(!h);
     }
 
-    void CAircraftModelView::stashingClearsSelection()
-    {
-        m_stashingClearsSelection = !m_stashingClearsSelection;
-    }
+    void CAircraftModelView::stashingClearsSelection() { m_stashingClearsSelection = !m_stashingClearsSelection; }
 
     void CAircraftModelView::requestedStash()
     {
@@ -449,11 +443,9 @@ namespace swift::gui::views
         if (!this->hasSelection()) { return; }
         const CAircraftModelList models(this->selectedObjects());
         emit this->requestStash(models);
-        if (m_stashingClearsSelection)
-        {
-            this->clearSelection();
-        }
-        sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, u"Stashed " % models.getModelStringList(true).join(" ")));
+        if (m_stashingClearsSelection) { this->clearSelection(); }
+        sGui->displayInStatusBar(
+            CStatusMessage(CStatusMessage::SeverityInfo, u"Stashed " % models.getModelStringList(true).join(" ")));
     }
 
     void CAircraftModelView::requestTempDisable()
@@ -463,7 +455,8 @@ namespace swift::gui::views
         if (!this->hasSelection()) { return; }
 
         const CAircraftModelList selectedModels(this->selectedObjects());
-        sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo, u"Temp.disabled " % selectedModels.getModelStringList(true).join(" ")));
+        sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo,
+                                                u"Temp.disabled " % selectedModels.getModelStringList(true).join(" ")));
         emit this->requestTempDisableModelsForMatching(selectedModels);
     }
 
@@ -477,7 +470,8 @@ namespace swift::gui::views
     void CAircraftModelView::displayModelValidationDialog()
     {
         if (!m_fileValidationDialog) { m_fileValidationDialog = new CAircraftModelValidationDialog(this); }
-        m_fileValidationDialog->setModels(this->selectedObjects(), m_correspondingSimulator, m_correspondingSimulatorDir);
+        m_fileValidationDialog->setModels(this->selectedObjects(), m_correspondingSimulator,
+                                          m_correspondingSimulatorDir);
         m_fileValidationDialog->triggerValidation(1000);
         m_fileValidationDialog->exec();
     }

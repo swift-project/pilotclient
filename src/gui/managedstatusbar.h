@@ -82,10 +82,13 @@ namespace swift::gui
         QPushButton *m_errorButton = nullptr; //!< log error button
         QTimer m_timerStatusBar { this }; //!< cleaning up status bar (own cleaning as I need to clean window / icon)
         bool m_ownedStatusBar = false; //!< own status bar or "injected" (e.g.by UI builder)
-        bool m_showWarnButtonInitially = false; //!< should the button be shown initially? Might be set before the button is initialized
-        bool m_showErrorButtonInitially = false; //!< should the button be shown initially? Might be set before the button is initialized
+        bool m_showWarnButtonInitially =
+            false; //!< should the button be shown initially? Might be set before the button is initialized
+        bool m_showErrorButtonInitially =
+            false; //!< should the button be shown initially? Might be set before the button is initialized
         Qt::TextElideMode m_elideMode = Qt::ElideMiddle; //!< label text elide
-        swift::misc::StatusSeverity m_currentSeverity = swift::misc::StatusSeverity::SeverityDebug; //!< severity currently displayed
+        swift::misc::StatusSeverity m_currentSeverity =
+            swift::misc::StatusSeverity::SeverityDebug; //!< severity currently displayed
     };
 } // namespace swift::gui
 

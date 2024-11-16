@@ -50,12 +50,15 @@ namespace swift::misc::simulation
 
         for (const auto [string, cg] : makePairsRange(m_modelStringVsCG))
         {
-            json += QStringLiteral("{ \"type\": \"cg\", \"modelstring\": \"%1\", \"cgft\": %2 },\n").arg(string, cg.valueRoundedAsString(CLengthUnit::ft(), 1));
+            json += QStringLiteral("{ \"type\": \"cg\", \"modelstring\": \"%1\", \"cgft\": %2 },\n")
+                        .arg(string, cg.valueRoundedAsString(CLengthUnit::ft(), 1));
         }
 
         for (const auto [string, sim] : makePairsRange(m_modelStringVsSimulatorInfo))
         {
-            json += QStringLiteral("{ \"type\": \"simulatorupdate\", \"modelstring\": \"%1\", \"simulator\": \"%2\" },\n").arg(string, sim.toQString(false));
+            json +=
+                QStringLiteral("{ \"type\": \"simulatorupdate\", \"modelstring\": \"%1\", \"simulator\": \"%2\" },\n")
+                    .arg(string, sim.toQString(false));
         }
 
         if (json.isEmpty()) { return {}; }
@@ -81,10 +84,7 @@ namespace swift::misc::simulation
             {
                 const QString simulator = obj["simulator"].toString();
                 const CSimulatorInfo si(simulator);
-                if (si.isSingleSimulator())
-                {
-                    this->insert(m, si);
-                }
+                if (si.isSingleSimulator()) { this->insert(m, si); }
             }
             else if (t.startsWith("cg", Qt::CaseInsensitive))
             {
@@ -100,7 +100,8 @@ namespace swift::misc::simulation
     bool CAutoPublishData::writeJsonToFile() const
     {
         if (this->isEmpty()) { return false; }
-        const QString fn = fileBaseName() % u'_' % QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss") % fileAppendix();
+        const QString fn =
+            fileBaseName() % u'_' % QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss") % fileAppendix();
         return this->writeJsonToFile(CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), fn));
     }
 
@@ -149,10 +150,7 @@ namespace swift::misc::simulation
             const CAircraftModel dbModel = dbModels.findFirstByModelStringOrDefault(modelString);
             if (dbModel.hasValidDbKey())
             {
-                if (dbModel.getCG() == m_modelStringVsCG[modelString])
-                {
-                    unchangedCG.insert(modelString);
-                }
+                if (dbModel.getCG() == m_modelStringVsCG[modelString]) { unchangedCG.insert(modelString); }
             }
         }
 
@@ -173,14 +171,16 @@ namespace swift::misc::simulation
         if (!unchangedCG.isEmpty())
         {
             QList<QString> unchangedCGList = std::move(unchangedCG);
-            msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged CGs: %1") << unchangedCGList.size());
+            msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged CGs: %1")
+                           << unchangedCGList.size());
             for (const QString &m : unchangedCGList) { m_modelStringVsCG.remove(m); }
         }
 
         if (!unchangedSim.isEmpty())
         {
             QList<QString> unchangedSimList = std::move(unchangedSim);
-            msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged simulators: %1") << unchangedSimList.size());
+            msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged simulators: %1")
+                           << unchangedSimList.size());
             for (const QString &m : unchangedSimList) { m_modelStringVsSimulatorInfo.remove(m); }
         }
 
@@ -190,7 +190,9 @@ namespace swift::misc::simulation
 
     QString CAutoPublishData::getSummary() const
     {
-        return QStringLiteral("Changed CGs: %1 | sim.entries: %2").arg(m_modelStringVsCG.size()).arg(m_modelStringVsSimulatorInfo.size());
+        return QStringLiteral("Changed CGs: %1 | sim.entries: %2")
+            .arg(m_modelStringVsCG.size())
+            .arg(m_modelStringVsSimulatorInfo.size());
     }
 
     QSet<QString> CAutoPublishData::allModelStrings() const
@@ -271,13 +273,11 @@ namespace swift::misc::simulation
         const QDateTime deadline = QDateTime::currentDateTimeUtc().addDays(-30);
         for (const QString &fn : fileList)
         {
-            const QFileInfo fi(fn.contains(dir.absolutePath()) ? fn : CFileUtils::appendFilePathsAndFixUnc(dir.absolutePath(), fn));
+            const QFileInfo fi(
+                fn.contains(dir.absolutePath()) ? fn : CFileUtils::appendFilePathsAndFixUnc(dir.absolutePath(), fn));
             if (!fi.exists()) { continue; }
             const QDateTime created = fi.birthTime().toUTC();
-            if (deadline < created)
-            {
-                correctedList << fn;
-            }
+            if (deadline < created) { correctedList << fn; }
             else
             {
                 QFile deleteFile(fn);

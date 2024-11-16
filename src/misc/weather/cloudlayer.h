@@ -71,17 +71,12 @@ namespace swift::misc::weather
         CCloudLayer() = default;
 
         //! Constructor
-        CCloudLayer(const swift::misc::aviation::CAltitude &base,
-                    const swift::misc::aviation::CAltitude &top,
+        CCloudLayer(const swift::misc::aviation::CAltitude &base, const swift::misc::aviation::CAltitude &top,
                     Coverage coverage);
 
         //! Constructor
-        CCloudLayer(const swift::misc::aviation::CAltitude &base,
-                    const swift::misc::aviation::CAltitude &top,
-                    double precipitationRate,
-                    Precipitation precipitation,
-                    Clouds clouds,
-                    Coverage coverage);
+        CCloudLayer(const swift::misc::aviation::CAltitude &base, const swift::misc::aviation::CAltitude &top,
+                    double precipitationRate, Precipitation precipitation, Clouds clouds, Coverage coverage);
 
         //! Set base
         void setBase(const swift::misc::aviation::CAltitude &base) { m_base = base; }

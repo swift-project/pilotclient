@@ -9,10 +9,13 @@ using namespace swift::misc;
 
 namespace swift::gui::models
 {
-    CStatusMessageFilter::CStatusMessageFilter(CStatusMessage::StatusSeverity severity, const QString &text, const QString &category) : m_severity(severity), m_msgText(text.trimmed()), m_category(category.trimmed())
+    CStatusMessageFilter::CStatusMessageFilter(CStatusMessage::StatusSeverity severity, const QString &text,
+                                               const QString &category)
+        : m_severity(severity), m_msgText(text.trimmed()), m_category(category.trimmed())
     {
         // info or debug are treated like no filter
-        this->m_valid = !((severity == CStatusMessage::SeverityInfo || severity == CStatusMessage::SeverityDebug) && m_msgText.isEmpty() && m_category.isEmpty());
+        this->m_valid = !((severity == CStatusMessage::SeverityInfo || severity == CStatusMessage::SeverityDebug) &&
+                          m_msgText.isEmpty() && m_category.isEmpty());
     }
 
     CStatusMessageList CStatusMessageFilter::filter(const CStatusMessageList &inContainer) const
@@ -33,7 +36,11 @@ namespace swift::gui::models
 
             if (!this->m_category.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(CLogPattern::humanOrTechnicalCategoriesFrom(msg).join(", "), this->m_category)) { continue; }
+                if (!this->stringMatchesFilterExpression(CLogPattern::humanOrTechnicalCategoriesFrom(msg).join(", "),
+                                                         this->m_category))
+                {
+                    continue;
+                }
             }
 
             outContainer.push_back(msg);
@@ -53,9 +60,12 @@ namespace swift::gui::models
         }
 
         CLogCategoryList categories = CLogCategoryList::fromQStringList(CLogCategories::allSpecialCategories());
-        categories.removeIf([this](const CLogCategory &cat) { return this->stringMatchesFilterExpression(cat.toQString(), this->m_category); });
+        categories.removeIf([this](const CLogCategory &cat) {
+            return this->stringMatchesFilterExpression(cat.toQString(), this->m_category);
+        });
         CSequence<QString> humanNames = CLogPattern::allHumanReadableNames();
-        humanNames.removeIf([this](const QString &name) { return this->stringMatchesFilterExpression(name, this->m_category); });
+        humanNames.removeIf(
+            [this](const QString &name) { return this->stringMatchesFilterExpression(name, this->m_category); });
         auto humanCats = humanNames.transform([](const QString &name) {
             const auto strings = CLogPattern::fromHumanReadableName(name).getCategoryStrings();
             return strings.isEmpty() ? QString {} : *strings.begin();

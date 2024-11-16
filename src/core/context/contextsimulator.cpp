@@ -30,7 +30,8 @@ namespace swift::core::context
         return s;
     }
 
-    IContextSimulator *IContextSimulator::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
+    IContextSimulator *IContextSimulator::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode,
+                                                 CDBusServer *server, QDBusConnection &connection)
     {
         switch (mode)
         {
@@ -40,8 +41,7 @@ namespace swift::core::context
         case CCoreFacadeConfig::Remote:
             return new CContextSimulatorProxy(CDBusServer::coreServiceName(connection), connection, mode, parent);
         case CCoreFacadeConfig::NotUsed:
-        default:
-            return new CContextSimulatorEmpty(parent);
+        default: return new CContextSimulatorEmpty(parent);
         }
     }
 

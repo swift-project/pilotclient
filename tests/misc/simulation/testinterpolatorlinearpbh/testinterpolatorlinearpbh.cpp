@@ -69,18 +69,9 @@ namespace MiscTest
             pbh.setTimeFraction(m_tfStep * i);
             const double h = pbh.getHeading().value(CAngleUnit::deg());
 
-            if (i == 0)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(h, 0.0), "Expect initial heading");
-            }
-            else if (i == m_steps)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(h, 120.0), "Expect final heading");
-            }
-            else
-            {
-                QVERIFY2(h > lastDeg, "Expect increasing heading");
-            }
+            if (i == 0) { QVERIFY2(CMathUtils::epsilonEqualLimits(h, 0.0), "Expect initial heading"); }
+            else if (i == m_steps) { QVERIFY2(CMathUtils::epsilonEqualLimits(h, 120.0), "Expect final heading"); }
+            else { QVERIFY2(h > lastDeg, "Expect increasing heading"); }
             lastDeg = h;
         }
     }
@@ -98,18 +89,9 @@ namespace MiscTest
             pbh.setTimeFraction(m_tfStep * i);
             const double h = pbh.getHeading().value(CAngleUnit::deg());
 
-            if (i == 0)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(h, -90.0), "Expect  initial heading");
-            }
-            else if (i == m_steps)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(h, 30.0), "Expect final heading");
-            }
-            else
-            {
-                QVERIFY2(h > lastDeg, "Expect increasing heading");
-            }
+            if (i == 0) { QVERIFY2(CMathUtils::epsilonEqualLimits(h, -90.0), "Expect  initial heading"); }
+            else if (i == m_steps) { QVERIFY2(CMathUtils::epsilonEqualLimits(h, 30.0), "Expect final heading"); }
+            else { QVERIFY2(h > lastDeg, "Expect increasing heading"); }
             lastDeg = h;
         }
     }
@@ -127,18 +109,9 @@ namespace MiscTest
             pbh.setTimeFraction(m_tfStep * i);
             const double h = CAngle::normalizeDegrees360(pbh.getHeading().value(CAngleUnit::deg()));
 
-            if (i == 0)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(h, 270.0), "Expect initial heading");
-            }
-            else if (i == m_steps)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(h, 170.0), "Expect final heading");
-            }
-            else
-            {
-                QVERIFY2(h < lastDeg, "Expect decreasing heading");
-            }
+            if (i == 0) { QVERIFY2(CMathUtils::epsilonEqualLimits(h, 270.0), "Expect initial heading"); }
+            else if (i == m_steps) { QVERIFY2(CMathUtils::epsilonEqualLimits(h, 170.0), "Expect final heading"); }
+            else { QVERIFY2(h < lastDeg, "Expect decreasing heading"); }
             lastDeg = h;
         }
     }
@@ -160,14 +133,8 @@ namespace MiscTest
             {
                 QVERIFY2(CMathUtils::epsilonEqualLimits(b, -90.0), "Expect initial bank"); // -90 as not normalized
             }
-            else if (i == m_steps)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(b, 30.0), "Expect final bank");
-            }
-            else
-            {
-                QVERIFY2(b > lastDeg, "Expect increasing bank");
-            }
+            else if (i == m_steps) { QVERIFY2(CMathUtils::epsilonEqualLimits(b, 30.0), "Expect final bank"); }
+            else { QVERIFY2(b > lastDeg, "Expect increasing bank"); }
             lastDeg = b;
         }
     }
@@ -185,18 +152,9 @@ namespace MiscTest
             pbh.setTimeFraction(m_tfStep * i);
             const double b = CAngle::normalizeDegrees360(pbh.getBank().value(CAngleUnit::deg()));
 
-            if (i == 0)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(b, 170.0), "Expect initial bank");
-            }
-            else if (i == m_steps)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(b, 190.0), "Expect final bank");
-            }
-            else
-            {
-                QVERIFY2(b > lastDeg, "Expect increasing bank");
-            }
+            if (i == 0) { QVERIFY2(CMathUtils::epsilonEqualLimits(b, 170.0), "Expect initial bank"); }
+            else if (i == m_steps) { QVERIFY2(CMathUtils::epsilonEqualLimits(b, 190.0), "Expect final bank"); }
+            else { QVERIFY2(b > lastDeg, "Expect increasing bank"); }
             lastDeg = b;
         }
     }
@@ -214,18 +172,9 @@ namespace MiscTest
             pbh.setTimeFraction(m_tfStep * i);
             const double p = pbh.getPitch().value(CAngleUnit::deg());
 
-            if (i == 0)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(p, 30.0), "Expect initial pitch");
-            }
-            else if (i == m_steps)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(p, -30.0), "Expect final pitch");
-            }
-            else
-            {
-                QVERIFY2(p < lastDeg, "Expect decreasing pitch");
-            }
+            if (i == 0) { QVERIFY2(CMathUtils::epsilonEqualLimits(p, 30.0), "Expect initial pitch"); }
+            else if (i == m_steps) { QVERIFY2(CMathUtils::epsilonEqualLimits(p, -30.0), "Expect final pitch"); }
+            else { QVERIFY2(p < lastDeg, "Expect decreasing pitch"); }
             lastDeg = p;
         }
     }
@@ -243,18 +192,9 @@ namespace MiscTest
             pbh.setTimeFraction(m_tfStep * i);
             const double p = pbh.getPitch().value(CAngleUnit::deg());
 
-            if (i == 0)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(p, -30.0), "Expect initial pitch");
-            }
-            else if (i == m_steps)
-            {
-                QVERIFY2(CMathUtils::epsilonEqualLimits(p, 30.0), "Expect final pitch");
-            }
-            else
-            {
-                QVERIFY2(p > lastDeg, "Expect increasing pitch");
-            }
+            if (i == 0) { QVERIFY2(CMathUtils::epsilonEqualLimits(p, -30.0), "Expect initial pitch"); }
+            else if (i == m_steps) { QVERIFY2(CMathUtils::epsilonEqualLimits(p, 30.0), "Expect final pitch"); }
+            else { QVERIFY2(p > lastDeg, "Expect increasing pitch"); }
             lastDeg = p;
         }
     }

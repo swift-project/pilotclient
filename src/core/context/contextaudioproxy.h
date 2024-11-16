@@ -72,10 +72,12 @@ namespace swift::core
             virtual void unRegisterDevicesFor(const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::registerAudioCallsign
-            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) override;
+            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::unRegisterAudioCallsign
-            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) override;
+            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                                 const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::hasRegisteredAudioCallsign
             virtual bool hasRegisteredAudioCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
@@ -89,10 +91,13 @@ namespace swift::core
 
         protected:
             //! Contructor
-            CContextAudioProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContextAudioBase(mode, runtime), m_dBusInterface(nullptr) {}
+            CContextAudioProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+                : CContextAudioBase(mode, runtime), m_dBusInterface(nullptr)
+            {}
 
             //! DBus version constructor
-            CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
+            CContextAudioProxy(const QString &serviceName, QDBusConnection &connection,
+                               CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
         };
     } // namespace context
 } // namespace swift::core

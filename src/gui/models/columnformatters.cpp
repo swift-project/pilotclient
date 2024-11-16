@@ -73,10 +73,7 @@ namespace swift::gui::models
 
     CVariant CDefaultFormatter::alignmentRole() const
     {
-        if (this->hasAlignment())
-        {
-            return CVariant::from(m_alignment);
-        }
+        if (this->hasAlignment()) { return CVariant::from(m_alignment); }
         return CVariant::from(alignDefault()); // default
     }
 
@@ -118,10 +115,7 @@ namespace swift::gui::models
         return CVariant();
     }
 
-    int CDefaultFormatter::alignDefault()
-    {
-        return alignLeftVCenter();
-    }
+    int CDefaultFormatter::alignDefault() { return alignLeftVCenter(); }
 
     CVariant CDefaultFormatter::keepStandardTypesConvertToStringOtherwise(const CVariant &inputData) const
     {
@@ -177,15 +171,9 @@ namespace swift::gui::models
         const int pmw = pm.width();
         const int pmh = pm.height();
 
-        if (m_maxHeight >= 0 && m_maxHeight < pmh)
-        {
-            return CVariant::fromValue(pm.scaledToHeight(m_maxHeight));
-        }
+        if (m_maxHeight >= 0 && m_maxHeight < pmh) { return CVariant::fromValue(pm.scaledToHeight(m_maxHeight)); }
 
-        if (m_maxWidth >= 0 && m_maxWidth < pmw)
-        {
-            return CVariant::fromValue(pm.scaledToWidth(m_maxWidth));
-        }
+        if (m_maxWidth >= 0 && m_maxWidth < pmw) { return CVariant::fromValue(pm.scaledToWidth(m_maxWidth)); }
 
         return CVariant::fromValue(pm);
     }
@@ -200,7 +188,8 @@ namespace swift::gui::models
         return CVariant(valueObject.toPixmap());
     }
 
-    CDateTimeFormatter::CDateTimeFormatter(const QString &formatString, int alignment, bool i18n) : CDefaultFormatter(alignment, i18n, { Qt::DisplayRole }), m_formatString(formatString)
+    CDateTimeFormatter::CDateTimeFormatter(const QString &formatString, int alignment, bool i18n)
+        : CDefaultFormatter(alignment, i18n, { Qt::DisplayRole }), m_formatString(formatString)
     {
         // void
     }
@@ -257,10 +246,7 @@ namespace swift::gui::models
         {
             // special treatment for some cases
             const CFrequency f = dataCVariant.value<CFrequency>();
-            if (CComSystem::isValidComFrequency(f))
-            {
-                return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
-            }
+            if (CComSystem::isValidComFrequency(f)) { return CPhysiqalQuantiyFormatter::displayRole(dataCVariant); }
             return emptyStringVariant();
         }
         else
@@ -314,10 +300,10 @@ namespace swift::gui::models
         return CDefaultFormatter::flags(flags, editable);
     }
 
-    CBoolLedFormatter::CBoolLedFormatter(int alignment) : CBoolLedFormatter("on", "off", alignment)
-    {}
+    CBoolLedFormatter::CBoolLedFormatter(int alignment) : CBoolLedFormatter("on", "off", alignment) {}
 
-    CBoolLedFormatter::CBoolLedFormatter(const QString &onName, const QString &offName, int alignment) : CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip())
+    CBoolLedFormatter::CBoolLedFormatter(const QString &onName, const QString &offName, int alignment)
+        : CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip())
     {
         // one time pixmap creation
         QScopedPointer<CLedWidget> led(createLedDefault());
@@ -345,17 +331,24 @@ namespace swift::gui::models
         return CVariant();
     }
 
-    CBoolIconFormatter::CBoolIconFormatter(int alignment) : CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "on", "off", alignment)
+    CBoolIconFormatter::CBoolIconFormatter(int alignment)
+        : CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "on", "off", alignment)
     {}
 
-    CBoolIconFormatter::CBoolIconFormatter(const QString &onName, const QString &offName, int alignment) : CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, onName, offName, alignment)
+    CBoolIconFormatter::CBoolIconFormatter(const QString &onName, const QString &offName, int alignment)
+        : CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, onName, offName, alignment)
     {}
 
-    CBoolIconFormatter::CBoolIconFormatter(CIcons::IconIndex onIcon, CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment) : CBoolIconFormatter(CIcon::iconByIndex(onIcon), CIcon::iconByIndex(offIcon), onName, offName, alignment)
+    CBoolIconFormatter::CBoolIconFormatter(CIcons::IconIndex onIcon, CIcons::IconIndex offIcon, const QString &onName,
+                                           const QString &offName, int alignment)
+        : CBoolIconFormatter(CIcon::iconByIndex(onIcon), CIcon::iconByIndex(offIcon), onName, offName, alignment)
     {}
 
-    CBoolIconFormatter::CBoolIconFormatter(const CIcon &onIcon, const CIcon &offIcon, const QString &onName, const QString &offName, int alignment) : CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip()),
-                                                                                                                                                      m_iconOnVariant(CVariant::fromValue(onIcon.toPixmap())), m_iconOffVariant(CVariant::fromValue(offIcon.toPixmap()))
+    CBoolIconFormatter::CBoolIconFormatter(const CIcon &onIcon, const CIcon &offIcon, const QString &onName,
+                                           const QString &offName, int alignment)
+        : CBoolTextFormatter(alignment, onName, offName, rolesDecorationAndToolTip()),
+          m_iconOnVariant(CVariant::fromValue(onIcon.toPixmap())),
+          m_iconOffVariant(CVariant::fromValue(offIcon.toPixmap()))
     {}
 
     CVariant CBoolIconFormatter::displayRole(const CVariant &dataCVariant) const
@@ -384,18 +377,13 @@ namespace swift::gui::models
     CVariant CAltitudeFormatter::displayRole(const CVariant &altitude) const
     {
         CAltitude alt(altitude.to<CAltitude>());
-        if (m_flightLevel)
-        {
-            alt.toFlightLevel();
-        }
-        else
-        {
-            alt.switchUnit(m_unit);
-        }
+        if (m_flightLevel) { alt.toFlightLevel(); }
+        else { alt.switchUnit(m_unit); }
         return alt.toQString(m_useI18n);
     }
 
-    CColorFormatter::CColorFormatter(int alignment, bool i18n) : CDefaultFormatter(alignment, i18n, rolesDecorationAndToolTip())
+    CColorFormatter::CColorFormatter(int alignment, bool i18n)
+        : CDefaultFormatter(alignment, i18n, rolesDecorationAndToolTip())
     {}
 
     CVariant CColorFormatter::displayRole(const CVariant &dataCVariant) const
@@ -437,8 +425,7 @@ namespace swift::gui::models
             if (ok) { return QString::number(ll); }
             break;
         }
-        default:
-            break;
+        default: break;
         }
 
         const int i = expectedInteger.toInt(&ok);

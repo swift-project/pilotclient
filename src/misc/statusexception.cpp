@@ -8,10 +8,10 @@
 
 namespace swift::misc
 {
-    CStatusException::CStatusException(const CStatusMessage &payload) : m_payload(payload)
-    {}
+    CStatusException::CStatusException(const CStatusMessage &payload) : m_payload(payload) {}
 
-    CStatusException::CStatusException(const CStatusException &other) : std::exception(other), m_payload(other.m_payload)
+    CStatusException::CStatusException(const CStatusException &other)
+        : std::exception(other), m_payload(other.m_payload)
     {
         QReadLocker lock(&other.m_lock);
         this->m_temp = other.m_temp;

@@ -76,7 +76,8 @@ namespace swift::core
             virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method
-            static IContextApplication *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, swift::misc::CDBusServer *server, QDBusConnection &connection);
+            static IContextApplication *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode,
+                                               swift::misc::CDBusServer *server, QDBusConnection &connection);
 
             //! Destructor
             virtual ~IContextApplication() override {}
@@ -87,7 +88,8 @@ namespace swift::core
 
             //! One or more settings were changed
             //! \note Used for cache relay, do not use directly
-            void settingsChanged(const swift::misc::CValueCachePacket &settings, const swift::misc::CIdentifier &origin);
+            void settingsChanged(const swift::misc::CValueCachePacket &settings,
+                                 const swift::misc::CIdentifier &origin);
 
             //! New action was registered
             //! \note Used to register hotkey action, do not use directly
@@ -101,7 +103,8 @@ namespace swift::core
             //! Ratify some settings changed by another process
             //! \note Not pure because it can be called from the base class constructor.
             //! \note This is the function which relays cache changes via DBus.
-            virtual void changeSettings(const swift::misc::CValueCachePacket &settings, const swift::misc::CIdentifier &origin);
+            virtual void changeSettings(const swift::misc::CValueCachePacket &settings,
+                                        const swift::misc::CIdentifier &origin);
 
             //! Get all settings currently in core settings cache
             virtual swift::misc::CValueCachePacket getAllSettings() const = 0;
@@ -132,7 +135,8 @@ namespace swift::core
             //! Call a hotkey action on a remote process
             //! \note Not pure because it can be called from the base class constructor.
             //! \note This is the function which relays action calls via DBus
-            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const swift::misc::CIdentifier &origin);
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument,
+                                                  const swift::misc::CIdentifier &origin);
 
             //! Register application, can also be used for ping
             virtual swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) = 0;
@@ -147,7 +151,8 @@ namespace swift::core
             virtual swift::misc::CIdentifier getApplicationIdentifier() const = 0;
 
             //! Forward to facade
-            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine,
+                                          const swift::misc::CIdentifier &originator) override;
 
         protected:
             static constexpr int PingIdentifiersMs = 20000; //!< how often identifiers are pinged

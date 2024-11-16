@@ -43,7 +43,8 @@ namespace swift::gui::components
         virtual ~CMainKeypadAreaComponent() override;
 
         //! Main info area changed
-        void onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes, const QList<int> &floatingIndexes);
+        void onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes,
+                                   const QList<int> &floatingIndexes);
 
         //! Focus in entry fields
         void focusInEntryField();
@@ -76,10 +77,12 @@ namespace swift::gui::components
         void buttonSelected();
 
         //! \copydoc swift::core::context::IContextNetwork::connectionStatusChanged
-        void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+        void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                     const swift::misc::network::CConnectionStatus &to);
 
         //! \copydoc swift::core::context::IContextOwnAircraft::changedAircraftCockpit
-        void ownAircraftCockpitChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+        void ownAircraftCockpitChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                       const swift::misc::CIdentifier &originator);
 
         //! \copydoc swift::core::context::IContextAudio::changedOutputMute
         void outputMuteChanged(bool muted);

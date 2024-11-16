@@ -11,14 +11,14 @@ namespace swift::misc::simulation
 {
     bool IOwnAircraftProvider::updateCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
     {
-        const bool changed1 = this->updateCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder(), originator);
+        const bool changed1 = this->updateCockpit(aircraft.getCom1System(), aircraft.getCom2System(),
+                                                  aircraft.getTransponder(), originator);
         const bool changed2 = this->updateSelcal(aircraft.getSelcal(), originator);
         return changed1 || changed2;
     }
 
     // pin vtables to this file
-    void COwnAircraftAware::anchor()
-    {}
+    void COwnAircraftAware::anchor() {}
 
     CSimulatedAircraft COwnAircraftAware::getOwnAircraft() const
     {
@@ -80,13 +80,15 @@ namespace swift::misc::simulation
         return this->provider()->updateCockpit(aircraft, originator);
     }
 
-    bool COwnAircraftAware::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const CIdentifier &originator)
+    bool COwnAircraftAware::updateCockpit(const CComSystem &com1, const CComSystem &com2,
+                                          const CTransponder &transponder, const CIdentifier &originator)
     {
         Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
         return this->provider()->updateCockpit(com1, com2, transponder, originator);
     }
 
-    bool COwnAircraftAware::updateActiveComFrequency(const CFrequency &frequency, CComSystem::ComUnit comUnit, const CIdentifier &originator)
+    bool COwnAircraftAware::updateActiveComFrequency(const CFrequency &frequency, CComSystem::ComUnit comUnit,
+                                                     const CIdentifier &originator)
     {
         Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
         return this->provider()->updateActiveComFrequency(frequency, comUnit, originator);
@@ -128,7 +130,8 @@ namespace swift::misc::simulation
         return this->provider()->updateOwnCallsign(callsign);
     }
 
-    bool COwnAircraftAware::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoData, const CAirlineIcaoCode &airlineIcaoCode)
+    bool COwnAircraftAware::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoData,
+                                               const CAirlineIcaoCode &airlineIcaoCode)
     {
         Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
         return this->provider()->updateOwnIcaoCodes(aircraftIcaoData, airlineIcaoCode);

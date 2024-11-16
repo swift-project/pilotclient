@@ -158,7 +158,8 @@ namespace swift::misc
         template <class CastType>
         CastType frontCasted() const
         {
-            static_assert(std::is_enum_v<CastType> || std::is_integral_v<CastType>, "CastType must be an enum or integer");
+            static_assert(std::is_enum_v<CastType> || std::is_integral_v<CastType>,
+                          "CastType must be an enum or integer");
             return static_cast<CastType>(frontToInt());
         }
 
@@ -175,10 +176,7 @@ namespace swift::misc
         {
             return [index = *this](const auto &a, const auto &b) {
                 using T = std::decay_t<decltype(a)>;
-                if constexpr (THasComparePropertyByIndex<T>::value)
-                {
-                    return a.comparePropertyByIndex(index, b);
-                }
+                if constexpr (THasComparePropertyByIndex<T>::value) { return a.comparePropertyByIndex(index, b); }
                 else if constexpr (THasPropertyByIndex<T>::value)
                 {
                     return compare(a.propertyByIndex(index), b.propertyByIndex(index));

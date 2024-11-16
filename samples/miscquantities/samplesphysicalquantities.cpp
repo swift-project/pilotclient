@@ -36,7 +36,8 @@ namespace swift::sample
         CLengthUnit lu2(CLengthUnit::ft());
         QString lu1s = lu1.toQString(true);
         QString lu2s = lu2.toQString(true);
-        out << "units: " << lu1 << " " << lu2 << " " << lu1s << " " << lu2s << " " << lu1.getName(true) << " " << lu2.getName(true) << Qt::endl;
+        out << "units: " << lu1 << " " << lu2 << " " << lu1s << " " << lu2s << " " << lu1.getName(true) << " "
+            << lu2.getName(true) << Qt::endl;
         const CLength l1(5.0, CLengthUnit::ft()); // 5 ft
         CLength l2(1, CLengthUnit::NM()); // 1NM
         CLength l3(1, CLengthUnit::km());
@@ -44,7 +45,8 @@ namespace swift::sample
 
         out << CLengthUnit::ft() << Qt::endl;
         out << l1 << " " << l2 << " " << l3 << " " << l4 << Qt::endl;
-        out << l1.valueRoundedWithUnit(CLengthUnit::ft(), 5) << " " << l2.valueRoundedWithUnit(CLengthUnit::km()) << Qt::endl;
+        out << l1.valueRoundedWithUnit(CLengthUnit::ft(), 5) << " " << l2.valueRoundedWithUnit(CLengthUnit::km())
+            << Qt::endl;
         out << l3.getUnit() << Qt::endl;
 
         l2.switchUnit(CLengthUnit::ft()); // now in ft
@@ -57,17 +59,20 @@ namespace swift::sample
 
         // null test
         CLength nullLength(0, CLengthUnit::nullUnit());
-        out << "Null PQ: " << nullLength << " converted " << nullLength.valueRoundedWithUnit(CLengthUnit::m(), 2) << Qt::endl;
+        out << "Null PQ: " << nullLength << " converted " << nullLength.valueRoundedWithUnit(CLengthUnit::m(), 2)
+            << Qt::endl;
 
         // more tests
         CFrequency f1(1E6, CFrequencyUnit::Hz()); // 1MHz
-        out << f1 << " " << f1.valueRoundedWithUnit(CFrequencyUnit::MHz()) << " " << f1.valueRoundedWithUnit(CFrequencyUnit::GHz(), 3);
+        out << f1 << " " << f1.valueRoundedWithUnit(CFrequencyUnit::MHz()) << " "
+            << f1.valueRoundedWithUnit(CFrequencyUnit::GHz(), 3);
 
         CSpeed s1 = CSpeed(100, CSpeedUnit::km_h());
         CSpeed s2 = CSpeed(1000, CSpeedUnit::ft_min());
         CSpeed s3 = CSpeed(s2);
         s3.switchUnit(CSpeedUnit::m_s());
-        out << s1 << " " << s1.valueRoundedWithUnit(CSpeedUnit::defaultUnit()) << " " << s1.valueRoundedWithUnit(CSpeedUnit::NM_h());
+        out << s1 << " " << s1.valueRoundedWithUnit(CSpeedUnit::defaultUnit()) << " "
+            << s1.valueRoundedWithUnit(CSpeedUnit::NM_h());
         out << s2 << " " << s3 << Qt::endl;
 
         CAngle a1(180, CAngleUnit::deg());
@@ -94,13 +99,15 @@ namespace swift::sample
         out << w1 << " " << w1.valueRoundedWithUnit(CMassUnit::kg()) << " " << w2 << Qt::endl;
 
         CPressure p1(CAltitude::standardISASeaLevelPressure());
-        out << p1 << " " << p1.valueRoundedWithUnit(CPressureUnit::psi()) << " " << p1.valueRoundedWithUnit(CPressureUnit::inHg()) << Qt::endl;
+        out << p1 << " " << p1.valueRoundedWithUnit(CPressureUnit::psi()) << " "
+            << p1.valueRoundedWithUnit(CPressureUnit::inHg()) << Qt::endl;
 
         CTemperature t1;
         CTemperature t2(20, CTemperatureUnit::C());
         CTemperature t3(1, CTemperatureUnit::F());
         out << t1 << " " << t2 << " " << t2.valueRoundedWithUnit(CTemperatureUnit::defaultUnit(), -1, true);
-        out << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1, true) << " " << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << " "
+        out << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1, true) << " "
+            << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << " "
             << "I18N/UTF" << Qt::endl;
 
         (t1 - t2).switchUnit(CTemperatureUnit::F()); // was not working since wrong return type const

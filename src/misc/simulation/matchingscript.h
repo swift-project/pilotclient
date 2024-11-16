@@ -27,14 +27,16 @@ namespace swift::misc::simulation
         Q_PROPERTY(QString callsign READ getCallsign WRITE setCallsign NOTIFY callsignChanged)
         Q_PROPERTY(QString callsignAsSet READ getCallsignAsSet)
         Q_PROPERTY(QString flightNumber READ getFlightNumber)
-        Q_PROPERTY(int dbAircraftIcaoId READ getDbAircraftIcaoId WRITE setDbAircraftIcaoId NOTIFY dbAircraftIcaoIdChanged)
+        Q_PROPERTY(
+            int dbAircraftIcaoId READ getDbAircraftIcaoId WRITE setDbAircraftIcaoId NOTIFY dbAircraftIcaoIdChanged)
         Q_PROPERTY(int dbAirlineIcaoId READ getDbAirlineIcaoId WRITE setDbAirlineIcaoId NOTIFY dbAirlineIcaoIdChanged)
         Q_PROPERTY(int dbLiveryId READ getDbLiveryId WRITE setDbLiveryId NOTIFY dbLiveryIdChanged)
         Q_PROPERTY(int dbModelId READ getDbModelId WRITE setDbModelId NOTIFY dbModelIdChanged)
         Q_PROPERTY(QString aircraftIcao READ getAircraftIcao WRITE setAircraftIcao NOTIFY aircraftIcaoChanged)
         Q_PROPERTY(QString aircraftFamily READ getAircraftFamily)
         Q_PROPERTY(QString airlineIcao READ getAirlineIcao WRITE setAirlineIcao NOTIFY airlineIcaoChanged)
-        Q_PROPERTY(QString virtualAirlineIcao READ getVirtualAirlineIcao WRITE setVirtualAirlineIcao NOTIFY virtualAirlineIcaoChanged)
+        Q_PROPERTY(QString virtualAirlineIcao READ getVirtualAirlineIcao WRITE setVirtualAirlineIcao NOTIFY
+                       virtualAirlineIcaoChanged)
         Q_PROPERTY(QString livery READ getLivery WRITE setLivery NOTIFY liveryChanged)
         Q_PROPERTY(QString modelString READ getModelString WRITE setModelString NOTIFY modelStringChanged)
         Q_PROPERTY(QString combinedType READ getCombinedType WRITE setCombinedType NOTIFY combinedTypeChanged)
@@ -57,24 +59,22 @@ namespace swift::misc::simulation
 
         //! Ctor
         Q_INVOKABLE MSInOutValues(const QString &cs, const QString &csAsSet, const QString &flightNumber,
-                                  const QString &aircraftIcao, const QString &aircraftFamily, const QString &combinedType, int idAircraftIcao,
-                                  const QString &airlineIcao, const QString &virtualAirlineIcao, int idAirlineIcao,
-                                  const QString &livery, int liveryId,
-                                  const QString &logMsg = {},
-                                  bool modified = false, bool rerun = false) : m_callsign(cs.trimmed().toUpper()), m_callsignAsSet(csAsSet), m_flightNumber(flightNumber),
-                                                                               m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftFamily(aircraftFamily.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper()),
-                                                                               m_airlineIcao(airlineIcao.trimmed().toUpper()), m_vAirlineIcao(virtualAirlineIcao),
-                                                                               m_livery(livery.trimmed().toUpper()),
-                                                                               m_dbAircraftIcaoId(idAircraftIcao), m_dbAirlineIcaoId(idAirlineIcao), m_dbLiveryId(liveryId),
-                                                                               m_logMessage(logMsg),
-                                                                               m_modified(modified), m_rerun(rerun)
+                                  const QString &aircraftIcao, const QString &aircraftFamily,
+                                  const QString &combinedType, int idAircraftIcao, const QString &airlineIcao,
+                                  const QString &virtualAirlineIcao, int idAirlineIcao, const QString &livery,
+                                  int liveryId, const QString &logMsg = {}, bool modified = false, bool rerun = false)
+            : m_callsign(cs.trimmed().toUpper()), m_callsignAsSet(csAsSet), m_flightNumber(flightNumber),
+              m_aircraftIcao(aircraftIcao.trimmed().toUpper()), m_aircraftFamily(aircraftFamily.trimmed().toUpper()),
+              m_combinedType(combinedType.trimmed().toUpper()), m_airlineIcao(airlineIcao.trimmed().toUpper()),
+              m_vAirlineIcao(virtualAirlineIcao), m_livery(livery.trimmed().toUpper()),
+              m_dbAircraftIcaoId(idAircraftIcao), m_dbAirlineIcaoId(idAirlineIcao), m_dbLiveryId(liveryId),
+              m_logMessage(logMsg), m_modified(modified), m_rerun(rerun)
         {}
 
         //! Ctor
         MSInOutValues(const swift::misc::aviation::CCallsign &cs,
                       const swift::misc::aviation::CAircraftIcaoCode &aircraftIcao,
-                      const swift::misc::aviation::CAirlineIcaoCode &airlineIcao,
-                      const QString &livery, int liveryId);
+                      const swift::misc::aviation::CAirlineIcaoCode &airlineIcao, const QString &livery, int liveryId);
 
         //! Ctor
         MSInOutValues(const swift::misc::aviation::CCallsign &cs,
@@ -150,14 +150,18 @@ namespace swift::misc::simulation
         //! @}
 
         //! Changed values such as modified values
-        void evaluateChanges(const swift::misc::aviation::CAircraftIcaoCode &aircraft, const swift::misc::aviation::CAirlineIcaoCode &airline);
+        void evaluateChanges(const swift::misc::aviation::CAircraftIcaoCode &aircraft,
+                             const swift::misc::aviation::CAirlineIcaoCode &airline);
 
         //! @{
         //! Changed values
         bool hasModifiedAircraftIcaoDesignator() const { return m_modifiedAircraftDesignator; }
         bool hasModifiedAirlineIcaoDesignator() const { return m_modifiedAirlineDesignator; }
         bool hasModifiedAircraftFamily() const { return m_modifiedAircraftFamily; }
-        bool hasUnmodifiedDesignators() const { return !this->hasModifiedAirlineIcaoDesignator() && !this->hasModifiedAircraftIcaoDesignator(); }
+        bool hasUnmodifiedDesignators() const
+        {
+            return !this->hasModifiedAirlineIcaoDesignator() && !this->hasModifiedAircraftIcaoDesignator();
+        }
         bool hasChangedAircraftIcao(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcao) const;
         bool hasChangedAircraftIcaoId(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcao) const;
         bool hasChangedAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &airlineIcao) const;
@@ -231,7 +235,8 @@ namespace swift::misc::simulation
         //! MSModelSet properties
         Q_PROPERTY(QString simulator READ getSimulator WRITE setSimulator NOTIFY simulatorChanged)
         Q_PROPERTY(bool available READ isAvailable WRITE setAvailable NOTIFY availabilityChanged)
-        Q_PROPERTY(int inputAircraftAndAirlineCount READ getInputAircraftAndAirlineCount WRITE setInputAircraftAndAirlineCount NOTIFY inputAircraftAndAirlineCountChanged)
+        Q_PROPERTY(int inputAircraftAndAirlineCount READ getInputAircraftAndAirlineCount WRITE
+                       setInputAircraftAndAirlineCount NOTIFY inputAircraftAndAirlineCountChanged)
         Q_PROPERTY(int modelSetSize READ getModelSetSize)
         Q_PROPERTY(int countDifferentAirlines READ countVtolAircraft)
         Q_PROPERTY(int countVtolAircraft READ countCivilianAircraft)
@@ -276,19 +281,25 @@ namespace swift::misc::simulation
 
         //! @{
         //! Invokable model set functions as properties
-        Q_INVOKABLE bool containsModelString(const QString &modelString) const { return m_modelSet.containsModelString(modelString, Qt::CaseInsensitive); }
+        Q_INVOKABLE bool containsModelString(const QString &modelString) const
+        {
+            return m_modelSet.containsModelString(modelString, Qt::CaseInsensitive);
+        }
         Q_INVOKABLE bool containsDbKey(int dbKey) const { return m_modelSet.containsDbKey(dbKey); }
         Q_INVOKABLE bool containsCombinedType(const QString &ct) const { return m_modelSet.containsCombinedType(ct); }
         //! @}
 
         //! Model string of model with closest color distance
-        Q_INVOKABLE QString findCombinedTypeWithClosestColorLivery(const QString &combinedType, const QString &rgbColor) const;
+        Q_INVOKABLE QString findCombinedTypeWithClosestColorLivery(const QString &combinedType,
+                                                                   const QString &rgbColor) const;
 
         //! Model string of model with closest color distance
-        Q_INVOKABLE QString findClosestCombinedTypeWithClosestColorLivery(const QString &combinedType, const QString &rgbColor) const;
+        Q_INVOKABLE QString findClosestCombinedTypeWithClosestColorLivery(const QString &combinedType,
+                                                                          const QString &rgbColor) const;
 
         //! Model string of model with closest color distance
-        Q_INVOKABLE QString findAircraftFamilyWithClosestColorLivery(const QString &family, const QString &rgbColor) const;
+        Q_INVOKABLE QString findAircraftFamilyWithClosestColorLivery(const QString &family,
+                                                                     const QString &rgbColor) const;
 
         // ------- NOT EXPOSED TO JAVASCRIPT -------
 
@@ -299,7 +310,8 @@ namespace swift::misc::simulation
         void initByModelSet(const swift::misc::simulation::CAircraftModelList &modelSet);
 
         //! Init by aircraft/airline
-        void initByAircraftAndAirline(const swift::misc::aviation::CAircraftIcaoCode &aircraft, const swift::misc::aviation::CAirlineIcaoCode &airline);
+        void initByAircraftAndAirline(const swift::misc::aviation::CAircraftIcaoCode &aircraft,
+                                      const swift::misc::aviation::CAirlineIcaoCode &airline);
 
         // ------- NOT EXPOSED TO JAVASCRIPT -------
 

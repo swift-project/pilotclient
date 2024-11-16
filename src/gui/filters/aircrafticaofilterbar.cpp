@@ -25,8 +25,8 @@ using namespace swift::core;
 
 namespace swift::gui::filters
 {
-    CAircraftIcaoFilterBar::CAircraftIcaoFilterBar(QWidget *parent) : CFilterWidget(parent),
-                                                                      ui(new Ui::CAircraftIcaoFilterBar)
+    CAircraftIcaoFilterBar::CAircraftIcaoFilterBar(QWidget *parent)
+        : CFilterWidget(parent), ui(new Ui::CAircraftIcaoFilterBar)
     {
         ui->setupUi(this);
         this->setButtonsAndCount(ui->filter_Buttons);
@@ -43,7 +43,8 @@ namespace swift::gui::filters
 
         if (sGui && sGui->hasWebDataServices())
         {
-            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAircraftIcaoRead, this, &CAircraftIcaoFilterBar::initCompleters);
+            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAircraftIcaoRead, this,
+                    &CAircraftIcaoFilterBar::initCompleters);
             this->initCompleters();
         }
 
@@ -51,18 +52,14 @@ namespace swift::gui::filters
         this->clearForm();
     }
 
-    CAircraftIcaoFilterBar::~CAircraftIcaoFilterBar()
-    {}
+    CAircraftIcaoFilterBar::~CAircraftIcaoFilterBar() {}
 
-    std::unique_ptr<swift::gui::models::IModelFilter<CAircraftIcaoCodeList>> CAircraftIcaoFilterBar::createModelFilter() const
+    std::unique_ptr<swift::gui::models::IModelFilter<CAircraftIcaoCodeList>>
+    CAircraftIcaoFilterBar::createModelFilter() const
     {
         return std::make_unique<CAircraftIcaoFilter>(
-            convertDbId(ui->le_Id->text()),
-            ui->le_Designator->text(),
-            ui->le_Family->text(),
-            ui->le_Manufacturer->text(),
-            ui->le_Description->text(),
-            ui->combinedType_Selector->getCombinedType());
+            convertDbId(ui->le_Id->text()), ui->le_Designator->text(), ui->le_Family->text(),
+            ui->le_Manufacturer->text(), ui->le_Description->text(), ui->combinedType_Selector->getCombinedType());
     }
 
     void CAircraftIcaoFilterBar::filter(const CAircraftIcaoCode &icao)
@@ -84,20 +81,11 @@ namespace swift::gui::filters
             ui->le_Description->setText("*" + icao.getModelDescription() + "*");
             filter = true;
         }
-        if (filter)
-        {
-            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
-        }
-        else
-        {
-            ui->filter_Buttons->clickButton(CFilterBarButtons::RemoveFilter);
-        }
+        if (filter) { ui->filter_Buttons->clickButton(CFilterBarButtons::Filter); }
+        else { ui->filter_Buttons->clickButton(CFilterBarButtons::RemoveFilter); }
     }
 
-    void CAircraftIcaoFilterBar::hideDescriptionField(bool hide)
-    {
-        ui->le_Description->setVisible(!hide);
-    }
+    void CAircraftIcaoFilterBar::hideDescriptionField(bool hide) { ui->le_Description->setVisible(!hide); }
 
     void CAircraftIcaoFilterBar::onRowCountChanged(int count, bool withFilter)
     {

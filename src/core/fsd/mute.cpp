@@ -7,9 +7,7 @@
 
 namespace swift::core::fsd
 {
-    Mute::Mute(const QString &sender, const QString &receiver, bool mute)
-        : MessageBase(sender, receiver),
-          m_mute(mute)
+    Mute::Mute(const QString &sender, const QString &receiver, bool mute) : MessageBase(sender, receiver), m_mute(mute)
     {}
 
     QStringList Mute::toTokens() const

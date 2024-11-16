@@ -67,7 +67,8 @@ namespace swift::misc::simulation
         void validating(bool running);
 
         //! Validated for simulator
-        void validated(const CSimulatorInfo &simulator, const CAircraftModelList &validModels, const CAircraftModelList &invalidModels, bool stopped, const CStatusMessageList &msgs);
+        void validated(const CSimulatorInfo &simulator, const CAircraftModelList &validModels,
+                       const CAircraftModelList &invalidModels, bool stopped, const CStatusMessageList &msgs);
 
     protected:
         //! \copydoc CContinuousWorker::beforeQuit

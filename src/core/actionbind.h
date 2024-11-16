@@ -28,9 +28,9 @@ namespace swift::core
         //! Constructor
         template <typename Receiver>
         CActionBind(const QString &action, swift::misc::CIcons::IconIndex icon, Receiver *receiver,
-                    MembFunc<Receiver> slot = nullptr,
-                    const std::function<void()> &deleteCallback = {},
-                    QObject *parent = nullptr) : QObject(parent), m_deleteCallback(deleteCallback)
+                    MembFunc<Receiver> slot = nullptr, const std::function<void()> &deleteCallback = {},
+                    QObject *parent = nullptr)
+            : QObject(parent), m_deleteCallback(deleteCallback)
         {
             // workaround if a binding is taking place in an empty context
             if (!sApp || sApp->isShuttingDown()) { return; }

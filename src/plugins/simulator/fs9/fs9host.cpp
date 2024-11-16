@@ -27,10 +27,7 @@ namespace swift::simplugin::fs9
         startHosting(sApp->swiftVersionString(), m_callsign.toQString());
     }
 
-    CFs9Host::~CFs9Host()
-    {
-        stopHosting();
-    }
+    CFs9Host::~CFs9Host() { stopHosting(); }
 
     QString CFs9Host::getHostAddress()
     {
@@ -176,15 +173,9 @@ namespace swift::simplugin::fs9
         if (m_hostStatus == Terminated) return hr;
 
         CLogMessage(this).info(u"Hosting terminated!");
-        if (FAILED(hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0)))
-        {
-            return logDirectPlayError(hr);
-        }
+        if (FAILED(hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0))) { return logDirectPlayError(hr); }
 
-        if (FAILED(hr = m_directPlayPeer->Close(0)))
-        {
-            return logDirectPlayError(hr);
-        }
+        if (FAILED(hr = m_directPlayPeer->Close(0))) { return logDirectPlayError(hr); }
 
         m_hostStatus = Terminated;
 

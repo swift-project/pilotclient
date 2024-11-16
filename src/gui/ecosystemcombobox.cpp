@@ -9,12 +9,10 @@ using namespace swift::misc::network;
 
 namespace swift::gui
 {
-    CEcosystemComboBox::CEcosystemComboBox(QWidget *parent) : QComboBox(parent)
-    {
-        this->initAllItems();
-    }
+    CEcosystemComboBox::CEcosystemComboBox(QWidget *parent) : QComboBox(parent) { this->initAllItems(); }
 
-    CEcosystemComboBox::CEcosystemComboBox(const CEcosystemList &systems, QWidget *parent) : QComboBox(parent), m_systems(systems)
+    CEcosystemComboBox::CEcosystemComboBox(const CEcosystemList &systems, QWidget *parent)
+        : QComboBox(parent), m_systems(systems)
     {
         this->initAllItems();
     }
@@ -27,10 +25,7 @@ namespace swift::gui
 
     void CEcosystemComboBox::setCurrentEcosystem(const CEcosystem &ecosystem)
     {
-        if (m_systems.contains(ecosystem))
-        {
-            this->setCurrentText(ecosystem.getSystemString());
-        }
+        if (m_systems.contains(ecosystem)) { this->setCurrentText(ecosystem.getSystemString()); }
     }
 
     void CEcosystemComboBox::setEcosystems(const CEcosystemList &systems)
@@ -42,9 +37,6 @@ namespace swift::gui
     void CEcosystemComboBox::initAllItems()
     {
         this->clear();
-        for (const CEcosystem &e : m_systems)
-        {
-            this->addItem(e.getSystemString());
-        }
+        for (const CEcosystem &e : m_systems) { this->addItem(e.getSystemString()); }
     }
 } // namespace swift::gui

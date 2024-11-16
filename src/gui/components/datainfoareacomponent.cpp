@@ -34,8 +34,8 @@ using namespace swift::gui::components;
 
 namespace swift::gui::components
 {
-    CDataInfoAreaComponent::CDataInfoAreaComponent(QWidget *parent) : CInfoArea(parent),
-                                                                      ui(new Ui::CDataInfoAreaComponent)
+    CDataInfoAreaComponent::CDataInfoAreaComponent(QWidget *parent)
+        : CInfoArea(parent), ui(new Ui::CDataInfoAreaComponent)
     {
         ui->setupUi(this);
         this->initInfoArea(); // init base class
@@ -43,38 +43,19 @@ namespace swift::gui::components
         this->setTabBarPosition(QTabWidget::North);
     }
 
-    CDataInfoAreaComponent::~CDataInfoAreaComponent()
-    {}
+    CDataInfoAreaComponent::~CDataInfoAreaComponent() {}
 
-    CDbModelComponent *CDataInfoAreaComponent::getModelComponent() const
-    {
-        return ui->comp_DbModels;
-    }
+    CDbModelComponent *CDataInfoAreaComponent::getModelComponent() const { return ui->comp_DbModels; }
 
-    CDbLiveryComponent *CDataInfoAreaComponent::getLiveryComponent() const
-    {
-        return ui->comp_DbLiveries;
-    }
+    CDbLiveryComponent *CDataInfoAreaComponent::getLiveryComponent() const { return ui->comp_DbLiveries; }
 
-    CDbDistributorComponent *CDataInfoAreaComponent::getDistributorComponent() const
-    {
-        return ui->comp_DbDistributors;
-    }
+    CDbDistributorComponent *CDataInfoAreaComponent::getDistributorComponent() const { return ui->comp_DbDistributors; }
 
-    CDbAircraftIcaoComponent *CDataInfoAreaComponent::getAircraftComponent() const
-    {
-        return ui->comp_DbAircraftIcao;
-    }
+    CDbAircraftIcaoComponent *CDataInfoAreaComponent::getAircraftComponent() const { return ui->comp_DbAircraftIcao; }
 
-    CDbAirlineIcaoComponent *CDataInfoAreaComponent::getAirlineComponent() const
-    {
-        return ui->comp_DbAirlineIcao;
-    }
+    CDbAirlineIcaoComponent *CDataInfoAreaComponent::getAirlineComponent() const { return ui->comp_DbAirlineIcao; }
 
-    CDbCountryComponent *CDataInfoAreaComponent::getCountryComponent() const
-    {
-        return ui->comp_DbCountries;
-    }
+    CDbCountryComponent *CDataInfoAreaComponent::getCountryComponent() const { return ui->comp_DbCountries; }
 
     CDbAircraftCategoryComponent *CDataInfoAreaComponent::getAircraftCategoryComponent() const
     {
@@ -91,14 +72,8 @@ namespace swift::gui::components
 
         // write to disk
         const bool s = sGui->getWebDataServices()->writeDbDataToDisk(CSwiftDirectories::staticDbFilesDirectory());
-        if (s)
-        {
-            CLogMessage(this).info(u"Written DB data");
-        }
-        else
-        {
-            CLogMessage(this).error(u"Cannot write DB data");
-        }
+        if (s) { CLogMessage(this).info(u"Written DB data"); }
+        else { CLogMessage(this).error(u"Cannot write DB data"); }
         return s;
     }
 
@@ -120,10 +95,7 @@ namespace swift::gui::components
             ui->comp_DbModels->showLoadIndicator();
             ok = true;
         }
-        else
-        {
-            CLogMessage::preformatted(msgs);
-        }
+        else { CLogMessage::preformatted(msgs); }
         return ok;
     }
 
@@ -138,8 +110,7 @@ namespace swift::gui::components
         case InfoAreaModels:
         case InfoAreaCountries:
         case InfoAreaAircraftCategories:
-        default:
-            return QSize(800, 600);
+        default: return QSize(800, 600);
         }
     }
 
@@ -161,7 +132,8 @@ namespace swift::gui::components
 
     void CDataInfoAreaComponent::requestUpdateOfAllDbData()
     {
-        sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AllDbEntitiesNoInfoObjectsNoAirportsAndCategories, QDateTime());
+        sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(
+            CEntityFlags::AllDbEntitiesNoInfoObjectsNoAirportsAndCategories, QDateTime());
     }
 
     void CDataInfoAreaComponent::requestUpdatedData(CEntityFlags::Entity entity)

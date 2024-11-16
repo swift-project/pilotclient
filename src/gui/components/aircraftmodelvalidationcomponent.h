@@ -45,11 +45,16 @@ namespace swift::gui::components
 
         //! Validated a model set
         //! \remark coming from swift::misc::simulation::CBackgroundValidation
-        void validatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator, const swift::misc::simulation::CAircraftModelList &valid, const swift::misc::simulation::CAircraftModelList &invalid, bool stopped, const swift::misc::CStatusMessageList &msgs);
+        void validatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator,
+                               const swift::misc::simulation::CAircraftModelList &valid,
+                               const swift::misc::simulation::CAircraftModelList &invalid, bool stopped,
+                               const swift::misc::CStatusMessageList &msgs);
 
     private:
         QScopedPointer<Ui::CAircraftModelValidationComponent> ui;
-        swift::misc::CSetting<swift::misc::simulation::settings::TModelMatching> m_matchingSettings { this }; //!< settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TModelMatching> m_matchingSettings {
+            this
+        }; //!< settings
         qint64 m_lastResults = -1; //!< when received last results
 
         //! Invalid models

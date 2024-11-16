@@ -57,7 +57,8 @@ namespace swift::gui::components
 
     private:
         //! Models have been read
-        void onModelsRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+        void onModelsRead(swift::misc::network::CEntityFlags::Entity entity,
+                          swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
         //! Reload models
         void onReload();
@@ -66,7 +67,8 @@ namespace swift::gui::components
         void onStyleSheetChanged();
 
         //! Download progress for an entity
-        void onEntityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        void onEntityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress,
+                                      qint64 current, qint64 max, const QUrl &url);
 
     private:
         QScopedPointer<Ui::CDbModelComponent> ui;

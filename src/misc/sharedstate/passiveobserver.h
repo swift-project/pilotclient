@@ -31,8 +31,9 @@ namespace swift::misc::shared_state
         friend QSharedPointer<CPassiveObserver>;
 
         template <typename T, typename F>
-        CPassiveObserver(T *parent, F eventHandler) : QObject(parent),
-                                                      m_eventHandler([=](const CVariant &param) { private_ns::invokeMethod(parent, eventHandler, param); })
+        CPassiveObserver(T *parent, F eventHandler)
+            : QObject(parent),
+              m_eventHandler([=](const CVariant &param) { private_ns::invokeMethod(parent, eventHandler, param); })
         {}
 
     public:

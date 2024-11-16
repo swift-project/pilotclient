@@ -40,7 +40,8 @@ namespace swift::simplugin::fs9
 
     private:
         //! Alloc and fill up a DPL_CONNECTION_SETTINGS. Call FreeConnectSettings later to free it.
-        HRESULT allocAndInitConnectSettings(const QString &address, GUID *pAppGuid, DPL_CONNECTION_SETTINGS **ppdplConnectSettings);
+        HRESULT allocAndInitConnectSettings(const QString &address, GUID *pAppGuid,
+                                            DPL_CONNECTION_SETTINGS **ppdplConnectSettings);
 
         void freeConnectSettings(DPL_CONNECTION_SETTINGS *pSettings);
 
@@ -61,7 +62,8 @@ namespace swift::simplugin::fs9
 
         DPNHANDLE m_applicationHandle = 0;
 
-        using TCallbackWrapper = CallbackWrapper<CLobbyClient, HRESULT, DWORD, void *>; //!< DirectPlay message handler wrapper
+        using TCallbackWrapper =
+            CallbackWrapper<CLobbyClient, HRESULT, DWORD, void *>; //!< DirectPlay message handler wrapper
         TCallbackWrapper m_callbackWrapper; //!< Callback wrapper
         TCallbackWrapper m_lobbyCallbackWrapper; //!< Callback wrapper
 

@@ -22,8 +22,7 @@ using namespace swift::misc;
 
 namespace swift::core
 {
-    IPluginManager::IPluginManager(QObject *parent) : QObject(parent)
-    {}
+    IPluginManager::IPluginManager(QObject *parent) : QObject(parent) {}
 
     void IPluginManager::collectPlugins()
     {
@@ -35,10 +34,7 @@ namespace swift::core
         }
 
         QDirIterator it(pluginDir, QDirIterator::FollowSymlinks);
-        while (it.hasNext())
-        {
-            tryLoad(it.next());
-        }
+        while (it.hasNext()) { tryLoad(it.next()); }
     }
 
     QString IPluginManager::getPluginConfigId(const QString &identifier)
@@ -46,31 +42,19 @@ namespace swift::core
         return m_configs.contains(identifier) ? m_configs.value(identifier) : QString();
     }
 
-    const QString &IPluginManager::pluginDirectory() const
-    {
-        return CSwiftDirectories::pluginsDirectory();
-    }
+    const QString &IPluginManager::pluginDirectory() const { return CSwiftDirectories::pluginsDirectory(); }
 
     bool IPluginManager::isValid(const QJsonObject &metadata) const
     {
-        if (!metadata["MetaData"].isObject())
-        {
-            return false;
-        }
+        if (!metadata["MetaData"].isObject()) { return false; }
 
         QJsonObject data = metadata["MetaData"].toObject();
-        if (!data.contains("identifier") || !data["identifier"].isString())
-        {
-            return false;
-        }
+        if (!data.contains("identifier") || !data["identifier"].isString()) { return false; }
 
         auto iids = acceptedIids();
         for (const QString &iid : iids)
         {
-            if (metadata["IID"].toString() == iid)
-            {
-                return true;
-            }
+            if (metadata["IID"].toString() == iid) { return true; }
         }
 
         return false;
@@ -107,10 +91,7 @@ namespace swift::core
         if (json.value("MetaData").toObject().contains("config"))
         {
             const QString configId = json.value("MetaData").toObject().value("config").toString();
-            if (!configId.isEmpty())
-            {
-                m_configs.insert(identifier, configId);
-            }
+            if (!configId.isEmpty()) { m_configs.insert(identifier, configId); }
         }
 
         return true;
@@ -118,10 +99,7 @@ namespace swift::core
 
     QObject *IPluginManager::getPluginByIdImpl(const QString &identifier)
     {
-        if (m_instances.contains(identifier))
-        {
-            return m_instances.value(identifier);
-        }
+        if (m_instances.contains(identifier)) { return m_instances.value(identifier); }
 
         if (!m_paths.contains(identifier))
         {

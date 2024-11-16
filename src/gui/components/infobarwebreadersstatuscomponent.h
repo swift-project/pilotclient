@@ -49,7 +49,8 @@ namespace swift::gui
             void init();
 
             //! Set LED states
-            void setLedReadStates(const QList<CLedWidget *> &leds, swift::misc::network::CEntityFlags::ReadState readState);
+            void setLedReadStates(const QList<CLedWidget *> &leds,
+                                  swift::misc::network::CEntityFlags::ReadState readState);
 
             //! Set the LED read state
             void setLedReadState(CLedWidget *led, swift::misc::network::CEntityFlags::ReadState readState);
@@ -62,11 +63,13 @@ namespace swift::gui
 
             //! Initial setup of leds
             void setLeds(swift::gui::CLedWidget *ledDataReady, CLedWidget *ledConsolidation,
-                         swift::gui::CLedWidget *ledIcaoAircraft, swift::gui::CLedWidget *ledIcaoAirline, swift::gui::CLedWidget *ledCountries,
-                         swift::gui::CLedWidget *ledDistributors, swift::gui::CLedWidget *ledLiveries, swift::gui::CLedWidget *ledModels);
+                         swift::gui::CLedWidget *ledIcaoAircraft, swift::gui::CLedWidget *ledIcaoAirline,
+                         swift::gui::CLedWidget *ledCountries, swift::gui::CLedWidget *ledDistributors,
+                         swift::gui::CLedWidget *ledLiveries, swift::gui::CLedWidget *ledModels);
 
             //! Data have been read
-            void dataRead(swift::misc::network::CEntityFlags::Entity entities, swift::misc::network::CEntityFlags::ReadState readState, int count);
+            void dataRead(swift::misc::network::CEntityFlags::Entity entities,
+                          swift::misc::network::CEntityFlags::ReadState readState, int count);
 
             //! Check data status
             void checkData();

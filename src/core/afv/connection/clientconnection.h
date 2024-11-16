@@ -38,7 +38,8 @@ namespace swift::core::afv::connection
 
         //! Connect
         //! \remark ASYNC, calling callback when done
-        void connectTo(const QString &userName, const QString &password, const QString &callsign, const QString &client, ConnectionCallback callback);
+        void connectTo(const QString &userName, const QString &password, const QString &callsign, const QString &client,
+                       ConnectionCallback callback);
 
         //! Disconnect
         void disconnectFrom(const QString &reason = {});
@@ -54,10 +55,7 @@ namespace swift::core::afv::connection
         void setReceiveAudio(bool value) { m_connection.setReceiveAudio(value); }
         bool receiveAudio() const { return m_connection.isReceivingAudio(); }
         bool receiveAudioDto() const { return m_receiveAudioDto; }
-        void setReceiveAudioDto(bool receiveAudioDto)
-        {
-            m_receiveAudioDto = receiveAudioDto;
-        }
+        void setReceiveAudioDto(bool receiveAudioDto) { m_receiveAudioDto = receiveAudioDto; }
         //! @}
 
         //! Send voice DTO to server
@@ -70,8 +68,10 @@ namespace swift::core::afv::connection
                 return;
             }
             const QUrl voiceServerUrl("udp://" + m_connection.getTokens().VoiceServer.addressIpV4);
-            const QByteArray dataBytes = crypto::CryptoDtoSerializer::serialize(*m_connection.m_voiceCryptoChannel, crypto::CryptoDtoMode::AEAD_ChaCha20Poly1305, dto);
-            m_udpSocket->writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
+            const QByteArray dataBytes = crypto::CryptoDtoSerializer::serialize(
+                *m_connection.m_voiceCryptoChannel, crypto::CryptoDtoMode::AEAD_ChaCha20Poly1305, dto);
+            m_udpSocket->writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()),
+                                       static_cast<quint16>(voiceServerUrl.port()));
         }
 
         //! Update transceivers

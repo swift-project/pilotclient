@@ -99,17 +99,10 @@ namespace swift::misc::geo
                 const QString cap = match.captured(0);
                 switch (c++)
                 {
-                case 0:
-                    deg = cap.toInt(&ok);
-                    break;
-                case 1:
-                    min = cap.toInt(&ok);
-                    break;
-                case 2:
-                    sec = cap.toDouble(&ok);
-                    break;
-                default:
-                    break;
+                case 0: deg = cap.toInt(&ok); break;
+                case 1: min = cap.toInt(&ok); break;
+                case 2: sec = cap.toDouble(&ok); break;
+                default: break;
                 }
             }
             Q_UNUSED(ok); // ok for debugging purposes

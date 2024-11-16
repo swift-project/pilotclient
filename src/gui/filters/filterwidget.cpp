@@ -16,11 +16,11 @@ namespace swift::gui::filters
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "sGui missing");
         this->setWindowTitle("Filter widget");
         this->onStyleSheetChanged();
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterWidget::onStyleSheetChanged, Qt::QueuedConnection);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterWidget::onStyleSheetChanged,
+                Qt::QueuedConnection);
     }
 
-    CFilterWidget::~CFilterWidget()
-    {}
+    CFilterWidget::~CFilterWidget() {}
 
     void CFilterWidget::setButtonsAndCount(CFilterBarButtons *buttons)
     {
@@ -41,10 +41,7 @@ namespace swift::gui::filters
         return ok && id >= 0 ? id : -1;
     }
 
-    void CFilterWidget::triggerFilter()
-    {
-        this->onFilterButtonClicked(CFilterBarButtons::Filter);
-    }
+    void CFilterWidget::triggerFilter() { this->onFilterButtonClicked(CFilterBarButtons::Filter); }
 
     void CFilterWidget::onStyleSheetChanged()
     {
@@ -56,9 +53,7 @@ namespace swift::gui::filters
     {
         switch (filterButton)
         {
-        case CFilterBarButtons::Filter:
-            emit this->changeFilter(true);
-            break;
+        case CFilterBarButtons::Filter: emit this->changeFilter(true); break;
         case CFilterBarButtons::RemoveFilter:
             emit this->changeFilter(false);
             emit this->rejectDialog();

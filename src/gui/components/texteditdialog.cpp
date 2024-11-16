@@ -7,23 +7,15 @@
 
 namespace swift::gui::components
 {
-    CTextEditDialog::CTextEditDialog(QWidget *parent) : QDialog(parent),
-                                                        ui(new Ui::CTextEditDialog)
+    CTextEditDialog::CTextEditDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CTextEditDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CTextEditDialog::~CTextEditDialog()
-    {}
+    CTextEditDialog::~CTextEditDialog() {}
 
-    QTextEdit *CTextEditDialog::textEdit() const
-    {
-        return ui->te_TextEdit;
-    }
+    QTextEdit *CTextEditDialog::textEdit() const { return ui->te_TextEdit; }
 
-    void CTextEditDialog::setReadOnly()
-    {
-        ui->te_TextEdit->setReadOnly(true);
-    }
+    void CTextEditDialog::setReadOnly() { ui->te_TextEdit->setReadOnly(true); }
 } // namespace swift::gui::components

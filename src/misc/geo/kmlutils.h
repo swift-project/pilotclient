@@ -25,8 +25,7 @@ namespace swift::misc::geo
         struct KMLSettings
         {
             //! Ctor
-            KMLSettings(bool withAltitude, bool extrude) : withAltitude(withAltitude), extrude(extrude)
-            {}
+            KMLSettings(bool withAltitude, bool extrude) : withAltitude(withAltitude), extrude(extrude) {}
 
             //! @{
             //! Setting members
@@ -50,7 +49,8 @@ namespace swift::misc::geo
         static QString asPoint(const geo::ICoordinateGeodetic &coordinate, const KMLSettings &settings);
 
         //! As KML placemark
-        static QString asPlacemark(const QString &name, const QString &description, const geo::ICoordinateGeodetic &coordinate, const KMLSettings &settings);
+        static QString asPlacemark(const QString &name, const QString &description,
+                                   const geo::ICoordinateGeodetic &coordinate, const KMLSettings &settings);
 
         //! As KML line
         static QString asLineString(const QString &coordinatesRaw, const KMLSettings &settings);

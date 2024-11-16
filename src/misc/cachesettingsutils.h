@@ -39,22 +39,26 @@ namespace swift::misc
         static QString otherVersionFileName(const swift::misc::CApplicationInfo &info, const QString &relativeFileName);
 
         //! Create other version's setting file from "my settings file"
-        static QString otherVersionSettingsFileName(const swift::misc::CApplicationInfo &info, const QString &mySettingFile);
+        static QString otherVersionSettingsFileName(const swift::misc::CApplicationInfo &info,
+                                                    const QString &mySettingFile);
 
         //! Create other version's cache file from "my cache file"
         static QString otherVersionCacheFileName(const swift::misc::CApplicationInfo &info, const QString &myCacheFile);
 
         //! Has the settings file for the given other version?
-        static bool hasOtherVersionSettingsFile(const swift::misc::CApplicationInfo &info, const QString &mySettingFile);
+        static bool hasOtherVersionSettingsFile(const swift::misc::CApplicationInfo &info,
+                                                const QString &mySettingFile);
 
         //! Has the cache file for the given other version?
         static bool hasOtherVersionCacheFile(const swift::misc::CApplicationInfo &info, const QString &myCacheFile);
 
         //! Setting JSON object as string
-        static QString otherVersionSettingsFileContent(const swift::misc::CApplicationInfo &info, const QString &mySettingFile);
+        static QString otherVersionSettingsFileContent(const swift::misc::CApplicationInfo &info,
+                                                       const QString &mySettingFile);
 
         //! Cache JSON object as string
-        static QString otherVersionCacheFileContent(const swift::misc::CApplicationInfo &info, const QString &myCacheFile);
+        static QString otherVersionCacheFileContent(const swift::misc::CApplicationInfo &info,
+                                                    const QString &myCacheFile);
     };
 } // namespace swift::misc
 

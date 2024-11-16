@@ -25,7 +25,8 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::models
 {
-    CAircraftModelListModel::CAircraftModelListModel(AircraftModelMode mode, QObject *parent) : COrderableListModelDbObjects("CAircraftModelListModel", parent)
+    CAircraftModelListModel::CAircraftModelListModel(AircraftModelMode mode, QObject *parent)
+        : COrderableListModelDbObjects("CAircraftModelListModel", parent)
     {
         this->setAircraftModelMode(mode);
 
@@ -45,17 +46,26 @@ namespace swift::gui::models
         case NotSet:
         case OwnAircraftModelClient:
             m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString }));
-            m_columns.addColumn(CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
-            m_columns.addColumn(CColumn::standardString("DB", "parts from DB", { CAircraftModel::IndexMembersDbStatus }));
-            m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
+            m_columns.addColumn(
+                CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
+            m_columns.addColumn(
+                CColumn::standardString("DB", "parts from DB", { CAircraftModel::IndexMembersDbStatus }));
+            m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon,
+                                        new CPixmapFormatter()));
             m_columns.addColumn(CColumn::standardString("description", { CAircraftModel::IndexDescription }));
-            m_columns.addColumn(CColumn::standardString("sim.", "simulator supported", CAircraftModel::IndexSimulatorInfoAsString));
+            m_columns.addColumn(
+                CColumn::standardString("sim.", "simulator supported", CAircraftModel::IndexSimulatorInfoAsString));
 
-            m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey }));
+            m_columns.addColumn(CColumn::standardString(
+                "dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey }));
 
-            m_columns.addColumn(CColumn::standardString("aircraft", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexDesignatorManufacturer }));
-            m_columns.addColumn(CColumn::standardString("livery", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode }));
-            m_columns.addColumn(CColumn::standardString("airline", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexDesignatorNameCountry }));
+            m_columns.addColumn(CColumn::standardString(
+                "aircraft", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexDesignatorManufacturer }));
+            m_columns.addColumn(
+                CColumn::standardString("livery", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode }));
+            m_columns.addColumn(
+                CColumn::standardString("airline", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode,
+                                                     CAirlineIcaoCode::IndexDesignatorNameCountry }));
 
             m_columns.addColumn(CColumn::standardString("name", { CAircraftModel::IndexName }));
             m_columns.addColumn(CColumn::standardString("filename", { CAircraftModel::IndexFileName }));
@@ -73,27 +83,43 @@ namespace swift::gui::models
         case OwnAircraftModelMappingTool:
         case StashModel:
             m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
-            m_columns.addColumn(CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
+            m_columns.addColumn(
+                CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
             if (mode == StashModel)
             {
-                m_columns.addColumn(CColumn::standardString("flags", "parts from DB", { CAircraftModel::IndexMembersDbStatus }));
+                m_columns.addColumn(
+                    CColumn::standardString("flags", "parts from DB", { CAircraftModel::IndexMembersDbStatus }));
             }
-            m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
-            m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey }));
+            m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon,
+                                        new CPixmapFormatter()));
+            m_columns.addColumn(CColumn::standardString(
+                "dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey }));
             if (mode == OwnModelSet)
             {
-                m_columns.addColumn(CColumn::standardString("d#", "distributor order", { CAircraftModel::IndexDistributor, CDistributor::IndexOrderString }));
+                m_columns.addColumn(CColumn::standardString(
+                    "d#", "distributor order", { CAircraftModel::IndexDistributor, CDistributor::IndexOrderString }));
             }
-            m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator }));
-            m_columns.addColumn(CColumn::standardString("fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily }));
-            m_columns.addColumn(CColumn::standardString("cat.", "category", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexCategory, CAircraftCategory::IndexLevelStringAndPath }));
-            m_columns.addColumn(CColumn::standardString("livery", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode }));
-            m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator }));
-            m_columns.addColumn(CColumn("CG", CAircraftModel::IndexCG, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
+            m_columns.addColumn(CColumn::standardString(
+                "ac", "aircraft ICAO",
+                { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator }));
+            m_columns.addColumn(CColumn::standardString(
+                "fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily }));
+            m_columns.addColumn(
+                CColumn::standardString("cat.", "category",
+                                        { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexCategory,
+                                          CAircraftCategory::IndexLevelStringAndPath }));
+            m_columns.addColumn(
+                CColumn::standardString("livery", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode }));
+            m_columns.addColumn(CColumn::standardString("al", "airline ICAO",
+                                                        { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode,
+                                                          CAirlineIcaoCode::IndexAirlineDesignator }));
+            m_columns.addColumn(CColumn("CG", CAircraftModel::IndexCG,
+                                        new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
             m_columns.addColumn(CColumn::standardString("parts", CAircraftModel::IndexSupportedParts));
             m_columns.addColumn(CColumn::standardString("description", CAircraftModel::IndexDescription));
             m_columns.addColumn(CColumn::standardString("filename", CAircraftModel::IndexFileName));
-            m_columns.addColumn(CColumn::standardString("file ts.", "file timestamp", CAircraftModel::IndexFileTimestampFormattedYmdhms));
+            m_columns.addColumn(CColumn::standardString("file ts.", "file timestamp",
+                                                        CAircraftModel::IndexFileTimestampFormattedYmdhms));
             m_columns.addColumn(CColumn::standardString("icon", CAircraftModel::IndexIconPath));
             m_columns.addColumn(CColumn::standardString("version", CAircraftModel::IndexVersion));
             m_columns.addColumn(CColumn::standardString("changed", CAircraftModel::IndexUtcTimestampFormattedYmdhms));
@@ -104,31 +130,55 @@ namespace swift::gui::models
             break;
 
         case Database:
-            m_columns.addColumn(CColumn::standardString("id", CAircraftModel::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
+            m_columns.addColumn(CColumn::standardString("id", CAircraftModel::IndexDbIntegerKey,
+                                                        CDefaultFormatter::alignRightVCenter()));
             m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexAllModelStrings));
-            m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon, new CPixmapFormatter()));
+            m_columns.addColumn(CColumn("mode", "model mode(include, exclude)", CAircraftModel::IndexModelModeAsIcon,
+                                        new CPixmapFormatter()));
 
-            m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey }));
+            m_columns.addColumn(CColumn::standardString(
+                "dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey }));
             m_columns.addColumn(CColumn::standardString("name", CAircraftModel::IndexName));
             m_columns.addColumn(CColumn::standardString("description", CAircraftModel::IndexDescription));
-            m_columns.addColumn(CColumn::standardString("sim.", "simulator supported", CAircraftModel::IndexSimulatorInfoAsString));
+            m_columns.addColumn(
+                CColumn::standardString("sim.", "simulator supported", CAircraftModel::IndexSimulatorInfoAsString));
 
-            m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator }));
-            m_columns.addColumn(CColumn::standardString("fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily }));
-            m_columns.addColumn(CColumn::standardString("cat.", "category", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexCategory, CAircraftCategory::IndexPath }));
-            m_columns.addColumn(CColumn::standardString("manufacturer", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexManufacturer }));
+            m_columns.addColumn(CColumn::standardString(
+                "ac", "aircraft ICAO",
+                { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator }));
+            m_columns.addColumn(CColumn::standardString(
+                "fam.", "aircraft family", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexFamily }));
+            m_columns.addColumn(
+                CColumn::standardString("cat.", "category",
+                                        { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexCategory,
+                                          CAircraftCategory::IndexPath }));
+            m_columns.addColumn(CColumn::standardString(
+                "manufacturer", "aircraft ICAO",
+                { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexManufacturer }));
 
-            m_columns.addColumn(CColumn::standardString("code", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode }));
-            m_columns.addColumn(CColumn::standardString("liv.desc.", "livery description", { CAircraftModel::IndexLivery, CLivery::IndexDescription }));
-            m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator }));
-            m_columns.addColumn(CColumn::standardString("al.name", "airline name", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineName }));
+            m_columns.addColumn(
+                CColumn::standardString("code", { CAircraftModel::IndexLivery, CLivery::IndexCombinedCode }));
+            m_columns.addColumn(CColumn::standardString("liv.desc.", "livery description",
+                                                        { CAircraftModel::IndexLivery, CLivery::IndexDescription }));
+            m_columns.addColumn(CColumn::standardString("al", "airline ICAO",
+                                                        { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode,
+                                                          CAirlineIcaoCode::IndexAirlineDesignator }));
+            m_columns.addColumn(CColumn::standardString(
+                "al.name", "airline name",
+                { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineName }));
 
-            m_columns.addColumn(CColumn("CG", CAircraftModel::IndexCG, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
+            m_columns.addColumn(CColumn("CG", CAircraftModel::IndexCG,
+                                        new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 1)));
             m_columns.addColumn(CColumn::standardString("parts", CAircraftModel::IndexSupportedParts));
 
-            m_columns.addColumn(CColumn("fuse.", "fuselage color", { CAircraftModel::IndexLivery, CLivery::IndexColorFuselage }, new CColorFormatter()));
-            m_columns.addColumn(CColumn("tail", "tail color", { CAircraftModel::IndexLivery, CLivery::IndexColorTail }, new CColorFormatter()));
-            m_columns.addColumn(CColumn("mil.", "military livery", { CAircraftModel::IndexLivery, CLivery::IndexIsMilitary }, new CBoolIconFormatter("military", "civil")));
+            m_columns.addColumn(CColumn("fuse.", "fuselage color",
+                                        { CAircraftModel::IndexLivery, CLivery::IndexColorFuselage },
+                                        new CColorFormatter()));
+            m_columns.addColumn(CColumn("tail", "tail color", { CAircraftModel::IndexLivery, CLivery::IndexColorTail },
+                                        new CColorFormatter()));
+            m_columns.addColumn(CColumn("mil.", "military livery",
+                                        { CAircraftModel::IndexLivery, CLivery::IndexIsMilitary },
+                                        new CBoolIconFormatter("military", "civil")));
             m_columns.addColumn(CColumn::standardString("version", CAircraftModel::IndexVersion));
             m_columns.addColumn(CColumn::standardString("changed", CAircraftModel::IndexUtcTimestampFormattedYmdhms));
 
@@ -139,13 +189,21 @@ namespace swift::gui::models
 
         case VPilotRuleModel:
             m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
-            m_columns.addColumn(CColumn::standardString("dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey }));
-            m_columns.addColumn(CColumn::standardString("sim.", "simulator supported", CAircraftModel::IndexSimulatorInfoAsString));
+            m_columns.addColumn(CColumn::standardString(
+                "dist.", "distributor", { CAircraftModel::IndexDistributor, CDistributor::IndexDbStringKey }));
+            m_columns.addColumn(
+                CColumn::standardString("sim.", "simulator supported", CAircraftModel::IndexSimulatorInfoAsString));
 
-            m_columns.addColumn(CColumn::standardString("ac", "aircraft ICAO", { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator }));
+            m_columns.addColumn(CColumn::standardString(
+                "ac", "aircraft ICAO",
+                { CAircraftModel::IndexAircraftIcaoCode, CAircraftIcaoCode::IndexAircraftDesignator }));
 
-            m_columns.addColumn(CColumn::standardString("al", "airline ICAO", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineDesignator }));
-            m_columns.addColumn(CColumn::standardString("al.name", "airline name", { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineName }));
+            m_columns.addColumn(CColumn::standardString("al", "airline ICAO",
+                                                        { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode,
+                                                          CAirlineIcaoCode::IndexAirlineDesignator }));
+            m_columns.addColumn(CColumn::standardString(
+                "al.name", "airline name",
+                { CAircraftModel::IndexLivery, CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexAirlineName }));
 
             m_columns.addColumn(CColumn::standardString("changed", CAircraftModel::IndexUtcTimestampFormattedYmdhms));
 
@@ -154,9 +212,7 @@ namespace swift::gui::models
             m_sortOrder = Qt::AscendingOrder;
             break;
 
-        default:
-            qFatal("Wrong mode");
-            break;
+        default: qFatal("Wrong mode"); break;
         }
     }
 
@@ -207,10 +263,7 @@ namespace swift::gui::models
             const CAircraftModel model(this->at(index));
 
             // highlight stashed first
-            if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive))
-            {
-                return m_highlightColor;
-            }
+            if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive)) { return m_highlightColor; }
 
             return QVariant();
         }
@@ -230,8 +283,5 @@ namespace swift::gui::models
         COrderableListModelDbObjects::clearHighlighting();
     }
 
-    bool CAircraftModelListModel::hasHighlightedRows() const
-    {
-        return !m_highlightStrings.isEmpty();
-    }
+    bool CAircraftModelListModel::hasHighlightedRows() const { return !m_highlightStrings.isEmpty(); }
 } // namespace swift::gui::models

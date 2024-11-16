@@ -9,8 +9,7 @@
 
 namespace swift::misc
 {
-    CSettingsCache::CSettingsCache() : CValueCache(0)
-    {}
+    CSettingsCache::CSettingsCache() : CValueCache(0) {}
 
     CSettingsCache *CSettingsCache::instance()
     {
@@ -41,7 +40,8 @@ namespace swift::misc
         }
         if (!lock.lock())
         {
-            return CStatusMessage(this).error(u"Failed to lock %1: %2") << lockFileName() << CFileUtils::lockFileError(lock);
+            return CStatusMessage(this).error(u"Failed to lock %1: %2")
+                   << lockFileName() << CFileUtils::lockFileError(lock);
         }
         return {};
     }
@@ -66,7 +66,8 @@ namespace swift::misc
 
     void CSettingsCache::enableLocalSave()
     {
-        connect(CSettingsCache::instance(), &CSettingsCache::valuesSaveRequested, CSettingsCache::instance(), &CSettingsCache::saveToStoreByPacket);
+        connect(CSettingsCache::instance(), &CSettingsCache::valuesSaveRequested, CSettingsCache::instance(),
+                &CSettingsCache::saveToStoreByPacket);
     }
 
     void CSettingsCache::saveToStoreByPacket(const CValueCachePacket &values)
@@ -103,8 +104,5 @@ namespace swift::misc
         return p;
     }
 
-    QStringList CSettingsCache::enumerateStore() const
-    {
-        return enumerateFiles(persistentStore());
-    }
+    QStringList CSettingsCache::enumerateStore() const { return enumerateFiles(persistentStore()); }
 } // namespace swift::misc

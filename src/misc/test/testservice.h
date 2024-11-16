@@ -154,46 +154,58 @@ namespace swift::misc::test
         swift::misc::network::CUser pingUser(const swift::misc::network::CUser &user) const;
 
         //! Ping situation
-        swift::misc::aviation::CAircraftSituation pingSituation(const swift::misc::aviation::CAircraftSituation &situation) const;
+        swift::misc::aviation::CAircraftSituation
+        pingSituation(const swift::misc::aviation::CAircraftSituation &situation) const;
 
         //! Ping ATC station
         swift::misc::aviation::CAtcStation pingAtcStation(const swift::misc::aviation::CAtcStation &station) const;
 
         //! Ping transponder
-        swift::misc::aviation::CTransponder pingTransponder(const swift::misc::aviation::CTransponder &transponder) const;
+        swift::misc::aviation::CTransponder
+        pingTransponder(const swift::misc::aviation::CTransponder &transponder) const;
 
         //! Ping aircraft lights
-        swift::misc::aviation::CAircraftLights pingAircraftLights(const swift::misc::aviation::CAircraftLights &aircraftLights) const;
+        swift::misc::aviation::CAircraftLights
+        pingAircraftLights(const swift::misc::aviation::CAircraftLights &aircraftLights) const;
 
         //! Ping parts
-        swift::misc::aviation::CAircraftParts pingAircraftParts(const swift::misc::aviation::CAircraftParts &aircraftParts) const;
+        swift::misc::aviation::CAircraftParts
+        pingAircraftParts(const swift::misc::aviation::CAircraftParts &aircraftParts) const;
 
         //! Ping engine
-        swift::misc::aviation::CAircraftEngine pingAircraftEngine(const swift::misc::aviation::CAircraftEngine &aircraftEngine) const;
+        swift::misc::aviation::CAircraftEngine
+        pingAircraftEngine(const swift::misc::aviation::CAircraftEngine &aircraftEngine) const;
 
         //! Ping model
-        swift::misc::simulation::CAircraftModel pingAircraftModel(const swift::misc::simulation::CAircraftModel &aircraftModel) const;
+        swift::misc::simulation::CAircraftModel
+        pingAircraftModel(const swift::misc::simulation::CAircraftModel &aircraftModel) const;
 
         //! Ping model
-        swift::misc::simulation::CAircraftModelList pingAircraftModelList(const swift::misc::simulation::CAircraftModelList &aircraftModels) const;
+        swift::misc::simulation::CAircraftModelList
+        pingAircraftModelList(const swift::misc::simulation::CAircraftModelList &aircraftModels) const;
 
         //! Ping simulated aircraft
-        swift::misc::simulation::CSimulatedAircraft pingSimulatedAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft) const;
+        swift::misc::simulation::CSimulatedAircraft
+        pingSimulatedAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft) const;
 
         //! Ping ATC list
-        swift::misc::aviation::CAtcStationList pingAtcStationList(const swift::misc::aviation::CAtcStationList &atcStationList) const;
+        swift::misc::aviation::CAtcStationList
+        pingAtcStationList(const swift::misc::aviation::CAtcStationList &atcStationList) const;
 
         //! Ping aircraft list
-        swift::misc::simulation::CSimulatedAircraftList pingAircraftList(const swift::misc::simulation::CSimulatedAircraftList &aircraftList) const;
+        swift::misc::simulation::CSimulatedAircraftList
+        pingAircraftList(const swift::misc::simulation::CSimulatedAircraftList &aircraftList) const;
 
         //! Ping airports list
-        swift::misc::aviation::CAirportList pingAirportList(const swift::misc::aviation::CAirportList &airportList) const;
+        swift::misc::aviation::CAirportList
+        pingAirportList(const swift::misc::aviation::CAirportList &airportList) const;
 
         //! Ping property index
         swift::misc::CPropertyIndex pingPropertyIndex(const swift::misc::CPropertyIndex &properties) const;
 
         //! Ping index variant map
-        swift::misc::CPropertyIndexVariantMap pingIndexVariantMap(const swift::misc::CPropertyIndexVariantMap &indexVariantMap) const;
+        swift::misc::CPropertyIndexVariantMap
+        pingIndexVariantMap(const swift::misc::CPropertyIndexVariantMap &indexVariantMap) const;
 
         //! Ping client
         swift::misc::network::CClient pingClient(const swift::misc::network::CClient &client) const;
@@ -202,10 +214,12 @@ namespace swift::misc::test
         swift::misc::network::CClientList pingClientList(const swift::misc::network::CClientList &clientList) const;
 
         //! Ping plugin info
-        swift::misc::simulation::CSimulatorPluginInfo pingPluginInfo(const swift::misc::simulation::CSimulatorPluginInfo &info) const;
+        swift::misc::simulation::CSimulatorPluginInfo
+        pingPluginInfo(const swift::misc::simulation::CSimulatorPluginInfo &info) const;
 
         //! Ping ICAO data object
-        swift::misc::aviation::CAircraftIcaoCode pingAircraftIcaoData(const swift::misc::aviation::CAircraftIcaoCode &icao) const;
+        swift::misc::aviation::CAircraftIcaoCode
+        pingAircraftIcaoData(const swift::misc::aviation::CAircraftIcaoCode &icao) const;
 
         //! Ping flight plan
         swift::misc::aviation::CFlightPlan pingFlightPlan(const swift::misc::aviation::CFlightPlan &flightPlan) const;

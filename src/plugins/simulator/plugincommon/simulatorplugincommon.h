@@ -39,8 +39,7 @@ namespace swift::simplugin::common
         CSimulatorPluginCommon(const swift::misc::simulation::CSimulatorPluginInfo &info,
                                swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                                swift::misc::simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                               swift::misc::network::IClientProvider *clientProvider,
-                               QObject *parent = nullptr);
+                               swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! \ingroup swiftdotcommands
         //! <pre>
@@ -58,7 +57,8 @@ namespace swift::simplugin::common
         //! Clean up the interpolation log.display if any
         void deleteInterpolationDisplay();
 
-        QPointer<swift::gui::components::CInterpolationLogDisplayDialog> m_interpolationDisplayDialog; //!< can be owned by main window after setting a parent
+        QPointer<swift::gui::components::CInterpolationLogDisplayDialog>
+            m_interpolationDisplayDialog; //!< can be owned by main window after setting a parent
     };
 } // namespace swift::simplugin::common
 

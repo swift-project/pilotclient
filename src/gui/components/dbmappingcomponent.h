@@ -145,7 +145,8 @@ namespace swift::gui
             swift::misc::simulation::CAircraftModelList getOwnModels() const;
 
             //! Own cached models
-            swift::misc::simulation::CAircraftModelList getOwnCachedModels(const swift::misc::simulation::CSimulatorInfo &simulator) const;
+            swift::misc::simulation::CAircraftModelList
+            getOwnCachedModels(const swift::misc::simulation::CSimulatorInfo &simulator) const;
 
             //! Own selected models
             swift::misc::simulation::CAircraftModelList getOwnSelectedModels() const;
@@ -179,16 +180,19 @@ namespace swift::gui
 
         public slots:
             //! \copydoc CDbStashComponent::stashModel
-            swift::misc::CStatusMessage stashModel(const swift::misc::simulation::CAircraftModel &model, bool replace = false);
+            swift::misc::CStatusMessage stashModel(const swift::misc::simulation::CAircraftModel &model,
+                                                   bool replace = false);
 
             //! \copydoc CDbStashComponent::stashModels
             swift::misc::CStatusMessageList stashModels(const swift::misc::simulation::CAircraftModelList &models);
 
             //! \copydoc CDbOwnModelSetComponent::addToModelSet
-            swift::misc::CStatusMessage addToOwnModelSet(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator);
+            swift::misc::CStatusMessage addToOwnModelSet(const swift::misc::simulation::CAircraftModelList &models,
+                                                         const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! \copydoc CDbStashComponent::consolidateModel
-            swift::misc::simulation::CAircraftModel consolidateModel(const swift::misc::simulation::CAircraftModel &model) const;
+            swift::misc::simulation::CAircraftModel
+            consolidateModel(const swift::misc::simulation::CAircraftModel &model) const;
 
             //! \copydoc CDbStashComponent::replaceModelsUnvalidated
             void replaceStashedModelsUnvalidated(const swift::misc::simulation::CAircraftModelList &models) const;
@@ -272,7 +276,8 @@ namespace swift::gui
             void onStashedModelsDataChangedDigest(int count, bool withFilter);
 
             //! Models have been published successfully
-            void onModelsSuccessfullyPublished(const swift::misc::simulation::CAircraftModelList &models, bool directWrite);
+            void onModelsSuccessfullyPublished(const swift::misc::simulation::CAircraftModelList &models,
+                                               bool directWrite);
 
             //! Stash drop request
             void handleStashDropRequest(const swift::misc::aviation::CAirlineIcaoCode &code) const;
@@ -328,8 +333,12 @@ namespace swift::gui
             QScopedPointer<CDbAutoSimulatorStashingComponent> m_autoSimulatorDialog; //!< dialog auto simulator update
             QScopedPointer<CDbModelMappingModifyDialog> m_modelModifyDialog; //!< dialog when modifying models
             swift::misc::simulation::fscommon::CVPilotRulesReader m_vPilotReader; //!< read vPilot rules
-            swift::misc::CDigestSignal m_dsStashedModelsChanged { this, &CDbMappingComponent::onStashedModelsChangedDigest, 750, 25 };
-            swift::misc::CDataReadOnly<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDbMappingComponent::onUserChanged };
+            swift::misc::CDigestSignal m_dsStashedModelsChanged { this,
+                                                                  &CDbMappingComponent::onStashedModelsChangedDigest,
+                                                                  750, 25 };
+            swift::misc::CDataReadOnly<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser {
+                this, &CDbMappingComponent::onUserChanged
+            };
             const bool vPilotSupport = true; //!< vPilot support (will be removed in future)
             bool m_vPilot1stInit = true; //!< vPilot extensions initalized?
             bool m_vPilotEnabled = false; //!< use vPilot extensions
@@ -340,8 +349,9 @@ namespace swift::gui
             void initVPilotLoading();
 
             //! Workaround to format vPilot view
-            //! \remark presize does not work properly when data are loaded, reason is not understood. This here does a formatting when tab becomes visible.
-            //! \fixme can be removed whenever a proper formatting is archived with data loading, vPilot support will be removed in the long term anyway
+            //! \remark presize does not work properly when data are loaded, reason is not understood. This here does a
+            //! formatting when tab becomes visible. \fixme can be removed whenever a proper formatting is archived with
+            //! data loading, vPilot support will be removed in the long term anyway
             void formatVPilotView();
 
             //! Model for given index from sender/current view
@@ -362,8 +372,7 @@ namespace swift::gui
             {
             public:
                 //! Constructor
-                CMappingVPilotMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent)
-                {}
+                CMappingVPilotMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent) {}
 
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(menus::CMenuActions &menuActions) override;
@@ -409,8 +418,7 @@ namespace swift::gui
             {
             public:
                 //! Constructor
-                COwnModelSetMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent)
-                {}
+                COwnModelSetMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent) {}
 
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(menus::CMenuActions &menuActions) override;
@@ -428,8 +436,7 @@ namespace swift::gui
             {
             public:
                 //! Constructor
-                CRemovedModelsMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent)
-                {}
+                CRemovedModelsMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent) {}
 
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(menus::CMenuActions &menuActions) override;
@@ -447,8 +454,7 @@ namespace swift::gui
             {
             public:
                 //! Constructor
-                CApplyDbDataMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent)
-                {}
+                CApplyDbDataMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent) {}
 
                 //! \copydoc IMenuDelegate::customMenu
                 virtual void customMenu(menus::CMenuActions &menuActions) override;

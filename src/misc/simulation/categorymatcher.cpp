@@ -53,35 +53,54 @@ namespace swift::misc::simulation
         }
     }
 
-    CAircraftModelList CCategoryMatcher::reduceByCategories(const CAircraftModelList &alreadyMatchedModels, const CAircraftModelList &modelSet, const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, bool &reduced, bool shortLog, CStatusMessageList *log) const
+    CAircraftModelList CCategoryMatcher::reduceByCategories(const CAircraftModelList &alreadyMatchedModels,
+                                                            const CAircraftModelList &modelSet,
+                                                            const CAircraftMatcherSetup &setup,
+                                                            const CSimulatedAircraft &remoteAircraft, bool &reduced,
+                                                            bool shortLog, CStatusMessageList *log) const
     {
         Q_UNUSED(shortLog)
 
         reduced = false;
         if (!setup.useCategoryMatching())
         {
-            if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Disabled category matching"), getLogCategories()); }
+            if (log)
+            {
+                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Disabled category matching"),
+                                                    getLogCategories());
+            }
             return alreadyMatchedModels;
         }
         if (m_all.isEmpty())
         {
             // no categories?
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Disabled category matching"), getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Disabled category matching"),
+                                                getLogCategories());
             return alreadyMatchedModels;
         }
         if (!remoteAircraft.getAircraftIcaoCode().hasCategory())
         {
-            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No category in remote aircraft"), getLogCategories());
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No category in remote aircraft"),
+                                                getLogCategories());
             return alreadyMatchedModels;
         }
 
-        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Remote aircraft has category '%1'").arg(remoteAircraft.getAircraftIcaoCode().getCategory().getNameDbKey()), getLogCategories()); }
-        if (!m_gliders.isEmpty() && setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByCategoryGlider) && this->isGlider(remoteAircraft.getAircraftIcaoCode()))
+        if (log)
+        {
+            CMatchingUtils::addLogDetailsToList(
+                log, remoteAircraft,
+                QStringLiteral("Remote aircraft has category '%1'")
+                    .arg(remoteAircraft.getAircraftIcaoCode().getCategory().getNameDbKey()),
+                getLogCategories());
+        }
+        if (!m_gliders.isEmpty() && setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByCategoryGlider) &&
+            this->isGlider(remoteAircraft.getAircraftIcaoCode()))
         {
             // we have a glider
             // and we search in the whole set: this is a special case
             const int firstLevel = this->gliderFirstLevel();
-            const CAircraftModelList gliders = modelSet.findByCategoryFirstLevel(firstLevel); // all gliders from model set
+            const CAircraftModelList gliders =
+                modelSet.findByCategoryFirstLevel(firstLevel); // all gliders from model set
             if (!gliders.isEmpty())
             {
                 const CAircraftCategory category = remoteAircraft.getAircraftIcaoCode().getCategory();
@@ -91,7 +110,14 @@ namespace swift::misc::simulation
                 const CAircraftModelList sameGliders = gliders.findByCategory(category);
                 if (!sameGliders.isEmpty())
                 {
-                    if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 models by category: '%2'").arg(sameGliders.size()).arg(category.toQString(true)), getLogCategories()); }
+                    if (log)
+                    {
+                        CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
+                                                            QStringLiteral("Reduced to %1 models by category: '%2'")
+                                                                .arg(sameGliders.size())
+                                                                .arg(category.toQString(true)),
+                                                            getLogCategories());
+                    }
                     return sameGliders;
                 }
 
@@ -102,7 +128,15 @@ namespace swift::misc::simulation
                     const CAircraftModelList otherBranchGliders = gliders.findByCategories(otherBranches);
                     if (!otherBranchGliders.isEmpty())
                     {
-                        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 parallel branch models of '%2' by categories: '%3'").arg(otherBranchGliders.size()).arg(category.getLevelAndName(), otherBranches.getLevelsString()), getLogCategories()); }
+                        if (log)
+                        {
+                            CMatchingUtils::addLogDetailsToList(
+                                log, remoteAircraft,
+                                QStringLiteral("Reduced to %1 parallel branch models of '%2' by categories: '%3'")
+                                    .arg(otherBranchGliders.size())
+                                    .arg(category.getLevelAndName(), otherBranches.getLevelsString()),
+                                getLogCategories());
+                        }
                         return otherBranchGliders;
                     }
                 }
@@ -113,35 +147,67 @@ namespace swift::misc::simulation
                     const CAircraftModelList siblingGliders = modelSet.findByCategories(siblings);
                     if (!siblings.isEmpty() && !siblingGliders.isEmpty())
                     {
-                        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 sibling models of '%2' by categories: '%3'").arg(siblingGliders.size()).arg(category.getLevelAndName(), siblings.getLevelsString()), getLogCategories()); }
+                        if (log)
+                        {
+                            CMatchingUtils::addLogDetailsToList(
+                                log, remoteAircraft,
+                                QStringLiteral("Reduced to %1 sibling models of '%2' by categories: '%3'")
+                                    .arg(siblingGliders.size())
+                                    .arg(category.getLevelAndName(), siblings.getLevelsString()),
+                                getLogCategories());
+                        }
                         return siblingGliders;
                     }
                 }
 
-                CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 models by 'GLIDER' category").arg(sameGliders.size()), getLogCategories());
+                CMatchingUtils::addLogDetailsToList(
+                    log, remoteAircraft,
+                    QStringLiteral("Reduced to %1 models by 'GLIDER' category").arg(sameGliders.size()),
+                    getLogCategories());
                 return gliders;
             }
             else
             {
-                if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No glider category '%1' in set").arg(m_gliders.front().getLevelAndName()), getLogCategories()); }
+                if (log)
+                {
+                    CMatchingUtils::addLogDetailsToList(
+                        log, remoteAircraft,
+                        QStringLiteral("No glider category '%1' in set").arg(m_gliders.front().getLevelAndName()),
+                        getLogCategories());
+                }
                 static const QStringList substituteIcaos({ "UHEL", "GLID", "ULAC" }); // maybe also GYRO
                 static const QString substituteIcaosStr = substituteIcaos.join(", ");
 
-                CAircraftModelList substitutes = alreadyMatchedModels.findByDesignatorsOrFamilyWithColorLivery(substituteIcaos);
+                CAircraftModelList substitutes =
+                    alreadyMatchedModels.findByDesignatorsOrFamilyWithColorLivery(substituteIcaos);
                 if (substitutes.isEmpty())
                 {
                     substitutes = alreadyMatchedModels.findByCombinedType(QStringLiteral("L1P"));
                     if (!substitutes.isEmpty())
                     {
                         reduced = true;
-                        if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("No gliders, reduced to 'L1P' models: %1' (avoid absurd matchings)").arg(substitutes.size()), getLogCategories()); }
+                        if (log)
+                        {
+                            CMatchingUtils::addLogDetailsToList(
+                                log, remoteAircraft,
+                                QStringLiteral("No gliders, reduced to 'L1P' models: %1' (avoid absurd matchings)")
+                                    .arg(substitutes.size()),
+                                getLogCategories());
+                        }
                         return substitutes;
                     }
                 }
                 else
                 {
                     reduced = true;
-                    if (log) { CMatchingUtils::addLogDetailsToList(log, remoteAircraft, QStringLiteral("Reduced to %1 models by '%2'").arg(substitutes.size()).arg(substituteIcaosStr), getLogCategories()); }
+                    if (log)
+                    {
+                        CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
+                                                            QStringLiteral("Reduced to %1 models by '%2'")
+                                                                .arg(substitutes.size())
+                                                                .arg(substituteIcaosStr),
+                                                            getLogCategories());
+                    }
                     return substitutes;
                 }
             }
@@ -154,10 +220,7 @@ namespace swift::misc::simulation
     {
         if (icao.getDesignator() == CAircraftIcaoCode::getGliderDesignator()) { return true; }
         const int glider1st = this->gliderFirstLevel();
-        if (glider1st >= 0 && icao.hasCategory())
-        {
-            return icao.getCategory().getFirstLevel() == glider1st;
-        }
+        if (glider1st >= 0 && icao.hasCategory()) { return icao.getCategory().getFirstLevel() == glider1st; }
         return false;
     }
 

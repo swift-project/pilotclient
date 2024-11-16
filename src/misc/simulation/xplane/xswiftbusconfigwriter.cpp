@@ -14,29 +14,19 @@
 
 namespace swift::misc::simulation::xplane
 {
-    CXSwiftBusConfigWriter::CXSwiftBusConfigWriter(QObject *parent) : QObject(parent)
-    {}
+    CXSwiftBusConfigWriter::CXSwiftBusConfigWriter(QObject *parent) : QObject(parent) {}
 
     void CXSwiftBusConfigWriter::setDBusAddress(const QString &dBusAddress)
     {
         if (CDBusServer::isSessionOrSystemAddress(dBusAddress)) { m_dbusMode = "session"; }
         else { m_dbusMode = "p2p"; }
 
-        if (m_dbusMode == "p2p")
-        {
-            CDBusServer::dBusAddressToHostAndPort(dBusAddress, m_dbusAddress, m_dbusPort);
-        }
+        if (m_dbusMode == "p2p") { CDBusServer::dBusAddressToHostAndPort(dBusAddress, m_dbusAddress, m_dbusPort); }
     }
 
-    void CXSwiftBusConfigWriter::setDebugMode(bool on)
-    {
-        m_debug = on;
-    }
+    void CXSwiftBusConfigWriter::setDebugMode(bool on) { m_debug = on; }
 
-    void CXSwiftBusConfigWriter::setTcasEnabled(bool on)
-    {
-        m_tcas = on;
-    }
+    void CXSwiftBusConfigWriter::setTcasEnabled(bool on) { m_tcas = on; }
 
     void CXSwiftBusConfigWriter::updateInAllXPlaneVersions()
     {
@@ -92,7 +82,8 @@ namespace swift::misc::simulation::xplane
 
             // add comment as information
             ts << Qt::endl;
-            ts << "# Updated by CXSwiftBusConfigWriter " << QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss") << " ";
+            ts << "# Updated by CXSwiftBusConfigWriter " << QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss")
+               << " ";
             ts << Qt::endl;
         }
     }

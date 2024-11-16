@@ -35,9 +35,7 @@ namespace swift::misc
 namespace swift::gui::components
 {
     //! Simulator component
-    class SWIFT_GUI_EXPORT CSimulatorComponent :
-        public QTabWidget,
-        public CEnableForDockWidgetInfoArea
+    class SWIFT_GUI_EXPORT CSimulatorComponent : public QTabWidget, public CEnableForDockWidgetInfoArea
     {
         Q_OBJECT
 
@@ -65,7 +63,8 @@ namespace swift::gui::components
         void onSimulatorStatusChanged(int status);
 
         //! \copydoc ISimulator::addingRemoteModelFailed
-        void onAddingRemoteModelFailed(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const swift::misc::CStatusMessage &message);
+        void onAddingRemoteModelFailed(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool disabled,
+                                       bool failover, const swift::misc::CStatusMessage &message);
 
         //! \copydoc ISimulator::onSimulatorMessages
         void onSimulatorMessages(const swift::misc::CStatusMessageList &messages);
@@ -80,7 +79,8 @@ namespace swift::gui::components
         void addOrUpdateLiveDataByName(const QString &name, const QString &value, const swift::misc::CIcon &icon);
 
         //! Simple add or update name / value pair
-        void addOrUpdateLiveDataByName(const QString &name, const QString &value, swift::misc::CIcons::IconIndex iconIndex);
+        void addOrUpdateLiveDataByName(const QString &name, const QString &value,
+                                       swift::misc::CIcons::IconIndex iconIndex);
 
         //! Remove name
         void removeLiveDataByName(const QString &name);

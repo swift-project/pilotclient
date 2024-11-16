@@ -42,11 +42,11 @@ namespace swift::core
         CModelSetBuilder(QObject *parent = nullptr);
 
         //! Build a model set
-        swift::misc::simulation::CAircraftModelList buildModelSet(
-            const swift::misc::simulation::CSimulatorInfo &simulator,
-            const swift::misc::simulation::CAircraftModelList &models,
-            const swift::misc::simulation::CAircraftModelList &currentSet, Builder options,
-            const swift::misc::simulation::CDistributorList &distributors = {}) const;
+        swift::misc::simulation::CAircraftModelList
+        buildModelSet(const swift::misc::simulation::CSimulatorInfo &simulator,
+                      const swift::misc::simulation::CAircraftModelList &models,
+                      const swift::misc::simulation::CAircraftModelList &currentSet, Builder options,
+                      const swift::misc::simulation::CDistributorList &distributors = {}) const;
     };
 } // namespace swift::core
 

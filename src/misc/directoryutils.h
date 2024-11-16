@@ -27,7 +27,8 @@ namespace swift::misc
         static bool isInApplicationDirectory(const QString &path);
 
         //! Is MacOS application bundle?
-        //! \remark: Means the currently running executable is a MacOS bundle, but not all our executables are bundles on MacOS
+        //! \remark: Means the currently running executable is a MacOS bundle, but not all our executables are bundles
+        //! on MacOS
         static bool isMacOSAppBundle();
 
         //! Virtually the inverse operation of CDirectoryUtils::normalizedApplicationDirectory
@@ -54,8 +55,8 @@ namespace swift::misc
 
         //! @{
         //! Directory existing? Also checking UNC paths upfront.
-        //! \remark Motivation: if an UNC cannot be accessed (e.g. machine is down) it can take very long before functions like QDir respond
-        //! \remark for non-UNC paths it is the same as the QDir checks
+        //! \remark Motivation: if an UNC cannot be accessed (e.g. machine is down) it can take very long before
+        //! functions like QDir respond \remark for non-UNC paths it is the same as the QDir checks
         static bool isDirExisting(const QString &path);
         static bool isDirExisting(const QDir &dir);
         //! @}
@@ -102,7 +103,8 @@ namespace swift::misc
         static QSet<QString> canonicalFileNamesToQSet(const QFileInfoList &fileInfoList);
 
         //! File to canonical names
-        static QSet<QString> filesToCanonicalNames(const QSet<QString> &fileNames, const QSet<QString> &canonicalFileNames);
+        static QSet<QString> filesToCanonicalNames(const QSet<QString> &fileNames,
+                                                   const QSet<QString> &canonicalFileNames);
 
         //! Can connect the UNC machine
         static bool canPingUncMachine(const QString &machine);

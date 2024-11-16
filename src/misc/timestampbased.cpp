@@ -12,13 +12,12 @@
 
 namespace swift::misc
 {
-    ITimestampBased::ITimestampBased()
-    {}
+    ITimestampBased::ITimestampBased() {}
 
-    ITimestampBased::ITimestampBased(qint64 msSincePoch) : m_timestampMSecsSinceEpoch(msSincePoch)
-    {}
+    ITimestampBased::ITimestampBased(qint64 msSincePoch) : m_timestampMSecsSinceEpoch(msSincePoch) {}
 
-    ITimestampBased::ITimestampBased(const QDateTime &timestamp) : m_timestampMSecsSinceEpoch(timestamp.toMSecsSinceEpoch())
+    ITimestampBased::ITimestampBased(const QDateTime &timestamp)
+        : m_timestampMSecsSinceEpoch(timestamp.toMSecsSinceEpoch())
     {}
 
     QDateTime ITimestampBased::getUtcTimestamp() const
@@ -27,10 +26,7 @@ namespace swift::misc
         return QDateTime::fromMSecsSinceEpoch(m_timestampMSecsSinceEpoch);
     }
 
-    void ITimestampBased::setTimestampToNull()
-    {
-        m_timestampMSecsSinceEpoch = -1;
-    }
+    void ITimestampBased::setTimestampToNull() { m_timestampMSecsSinceEpoch = -1; }
 
     void ITimestampBased::setByYearMonthDayHourMinute(const QString &yyyyMMddhhmmsszzz)
     {
@@ -96,76 +92,51 @@ namespace swift::misc
         return QDateTime::currentMSecsSinceEpoch() - m_timestampMSecsSinceEpoch;
     }
 
-    void ITimestampBased::setCurrentUtcTime()
-    {
-        m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
-    }
+    void ITimestampBased::setCurrentUtcTime() { m_timestampMSecsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
 
-    void ITimestampBased::addMsecs(qint64 ms)
-    {
-        m_timestampMSecsSinceEpoch += ms;
-    }
+    void ITimestampBased::addMsecs(qint64 ms) { m_timestampMSecsSinceEpoch += ms; }
 
     QString ITimestampBased::getFormattedUtcTimestampMdhms() const
     {
-        return this->hasValidTimestamp() ?
-                   this->getUtcTimestamp().toString("MM-dd hh:mm:ss") :
-                   "";
+        return this->hasValidTimestamp() ? this->getUtcTimestamp().toString("MM-dd hh:mm:ss") : "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampMdhmsz() const
     {
-        return this->hasValidTimestamp() ?
-                   this->getUtcTimestamp().toString("MM-dd hh:mm:ss.zzz") :
-                   "";
+        return this->hasValidTimestamp() ? this->getUtcTimestamp().toString("MM-dd hh:mm:ss.zzz") : "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampDhms() const
     {
-        return this->hasValidTimestamp() ?
-                   this->getUtcTimestamp().toString("dd hh:mm:ss") :
-                   "";
+        return this->hasValidTimestamp() ? this->getUtcTimestamp().toString("dd hh:mm:ss") : "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampHms() const
     {
-        return this->hasValidTimestamp() ?
-                   this->getUtcTimestamp().toString("hh:mm:ss") :
-                   "";
+        return this->hasValidTimestamp() ? this->getUtcTimestamp().toString("hh:mm:ss") : "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampHmsz() const
     {
-        return this->hasValidTimestamp() ?
-                   this->getUtcTimestamp().toString("hh:mm:ss.zzz") :
-                   "";
+        return this->hasValidTimestamp() ? this->getUtcTimestamp().toString("hh:mm:ss.zzz") : "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampHm() const
     {
-        return this->hasValidTimestamp() ?
-                   this->getUtcTimestamp().toString("hh::mm") :
-                   "";
+        return this->hasValidTimestamp() ? this->getUtcTimestamp().toString("hh::mm") : "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampYmdhms() const
     {
-        return this->hasValidTimestamp() ?
-                   this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss") :
-                   "";
+        return this->hasValidTimestamp() ? this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss") : "";
     }
 
     QString ITimestampBased::getFormattedUtcTimestampYmdhmsz() const
     {
-        return this->hasValidTimestamp() ?
-                   this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss.zzz") :
-                   "";
+        return this->hasValidTimestamp() ? this->getUtcTimestamp().toString("yyyy-MM-dd HH:mm:ss.zzz") : "";
     }
 
-    bool ITimestampBased::hasValidTimestamp() const
-    {
-        return m_timestampMSecsSinceEpoch >= 0;
-    }
+    bool ITimestampBased::hasValidTimestamp() const { return m_timestampMSecsSinceEpoch >= 0; }
 
     bool ITimestampBased::isAnyTimestampIndex(int index)
     {
@@ -237,10 +208,7 @@ namespace swift::misc
 
     void ITimestampBased::updateMissingParts(const ITimestampBased &other)
     {
-        if (m_timestampMSecsSinceEpoch < 0)
-        {
-            m_timestampMSecsSinceEpoch = other.m_timestampMSecsSinceEpoch;
-        }
+        if (m_timestampMSecsSinceEpoch < 0) { m_timestampMSecsSinceEpoch = other.m_timestampMSecsSinceEpoch; }
     }
 
     QString ITimestampWithOffsetBased::getTimestampAndOffset(bool formatted) const
@@ -256,7 +224,9 @@ namespace swift::misc
         if (!includeRawTimestamp) { return this->getTimestampAndOffset(true); }
         static const QString ts("%1/%2 (%3)");
         if (!this->hasValidTimestamp()) { return ts.arg("-", "-", this->getTimeOffsetWithUnit()); }
-        return ts.arg(this->getFormattedUtcTimestampHmsz()).arg(m_timestampMSecsSinceEpoch).arg(this->getTimeOffsetWithUnit());
+        return ts.arg(this->getFormattedUtcTimestampHmsz())
+            .arg(m_timestampMSecsSinceEpoch)
+            .arg(this->getTimeOffsetWithUnit());
     }
 
     bool ITimestampWithOffsetBased::isNewerThanAdjusted(const ITimestampWithOffsetBased &otherTimestampObj) const
@@ -287,15 +257,9 @@ namespace swift::misc
         return (i >= static_cast<int>(IndexOffsetMs)) && (i <= static_cast<int>(IndexOffsetWithUnit));
     }
 
-    bool ITimestampWithOffsetBased::hasNonZeroOffsetTime() const
-    {
-        return m_timeOffsetMs != 0;
-    }
+    bool ITimestampWithOffsetBased::hasNonZeroOffsetTime() const { return m_timeOffsetMs != 0; }
 
-    void ITimestampWithOffsetBased::addMsecsToOffsetTime(qint64 msToAdd)
-    {
-        m_timeOffsetMs += msToAdd;
-    }
+    void ITimestampWithOffsetBased::addMsecsToOffsetTime(qint64 msToAdd) { m_timeOffsetMs += msToAdd; }
 
     QString ITimestampWithOffsetBased::getTimeOffsetWithUnit() const
     {
@@ -356,9 +320,13 @@ namespace swift::misc
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
     }
 
-    int ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndexRef index, const ITimestampWithOffsetBased &compareValue) const
+    int ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndexRef index,
+                                                          const ITimestampWithOffsetBased &compareValue) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::comparePropertyByIndex(index, compareValue);
+        }
         if (!index.isEmpty())
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();

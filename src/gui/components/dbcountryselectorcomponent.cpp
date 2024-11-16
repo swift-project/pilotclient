@@ -31,8 +31,8 @@ using namespace swift::misc::network;
 
 namespace swift::gui::components
 {
-    CDbCountrySelectorComponent::CDbCountrySelectorComponent(QWidget *parent) : QFrame(parent),
-                                                                                ui(new Ui::CDbCountrySelectorComponent)
+    CDbCountrySelectorComponent::CDbCountrySelectorComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CDbCountrySelectorComponent)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->le_CountryIso);
@@ -45,12 +45,13 @@ namespace swift::gui::components
         connect(ui->le_CountryName, &QLineEdit::returnPressed, this, &CDbCountrySelectorComponent::onDataChanged);
 
         ui->le_CountryIso->setValidator(new CUpperCaseValidator(this));
-        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountrySelectorComponent::onCountriesRead, Qt::QueuedConnection);
-        this->onCountriesRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount());
+        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this,
+                &CDbCountrySelectorComponent::onCountriesRead, Qt::QueuedConnection);
+        this->onCountriesRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished,
+                              sGui->getWebDataServices()->getCountriesCount());
     }
 
-    CDbCountrySelectorComponent::~CDbCountrySelectorComponent()
-    {}
+    CDbCountrySelectorComponent::~CDbCountrySelectorComponent() {}
 
     void CDbCountrySelectorComponent::setCountry(const swift::misc::CCountry &country)
     {
@@ -75,10 +76,7 @@ namespace swift::gui::components
         if (!sGui) { return CCountry(); }
         const QString iso(ui->le_CountryIso->text().trimmed().toUpper());
         const QString name(ui->le_CountryName->text().trimmed());
-        if (CCountry::isValidIsoCode(iso))
-        {
-            return sGui->getWebDataServices()->getCountryForIsoCode(iso);
-        }
+        if (CCountry::isValidIsoCode(iso)) { return sGui->getWebDataServices()->getCountryForIsoCode(iso); }
         else
         {
             if (name.isEmpty()) { return CCountry(); }
@@ -95,10 +93,7 @@ namespace swift::gui::components
         this->setEnabled(!readOnly);
     }
 
-    bool CDbCountrySelectorComponent::isSet() const
-    {
-        return this->getCountry().isValid();
-    }
+    bool CDbCountrySelectorComponent::isSet() const { return this->getCountry().isValid(); }
 
     void CDbCountrySelectorComponent::clear()
     {
@@ -147,7 +142,8 @@ namespace swift::gui::components
         }
     }
 
-    void CDbCountrySelectorComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+    void CDbCountrySelectorComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState,
+                                                      int count)
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
         if (entity.testFlag(CEntityFlags::CountryEntity) && CEntityFlags::isFinishedReadState(readState))
@@ -158,15 +154,13 @@ namespace swift::gui::components
                 c->setCaseSensitivity(Qt::CaseInsensitive);
                 c->setCompletionMode(QCompleter::PopupCompletion);
                 c->setMaxVisibleItems(10);
-                connect(c, qOverload<const QString &>(&QCompleter::activated), this, &CDbCountrySelectorComponent::onCompleterActivated);
+                connect(c, qOverload<const QString &>(&QCompleter::activated), this,
+                        &CDbCountrySelectorComponent::onCompleterActivated);
 
                 ui->le_CountryName->setCompleter(c);
                 m_completerCountryNames.reset(c); // deletes any old completer
             }
-            else
-            {
-                m_completerCountryNames.reset(nullptr);
-            }
+            else { m_completerCountryNames.reset(nullptr); }
         }
     }
 
@@ -185,10 +179,7 @@ namespace swift::gui::components
         else if (sender == ui->le_CountryName)
         {
             QString name(ui->le_CountryName->text().trimmed());
-            if (!name.isEmpty())
-            {
-                this->setCountry(sGui->getWebDataServices()->getCountryForName(name));
-            }
+            if (!name.isEmpty()) { this->setCountry(sGui->getWebDataServices()->getCountryForName(name)); }
         }
     }
 

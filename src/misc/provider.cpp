@@ -5,6 +5,5 @@
 
 namespace swift::misc
 {
-    IProvider::~IProvider()
-    {}
+    IProvider::~IProvider() {}
 } // namespace swift::misc

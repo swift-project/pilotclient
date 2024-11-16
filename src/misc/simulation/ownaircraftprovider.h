@@ -71,7 +71,8 @@ namespace swift::misc
 
             //! Distance to own aircraft
             //! \threadsafe
-            virtual swift::misc::physical_quantities::CLength getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const = 0;
+            virtual swift::misc::physical_quantities::CLength
+            getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const = 0;
 
             //! Update aircraft's callsign
             //! \threadsafe
@@ -79,7 +80,8 @@ namespace swift::misc
 
             //! Update ICAO data
             //! \threadsafe
-            virtual bool updateOwnIcaoCodes(const aviation::CAircraftIcaoCode &aircraftIcaoCode, const aviation::CAirlineIcaoCode &airlineIcaoCode) = 0;
+            virtual bool updateOwnIcaoCodes(const aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                            const aviation::CAirlineIcaoCode &airlineIcaoCode) = 0;
 
             //! Update model
             //! \threadsafe
@@ -101,15 +103,20 @@ namespace swift::misc
 
             //! Update cockpit, but only send signals when applicable
             //! \threadsafe
-            bool updateCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+            bool updateCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                               const swift::misc::CIdentifier &originator);
 
             //! Update cockpit, but only send signals when applicable
             //! \threadsafe
-            virtual bool updateCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2, const aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator) = 0;
+            virtual bool updateCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2,
+                                       const aviation::CTransponder &transponder,
+                                       const swift::misc::CIdentifier &originator) = 0;
 
             //! Update cockpit, but only send signals when applicable
             //! \threadsafe
-            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, aviation::CComSystem::ComUnit comUnit, const swift::misc::CIdentifier &originator) = 0;
+            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                                  aviation::CComSystem::ComUnit comUnit,
+                                                  const swift::misc::CIdentifier &originator) = 0;
 
             //! Update cockpit, but only send signals when applicable
             //! \threadsafe
@@ -150,16 +157,23 @@ namespace swift::misc
             swift::misc::simulation::CAircraftModel getOwnAircraftModel() const;
 
             //! \copydoc IOwnAircraftProvider::getDistanceToOwnAircraft
-            swift::misc::physical_quantities::CLength getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const;
+            swift::misc::physical_quantities::CLength
+            getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const;
 
-            //! \copydoc IOwnAircraftProvider::updateCockpit(const swift::misc::simulation::CSimulatedAircraft &, const swift::misc::CIdentifier &)
-            bool updateCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+            //! \copydoc IOwnAircraftProvider::updateCockpit(const swift::misc::simulation::CSimulatedAircraft &, const
+            //! swift::misc::CIdentifier &)
+            bool updateCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                               const swift::misc::CIdentifier &originator);
 
-            //! \copydoc IOwnAircraftProvider::updateCockpit(const aviation::CComSystem &, const aviation::CComSystem &, const aviation::CTransponder &, const swift::misc::CIdentifier &);
-            bool updateCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2, const aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator);
+            //! \copydoc IOwnAircraftProvider::updateCockpit(const aviation::CComSystem &, const aviation::CComSystem &,
+            //! const aviation::CTransponder &, const swift::misc::CIdentifier &);
+            bool updateCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2,
+                               const aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator);
 
             //! \copydoc IOwnAircraftProvider::updateActiveComFrequency
-            bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, aviation::CComSystem::ComUnit comUnit, const swift::misc::CIdentifier &originator);
+            bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                          aviation::CComSystem::ComUnit comUnit,
+                                          const swift::misc::CIdentifier &originator);
 
             //! \copydoc IOwnAircraftProvider::updateSelcal
             bool updateSelcal(const aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator);
@@ -168,7 +182,8 @@ namespace swift::misc
             bool updateOwnCallsign(const aviation::CCallsign &callsign);
 
             //! \copydoc IOwnAircraftProvider::updateOwnIcaoCodes
-            bool updateOwnIcaoCodes(const aviation::CAircraftIcaoCode &aircraftIcaoData, const aviation::CAirlineIcaoCode &airlineIcaoCode);
+            bool updateOwnIcaoCodes(const aviation::CAircraftIcaoCode &aircraftIcaoData,
+                                    const aviation::CAirlineIcaoCode &airlineIcaoCode);
 
             //! \copydoc IOwnAircraftProvider::updateOwnModel
             bool updateOwnModel(const swift::misc::simulation::CAircraftModel &model);
@@ -184,11 +199,15 @@ namespace swift::misc
 
         protected:
             //! Constructor
-            COwnAircraftAware(IOwnAircraftProvider *ownAircraftProvider) : IProviderAware(ownAircraftProvider) { Q_ASSERT(ownAircraftProvider); }
+            COwnAircraftAware(IOwnAircraftProvider *ownAircraftProvider) : IProviderAware(ownAircraftProvider)
+            {
+                Q_ASSERT(ownAircraftProvider);
+            }
         };
     } // namespace simulation
 } // namespace swift::misc
 
-Q_DECLARE_INTERFACE(swift::misc::simulation::IOwnAircraftProvider, "org.swift-project.misc::simulation::iownaircraftprovider")
+Q_DECLARE_INTERFACE(swift::misc::simulation::IOwnAircraftProvider,
+                    "org.swift-project.misc::simulation::iownaircraftprovider")
 
 #endif

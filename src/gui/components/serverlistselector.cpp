@@ -21,10 +21,7 @@ namespace swift::gui::components
     CServerListSelector::CServerListSelector(QWidget *parent) : QComboBox(parent)
     {
         const CServer server = m_lastServer.get();
-        if (server.hasName())
-        {
-            m_pendingPreselect = server.getName();
-        }
+        if (server.hasName()) { m_pendingPreselect = server.getName(); }
         connect(this, &QComboBox::currentTextChanged, this, &CServerListSelector::onServerTextChanged);
     }
 
@@ -77,24 +74,15 @@ namespace swift::gui::components
         {
             const QString d(server.getName() + ": " + server.getDescription());
             m_items.append(d);
-            if (!currentlySelected.isEmpty() && index < 0 && d == currentlySelected)
-            {
-                index = m_items.size() - 1;
-            }
+            if (!currentlySelected.isEmpty() && index < 0 && d == currentlySelected) { index = m_items.size() - 1; }
 
             this->addItem(d);
         }
 
         // reselect
         if (m_items.isEmpty()) { return; }
-        if (m_items.size() == 1)
-        {
-            this->setCurrentIndex(0);
-        }
-        else if (index >= 0)
-        {
-            this->setCurrentIndex(index);
-        }
+        if (m_items.size() == 1) { this->setCurrentIndex(0); }
+        else if (index >= 0) { this->setCurrentIndex(index); }
     }
 
     void CServerListSelector::onServerTextChanged(const QString &text)

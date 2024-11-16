@@ -13,21 +13,13 @@ using namespace swift::misc;
 
 namespace swift::gui
 {
-    CDropBase::CDropBase()
-    {}
+    CDropBase::CDropBase() {}
 
-    CDropBase::~CDropBase()
-    {}
+    CDropBase::~CDropBase() {}
 
-    void CDropBase::setAcceptedMetaTypeIds(const QList<int> &ids)
-    {
-        m_acceptedMetaTypes = ids;
-    }
+    void CDropBase::setAcceptedMetaTypeIds(const QList<int> &ids) { m_acceptedMetaTypes = ids; }
 
-    void CDropBase::addAcceptedMetaTypeId(int id)
-    {
-        m_acceptedMetaTypes.append(id);
-    }
+    void CDropBase::addAcceptedMetaTypeId(int id) { m_acceptedMetaTypes.append(id); }
 
     bool CDropBase::acceptDrop(const QMimeData *mime) const
     {
@@ -48,8 +40,5 @@ namespace swift::gui
         return accept;
     }
 
-    CVariant CDropBase::toCVariant(const QMimeData *mime) const
-    {
-        return CGuiUtility::fromSwiftDragAndDropData(mime);
-    }
+    CVariant CDropBase::toCVariant(const QMimeData *mime) const { return CGuiUtility::fromSwiftDragAndDropData(mime); }
 } // namespace swift::gui

@@ -17,18 +17,22 @@ namespace swift::misc::simulation
     {
     public:
         //! Constructor
-        CInterpolatorMulti(const aviation::CCallsign &callsign,
-                           ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+        CInterpolatorMulti(const aviation::CCallsign &callsign, ISimulationEnvironmentProvider *p1,
+                           IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
                            CInterpolationLogger *logger = nullptr);
 
         //! \copydoc CInterpolator::getInterpolation
-        CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber);
+        CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch,
+                                              const CInterpolationAndRenderingSetupPerCallsign &setup,
+                                              uint32_t aircraftNumber);
 
         //! \copydoc CInterpolator::getLastInterpolatedSituation
-        const aviation::CAircraftSituation &getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        const aviation::CAircraftSituation &
+        getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! \copydoc CInterpolator::getInterpolationMessages
-        const CStatusMessageList &getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        const CStatusMessageList &
+        getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! \copydoc CInterpolator::attachLogger
         void attachLogger(CInterpolationLogger *logger);
@@ -55,10 +59,9 @@ namespace swift::misc::simulation
         CInterpolatorMultiWrapper();
 
         //! Constructor
-        CInterpolatorMultiWrapper(
-            const aviation::CCallsign &callsign,
-            ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
-            CInterpolationLogger *logger = nullptr);
+        CInterpolatorMultiWrapper(const aviation::CCallsign &callsign, ISimulationEnvironmentProvider *p1,
+                                  IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                                  CInterpolationLogger *logger = nullptr);
 
         //! Has interpolator initialized?
         bool hasInterpolator() const { return !m_interpolator.isNull(); }
@@ -82,7 +85,8 @@ namespace swift::misc::simulation
         CInterpolatorMulti *operator->() const { return this->interpolator(); }
 
     private:
-        QSharedPointer<CInterpolatorMulti> m_interpolator; //!< shared pointer because CInterpolatorMultiWrapper can be copied
+        QSharedPointer<CInterpolatorMulti>
+            m_interpolator; //!< shared pointer because CInterpolatorMultiWrapper can be copied
     };
 } // namespace swift::misc::simulation
 

@@ -77,7 +77,8 @@ namespace swift::core
             virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method
-            static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, swift::misc::CDBusServer *server, QDBusConnection &connection);
+            static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode,
+                                         swift::misc::CDBusServer *server, QDBusConnection &connection);
 
             // ------------- only use DBus signals here -------------
         signals:
@@ -101,11 +102,13 @@ namespace swift::core
 
             //! Register an audio callsign (used with AFV)
             //! \remarks normally called with login
-            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) = 0;
+            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::CIdentifier &identifier) = 0;
 
             //! Un-register an audio callsign (used with AFV)
             //! \remarks normally called with logoff
-            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) = 0;
+            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                                 const swift::misc::CIdentifier &identifier) = 0;
 
             //! Un-register an audio callsign (used with AFV)
             //! \remarks normally called with logoff
@@ -122,9 +125,7 @@ namespace swift::core
         };
 
         //! Audio context interface
-        class SWIFT_CORE_EXPORT CContextAudioBase :
-            public IContextAudio,
-            public swift::misc::CIdentifiable
+        class SWIFT_CORE_EXPORT CContextAudioBase : public IContextAudio, public swift::misc::CIdentifiable
         {
             Q_OBJECT
             friend class swift::core::CCoreFacade;
@@ -163,7 +164,8 @@ namespace swift::core
             swift::misc::audio::CAudioDeviceInfoList getCurrentAudioDevices() const;
 
             //! Set current audio devices
-            void setCurrentAudioDevices(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
+            void setCurrentAudioDevices(const swift::misc::audio::CAudioDeviceInfo &inputDevice,
+                                        const swift::misc::audio::CAudioDeviceInfo &outputDevice);
 
             //! @{
             //! Volume
@@ -179,7 +181,8 @@ namespace swift::core
             void playSelcalTone(const swift::misc::aviation::CSelcal &selcal);
 
             //! Notification sounds
-            void playNotification(swift::misc::audio::CNotificationSounds::NotificationFlag notification, bool considerSettings, int volume = -1);
+            void playNotification(swift::misc::audio::CNotificationSounds::NotificationFlag notification,
+                                  bool considerSettings, int volume = -1);
 
             //! @{
             //! Loopback
@@ -227,7 +230,10 @@ namespace swift::core
             //! Register the commands
             static void registerHelp()
             {
-                if (swift::misc::CSimpleCommandParser::registered("swift::core::context::CContextAudioBase")) { return; }
+                if (swift::misc::CSimpleCommandParser::registered("swift::core::context::CContextAudioBase"))
+                {
+                    return;
+                }
                 swift::misc::CSimpleCommandParser::registerCommand({ ".mute", "mute audio" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".unmute", "unmute audio" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".vol volume", "volume 0..100" });
@@ -248,7 +254,8 @@ namespace swift::core
             //! .vol .volume   volume 0..100   set volume       swift::core::context::CContextAudioBase
             //! .aliased on|off                aliased stations swift::core::context::CContextAudioBase
             //! </pre>
-            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine,
+                                          const swift::misc::CIdentifier &originator) override;
             //! \endcond
 
             // ------------- DBus ---------------
@@ -266,7 +273,8 @@ namespace swift::core
             void changedLocalAudioDevices(const swift::misc::audio::CAudioDeviceInfoList &devices);
 
             //! Audio started with devices
-            void startedAudio(const swift::misc::audio::CAudioDeviceInfo &input, const swift::misc::audio::CAudioDeviceInfo &output);
+            void startedAudio(const swift::misc::audio::CAudioDeviceInfo &input,
+                              const swift::misc::audio::CAudioDeviceInfo &output);
 
             //! Audio stopped
             void stoppedAudio();
@@ -285,7 +293,8 @@ namespace swift::core
             //! @}
 
             //! Callsigns I receive have changed
-            void receivingCallsignsChanged(const swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs &args);
+            void receivingCallsignsChanged(const swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs
+            &args);
 
             //! Client updated from own aicraft data
             void updatedFromOwnAircraftCockpit();
@@ -321,7 +330,8 @@ namespace swift::core
             //! @}
 
             //! Network connection status
-            void xCtxNetworkConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+            void xCtxNetworkConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                                    const swift::misc::network::CConnectionStatus &to);
 
             //! AFV client connection status changed
             void onAfvConnectionStatusChanged(int status);
@@ -329,13 +339,26 @@ namespace swift::core
             //! AFV client authentication failed
             void onAfvConnectionFailure(const swift::misc::CStatusMessage &msg);
 
-            CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::input::pttHotkeyIcon(), this, &CContextAudioBase::setVoiceTransmission };
-            CActionBind m_actionAudioVolumeIncrease { swift::misc::input::audioVolumeIncreaseHotkeyAction(), swift::misc::input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolume };
-            CActionBind m_actionAudioVolumeDecrease { swift::misc::input::audioVolumeDecreaseHotkeyAction(), swift::misc::input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolume };
-            CActionBind m_actionAudioVolumeIncreaseCom1 { swift::misc::input::audioVolumeIncreaseCom1HotkeyAction(), swift::misc::input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom1 };
-            CActionBind m_actionAudioVolumeDecreaseCom1 { swift::misc::input::audioVolumeDecreaseCom1HotkeyAction(), swift::misc::input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolumeCom1 };
-            CActionBind m_actionAudioVolumeIncreaseCom2 { swift::misc::input::audioVolumeIncreaseCom2HotkeyAction(), swift::misc::input::audioVolumeIncreaseHotkeyIcon(), this, &CContextAudioBase::audioIncreaseVolumeCom2 };
-            CActionBind m_actionAudioVolumeDecreaseCom2 { swift::misc::input::audioVolumeDecreaseCom2HotkeyAction(), swift::misc::input::audioVolumeDecreaseHotkeyIcon(), this, &CContextAudioBase::audioDecreaseVolumeCom2 };
+            CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::input::pttHotkeyIcon(), this,
+                                      &CContextAudioBase::setVoiceTransmission };
+            CActionBind m_actionAudioVolumeIncrease { swift::misc::input::audioVolumeIncreaseHotkeyAction(),
+                                                      swift::misc::input::audioVolumeIncreaseHotkeyIcon(), this,
+                                                      &CContextAudioBase::audioIncreaseVolume };
+            CActionBind m_actionAudioVolumeDecrease { swift::misc::input::audioVolumeDecreaseHotkeyAction(),
+                                                      swift::misc::input::audioVolumeDecreaseHotkeyIcon(), this,
+                                                      &CContextAudioBase::audioDecreaseVolume };
+            CActionBind m_actionAudioVolumeIncreaseCom1 { swift::misc::input::audioVolumeIncreaseCom1HotkeyAction(),
+                                                          swift::misc::input::audioVolumeIncreaseHotkeyIcon(), this,
+                                                          &CContextAudioBase::audioIncreaseVolumeCom1 };
+            CActionBind m_actionAudioVolumeDecreaseCom1 { swift::misc::input::audioVolumeDecreaseCom1HotkeyAction(),
+                                                          swift::misc::input::audioVolumeDecreaseHotkeyIcon(), this,
+                                                          &CContextAudioBase::audioDecreaseVolumeCom1 };
+            CActionBind m_actionAudioVolumeIncreaseCom2 { swift::misc::input::audioVolumeIncreaseCom2HotkeyAction(),
+                                                          swift::misc::input::audioVolumeIncreaseHotkeyIcon(), this,
+                                                          &CContextAudioBase::audioIncreaseVolumeCom2 };
+            CActionBind m_actionAudioVolumeDecreaseCom2 { swift::misc::input::audioVolumeDecreaseCom2HotkeyAction(),
+                                                          swift::misc::input::audioVolumeDecreaseHotkeyIcon(), this,
+                                                          &CContextAudioBase::audioDecreaseVolumeCom2 };
 
             int m_outMasterVolumeBeforeMute = 50;
             static constexpr int MinUnmuteVolume = 20; //!< minimum volume when unmuted
@@ -344,10 +367,16 @@ namespace swift::core
             static bool isRunningWithLocalCore();
 
             // settings
-            swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &CContextAudioBase::onChangedAudioSettings };
+            swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings {
+                this, &CContextAudioBase::onChangedAudioSettings
+            };
 
-            swift::misc::CSetting<audio::TInputDevice> m_inputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
-            swift::misc::CSetting<audio::TOutputDevice> m_outputDeviceSetting { this, &CContextAudioBase::changeDeviceSettings };
+            swift::misc::CSetting<audio::TInputDevice> m_inputDeviceSetting {
+                this, &CContextAudioBase::changeDeviceSettings
+            };
+            swift::misc::CSetting<audio::TOutputDevice> m_outputDeviceSetting {
+                this, &CContextAudioBase::changeDeviceSettings
+            };
 
             // AFV
             afv::clients::CAfvClient *m_voiceClient = nullptr;

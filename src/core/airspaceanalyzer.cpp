@@ -29,9 +29,10 @@ using namespace swift::core::fsd;
 
 namespace swift::core
 {
-    CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, CFSDClient *fsdClient, CAirspaceMonitor *airspaceMonitorParent) : CContinuousWorker(airspaceMonitorParent, "CAirspaceAnalyzer"),
-                                                                                                                                                      COwnAircraftAware(ownAircraftProvider),
-                                                                                                                                                      CRemoteAircraftAware(airspaceMonitorParent)
+    CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, CFSDClient *fsdClient,
+                                         CAirspaceMonitor *airspaceMonitorParent)
+        : CContinuousWorker(airspaceMonitorParent, "CAirspaceAnalyzer"), COwnAircraftAware(ownAircraftProvider),
+          CRemoteAircraftAware(airspaceMonitorParent)
     {
         Q_ASSERT_X(fsdClient, Q_FUNC_INFO, "Network object required to connect");
 
@@ -45,26 +46,32 @@ namespace swift::core
         // network connected
 
         // those are CID and not callsign related
-        // c = connect(fsdClient, &CFSDClient::deletePilotReceived, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign, Qt::QueuedConnection);
-        // Q_ASSERT(c);
-        // c = connect(fsdClient, &CFSDClient::deleteAtcReceived, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign, Qt::QueuedConnection);
-        // Q_ASSERT(c);
+        // c = connect(fsdClient, &CFSDClient::deletePilotReceived, this,
+        // &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign, Qt::QueuedConnection); Q_ASSERT(c); c =
+        // connect(fsdClient, &CFSDClient::deleteAtcReceived, this, &CAirspaceAnalyzer::watchdogRemoveAtcCallsign,
+        // Qt::QueuedConnection); Q_ASSERT(c);
 
-        c = connect(fsdClient, &CFSDClient::connectionStatusChanged, this, &CAirspaceAnalyzer::onConnectionStatusChanged, Qt::QueuedConnection);
+        c = connect(fsdClient, &CFSDClient::connectionStatusChanged, this,
+                    &CAirspaceAnalyzer::onConnectionStatusChanged, Qt::QueuedConnection);
         Q_ASSERT(c);
 
         // network situations
-        c = connect(fsdClient, &CFSDClient::pilotDataUpdateReceived, this, &CAirspaceAnalyzer::onNetworkPositionUpdate, Qt::QueuedConnection);
+        c = connect(fsdClient, &CFSDClient::pilotDataUpdateReceived, this, &CAirspaceAnalyzer::onNetworkPositionUpdate,
+                    Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(fsdClient, &CFSDClient::atcDataUpdateReceived, this, &CAirspaceAnalyzer::watchdogTouchAtcCallsign, Qt::QueuedConnection);
+        c = connect(fsdClient, &CFSDClient::atcDataUpdateReceived, this, &CAirspaceAnalyzer::watchdogTouchAtcCallsign,
+                    Qt::QueuedConnection);
         Q_ASSERT(c);
 
         // Monitor
-        c = connect(airspaceMonitorParent, &CAirspaceMonitor::addedAircraftSituation, this, &CAirspaceAnalyzer::watchdogTouchAircraftCallsign);
+        c = connect(airspaceMonitorParent, &CAirspaceMonitor::addedAircraftSituation, this,
+                    &CAirspaceAnalyzer::watchdogTouchAircraftCallsign);
         Q_ASSERT(c);
-        c = connect(airspaceMonitorParent, &CAirspaceMonitor::removedAircraft, this, &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign);
+        c = connect(airspaceMonitorParent, &CAirspaceMonitor::removedAircraft, this,
+                    &CAirspaceAnalyzer::watchdogRemoveAircraftCallsign);
         Q_ASSERT(c);
-        c = connect(airspaceMonitorParent, &CAirspaceMonitor::atcStationDisconnected, this, &CAirspaceAnalyzer::onAtcStationDisconnected);
+        c = connect(airspaceMonitorParent, &CAirspaceMonitor::atcStationDisconnected, this,
+                    &CAirspaceAnalyzer::onAtcStationDisconnected);
         Q_ASSERT(c);
 
         // --------------------
@@ -80,7 +87,8 @@ namespace swift::core
         return m_latestAircraftSnapshot;
     }
 
-    void CAirspaceAnalyzer::setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
+    void CAirspaceAnalyzer::setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft,
+                                                                  const CLength &maxRenderedDistance)
     {
         QWriteLocker l(&m_lockRestrictions);
         m_simulatorRenderedAircraftRestricted = restricted;
@@ -89,10 +97,10 @@ namespace swift::core
         m_simulatorMaxRenderedDistance = maxRenderedDistance;
     }
 
-    CAirspaceAnalyzer::~CAirspaceAnalyzer()
-    {}
+    CAirspaceAnalyzer::~CAirspaceAnalyzer() {}
 
-    void CAirspaceAnalyzer::onNetworkPositionUpdate(const CAircraftSituation &situation, const CTransponder &transponder)
+    void CAirspaceAnalyzer::onNetworkPositionUpdate(const CAircraftSituation &situation,
+                                                    const CTransponder &transponder)
     {
         Q_UNUSED(transponder)
         this->watchdogTouchAircraftCallsign(situation);
@@ -111,7 +119,8 @@ namespace swift::core
         m_aircraftCallsignTimestamps[cs] = QDateTime::currentMSecsSinceEpoch();
     }
 
-    void CAirspaceAnalyzer::watchdogTouchAtcCallsign(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const CLength &range)
+    void CAirspaceAnalyzer::watchdogTouchAtcCallsign(const CCallsign &callsign, const CFrequency &frequency,
+                                                     const CCoordinateGeodetic &position, const CLength &range)
     {
         Q_UNUSED(frequency)
         Q_UNUSED(position)
@@ -127,10 +136,7 @@ namespace swift::core
             this->clear();
             m_updateTimer.stop();
         }
-        else if (newStatus.isConnected())
-        {
-            m_updateTimer.start();
-        }
+        else if (newStatus.isConnected()) { m_updateTimer.start(); }
     }
 
     void CAirspaceAnalyzer::onTimeout()
@@ -185,10 +191,15 @@ namespace swift::core
         const QList<CCallsign> callsignsAircraft = m_aircraftCallsignTimestamps.keys();
         for (const CCallsign &callsign : callsignsAircraft) // clazy:exclude=container-anti-pattern,range-loop
         {
-            if (!enabled) { m_aircraftCallsignTimestamps[callsign] = timeoutAircraftEpochMs + 1000; } // fake value so it can be re-enabled
+            if (!enabled)
+            {
+                m_aircraftCallsignTimestamps[callsign] = timeoutAircraftEpochMs + 1000;
+            } // fake value so it can be re-enabled
             const qint64 tsv = m_aircraftCallsignTimestamps.value(callsign);
             if (tsv > timeoutAircraftEpochMs) { continue; }
-            CLogMessage(this).debug() << QStringLiteral("Aircraft '%1' timed out after %2ms").arg(callsign.toQString()).arg(currentTimeMsEpoch - tsv);
+            CLogMessage(this).debug() << QStringLiteral("Aircraft '%1' timed out after %2ms")
+                                             .arg(callsign.toQString())
+                                             .arg(currentTimeMsEpoch - tsv);
             m_aircraftCallsignTimestamps.remove(callsign);
             emit this->timeoutAircraft(callsign);
         }
@@ -196,10 +207,15 @@ namespace swift::core
         const QList<CCallsign> callsignsAtc = m_atcCallsignTimestamps.keys();
         for (const CCallsign &callsign : callsignsAtc) // clazy:exclude=container-anti-pattern,range-loop
         {
-            if (!enabled) { m_aircraftCallsignTimestamps[callsign] = timeoutAtcEpochMs + 1000; } // fake value so it can be re-enabled
+            if (!enabled)
+            {
+                m_aircraftCallsignTimestamps[callsign] = timeoutAtcEpochMs + 1000;
+            } // fake value so it can be re-enabled
             const qint64 tsv = m_atcCallsignTimestamps.value(callsign);
             if (tsv > timeoutAtcEpochMs) { continue; }
-            CLogMessage(this).debug() << QStringLiteral("ATC '%1' timed out after %2ms").arg(callsign.toQString()).arg(currentTimeMsEpoch - tsv);
+            CLogMessage(this).debug() << QStringLiteral("ATC '%1' timed out after %2ms")
+                                             .arg(callsign.toQString())
+                                             .arg(currentTimeMsEpoch - tsv);
             m_atcCallsignTimestamps.remove(callsign);
             emit this->timeoutAtc(callsign);
         }
@@ -225,19 +241,13 @@ namespace swift::core
         // nevertheless we calculate all the time as the snapshot could be used in other scenarios
 
         CSimulatedAircraftList aircraftInRange(this->getAircraftInRange()); // thread safe copy from provider
-        CAirspaceAircraftSnapshot snapshot(
-            aircraftInRange,
-            restricted, enabled,
-            maxAircraft, maxRenderedDistance);
+        CAirspaceAircraftSnapshot snapshot(aircraftInRange, restricted, enabled, maxAircraft, maxRenderedDistance);
 
         // lock block
         {
             QWriteLocker l(&m_lockSnapshot);
             bool wasValid = m_latestAircraftSnapshot.isValidSnapshot();
-            if (wasValid)
-            {
-                snapshot.setRestrictionChanged(m_latestAircraftSnapshot);
-            }
+            if (wasValid) { snapshot.setRestrictionChanged(m_latestAircraftSnapshot); }
             m_latestAircraftSnapshot = snapshot;
             if (!wasValid) { return; } // ignore the 1st snapshot
         }

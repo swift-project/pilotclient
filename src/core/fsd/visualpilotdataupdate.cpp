@@ -15,27 +15,17 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    VisualPilotDataUpdate::VisualPilotDataUpdate() : MessageBase()
-    {}
+    VisualPilotDataUpdate::VisualPilotDataUpdate() : MessageBase() {}
 
-    VisualPilotDataUpdate::VisualPilotDataUpdate(const QString &sender, double latitude, double longitude, double altitudeTrue, double heightAgl,
-                                                 double pitch, double bank, double heading, double xVelocity, double yVelocity, double zVelocity,
-                                                 double pitchRadPerSec, double bankRadPerSec, double headingRadPerSec, double noseGearAngle)
-        : MessageBase(sender, {}),
-          m_latitude(latitude),
-          m_longitude(longitude),
-          m_altitudeTrue(altitudeTrue),
-          m_heightAgl(heightAgl),
-          m_pitch(pitch),
-          m_bank(bank),
-          m_heading(heading),
-          m_xVelocity(xVelocity),
-          m_yVelocity(yVelocity),
-          m_zVelocity(zVelocity),
-          m_pitchRadPerSec(pitchRadPerSec),
-          m_bankRadPerSec(bankRadPerSec),
-          m_headingRadPerSec(headingRadPerSec),
-          m_noseGearAngle(noseGearAngle)
+    VisualPilotDataUpdate::VisualPilotDataUpdate(const QString &sender, double latitude, double longitude,
+                                                 double altitudeTrue, double heightAgl, double pitch, double bank,
+                                                 double heading, double xVelocity, double yVelocity, double zVelocity,
+                                                 double pitchRadPerSec, double bankRadPerSec, double headingRadPerSec,
+                                                 double noseGearAngle)
+        : MessageBase(sender, {}), m_latitude(latitude), m_longitude(longitude), m_altitudeTrue(altitudeTrue),
+          m_heightAgl(heightAgl), m_pitch(pitch), m_bank(bank), m_heading(heading), m_xVelocity(xVelocity),
+          m_yVelocity(yVelocity), m_zVelocity(zVelocity), m_pitchRadPerSec(pitchRadPerSec),
+          m_bankRadPerSec(bankRadPerSec), m_headingRadPerSec(headingRadPerSec), m_noseGearAngle(noseGearAngle)
     {}
 
     QStringList VisualPilotDataUpdate::toTokens() const
@@ -74,20 +64,22 @@ namespace swift::core::fsd
         bool unused = false; //! \todo check if needed?
         unpackPBH(tokens[5].toUInt(), pitch, bank, heading, unused);
 
-        return VisualPilotDataUpdate(tokens[0], tokens[1].toDouble(), tokens[2].toDouble(), tokens[3].toDouble(), tokens[4].toDouble(),
-                                     pitch, bank, heading, tokens[6].toDouble(), tokens[7].toDouble(), tokens[8].toDouble(), tokens[9].toDouble(),
-                                     tokens[11].toDouble(), tokens[10].toDouble(), tokens.value(12, QStringLiteral("0")).toDouble());
+        return VisualPilotDataUpdate(
+            tokens[0], tokens[1].toDouble(), tokens[2].toDouble(), tokens[3].toDouble(), tokens[4].toDouble(), pitch,
+            bank, heading, tokens[6].toDouble(), tokens[7].toDouble(), tokens[8].toDouble(), tokens[9].toDouble(),
+            tokens[11].toDouble(), tokens[10].toDouble(), tokens.value(12, QStringLiteral("0")).toDouble());
     }
 
     VisualPilotDataPeriodic VisualPilotDataUpdate::toPeriodic() const
     {
-        return VisualPilotDataPeriodic(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading,
-                                       m_xVelocity, m_yVelocity, m_zVelocity, m_pitchRadPerSec, m_bankRadPerSec, m_headingRadPerSec, m_noseGearAngle);
+        return VisualPilotDataPeriodic(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank,
+                                       m_heading, m_xVelocity, m_yVelocity, m_zVelocity, m_pitchRadPerSec,
+                                       m_bankRadPerSec, m_headingRadPerSec, m_noseGearAngle);
     }
 
     VisualPilotDataStopped VisualPilotDataUpdate::toStopped() const
     {
-        return VisualPilotDataStopped(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading,
-                                      m_noseGearAngle);
+        return VisualPilotDataStopped(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank,
+                                      m_heading, m_noseGearAngle);
     }
 } // namespace swift::core::fsd

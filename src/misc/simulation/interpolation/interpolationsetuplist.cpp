@@ -3,7 +3,8 @@
 
 #include "misc/simulation/interpolation/interpolationsetuplist.h"
 
-SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList)
+SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign,
+                             CInterpolationSetupList)
 
 namespace swift::misc::simulation
 {
@@ -14,7 +15,8 @@ namespace swift::misc::simulation
         this->push_back(setup);
     }
 
-    CInterpolationSetupList::CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other) : CSequence<CInterpolationAndRenderingSetupPerCallsign>(other)
+    CInterpolationSetupList::CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other)
+        : CSequence<CInterpolationAndRenderingSetupPerCallsign>(other)
     {}
 
 } // namespace swift::misc::simulation

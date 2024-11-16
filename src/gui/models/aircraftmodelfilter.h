@@ -23,21 +23,19 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CAircraftModelFilter(int id,
-                             const QString &modelKey, const QString &description,
-                             swift::misc::simulation::CAircraftModel::ModelModeFilter modelMode,
-                             swift::misc::db::DbKeyStateFilter dbKeyFilter,
-                             Qt::CheckState military, Qt::CheckState colorLiveries,
-                             const QString &aircraftIcao, const QString &aircraftManufacturer,
-                             const QString &airlineIcao, const QString &airlineName,
-                             const QString &liveryCode,
-                             const QString &fileName,
-                             const QString &combinedType,
-                             const swift::misc::simulation::CSimulatorInfo &simInfo = swift::misc::simulation::CSimulatorInfo::allSimulators(),
-                             const swift::misc::simulation::CDistributor &distributor = swift::misc::simulation::CDistributor());
+        CAircraftModelFilter(
+            int id, const QString &modelKey, const QString &description,
+            swift::misc::simulation::CAircraftModel::ModelModeFilter modelMode,
+            swift::misc::db::DbKeyStateFilter dbKeyFilter, Qt::CheckState military, Qt::CheckState colorLiveries,
+            const QString &aircraftIcao, const QString &aircraftManufacturer, const QString &airlineIcao,
+            const QString &airlineName, const QString &liveryCode, const QString &fileName, const QString &combinedType,
+            const swift::misc::simulation::CSimulatorInfo &simInfo =
+                swift::misc::simulation::CSimulatorInfo::allSimulators(),
+            const swift::misc::simulation::CDistributor &distributor = swift::misc::simulation::CDistributor());
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::simulation::CAircraftModelList filter(const swift::misc::simulation::CAircraftModelList &inContainer) const override;
+        virtual swift::misc::simulation::CAircraftModelList
+        filter(const swift::misc::simulation::CAircraftModelList &inContainer) const override;
 
     private:
         int m_id = -1;

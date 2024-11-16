@@ -46,7 +46,8 @@ namespace swift::misc
     void registerMetaValueType()
     {
         if (QMetaType::hasRegisteredConverterFunction<T, private_ns::IValueObjectMetaInfo *>()) { return; }
-        bool ok = QMetaType::registerConverter<T, private_ns::IValueObjectMetaInfo *>(private_ns::CValueObjectMetaInfo<T>::instance);
+        bool ok = QMetaType::registerConverter<T, private_ns::IValueObjectMetaInfo *>(
+            private_ns::CValueObjectMetaInfo<T>::instance);
         Q_ASSERT(ok);
         Q_UNUSED(ok);
     }
@@ -272,7 +273,8 @@ namespace swift::misc
         void convertFromJson(const QJsonObject &json);
 
         //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
-        CStatusMessage convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
+        CStatusMessage convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                              const QString &prefix);
 
         //! To compact JSON format.
         QJsonObject toMemoizedJson() const;
@@ -281,7 +283,8 @@ namespace swift::misc
         void convertFromMemoizedJson(const QJsonObject &json, bool allowFallbackToJson);
 
         //! Call convertFromMemoizedJson, catch any CJsonException that is thrown and return it as CStatusMessage.
-        CStatusMessage convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
+        CStatusMessage convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                                      const QString &prefix);
 
         //! \copydoc swift::misc::mixin::DBusByMetaClass::marshallToDbus
         void marshallToDbus(QDBusArgument &argument) const;
@@ -331,7 +334,10 @@ namespace swift::misc
     private:
         QVariant m_v;
 
-        private_ns::IValueObjectMetaInfo *getValueObjectMetaInfo() const { return private_ns::getValueObjectMetaInfo(m_v); }
+        private_ns::IValueObjectMetaInfo *getValueObjectMetaInfo() const
+        {
+            return private_ns::getValueObjectMetaInfo(m_v);
+        }
         void *data() { return m_v.data(); }
         const void *data() const { return m_v.data(); }
 
@@ -384,7 +390,11 @@ namespace swift::misc::private_ns
     {
         if constexpr (canConvertVariantList<T>(0))
         {
-            if (QMetaType::hasRegisteredConverterFunction(QMetaType(qMetaTypeId<T>()), QMetaType(qMetaTypeId<QVector<CVariant>>()))) { return; }
+            if (QMetaType::hasRegisteredConverterFunction(QMetaType(qMetaTypeId<T>()),
+                                                          QMetaType(qMetaTypeId<QVector<CVariant>>())))
+            {
+                return;
+            }
 
             QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant> {
                 return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });

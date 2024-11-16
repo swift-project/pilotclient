@@ -24,10 +24,7 @@ namespace swift::misc
 
         m_timer.start(); // start or restart
         m_inputsCount++;
-        if (m_inputsCount >= m_maxInputsPerDigest)
-        {
-            timerTimeout();
-        }
+        if (m_inputsCount >= m_maxInputsPerDigest) { timerTimeout(); }
     }
 
     void CDigestSignal::timerTimeout()

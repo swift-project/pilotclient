@@ -20,7 +20,8 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::models
 {
-    CTextMessageListModel::CTextMessageListModel(TextMessageMode mode, QObject *parent) : CListModelTimestampObjects("ModelTextMessageList", parent), m_textMessageMode(NotSet)
+    CTextMessageListModel::CTextMessageListModel(TextMessageMode mode, QObject *parent)
+        : CListModelTimestampObjects("ModelTextMessageList", parent), m_textMessageMode(NotSet)
     {
         this->setTextMessageMode(mode);
 
@@ -44,8 +45,10 @@ namespace swift::gui::models
             CColumn col = CColumn("type", CTextMessage::IndexIcon);
             col.setSortPropertyIndex({ CTextMessage::IndexSenderCallsign, CCallsign::IndexSuffix });
             m_columns.addColumn(col);
-            m_columns.addColumn(CColumn("time", "received", CTextMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
-            m_columns.addColumn(CColumn::standardString("from", { CTextMessage::IndexSenderCallsign, CCallsign::IndexCallsignString }));
+            m_columns.addColumn(CColumn("time", "received", CTextMessage::IndexUtcTimestamp,
+                                        new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
+            m_columns.addColumn(
+                CColumn::standardString("from", { CTextMessage::IndexSenderCallsign, CCallsign::IndexCallsignString }));
             m_columns.addColumn(CColumn::standardString("to", CTextMessage::IndexRecipientCallsignOrFrequency));
             m_columns.addColumn(CColumn::standardString("message", CTextMessage::IndexMessage));
 
@@ -57,8 +60,10 @@ namespace swift::gui::models
 
         case From:
         {
-            m_columns.addColumn(CColumn("time", "received", CTextMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
-            m_columns.addColumn(CColumn::standardString("from", { CTextMessage::IndexSenderCallsign, CCallsign::IndexCallsignString }));
+            m_columns.addColumn(CColumn("time", "received", CTextMessage::IndexUtcTimestamp,
+                                        new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
+            m_columns.addColumn(
+                CColumn::standardString("from", { CTextMessage::IndexSenderCallsign, CCallsign::IndexCallsignString }));
             m_columns.addColumn(CColumn::standardString("message", CTextMessage::IndexMessage));
 
             // default sort order
@@ -67,9 +72,7 @@ namespace swift::gui::models
         }
         break;
 
-        default:
-            qFatal("Wrong mode");
-            break;
+        default: qFatal("Wrong mode"); break;
         }
     }
 

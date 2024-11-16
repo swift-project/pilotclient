@@ -37,8 +37,8 @@ using namespace swift::misc::network;
 
 namespace swift::gui::components
 {
-    CDbLiverySelectorComponent::CDbLiverySelectorComponent(QWidget *parent) : QFrame(parent),
-                                                                              ui(new Ui::CDbLiverySelectorComponent)
+    CDbLiverySelectorComponent::CDbLiverySelectorComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CDbLiverySelectorComponent)
     {
         ui->setupUi(this);
         this->setAcceptDrops(true);
@@ -49,8 +49,10 @@ namespace swift::gui::components
         connect(ui->le_Livery, &QLineEdit::returnPressed, this, &CDbLiverySelectorComponent::onDataChanged);
         connect(ui->le_Livery, &QLineEdit::editingFinished, this, &CDbLiverySelectorComponent::onDataChanged);
 
-        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLiverySelectorComponent::onLiveriesRead, Qt::QueuedConnection);
-        this->onLiveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getLiveriesCount(), {});
+        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this,
+                &CDbLiverySelectorComponent::onLiveriesRead, Qt::QueuedConnection);
+        this->onLiveriesRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFinished,
+                             sGui->getWebDataServices()->getLiveriesCount(), {});
     }
 
     CDbLiverySelectorComponent::~CDbLiverySelectorComponent()
@@ -80,10 +82,7 @@ namespace swift::gui::components
         const int dbKey = CDatastoreUtility::extractIntegerKey(code);
         CLivery livery;
 
-        if (dbKey >= 0)
-        {
-            livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey);
-        }
+        if (dbKey >= 0) { livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey); }
 
         if (!livery.hasValidDbKey())
         {
@@ -92,10 +91,7 @@ namespace swift::gui::components
             livery = sGui->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode);
         }
 
-        if (livery.hasCompleteData())
-        {
-            this->setLivery(livery);
-        }
+        if (livery.hasCompleteData()) { this->setLivery(livery); }
         else
         {
             ui->lbl_Description->setText("");
@@ -111,10 +107,7 @@ namespace swift::gui::components
         const int dbKey = CDatastoreUtility::extractIntegerKey(raw);
 
         CLivery livery;
-        if (dbKey >= 0)
-        {
-            livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey);
-        }
+        if (dbKey >= 0) { livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey); }
         else
         {
             const QString liveryCode(this->stripExtraInfo(ui->le_Livery->text()));
@@ -136,25 +129,16 @@ namespace swift::gui::components
         return stripDesignatorFromCompleterString(cc);
     }
 
-    void CDbLiverySelectorComponent::setReadOnly(bool readOnly)
-    {
-        ui->le_Livery->setReadOnly(readOnly);
-    }
+    void CDbLiverySelectorComponent::setReadOnly(bool readOnly) { ui->le_Livery->setReadOnly(readOnly); }
 
     void CDbLiverySelectorComponent::withLiveryDescription(bool description)
     {
         ui->lbl_Description->setVisible(description);
     }
 
-    bool CDbLiverySelectorComponent::isSet() const
-    {
-        return this->getLivery().hasCompleteData();
-    }
+    bool CDbLiverySelectorComponent::isSet() const { return this->getLivery().hasCompleteData(); }
 
-    void CDbLiverySelectorComponent::clear()
-    {
-        ui->le_Livery->clear();
-    }
+    void CDbLiverySelectorComponent::clear() { ui->le_Livery->clear(); }
 
     void CDbLiverySelectorComponent::dragEnterEvent(QDragEnterEvent *event)
     {
@@ -196,7 +180,8 @@ namespace swift::gui::components
         }
     }
 
-    void CDbLiverySelectorComponent::onLiveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
+    void CDbLiverySelectorComponent::onLiveriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState,
+                                                    int count, const QUrl &url)
     {
         Q_UNUSED(url)
 
@@ -210,15 +195,13 @@ namespace swift::gui::components
                 c->setCaseSensitivity(Qt::CaseInsensitive);
                 c->setCompletionMode(QCompleter::PopupCompletion);
                 c->setMaxVisibleItems(10);
-                connect(c, qOverload<const QString &>(&QCompleter::activated), this, &CDbLiverySelectorComponent::onCompleterActivated);
+                connect(c, qOverload<const QString &>(&QCompleter::activated), this,
+                        &CDbLiverySelectorComponent::onCompleterActivated);
 
                 ui->le_Livery->setCompleter(c);
                 m_completerLiveries.reset(c); // deletes any old completer
             }
-            else
-            {
-                m_completerLiveries.reset(nullptr);
-            }
+            else { m_completerLiveries.reset(nullptr); }
         }
     }
 
@@ -229,10 +212,7 @@ namespace swift::gui::components
         this->setLivery(raw);
     }
 
-    void CDbLiverySelectorComponent::onCompleterActivated(const QString &liveryCode)
-    {
-        this->setLivery(liveryCode);
-    }
+    void CDbLiverySelectorComponent::onCompleterActivated(const QString &liveryCode) { this->setLivery(liveryCode); }
 
     QString CDbLiverySelectorComponent::stripExtraInfo(const QString &liveryCode) const
     {

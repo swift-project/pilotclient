@@ -91,7 +91,8 @@ namespace swift::simplugin::fs9
         // We need the Id of the users player, because we are sending packets only to him
         std::atomic<DPNID> m_playerUser = { 0 }; //!< User player Id
 
-        using TCallbackWrapper = CallbackWrapper<CDirectPlayPeer, HRESULT, DWORD, void *>; //!< DirectPlay peer message handler wrapper
+        using TCallbackWrapper =
+            CallbackWrapper<CDirectPlayPeer, HRESULT, DWORD, void *>; //!< DirectPlay peer message handler wrapper
         TCallbackWrapper m_callbackWrapper; //!< Callback wrapper
 
     private:

@@ -74,7 +74,8 @@ namespace swift::misc
             void peerSubscriptionsReceived(const QString &channel, const swift::misc::CVariantList &filters);
 
             //! Server has submitted a request to be handled by the client.
-            void requestReceived(const QString &channel, const swift::misc::CVariant &param, quint32 token, QPrivateSignal);
+            void requestReceived(const QString &channel, const swift::misc::CVariant &param, quint32 token,
+                                 QPrivateSignal);
 
             //! \private Server has relayed a reply to the client's request.
             void replyReceived(const QString &channel, const swift::misc::CVariant &param, quint32 token);

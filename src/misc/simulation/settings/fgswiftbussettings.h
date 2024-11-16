@@ -17,8 +17,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CFGSwiftBusS
 namespace swift::misc::simulation::settings
 {
     //! FGSwiftBus settings
-    class SWIFT_MISC_EXPORT CFGSwiftBusSettings final :
-        public CValueObject<CFGSwiftBusSettings>
+    class SWIFT_MISC_EXPORT CFGSwiftBusSettings final : public CValueObject<CFGSwiftBusSettings>
     {
     public:
         //! Properties by index
@@ -72,7 +71,11 @@ namespace swift::misc::simulation::settings
         static CFGSwiftBusSettings defaultValue() { return CFGSwiftBusSettings(); }
 
         //! \copydoc swift::misc::TSettingTrait::isValid
-        static bool isValid(const CFGSwiftBusSettings &settings, QString &) { return swift::misc::CDBusServer::isSessionOrSystemAddress(settings.getDBusServerAddress()) || swift::misc::CDBusServer::isQtDBusAddress(settings.getDBusServerAddress()); }
+        static bool isValid(const CFGSwiftBusSettings &settings, QString &)
+        {
+            return swift::misc::CDBusServer::isSessionOrSystemAddress(settings.getDBusServerAddress()) ||
+                   swift::misc::CDBusServer::isQtDBusAddress(settings.getDBusServerAddress());
+        }
     };
 } // namespace swift::misc::simulation::settings
 

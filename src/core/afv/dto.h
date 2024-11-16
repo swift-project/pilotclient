@@ -222,16 +222,10 @@ namespace swift::core::afv
         TxTransceiverDto() {}
 
         //! Ctor
-        TxTransceiverDto(const TransceiverDto &dto)
-        {
-            id = dto.id;
-        }
+        TxTransceiverDto(const TransceiverDto &dto) { id = dto.id; }
 
         //! Ctor
-        TxTransceiverDto(uint16_t value)
-        {
-            id = value;
-        }
+        TxTransceiverDto(uint16_t value) { id = value; }
 
         uint16_t id; //!< id
         MSGPACK_DEFINE(id)

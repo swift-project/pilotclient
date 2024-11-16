@@ -25,7 +25,8 @@ namespace swift::gui::models
         CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem = nullptr);
 
         //! Constructor
-        CActionItem(const QString &action, const QString &name, swift::misc::CIcons::IconIndex icon, CActionItem *parentItem = nullptr);
+        CActionItem(const QString &action, const QString &name, swift::misc::CIcons::IconIndex icon,
+                    CActionItem *parentItem = nullptr);
 
         //! Destructor
         ~CActionItem();

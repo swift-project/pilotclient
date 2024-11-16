@@ -13,8 +13,7 @@
 namespace swift::gui::views
 {
     //! Aircraft ICAO codes view
-    class SWIFT_GUI_EXPORT CAircraftIcaoCodeView :
-        public CViewWithDbObjects<models::CAircraftIcaoCodeListModel>
+    class SWIFT_GUI_EXPORT CAircraftIcaoCodeView : public CViewWithDbObjects<models::CAircraftIcaoCodeListModel>
     {
         Q_OBJECT
 

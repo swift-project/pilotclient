@@ -15,12 +15,13 @@ using namespace swift::gui::filters;
 
 namespace swift::gui::components
 {
-    CStatusMessagesDetail::CStatusMessagesDetail(QWidget *parent) : QFrame(parent),
-                                                                    ui(new Ui::CStatusMessagesDetail)
+    CStatusMessagesDetail::CStatusMessagesDetail(QWidget *parent) : QFrame(parent), ui(new Ui::CStatusMessagesDetail)
     {
         ui->setupUi(this);
-        connect(ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, ui->form_StatusMessage, &CStatusMessageForm::setVariant);
-        connect(ui->tvp_StatusMessages, &CStatusMessageView::modelDataChangedDigest, this, &CStatusMessagesDetail::modelDataChangedDigest);
+        connect(ui->tvp_StatusMessages, &CStatusMessageView::objectSelected, ui->form_StatusMessage,
+                &CStatusMessageForm::setVariant);
+        connect(ui->tvp_StatusMessages, &CStatusMessageView::modelDataChangedDigest, this,
+                &CStatusMessagesDetail::modelDataChangedDigest);
         ui->tvp_StatusMessages->setAutoResizeFrequency(3);
         ui->tvp_StatusMessages->setSorting(CStatusMessage::IndexUtcTimestamp, Qt::DescendingOrder);
         ui->tvp_StatusMessages->setCustomMenu(new CMessageMenu(this));
@@ -32,8 +33,7 @@ namespace swift::gui::components
         });
     }
 
-    CStatusMessagesDetail::~CStatusMessagesDetail()
-    {}
+    CStatusMessagesDetail::~CStatusMessagesDetail() {}
 
     void CStatusMessagesDetail::appendStatusMessageToList(const CStatusMessage &message)
     {
@@ -52,7 +52,8 @@ namespace swift::gui::components
     void CStatusMessagesDetail::showDetails(bool details)
     {
         ui->form_StatusMessage->setVisible(details);
-        ui->tvp_StatusMessages->setMode(details ? models::CStatusMessageListModel::Detailed : models::CStatusMessageListModel::Simplified);
+        ui->tvp_StatusMessages->setMode(details ? models::CStatusMessageListModel::Detailed :
+                                                  models::CStatusMessageListModel::Simplified);
     }
 
     void CStatusMessagesDetail::showFilterDialog()
@@ -71,10 +72,7 @@ namespace swift::gui::components
         ui->filter_LogMessages->show();
     }
 
-    void CStatusMessagesDetail::hideFilterBar()
-    {
-        ui->filter_LogMessages->hide();
-    }
+    void CStatusMessagesDetail::hideFilterBar() { ui->filter_LogMessages->hide(); }
 
     void CStatusMessagesDetail::clear()
     {
@@ -82,10 +80,7 @@ namespace swift::gui::components
         ui->form_StatusMessage->clear();
     }
 
-    int CStatusMessagesDetail::rowCount() const
-    {
-        return ui->tvp_StatusMessages->rowCount();
-    }
+    int CStatusMessagesDetail::rowCount() const { return ui->tvp_StatusMessages->rowCount(); }
 
     void CStatusMessagesDetail::filterUseRadioButtonDescriptiveIcons(bool oneCharacterText)
     {
@@ -97,10 +92,7 @@ namespace swift::gui::components
         ui->tvp_StatusMessages->setSorting(propertyIndex, order);
     }
 
-    void CStatusMessagesDetail::setNoSorting()
-    {
-        ui->tvp_StatusMessages->setNoSorting();
-    }
+    void CStatusMessagesDetail::setNoSorting() { ui->tvp_StatusMessages->setNoSorting(); }
 
     void CStatusMessagesDetail::deferredUpdate()
     {
@@ -134,9 +126,9 @@ namespace swift::gui::components
 
         const bool v = messagesDetail->ui->form_StatusMessage->isVisible();
         const QString formString(v ? "Hide log details" : "Show log details");
-        m_action = menuActions.addAction(m_action,
-                                         CIcons::databaseTable16(), formString,
-                                         CMenuAction::pathLog(), { messagesDetail->ui->form_StatusMessage, &CStatusMessageForm::toggleVisibility });
+        m_action =
+            menuActions.addAction(m_action, CIcons::databaseTable16(), formString, CMenuAction::pathLog(),
+                                  { messagesDetail->ui->form_StatusMessage, &CStatusMessageForm::toggleVisibility });
         m_action->setCheckable(true);
         m_action->setChecked(v);
     }

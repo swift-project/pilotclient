@@ -20,25 +20,25 @@ using namespace swift::core::data;
 
 namespace swift::gui::components
 {
-    CSetupLoadingDialog::CSetupLoadingDialog(QWidget *parent) : QDialog(parent),
-                                                                ui(new Ui::CSetupLoadingDialog)
+    CSetupLoadingDialog::CSetupLoadingDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CSetupLoadingDialog)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
 
         ui->setupUi(this);
 
         const QString bootstrapPath = CSwiftDirectories::bootstrapResourceFilePath();
-        ui->lbl_ownBootstrap->setText("Your boostrap.json file is available at <a href=" + bootstrapPath + ">" + bootstrapPath + "</>");
+        ui->lbl_ownBootstrap->setText("Your boostrap.json file is available at <a href=" + bootstrapPath + ">" +
+                                      bootstrapPath + "</>");
 
         // hide unnecessary details
         ui->comp_Messages->hideFilterBar();
         ui->comp_Messages->showDetails(false);
     }
-    CSetupLoadingDialog::CSetupLoadingDialog(const CStatusMessageList &msgs, QWidget *parent) : CSetupLoadingDialog(parent)
+    CSetupLoadingDialog::CSetupLoadingDialog(const CStatusMessageList &msgs, QWidget *parent)
+        : CSetupLoadingDialog(parent)
     {
         ui->comp_Messages->appendStatusMessagesToList(msgs);
     }
 
-    CSetupLoadingDialog::~CSetupLoadingDialog()
-    {}
+    CSetupLoadingDialog::~CSetupLoadingDialog() {}
 } // namespace swift::gui::components

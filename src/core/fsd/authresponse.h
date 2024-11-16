@@ -36,16 +36,11 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const AuthResponse &lhs, const AuthResponse &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.m_response == rhs.m_response;
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.m_response == rhs.m_response;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const AuthResponse &lhs, const AuthResponse &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const AuthResponse &lhs, const AuthResponse &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

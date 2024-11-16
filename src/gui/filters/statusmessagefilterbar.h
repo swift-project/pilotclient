@@ -41,7 +41,8 @@ namespace swift::gui::filters
         void useRadioButtonDescriptiveIcons(bool oneCharacterText);
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>> createModelFilter() const override;
+        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>>
+        createModelFilter() const override;
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged

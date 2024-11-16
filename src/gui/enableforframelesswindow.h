@@ -44,7 +44,8 @@ namespace swift::gui
         //! \param isMainApplicationWindow is this the main (there should be only one) application window
         //! \param framelessPropertyname   qss property indication frameless
         //! \param correspondingWidget     the widget representing the window
-        CEnableForFramelessWindow(WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyname, QWidget *correspondingWidget);
+        CEnableForFramelessWindow(WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyname,
+                                  QWidget *correspondingWidget);
 
         //! Destructor
         virtual ~CEnableForFramelessWindow() {}

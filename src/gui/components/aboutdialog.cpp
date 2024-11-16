@@ -29,8 +29,7 @@ namespace swift::gui::components
         });
     }
 
-    CAboutDialog::~CAboutDialog()
-    {}
+    CAboutDialog::~CAboutDialog() {}
 
     void CAboutDialog::init()
     {
@@ -45,13 +44,15 @@ namespace swift::gui::components
 
     void CAboutDialog::loadSwiftLicense()
     {
-        const QString html = swift::misc::CFileUtils::readFileToString(swift::misc::CSwiftDirectories::legalDirectory() + "/LicenseRef-swift-pilot-client-1.html");
+        const QString html = swift::misc::CFileUtils::readFileToString(
+            swift::misc::CSwiftDirectories::legalDirectory() + "/LicenseRef-swift-pilot-client-1.html");
         ui->tbr_swiftLicense->setHtml(html);
     }
 
     void CAboutDialog::loadThirdPartyLicenses()
     {
-        const QString html = swift::misc::CFileUtils::readFileToString(swift::misc::CSwiftDirectories::legalDirectory() + "/3rdparty.html");
+        const QString html = swift::misc::CFileUtils::readFileToString(
+            swift::misc::CSwiftDirectories::legalDirectory() + "/3rdparty.html");
         ui->tbr_ThirdPartyLicenses->setHtml(html);
     }
 } // namespace swift::gui::components

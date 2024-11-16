@@ -20,8 +20,7 @@ namespace swift::simplugin::fsx
         CSimulatorFsx(const swift::misc::simulation::CSimulatorPluginInfo &info,
                       swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                       swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                      swift::misc::network::IClientProvider *clientProvider,
-                      QObject *parent = nullptr);
+                      swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! \name ISimulator implementations
         //! @{

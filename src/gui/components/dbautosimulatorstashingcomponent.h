@@ -76,7 +76,8 @@ namespace swift::gui::components
         void addStatusMessages(const swift::misc::CStatusMessageList &msgs);
 
         //! Add a status message for a given model (prefixed)
-        void addStatusMessage(const swift::misc::CStatusMessage &msg, const swift::misc::simulation::CAircraftModel &model);
+        void addStatusMessage(const swift::misc::CStatusMessage &msg,
+                              const swift::misc::simulation::CAircraftModel &model);
 
         //! Try to stash updated models
         void tryToStash();

@@ -23,9 +23,7 @@ namespace swift::misc::simulation::fscommon
     //! Set of aircraft.cfg entries representing an aircraft (FSX)
     //! \remarks an entry in the aircraft.cfg is title, atc type, ...
     //!          This class already bundles relevant entries, hence the class is named Entries (plural)
-    class SWIFT_MISC_EXPORT CAircraftCfgEntries :
-        public CValueObject<CAircraftCfgEntries>,
-        public ITimestampBased
+    class SWIFT_MISC_EXPORT CAircraftCfgEntries : public CValueObject<CAircraftCfgEntries>, public ITimestampBased
     {
     public:
         //! Properties by index
@@ -56,7 +54,8 @@ namespace swift::misc::simulation::fscommon
         CAircraftCfgEntries(const QString &fileName, int index);
 
         //! Entries representing an aircraft
-        CAircraftCfgEntries(const QString &filePath, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description);
+        CAircraftCfgEntries(const QString &filePath, int index, const QString &title, const QString &atcType,
+                            const QString &atcModel, const QString &atcParkingCode, const QString &description);
 
         //! File name
         const QString &getFileName() const { return m_fileName; }

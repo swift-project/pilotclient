@@ -24,8 +24,8 @@ using namespace swift::misc::simulation::fscommon;
 
 namespace swift::gui::components
 {
-    CInstallFsxTerrainProbeComponent::CInstallFsxTerrainProbeComponent(QWidget *parent) : QFrame(parent),
-                                                                                          ui(new Ui::CInstallFsxTerrainProbeComponent)
+    CInstallFsxTerrainProbeComponent::CInstallFsxTerrainProbeComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CInstallFsxTerrainProbeComponent)
     {
         ui->setupUi(this);
         ui->le_Source->setText(CSwiftDirectories::shareTerrainProbeDirectory());
@@ -35,8 +35,10 @@ namespace swift::gui::components
         ui->comp_SimulatorSelector->setValue(CSimulatorInfo::fsx());
 
         connect(ui->pb_Copy, &QPushButton::released, this, &CInstallFsxTerrainProbeComponent::copyProbe);
-        connect(ui->pb_DirectoryBrowser, &QPushButton::released, this, &CInstallFsxTerrainProbeComponent::selectSimObjectsDir);
-        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CInstallFsxTerrainProbeComponent::onSimulatorChanged);
+        connect(ui->pb_DirectoryBrowser, &QPushButton::released, this,
+                &CInstallFsxTerrainProbeComponent::selectSimObjectsDir);
+        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this,
+                &CInstallFsxTerrainProbeComponent::onSimulatorChanged);
 
         QPointer<CInstallFsxTerrainProbeComponent> myself(this);
         QTimer::singleShot(500, this, [=] {
@@ -45,8 +47,7 @@ namespace swift::gui::components
         });
     }
 
-    CInstallFsxTerrainProbeComponent::~CInstallFsxTerrainProbeComponent()
-    {}
+    CInstallFsxTerrainProbeComponent::~CInstallFsxTerrainProbeComponent() {}
 
     void CInstallFsxTerrainProbeComponent::copyProbe()
     {
@@ -66,24 +67,16 @@ namespace swift::gui::components
 
         // model directories
         const QStringList modelDirs = m_simulatorSettings.getModelDirectoriesOrDefault(sim);
-        if (!modelDirs.isEmpty() && !modelDirs.front().isEmpty())
-        {
-            ui->le_Target->setText(modelDirs.front());
-        }
-        else
-        {
-            ui->le_Target->clear();
-        }
+        if (!modelDirs.isEmpty() && !modelDirs.front().isEmpty()) { ui->le_Target->setText(modelDirs.front()); }
+        else { ui->le_Target->clear(); }
     }
 
     void CInstallFsxTerrainProbeComponent::selectSimObjectsDir()
     {
         const QString startDirectory = CFileUtils::fixWindowsUncPath(ui->le_Target->text());
-        const QString dir =
-            CFileUtils::fixWindowsUncPath(
-                QFileDialog::getExistingDirectory(
-                    this, "SimObjects directory", startDirectory,
-                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks));
+        const QString dir = CFileUtils::fixWindowsUncPath(
+            QFileDialog::getExistingDirectory(this, "SimObjects directory", startDirectory,
+                                              QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks));
         ui->le_Target->setText(dir);
     }
 } // namespace swift::gui::components

@@ -17,8 +17,7 @@ using namespace swift::misc;
 
 namespace swift::gui::components
 {
-    CSettingsFontComponent::CSettingsFontComponent(QWidget *parent) : QFrame(parent),
-                                                                      ui(new Ui::CSettingsFontComponent)
+    CSettingsFontComponent::CSettingsFontComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CSettingsFontComponent)
     {
         ui->setupUi(this);
         this->setMode(CSettingsFontComponent::DirectUpdate);
@@ -28,15 +27,16 @@ namespace swift::gui::components
         connect(ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsFontComponent::fontColorDialog);
         connect(ui->tb_SettingsGuiNoFontColor, &QToolButton::clicked, this, &CSettingsFontComponent::noColor);
         connect(ui->pb_Ok, &QPushButton::clicked, this, &CSettingsFontComponent::changeFont, Qt::QueuedConnection);
-        connect(ui->pb_CancelOrReset, &QToolButton::clicked, this, &CSettingsFontComponent::resetFontAndReject, Qt::QueuedConnection);
-        connect(ui->pb_Reset, &QToolButton::clicked, this, &CSettingsFontComponent::clearQssAndResetFont, Qt::QueuedConnection);
+        connect(ui->pb_CancelOrReset, &QToolButton::clicked, this, &CSettingsFontComponent::resetFontAndReject,
+                Qt::QueuedConnection);
+        connect(ui->pb_Reset, &QToolButton::clicked, this, &CSettingsFontComponent::clearQssAndResetFont,
+                Qt::QueuedConnection);
 
         // only after the complete startup style sheet font overrides are available
         connect(sGui, &CGuiApplication::startUpCompleted, this, &CSettingsFontComponent::initValues);
     }
 
-    CSettingsFontComponent::~CSettingsFontComponent()
-    {}
+    CSettingsFontComponent::~CSettingsFontComponent() {}
 
     void CSettingsFontComponent::setMode(CSettingsFontComponent::Mode m)
     {
@@ -59,10 +59,7 @@ namespace swift::gui::components
         this->resetFont();
     }
 
-    QFont CSettingsFontComponent::getFont() const
-    {
-        return ui->cb_SettingsGuiFont->font();
-    }
+    QFont CSettingsFontComponent::getFont() const { return ui->cb_SettingsGuiFont->font(); }
 
     QStringList CSettingsFontComponent::getFamilySizeStyle() const
     {
@@ -93,30 +90,23 @@ namespace swift::gui::components
         const QString fontStyleCombined = ui->cb_SettingsGuiFontStyle->currentText();
 
         QString fontColor = m_selectedColor.name();
-        if (!m_selectedColor.isValid() || m_selectedColor.name().isEmpty())
-        {
-            fontColor.clear();
-        }
+        if (!m_selectedColor.isValid() || m_selectedColor.name().isEmpty()) { fontColor.clear(); }
         ui->le_SettingsGuiFontColor->setText(fontColor);
-        m_qss = CStyleSheetUtility::asStylesheet(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
+        m_qss = CStyleSheetUtility::asStylesheet(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined),
+                                                 CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
         if (m_mode == CSettingsFontComponent::DirectUpdate)
         {
             const bool ok = sGui->updateFont(m_qss);
-            if (ok)
-            {
-                CLogMessage(this).info(u"Updated font style");
-            }
-            else
-            {
-                CLogMessage(this).warning(u"Updating style failed");
-            }
+            if (ok) { CLogMessage(this).info(u"Updated font style"); }
+            else { CLogMessage(this).warning(u"Updating style failed"); }
         }
         emit this->accept();
     }
 
     void CSettingsFontComponent::fontColorDialog()
     {
-        const QColor c = QColorDialog::getColor(m_selectedColor.isValid() ? m_selectedColor : m_cancelColor, this, "Font color");
+        const QColor c =
+            QColorDialog::getColor(m_selectedColor.isValid() ? m_selectedColor : m_cancelColor, this, "Font color");
         if (c == m_selectedColor) { return; }
         m_selectedColor = c;
         ui->le_SettingsGuiFontColor->setText(m_selectedColor.name());
@@ -155,10 +145,7 @@ namespace swift::gui::components
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
         this->initUiValues(m_cancelFont, m_noColorDefault ? QColor() : m_cancelColor);
-        if (m_mode == CSettingsFontComponent::DirectUpdate)
-        {
-            sGui->resetFont();
-        }
+        if (m_mode == CSettingsFontComponent::DirectUpdate) { sGui->resetFont(); }
     }
 
     void CSettingsFontComponent::resetFontAndReject()

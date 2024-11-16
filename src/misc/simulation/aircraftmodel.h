@@ -53,10 +53,7 @@ namespace swift::misc
             int aircraft = -1; //!< aircraft ICAO id
 
             //! Any valid id?
-            bool hasAnyId() const
-            {
-                return model >= 0 || livery >= 0 || aircraft >= 0;
-            }
+            bool hasAnyId() const { return model >= 0 || livery >= 0 || aircraft >= 0; }
 
             //! Return as string
             QString toQString() const
@@ -141,16 +138,22 @@ namespace swift::misc
             CAircraftModel(const QString &model, ModelType type);
 
             //! Constructor.
-            CAircraftModel(const QString &model, ModelType type, const aviation::CAircraftIcaoCode &icao, const aviation::CLivery &livery);
+            CAircraftModel(const QString &model, ModelType type, const aviation::CAircraftIcaoCode &icao,
+                           const aviation::CLivery &livery);
 
             //! Constructor.
-            CAircraftModel(const QString &model, ModelType type, const QString &description, const aviation::CAircraftIcaoCode &icao, const aviation::CLivery &livery = aviation::CLivery());
+            CAircraftModel(const QString &model, ModelType type, const QString &description,
+                           const aviation::CAircraftIcaoCode &icao,
+                           const aviation::CLivery &livery = aviation::CLivery());
 
             //! Constructor.
-            CAircraftModel(const QString &model, ModelType type, const CSimulatorInfo &simulator, const QString &name, const QString &description);
+            CAircraftModel(const QString &model, ModelType type, const CSimulatorInfo &simulator, const QString &name,
+                           const QString &description);
 
             //! Constructor.
-            CAircraftModel(const QString &model, ModelType type, const CSimulatorInfo &simulator, const QString &name, const QString &description, const aviation::CAircraftIcaoCode &icao, const aviation::CLivery &livery = aviation::CLivery());
+            CAircraftModel(const QString &model, ModelType type, const CSimulatorInfo &simulator, const QString &name,
+                           const QString &description, const aviation::CAircraftIcaoCode &icao,
+                           const aviation::CLivery &livery = aviation::CLivery());
 
             //! \copydoc swift::misc::mixin::Index::propertyByIndex
             QVariant propertyByIndex(CPropertyIndexRef index) const;
@@ -226,13 +229,22 @@ namespace swift::misc
             const aviation::CAirlineIcaoCode &getAirlineIcaoCode() const { return m_livery.getAirlineIcaoCode(); }
 
             //! Set airline ICAO code designator
-            bool setAirlineIcaoDesignator(const QString &designator) { return m_livery.setAirlineIcaoCodeDesignator(designator); }
+            bool setAirlineIcaoDesignator(const QString &designator)
+            {
+                return m_livery.setAirlineIcaoCodeDesignator(designator);
+            }
 
             //! Airline ICAO code designator
-            const QString &getAirlineIcaoCodeDesignator() const { return m_livery.getAirlineIcaoCode().getDesignator(); }
+            const QString &getAirlineIcaoCodeDesignator() const
+            {
+                return m_livery.getAirlineIcaoCode().getDesignator();
+            }
 
             //! Airline ICAO code designator
-            const QString getAirlineIcaoCodeVDesignator() const { return m_livery.getAirlineIcaoCode().getVDesignator(); }
+            const QString getAirlineIcaoCodeVDesignator() const
+            {
+                return m_livery.getAirlineIcaoCode().getVDesignator();
+            }
 
             //! Set aircraft ICAO code
             bool setAircraftIcaoCode(const aviation::CAircraftIcaoCode &aircraftIcaoCode);
@@ -241,7 +253,8 @@ namespace swift::misc
             void setAircraftIcaoDesignator(const QString &designator);
 
             //! Set ICAO codes
-            void setAircraftIcaoCodes(const aviation::CAircraftIcaoCode &aircraftIcaoCode, const aviation::CAirlineIcaoCode &airlineIcaoCode);
+            void setAircraftIcaoCodes(const aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                      const aviation::CAirlineIcaoCode &airlineIcaoCode);
 
             //! Valid airline and aircraft designator?
             bool hasValidAircraftAndAirlineDesignator() const;
@@ -411,7 +424,8 @@ namespace swift::misc
             bool matchesModelStringOrAlias(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
             //! Calculate score
-            int calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries, CStatusMessageList *log = nullptr) const;
+            int calculateScore(const CAircraftModel &compareModel, bool preferColorLiveries,
+                               CStatusMessageList *log = nullptr) const;
 
             //! Validate
             CStatusMessageList validate(bool withNestedObjects) const;
@@ -528,7 +542,10 @@ namespace swift::misc
             static CAircraftModel fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("mod_"));
 
             //! From swift DB JSON, caching during this process (faster)
-            static CAircraftModel fromDatabaseJsonCaching(const QJsonObject &json, aviation::AircraftIcaoIdMap &aircraftIcaos, const aviation::AircraftCategoryIdMap &categories, aviation::LiveryIdMap &liveries, DistributorIdMap &distributors, const QString &prefix = QString("mod_"));
+            static CAircraftModel
+            fromDatabaseJsonCaching(const QJsonObject &json, aviation::AircraftIcaoIdMap &aircraftIcaos,
+                                    const aviation::AircraftCategoryIdMap &categories, aviation::LiveryIdMap &liveries,
+                                    DistributorIdMap &distributors, const QString &prefix = QString("mod_"));
 
             //! Livery string prefix
             static const QString &liveryStringPrefix();
@@ -552,7 +569,10 @@ namespace swift::misc
 
         private:
             //! Common implemenation of all fromDatabaseJson functions
-            static CAircraftModel fromDatabaseJsonBaseImpl(const QJsonObject &json, const QString &prefix, const aviation::CAircraftIcaoCode &aircraftIcao, const aviation::CLivery &livery, const CDistributor &distributor);
+            static CAircraftModel fromDatabaseJsonBaseImpl(const QJsonObject &json, const QString &prefix,
+                                                           const aviation::CAircraftIcaoCode &aircraftIcao,
+                                                           const aviation::CLivery &livery,
+                                                           const CDistributor &distributor);
 
             aviation::CCallsign m_callsign; //!< aircraft's callsign if any
             aviation::CAircraftIcaoCode m_aircraftIcao; //!< ICAO code if available

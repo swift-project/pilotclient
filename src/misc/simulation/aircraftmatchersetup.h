@@ -77,8 +77,12 @@ namespace swift::misc::simulation
 
             // default depending on algorithm
             ModeDefaultScore = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault | ReverseLookupDefault,
-            ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ByLivery,
-            ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType | ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ModeDefaultScore,
+            ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType |
+                                ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault |
+                                ExcludeDefault | ByLivery,
+            ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType |
+                                         ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault |
+                                         ExcludeDefault | ModeDefaultScore,
         };
         Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
@@ -189,7 +193,10 @@ namespace swift::misc::simulation
 
         //! Verification only shown for warning/errors?
         //! \sa ModelVerificationOnlyWarnError
-        bool onlyShowVerificationWarningsAndErrors() const { return this->getMatchingMode().testFlag(ModelVerificationOnlyWarnError); }
+        bool onlyShowVerificationWarningsAndErrors() const
+        {
+            return this->getMatchingMode().testFlag(ModelVerificationOnlyWarnError);
+        }
 
         //! Failover if model cannot be loaded
         //! \sa ModelFailoverIfNoModelCanBeAdded
@@ -259,13 +266,14 @@ namespace swift::misc::simulation
         static const QString &strategyToString(PickSimilarStrategy strategy);
 
         //! Mode by flags
-        static MatchingMode matchingMode(bool revModelString, bool revLiveryIds,
-                                         bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st,
-                                         bool byFamily, bool byLivery, bool byCombinedType,
-                                         bool byForceMilitary, bool byForceCivilian,
-                                         bool byVtol, bool byGliderCategory, bool byMilitaryCategory, bool bySmallAircraftCategory,
-                                         bool scoreIgnoreZeros, bool scorePreferColorLiveries, bool excludeNoDbData, bool excludeNoExcluded,
-                                         bool modelVerification, bool modelVerificationWarnError, bool modelSetRemoveFailedModel, bool modelFailover);
+        static MatchingMode matchingMode(bool revModelString, bool revLiveryIds, bool byModelString,
+                                         bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily,
+                                         bool byLivery, bool byCombinedType, bool byForceMilitary, bool byForceCivilian,
+                                         bool byVtol, bool byGliderCategory, bool byMilitaryCategory,
+                                         bool bySmallAircraftCategory, bool scoreIgnoreZeros,
+                                         bool scorePreferColorLiveries, bool excludeNoDbData, bool excludeNoExcluded,
+                                         bool modelVerification, bool modelVerificationWarnError,
+                                         bool modelSetRemoveFailedModel, bool modelFailover);
 
     private:
         int m_algorithm = static_cast<int>(MatchingStepwiseReducePlusScoreBased);

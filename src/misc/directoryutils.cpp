@@ -158,8 +158,7 @@ namespace swift::misc
     bool CDirectoryUtils::isSameOrSubDirectoryOf(const QString &dir1, const QDir &parentDir)
     {
         QDir d1(dir1);
-        do
-        {
+        do {
             if (d1 == parentDir) { return true; }
         }
         while (d1.cdUp());
@@ -179,24 +178,19 @@ namespace swift::misc
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         CSetBuilder<QString> sl;
-        for (const QFileInfo &info : fileInfoList)
-        {
-            sl.insert(info.fileName());
-        }
+        for (const QFileInfo &info : fileInfoList) { sl.insert(info.fileName()); }
         return sl;
     }
 
     QSet<QString> CDirectoryUtils::canonicalFileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         CSetBuilder<QString> sl;
-        for (const QFileInfo &info : fileInfoList)
-        {
-            sl.insert(info.canonicalFilePath());
-        }
+        for (const QFileInfo &info : fileInfoList) { sl.insert(info.canonicalFilePath()); }
         return sl;
     }
 
-    QSet<QString> CDirectoryUtils::filesToCanonicalNames(const QSet<QString> &fileNames, const QSet<QString> &canonicalFileNames)
+    QSet<QString> CDirectoryUtils::filesToCanonicalNames(const QSet<QString> &fileNames,
+                                                         const QSet<QString> &canonicalFileNames)
     {
         CSetBuilder<QString> found;
         if (fileNames.isEmpty()) return {};
@@ -204,10 +198,7 @@ namespace swift::misc
         {
             if (canonical.endsWith('/')) continue;
             const QString c = canonical.mid(1 + canonical.lastIndexOf('/'));
-            if (fileNames.contains(c))
-            {
-                found.insert(canonical);
-            }
+            if (fileNames.contains(c)) { found.insert(canonical); }
         }
         return found;
     }
@@ -246,7 +237,8 @@ namespace swift::misc
         return count;
     }
 
-    CDirectoryUtils::DirComparison CDirectoryUtils::compareTwoDirectories(const QString &dirSource, const QString &dirTarget, bool nestedDirs)
+    CDirectoryUtils::DirComparison CDirectoryUtils::compareTwoDirectories(const QString &dirSource,
+                                                                          const QString &dirTarget, bool nestedDirs)
     {
         DirComparison comp;
         const QDir d1(dirSource);
@@ -278,7 +270,8 @@ namespace swift::misc
         comp.sameNameInSource = CDirectoryUtils::filesToCanonicalNames(sameNames, sSourceCanonicalFiles);
         comp.sameNameInTarget = CDirectoryUtils::filesToCanonicalNames(sameNames, sTargetCanonicalFiles);
 
-        Q_ASSERT_X(comp.sameNameInSource.size() == comp.sameNameInTarget.size(), Q_FUNC_INFO, "Same sets require same size");
+        Q_ASSERT_X(comp.sameNameInSource.size() == comp.sameNameInTarget.size(), Q_FUNC_INFO,
+                   "Same sets require same size");
         QSet<QString>::const_iterator targetIt = comp.sameNameInTarget.cbegin();
         for (const QString &sourceFile : std::as_const(comp.sameNameInSource))
         {
@@ -307,7 +300,8 @@ namespace swift::misc
                 {
                     const QString sourceSubdir = CFileUtils::appendFilePaths(dirSource, relativeSubdir);
                     const QString targetSubdir = CFileUtils::appendFilePaths(dirTarget, relativeSubdir);
-                    const DirComparison subComparison = CDirectoryUtils::compareTwoDirectories(sourceSubdir, targetSubdir, true);
+                    const DirComparison subComparison =
+                        CDirectoryUtils::compareTwoDirectories(sourceSubdir, targetSubdir, true);
                     comp.insert(subComparison);
                 }
             }

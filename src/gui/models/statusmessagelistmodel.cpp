@@ -15,7 +15,8 @@ using namespace swift::misc;
 
 namespace swift::gui::models
 {
-    CStatusMessageListModel::CStatusMessageListModel(QObject *parent) : CListModelTimestampObjects<CStatusMessageList, true>("ViewStatusMessageList", parent)
+    CStatusMessageListModel::CStatusMessageListModel(QObject *parent)
+        : CListModelTimestampObjects<CStatusMessageList, true>("ViewStatusMessageList", parent)
     {
         this->setSorting(CStatusMessage::IndexUtcTimestamp, Qt::DescendingOrder);
         m_sortTieBreakers.push_front(CStatusMessage::IndexMessage);
@@ -35,13 +36,9 @@ namespace swift::gui::models
         switch (mode)
         {
         case DetailedWithOrder:
-        case Detailed:
-            this->setMode(messages.needsOrder() ? Detailed : DetailedWithOrder);
-            break;
+        case Detailed: this->setMode(messages.needsOrder() ? Detailed : DetailedWithOrder); break;
         case SimplifiedWithOrder:
-        case Simplified:
-            this->setMode(messages.needsOrder() ? Simplified : SimplifiedWithOrder);
-            break;
+        case Simplified: this->setMode(messages.needsOrder() ? Simplified : SimplifiedWithOrder); break;
         }
     }
 
@@ -72,12 +69,11 @@ namespace swift::gui::models
 
         switch (mode)
         {
-        case DetailedWithOrder:
-            m_columns.addColumn(CColumn::orderColumn());
-            [[fallthrough]];
+        case DetailedWithOrder: m_columns.addColumn(CColumn::orderColumn()); [[fallthrough]];
         case Detailed:
         {
-            m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
+            m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp,
+                                        new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
             CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
             col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
             m_columns.addColumn(col);
@@ -85,12 +81,11 @@ namespace swift::gui::models
             m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoriesAsString));
         }
         break;
-        case SimplifiedWithOrder:
-            m_columns.addColumn(CColumn::orderColumn());
-            [[fallthrough]];
+        case SimplifiedWithOrder: m_columns.addColumn(CColumn::orderColumn()); [[fallthrough]];
         case Simplified:
         {
-            m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
+            m_columns.addColumn(CColumn("time", CStatusMessage::IndexUtcTimestamp,
+                                        new CDateTimeFormatter(CDateTimeFormatter::formatHmsz())));
             CColumn col = CColumn("severity", CStatusMessage::IndexSeverityAsIcon);
             col.setSortPropertyIndex(CStatusMessage::IndexSeverityAsString);
             m_columns.addColumn(col);
@@ -107,10 +102,7 @@ namespace swift::gui::models
             {
                 this->setSorting(CStatusMessage::IndexOrder, oldOrder);
             }
-            else
-            {
-                this->setSorting(CStatusMessage::IndexUtcTimestamp, oldOrder);
-            }
+            else { this->setSorting(CStatusMessage::IndexUtcTimestamp, oldOrder); }
         }
         else
         {

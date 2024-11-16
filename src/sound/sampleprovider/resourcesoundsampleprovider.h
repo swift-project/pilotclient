@@ -43,7 +43,8 @@ namespace swift::sound::sample_provider
 
         CResourceSound m_resourceSound;
         qint64 m_position = 0;
-        const int m_tempBufferSize = 24000; // 24000 = 500ms (avoid buffer overflow), m_tempBufferSize = 9600; //9600 = 200ms
+        const int m_tempBufferSize =
+            24000; // 24000 = 500ms (avoid buffer overflow), m_tempBufferSize = 9600; //9600 = 200ms
         QVector<float> m_tempBuffer;
         bool m_isFinished = false;
     };

@@ -38,16 +38,14 @@ using namespace swift::core::db;
 
 namespace swift::core::db
 {
-    CModelDataReader::CModelDataReader(QObject *owner, const CDatabaseReaderConfigList &config) : CDatabaseReader(owner, config, "CModelDataReader")
+    CModelDataReader::CModelDataReader(QObject *owner, const CDatabaseReaderConfigList &config)
+        : CDatabaseReader(owner, config, "CModelDataReader")
     {
         // init to avoid threading issues
         getBaseUrl(CDbFlags::DbReading);
     }
 
-    CLiveryList CModelDataReader::getLiveries() const
-    {
-        return m_liveryCache.get();
-    }
+    CLiveryList CModelDataReader::getLiveries() const { return m_liveryCache.get(); }
 
     CLivery CModelDataReader::getLiveryForCombinedCode(const QString &combinedCode) const
     {
@@ -76,10 +74,7 @@ namespace swift::core::db
         return liveries.smartLiverySelector(liveryPattern);
     }
 
-    CDistributorList CModelDataReader::getDistributors() const
-    {
-        return m_distributorCache.get();
-    }
+    CDistributorList CModelDataReader::getDistributors() const { return m_distributorCache.get(); }
 
     CDistributor CModelDataReader::getDistributorForDbKey(const QString &dbKey) const
     {
@@ -88,10 +83,7 @@ namespace swift::core::db
         return distributors.findByKeyOrAlias(dbKey);
     }
 
-    CAircraftModelList CModelDataReader::getModels() const
-    {
-        return m_modelCache.get();
-    }
+    CAircraftModelList CModelDataReader::getModels() const { return m_modelCache.get(); }
 
     CAircraftModel CModelDataReader::getModelForModelString(const QString &modelString) const
     {
@@ -127,22 +119,18 @@ namespace swift::core::db
         return models.getAicraftIcaoCodesForAirline(code);
     }
 
-    CAircraftModelList CModelDataReader::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode)
+    CAircraftModelList
+    CModelDataReader::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator,
+                                                                          const QString &combinedCode)
     {
         if (aircraftDesignator.isEmpty()) { return CAircraftModelList(); }
         const CAircraftModelList models(this->getModels());
         return models.findByAircraftDesignatorAndLiveryCombinedCode(aircraftDesignator, combinedCode);
     }
 
-    int CModelDataReader::getLiveriesCount() const
-    {
-        return this->getLiveries().size();
-    }
+    int CModelDataReader::getLiveriesCount() const { return this->getLiveries().size(); }
 
-    int CModelDataReader::getDistributorsCount() const
-    {
-        return this->getDistributors().size();
-    }
+    int CModelDataReader::getDistributorsCount() const { return this->getDistributors().size(); }
 
     CDistributor CModelDataReader::smartDistributorSelector(const CDistributor &distributorPattern) const
     {
@@ -150,21 +138,16 @@ namespace swift::core::db
         return distributors.smartDistributorSelector(distributorPattern);
     }
 
-    CDistributor CModelDataReader::smartDistributorSelector(const CDistributor &distributorPattern, const CAircraftModel &model) const
+    CDistributor CModelDataReader::smartDistributorSelector(const CDistributor &distributorPattern,
+                                                            const CAircraftModel &model) const
     {
         const CDistributorList distributors(getDistributors()); // thread safe copy
         return distributors.smartDistributorSelector(distributorPattern, model);
     }
 
-    int CModelDataReader::getModelsCount() const
-    {
-        return this->getModels().size();
-    }
+    int CModelDataReader::getModelsCount() const { return this->getModels().size(); }
 
-    QSet<int> CModelDataReader::getModelDbKeys() const
-    {
-        return this->getModels().toDbKeySet();
-    }
+    QSet<int> CModelDataReader::getModelDbKeys() const { return this->getModels().toDbKeySet(); }
 
     QStringList CModelDataReader::getModelStringList(bool sort) const
     {
@@ -173,12 +156,11 @@ namespace swift::core::db
 
     bool CModelDataReader::areAllDataRead() const
     {
-        return this->getLiveriesCount() > 0 &&
-               this->getModelsCount() > 0 &&
-               this->getDistributorsCount() > 0;
+        return this->getLiveriesCount() > 0 && this->getModelsCount() > 0 && this->getDistributorsCount() > 0;
     }
 
-    void CModelDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+    void CModelDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode,
+                                const QDateTime &newerThan)
     {
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
@@ -196,10 +178,7 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseLiveryData });
                 triggeredRead |= CEntityFlags::LiveryEntity;
             }
-            else
-            {
-                this->logNoWorkingUrl(CEntityFlags::LiveryEntity);
-            }
+            else { this->logNoWorkingUrl(CEntityFlags::LiveryEntity); }
         }
 
         if (entities.testFlag(CEntityFlags::DistributorEntity))
@@ -211,10 +190,7 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseDistributorData });
                 triggeredRead |= CEntityFlags::DistributorEntity;
             }
-            else
-            {
-                this->logNoWorkingUrl(CEntityFlags::DistributorEntity);
-            }
+            else { this->logNoWorkingUrl(CEntityFlags::DistributorEntity); }
         }
 
         if (entities.testFlag(CEntityFlags::ModelEntity))
@@ -226,10 +202,7 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseModelData });
                 triggeredRead |= CEntityFlags::ModelEntity;
             }
-            else
-            {
-                this->logNoWorkingUrl(CEntityFlags::ModelEntity);
-            }
+            else { this->logNoWorkingUrl(CEntityFlags::ModelEntity); }
         }
 
         if (triggeredRead != CEntityFlags::NoEntity)
@@ -238,20 +211,11 @@ namespace swift::core::db
         }
     }
 
-    void CModelDataReader::liveryCacheChanged()
-    {
-        this->cacheHasChanged(CEntityFlags::LiveryEntity);
-    }
+    void CModelDataReader::liveryCacheChanged() { this->cacheHasChanged(CEntityFlags::LiveryEntity); }
 
-    void CModelDataReader::modelCacheChanged()
-    {
-        this->cacheHasChanged(CEntityFlags::ModelEntity);
-    }
+    void CModelDataReader::modelCacheChanged() { this->cacheHasChanged(CEntityFlags::ModelEntity); }
 
-    void CModelDataReader::distributorCacheChanged()
-    {
-        this->cacheHasChanged(CEntityFlags::DistributorEntity);
-    }
+    void CModelDataReader::distributorCacheChanged() { this->cacheHasChanged(CEntityFlags::DistributorEntity); }
 
     void CModelDataReader::baseUrlCacheChanged()
     {
@@ -263,10 +227,7 @@ namespace swift::core::db
         const CUrl current = m_readerUrlCache.get();
         if (current == url) { return; }
         const CStatusMessage m = m_readerUrlCache.set(url);
-        if (m.isFailure())
-        {
-            CLogMessage::preformatted(m);
-        }
+        if (m.isFailure()) { CLogMessage::preformatted(m); }
     }
 
     CAircraftIcaoCodeList CModelDataReader::getAircraftAircraftIcaos() const
@@ -287,7 +248,8 @@ namespace swift::core::db
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         if (!this->doWorkCheck()) { return; }
-        CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        CDatabaseReader::JsonDatastoreResponse res =
+            this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
         {
             CLogMessage::preformatted(res.lastWarningOrAbove());
@@ -335,7 +297,8 @@ namespace swift::core::db
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         if (!this->doWorkCheck()) { return; }
-        CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        CDatabaseReader::JsonDatastoreResponse res =
+            this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
         {
             CLogMessage::preformatted(res.lastWarningOrAbove());
@@ -384,7 +347,8 @@ namespace swift::core::db
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         if (!this->doWorkCheck()) { return; }
-        const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        const CDatabaseReader::JsonDatastoreResponse res =
+            this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
         {
             CLogMessage::preformatted(res.lastWarningOrAbove());
@@ -407,7 +371,8 @@ namespace swift::core::db
         if (res.isRestricted())
         {
             // create full list if it was just incremental
-            const CAircraftModelList incrementalModels(CAircraftModelList::fromDatabaseJsonCaching(res, icaos, categories, liveries, distributors));
+            const CAircraftModelList incrementalModels(
+                CAircraftModelList::fromDatabaseJsonCaching(res, icaos, categories, liveries, distributors));
             if (incrementalModels.isEmpty()) { return; } // currently ignored
             models = this->getModels();
             models.replaceOrAddObjectsByKey(incrementalModels);
@@ -436,13 +401,11 @@ namespace swift::core::db
         this->emitAndLogDataRead(CEntityFlags::ModelEntity, n, res);
     }
 
-    CStatusMessageList CModelDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
+    CStatusMessageList CModelDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead,
+                                                           bool overrideNewerOnly)
     {
         const QDir directory(dir);
-        if (!directory.exists())
-        {
-            return CStatusMessage(this).error(u"Missing directory '%1'") << dir;
-        }
+        if (!directory.exists()) { return CStatusMessage(this).error(u"Missing directory '%1'") << dir; }
 
         whatToRead &= CEntityFlags::DistributorLiveryModel; // supported
         CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
@@ -452,10 +415,7 @@ namespace swift::core::db
         {
             const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json");
             const QFileInfo fi(fileName);
-            if (!fi.exists())
-            {
-                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
-            }
+            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::LiveryEntity, msgs))
             {
                 // void
@@ -481,7 +441,8 @@ namespace swift::core::db
                     catch (const CJsonException &ex)
                     {
                         emit this->dataRead(CEntityFlags::LiveryEntity, CEntityFlags::ReadFailed, 0, url);
-                        msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading liveries from '%1'").arg(fileName)));
+                        msgs.push_back(CStatusMessage::fromJsonException(
+                            ex, this, QStringLiteral("Reading liveries from '%1'").arg(fileName)));
                     }
                 }
             }
@@ -491,10 +452,7 @@ namespace swift::core::db
         {
             const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "models.json");
             const QFileInfo fi(fileName);
-            if (!fi.exists())
-            {
-                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
-            }
+            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::ModelEntity, msgs))
             {
                 // void
@@ -521,7 +479,8 @@ namespace swift::core::db
                     catch (const CJsonException &ex)
                     {
                         emit this->dataRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFailed, 0, url);
-                        msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading models from '%1'").arg(fileName)));
+                        msgs.push_back(CStatusMessage::fromJsonException(
+                            ex, this, QStringLiteral("Reading models from '%1'").arg(fileName)));
                     }
                 }
             }
@@ -531,10 +490,7 @@ namespace swift::core::db
         {
             const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "distributors.json");
             const QFileInfo fi(fileName);
-            if (!fi.exists())
-            {
-                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
-            }
+            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::DistributorEntity, msgs))
             {
                 // void
@@ -552,16 +508,19 @@ namespace swift::core::db
                 {
                     try
                     {
-                        const CDistributorList distributors = CDistributorList::fromMultipleJsonFormats(distributorsJson);
+                        const CDistributorList distributors =
+                            CDistributorList::fromMultipleJsonFormats(distributorsJson);
                         const int c = distributors.size();
-                        msgs.push_back(m_distributorCache.set(distributors, fi.birthTime().toUTC().toMSecsSinceEpoch()));
+                        msgs.push_back(
+                            m_distributorCache.set(distributors, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                         emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, c, url);
                         reallyRead |= CEntityFlags::DistributorEntity;
                     }
                     catch (const CJsonException &ex)
                     {
                         emit this->dataRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFailed, 0, url);
-                        msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading distributors from '%1'").arg(fileName)));
+                        msgs.push_back(CStatusMessage::fromJsonException(
+                            ex, this, QStringLiteral("Reading distributors from '%1'").arg(fileName)));
                     }
                 }
             }
@@ -570,7 +529,8 @@ namespace swift::core::db
         return msgs;
     }
 
-    bool CModelDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
+    bool CModelDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead,
+                                                         bool overrideNewerOnly)
     {
         if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
 
@@ -578,10 +538,7 @@ namespace swift::core::db
         QTimer::singleShot(0, this, [=]() {
             if (!myself) { return; }
             const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
-            if (msgs.isFailure())
-            {
-                CLogMessage::preformatted(msgs);
-            }
+            if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
         });
         return true;
     }
@@ -612,16 +569,14 @@ namespace swift::core::db
         for (const auto &pair : fileContents)
         {
             CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory] {
-                CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), pair.first), pair.second);
+                CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), pair.first),
+                                              pair.second);
             });
         }
         return true;
     }
 
-    CEntityFlags::Entity CModelDataReader::getSupportedEntities() const
-    {
-        return CEntityFlags::DistributorLiveryModel;
-    }
+    CEntityFlags::Entity CModelDataReader::getSupportedEntities() const { return CEntityFlags::DistributorLiveryModel; }
 
     void CModelDataReader::synchronizeCaches(CEntityFlags::Entity entities)
     {
@@ -654,9 +609,18 @@ namespace swift::core::db
 
     void CModelDataReader::invalidateCaches(CEntityFlags::Entity entities)
     {
-        if (entities.testFlag(CEntityFlags::LiveryEntity)) { CDataCache::instance()->clearAllValues(m_liveryCache.getKey()); }
-        if (entities.testFlag(CEntityFlags::ModelEntity)) { CDataCache::instance()->clearAllValues(m_modelCache.getKey()); }
-        if (entities.testFlag(CEntityFlags::DistributorEntity)) { CDataCache::instance()->clearAllValues(m_distributorCache.getKey()); }
+        if (entities.testFlag(CEntityFlags::LiveryEntity))
+        {
+            CDataCache::instance()->clearAllValues(m_liveryCache.getKey());
+        }
+        if (entities.testFlag(CEntityFlags::ModelEntity))
+        {
+            CDataCache::instance()->clearAllValues(m_modelCache.getKey());
+        }
+        if (entities.testFlag(CEntityFlags::DistributorEntity))
+        {
+            CDataCache::instance()->clearAllValues(m_distributorCache.getKey());
+        }
     }
 
     QDateTime CModelDataReader::getCacheTimestamp(CEntityFlags::Entity entity) const
@@ -693,9 +657,12 @@ namespace swift::core::db
     CEntityFlags::Entity CModelDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
     {
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-        if (this->hasCacheTimestampNewerThan(CEntityFlags::LiveryEntity, threshold)) entities |= CEntityFlags::LiveryEntity;
-        if (this->hasCacheTimestampNewerThan(CEntityFlags::ModelEntity, threshold)) entities |= CEntityFlags::ModelEntity;
-        if (this->hasCacheTimestampNewerThan(CEntityFlags::DistributorEntity, threshold)) entities |= CEntityFlags::DistributorEntity;
+        if (this->hasCacheTimestampNewerThan(CEntityFlags::LiveryEntity, threshold))
+            entities |= CEntityFlags::LiveryEntity;
+        if (this->hasCacheTimestampNewerThan(CEntityFlags::ModelEntity, threshold))
+            entities |= CEntityFlags::ModelEntity;
+        if (this->hasCacheTimestampNewerThan(CEntityFlags::DistributorEntity, threshold))
+            entities |= CEntityFlags::DistributorEntity;
         return entities;
     }
 
@@ -707,10 +674,7 @@ namespace swift::core::db
         return CDatabaseReader::isChangedUrl(oldUrlInfo, newUrlInfo);
     }
 
-    CUrl CModelDataReader::getDbServiceBaseUrl() const
-    {
-        return sApp->getGlobalSetup().getDbModelReaderUrl();
-    }
+    CUrl CModelDataReader::getDbServiceBaseUrl() const { return sApp->getGlobalSetup().getDbModelReaderUrl(); }
 
     CUrl CModelDataReader::getLiveryUrl(CDbFlags::DataRetrievalModeFlag mode) const
     {

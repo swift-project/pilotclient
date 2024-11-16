@@ -23,8 +23,7 @@ using namespace swift::gui::components;
 
 namespace swift::gui::editors
 {
-    CDistributorForm::CDistributorForm(QWidget *parent) : CForm(parent),
-                                                          ui(new Ui::CDistributorForm)
+    CDistributorForm::CDistributorForm(QWidget *parent) : CForm(parent), ui(new Ui::CDistributorForm)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->comp_DistributorSelector);
@@ -34,14 +33,15 @@ namespace swift::gui::editors
 
         // drag and drop
         connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CDistributorForm::onDroppedCode);
-        connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CDistributorForm::setValue);
-        // connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::returnPressed, this, &CDistributorForm::onReturnPressed);
+        connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this,
+                &CDistributorForm::setValue);
+        // connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::returnPressed, this,
+        // &CDistributorForm::onReturnPressed);
         ui->drop_DropData->setInfoText("<drop distributor>");
         ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>() });
     }
 
-    CDistributorForm::~CDistributorForm()
-    {}
+    CDistributorForm::~CDistributorForm() {}
 
     bool CDistributorForm::setValue(const swift::misc::simulation::CDistributor &distributor)
     {
@@ -56,10 +56,7 @@ namespace swift::gui::editors
         return true;
     }
 
-    void CDistributorForm::jsonPasted(const QString &json)
-    {
-        Q_UNUSED(json);
-    }
+    void CDistributorForm::jsonPasted(const QString &json) { Q_UNUSED(json); }
 
     CDistributor CDistributorForm::getValue() const
     {
@@ -84,15 +81,9 @@ namespace swift::gui::editors
         return msgs;
     }
 
-    void CDistributorForm::allowDrop(bool allowDrop)
-    {
-        ui->drop_DropData->allowDrop(allowDrop);
-    }
+    void CDistributorForm::allowDrop(bool allowDrop) { ui->drop_DropData->allowDrop(allowDrop); }
 
-    bool CDistributorForm::isDropAllowed() const
-    {
-        return ui->drop_DropData->isDropAllowed();
-    }
+    bool CDistributorForm::isDropAllowed() const { return ui->drop_DropData->isDropAllowed(); }
 
     void CDistributorForm::setReadOnly(bool readOnly)
     {
@@ -121,25 +112,20 @@ namespace swift::gui::editors
     void CDistributorForm::onDroppedCode(const swift::misc::CVariant &variantDropped)
     {
         CDistributor distributor;
-        if (variantDropped.canConvert<CDistributor>())
-        {
-            distributor = variantDropped.value<CDistributor>();
-        }
+        if (variantDropped.canConvert<CDistributor>()) { distributor = variantDropped.value<CDistributor>(); }
         else if (variantDropped.canConvert<CDistributorList>())
         {
             const CDistributorList icaoList(variantDropped.value<CDistributorList>());
             if (icaoList.isEmpty()) { return; }
             distributor = icaoList.front();
         }
-        else
-        {
-            return;
-        }
+        else { return; }
         this->setValue(distributor);
     }
 
     bool CDistributorForm::hasAnyUiDetailsValues() const
     {
-        return !(ui->le_Alias1->text().isEmpty() && ui->le_Alias2->text().isEmpty() && ui->le_Description->text().isEmpty() && ui->le_Updated->text().isEmpty());
+        return !(ui->le_Alias1->text().isEmpty() && ui->le_Alias2->text().isEmpty() &&
+                 ui->le_Description->text().isEmpty() && ui->le_Updated->text().isEmpty());
     }
 } // namespace swift::gui::editors

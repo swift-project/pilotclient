@@ -17,8 +17,8 @@ using namespace swift::gui;
 
 namespace swift::gui::components
 {
-    CMainInfoAreaComponent::CMainInfoAreaComponent(QWidget *parent) : CInfoArea(parent),
-                                                                      ui(new Ui::CMainInfoAreaComponent)
+    CMainInfoAreaComponent::CMainInfoAreaComponent(QWidget *parent)
+        : CInfoArea(parent), ui(new Ui::CMainInfoAreaComponent)
     {
         ui->setupUi(this);
         CInfoArea::initInfoArea(); // init base class
@@ -27,68 +27,31 @@ namespace swift::gui::components
         connect(this->getLogComponent(), &CLogComponent::requestAttention, this, &CMainInfoAreaComponent::selectLog);
     }
 
-    CMainInfoAreaComponent::~CMainInfoAreaComponent()
-    {}
+    CMainInfoAreaComponent::~CMainInfoAreaComponent() {}
 
-    CAtcStationComponent *CMainInfoAreaComponent::getAtcStationComponent()
-    {
-        return ui->comp_AtcStations;
-    }
+    CAtcStationComponent *CMainInfoAreaComponent::getAtcStationComponent() { return ui->comp_AtcStations; }
 
-    CAircraftComponent *CMainInfoAreaComponent::getAircraftComponent()
-    {
-        return ui->comp_Aircraft;
-    }
+    CAircraftComponent *CMainInfoAreaComponent::getAircraftComponent() { return ui->comp_Aircraft; }
 
-    CMappingComponent *CMainInfoAreaComponent::getMappingComponent()
-    {
-        return ui->comp_Mappings;
-    }
+    CMappingComponent *CMainInfoAreaComponent::getMappingComponent() { return ui->comp_Mappings; }
 
-    CInterpolationComponent *CMainInfoAreaComponent::getInterpolationComponent()
-    {
-        return ui->comp_Interpolation;
-    }
+    CInterpolationComponent *CMainInfoAreaComponent::getInterpolationComponent() { return ui->comp_Interpolation; }
 
-    CUserComponent *CMainInfoAreaComponent::getUserComponent()
-    {
-        return ui->comp_Users;
-    }
+    CUserComponent *CMainInfoAreaComponent::getUserComponent() { return ui->comp_Users; }
 
-    CCockpitComponent *CMainInfoAreaComponent::getCockpitComponent()
-    {
-        return ui->comp_Cockpit;
-    }
+    CCockpitComponent *CMainInfoAreaComponent::getCockpitComponent() { return ui->comp_Cockpit; }
 
-    CFlightPlanComponent *CMainInfoAreaComponent::getFlightPlanComponent()
-    {
-        return ui->comp_FlightPlan;
-    }
+    CFlightPlanComponent *CMainInfoAreaComponent::getFlightPlanComponent() { return ui->comp_FlightPlan; }
 
-    CSettingsComponent *CMainInfoAreaComponent::getSettingsComponent()
-    {
-        return ui->comp_Settings;
-    }
+    CSettingsComponent *CMainInfoAreaComponent::getSettingsComponent() { return ui->comp_Settings; }
 
-    CLogComponent *CMainInfoAreaComponent::getLogComponent()
-    {
-        return ui->comp_Log;
-    }
+    CLogComponent *CMainInfoAreaComponent::getLogComponent() { return ui->comp_Log; }
 
-    CSimulatorComponent *CMainInfoAreaComponent::getSimulatorComponent()
-    {
-        return ui->comp_Simulator;
-    }
+    CSimulatorComponent *CMainInfoAreaComponent::getSimulatorComponent() { return ui->comp_Simulator; }
 
-    CTextMessageComponent *CMainInfoAreaComponent::getTextMessageComponent()
-    {
-        return ui->comp_TextMessages;
-    }
+    CTextMessageComponent *CMainInfoAreaComponent::getTextMessageComponent() { return ui->comp_TextMessages; }
 
-    CRadarComponent *CMainInfoAreaComponent::getRadarComponent()
-    {
-        return ui->comp_Radar;
-    }
+    CRadarComponent *CMainInfoAreaComponent::getRadarComponent() { return ui->comp_Radar; }
 
     void CMainInfoAreaComponent::displayLog()
     {
@@ -105,28 +68,13 @@ namespace swift::gui::components
         if (!shift) { return; }
 
         // pressing shift will go to overview
-        if (infoArea == InfoAreaSettings)
-        {
-            ui->comp_Settings->setSettingsOverviewTab();
-        }
-        else if (infoArea == InfoAreaAircraft)
-        {
-            ui->comp_Aircraft->setTab(CAircraftComponent::TabAircraftInRange);
-        }
-        else if (infoArea == InfoAreaAtc)
-        {
-            ui->comp_AtcStations->setTab(CAtcStationComponent::TabAtcOnline);
-        }
-        else if (infoArea == InfoAreaMapping)
-        {
-            ui->comp_Mappings->setTab(CMappingComponent::TabRenderedAircraft);
-        }
+        if (infoArea == InfoAreaSettings) { ui->comp_Settings->setSettingsOverviewTab(); }
+        else if (infoArea == InfoAreaAircraft) { ui->comp_Aircraft->setTab(CAircraftComponent::TabAircraftInRange); }
+        else if (infoArea == InfoAreaAtc) { ui->comp_AtcStations->setTab(CAtcStationComponent::TabAtcOnline); }
+        else if (infoArea == InfoAreaMapping) { ui->comp_Mappings->setTab(CMappingComponent::TabRenderedAircraft); }
     }
 
-    void CMainInfoAreaComponent::selectLog()
-    {
-        this->selectArea(InfoAreaLog);
-    }
+    void CMainInfoAreaComponent::selectLog() { this->selectArea(InfoAreaLog); }
 
     QSize CMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
@@ -143,12 +91,9 @@ namespace swift::gui::components
         case InfoAreaInterpolation:
         case InfoAreaSettings:
         case InfoAreaTextMessages:
-        case InfoAreaRadar:
-            return QSize(600, 400);
-        case InfoAreaFlightPlan:
-            return QSize(800, 600);
-        default:
-            return QSize(600, 400);
+        case InfoAreaRadar: return QSize(600, 400);
+        case InfoAreaFlightPlan: return QSize(800, 600);
+        default: return QSize(600, 400);
         }
     }
 

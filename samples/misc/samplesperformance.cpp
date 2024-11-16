@@ -329,7 +329,8 @@ namespace swift::sample
         timer.start();
         const CLiveryList dbLiveries3 = CLiveryList::fromDatabaseJsonCaching(response, liveryAirlines);
         ms = timer.elapsed();
-        out << "Read via DB JSON format (new, passing airlines): " << dbLiveries3.size() << " liveries in " << ms << "ms" << Qt::endl;
+        out << "Read via DB JSON format (new, passing airlines): " << dbLiveries3.size() << " liveries in " << ms
+            << "ms" << Qt::endl;
 
         CDatabaseReader::stringToDatastoreResponse(modelData, response);
         timer.start();
@@ -359,11 +360,13 @@ namespace swift::sample
     int CSamplesPerformance::samplesStringUtilsVsRegEx(QTextStream &out)
     {
         QElapsedTimer timer;
-        static const QString chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~_-=+!\"@#$%^&*()[]{} \t;:\\/?,.<>";
+        static const QString chars =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~_-=+!\"@#$%^&*()[]{} \t;:\\/?,.<>";
         QStringList strings;
         std::generate_n(std::back_inserter(strings), 100000, [] {
             QString s;
-            std::generate_n(std::back_inserter(s), 10, [] { return chars[CMathUtils::randomInteger(0, chars.size() - 1)]; });
+            std::generate_n(std::back_inserter(s), 10,
+                            [] { return chars[CMathUtils::randomInteger(0, chars.size() - 1)]; });
             return s;
         });
         QString bigString = strings.join("\n");
@@ -377,7 +380,8 @@ namespace swift::sample
             auto c = containsChar(s, [](QChar c) { return c.isUpper(); });
             Q_UNUSED(c);
         }
-        out << "Check 100,000 strings for containing uppercase letter: (utility)     " << timer.elapsed() << "ms" << Qt::endl;
+        out << "Check 100,000 strings for containing uppercase letter: (utility)     " << timer.elapsed() << "ms"
+            << Qt::endl;
 
         timer.start();
         for (const QString &s : std::as_const(strings))
@@ -385,7 +389,8 @@ namespace swift::sample
             auto c = s.contains(upperRegex);
             Q_UNUSED(c);
         }
-        out << "Check 100,000 strings for containing uppercase letter: (regex)       " << timer.elapsed() << "ms" << Qt::endl
+        out << "Check 100,000 strings for containing uppercase letter: (regex)       " << timer.elapsed() << "ms"
+            << Qt::endl
             << Qt::endl;
 
         timer.start();
@@ -394,7 +399,8 @@ namespace swift::sample
             auto i = indexOfChar(s, [](QChar c) { return c.isUpper(); });
             Q_UNUSED(i);
         }
-        out << "Check 100,000 strings for index of first uppercase letter: (utility) " << timer.elapsed() << "ms" << Qt::endl;
+        out << "Check 100,000 strings for index of first uppercase letter: (utility) " << timer.elapsed() << "ms"
+            << Qt::endl;
 
         timer.start();
         for (const QString &s : std::as_const(strings))
@@ -402,7 +408,8 @@ namespace swift::sample
             auto i = s.indexOf(upperRegex);
             Q_UNUSED(i);
         }
-        out << "Check 100,000 strings for index of first uppercase letter: (regex)   " << timer.elapsed() << "ms" << Qt::endl
+        out << "Check 100,000 strings for index of first uppercase letter: (regex)   " << timer.elapsed() << "ms"
+            << Qt::endl
             << Qt::endl;
 
         auto temp = strings;
@@ -411,15 +418,14 @@ namespace swift::sample
         {
             removeChars(s, [](QChar c) { return c.isUpper(); });
         }
-        out << "Remove from 100,000 strings all uppercase letters: (utility)         " << timer.elapsed() << "ms" << Qt::endl;
+        out << "Remove from 100,000 strings all uppercase letters: (utility)         " << timer.elapsed() << "ms"
+            << Qt::endl;
         strings = temp;
 
         timer.start();
-        for (QString &s : strings)
-        {
-            s.remove(upperRegex);
-        }
-        out << "Remove from 100,000 strings all uppercase letters: (regex)           " << timer.elapsed() << "ms" << Qt::endl
+        for (QString &s : strings) { s.remove(upperRegex); }
+        out << "Remove from 100,000 strings all uppercase letters: (regex)           " << timer.elapsed() << "ms"
+            << Qt::endl
             << Qt::endl;
 
         timer.start();
@@ -427,14 +433,16 @@ namespace swift::sample
             auto lines = splitLines(bigString);
             Q_UNUSED(lines);
         }
-        out << "Split 100,000 line string into list of lines: (QStringList)          " << timer.elapsed() << "ms" << Qt::endl;
+        out << "Split 100,000 line string into list of lines: (QStringList)          " << timer.elapsed() << "ms"
+            << Qt::endl;
 
         timer.start();
         {
             auto lines = splitLinesRefs(bigString);
             Q_UNUSED(lines);
         }
-        out << "Split 100,000 line string into list of lines: (QList<QStringRef>)    " << timer.elapsed() << "ms" << Qt::endl;
+        out << "Split 100,000 line string into list of lines: (QList<QStringRef>)    " << timer.elapsed() << "ms"
+            << Qt::endl;
 
         return EXIT_SUCCESS;
     }
@@ -455,10 +463,7 @@ namespace swift::sample
 
         QElapsedTimer time;
         time.start();
-        for (int i = 0; i < loop; i++)
-        {
-            x += "12-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        }
+        for (int i = 0; i < loop; i++) { x += "12-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; }
         out << "+= String " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
@@ -479,18 +484,12 @@ namespace swift::sample
         x.clear();
 
         time.start();
-        for (int i = 0; i < loop; i++)
-        {
-            x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9;
-        }
+        for (int i = 0; i < loop; i++) { x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9; }
         out << "+ String multiple " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
         time.start();
-        for (int i = 0; i < loop; i++)
-        {
-            x = x1 % x2 % x3 % x4 % x5 % x6 % x7 % x8 % x9;
-        }
+        for (int i = 0; i < loop; i++) { x = x1 % x2 % x3 % x4 % x5 % x6 % x7 % x8 % x9; }
         out << "% String multiple " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
@@ -504,10 +503,7 @@ namespace swift::sample
 
         static const QString xArgString("%1 %2 %3 %4 %5 %6 %7 %8 %9");
         time.start();
-        for (int i = 0; i < loop; i++)
-        {
-            x = xArgString.arg(x1, x2, x3, x4, x5, x6, x7, x8, x9);
-        }
+        for (int i = 0; i < loop; i++) { x = xArgString.arg(x1, x2, x3, x4, x5, x6, x7, x8, x9); }
         out << "arg String multiple " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
@@ -528,25 +524,20 @@ namespace swift::sample
         QElapsedTimer time;
         QString x;
         time.start();
-        for (int i = 0; i < loop; i++)
-        {
-            x = fooString();
-        }
+        for (int i = 0; i < loop; i++) { x = fooString(); }
         out << "by constQString " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
         time.start();
-        for (int i = 0; i < loop; i++)
-        {
-            x = fooStringLiteral();
-        }
+        for (int i = 0; i < loop; i++) { x = fooStringLiteral(); }
         out << "by QStringLiteral " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
         time.start();
         for (int i = 0; i < loop; i++)
         {
-            x = QString("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.");
+            x = QString("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. "
+                        "Sed cursus ante dapibus diam. Sed nisi.");
         }
         out << "by QString(\"...\") " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
@@ -554,7 +545,8 @@ namespace swift::sample
         time.start();
         for (int i = 0; i < loop; i++)
         {
-            x = QStringLiteral("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.");
+            x = QStringLiteral("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent "
+                               "libero. Sed cursus ante dapibus diam. Sed nisi.");
         }
         out << "by QStringLiteral(\"...\") " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
@@ -682,7 +674,8 @@ namespace swift::sample
         return EXIT_SUCCESS;
     }
 
-    CAircraftSituationList CSamplesPerformance::createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes)
+    CAircraftSituationList CSamplesPerformance::createSituations(qint64 baseTimeEpoch, int numberOfCallsigns,
+                                                                 int numberOfTimes)
     {
         CAircraftSituationList situations;
         for (int cs = 0; cs < numberOfCallsigns; cs++)
@@ -706,8 +699,12 @@ namespace swift::sample
         CDistributorList distributors;
         for (int i = 0; i < numberOfMemoParts; ++i)
         {
-            aircraftIcaos.push_back(CAircraftIcaoCode("A" + QString::number(i), "A" + QString::number(i), "L1P", "Lego", "Foo", CWakeTurbulenceCategory::MEDIUM, false, false, false, 0));
-            liveries.push_back(CLivery("A" + QString::number(i), CAirlineIcaoCode("A" + QString::number(i), "Foo", CCountry("DE", "Germany"), "Foo", false, false), "Foo", "red", "blue", false));
+            aircraftIcaos.push_back(CAircraftIcaoCode("A" + QString::number(i), "A" + QString::number(i), "L1P", "Lego",
+                                                      "Foo", CWakeTurbulenceCategory::MEDIUM, false, false, false, 0));
+            liveries.push_back(CLivery(
+                "A" + QString::number(i),
+                CAirlineIcaoCode("A" + QString::number(i), "Foo", CCountry("DE", "Germany"), "Foo", false, false),
+                "Foo", "red", "blue", false));
             distributors.push_back(CDistributor(QString::number(i), "Foo", {}, {}, CSimulatorInfo::FSX));
         }
 
@@ -717,7 +714,8 @@ namespace swift::sample
             const auto &aircraftIcao = aircraftIcaos[CMathUtils::randomInteger(0, numberOfMemoParts - 1)];
             const auto &livery = liveries[CMathUtils::randomInteger(0, numberOfMemoParts - 1)];
             const auto &distributor = distributors[CMathUtils::randomInteger(0, numberOfMemoParts - 1)];
-            models.push_back(CAircraftModel(QString::number(i), CAircraftModel::TypeUnknown, CSimulatorInfo::FSX, QString::number(i), QString::number(i), aircraftIcao, livery));
+            models.push_back(CAircraftModel(QString::number(i), CAircraftModel::TypeUnknown, CSimulatorInfo::FSX,
+                                            QString::number(i), QString::number(i), aircraftIcao, livery));
             models.back().setDistributor(distributor);
         }
         return models;
@@ -728,12 +726,9 @@ namespace swift::sample
         if (n < 1) { return; }
         CAtcStation atc = CTesting::createStation(1);
         const QList<CCoordinateGeodetic> pos(
-            { CCoordinateGeodetic(10.0, 10.0, 10.0),
-              CCoordinateGeodetic(20.0, 20.0, 20.0),
-              CCoordinateGeodetic(30.0, 30.0, 30.0),
-              CCoordinateGeodetic(40.0, 40.0, 40.0),
-              CCoordinateGeodetic(50.0, 50.0, 50.0),
-              CCoordinateGeodetic(60.0, 60.0, 60.0),
+            { CCoordinateGeodetic(10.0, 10.0, 10.0), CCoordinateGeodetic(20.0, 20.0, 20.0),
+              CCoordinateGeodetic(30.0, 30.0, 30.0), CCoordinateGeodetic(40.0, 40.0, 40.0),
+              CCoordinateGeodetic(50.0, 50.0, 50.0), CCoordinateGeodetic(60.0, 60.0, 60.0),
               CCoordinateGeodetic(70.0, 70.0, 70.0) });
         const int s = pos.size();
         for (int i = 0; i < n; i++)
@@ -755,12 +750,9 @@ namespace swift::sample
 
     void CSamplesPerformance::parseWgs(int times)
     {
-        static QStringList wgsLatLng(
-            { "12° 11′ 10″ N", "11° 22′ 33″ W",
-              "48° 21′ 13″ N", "11° 47′ 09″ E",
-              " 8° 21′ 13″ N", "11° 47′ 09″ W",
-              "18° 21′ 13″ S", "11° 47′ 09″ E",
-              "09° 12′ 13″ S", "11° 47′ 09″ W" });
+        static QStringList wgsLatLng({ "12° 11′ 10″ N", "11° 22′ 33″ W", "48° 21′ 13″ N", "11° 47′ 09″ E",
+                                       " 8° 21′ 13″ N", "11° 47′ 09″ W", "18° 21′ 13″ S", "11° 47′ 09″ E",
+                                       "09° 12′ 13″ S", "11° 47′ 09″ W" });
 
         CCoordinateGeodetic c;
         const CAltitude a(333, CLengthUnit::m());
@@ -773,19 +765,18 @@ namespace swift::sample
 
     const QString &CSamplesPerformance::fooString()
     {
-        static const QString s("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.");
+        static const QString s("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent "
+                               "libero. Sed cursus ante dapibus diam. Sed nisi.");
         return s;
     }
 
     QString CSamplesPerformance::fooStringLiteral()
     {
-        return QStringLiteral("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.");
+        return QStringLiteral("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent "
+                              "libero. Sed cursus ante dapibus diam. Sed nisi.");
     }
 
-    QStringList CSamplesPerformance::generateList()
-    {
-        return QStringList({ "1", "2", "3", "4" });
-    }
+    QStringList CSamplesPerformance::generateList() { return QStringList({ "1", "2", "3", "4" }); }
 
     QStringList CSamplesPerformance::replacedList()
     {
@@ -800,10 +791,7 @@ namespace swift::sample
     {
         CCallsignSet set;
         static const QString cs("FOO%1");
-        for (int i = 0; i < number; i++)
-        {
-            set.insert(CCallsign(cs.arg(i)));
-        }
+        for (int i = 0; i < number; i++) { set.insert(CCallsign(cs.arg(i))); }
         return set;
     }
 
@@ -849,12 +837,25 @@ namespace swift::sample
         QString r;
         if (byPropertyIndex)
         {
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexCallsign, CCallsign::IndexString }).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexController, CUser::IndexRealName }).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString }).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString }).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexRelativeDistance, CLength::IndexValueRounded2DigitsWithUnit }).toString());
-            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexLogoffTime }).toDateTime().toString("yyyy-MM-dd hh:mm"));
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexCallsign, CCallsign::IndexString })
+                         .toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexController, CUser::IndexRealName })
+                         .toString());
+            r.append(station
+                         .propertyByIndex(
+                             CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString })
+                         .toString());
+            r.append(station
+                         .propertyByIndex(
+                             CPropertyIndex { CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString })
+                         .toString());
+            r.append(station
+                         .propertyByIndex(CPropertyIndex { CAtcStation::IndexRelativeDistance,
+                                                           CLength::IndexValueRounded2DigitsWithUnit })
+                         .toString());
+            r.append(station.propertyByIndex(CPropertyIndex { CAtcStation::IndexLogoffTime })
+                         .toDateTime()
+                         .toString("yyyy-MM-dd hh:mm"));
         }
         else
         {

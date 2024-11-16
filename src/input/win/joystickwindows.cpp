@@ -19,12 +19,12 @@ using namespace swift::misc::input;
 
 namespace swift::input
 {
-    CJoystickDevice::CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance, QObject *parent) : QObject(parent),
-                                                                                                                              m_guidDevice(pdidInstance->guidInstance),
-                                                                                                                              m_guidProduct(pdidInstance->guidProduct),
-                                                                                                                              m_deviceName(QString::fromWCharArray(pdidInstance->tszInstanceName).simplified()),
-                                                                                                                              m_productName(QString::fromWCharArray(pdidInstance->tszProductName).simplified()),
-                                                                                                                              m_directInput(directInputPtr)
+    CJoystickDevice::CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance,
+                                     QObject *parent)
+        : QObject(parent), m_guidDevice(pdidInstance->guidInstance), m_guidProduct(pdidInstance->guidProduct),
+          m_deviceName(QString::fromWCharArray(pdidInstance->tszInstanceName).simplified()),
+          m_productName(QString::fromWCharArray(pdidInstance->tszProductName).simplified()),
+          m_directInput(directInputPtr)
     {
         this->setObjectName(classNameShort(this));
     }
@@ -149,7 +149,8 @@ namespace swift::input
         deviceInput.m_button = CJoystickButton(joystickDevice->m_deviceName, DIJOFS_BUTTON(number) - DIJOFS_BUTTON0);
 
         joystickDevice->m_joystickDeviceInputs.append(deviceInput);
-        CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick button" << QString::fromWCharArray(dev->tszName) << joystickDevice->m_deviceName;
+        CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug()
+            << "Found joystick button" << QString::fromWCharArray(dev->tszName) << joystickDevice->m_deviceName;
 
         return DIENUM_CONTINUE;
     }
@@ -169,7 +170,8 @@ namespace swift::input
 
         // Continue here only if CoInitializeEx was successful
         // S_OK: The COM library was initialized successfully on this thread.
-        // S_FALSE: The COM library is already initialized on this thread. Reference count was incremented. This is not an error.
+        // S_FALSE: The COM library is already initialized on this thread. Reference count was incremented. This is not
+        // an error.
         if (hr == S_OK || hr == S_FALSE)
         {
             m_coInitializeSucceeded = true;
@@ -182,19 +184,13 @@ namespace swift::input
                 this->requestDeviceNotification();
             }
         }
-        else
-        {
-            CLogMessage(this).warning(u"CoInitializeEx returned error code %1");
-        }
+        else { CLogMessage(this).warning(u"CoInitializeEx returned error code %1"); }
     }
 
     CJoystickWindows::~CJoystickWindows()
     {
         // All DirectInput devices need to be cleaned up before the call to CoUninitialize()
-        for (CJoystickDevice *joystickDevice : std::as_const(m_joystickDevices))
-        {
-            delete joystickDevice;
-        }
+        for (CJoystickDevice *joystickDevice : std::as_const(m_joystickDevices)) { delete joystickDevice; }
         m_joystickDevices.clear();
         m_directInput.reset();
         if (m_coInitializeSucceeded) { CoUninitialize(); }
@@ -220,8 +216,10 @@ namespace swift::input
     HRESULT CJoystickWindows::initDirectInput()
     {
         IDirectInput8 *directInput = nullptr;
-        // HRESULT hr = DirectInput8Create(GetModuleHandle(nullptr), DIRECTINPUT_VERSION, IID_IDirectInput8, reinterpret_cast<LPVOID *>(&directInput), nullptr);
-        HRESULT hr = CoCreateInstance(CLSID_DirectInput8, nullptr, CLSCTX_INPROC_SERVER, IID_IDirectInput8, reinterpret_cast<LPVOID *>(&directInput));
+        // HRESULT hr = DirectInput8Create(GetModuleHandle(nullptr), DIRECTINPUT_VERSION, IID_IDirectInput8,
+        // reinterpret_cast<LPVOID *>(&directInput), nullptr);
+        HRESULT hr = CoCreateInstance(CLSID_DirectInput8, nullptr, CLSCTX_INPROC_SERVER, IID_IDirectInput8,
+                                      reinterpret_cast<LPVOID *>(&directInput));
         if (FAILED(hr)) { return hr; }
         m_directInput = DirectInput8Ptr(directInput, ReleaseDirectInput);
 
@@ -239,26 +237,21 @@ namespace swift::input
         }
 
         HRESULT hr;
-        if (FAILED(hr = m_directInput->EnumDevices(DI8DEVCLASS_GAMECTRL, enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY)))
+        if (FAILED(hr = m_directInput->EnumDevices(DI8DEVCLASS_GAMECTRL, enumJoysticksCallback, this,
+                                                   DIEDFL_ATTACHEDONLY)))
         {
             CLogMessage(this).error(u"Error reading joystick devices");
             return hr;
         }
 
-        if (m_joystickDevices.isEmpty())
-        {
-            CLogMessage(this).info(u"No joystick device found");
-        }
+        if (m_joystickDevices.isEmpty()) { CLogMessage(this).info(u"No joystick device found"); }
         return hr;
     }
 
     int CJoystickWindows::createHelperWindow()
     {
         // Make sure window isn't created twice
-        if (helperWindow != nullptr)
-        {
-            return 0;
-        }
+        if (helperWindow != nullptr) { return 0; }
 
         HINSTANCE hInstance = GetModuleHandle(nullptr);
         WNDCLASSEX wce;
@@ -269,18 +262,12 @@ namespace swift::input
         wce.hInstance = hInstance;
 
         /* Register the class. */
-        if (!RegisterClassEx(&wce))
-        {
-            return -1;
-        }
+        if (!RegisterClassEx(&wce)) { return -1; }
 
         /* Create the window. */
-        helperWindow = CreateWindowEx(0, helperWindowClassName,
-                                      helperWindowName,
-                                      WS_OVERLAPPED, CW_USEDEFAULT,
-                                      CW_USEDEFAULT, CW_USEDEFAULT,
-                                      CW_USEDEFAULT, HWND_MESSAGE, nullptr,
-                                      hInstance, nullptr);
+        helperWindow =
+            CreateWindowEx(0, helperWindowClassName, helperWindowName, WS_OVERLAPPED, CW_USEDEFAULT, CW_USEDEFAULT,
+                           CW_USEDEFAULT, CW_USEDEFAULT, HWND_MESSAGE, nullptr, hInstance, nullptr);
         if (helperWindow == nullptr)
         {
             UnregisterClass(helperWindowClassName, hInstance);
@@ -298,7 +285,8 @@ namespace swift::input
         ZeroMemory(&notificationFilter, sizeof(notificationFilter));
         notificationFilter.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
         notificationFilter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
-        hDevNotify = RegisterDeviceNotification(helperWindow, &notificationFilter, DEVICE_NOTIFY_WINDOW_HANDLE | DEVICE_NOTIFY_ALL_INTERFACE_CLASSES);
+        hDevNotify = RegisterDeviceNotification(helperWindow, &notificationFilter,
+                                                DEVICE_NOTIFY_WINDOW_HANDLE | DEVICE_NOTIFY_ALL_INTERFACE_CLASSES);
     }
 
     void CJoystickWindows::destroyHelperWindow()
@@ -323,20 +311,14 @@ namespace swift::input
             connect(device, &CJoystickDevice::connectionLost, this, &CJoystickWindows::removeJoystickDevice);
             m_joystickDevices.push_back(device);
         }
-        else
-        {
-            delete device;
-        }
+        else { delete device; }
     }
 
     bool CJoystickWindows::isJoystickAlreadyAdded(const DIDEVICEINSTANCE *pdidInstance) const
     {
         for (const CJoystickDevice *device : m_joystickDevices)
         {
-            if (IsEqualGUID(device->getDeviceGuid(), pdidInstance->guidInstance))
-            {
-                return true;
-            }
+            if (IsEqualGUID(device->getDeviceGuid(), pdidInstance->guidInstance)) { return true; }
         }
 
         return false;
@@ -348,10 +330,7 @@ namespace swift::input
         if (isPressed) { m_buttonCombination.addJoystickButton(joystickButton); }
         else { m_buttonCombination.removeJoystickButton(joystickButton); }
 
-        if (oldCombination != m_buttonCombination)
-        {
-            emit buttonCombinationChanged(m_buttonCombination);
-        }
+        if (oldCombination != m_buttonCombination) { emit buttonCombinationChanged(m_buttonCombination); }
     }
 
     void CJoystickWindows::removeJoystickDevice(const GUID &guid)
@@ -407,22 +386,20 @@ namespace swift::input
         if (!obj->isJoystickAlreadyAdded(pdidInstance))
         {
             obj->addJoystickDevice(pdidInstance);
-            CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug() << "Found joystick device" << QString::fromWCharArray(pdidInstance->tszInstanceName);
+            CLogMessage(static_cast<CJoystickWindows *>(nullptr)).debug()
+                << "Found joystick device" << QString::fromWCharArray(pdidInstance->tszInstanceName);
         }
         return DIENUM_CONTINUE;
     }
 
     bool operator==(const CJoystickDevice &lhs, const CJoystickDevice &rhs)
     {
-        return lhs.m_guidDevice == rhs.m_guidDevice &&
-               lhs.m_guidProduct == rhs.m_guidProduct &&
-               lhs.m_deviceName == rhs.m_deviceName &&
-               lhs.m_productName == rhs.m_productName;
+        return lhs.m_guidDevice == rhs.m_guidDevice && lhs.m_guidProduct == rhs.m_guidProduct &&
+               lhs.m_deviceName == rhs.m_deviceName && lhs.m_productName == rhs.m_productName;
     }
 
     bool operator==(CJoystickDeviceInput const &lhs, CJoystickDeviceInput const &rhs)
     {
-        return lhs.m_offset == rhs.m_offset &&
-               lhs.m_button == rhs.m_button;
+        return lhs.m_offset == rhs.m_offset && lhs.m_button == rhs.m_button;
     }
 } // namespace swift::input

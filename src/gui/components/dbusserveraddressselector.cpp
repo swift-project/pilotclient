@@ -18,8 +18,8 @@ using namespace swift::misc::network;
 
 namespace swift::gui::components
 {
-    CDBusServerAddressSelector::CDBusServerAddressSelector(QWidget *parent) : QFrame(parent),
-                                                                              ui(new Ui::CDBusServerAddressSelector)
+    CDBusServerAddressSelector::CDBusServerAddressSelector(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CDBusServerAddressSelector)
     {
         Q_ASSERT(sGui);
         ui->setupUi(this);
@@ -35,18 +35,16 @@ namespace swift::gui::components
         connect(ui->rb_DBusSession, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
         connect(ui->rb_DBusSystem, &QRadioButton::released, this, &CDBusServerAddressSelector::onRadioButtonReleased);
         connect(ui->le_DBusServerPort, &QLineEdit::editingFinished, this, &CDBusServerAddressSelector::editingFinished);
-        connect(ui->cb_DBusServerAddress, &QComboBox::currentTextChanged, this, &CDBusServerAddressSelector::editingFinished);
+        connect(ui->cb_DBusServerAddress, &QComboBox::currentTextChanged, this,
+                &CDBusServerAddressSelector::editingFinished);
     }
 
-    CDBusServerAddressSelector::~CDBusServerAddressSelector()
-    {}
+    CDBusServerAddressSelector::~CDBusServerAddressSelector() {}
 
     QString CDBusServerAddressSelector::getP2PAddress() const
     {
         if (!this->isP2P()) { return {}; }
-        return CDBusServer::p2pAddress(
-            ui->cb_DBusServerAddress->currentText() + ":" +
-            ui->le_DBusServerPort->text());
+        return CDBusServer::p2pAddress(ui->cb_DBusServerAddress->currentText() + ":" + ui->le_DBusServerPort->text());
     }
 
     QString CDBusServerAddressSelector::getDBusAddress() const
@@ -61,10 +59,7 @@ namespace swift::gui::components
         return QStringList { "--dbus", this->getDBusAddress() };
     }
 
-    bool CDBusServerAddressSelector::isP2P() const
-    {
-        return ui->rb_DBusP2P->isChecked();
-    }
+    bool CDBusServerAddressSelector::isP2P() const { return ui->rb_DBusP2P->isChecked(); }
 
     void CDBusServerAddressSelector::setDefaultP2PAddress(const QString &dBus)
     {
@@ -73,10 +68,7 @@ namespace swift::gui::components
         CDBusServer::dBusAddressToHostAndPort(dBusLc, host, port);
         if (!host.isEmpty())
         {
-            if (ui->cb_DBusServerAddress->findText(host) < 0)
-            {
-                ui->cb_DBusServerAddress->addItem(host);
-            }
+            if (ui->cb_DBusServerAddress->findText(host) < 0) { ui->cb_DBusServerAddress->addItem(host); }
             ui->cb_DBusServerAddress->setCurrentText(host);
             ui->le_DBusServerPort->setText(port);
         }
@@ -85,14 +77,8 @@ namespace swift::gui::components
     void CDBusServerAddressSelector::set(const QString &dBus)
     {
         const QString dBusLc = dBus.toLower().trimmed();
-        if (dBusLc.isEmpty() || dBusLc.startsWith("session"))
-        {
-            ui->rb_DBusSession->setChecked(true);
-        }
-        else if (dBusLc.startsWith("sys"))
-        {
-            ui->rb_DBusSystem->setChecked(true);
-        }
+        if (dBusLc.isEmpty() || dBusLc.startsWith("session")) { ui->rb_DBusSession->setChecked(true); }
+        else if (dBusLc.startsWith("sys")) { ui->rb_DBusSystem->setChecked(true); }
         else
         {
             ui->rb_DBusP2P->setChecked(true);
@@ -100,10 +86,7 @@ namespace swift::gui::components
             CDBusServer::dBusAddressToHostAndPort(dBusLc, host, port);
             if (!host.isEmpty())
             {
-                if (ui->cb_DBusServerAddress->findText(host) < 0)
-                {
-                    ui->cb_DBusServerAddress->addItem(host);
-                }
+                if (ui->cb_DBusServerAddress->findText(host) < 0) { ui->cb_DBusServerAddress->addItem(host); }
                 ui->cb_DBusServerAddress->setCurrentText(host);
                 ui->le_DBusServerPort->setText(port);
             }
@@ -115,10 +98,7 @@ namespace swift::gui::components
     {
         const bool wasChecked = ui->rb_DBusSystem->isChecked();
         ui->rb_DBusSystem->setVisible(visible);
-        if (!visible && wasChecked)
-        {
-            ui->rb_DBusSession->setChecked(true);
-        }
+        if (!visible && wasChecked) { ui->rb_DBusSession->setChecked(true); }
     }
 
     void CDBusServerAddressSelector::setP2PDBusVisible(bool visible)

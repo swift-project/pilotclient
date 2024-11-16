@@ -41,10 +41,12 @@ int main(int argc, char *argv[])
     CGuiApplication a(CApplicationInfo::swiftLauncher(), CApplicationInfo::Launcher, CIcons::swiftLauncher1024());
     a.addNetworkOptions(); // so it can be passed (hand over) to started applications
     a.addDBusAddressOption(); // required by the dbus server address selector
-    const QCommandLineOption installerOption { { "i", "installer" }, QCoreApplication::translate("main", "Installer setup.") };
+    const QCommandLineOption installerOption { { "i", "installer" },
+                                               QCoreApplication::translate("main", "Installer setup.") };
     a.addParserOption(installerOption);
     if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
-    a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forLauncher());
+    a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders,
+                                  CDatabaseReaderConfigList::forLauncher());
 
     const bool installMode = a.isParserOptionSet(installerOption);
     if (installMode) initDbCacheFromResourceFileIfRequired(a);
@@ -58,10 +60,7 @@ int main(int argc, char *argv[])
 
     CSwiftLauncher launcher(installMode);
     const int res = a.exec();
-    if (res != EXIT_SUCCESS || !launcher.shouldStartAppDetached())
-    {
-        return res;
-    }
+    if (res != EXIT_SUCCESS || !launcher.shouldStartAppDetached()) { return res; }
 
     const bool s = launcher.startDetached();
     return s ? EXIT_SUCCESS : EXIT_FAILURE;

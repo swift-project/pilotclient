@@ -22,10 +22,7 @@ namespace swift::gui
         createTrayIcon(icon);
     }
 
-    void CSystemTrayWindow::setSystemTrayMode(SystemTrayMode mode)
-    {
-        m_systemTrayMode = mode;
-    }
+    void CSystemTrayWindow::setSystemTrayMode(SystemTrayMode mode) { m_systemTrayMode = mode; }
 
     void CSystemTrayWindow::setSystemTrayIcon(const QIcon &icon)
     {
@@ -48,15 +45,13 @@ namespace swift::gui
             showNormal();
             activateWindow();
             break;
-        case QSystemTrayIcon::MiddleClick:
-            break;
-        default:
-            break;
+        case QSystemTrayIcon::MiddleClick: break;
+        default: break;
         }
     }
 
-    void CSystemTrayWindow::ps_showMessage(const QString &title, const QString &message, QSystemTrayIcon::MessageIcon icon,
-                                           int millisecondsTimeoutHint)
+    void CSystemTrayWindow::ps_showMessage(const QString &title, const QString &message,
+                                           QSystemTrayIcon::MessageIcon icon, int millisecondsTimeoutHint)
     {
         Q_ASSERT(m_systemTrayIcon);
         m_systemTrayIcon->showMessage(title, message, icon, millisecondsTimeoutHint);
@@ -78,15 +73,9 @@ namespace swift::gui
         result = QMessageBox::Close; // msgBox.exec();
         switch (result)
         {
-        case QMessageBox::Close:
-            event->accept();
-            break;
-        case QMessageBox::Cancel:
-            event->ignore();
-            break;
-        default:
-            closeEvent(event);
-            break;
+        case QMessageBox::Close: event->accept(); break;
+        case QMessageBox::Cancel: event->ignore(); break;
+        default: closeEvent(event); break;
         }
     }
 

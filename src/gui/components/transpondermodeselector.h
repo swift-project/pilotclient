@@ -64,8 +64,10 @@ namespace swift::gui::components
         void transponderStateIdentEnded();
 
     private:
-        swift::misc::aviation::CTransponder::TransponderMode m_currentMode = swift::misc::aviation::CTransponder::StateStandby;
-        swift::misc::aviation::CTransponder::TransponderMode m_resetMode = swift::misc::aviation::CTransponder::StateStandby;
+        swift::misc::aviation::CTransponder::TransponderMode m_currentMode =
+            swift::misc::aviation::CTransponder::StateStandby;
+        swift::misc::aviation::CTransponder::TransponderMode m_resetMode =
+            swift::misc::aviation::CTransponder::StateStandby;
         QTimer m_resetTimer;
     };
 } // namespace swift::gui::components

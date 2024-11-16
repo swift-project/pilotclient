@@ -61,7 +61,8 @@ namespace swift::sample
         }
 
         // as this is the receiver side, the slots can be debugged too
-        CTestService *testService = CTestService::registerTestService(sessionBusConnection, verbose, QCoreApplication::instance());
+        CTestService *testService =
+            CTestService::registerTestService(sessionBusConnection, verbose, QCoreApplication::instance());
         dBusServer->addObject(CTestService::ObjectPath(), testService);
     }
 
@@ -69,13 +70,11 @@ namespace swift::sample
     {
         // send data as P2P to server (this can be session bus, too, but usually is P2P)
         const bool sb = address.startsWith("session", Qt::CaseInsensitive);
-        QDBusConnection connection = sb ?
-                                         QDBusConnection::sessionBus() :
-                                         QDBusConnection::connectToPeer(address, "p2pConnection");
+        QDBusConnection connection =
+            sb ? QDBusConnection::sessionBus() : QDBusConnection::connectToPeer(address, "p2pConnection");
 
-        // qtout << "server connection has interface? " << connection.interface(); // returns 0 with server and a real interface with session bus
-        // qtout << "address: " << address;
-        // qtout << "name: " << connection.name();
+        // qtout << "server connection has interface? " << connection.interface(); // returns 0 with server and a real
+        // interface with session bus qtout << "address: " << address; qtout << "name: " << connection.name();
 
         ServiceTool::sendDataToTestservice(connection);
     }
@@ -83,7 +82,8 @@ namespace swift::sample
     void ServiceTool::sendDataToTestservice(const QDBusConnection &connection)
     {
         // on the client's side
-        ITestServiceInterface testServiceInterface(CTestService::InterfaceName(), CTestService::ObjectPath(), connection);
+        ITestServiceInterface testServiceInterface(CTestService::InterfaceName(), CTestService::ObjectPath(),
+                                                   connection);
         QTextStream qtin(stdin);
         QTextStream qtout(stdout);
 
@@ -91,13 +91,13 @@ namespace swift::sample
 
         while (true)
         {
-            QDBusMessage m = QDBusMessage::createSignal(
-                CTestService::ObjectPath(), CTestService::InterfaceName(),
-                "sendStringMessage");
+            QDBusMessage m = QDBusMessage::createSignal(CTestService::ObjectPath(), CTestService::InterfaceName(),
+                                                        "sendStringMessage");
 
             // The << operator is used to add the parameters for the slot
             const QDateTime dtnow = QDateTime::currentDateTimeUtc();
-            const QString msg = QStringLiteral("Con.: %1, message at %2").arg(connection.name(), dtnow.toString("MM/dd/yyyy @ hh:mm:ss"));
+            const QString msg = QStringLiteral("Con.: %1, message at %2")
+                                    .arg(connection.name(), dtnow.toString("MM/dd/yyyy @ hh:mm:ss"));
             m << msg;
 
             // We send this as a non-replying message. This is used for sending errors, replys, signals.
@@ -135,10 +135,13 @@ namespace swift::sample
             QVariant tsqv = QVariant::fromValue(trafficServer);
             QDBusVariant tsv(tsqv);
             testServiceInterface.receiveVariant(tsv, tsqv.userType());
-            qtout << "Send server via interface and variant '" << trafficServer << QLatin1String("' ") << tsqv.userType() << Qt::endl;
+            qtout << "Send server via interface and variant '" << trafficServer << QLatin1String("' ")
+                  << tsqv.userType() << Qt::endl;
 
             // Aviation
-            const CComSystem comSystem = CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress(), CPhysicalQuantitiesConstants::FrequencyUnicom());
+            const CComSystem comSystem =
+                CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress(),
+                           CPhysicalQuantitiesConstants::FrequencyUnicom());
             testServiceInterface.receiveComUnit(comSystem);
             qtout << "Send COM via interface " << comSystem << Qt::endl;
 

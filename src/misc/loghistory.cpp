@@ -9,28 +9,17 @@
 
 namespace swift::misc
 {
-    CLogHistory::CLogHistory(QObject *parent) : CListJournal(parent)
-    {
-    }
+    CLogHistory::CLogHistory(QObject *parent) : CListJournal(parent) {}
 
     CLogHistorySource::CLogHistorySource(QObject *parent) : CListMutator(parent)
     {
-        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, [this](auto &&...args) {
-            this->addElement(args...);
-        });
+        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this,
+                [this](auto &&...args) { this->addElement(args...); });
     }
 
-    CLogHistoryReplica::CLogHistoryReplica(QObject *parent) : CListObserver(parent)
-    {
-    }
+    CLogHistoryReplica::CLogHistoryReplica(QObject *parent) : CListObserver(parent) {}
 
-    void CLogHistoryReplica::onElementAdded(const CStatusMessage &msg)
-    {
-        emit elementAdded(msg);
-    }
+    void CLogHistoryReplica::onElementAdded(const CStatusMessage &msg) { emit elementAdded(msg); }
 
-    void CLogHistoryReplica::onElementsReplaced(const CStatusMessageList &msgs)
-    {
-        emit elementsReplaced(msgs);
-    }
+    void CLogHistoryReplica::onElementsReplaced(const CStatusMessageList &msgs) { emit elementsReplaced(msgs); }
 } // namespace swift::misc

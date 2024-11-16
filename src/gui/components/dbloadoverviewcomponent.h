@@ -23,9 +23,7 @@ namespace swift::gui::components
     /*!
      * Overview about load state of DB data
      */
-    class SWIFT_GUI_EXPORT CDbLoadOverviewComponent :
-        public QFrame,
-        public swift::gui::CLoadIndicatorEnabled
+    class SWIFT_GUI_EXPORT CDbLoadOverviewComponent : public QFrame, public swift::gui::CLoadIndicatorEnabled
     {
         Q_OBJECT
 
@@ -68,7 +66,8 @@ namespace swift::gui::components
         QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
         swift::misc::CDigestSignal m_dsTriggerGuiUpdate { this, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
         qint64 m_sharedLastCheck = -1; //!< when shared URLs were last checked
-        bool m_sharedValueCheckInProgress = false; //!< setting values in progress, needed because of CNetworkUtils::canConnect check (processing events)
+        bool m_sharedValueCheckInProgress = false; //!< setting values in progress, needed because of
+                                                   //!< CNetworkUtils::canConnect check (processing events)
         const QString m_imgOk = ":/diagona/icons/diagona/icons/tick.png";
         const QString m_imgFailed = ":/diagona/icons/diagona/icons/cross-script.png";
 
@@ -94,7 +93,8 @@ namespace swift::gui::components
         void setSharedUrlValues();
 
         //! Data have been loaded
-        void dataLoaded(swift::misc::network::CEntityFlags::Entity entities, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataLoaded(swift::misc::network::CEntityFlags::Entity entities,
+                        swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Load info objects if not already loaded
         void loadInfoObjects();

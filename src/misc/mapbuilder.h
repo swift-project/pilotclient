@@ -52,7 +52,8 @@ namespace swift::misc
         static QList<std::pair<K, V>> sortAndDeduplicate(QList<std::pair<K, V>> list)
         {
             std::sort(list.begin(), list.end(), [](auto &&a, auto &&b) { return std::less<>()(a.first, b.first); });
-            list.erase(std::unique(list.begin(), list.end(), [](auto &&a, auto &&b) { return a.first == b.first; }), list.end());
+            list.erase(std::unique(list.begin(), list.end(), [](auto &&a, auto &&b) { return a.first == b.first; }),
+                       list.end());
             return list;
         }
 
@@ -65,7 +66,10 @@ namespace swift::misc
         static QMap<K, V> convertToMap(QList<std::pair<K, V>> &&list)
         {
             QMap<K, V> map;
-            for (auto &pair : makeRange(list).reverse()) { map.insert(map.cbegin(), std::move(pair.first), std::move(pair.second)); }
+            for (auto &pair : makeRange(list).reverse())
+            {
+                map.insert(map.cbegin(), std::move(pair.first), std::move(pair.second));
+            }
             return map;
         }
     };

@@ -34,9 +34,7 @@ namespace swift::gui
     namespace components
     {
         //! Text message widget
-        class SWIFT_GUI_EXPORT CTextMessageComponent :
-            public QFrame,
-            public CEnableForDockWidgetInfoArea
+        class SWIFT_GUI_EXPORT CTextMessageComponent : public QFrame, public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -124,7 +122,9 @@ namespace swift::gui
         private:
             QScopedPointer<Ui::CTextMessageComponent> ui;
             swift::misc::CIdentifier m_identifier { "TextMessageComponent", this };
-            swift::misc::CSetting<settings::TextMessageSettings> m_messageSettings { this, &CTextMessageComponent::onSettingsChanged };
+            swift::misc::CSetting<settings::TextMessageSettings> m_messageSettings {
+                this, &CTextMessageComponent::onSettingsChanged
+            };
             swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this };
             bool m_usedAsOverlayWidget = false; //!< disables dockwidget parts if used as overlay widget
             bool m_activeSend = true; //!< ignore sent messages
@@ -150,7 +150,8 @@ namespace swift::gui
             QWidget *addNewTextMessageTab(const swift::misc::aviation::CCallsign &callsign);
 
             //! Find text message tab by callsign
-            QWidget *findTextMessageTabByCallsign(const swift::misc::aviation::CCallsign &callsign, bool callsignResolution = false) const;
+            QWidget *findTextMessageTabByCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                                  bool callsignResolution = false) const;
 
             //! Find text message tab by its name
             QWidget *findTextMessageTabByName(const QString &name) const;
@@ -192,7 +193,8 @@ namespace swift::gui
             void onTextMessageSent(const swift::misc::network::CTextMessage &sentMessage);
 
             //! Cockpit values changed, used to updated some components
-            void onChangedAircraftCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+            void onChangedAircraftCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                          const swift::misc::CIdentifier &originator);
 
             //! Settings have been checked (group box visible/invisible)
             void onSettingsChecked(bool checked);

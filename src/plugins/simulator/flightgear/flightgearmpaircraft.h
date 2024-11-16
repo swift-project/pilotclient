@@ -52,23 +52,29 @@ namespace swift::simplugin::flightgear
         const swift::misc::simulation::CAircraftModel &getAircraftModel() const { return m_aircraft.getModel(); }
 
         //! \copydoc swift::misc::simulation::CInterpolator::getInterpolatorInfo
-        QString getInterpolatorInfo(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        QString
+        getInterpolatorInfo(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! \copydoc swift::misc::simulation::CInterpolator::attachLogger
         void attachInterpolatorLogger(swift::misc::simulation::CInterpolationLogger *logger) const;
 
         //! \copydoc swift::misc::simulation::CInterpolator::getInterpolation
-        swift::misc::simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
+        swift::misc::simulation::CInterpolationResult
+        getInterpolation(qint64 currentTimeSinceEpoch,
+                         const swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
+                         uint32_t aircraftNumber) const;
 
         //! \copydoc swift::misc::simulation::CInterpolator::getInterpolationMessages
-        swift::misc::CStatusMessageList getInterpolationMessages(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        swift::misc::CStatusMessageList getInterpolationMessages(
+            swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! Interpolator
         swift::misc::simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
 
     private:
         swift::misc::simulation::CSimulatedAircraft m_aircraft; //!< corresponding aircraft
-        QSharedPointer<swift::misc::simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
+        QSharedPointer<swift::misc::simulation::CInterpolatorMulti>
+            m_interpolator; //!< shared pointer because CSimConnectObject can be copied
     };
 
     //! Simulator objects (aka AI aircraft)

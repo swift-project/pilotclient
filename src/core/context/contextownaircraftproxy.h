@@ -61,7 +61,8 @@ namespace swift::core
             virtual swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::getOwnComSystem
-            virtual swift::misc::aviation::CComSystem getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const override;
+            virtual swift::misc::aviation::CComSystem
+            getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::getOwnTransponder
             virtual swift::misc::aviation::CTransponder getOwnTransponder() const override;
@@ -70,28 +71,39 @@ namespace swift::core
             virtual swift::misc::aviation::CAircraftSituation getOwnAircraftSituation() const override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::updateOwnPosition
-            virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::aviation::CAltitude &altitude, const swift::misc::aviation::CAltitude &pressureAltitude) override;
+            virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position,
+                                           const swift::misc::aviation::CAltitude &altitude,
+                                           const swift::misc::aviation::CAltitude &pressureAltitude) override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::updateCockpit
-            virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2, const swift::misc::aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1,
+                                       const swift::misc::aviation::CComSystem &com2,
+                                       const swift::misc::aviation::CTransponder &transponder,
+                                       const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::updateTransponderMode
-            virtual bool updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode, const swift::misc::CIdentifier &originator) override;
+            virtual bool
+            updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode,
+                                  const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::updateActiveComFrequency
-            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                                  swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                                  const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::updateOwnAircraftPilot
             virtual bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::updateSelcal
-            virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                      const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::updateOwnCallsign
             virtual bool updateOwnCallsign(const swift::misc::aviation::CCallsign &callsign) override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::updateOwnIcaoCodes
-            virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode, const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
+            virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                            const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::toggleTransponderMode
             virtual void toggleTransponderMode() override;
@@ -100,14 +112,18 @@ namespace swift::core
             virtual bool setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode) override;
 
             //! \copydoc swift::core::context::IContextOwnAircraft::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine,
+                                          const swift::misc::CIdentifier &originator) override;
 
         protected:
             //! \brief Constructor
-            CContextOwnAircraftProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr) {}
+            CContextOwnAircraftProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+                : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr)
+            {}
 
             //! \brief DBus version constructor
-            CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
+            CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection,
+                                     CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
         private:
             swift::misc::CGenericDBusInterface *m_dBusInterface; //!< DBus interface */

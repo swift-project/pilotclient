@@ -22,8 +22,11 @@ namespace swift::misc::simulation
         //! @{
         //! Constructor
         CInterpolatorLinearPbh() = default;
-        CInterpolatorLinearPbh(const aviation::CAircraftSituation &start, const aviation::CAircraftSituation &end) : m_startSituation(start), m_endSituation(end) {}
-        CInterpolatorLinearPbh(double simulationTimeFraction, const aviation::CAircraftSituation &start, const aviation::CAircraftSituation &end);
+        CInterpolatorLinearPbh(const aviation::CAircraftSituation &start, const aviation::CAircraftSituation &end)
+            : m_startSituation(start), m_endSituation(end)
+        {}
+        CInterpolatorLinearPbh(double simulationTimeFraction, const aviation::CAircraftSituation &start,
+                               const aviation::CAircraftSituation &end);
         //! @}
 
         //! @{
@@ -41,7 +44,9 @@ namespace swift::misc::simulation
 
     private:
         //! Interpolate angle
-        static physical_quantities::CAngle interpolateAngle(const physical_quantities::CAngle &begin, const physical_quantities::CAngle &end, double timeFraction0to1);
+        static physical_quantities::CAngle interpolateAngle(const physical_quantities::CAngle &begin,
+                                                            const physical_quantities::CAngle &end,
+                                                            double timeFraction0to1);
 
         double m_simulationTimeFraction = 0.0; //!< Value within [0;1] to blend between the situations
         aviation::CAircraftSituation m_startSituation;

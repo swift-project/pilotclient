@@ -23,10 +23,7 @@ namespace swift::gui::views
         this->standardInit(new CStatusMessageListModel(this));
     }
 
-    void CStatusMessageView::setMode(CStatusMessageListModel::Mode mode)
-    {
-        this->derivedModel()->setMode(mode);
-    }
+    void CStatusMessageView::setMode(CStatusMessageListModel::Mode mode) { this->derivedModel()->setMode(mode); }
 
     void CStatusMessageView::setMode(CStatusMessageListModel::Mode mode, const CStatusMessageList &messages)
     {

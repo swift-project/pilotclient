@@ -43,11 +43,15 @@ namespace swift::misc::simulation
 
     protected:
         //! Constructor
-        CAircraftModelSetAware(IAircraftModelSetProvider *modelSetProvider) : IProviderAware(modelSetProvider) { Q_ASSERT(modelSetProvider); }
+        CAircraftModelSetAware(IAircraftModelSetProvider *modelSetProvider) : IProviderAware(modelSetProvider)
+        {
+            Q_ASSERT(modelSetProvider);
+        }
     };
 
 } // namespace swift::misc::simulation
 
-Q_DECLARE_INTERFACE(swift::misc::simulation::IAircraftModelSetProvider, "org.swift-project.misc.simulation.iaircraftmodelsetprovider")
+Q_DECLARE_INTERFACE(swift::misc::simulation::IAircraftModelSetProvider,
+                    "org.swift-project.misc.simulation.iaircraftmodelsetprovider")
 
 #endif // guard

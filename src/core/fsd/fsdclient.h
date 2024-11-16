@@ -78,8 +78,10 @@ namespace swift::core::fsd
         public swift::misc::CContinuousWorker,
         public swift::misc::network::IEcosystemProvider, // provide info about used ecosystem
         public swift::misc::network::CClientAware, // network can set client information
-        public swift::misc::simulation::COwnAircraftAware, // network vatlib consumes own aircraft data and sets ICAO/callsign data
-        public swift::misc::simulation::CRemoteAircraftAware, // check if we really need to process network packets (e.g. parts)
+        public swift::misc::simulation::COwnAircraftAware, // network vatlib consumes own aircraft data and sets
+                                                           // ICAO/callsign data
+        public swift::misc::simulation::CRemoteAircraftAware, // check if we really need to process network packets
+                                                              // (e.g. parts)
         public swift::misc::simulation::CSimulationEnvironmentAware // allows to consume ground elevations
     {
         Q_OBJECT
@@ -92,8 +94,7 @@ namespace swift::core::fsd
         //! Ctor
         CFSDClient(swift::misc::network::IClientProvider *clientProvider,
                    swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-                   swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                   QObject *owner = nullptr);
+                   swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider, QObject *owner = nullptr);
 
         //! @{
         //! Preset functions
@@ -138,7 +139,8 @@ namespace swift::core::fsd
             m_partnerCallsign = callsign;
         }
         void setIcaoCodes(const swift::misc::simulation::CSimulatedAircraft &ownAircraft);
-        void setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString);
+        void setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString,
+                                     bool sendModelString);
         void setSimType(const swift::misc::simulation::CSimulatorInfo &simInfo);
         void setSimType(swift::misc::simulation::CSimulatorInfo::Simulator simulator);
         void setPilotRating(PilotRating rating)
@@ -207,8 +209,14 @@ namespace swift::core::fsd
 
         //! @{
         //! Interim positions
-        void addInterimPositionReceiver(const swift::misc::aviation::CCallsign &receiver) { m_interimPositionReceivers.push_back(receiver); }
-        void removeInterimPositionReceiver(const swift::misc::aviation::CCallsign &receiver) { m_interimPositionReceivers.remove(receiver); }
+        void addInterimPositionReceiver(const swift::misc::aviation::CCallsign &receiver)
+        {
+            m_interimPositionReceivers.push_back(receiver);
+        }
+        void removeInterimPositionReceiver(const swift::misc::aviation::CCallsign &receiver)
+        {
+            m_interimPositionReceivers.remove(receiver);
+        }
         //! @}
 
         //! @{
@@ -274,34 +282,46 @@ namespace swift::core::fsd
     signals:
         //! @{
         //! Client responses received
-        void atcDataUpdateReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CFrequency &freq,
-                                   const swift::misc::geo::CCoordinateGeodetic &pos, const swift::misc::physical_quantities::CLength &range);
+        void atcDataUpdateReceived(const swift::misc::aviation::CCallsign &callsign,
+                                   const swift::misc::physical_quantities::CFrequency &freq,
+                                   const swift::misc::geo::CCoordinateGeodetic &pos,
+                                   const swift::misc::physical_quantities::CLength &range);
         void deleteAtcReceived(const QString &cid);
         void deletePilotReceived(const QString &cid);
-        void pilotDataUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CTransponder &transponder);
+        void pilotDataUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation,
+                                     const swift::misc::aviation::CTransponder &transponder);
         void pongReceived(const QString &sender, double elapsedTimeMs);
-        void flightPlanReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CFlightPlan &flightPlan);
+        void flightPlanReceived(const swift::misc::aviation::CCallsign &callsign,
+                                const swift::misc::aviation::CFlightPlan &flightPlan);
         void textMessagesReceived(const swift::misc::network::CTextMessageList &messages);
         void aircraftConfigReceived(const QString &sender, const QJsonObject &config, qint64 currentOffsetTimeMs);
         void validAtcResponseReceived(const QString &callsign, bool isValidAtc);
-        void capabilityResponseReceived(const swift::misc::aviation::CCallsign &sender, swift::misc::network::CClient::Capabilities capabilities);
-        void com1FrequencyResponseReceived(const QString &sender, const swift::misc::physical_quantities::CFrequency &frequency);
+        void capabilityResponseReceived(const swift::misc::aviation::CCallsign &sender,
+                                        swift::misc::network::CClient::Capabilities capabilities);
+        void com1FrequencyResponseReceived(const QString &sender,
+                                           const swift::misc::physical_quantities::CFrequency &frequency);
         void realNameResponseReceived(const QString &sender, const QString &realName);
         void serverResponseReceived(const QString &sender, const QString &hostName);
-        void planeInformationReceived(const QString &sender, const QString &aircraft, const QString &airline, const QString &livery);
+        void planeInformationReceived(const QString &sender, const QString &aircraft, const QString &airline,
+                                      const QString &livery);
         void customPilotPacketReceived(const QString &sender, const QStringList &data);
         void interimPilotDataUpdatedReceived(const swift::misc::aviation::CAircraftSituation &situation);
         void visualPilotDataUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation);
-        void euroscopeSimDataUpdatedReceived(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts, qint64 currentOffsetTimeMs, const QString &model, const QString &livery);
+        void euroscopeSimDataUpdatedReceived(const swift::misc::aviation::CAircraftSituation &situation,
+                                             const swift::misc::aviation::CAircraftParts &parts,
+                                             qint64 currentOffsetTimeMs, const QString &model, const QString &livery);
         void rawFsdMessage(const swift::misc::network::CRawFsdMessage &rawFsdMessage);
-        void planeInformationFsinnReceived(const swift::misc::aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
+        void planeInformationFsinnReceived(const swift::misc::aviation::CCallsign &callsign,
+                                           const QString &airlineIcaoDesignator, const QString &aircraftDesignator,
+                                           const QString &combinedAircraftType, const QString &modelString);
         void revbAircraftConfigReceived(const QString &sender, const QString &config, qint64 currentOffsetTimeMs);
         void muteRequestReceived(bool mute);
 
         //! @}
 
         //! We received a reply to one of our ATIS queries.
-        void atisReplyReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CInformationMessage &atis);
+        void atisReplyReceived(const swift::misc::aviation::CCallsign &callsign,
+                               const swift::misc::aviation::CInformationMessage &atis);
 
         //! We received a reply to one of our ATIS queries, containing the controller's planned logoff time.
         void atisLogoffTimeReplyReceived(const swift::misc::aviation::CCallsign &callsign, const QString &zuluTime);
@@ -310,7 +330,8 @@ namespace swift::core::fsd
         void textMessageSent(const swift::misc::network::CTextMessage &sentMessage);
 
         //! Connection status has been changed
-        void connectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus, swift::misc::network::CConnectionStatus newStatus);
+        void connectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus,
+                                     swift::misc::network::CConnectionStatus newStatus);
 
         //! Network error
         void severeNetworkError(const QString &errorMessage);
@@ -336,9 +357,11 @@ namespace swift::core::fsd
         void sendPing(const QString &receiver);
         //
         void sendClientQueryIsValidAtc(const swift::misc::aviation::CCallsign &callsign);
-        void sendClientQuery(ClientQueryType queryType, const swift::misc::aviation::CCallsign &receiver, const QStringList &queryData = {});
+        void sendClientQuery(ClientQueryType queryType, const swift::misc::aviation::CCallsign &receiver,
+                             const QStringList &queryData = {});
         void sendTextMessage(const QString &receiver, const QString &message);
-        void sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline = {}, const QString &livery = {});
+        void sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline = {},
+                                  const QString &livery = {});
         void sendPlaneInformationFsinn(const swift::misc::aviation::CCallsign &callsign);
         void sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson);
         //
@@ -475,7 +498,8 @@ namespace swift::core::fsd
         void emitConsolidatedTextMessages();
 
         //! Remember when last position was received
-        qint64 receivedPositionFixTsAndGetOffsetTime(const swift::misc::aviation::CCallsign &callsign, qint64 markerTs = -1);
+        qint64 receivedPositionFixTsAndGetOffsetTime(const swift::misc::aviation::CCallsign &callsign,
+                                                     qint64 markerTs = -1);
 
         //! Current offset time
         qint64 currentOffsetTime(const swift::misc::aviation::CCallsign &callsign) const;
@@ -490,10 +514,12 @@ namespace swift::core::fsd
         void insertLatestOffsetTime(const swift::misc::aviation::CCallsign &callsign, qint64 offsetMs);
 
         //! Average offset time in ms
-        qint64 averageOffsetTimeMs(const swift::misc::aviation::CCallsign &callsign, int &count, int maxLastValues = c_maxOffsetTimes) const;
+        qint64 averageOffsetTimeMs(const swift::misc::aviation::CCallsign &callsign, int &count,
+                                   int maxLastValues = c_maxOffsetTimes) const;
 
         //! Average offset time in ms
-        qint64 averageOffsetTimeMs(const swift::misc::aviation::CCallsign &callsign, int maxLastValues = c_maxOffsetTimes) const;
+        qint64 averageOffsetTimeMs(const swift::misc::aviation::CCallsign &callsign,
+                                   int maxLastValues = c_maxOffsetTimes) const;
 
         bool isInterimPositionSendingEnabledForServer() const;
         bool isInterimPositionReceivingEnabledForServer() const;
@@ -502,7 +528,8 @@ namespace swift::core::fsd
 
         //! Handles ATIS replies from non-VATSIM servers. If the conditions are not met,
         //! the message is released as normal text message.
-        void maybeHandleAtisReply(const swift::misc::aviation::CCallsign &sender, const swift::misc::aviation::CCallsign &receiver, const QString &message);
+        void maybeHandleAtisReply(const swift::misc::aviation::CCallsign &sender,
+                                  const swift::misc::aviation::CCallsign &receiver, const QString &message);
 
         //! Settings have been changed
         void fsdMessageSettingsChanged();
@@ -526,16 +553,21 @@ namespace swift::core::fsd
         void pendingTimeoutCheck();
 
         //! Fix ATC station range
-        static const swift::misc::physical_quantities::CLength &fixAtcRange(const swift::misc::physical_quantities::CLength &networkRange, const swift::misc::aviation::CCallsign &cs);
+        static const swift::misc::physical_quantities::CLength &
+        fixAtcRange(const swift::misc::physical_quantities::CLength &networkRange,
+                    const swift::misc::aviation::CCallsign &cs);
 
         //! Max or 1st non-null value
-        static const swift::misc::physical_quantities::CLength &maxOrNotNull(const swift::misc::physical_quantities::CLength &l1, const swift::misc::physical_quantities::CLength &l2);
+        static const swift::misc::physical_quantities::CLength &
+        maxOrNotNull(const swift::misc::physical_quantities::CLength &l1,
+                     const swift::misc::physical_quantities::CLength &l2);
 
         //! String without colons
         static QString noColons(const QString &input);
 
         //! Get a short-lived, one-time-use token from Vatsim web service, to avoid sending plaintext password to FSD
-        void getVatsimAuthToken(const QString &cid, const QString &password, const swift::misc::CSlot<void(const QString &)> &callback);
+        void getVatsimAuthToken(const QString &cid, const QString &password,
+                                const swift::misc::CSlot<void(const QString &)> &callback);
 
         //! Convert FlightRules to FlightType
         static FlightType getFlightType(swift::misc::aviation::CFlightPlan::FlightRules flightRule);
@@ -551,7 +583,8 @@ namespace swift::core::fsd
         // Parser
         QHash<QString, MessageType> m_messageTypeMapping;
 
-        std::shared_ptr<QTcpSocket> m_socket = std::make_shared<QTcpSocket>(this); //!< used TCP socket, parent needed as it runs in worker thread
+        std::shared_ptr<QTcpSocket> m_socket =
+            std::make_shared<QTcpSocket>(this); //!< used TCP socket, parent needed as it runs in worker thread
         void connectSocketSignals();
         void initiateConnection(std::shared_ptr<QTcpSocket> rehostingSocket = {}, const QString &rehostingHost = {});
         void resolveLoadBalancing(const QString &host, std::function<void(const QString &)> callback);
@@ -593,7 +626,9 @@ namespace swift::core::fsd
 
         swift::misc::aviation::CAtcStationList m_atcStations;
 
-        swift::misc::CSettingReadOnly<swift::core::vatsim::TRawFsdMessageSetting> m_fsdMessageSetting { this, &CFSDClient::fsdMessageSettingsChanged };
+        swift::misc::CSettingReadOnly<swift::core::vatsim::TRawFsdMessageSetting> m_fsdMessageSetting {
+            this, &CFSDClient::fsdMessageSettingsChanged
+        };
         QFile m_rawFsdMessageLogFile;
         std::atomic_bool m_rawFsdMessagesEnabled { false };
         std::atomic_bool m_filterPasswordFromLogin { false };
@@ -632,15 +667,20 @@ namespace swift::core::fsd
 
         // buffered data for FSD
         swift::misc::aviation::CCallsign m_ownCallsign; //!< "buffered callsign", as this must not change when connected
-        swift::misc::aviation::CCallsign m_partnerCallsign; //!< "buffered"callsign", of partner flying in shared cockpit
-        swift::misc::aviation::CAircraftIcaoCode m_ownAircraftIcaoCode; //!< "buffered icao", as this must not change when connected
-        swift::misc::aviation::CAirlineIcaoCode m_ownAirlineIcaoCode; //!< "buffered icao", as this must not change when connected
+        swift::misc::aviation::CCallsign
+            m_partnerCallsign; //!< "buffered"callsign", of partner flying in shared cockpit
+        swift::misc::aviation::CAircraftIcaoCode
+            m_ownAircraftIcaoCode; //!< "buffered icao", as this must not change when connected
+        swift::misc::aviation::CAirlineIcaoCode
+            m_ownAirlineIcaoCode; //!< "buffered icao", as this must not change when connected
         QString m_ownLivery; //!< "buffered livery", as this must not change when connected
         QString m_ownModelString; //!< "buffered model string", as this must not change when connected
         std::atomic_bool m_sendLiveryString { true };
         std::atomic_bool m_sendModelString { true };
 
-        mutable QReadWriteLock m_lockUserClientBuffered { QReadWriteLock::Recursive }; //!< for user, client and buffered data
+        mutable QReadWriteLock m_lockUserClientBuffered {
+            QReadWriteLock::Recursive
+        }; //!< for user, client and buffered data
         QString getOwnCallsignAsString() const
         {
             QReadLocker l(&m_lockUserClientBuffered);
@@ -654,9 +694,12 @@ namespace swift::core::fsd
 
         static int constexpr c_maxOffsetTimes = 6; //!< Max offset times kept
         static int constexpr c_processingIntervalMsec = 100; //!< interval for the processing timer
-        static int constexpr c_updatePositionIntervalMsec = 5000; //!< interval for the position update timer (send our position to network)
-        static int constexpr c_updateInterimPositionIntervalMsec = 1000; //!< interval for interim position updates (send our position as interim position)
-        static int constexpr c_updateVisualPositionIntervalMsec = 200; //!< interval for the VATSIM visual position updates (send our position and 6DOF velocity)
+        static int constexpr c_updatePositionIntervalMsec =
+            5000; //!< interval for the position update timer (send our position to network)
+        static int constexpr c_updateInterimPositionIntervalMsec =
+            1000; //!< interval for interim position updates (send our position as interim position)
+        static int constexpr c_updateVisualPositionIntervalMsec =
+            200; //!< interval for the VATSIM visual position updates (send our position and 6DOF velocity)
         static int constexpr c_sendFsdMsgIntervalMsec = 10; //!< interval for FSD send messages
         bool m_stoppedSendingVisualPositions = false; //!< for when velocity drops to zero
         bool m_serverWantsVisualPositions = false; //!< there are interested clients in range

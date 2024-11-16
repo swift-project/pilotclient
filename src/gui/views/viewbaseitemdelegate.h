@@ -27,7 +27,8 @@ namespace swift::gui::views
         //! @{
 
         //! \copydoc QStyledItemDelegate::paint
-        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option,
+                           const QModelIndex &index) const override;
 
         //! \copydoc QStyledItemDelegate::sizeHint
         virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;

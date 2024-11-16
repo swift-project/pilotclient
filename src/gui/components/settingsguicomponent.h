@@ -21,9 +21,7 @@ namespace swift::gui::components
     /*!
      * General GUI settings
      */
-    class CSettingsGuiComponent :
-        public QFrame,
-        public swift::gui::CSingleApplicationUi
+    class CSettingsGuiComponent : public QFrame, public swift::gui::CSingleApplicationUi
     {
         Q_OBJECT
 

@@ -9,8 +9,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CModelSetting
 
 namespace swift::misc::simulation::settings
 {
-    CModelSettings::CModelSettings()
-    {}
+    CModelSettings::CModelSettings() {}
 
     QString CModelSettings::convertToQString(bool i18n) const
     {

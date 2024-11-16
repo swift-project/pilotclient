@@ -20,8 +20,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CNavigatorSettings)
 namespace swift::gui::settings
 {
     //! Settings for navigator bar
-    class SWIFT_GUI_EXPORT CNavigatorSettings :
-        public swift::misc::CValueObject<CNavigatorSettings>
+    class SWIFT_GUI_EXPORT CNavigatorSettings : public swift::misc::CValueObject<CNavigatorSettings>
     {
     public:
         //! Properties by index

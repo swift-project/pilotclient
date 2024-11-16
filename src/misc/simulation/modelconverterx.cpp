@@ -39,13 +39,11 @@ namespace swift::misc::simulation
             if (old->state() == QProcess::Running)
             {
                 // if still running, terminate and then delete
-                QObject::connect(old, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), old, &QObject::deleteLater);
+                QObject::connect(old, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), old,
+                                 &QObject::deleteLater);
                 old->terminate();
             }
-            else
-            {
-                old->deleteLater();
-            }
+            else { old->deleteLater(); }
         }
 
         QProcess *process = new QProcess(parent);

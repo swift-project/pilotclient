@@ -76,7 +76,9 @@ namespace swift::gui::editors
         //! Directory browser
         void fileDialog();
 
-        swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directories { this }; //!< the swift directories
+        swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directories {
+            this
+        }; //!< the swift directories
         QScopedPointer<Ui::CMatchingForm> ui;
     };
 } // namespace swift::gui::editors

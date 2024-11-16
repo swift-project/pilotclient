@@ -17,9 +17,10 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CDbAutoSimulatorStashingComponent::CDbAutoSimulatorStashingComponent(QWidget *parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint),
-                                                                                            CDbMappingComponentAware(qobject_cast<CDbMappingComponent *>(parent)),
-                                                                                            ui(new Ui::CDbAutoSimulatorStashingComponent)
+    CDbAutoSimulatorStashingComponent::CDbAutoSimulatorStashingComponent(QWidget *parent)
+        : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint),
+          CDbMappingComponentAware(qobject_cast<CDbMappingComponent *>(parent)),
+          ui(new Ui::CDbAutoSimulatorStashingComponent)
     {
         ui->setupUi(this);
         ui->le_MaxModelsStashed->setValidator(new QIntValidator(this));
@@ -44,7 +45,8 @@ namespace swift::gui::components
             {
                 // this removes previously stashed models
                 this->getMappingComponent()->replaceStashedModelsUnvalidated(m_modelsToStash);
-                const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Stashed %1 models").arg(m_modelsToStash.size()));
+                const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo,
+                                                QStringLiteral("Stashed %1 models").arg(m_modelsToStash.size()));
                 this->addStatusMessage(stashedMsg);
                 m_modelsToStash.clear();
             }
@@ -59,8 +61,7 @@ namespace swift::gui::components
         }
     }
 
-    CDbAutoSimulatorStashingComponent::~CDbAutoSimulatorStashingComponent()
-    {}
+    CDbAutoSimulatorStashingComponent::~CDbAutoSimulatorStashingComponent() {}
 
     void CDbAutoSimulatorStashingComponent::updateProgressIndicator(int percent)
     {
@@ -105,10 +106,7 @@ namespace swift::gui::components
     void CDbAutoSimulatorStashingComponent::addStatusMessages(const CStatusMessageList &msgs)
     {
         if (msgs.isEmpty()) { return; }
-        for (const CStatusMessage &msg : msgs)
-        {
-            this->addStatusMessage(msg);
-        }
+        for (const CStatusMessage &msg : msgs) { this->addStatusMessage(msg); }
     }
 
     void CDbAutoSimulatorStashingComponent::addStatusMessage(const CStatusMessage &msg, const CAircraftModel &model)
@@ -120,10 +118,7 @@ namespace swift::gui::components
             prefixMessage.prependMessage(QString(model.getModelString() + ", " + model.getMembersDbStatus() + ": "));
             ui->tvp_StatusMessages->insert(prefixMessage);
         }
-        else
-        {
-            ui->tvp_StatusMessages->insert(msg);
-        }
+        else { ui->tvp_StatusMessages->insert(msg); }
     }
 
     void CDbAutoSimulatorStashingComponent::tryToStash()
@@ -149,7 +144,8 @@ namespace swift::gui::components
             const CAircraftModelList selectedModels(this->currentModelView()->selectedObjects());
             ownModelsCount = selectedModels.size();
             this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, intro.arg(ownModelsCount)));
-            m_modelsToStash = CDatabaseUtils::updateSimulatorForFsFamily(selectedModels, &info, maxObjectsStashed, this, true);
+            m_modelsToStash =
+                CDatabaseUtils::updateSimulatorForFsFamily(selectedModels, &info, maxObjectsStashed, this, true);
         }
         else
         {
@@ -163,14 +159,17 @@ namespace swift::gui::components
                 const CAircraftModelList ownModels = mappincComponent->getOwnCachedModels(simulator);
                 const QString sim = simulator.toQString();
                 ownModelsCount += ownModels.size();
-                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, intro.arg(ownModels.size()).arg(sim)));
-                m_modelsToStash.push_back(CDatabaseUtils::updateSimulatorForFsFamily(ownModels, &info, maxObjectsStashed, this, true));
+                this->addStatusMessage(
+                    CStatusMessage(this, CStatusMessage::SeverityInfo, intro.arg(ownModels.size()).arg(sim)));
+                m_modelsToStash.push_back(
+                    CDatabaseUtils::updateSimulatorForFsFamily(ownModels, &info, maxObjectsStashed, this, true));
             }
         }
 
         const QString result("Tested %1 own models, %2 models should be updated in DB");
         this->addStatusMessages(info);
-        this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, result.arg(ownModelsCount).arg(m_modelsToStash.size())));
+        this->addStatusMessage(
+            CStatusMessage(this, CStatusMessage::SeverityInfo, result.arg(ownModelsCount).arg(m_modelsToStash.size())));
         m_state = Completed;
     }
 } // namespace swift::gui::components

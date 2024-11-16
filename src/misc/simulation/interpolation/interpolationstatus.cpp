@@ -7,10 +7,7 @@ using namespace swift::misc::aviation;
 
 namespace swift::misc::simulation
 {
-    void CInterpolationStatus::setExtraInfo(const QString &info)
-    {
-        m_extraInfo = info;
-    }
+    void CInterpolationStatus::setExtraInfo(const QString &info) { m_extraInfo = info; }
 
     void CInterpolationStatus::setInterpolatedAndCheckSituation(bool succeeded, const CAircraftSituation &situation)
     {
@@ -24,17 +21,13 @@ namespace swift::misc::simulation
         if (!m_isValidSituation) { m_isValidSituation = false; }
     }
 
-    bool CInterpolationStatus::hasValidInterpolatedSituation() const
-    {
-        return m_isInterpolated && m_isValidSituation;
-    }
+    bool CInterpolationStatus::hasValidInterpolatedSituation() const { return m_isInterpolated && m_isValidSituation; }
 
     QString CInterpolationStatus::toQString() const
     {
-        return QStringLiteral("Interpolated: ") % boolToYesNo(m_isInterpolated) %
-               QStringLiteral(" | situations: ") % QString::number(m_situations) %
-               QStringLiteral(" | situation valid: ") % boolToYesNo(m_isValidSituation) %
-               QStringLiteral(" | same: ") % boolToYesNo(m_isSameSituation) %
+        return QStringLiteral("Interpolated: ") % boolToYesNo(m_isInterpolated) % QStringLiteral(" | situations: ") %
+               QString::number(m_situations) % QStringLiteral(" | situation valid: ") %
+               boolToYesNo(m_isValidSituation) % QStringLiteral(" | same: ") % boolToYesNo(m_isSameSituation) %
                (m_extraInfo.isEmpty() ? QString() : QStringLiteral(" info: ") % m_extraInfo);
     }
 } // namespace swift::misc::simulation

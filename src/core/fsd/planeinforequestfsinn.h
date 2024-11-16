@@ -15,11 +15,8 @@ namespace swift::core::fsd
     {
     public:
         //! Constructor
-        PlaneInfoRequestFsinn(const QString &sender,
-                              const QString &receiver,
-                              const QString &airlineIcao,
-                              const QString &aircraftIcao,
-                              const QString &aircraftIcaoCombinedType,
+        PlaneInfoRequestFsinn(const QString &sender, const QString &receiver, const QString &airlineIcao,
+                              const QString &aircraftIcao, const QString &aircraftIcaoCombinedType,
                               const QString &sendMModelString);
 
         //! Message converted to tokens
@@ -46,19 +43,14 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const PlaneInfoRequestFsinn &lhs, const PlaneInfoRequestFsinn &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.m_airlineIcao == rhs.m_airlineIcao &&
-               lhs.m_aircraftIcao == rhs.m_aircraftIcao &&
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+               lhs.m_airlineIcao == rhs.m_airlineIcao && lhs.m_aircraftIcao == rhs.m_aircraftIcao &&
                lhs.m_aircraftIcaoCombinedType == rhs.m_aircraftIcaoCombinedType &&
                lhs.m_sendMModelString == rhs.m_sendMModelString;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const PlaneInfoRequestFsinn &lhs, const PlaneInfoRequestFsinn &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const PlaneInfoRequestFsinn &lhs, const PlaneInfoRequestFsinn &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

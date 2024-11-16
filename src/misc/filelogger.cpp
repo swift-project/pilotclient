@@ -29,17 +29,14 @@ namespace swift::misc
     //! Get log file name
     QString logFileName()
     {
-        static const QString fileName = applicationName() %
-                                        QLatin1String("_") %
+        static const QString fileName = applicationName() % QLatin1String("_") %
                                         QDateTime::currentDateTimeUtc().toString(QStringLiteral("yyMMddhhmmss")) %
-                                        QLatin1String("_") %
-                                        QString::number(QCoreApplication::applicationPid()) %
+                                        QLatin1String("_") % QString::number(QCoreApplication::applicationPid()) %
                                         QLatin1String(".log");
         return fileName;
     }
 
-    CFileLogger::CFileLogger(QObject *parent) : QObject(parent),
-                                                m_logFile(this)
+    CFileLogger::CFileLogger(QObject *parent) : QObject(parent), m_logFile(this)
     {
         Q_ASSERT(!applicationName().isEmpty());
         QDir::root().mkpath(CSwiftDirectories::logDirectory());
@@ -51,10 +48,7 @@ namespace swift::misc
         writeHeaderToFile();
     }
 
-    CFileLogger::~CFileLogger()
-    {
-        this->close();
-    }
+    CFileLogger::~CFileLogger() { this->close(); }
 
     void CFileLogger::close()
     {
@@ -66,10 +60,7 @@ namespace swift::misc
         }
     }
 
-    QString CFileLogger::getLogFileName()
-    {
-        return logFileName();
-    }
+    QString CFileLogger::getLogFileName() { return logFileName(); }
 
     void CFileLogger::writeStatusMessageToFile(const swift::misc::CStatusMessage &statusMessage)
     {
@@ -82,7 +73,8 @@ namespace swift::misc
             writeContentToFile(u"\n[" % categories % u']');
             m_previousCategories = categories;
         }
-        const QString finalContent(QDateTime::currentDateTime().toString(QStringLiteral("hh:mm:ss ")) % statusMessage.getSeverityAsString() % u": " % statusMessage.getMessage());
+        const QString finalContent(QDateTime::currentDateTime().toString(QStringLiteral("hh:mm:ss ")) %
+                                   statusMessage.getSeverityAsString() % u": " % statusMessage.getMessage());
 
         writeContentToFile(finalContent);
     }
@@ -102,10 +94,7 @@ namespace swift::misc
         QDateTime now = QDateTime::currentDateTime();
         for (const auto &logFileInfo : dir.entryInfoList())
         {
-            if (logFileInfo.lastModified().daysTo(now) > 7)
-            {
-                dir.remove(logFileInfo.fileName());
-            }
+            if (logFileInfo.lastModified().daysTo(now) > 7) { dir.remove(logFileInfo.fileName()); }
         }
     }
 
@@ -126,8 +115,5 @@ namespace swift::misc
         m_stream << "Application started." << Qt::endl;
     }
 
-    void CFileLogger::writeContentToFile(const QString &content)
-    {
-        m_stream << content << Qt::endl;
-    }
+    void CFileLogger::writeContentToFile(const QString &content) { m_stream << content << Qt::endl; }
 } // namespace swift::misc

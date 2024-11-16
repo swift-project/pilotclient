@@ -38,16 +38,14 @@ using namespace swift::core::data;
 
 namespace swift::core::db
 {
-    CIcaoDataReader::CIcaoDataReader(QObject *owner, const CDatabaseReaderConfigList &config) : CDatabaseReader(owner, config, "CIcaoDataReader")
+    CIcaoDataReader::CIcaoDataReader(QObject *owner, const CDatabaseReaderConfigList &config)
+        : CDatabaseReader(owner, config, "CIcaoDataReader")
     {
         // init to avoid threading issues
         this->getBaseUrl(CDbFlags::DbReading);
     }
 
-    CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodes() const
-    {
-        return m_aircraftIcaoCache.get();
-    }
+    CAircraftIcaoCodeList CIcaoDataReader::getAircraftIcaoCodes() const { return m_aircraftIcaoCache.get(); }
 
     CAircraftIcaoCode CIcaoDataReader::getAircraftIcaoCodeForDesignator(const QString &designator) const
     {
@@ -74,10 +72,7 @@ namespace swift::core::db
         return this->getAircraftIcaoCodes().containsDesignator(designator);
     }
 
-    CAirlineIcaoCodeList CIcaoDataReader::getAirlineIcaoCodes() const
-    {
-        return m_airlineIcaoCache.get();
-    }
+    CAirlineIcaoCodeList CIcaoDataReader::getAirlineIcaoCodes() const { return m_airlineIcaoCache.get(); }
 
     CAircraftIcaoCode CIcaoDataReader::smartAircraftIcaoSelector(const CAircraftIcaoCode &icaoPattern) const
     {
@@ -85,10 +80,7 @@ namespace swift::core::db
         return codes.smartAircraftIcaoSelector(icaoPattern); // sorted by rank
     }
 
-    CCountryList CIcaoDataReader::getCountries() const
-    {
-        return m_countryCache.get();
-    }
+    CCountryList CIcaoDataReader::getCountries() const { return m_countryCache.get(); }
 
     CCountry CIcaoDataReader::getCountryForIsoCode(const QString &isoCode) const
     {
@@ -110,7 +102,8 @@ namespace swift::core::db
         return this->getAirlineIcaoCodes().containsVDesignator(designator);
     }
 
-    CAirlineIcaoCode CIcaoDataReader::getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const
+    CAirlineIcaoCode CIcaoDataReader::getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator,
+                                                                                     bool preferOperatingAirlines) const
     {
         return this->getAirlineIcaoCodes().findByUniqueVDesignatorOrDefault(designator, preferOperatingAirlines);
     }
@@ -130,43 +123,30 @@ namespace swift::core::db
         return this->getAirlineIcaoCodes().findByKey(key);
     }
 
-    CAirlineIcaoCode CIcaoDataReader::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
+    CAirlineIcaoCode CIcaoDataReader::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern,
+                                                               const CCallsign &callsign) const
     {
         const CAirlineIcaoCodeList codes(this->getAirlineIcaoCodes()); // thread safe copy
         return codes.smartAirlineIcaoSelector(icaoPattern, callsign);
     }
 
-    CAircraftCategoryList CIcaoDataReader::getAircraftCategories() const
-    {
-        return m_categoryCache.get();
-    }
+    CAircraftCategoryList CIcaoDataReader::getAircraftCategories() const { return m_categoryCache.get(); }
 
-    int CIcaoDataReader::getAircraftCategoryCount() const
-    {
-        return this->getAircraftCategories().size();
-    }
+    int CIcaoDataReader::getAircraftCategoryCount() const { return this->getAircraftCategories().size(); }
 
-    int CIcaoDataReader::getAircraftIcaoCodesCount() const
-    {
-        return this->getAircraftIcaoCodes().size();
-    }
+    int CIcaoDataReader::getAircraftIcaoCodesCount() const { return this->getAircraftIcaoCodes().size(); }
 
-    int CIcaoDataReader::getAirlineIcaoCodesCount() const
-    {
-        return this->getAirlineIcaoCodes().size();
-    }
+    int CIcaoDataReader::getAirlineIcaoCodesCount() const { return this->getAirlineIcaoCodes().size(); }
 
     bool CIcaoDataReader::areAllDataRead() const
     {
         return this->getCountriesCount() > 0 && getAirlineIcaoCodesCount() > 0 && getAircraftIcaoCodesCount() > 0;
     }
 
-    int CIcaoDataReader::getCountriesCount() const
-    {
-        return this->getCountries().size();
-    }
+    int CIcaoDataReader::getCountriesCount() const { return this->getCountries().size(); }
 
-    void CIcaoDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+    void CIcaoDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode,
+                               const QDateTime &newerThan)
     {
         this->threadAssertCheck(); // runs in background thread
         if (!this->doWorkCheck()) { return; }
@@ -183,10 +163,7 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::parseAircraftIcaoData });
                 entitiesTriggered |= CEntityFlags::AircraftIcaoEntity;
             }
-            else
-            {
-                this->logNoWorkingUrl(CEntityFlags::AircraftIcaoEntity);
-            }
+            else { this->logNoWorkingUrl(CEntityFlags::AircraftIcaoEntity); }
         }
 
         if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
@@ -198,10 +175,7 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::parseAirlineIcaoData });
                 entitiesTriggered |= CEntityFlags::AirlineIcaoEntity;
             }
-            else
-            {
-                this->logNoWorkingUrl(CEntityFlags::AirlineIcaoEntity);
-            }
+            else { this->logNoWorkingUrl(CEntityFlags::AirlineIcaoEntity); }
         }
 
         if (entities.testFlag(CEntityFlags::CountryEntity))
@@ -213,10 +187,7 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::parseCountryData });
                 entitiesTriggered |= CEntityFlags::CountryEntity;
             }
-            else
-            {
-                this->logNoWorkingUrl(CEntityFlags::CountryEntity);
-            }
+            else { this->logNoWorkingUrl(CEntityFlags::CountryEntity); }
         }
 
         if (entities.testFlag(CEntityFlags::AircraftCategoryEntity))
@@ -228,10 +199,7 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CIcaoDataReader::parseAircraftCategoryData });
                 entitiesTriggered |= CEntityFlags::AircraftCategoryEntity;
             }
-            else
-            {
-                this->logNoWorkingUrl(CEntityFlags::AircraftCategoryEntity);
-            }
+            else { this->logNoWorkingUrl(CEntityFlags::AircraftCategoryEntity); }
         }
 
         if (entitiesTriggered != CEntityFlags::NoEntity)
@@ -240,20 +208,11 @@ namespace swift::core::db
         }
     }
 
-    void CIcaoDataReader::aircraftIcaoCacheChanged()
-    {
-        this->cacheHasChanged(CEntityFlags::AircraftIcaoEntity);
-    }
+    void CIcaoDataReader::aircraftIcaoCacheChanged() { this->cacheHasChanged(CEntityFlags::AircraftIcaoEntity); }
 
-    void CIcaoDataReader::airlineIcaoCacheChanged()
-    {
-        this->cacheHasChanged(CEntityFlags::AirlineIcaoEntity);
-    }
+    void CIcaoDataReader::airlineIcaoCacheChanged() { this->cacheHasChanged(CEntityFlags::AirlineIcaoEntity); }
 
-    void CIcaoDataReader::countryCacheChanged()
-    {
-        this->cacheHasChanged(CEntityFlags::CountryEntity);
-    }
+    void CIcaoDataReader::countryCacheChanged() { this->cacheHasChanged(CEntityFlags::CountryEntity); }
 
     void CIcaoDataReader::aircraftCategoryCacheChanged()
     {
@@ -270,10 +229,7 @@ namespace swift::core::db
         const CUrl current = m_readerUrlCache.get();
         if (current == url) { return; }
         const CStatusMessage m = m_readerUrlCache.set(url);
-        if (m.isFailure())
-        {
-            CLogMessage::preformatted(m);
-        }
+        if (m.isFailure()) { CLogMessage::preformatted(m); }
     }
 
     void CIcaoDataReader::parseAircraftIcaoData(QNetworkReply *nwReplyPtr)
@@ -283,7 +239,8 @@ namespace swift::core::db
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         if (!this->doWorkCheck()) { return; }
 
-        const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        const CDatabaseReader::JsonDatastoreResponse res =
+            this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         const QUrl url = nwReply->url();
 
         if (res.hasErrorMessage())
@@ -300,7 +257,8 @@ namespace swift::core::db
         if (res.isRestricted())
         {
             // create full list if it was just incremental
-            const CAircraftIcaoCodeList incrementalCodes(CAircraftIcaoCodeList::fromDatabaseJson(res, categories, true, &inconsistent));
+            const CAircraftIcaoCodeList incrementalCodes(
+                CAircraftIcaoCodeList::fromDatabaseJson(res, categories, true, &inconsistent));
             if (incrementalCodes.isEmpty()) { return; } // currently ignored
             codes = this->getAircraftIcaoCodes();
             codes.replaceOrAddObjectsByKey(incrementalCodes);
@@ -316,9 +274,9 @@ namespace swift::core::db
 
         if (!inconsistent.isEmpty())
         {
-            logInconsistentData(
-                CStatusMessage(this, CStatusMessage::SeverityInfo, u"Inconsistent aircraft codes: " % inconsistent.dbKeysAsString(", ")),
-                Q_FUNC_INFO);
+            logInconsistentData(CStatusMessage(this, CStatusMessage::SeverityInfo,
+                                               u"Inconsistent aircraft codes: " % inconsistent.dbKeysAsString(", ")),
+                                Q_FUNC_INFO);
         }
 
         if (!this->doWorkCheck()) { return; }
@@ -342,7 +300,8 @@ namespace swift::core::db
         if (!this->doWorkCheck()) { return; }
 
         const QUrl url = nwReply->url();
-        const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        const CDatabaseReader::JsonDatastoreResponse res =
+            this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
         {
             CLogMessage::preformatted(res.lastWarningOrAbove());
@@ -356,7 +315,8 @@ namespace swift::core::db
         if (res.isRestricted())
         {
             // create full list if it was just incremental
-            const CAirlineIcaoCodeList incrementalCodes(CAirlineIcaoCodeList::fromDatabaseJson(res, true, &inconsistent));
+            const CAirlineIcaoCodeList incrementalCodes(
+                CAirlineIcaoCodeList::fromDatabaseJson(res, true, &inconsistent));
             if (incrementalCodes.isEmpty()) { return; } // currently ignored
             codes = this->getAirlineIcaoCodes();
             codes.replaceOrAddObjectsByKey(incrementalCodes);
@@ -372,9 +332,9 @@ namespace swift::core::db
 
         if (!inconsistent.isEmpty())
         {
-            logInconsistentData(
-                CStatusMessage(this, CStatusMessage::SeverityInfo, u"Inconsistent airline codes: " % inconsistent.dbKeysAsString(", ")),
-                Q_FUNC_INFO);
+            logInconsistentData(CStatusMessage(this, CStatusMessage::SeverityInfo,
+                                               u"Inconsistent airline codes: " % inconsistent.dbKeysAsString(", ")),
+                                Q_FUNC_INFO);
         }
 
         if (!this->doWorkCheck()) { return; }
@@ -395,7 +355,8 @@ namespace swift::core::db
     void CIcaoDataReader::parseCountryData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        const CDatabaseReader::JsonDatastoreResponse res =
+            this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         const QUrl url = nwReply->url();
 
         if (res.hasErrorMessage())
@@ -442,7 +403,8 @@ namespace swift::core::db
     void CIcaoDataReader::parseAircraftCategoryData(QNetworkReply *nwReplyPtr)
     {
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        const CDatabaseReader::JsonDatastoreResponse res =
+            this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         const QUrl url = nwReply->url();
 
         if (res.hasErrorMessage())
@@ -486,13 +448,11 @@ namespace swift::core::db
         this->emitAndLogDataRead(CEntityFlags::AircraftCategoryEntity, n, res);
     }
 
-    CStatusMessageList CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
+    CStatusMessageList CIcaoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead,
+                                                          bool overrideNewerOnly)
     {
         const QDir directory(dir);
-        if (!directory.exists())
-        {
-            return CStatusMessage(this).error(u"Missing directory '%1'") << dir;
-        }
+        if (!directory.exists()) { return CStatusMessage(this).error(u"Missing directory '%1'") << dir; }
 
         // Hint: Do not emit while locked -> deadlock
         CStatusMessageList msgs;
@@ -500,12 +460,10 @@ namespace swift::core::db
         CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
         if (whatToRead.testFlag(CEntityFlags::CountryEntity))
         {
-            const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::CountryEntity));
+            const QString fileName = CFileUtils::appendFilePaths(
+                directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::CountryEntity));
             const QFileInfo fi(fileName);
-            if (!fi.exists())
-            {
-                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
-            }
+            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::CountryEntity, msgs))
             {
                 // void
@@ -531,7 +489,8 @@ namespace swift::core::db
                     catch (const CJsonException &ex)
                     {
                         emit this->dataRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFailed, 0, url);
-                        msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading countries from '%1'").arg(fileName)));
+                        msgs.push_back(CStatusMessage::fromJsonException(
+                            ex, this, QStringLiteral("Reading countries from '%1'").arg(fileName)));
                     }
                 }
             }
@@ -539,12 +498,10 @@ namespace swift::core::db
 
         if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity))
         {
-            const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftIcaoEntity));
+            const QString fileName = CFileUtils::appendFilePaths(
+                directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftIcaoEntity));
             const QFileInfo fi(fileName);
-            if (!fi.exists())
-            {
-                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
-            }
+            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AircraftIcaoEntity, msgs))
             {
                 // void
@@ -561,16 +518,19 @@ namespace swift::core::db
                 {
                     try
                     {
-                        const CAircraftIcaoCodeList aircraftIcaos = CAircraftIcaoCodeList::fromMultipleJsonFormats(aircraftJson);
+                        const CAircraftIcaoCodeList aircraftIcaos =
+                            CAircraftIcaoCodeList::fromMultipleJsonFormats(aircraftJson);
                         const int c = aircraftIcaos.size();
-                        msgs.push_back(m_aircraftIcaoCache.set(aircraftIcaos, fi.birthTime().toUTC().toMSecsSinceEpoch()));
+                        msgs.push_back(
+                            m_aircraftIcaoCache.set(aircraftIcaos, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                         reallyRead |= CEntityFlags::AircraftIcaoEntity;
                         emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, c, url);
                     }
                     catch (const CJsonException &ex)
                     {
                         emit this->dataRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFailed, 0, url);
-                        msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading aircraft ICAOs from '%1'").arg(fileName)));
+                        msgs.push_back(CStatusMessage::fromJsonException(
+                            ex, this, QStringLiteral("Reading aircraft ICAOs from '%1'").arg(fileName)));
                     }
                 }
             }
@@ -578,12 +538,10 @@ namespace swift::core::db
 
         if (whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity))
         {
-            const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AirlineIcaoEntity));
+            const QString fileName = CFileUtils::appendFilePaths(
+                directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AirlineIcaoEntity));
             const QFileInfo fi(fileName);
-            if (!fi.exists())
-            {
-                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
-            }
+            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AirlineIcaoEntity, msgs))
             {
                 // void
@@ -600,16 +558,19 @@ namespace swift::core::db
                 {
                     try
                     {
-                        const CAirlineIcaoCodeList airlineIcaos = CAirlineIcaoCodeList::fromMultipleJsonFormats(airlineJson);
+                        const CAirlineIcaoCodeList airlineIcaos =
+                            CAirlineIcaoCodeList::fromMultipleJsonFormats(airlineJson);
                         const int c = airlineIcaos.size();
-                        msgs.push_back(m_airlineIcaoCache.set(airlineIcaos, fi.birthTime().toUTC().toMSecsSinceEpoch()));
+                        msgs.push_back(
+                            m_airlineIcaoCache.set(airlineIcaos, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                         reallyRead |= CEntityFlags::AirlineIcaoEntity;
                         emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c, url);
                     }
                     catch (const CJsonException &ex)
                     {
                         emit this->dataRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFailed, 0, url);
-                        msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading airline ICAOs from '%1'").arg(fileName)));
+                        msgs.push_back(CStatusMessage::fromJsonException(
+                            ex, this, QStringLiteral("Reading airline ICAOs from '%1'").arg(fileName)));
                     }
                 }
             }
@@ -617,12 +578,10 @@ namespace swift::core::db
 
         if (whatToRead.testFlag(CEntityFlags::AircraftCategoryEntity))
         {
-            const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftCategoryEntity));
+            const QString fileName = CFileUtils::appendFilePaths(
+                directory.absolutePath(), CDbInfo::entityToSharedName(CEntityFlags::AircraftCategoryEntity));
             const QFileInfo fi(fileName);
-            if (!fi.exists())
-            {
-                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
-            }
+            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AircraftCategoryEntity, msgs))
             {
                 // void
@@ -639,16 +598,19 @@ namespace swift::core::db
                 {
                     try
                     {
-                        const CAircraftCategoryList aircraftCategories = CAircraftCategoryList::fromMultipleJsonFormats(aircraftCategory);
+                        const CAircraftCategoryList aircraftCategories =
+                            CAircraftCategoryList::fromMultipleJsonFormats(aircraftCategory);
                         const int c = aircraftCategories.size();
-                        msgs.push_back(m_categoryCache.set(aircraftCategories, fi.birthTime().toUTC().toMSecsSinceEpoch()));
+                        msgs.push_back(
+                            m_categoryCache.set(aircraftCategories, fi.birthTime().toUTC().toMSecsSinceEpoch()));
                         reallyRead |= CEntityFlags::AircraftCategoryEntity;
                         emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFinished, c, url);
                     }
                     catch (const CJsonException &ex)
                     {
                         emit this->dataRead(CEntityFlags::AircraftCategoryEntity, CEntityFlags::ReadFailed, 0, url);
-                        msgs.push_back(CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading categories from '%1'").arg(fileName)));
+                        msgs.push_back(CStatusMessage::fromJsonException(
+                            ex, this, QStringLiteral("Reading categories from '%1'").arg(fileName)));
                     }
                 }
             }
@@ -657,7 +619,8 @@ namespace swift::core::db
         return msgs;
     }
 
-    bool CIcaoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
+    bool CIcaoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead,
+                                                        bool overrideNewerOnly)
     {
         if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
 
@@ -665,10 +628,7 @@ namespace swift::core::db
         QTimer::singleShot(0, this, [=]() {
             if (!myself) { return; }
             const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
-            if (msgs.isFailure())
-            {
-                CLogMessage::preformatted(msgs);
-            }
+            if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
         });
         return true;
     }
@@ -705,7 +665,9 @@ namespace swift::core::db
         for (const auto &pair : fileContents)
         {
             CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory] {
-                CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(pair.first)), pair.second);
+                CFileUtils::writeStringToFile(
+                    CFileUtils::appendFilePaths(directory.absolutePath(), CDbInfo::entityToSharedName(pair.first)),
+                    pair.second);
             });
         }
         return true;
@@ -754,10 +716,22 @@ namespace swift::core::db
 
     void CIcaoDataReader::invalidateCaches(CEntityFlags::Entity entities)
     {
-        if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { CDataCache::instance()->clearAllValues(m_aircraftIcaoCache.getKey()); }
-        if (entities.testFlag(CEntityFlags::AirlineIcaoEntity)) { CDataCache::instance()->clearAllValues(m_airlineIcaoCache.getKey()); }
-        if (entities.testFlag(CEntityFlags::CountryEntity)) { CDataCache::instance()->clearAllValues(m_countryCache.getKey()); }
-        if (entities.testFlag(CEntityFlags::AircraftCategoryEntity)) { CDataCache::instance()->clearAllValues(m_categoryCache.getKey()); }
+        if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
+        {
+            CDataCache::instance()->clearAllValues(m_aircraftIcaoCache.getKey());
+        }
+        if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
+        {
+            CDataCache::instance()->clearAllValues(m_airlineIcaoCache.getKey());
+        }
+        if (entities.testFlag(CEntityFlags::CountryEntity))
+        {
+            CDataCache::instance()->clearAllValues(m_countryCache.getKey());
+        }
+        if (entities.testFlag(CEntityFlags::AircraftCategoryEntity))
+        {
+            CDataCache::instance()->clearAllValues(m_categoryCache.getKey());
+        }
     }
 
     QDateTime CIcaoDataReader::getCacheTimestamp(CEntityFlags::Entity entity) const
@@ -790,17 +764,22 @@ namespace swift::core::db
         if (this->getCacheCount(CEntityFlags::AircraftIcaoEntity) > 0) entities |= CEntityFlags::AircraftIcaoEntity;
         if (this->getCacheCount(CEntityFlags::AirlineIcaoEntity) > 0) entities |= CEntityFlags::AirlineIcaoEntity;
         if (this->getCacheCount(CEntityFlags::CountryEntity) > 0) entities |= CEntityFlags::CountryEntity;
-        if (this->getCacheCount(CEntityFlags::AircraftCategoryEntity) > 0) entities |= CEntityFlags::AircraftCategoryEntity;
+        if (this->getCacheCount(CEntityFlags::AircraftCategoryEntity) > 0)
+            entities |= CEntityFlags::AircraftCategoryEntity;
         return entities;
     }
 
     CEntityFlags::Entity CIcaoDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
     {
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-        if (this->hasCacheTimestampNewerThan(CEntityFlags::AircraftIcaoEntity, threshold)) entities |= CEntityFlags::AircraftIcaoEntity;
-        if (this->hasCacheTimestampNewerThan(CEntityFlags::AirlineIcaoEntity, threshold)) entities |= CEntityFlags::AirlineIcaoEntity;
-        if (this->hasCacheTimestampNewerThan(CEntityFlags::CountryEntity, threshold)) entities |= CEntityFlags::CountryEntity;
-        if (this->hasCacheTimestampNewerThan(CEntityFlags::AircraftCategoryEntity, threshold)) entities |= CEntityFlags::CountryEntity;
+        if (this->hasCacheTimestampNewerThan(CEntityFlags::AircraftIcaoEntity, threshold))
+            entities |= CEntityFlags::AircraftIcaoEntity;
+        if (this->hasCacheTimestampNewerThan(CEntityFlags::AirlineIcaoEntity, threshold))
+            entities |= CEntityFlags::AirlineIcaoEntity;
+        if (this->hasCacheTimestampNewerThan(CEntityFlags::CountryEntity, threshold))
+            entities |= CEntityFlags::CountryEntity;
+        if (this->hasCacheTimestampNewerThan(CEntityFlags::AircraftCategoryEntity, threshold))
+            entities |= CEntityFlags::CountryEntity;
         return entities;
     }
 
@@ -812,10 +791,7 @@ namespace swift::core::db
         return CDatabaseReader::isChangedUrl(oldUrlInfo, newUrlInfo);
     }
 
-    CUrl CIcaoDataReader::getDbServiceBaseUrl() const
-    {
-        return sApp->getGlobalSetup().getDbIcaoReaderUrl();
-    }
+    CUrl CIcaoDataReader::getDbServiceBaseUrl() const { return sApp->getGlobalSetup().getDbIcaoReaderUrl(); }
 
     CUrl CIcaoDataReader::getAircraftIcaoUrl(CDbFlags::DataRetrievalModeFlag mode) const
     {

@@ -68,7 +68,8 @@ namespace swift::gui
             QScopedPointer<Ui::CDbDistributorComponent> ui;
 
             //! Distributors have been read
-            void onDistributorsRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
+            void onDistributorsRead(swift::misc::network::CEntityFlags::Entity entity,
+                                    swift::misc::network::CEntityFlags::ReadState readState, int count);
 
             //! Select all FSX standard models
             void selectStandardModels();

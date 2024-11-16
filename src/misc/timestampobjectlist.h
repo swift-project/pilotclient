@@ -38,7 +38,10 @@ namespace swift::misc
         }
 
         //! As string
-        QString asString() const { return QStringLiteral("Min: %1ms Max: %2ms Mean: %3ms").arg(min).arg(max).arg(mean, 0, 'f', 2); }
+        QString asString() const
+        {
+            return QStringLiteral("Min: %1ms Max: %2ms Mean: %3ms").arg(min).arg(max).arg(mean, 0, 'f', 2);
+        }
     };
 
     //! List of objects with timestamp.
@@ -58,17 +61,12 @@ namespace swift::misc
         };
 
         //! List of objects before dateTime (older)
-        CONTAINER findBefore(const QDateTime &dateTime) const
-        {
-            return this->findBefore(dateTime.toMSecsSinceEpoch());
-        }
+        CONTAINER findBefore(const QDateTime &dateTime) const { return this->findBefore(dateTime.toMSecsSinceEpoch()); }
 
         //! List of objects before msSinceEpoch (older)
         CONTAINER findBefore(qint64 msSinceEpoch) const
         {
-            return this->container().findBy([&](const OBJ &obj) {
-                return obj.isOlderThan(msSinceEpoch);
-            });
+            return this->container().findBy([&](const OBJ &obj) { return obj.isOlderThan(msSinceEpoch); });
         }
 
         //! Object before timestamp or default (older)
@@ -94,17 +92,12 @@ namespace swift::misc
         }
 
         //! List of objects after dateTime (newer)
-        CONTAINER findAfter(const QDateTime &dateTime) const
-        {
-            return this->findAfter(dateTime.toMSecsSinceEpoch());
-        }
+        CONTAINER findAfter(const QDateTime &dateTime) const { return this->findAfter(dateTime.toMSecsSinceEpoch()); }
 
         //! List of objects after msSinceEpoch (newer)
         CONTAINER findAfter(qint64 msSinceEpoch) const
         {
-            return this->container().findBy([&](const OBJ &obj) {
-                return obj.isNewerThan(msSinceEpoch);
-            });
+            return this->container().findBy([&](const OBJ &obj) { return obj.isNewerThan(msSinceEpoch); });
         }
 
         //! List of objects before now - offset
@@ -124,43 +117,34 @@ namespace swift::misc
         //! Objects without valid timestamp
         CONTAINER findInvalidTimestamps() const
         {
-            return this->container().findBy([&](const OBJ &obj) {
-                return !obj.hasValidTimestamp();
-            });
+            return this->container().findBy([&](const OBJ &obj) { return !obj.hasValidTimestamp(); });
         }
 
         //! Find closest (or default)
         OBJ findClosestTimeDistance(qint64 msSinceEpoch) const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const auto closest = std::min_element(this->container().cbegin(), this->container().cend(), [=](const ITimestampBased &a, const ITimestampBased &b) {
-                return qAbs(a.getTimeDifferenceMs(msSinceEpoch)) < qAbs(b.getTimeDifferenceMs(msSinceEpoch));
-            });
+            const auto closest = std::min_element(this->container().cbegin(), this->container().cend(),
+                                                  [=](const ITimestampBased &a, const ITimestampBased &b) {
+                                                      return qAbs(a.getTimeDifferenceMs(msSinceEpoch)) <
+                                                             qAbs(b.getTimeDifferenceMs(msSinceEpoch));
+                                                  });
             return *closest;
         }
 
         //! Has invalid timestamp
-        bool hasInvalidTimestamps() const
-        {
-            return this->container().contains(&OBJ::hasValidTimestamp, false);
-        }
+        bool hasInvalidTimestamps() const { return this->container().contains(&OBJ::hasValidTimestamp, false); }
 
         //! Set all timestamps to now
         void setCurrentUtcTime()
         {
-            for (ITimestampBased &tsObj : this->container())
-            {
-                tsObj.setCurrentUtcTime();
-            }
+            for (ITimestampBased &tsObj : this->container()) { tsObj.setCurrentUtcTime(); }
         }
 
         //! Set all timestamps to given time
         void setUtcTime(qint64 msSinceEpoch)
         {
-            for (ITimestampBased &tsObj : this->container())
-            {
-                tsObj.setMSecsSinceEpoch(msSinceEpoch);
-            }
+            for (ITimestampBased &tsObj : this->container()) { tsObj.setMSecsSinceEpoch(msSinceEpoch); }
         }
 
         //! Set invalid timestamps to now
@@ -205,7 +189,10 @@ namespace swift::misc
         OBJ latestObject() const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const auto latest = std::max_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+            const auto latest =
+                std::max_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) {
+                    return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch();
+                });
             return *latest;
         }
 
@@ -213,31 +200,27 @@ namespace swift::misc
         OBJ oldestObject() const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const auto oldest = std::min_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) { return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch(); });
+            const auto oldest =
+                std::min_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) {
+                    return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch();
+                });
             return *oldest;
         }
 
         //! Remove objects with timestamp before dateTime
-        int removeBefore(const QDateTime &dateTime)
-        {
-            return this->removeBefore(dateTime.toMSecsSinceEpoch());
-        }
+        int removeBefore(const QDateTime &dateTime) { return this->removeBefore(dateTime.toMSecsSinceEpoch()); }
 
         //! Remove objects with timestamp before dateTime
         int removeBefore(qint64 msSinceEpoch)
         {
-            return this->container().removeIf([&](const OBJ &obj) {
-                return obj.isOlderThan(msSinceEpoch);
-            });
+            return this->container().removeIf([&](const OBJ &obj) { return obj.isOlderThan(msSinceEpoch); });
         }
 
         //! Remove objects older than seconds
         int removeOlderThanNowMinusOffset(qint64 offsetMs)
         {
             const qint64 epoch = QDateTime::currentMSecsSinceEpoch() - offsetMs;
-            return this->container().removeIf([&](const OBJ &obj) {
-                return obj.isOlderThan(epoch);
-            });
+            return this->container().removeIf([&](const OBJ &obj) { return obj.isOlderThan(epoch); });
         }
 
         //! Sort by timestamp
@@ -248,10 +231,7 @@ namespace swift::misc
         }
 
         //! Sort by timestamp
-        void sortOldestFirst()
-        {
-            this->container().sort(predicates::MemberLess(&OBJ::getMSecsSinceEpoch));
-        }
+        void sortOldestFirst() { this->container().sort(predicates::MemberLess(&OBJ::getMSecsSinceEpoch)); }
 
         //! Insert as first element by keeping maxElements and the latest first
         void push_frontKeepLatestFirst(const OBJ &value, bool replaceSameTimestamp = true, int maxElements = -1)
@@ -268,10 +248,7 @@ namespace swift::misc
                 if (maxElements > 0) { c.truncate(maxElements - 1); }
                 const bool needSort = !c.isEmpty() && value.isOlderThan(c.front());
                 c.push_front(value);
-                if (needSort)
-                {
-                    ITimestampObjectList::sortLatestFirst();
-                }
+                if (needSort) { ITimestampObjectList::sortLatestFirst(); }
             }
 
             // crosscheck
@@ -369,17 +346,11 @@ namespace swift::misc
         void addMsecs(qint64 msToAdd)
         {
             if (msToAdd == 0) { return; }
-            for (ITimestampBased &obj : this->container())
-            {
-                obj.addMsecs(msToAdd);
-            }
+            for (ITimestampBased &obj : this->container()) { obj.addMsecs(msToAdd); }
         }
 
         //! Set the hint
-        void setSortHint(HintTimestampSort hint)
-        {
-            m_tsSortHint = hint;
-        }
+        void setSortHint(HintTimestampSort hint) { m_tsSortHint = hint; }
 
         //! Difference of timestamp values
         //! \pre timestamp list has to be sorted to get meaningful values
@@ -429,16 +400,10 @@ namespace swift::misc
         ITimestampObjectList() = default;
 
         //! Container
-        const CONTAINER &container() const
-        {
-            return static_cast<const CONTAINER &>(*this);
-        }
+        const CONTAINER &container() const { return static_cast<const CONTAINER &>(*this); }
 
         //! Container
-        CONTAINER &container()
-        {
-            return static_cast<CONTAINER &>(*this);
-        }
+        CONTAINER &container() { return static_cast<CONTAINER &>(*this); }
 
         HintTimestampSort m_tsSortHint = NoTimestampSortHint; //!< sort hint
     };
@@ -477,7 +442,8 @@ namespace swift::misc
         CONTAINER getLatestAdjustedTwoObjects(bool alreadySortedLatestFirst = false) const
         {
             if (this->container().size() < 2) { return CONTAINER(); }
-            CONTAINER copy(alreadySortedLatestFirst ? this->container() : this->container().getSortedAdjustedLatestFirst());
+            CONTAINER copy(alreadySortedLatestFirst ? this->container() :
+                                                      this->container().getSortedAdjustedLatestFirst());
             copy.truncate(2);
             return copy;
         }
@@ -511,10 +477,7 @@ namespace swift::misc
         //! Adds a time to all offset values
         void addMsecsToOffset(qint64 msToAdd)
         {
-            for (ITimestampWithOffsetBased &obj : this->container())
-            {
-                obj.addMsecsToOffsetTime(msToAdd);
-            }
+            for (ITimestampWithOffsetBased &obj : this->container()) { obj.addMsecsToOffsetTime(msToAdd); }
         }
 
         //! Insert as first element by keeping maxElements and the latest first
@@ -532,17 +495,16 @@ namespace swift::misc
             if (maxElements > 0) { c.truncate(maxElements - 1); }
             const bool needSort = !c.isEmpty() && value.isOlderThanAdjusted(c.front());
             c.push_front(value);
-            if (needSort)
-            {
-                ITimestampWithOffsetObjectList::sortAdjustedLatestFirst();
-            }
+            if (needSort) { ITimestampWithOffsetObjectList::sortAdjustedLatestFirst(); }
         }
 
         //! Insert as first element by keeping maxElements and the latest first
         //! \remark adjust offset to average offset of two adjacent elements so adjusted values are sorted
-        void push_frontKeepLatestFirstAdjustOffset(const OBJ &value, bool replaceSameTimestamp = true, int maxElements = -1)
+        void push_frontKeepLatestFirstAdjustOffset(const OBJ &value, bool replaceSameTimestamp = true,
+                                                   int maxElements = -1)
         {
-            ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(value, replaceSameTimestamp, maxElements);
+            ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(value, replaceSameTimestamp,
+                                                                                      maxElements);
 
             // now sorted by timestamp
             // this reflects normally the incoming order
@@ -558,7 +520,8 @@ namespace swift::misc
             if (!front.isNewerThanAdjusted(second))
             {
                 // const qint64 minOs = qMin(front.getTimeOffsetMs(), second.getTimeOffsetMs());
-                const qint64 minReqOs = second.getAdjustedMSecsSinceEpoch() - front.getMSecsSinceEpoch(); // minimal required
+                const qint64 minReqOs =
+                    second.getAdjustedMSecsSinceEpoch() - front.getMSecsSinceEpoch(); // minimal required
                 const qint64 avgOs = (front.getTimeOffsetMs() + second.getTimeOffsetMs()) / 2;
                 const qint64 os = qMax(minReqOs + 1, avgOs); // at least +1, as value must be > (greater)
                 front.setTimeOffsetMs(os);
@@ -572,7 +535,8 @@ namespace swift::misc
         }
 
         //! Add value, but ignore overlapping (past) values
-        void push_frontKeepLatestFirstIgnoreOverlapping(const OBJ &value, bool replaceSameTimestamp = true, int maxElements = -1)
+        void push_frontKeepLatestFirstIgnoreOverlapping(const OBJ &value, bool replaceSameTimestamp = true,
+                                                        int maxElements = -1)
         {
             CONTAINER &c = this->container();
             if (c.size() > 1)
@@ -580,7 +544,8 @@ namespace swift::misc
                 const ITimestampWithOffsetBased front = c.front();
                 if (value.getAdjustedMSecsSinceEpoch() <= front.getAdjustedMSecsSinceEpoch()) { return; }
             }
-            ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(value, replaceSameTimestamp, maxElements);
+            ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(value, replaceSameTimestamp,
+                                                                                      maxElements);
         }
 
         //! Prefill with elements
@@ -637,9 +602,8 @@ namespace swift::misc
         //! List of objects after msSinceEpoch (newer)
         CONTAINER findAfterAdjusted(qint64 msSinceEpoch) const
         {
-            return this->container().findBy([&](const ITimestampWithOffsetBased &obj) {
-                return obj.isNewerThanAdjusted(msSinceEpoch);
-            });
+            return this->container().findBy(
+                [&](const ITimestampWithOffsetBased &obj) { return obj.isNewerThanAdjusted(msSinceEpoch); });
         }
 
         //! List of objects after msSinceEpoch (newer)
@@ -653,9 +617,8 @@ namespace swift::misc
         //! List of objects before msSinceEpoch (older)
         CONTAINER findBeforeAdjusted(qint64 msSinceEpoch) const
         {
-            return this->container().findBy([&](const ITimestampWithOffsetBased &obj) {
-                return obj.isOlderThanAdjusted(msSinceEpoch);
-            });
+            return this->container().findBy(
+                [&](const ITimestampWithOffsetBased &obj) { return obj.isOlderThanAdjusted(msSinceEpoch); });
         }
 
         //! Object before timestamp (older)
@@ -670,9 +633,12 @@ namespace swift::misc
         OBJ findClosestTimeDistanceAdjusted(qint64 msSinceEpoch) const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const auto closest = std::min_element(this->container().cbegin(), this->container().cend(), [=](const ITimestampWithOffsetBased &a, const ITimestampWithOffsetBased &b) {
-                return qAbs(a.getAdjustedTimeDifferenceMs(msSinceEpoch)) < qAbs(b.getAdjustedTimeDifferenceMs(msSinceEpoch));
-            });
+            const auto closest =
+                std::min_element(this->container().cbegin(), this->container().cend(),
+                                 [=](const ITimestampWithOffsetBased &a, const ITimestampWithOffsetBased &b) {
+                                     return qAbs(a.getAdjustedTimeDifferenceMs(msSinceEpoch)) <
+                                            qAbs(b.getAdjustedTimeDifferenceMs(msSinceEpoch));
+                                 });
             return *closest;
         }
 
@@ -684,7 +650,10 @@ namespace swift::misc
             {
                 return this->container().front();
             }
-            const auto latest = std::max_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) { return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch(); });
+            const auto latest =
+                std::max_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) {
+                    return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch();
+                });
             return *latest;
         }
 
@@ -696,7 +665,10 @@ namespace swift::misc
             {
                 return this->container().back();
             }
-            const auto oldest = std::min_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) { return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch(); });
+            const auto oldest =
+                std::min_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) {
+                    return a.getAdjustedMSecsSinceEpoch() < b.getAdjustedMSecsSinceEpoch();
+                });
             return *oldest;
         }
 
@@ -731,10 +703,7 @@ namespace swift::misc
         }
 
         //! Set the hint
-        void setAdjustedSortHint(HintAdjustedTimestampSort hint)
-        {
-            this->container().m_tsAdjustedSortHint = hint;
-        }
+        void setAdjustedSortHint(HintAdjustedTimestampSort hint) { this->container().m_tsAdjustedSortHint = hint; }
 
         //! Difference of timestamp values
         //! \pre timestamp list has to be sorted to get meaningful values

@@ -23,9 +23,7 @@ namespace swift::misc::simulation::fscommon
 {
     //! Value object encapsulating information of software distributor.
     //! \deprecated vPilot handling will be most likely removed in the future
-    class SWIFT_MISC_EXPORT CVPilotModelRule :
-        public CValueObject<CVPilotModelRule>,
-        public ITimestampBased
+    class SWIFT_MISC_EXPORT CVPilotModelRule : public CValueObject<CVPilotModelRule>, public ITimestampBased
     {
     public:
         //! Property indexes
@@ -41,7 +39,8 @@ namespace swift::misc::simulation::fscommon
         CVPilotModelRule();
 
         //! Default constructor.
-        CVPilotModelRule(const QString &modelName, const QString &folder, const QString &typeCode, const QString &callsignPrefix, qint64 updated);
+        CVPilotModelRule(const QString &modelName, const QString &folder, const QString &typeCode,
+                         const QString &callsignPrefix, qint64 updated);
 
         //! Get model name
         const QString &getModelName() const { return this->m_modelName; }

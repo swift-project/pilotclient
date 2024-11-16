@@ -28,7 +28,8 @@ namespace swift::gui::views
         this->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(this, &CAtcStationTreeView::customContextMenuRequested, this, &CAtcStationTreeView::customMenu);
         connect(this, &CAtcStationTreeView::expanded, this, &CAtcStationTreeView::onExpanded, Qt::QueuedConnection);
-        connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CAtcStationTreeView::onSelected, Qt::QueuedConnection);
+        connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CAtcStationTreeView::onSelected,
+                Qt::QueuedConnection);
     }
 
     void CAtcStationTreeView::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
@@ -51,28 +52,19 @@ namespace swift::gui::views
         this->stationModel()->clear();
     }
 
-    bool CAtcStationTreeView::isEmpty() const
-    {
-        return this->stationModel()->rowCount() < 1;
-    }
+    bool CAtcStationTreeView::isEmpty() const { return this->stationModel()->rowCount() < 1; }
 
     void CAtcStationTreeView::setColumns(const CColumns &columns)
     {
         if (this->stationModel()) { this->stationModel()->setColumns(columns); }
     }
 
-    void CAtcStationTreeView::fullResizeToContents()
-    {
-        m_dsFullResize.inputSignal();
-    }
+    void CAtcStationTreeView::fullResizeToContents() { m_dsFullResize.inputSignal(); }
 
     void CAtcStationTreeView::fullResizeToContentsImpl()
     {
         if (this->isEmpty()) { return; }
-        for (int c = 0; c < this->model()->columnCount(); c++)
-        {
-            this->resizeColumnToContents(c);
-        }
+        for (int c = 0; c < this->model()->columnCount(); c++) { this->resizeColumnToContents(c); }
     }
 
     const CAtcStationTreeModel *CAtcStationTreeView::stationModel() const

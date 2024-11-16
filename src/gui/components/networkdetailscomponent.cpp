@@ -20,21 +20,26 @@ using namespace swift::core::data;
 
 namespace swift::gui::components
 {
-    CNetworkDetailsComponent::CNetworkDetailsComponent(QWidget *parent) : QFrame(parent),
-                                                                          ui(new Ui::CNetworkDetailsComponent)
+    CNetworkDetailsComponent::CNetworkDetailsComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CNetworkDetailsComponent)
     {
         ui->setupUi(this);
 
-        connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this, &CNetworkDetailsComponent::onSelectedServerChanged);
-        connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this, &CNetworkDetailsComponent::onSelectedServerChanged);
+        connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this,
+                &CNetworkDetailsComponent::onSelectedServerChanged);
+        connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this,
+                &CNetworkDetailsComponent::onSelectedServerChanged);
         connect(ui->tw_Network, &QTabWidget::currentChanged, this, &CNetworkDetailsComponent::onServerTabWidgetChanged);
-        connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this, &CNetworkDetailsComponent::requestNetworkSettings);
-        connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CNetworkDetailsComponent::reloadOtherServersSetup, Qt::QueuedConnection);
+        connect(ui->pb_OtherServersGotoSettings, &QPushButton::pressed, this,
+                &CNetworkDetailsComponent::requestNetworkSettings);
+        connect(&m_networkSetup, &CNetworkSetup::setupChanged, this, &CNetworkDetailsComponent::reloadOtherServersSetup,
+                Qt::QueuedConnection);
 
         // web service data
         if (sGui && sGui->getWebDataServices())
         {
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CNetworkDetailsComponent::onWebServiceDataRead, Qt::QueuedConnection);
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this,
+                    &CNetworkDetailsComponent::onWebServiceDataRead, Qt::QueuedConnection);
         }
 
         constexpr int MaxLength = 10;
@@ -51,18 +56,11 @@ namespace swift::gui::components
         this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
     }
 
-    CNetworkDetailsComponent::~CNetworkDetailsComponent()
-    {}
+    CNetworkDetailsComponent::~CNetworkDetailsComponent() {}
 
-    CLoginMode CNetworkDetailsComponent::getLoginMode() const
-    {
-        return ui->frp_LoginMode->getLoginMode();
-    }
+    CLoginMode CNetworkDetailsComponent::getLoginMode() const { return ui->frp_LoginMode->getLoginMode(); }
 
-    void CNetworkDetailsComponent::setLoginMode(CLoginMode mode)
-    {
-        ui->frp_LoginMode->setLoginMode(mode);
-    }
+    void CNetworkDetailsComponent::setLoginMode(CLoginMode mode) { ui->frp_LoginMode->setLoginMode(mode); }
 
     bool CNetworkDetailsComponent::isVatsimServerSelected() const
     {
@@ -96,7 +94,8 @@ namespace swift::gui::components
         emit this->overridePilot(server.getUser());
     }
 
-    void CNetworkDetailsComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
+    void CNetworkDetailsComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state,
+                                                        int number, const QUrl &url)
     {
         if (!CEntityFlags::isFinishedReadState(state)) { return; }
         Q_UNUSED(number)
@@ -125,20 +124,14 @@ namespace swift::gui::components
         return server;
     }
 
-    CServer CNetworkDetailsComponent::getCurrentOtherServer() const
-    {
-        return ui->comp_OtherServers->currentServer();
-    }
+    CServer CNetworkDetailsComponent::getCurrentOtherServer() const { return ui->comp_OtherServers->currentServer(); }
 
     CServer CNetworkDetailsComponent::getCurrentServer() const
     {
         return this->isVatsimServerSelected() ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
     }
 
-    bool CNetworkDetailsComponent::hasPartnerCallsign() const
-    {
-        return !ui->le_PartnerCallsign->text().isEmpty();
-    }
+    bool CNetworkDetailsComponent::hasPartnerCallsign() const { return !ui->le_PartnerCallsign->text().isEmpty(); }
 
     CCallsign CNetworkDetailsComponent::getPartnerCallsign() const
     {

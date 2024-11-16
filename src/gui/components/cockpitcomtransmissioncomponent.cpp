@@ -10,8 +10,8 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CCockpitComTransmissionComponent::CCockpitComTransmissionComponent(QWidget *parent) : QFrame(parent),
-                                                                                          ui(new Ui::CCockpitComTransmissionComponent)
+    CCockpitComTransmissionComponent::CCockpitComTransmissionComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CCockpitComTransmissionComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_Com1Save, &QPushButton::released, this, &CCockpitComTransmissionComponent::onSave);
@@ -39,8 +39,7 @@ namespace swift::gui::components
             comSystem.setTransmitEnabled(ui->cb_Com2Tx->isChecked());
             comSystem.setReceiveEnabled(ui->cb_Com2Rec->isChecked());
             break;
-        default:
-            break;
+        default: break;
         }
     }
 
@@ -60,8 +59,7 @@ namespace swift::gui::components
             ui->cb_Com2Tx->setChecked(comSystem.isTransmitEnabled());
             ui->cb_Com2Rec->setChecked(comSystem.isReceiveEnabled());
             break;
-        default:
-            break;
+        default: break;
         }
     }
 

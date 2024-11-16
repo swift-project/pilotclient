@@ -80,7 +80,8 @@ namespace swift::core::vatsim
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns) const
     {
-        return this->getAircraft().findByCallsigns(callsigns).transform(predicates::MemberTransform(&CSimulatedAircraft::getPilot));
+        return this->getAircraft().findByCallsigns(callsigns).transform(
+            predicates::MemberTransform(&CSimulatedAircraft::getPilot));
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign) const
@@ -128,7 +129,8 @@ namespace swift::core::vatsim
 
     CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignSet &callsigns) const
     {
-        return this->getAtcStations().findByCallsigns(callsigns).transform(predicates::MemberTransform(&CAtcStation::getController));
+        return this->getAtcStations().findByCallsigns(callsigns).transform(
+            predicates::MemberTransform(&CAtcStation::getController));
     }
 
     CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign) const
@@ -158,10 +160,7 @@ namespace swift::core::vatsim
         });
     }
 
-    void CVatsimDataFileReader::doWorkImpl()
-    {
-        this->read();
-    }
+    void CVatsimDataFileReader::doWorkImpl() { this->read(); }
 
     void CVatsimDataFileReader::read()
     {
@@ -212,7 +211,8 @@ namespace swift::core::vatsim
             CAtcStationList atcStations;
             CSimulatedAircraftList aircraft;
             QMap<CCallsign, CFlightPlanRemarks> flightPlanRemarksMap;
-            auto updateTimestampFromFile = QDateTime::fromString(jsonDoc["general"]["update_timestamp"].toString(), Qt::ISODateWithMs);
+            auto updateTimestampFromFile =
+                QDateTime::fromString(jsonDoc["general"]["update_timestamp"].toString(), Qt::ISODateWithMs);
 
             const bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
             if (alreadyRead)
@@ -266,41 +266,41 @@ namespace swift::core::vatsim
             if (!illegalEquipmentCodes.isEmpty())
             {
                 CVatsimDataFileReader::logInconsistentData(
-                    CStatusMessage(this, CStatusMessage::SeverityInfo, u"Illegal / ignored equipment code(s) in VATSIM data file: %1") << illegalEquipmentCodes.join(", "));
+                    CStatusMessage(this, CStatusMessage::SeverityInfo,
+                                   u"Illegal / ignored equipment code(s) in VATSIM data file: %1")
+                    << illegalEquipmentCodes.join(", "));
             }
 
             // data read finished
             emit this->dataFileRead(dataFileData.size() / 1000);
-            emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, dataFileData.size() / 1000, url);
+            emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, dataFileData.size() / 1000,
+                                url);
         }
         else
         {
             // network error
-            CLogMessage(this).warning(u"Reading VATSIM data file failed '%1' '%2'") << nwReply->errorString() << urlString;
+            CLogMessage(this).warning(u"Reading VATSIM data file failed '%1' '%2'")
+                << nwReply->errorString() << urlString;
             nwReply->abort();
             emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0, url);
         }
     }
 
-    CSimulatedAircraft CVatsimDataFileReader::parsePilot(const QJsonObject &pilot, QStringList &o_illegalEquipmentCodes) const
+    CSimulatedAircraft CVatsimDataFileReader::parsePilot(const QJsonObject &pilot,
+                                                         QStringList &o_illegalEquipmentCodes) const
     {
         const CCallsign callsign(pilot["callsign"].toString());
         const CUser user(pilot["cid"].toString(), pilot["name"].toString(), callsign);
-        const CCoordinateGeodetic position(pilot["latitude"].toDouble(), pilot["longitude"].toDouble(), pilot["altitude"].toInt());
+        const CCoordinateGeodetic position(pilot["latitude"].toDouble(), pilot["longitude"].toDouble(),
+                                           pilot["altitude"].toInt());
         const CHeading heading(pilot["heading"].toInt(), CAngleUnit::deg());
         const CSpeed groundspeed(pilot["groundspeed"].toInt(), CSpeedUnit::kts());
         const CAircraftSituation situation(callsign, position, heading, {}, {}, groundspeed);
         CSimulatedAircraft aircraft(callsign, user, situation);
         const QString icaoAndEquipment(pilot["flight_plan"]["aircraft"].toString().trimmed()); // in ICAO format
         CFlightPlanAircraftInfo info(icaoAndEquipment);
-        if (info.getAircraftIcao().hasValidDesignator())
-        {
-            aircraft.setAircraftIcaoCode(info.getAircraftIcao());
-        }
-        else if (!icaoAndEquipment.isEmpty())
-        {
-            o_illegalEquipmentCodes.push_back(icaoAndEquipment);
-        }
+        if (info.getAircraftIcao().hasValidDesignator()) { aircraft.setAircraftIcaoCode(info.getAircraftIcao()); }
+        else if (!icaoAndEquipment.isEmpty()) { o_illegalEquipmentCodes.push_back(icaoAndEquipment); }
         aircraft.setTransponderCode(pilot["transponder"].toString().toInt());
         return aircraft;
     }

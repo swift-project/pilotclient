@@ -14,21 +14,17 @@ using namespace swift::misc::math;
 
 namespace swift::misc::physical_quantities
 {
-    CAngle::CAngle(int degrees, int minutes, double seconds) : CPhysicalQuantity(
-                                                                   degrees + minutes / 100.0 + seconds / 10000.0,
-                                                                   CAngleUnit::sexagesimalDeg())
+    CAngle::CAngle(int degrees, int minutes, double seconds)
+        : CPhysicalQuantity(degrees + minutes / 100.0 + seconds / 10000.0, CAngleUnit::sexagesimalDeg())
     {
-        Q_ASSERT_X((degrees >= 0 && minutes >= 0 && seconds >= 0) ||
-                       (degrees <= 0 && minutes <= 0 && seconds <= 0),
+        Q_ASSERT_X((degrees >= 0 && minutes >= 0 && seconds >= 0) || (degrees <= 0 && minutes <= 0 && seconds <= 0),
                    Q_FUNC_INFO, "Same sign required");
     }
 
-    CAngle::CAngle(int degrees, double minutes) : CPhysicalQuantity(
-                                                      degrees + minutes / 100.0,
-                                                      CAngleUnit::sexagesimalDeg())
+    CAngle::CAngle(int degrees, double minutes)
+        : CPhysicalQuantity(degrees + minutes / 100.0, CAngleUnit::sexagesimalDeg())
     {
-        Q_ASSERT_X((degrees >= 0 && minutes >= 0) || (degrees <= 0 && minutes <= 0),
-                   Q_FUNC_INFO, "Same sign required");
+        Q_ASSERT_X((degrees >= 0 && minutes >= 0) || (degrees <= 0 && minutes <= 0), Q_FUNC_INFO, "Same sign required");
     }
 
     void CAngle::unifySign(int degrees, int &minutes, double &seconds)
@@ -43,10 +39,7 @@ namespace swift::misc::physical_quantities
         minutes = std::copysign(minutes, degrees);
     }
 
-    CIcons::IconIndex CAngle::toIcon() const
-    {
-        return CIcons::StandardIconArrowMediumNorth16;
-    }
+    CIcons::IconIndex CAngle::toIcon() const { return CIcons::StandardIconArrowMediumNorth16; }
 
     CAngle::DegMinSecFractionalSec CAngle::asSexagesimalDegMinSec(bool range180Degrees) const
     {
@@ -73,30 +66,15 @@ namespace swift::misc::physical_quantities
         return values;
     }
 
-    double CAngle::piFactor() const
-    {
-        return math::CMathUtils::round(this->value(CAngleUnit::rad()) / c_pi, 6);
-    }
+    double CAngle::piFactor() const { return math::CMathUtils::round(this->value(CAngleUnit::rad()) / c_pi, 6); }
 
-    const double &CAngle::PI()
-    {
-        return c_pi;
-    }
+    const double &CAngle::PI() { return c_pi; }
 
-    double CAngle::sin() const
-    {
-        return std::sin(this->value(CAngleUnit::rad()));
-    }
+    double CAngle::sin() const { return std::sin(this->value(CAngleUnit::rad())); }
 
-    double CAngle::cos() const
-    {
-        return std::cos(this->value(CAngleUnit::rad()));
-    }
+    double CAngle::cos() const { return std::cos(this->value(CAngleUnit::rad())); }
 
-    double CAngle::tan() const
-    {
-        return std::tan(this->value(CAngleUnit::rad()));
-    }
+    double CAngle::tan() const { return std::tan(this->value(CAngleUnit::rad())); }
 
     void CAngle::normalizeToPlusMinus180Degrees()
     {

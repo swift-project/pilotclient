@@ -9,18 +9,18 @@ using namespace swift::misc;
 
 namespace swift::gui::components
 {
-    CSettingsAdvancedComponent::CSettingsAdvancedComponent(QWidget *parent) : QFrame(parent),
-                                                                              ui(new Ui::CSettingsAdvancedComponent)
+    CSettingsAdvancedComponent::CSettingsAdvancedComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsAdvancedComponent)
     {
         ui->setupUi(this);
 
         const bool crashDumpUploadEnabled = m_crashDumpUploadEnabled.getThreadLocal();
         ui->cb_crashDumpsUpload->setChecked(crashDumpUploadEnabled);
-        connect(ui->cb_crashDumpsUpload, &QCheckBox::stateChanged, this, &CSettingsAdvancedComponent::crashDumpUploadEnabledChanged);
+        connect(ui->cb_crashDumpsUpload, &QCheckBox::stateChanged, this,
+                &CSettingsAdvancedComponent::crashDumpUploadEnabledChanged);
     }
 
-    CSettingsAdvancedComponent::~CSettingsAdvancedComponent()
-    {}
+    CSettingsAdvancedComponent::~CSettingsAdvancedComponent() {}
 
     void CSettingsAdvancedComponent::crashDumpUploadEnabledChanged(int state)
     {

@@ -15,8 +15,8 @@ using namespace swift::gui::models;
 
 namespace swift::gui::filters
 {
-    CStatusMessageFilterBar::CStatusMessageFilterBar(QWidget *parent) : CFilterWidget(parent),
-                                                                        ui(new Ui::CStatusMessageFilterBar)
+    CStatusMessageFilterBar::CStatusMessageFilterBar(QWidget *parent)
+        : CFilterWidget(parent), ui(new Ui::CStatusMessageFilterBar)
     {
         ui->setupUi(this);
         this->setButtonsAndCount(ui->filter_Buttons);
@@ -33,13 +33,9 @@ namespace swift::gui::filters
         this->clearForm();
     }
 
-    void CStatusMessageFilterBar::displayCount(bool show)
-    {
-        ui->filter_Buttons->displayCount(show);
-    }
+    void CStatusMessageFilterBar::displayCount(bool show) { ui->filter_Buttons->displayCount(show); }
 
-    CStatusMessageFilterBar::~CStatusMessageFilterBar()
-    {}
+    CStatusMessageFilterBar::~CStatusMessageFilterBar() {}
 
     void CStatusMessageFilterBar::useRadioButtonDescriptiveIcons(bool oneCharacterText)
     {
@@ -60,12 +56,11 @@ namespace swift::gui::filters
         ui->rb_Info->setText(oneCharacterText ? msg.getSeverityAsString().left(1) : "");
     }
 
-    std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>> CStatusMessageFilterBar::createModelFilter() const
+    std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>>
+    CStatusMessageFilterBar::createModelFilter() const
     {
-        return std::make_unique<CStatusMessageFilter>(
-            this->getSelectedSeverity(),
-            ui->le_MessageText->text(),
-            ui->le_Category->text());
+        return std::make_unique<CStatusMessageFilter>(this->getSelectedSeverity(), ui->le_MessageText->text(),
+                                                      ui->le_Category->text());
     }
 
     void CStatusMessageFilterBar::onRowCountChanged(int count, bool withFilter)
@@ -80,10 +75,7 @@ namespace swift::gui::filters
         ui->rb_Info->setChecked(true);
     }
 
-    void CStatusMessageFilterBar::radioButtonChanged()
-    {
-        this->triggerFilter();
-    }
+    void CStatusMessageFilterBar::radioButtonChanged() { this->triggerFilter(); }
 
     CStatusMessage::StatusSeverity CStatusMessageFilterBar::getSelectedSeverity() const
     {

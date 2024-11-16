@@ -10,8 +10,5 @@ using namespace swift::gui::models;
 
 namespace swift::gui::views
 {
-    CClientView::CClientView(QWidget *parent) : CViewBase(parent)
-    {
-        this->standardInit(new CClientListModel(this));
-    }
+    CClientView::CClientView(QWidget *parent) : CViewBase(parent) { this->standardInit(new CClientListModel(this)); }
 } // namespace swift::gui::views

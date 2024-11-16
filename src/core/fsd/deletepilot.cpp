@@ -9,13 +9,9 @@ using namespace swift::misc;
 
 namespace swift::core::fsd
 {
-    DeletePilot::DeletePilot() : MessageBase()
-    {}
+    DeletePilot::DeletePilot() : MessageBase() {}
 
-    DeletePilot::DeletePilot(const QString &callsign, const QString &id)
-        : MessageBase(callsign),
-          m_cid(id)
-    {}
+    DeletePilot::DeletePilot(const QString &callsign, const QString &id) : MessageBase(callsign), m_cid(id) {}
 
     QStringList DeletePilot::toTokens() const
     {

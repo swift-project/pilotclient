@@ -13,17 +13,19 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CAircraftModelSetValidationDialog::CAircraftModelSetValidationDialog(QWidget *parent) : QDialog(parent),
-                                                                                            ui(new Ui::CAircraftModelSetValidationDialog)
+    CAircraftModelSetValidationDialog::CAircraftModelSetValidationDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CAircraftModelSetValidationDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() | Qt::WindowContextHelpButtonHint);
     }
 
-    CAircraftModelSetValidationDialog::~CAircraftModelSetValidationDialog()
-    {}
+    CAircraftModelSetValidationDialog::~CAircraftModelSetValidationDialog() {}
 
-    void CAircraftModelSetValidationDialog::validatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
+    void CAircraftModelSetValidationDialog::validatedModelSet(const CSimulatorInfo &simulator,
+                                                              const CAircraftModelList &valid,
+                                                              const CAircraftModelList &invalid, bool stopped,
+                                                              const CStatusMessageList &msgs)
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
         ui->comp_AircraftModelValidation->validatedModelSet(simulator, valid, invalid, stopped, msgs);

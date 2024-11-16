@@ -74,7 +74,8 @@ namespace swift::sound
         m_playingEffect.clear();
     }
 
-    void CNotificationPlayer::updateEffect(CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name)
+    void CNotificationPlayer::updateEffect(CNotificationSounds::NotificationFlag f, const QString &directory,
+                                           const QString &name)
     {
         QSoundEffect *e = nullptr;
         if (m_effects.contains(f)) { e = m_effects[f]; }
@@ -96,6 +97,7 @@ namespace swift::sound
         effect->setLoopCount(1);
         effect->setMuted(false);
         m_effects[f] = effect;
-        connect(effect, &QSoundEffect::playingChanged, this, &CNotificationPlayer::onPlayingChanged, Qt::QueuedConnection);
+        connect(effect, &QSoundEffect::playingChanged, this, &CNotificationPlayer::onPlayingChanged,
+                Qt::QueuedConnection);
     }
 } // namespace swift::sound

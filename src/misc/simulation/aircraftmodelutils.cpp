@@ -13,7 +13,8 @@
 
 namespace swift::misc::simulation
 {
-    bool CAircraftModelUtilities::mergeWithVPilotData(CAircraftModelList &modelToBeModified, const CAircraftModelList &vPilotModels, bool force)
+    bool CAircraftModelUtilities::mergeWithVPilotData(CAircraftModelList &modelToBeModified,
+                                                      const CAircraftModelList &vPilotModels, bool force)
     {
         if (vPilotModels.isEmpty() || modelToBeModified.isEmpty()) { return false; }
         for (CAircraftModel &simModel : modelToBeModified)
@@ -44,24 +45,18 @@ namespace swift::misc::simulation
 
         for (const CAircraftModel &model : std::as_const(sortedByAircraft))
         {
-            const QString aircraftIcao(model.hasAircraftDesignator() ? model.getAircraftIcaoCodeDesignator() : emptyDesignator);
+            const QString aircraftIcao(model.hasAircraftDesignator() ? model.getAircraftIcaoCodeDesignator() :
+                                                                       emptyDesignator);
             if (!modelsByDesignator.contains(aircraftIcao))
             {
                 modelsByDesignator.insert(aircraftIcao, emptyAirlineDesignatorMap);
             }
             QMap<QString, CAircraftModelList> &airlineModels = modelsByDesignator[aircraftIcao];
-            const QString airlineIcao(
-                model.getLivery().isColorLivery() ? colorLiveryDesignator :
-                model.hasAirlineDesignator()      ? model.getAirlineIcaoCodeDesignator() :
-                                                    emptyDesignator);
-            if (airlineModels.contains(airlineIcao))
-            {
-                airlineModels[airlineIcao].push_back(model);
-            }
-            else
-            {
-                airlineModels.insert(airlineIcao, CAircraftModelList({ model }));
-            }
+            const QString airlineIcao(model.getLivery().isColorLivery() ? colorLiveryDesignator :
+                                      model.hasAirlineDesignator()      ? model.getAirlineIcaoCodeDesignator() :
+                                                                          emptyDesignator);
+            if (airlineModels.contains(airlineIcao)) { airlineModels[airlineIcao].push_back(model); }
+            else { airlineModels.insert(airlineIcao, CAircraftModelList({ model })); }
         }
 
         // to HTML
@@ -107,10 +102,7 @@ namespace swift::misc::simulation
                     html += "</div>"
                             "</td>\n";
                 }
-                else
-                {
-                    html += "  <td></td>\n";
-                }
+                else { html += "  <td></td>\n"; }
             }
             html += "</tr>\n";
         }
@@ -119,7 +111,8 @@ namespace swift::misc::simulation
         return html;
     }
 
-    QString CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(const CAircraftModelList &models, const QString &tempDir)
+    QString CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(const CAircraftModelList &models,
+                                                                             const QString &tempDir)
     {
         Q_ASSERT_X(!tempDir.isEmpty(), Q_FUNC_INFO, "Need directory");
         if (models.isEmpty()) { return {}; }
@@ -136,7 +129,12 @@ namespace swift::misc::simulation
         return ok ? dir.absoluteFilePath(fn) : "";
     }
 
-    CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir)
+    CStatusMessageList CAircraftModelUtilities::validateModelFiles(const CSimulatorInfo &simulator,
+                                                                   const CAircraftModelList &models,
+                                                                   CAircraftModelList &validModels,
+                                                                   CAircraftModelList &invalidModels, bool ignoreEmpty,
+                                                                   int stopAtFailedFiles, std::atomic_bool &wasStopped,
+                                                                   const QString &simulatorDir)
     {
         // some generic tests
         CLogCategoryList cats = { CLogCategories::matching() };
@@ -150,49 +148,61 @@ namespace swift::misc::simulation
         const int noDb = models.size() - models.countWithValidDbKey();
         if (noDb > 0)
         {
-            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, QStringLiteral("%1 models without DB data, is this intended?").arg(noDb), true));
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning,
+                                          QStringLiteral("%1 models without DB data, is this intended?").arg(noDb),
+                                          true));
             const QString ms = models.findWithoutValidDbKey(5).getModelStringList().join(", ");
-            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, QStringLiteral("Some of the non DB models are: '%1'").arg(ms), true));
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning,
+                                          QStringLiteral("Some of the non DB models are: '%1'").arg(ms), true));
         }
 
         const int noExcluded = models.countByMode(CAircraftModel::Exclude);
         if (noExcluded > 0)
         {
-            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, QStringLiteral("%1 models marked as excluded, is this intended?").arg(noExcluded), true));
+            msgs.push_back(CStatusMessage(
+                cats, CStatusMessage::SeverityWarning,
+                QStringLiteral("%1 models marked as excluded, is this intended?").arg(noExcluded), true));
             const QString ms = models.findAllExcludedModels(5).getModelStringList().join(", ");
-            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning, QStringLiteral("Some of the excluded models are: '%1'").arg(ms), true));
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityWarning,
+                                          QStringLiteral("Some of the excluded models are: '%1'").arg(ms), true));
         }
 
         // specific checks for FSX/XPlane/FG
         CStatusMessageList specificTests;
         if (simulator.isMicrosoftOrPrepare3DSimulator() || models.isLikelyFsFamilyModelList())
         {
-            const CStatusMessageList specificTests1 = fscommon::CFsCommonUtil::validateAircraftConfigFiles(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped);
+            const CStatusMessageList specificTests1 = fscommon::CFsCommonUtil::validateAircraftConfigFiles(
+                models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped);
             specificTests.push_back(specificTests1);
 
             if (simulator.isP3D())
             {
-                const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateP3DSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
+                const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateP3DSimObjectsPath(
+                    models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
                 specificTests.push_back(specificTests2);
             }
             else if (simulator.isFSX())
             {
-                const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateFSXSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
+                const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateFSXSimObjectsPath(
+                    models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
                 specificTests.push_back(specificTests2);
             }
             else if (simulator.isMSFS())
             {
-                const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateMSFSSimObjectsPath(models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
+                const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateMSFSSimObjectsPath(
+                    models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
                 specificTests.push_back(specificTests2);
             }
         }
         else if (simulator.isXPlane() || models.isLikelyXPlaneModelList())
         {
-            specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
+            specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped,
+                                                 simulatorDir);
         }
         else
         {
-            specificTests = models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, {});
+            specificTests =
+                models.validateFiles(validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, {});
         }
 
         msgs.push_back(specificTests);

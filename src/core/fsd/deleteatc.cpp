@@ -7,13 +7,9 @@
 
 namespace swift::core::fsd
 {
-    DeleteAtc::DeleteAtc() : MessageBase()
-    {}
+    DeleteAtc::DeleteAtc() : MessageBase() {}
 
-    DeleteAtc::DeleteAtc(const QString &sender, const QString &cid)
-        : MessageBase(sender),
-          m_cid(cid)
-    {}
+    DeleteAtc::DeleteAtc(const QString &sender, const QString &cid) : MessageBase(sender), m_cid(cid) {}
 
     QStringList DeleteAtc::toTokens() const
     {

@@ -14,15 +14,11 @@ using namespace swift::misc::network;
 
 namespace swift::gui::editors
 {
-    CForm::CForm(QWidget *parent) : COverlayMessagesFrame(parent)
-    {}
+    CForm::CForm(QWidget *parent) : COverlayMessagesFrame(parent) {}
 
     CForm::~CForm() {}
 
-    void CForm::setSelectOnly()
-    {
-        this->setReadOnly(true);
-    }
+    void CForm::setSelectOnly() { this->setReadOnly(true); }
 
     CStatusMessageList CForm::validate(bool withNestedObjects) const
     {
@@ -37,10 +33,7 @@ namespace swift::gui::editors
         return msgs;
     }
 
-    void CForm::jsonPasted(const QString &json)
-    {
-        Q_UNUSED(json);
-    }
+    void CForm::jsonPasted(const QString &json) { Q_UNUSED(json); }
 
     void CForm::pasted()
     {
@@ -50,21 +43,13 @@ namespace swift::gui::editors
         this->jsonPasted(data);
     }
 
-    void CForm::forceStyleSheetUpdate()
-    {
-        CGuiUtility::forceStyleSheetUpdate(this);
-    }
+    void CForm::forceStyleSheetUpdate() { CGuiUtility::forceStyleSheetUpdate(this); }
 
-    CFormDbUser::CFormDbUser(QWidget *parent) : CForm(parent)
-    {}
+    CFormDbUser::CFormDbUser(QWidget *parent) : CForm(parent) {}
 
-    CFormDbUser::~CFormDbUser()
-    {}
+    CFormDbUser::~CFormDbUser() {}
 
-    CAuthenticatedUser CFormDbUser::getSwiftDbUser() const
-    {
-        return m_swiftDbUser.get();
-    }
+    CAuthenticatedUser CFormDbUser::getSwiftDbUser() const { return m_swiftDbUser.get(); }
 
     void CFormDbUser::userChanged()
     {

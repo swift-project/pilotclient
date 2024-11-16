@@ -7,29 +7,24 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlanAircraftInfo)
 
 namespace swift::misc::aviation
 {
-    CFlightPlanAircraftInfo::CFlightPlanAircraftInfo(const CAircraftIcaoCode &aircraftIcao, const CComNavEquipment &comNavEquipment,
-                                                     const CSsrEquipment &ssrEquipment, const CWakeTurbulenceCategory &wtc) : m_aircraftIcao(aircraftIcao),
-                                                                                                                              m_comNavEquipment(comNavEquipment),
-                                                                                                                              m_ssrEquipment(ssrEquipment),
-                                                                                                                              m_wtc(wtc) {}
+    CFlightPlanAircraftInfo::CFlightPlanAircraftInfo(const CAircraftIcaoCode &aircraftIcao,
+                                                     const CComNavEquipment &comNavEquipment,
+                                                     const CSsrEquipment &ssrEquipment,
+                                                     const CWakeTurbulenceCategory &wtc)
+        : m_aircraftIcao(aircraftIcao), m_comNavEquipment(comNavEquipment), m_ssrEquipment(ssrEquipment), m_wtc(wtc)
+    {}
 
     CFlightPlanAircraftInfo::CFlightPlanAircraftInfo(QString equipmentCodeAndAircraft)
     {
         equipmentCodeAndAircraft = equipmentCodeAndAircraft.trimmed().toUpper().replace(" ", "");
         const int numberSlash = equipmentCodeAndAircraft.count("/");
         const int numberHypen = equipmentCodeAndAircraft.count("-");
-        if (numberHypen == 1 && numberSlash == 2)
-        {
-            parseIcaoEquipmentCode(equipmentCodeAndAircraft);
-        }
+        if (numberHypen == 1 && numberSlash == 2) { parseIcaoEquipmentCode(equipmentCodeAndAircraft); }
         else if (numberSlash >= 1 && numberSlash <= 2 && numberHypen == 0)
         {
             parseFaaEquipmentCode(equipmentCodeAndAircraft);
         }
-        else
-        {
-            parseUnknownEquipmentCode(equipmentCodeAndAircraft);
-        }
+        else { parseUnknownEquipmentCode(equipmentCodeAndAircraft); }
     }
 
     QString CFlightPlanAircraftInfo::asIcaoString() const
@@ -38,58 +33,32 @@ namespace swift::misc::aviation
         // This can in particular happen when translating from FAA codes to ICAO codes.
         // This sets a default  wake turbulence category of MEDIUM if the category is unknown otherwise.
         QChar wtc;
-        if (!m_wtc.isUnknown())
-        {
-            wtc = m_wtc.toQString().at(0);
-        }
-        else
-        {
-            wtc = CWakeTurbulenceCategory(CWakeTurbulenceCategory::MEDIUM).toQString().at(0);
-        }
+        if (!m_wtc.isUnknown()) { wtc = m_wtc.toQString().at(0); }
+        else { wtc = CWakeTurbulenceCategory(CWakeTurbulenceCategory::MEDIUM).toQString().at(0); }
 
-        return m_aircraftIcao.getDesignator() % "/" % wtc % "-" % m_comNavEquipment.toQString() % "/" % m_ssrEquipment.toQString();
+        return m_aircraftIcao.getDesignator() % "/" % wtc % "-" % m_comNavEquipment.toQString() % "/" %
+               m_ssrEquipment.toQString();
     }
 
     QString CFlightPlanAircraftInfo::asFaaString() const
     {
         // TCAS prefix (T/) is not used
         QString s;
-        if (m_wtc.isCategory(CWakeTurbulenceCategory::HEAVY))
-        {
-            s = "H/";
-        }
-        else if (m_wtc.isCategory(CWakeTurbulenceCategory::SUPER))
-        {
-            s = "J/";
-        }
+        if (m_wtc.isCategory(CWakeTurbulenceCategory::HEAVY)) { s = "H/"; }
+        else if (m_wtc.isCategory(CWakeTurbulenceCategory::SUPER)) { s = "J/"; }
         s += m_aircraftIcao.getDesignator() % "/" % equipmentToFaaCode(m_comNavEquipment, m_ssrEquipment);
         return s;
     }
 
-    CAircraftIcaoCode CFlightPlanAircraftInfo::getAircraftIcao() const
-    {
-        return m_aircraftIcao;
-    }
+    CAircraftIcaoCode CFlightPlanAircraftInfo::getAircraftIcao() const { return m_aircraftIcao; }
 
-    CComNavEquipment CFlightPlanAircraftInfo::getComNavEquipment() const
-    {
-        return m_comNavEquipment;
-    }
+    CComNavEquipment CFlightPlanAircraftInfo::getComNavEquipment() const { return m_comNavEquipment; }
 
-    CSsrEquipment CFlightPlanAircraftInfo::getSsrEquipment() const
-    {
-        return m_ssrEquipment;
-    }
+    CSsrEquipment CFlightPlanAircraftInfo::getSsrEquipment() const { return m_ssrEquipment; }
 
-    CWakeTurbulenceCategory CFlightPlanAircraftInfo::getWtc() const
-    {
-        return m_wtc;
-    }
+    CWakeTurbulenceCategory CFlightPlanAircraftInfo::getWtc() const { return m_wtc; }
 
-    QString CFlightPlanAircraftInfo::convertToQString(bool) const
-    {
-        return asIcaoString();
-    }
+    QString CFlightPlanAircraftInfo::convertToQString(bool) const { return asIcaoString(); }
 
     void CFlightPlanAircraftInfo::parseIcaoEquipmentCode(const QString &equipment)
     {
@@ -131,10 +100,7 @@ namespace swift::misc::aviation
                 m_wtc = CWakeTurbulenceCategory();
             }
         }
-        else
-        {
-            m_wtc = CWakeTurbulenceCategory();
-        }
+        else { m_wtc = CWakeTurbulenceCategory(); }
 
         try
         {
@@ -150,7 +116,8 @@ namespace swift::misc::aviation
     {
         // Example: H/A346/L
         QStringList split = equipment.split('/');
-        Q_ASSERT_X(split.size() == 2 || split.size() == 3, Q_FUNC_INFO, "Cannot split string as required for the FAA format");
+        Q_ASSERT_X(split.size() == 2 || split.size() == 3, Q_FUNC_INFO,
+                   "Cannot split string as required for the FAA format");
         bool missingEquipmentCode = false;
 
         if (CAircraftIcaoCode::isValidDesignator(split.at(split.size() - 2)))
@@ -163,19 +130,13 @@ namespace swift::misc::aviation
             m_aircraftIcao = CAircraftIcaoCode(split.at(split.size() - 1));
             missingEquipmentCode = true;
         }
-        else
-        {
-            m_aircraftIcao = CAircraftIcaoCode();
-        }
+        else { m_aircraftIcao = CAircraftIcaoCode(); }
 
         // Check prefix (wake turbulence category)
         if (split.length() == 3)
         {
             const QString &prefix = split.at(0);
-            if (prefix == "H" || prefix == "J")
-            {
-                m_wtc = CWakeTurbulenceCategory(prefix.at(0));
-            }
+            if (prefix == "H" || prefix == "J") { m_wtc = CWakeTurbulenceCategory(prefix.at(0)); }
         }
         else if (split.length() == 2 && split.at(0).size() == 1)
         {
@@ -183,10 +144,7 @@ namespace swift::misc::aviation
             m_wtc = CWakeTurbulenceCategory(split.at(0).at(0));
             missingEquipmentCode = true;
         }
-        else
-        {
-            m_wtc = CWakeTurbulenceCategory();
-        }
+        else { m_wtc = CWakeTurbulenceCategory(); }
 
         // Equipment Code
         if (missingEquipmentCode || split.at(split.size() - 1).isEmpty())
@@ -194,7 +152,8 @@ namespace swift::misc::aviation
             return; // No (empty) equipment code
         }
 
-        // Always taking the first character. If the code contains more than one character, this is likely an error, but we will try it anyway
+        // Always taking the first character. If the code contains more than one character, this is likely an error, but
+        // we will try it anyway
         QChar equipmentCode = split.at(split.size() - 1).at(0);
         auto [comNavEquipment, ssrEquipment] = faaCodeToEquipment(equipmentCode);
         m_comNavEquipment = comNavEquipment;
@@ -273,7 +232,8 @@ namespace swift::misc::aviation
         else if (equipmentCode == 'T' || equipmentCode == 'B' || equipmentCode == 'N' || equipmentCode == 'C' ||
                  equipmentCode == 'S')
         {
-            // The ICAO format does not contain a separate code for a general NONE Mode C transponder. We use Mode A instead.
+            // The ICAO format does not contain a separate code for a general NONE Mode C transponder. We use Mode A
+            // instead.
             ssr = CSsrEquipment::SSrEquipment { CSsrEquipment::ModeA };
         }
 
@@ -286,102 +246,53 @@ namespace swift::misc::aviation
         {
             if (ssr.hasEquipment(CSsrEquipment::None))
             {
-                // This could also be 'O' as we cannot differentiate between a failed transponder and a failed Mode C transponder
+                // This could also be 'O' as we cannot differentiate between a failed transponder and a failed Mode C
+                // transponder
                 return 'H';
             }
 
-            // In the following, do not check the transponder capability, as the FAA codes only work with Mode C and not Mode S transponders
-            if (equip.hasEquipment(CComNavEquipment::Gnss))
-            {
-                return 'L';
-            }
+            // In the following, do not check the transponder capability, as the FAA codes only work with Mode C and not
+            // Mode S transponders
+            if (equip.hasEquipment(CComNavEquipment::Gnss)) { return 'L'; }
             if (equip.hasEquipment(CComNavEquipment::Pbn))
             {
                 // PBN is used for RNAV when converting from FAA string to CFlightPlanAircraftInfo
                 return 'Z';
             }
-            else
-            {
-                return 'W';
-            }
+            else { return 'W'; }
         }
         else
         {
             if (equip.hasEquipment(CComNavEquipment::Gnss))
             {
-                if (ssr.hasEquipment(CSsrEquipment::None))
-                {
-                    return 'V';
-                }
-                if (ssr.hasEquipment(CSsrEquipment::ModeAC))
-                {
-                    return 'G';
-                }
-                else
-                {
-                    return 'S';
-                }
+                if (ssr.hasEquipment(CSsrEquipment::None)) { return 'V'; }
+                if (ssr.hasEquipment(CSsrEquipment::ModeAC)) { return 'G'; }
+                else { return 'S'; }
             }
             if (equip.hasEquipment(CComNavEquipment::Tacan))
             {
-                if (ssr.hasEquipment(CSsrEquipment::None))
-                {
-                    return 'M';
-                }
-                if (ssr.hasEquipment(CSsrEquipment::ModeAC))
-                {
-                    return 'P';
-                }
-                else
-                {
-                    return 'N';
-                }
+                if (ssr.hasEquipment(CSsrEquipment::None)) { return 'M'; }
+                if (ssr.hasEquipment(CSsrEquipment::ModeAC)) { return 'P'; }
+                else { return 'N'; }
             }
             if (equip.hasEquipment(CComNavEquipment::Pbn))
             {
                 // PBN is used for RNAV when converting from FAA string to CFlightPlanAircraftInfo
-                if (ssr.hasEquipment(CSsrEquipment::None))
-                {
-                    return 'Y';
-                }
-                if (ssr.hasEquipment(CSsrEquipment::ModeAC))
-                {
-                    return 'I';
-                }
-                else
-                {
-                    return 'C';
-                }
+                if (ssr.hasEquipment(CSsrEquipment::None)) { return 'Y'; }
+                if (ssr.hasEquipment(CSsrEquipment::ModeAC)) { return 'I'; }
+                else { return 'C'; }
             }
             if (equip.hasEquipment(CComNavEquipment::Dme))
             {
-                if (ssr.hasEquipment(CSsrEquipment::None))
-                {
-                    return 'D';
-                }
-                if (ssr.hasEquipment(CSsrEquipment::ModeAC))
-                {
-                    return 'A';
-                }
-                else
-                {
-                    return 'B';
-                }
+                if (ssr.hasEquipment(CSsrEquipment::None)) { return 'D'; }
+                if (ssr.hasEquipment(CSsrEquipment::ModeAC)) { return 'A'; }
+                else { return 'B'; }
             }
 
             // No DME
-            if (ssr.hasEquipment(CSsrEquipment::None))
-            {
-                return 'X';
-            }
-            if (ssr.hasEquipment(CSsrEquipment::ModeAC))
-            {
-                return 'U';
-            }
-            else
-            {
-                return 'T';
-            }
+            if (ssr.hasEquipment(CSsrEquipment::None)) { return 'X'; }
+            if (ssr.hasEquipment(CSsrEquipment::ModeAC)) { return 'U'; }
+            else { return 'T'; }
         }
     }
 

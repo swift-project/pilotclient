@@ -71,13 +71,11 @@ namespace swift::core::afv::audio
         COutput(QObject *parent = nullptr);
 
         //! Dtor
-        virtual ~COutput() override
-        {
-            this->stop();
-        }
+        virtual ~COutput() override { this->stop(); }
 
         //! Start output
-        void start(const swift::misc::audio::CAudioDeviceInfo &outputDevice, swift::sound::sample_provider::ISampleProvider *sampleProvider);
+        void start(const swift::misc::audio::CAudioDeviceInfo &outputDevice,
+                   swift::sound::sample_provider::ISampleProvider *sampleProvider);
 
         //! Stop output
         void stop();

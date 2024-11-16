@@ -16,8 +16,9 @@ namespace swift::core::fsd
     {
     public:
         //! Constructor
-        InterimPilotDataUpdate(const QString &sender, const QString &receiver, double latitude, double longitude, int altitudeTrue,
-                               int groundSpeed, double pitch, double bank, double heading, bool onGround);
+        InterimPilotDataUpdate(const QString &sender, const QString &receiver, double latitude, double longitude,
+                               int altitudeTrue, int groundSpeed, double pitch, double bank, double heading,
+                               bool onGround);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -47,14 +48,10 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const InterimPilotDataUpdate &lhs, const InterimPilotDataUpdate &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) &&
-               qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
-               lhs.m_altitudeTrue == rhs.m_altitudeTrue &&
-               qFuzzyCompare(lhs.m_pitch, rhs.m_pitch) &&
-               qFuzzyCompare(lhs.m_bank, rhs.m_bank) &&
-               qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+               qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) && qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
+               lhs.m_altitudeTrue == rhs.m_altitudeTrue && qFuzzyCompare(lhs.m_pitch, rhs.m_pitch) &&
+               qFuzzyCompare(lhs.m_bank, rhs.m_bank) && qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
                lhs.m_onGround == rhs.m_onGround;
     }
 

@@ -34,8 +34,8 @@ using namespace swift::gui::models;
 
 namespace swift::gui::components
 {
-    CDbModelWorkbenchComponent::CDbModelWorkbenchComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                              ui(new Ui::CDbModelWorkbenchComponent)
+    CDbModelWorkbenchComponent::CDbModelWorkbenchComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CDbModelWorkbenchComponent)
     {
         ui->setupUi(this);
 
@@ -61,15 +61,9 @@ namespace swift::gui::components
         return l;
     }
 
-    CAircraftModelView *CDbModelWorkbenchComponent::view() const
-    {
-        return ui->tvp_Models;
-    }
+    CAircraftModelView *CDbModelWorkbenchComponent::view() const { return ui->tvp_Models; }
 
-    CAircraftModelListModel *CDbModelWorkbenchComponent::model() const
-    {
-        return ui->tvp_Models->derivedModel();
-    }
+    CAircraftModelListModel *CDbModelWorkbenchComponent::model() const { return ui->tvp_Models->derivedModel(); }
 
     CAircraftModel CDbModelWorkbenchComponent::getOwnModelForModelString(const QString &modelString) const
     {
@@ -81,23 +75,19 @@ namespace swift::gui::components
         return ui->tvp_Models->selectedObjects();
     }
 
-    CAircraftModelList CDbModelWorkbenchComponent::getModels() const
-    {
-        return ui->tvp_Models->container();
-    }
+    CAircraftModelList CDbModelWorkbenchComponent::getModels() const { return ui->tvp_Models->container(); }
 
-    int CDbModelWorkbenchComponent::getModelsCount() const
-    {
-        return ui->tvp_Models->rowCount();
-    }
+    int CDbModelWorkbenchComponent::getModelsCount() const { return ui->tvp_Models->rowCount(); }
 
-    void CDbModelWorkbenchComponent::setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+    void CDbModelWorkbenchComponent::setModelsForSimulator(const CAircraftModelList &models,
+                                                           const CSimulatorInfo &simulator)
     {
         Q_UNUSED(simulator);
         ui->tvp_Models->replaceOrAddModelsWithString(models);
     }
 
-    int CDbModelWorkbenchComponent::updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+    int CDbModelWorkbenchComponent::updateModelsForSimulator(const CAircraftModelList &models,
+                                                             const CSimulatorInfo &simulator)
     {
         Q_UNUSED(simulator);
         return ui->tvp_Models->replaceOrAddModelsWithString(models);

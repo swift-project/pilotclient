@@ -12,10 +12,14 @@ using namespace swift::sound::sample_provider;
 
 namespace swift::core::afv::audio
 {
-    CSoundcardSampleProvider::CSoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs, QObject *parent) : ISampleProvider(parent),
-                                                                                                                                  m_mixer(new CMixingSampleProvider())
+    CSoundcardSampleProvider::CSoundcardSampleProvider(int sampleRate, const QVector<quint16> &transceiverIDs,
+                                                       QObject *parent)
+        : ISampleProvider(parent), m_mixer(new CMixingSampleProvider())
     {
-        const QString on = QStringLiteral("%1 sample rate: %2, transceivers: %3").arg(classNameShort(this)).arg(sampleRate).arg(transceiverIDs.size());
+        const QString on = QStringLiteral("%1 sample rate: %2, transceivers: %3")
+                               .arg(classNameShort(this))
+                               .arg(sampleRate)
+                               .arg(transceiverIDs.size());
         this->setObjectName(on);
 
         m_waveFormat.setSampleRate(sampleRate);
@@ -29,8 +33,10 @@ namespace swift::core::afv::audio
         constexpr int voiceInputNumber = 4; // number of CallsignSampleProviders
         for (quint16 transceiverID : transceiverIDs)
         {
-            CReceiverSampleProvider *transceiverInput = new CReceiverSampleProvider(m_waveFormat, transceiverID, voiceInputNumber, m_mixer);
-            connect(transceiverInput, &CReceiverSampleProvider::receivingCallsignsChanged, this, &CSoundcardSampleProvider::receivingCallsignsChanged);
+            CReceiverSampleProvider *transceiverInput =
+                new CReceiverSampleProvider(m_waveFormat, transceiverID, voiceInputNumber, m_mixer);
+            connect(transceiverInput, &CReceiverSampleProvider::receivingCallsignsChanged, this,
+                    &CSoundcardSampleProvider::receivingCallsignsChanged);
             m_receiverInputs.push_back(transceiverInput);
             m_receiverIDs.push_back(transceiverID);
             m_mixer->addMixerInput(transceiverInput);
@@ -53,16 +59,16 @@ namespace swift::core::afv::audio
             {
                 QVector<TxTransceiverDto> txTransceiversFiltered = txTransceivers;
 
-                txTransceiversFiltered.erase(std::remove_if(txTransceiversFiltered.begin(), txTransceiversFiltered.end(), [this](const TxTransceiverDto &d) {
-                                                 return !m_receiverIDs.contains(d.id);
-                                             }),
-                                             txTransceiversFiltered.end());
+                txTransceiversFiltered.erase(
+                    std::remove_if(txTransceiversFiltered.begin(), txTransceiversFiltered.end(),
+                                   [this](const TxTransceiverDto &d) { return !m_receiverIDs.contains(d.id); }),
+                    txTransceiversFiltered.end());
 
                 for (const TxTransceiverDto &txTransceiver : txTransceiversFiltered)
                 {
-                    auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [txTransceiver](const CReceiverSampleProvider *p) {
-                        return p->getId() == txTransceiver.id;
-                    });
+                    auto it = std::find_if(
+                        m_receiverInputs.begin(), m_receiverInputs.end(),
+                        [txTransceiver](const CReceiverSampleProvider *p) { return p->getId() == txTransceiver.id; });
 
                     if (it != m_receiverInputs.end()) { (*it)->setMute(true); }
                 }
@@ -82,18 +88,20 @@ namespace swift::core::afv::audio
         return m_mixer->readSamples(samples, count);
     }
 
-    void CSoundcardSampleProvider::addOpusSamples(const IAudioDto &audioDto, const QVector<RxTransceiverDto> &rxTransceivers)
+    void CSoundcardSampleProvider::addOpusSamples(const IAudioDto &audioDto,
+                                                  const QVector<RxTransceiverDto> &rxTransceivers)
     {
         QVector<RxTransceiverDto> rxTransceiversFilteredAndSorted = rxTransceivers;
 
-        rxTransceiversFilteredAndSorted.erase(std::remove_if(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(), [this](const RxTransceiverDto &r) {
-                                                  return !m_receiverIDs.contains(r.id);
-                                              }),
-                                              rxTransceiversFilteredAndSorted.end());
+        rxTransceiversFilteredAndSorted.erase(
+            std::remove_if(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(),
+                           [this](const RxTransceiverDto &r) { return !m_receiverIDs.contains(r.id); }),
+            rxTransceiversFilteredAndSorted.end());
 
-        std::sort(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(), [](const RxTransceiverDto &a, const RxTransceiverDto &b) -> bool {
-            return a.distanceRatio > b.distanceRatio;
-        });
+        std::sort(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(),
+                  [](const RxTransceiverDto &a, const RxTransceiverDto &b) -> bool {
+                      return a.distanceRatio > b.distanceRatio;
+                  });
 
         if (!rxTransceiversFilteredAndSorted.isEmpty())
         {
@@ -107,14 +115,11 @@ namespace swift::core::afv::audio
                     handledTransceiverIDs.push_back(rxTransceiver.id);
 
                     CReceiverSampleProvider *receiverInput = nullptr;
-                    auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [rxTransceiver](const CReceiverSampleProvider *p) {
-                        return p->getId() == rxTransceiver.id;
-                    });
+                    auto it = std::find_if(
+                        m_receiverInputs.begin(), m_receiverInputs.end(),
+                        [rxTransceiver](const CReceiverSampleProvider *p) { return p->getId() == rxTransceiver.id; });
 
-                    if (it != m_receiverInputs.end())
-                    {
-                        receiverInput = *it;
-                    }
+                    if (it != m_receiverInputs.end()) { receiverInput = *it; }
 
                     if (!receiverInput) { continue; }
                     if (receiverInput->getMute()) { continue; }
@@ -143,24 +148,19 @@ namespace swift::core::afv::audio
     {
         for (const TransceiverDto &radioTransceiver : radioTransceivers)
         {
-            auto it = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(), [radioTransceiver](const CReceiverSampleProvider *p) {
-                return p->getId() == radioTransceiver.id;
-            });
+            auto it = std::find_if(
+                m_receiverInputs.begin(), m_receiverInputs.end(),
+                [radioTransceiver](const CReceiverSampleProvider *p) { return p->getId() == radioTransceiver.id; });
 
-            if (it != m_receiverInputs.end())
-            {
-                (*it)->setFrequency(radioTransceiver.frequencyHz);
-            }
+            if (it != m_receiverInputs.end()) { (*it)->setFrequency(radioTransceiver.frequencyHz); }
         }
 
         for (CReceiverSampleProvider *receiverInput : std::as_const(m_receiverInputs))
         {
             const quint16 transceiverID = receiverInput->getId();
-            const bool contains = std::any_of(radioTransceivers.cbegin(), radioTransceivers.cend(), [transceiverID](const auto &tx) { return transceiverID == tx.id; });
-            if (!contains)
-            {
-                receiverInput->setFrequency(0);
-            }
+            const bool contains = std::any_of(radioTransceivers.cbegin(), radioTransceivers.cend(),
+                                              [transceiverID](const auto &tx) { return transceiverID == tx.id; });
+            if (!contains) { receiverInput->setFrequency(0); }
         }
     }
 
@@ -172,9 +172,7 @@ namespace swift::core::afv::audio
     bool CSoundcardSampleProvider::setGainRatioForTransceiver(quint16 transceiverID, double gainRatio)
     {
         auto receiverInput = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(),
-                                          [&](const auto receiver) {
-                                              return receiver->getId() == transceiverID;
-                                          });
+                                          [&](const auto receiver) { return receiver->getId() == transceiverID; });
         if (receiverInput == m_receiverInputs.end()) { return false; }
         return (*receiverInput)->setGainRatio(gainRatio);
     }

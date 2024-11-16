@@ -56,10 +56,7 @@ namespace swift::misc::simulation
     bool CBackgroundValidation::triggerValidation(const CSimulatorInfo &simulator, const QString &simDirectory)
     {
         const QPointer<CBackgroundValidation> myself(this);
-        if (simulator.isNoSimulator())
-        {
-            return this->requestLastValidationResults();
-        }
+        if (simulator.isNoSimulator()) { return this->requestLastValidationResults(); }
 
         {
             QWriteLocker l(&m_lock);
@@ -118,8 +115,7 @@ namespace swift::misc::simulation
         const qint64 started = QDateTime::currentMSecsSinceEpoch();
         m_wasStopped = false;
 
-        do
-        {
+        do {
             if (!simulator.isSingleSimulator()) { break; }
             if (this->wasAlreadyChecked(simulator)) { break; }
 
@@ -133,15 +129,19 @@ namespace swift::misc::simulation
 
             if (models.isEmpty())
             {
-                msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityWarning, QStringLiteral("No models in set for  '%1'").arg(simulator.toQString(true))));
+                msgs.push_back(
+                    CStatusMessage(this, CStatusMessage::SeverityWarning,
+                                   QStringLiteral("No models in set for  '%1'").arg(simulator.toQString(true))));
             }
             else
             {
-                msgs = CAircraftModelUtilities::validateModelFiles(simulator, models, valid, invalid, false, 25, m_wasStopped, m_simDirectory);
+                msgs = CAircraftModelUtilities::validateModelFiles(simulator, models, valid, invalid, false, 25,
+                                                                   m_wasStopped, m_simDirectory);
             }
 
             const qint64 deltaTimeMs = now - started;
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, QStringLiteral("Validated in %1ms").arg(deltaTimeMs)));
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo,
+                                          QStringLiteral("Validated in %1ms").arg(deltaTimeMs)));
             msgs.sortBySeverityHighestFirst();
             msgs.freezeOrder();
 
@@ -161,10 +161,7 @@ namespace swift::misc::simulation
             m_timerBasedRuns++;
 
             // stop timer after some runs
-            if (m_timerBasedRuns > 3)
-            {
-                m_updateTimer.stop();
-            }
+            if (m_timerBasedRuns > 3) { m_updateTimer.stop(); }
         }
 
         emit this->validating(false);

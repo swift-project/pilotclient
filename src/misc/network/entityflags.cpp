@@ -33,9 +33,7 @@ namespace swift::misc::network
         case NoEntity: return QStringLiteral("no data");
         case VatsimDataFile: return QStringLiteral("VATSIM data file");
         case VatsimStatusFile: return QStringLiteral("VATSIM status file");
-        default:
-            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
-            return "wrong flags";
+        default: SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong flags"); return "wrong flags";
         }
     }
 
@@ -103,9 +101,7 @@ namespace swift::misc::network
         case ReadFailed: return fa;
         case ReadSkipped: return s;
         case ReadStarted: return st;
-        default:
-            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
-            return x;
+        default: SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong flags"); return x;
         }
     }
 
@@ -119,9 +115,7 @@ namespace swift::misc::network
         case ReadStarted: return CStatusMessage::SeverityInfo;
         case ReadSkipped: return CStatusMessage::SeverityWarning;
         case ReadFailed: return CStatusMessage::SeverityError;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Missing state");
-            return CStatusMessage::SeverityInfo;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Missing state"); return CStatusMessage::SeverityInfo;
         }
     }
 
@@ -187,10 +181,8 @@ namespace swift::misc::network
         switch (s)
         {
         case CStatusMessage::SeverityError:
-        case CStatusMessage::SeverityWarning:
-            return true;
-        default:
-            return false;
+        case CStatusMessage::SeverityWarning: return true;
+        default: return false;
         }
     }
 

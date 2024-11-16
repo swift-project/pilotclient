@@ -22,8 +22,8 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CApplicationCloseDialog::CApplicationCloseDialog(QWidget *parent) : QDialog(parent),
-                                                                        ui(new Ui::CApplicationCloseDialog)
+    CApplicationCloseDialog::CApplicationCloseDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CApplicationCloseDialog)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 
@@ -34,11 +34,11 @@ namespace swift::gui::components
 
         connect(this, &CApplicationCloseDialog::accepted, this, &CApplicationCloseDialog::onAccepted);
         connect(this, &CApplicationCloseDialog::rejected, this, &CApplicationCloseDialog::onRejected);
-        connect(ui->bb_ApplicationCloseDialog, &QDialogButtonBox::clicked, this, &CApplicationCloseDialog::buttonClicked);
+        connect(ui->bb_ApplicationCloseDialog, &QDialogButtonBox::clicked, this,
+                &CApplicationCloseDialog::buttonClicked);
     }
 
-    CApplicationCloseDialog::~CApplicationCloseDialog()
-    {}
+    CApplicationCloseDialog::~CApplicationCloseDialog() {}
 
     void CApplicationCloseDialog::onAccepted()
     {

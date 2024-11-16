@@ -33,9 +33,10 @@ namespace swift::core::db
         CDatabaseReaderConfig() = default;
 
         //! Constructor for one or multiple entities
-        CDatabaseReaderConfig(swift::misc::network::CEntityFlags::Entity entities,
-                              swift::misc::db::CDbFlags::DataRetrievalMode retrievalFlags,
-                              const swift::misc::physical_quantities::CTime &cacheLifetime = swift::misc::physical_quantities::CTime());
+        CDatabaseReaderConfig(
+            swift::misc::network::CEntityFlags::Entity entities,
+            swift::misc::db::CDbFlags::DataRetrievalMode retrievalFlags,
+            const swift::misc::physical_quantities::CTime &cacheLifetime = swift::misc::physical_quantities::CTime());
 
         //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
@@ -105,7 +106,8 @@ namespace swift::core::db
 
         //! Find first one matching given
         //! \remark works for single and multiple entities
-        CDatabaseReaderConfig findFirstOrDefaultForEntity(const swift::misc::network::CEntityFlags::Entity entities) const;
+        CDatabaseReaderConfig
+        findFirstOrDefaultForEntity(const swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! DB is down
         void markAsDbDown();
@@ -124,9 +126,8 @@ namespace swift::core::db
 
         //! Needs any shared info object, but only if the cache is empty
         //! \remark needs readers initialized
-        bool needsSharedInfoObjectsIfCachesEmpty(
-            swift::misc::network::CEntityFlags::Entity entities,
-            swift::misc::network::CEntityFlags::Entity cachedEntities) const;
+        bool needsSharedInfoObjectsIfCachesEmpty(swift::misc::network::CEntityFlags::Entity entities,
+                                                 swift::misc::network::CEntityFlags::Entity cachedEntities) const;
 
         //! Needs any shared header loaded before continued
         bool needsSharedInfoFile(swift::misc::network::CEntityFlags::Entity entities) const;

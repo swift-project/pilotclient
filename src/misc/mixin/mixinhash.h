@@ -38,7 +38,8 @@ namespace swift::misc
     namespace mixin
     {
         /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by metaclass.
+         * CRTP class template from which a derived class can inherit common methods dealing with hashing instances by
+         * metaclass.
          *
          * \tparam Derived Must be registered with SWIFT_DECLARE_TUPLE_CONVERSION.
          */

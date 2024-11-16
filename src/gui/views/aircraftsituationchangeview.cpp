@@ -7,7 +7,8 @@ using namespace swift::gui::models;
 
 namespace swift::gui::views
 {
-    CAircraftSituationChangeView::CAircraftSituationChangeView(QWidget *parent) : CViewWithTimestampWithOffsetObjects(parent)
+    CAircraftSituationChangeView::CAircraftSituationChangeView(QWidget *parent)
+        : CViewWithTimestampWithOffsetObjects(parent)
     {
         this->standardInit(new CAircraftSituationChangeListModel(this));
         this->setMenu(MenuDefault);

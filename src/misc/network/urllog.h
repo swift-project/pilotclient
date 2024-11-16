@@ -20,9 +20,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUrlLog)
 namespace swift::misc::network
 {
     //! Information about accessing one URL over the network
-    class SWIFT_MISC_EXPORT CUrlLog :
-        public CValueObject<CUrlLog>,
-        public ITimestampBased
+    class SWIFT_MISC_EXPORT CUrlLog : public CValueObject<CUrlLog>, public ITimestampBased
     {
     public:
         //! Properties by index

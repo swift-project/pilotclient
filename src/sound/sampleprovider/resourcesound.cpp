@@ -39,10 +39,7 @@ namespace swift::sound::sample_provider
                 // Not implemented
                 // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
             }
-            else
-            {
-                m_data->samples = convertBytesTo32BitFloatPCM(wavFile.audioData());
-            }
+            else { m_data->samples = convertBytesTo32BitFloatPCM(wavFile.audioData()); }
         }
 
         m_data->isLoaded = true;

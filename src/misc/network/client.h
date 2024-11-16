@@ -104,10 +104,16 @@ namespace swift::misc::network
         bool hasSpecifiedVoiceCapabilities() const { return !m_voiceCapabilities.isUnknown(); }
 
         //! Set voice capabilities
-        void setVoiceCapabilities(const CVoiceCapabilities &voiceCapabilities) { m_voiceCapabilities = voiceCapabilities; }
+        void setVoiceCapabilities(const CVoiceCapabilities &voiceCapabilities)
+        {
+            m_voiceCapabilities = voiceCapabilities;
+        }
 
         //! Set voice capabilities
-        void setVoiceCapabilities(const QString &flightPlanRemarks) { m_voiceCapabilities = CVoiceCapabilities(flightPlanRemarks); }
+        void setVoiceCapabilities(const QString &flightPlanRemarks)
+        {
+            m_voiceCapabilities = CVoiceCapabilities(flightPlanRemarks);
+        }
 
         //! User
         const CUser &getUser() const { return m_user; }

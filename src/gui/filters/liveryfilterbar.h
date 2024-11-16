@@ -44,7 +44,8 @@ namespace swift::gui::filters
         virtual ~CLiveryFilterBar() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::aviation::CLiveryList>> createModelFilter() const override;
+        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::aviation::CLiveryList>>
+        createModelFilter() const override;
 
         //! Filter by livery values
         void filter(const swift::misc::aviation::CLivery &livery);

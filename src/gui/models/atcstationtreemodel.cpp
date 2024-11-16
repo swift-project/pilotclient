@@ -33,8 +33,7 @@ using namespace swift::misc::network;
 
 namespace swift::gui::models
 {
-    CAtcStationTreeModel::CAtcStationTreeModel(QObject *parent) : QStandardItemModel(parent)
-    {}
+    CAtcStationTreeModel::CAtcStationTreeModel(QObject *parent) : QStandardItemModel(parent) {}
 
     void CAtcStationTreeModel::updateContainer(const CAtcStationList &stations)
     {
@@ -50,7 +49,8 @@ namespace swift::gui::models
         for (const QString &suffix : std::as_const(m_suffixes))
         {
             // ownership of QStandardItem is taken by model
-            QStandardItem *typeFolderFirstColumn = new QStandardItem(CCallsign::atcSuffixToIcon(suffix).toQIcon(), suffix);
+            QStandardItem *typeFolderFirstColumn =
+                new QStandardItem(CCallsign::atcSuffixToIcon(suffix).toQIcon(), suffix);
             typeFolderFirstColumn->setEditable(false);
             this->invisibleRootItem()->appendRow(typeFolderFirstColumn);
 

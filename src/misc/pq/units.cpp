@@ -23,26 +23,19 @@ namespace swift::misc::physical_quantities
 
     // pin vtables to this file
 
-    void CLengthUnit::anchor()
-    {}
+    void CLengthUnit::anchor() {}
 
-    void CFrequencyUnit::anchor()
-    {}
+    void CFrequencyUnit::anchor() {}
 
-    void CMassUnit::anchor()
-    {}
+    void CMassUnit::anchor() {}
 
-    void CPressureUnit::anchor()
-    {}
+    void CPressureUnit::anchor() {}
 
-    void CTemperatureUnit::anchor()
-    {}
+    void CTemperatureUnit::anchor() {}
 
-    void CSpeedUnit::anchor()
-    {}
+    void CSpeedUnit::anchor() {}
 
-    void CAccelerationUnit::anchor()
-    {}
+    void CAccelerationUnit::anchor() {}
 
     QString CAngleUnit::makeRoundedQStringWithUnit(double value, int digits, bool withGroupSeparator, bool i18n) const
     {
@@ -69,10 +62,7 @@ namespace swift::misc::physical_quantities
             s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
             s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 3 + digits, 'f', digits, '0');
         }
-        else
-        {
-            s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n);
-        }
+        else { s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n); }
         return s;
     }
 
@@ -89,7 +79,9 @@ namespace swift::misc::physical_quantities
             double se = CMathUtils::trunc((value - hr - mi / 100.0) * 1000000) / 100.0;
             const char *fmt = value < 0 ? "-%1h%2m%3s" : "%1h%2m%3s";
             s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
-            s = s.arg(fabs(hr), 2, 'f', 0, '0').arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 3 + digits, 'f', digits, '0');
+            s = s.arg(fabs(hr), 2, 'f', 0, '0')
+                    .arg(fabs(mi), 2, 'f', 0, '0')
+                    .arg(fabs(se), 3 + digits, 'f', digits, '0');
         }
         else if ((*this) == CTimeUnit::hrmin())
         {
@@ -111,10 +103,7 @@ namespace swift::misc::physical_quantities
             s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
             s = s.arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 3 + digits, 'f', digits, '0');
         }
-        else
-        {
-            s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n);
-        }
+        else { s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n); }
         return s;
     }
 

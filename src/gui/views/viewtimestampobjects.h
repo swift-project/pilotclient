@@ -22,8 +22,7 @@ namespace swift::gui
     {
         //! Base class for views timestamp offset objects
         template <class T>
-        class CViewWithTimestampWithOffsetObjects :
-            public CViewBase<T>
+        class CViewWithTimestampWithOffsetObjects : public CViewBase<T>
         {
         public:
             //! Model type

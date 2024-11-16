@@ -22,8 +22,8 @@ namespace swift::misc
     /*!
      * Class for emitting a log message. Works similar to the qDebug, qWarning, qCritical family of functions.
      *
-     * The member functions debug, info, warning, error, and the stream operators all return a reference to <tt>*this</tt>,
-     * so they can be chained together.
+     * The member functions debug, info, warning, error, and the stream operators all return a reference to
+     * <tt>*this</tt>, so they can be chained together.
      *
      * The categories are arbitrary string tags which can be attached to the message to categorize it.
      * A message can have more than one category. The categories can be used for filtering by message handlers.

@@ -48,7 +48,9 @@ namespace swift::misc::simulation
         CDistributor(const QString &key);
 
         //! Constructor
-        CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2, const swift::misc::simulation::CSimulatorInfo &simulator = swift::misc::simulation::CSimulatorInfo());
+        CDistributor(
+            const QString &id, const QString &description, const QString &alias1, const QString &alias2,
+            const swift::misc::simulation::CSimulatorInfo &simulator = swift::misc::simulation::CSimulatorInfo());
 
         //! Get description
         const QString &getDescription() const { return m_description; }

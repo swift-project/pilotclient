@@ -14,11 +14,9 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CHotkeyCombination)
 
 namespace swift::misc::input
 {
-    CHotkeyCombination::CHotkeyCombination(CKeyboardKey key) : CHotkeyCombination(CKeyboardKeyList { key })
-    {}
+    CHotkeyCombination::CHotkeyCombination(CKeyboardKey key) : CHotkeyCombination(CKeyboardKeyList { key }) {}
 
-    CHotkeyCombination::CHotkeyCombination(const CKeyboardKeyList &keys) : m_keyboardKeys(keys)
-    {}
+    CHotkeyCombination::CHotkeyCombination(const CKeyboardKeyList &keys) : m_keyboardKeys(keys) {}
 
     void CHotkeyCombination::addKeyboardKey(const CKeyboardKey &key)
     {
@@ -34,10 +32,7 @@ namespace swift::misc::input
         m_joystickButtons.sortBy(&CJoystickButton::getButtonIndex);
     }
 
-    bool CHotkeyCombination::containsKeyboardKey(const CKeyboardKey &key) const
-    {
-        return m_keyboardKeys.contains(key);
-    }
+    bool CHotkeyCombination::containsKeyboardKey(const CKeyboardKey &key) const { return m_keyboardKeys.contains(key); }
 
     bool CHotkeyCombination::containsJoystickButton(const CJoystickButton &button) const
     {
@@ -62,20 +57,16 @@ namespace swift::misc::input
         m_joystickButtons.sortBy(&CJoystickButton::getButtonIndex);
     }
 
-    void CHotkeyCombination::removeKeyboardKey(CKeyboardKey key)
-    {
-        replaceKey(key, CKeyboardKey());
-    }
+    void CHotkeyCombination::removeKeyboardKey(CKeyboardKey key) { replaceKey(key, CKeyboardKey()); }
 
-    void CHotkeyCombination::removeJoystickButton(CJoystickButton button)
-    {
-        replaceButton(button, CJoystickButton());
-    }
+    void CHotkeyCombination::removeJoystickButton(CJoystickButton button) { replaceButton(button, CJoystickButton()); }
 
     bool CHotkeyCombination::isSubsetOf(const CHotkeyCombination &other) const
     {
-        return std::all_of(m_keyboardKeys.begin(), m_keyboardKeys.end(), [&other](const CKeyboardKey &k) { return other.m_keyboardKeys.contains(k); }) &&
-               std::all_of(m_joystickButtons.begin(), m_joystickButtons.end(), [&other](const CJoystickButton &b) { return other.m_joystickButtons.contains(b); });
+        return std::all_of(m_keyboardKeys.begin(), m_keyboardKeys.end(),
+                           [&other](const CKeyboardKey &k) { return other.m_keyboardKeys.contains(k); }) &&
+               std::all_of(m_joystickButtons.begin(), m_joystickButtons.end(),
+                           [&other](const CJoystickButton &b) { return other.m_joystickButtons.contains(b); });
     }
 
     CHotkeyCombination CHotkeyCombination::getDeltaComparedTo(const CHotkeyCombination &other) const
@@ -100,14 +91,8 @@ namespace swift::misc::input
         Q_UNUSED(i18n)
         QStringList sl;
         sl.reserve(m_keyboardKeys.size() + m_joystickButtons.size());
-        for (const auto &key : m_keyboardKeys)
-        {
-            sl << key.toQString();
-        }
-        for (const auto &button : m_joystickButtons)
-        {
-            sl << button.toQString();
-        }
+        for (const auto &key : m_keyboardKeys) { sl << key.toQString(); }
+        for (const auto &button : m_joystickButtons) { sl << button.toQString(); }
         return sl.join('+');
     }
 
@@ -115,14 +100,8 @@ namespace swift::misc::input
     {
         QStringList sl;
         sl.reserve(m_keyboardKeys.size() + m_joystickButtons.size());
-        for (const auto &key : m_keyboardKeys)
-        {
-            sl << key.toQString();
-        }
-        for (const auto &button : m_joystickButtons)
-        {
-            sl << button.getButtonAsStringWithDeviceName();
-        }
+        for (const auto &key : m_keyboardKeys) { sl << key.toQString(); }
+        for (const auto &button : m_joystickButtons) { sl << button.getButtonAsStringWithDeviceName(); }
         return sl.join('+');
     }
 } // namespace swift::misc::input

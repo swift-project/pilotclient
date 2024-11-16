@@ -247,7 +247,8 @@ namespace swift::simplugin::fsxcommon
         void setDefaultValues()
         {
             std::fill(data, data + 128, static_cast<byte>(0));
-            data[0] = 1; // SB running, indicates the client is running as external app, 0..not running, 1..external app, 2..FS module
+            data[0] = 1; // SB running, indicates the client is running as external app, 0..not running, 1..external
+                         // app, 2..FS module
             data[1] = 0; // SB connected to FSD, 0..not connected, 1..connected
             data[17] = 1; // 1..standby, 0..mode C
             data[19] = 0; // no ident
@@ -329,7 +330,8 @@ namespace swift::simplugin::fsxcommon
         CSimConnectDefinitions();
 
         //! Initialize all data definitions
-        static HRESULT initDataDefinitionsWhenConnected(const HANDLE hSimConnect, const swift::misc::simulation::CSimulatorInfo &simInfo);
+        static HRESULT initDataDefinitionsWhenConnected(const HANDLE hSimConnect,
+                                                        const swift::misc::simulation::CSimulatorInfo &simInfo);
 
     private:
         //! Initialize data definition for our own aircraft

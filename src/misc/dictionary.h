@@ -70,7 +70,9 @@ namespace swift::misc
      * Trait to select the appropriate default associative container type depending on what the key type supports.
      */
     template <typename K, typename V>
-    using TDefaultAssociativeType = typename private_ns::TAssociativityTraits<TModelsQHashKey<K>::value, TModelsQMapKey<K>::value>::template DefaultType<K, V>;
+    using TDefaultAssociativeType =
+        typename private_ns::TAssociativityTraits<TModelsQHashKey<K>::value,
+                                                  TModelsQMapKey<K>::value>::template DefaultType<K, V>;
 
     /*!
      * Associative container with value semantics, chooses a sensible default implementation container type.
@@ -117,7 +119,8 @@ namespace swift::misc
         //! STL compatibility
         typedef typename Impl<Key, Value>::const_iterator const_iterator;
 
-        //! Return a copy containing only those elements for which the dictionary keys return true for a given predicate.
+        //! Return a copy containing only those elements for which the dictionary keys return true for a given
+        //! predicate.
         template <class Predicate>
         CDictionary findKeyBy(Predicate p) const
         {
@@ -241,10 +244,7 @@ namespace swift::misc
             QJsonArray array;
             QJsonObject json;
 
-            for (auto it = m_impl.cbegin(); it != m_impl.cend(); ++it)
-            {
-                array << it.key() << it.value();
-            }
+            for (auto it = m_impl.cbegin(); it != m_impl.cend(); ++it) { array << it.key() << it.value(); }
             json.insert("associativecontainerbase", array);
             return json;
         }
@@ -454,7 +454,8 @@ namespace swift::misc
             for (auto it = m_impl.cbegin(); it != m_impl.end(); ++it)
             {
                 str += "{";
-                str += CContainerHelper::stringify(it.key(), i18n) + "," + CContainerHelper::stringify(it.value(), i18n);
+                str +=
+                    CContainerHelper::stringify(it.key(), i18n) + "," + CContainerHelper::stringify(it.value(), i18n);
                 str += "}";
             }
             return "{" + str + "}";
@@ -462,16 +463,10 @@ namespace swift::misc
 
     public:
         //! \copydoc swift::misc::CValueObject::marshallToDbus
-        void marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << m_impl;
-        }
+        void marshallToDbus(QDBusArgument &argument) const { argument << m_impl; }
 
         //! \copydoc swift::misc::CValueObject::unmarshallFromDbus
-        void unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> m_impl;
-        }
+        void unmarshallFromDbus(const QDBusArgument &argument) { argument >> m_impl; }
 
         //! \copydoc swift::misc::mixin::DataStreamByMetaClass::marshalToDataStream
         void marshalToDataStream(QDataStream &stream) const { stream << m_impl; }
@@ -507,7 +502,8 @@ namespace swift::misc
     template <class Map1, class Map2, class F>
     void forEachIntersection(const Map1 &map1, const Map2 &map2, F functor)
     {
-        static_assert(std::is_same_v<typename Map1::key_type, typename Map2::key_type>, "Maps must have the same key type");
+        static_assert(std::is_same_v<typename Map1::key_type, typename Map2::key_type>,
+                      "Maps must have the same key type");
         if (map1.empty() || map2.empty()) { return; }
         auto it1 = implementationOf(map1).lowerBound(map2.cbegin().key());
         auto end1 = implementationOf(map1).upperBound((map2.cend() - 1).key());

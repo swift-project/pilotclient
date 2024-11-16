@@ -24,9 +24,7 @@ namespace Ui
 namespace swift::gui::components
 {
     //! GUI displaying a radar like view with aircrafts nearby
-    class SWIFT_GUI_EXPORT CRadarComponent :
-        public QFrame,
-        public CEnableForDockWidgetInfoArea
+    class SWIFT_GUI_EXPORT CRadarComponent : public QFrame, public CEnableForDockWidgetInfoArea
     {
         Q_OBJECT
 
@@ -77,8 +75,12 @@ namespace swift::gui::components
 
         QFont m_tagFont;
 
-        swift::core::CActionBind m_actionZoomIn { swift::misc::input::radarZoomInHotkeyAction(), swift::misc::input::radarZoomInHotkeyIcon(), this, &CRadarComponent::rangeZoomIn };
-        swift::core::CActionBind m_actionZoomOut { swift::misc::input::radarZoomOutHotkeyAction(), swift::misc::input::radarZoomOutHotkeyIcon(), this, &CRadarComponent::rangeZoomOut };
+        swift::core::CActionBind m_actionZoomIn { swift::misc::input::radarZoomInHotkeyAction(),
+                                                  swift::misc::input::radarZoomInHotkeyIcon(), this,
+                                                  &CRadarComponent::rangeZoomIn };
+        swift::core::CActionBind m_actionZoomOut { swift::misc::input::radarZoomOutHotkeyAction(),
+                                                   swift::misc::input::radarZoomOutHotkeyIcon(), this,
+                                                   &CRadarComponent::rangeZoomOut };
         void rangeZoomIn(bool keydown)
         {
             if (keydown) { changeRangeInSteps(true); }

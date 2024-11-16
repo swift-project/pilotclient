@@ -9,9 +9,7 @@ class QWidget;
 
 namespace swift::simplugin::flightgear
 {
-    CSimulatorFlightgearConfig::CSimulatorFlightgearConfig(QObject *parent) : QObject(parent)
-    {
-    }
+    CSimulatorFlightgearConfig::CSimulatorFlightgearConfig(QObject *parent) : QObject(parent) {}
 
     swift::gui::CPluginConfigWindow *CSimulatorFlightgearConfig::createConfigWindow(QWidget *parent)
     {

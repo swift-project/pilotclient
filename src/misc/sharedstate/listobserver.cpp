@@ -42,9 +42,8 @@ namespace swift::misc::shared_state
     int CGenericListObserver::cleanValues()
     {
         QMutexLocker lock(&m_listMutex);
-        return m_list.removeIf([filter = m_observer->eventSubscription()](const CVariant &value) {
-            return !value.matches(filter);
-        });
+        return m_list.removeIf(
+            [filter = m_observer->eventSubscription()](const CVariant &value) { return !value.matches(filter); });
     }
 
     void CGenericListObserver::handleEvent(const CVariant &param)

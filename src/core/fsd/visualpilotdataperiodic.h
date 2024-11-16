@@ -18,9 +18,10 @@ namespace swift::core::fsd
     {
     public:
         //! Constructor
-        VisualPilotDataPeriodic(const QString &sender, double latitude, double longitude, double altitudeTrue, double heightAgl,
-                                double pitch, double bank, double heading, double xVelocity, double yVelocity, double zVelocity,
-                                double pitchRadPerSec, double bankRadPerSec, double headingRadPerSec, double noseGearAngle = 0.0);
+        VisualPilotDataPeriodic(const QString &sender, double latitude, double longitude, double altitudeTrue,
+                                double heightAgl, double pitch, double bank, double heading, double xVelocity,
+                                double yVelocity, double zVelocity, double pitchRadPerSec, double bankRadPerSec,
+                                double headingRadPerSec, double noseGearAngle = 0.0);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -59,15 +60,11 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const VisualPilotDataPeriodic &lhs, const VisualPilotDataPeriodic &rhs)
     {
-        return qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) &&
-               qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
+        return qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) && qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
                qFuzzyCompare(lhs.m_altitudeTrue, rhs.m_altitudeTrue) &&
-               qFuzzyCompare(lhs.m_heightAgl, rhs.m_heightAgl) &&
-               qFuzzyCompare(lhs.m_pitch, rhs.m_pitch) &&
-               qFuzzyCompare(lhs.m_bank, rhs.m_bank) &&
-               qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
-               qFuzzyCompare(lhs.m_xVelocity, rhs.m_xVelocity) &&
-               qFuzzyCompare(lhs.m_yVelocity, rhs.m_yVelocity) &&
+               qFuzzyCompare(lhs.m_heightAgl, rhs.m_heightAgl) && qFuzzyCompare(lhs.m_pitch, rhs.m_pitch) &&
+               qFuzzyCompare(lhs.m_bank, rhs.m_bank) && qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
+               qFuzzyCompare(lhs.m_xVelocity, rhs.m_xVelocity) && qFuzzyCompare(lhs.m_yVelocity, rhs.m_yVelocity) &&
                qFuzzyCompare(lhs.m_zVelocity, rhs.m_zVelocity) &&
                qFuzzyCompare(lhs.m_pitchRadPerSec, rhs.m_pitchRadPerSec) &&
                qFuzzyCompare(lhs.m_bankRadPerSec, rhs.m_bankRadPerSec) &&

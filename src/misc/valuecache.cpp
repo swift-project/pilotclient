@@ -69,7 +69,8 @@ namespace swift::misc
     // CValueCachePacket
     ////////////////////////////////
 
-    CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved, bool valuesChanged) : m_saved(saved), m_valuesChanged(valuesChanged)
+    CValueCachePacket::CValueCachePacket(const CVariantMap &values, qint64 timestamp, bool saved, bool valuesChanged)
+        : m_saved(saved), m_valuesChanged(valuesChanged)
     {
         for (auto it = values.cbegin(); it != values.cend(); ++it)
         {
@@ -115,7 +116,9 @@ namespace swift::misc
         QStringList result;
         for (const auto &key : keys)
         {
-            QString time = contains(key) ? QDateTime::fromMSecsSinceEpoch(value(key).second, Qt::UTC).toString(Qt::ISODate) : "no timestamp";
+            QString time = contains(key) ?
+                               QDateTime::fromMSecsSinceEpoch(value(key).second, Qt::UTC).toString(Qt::ISODate) :
+                               "no timestamp";
             result.push_back(key + " (" + time + ")");
         }
         return result.join(",");
@@ -301,7 +304,8 @@ namespace swift::misc
                 Q_ASSERT(element.m_pendingChanges >= 0);
                 ackedChanges.insert(in.key(), in.value(), in.timestamp());
             }
-            else if (element.m_pendingChanges == 0) // ratify a change only if own change is not pending, to ensure consistency
+            else if (element.m_pendingChanges ==
+                     0) // ratify a change only if own change is not pending, to ensure consistency
             {
                 element.m_value = in.value();
                 element.m_timestamp = in.timestamp();
@@ -329,7 +333,8 @@ namespace swift::misc
         if (!map.isEmpty()) { insertValues({ map, QDateTime::currentMSecsSinceEpoch() }); }
     }
 
-    CStatusMessageList CValueCache::loadFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessageList CValueCache::loadFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                                        const QString &prefix)
     {
         CVariantMap map;
         auto messages = map.convertFromMemoizedJsonNoThrow(json, categories, prefix);
@@ -355,7 +360,8 @@ namespace swift::misc
         return status;
     }
 
-    CStatusMessage CValueCache::saveToFiles(const QString &dir, const CVariantMap &values, const QString &keysMessage) const
+    CStatusMessage CValueCache::saveToFiles(const QString &dir, const CVariantMap &values,
+                                            const QString &keysMessage) const
     {
         QMap<QString, CVariantMap> namespaces;
         for (auto it = values.cbegin(); it != values.cend(); ++it)
@@ -363,10 +369,7 @@ namespace swift::misc
             Q_ASSERT(it.value().isValid());
             namespaces[it.key().section('/', 0, m_fileSplitDepth - 1)].insert(it.key(), it.value());
         }
-        if (!QDir::root().mkpath(dir))
-        {
-            return CStatusMessage(this).error(u"Failed to create directory '%1'") << dir;
-        }
+        if (!QDir::root().mkpath(dir)) { return CStatusMessage(this).error(u"Failed to create directory '%1'") << dir; }
         for (auto it = namespaces.cbegin(); it != namespaces.cend(); ++it)
         {
             CAtomicFile file(dir + "/" + it.key() + ".json");
@@ -388,10 +391,12 @@ namespace swift::misc
 
             if (!(file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
             {
-                return CStatusMessage(this).error(u"Failed to write to %1: %2") << file.fileName() << file.errorString();
+                return CStatusMessage(this).error(u"Failed to write to %1: %2")
+                       << file.fileName() << file.errorString();
             }
         }
-        return CStatusMessage(this).info(u"Written '%1' to value cache in '%2'") << (keysMessage.isEmpty() ? values.keys().to<QStringList>().join(",") : keysMessage) << dir;
+        return CStatusMessage(this).info(u"Written '%1' to value cache in '%2'")
+               << (keysMessage.isEmpty() ? values.keys().to<QStringList>().join(",") : keysMessage) << dir;
     }
 
     CStatusMessage CValueCache::loadFromFiles(const QString &dir)
@@ -404,12 +409,11 @@ namespace swift::misc
         return status;
     }
 
-    CStatusMessage CValueCache::loadFromFiles(const QString &dir, const QSet<QString> &keys, const CVariantMap &currentValues, CValueCachePacket &o_values, const QString &keysMessage, bool keysOnly) const
+    CStatusMessage CValueCache::loadFromFiles(const QString &dir, const QSet<QString> &keys,
+                                              const CVariantMap &currentValues, CValueCachePacket &o_values,
+                                              const QString &keysMessage, bool keysOnly) const
     {
-        if (!QDir(dir).exists())
-        {
-            return CStatusMessage(this).warning(u"No such directory '%1'") << dir;
-        }
+        if (!QDir(dir).exists()) { return CStatusMessage(this).warning(u"No such directory '%1'") << dir; }
         if (!QDir(dir).isReadable())
         {
             return CStatusMessage(this).error(u"Failed to read from directory '%1'") << dir;
@@ -423,19 +427,13 @@ namespace swift::misc
         if (keys.isEmpty())
         {
             QDirIterator iter(dir, { "*.json" }, QDir::Files, QDirIterator::Subdirectories);
-            while (iter.hasNext())
-            {
-                keysInFiles.insert(QDir(dir).relativeFilePath(iter.next()), {});
-            }
+            while (iter.hasNext()) { keysInFiles.insert(QDir(dir).relativeFilePath(iter.next()), {}); }
         }
         bool ok = true;
         for (auto it = keysInFiles.cbegin(); it != keysInFiles.cend(); ++it)
         {
             QFile file(QDir(dir).absoluteFilePath(it.key()));
-            if (!file.exists())
-            {
-                continue;
-            }
+            if (!file.exists()) { continue; }
             if (!file.open(QFile::ReadOnly | QFile::Text))
             {
                 return CStatusMessage(this).error(u"Failed to open %1: %2") << file.fileName() << file.errorString();
@@ -455,7 +453,10 @@ namespace swift::misc
             {
                 const QString messagePrefix = QStringLiteral("Parsing %1").arg(it.key());
                 auto messages = temp.convertFromMemoizedJsonNoThrow(json.object(), it.value(), this, messagePrefix);
-                if (it.value().isEmpty()) { messages.push_back(temp.convertFromMemoizedJsonNoThrow(json.object(), this, messagePrefix)); }
+                if (it.value().isEmpty())
+                {
+                    messages.push_back(temp.convertFromMemoizedJsonNoThrow(json.object(), this, messagePrefix));
+                }
                 if (!messages.isEmpty())
                 {
                     ok = false;
@@ -466,7 +467,9 @@ namespace swift::misc
             temp.removeDuplicates(currentValues);
             o_values.insert(temp, QFileInfo(file).lastModified().toMSecsSinceEpoch());
         }
-        return CStatusMessage(this).info(u"Loaded cache values '%1' from '%2' '%3'") << (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir << (ok ? "successfully" : "with errors");
+        return CStatusMessage(this).info(u"Loaded cache values '%1' from '%2' '%3'")
+               << (keysMessage.isEmpty() ? o_values.keys().to<QStringList>().join(",") : keysMessage) << dir
+               << (ok ? "successfully" : "with errors");
     }
 
     void CValueCache::backupFile(QFile &file) const
@@ -492,19 +495,13 @@ namespace swift::misc
     void CValueCache::markAllAsSaved(const QString &keyPrefix)
     {
         QMutexLocker lock(&m_mutex);
-        for (const auto &element : elementsStartingWith(keyPrefix))
-        {
-            element->m_saved = true;
-        }
+        for (const auto &element : elementsStartingWith(keyPrefix)) { element->m_saved = true; }
     }
 
     void CValueCache::markAllAsSaved(const QStringList &keys)
     {
         QMutexLocker lock(&m_mutex);
-        for (const auto &key : keys)
-        {
-            getElement(key).m_saved = true;
-        }
+        for (const auto &key : keys) { getElement(key).m_saved = true; }
     }
 
     QString CValueCache::filenameForKey(const QString &key) const
@@ -575,13 +572,9 @@ namespace swift::misc
     // Private :: CValuePage
     ////////////////////////////////
 
-    const QStringList &CValuePage::getLogCategories()
-    {
-        return CValueCache::getLogCategories();
-    }
+    const QStringList &CValuePage::getLogCategories() { return CValueCache::getLogCategories(); }
 
-    CValuePage::CValuePage(QObject *parent, CValueCache *cache) : QObject(parent),
-                                                                  m_cache(cache)
+    CValuePage::CValuePage(QObject *parent, CValueCache *cache) : QObject(parent), m_cache(cache)
     {
         m_cache->connectPage(this);
     }
@@ -589,14 +582,17 @@ namespace swift::misc
     CValuePage &CValuePage::getPageFor(QObject *parent, CValueCache *cache)
     {
         auto pages = parent->findChildren<CValuePage *>("", Qt::FindDirectChildrenOnly);
-        auto it = std::find_if(pages.cbegin(), pages.cend(), [cache](CValuePage *page) { return page->m_cache == cache; });
+        auto it =
+            std::find_if(pages.cbegin(), pages.cend(), [cache](CValuePage *page) { return page->m_cache == cache; });
         if (it == pages.cend()) { return *new CValuePage(parent, cache); }
         else { return **it; }
     }
 
     struct CValuePage::Element
     {
-        Element(const QString &key, const QString &name, int metaType, const Validator &validator, const CVariant &defaultValue) : m_key(key), m_name(name), m_metaType(metaType), m_validator(validator), m_default(defaultValue)
+        Element(const QString &key, const QString &name, int metaType, const Validator &validator,
+                const CVariant &defaultValue)
+            : m_key(key), m_name(name), m_metaType(metaType), m_validator(validator), m_default(defaultValue)
         {}
         const QString m_key;
         const QString m_name;
@@ -611,7 +607,8 @@ namespace swift::misc
         bool m_saved = false;
     };
 
-    CValuePage::Element &CValuePage::createElement(const QString &keyTemplate, const QString &name, int metaType, const Validator &validator, const CVariant &defaultValue)
+    CValuePage::Element &CValuePage::createElement(const QString &keyTemplate, const QString &name, int metaType,
+                                                   const Validator &validator, const CVariant &defaultValue)
     {
         if (parent()->objectName().isEmpty() && keyTemplate.contains("%OwnerName%"))
         {
@@ -620,18 +617,24 @@ namespace swift::misc
         }
 
         QString key = keyTemplate;
-        key.replace("%Application%", QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName(), Qt::CaseInsensitive);
-        key.replace("%OwnerClass%", QString(parent()->metaObject()->className()).replace("::", "/"), Qt::CaseInsensitive);
+        key.replace("%Application%", QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName(),
+                    Qt::CaseInsensitive);
+        key.replace("%OwnerClass%", QString(parent()->metaObject()->className()).replace("::", "/"),
+                    Qt::CaseInsensitive);
         key.replace("%OwnerName%", parent()->objectName(), Qt::CaseInsensitive);
 
         QString unused;
-        Q_ASSERT_X(!m_elements.contains(key), "CValuePage", "Can't have two CCached in the same object referring to the same value");
-        Q_ASSERT_X(defaultValue.isValid() ? defaultValue.userType() == metaType : true, "CValuePage", "Metatype mismatch for default value");
-        Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue, unused) : true, "CValuePage", "Validator rejects default value");
+        Q_ASSERT_X(!m_elements.contains(key), "CValuePage",
+                   "Can't have two CCached in the same object referring to the same value");
+        Q_ASSERT_X(defaultValue.isValid() ? defaultValue.userType() == metaType : true, "CValuePage",
+                   "Metatype mismatch for default value");
+        Q_ASSERT_X(defaultValue.isValid() && validator ? validator(defaultValue, unused) : true, "CValuePage",
+                   "Validator rejects default value");
         Q_UNUSED(unused)
 
         auto &element = *(m_elements[key] = ElementPtr(new Element(key, name, metaType, validator, defaultValue)));
-        std::forward_as_tuple(element.m_value.uniqueWrite(), element.m_timestamp, element.m_saved) = m_cache->getValue(key);
+        std::forward_as_tuple(element.m_value.uniqueWrite(), element.m_timestamp, element.m_saved) =
+            m_cache->getValue(key);
 
         auto status = validate(element, element.m_value.read(), CStatusMessage::SeverityDebug);
         if (!status.isEmpty()) // intentionally kept !empty here, debug message supposed to write default value
@@ -647,24 +650,15 @@ namespace swift::misc
                     CLogMessage::preformatted(status);
                 }
             }
-            else
-            {
-                CLogMessage::preformatted(status);
-            }
+            else { CLogMessage::preformatted(status); }
         }
 
         return element;
     }
 
-    void CValuePage::setNotifySlot(Element &element, const NotifySlot &slot)
-    {
-        element.m_notifySlot = slot;
-    }
+    void CValuePage::setNotifySlot(Element &element, const NotifySlot &slot) { element.m_notifySlot = slot; }
 
-    bool CValuePage::isInitialized(const Element &element) const
-    {
-        return !element.m_key.isEmpty();
-    }
+    bool CValuePage::isInitialized(const Element &element) const { return !element.m_key.isEmpty(); }
 
     bool CValuePage::isValid(const Element &element, int typeId) const
     {
@@ -674,7 +668,8 @@ namespace swift::misc
 
     const CVariant &CValuePage::getValue(const Element &element) const
     {
-        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
+        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO,
+                   "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         Q_ASSERT(QThread::currentThread() == thread());
 
         return element.m_value.read();
@@ -682,13 +677,15 @@ namespace swift::misc
 
     CVariant CValuePage::getValueCopy(const Element &element) const
     {
-        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
+        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO,
+                   "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         return element.m_value.read();
     }
 
     CStatusMessage CValuePage::setValue(Element &element, CVariant value, qint64 timestamp, bool save)
     {
-        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
+        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO,
+                   "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         Q_ASSERT(QThread::currentThread() == thread());
 
         if (timestamp == 0) { timestamp = QDateTime::currentMSecsSinceEpoch(); }
@@ -708,10 +705,7 @@ namespace swift::misc
                 element.m_saved = save;
                 emit valuesWantToCache({ { { element.m_key, value } }, 0, save, false });
             }
-            else if (m_batchMode > 0)
-            {
-                m_batchedValues[element.m_key] = value;
-            }
+            else if (m_batchMode > 0) { m_batchedValues[element.m_key] = value; }
             else
             {
                 Q_ASSERT(isSafeToIncrement(element.m_pendingChanges));
@@ -728,26 +722,18 @@ namespace swift::misc
         return status;
     }
 
-    const QString &CValuePage::getKey(const Element &element) const
-    {
-        return element.m_key;
-    }
+    const QString &CValuePage::getKey(const Element &element) const { return element.m_key; }
 
     qint64 CValuePage::getTimestamp(const Element &element) const
     {
-        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO, "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
+        Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO,
+                   "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
         return element.m_timestamp;
     }
 
-    bool CValuePage::isSaved(const Element &element) const
-    {
-        return element.m_saved && !element.m_pendingChanges;
-    }
+    bool CValuePage::isSaved(const Element &element) const { return element.m_saved && !element.m_pendingChanges; }
 
-    bool CValuePage::isSaving(const Element &element) const
-    {
-        return element.m_saved && element.m_pendingChanges;
-    }
+    bool CValuePage::isSaving(const Element &element) const { return element.m_saved && element.m_pendingChanges; }
 
     void CValuePage::setValuesFromCache(const CValueCachePacket &values, QObject *changedBy)
     {
@@ -756,31 +742,34 @@ namespace swift::misc
 
         CSequence<NotifySlot *> notifySlots;
 
-        forEachIntersection(m_elements, values, [changedBy, this, &notifySlots, &values](const QString &, const ElementPtr &element, CValueCachePacket::const_iterator it) {
-            if (changedBy == this) // round trip
-            {
-                element->m_pendingChanges--;
-                Q_ASSERT(element->m_pendingChanges >= 0);
-            }
-            else if (element->m_pendingChanges == 0) // ratify a change only if own change is not pending, to ensure consistency
-            {
-                auto error = validate(*element, it.value(), CStatusMessage::SeverityError);
-                if (error.isSuccess())
-                {
-                    element->m_value.uniqueWrite() = it.value();
-                    element->m_timestamp = it.timestamp();
-                    element->m_saved = values.isSaved();
-                    if (element->m_notifySlot.first && (!element->m_notifySlot.second || !notifySlots.containsBy([&](auto slot) { return slot->second == element->m_notifySlot.second; })))
-                    {
-                        notifySlots.push_back(&element->m_notifySlot);
-                    }
-                }
-                else
-                {
-                    CLogMessage::preformatted(error);
-                }
-            }
-        });
+        forEachIntersection(m_elements, values,
+                            [changedBy, this, &notifySlots, &values](const QString &, const ElementPtr &element,
+                                                                     CValueCachePacket::const_iterator it) {
+                                if (changedBy == this) // round trip
+                                {
+                                    element->m_pendingChanges--;
+                                    Q_ASSERT(element->m_pendingChanges >= 0);
+                                }
+                                else if (element->m_pendingChanges ==
+                                         0) // ratify a change only if own change is not pending, to ensure consistency
+                                {
+                                    auto error = validate(*element, it.value(), CStatusMessage::SeverityError);
+                                    if (error.isSuccess())
+                                    {
+                                        element->m_value.uniqueWrite() = it.value();
+                                        element->m_timestamp = it.timestamp();
+                                        element->m_saved = values.isSaved();
+                                        if (element->m_notifySlot.first &&
+                                            (!element->m_notifySlot.second || !notifySlots.containsBy([&](auto slot) {
+                                                return slot->second == element->m_notifySlot.second;
+                                            })))
+                                        {
+                                            notifySlots.push_back(&element->m_notifySlot);
+                                        }
+                                    }
+                                    else { CLogMessage::preformatted(error); }
+                                }
+                            });
 
         for (auto slot : notifySlots) { slot->first(parent()); }
     }
@@ -812,18 +801,21 @@ namespace swift::misc
         if (m_batchMode <= 0 && !m_batchedValues.isEmpty())
         {
             qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
-            forEachIntersection(m_elements, m_batchedValues, [timestamp](const QString &, const ElementPtr &element, CVariantMap::const_iterator it) {
-                Q_ASSERT(isSafeToIncrement(element->m_pendingChanges));
-                element->m_pendingChanges++;
-                element->m_value.uniqueWrite() = it.value();
-                element->m_timestamp = timestamp;
-                element->m_saved = false;
-            });
+            forEachIntersection(
+                m_elements, m_batchedValues,
+                [timestamp](const QString &, const ElementPtr &element, CVariantMap::const_iterator it) {
+                    Q_ASSERT(isSafeToIncrement(element->m_pendingChanges));
+                    element->m_pendingChanges++;
+                    element->m_value.uniqueWrite() = it.value();
+                    element->m_timestamp = timestamp;
+                    element->m_saved = false;
+                });
             emit valuesWantToCache({ m_batchedValues, timestamp });
         }
     }
 
-    CStatusMessage CValuePage::validate(const Element &element, const CVariant &value, CStatusMessage::StatusSeverity invalidSeverity) const
+    CStatusMessage CValuePage::validate(const Element &element, const CVariant &value,
+                                        CStatusMessage::StatusSeverity invalidSeverity) const
     {
         QString reason;
         if (!value.isValid())
@@ -832,23 +824,23 @@ namespace swift::misc
         }
         else if (value.userType() != element.m_metaType)
         {
-            return CStatusMessage(this).error(u"Expected %1 but got %2 for %3") << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_nameWithKey;
+            return CStatusMessage(this).error(u"Expected %1 but got %2 for %3")
+                   << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_nameWithKey;
         }
         else if (element.m_validator && !element.m_validator(value, reason))
         {
             if (reason.isEmpty())
             {
-                return CStatusMessage(this).error(u"%1 is not valid for %2") << value.toQString() << element.m_nameWithKey;
+                return CStatusMessage(this).error(u"%1 is not valid for %2")
+                       << value.toQString() << element.m_nameWithKey;
             }
             else
             {
-                return CStatusMessage(this).error(u"%1 (%2 for %3)") << reason << value.toQString() << element.m_nameWithKey;
+                return CStatusMessage(this).error(u"%1 (%2 for %3)")
+                       << reason << value.toQString() << element.m_nameWithKey;
             }
         }
-        else
-        {
-            return {};
-        }
+        else { return {}; }
     }
 
 } // namespace swift::misc

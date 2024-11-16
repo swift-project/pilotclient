@@ -14,11 +14,13 @@ namespace swift::misc::physical_quantities
     double CMeasurementUnit::convertFrom(double value, const CMeasurementUnit &unit) const
     {
         if (this->isNull() || unit.isNull()) return 0;
-        if (m_data->m_toDefault == unit.m_data->m_toDefault && m_data->m_fromDefault == unit.m_data->m_fromDefault) return value;
+        if (m_data->m_toDefault == unit.m_data->m_toDefault && m_data->m_fromDefault == unit.m_data->m_fromDefault)
+            return value;
         return m_data->m_fromDefault(unit.m_data->m_toDefault(value));
     }
 
-    QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool withGroupSeparator, bool i18n) const
+    QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool withGroupSeparator,
+                                                         bool i18n) const
     {
         return this->makeRoundedQString(value, digits, withGroupSeparator).append(this->getSymbol(i18n));
     }

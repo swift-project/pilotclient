@@ -57,7 +57,8 @@ namespace swift::misc::aviation
         CAirport(const CAirportIcaoCode &icao, const swift::misc::geo::CCoordinateGeodetic &position);
 
         //! ATC station constructor
-        CAirport(const CAirportIcaoCode &icao, const swift::misc::geo::CCoordinateGeodetic &position, const QString &descriptiveName);
+        CAirport(const CAirportIcaoCode &icao, const swift::misc::geo::CCoordinateGeodetic &position,
+                 const QString &descriptiveName);
 
         //! Get ICAO code.
         const CAirportIcaoCode &getIcao() const { return m_icao; }
@@ -107,7 +108,10 @@ namespace swift::misc::aviation
 
         //! Elevation
         //! \sa setGeodeticHeight
-        void setElevation(const swift::misc::aviation::CAltitude &elevation) { this->m_position.setGeodeticHeight(elevation); }
+        void setElevation(const swift::misc::aviation::CAltitude &elevation)
+        {
+            this->m_position.setGeodeticHeight(elevation);
+        }
 
         //! Is the airport still active?
         bool isOperating() const { return m_operating; }
@@ -119,7 +123,10 @@ namespace swift::misc::aviation
         void updateMissingParts(const CAirport &airport);
 
         //! \copydoc geo::ICoordinateGeodetic::geodeticHeight
-        const swift::misc::aviation::CAltitude &geodeticHeight() const override { return this->m_position.geodeticHeight(); }
+        const swift::misc::aviation::CAltitude &geodeticHeight() const override
+        {
+            return this->m_position.geodeticHeight();
+        }
 
         //! Valid ICAO code
         bool hasValidIcaoCode() const { return !this->getIcao().isEmpty(); }
@@ -128,22 +135,19 @@ namespace swift::misc::aviation
         virtual bool isNull() const override;
 
         //! \copydoc geo::ICoordinateGeodetic::latitude
-        virtual swift::misc::geo::CLatitude latitude() const override
-        {
-            return this->getPosition().latitude();
-        }
+        virtual swift::misc::geo::CLatitude latitude() const override { return this->getPosition().latitude(); }
 
         //! \copydoc geo::ICoordinateGeodetic::longitude
-        virtual swift::misc::geo::CLongitude longitude() const override
-        {
-            return this->getPosition().longitude();
-        }
+        virtual swift::misc::geo::CLongitude longitude() const override { return this->getPosition().longitude(); }
 
         //! \copydoc geo::ICoordinateGeodetic::normalVector
         virtual QVector3D normalVector() const override { return this->getPosition().normalVector(); }
 
         //! \copydoc geo::ICoordinateGeodetic::normalVectorDouble
-        virtual std::array<double, 3> normalVectorDouble() const override { return this->getPosition().normalVectorDouble(); }
+        virtual std::array<double, 3> normalVectorDouble() const override
+        {
+            return this->getPosition().normalVectorDouble();
+        }
 
         //! \copydoc swift::misc::mixin::Index::propertyByIndex
         QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;

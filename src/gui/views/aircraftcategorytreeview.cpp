@@ -24,8 +24,10 @@ namespace swift::gui::views
     {
         this->setModel(new CAircraftCategoryTreeModel(this));
         this->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(this, &CAircraftCategoryTreeView::customContextMenuRequested, this, &CAircraftCategoryTreeView::customMenu);
-        connect(this, &CAircraftCategoryTreeView::expanded, this, &CAircraftCategoryTreeView::onExpanded, Qt::QueuedConnection);
+        connect(this, &CAircraftCategoryTreeView::customContextMenuRequested, this,
+                &CAircraftCategoryTreeView::customMenu);
+        connect(this, &CAircraftCategoryTreeView::expanded, this, &CAircraftCategoryTreeView::onExpanded,
+                Qt::QueuedConnection);
     }
 
     void CAircraftCategoryTreeView::updateContainer(const CAircraftCategoryList &categories)
@@ -33,7 +35,8 @@ namespace swift::gui::views
         if (!this->categoryModel()) { return; }
         this->categoryModel()->updateContainer(categories);
 
-        //! \fixme 2019-02 workaround for HEAP: Free Heap block 000001AB439BFFF0 modified at 000001AB439C00BC after it was freed
+        //! \fixme 2019-02 workaround for HEAP: Free Heap block 000001AB439BFFF0 modified at 000001AB439C00BC after it
+        //! was freed
         // using Qt::QueuedConnection seems to fix for expand all
         // also this->expandToDepth(0) seems to work
         this->expandAll();
@@ -45,10 +48,7 @@ namespace swift::gui::views
         this->categoryModel()->clear();
     }
 
-    void CAircraftCategoryTreeView::fullResizeToContents()
-    {
-        m_dsFullResize.inputSignal();
-    }
+    void CAircraftCategoryTreeView::fullResizeToContents() { m_dsFullResize.inputSignal(); }
 
     void CAircraftCategoryTreeView::setColumns(const CColumns &columns)
     {
@@ -59,16 +59,10 @@ namespace swift::gui::views
     {
         if (this->isEmpty()) { return; }
         const int cc = this->categoryModel()->columnCount();
-        for (int c = 0; c < cc; c++)
-        {
-            this->resizeColumnToContents(c);
-        }
+        for (int c = 0; c < cc; c++) { this->resizeColumnToContents(c); }
     }
 
-    bool CAircraftCategoryTreeView::isEmpty() const
-    {
-        return this->categoryModel()->rowCount() < 1;
-    }
+    bool CAircraftCategoryTreeView::isEmpty() const { return this->categoryModel()->rowCount() < 1; }
 
     const CAircraftCategoryTreeModel *CAircraftCategoryTreeView::categoryModel() const
     {

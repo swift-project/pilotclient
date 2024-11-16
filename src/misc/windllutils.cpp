@@ -46,7 +46,8 @@ namespace swift::misc
                                              .arg(stringName);
             UINT dwBytes = 0;
             wchar_t *szQueryString = nullptr;
-            VerQueryValue(pbVersionInfo, subBlockNameBuffer.toStdWString().c_str(), reinterpret_cast<LPVOID *>(&szQueryString), &dwBytes);
+            VerQueryValue(pbVersionInfo, subBlockNameBuffer.toStdWString().c_str(),
+                          reinterpret_cast<LPVOID *>(&szQueryString), &dwBytes);
             const QString queryString = QString::fromWCharArray(szQueryString, dwBytes);
             return queryString;
         }
@@ -113,7 +114,8 @@ namespace swift::misc
         PrivateWindows::LanguageCodePage *lpTranslate;
 
         // Read the list of languages and code pages.
-        VerQueryValue(pbVersionInfo.data(), TEXT("\\VarFileInfo\\Translation"), reinterpret_cast<LPVOID *>(&lpTranslate), &puLenFileInfo);
+        VerQueryValue(pbVersionInfo.data(), TEXT("\\VarFileInfo\\Translation"),
+                      reinterpret_cast<LPVOID *>(&lpTranslate), &puLenFileInfo);
 
         // Read the file description for each language and code page.
         // All names: https://msdn.microsoft.com/en-us/library/windows/desktop/ms647464(v=vs.85).aspx
@@ -122,10 +124,14 @@ namespace swift::misc
             // Retrieve file description for language and code page "i".
             const PrivateWindows::LanguageCodePage cp = lpTranslate[i];
             result.iso = PrivateWindows::languageToIsoCode(cp);
-            result.fileDescription = PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("FileDescription"));
-            result.productName = PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("ProductName"));
-            result.productVersionName = PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("ProductVersion"));
-            result.originalFilename = PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("OriginalFilename"));
+            result.fileDescription =
+                PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("FileDescription"));
+            result.productName =
+                PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("ProductName"));
+            result.productVersionName =
+                PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("ProductVersion"));
+            result.originalFilename =
+                PrivateWindows::queryStringFileInfo(pbVersionInfo.data(), cp, QStringLiteral("OriginalFilename"));
             result.fullFilename = dllQFile.fileName();
 
             //! \fixme currently stopping at first language, maybe need to change that in future
@@ -166,8 +172,7 @@ namespace swift::misc
 
         // Now walk the module list of the process,
         // and display information about each module
-        do
-        {
+        do {
             ProcessModule pm;
             pm.moduleName = QString::fromWCharArray(static_cast<const wchar_t *>(&me32.szModule[0]));
             if (nameFilter.isEmpty() || pm.moduleName.contains(nameFilter, Qt::CaseInsensitive))

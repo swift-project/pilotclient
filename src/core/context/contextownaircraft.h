@@ -72,14 +72,16 @@ namespace swift::core::context
         virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextOwnAircraft *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, swift::misc::CDBusServer *server, QDBusConnection &connection);
+        static IContextOwnAircraft *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode,
+                                           swift::misc::CDBusServer *server, QDBusConnection &connection);
 
         //! Destructor
         virtual ~IContextOwnAircraft() override {}
 
     signals:
         //! Aircraft cockpit update
-        void changedAircraftCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+        void changedAircraftCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                    const swift::misc::CIdentifier &originator);
 
         //! Changed SELCAL code
         void changedSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator);
@@ -88,7 +90,8 @@ namespace swift::core::context
         void changedCallsign(const swift::misc::aviation::CCallsign &callsign);
 
         //! Own ICAO was changed
-        void changedAircraftIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode, const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode);
+        void changedAircraftIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                      const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode);
 
         //! Own pilot (aka the swift user) changed
         void changedPilot(const swift::misc::network::CUser &pilot);
@@ -107,7 +110,8 @@ namespace swift::core::context
         virtual swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const = 0;
 
         //! Get own COM system
-        virtual swift::misc::aviation::CComSystem getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const = 0;
+        virtual swift::misc::aviation::CComSystem
+        getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const = 0;
 
         //! Get own transponder
         virtual swift::misc::aviation::CTransponder getOwnTransponder() const = 0;
@@ -117,13 +121,19 @@ namespace swift::core::context
 
         //! Update position
         //! \note this is in \sa IContextOwnAircraft as we want to set test positions from the GUI / elsewhere
-        virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::aviation::CAltitude &altitude, const swift::misc::aviation::CAltitude &pressureAltitude) = 0;
+        virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position,
+                                       const swift::misc::aviation::CAltitude &altitude,
+                                       const swift::misc::aviation::CAltitude &pressureAltitude) = 0;
 
         //! Update own cockpit
-        virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2, const swift::misc::aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator) = 0;
+        virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1,
+                                   const swift::misc::aviation::CComSystem &com2,
+                                   const swift::misc::aviation::CTransponder &transponder,
+                                   const swift::misc::CIdentifier &originator) = 0;
 
         //! Update own transponder mode
-        virtual bool updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode, const swift::misc::CIdentifier &originator) = 0;
+        virtual bool updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode,
+                                           const swift::misc::CIdentifier &originator) = 0;
 
         //! Toggle XPDR mode
         virtual void toggleTransponderMode() = 0;
@@ -132,19 +142,23 @@ namespace swift::core::context
         virtual bool setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode) = 0;
 
         //! Tune in a COM frequency
-        virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::CIdentifier &originator) = 0;
+        virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                              swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                              const swift::misc::CIdentifier &originator) = 0;
 
         //! Set current pilot
         virtual bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) = 0;
 
         //! Set ICAO data
-        virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode, const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) = 0;
+        virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                        const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) = 0;
 
         //! Set callsign
         virtual bool updateOwnCallsign(const swift::misc::aviation::CCallsign &callsign) = 0;
 
         //! Own SELCAL code
-        virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) = 0;
+        virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                  const swift::misc::CIdentifier &originator) = 0;
 
         //! Default situation
         //! \remark normally used when no driver is attached

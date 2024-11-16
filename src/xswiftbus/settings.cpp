@@ -33,24 +33,12 @@ namespace XSwiftBus
         // void
     }
 
-    CSettings CSettingsAware::getSettings() const
-    {
-        return m_provider->getSettings();
-    }
+    CSettings CSettingsAware::getSettings() const { return m_provider->getSettings(); }
 
-    void CSettingsAware::setSettings(const CSettings &settings)
-    {
-        m_provider->setSettings(settings);
-    }
+    void CSettingsAware::setSettings(const CSettings &settings) { m_provider->setSettings(settings); }
 
-    const CConfig &CSettingsAware::getConfig() const
-    {
-        return m_provider->getConfig();
-    }
+    const CConfig &CSettingsAware::getConfig() const { return m_provider->getConfig(); }
 
-    bool CSettingsAware::writeConfig(bool tcas, bool debug)
-    {
-        return m_provider->writeConfig(tcas, debug);
-    }
+    bool CSettingsAware::writeConfig(bool tcas, bool debug) { return m_provider->writeConfig(tcas, debug); }
 
 } // namespace XSwiftBus

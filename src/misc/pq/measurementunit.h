@@ -68,8 +68,14 @@ namespace swift::misc::physical_quantities
         template <class Policy>
         struct LinearConverter
         {
-            static double toDefault(double value) { return value * Policy::factor(); } //!< convert from this unit to the default unit
-            static double fromDefault(double value) { return value / Policy::factor(); } //!< convert to this unit from the default unit
+            static double toDefault(double value)
+            {
+                return value * Policy::factor();
+            } //!< convert from this unit to the default unit
+            static double fromDefault(double value)
+            {
+                return value / Policy::factor();
+            } //!< convert to this unit from the default unit
         };
 
         /*!
@@ -79,8 +85,14 @@ namespace swift::misc::physical_quantities
         template <class Policy>
         struct AffineConverter
         {
-            static double toDefault(double value) { return (value - Policy::offset()) * Policy::factor(); } //!< convert from this unit to the default unit
-            static double fromDefault(double value) { return value / Policy::factor() + Policy::offset(); } //!< convert to this unit from the default unit
+            static double toDefault(double value)
+            {
+                return (value - Policy::offset()) * Policy::factor();
+            } //!< convert from this unit to the default unit
+            static double fromDefault(double value)
+            {
+                return value / Policy::factor() + Policy::offset();
+            } //!< convert to this unit from the default unit
         };
 
         /*!
@@ -124,7 +136,8 @@ namespace swift::misc::physical_quantities
                 using swift::misc::math::CMathUtils;
                 double part2 = CMathUtils::fract(value) * SubdivPolicy::fraction();
                 double part3 = CMathUtils::fract(part2) * SubdivPolicy::fraction();
-                value = CMathUtils::trunc(value) + (CMathUtils::trunc(part2) + part3 / SubdivPolicy::subfactor()) / SubdivPolicy::subfactor();
+                value = CMathUtils::trunc(value) +
+                        (CMathUtils::trunc(part2) + part3 / SubdivPolicy::subfactor()) / SubdivPolicy::subfactor();
                 return value * FactorPolicy::factor();
             }
             //! convert to this unit from the default unit
@@ -136,7 +149,8 @@ namespace swift::misc::physical_quantities
                 double part2 = CMathUtils::trunc(remaining * SubdivPolicy::subfactor());
                 remaining = std::fmod(remaining * SubdivPolicy::subfactor(), 1.0);
                 double part3 = remaining * SubdivPolicy::subfactor();
-                return part1 + part2 / SubdivPolicy::fraction() + part3 / (SubdivPolicy::fraction() * SubdivPolicy::fraction());
+                return part1 + part2 / SubdivPolicy::fraction() +
+                       part3 / (SubdivPolicy::fraction() * SubdivPolicy::fraction());
             }
         };
 
@@ -201,14 +215,14 @@ namespace swift::misc::physical_quantities
         {
             //! Construct a unit with custom conversion
             template <class Converter>
-            constexpr Data(QLatin1String name, QLatin1String symbol, Converter, int displayDigits = 2, double epsilon = 1e-9)
-                : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_toDefault(Converter::toDefault), m_fromDefault(Converter::fromDefault)
+            constexpr Data(QLatin1String name, QLatin1String symbol, Converter, int displayDigits = 2,
+                           double epsilon = 1e-9)
+                : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits),
+                  m_toDefault(Converter::toDefault), m_fromDefault(Converter::fromDefault)
             {}
 
             //! Construct a null unit
-            constexpr Data(QLatin1String name, QLatin1String symbol)
-                : m_name(name), m_symbol(symbol)
-            {}
+            constexpr Data(QLatin1String name, QLatin1String symbol) : m_name(name), m_symbol(symbol) {}
 
             QLatin1String m_name; //!< name, e.g. "meter"
             QLatin1String m_symbol; //!< unit name, e.g. "m"
@@ -245,16 +259,10 @@ namespace swift::misc::physical_quantities
 
     public:
         //! \copydoc swift::misc::mixin::String::toQString
-        QString convertToQString(bool i18n = false) const
-        {
-            return this->getSymbol(i18n);
-        }
+        QString convertToQString(bool i18n = false) const { return this->getSymbol(i18n); }
 
         //! \copydoc swift::misc::mixin::DBusByMetaClass::marshallToDbus
-        void marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << m_data->m_symbol;
-        }
+        void marshallToDbus(QDBusArgument &argument) const { argument << m_data->m_symbol; }
 
         //! \copydoc swift::misc::mixin::DBusByMetaClass::unmarshallFromDbus
         void unmarshallFromDbus(const QDBusArgument &)
@@ -265,10 +273,7 @@ namespace swift::misc::physical_quantities
         }
 
         //! \copydoc swift::misc::mixin::DataStreamByMetaClass::marshalToDataStream
-        void marshalToDataStream(QDataStream &stream) const
-        {
-            stream << QString(m_data->m_symbol);
-        }
+        void marshalToDataStream(QDataStream &stream) const { stream << QString(m_data->m_symbol); }
 
         //! \copydoc swift::misc::mixin::DataStreamByMetaClass::unmarshalFromDataStream
         void unmarshalFromDataStream(QDataStream &)
@@ -286,16 +291,10 @@ namespace swift::misc::physical_quantities
         }
 
         //! Unequal operator !=
-        friend bool operator!=(const CMeasurementUnit &a, const CMeasurementUnit &b)
-        {
-            return !(a == b);
-        }
+        friend bool operator!=(const CMeasurementUnit &a, const CMeasurementUnit &b) { return !(a == b); }
 
         //! \copydoc CValueObject::qHash
-        friend size_t qHash(const CMeasurementUnit &unit)
-        {
-            return ::qHash(unit.getName());
-        }
+        friend size_t qHash(const CMeasurementUnit &unit) { return ::qHash(unit.getName()); }
 
         //! Name such as "meter"
         QString getName(bool i18n = false) const
@@ -327,23 +326,19 @@ namespace swift::misc::physical_quantities
 
         //! Rounded string utility method, virtual so units can have specialized formatting
         //! \note default digits is CMeasurementUnit::getDisplayDigits
-        virtual QString makeRoundedQString(double value, int digits = -1, bool withGroupSeparator = false, bool i18n = false) const;
+        virtual QString makeRoundedQString(double value, int digits = -1, bool withGroupSeparator = false,
+                                           bool i18n = false) const;
 
         //! Value rounded with unit, e.g. "5.00m", "30kHz"
         //! \note default digits is CMeasurementUnit::getDisplayDigits
-        virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool withGroupSeparator = false, bool i18n = false) const;
+        virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool withGroupSeparator = false,
+                                                   bool i18n = false) const;
 
         //! Threshold for comparions
-        double getEpsilon() const
-        {
-            return m_data->m_epsilon;
-        }
+        double getEpsilon() const { return m_data->m_epsilon; }
 
         //! Display digits
-        int getDisplayDigits() const
-        {
-            return m_data->m_displayDigits;
-        }
+        int getDisplayDigits() const { return m_data->m_displayDigits; }
 
         //! Convert from other unit to this unit.
         double convertFrom(double value, const CMeasurementUnit &unit) const;
@@ -357,10 +352,7 @@ namespace swift::misc::physical_quantities
         }
 
         //! Is unit null?
-        bool isNull() const
-        {
-            return m_data->m_toDefault == nullptr;
-        }
+        bool isNull() const { return m_data->m_toDefault == nullptr; }
 
         // --------------------------------------------------------------------
         // -- static
@@ -400,10 +392,7 @@ namespace swift::misc::physical_quantities
         {
             static const QStringList symbols = [] {
                 QStringList s;
-                for (const auto &unit : U::allUnits())
-                {
-                    s.push_back(unit.getSymbol());
-                }
+                for (const auto &unit : U::allUnits()) { s.push_back(unit.getSymbol()); }
                 return s;
             }();
             return symbols;
@@ -417,10 +406,7 @@ namespace swift::misc::physical_quantities
         {
             static const QStringList symbols = [] {
                 QSet<QString> s;
-                for (const QString &symbol : allSymbols<U>())
-                {
-                    s.insert(symbol.toLower());
-                }
+                for (const QString &symbol : allSymbols<U>()) { s.insert(symbol.toLower()); }
                 return s.values();
             }();
             return symbols;
@@ -432,9 +418,7 @@ namespace swift::misc::physical_quantities
         template <class U>
         static bool hasCaseSensitiveSymbols()
         {
-            static const bool cs = [] {
-                return (allSymbolsLowerCase<U>().size() != allSymbols<U>().size());
-            }();
+            static const bool cs = [] { return (allSymbolsLowerCase<U>().size() != allSymbols<U>().size()); }();
             return cs;
         }
 
@@ -446,9 +430,8 @@ namespace swift::misc::physical_quantities
         static bool isValidUnitSymbol(const QString &symbol)
         {
             static const bool cs = hasCaseSensitiveSymbols<U>();
-            return cs ?
-                       isValidUnitSymbol<U>(symbol, Qt::CaseSensitive) :
-                       isValidUnitSymbol<U>(symbol, Qt::CaseInsensitive);
+            return cs ? isValidUnitSymbol<U>(symbol, Qt::CaseSensitive) :
+                        isValidUnitSymbol<U>(symbol, Qt::CaseInsensitive);
         }
 
         /*!
@@ -473,7 +456,8 @@ namespace swift::misc::physical_quantities
          * \param caseSensitivity check case sensitiv?
          */
         template <class U>
-        static bool containsValidUnitSymbol(const QString &candidate, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
+        static bool containsValidUnitSymbol(const QString &candidate,
+                                            Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
         {
             if (candidate.isEmpty()) return false;
             for (const auto &unit : U::allUnits())
@@ -489,7 +473,8 @@ namespace swift::misc::physical_quantities
          * \param caseSensitivity check case sensitiv?
          */
         template <class U>
-        static bool endWithValidUnitSymbol(const QString &candidate, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
+        static bool endWithValidUnitSymbol(const QString &candidate,
+                                           Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
         {
             if (candidate.isEmpty()) return false;
             for (const auto &unit : U::allUnits())

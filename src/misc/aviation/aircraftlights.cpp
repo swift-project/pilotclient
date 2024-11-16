@@ -13,11 +13,14 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftLights)
 namespace swift::misc::aviation
 {
     CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn)
-        : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn), m_logoOn(logoOn)
+        : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn),
+          m_logoOn(logoOn)
     {}
 
-    CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn, bool recognition, bool cabin)
-        : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn), m_logoOn(logoOn), m_recognition(recognition), m_cabin(cabin)
+    CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn,
+                                     bool recognition, bool cabin)
+        : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn),
+          m_logoOn(logoOn), m_recognition(recognition), m_cabin(cabin)
     {}
 
     CAircraftLights CAircraftLights::allLightsOn()
@@ -33,14 +36,10 @@ namespace swift::misc::aviation
     QString CAircraftLights::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        const QString s = u"strobe: " % boolToYesNo(m_strobeOn) %
-                          u" landing: " % boolToYesNo(m_landingOn) %
-                          u" taxi: " % boolToYesNo(m_taxiOn) %
-                          u" beacon: " % boolToYesNo(m_beaconOn) %
-                          u" nav: " % boolToYesNo(m_navOn) %
-                          u" logo: " % boolToYesNo(m_logoOn) %
-                          u" recognition: " % boolToYesNo(m_recognition) %
-                          u" cabin: " % boolToYesNo(m_cabin);
+        const QString s = u"strobe: " % boolToYesNo(m_strobeOn) % u" landing: " % boolToYesNo(m_landingOn) %
+                          u" taxi: " % boolToYesNo(m_taxiOn) % u" beacon: " % boolToYesNo(m_beaconOn) % u" nav: " %
+                          boolToYesNo(m_navOn) % u" logo: " % boolToYesNo(m_logoOn) % u" recognition: " %
+                          boolToYesNo(m_recognition) % u" cabin: " % boolToYesNo(m_cabin);
         return s;
     }
 

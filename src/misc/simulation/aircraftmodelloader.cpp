@@ -85,20 +85,25 @@ namespace swift::misc::simulation
         return mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly);
     }
 
-    IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator, QObject *parent) : QObject(parent),
-                                                                                                   m_simulator(simulator)
+    IAircraftModelLoader::IAircraftModelLoader(const CSimulatorInfo &simulator, QObject *parent)
+        : QObject(parent), m_simulator(simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Only one simulator per loader");
-        connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished, Qt::QueuedConnection);
+        connect(this, &IAircraftModelLoader::loadingFinished, this, &IAircraftModelLoader::onLoadingFinished,
+                Qt::QueuedConnection);
 
-        CCentralMultiSimulatorModelCachesProvider *centralCaches = &CCentralMultiSimulatorModelCachesProvider::modelCachesInstance();
-        connect(centralCaches, &CCentralMultiSimulatorModelCachesProvider::cacheChanged, this, &IAircraftModelLoader::onCacheChanged, Qt::QueuedConnection);
+        CCentralMultiSimulatorModelCachesProvider *centralCaches =
+            &CCentralMultiSimulatorModelCachesProvider::modelCachesInstance();
+        connect(centralCaches, &CCentralMultiSimulatorModelCachesProvider::cacheChanged, this,
+                &IAircraftModelLoader::onCacheChanged, Qt::QueuedConnection);
         this->setObjectInfo(simulator);
     }
 
     IAircraftModelLoader::~IAircraftModelLoader() {}
 
-    void IAircraftModelLoader::startLoading(LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
+    void IAircraftModelLoader::startLoading(LoadMode mode,
+                                            const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation,
+                                            const QStringList &modelDirectories)
     {
         if (m_loadingInProgress) { return; }
         if (mode == NotSet) { return; }
@@ -159,24 +164,24 @@ namespace swift::misc::simulation
         return this->updateModelsForSimulator(models, m_simulator);
     }
 
-    QStringList IAircraftModelLoader::getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const
+    QStringList IAircraftModelLoader::getInitializedModelDirectories(const QStringList &modelDirectories,
+                                                                     const CSimulatorInfo &simulator) const
     {
-        QStringList modelDirs = modelDirectories.isEmpty() ? m_settings.getModelDirectoriesOrDefault(simulator) : modelDirectories;
+        QStringList modelDirs =
+            modelDirectories.isEmpty() ? m_settings.getModelDirectoriesOrDefault(simulator) : modelDirectories;
         modelDirs = CFileUtils::fixWindowsUncPaths(modelDirs);
         return CDirectoryUtils::getExistingUnemptyDirectories(modelDirs);
     }
 
-    bool IAircraftModelLoader::hasCachedData() const
-    {
-        return !this->getCachedModels(m_simulator).isEmpty();
-    }
+    bool IAircraftModelLoader::hasCachedData() const { return !this->getCachedModels(m_simulator).isEmpty(); }
 
     void IAircraftModelLoader::setObjectInfo(const CSimulatorInfo &simulatorInfo)
     {
         this->setObjectName("Model loader for: '" + simulatorInfo.toQString(true) + "'");
     }
 
-    void IAircraftModelLoader::onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
+    void IAircraftModelLoader::onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator,
+                                                 IAircraftModelLoader::LoadFinishedInfo info)
     {
         if (!this->supportsSimulator(simulator)) { return; } // none of my business
         this->setObjectInfo(simulator);
@@ -197,18 +202,23 @@ namespace swift::misc::simulation
         }
         else
         {
-            CLogMessage(this).info(u"Loading '%1' finished, success for '%2'") << IAircraftModelLoader::enumToString(info) << simulator.toQString();
+            CLogMessage(this).info(u"Loading '%1' finished, success for '%2'")
+                << IAircraftModelLoader::enumToString(info) << simulator.toQString();
         }
     }
 
     void IAircraftModelLoader::onCacheChanged(const CSimulatorInfo &simulator)
     {
-        if (m_loadingInProgress) { return; } // this change signal is redundant as it will be handled by onLoadingFinished
+        if (m_loadingInProgress)
+        {
+            return;
+        } // this change signal is redundant as it will be handled by onLoadingFinished
         if (!this->supportsSimulator(simulator)) { return; } // none of my business
         emit this->cacheChanged(simulator);
     }
 
-    CDummyModelLoader::CDummyModelLoader(const CSimulatorInfo &simulator, QObject *parent) : IAircraftModelLoader(simulator, parent)
+    CDummyModelLoader::CDummyModelLoader(const CSimulatorInfo &simulator, QObject *parent)
+        : IAircraftModelLoader(simulator, parent)
     {
         // void
     }
@@ -220,7 +230,10 @@ namespace swift::misc::simulation
         return m_loadingStartedTs > 0 && now > (m_loadingStartedTs + 5000);
     }
 
-    void CDummyModelLoader::startLoadingFromDisk(LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
+    void
+    CDummyModelLoader::startLoadingFromDisk(LoadMode mode,
+                                            const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation,
+                                            const QStringList &modelDirectories)
     {
         Q_UNUSED(mode);
         Q_UNUSED(modelConsolidation);

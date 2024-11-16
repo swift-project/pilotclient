@@ -14,8 +14,7 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAirport, CAirportList)
 
 namespace swift::misc::aviation
 {
-    CAirportList::CAirportList(const CSequence<CAirport> &other) : CSequence<CAirport>(other)
-    {}
+    CAirportList::CAirportList(const CSequence<CAirport> &other) : CSequence<CAirport>(other) {}
 
     CAirportList CAirportList::findByIcao(const CAirportIcaoCode &icao) const
     {
@@ -40,10 +39,7 @@ namespace swift::misc::aviation
         for (CAirport &airport : *this)
         {
             const CAirport fromAirport = updateFromList.findFirstByIcao(airport.getIcao());
-            if (fromAirport.hasValidIcaoCode())
-            {
-                airport.updateMissingParts(fromAirport);
-            }
+            if (fromAirport.hasValidIcaoCode()) { airport.updateMissingParts(fromAirport); }
         }
     }
 
@@ -55,14 +51,11 @@ namespace swift::misc::aviation
     CAirport CAirportList::findFirstByNameOrLocation(const QString &nameOrLocation) const
     {
         if (this->isEmpty() || nameOrLocation.isEmpty()) { return CAirport(); }
-        CAirportList airports = this->findBy([&](const CAirport &airport) {
-            return airport.matchesDescriptiveName(nameOrLocation);
-        });
+        CAirportList airports =
+            this->findBy([&](const CAirport &airport) { return airport.matchesDescriptiveName(nameOrLocation); });
         if (!airports.isEmpty()) { return airports.frontOrDefault(); }
 
-        airports = this->findBy([&](const CAirport &airport) {
-            return airport.matchesLocation(nameOrLocation);
-        });
+        airports = this->findBy([&](const CAirport &airport) { return airport.matchesLocation(nameOrLocation); });
         if (!airports.isEmpty()) { return airports.frontOrDefault(); }
         return CAirport();
     }

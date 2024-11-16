@@ -17,7 +17,8 @@ using namespace swift::misc;
 
 namespace swift::gui::models
 {
-    CNameVariantPairModel::CNameVariantPairModel(bool withIcon, QObject *parent) : CListModelBase("ViewNameVariantPairList", parent)
+    CNameVariantPairModel::CNameVariantPairModel(bool withIcon, QObject *parent)
+        : CListModelBase("ViewNameVariantPairList", parent)
     {
         this->setIconMode(withIcon);
 
@@ -29,10 +30,7 @@ namespace swift::gui::models
     void CNameVariantPairModel::setIconMode(bool withIcon)
     {
         this->m_columns.clear();
-        if (withIcon)
-        {
-            this->m_columns.addColumn(CColumn(CNameVariantPair::IndexPixmap));
-        }
+        if (withIcon) { this->m_columns.addColumn(CColumn(CNameVariantPair::IndexPixmap)); }
         this->m_columns.addColumn(CColumn::standardString("name", CNameVariantPair::IndexName));
         this->m_columns.addColumn(CColumn("value", CNameVariantPair::IndexVariant, new CDefaultFormatter()));
 
@@ -41,7 +39,8 @@ namespace swift::gui::models
         this->m_sortOrder = Qt::AscendingOrder;
     }
 
-    bool CNameVariantPairModel::addOrUpdateByName(const QString &name, const swift::misc::CVariant &value, const CIcon &icon, bool skipEqualValues)
+    bool CNameVariantPairModel::addOrUpdateByName(const QString &name, const swift::misc::CVariant &value,
+                                                  const CIcon &icon, bool skipEqualValues)
     {
         int index = this->getRowIndexForName(name);
         CNameVariantPair pair(name, value, icon);
@@ -75,10 +74,7 @@ namespace swift::gui::models
         this->remove(this->at(i));
     }
 
-    bool CNameVariantPairModel::containsName(const QString &name) const
-    {
-        return this->m_container.containsName(name);
-    }
+    bool CNameVariantPairModel::containsName(const QString &name) const { return this->m_container.containsName(name); }
 
     bool CNameVariantPairModel::containsNameValue(const QString &name, const swift::misc::CVariant &value) const
     {

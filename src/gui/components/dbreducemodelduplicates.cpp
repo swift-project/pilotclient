@@ -20,8 +20,8 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    CDbReduceModelDuplicates::CDbReduceModelDuplicates(QWidget *parent) : QDialog(parent),
-                                                                          ui(new Ui::CDbReduceModelDuplicates)
+    CDbReduceModelDuplicates::CDbReduceModelDuplicates(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CDbReduceModelDuplicates)
     {
         ui->setupUi(this);
         this->clearProgressBar();
@@ -37,8 +37,7 @@ namespace swift::gui::components
         connect(this, &QDialog::finished, this, &CDbReduceModelDuplicates::stop);
     }
 
-    CDbReduceModelDuplicates::~CDbReduceModelDuplicates()
-    {}
+    CDbReduceModelDuplicates::~CDbReduceModelDuplicates() {}
 
     void CDbReduceModelDuplicates::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
     {
@@ -65,7 +64,10 @@ namespace swift::gui::components
         QCompleter *c = new QCompleter(distributors, this);
         c->setCaseSensitivity(Qt::CaseInsensitive);
         ui->le_Distributor->setCompleter(c);
-        ui->le_Models->setText(QStringLiteral("%1 models for simulator '%2', distributors: %3").arg(models.size()).arg(simulator.toQString(true)).arg(distributorCount));
+        ui->le_Models->setText(QStringLiteral("%1 models for simulator '%2', distributors: %3")
+                                   .arg(models.size())
+                                   .arg(simulator.toQString(true))
+                                   .arg(distributorCount));
     }
 
     void CDbReduceModelDuplicates::process()
@@ -92,7 +94,8 @@ namespace swift::gui::components
         const CAircraftModelList keyDuplicates = m_models.findDuplicateModelStrings();
         if (!keyDuplicates.isEmpty())
         {
-            const CStatusMessage m = CStatusMessage(this).validationError(u"Found %1 key duplicates") << keyDuplicates.size();
+            const CStatusMessage m = CStatusMessage(this).validationError(u"Found %1 key duplicates")
+                                     << keyDuplicates.size();
             ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
             return;
         }
@@ -122,11 +125,17 @@ namespace swift::gui::components
             if (!distributorModel.getAircraftIcaoCode().hasValidDbKey()) { continue; }
             if (ui->rb_SameLiveryAndAircraft->isChecked())
             {
-                removeModels.replaceOrAddModelsWithString(otherDistributorsModels.findByAircraftAndLivery(distributorModel.getAircraftIcaoCode(), distributorModel.getLivery()), Qt::CaseInsensitive);
+                removeModels.replaceOrAddModelsWithString(
+                    otherDistributorsModels.findByAircraftAndLivery(distributorModel.getAircraftIcaoCode(),
+                                                                    distributorModel.getLivery()),
+                    Qt::CaseInsensitive);
             }
             else if (ui->rb_SameAirlineAndAircraft->isChecked())
             {
-                removeModels.replaceOrAddModelsWithString(otherDistributorsModels.findByAircraftAndAirline(distributorModel.getAircraftIcaoCode(), distributorModel.getAirlineIcaoCode()), Qt::CaseInsensitive);
+                removeModels.replaceOrAddModelsWithString(
+                    otherDistributorsModels.findByAircraftAndAirline(distributorModel.getAircraftIcaoCode(),
+                                                                     distributorModel.getAirlineIcaoCode()),
+                    Qt::CaseInsensitive);
             }
 
             if (mc % 50 == 0) { ui->pb_Progress->setValue(mc); }
@@ -140,9 +149,11 @@ namespace swift::gui::components
         m_stop = false;
 
         const QString distKeys = removeModels.getDistributors().dbKeysAsString(", ");
-        const CStatusMessage msg = removeModels.isEmpty() ?
-                                       CStatusMessage(this).info(u"No duplicates to be removed!") :
-                                       CStatusMessage(this).info(u"You can remove %1 models of the following distributors: '%2'.") << removeModels.size() << distKeys;
+        const CStatusMessage msg =
+            removeModels.isEmpty() ?
+                CStatusMessage(this).info(u"No duplicates to be removed!") :
+                CStatusMessage(this).info(u"You can remove %1 models of the following distributors: '%2'.")
+                    << removeModels.size() << distKeys;
         ui->fr_Overlay->showOverlayHTMLMessage(msg, 5000);
         ui->bb_ReduceModelDuplicates->button(QDialogButtonBox::Ok)->setEnabled(true);
     }

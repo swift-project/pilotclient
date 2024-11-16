@@ -39,10 +39,16 @@ namespace swift::misc::simulation::fscommon
     {
         QString fsxPath;
         const FsRegistryPathPair fsxRegistryPathPairs = {
-            { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("AppPath") },
-            { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator - Steam Edition\\10.0"), QStringLiteral("AppPath") },
-            { QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("SetupPath") },
-            { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"), QStringLiteral("SetupPath") }
+            { QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"),
+              QStringLiteral("AppPath") },
+            { QStringLiteral(
+                  "HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator - Steam Edition\\10.0"),
+              QStringLiteral("AppPath") },
+            { QStringLiteral("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"),
+              QStringLiteral("SetupPath") },
+            { QStringLiteral(
+                  "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0"),
+              QStringLiteral("SetupPath") }
         };
 
         for (const auto &registryPair : fsxRegistryPathPairs)
@@ -72,8 +78,7 @@ namespace swift::misc::simulation::fscommon
         const QString dir(CFsDirectories::fsxDirFromRegistry());
         if (!dir.isEmpty()) { return dir; }
         QStringList someDefaultDirs(
-            { "C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X",
-              "C:/FSX" });
+            { "C:/Program Files (x86)/Microsoft Games/Microsoft Flight Simulator X", "C:/FSX" });
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
             // developer directories
@@ -93,7 +98,8 @@ namespace swift::misc::simulation::fscommon
         const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
         for (const QString &path : locations)
         {
-            const QString msfsPackage = CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path, "Packages"), "Microsoft.FlightSimulator_8wekyb3d8bbwe");
+            const QString msfsPackage = CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path, "Packages"),
+                                                                    "Microsoft.FlightSimulator_8wekyb3d8bbwe");
             const QDir d(msfsPackage);
             if (!d.exists()) { continue; }
             return msfsPackage;
@@ -110,7 +116,8 @@ namespace swift::misc::simulation::fscommon
     QString msfsPackagesDirImpl()
     {
         QString msfsDirectory(CFsDirectories::msfsDir());
-        const QString userCfg = CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(msfsDirectory, "LocalCache"), "UserCfg.opt");
+        const QString userCfg =
+            CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(msfsDirectory, "LocalCache"), "UserCfg.opt");
         QFile file(userCfg);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
 
@@ -189,12 +196,8 @@ namespace swift::misc::simulation::fscommon
 
     const QStringList &CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns()
     {
-        static const QStringList exclude {
-            "SimObjects/Animals",
-            "SimObjects/Misc",
-            "SimObjects/GroundVehicles",
-            "SimObjects/Boats"
-        };
+        static const QStringList exclude { "SimObjects/Animals", "SimObjects/Misc", "SimObjects/GroundVehicles",
+                                           "SimObjects/Boats" };
         return exclude;
     }
 
@@ -263,11 +266,10 @@ namespace swift::misc::simulation::fscommon
     {
         QString dir(CFsDirectories::p3dDirFromRegistry());
         if (!dir.isEmpty()) { return dir; }
-        const QStringList someDefaultDirs(
-            { "C:/Program Files (x86)/Lockheed Martin/Prepar3D v4",
-              "C:/Program Files (x86)/Lockheed Martin/Prepar3D v3",
-              "C:/Program Files (x86)/Lockheed Martin/Prepar3D v2",
-              "C:/Program Files (x86)/Lockheed Martin/Prepar3D" });
+        const QStringList someDefaultDirs({ "C:/Program Files (x86)/Lockheed Martin/Prepar3D v4",
+                                            "C:/Program Files (x86)/Lockheed Martin/Prepar3D v3",
+                                            "C:/Program Files (x86)/Lockheed Martin/Prepar3D v2",
+                                            "C:/Program Files (x86)/Lockheed Martin/Prepar3D" });
         return CFileUtils::findFirstExisting(someDefaultDirs);
     }
 
@@ -307,7 +309,8 @@ namespace swift::misc::simulation::fscommon
     {
         // finding the user settings only works on P3D machine
         QStringList allPaths = CFsDirectories::allFsxSimObjectPaths().values();
-        const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsDirectories::fsxSimObjectsDir() : simObjectsDir);
+        const QString sod = CFileUtils::normalizeFilePathToQtStandard(
+            simObjectsDir.isEmpty() ? CFsDirectories::fsxSimObjectsDir() : simObjectsDir);
         if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
         {
             // case insensitive is important here
@@ -324,7 +327,8 @@ namespace swift::misc::simulation::fscommon
     {
         // finding the user settings only works on P3D machine
         QStringList allPaths = CFsDirectories::allMsfsSimObjectPaths().values();
-        const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsDirectories::msfsSimObjectsDir() : simObjectsDir);
+        const QString sod = CFileUtils::normalizeFilePathToQtStandard(
+            simObjectsDir.isEmpty() ? CFsDirectories::msfsSimObjectsDir() : simObjectsDir);
         if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
         {
             // case insensitive is important here
@@ -337,11 +341,13 @@ namespace swift::misc::simulation::fscommon
         return allPaths;
     }
 
-    QStringList CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir, const QString &versionHint)
+    QStringList CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir,
+                                                                            const QString &versionHint)
     {
         // finding the user settings only works on P3D machine
         QStringList allPaths = CFsDirectories::allP3dAddOnXmlSimObjectPaths(versionHint).values();
-        const QString sod = CFileUtils::normalizeFilePathToQtStandard(simObjectsDir.isEmpty() ? CFsDirectories::p3dSimObjectsDir() : simObjectsDir);
+        const QString sod = CFileUtils::normalizeFilePathToQtStandard(
+            simObjectsDir.isEmpty() ? CFsDirectories::p3dSimObjectsDir() : simObjectsDir);
         if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
         {
             // case insensitive is important here
@@ -394,8 +400,13 @@ namespace swift::misc::simulation::fscommon
     {
         QString fs9Path;
         FsRegistryPathPair fs9RegistryPathPairs = {
-            { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") },
-            { QStringLiteral("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"), QStringLiteral("AppPath") }
+            { QStringLiteral(
+                  "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight Simulator 2004"),
+              QStringLiteral("AppPath") },
+            { QStringLiteral(
+                  "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\DirectPlay\\Applications\\Microsoft Flight "
+                  "Simulator 2004"),
+              QStringLiteral("AppPath") }
         };
 
         for (const auto &registryPair : fs9RegistryPathPairs)
@@ -424,9 +435,7 @@ namespace swift::misc::simulation::fscommon
     {
         QString dir(CFsDirectories::fs9DirFromRegistry());
         if (!dir.isEmpty()) { return dir; }
-        const QStringList someDefaultDirs(
-            { "C:/Flight Simulator 9",
-              "C:/FS9" });
+        const QStringList someDefaultDirs({ "C:/Flight Simulator 9", "C:/FS9" });
         return CFileUtils::findFirstExisting(someDefaultDirs);
     }
 
@@ -496,7 +505,10 @@ namespace swift::misc::simulation::fscommon
             const QString pathUp = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Lockheed Martin");
             const QDir d(pathUp);
             if (!d.exists()) { continue; }
-            if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D config dir: '%1'") << d.absolutePath(); }
+            if (logConfigPathReading())
+            {
+                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D config dir: '%1'") << d.absolutePath();
+            }
 
             // all versions sub directories
             // looking for "add-ons.cfg" or simobjects.cfg
@@ -511,7 +523,10 @@ namespace swift::misc::simulation::fscommon
                     if (fi.exists())
                     {
                         files.insert(f);
-                        if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D config file: '%1'") << f; }
+                        if (logConfigPathReading())
+                        {
+                            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D config file: '%1'") << f;
+                        }
                     }
                 } // contains
             } // entries
@@ -519,7 +534,8 @@ namespace swift::misc::simulation::fscommon
         return files;
     }
 
-    QSet<QString> CFsDirectories::allConfigFilesPathValues(const QStringList &configFiles, bool checked, const QString &pathPrefix)
+    QSet<QString> CFsDirectories::allConfigFilesPathValues(const QStringList &configFiles, bool checked,
+                                                           const QString &pathPrefix)
     {
         if (configFiles.isEmpty()) { return QSet<QString>(); }
         QSet<QString> paths;
@@ -535,7 +551,9 @@ namespace swift::misc::simulation::fscommon
                 const int i = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
                 if (i < 0 || line.endsWith('=')) { continue; }
                 const QStringRef path = line.mid(i + p.length());
-                const QDir dir(QDir::fromNativeSeparators(pathPrefix.isEmpty() ? path.toString() : CFileUtils::appendFilePathsAndFixUnc(pathPrefix, path.toString())));
+                const QDir dir(QDir::fromNativeSeparators(
+                    pathPrefix.isEmpty() ? path.toString() :
+                                           CFileUtils::appendFilePathsAndFixUnc(pathPrefix, path.toString())));
                 if (!checked || dir.exists()) { paths.insert(dir.absolutePath()); }
             }
         }
@@ -552,7 +570,11 @@ namespace swift::misc::simulation::fscommon
             QDomDocument doc;
             QFile file(filename);
             if (!file.open(QIODevice::ReadOnly) || !doc.setContent(&file)) { continue; }
-            if (CFsDirectories::logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Reading '%1' from addon path: '%2'") << file.fileName() << addOnPath; }
+            if (CFsDirectories::logConfigPathReading())
+            {
+                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Reading '%1' from addon path: '%2'")
+                    << file.fileName() << addOnPath;
+            }
 
             const QDomNodeList components = doc.elementsByTagName("AddOn.Component");
             for (int i = 0; i < components.size(); i++)
@@ -571,11 +593,18 @@ namespace swift::misc::simulation::fscommon
                 const QString fp = QStringView { pathValue }.left(3).contains(':') ?
                                        pathValue :
                                        CFileUtils::appendFilePaths(addOnPath, pathValue);
-                if (CFsDirectories::logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Testing '%1' as addon path: '%2'") << fp << addOnPath; }
+                if (CFsDirectories::logConfigPathReading())
+                {
+                    CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Testing '%1' as addon path: '%2'")
+                        << fp << addOnPath;
+                }
                 if (!checked || QDir(fp).exists())
                 {
                     simObjectPaths.insert(CFileUtils::normalizeFilePathToQtStandard(fp));
-                    if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D SimObjects path: '%1'") << fp; }
+                    if (logConfigPathReading())
+                    {
+                        CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D SimObjects path: '%1'") << fp;
+                    }
                 }
             } // components
         } // paths
@@ -617,7 +646,11 @@ namespace swift::misc::simulation::fscommon
             if (fi.exists())
             {
                 files.push_back(fi.absoluteFilePath());
-                if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX config file: '%1'") << fi.absoluteFilePath(); }
+                if (logConfigPathReading())
+                {
+                    CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX config file: '%1'")
+                        << fi.absoluteFilePath();
+                }
             }
         }
         return files;
@@ -635,7 +668,11 @@ namespace swift::misc::simulation::fscommon
             if (fi.exists())
             {
                 files.push_back(fi.absoluteFilePath());
-                if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS config file: '%1'") << fi.absoluteFilePath(); }
+                if (logConfigPathReading())
+                {
+                    CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS config file: '%1'")
+                        << fi.absoluteFilePath();
+                }
             }
         }
         return files;
@@ -644,10 +681,7 @@ namespace swift::misc::simulation::fscommon
     QSet<QString> CFsDirectories::fsxSimObjectsPaths(const QStringList &fsxFiles, bool checked)
     {
         QSet<QString> paths;
-        for (const QString &fsxFile : fsxFiles)
-        {
-            paths.unite(CFsDirectories::fsxSimObjectsPaths(fsxFile, checked));
-        }
+        for (const QString &fsxFile : fsxFiles) { paths.unite(CFsDirectories::fsxSimObjectsPaths(fsxFile, checked)); }
         return paths;
     }
 
@@ -680,31 +714,55 @@ namespace swift::misc::simulation::fscommon
             if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
             const QStringRef path = line.mid(i2 + 1);
             QString soPath = QDir::fromNativeSeparators(path.toString());
-            if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path checked: '%1' in '%2'") << line << fsxFile; }
+            if (logConfigPathReading())
+            {
+                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path checked: '%1' in '%2'")
+                    << line << fsxFile;
+            }
 
             // ignore exclude patterns
-            if (containsAny(soPath, CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive)) { continue; }
+            if (containsAny(soPath, CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive))
+            {
+                continue;
+            }
 
             // make absolute
-            if (!QStringView { soPath }.left(3).contains(':')) { soPath = CFileUtils::appendFilePaths(relPath, soPath); }
+            if (!QStringView { soPath }.left(3).contains(':'))
+            {
+                soPath = CFileUtils::appendFilePaths(relPath, soPath);
+            }
 
             const QDir dir(soPath); // always absolute path now
             if (checked && !dir.exists())
             {
                 // skip, not existing
-                if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'") << dir.absolutePath() << fsxFile; }
+                if (logConfigPathReading())
+                {
+                    CLogMessage(static_cast<CFsDirectories *>(nullptr))
+                            .info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'")
+                        << dir.absolutePath() << fsxFile;
+                }
                 continue;
             }
 
             const QString afp = dir.absolutePath().toLower();
             if (!CDirectoryUtils::containsFileInDir(afp, airFileFilter(), true))
             {
-                if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file") << afp << fsxFile << airFileFilter(); }
+                if (logConfigPathReading())
+                {
+                    CLogMessage(static_cast<CFsDirectories *>(nullptr))
+                            .info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file")
+                        << afp << fsxFile << airFileFilter();
+                }
                 continue;
             }
 
             paths.insert(afp);
-            if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'") << afp << fsxFile; }
+            if (logConfigPathReading())
+            {
+                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'")
+                    << afp << fsxFile;
+            }
         }
         return paths;
     }
@@ -728,10 +786,17 @@ namespace swift::misc::simulation::fscommon
             if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
             const QStringRef path = line.mid(i2 + 1);
             QString soPath = QDir::fromNativeSeparators(path.toString());
-            if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS SimObjects path checked: '%1' in '%2'") << line << msfsFile; }
+            if (logConfigPathReading())
+            {
+                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS SimObjects path checked: '%1' in '%2'")
+                    << line << msfsFile;
+            }
 
             // ignore exclude patterns
-            if (containsAny(soPath, CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive)) { continue; }
+            if (containsAny(soPath, CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive))
+            {
+                continue;
+            }
 
             // make absolute
             if (!QStringView(soPath).left(3).contains(':')) { soPath = CFileUtils::appendFilePaths(relPath, soPath); }
@@ -740,19 +805,33 @@ namespace swift::misc::simulation::fscommon
             if (checked && !dir.exists())
             {
                 // skip, not existing
-                if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'") << dir.absolutePath() << msfsFile; }
+                if (logConfigPathReading())
+                {
+                    CLogMessage(static_cast<CFsDirectories *>(nullptr))
+                            .info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'")
+                        << dir.absolutePath() << msfsFile;
+                }
                 continue;
             }
 
             const QString afp = dir.absolutePath().toLower();
             if (!CDirectoryUtils::containsFileInDir(afp, airFileFilter(), true))
             {
-                if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file") << afp << msfsFile << airFileFilter(); }
+                if (logConfigPathReading())
+                {
+                    CLogMessage(static_cast<CFsDirectories *>(nullptr))
+                            .info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file")
+                        << afp << msfsFile << airFileFilter();
+                }
                 continue;
             }
 
             paths.insert(afp);
-            if (logConfigPathReading()) { CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'") << afp << msfsFile; }
+            if (logConfigPathReading())
+            {
+                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'")
+                    << afp << msfsFile;
+            }
         }
         return paths;
     }
@@ -763,8 +842,5 @@ namespace swift::misc::simulation::fscommon
         return a;
     }
 
-    bool CFsDirectories::logConfigPathReading()
-    {
-        return true;
-    }
+    bool CFsDirectories::logConfigPathReading() { return true; }
 } // namespace swift::misc::simulation::fscommon

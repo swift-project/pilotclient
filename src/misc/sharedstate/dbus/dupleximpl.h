@@ -20,7 +20,8 @@ namespace swift::misc
         class CHub;
 
         /*!
-         * Server side implementation of IDuplex. Receives messages from clients and forwards them to other clients via the CHub.
+         * Server side implementation of IDuplex. Receives messages from clients and forwards them to other clients via
+         * the CHub.
          */
         class SWIFT_MISC_EXPORT CDuplex final : public IDuplex
         {
@@ -48,7 +49,8 @@ namespace swift::misc
             virtual void requestPeerSubscriptions() override;
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::submitRequest
-            virtual void submitRequest(const QString &channel, const swift::misc::CVariant &param, quint32 token) override;
+            virtual void submitRequest(const QString &channel, const swift::misc::CVariant &param,
+                                       quint32 token) override;
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::advertise
             virtual void advertise(const QString &channel) override;

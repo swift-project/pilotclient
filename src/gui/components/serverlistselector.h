@@ -49,7 +49,9 @@ namespace swift::gui::components
         swift::misc::network::CServerList m_servers; //!< corresponding servers
         QStringList m_items; //!< items strings
         QString m_pendingPreselect; //!< pending preselect value
-        swift::misc::CData<swift::misc::network::data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
+        swift::misc::CData<swift::misc::network::data::TLastServer> m_lastServer {
+            this
+        }; //!< recently used server (VATSIM, other)
     };
 } // namespace swift::gui::components
 

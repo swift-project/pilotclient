@@ -31,9 +31,9 @@ using namespace swift::core::db;
 
 namespace swift::core::db
 {
-    CDatabaseWriter::CDatabaseWriter(const network::CUrl &baseUrl, QObject *parent) : QObject(parent),
-                                                                                      m_modelPublishUrl(CDatabaseWriter::getModelPublishUrl(baseUrl)),
-                                                                                      m_autoPublishUrl(CDatabaseWriter::getAutoPublishUrl(baseUrl))
+    CDatabaseWriter::CDatabaseWriter(const network::CUrl &baseUrl, QObject *parent)
+        : QObject(parent), m_modelPublishUrl(CDatabaseWriter::getModelPublishUrl(baseUrl)),
+          m_autoPublishUrl(CDatabaseWriter::getAutoPublishUrl(baseUrl))
     {
         // void
     }
@@ -74,10 +74,7 @@ namespace swift::core::db
         QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
         multiPart->append(CDatabaseUtils::getJsonTextMultipart(models.toDatabaseJson(), compress));
 
-        if (sApp->getGlobalSetup().dbDebugFlag())
-        {
-            multiPart->append(CDatabaseUtils::getMultipartWithDebugFlag());
-        }
+        if (sApp->getGlobalSetup().dbDebugFlag()) { multiPart->append(CDatabaseUtils::getMultipartWithDebugFlag()); }
 
         QUrl url(m_modelPublishUrl.toQUrl());
         if (compress) { url.setQuery(CDatabaseUtils::getCompressedQuery()); }
@@ -85,7 +82,8 @@ namespace swift::core::db
         const QByteArray eInfo = extraInfo.toLatin1();
         request.setRawHeader(QByteArray("swift-extrainfo"), eInfo);
         const int logId = m_writeLog.addPendingUrl(url);
-        m_pendingModelPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedModelsResponse });
+        m_pendingModelPublishReply =
+            sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedModelsResponse });
         m_modelReplyPendingSince = QDateTime::currentMSecsSinceEpoch();
         return msgs;
     }
@@ -123,7 +121,8 @@ namespace swift::core::db
 
         QNetworkRequest request(url);
         const int logId = m_writeLog.addPendingUrl(url);
-        m_pendingAutoPublishReply = sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedAutoPublishResponse });
+        m_pendingAutoPublishReply =
+            sApp->postToNetwork(request, logId, multiPart, { this, &CDatabaseWriter::postedAutoPublishResponse });
         m_autoPublishReplyPendingSince = QDateTime::currentMSecsSinceEpoch();
         return msgs;
     }
@@ -142,9 +141,7 @@ namespace swift::core::db
 
     const QStringList &CDatabaseWriter::getLogCategories()
     {
-        static const QStringList cats {
-            CLogCategories::swiftDbWebservice(), CLogCategories::webservice()
-        };
+        static const QStringList cats { CLogCategories::swiftDbWebservice(), CLogCategories::webservice() };
         return cats;
     }
 
@@ -166,7 +163,8 @@ namespace swift::core::db
             nwReply->close(); // close asap
             if (responseData.isEmpty())
             {
-                const CStatusMessageList msgs({ CStatusMessage(this, CStatusMessage::SeverityError, u"No response data from " % urlString) });
+                const CStatusMessageList msgs(
+                    { CStatusMessage(this, CStatusMessage::SeverityError, u"No response data from " % urlString) });
                 emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
                 return;
             }
@@ -175,22 +173,21 @@ namespace swift::core::db
             CAircraftModelList modelsSkipped;
             CStatusMessageList msgs;
             bool directWrite;
-            const bool sendingSuccessful = parseSwiftPublishResponse(responseData, modelsPublished, modelsSkipped, msgs, directWrite);
+            const bool sendingSuccessful =
+                parseSwiftPublishResponse(responseData, modelsPublished, modelsSkipped, msgs, directWrite);
             const int c = CDatabaseUtils::fillInMissingAircraftAndLiveryEntities(modelsPublished);
 
             emit this->publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
 
-            if (!modelsPublished.isEmpty())
-            {
-                emit this->publishedModelsSimplified(modelsPublished, directWrite);
-            }
+            if (!modelsPublished.isEmpty()) { emit this->publishedModelsSimplified(modelsPublished, directWrite); }
             Q_UNUSED(c);
         }
         else
         {
             const QString error = nwReply->errorString();
             nwReply->close(); // close asap
-            const CStatusMessageList msgs({ CStatusMessage(this, CStatusMessage::SeverityError, u"HTTP error: " % error) });
+            const CStatusMessageList msgs(
+                { CStatusMessage(this, CStatusMessage::SeverityError, u"HTTP error: " % error) });
             emit this->publishedModels(CAircraftModelList(), CAircraftModelList(), msgs, false, false);
         }
     }
@@ -219,10 +216,7 @@ namespace swift::core::db
         {
             // no error
         }
-        else
-        {
-            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"HTTP error: " % error));
-        }
+        else { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"HTTP error: " % error)); }
 
         emit this->autoPublished(ok, urlString, msgs);
     }
@@ -267,13 +261,16 @@ namespace swift::core::db
         return arrays;
     }
 
-    bool CDatabaseWriter::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels, CAircraftModelList &skippedModels, CStatusMessageList &messages, bool &directWrite)
+    bool CDatabaseWriter::parseSwiftPublishResponse(const QString &jsonResponse, CAircraftModelList &publishedModels,
+                                                    CAircraftModelList &skippedModels, CStatusMessageList &messages,
+                                                    bool &directWrite)
     {
         directWrite = false;
 
         if (jsonResponse.isEmpty())
         {
-            messages.push_back(CStatusMessage(static_cast<CDatabaseWriter *>(nullptr), CStatusMessage::SeverityError, u"Empty JSON data for published models"));
+            messages.push_back(CStatusMessage(static_cast<CDatabaseWriter *>(nullptr), CStatusMessage::SeverityError,
+                                              u"Empty JSON data for published models"));
             return false;
         }
 
@@ -291,7 +288,8 @@ namespace swift::core::db
         if (!jsonDoc.isObject())
         {
             const QString phpError(CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonResponse));
-            messages.push_back(CStatusMessage(static_cast<CDatabaseWriter *>(nullptr), CStatusMessage::SeverityError, phpError));
+            messages.push_back(
+                CStatusMessage(static_cast<CDatabaseWriter *>(nullptr), CStatusMessage::SeverityError, phpError));
             return false;
         }
 
@@ -340,7 +338,8 @@ namespace swift::core::db
 
         if (!hasData)
         {
-            messages.push_back(CStatusMessage(static_cast<CDatabaseWriter *>(nullptr), CStatusMessage::SeverityError, u"Received response, but no JSON data"));
+            messages.push_back(CStatusMessage(static_cast<CDatabaseWriter *>(nullptr), CStatusMessage::SeverityError,
+                                              u"Received response, but no JSON data"));
         }
 
         return hasData;

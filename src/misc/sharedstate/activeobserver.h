@@ -45,7 +45,10 @@ namespace swift::misc::shared_state
         void requestAsync(const CVariant &param, std::function<void(const CVariant &)> callback);
 
         //! Get a QWeakPointer pointing to this object.
-        QWeakPointer<const CActiveObserver> weakRef() const { return qSharedPointerCast<const CActiveObserver>(CPassiveObserver::weakRef()); }
+        QWeakPointer<const CActiveObserver> weakRef() const
+        {
+            return qSharedPointerCast<const CActiveObserver>(CPassiveObserver::weakRef());
+        }
 
     signals:
         //! Emitted by request and requestAsync.

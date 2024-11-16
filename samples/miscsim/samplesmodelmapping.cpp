@@ -39,16 +39,17 @@ namespace swift::sample
         CVPilotRulesReader vpRulesReader;
         const bool s = vpRulesReader.read(true);
         streamOut << "directory: " << CVPilotRulesReader::standardMappingsDirectory() << Qt::endl;
-        streamOut << "loaded: " << swift::misc::boolToYesNo(s) << " size: " << vpRulesReader.getAsModelsFromCache().size() << Qt::endl;
+        streamOut << "loaded: " << swift::misc::boolToYesNo(s)
+                  << " size: " << vpRulesReader.getAsModelsFromCache().size() << Qt::endl;
 
         // mapper with rule set, handing over ownership
-        const QString fsDir = CSampleUtils::selectDirectory(
-            { QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
-              QStringLiteral("P:/Temp/SimObjects"),
-              QStringLiteral("C:/Flight Simulator 9/Aircraft") },
-            streamOut, streamIn);
+        const QString fsDir = CSampleUtils::selectDirectory({ QStringLiteral("P:/FlightSimulatorX (MSI)/SimObjects"),
+                                                              QStringLiteral("P:/Temp/SimObjects"),
+                                                              QStringLiteral("C:/Flight Simulator 9/Aircraft") },
+                                                            streamOut, streamIn);
 
-        const CSimulatorInfo sim = fsDir.contains("simobjects", Qt::CaseInsensitive) ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
+        const CSimulatorInfo sim =
+            fsDir.contains("simobjects", Qt::CaseInsensitive) ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
         CMultiSimulatorSettings multiSettings;
         const CSimulatorSettings originalSettings = multiSettings.getSettings(sim);
         CSimulatorSettings newSettings(originalSettings);
@@ -59,7 +60,8 @@ namespace swift::sample
         streamOut << "Start reading models" << Qt::endl;
         cfgParser.startLoading(CAircraftCfgParser::CacheSkipped | CAircraftCfgParser::LoadDirectly);
         streamOut << "Read models: " << cfgParser.getAircraftCfgEntriesList().size() << Qt::endl;
-        streamOut << "Ambigious models: " << cfgParser.getAircraftCfgEntriesList().detectAmbiguousTitles().join(", ") << Qt::endl;
+        streamOut << "Ambigious models: " << cfgParser.getAircraftCfgEntriesList().detectAmbiguousTitles().join(", ")
+                  << Qt::endl;
 
         // sync definitions, remove redundant ones
         CAircraftMatcher matcher;

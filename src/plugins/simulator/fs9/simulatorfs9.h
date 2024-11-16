@@ -35,12 +35,10 @@ namespace swift::simplugin::fs9
     public:
         //! Constructor, parameters as in \sa swift::core::ISimulatorFactory::create
         CSimulatorFs9(const swift::misc::simulation::CSimulatorPluginInfo &info,
-                      const QSharedPointer<CFs9Host> &fs9Host,
-                      const QSharedPointer<CLobbyClient> &lobbyClient,
+                      const QSharedPointer<CFs9Host> &fs9Host, const QSharedPointer<CLobbyClient> &lobbyClient,
                       swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                       swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                      swift::misc::network::IClientProvider *clientProvider,
-                      QObject *parent = nullptr);
+                      swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CSimulatorFs9() override = default;
@@ -49,17 +47,23 @@ namespace swift::simplugin::fs9
         //! @{
         virtual bool connectTo() override;
         virtual bool disconnectFrom() override;
-        virtual bool physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft) override;
+        virtual bool
+        physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft) override;
         virtual bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
         virtual int physicallyRemoveAllRemoteAircraft() override;
         virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
         virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
-        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &ownAircraft, const swift::misc::CIdentifier &originator) override;
-        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
+        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &ownAircraft,
+                                               const swift::misc::CIdentifier &originator) override;
+        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                              const swift::misc::CIdentifier &originator) override;
         virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
         virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
-        virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
-        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) override;
+        virtual swift::misc::CStatusMessageList
+        getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
+        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::aviation::CAircraftSituation &situation,
+                                               const swift::misc::aviation::CAircraftParts &parts) override;
         //! @}
 
     protected:
@@ -89,7 +93,8 @@ namespace swift::simplugin::fs9
         void updateOwnAircraftFromSimulator(const swift::misc::simulation::CSimulatedAircraft &ownAircraft);
 
         //! Render status
-        void updateRenderStatus(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft, swift::simplugin::fs9::CFs9Client::ClientStatus);
+        void updateRenderStatus(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft,
+                                swift::simplugin::fs9::CFs9Client::ClientStatus);
 
         //! Disconnect all clients
         void disconnectAllClients();
@@ -118,8 +123,7 @@ namespace swift::simplugin::fs9
     public:
         //! Constructor
         CSimulatorFs9Listener(const swift::misc::simulation::CSimulatorPluginInfo &info,
-                              const QSharedPointer<CFs9Host> &fs9Host,
-                              const QSharedPointer<CLobbyClient> &lobbyClient);
+                              const QSharedPointer<CFs9Host> &fs9Host, const QSharedPointer<CLobbyClient> &lobbyClient);
 
     protected:
         //! \copydoc swift::core::ISimulatorListener::startImpl
@@ -158,14 +162,15 @@ namespace swift::simplugin::fs9
         virtual ~CSimulatorFs9Factory() override;
 
         //! \copydoc swift::core::ISimulatorFactory::create
-        virtual swift::core::ISimulator *create(
-            const swift::misc::simulation::CSimulatorPluginInfo &info,
-            swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-            swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            swift::misc::network::IClientProvider *clientProvider) override;
+        virtual swift::core::ISimulator *
+        create(const swift::misc::simulation::CSimulatorPluginInfo &info,
+               swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+               swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+               swift::misc::network::IClientProvider *clientProvider) override;
 
         //! \copydoc swift::core::ISimulatorFactory::createListener
-        virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override;
+        virtual swift::core::ISimulatorListener *
+        createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override;
 
     private:
         QSharedPointer<CFs9Host> m_fs9Host;

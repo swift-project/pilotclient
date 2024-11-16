@@ -27,7 +27,8 @@ namespace swift::misc
 
         //! Unzip my using 7zip
         //! \remark relies on external 7zip command line
-        static bool zip7Uncompress(const QString &file, const QString &directory, QStringList *stdOutAndError = nullptr);
+        static bool zip7Uncompress(const QString &file, const QString &directory,
+                                   QStringList *stdOutAndError = nullptr);
 
         //! External program existing?
         //! \remark relies on external 7zip command line

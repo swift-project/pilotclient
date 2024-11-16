@@ -37,16 +37,10 @@ namespace swift::core::fsd
     };
 
     //! Equal to operator
-    inline bool operator==(const Rehost &lhs, const Rehost &rhs)
-    {
-        return lhs.m_hostname == rhs.m_hostname;
-    }
+    inline bool operator==(const Rehost &lhs, const Rehost &rhs) { return lhs.m_hostname == rhs.m_hostname; }
 
     //! Not equal to operator
-    inline bool operator!=(const Rehost &lhs, const Rehost &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const Rehost &lhs, const Rehost &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

@@ -101,7 +101,8 @@ namespace swift::misc::Iterators
     /*!
      * Iterator wrapper which applies some transformation function to each element.
      *
-     * By creating a CRange from such iterators, it is possible to perform a transformation on a container without copying elements.
+     * By creating a CRange from such iterators, it is possible to perform a transformation on a container without
+     * copying elements.
      */
     template <class I, class F>
     class TransformIterator
@@ -110,15 +111,18 @@ namespace swift::misc::Iterators
         //! @{
         //! Types
         using iterator_category = std::forward_iterator_tag;
-        using value_type = std::decay_t<decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()))>;
+        using value_type =
+            std::decay_t<decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()))>;
         using difference_type = typename std::iterator_traits<I>::difference_type;
         using reference = typename std::iterator_traits<I>::reference;
         //! @}
 
         //! The type returned by the transformation function, which may or may not be a reference.
-        using undecayed_type = decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()));
+        using undecayed_type =
+            decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()));
 
-        //! \private A pointer-like wrapper returned by the arrow operator if the transformation function returns by value.
+        //! \private A pointer-like wrapper returned by the arrow operator if the transformation function returns by
+        //! value.
         struct PointerWrapper
         {
             PointerWrapper(std::decay_t<undecayed_type> *obj) : m_obj(std::move(*obj)) {}
@@ -132,8 +136,7 @@ namespace swift::misc::Iterators
 
         //! The type returned by this iterator's arrow operator, which may be a pointer or a pointer-like wrapper object
         using pointer = typename std::conditional<std::is_reference_v<undecayed_type>,
-                                                  std::remove_reference_t<undecayed_type> *,
-                                                  PointerWrapper>::type;
+                                                  std::remove_reference_t<undecayed_type> *, PointerWrapper>::type;
 
         //! Constructor.
         TransformIterator(I iterator, F function) : m_iterator(iterator), m_function(function) {}
@@ -193,7 +196,8 @@ namespace swift::misc::Iterators
     /*!
      * Iterator wrapper which skips over any elements which do not satisfy a given condition predicate.
      *
-     * By creating a CRange from such iterators, it is possible to return the results of predicate methods without copying elements.
+     * By creating a CRange from such iterators, it is possible to return the results of predicate methods without
+     * copying elements.
      */
     template <class I, class F>
     class ConditionalIterator
@@ -211,23 +215,19 @@ namespace swift::misc::Iterators
         //! Constructor.
         ConditionalIterator(I iterator, I end, F predicate) : m_iterator(iterator), m_end(end), m_predicate(predicate)
         {
-            while (m_iterator != m_end && !(*m_predicate)(*m_iterator))
-            {
-                ++m_iterator;
-            }
+            while (m_iterator != m_end && !(*m_predicate)(*m_iterator)) { ++m_iterator; }
         }
 
         //! Implicit conversion from an end iterator.
         ConditionalIterator(I end) : m_iterator(end), m_end(end) {}
 
         //! @{
-        //! Advance the iterator to the next element which matches the predicate, or the end if there are none remaining.
-        //! Undefined if the iterator is already at the end.
+        //! Advance the iterator to the next element which matches the predicate, or the end if there are none
+        //! remaining. Undefined if the iterator is already at the end.
         ConditionalIterator &operator++()
         {
             Q_ASSERT(m_predicate);
-            do
-            {
+            do {
                 ++m_iterator;
             }
             while (m_iterator != m_end && !(*m_predicate)(*m_iterator));

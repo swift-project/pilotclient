@@ -10,10 +10,7 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::models
 {
-    CDistributorFilter::CDistributorFilter(const CSimulatorInfo &simulator) : m_simulator(simulator)
-    {
-        m_valid = true;
-    }
+    CDistributorFilter::CDistributorFilter(const CSimulatorInfo &simulator) : m_simulator(simulator) { m_valid = true; }
 
     CDistributorList CDistributorFilter::filter(const CDistributorList &inDistributors) const
     {

@@ -39,25 +39,13 @@ namespace swift::misc::math
         return rv;
     }
 
-    bool CMathUtils::epsilonEqual(float v1, float v2, float epsilon)
-    {
-        return qAbs(v1 - v2) <= epsilon;
-    }
+    bool CMathUtils::epsilonEqual(float v1, float v2, float epsilon) { return qAbs(v1 - v2) <= epsilon; }
 
-    bool CMathUtils::epsilonEqual(double v1, double v2, double epsilon)
-    {
-        return qAbs(v1 - v2) <= epsilon;
-    }
+    bool CMathUtils::epsilonEqual(double v1, double v2, double epsilon) { return qAbs(v1 - v2) <= epsilon; }
 
-    double CMathUtils::deg2rad(double degree)
-    {
-        return degree * c_pi / 180.0;
-    }
+    double CMathUtils::deg2rad(double degree) { return degree * c_pi / 180.0; }
 
-    double CMathUtils::rad2deg(double radians)
-    {
-        return radians * 180.0 / c_pi;
-    }
+    double CMathUtils::rad2deg(double radians) { return radians * 180.0 / c_pi; }
 
     double CMathUtils::normalizeDegrees180(double degrees)
     {
@@ -90,10 +78,7 @@ namespace swift::misc::math
         return (r / MAX) * max;
     }
 
-    bool CMathUtils::randomBool()
-    {
-        return randomInteger(0, 1);
-    }
+    bool CMathUtils::randomBool() { return randomInteger(0, 1); }
 
     int CMathUtils::roundToMultipleOf(int value, int divisor)
     {

@@ -21,8 +21,8 @@ using namespace swift::config;
 
 namespace swift::gui::components
 {
-    CLegalInfoComponent::CLegalInfoComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                ui(new Ui::CLegalInfoComponent)
+    CLegalInfoComponent::CLegalInfoComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CLegalInfoComponent)
     {
         ui->setupUi(this);
         this->setChecklistInfo();
@@ -34,18 +34,15 @@ namespace swift::gui::components
         connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
     }
 
-    CLegalInfoComponent::~CLegalInfoComponent()
-    {}
+    CLegalInfoComponent::~CLegalInfoComponent() {}
 
-    bool CLegalInfoComponent::isAgreedTo() const
-    {
-        return ui->cb_Agree->isChecked();
-    }
+    bool CLegalInfoComponent::isAgreedTo() const { return ui->cb_Agree->isChecked(); }
 
     bool CLegalInfoComponent::validateAgreement()
     {
         if (this->isAgreedTo()) { return true; }
-        static const CStatusMessage m = CStatusMessage(this).validationError(u"You need to agree with the swift license");
+        static const CStatusMessage m =
+            CStatusMessage(this).validationError(u"You need to agree with the swift license");
         this->showOverlayMessage(m);
         return false;
     }
@@ -60,14 +57,12 @@ namespace swift::gui::components
         if (!sGui) { return; }
         const CGlobalSetup gs = sGui->getGlobalSetup();
         const CUrl url = gs.getHelpPageUrl("checklist");
-        ui->lbl_Tip->setText(QStringLiteral("Please read the <a href=\"%1\">checklist before your 1st flight</a>").arg(url.getFullUrl()));
+        ui->lbl_Tip->setText(QStringLiteral("Please read the <a href=\"%1\">checklist before your 1st flight</a>")
+                                 .arg(url.getFullUrl()));
         ui->lbl_Tip->setTextFormat(Qt::RichText);
         ui->lbl_Tip->setTextInteractionFlags(Qt::TextBrowserInteraction);
         ui->lbl_Tip->setOpenExternalLinks(true);
     }
 
-    bool CLegalInfoWizardPage::validatePage()
-    {
-        return m_legalInfo && m_legalInfo->validateAgreement();
-    }
+    bool CLegalInfoWizardPage::validatePage() { return m_legalInfo && m_legalInfo->validateAgreement(); }
 } // namespace swift::gui::components

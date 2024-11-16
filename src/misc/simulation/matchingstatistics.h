@@ -43,19 +43,26 @@ namespace swift::misc::simulation
         bool containsSessionId(const QString &sessionId) const;
 
         //! Contains given aircraft / airline combination
-        bool containsAircraftAirlineCombination(const QString &aircraftDesignator, const QString &airlineDesignator) const;
+        bool containsAircraftAirlineCombination(const QString &aircraftDesignator,
+                                                const QString &airlineDesignator) const;
 
         //! Contains given aircraft / airline combination
-        bool containsAircraftAirlineCombination(const QString &sessionId, const QString &aircraftDesignator, const QString &airlineDesignator) const;
+        bool containsAircraftAirlineCombination(const QString &sessionId, const QString &aircraftDesignator,
+                                                const QString &airlineDesignator) const;
 
         //! Increase count if found
-        bool increaseCountIfFound(CMatchingStatisticsEntry::EntryType type, const QString &sessionId, const QString &aircraftDesignator, const QString &airlineDesignator = {});
+        bool increaseCountIfFound(CMatchingStatisticsEntry::EntryType type, const QString &sessionId,
+                                  const QString &aircraftDesignator, const QString &airlineDesignator = {});
 
         //! Add a combination, normally with no duplicates (in that case count is increased
-        void addAircraft(CMatchingStatisticsEntry::EntryType type, const QString &sessionId, const QString &modelSetId, const QString &description, const QString &aircraftDesignator, bool avoidDuplicates = true);
+        void addAircraft(CMatchingStatisticsEntry::EntryType type, const QString &sessionId, const QString &modelSetId,
+                         const QString &description, const QString &aircraftDesignator, bool avoidDuplicates = true);
 
         //! Add a combination, normally with no duplicates (in that case count is increased
-        void addAircraftAirlineCombination(CMatchingStatisticsEntry::EntryType type, const QString &sessionId, const QString &modelSetId, const QString &description, const QString &aircraftDesignator, const QString &airlineDesignator, bool avoidDuplicates = true);
+        void addAircraftAirlineCombination(CMatchingStatisticsEntry::EntryType type, const QString &sessionId,
+                                           const QString &modelSetId, const QString &description,
+                                           const QString &aircraftDesignator, const QString &airlineDesignator,
+                                           bool avoidDuplicates = true);
     };
 } // namespace swift::misc::simulation
 

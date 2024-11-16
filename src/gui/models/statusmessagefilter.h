@@ -24,10 +24,12 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CStatusMessageFilter(swift::misc::CStatusMessage::StatusSeverity severity, const QString &text, const QString &category);
+        CStatusMessageFilter(swift::misc::CStatusMessage::StatusSeverity severity, const QString &text,
+                             const QString &category);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::CStatusMessageList filter(const swift::misc::CStatusMessageList &inContainer) const override;
+        virtual swift::misc::CStatusMessageList
+        filter(const swift::misc::CStatusMessageList &inContainer) const override;
 
         //! \copydoc IModelFilter::getAsValueObject
         virtual swift::misc::CVariant getAsValueObject() const override;

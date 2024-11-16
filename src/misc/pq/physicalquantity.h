@@ -30,25 +30,29 @@ namespace swift::misc::physical_quantities
 }
 
 //! \cond
-#define SWIFT_TEMPLATE_PQ_MIXINS(MU, PQ, Extern, Export)                                                                                            \
-    namespace swift::misc::physical_quantities                                                                                                      \
-    {                                                                                                                                               \
-        class PQ;                                                                                                                                   \
-    }                                                                                                                                               \
-    namespace swift::misc::private_ns                                                                                                               \
-    {                                                                                                                                               \
-        Extern template struct Export CValueObjectMetaInfo<physical_quantities::PQ>;                                                                \
-        Extern template struct Export MetaTypeHelper<physical_quantities::PQ>;                                                                      \
-    }                                                                                                                                               \
-    namespace swift::misc::mixin                                                                                                                    \
-    {                                                                                                                                               \
-        Extern template class Export DBusOperators<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;       \
-        Extern template class Export DataStreamOperators<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>; \
-        Extern template class Export JsonOperators<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;       \
-        Extern template class Export Index<physical_quantities::PQ>;                                                                                \
-        Extern template class Export MetaType<physical_quantities::PQ>;                                                                             \
-        Extern template class Export String<physical_quantities::PQ>;                                                                               \
-        Extern template class Export Icon<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;                \
+#define SWIFT_TEMPLATE_PQ_MIXINS(MU, PQ, Extern, Export)                                                               \
+    namespace swift::misc::physical_quantities                                                                         \
+    {                                                                                                                  \
+        class PQ;                                                                                                      \
+    }                                                                                                                  \
+    namespace swift::misc::private_ns                                                                                  \
+    {                                                                                                                  \
+        Extern template struct Export CValueObjectMetaInfo<physical_quantities::PQ>;                                   \
+        Extern template struct Export MetaTypeHelper<physical_quantities::PQ>;                                         \
+    }                                                                                                                  \
+    namespace swift::misc::mixin                                                                                       \
+    {                                                                                                                  \
+        Extern template class Export                                                                                   \
+            DBusOperators<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;   \
+        Extern template class Export DataStreamOperators<                                                              \
+            physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;                 \
+        Extern template class Export                                                                                   \
+            JsonOperators<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;   \
+        Extern template class Export Index<physical_quantities::PQ>;                                                   \
+        Extern template class Export MetaType<physical_quantities::PQ>;                                                \
+        Extern template class Export String<physical_quantities::PQ>;                                                  \
+        Extern template class Export                                                                                   \
+            Icon<physical_quantities::CPhysicalQuantity<physical_quantities::MU, physical_quantities::PQ>>;            \
     }
 //! \endcond
 
@@ -187,7 +191,8 @@ namespace swift::misc::physical_quantities
 
         //! Value to QString with the given unit, e.g. "5.00m"
         //! \note default digits is CMeasurementUnit::getDisplayDigits
-        QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool withGroupSeparator = false, bool i18n = false) const;
+        QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool withGroupSeparator = false,
+                                     bool i18n = false) const;
 
         //! Value to QString with the current unit, e.g. "5.00m"
         //! \note default digits is CMeasurementUnit::getDisplayDigits

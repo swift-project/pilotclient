@@ -49,7 +49,8 @@ namespace swift::gui::models
         bool containsNameValue(const QString &name, const swift::misc::CVariant &value) const;
 
         //! Add our update a value
-        bool addOrUpdateByName(const QString &name, const swift::misc::CVariant &value, const swift::misc::CIcon &icon, bool skipEqualValues);
+        bool addOrUpdateByName(const QString &name, const swift::misc::CVariant &value, const swift::misc::CIcon &icon,
+                               bool skipEqualValues);
 
         //! Current row index of given name
         int getRowIndexForName(const QString &name) const;

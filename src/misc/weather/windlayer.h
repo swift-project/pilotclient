@@ -62,7 +62,8 @@ namespace swift::misc::weather
         }
 
         //! Set direction
-        void setDirection(const physical_quantities::CAngle &main, const physical_quantities::CAngle &from, const physical_quantities::CAngle &to)
+        void setDirection(const physical_quantities::CAngle &main, const physical_quantities::CAngle &from,
+                          const physical_quantities::CAngle &to)
         {
             m_directionMain = main;
             m_directionFrom = from;

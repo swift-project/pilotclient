@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
     QCoreApplication qa(argc, argv);
     COwnAircraftProviderDummy::instance()->updateOwnCallsign("BER368");
 
-    CFSDClient client(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), CRemoteAircraftProviderDummy::instance(), &qa);
+    CFSDClient client(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(),
+                      CRemoteAircraftProviderDummy::instance(), &qa);
     client.setClientName("Test Client");
     client.setHostApplication("None");
     client.setVersion(0, 8);
@@ -48,8 +49,8 @@ int main(int argc, char *argv[])
     client.sendFsdMessage("$CRLOWW_F_APP:LHA449:ATIS:E:6\r\n");
     client.sendFsdMessage("$CRN1234:BAW345:CAPS:INTERIMPOS=1:MODELDESC=1:ATCINFO=1:STEALTH=1:ACCONFIG=1\r\n");
     client.sendFsdMessage("#SBBAW106:LHA449:PI:GEN:EQUIPMENT=B744:AIRLINE=BAW:LIVERY=UNION\r\n");
-    client.sendFsdMessage("#SBGEC55F:DESWL:FSIPIR:1::MD11:12.93209:-0.01354:3648.00000:4.CB8FB1E0.984745A0::PMDG MD-11F Lufthansa Cargo WOW\r\n");
-    client.sendFsdMessage("#TMAFR529:@20500&@26000:taxi to entry N1 via M A4\r\n");
+    client.sendFsdMessage("#SBGEC55F:DESWL:FSIPIR:1::MD11:12.93209:-0.01354:3648.00000:4.CB8FB1E0.984745A0::PMDG MD-11F
+    Lufthansa Cargo WOW\r\n"); client.sendFsdMessage("#TMAFR529:@20500&@26000:taxi to entry N1 via M A4\r\n");
     client.sendFsdMessage("$CQDLH123:BER368:ACC:json config\r\n");
     client.sendFsdMessage("$CQDLH123:@94836:ACC:{\"request\":\"full\"}\r\n");
     client.sendFsdMessage("#SBAUA417C:LHA449:PI:X:0:1:~B737");

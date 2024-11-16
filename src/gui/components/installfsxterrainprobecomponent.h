@@ -41,7 +41,9 @@ namespace swift::gui::components
         //! Simulator has been changed
         void onSimulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
-        swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for SimObjects directories
+        swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings {
+            this
+        }; //!< for SimObjects directories
     };
 } // namespace swift::gui::components
 

@@ -17,7 +17,8 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::models
 {
-    CUserListModel::CUserListModel(UserMode userMode, QObject *parent) : CListModelBase("ModelUserList", parent), m_userMode(NotSet)
+    CUserListModel::CUserListModel(UserMode userMode, QObject *parent)
+        : CListModelBase("ModelUserList", parent), m_userMode(NotSet)
     {
         this->setUserMode(userMode);
 
@@ -40,8 +41,10 @@ namespace swift::gui::models
         case UserDetailed:
             m_columns.addColumn(CColumn(CUser::IndexIcon));
             m_columns.addColumn(CColumn::standardString("realname", CUser::IndexRealName));
-            m_columns.addColumn(CColumn::standardValueObject("callsign", { CUser::IndexCallsign, CCallsign::IndexCallsignString }));
-            m_columns.addColumn(CColumn::standardValueObject("hb.", "homebase", { CUser::IndexHomebase, CAirportIcaoCode::IndexString }));
+            m_columns.addColumn(
+                CColumn::standardValueObject("callsign", { CUser::IndexCallsign, CCallsign::IndexCallsignString }));
+            m_columns.addColumn(CColumn::standardValueObject("hb.", "homebase",
+                                                             { CUser::IndexHomebase, CAirportIcaoCode::IndexString }));
             m_columns.addColumn(CColumn::standardString("userid", CUser::IndexId7Digit));
 
             // default sort order
@@ -59,9 +62,7 @@ namespace swift::gui::models
             m_sortOrder = Qt::AscendingOrder;
             break;
 
-        default:
-            qFatal("Wrong mode");
-            break;
+        default: qFatal("Wrong mode"); break;
         }
     }
 } // namespace swift::gui::models

@@ -32,7 +32,10 @@ FSXCOMMON_EXPORT P3DSimConnectVersion stringToP3DVersion(const QString &p3d);
 FSXCOMMON_EXPORT bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version);
 
 //! Same but string version
-inline bool loadAndResolveP3DSimConnectByString(const QString &version) { return loadAndResolveP3DSimConnect(stringToP3DVersion(version)); }
+inline bool loadAndResolveP3DSimConnectByString(const QString &version)
+{
+    return loadAndResolveP3DSimConnect(stringToP3DVersion(version));
+}
 
 FSXCOMMON_EXPORT bool loadAndResolveMSFSimConnect();
 

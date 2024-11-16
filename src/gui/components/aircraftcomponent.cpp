@@ -35,8 +35,7 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::components
 {
-    CAircraftComponent::CAircraftComponent(QWidget *parent) : QTabWidget(parent),
-                                                              ui(new Ui::CAircraftComponent)
+    CAircraftComponent::CAircraftComponent(QWidget *parent) : QTabWidget(parent), ui(new Ui::CAircraftComponent)
     {
         ui->setupUi(this);
 
@@ -51,19 +50,23 @@ namespace swift::gui::components
         ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::NetworkMode);
         ui->tvp_AircraftInRange->configureMenu(true, true, false, true, true, true);
 
-        connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
-        connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this, &CAircraftComponent::requestTextMessageWidget);
-        connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this, &CAircraftComponent::onRowCountChanged);
-        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAircraftComponent::onConnectionStatusChanged, Qt::QueuedConnection);
-        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::movedAircraft, this, &CAircraftComponent::onOwnAircraftMoved, Qt::QueuedConnection);
+        connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::modelDataChangedDigest, this,
+                &CAircraftComponent::onRowCountChanged);
+        connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this,
+                &CAircraftComponent::requestTextMessageWidget);
+        connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this,
+                &CAircraftComponent::onRowCountChanged);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
+                &CAircraftComponent::onConnectionStatusChanged, Qt::QueuedConnection);
+        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::movedAircraft, this,
+                &CAircraftComponent::onOwnAircraftMoved, Qt::QueuedConnection);
         connect(&m_updateTimer, &QTimer::timeout, this, &CAircraftComponent::update);
 
         this->onSettingsChanged();
         m_updateTimer.start();
     }
 
-    CAircraftComponent::~CAircraftComponent()
-    {}
+    CAircraftComponent::~CAircraftComponent() {}
 
     int CAircraftComponent::countAircraftInView() const
     {
@@ -80,7 +83,8 @@ namespace swift::gui::components
     bool CAircraftComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
         CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
-        const bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAircraftComponent::onInfoAreaTabBarChanged, Qt::QueuedConnection);
+        const bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this,
+                               &CAircraftComponent::onInfoAreaTabBarChanged, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
         Q_ASSERT_X(parentDockableWidget, Q_FUNC_INFO, "missing parent");
         return c && parentDockableWidget;
@@ -105,7 +109,8 @@ namespace swift::gui::components
             const bool counter = ((m_updateCounter % 5) == 0); // less frequent than aircraft
             if (this->countAirportsInRangeInView() < 1 || (visible && counter))
             {
-                ui->tvp_AirportsInRange->updateContainerMaybeAsync(sGui->getIContextSimulator()->getAirportsInRange(true));
+                ui->tvp_AirportsInRange->updateContainerMaybeAsync(
+                    sGui->getIContextSimulator()->getAirportsInRange(true));
             }
         }
 
@@ -158,10 +163,7 @@ namespace swift::gui::components
     void CAircraftComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from)
-        if (to.isDisconnected())
-        {
-            ui->tvp_AircraftInRange->clear();
-        }
+        if (to.isDisconnected()) { ui->tvp_AircraftInRange->clear(); }
         else if (to.isConnected())
         {
             if (sGui && sGui->getIContextNetwork())

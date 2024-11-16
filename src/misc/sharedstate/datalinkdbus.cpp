@@ -25,15 +25,9 @@ namespace swift::misc::shared_state
         m_watchTimer.setInterval(1000);
     }
 
-    CDataLinkDBus::~CDataLinkDBus()
-    {
-        setConnectionStatus(false);
-    }
+    CDataLinkDBus::~CDataLinkDBus() { setConnectionStatus(false); }
 
-    void CDataLinkDBus::overrideIdentifier(const CIdentifier &id)
-    {
-        m_identifier = id;
-    }
+    void CDataLinkDBus::overrideIdentifier(const CIdentifier &id) { m_identifier = id; }
 
     void CDataLinkDBus::initializeLocal(CDBusServer *server)
     {
@@ -100,19 +94,13 @@ namespace swift::misc::shared_state
         for (const auto &observerWeak : std::as_const(getChannel(channel).passiveObservers))
         {
             auto observer = observerWeak.lock();
-            if (observer && observer->eventSubscription().matches(param))
-            {
-                observer->handleEvent(param);
-            }
+            if (observer && observer->eventSubscription().matches(param)) { observer->handleEvent(param); }
         }
     }
 
     void CDataLinkDBus::announceLocalSubscriptions()
     {
-        for (const auto &channel : getChannelNames())
-        {
-            announceLocalSubscriptions(channel);
-        }
+        for (const auto &channel : getChannelNames()) { announceLocalSubscriptions(channel); }
     }
 
     void CDataLinkDBus::announceLocalSubscriptions(const QString &channel)
@@ -154,9 +142,8 @@ namespace swift::misc::shared_state
 
     void CDataLinkDBus::publish(const CPassiveMutator *mutator)
     {
-        connect(mutator, &CPassiveMutator::eventPosted, this, [this, channel = getChannelName(mutator)](const CVariant &param) {
-            handleLocalEvent(channel, param);
-        });
+        connect(mutator, &CPassiveMutator::eventPosted, this,
+                [this, channel = getChannelName(mutator)](const CVariant &param) { handleLocalEvent(channel, param); });
     }
 
     void CDataLinkDBus::publish(const CActiveMutator *mutator)
@@ -167,10 +154,7 @@ namespace swift::misc::shared_state
         Q_ASSERT_X(!channel.activeMutator, Q_FUNC_INFO, "Tried to publish two active mutators on one channel");
         channel.activeMutator = mutator->weakRef();
 
-        if (m_duplex)
-        {
-            m_duplex->advertise(getChannelName(mutator));
-        }
+        if (m_duplex) { m_duplex->advertise(getChannelName(mutator)); }
         connect(mutator, &QObject::destroyed, this, [this, channel = getChannelName(mutator)] {
             if (m_duplex) { m_duplex->withdraw(channel); }
         });
@@ -192,9 +176,10 @@ namespace swift::misc::shared_state
     {
         subscribe(static_cast<const CPassiveObserver *>(observer));
 
-        connect(observer, &CActiveObserver::requestPosted, this, [this, channel = getChannelName(observer)](const CVariant &param, CPromise<CVariant> reply) {
-            reply.chainResult(handleLocalRequest(channel, param));
-        });
+        connect(observer, &CActiveObserver::requestPosted, this,
+                [this, channel = getChannelName(observer)](const CVariant &param, CPromise<CVariant> reply) {
+                    reply.chainResult(handleLocalRequest(channel, param));
+                });
     }
 
     QStringList CDataLinkDBus::getChannelNames() const

@@ -11,17 +11,15 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAircraftMatcherSetup)
 
 namespace swift::misc::simulation
 {
-    CAircraftMatcherSetup::CAircraftMatcherSetup()
-    {
-        this->reset();
-    }
+    CAircraftMatcherSetup::CAircraftMatcherSetup() { this->reset(); }
 
     CAircraftMatcherSetup::CAircraftMatcherSetup(CAircraftMatcherSetup::MatchingAlgorithm algorithm)
     {
         this->reset(algorithm);
     }
 
-    CAircraftMatcherSetup::CAircraftMatcherSetup(CAircraftMatcherSetup::MatchingAlgorithm algorithm, MatchingMode mode, PickSimilarStrategy pickStrategy)
+    CAircraftMatcherSetup::CAircraftMatcherSetup(CAircraftMatcherSetup::MatchingAlgorithm algorithm, MatchingMode mode,
+                                                 PickSimilarStrategy pickStrategy)
     {
         this->setPickStrategy(pickStrategy);
         this->setMatchingAlgorithm(algorithm, false);
@@ -31,14 +29,8 @@ namespace swift::misc::simulation
     bool CAircraftMatcherSetup::setMatchingAlgorithm(CAircraftMatcherSetup::MatchingAlgorithm algorithm, bool reset)
     {
         if (this->getMatchingAlgorithm() == algorithm) { return false; }
-        if (reset)
-        {
-            this->reset(algorithm);
-        }
-        else
-        {
-            m_algorithm = static_cast<int>(algorithm);
-        }
+        if (reset) { this->reset(algorithm); }
+        else { m_algorithm = static_cast<int>(algorithm); }
         return true;
     }
 
@@ -96,10 +88,8 @@ namespace swift::misc::simulation
     QString CAircraftMatcherSetup::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n)
-        return u"algorithm: '" % this->getMatchingAlgorithmAsString() %
-               u"' mode: '" % this->getMatchingModeAsString() %
-               u"' force: '" % this->getForceModeAsString() %
-               u"' strategy: '" % this->getPickStrategyAsString() %
+        return u"algorithm: '" % this->getMatchingAlgorithmAsString() % u"' mode: '" % this->getMatchingModeAsString() %
+               u"' force: '" % this->getForceModeAsString() % u"' strategy: '" % this->getPickStrategyAsString() %
                u"\' matching script: " % boolToOnOff(m_msReverseEnabled) % u'/' % boolToOnOff(m_msMatchingEnabled);
     }
 
@@ -163,9 +153,7 @@ namespace swift::misc::simulation
         case MatchingStepwiseReduce: mode = ModeDefaultReduce; break;
         case MatchingScoreBased: mode = ModeDefaultScore; break;
         case MatchingStepwiseReducePlusScoreBased:
-        default:
-            mode = ModeDefaultReducePlusScore;
-            break;
+        default: mode = ModeDefaultReducePlusScore; break;
         }
         mode |= ModeDefaultSet; // add set default
 
@@ -280,8 +268,14 @@ namespace swift::misc::simulation
         if (mode.testFlag(ModelVerificationAtStartup)) { modes << modeFlagToString(ModelVerificationAtStartup); }
         if (mode.testFlag(ByAirlineGroupIfNoAirline)) { modes << modeFlagToString(ByAirlineGroupIfNoAirline); }
         if (mode.testFlag(ByAirlineGroupSameAsAirline)) { modes << modeFlagToString(ByAirlineGroupSameAsAirline); }
-        if (mode.testFlag(ModelVerificationOnlyWarnError)) { modes << modeFlagToString(ModelVerificationOnlyWarnError); }
-        if (mode.testFlag(ModelFailoverIfNoModelCanBeAdded)) { modes << modeFlagToString(ModelFailoverIfNoModelCanBeAdded); }
+        if (mode.testFlag(ModelVerificationOnlyWarnError))
+        {
+            modes << modeFlagToString(ModelVerificationOnlyWarnError);
+        }
+        if (mode.testFlag(ModelFailoverIfNoModelCanBeAdded))
+        {
+            modes << modeFlagToString(ModelFailoverIfNoModelCanBeAdded);
+        }
         return modes.join(", ");
     }
 
@@ -298,8 +292,7 @@ namespace swift::misc::simulation
         case ForceEnginecount: return ec;
         case ForceEngine: return e;
         case ForceNothing:
-        default:
-            break;
+        default: break;
         }
         return n;
     }
@@ -334,14 +327,11 @@ namespace swift::misc::simulation
     }
 
     CAircraftMatcherSetup::MatchingMode CAircraftMatcherSetup::matchingMode(
-        bool revModelString, bool revLiveryIds,
-        bool byModelString, bool byIcaoDataAircraft1st, bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType,
-        bool byMilitary, bool byCivilian, bool byVtol,
-        bool byGliderCategory, bool byMilitaryCategory, bool bySmallAircraftCategory,
-        bool scoreIgnoreZeros, bool scorePreferColorLiveries,
-        bool excludeNoDbData, bool excludeNoExcluded,
-        bool modelVerification, bool modelVerificationWarnError,
-        bool modelSetRemoveFailedModel, bool modelFailover)
+        bool revModelString, bool revLiveryIds, bool byModelString, bool byIcaoDataAircraft1st,
+        bool byIcaoDataAirline1st, bool byFamily, bool byLivery, bool byCombinedType, bool byMilitary, bool byCivilian,
+        bool byVtol, bool byGliderCategory, bool byMilitaryCategory, bool bySmallAircraftCategory,
+        bool scoreIgnoreZeros, bool scorePreferColorLiveries, bool excludeNoDbData, bool excludeNoExcluded,
+        bool modelVerification, bool modelVerificationWarnError, bool modelSetRemoveFailedModel, bool modelFailover)
     {
         if (modelFailover) { modelSetRemoveFailedModel = true; } // otherwise this does not make sense
 

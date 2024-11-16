@@ -20,9 +20,7 @@ SWIFT_DECLARE_COLLECTION_MIXINS(swift::misc, CPlatform, CPlatformSet)
 namespace swift::misc
 {
     //! Value object for a set of platforms.
-    class SWIFT_MISC_EXPORT CPlatformSet :
-        public CCollection<CPlatform>,
-        public mixin::MetaType<CPlatformSet>
+    class SWIFT_MISC_EXPORT CPlatformSet : public CCollection<CPlatform>, public mixin::MetaType<CPlatformSet>
     {
         using CCollection::CCollection;
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CPlatformSet)

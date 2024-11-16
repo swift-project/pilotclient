@@ -15,13 +15,9 @@ namespace swift::misc::aviation
         QString s = CAngle::convertToQString(i18n).append(" ");
         if (i18n)
         {
-            return s.append(this->isMagneticTrack() ?
-                                QCoreApplication::translate("Aviation", "magnetic") :
-                                QCoreApplication::translate("Aviation", "true"));
+            return s.append(this->isMagneticTrack() ? QCoreApplication::translate("Aviation", "magnetic") :
+                                                      QCoreApplication::translate("Aviation", "true"));
         }
-        else
-        {
-            return s.append(this->isMagneticTrack() ? "magnetic" : "true");
-        }
+        else { return s.append(this->isMagneticTrack() ? "magnetic" : "true"); }
     }
 } // namespace swift::misc::aviation

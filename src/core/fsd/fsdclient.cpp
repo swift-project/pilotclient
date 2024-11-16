@@ -68,14 +68,8 @@ namespace swift::core::fsd
         for (const auto &ch : str)
         {
             const ushort code = ch.unicode();
-            if (code < 0x80)
-            {
-                escaped += ch;
-            }
-            else
-            {
-                escaped += "\\u" % QString::number(code, 16).rightJustified(4, '0');
-            }
+            if (code < 0x80) { escaped += ch; }
+            else { escaped += "\\u" % QString::number(code, 16).rightJustified(4, '0'); }
         }
         return escaped;
     }
@@ -91,15 +85,10 @@ namespace swift::core::fsd
         return cats;
     }
 
-    CFSDClient::CFSDClient(IClientProvider *clientProvider,
-                           IOwnAircraftProvider *ownAircraftProvider,
-                           IRemoteAircraftProvider *remoteAircraftProvider,
-                           QObject *owner)
-        : CContinuousWorker(owner, "FSDClient"),
-          CClientAware(clientProvider),
-          COwnAircraftAware(ownAircraftProvider),
-          CRemoteAircraftAware(remoteAircraftProvider),
-          m_tokenBucket(10, 5000, 1)
+    CFSDClient::CFSDClient(IClientProvider *clientProvider, IOwnAircraftProvider *ownAircraftProvider,
+                           IRemoteAircraftProvider *remoteAircraftProvider, QObject *owner)
+        : CContinuousWorker(owner, "FSDClient"), CClientAware(clientProvider), COwnAircraftAware(ownAircraftProvider),
+          CRemoteAircraftAware(remoteAircraftProvider), m_tokenBucket(10, 5000, 1)
     {
         initializeMessageTypes();
         connectSocketSignals();
@@ -121,7 +110,8 @@ namespace swift::core::fsd
 
         fsdMessageSettingsChanged();
 
-        if (!m_statistics && (CBuildConfig::isLocalDeveloperDebugBuild() || (sApp && sApp->getOwnDistribution().isRestricted())))
+        if (!m_statistics &&
+            (CBuildConfig::isLocalDeveloperDebugBuild() || (sApp && sApp->getOwnDistribution().isRestricted())))
         {
             CLogMessage(this).info(u"Enabled network statistics");
             m_statistics = true;
@@ -147,12 +137,15 @@ namespace swift::core::fsd
 
     void CFSDClient::setServer(const CServer &server)
     {
-        Q_ASSERT_X(this->getConnectionStatus().isDisconnected(), Q_FUNC_INFO, "Can't change server details while still connected");
+        Q_ASSERT_X(this->getConnectionStatus().isDisconnected(), Q_FUNC_INFO,
+                   "Can't change server details while still connected");
 
         const QString codecName(server.getFsdSetup().getTextCodec());
         QTextCodec *textCodec = QTextCodec::codecForName(codecName.toLocal8Bit());
         if (!textCodec) { textCodec = QTextCodec::codecForName("utf-8"); }
-        const int protocolRev = (server.getServerType() == CServer::FSDServerVatsim) ? PROTOCOL_REVISION_VATSIM_VELOCITY : PROTOCOL_REVISION_CLASSIC;
+        const int protocolRev = (server.getServerType() == CServer::FSDServerVatsim) ?
+                                    PROTOCOL_REVISION_VATSIM_VELOCITY :
+                                    PROTOCOL_REVISION_CLASSIC;
 
         QWriteLocker l(&m_lockUserClientBuffered);
         m_server = server;
@@ -162,7 +155,8 @@ namespace swift::core::fsd
 
     void CFSDClient::setCallsign(const CCallsign &callsign)
     {
-        Q_ASSERT_X(this->getConnectionStatus().isDisconnected(), Q_FUNC_INFO, "Can't change callsign while still connected");
+        Q_ASSERT_X(this->getConnectionStatus().isDisconnected(), Q_FUNC_INFO,
+                   "Can't change callsign while still connected");
         updateOwnCallsign(callsign);
 
         QWriteLocker l(&m_lockUserClientBuffered);
@@ -171,7 +165,8 @@ namespace swift::core::fsd
 
     void CFSDClient::setIcaoCodes(const CSimulatedAircraft &ownAircraft)
     {
-        Q_ASSERT_X(this->getConnectionStatus().isDisconnected(), Q_FUNC_INFO, "Can't change ICAO codes while still connected");
+        Q_ASSERT_X(this->getConnectionStatus().isDisconnected(), Q_FUNC_INFO,
+                   "Can't change ICAO codes while still connected");
         updateOwnIcaoCodes(ownAircraft.getAircraftIcaoCode(), ownAircraft.getAirlineIcaoCode());
 
         QWriteLocker l(&m_lockUserClientBuffered);
@@ -187,7 +182,8 @@ namespace swift::core::fsd
         */
     }
 
-    void CFSDClient::setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString, bool sendModelString)
+    void CFSDClient::setLiveryAndModelString(const QString &livery, bool sendLiveryString, const QString &modelString,
+                                             bool sendModelString)
     {
         QWriteLocker l(&m_lockUserClientBuffered);
         m_ownLivery = livery;
@@ -196,10 +192,7 @@ namespace swift::core::fsd
         m_sendModelString = sendModelString;
     }
 
-    void CFSDClient::setSimType(const CSimulatorInfo &simInfo)
-    {
-        this->setSimType(simInfo.getSimulator());
-    }
+    void CFSDClient::setSimType(const CSimulatorInfo &simInfo) { this->setSimType(simInfo.getSimulator()); }
 
     void CFSDClient::setSimType(swift::misc::simulation::CSimulatorInfo::Simulator simulator)
     {
@@ -220,14 +213,12 @@ namespace swift::core::fsd
     QStringList CFSDClient::getPresetValues() const
     {
         QReadLocker l(&m_lockUserClientBuffered);
-        const QStringList v = {
-            m_ownModelString,
-            m_ownLivery,
-            m_ownAircraftIcaoCode.getDesignator(),
-            m_ownAirlineIcaoCode.getVDesignator(),
-            m_ownCallsign.asString(),
-            m_partnerCallsign.asString()
-        };
+        const QStringList v = { m_ownModelString,
+                                m_ownLivery,
+                                m_ownAircraftIcaoCode.getDesignator(),
+                                m_ownAirlineIcaoCode.getVDesignator(),
+                                m_ownCallsign.asString(),
+                                m_partnerCallsign.asString() };
         return v;
     }
 
@@ -304,13 +295,15 @@ namespace swift::core::fsd
         {
             const AddPilot pilotLogin(callsign, cid, password, m_pilotRating, m_protocolRevision, m_simType, name);
             sendQueuedMessage(pilotLogin);
-            CStatusMessage(this).info(u"Sending login as '%1' '%2' '%3' '%4' '%5' '%6'") << callsign << cid << toQString(m_pilotRating) << m_protocolRevision << toQString(m_simType) << name;
+            CStatusMessage(this).info(u"Sending login as '%1' '%2' '%3' '%4' '%5' '%6'")
+                << callsign << cid << toQString(m_pilotRating) << m_protocolRevision << toQString(m_simType) << name;
         }
         else if (m.isObserver())
         {
             const AddAtc addAtc(callsign, name, cid, password, m_atcRating, m_protocolRevision);
             sendQueuedMessage(addAtc);
-            CStatusMessage(this).info(u"Sending OBS login as '%1' '%2' '%3' '%4' '%5'") << callsign << cid << toQString(m_atcRating) << m_protocolRevision << name;
+            CStatusMessage(this).info(u"Sending OBS login as '%1' '%2' '%3' '%4' '%5'")
+                << callsign << cid << toQString(m_atcRating) << m_protocolRevision << name;
         }
 
         if (m_server.getFsdSetup().receiveEuroscopeSimData())
@@ -339,7 +332,8 @@ namespace swift::core::fsd
         const CSimulatedAircraft myAircraft(getOwnAircraft());
         if (m_loginMode == CLoginMode::Observer)
         {
-            sendAtcDataUpdate(myAircraft.latitude().value(CAngleUnit::deg()), myAircraft.longitude().value(CAngleUnit::deg()));
+            sendAtcDataUpdate(myAircraft.latitude().value(CAngleUnit::deg()),
+                              myAircraft.longitude().value(CAngleUnit::deg()));
         }
         else
         {
@@ -352,19 +346,16 @@ namespace swift::core::fsd
             }
 
             PilotRating r = this->getPilotRating();
-            PilotDataUpdate pilotDataUpdate(myAircraft.getTransponderMode(),
-                                            getOwnCallsignAsString(),
-                                            static_cast<qint16>(myAircraft.getTransponderCode()),
-                                            r,
-                                            myAircraft.latitude().value(CAngleUnit::deg()),
-                                            myAircraft.longitude().value(CAngleUnit::deg()),
-                                            myAircraft.getAltitude().valueInteger(CLengthUnit::ft()),
-                                            myAircraft.getPressureAltitude().valueInteger(CLengthUnit::ft()),
-                                            myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts()),
-                                            myAircraft.getPitch().value(CAngleUnit::deg()),
-                                            myAircraft.getBank().value(CAngleUnit::deg()),
-                                            myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
-                                            myAircraft.getParts().isOnGround());
+            PilotDataUpdate pilotDataUpdate(
+                myAircraft.getTransponderMode(), getOwnCallsignAsString(),
+                static_cast<qint16>(myAircraft.getTransponderCode()), r, myAircraft.latitude().value(CAngleUnit::deg()),
+                myAircraft.longitude().value(CAngleUnit::deg()),
+                myAircraft.getAltitude().valueInteger(CLengthUnit::ft()),
+                myAircraft.getPressureAltitude().valueInteger(CLengthUnit::ft()),
+                myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts()),
+                myAircraft.getPitch().value(CAngleUnit::deg()), myAircraft.getBank().value(CAngleUnit::deg()),
+                myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
+                myAircraft.getParts().isOnGround());
             sendQueuedMessage(pilotDataUpdate);
         }
     }
@@ -373,16 +364,13 @@ namespace swift::core::fsd
     {
         if (this->getConnectionStatus().isDisconnected()) { return; }
         const CSimulatedAircraft myAircraft(getOwnAircraft());
-        InterimPilotDataUpdate interimPilotDataUpdate(getOwnCallsignAsString(),
-                                                      QString(),
-                                                      myAircraft.latitude().value(CAngleUnit::deg()),
-                                                      myAircraft.longitude().value(CAngleUnit::deg()),
-                                                      myAircraft.getAltitude().valueInteger(CLengthUnit::ft()),
-                                                      myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts()),
-                                                      myAircraft.getPitch().value(CAngleUnit::deg()),
-                                                      myAircraft.getBank().value(CAngleUnit::deg()),
-                                                      myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
-                                                      myAircraft.getParts().isOnGround());
+        InterimPilotDataUpdate interimPilotDataUpdate(
+            getOwnCallsignAsString(), QString(), myAircraft.latitude().value(CAngleUnit::deg()),
+            myAircraft.longitude().value(CAngleUnit::deg()), myAircraft.getAltitude().valueInteger(CLengthUnit::ft()),
+            myAircraft.getGroundSpeed().valueInteger(CSpeedUnit::kts()), myAircraft.getPitch().value(CAngleUnit::deg()),
+            myAircraft.getBank().value(CAngleUnit::deg()),
+            myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
+            myAircraft.getParts().isOnGround());
 
         for (const auto &receiver : std::as_const(m_interimPositionReceivers))
         {
@@ -412,48 +400,33 @@ namespace swift::core::fsd
                 m_stoppedSendingVisualPositions = true;
                 m_visualPositionUpdateSentCount = 0;
             }
-            else
-            {
-                m_stoppedSendingVisualPositions = false;
-            }
+            else { m_stoppedSendingVisualPositions = false; }
 
-            if (!m_serverWantsVisualPositions)
-            {
-                return;
-            }
+            if (!m_serverWantsVisualPositions) { return; }
         }
-        VisualPilotDataUpdate visualPilotDataUpdate(getOwnCallsignAsString(),
-                                                    myAircraft.latitude().value(CAngleUnit::deg()),
-                                                    myAircraft.longitude().value(CAngleUnit::deg()),
-                                                    myAircraft.getAltitude().value(CLengthUnit::ft()),
-                                                    myAircraft.getAltitude().value(CLengthUnit::ft()) - myAircraft.getGroundElevation().value(CLengthUnit::ft()),
-                                                    myAircraft.getPitch().value(CAngleUnit::deg()),
-                                                    myAircraft.getBank().value(CAngleUnit::deg()),
-                                                    myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
-                                                    myAircraft.getVelocity().getVelocityX(CSpeedUnit::m_s()),
-                                                    myAircraft.getVelocity().getVelocityY(CSpeedUnit::m_s()),
-                                                    myAircraft.getVelocity().getVelocityZ(CSpeedUnit::m_s()),
-                                                    myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s()),
-                                                    myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s()),
-                                                    myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s()));
+        VisualPilotDataUpdate visualPilotDataUpdate(
+            getOwnCallsignAsString(), myAircraft.latitude().value(CAngleUnit::deg()),
+            myAircraft.longitude().value(CAngleUnit::deg()), myAircraft.getAltitude().value(CLengthUnit::ft()),
+            myAircraft.getAltitude().value(CLengthUnit::ft()) -
+                myAircraft.getGroundElevation().value(CLengthUnit::ft()),
+            myAircraft.getPitch().value(CAngleUnit::deg()), myAircraft.getBank().value(CAngleUnit::deg()),
+            myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
+            myAircraft.getVelocity().getVelocityX(CSpeedUnit::m_s()),
+            myAircraft.getVelocity().getVelocityY(CSpeedUnit::m_s()),
+            myAircraft.getVelocity().getVelocityZ(CSpeedUnit::m_s()),
+            myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s()),
+            myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s()),
+            myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s()));
 
-        if (m_stoppedSendingVisualPositions)
-        {
-            sendQueuedMessage(visualPilotDataUpdate.toStopped());
-        }
-        else if (m_visualPositionUpdateSentCount++ % 25 == 0)
-        {
-            sendQueuedMessage(visualPilotDataUpdate.toPeriodic());
-        }
-        else
-        {
-            sendQueuedMessage(visualPilotDataUpdate);
-        }
+        if (m_stoppedSendingVisualPositions) { sendQueuedMessage(visualPilotDataUpdate.toStopped()); }
+        else if (m_visualPositionUpdateSentCount++ % 25 == 0) { sendQueuedMessage(visualPilotDataUpdate.toPeriodic()); }
+        else { sendQueuedMessage(visualPilotDataUpdate); }
     }
 
     void CFSDClient::sendAtcDataUpdate(double latitude, double longitude)
     {
-        const AtcDataUpdate atcDataUpdate(getOwnCallsignAsString(), 199998, CFacilityType::OBS, 300, AtcRating::Observer, latitude, longitude, 0);
+        const AtcDataUpdate atcDataUpdate(getOwnCallsignAsString(), 199998, CFacilityType::OBS, 300,
+                                          AtcRating::Observer, latitude, longitude, 0);
         sendQueuedMessage(atcDataUpdate);
     }
 
@@ -552,10 +525,7 @@ namespace swift::core::fsd
         {
             const ClientQuery clientQuery(getOwnCallsignAsString(), receiverCallsign, ClientQueryType::ATIS);
             sendQueuedMessage(clientQuery);
-            if (m_serverType != ServerType::Vatsim)
-            {
-                m_pendingAtisQueries.insert(receiver, {});
-            }
+            if (m_serverType != ServerType::Vatsim) { m_pendingAtisQueries.insert(receiver, {}); }
         }
         else if (queryType == ClientQueryType::PublicIP)
         {
@@ -576,12 +546,14 @@ namespace swift::core::fsd
         else if (queryType == ClientQueryType::AircraftConfig)
         {
             if (queryData.isEmpty()) { return; }
-            const ClientQuery clientQuery(getOwnCallsignAsString(), receiverCallsign, ClientQueryType::AircraftConfig, queryData);
+            const ClientQuery clientQuery(getOwnCallsignAsString(), receiverCallsign, ClientQueryType::AircraftConfig,
+                                          queryData);
             sendQueuedMessage(clientQuery);
         }
         else if (queryType == ClientQueryType::EuroscopeSimData)
         {
-            const ClientQuery clientQuery(getOwnCallsignAsString(), "@94835", ClientQueryType::EuroscopeSimData, { "1" });
+            const ClientQuery clientQuery(getOwnCallsignAsString(), "@94835", ClientQueryType::EuroscopeSimData,
+                                          { "1" });
             sendQueuedMessage(clientQuery);
         }
 
@@ -605,7 +577,8 @@ namespace swift::core::fsd
         for (const auto &message : privateMessages)
         {
             if (message.getRecipientCallsign().isEmpty()) { continue; }
-            const TextMessage textMessage(ownCallsign, message.getRecipientCallsign().getFsdCallsignString(), message.getMessage());
+            const TextMessage textMessage(ownCallsign, message.getRecipientCallsign().getFsdCallsignString(),
+                                          message.getMessage());
             sendQueuedMessage(textMessage);
             increaseStatisticsValue(QStringLiteral("sendTextMessages.PM"));
             emit textMessageSent(message);
@@ -617,7 +590,9 @@ namespace swift::core::fsd
         {
             // Adjust to nearest frequency, in case of 5kHz difference
             const CAtcStationList stations = m_atcStations.findIfFrequencyIsWithinSpacing(message.getFrequency());
-            const CFrequency freq = stations.isEmpty() ? message.getFrequency() : stations.findClosest(1, getOwnAircraftPosition()).front().getFrequency();
+            const CFrequency freq = stations.isEmpty() ?
+                                        message.getFrequency() :
+                                        stations.findClosest(1, getOwnAircraftPosition()).front().getFrequency();
 
             // I could send the same message to n frequencies in one step
             // if this is really required, I need to group by message
@@ -716,10 +691,7 @@ namespace swift::core::fsd
         {
             act = flightPlan.getAircraftInfo().asIcaoString();
         }
-        else
-        {
-            act = flightPlan.getAircraftInfo().asFaaString();
-        }
+        else { act = flightPlan.getAircraftInfo().asFaaString(); }
 
         Q_ASSERT_X(!act.isEmpty(), Q_FUNC_INFO, "Aircraft type must not be empty");
 
@@ -729,15 +701,10 @@ namespace swift::core::fsd
                             flightPlan.getCruiseTrueAirspeed().valueInteger(CSpeedUnit::kts()),
                             flightPlan.getOriginAirportIcao().asString(),
                             flightPlan.getTakeoffTimePlanned().toUTC().toString("hhmm").toInt(),
-                            flightPlan.getTakeoffTimeActual().toUTC().toString("hhmm").toInt(),
-                            alt,
-                            flightPlan.getDestinationAirportIcao().asString(),
-                            timePartsEnroute[CTime::Hours],
-                            timePartsEnroute[CTime::Minutes],
-                            timePartsFuel[CTime::Hours],
-                            timePartsFuel[CTime::Minutes],
-                            flightPlan.getAlternateAirportIcao().asString(),
-                            remarks,
+                            flightPlan.getTakeoffTimeActual().toUTC().toString("hhmm").toInt(), alt,
+                            flightPlan.getDestinationAirportIcao().asString(), timePartsEnroute[CTime::Hours],
+                            timePartsEnroute[CTime::Minutes], timePartsFuel[CTime::Hours],
+                            timePartsFuel[CTime::Minutes], flightPlan.getAlternateAirportIcao().asString(), remarks,
                             route);
 
         sendQueuedMessage(fp);
@@ -775,16 +742,15 @@ namespace swift::core::fsd
 
         const CSimulatedAircraft myAircraft(getOwnAircraft());
         const QString modelString = this->getConfiguredModelString(myAircraft);
-        const PlaneInfoRequestFsinn planeInfoRequestFsinn(getOwnCallsignAsString(), callsign.toQString(),
-                                                          myAircraft.getAirlineIcaoCodeDesignator(),
-                                                          myAircraft.getAircraftIcaoCodeDesignator(),
-                                                          myAircraft.getAircraftIcaoCombinedType(),
-                                                          modelString);
+        const PlaneInfoRequestFsinn planeInfoRequestFsinn(
+            getOwnCallsignAsString(), callsign.toQString(), myAircraft.getAirlineIcaoCodeDesignator(),
+            myAircraft.getAircraftIcaoCodeDesignator(), myAircraft.getAircraftIcaoCombinedType(), modelString);
         sendQueuedMessage(planeInfoRequestFsinn);
         increaseStatisticsValue(QStringLiteral("sendPlaneInfoRequestFsinn"));
     }
 
-    void CFSDClient::sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline, const QString &livery)
+    void CFSDClient::sendPlaneInformation(const QString &receiver, const QString &aircraft, const QString &airline,
+                                          const QString &livery)
     {
         const PlaneInformation planeInformation(getOwnCallsignAsString(), receiver, aircraft, airline, livery);
         sendQueuedMessage(planeInformation);
@@ -796,11 +762,9 @@ namespace swift::core::fsd
         if (this->getConnectionStatus().isDisconnected() && !m_unitTestMode) { return; }
         const CSimulatedAircraft myAircraft(getOwnAircraft());
         const QString modelString = this->getConfiguredModelString(myAircraft);
-        const PlaneInformationFsinn planeInformationFsinn(getOwnCallsignAsString(), callsign.toQString(),
-                                                          myAircraft.getAirlineIcaoCodeDesignator(),
-                                                          myAircraft.getAircraftIcaoCodeDesignator(),
-                                                          myAircraft.getAircraftIcaoCombinedType(),
-                                                          modelString);
+        const PlaneInformationFsinn planeInformationFsinn(
+            getOwnCallsignAsString(), callsign.toQString(), myAircraft.getAirlineIcaoCodeDesignator(),
+            myAircraft.getAircraftIcaoCodeDesignator(), myAircraft.getAircraftIcaoCombinedType(), modelString);
         sendQueuedMessage(planeInformationFsinn);
         increaseStatisticsValue(QStringLiteral("sendPlaneInformationFsinn"));
     }
@@ -808,7 +772,8 @@ namespace swift::core::fsd
     void CFSDClient::sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson)
     {
         if (aircraftConfigJson.size() == 0) { return; }
-        const ClientQuery clientQuery(getOwnCallsignAsString(), receiver, ClientQueryType::AircraftConfig, { aircraftConfigJson });
+        const ClientQuery clientQuery(getOwnCallsignAsString(), receiver, ClientQueryType::AircraftConfig,
+                                      { aircraftConfigJson });
         sendQueuedMessage(clientQuery);
     }
 
@@ -845,10 +810,7 @@ namespace swift::core::fsd
             if (s > 75) { sendNo = 20; }
             if (s > 100) { sendNo = 30; }
 
-            for (int i = 0; i < sendNo; i++)
-            {
-                this->sendMessageString(m_queuedFsdMessages.dequeue());
-            }
+            for (int i = 0; i < sendNo; i++) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
         }
     }
 
@@ -913,21 +875,28 @@ namespace swift::core::fsd
         {
             responseData.clear();
             if (m_capabilities & Capabilities::AtcInfo) responseData.push_back(toQString(Capabilities::AtcInfo) % "=1");
-            if (m_capabilities & Capabilities::SecondaryPos) responseData.push_back(toQString(Capabilities::SecondaryPos) % "=1");
-            if (m_capabilities & Capabilities::AircraftInfo) responseData.push_back(toQString(Capabilities::AircraftInfo) % "=1");
-            if (m_capabilities & Capabilities::OngoingCoord) responseData.push_back(toQString(Capabilities::OngoingCoord) % "=1");
-            if (m_capabilities & Capabilities::InterminPos) responseData.push_back(toQString(Capabilities::InterminPos) % "=1");
+            if (m_capabilities & Capabilities::SecondaryPos)
+                responseData.push_back(toQString(Capabilities::SecondaryPos) % "=1");
+            if (m_capabilities & Capabilities::AircraftInfo)
+                responseData.push_back(toQString(Capabilities::AircraftInfo) % "=1");
+            if (m_capabilities & Capabilities::OngoingCoord)
+                responseData.push_back(toQString(Capabilities::OngoingCoord) % "=1");
+            if (m_capabilities & Capabilities::InterminPos)
+                responseData.push_back(toQString(Capabilities::InterminPos) % "=1");
             if (m_capabilities & Capabilities::FastPos) responseData.push_back(toQString(Capabilities::FastPos) % "=1");
             if (m_capabilities & Capabilities::VisPos) responseData.push_back(toQString(Capabilities::VisPos) % "=1");
             if (m_capabilities & Capabilities::Stealth) responseData.push_back(toQString(Capabilities::Stealth) % "=1");
-            if (m_capabilities & Capabilities::AircraftConfig) responseData.push_back(toQString(Capabilities::AircraftConfig) % "=1");
-            if (m_capabilities & Capabilities::IcaoEquipment) responseData.push_back(toQString(Capabilities::IcaoEquipment) % "=1");
+            if (m_capabilities & Capabilities::AircraftConfig)
+                responseData.push_back(toQString(Capabilities::AircraftConfig) % "=1");
+            if (m_capabilities & Capabilities::IcaoEquipment)
+                responseData.push_back(toQString(Capabilities::IcaoEquipment) % "=1");
             const ClientResponse clientResponse(ownCallsign, receiver, ClientQueryType::Capabilities, responseData);
             sendQueuedMessage(clientResponse);
         }
         else if (queryType == ClientQueryType::Com1Freq)
         {
-            const QString com1Frequency = QString::number(getOwnAircraft().getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3);
+            const QString com1Frequency = QString::number(
+                getOwnAircraft().getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3);
             responseData.push_back(com1Frequency);
             const ClientResponse pduClientResponse(ownCallsign, receiver, ClientQueryType::Com1Freq, responseData);
             sendQueuedMessage(pduClientResponse);
@@ -954,11 +923,13 @@ namespace swift::core::fsd
         }
         else if (queryType == ClientQueryType::ATIS)
         {
-            this->handleIllegalFsdState(QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::ATIS)));
+            this->handleIllegalFsdState(
+                QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::ATIS)));
         }
         else if (queryType == ClientQueryType::PublicIP)
         {
-            this->handleIllegalFsdState(QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::PublicIP)));
+            this->handleIllegalFsdState(
+                QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::PublicIP)));
         }
         else if (queryType == ClientQueryType::INF)
         {
@@ -975,21 +946,23 @@ namespace swift::core::fsd
             vatsim_get_system_unique_id(sysuid.data());
 #endif
 
-            const QString userInfo = QStringLiteral("CID=") % cid % " " % m_clientName % " IP=" % m_socket->localAddress().toString() %
-                                     " SYS_UID=" % sysuid.data() % " FSVER=" % m_hostApplication % " LT=" % QString::number(latitude) %
-                                     " LO=" % QString::number(longitude) % " AL=" % QString::number(altitude) %
-                                     " " % realName;
+            const QString userInfo = QStringLiteral("CID=") % cid % " " % m_clientName % " IP=" %
+                                     m_socket->localAddress().toString() % " SYS_UID=" % sysuid.data() % " FSVER=" %
+                                     m_hostApplication % " LT=" % QString::number(latitude) % " LO=" %
+                                     QString::number(longitude) % " AL=" % QString::number(altitude) % " " % realName;
 
             const TextMessage textMessage(ownCallsign, receiver, userInfo);
             sendQueuedMessage(textMessage);
         }
         else if (queryType == ClientQueryType::FP)
         {
-            this->handleIllegalFsdState(QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::FP)));
+            this->handleIllegalFsdState(
+                QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::FP)));
         }
         else if (queryType == ClientQueryType::AircraftConfig)
         {
-            this->handleIllegalFsdState(QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::AircraftConfig)));
+            this->handleIllegalFsdState(
+                QStringLiteral("Dont send '%1' as pilot client!").arg(toQString(ClientQueryType::AircraftConfig)));
         }
     }
 
@@ -999,7 +972,9 @@ namespace swift::core::fsd
         std::array<char, 50> sysuid = {};
         vatsim_get_system_unique_id(sysuid.data());
         const QString cid = m_server.getUser().getId();
-        const ClientIdentification clientIdentification(getOwnCallsignAsString(), vatsim_auth_get_client_id(m_clientAuth), m_clientName, m_versionMajor, m_versionMinor, cid, sysuid.data(), fsdChallenge);
+        const ClientIdentification clientIdentification(
+            getOwnCallsignAsString(), vatsim_auth_get_client_id(m_clientAuth), m_clientName, m_versionMajor,
+            m_versionMinor, cid, sysuid.data(), fsdChallenge);
         this->sendQueuedMessage(clientIdentification);
 
         if (getServer().getEcosystem().isSystem(CEcosystem::VATSIM))
@@ -1019,7 +994,8 @@ namespace swift::core::fsd
     }
 #endif
 
-    void CFSDClient::getVatsimAuthToken(const QString &cid, const QString &password, const swift::misc::CSlot<void(const QString &)> &callback)
+    void CFSDClient::getVatsimAuthToken(const QString &cid, const QString &password,
+                                        const swift::misc::CSlot<void(const QString &)> &callback)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need app");
         QNetworkRequest nwRequest(sApp->getGlobalSetup().getVatsimAuthUrl());
@@ -1031,13 +1007,12 @@ namespace swift::core::fsd
                                  const QByteArray data = nwReply->readAll();
                                  const QJsonObject json = QJsonDocument::fromJson(data).object();
 
-                                 if (json.value("success").toBool())
-                                 {
-                                     callback(json.value("token").toString());
-                                 }
+                                 if (json.value("success").toBool()) { callback(json.value("token").toString()); }
                                  else
                                  {
-                                     const QString error = json.value("error_msg").isString() ? json.value("error_msg").toString() : nwReply->errorString();
+                                     const QString error = json.value("error_msg").isString() ?
+                                                               json.value("error_msg").toString() :
+                                                               nwReply->errorString();
                                      CLogMessage(this).error(u"VATSIM auth token endpoint: %1") << error;
                                      disconnectFromServer();
                                  }
@@ -1059,7 +1034,8 @@ namespace swift::core::fsd
         const QJsonObject currentConfig = currentParts.toJson();
         const QJsonObject incrementalConfig = getIncrementalObject(previousConfig, currentConfig);
 
-        const QString dataStr = convertToUnicodeEscaped(QJsonDocument(QJsonObject { { "config", incrementalConfig } }).toJson(QJsonDocument::Compact));
+        const QString dataStr = convertToUnicodeEscaped(
+            QJsonDocument(QJsonObject { { "config", incrementalConfig } }).toJson(QJsonDocument::Compact));
 
         sendAircraftConfiguration("@94836", dataStr);
         m_sentAircraftConfig = currentParts;
@@ -1116,13 +1092,17 @@ namespace swift::core::fsd
         const CCallsign cs(senderCs, CCallsign::Atc);
 
         // Filter non-ATC like OBS stations, like pilots logging in as shared cockpit co-pilots.
-        if (atcDataUpdate.m_facility == CFacilityType::Unknown && !cs.isObserverCallsign()) { return; } // like in old version
+        if (atcDataUpdate.m_facility == CFacilityType::Unknown && !cs.isObserverCallsign())
+        {
+            return;
+        } // like in old version
         if (atcDataUpdate.m_facility == CFacilityType::OBS && !cs.hasSuffix()) { return; }
 
         CFrequency freq(atcDataUpdate.m_frequencykHz, CFrequencyUnit::kHz());
         freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
 
-        // Here we could round to channel spacing, based on https://discordapp.com/channels/539048679160676382/539486489977946112/651514202405601291
+        // Here we could round to channel spacing, based on
+        // https://discordapp.com/channels/539048679160676382/539486489977946112/651514202405601291
         // CComSystem::roundToChannelSpacing(freq, CComSystem::ChannelSpacing25KHz);
 
         const CLength networkRange(atcDataUpdate.m_visibleRange, CLengthUnit::NM());
@@ -1194,8 +1174,7 @@ namespace swift::core::fsd
             // * Receiver callsign must be owner callsign and not any type of broadcast.
             // * We have requested the ATIS of this controller before.
             if (m_server.getServerType() != CServer::FSDServerVatsim &&
-                m_ownCallsign.asString() == textMessage.receiver() &&
-                m_pendingAtisQueries.contains(sender))
+                m_ownCallsign.asString() == textMessage.receiver() && m_pendingAtisQueries.contains(sender))
             {
                 maybeHandleAtisReply(sender, receiver, textMessage.m_message);
                 return;
@@ -1215,10 +1194,7 @@ namespace swift::core::fsd
             {
                 CFrequency f(freqKhz, CFrequencyUnit::kHz());
                 CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing8_33KHz);
-                if (f == com1 || f == com2)
-                {
-                    frequencies.push_back(f);
-                }
+                if (f == com1 || f == com2) { frequencies.push_back(f); }
             }
             if (frequencies.isEmpty()) { return; }
             CTextMessageList messages(textMessage.m_message, frequencies, CCallsign(textMessage.sender()));
@@ -1233,19 +1209,20 @@ namespace swift::core::fsd
         const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
 
         CAircraftSituation situation(
-            callsign,
-            CCoordinateGeodetic(dataUpdate.m_latitude, dataUpdate.m_longitude, dataUpdate.m_altitudeTrue),
+            callsign, CCoordinateGeodetic(dataUpdate.m_latitude, dataUpdate.m_longitude, dataUpdate.m_altitudeTrue),
             CHeading(dataUpdate.m_heading, CHeading::True, CAngleUnit::deg()),
-            CAngle(dataUpdate.m_pitch, CAngleUnit::deg()),
-            CAngle(dataUpdate.m_bank, CAngleUnit::deg()),
+            CAngle(dataUpdate.m_pitch, CAngleUnit::deg()), CAngle(dataUpdate.m_bank, CAngleUnit::deg()),
             CSpeed(dataUpdate.m_groundSpeed, CSpeedUnit::kts()));
-        situation.setPressureAltitude(CAltitude(dataUpdate.m_altitudePressure, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
-        const COnGroundInfo og(dataUpdate.m_onGround ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround, COnGroundInfo::InFromNetwork);
+        situation.setPressureAltitude(CAltitude(dataUpdate.m_altitudePressure, CAltitude::MeanSeaLevel,
+                                                CAltitude::PressureAltitude, CLengthUnit::ft()));
+        const COnGroundInfo og(dataUpdate.m_onGround ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround,
+                               COnGroundInfo::InFromNetwork);
         situation.setOnGroundInfo(og);
 
         // Ref T297, default offset time
         situation.setCurrentUtcTime();
-        const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+        const qint64 offsetTimeMs =
+            receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
         situation.setTimeOffsetMs(offsetTimeMs);
 
         // I did have a situation where I got wrong transponder codes (KB)
@@ -1259,7 +1236,8 @@ namespace swift::core::fsd
         {
             if (CBuildConfig::isLocalDeveloperDebugBuild())
             {
-                CLogMessage(this).debug(u"Wrong transponder code '%1' for '%2'") << dataUpdate.m_transponderCode << callsign;
+                CLogMessage(this).debug(u"Wrong transponder code '%1' for '%2'")
+                    << dataUpdate.m_transponderCode << callsign;
             }
 
             // I set a default: IFR standby is a reasonable default
@@ -1272,19 +1250,19 @@ namespace swift::core::fsd
     {
         const EuroscopeSimData data = EuroscopeSimData::fromTokens(tokens);
 
-        CAircraftSituation situation(
-            CCallsign(data.sender(), CCallsign::Aircraft),
-            CCoordinateGeodetic(data.m_latitude, data.m_longitude, data.m_altitude),
-            CHeading(data.m_heading, CAngleUnit::deg()),
-            CAngle(-data.m_pitch, CAngleUnit::deg()),
-            CAngle(-data.m_bank, CAngleUnit::deg()),
-            CSpeed(data.m_groundSpeed, CSpeedUnit::kts()));
-        const COnGroundInfo og(data.m_onGround ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround, COnGroundInfo::InFromNetwork);
+        CAircraftSituation situation(CCallsign(data.sender(), CCallsign::Aircraft),
+                                     CCoordinateGeodetic(data.m_latitude, data.m_longitude, data.m_altitude),
+                                     CHeading(data.m_heading, CAngleUnit::deg()),
+                                     CAngle(-data.m_pitch, CAngleUnit::deg()), CAngle(-data.m_bank, CAngleUnit::deg()),
+                                     CSpeed(data.m_groundSpeed, CSpeedUnit::kts()));
+        const COnGroundInfo og(data.m_onGround ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround,
+                               COnGroundInfo::InFromNetwork);
         situation.setOnGroundInfo(og);
 
         // Ref T297, default offset time
         situation.setCurrentUtcTime();
-        const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+        const qint64 offsetTimeMs =
+            receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
         situation.setTimeOffsetMs(offsetTimeMs);
 
         CAircraftParts parts;
@@ -1292,7 +1270,8 @@ namespace swift::core::fsd
         parts.setGearDown(data.m_gearPercent);
         parts.setOnGround(data.m_onGround);
 
-        emit euroscopeSimDataUpdatedReceived(situation, parts, currentOffsetTime(data.sender()), data.m_model, data.m_livery);
+        emit euroscopeSimDataUpdatedReceived(situation, parts, currentOffsetTime(data.sender()), data.m_model,
+                                             data.m_livery);
     }
 
     void CFSDClient::handleVisualPilotDataUpdate(const QStringList & /*tokens*/, MessageType /*messageType*/)
@@ -1378,25 +1357,13 @@ namespace swift::core::fsd
             // RefT323, also major tool such as PFPX and Simbrief do so
             if (rules == CFlightPlan::IFR)
             {
-                if (ca >= 1000)
-                {
-                    cruiseAltString = u"FL" % QString::number(ca / 100);
-                }
-                else
-                {
-                    cruiseAltString = u"FL" % cruiseAltString;
-                }
+                if (ca >= 1000) { cruiseAltString = u"FL" % QString::number(ca / 100); }
+                else { cruiseAltString = u"FL" % cruiseAltString; }
             }
             else // VFR
             {
-                if (ca >= 5000)
-                {
-                    cruiseAltString = u"FL" % QString::number(ca / 100);
-                }
-                else
-                {
-                    cruiseAltString = cruiseAltString % u"ft";
-                }
+                if (ca >= 5000) { cruiseAltString = u"FL" % QString::number(ca / 100); }
+                else { cruiseAltString = cruiseAltString % u"ft"; }
             }
         }
         CAltitude cruiseAlt;
@@ -1407,20 +1374,11 @@ namespace swift::core::fsd
 
         const CCallsign callsign(fp.sender(), CCallsign::Aircraft);
         const CFlightPlan flightPlan(
-            callsign,
-            CFlightPlanAircraftInfo(fp.m_aircraftIcaoType),
-            fp.m_depAirport,
-            fp.m_destAirport,
-            fp.m_altAirport,
-            fromStringUtc(depTimePlanned, "hhmm"),
-            fromStringUtc(depTimeActual, "hhmm"),
+            callsign, CFlightPlanAircraftInfo(fp.m_aircraftIcaoType), fp.m_depAirport, fp.m_destAirport,
+            fp.m_altAirport, fromStringUtc(depTimePlanned, "hhmm"), fromStringUtc(depTimeActual, "hhmm"),
             CTime(fp.m_hoursEnroute * 60 + fp.m_minutesEnroute, CTimeUnit::min()),
-            CTime(fp.m_fuelAvailHours * 60 + fp.m_fuelAvailMinutes, CTimeUnit::min()),
-            cruiseAlt,
-            CSpeed(fp.m_trueCruisingSpeed, CSpeedUnit::kts()),
-            rules,
-            fp.m_route,
-            fp.m_remarks);
+            CTime(fp.m_fuelAvailHours * 60 + fp.m_fuelAvailMinutes, CTimeUnit::min()), cruiseAlt,
+            CSpeed(fp.m_trueCruisingSpeed, CSpeedUnit::kts()), rules, fp.m_route, fp.m_remarks);
 
         emit flightPlanReceived(callsign, flightPlan);
     }
@@ -1479,7 +1437,8 @@ namespace swift::core::fsd
 
             if (parserError.error != QJsonParseError::NoError)
             {
-                CLogMessage(this).warning(u"Failed to parse aircraft config packet: '%1' packet: '%2'") << parserError.errorString() << QString(json);
+                CLogMessage(this).warning(u"Failed to parse aircraft config packet: '%1' packet: '%2'")
+                    << parserError.errorString() << QString(json);
                 return; // we cannot parse the packet, so we give up here
             }
 
@@ -1515,15 +1474,9 @@ namespace swift::core::fsd
 
         QString responseData1;
         QString responseData2;
-        if (clientResponse.m_responseData.size() > 0)
-        {
-            responseData1 = clientResponse.m_responseData.at(0);
-        }
+        if (clientResponse.m_responseData.size() > 0) { responseData1 = clientResponse.m_responseData.at(0); }
 
-        if (clientResponse.m_responseData.size() > 1)
-        {
-            responseData2 = clientResponse.m_responseData.at(1);
-        }
+        if (clientResponse.m_responseData.size() > 1) { responseData2 = clientResponse.m_responseData.at(1); }
 
         if (clientResponse.m_queryType == ClientQueryType::IsValidATC)
         {
@@ -1542,10 +1495,7 @@ namespace swift::core::fsd
                 const QString key = split.at(0);
                 const QString value = split.at(1);
 
-                if (value == "1")
-                {
-                    capabilities |= fromQString<Capabilities>(key);
-                }
+                if (value == "1") { capabilities |= fromQString<Capabilities>(key); }
             }
 
             CClient::Capabilities caps = CClient::None;
@@ -1578,7 +1528,8 @@ namespace swift::core::fsd
         {
             if (responseData1.isEmpty())
             {
-                // networkLog(vatSeverityDebug, "VatFsdClient::handleClientQueryResponse", "ATIS line type cannot be empty!");
+                // networkLog(vatSeverityDebug, "VatFsdClient::handleClientQueryResponse", "ATIS line type cannot be
+                // empty!");
             }
             updateAtisMap(clientResponse.sender(), fromQString<AtisLineType>(responseData1), responseData2);
         }
@@ -1607,25 +1558,54 @@ namespace swift::core::fsd
         {
         case ServerErrorCode::CallsignInUse: CLogMessage(this).error(u"The requested callsign is already taken"); break;
         case ServerErrorCode::InvalidCallsign: CLogMessage(this).error(u"The requested callsign is not valid"); break;
-        case ServerErrorCode::InvalidCidPassword: CLogMessage(this).error(u"Wrong user ID or password, inactive account"); break;
-        case ServerErrorCode::InvalidRevision: CLogMessage(this).error(u"This server does not support our protocol version"); break;
+        case ServerErrorCode::InvalidCidPassword:
+            CLogMessage(this).error(u"Wrong user ID or password, inactive account");
+            break;
+        case ServerErrorCode::InvalidRevision:
+            CLogMessage(this).error(u"This server does not support our protocol version");
+            break;
         case ServerErrorCode::ServerFull: CLogMessage(this).error(u"The server is full"); break;
         case ServerErrorCode::CidSuspended: CLogMessage(this).error(u"Your user account is suspended"); break;
-        case ServerErrorCode::RatingTooLow: CLogMessage(this).error(u"You are not authorized to use the requested rating"); break;
-        case ServerErrorCode::InvalidClient: CLogMessage(this).error(u"This software is not authorized for use on this network"); break;
-        case ServerErrorCode::RequestedLevelTooHigh: CLogMessage(this).error(u"You are not authorized to use the requested pilot rating"); break;
+        case ServerErrorCode::RatingTooLow:
+            CLogMessage(this).error(u"You are not authorized to use the requested rating");
+            break;
+        case ServerErrorCode::InvalidClient:
+            CLogMessage(this).error(u"This software is not authorized for use on this network");
+            break;
+        case ServerErrorCode::RequestedLevelTooHigh:
+            CLogMessage(this).error(u"You are not authorized to use the requested pilot rating");
+            break;
 
         case ServerErrorCode::NoError: CLogMessage(this).info(u"OK"); break;
-        case ServerErrorCode::SyntaxError: CLogMessage(this).error(u"Malformed packet, syntax error: '%1'. This can also occur if an OBS sends frequency text messages.") << serverError.getCausingParameter(); break;
-        case ServerErrorCode::InvalidSrcCallsign: CLogMessage(this).info(u"FSD message was using an invalid callsign: %1 (%2)") << serverError.getCausingParameter() << serverError.getDescription(); break;
-        case ServerErrorCode::NoSuchCallsign: CLogMessage(this).info(u"FSD Server: no such callsign: %1 %2") << serverError.getCausingParameter() << serverError.getDescription(); break;
+        case ServerErrorCode::SyntaxError:
+            CLogMessage(this).error(
+                u"Malformed packet, syntax error: '%1'. This can also occur if an OBS sends frequency text messages.")
+                << serverError.getCausingParameter();
+            break;
+        case ServerErrorCode::InvalidSrcCallsign:
+            CLogMessage(this).info(u"FSD message was using an invalid callsign: %1 (%2)")
+                << serverError.getCausingParameter() << serverError.getDescription();
+            break;
+        case ServerErrorCode::NoSuchCallsign:
+            CLogMessage(this).info(u"FSD Server: no such callsign: %1 %2")
+                << serverError.getCausingParameter() << serverError.getDescription();
+            break;
         case ServerErrorCode::NoFlightPlan: CLogMessage(this).info(u"FSD Server: no flight plan"); break;
-        case ServerErrorCode::NoWeatherProfile: CLogMessage(this).info(u"FSD Server: requested weather profile does not exist"); break;
+        case ServerErrorCode::NoWeatherProfile:
+            CLogMessage(this).info(u"FSD Server: requested weather profile does not exist");
+            break;
 
         // we have no idea what these mean
-        case ServerErrorCode::AlreadyRegistered: CLogMessage(this).warning(u"Server says already registered: %1") << serverError.getDescription(); break;
-        case ServerErrorCode::InvalidCtrl: CLogMessage(this).warning(u"Server invalid control: %1") << serverError.getDescription(); break;
-        case ServerErrorCode::Unknown: CLogMessage(this).warning(u"Server sent unknown error code: %1 (%2)") << serverError.getCausingParameter() << serverError.getDescription(); break;
+        case ServerErrorCode::AlreadyRegistered:
+            CLogMessage(this).warning(u"Server says already registered: %1") << serverError.getDescription();
+            break;
+        case ServerErrorCode::InvalidCtrl:
+            CLogMessage(this).warning(u"Server invalid control: %1") << serverError.getDescription();
+            break;
+        case ServerErrorCode::Unknown:
+            CLogMessage(this).warning(u"Server sent unknown error code: %1 (%2)")
+                << serverError.getCausingParameter() << serverError.getDescription();
+            break;
         case ServerErrorCode::AuthTimeout: CLogMessage(this).warning(u"Client did not authenticate in time"); break;
         }
         if (serverError.isFatalError()) { disconnectFromServer(); }
@@ -1671,7 +1651,10 @@ namespace swift::core::fsd
             CLogMessage(this).warning(u"Failed to switch server: %1") << rehostingSocket->errorString();
             m_rehosting = false;
             rehostingSocket->disconnect(this);
-            if (m_socket->state() != QAbstractSocket::ConnectedState) { updateConnectionStatus(CConnectionStatus::Disconnected); }
+            if (m_socket->state() != QAbstractSocket::ConnectedState)
+            {
+                updateConnectionStatus(CConnectionStatus::Disconnected);
+            }
         });
 
         initiateConnection(rehostingSocket, rehost.m_hostname);
@@ -1699,7 +1682,8 @@ namespace swift::core::fsd
 
     void CFSDClient::resolveLoadBalancing(const QString &host, std::function<void(const QString &)> callback)
     {
-        if (QHostAddress(host).isNull() && (getServer().getName() == "AUTOMATIC" || m_rehosting) && getServer().getEcosystem() == CEcosystem::VATSIM)
+        if (QHostAddress(host).isNull() && (getServer().getName() == "AUTOMATIC" || m_rehosting) &&
+            getServer().getEcosystem() == CEcosystem::VATSIM)
         {
             // Not an IP -> Get IP for load balancing via HTTP
             Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need app");
@@ -1719,10 +1703,7 @@ namespace swift::core::fsd
                                            callback(host);
                                        } });
         }
-        else
-        {
-            callback(host);
-        }
+        else { callback(host); }
     }
 
     void CFSDClient::handleCustomPilotPacket(const QStringList &tokens)
@@ -1734,7 +1715,9 @@ namespace swift::core::fsd
             PlaneInfoRequest planeInfoRequest = PlaneInfoRequest::fromTokens(tokens);
 
             const CSimulatedAircraft myAircraft = this->getOwnAircraft();
-            const QString airlineIcao = m_server.getFsdSetup().force3LetterAirlineCodes() ? myAircraft.getAirlineIcaoCode().getDesignator() : myAircraft.getAirlineIcaoCode().getVDesignator();
+            const QString airlineIcao = m_server.getFsdSetup().force3LetterAirlineCodes() ?
+                                            myAircraft.getAirlineIcaoCode().getDesignator() :
+                                            myAircraft.getAirlineIcaoCode().getVDesignator();
             const QString acTypeICAO = myAircraft.getAircraftIcaoCode().getDesignator();
             const QString livery = this->getConfiguredLiveryString(myAircraft);
 
@@ -1749,7 +1732,8 @@ namespace swift::core::fsd
             else if (tokens.size() > 4 && tokens.at(3) == "GEN")
             {
                 const PlaneInformation planeInformation = PlaneInformation::fromTokens(tokens);
-                emit planeInformationReceived(planeInformation.sender(), planeInformation.m_aircraft, planeInformation.m_airline, planeInformation.m_livery);
+                emit planeInformationReceived(planeInformation.sender(), planeInformation.m_aircraft,
+                                              planeInformation.m_airline, planeInformation.m_livery);
             }
         }
         else if (subType == "I")
@@ -1764,19 +1748,23 @@ namespace swift::core::fsd
             const InterimPilotDataUpdate interimPilotDataUpdate = InterimPilotDataUpdate::fromTokens(tokens);
             const CCallsign callsign(interimPilotDataUpdate.sender(), CCallsign::Aircraft);
 
-            CAircraftSituation situation(
-                callsign,
-                CCoordinateGeodetic(interimPilotDataUpdate.m_latitude, interimPilotDataUpdate.m_longitude, interimPilotDataUpdate.m_altitudeTrue),
-                CHeading(interimPilotDataUpdate.m_heading, CHeading::True, CAngleUnit::deg()),
-                CAngle(interimPilotDataUpdate.m_pitch, CAngleUnit::deg()),
-                CAngle(interimPilotDataUpdate.m_bank, CAngleUnit::deg()),
-                CSpeed(interimPilotDataUpdate.m_groundSpeed, CSpeedUnit::kts()));
-            const COnGroundInfo og(interimPilotDataUpdate.m_onGround ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround, COnGroundInfo::InFromNetwork);
+            CAircraftSituation situation(callsign,
+                                         CCoordinateGeodetic(interimPilotDataUpdate.m_latitude,
+                                                             interimPilotDataUpdate.m_longitude,
+                                                             interimPilotDataUpdate.m_altitudeTrue),
+                                         CHeading(interimPilotDataUpdate.m_heading, CHeading::True, CAngleUnit::deg()),
+                                         CAngle(interimPilotDataUpdate.m_pitch, CAngleUnit::deg()),
+                                         CAngle(interimPilotDataUpdate.m_bank, CAngleUnit::deg()),
+                                         CSpeed(interimPilotDataUpdate.m_groundSpeed, CSpeedUnit::kts()));
+            const COnGroundInfo og(interimPilotDataUpdate.m_onGround ? COnGroundInfo::OnGround :
+                                                                       COnGroundInfo::NotOnGround,
+                                   COnGroundInfo::InFromNetwork);
             situation.setOnGroundInfo(og);
 
             // Ref T297, default offset time
             situation.setCurrentUtcTime();
-            const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+            const qint64 offsetTimeMs =
+                receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
             situation.setTimeOffsetMs(offsetTimeMs);
 
             emit interimPilotDataUpdatedReceived(situation);
@@ -1784,8 +1772,7 @@ namespace swift::core::fsd
         else if (subType == "FSIPI")
         {
             const PlaneInformationFsinn planeInformationFsinn = PlaneInformationFsinn::fromTokens(tokens);
-            emit planeInformationFsinnReceived(planeInformationFsinn.sender(),
-                                               planeInformationFsinn.m_airlineIcao,
+            emit planeInformationFsinnReceived(planeInformationFsinn.sender(), planeInformationFsinn.m_airlineIcao,
                                                planeInformationFsinn.m_aircraftIcao,
                                                planeInformationFsinn.m_aircraftIcaoCombinedType,
                                                planeInformationFsinn.m_sendMModelString);
@@ -1794,8 +1781,7 @@ namespace swift::core::fsd
         {
             const PlaneInfoRequestFsinn planeInfoRequestFsinn = PlaneInfoRequestFsinn::fromTokens(tokens);
             sendPlaneInformationFsinn(planeInfoRequestFsinn.sender());
-            emit planeInformationFsinnReceived(planeInfoRequestFsinn.sender(),
-                                               planeInfoRequestFsinn.m_airlineIcao,
+            emit planeInformationFsinnReceived(planeInfoRequestFsinn.sender(), planeInfoRequestFsinn.m_airlineIcao,
                                                planeInfoRequestFsinn.m_aircraftIcao,
                                                planeInfoRequestFsinn.m_aircraftIcaoCombinedType,
                                                planeInfoRequestFsinn.m_sendMModelString);
@@ -1824,7 +1810,8 @@ namespace swift::core::fsd
         }
         else
         {
-            CLogMessage(this).error(u"You tried to connect to a VATSIM server without using VATSIM protocol, disconnecting!");
+            CLogMessage(this).error(
+                u"You tried to connect to a VATSIM server without using VATSIM protocol, disconnecting!");
             disconnectFromServer();
         }
     }
@@ -1835,10 +1822,7 @@ namespace swift::core::fsd
         CLogMessage(this).warning(u"FSD unknown packet: '%1'") << line;
     }
 
-    void CFSDClient::handleUnknownPacket(const QStringList &tokens)
-    {
-        this->handleUnknownPacket(tokens.join(", "));
-    }
+    void CFSDClient::handleUnknownPacket(const QStringList &tokens) { this->handleUnknownPacket(tokens.join(", ")); }
 
     void CFSDClient::printSocketError(QAbstractSocket::SocketError socketError)
     {
@@ -1859,8 +1843,7 @@ namespace swift::core::fsd
             emit this->severeNetworkError(error);
             this->disconnectFromServer();
             break;
-        default:
-            break;
+        default: break;
         }
     }
 
@@ -1913,10 +1896,7 @@ namespace swift::core::fsd
 
     void CFSDClient::consolidateTextMessage(const CTextMessage &textMessage)
     {
-        if (textMessage.isSupervisorMessage())
-        {
-            emit this->textMessagesReceived(textMessage);
-        }
+        if (textMessage.isSupervisorMessage()) { emit this->textMessagesReceived(textMessage); }
         else
         {
             m_textMessagesToConsolidate.addConsolidatedTextMessage(textMessage);
@@ -1963,7 +1943,10 @@ namespace swift::core::fsd
     {
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
 
-        if (!m_lastOffsetTimes.contains(callsign) || m_lastOffsetTimes[callsign].isEmpty()) { return CFsdSetup::c_positionTimeOffsetMsec; }
+        if (!m_lastOffsetTimes.contains(callsign) || m_lastOffsetTimes[callsign].isEmpty())
+        {
+            return CFsdSetup::c_positionTimeOffsetMsec;
+        }
         return m_lastOffsetTimes[callsign].front();
     }
 
@@ -2038,10 +2021,7 @@ namespace swift::core::fsd
         return (d & CFsdSetup::SendVisualPositions);
     }
 
-    const CFsdSetup &CFSDClient::getSetupForServer() const
-    {
-        return m_server.getFsdSetup();
-    }
+    const CFsdSetup &CFSDClient::getSetupForServer() const { return m_server.getFsdSetup(); }
 
     void CFSDClient::maybeHandleAtisReply(const CCallsign &sender, const CCallsign &receiver, const QString &message)
     {
@@ -2176,16 +2156,12 @@ namespace swift::core::fsd
         QString stats;
         for (const auto &pair : transformed)
         {
-            stats +=
-                (stats.isEmpty() ? QString() : separator) %
-                pair.second % u": " % QString::number(pair.first);
+            stats += (stats.isEmpty() ? QString() : separator) % pair.second % u": " % QString::number(pair.first);
         }
 
         for (const auto &pair : transformed)
         {
-            stats +=
-                (stats.isEmpty() ? QString() : separator) %
-                pair.second % u": " % QString::number(pair.first);
+            stats += (stats.isEmpty() ? QString() : separator) % pair.second % u": " % QString::number(pair.first);
         }
 
         if (!callByTime.isEmpty())
@@ -2231,7 +2207,8 @@ namespace swift::core::fsd
                 static constexpr int DelayMs = 10;
                 const int newMax = qRound(1.2 * lines); // 20% more
 
-                CLogMessage(this).debug(u"ReadDataFromSocket has too many lines (>%1), will read again in %2ms") << MaxLines << DelayMs;
+                CLogMessage(this).debug(u"ReadDataFromSocket has too many lines (>%1), will read again in %2ms")
+                    << MaxLines << DelayMs;
                 QPointer<CFSDClient> myself(this);
                 QTimer::singleShot(DelayMs, this, [=] {
                     if (!sApp || sApp->isShuttingDown()) { return; }
@@ -2245,10 +2222,7 @@ namespace swift::core::fsd
     QString CFSDClient::socketErrorString(QAbstractSocket::SocketError error) const
     {
         QString e = CFSDClient::socketErrorToQString(error);
-        if (!m_socket->errorString().isEmpty())
-        {
-            e += QStringLiteral(": ") % m_socket->errorString();
-        }
+        if (!m_socket->errorString().isEmpty()) { e += QStringLiteral(": ") % m_socket->errorString(); }
         return e;
     }
 
@@ -2301,9 +2275,7 @@ namespace swift::core::fsd
             case MessageType::ProController:
             case MessageType::ClientIdentification:
             case MessageType::RegistrationInfo:
-            case MessageType::RevBPilotDescription:
-
-                break;
+            case MessageType::RevBPilotDescription: break;
 
             // handled ones
             case MessageType::AtcDataUpdate: handleAtcDataUpdate(tokens); break;
@@ -2337,15 +2309,10 @@ namespace swift::core::fsd
 
             // normally we should not get here
             default:
-            case MessageType::Unknown:
-                handleUnknownPacket(tokens);
-                break;
+            case MessageType::Unknown: handleUnknownPacket(tokens); break;
             }
         }
-        else
-        {
-            handleUnknownPacket(line);
-        }
+        else { handleUnknownPacket(line); }
     }
 
     void CFSDClient::emitRawFsdMessage(const QString &fsdMessage, bool isSent)
@@ -2379,7 +2346,8 @@ namespace swift::core::fsd
 
         const QString s = this->getNetworkStatisticsAsText(false, "\n");
         if (s.isEmpty()) { return false; }
-        const QString fn = QStringLiteral("networkstatistics_%1_%2.log").arg(QDateTime::currentDateTimeUtc().toString("yyMMddhhmmss"), server);
+        const QString fn = QStringLiteral("networkstatistics_%1_%2.log")
+                               .arg(QDateTime::currentDateTimeUtc().toString("yyMMddhhmmss"), server);
         const QString fp = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), fn);
         return CFileUtils::writeStringToFile(s, fp);
     }
@@ -2392,9 +2360,15 @@ namespace swift::core::fsd
         m_queuedFsdMessages.clear(); // clear everything before the timer is started
 
         // interim positions
-        if (this->isInterimPositionSendingEnabledForServer()) { m_interimPositionUpdateTimer.start(c_updateInterimPositionIntervalMsec); }
+        if (this->isInterimPositionSendingEnabledForServer())
+        {
+            m_interimPositionUpdateTimer.start(c_updateInterimPositionIntervalMsec);
+        }
         else { m_interimPositionUpdateTimer.stop(); }
-        if (this->isVisualPositionSendingEnabledForServer()) { m_visualPositionUpdateTimer.start(c_updateVisualPositionIntervalMsec); }
+        if (this->isVisualPositionSendingEnabledForServer())
+        {
+            m_visualPositionUpdateTimer.start(c_updateVisualPositionIntervalMsec);
+        }
         else { m_visualPositionUpdateTimer.stop(); }
     }
 
@@ -2570,10 +2544,7 @@ namespace swift::core::fsd
 
     void CFSDClient::handleIllegalFsdState(const QString &message)
     {
-        if (CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Illegal FSD state");
-        }
+        if (CBuildConfig::isLocalDeveloperDebugBuild()) { SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Illegal FSD state"); }
         CLogMessage(this).warning(message);
     }
 

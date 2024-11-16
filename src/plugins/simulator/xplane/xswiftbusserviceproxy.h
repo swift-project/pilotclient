@@ -82,12 +82,13 @@ namespace swift::simplugin::xplane
         SWIFT_NO_RELAY void asyncMethodError(QDBusError error);
 
         //! Own aircraft model changed
-        void aircraftModelChanged(
-            const QString &path, const QString &filename, const QString &livery,
-            const QString &icao, const QString &modelString, const QString &name, const QString &description);
+        void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
+                                  const QString &icao, const QString &modelString, const QString &name,
+                                  const QString &description);
 
         //! Airports in range are updated
-        void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats, const QList<double> &lons, const QList<double> &alts);
+        void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats,
+                                    const QList<double> &lons, const QList<double> &alts);
 
         //! Scenery was loaded
         void sceneryLoaded();
@@ -209,8 +210,10 @@ namespace swift::simplugin::xplane
 
         //! @{
         //! \copydoc XSwiftBus::CService::getFrameStats
-        void getFrameStats(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate) const;
-        void getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate);
+        void getFrameStats(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort,
+                           double *o_minutesLate) const;
+        void getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort,
+                                double *o_minutesLate);
         //! @}
 
         //! \copydoc XSwiftBus::CService::resetFrameTotals

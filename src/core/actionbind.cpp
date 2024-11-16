@@ -40,10 +40,7 @@ namespace swift::core
     void CActionBind::shutdown()
     {
         unbind();
-        if (m_deleteCallback)
-        {
-            m_deleteCallback();
-        }
+        if (m_deleteCallback) { m_deleteCallback(); }
     }
 
     QString CActionBind::normalizeAction(const QString &action)

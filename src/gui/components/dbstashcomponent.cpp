@@ -44,9 +44,8 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    CDbStashComponent::CDbStashComponent(QWidget *parent) : QFrame(parent),
-                                                            CDbMappingComponentAware(parent),
-                                                            ui(new Ui::CDbStashComponent)
+    CDbStashComponent::CDbStashComponent(QWidget *parent)
+        : QFrame(parent), CDbMappingComponentAware(parent), ui(new Ui::CDbStashComponent)
     {
         ui->setupUi(this);
 
@@ -54,8 +53,10 @@ namespace swift::gui::components
         connect(ui->pb_Validate, &QPushButton::pressed, this, &CDbStashComponent::onValidatePressed);
         connect(ui->pb_RemoveInvalid, &QPushButton::pressed, this, &CDbStashComponent::onRemoveInvalidPressed);
         connect(ui->pb_Publish, &QPushButton::pressed, this, &CDbStashComponent::onPublishPressed);
-        connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this, &CDbStashComponent::stashedModelsChanged);
-        connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this, &CDbStashComponent::onRowCountChanged);
+        connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelChanged, this,
+                &CDbStashComponent::stashedModelsChanged);
+        connect(ui->tvp_StashAircraftModels, &CAircraftModelView::modelDataChanged, this,
+                &CDbStashComponent::onRowCountChanged);
 
         // copy over buttons
         connect(ui->pb_AircraftIcao, &QPushButton::pressed, this, &CDbStashComponent::copyOverValuesToSelectedModels);
@@ -74,24 +75,26 @@ namespace swift::gui::components
         ui->tvp_StashAircraftModels->setSettingsDirectoryIndex(CDirectories::IndexDirLastModelStashJsonOrDefault);
         this->enableButtonRow();
 
-        connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbStashComponent::onPublishedModelsResponse, Qt::QueuedConnection);
+        connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this,
+                &CDbStashComponent::onPublishedModelsResponse, Qt::QueuedConnection);
         this->onUserChanged();
     }
 
-    CDbStashComponent::~CDbStashComponent()
-    {}
+    CDbStashComponent::~CDbStashComponent() {}
 
     CStatusMessage CDbStashComponent::validateStashModel(const CAircraftModel &model, bool allowReplace) const
     {
         if (!allowReplace && ui->tvp_StashAircraftModels->container().containsModelStringOrDbKey(model))
         {
             const QString msg("Model '%1' already stashed");
-            return CStatusMessage(validationCategories(), CStatusMessage::SeverityError, msg.arg(model.getModelString()));
+            return CStatusMessage(validationCategories(), CStatusMessage::SeverityError,
+                                  msg.arg(model.getModelString()));
         }
         return CStatusMessage();
     }
 
-    CStatusMessage CDbStashComponent::stashModel(const CAircraftModel &model, bool replace, bool consolidateWithDbData, bool clearHighlighting)
+    CStatusMessage CDbStashComponent::stashModel(const CAircraftModel &model, bool replace, bool consolidateWithDbData,
+                                                 bool clearHighlighting)
     {
         const CAircraftModel stashModel(consolidateWithDbData ? this->consolidateModel(model) : model);
         const CStatusMessage m(this->validateStashModel(stashModel, replace));
@@ -100,17 +103,16 @@ namespace swift::gui::components
             if (clearHighlighting) { this->clearValidationHighlighting(); }
             if (replace)
             {
-                ui->tvp_StashAircraftModels->replaceOrAdd(&CAircraftModel::getModelString, stashModel.getModelString(), stashModel);
+                ui->tvp_StashAircraftModels->replaceOrAdd(&CAircraftModel::getModelString, stashModel.getModelString(),
+                                                          stashModel);
             }
-            else
-            {
-                ui->tvp_StashAircraftModels->insert(stashModel);
-            }
+            else { ui->tvp_StashAircraftModels->insert(stashModel); }
         }
         return m;
     }
 
-    CStatusMessageList CDbStashComponent::stashModels(const CAircraftModelList &models, bool replace, bool consolidateWithDbData, bool clearHighlighting)
+    CStatusMessageList CDbStashComponent::stashModels(const CAircraftModelList &models, bool replace,
+                                                      bool consolidateWithDbData, bool clearHighlighting)
     {
         if (models.isEmpty()) { return CStatusMessageList(); }
         CStatusMessageList msgs;
@@ -118,14 +120,8 @@ namespace swift::gui::components
         for (const CAircraftModel &model : models)
         {
             const CStatusMessage m(this->stashModel(model, replace, consolidateWithDbData, false));
-            if (m.isWarningOrAbove())
-            {
-                msgs.push_back(m);
-            }
-            else
-            {
-                successfullyAdded++;
-            }
+            if (m.isWarningOrAbove()) { msgs.push_back(m); }
+            else { successfullyAdded++; }
         }
         if (successfullyAdded > 0 && clearHighlighting) { this->clearValidationHighlighting(); }
         return msgs;
@@ -154,20 +150,11 @@ namespace swift::gui::components
         return ui->tvp_StashAircraftModels->removeModelsWithModelString(models);
     }
 
-    CAircraftModelView *CDbStashComponent::view() const
-    {
-        return ui->tvp_StashAircraftModels;
-    }
+    CAircraftModelView *CDbStashComponent::view() const { return ui->tvp_StashAircraftModels; }
 
-    bool CDbStashComponent::hasStashedModels() const
-    {
-        return !ui->tvp_StashAircraftModels->isEmpty();
-    }
+    bool CDbStashComponent::hasStashedModels() const { return !ui->tvp_StashAircraftModels->isEmpty(); }
 
-    int CDbStashComponent::getStashedModelsCount() const
-    {
-        return ui->tvp_StashAircraftModels->rowCount();
-    }
+    int CDbStashComponent::getStashedModelsCount() const { return ui->tvp_StashAircraftModels->rowCount(); }
 
     QStringList CDbStashComponent::getStashedModelStrings() const
     {
@@ -214,7 +201,8 @@ namespace swift::gui::components
         const CLivery stdLivery(sApp->getWebDataServices()->getStdLiveryForAirlineCode(icao));
         if (!stdLivery.hasValidDbKey())
         {
-            static const CStatusMessage msg(CStatusMessage::SeverityError, u"No valid standard livery for " % icao.getDesignator());
+            static const CStatusMessage msg(CStatusMessage::SeverityError,
+                                            u"No valid standard livery for " % icao.getDesignator());
             this->showOverlayMessage(msg);
             return;
         }
@@ -237,10 +225,7 @@ namespace swift::gui::components
         ui->tvp_StashAircraftModels->applyToSelected(vm);
     }
 
-    void CDbStashComponent::onUnstashPressed()
-    {
-        ui->tvp_StashAircraftModels->removeSelectedRows();
-    }
+    void CDbStashComponent::onUnstashPressed() { ui->tvp_StashAircraftModels->removeSelectedRows(); }
 
     void CDbStashComponent::onValidatePressed()
     {
@@ -277,21 +262,20 @@ namespace swift::gui::components
         if (validModels.size() > MaxModelPublished)
         {
             validModels.truncate(MaxModelPublished);
-            msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning, u"More than %1 values, values skipped") << MaxModelPublished);
+            msgs.push_back(CStatusMessage(validationCategories(), CStatusMessage::SeverityWarning,
+                                          u"More than %1 values, values skipped")
+                           << MaxModelPublished);
         }
 
         msgs.push_back(sGui->getWebDataServices()->asyncPublishModels(validModels));
-        if (msgs.hasWarningOrErrorMessages())
-        {
-            this->showOverlayMessages(msgs);
-        }
-        else
-        {
-            ui->tvp_StashAircraftModels->showLoadIndicator();
-        }
+        if (msgs.hasWarningOrErrorMessages()) { this->showOverlayMessages(msgs); }
+        else { ui->tvp_StashAircraftModels->showLoadIndicator(); }
     }
 
-    void CDbStashComponent::onPublishedModelsResponse(const CAircraftModelList &publishedModels, const CAircraftModelList &skippedModels, const CStatusMessageList &msgs, bool sendingSuccesful, bool directWrite)
+    void CDbStashComponent::onPublishedModelsResponse(const CAircraftModelList &publishedModels,
+                                                      const CAircraftModelList &skippedModels,
+                                                      const CStatusMessageList &msgs, bool sendingSuccesful,
+                                                      bool directWrite)
     {
         Q_UNUSED(skippedModels);
         ui->tvp_StashAircraftModels->hideLoadIndicator();
@@ -302,10 +286,7 @@ namespace swift::gui::components
 
         if (!msgs.isEmpty())
         {
-            if (publishedModels.isEmpty())
-            {
-                this->showOverlayMessages(msgs, false, false);
-            }
+            if (publishedModels.isEmpty()) { this->showOverlayMessages(msgs, false, false); }
             else
             {
                 QPointer<CDbStashComponent> myself(this);
@@ -314,33 +295,35 @@ namespace swift::gui::components
                     if (!myself) { return; }
                     myself->unstashModels(publishedModels.getModelStringList(false));
                 };
-                this->showOverlayMessagesWithConfirmation(msgs, false, confirm.arg(publishedModels.size()), lambda, QMessageBox::Ok);
+                this->showOverlayMessagesWithConfirmation(msgs, false, confirm.arg(publishedModels.size()), lambda,
+                                                          QMessageBox::Ok);
             }
         }
     }
 
-    CStatusMessageList CDbStashComponent::validate(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
+    CStatusMessageList CDbStashComponent::validate(CAircraftModelList &validModels,
+                                                   CAircraftModelList &invalidModels) const
     {
         if (ui->tvp_StashAircraftModels->isEmpty()) { return CStatusMessageList(); }
         Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "No web services");
         const CAircraftModelList models(getSelectedOrAllModels());
         if (models.isEmpty()) { return CStatusMessageList(); }
         const bool ignoreEqual = ui->cb_ChangedOnly->isChecked();
-        const CStatusMessageList msgs(sGui->getWebDataServices()->validateForPublishing(models, ignoreEqual, validModels, invalidModels));
+        const CStatusMessageList msgs(
+            sGui->getWebDataServices()->validateForPublishing(models, ignoreEqual, validModels, invalidModels));
 
         // OK?
         if (msgs.isEmpty())
         {
             return CStatusMessageList(
-                { CStatusMessage(validationCategories(), CStatusMessage::SeverityInfo, u"No errors in %1 model(s)") << models.size() });
+                { CStatusMessage(validationCategories(), CStatusMessage::SeverityInfo, u"No errors in %1 model(s)")
+                  << models.size() });
         }
-        else
-        {
-            return msgs;
-        }
+        else { return msgs; }
     }
 
-    bool CDbStashComponent::validateAndDisplay(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool displayInfo)
+    bool CDbStashComponent::validateAndDisplay(CAircraftModelList &validModels, CAircraftModelList &invalidModels,
+                                               bool displayInfo)
     {
         const CStatusMessageList msgs(this->validate(validModels, invalidModels));
         if (msgs.hasWarningOrErrorMessages())
@@ -355,7 +338,8 @@ namespace swift::gui::components
             if (displayInfo)
             {
                 const QString no = QString::number(this->getStashedModelsCount());
-                const CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo, "Validation passed for " + no + " models");
+                const CStatusMessage msg(validationCategories(), CStatusMessage::SeverityInfo,
+                                         "Validation passed for " + no + " models");
                 this->showOverlayMessage(msg);
             }
         }
@@ -386,7 +370,8 @@ namespace swift::gui::components
     CAircraftModelList CDbStashComponent::getSelectedOrAllModels() const
     {
         const bool selectedOnly = ui->cb_SelectedOnly->isChecked();
-        const CAircraftModelList models(selectedOnly ? ui->tvp_StashAircraftModels->selectedObjects() : ui->tvp_StashAircraftModels->containerOrFilteredContainer());
+        const CAircraftModelList models(selectedOnly ? ui->tvp_StashAircraftModels->selectedObjects() :
+                                                       ui->tvp_StashAircraftModels->containerOrFilteredContainer());
         return models;
     }
 
@@ -406,10 +391,7 @@ namespace swift::gui::components
         return ownModel;
     }
 
-    CAuthenticatedUser CDbStashComponent::getSwiftDbUser() const
-    {
-        return m_swiftDbUser.get();
-    }
+    CAuthenticatedUser CDbStashComponent::getSwiftDbUser() const { return m_swiftDbUser.get(); }
 
     CAircraftModel CDbStashComponent::consolidateModel(const CAircraftModel &model) const
     {
@@ -421,10 +403,7 @@ namespace swift::gui::components
         stashModel = this->consolidateWithDbData(stashModel, true);
 
         // merge with own models if any
-        if (!ownModel)
-        {
-            stashModel = this->consolidateWithOwnModels(stashModel);
-        }
+        if (!ownModel) { stashModel = this->consolidateWithOwnModels(stashModel); }
 
         return stashModel;
     }
@@ -443,20 +422,15 @@ namespace swift::gui::components
             const bool equal = sGui->getWebDataServices()->isDbModelEqualForPublishing(model, &modelMsgs);
             if (equal)
             {
-                msgs.push_back(CStatusMessage(this).info(u"Model '%1' has no change values") << model.getModelStringAndDbKey());
+                msgs.push_back(CStatusMessage(this).info(u"Model '%1' has no change values")
+                               << model.getModelStringAndDbKey());
             }
-            else
-            {
-                msgs.push_back(modelMsgs);
-            }
+            else { msgs.push_back(modelMsgs); }
         }
         this->showOverlayMessages(msgs);
     }
 
-    void CDbStashComponent::clearValidationHighlighting()
-    {
-        ui->tvp_StashAircraftModels->clearHighlighting();
-    }
+    void CDbStashComponent::clearValidationHighlighting() { ui->tvp_StashAircraftModels->clearHighlighting(); }
 
     void CDbStashComponent::copyOverValuesToSelectedModels()
     {
@@ -466,30 +440,15 @@ namespace swift::gui::components
         if (!ui->tvp_StashAircraftModels->hasSelection()) { return; }
 
         const CAircraftModel model(this->getMappingComponent()->getEditorAircraftModel());
-        if (sender == ui->pb_AircraftIcao)
-        {
-            this->applyToSelected(model.getAircraftIcaoCode());
-        }
-        else if (sender == ui->pb_AirlineIcao)
-        {
-            this->applyToSelected(model.getAirlineIcaoCode());
-        }
-        else if (sender == ui->pb_Distributor)
-        {
-            this->applyToSelected(model.getDistributor());
-        }
-        else if (sender == ui->pb_Livery)
-        {
-            this->applyToSelected(model.getLivery());
-        }
+        if (sender == ui->pb_AircraftIcao) { this->applyToSelected(model.getAircraftIcaoCode()); }
+        else if (sender == ui->pb_AirlineIcao) { this->applyToSelected(model.getAirlineIcaoCode()); }
+        else if (sender == ui->pb_Distributor) { this->applyToSelected(model.getDistributor()); }
+        else if (sender == ui->pb_Livery) { this->applyToSelected(model.getLivery()); }
     }
 
     void CDbStashComponent::modifyModelDialog()
     {
-        if (this->getMappingComponent())
-        {
-            this->getMappingComponent()->modifyModelDialog();
-        }
+        if (this->getMappingComponent()) { this->getMappingComponent()->modifyModelDialog(); }
     }
 
     void CDbStashComponent::onRowCountChanged(int number, bool filter)
@@ -522,7 +481,8 @@ namespace swift::gui::components
         }
     }
 
-    bool CDbStashComponent::showOverlayMessages(const CStatusMessageList &msgs, bool onlyErrors, bool appendOldMessages, int timeoutMs)
+    bool CDbStashComponent::showOverlayMessages(const CStatusMessageList &msgs, bool onlyErrors, bool appendOldMessages,
+                                                int timeoutMs)
     {
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
@@ -533,15 +493,18 @@ namespace swift::gui::components
         return true;
     }
 
-    bool CDbStashComponent::showOverlayMessagesWithConfirmation(
-        const CStatusMessageList &msgs, bool appendOldMessages,
-        const QString &confirmation, std::function<void()> okLambda, QMessageBox::StandardButton defaultButton, bool onlyErrors, int timeoutMs)
+    bool CDbStashComponent::showOverlayMessagesWithConfirmation(const CStatusMessageList &msgs, bool appendOldMessages,
+                                                                const QString &confirmation,
+                                                                std::function<void()> okLambda,
+                                                                QMessageBox::StandardButton defaultButton,
+                                                                bool onlyErrors, int timeoutMs)
     {
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
         SWIFT_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
         if (!this->getMappingComponent()) { return false; }
-        this->getMappingComponent()->showOverlayMessagesWithConfirmation(msgs, appendOldMessages, confirmation, okLambda, defaultButton, timeoutMs);
+        this->getMappingComponent()->showOverlayMessagesWithConfirmation(msgs, appendOldMessages, confirmation,
+                                                                         okLambda, defaultButton, timeoutMs);
         return true;
     }
 

@@ -15,21 +15,13 @@ namespace swift::misc
         Q_ASSERT(singleProperty >= static_cast<int>(CPropertyIndexRef::GlobalIndexCValueObject));
     }
 
-    CPropertyIndex::CPropertyIndex(std::initializer_list<int> il) : m_indexes(il)
-    {}
+    CPropertyIndex::CPropertyIndex(std::initializer_list<int> il) : m_indexes(il) {}
 
-    CPropertyIndex::CPropertyIndex(const QList<int> &indexes) : m_indexes(indexes)
-    {}
+    CPropertyIndex::CPropertyIndex(const QList<int> &indexes) : m_indexes(indexes) {}
 
-    CPropertyIndex::CPropertyIndex(const QString &indexes)
-    {
-        this->parseFromString(indexes);
-    }
+    CPropertyIndex::CPropertyIndex(const QString &indexes) { this->parseFromString(indexes); }
 
-    CPropertyIndex::operator CPropertyIndexRef() const
-    {
-        return CPropertyIndexRef(m_indexes);
-    }
+    CPropertyIndex::operator CPropertyIndexRef() const { return CPropertyIndexRef(m_indexes); }
 
     CPropertyIndex CPropertyIndex::copyFrontRemoved() const
     {
@@ -40,20 +32,11 @@ namespace swift::misc
         return copy;
     }
 
-    bool CPropertyIndex::isNested() const
-    {
-        return m_indexes.size() > 1;
-    }
+    bool CPropertyIndex::isNested() const { return m_indexes.size() > 1; }
 
-    bool CPropertyIndex::isMyself() const
-    {
-        return m_indexes.isEmpty();
-    }
+    bool CPropertyIndex::isMyself() const { return m_indexes.isEmpty(); }
 
-    bool CPropertyIndex::isEmpty() const
-    {
-        return m_indexes.isEmpty();
-    }
+    bool CPropertyIndex::isEmpty() const { return m_indexes.isEmpty(); }
 
     QString CPropertyIndex::convertToQString(bool i18n) const
     {
@@ -97,20 +80,11 @@ namespace swift::misc
         this->parseFromString(value.toString());
     }
 
-    QList<int> CPropertyIndex::indexList() const
-    {
-        return m_indexes;
-    }
+    QList<int> CPropertyIndex::indexList() const { return m_indexes; }
 
-    void CPropertyIndex::prepend(int newLeftIndex)
-    {
-        m_indexes.push_front(newLeftIndex);
-    }
+    void CPropertyIndex::prepend(int newLeftIndex) { m_indexes.push_front(newLeftIndex); }
 
-    bool CPropertyIndex::contains(int index) const
-    {
-        return m_indexes.contains(index);
-    }
+    bool CPropertyIndex::contains(int index) const { return m_indexes.contains(index); }
 
     int CPropertyIndex::frontToInt() const
     {

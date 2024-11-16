@@ -14,7 +14,8 @@
 using namespace swift::misc;
 using namespace swift::core;
 
-CSwiftGuiStdApplication::CSwiftGuiStdApplication() : CGuiApplication(CApplicationInfo::swiftPilotClientGui(), CApplicationInfo::PilotClientGui, CIcons::swift1024())
+CSwiftGuiStdApplication::CSwiftGuiStdApplication()
+    : CGuiApplication(CApplicationInfo::swiftPilotClientGui(), CApplicationInfo::PilotClientGui, CIcons::swift1024())
 {
     this->addParserOption(m_cmdFacadeMode);
     this->addDBusAddressOption();
@@ -27,7 +28,8 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed cmd line arguments");
 
     QString dBusAddress(this->getCmdDBusAddressValue());
-    const QString coreModeStr = this->isParserOptionSet(m_cmdFacadeMode) ? this->getParserValue(m_cmdFacadeMode) : QString();
+    const QString coreModeStr =
+        this->isParserOptionSet(m_cmdFacadeMode) ? this->getParserValue(m_cmdFacadeMode) : QString();
     CoreModes::CoreMode coreMode = CoreModes::stringToCoreMode(coreModeStr);
 
     // Valid combination?
@@ -35,8 +37,9 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     {
         if (coreMode == CoreModes::Standalone && !dBusAddress.isEmpty())
         {
-            const CStatusMessage m = CStatusMessage(this, CLogCategories::validation()).error(u"Inconsistent pair DBus: '%1' and core: '%2'")
-                                     << dBusAddress << coreModeStr;
+            const CStatusMessage m =
+                CStatusMessage(this, CLogCategories::validation()).error(u"Inconsistent pair DBus: '%1' and core: '%2'")
+                << dBusAddress << coreModeStr;
             return CStatusMessageList(m);
         }
     }
@@ -46,28 +49,25 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
     if (!dBusAddress.isEmpty() && coreModeStr.isEmpty())
     {
         coreMode = CoreModes::Distributed; // default
-        const CStatusMessage m = CStatusMessage(this, CLogCategories::validation()).info(u"No DBus address, setting core mode: '%1'")
-                                 << CoreModes::coreModeToString(coreMode);
+        const CStatusMessage m =
+            CStatusMessage(this, CLogCategories::validation()).info(u"No DBus address, setting core mode: '%1'")
+            << CoreModes::coreModeToString(coreMode);
         msgs.push_back(m);
     }
     else if (dBusAddress.isEmpty() && coreMode == CoreModes::Distributed)
     {
         dBusAddress = CDBusServer::sessionBusAddress(); // a possible default
-        const CStatusMessage m = CStatusMessage(this, CLogCategories::validation()).info(u"Setting DBus address to '%1'")
-                                 << dBusAddress;
+        const CStatusMessage m =
+            CStatusMessage(this, CLogCategories::validation()).info(u"Setting DBus address to '%1'") << dBusAddress;
         msgs.push_back(m);
     }
 
     CCoreFacadeConfig runtimeConfig;
     switch (coreMode)
     {
-    case CoreModes::Distributed:
-        runtimeConfig = CCoreFacadeConfig::remote(dBusAddress);
-        break;
+    case CoreModes::Distributed: runtimeConfig = CCoreFacadeConfig::remote(dBusAddress); break;
     default:
-    case CoreModes::Standalone:
-        runtimeConfig = CCoreFacadeConfig::local(dBusAddress);
-        break;
+    case CoreModes::Standalone: runtimeConfig = CCoreFacadeConfig::local(dBusAddress); break;
     }
 
     const CStatusMessageList contextMsgs = this->initContextsAndStartCoreFacade(runtimeConfig);

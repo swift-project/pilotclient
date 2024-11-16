@@ -62,10 +62,12 @@ namespace swift::gui::models
         virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const final override;
 
         //! \copydoc QStandardItemModel::canDropMimeData
-        virtual bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const final override;
+        virtual bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
+                                     const QModelIndex &parent) const final override;
 
         //! \copydoc QStandardItemModel::dropMimeData
-        virtual bool dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent) final override;
+        virtual bool dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column,
+                                  const QModelIndex &parent) final override;
         //! @}
 
         //! \name Functions from CListModelBaseNonTemplate
@@ -75,7 +77,8 @@ namespace swift::gui::models
         virtual QJsonObject toJson(bool selectedOnly = false) const override;
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::toJsonString
-        virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented, bool selectedOnly = false) const override;
+        virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented,
+                                     bool selectedOnly = false) const override;
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::isOrderable
         virtual bool isOrderable() const override;
@@ -180,7 +183,10 @@ namespace swift::gui::models
         void takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType>> &filter);
 
         //! Set the selection model
-        void setSelectionModel(swift::gui::models::ISelectionModel<ContainerType> *selectionModel) { m_selectionModel = selectionModel; }
+        void setSelectionModel(swift::gui::models::ISelectionModel<ContainerType> *selectionModel)
+        {
+            m_selectionModel = selectionModel;
+        }
 
     protected:
         //! Constructor
@@ -190,7 +196,8 @@ namespace swift::gui::models
         //! @{
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::onDataChanged
-        virtual void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomLeft, const QVector<int> &roles) override;
+        virtual void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomLeft,
+                                   const QVector<int> &roles) override;
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::onDataChanged
         virtual void onChangedDigest() override;
@@ -212,14 +219,17 @@ namespace swift::gui::models
     {
         //! Sort with compare function
         template <class ObjectType>
-        bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const swift::misc::CPropertyIndex &index, const swift::misc::CPropertyIndexList &tieBreakers, std::true_type)
+        bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order,
+                                 const swift::misc::CPropertyIndex &index,
+                                 const swift::misc::CPropertyIndexList &tieBreakers, std::true_type)
         {
             const int c = a.comparePropertyByIndex(index, b);
             if (c == 0)
             {
                 if (!tieBreakers.isEmpty())
                 {
-                    return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(), std::true_type());
+                    return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(),
+                                                           tieBreakers.copyFrontRemoved(), std::true_type());
                 }
                 return false;
             }
@@ -228,13 +238,16 @@ namespace swift::gui::models
 
         //! Sort without compare function
         template <typename ObjectType>
-        bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order, const swift::misc::CPropertyIndex &index, const swift::misc::CPropertyIndexList &tieBreakers, std::false_type)
+        bool compareForModelSort(const ObjectType &a, const ObjectType &b, Qt::SortOrder order,
+                                 const swift::misc::CPropertyIndex &index,
+                                 const swift::misc::CPropertyIndexList &tieBreakers, std::false_type)
         {
             const swift::misc::CVariant aQv = a.propertyByIndex(index);
             const swift::misc::CVariant bQv = b.propertyByIndex(index);
             if (!tieBreakers.isEmpty() && aQv == bQv)
             {
-                return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(), std::false_type());
+                return compareForModelSort<ObjectType>(a, b, order, tieBreakers.front(), tieBreakers.copyFrontRemoved(),
+                                                       std::false_type());
             }
             return (order == Qt::AscendingOrder) ? (aQv < bQv) : (bQv < aQv);
         }

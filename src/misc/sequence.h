@@ -21,27 +21,27 @@
 #include "misc/swiftmiscexport.h"
 
 //! \cond
-#define SWIFT_TEMPLATE_SEQUENCE_MIXINS(NS, T, List, Extern)            \
-    namespace NS                                                       \
-    {                                                                  \
-        class List;                                                    \
-    }                                                                  \
-    namespace swift::misc::private_ns                                  \
-    {                                                                  \
-        Extern template struct CValueObjectMetaInfo<NS::List>;         \
-        Extern template struct CValueObjectMetaInfo<CSequence<NS::T>>; \
-        Extern template struct MetaTypeHelper<NS::List>;               \
-        Extern template struct MetaTypeHelper<CSequence<NS::T>>;       \
-    }                                                                  \
-    namespace swift::misc::mixin                                       \
-    {                                                                  \
-        Extern template class MetaType<NS::List>;                      \
-        Extern template class MetaType<CSequence<NS::T>>;              \
-        Extern template class DBusOperators<CSequence<NS::T>>;         \
-        Extern template class JsonOperators<CSequence<NS::T>>;         \
-        Extern template class String<CSequence<NS::T>>;                \
-        Extern template class DataStreamOperators<CSequence<NS::T>>;   \
-        Extern template class Icon<CSequence<NS::T>>;                  \
+#define SWIFT_TEMPLATE_SEQUENCE_MIXINS(NS, T, List, Extern)                                                            \
+    namespace NS                                                                                                       \
+    {                                                                                                                  \
+        class List;                                                                                                    \
+    }                                                                                                                  \
+    namespace swift::misc::private_ns                                                                                  \
+    {                                                                                                                  \
+        Extern template struct CValueObjectMetaInfo<NS::List>;                                                         \
+        Extern template struct CValueObjectMetaInfo<CSequence<NS::T>>;                                                 \
+        Extern template struct MetaTypeHelper<NS::List>;                                                               \
+        Extern template struct MetaTypeHelper<CSequence<NS::T>>;                                                       \
+    }                                                                                                                  \
+    namespace swift::misc::mixin                                                                                       \
+    {                                                                                                                  \
+        Extern template class MetaType<NS::List>;                                                                      \
+        Extern template class MetaType<CSequence<NS::T>>;                                                              \
+        Extern template class DBusOperators<CSequence<NS::T>>;                                                         \
+        Extern template class JsonOperators<CSequence<NS::T>>;                                                         \
+        Extern template class String<CSequence<NS::T>>;                                                                \
+        Extern template class DataStreamOperators<CSequence<NS::T>>;                                                   \
+        Extern template class Icon<CSequence<NS::T>>;                                                                  \
     }
 //! \endcond
 
@@ -525,24 +525,18 @@ namespace swift::misc
         }
 
         //! Replace elements matching the given element. If there is no match, push the new element on the end.
-        void replaceOrAdd(const T &replacement)
-        {
-            this->replaceOrAdd(replacement, replacement);
-        }
+        void replaceOrAdd(const T &replacement) { this->replaceOrAdd(replacement, replacement); }
 
         //! Replace or add given elements
         void replaceOrAdd(const CSequence<T> &replacements)
         {
-            for (const T &replacement : replacements)
-            {
-                this->replaceOrAdd(replacement, replacement);
-            }
+            for (const T &replacement : replacements) { this->replaceOrAdd(replacement, replacement); }
         }
 
-        //! Replace elements matching a particular key/value pair. If there is no match, push the new element on the end.
-        //! \param key1 A pointer to a member function of T.
-        //! \param value1 Will be compared to the return value of key1.
-        //! \param replacement All matching elements will be replaced by copies of this one, or a copy will be added.
+        //! Replace elements matching a particular key/value pair. If there is no match, push the new element on the
+        //! end. \param key1 A pointer to a member function of T. \param value1 Will be compared to the return value of
+        //! key1. \param replacement All matching elements will be replaced by copies of this one, or a copy will be
+        //! added.
         template <class K1, class V1>
         void replaceOrAdd(K1 key1, V1 value1, const T &replacement)
         {
@@ -551,10 +545,7 @@ namespace swift::misc
         }
 
         //! In-place reverse
-        void reverse()
-        {
-            std::reverse(begin(), end());
-        }
+        void reverse() { std::reverse(begin(), end()); }
 
         //! Reversed order
         Q_REQUIRED_RESULT CSequence reversed() const
@@ -570,7 +561,8 @@ namespace swift::misc
         {
             QVector<T> temp;
             temp.reserve(size());
-            for (int i : private_ns::sortIndices(size(), [&p, this](int a, int b) { return p((*this)[a], (*this)[b]); }))
+            for (int i :
+                 private_ns::sortIndices(size(), [&p, this](int a, int b) { return p((*this)[a], (*this)[b]); }))
             {
                 temp.push_back(std::move((*this)[i]));
             }

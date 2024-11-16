@@ -22,9 +22,7 @@ SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CKeyboardKey, CKeyboardKeyList
 namespace swift::misc::input
 {
     //! Value object encapsulating a list of keyboard keys.
-    class SWIFT_MISC_EXPORT CKeyboardKeyList :
-        public CSequence<CKeyboardKey>,
-        public mixin::MetaType<CKeyboardKeyList>
+    class SWIFT_MISC_EXPORT CKeyboardKeyList : public CSequence<CKeyboardKey>, public mixin::MetaType<CKeyboardKeyList>
     {
     public:
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CKeyboardKeyList)

@@ -44,7 +44,8 @@ namespace swift::gui::filters
         virtual ~CCountryFilterBar() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CCountryList>> createModelFilter() const override;
+        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CCountryList>>
+        createModelFilter() const override;
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged

@@ -16,7 +16,8 @@ namespace swift::core::fsd
     {
     public:
         //! Constructor
-        ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode, const QString &causingParameter, const QString &description);
+        ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode,
+                    const QString &causingParameter, const QString &description);
 
         //! Fatal?
         bool isFatalError() const;
@@ -59,18 +60,13 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const ServerError &lhs, const ServerError &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.m_errorNumber == rhs.m_errorNumber &&
-               lhs.m_causingParameter == rhs.m_causingParameter &&
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+               lhs.m_errorNumber == rhs.m_errorNumber && lhs.m_causingParameter == rhs.m_causingParameter &&
                lhs.m_description == rhs.m_description;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const ServerError &lhs, const ServerError &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const ServerError &lhs, const ServerError &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

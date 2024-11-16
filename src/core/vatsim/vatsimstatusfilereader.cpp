@@ -45,15 +45,9 @@ namespace swift::core::vatsim
         });
     }
 
-    CUrl CVatsimStatusFileReader::getMetarFileUrl() const
-    {
-        return m_lastGoodSetup.get().getMetarFileUrl();
-    }
+    CUrl CVatsimStatusFileReader::getMetarFileUrl() const { return m_lastGoodSetup.get().getMetarFileUrl(); }
 
-    CUrl CVatsimStatusFileReader::getDataFileUrl() const
-    {
-        return m_lastGoodSetup.get().getDataFileUrl();
-    }
+    CUrl CVatsimStatusFileReader::getDataFileUrl() const { return m_lastGoodSetup.get().getDataFileUrl(); }
 
     void CVatsimStatusFileReader::read()
     {
@@ -121,11 +115,7 @@ namespace swift::core::vatsim
             vs.setUtcTimestamp(QDateTime::currentDateTime());
             const CStatusMessage cacheMsg = m_lastGoodSetup.set(vs);
             if (cacheMsg.isFailure()) { CLogMessage::preformatted(cacheMsg); }
-            else
-            {
-                CLogMessage(this).info(u"Read VATSIM status file from '%1'")
-                    << urlString;
-            }
+            else { CLogMessage(this).info(u"Read VATSIM status file from '%1'") << urlString; }
             Q_UNUSED(changed);
 
             // data read finished
@@ -135,7 +125,8 @@ namespace swift::core::vatsim
         else
         {
             // network error
-            CLogMessage(this).warning(u"Reading VATSIM status file failed '%1' '%2'") << nwReply->errorString() << urlString;
+            CLogMessage(this).warning(u"Reading VATSIM status file failed '%1' '%2'")
+                << nwReply->errorString() << urlString;
             nwReply->abort();
             emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFailed, 0);
         }

@@ -9,8 +9,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSwiftPluginS
 
 namespace swift::misc::simulation::settings
 {
-    CSwiftPluginSettings::CSwiftPluginSettings()
-    {}
+    CSwiftPluginSettings::CSwiftPluginSettings() {}
 
     void CSwiftPluginSettings::setEmulatedSimulator(const CSimulatorInfo &simulator)
     {
@@ -22,7 +21,8 @@ namespace swift::misc::simulation::settings
     {
         Q_UNUSED(i18n);
         static const QString ms("Emulated simulator: %1, default model: '%2', log.function calls: %3");
-        return ms.arg(this->m_emulatedSimulator.toQString(), m_defaultModel.getModelStringAndDbKey(), boolToYesNo(m_logFunctionCalls));
+        return ms.arg(this->m_emulatedSimulator.toQString(), m_defaultModel.getModelStringAndDbKey(),
+                      boolToYesNo(m_logFunctionCalls));
     }
 
     QVariant CSwiftPluginSettings::propertyByIndex(CPropertyIndexRef index) const
@@ -31,16 +31,11 @@ namespace swift::misc::simulation::settings
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexEmulatedSimulator:
-            return this->m_emulatedSimulator.propertyByIndex(index.copyFrontRemoved());
-        case IndexOwnModel:
-            return QVariant::fromValue(m_ownModel);
-        case IndexDefaultModel:
-            return QVariant::fromValue(m_defaultModel);
-        case IndexLoggingFunctionCalls:
-            return QVariant::fromValue(m_logFunctionCalls);
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexEmulatedSimulator: return this->m_emulatedSimulator.propertyByIndex(index.copyFrontRemoved());
+        case IndexOwnModel: return QVariant::fromValue(m_ownModel);
+        case IndexDefaultModel: return QVariant::fromValue(m_defaultModel);
+        case IndexLoggingFunctionCalls: return QVariant::fromValue(m_logFunctionCalls);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -57,18 +52,10 @@ namespace swift::misc::simulation::settings
         case IndexEmulatedSimulator:
             this->m_emulatedSimulator.setPropertyByIndex(index.copyFrontRemoved(), variant);
             break;
-        case IndexOwnModel:
-            this->m_ownModel.setPropertyByIndex(index.copyFrontRemoved(), variant);
-            break;
-        case IndexDefaultModel:
-            this->m_defaultModel.setPropertyByIndex(index.copyFrontRemoved(), variant);
-            break;
-        case IndexLoggingFunctionCalls:
-            this->m_logFunctionCalls = variant.toBool();
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexOwnModel: this->m_ownModel.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexDefaultModel: this->m_defaultModel.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexLoggingFunctionCalls: this->m_logFunctionCalls = variant.toBool(); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::misc::simulation::settings

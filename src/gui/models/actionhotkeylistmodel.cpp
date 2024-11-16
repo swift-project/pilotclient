@@ -16,18 +16,11 @@ using namespace swift::misc::input;
 
 namespace swift::gui::models
 {
-    CActionHotkeyListModel::CActionHotkeyListModel(QObject *parent) : QAbstractTableModel(parent)
-    {}
+    CActionHotkeyListModel::CActionHotkeyListModel(QObject *parent) : QAbstractTableModel(parent) {}
 
-    int CActionHotkeyListModel::rowCount(const QModelIndex & /** parent **/) const
-    {
-        return m_actionHotkeys.size();
-    }
+    int CActionHotkeyListModel::rowCount(const QModelIndex & /** parent **/) const { return m_actionHotkeys.size(); }
 
-    int CActionHotkeyListModel::columnCount(const QModelIndex & /** parent **/) const
-    {
-        return 3;
-    }
+    int CActionHotkeyListModel::columnCount(const QModelIndex & /** parent **/) const { return 3; }
 
     QVariant CActionHotkeyListModel::data(const QModelIndex &index, int role) const
     {
@@ -48,10 +41,7 @@ namespace swift::gui::models
                 return combination.asStringWithDeviceNames();
                 // return combination.toQString();
             }
-            if (col == 2)
-            {
-                return m_actionHotkeys[index.row()].getAction();
-            }
+            if (col == 2) { return m_actionHotkeys[index.row()].getAction(); }
         }
         else if (role == ActionHotkeyRole)
         {
@@ -83,10 +73,7 @@ namespace swift::gui::models
         Q_UNUSED(index)
         beginInsertRows(QModelIndex(), position, position + rows - 1);
 
-        for (int row = 0; row < rows; ++row)
-        {
-            m_actionHotkeys.push_back(swift::misc::input::CActionHotkey());
-        }
+        for (int row = 0; row < rows; ++row) { m_actionHotkeys.push_back(swift::misc::input::CActionHotkey()); }
 
         endInsertRows();
         return true;

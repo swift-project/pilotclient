@@ -24,7 +24,9 @@ namespace swift::misc::simulation::fscommon
     bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
     {
         if (title.isEmpty()) { return false; }
-        return this->containsBy([=](const CAircraftCfgEntries &entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
+        return this->containsBy([=](const CAircraftCfgEntries &entries) {
+            return title.compare(entries.getTitle(), caseSensitivity) == 0;
+        });
     }
 
     QStringList CAircraftCfgEntriesList::detectAmbiguousTitles() const
@@ -37,10 +39,7 @@ namespace swift::misc::simulation::fscommon
             if (title.isEmpty()) { continue; }
             if (title.compare(last, Qt::CaseInsensitive) == 0)
             {
-                if (!ambiguousTitles.contains(title, Qt::CaseInsensitive))
-                {
-                    ambiguousTitles.append(title);
-                }
+                if (!ambiguousTitles.contains(title, Qt::CaseInsensitive)) { ambiguousTitles.append(title); }
             }
             last = title;
         }
@@ -57,10 +56,7 @@ namespace swift::misc::simulation::fscommon
     QSet<QString> CAircraftCfgEntriesList::getTitleSetUpperCase() const
     {
         CSetBuilder<QString> titlesUc;
-        for (const CAircraftCfgEntries &entries : *this)
-        {
-            titlesUc.insert(entries.getTitle().toUpper());
-        }
+        for (const CAircraftCfgEntries &entries : *this) { titlesUc.insert(entries.getTitle().toUpper()); }
         return titlesUc;
     }
 
@@ -79,7 +75,8 @@ namespace swift::misc::simulation::fscommon
         return false;
     }
 
-    CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const
+    CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings,
+                                                                    CStatusMessageList &msgs) const
     {
         CAircraftModelList ml;
         QSet<QString> keys;
@@ -104,16 +101,21 @@ namespace swift::misc::simulation::fscommon
         return ml;
     }
 
-    CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(const CSimulatorInfo &simInfo, bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const
+    CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(const CSimulatorInfo &simInfo,
+                                                                    bool ignoreDuplicatesAndEmptyModelStrings,
+                                                                    CStatusMessageList &msgs) const
     {
         CAircraftModelList ml = this->toAircraftModelList(ignoreDuplicatesAndEmptyModelStrings, msgs);
         ml.setSimulatorInfo(simInfo);
         return ml;
     }
 
-    CAircraftCfgEntriesList CAircraftCfgEntriesList::findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity) const
+    CAircraftCfgEntriesList CAircraftCfgEntriesList::findByTitle(const QString &title,
+                                                                 Qt::CaseSensitivity caseSensitivity) const
     {
-        return this->findBy([=](const CAircraftCfgEntries &entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
+        return this->findBy([=](const CAircraftCfgEntries &entries) {
+            return title.compare(entries.getTitle(), caseSensitivity) == 0;
+        });
     }
 
 } // namespace swift::misc::simulation::fscommon

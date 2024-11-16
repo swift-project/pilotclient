@@ -18,8 +18,12 @@ namespace swift::sample
     void CSamplesFsx::samplesMisc(QTextStream &streamOut)
     {
         swift::misc::registerMetadata();
-        streamOut << CSimConnectUtilities::simConnectExceptionToString(CSimConnectUtilities::SIMCONNECT_EXCEPTION_ALREADY_SUBSCRIBED) << Qt::endl;
-        streamOut << CSimConnectUtilities::simConnectExceptionToString(CSimConnectUtilities::SIMCONNECT_EXCEPTION_ILLEGAL_OPERATION) << Qt::endl;
+        streamOut << CSimConnectUtilities::simConnectExceptionToString(
+                         CSimConnectUtilities::SIMCONNECT_EXCEPTION_ALREADY_SUBSCRIBED)
+                  << Qt::endl;
+        streamOut << CSimConnectUtilities::simConnectExceptionToString(
+                         CSimConnectUtilities::SIMCONNECT_EXCEPTION_ILLEGAL_OPERATION)
+                  << Qt::endl;
         streamOut << CSimConnectUtilities::simConnectSurfaceTypeToString(CSimConnectUtilities::Bituminus) << Qt::endl;
     }
 } // namespace swift::sample

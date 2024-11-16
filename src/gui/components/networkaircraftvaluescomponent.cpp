@@ -13,8 +13,8 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CNetworkAircraftValuesComponent::CNetworkAircraftValuesComponent(QWidget *parent) : QFrame(parent),
-                                                                                        ui(new Ui::CNetworkAircraftValuesComponent)
+    CNetworkAircraftValuesComponent::CNetworkAircraftValuesComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CNetworkAircraftValuesComponent)
     {
         ui->setupUi(this);
     }

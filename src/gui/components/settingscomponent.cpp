@@ -30,18 +30,19 @@ using namespace swift::config;
 
 namespace swift::gui::components
 {
-    CSettingsComponent::CSettingsComponent(QWidget *parent) : QTabWidget(parent),
-                                                              ui(new Ui::CSettingsComponent)
+    CSettingsComponent::CSettingsComponent(QWidget *parent) : QTabWidget(parent), ui(new Ui::CSettingsComponent)
     {
         ui->setupUi(this);
 
         this->tabBar()->setExpanding(false);
         this->tabBar()->setUsesScrollButtons(true);
         this->setCurrentIndex(0); // 1st tab
-        ui->comp_DataLoadOverview->showVisibleDbRefreshButtons(CBuildConfig::isDebugBuild() || sGui->isDeveloperFlagSet());
+        ui->comp_DataLoadOverview->showVisibleDbRefreshButtons(CBuildConfig::isDebugBuild() ||
+                                                               sGui->isDeveloperFlagSet());
         ui->comp_DataLoadOverview->showVisibleLoadAllButtons(false, false, false);
 
-        connect(ui->comp_SettingsGuiGeneral, &CSettingsGuiComponent::changedWindowsOpacity, this, &CSettingsComponent::changedWindowsOpacity);
+        connect(ui->comp_SettingsGuiGeneral, &CSettingsGuiComponent::changedWindowsOpacity, this,
+                &CSettingsComponent::changedWindowsOpacity);
         connect(ui->pb_Advanced, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
         connect(ui->pb_Audio, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
         connect(ui->pb_Gui, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
@@ -55,7 +56,8 @@ namespace swift::gui::components
         connect(ui->pb_DataLoadAndCaches, &QPushButton::released, this, &CSettingsComponent::onOverviewButtonClicked);
     }
 
-    CSettingsComponent::~CSettingsComponent() = default; // declared in cpp to avoid incomplete type of Ui::CSettingsComponent
+    CSettingsComponent::~CSettingsComponent() =
+        default; // declared in cpp to avoid incomplete type of Ui::CSettingsComponent
 
     CSpecializedSimulatorSettings CSettingsComponent::getSimulatorSettings(const CSimulatorInfo &simulator) const
     {
@@ -67,15 +69,9 @@ namespace swift::gui::components
         this->setCurrentIndex(static_cast<int>(tab));
     }
 
-    void CSettingsComponent::setSettingsOverviewTab()
-    {
-        this->setTab(SettingTabOverview);
-    }
+    void CSettingsComponent::setSettingsOverviewTab() { this->setTab(SettingTabOverview); }
 
-    void CSettingsComponent::setGuiOpacity(double value)
-    {
-        ui->comp_SettingsGuiGeneral->setGuiOpacity(value);
-    }
+    void CSettingsComponent::setGuiOpacity(double value) { ui->comp_SettingsGuiGeneral->setGuiOpacity(value); }
 
     void CSettingsComponent::onOverviewButtonClicked()
     {

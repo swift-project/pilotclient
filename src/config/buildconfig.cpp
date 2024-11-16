@@ -67,10 +67,7 @@ namespace swift::config
         return devBuild;
     }
 
-    static QString boolToYesNo(bool v)
-    {
-        return v ? QStringLiteral("yes") : QStringLiteral("no");
-    }
+    static QString boolToYesNo(bool v) { return v ? QStringLiteral("yes") : QStringLiteral("no"); }
 
     const QString &CBuildConfig::compiledWithInfoShort()
     {

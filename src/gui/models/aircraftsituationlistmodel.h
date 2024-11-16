@@ -15,7 +15,8 @@
 namespace swift::gui::models
 {
     //! Client list model
-    class SWIFT_GUI_EXPORT CAircraftSituationListModel : public CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftSituationList, true>
+    class SWIFT_GUI_EXPORT CAircraftSituationListModel :
+        public CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftSituationList, true>
     {
         Q_OBJECT
 

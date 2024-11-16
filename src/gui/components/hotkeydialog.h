@@ -66,10 +66,8 @@ namespace swift::gui::components
 
     public:
         //! Constructor
-        CHotkeyDialog(
-            const swift::misc::input::CActionHotkey &actionHotkey,
-            const swift::misc::CIdentifierList &identifiers,
-            QWidget *parent = nullptr);
+        CHotkeyDialog(const swift::misc::input::CActionHotkey &actionHotkey,
+                      const swift::misc::CIdentifierList &identifiers, QWidget *parent = nullptr);
 
         //! Destructor
         virtual ~CHotkeyDialog() override;
@@ -84,10 +82,9 @@ namespace swift::gui::components
         virtual void accept() override;
 
         //! Runs the hotkey dialog and returns the result
-        static swift::misc::input::CActionHotkey getActionHotkey(
-            const swift::misc::input::CActionHotkey &initial,
-            const swift::misc::CIdentifierList &identifiers,
-            QWidget *parent = nullptr);
+        static swift::misc::input::CActionHotkey getActionHotkey(const swift::misc::input::CActionHotkey &initial,
+                                                                 const swift::misc::CIdentifierList &identifiers,
+                                                                 QWidget *parent = nullptr);
 
     private:
         void advancedModeChanged();
@@ -95,8 +92,10 @@ namespace swift::gui::components
         void combinationSelectionChanged(const swift::misc::input::CHotkeyCombination &combination);
         void combinationSelectionFinished(const swift::misc::input::CHotkeyCombination &combination);
         void changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected);
-        CKeySelectionBox *addSelectionBox(const swift::misc::input::CKeyboardKeyList &allSupportedKeys, const swift::misc::input::CKeyboardKey &keyboardKey = {});
-        CKeySelectionBox *addSelectionBox(const swift::misc::input::CJoystickButtonList &allAvailableButtons, const swift::misc::input::CJoystickButton &joystickButton = {});
+        CKeySelectionBox *addSelectionBox(const swift::misc::input::CKeyboardKeyList &allSupportedKeys,
+                                          const swift::misc::input::CKeyboardKey &keyboardKey = {});
+        CKeySelectionBox *addSelectionBox(const swift::misc::input::CJoystickButtonList &allAvailableButtons,
+                                          const swift::misc::input::CJoystickButton &joystickButton = {});
 
         void changeApplicableMachine(int index);
         void synchronize();

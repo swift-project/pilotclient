@@ -16,16 +16,12 @@ namespace swift::misc
 {
     CPlatformSet::CPlatformSet() {}
 
-    CPlatformSet::CPlatformSet(const CCollection<CPlatform> &other) : CCollection<CPlatform>(other)
-    {}
+    CPlatformSet::CPlatformSet(const CCollection<CPlatform> &other) : CCollection<CPlatform>(other) {}
 
     QStringList CPlatformSet::getPlatformNames() const
     {
         QStringList names;
-        for (const CPlatform &p : *this)
-        {
-            names.append(p.getPlatformName());
-        }
+        for (const CPlatform &p : *this) { names.append(p.getPlatformName()); }
         return names;
     }
 
@@ -58,7 +54,8 @@ namespace swift::misc
 
     const CPlatformSet &CPlatformSet::allPlatforms()
     {
-        static const CPlatformSet platforms({ CPlatform::win32Platform(), CPlatform::win64Platform(), CPlatform::linuxPlatform(), CPlatform::macOSPlatform() });
+        static const CPlatformSet platforms({ CPlatform::win32Platform(), CPlatform::win64Platform(),
+                                              CPlatform::linuxPlatform(), CPlatform::macOSPlatform() });
         return platforms;
     }
 

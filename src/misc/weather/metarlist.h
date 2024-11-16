@@ -21,9 +21,7 @@ SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::weather, CMetar, CMetarList)
 namespace swift::misc::weather
 {
     //! Sequence of Metars
-    class SWIFT_MISC_EXPORT CMetarList :
-        public CSequence<CMetar>,
-        public swift::misc::mixin::MetaType<CMetarList>
+    class SWIFT_MISC_EXPORT CMetarList : public CSequence<CMetar>, public swift::misc::mixin::MetaType<CMetarList>
     {
     public:
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CMetarList)

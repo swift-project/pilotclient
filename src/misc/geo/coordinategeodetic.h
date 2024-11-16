@@ -110,14 +110,16 @@ namespace swift::misc
             bool hasMSLGeodeticHeight() const { return this->geodeticHeight().hasMeanSeaLevelValue(); }
 
             //! Is null, means vector x, y, z == 0
-            //! \remark this is a default implementation, concrete implementations of ICoordinateGeodetic might override it
+            //! \remark this is a default implementation, concrete implementations of ICoordinateGeodetic might override
+            //! it
             virtual bool isNull() const { return this->normalVector().isNull(); }
 
             //! Great circle distance
             physical_quantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
 
             //! Object within range?
-            bool isWithinRange(const ICoordinateGeodetic &otherCoordinate, const physical_quantities::CLength &range) const;
+            bool isWithinRange(const ICoordinateGeodetic &otherCoordinate,
+                               const physical_quantities::CLength &range) const;
 
             //! Initial bearing
             physical_quantities::CAngle calculateBearing(const ICoordinateGeodetic &otherCoordinate) const;
@@ -147,18 +149,23 @@ namespace swift::misc
         };
 
         //! Great circle distance between points
-        SWIFT_MISC_EXPORT physical_quantities::CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        SWIFT_MISC_EXPORT physical_quantities::CLength
+        calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
         //! Initial bearing
-        SWIFT_MISC_EXPORT physical_quantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        SWIFT_MISC_EXPORT physical_quantities::CAngle calculateBearing(const ICoordinateGeodetic &coordinate1,
+                                                                       const ICoordinateGeodetic &coordinate2);
 
         //! Euclidean distance between normal vectors
-        SWIFT_MISC_EXPORT double calculateEuclideanDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        SWIFT_MISC_EXPORT double calculateEuclideanDistance(const ICoordinateGeodetic &coordinate1,
+                                                            const ICoordinateGeodetic &coordinate2);
 
         //! Euclidean distance squared between normal vectors, use for more efficient sorting by distance
-        SWIFT_MISC_EXPORT double calculateEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+        SWIFT_MISC_EXPORT double calculateEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate1,
+                                                                   const ICoordinateGeodetic &coordinate2);
 
-        //! Interface (actually more an abstract class) of coordinates and relative position to something (normally own aircraft)
+        //! Interface (actually more an abstract class) of coordinates and relative position to something (normally own
+        //! aircraft)
         class SWIFT_MISC_EXPORT ICoordinateWithRelativePosition : public ICoordinateGeodetic
         {
         public:
@@ -191,7 +198,8 @@ namespace swift::misc
             physical_quantities::CLength calculcateAndUpdateRelativeDistance(const geo::ICoordinateGeodetic &position);
 
             //! Calculcate distance and bearing to plane, set it, and return distance
-            physical_quantities::CLength calculcateAndUpdateRelativeDistanceAndBearing(const geo::ICoordinateGeodetic &position);
+            physical_quantities::CLength
+            calculcateAndUpdateRelativeDistanceAndBearing(const geo::ICoordinateGeodetic &position);
 
             //! \copydoc mixin::Index::propertyByIndex
             QVariant propertyByIndex(CPropertyIndexRef index) const;
@@ -200,7 +208,8 @@ namespace swift::misc
             void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(CPropertyIndexRef index, const ICoordinateWithRelativePosition &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index,
+                                       const ICoordinateWithRelativePosition &compareValue) const;
 
             //! \copydoc mixin::String::toQString
             QString convertToQString(bool i18n = false) const;
@@ -217,14 +226,19 @@ namespace swift::misc
         };
 
         //! Geodetic coordinate
-        class SWIFT_MISC_EXPORT CCoordinateGeodetic : public CValueObject<CCoordinateGeodetic>, public ICoordinateGeodetic
+        class SWIFT_MISC_EXPORT CCoordinateGeodetic :
+            public CValueObject<CCoordinateGeodetic>,
+            public ICoordinateGeodetic
         {
         public:
             //! Default constructor (null coordinate)
             CCoordinateGeodetic() {}
 
             //! Constructor by normal vector
-            CCoordinateGeodetic(const QVector3D &normal) : m_x(static_cast<double>(normal.x())), m_y(static_cast<double>(normal.y())), m_z(static_cast<double>(normal.z())) {}
+            CCoordinateGeodetic(const QVector3D &normal)
+                : m_x(static_cast<double>(normal.x())), m_y(static_cast<double>(normal.y())),
+                  m_z(static_cast<double>(normal.z()))
+            {}
 
             //! Constructor by normal vector
             CCoordinateGeodetic(const std::array<double, 3> &normalVector);
@@ -233,7 +247,8 @@ namespace swift::misc
             CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude);
 
             //! Constructor by latitude/longitude/height (or altitude)
-            CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const aviation::CAltitude &geodeticHeight);
+            CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude,
+                                const aviation::CAltitude &geodeticHeight);
 
             //! Constructor by double values, but no geodetic height
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees);
@@ -245,7 +260,8 @@ namespace swift::misc
             CCoordinateGeodetic(const ICoordinateGeodetic &coordinate);
 
             //! Calculate a position in distance/bearing
-            CCoordinateGeodetic calculatePosition(const physical_quantities::CLength &distance, const physical_quantities::CAngle &relBearing) const;
+            CCoordinateGeodetic calculatePosition(const physical_quantities::CLength &distance,
+                                                  const physical_quantities::CAngle &relBearing) const;
 
             //! \copydoc ICoordinateGeodetic::latitude
             virtual CLatitude latitude() const override;
@@ -331,11 +347,13 @@ namespace swift::misc
             virtual bool isNull() const override
             {
                 if (m_geodeticHeight.isNull()) { return true; }
-                return math::CMathUtils::epsilonZeroLimits(m_x) && math::CMathUtils::epsilonZeroLimits(m_y) && math::CMathUtils::epsilonZeroLimits(m_z);
+                return math::CMathUtils::epsilonZeroLimits(m_x) && math::CMathUtils::epsilonZeroLimits(m_y) &&
+                       math::CMathUtils::epsilonZeroLimits(m_z);
             }
 
             //! Coordinate by WGS84 position data
-            static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const aviation::CAltitude &geodeticHeight = {});
+            static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84,
+                                                 const aviation::CAltitude &geodeticHeight = {});
 
             //! null coordinate
             static const CCoordinateGeodetic &null();

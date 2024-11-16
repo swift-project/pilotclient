@@ -73,19 +73,20 @@ swift::core::CApplication *sApp = nullptr; // set by constructor
 //! \private
 static const QString &swiftDataRoot()
 {
-    static const QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/";
+    static const QString path =
+        QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/org.swift-project/";
     return path;
 }
 
 namespace swift::core
 {
-    CApplication::CApplication(CApplicationInfo::Application application, bool init) : CApplication(executable(), application, init)
+    CApplication::CApplication(CApplicationInfo::Application application, bool init)
+        : CApplication(executable(), application, init)
     {}
 
-    CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init) : CIdentifiable(this),
-                                                                                                                       m_accessManager(new QNetworkAccessManager(this)),
-                                                                                                                       m_applicationInfo(application),
-                                                                                                                       m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+    CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init)
+        : CIdentifiable(this), m_accessManager(new QNetworkAccessManager(this)), m_applicationInfo(application),
+          m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -94,13 +95,11 @@ namespace swift::core
         QCoreApplication::setApplicationName(m_applicationName);
         QCoreApplication::setApplicationVersion(CBuildConfig::getVersionString());
         this->setObjectName(m_applicationName);
-        this->thread()->setObjectName(m_applicationName); // normally no effect as thread already runs, but does not harm either
+        this->thread()->setObjectName(
+            m_applicationName); // normally no effect as thread already runs, but does not harm either
 
         // init skipped when called from CGuiApplication
-        if (init)
-        {
-            this->init(true);
-        }
+        if (init) { this->init(true); }
     }
 
     void CApplication::init(bool withMetadata)
@@ -108,7 +107,8 @@ namespace swift::core
         if (!sApp)
         {
             // notify when app goes down
-            connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CApplication::gracefulShutdown);
+            connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this,
+                    &CApplication::gracefulShutdown);
 
             // metadata
             if (withMetadata) { CApplication::registerMetadata(); }
@@ -119,7 +119,8 @@ namespace swift::core
                 const QString tempPath(CApplication::getTemporaryDirectory());
                 swift::misc::setMockCacheRootDirectory(tempPath);
             }
-            m_alreadyRunning = CApplication::getRunningApplications().containsApplication(CApplication::getApplicationInfo().getApplication());
+            m_alreadyRunning = CApplication::getRunningApplications().containsApplication(
+                CApplication::getApplicationInfo().getApplication());
             this->initParser();
             this->initLogging();
             this->tagApplicationDataDirectory();
@@ -138,12 +139,15 @@ namespace swift::core
 
             // check for updates
             m_gitHubPackagesReader.reset(new CGitHubPackagesReader(this));
-            connect(m_gitHubPackagesReader.data(), &CGitHubPackagesReader::updateInfoAvailable, this, &CApplication::updateInfoAvailable, Qt::QueuedConnection);
+            connect(m_gitHubPackagesReader.data(), &CGitHubPackagesReader::updateInfoAvailable, this,
+                    &CApplication::updateInfoAvailable, Qt::QueuedConnection);
             reloadUpdateInfo();
 
             // startup done
-            connect(this, &CApplication::startUpCompleted, this, &CApplication::onStartUpCompleted, Qt::QueuedConnection);
-            connect(this, &CApplication::coreFacadeStarted, this, &CApplication::onCoreFacadeStarted, Qt::QueuedConnection);
+            connect(this, &CApplication::startUpCompleted, this, &CApplication::onStartUpCompleted,
+                    Qt::QueuedConnection);
+            connect(this, &CApplication::coreFacadeStarted, this, &CApplication::onCoreFacadeStarted,
+                    Qt::QueuedConnection);
 
             if (!this->getApplicationInfo().isUnitTest())
             {
@@ -154,7 +158,8 @@ namespace swift::core
             connect(this, &QObject::destroyed, [cat = CLogCategoryList(this)] {
                 for (CWorkerBase *worker : CWorkerBase::allWorkers())
                 {
-                    CLogMessage(cat).debug(u"Worker named '%1' still exists after application destroyed") << worker->objectName();
+                    CLogMessage(cat).debug(u"Worker named '%1' still exists after application destroyed")
+                        << worker->objectName();
                 }
             });
         }
@@ -166,8 +171,12 @@ namespace swift::core
         CApplicationInfoList apps = CApplication::getRunningApplications();
         const CApplicationInfo myself = CApplication::instance()->getApplicationInfo();
         if (!apps.contains(myself)) { apps.push_back(myself); }
-        const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
-        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error(u"Failed to write to application list file"); }
+        const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(),
+                                                            CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
+        if (!ok)
+        {
+            CLogMessage(static_cast<CApplication *>(nullptr)).error(u"Failed to write to application list file");
+        }
         return ok;
     }
 
@@ -178,8 +187,12 @@ namespace swift::core
         const CApplicationInfo myself = CApplication::instance()->getApplicationInfo();
         if (!apps.contains(myself)) { return true; }
         apps.remove(myself);
-        const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(), CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
-        if (!ok) { CLogMessage(static_cast<CApplication *>(nullptr)).error(u"Failed to write to application list file"); }
+        const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(),
+                                                            CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
+        if (!ok)
+        {
+            CLogMessage(static_cast<CApplication *>(nullptr)).error(u"Failed to write to application list file");
+        }
         return ok;
     }
 
@@ -201,10 +214,7 @@ namespace swift::core
         CApplication::exit(0);
     }
 
-    CApplication::~CApplication()
-    {
-        this->gracefulShutdown();
-    }
+    CApplication::~CApplication() { this->gracefulShutdown(); }
 
     CApplicationInfoList CApplication::getRunningApplications()
     {
@@ -222,28 +232,18 @@ namespace swift::core
 
     bool CApplication::isAlreadyRunning() const
     {
-        return getRunningApplications().containsBy([this](const CApplicationInfo &info) { return info.getApplication() == getApplicationInfo().getApplication(); });
+        return getRunningApplications().containsBy([this](const CApplicationInfo &info) {
+            return info.getApplication() == getApplicationInfo().getApplication();
+        });
     }
 
-    bool CApplication::isShuttingDown() const
-    {
-        return m_shutdown || m_shutdownInProgress;
-    }
+    bool CApplication::isShuttingDown() const { return m_shutdown || m_shutdownInProgress; }
 
-    bool CApplication::isIncognito() const
-    {
-        return m_incognito;
-    }
+    bool CApplication::isIncognito() const { return m_incognito; }
 
-    void CApplication::setIncognito(bool incognito)
-    {
-        m_incognito = incognito;
-    }
+    void CApplication::setIncognito(bool incognito) { m_incognito = incognito; }
 
-    void CApplication::toggleIncognito()
-    {
-        m_incognito = !m_incognito;
-    }
+    void CApplication::toggleIncognito() { m_incognito = !m_incognito; }
 
     const QString &CApplication::getApplicationNameAndVersion() const
     {
@@ -280,7 +280,8 @@ namespace swift::core
 
     bool CApplication::startLauncher()
     {
-        static const QString launcher = CApplication::getExecutableForApplication(CApplicationInfo::Application::Launcher);
+        static const QString launcher =
+            CApplication::getExecutableForApplication(CApplicationInfo::Application::Launcher);
         if (launcher.isEmpty() || CApplication::isApplicationRunning(CApplicationInfo::Launcher)) { return false; }
 
         // const QStringList args = this->argumentsJoined({}, { "--dbus", "--core", "--coreaudio" });
@@ -334,8 +335,7 @@ namespace swift::core
 
         // parsing itself is done
         CStatusMessageList msgs;
-        do
-        {
+        do {
             // clear cache?
             if (this->isSet(m_cmdClearCache))
             {
@@ -371,10 +371,7 @@ namespace swift::core
             this->cmdLineErrorMessage(msgs);
             return false;
         }
-        else if (!msgs.isEmpty())
-        {
-            CLogMessage::preformatted(msgs);
-        }
+        else if (!msgs.isEmpty()) { CLogMessage::preformatted(msgs); }
 
         m_started = true;
         return m_started;
@@ -402,7 +399,8 @@ namespace swift::core
         // use hasWebDataServices() to test if services are available
         // getting the assert means web services are accessed before the are initialized
 
-        Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO, "Missing web data services, use hasWebDataServices to test if existing");
+        Q_ASSERT_X(m_webDataServices, Q_FUNC_INFO,
+                   "Missing web data services, use hasWebDataServices to test if existing");
         return m_webDataServices.data();
     }
 
@@ -465,36 +463,29 @@ namespace swift::core
             const CStatusMessage msg = CSettingsCache::instance()->loadFromStore();
             if (msg.isFailure()) { return msg; }
 
-            // Settings are distributed via DBus. So only one application is responsible for saving. `enableLocalSave()` means
-            // "this is the application responsible for saving". If swiftgui requests a setting to be saved, it is sent to swiftcore and saved by swiftcore.
+            // Settings are distributed via DBus. So only one application is responsible for saving. `enableLocalSave()`
+            // means "this is the application responsible for saving". If swiftgui requests a setting to be saved, it is
+            // sent to swiftcore and saved by swiftcore.
             CSettingsCache::instance()->enableLocalSave();
         }
         return CStatusMessage();
     }
 
-    bool CApplication::hasUnsavedSettings() const
-    {
-        return !this->getUnsavedSettingsKeys().isEmpty();
-    }
+    bool CApplication::hasUnsavedSettings() const { return !this->getUnsavedSettingsKeys().isEmpty(); }
 
-    void CApplication::saveSettingsOnShutdown(bool saveSettings)
-    {
-        m_saveSettingsOnShutdown = saveSettings;
-    }
+    void CApplication::saveSettingsOnShutdown(bool saveSettings) { m_saveSettingsOnShutdown = saveSettings; }
 
     QStringList CApplication::getUnsavedSettingsKeys() const
     {
-        return this->supportsContexts() ?
-                   this->getIContextApplication()->getUnsavedSettingsKeys() :
-                   CSettingsCache::instance()->getAllUnsavedKeys();
+        return this->supportsContexts() ? this->getIContextApplication()->getUnsavedSettingsKeys() :
+                                          CSettingsCache::instance()->getAllUnsavedKeys();
     }
 
     CStatusMessage CApplication::saveSettingsByKey(const QStringList &keys)
     {
         if (keys.isEmpty()) { return CStatusMessage(); }
-        return this->supportsContexts() ?
-                   this->getIContextApplication()->saveSettingsByKey(keys) :
-                   CSettingsCache::instance()->saveToStore(keys);
+        return this->supportsContexts() ? this->getIContextApplication()->saveSettingsByKey(keys) :
+                                          CSettingsCache::instance()->saveToStore(keys);
     }
 
     QString CApplication::getTemporaryDirectory()
@@ -506,118 +497,107 @@ namespace swift::core
 
     QString CApplication::getInfoString(const QString &separator) const
     {
-        QString str =
-            CBuildConfig::getVersionString() %
-            u" " % (CBuildConfig::isReleaseBuild() ? u"Release build" : u"Debug build") %
-            separator %
-            u"Local dev.dbg.: " %
-            boolToYesNo(CBuildConfig::isLocalDeveloperDebugBuild()) %
-            separator %
-            u"dev.env.: " %
-            boolToYesNo(this->isDeveloperFlagSet()) %
-            separator %
-            u"distribution: " %
-            this->getOwnDistribution().toQString(true) %
-            separator %
-            u"Windows NT: " %
-            boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()) %
-            separator %
-            u"Linux: " %
-            boolToYesNo(CBuildConfig::isRunningOnLinuxPlatform()) %
-            " Unix: " %
-            boolToYesNo(CBuildConfig::isRunningOnUnixPlatform()) %
-            separator %
-            u"MacOS: " %
-            boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform()) %
-            separator %
-            "Build Abi: " %
-            QSysInfo::buildAbi() %
-            separator %
-            u"Build CPU: " %
-            QSysInfo::buildCpuArchitecture() %
-            separator %
-            CBuildConfig::compiledWithInfoLong();
+        QString str = CBuildConfig::getVersionString() % u" " %
+                      (CBuildConfig::isReleaseBuild() ? u"Release build" : u"Debug build") % separator %
+                      u"Local dev.dbg.: " % boolToYesNo(CBuildConfig::isLocalDeveloperDebugBuild()) % separator %
+                      u"dev.env.: " % boolToYesNo(this->isDeveloperFlagSet()) % separator % u"distribution: " %
+                      this->getOwnDistribution().toQString(true) % separator % u"Windows NT: " %
+                      boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()) % separator % u"Linux: " %
+                      boolToYesNo(CBuildConfig::isRunningOnLinuxPlatform()) % " Unix: " %
+                      boolToYesNo(CBuildConfig::isRunningOnUnixPlatform()) % separator % u"MacOS: " %
+                      boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform()) % separator % "Build Abi: " %
+                      QSysInfo::buildAbi() % separator % u"Build CPU: " % QSysInfo::buildCpuArchitecture() % separator %
+                      CBuildConfig::compiledWithInfoLong();
 
         if (this->supportsContexts())
         {
             str += (separator % u"Supporting contexts");
-            if (this->getIContextNetwork())
-            {
-                str += (separator % this->getIContextNetwork()->getLibraryInfo(true));
-            }
+            if (this->getIContextNetwork()) { str += (separator % this->getIContextNetwork()->getLibraryInfo(true)); }
         }
 
         return str;
     }
 
-    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CApplication::CallbackSlot &callback, int maxRedirects)
+    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CApplication::CallbackSlot &callback,
+                                                int maxRedirects)
     {
         const CApplication::ProgressSlot progress;
         return this->getFromNetwork(url, callback, progress, maxRedirects);
     }
 
-    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CApplication::CallbackSlot &callback, const CApplication::ProgressSlot &progress, int maxRedirects)
+    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, const CApplication::CallbackSlot &callback,
+                                                const CApplication::ProgressSlot &progress, int maxRedirects)
     {
         return this->getFromNetwork(url.toNetworkRequest(), NoLogRequestId, callback, progress, maxRedirects);
     }
 
-    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, int logId, const CApplication::CallbackSlot &callback, const CApplication::ProgressSlot &progress, int maxRedirects)
+    QNetworkReply *CApplication::getFromNetwork(const CUrl &url, int logId, const CApplication::CallbackSlot &callback,
+                                                const CApplication::ProgressSlot &progress, int maxRedirects)
     {
         return this->getFromNetwork(url.toNetworkRequest(), logId, callback, progress, maxRedirects);
     }
 
-    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, const CApplication::CallbackSlot &callback, int maxRedirects)
+    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request,
+                                                const CApplication::CallbackSlot &callback, int maxRedirects)
     {
         const CApplication::ProgressSlot progress;
         return this->getFromNetwork(request, callback, progress, maxRedirects);
     }
 
-    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, const CApplication::CallbackSlot &callback, const CApplication::ProgressSlot &progress, int maxRedirects)
+    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request,
+                                                const CApplication::CallbackSlot &callback,
+                                                const CApplication::ProgressSlot &progress, int maxRedirects)
     {
         return this->getFromNetwork(request, NoLogRequestId, callback, progress, maxRedirects);
     }
 
-    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, int logId, const CApplication::CallbackSlot &callback, const CApplication::ProgressSlot &progress, int maxRedirects)
+    QNetworkReply *CApplication::getFromNetwork(const QNetworkRequest &request, int logId,
+                                                const CApplication::CallbackSlot &callback,
+                                                const CApplication::ProgressSlot &progress, int maxRedirects)
     {
-        return this->httpRequestImpl(request, logId, callback, progress, maxRedirects, [](QNetworkAccessManager &qam, const QNetworkRequest &request) {
-            QNetworkReply *nr = qam.get(request);
-            return nr;
-        });
+        return this->httpRequestImpl(request, logId, callback, progress, maxRedirects,
+                                     [](QNetworkAccessManager &qam, const QNetworkRequest &request) {
+                                         QNetworkReply *nr = qam.get(request);
+                                         return nr;
+                                     });
     }
 
-    QNetworkReply *CApplication::deleteResourceFromNetwork(const QNetworkRequest &request, int logId, const CApplication::CallbackSlot &callback, int maxRedirects)
+    QNetworkReply *CApplication::deleteResourceFromNetwork(const QNetworkRequest &request, int logId,
+                                                           const CApplication::CallbackSlot &callback, int maxRedirects)
     {
         const CApplication::ProgressSlot progress;
-        return this->httpRequestImpl(request, logId, callback, progress, maxRedirects, [](QNetworkAccessManager &qam, const QNetworkRequest &request) {
-            QNetworkReply *nr = qam.deleteResource(request);
-            return nr;
-        });
+        return this->httpRequestImpl(request, logId, callback, progress, maxRedirects,
+                                     [](QNetworkAccessManager &qam, const QNetworkRequest &request) {
+                                         QNetworkReply *nr = qam.deleteResource(request);
+                                         return nr;
+                                     });
     }
 
-    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data, const CSlot<void(QNetworkReply *)> &callback)
+    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data,
+                                               const CSlot<void(QNetworkReply *)> &callback)
     {
-        return this->httpRequestImpl(request, logId, callback, NoRedirects, [data](QNetworkAccessManager &qam, const QNetworkRequest &request) {
-            QNetworkReply *nr = qam.post(request, data);
-            return nr;
-        });
+        return this->httpRequestImpl(request, logId, callback, NoRedirects,
+                                     [data](QNetworkAccessManager &qam, const QNetworkRequest &request) {
+                                         QNetworkReply *nr = qam.post(request, data);
+                                         return nr;
+                                     });
     }
 
-    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart, const CSlot<void(QNetworkReply *)> &callback)
+    QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart,
+                                               const CSlot<void(QNetworkReply *)> &callback)
     {
-        if (multiPart->thread() != m_accessManager->thread())
-        {
-            multiPart->moveToThread(m_accessManager->thread());
-        }
+        if (multiPart->thread() != m_accessManager->thread()) { multiPart->moveToThread(m_accessManager->thread()); }
 
         QPointer<CApplication> myself(this);
-        return httpRequestImpl(request, logId, callback, NoRedirects, [=](QNetworkAccessManager &qam, const QNetworkRequest &request) {
-            QNetworkReply *nr = nullptr;
-            if (!myself) { return nr; }
-            if (!multiPart) { return nr; }
-            nr = qam.post(request, multiPart);
-            multiPart->setParent(nr);
-            return nr;
-        });
+        return httpRequestImpl(request, logId, callback, NoRedirects,
+                               [=](QNetworkAccessManager &qam, const QNetworkRequest &request) {
+                                   QNetworkReply *nr = nullptr;
+                                   if (!myself) { return nr; }
+                                   if (!multiPart) { return nr; }
+                                   nr = qam.post(request, multiPart);
+                                   multiPart->setParent(nr);
+                                   return nr;
+                               });
     }
 
     QNetworkReply *CApplication::headerFromNetwork(const CUrl &url, const CallbackSlot &callback, int maxRedirects)
@@ -625,12 +605,17 @@ namespace swift::core
         return headerFromNetwork(url.toNetworkRequest(), callback, maxRedirects);
     }
 
-    QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback, int maxRedirects)
+    QNetworkReply *CApplication::headerFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback,
+                                                   int maxRedirects)
     {
-        return httpRequestImpl(request, NoLogRequestId, callback, maxRedirects, [](QNetworkAccessManager &qam, const QNetworkRequest &request) { return qam.head(request); });
+        return httpRequestImpl(
+            request, NoLogRequestId, callback, maxRedirects,
+            [](QNetworkAccessManager &qam, const QNetworkRequest &request) { return qam.head(request); });
     }
 
-    QNetworkReply *CApplication::downloadFromNetwork(const CUrl &url, const QString &saveAsFileName, const CSlot<void(const CStatusMessage &)> &callback, int maxRedirects)
+    QNetworkReply *CApplication::downloadFromNetwork(const CUrl &url, const QString &saveAsFileName,
+                                                     const CSlot<void(const CStatusMessage &)> &callback,
+                                                     int maxRedirects)
     {
         // upfront checks
         if (url.isEmpty()) { return nullptr; }
@@ -644,14 +629,17 @@ namespace swift::core
             CStatusMessage msg;
             if (reply->error() != QNetworkReply::NoError)
             {
-                msg = CStatusMessage(this, CStatusMessage::SeverityError, u"Download for '%1' failed: '%2'") << url.getFullUrl() << nwReply->errorString();
+                msg = CStatusMessage(this, CStatusMessage::SeverityError, u"Download for '%1' failed: '%2'")
+                      << url.getFullUrl() << nwReply->errorString();
             }
             else
             {
                 const bool ok = CFileUtils::writeByteArrayToFile(reply->readAll(), saveAsFileName);
-                msg = ok ?
-                          CStatusMessage(this, CStatusMessage::SeverityInfo, u"Saved file '%1' downloaded from '%2'") << saveAsFileName << url.getFullUrl() :
-                          CStatusMessage(this, CStatusMessage::SeverityError, u"Saving file '%1' downloaded from '%2' failed") << saveAsFileName << url.getFullUrl();
+                msg = ok ? CStatusMessage(this, CStatusMessage::SeverityInfo, u"Saved file '%1' downloaded from '%2'")
+                               << saveAsFileName << url.getFullUrl() :
+                           CStatusMessage(this, CStatusMessage::SeverityError,
+                                          u"Saving file '%1' downloaded from '%2' failed")
+                               << saveAsFileName << url.getFullUrl();
             }
             nwReply->close();
             QTimer::singleShot(0, callback.object(), [=] {
@@ -668,10 +656,7 @@ namespace swift::core
         return reply;
     }
 
-    void CApplication::deleteAllCookies()
-    {
-        m_cookieManager->deleteAllCookies();
-    }
+    void CApplication::deleteAllCookies() { m_cookieManager->deleteAllCookies(); }
 
     void CApplication::exit(int retcode)
     {
@@ -681,10 +666,7 @@ namespace swift::core
         QCoreApplication::exit(retcode);
     }
 
-    QStringList CApplication::arguments()
-    {
-        return QCoreApplication::arguments();
-    }
+    QStringList CApplication::arguments() { return QCoreApplication::arguments(); }
 
     int CApplication::indexOfCommandLineOption(const QCommandLineOption &option, const QStringList &args)
     {
@@ -737,7 +719,8 @@ namespace swift::core
         // if not yet initialized, init web data services
         if (!m_webDataServices)
         {
-            const CStatusMessageList msgs = this->initAndStartWebDataServices(CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
+            const CStatusMessageList msgs = this->initAndStartWebDataServices(
+                CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
             if (msgs.hasErrorMessages()) { return msgs; }
         }
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
@@ -755,14 +738,12 @@ namespace swift::core
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
 
-    CStatusMessageList CApplication::initAndStartWebDataServices(CWebReaderFlags::WebReader webReader, const db::CDatabaseReaderConfigList &dbReaderConfig)
+    CStatusMessageList CApplication::initAndStartWebDataServices(CWebReaderFlags::WebReader webReader,
+                                                                 const db::CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
         SWIFT_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
-        if (!QSslSocket::supportsSsl())
-        {
-            return CStatusMessage(this).error(u"No SSL supported, can`t be used");
-        }
+        if (!QSslSocket::supportsSsl()) { return CStatusMessage(this).error(u"No SSL supported, can`t be used"); }
 
         return this->startWebDataServices(webReader, dbReaderConfig);
     }
@@ -774,15 +755,22 @@ namespace swift::core
 
     bool CApplication::isDBusContext() const
     {
-        return this->getIContextApplication() && !this->getIContextApplication()->isUsingImplementingObject() && !this->getIContextApplication()->isEmptyObject();
+        return this->getIContextApplication() && !this->getIContextApplication()->isUsingImplementingObject() &&
+               !this->getIContextApplication()->isEmptyObject();
     }
 
     CStatusMessageList CApplication::startCoreFacade()
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        if (!m_useContexts) { return CStatusMessage(this).error(u"No need to start core facade"); } // we do not use context, so no need to startup
-        if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error(u"No setup reader or setup available"); }
+        if (!m_useContexts)
+        {
+            return CStatusMessage(this).error(u"No need to start core facade");
+        } // we do not use context, so no need to startup
+        if (!m_setupReader || !m_setupReader->isSetupAvailable())
+        {
+            return CStatusMessage(this).error(u"No setup reader or setup available");
+        }
 
         Q_ASSERT_X(m_coreFacade.isNull(), Q_FUNC_INFO, "Cannot alter facade");
         Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "No facade without setup possible");
@@ -794,11 +782,15 @@ namespace swift::core
         return msgs;
     }
 
-    CStatusMessageList CApplication::startWebDataServices(CWebReaderFlags::WebReader webReader, const db::CDatabaseReaderConfigList &dbReaderConfig)
+    CStatusMessageList CApplication::startWebDataServices(CWebReaderFlags::WebReader webReader,
+                                                          const db::CDatabaseReaderConfigList &dbReaderConfig)
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        if (!m_setupReader || !m_setupReader->isSetupAvailable()) { return CStatusMessage(this).error(u"No setup reader or setup available"); }
+        if (!m_setupReader || !m_setupReader->isSetupAvailable())
+        {
+            return CStatusMessage(this).error(u"No setup reader or setup available");
+        }
 
         Q_ASSERT_X(m_setupReader, Q_FUNC_INFO, "No web data services without setup possible");
         CStatusMessageList msgs;
@@ -810,10 +802,7 @@ namespace swift::core
 
             emit this->webDataServicesStarted(true);
         }
-        else
-        {
-            msgs.push_back(CStatusMessage(this).info(u"Web data services already running"));
-        }
+        else { msgs.push_back(CStatusMessage(this).info(u"Web data services already running")); }
 
         return msgs;
     }
@@ -824,8 +813,10 @@ namespace swift::core
 
         // File logger
         m_fileLogger.reset(new CFileLogger(this));
-        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_fileLogger.data(), &CFileLogger::writeStatusMessageToFile);
-        connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_fileLogger.data(), &CFileLogger::writeStatusMessageToFile);
+        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_fileLogger.data(),
+                &CFileLogger::writeStatusMessageToFile);
+        connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_fileLogger.data(),
+                &CFileLogger::writeStatusMessageToFile);
         m_fileLogger->changeLogPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityDebug));
     }
 
@@ -844,8 +835,8 @@ namespace swift::core
         this->addParserOption(m_cmdDevelopment);
 
         // Skip single application check
-        m_cmdSkipSingleApp = QCommandLineOption({ "skipsa", "skipsingleapp" },
-                                                QCoreApplication::translate("application", "Skip the single app.test."));
+        m_cmdSkipSingleApp = QCommandLineOption(
+            { "skipsa", "skipsingleapp" }, QCoreApplication::translate("application", "Skip the single app.test."));
         this->addParserOption(m_cmdSkipSingleApp);
 
         // reset caches upfront
@@ -854,15 +845,12 @@ namespace swift::core
         this->addParserOption(m_cmdClearCache);
 
         // test crashpad upload
-        m_cmdTestCrashpad = QCommandLineOption({ "testcp", "testcrashpad" },
-                                               QCoreApplication::translate("application", "Trigger crashpad situation."));
+        m_cmdTestCrashpad = QCommandLineOption(
+            { "testcp", "testcrashpad" }, QCoreApplication::translate("application", "Trigger crashpad situation."));
         this->addParserOption(m_cmdTestCrashpad);
     }
 
-    bool CApplication::isSet(const QCommandLineOption &option) const
-    {
-        return (m_parser.isSet(option));
-    }
+    bool CApplication::isSet(const QCommandLineOption &option) const { return (m_parser.isSet(option)); }
 
     void CApplication::registerMetadata()
     {
@@ -899,9 +887,8 @@ namespace swift::core
         // save settings (but only when application was really alive)
         if (m_parsed && m_saveSettingsOnShutdown)
         {
-            const CStatusMessage m = this->supportsContexts() ?
-                                         this->getIContextApplication()->saveSettings() :
-                                         CSettingsCache::instance()->saveToStore();
+            const CStatusMessage m = this->supportsContexts() ? this->getIContextApplication()->saveSettings() :
+                                                                CSettingsCache::instance()->saveToStore();
             CLogMessage(this).preformatted(m);
         }
 
@@ -925,15 +912,9 @@ namespace swift::core
             m_webDataServices.reset();
         }
 
-        if (m_gitHubPackagesReader)
-        {
-            m_gitHubPackagesReader.reset();
-        }
+        if (m_gitHubPackagesReader) { m_gitHubPackagesReader.reset(); }
 
-        if (m_setupReader)
-        {
-            m_setupReader.reset();
-        }
+        if (m_setupReader) { m_setupReader.reset(); }
 
         CLogMessage(this).info(u"Graceful shutdown of CApplication, shutdown of logger");
         m_fileLogger->close();
@@ -966,10 +947,7 @@ namespace swift::core
         Q_ASSERT_X(m_accessManager, Q_FUNC_INFO, "Need QAM");
     }
 
-    CApplication *swift::core::CApplication::instance()
-    {
-        return sApp;
-    }
+    CApplication *swift::core::CApplication::instance() { return sApp; }
 
     const QString &CApplication::executable()
     {
@@ -1001,21 +979,16 @@ namespace swift::core
 
     void CApplication::addDBusAddressOption()
     {
-        m_cmdDBusAddress = QCommandLineOption({ "dbus", "dbusaddress" },
-                                              QCoreApplication::translate("application", "DBus address (session, system, P2P IP e.g. 192.168.23.5)"),
-                                              "dbusaddress");
+        m_cmdDBusAddress = QCommandLineOption(
+            { "dbus", "dbusaddress" },
+            QCoreApplication::translate("application", "DBus address (session, system, P2P IP e.g. 192.168.23.5)"),
+            "dbusaddress");
         this->addParserOption(m_cmdDBusAddress);
     }
 
-    void CApplication::addNetworkOptions()
-    {
-        this->addParserOptions(IContextNetwork::getCmdLineOptions());
-    }
+    void CApplication::addNetworkOptions() { this->addParserOptions(IContextNetwork::getCmdLineOptions()); }
 
-    void CApplication::addAudioOptions()
-    {
-        this->addParserOptions(CContextAudioBase::getCmdLineOptions());
-    }
+    void CApplication::addAudioOptions() { this->addParserOptions(CContextAudioBase::getCmdLineOptions()); }
 
     QString CApplication::getCmdDBusAddressValue() const
     {
@@ -1025,25 +998,13 @@ namespace swift::core
         return dBusAddress;
     }
 
-    bool CApplication::isParserOptionSet(const QString &option) const
-    {
-        return m_parser.isSet(option);
-    }
+    bool CApplication::isParserOptionSet(const QString &option) const { return m_parser.isSet(option); }
 
-    bool CApplication::skipSingleApplicationCheck() const
-    {
-        return this->isParserOptionSet(m_cmdSkipSingleApp);
-    }
+    bool CApplication::skipSingleApplicationCheck() const { return this->isParserOptionSet(m_cmdSkipSingleApp); }
 
-    bool CApplication::isParserOptionSet(const QCommandLineOption &option) const
-    {
-        return m_parser.isSet(option);
-    }
+    bool CApplication::isParserOptionSet(const QCommandLineOption &option) const { return m_parser.isSet(option); }
 
-    QString CApplication::getParserValue(const QString &option) const
-    {
-        return m_parser.value(option).trimmed();
-    }
+    QString CApplication::getParserValue(const QString &option) const { return m_parser.value(option).trimmed(); }
 
     QString CApplication::getParserValue(const QCommandLineOption &option) const
     {
@@ -1072,7 +1033,8 @@ namespace swift::core
 
         if (m_alreadyRunning && !this->skipSingleApplicationCheck())
         {
-            this->cmdLineErrorMessage("Program must only run once", "You cannot run two or more instances side-by-side.");
+            this->cmdLineErrorMessage("Program must only run once",
+                                      "You cannot run two or more instances side-by-side.");
             return false;
         }
 
@@ -1116,10 +1078,7 @@ namespace swift::core
     {
         const CStatusMessageList msgs = loadSetup();
 
-        if (msgs.isFailure())
-        {
-            displaySetupLoadFailure(msgs);
-        }
+        if (msgs.isFailure()) { displaySetupLoadFailure(msgs); }
         return msgs.isSuccess();
     }
 
@@ -1172,8 +1131,14 @@ namespace swift::core
         QStringList newArgumentsChecked = newArguments;
 
         // remove the executable argument if it exists at position 0
-        if (!joinedArguments.isEmpty() && !joinedArguments.at(0).startsWith("-")) { joinedArguments.removeFirst(); } // was cmd line argument
-        if (!newArgumentsChecked.isEmpty() && !newArgumentsChecked.at(0).startsWith("-")) { newArgumentsChecked.removeFirst(); } // was cmd line argument
+        if (!joinedArguments.isEmpty() && !joinedArguments.at(0).startsWith("-"))
+        {
+            joinedArguments.removeFirst();
+        } // was cmd line argument
+        if (!newArgumentsChecked.isEmpty() && !newArgumentsChecked.at(0).startsWith("-"))
+        {
+            newArgumentsChecked.removeFirst();
+        } // was cmd line argument
 
         // remove all values before checking options
         static const QRegularExpression regExp("^-");
@@ -1189,10 +1154,7 @@ namespace swift::core
             for (const QCommandLineOption &option : m_allOptions)
             {
                 const int n = indexOfCommandLineOption(option, toBeRemoved);
-                if (n >= 0)
-                {
-                    argumentsWithoutOption(option, joinedArguments);
-                }
+                if (n >= 0) { argumentsWithoutOption(option, joinedArguments); }
             }
         }
 
@@ -1204,10 +1166,7 @@ namespace swift::core
     // Contexts
     // ---------------------------------------------------------------------------------
 
-    shared_state::CDataLinkDBus *CApplication::getDataLinkDBus()
-    {
-        return getCoreFacade()->getDataLinkDBus();
-    }
+    shared_state::CDataLinkDBus *CApplication::getDataLinkDBus() { return getCoreFacade()->getDataLinkDBus(); }
 
     bool CApplication::supportsContexts(bool ignoreShutdownTest) const
     {
@@ -1298,15 +1257,9 @@ namespace swift::core
     // Setup
     // ---------------------------------------------------------------------------------
 
-    bool CApplication::hasSetupReader() const
-    {
-        return !m_setupReader.isNull();
-    }
+    bool CApplication::hasSetupReader() const { return !m_setupReader.isNull(); }
 
-    CSetupReader *CApplication::getSetupReader() const
-    {
-        return m_setupReader.data();
-    }
+    CSetupReader *CApplication::getSetupReader() const { return m_setupReader.data(); }
 
     CStatusMessageList CApplication::loadSetup()
     {
@@ -1325,10 +1278,7 @@ namespace swift::core
             const CUrl url(m_webDataServices->getVatsimMetarUrl());
             if (!url.isEmpty()) { return url; }
         }
-        if (m_setupReader)
-        {
-            return m_setupReader->getSetup().getVatsimMetarsUrl();
-        }
+        if (m_setupReader) { return m_setupReader->getSetup().getVatsimMetarsUrl(); }
         return {};
     }
 
@@ -1340,10 +1290,7 @@ namespace swift::core
             const CUrl url(m_webDataServices->getVatsimDataFileUrl());
             if (!url.isEmpty()) { return url; }
         }
-        if (m_setupReader)
-        {
-            return m_setupReader->getSetup().getVatsimDataFileUrl();
-        }
+        if (m_setupReader) { return m_setupReader->getSetup().getVatsimDataFileUrl(); }
         return {};
     }
 
@@ -1367,20 +1314,11 @@ namespace swift::core
         this->enableCrashDumpUpload(enabled);
     }
 
-    void CApplication::simulateCrash()
-    {
-        CCrashHandler::instance()->simulateCrash();
-    }
+    void CApplication::simulateCrash() { CCrashHandler::instance()->simulateCrash(); }
 
-    void CApplication::simulateAssert()
-    {
-        CCrashHandler::instance()->simulateAssert();
-    }
+    void CApplication::simulateAssert() { CCrashHandler::instance()->simulateAssert(); }
 
-    void CApplication::enableCrashDumpUpload(bool enable)
-    {
-        CCrashHandler::instance()->setUploadsEnabled(enable);
-    }
+    void CApplication::enableCrashDumpUpload(bool enable) { CCrashHandler::instance()->setUploadsEnabled(enable); }
 
     bool CApplication::isSupportingCrashpad() const
     {
@@ -1391,34 +1329,38 @@ namespace swift::core
 #endif
     }
 
-    void CApplication::httpRequestImplInQAMThread(const QNetworkRequest &request, int logId, const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest)
+    void CApplication::httpRequestImplInQAMThread(const QNetworkRequest &request, int logId,
+                                                  const CallbackSlot &callback, const ProgressSlot &progress,
+                                                  int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest)
     {
         // run in QAM thread
         if (this->isShuttingDown()) { return; }
         QTimer::singleShot(0, m_accessManager, [=] {
             // should be now in QAM thread
             if (!sApp || sApp->isShuttingDown()) { return; }
-            Q_ASSERT_X(CThreadUtils::isInThisThread(sApp->m_accessManager), Q_FUNC_INFO, "Wrong thread, must be QAM thread");
+            Q_ASSERT_X(CThreadUtils::isInThisThread(sApp->m_accessManager), Q_FUNC_INFO,
+                       "Wrong thread, must be QAM thread");
             this->httpRequestImpl(request, logId, callback, progress, maxRedirects, getPostOrDeleteRequest);
         });
     }
 
-    QNetworkReply *CApplication::httpRequestImpl(
-        const QNetworkRequest &request, int logId,
-        const CApplication::CallbackSlot &callback, int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod)
+    QNetworkReply *CApplication::httpRequestImpl(const QNetworkRequest &request, int logId,
+                                                 const CApplication::CallbackSlot &callback, int maxRedirects,
+                                                 NetworkRequestOrPostFunction requestOrPostMethod)
     {
         ProgressSlot progress;
         return this->httpRequestImpl(request, logId, callback, progress, maxRedirects, requestOrPostMethod);
     }
 
-    QNetworkReply *CApplication::httpRequestImpl(
-        const QNetworkRequest &request, int logId,
-        const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest)
+    QNetworkReply *CApplication::httpRequestImpl(const QNetworkRequest &request, int logId,
+                                                 const CallbackSlot &callback, const ProgressSlot &progress,
+                                                 int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest)
     {
         if (this->isShuttingDown()) { return nullptr; }
 
         QWriteLocker locker(&m_accessManagerLock);
-        Q_ASSERT_X(m_accessManager->thread() == qApp->thread(), Q_FUNC_INFO, "Network manager supposed to be in main thread");
+        Q_ASSERT_X(m_accessManager->thread() == qApp->thread(), Q_FUNC_INFO,
+                   "Network manager supposed to be in main thread");
         if (!CThreadUtils::isInThisThread(m_accessManager))
         {
             this->httpRequestImplInQAMThread(request, logId, callback, progress, maxRedirects, getPostOrDeleteRequest);
@@ -1426,7 +1368,8 @@ namespace swift::core
         }
 
         Q_ASSERT_X(CThreadUtils::isInThisThread(m_accessManager), Q_FUNC_INFO, "Network manager thread mismatch");
-        QNetworkRequest copiedRequest = CNetworkUtils::getSwiftNetworkRequest(request, this->getApplicationNameAndVersion());
+        QNetworkRequest copiedRequest =
+            CNetworkUtils::getSwiftNetworkRequest(request, this->getApplicationNameAndVersion());
 
         QNetworkReply *reply = getPostOrDeleteRequest(*m_accessManager, copiedRequest);
         reply->setProperty("started", QVariant(QDateTime::currentMSecsSinceEpoch()));
@@ -1436,19 +1379,21 @@ namespace swift::core
 
         if (progress)
         {
-            connect(reply, &QNetworkReply::downloadProgress, progress.object(), [=](qint64 current, qint64 max) {
-                progress(logId, current, max, url);
-            });
+            connect(reply, &QNetworkReply::downloadProgress, progress.object(),
+                    [=](qint64 current, qint64 max) { progress(logId, current, max, url); });
         }
 
         if (callback)
         {
             Q_ASSERT_X(callback.object(), Q_FUNC_INFO, "Need callback object (to determine thread)");
             connect(
-                reply, &QNetworkReply::finished, callback.object(), [=] {
+                reply, &QNetworkReply::finished, callback.object(),
+                [=] {
                     // Called when finished!
-                    // QNetworkRequest::FollowRedirectsAttribute would allow auto redirect, but we use our approach as it gives us better control
-                    // \fixme: Check again on Qt 5.9: Added redirects policy to QNetworkAccessManager (ManualRedirectsPolicy, NoLessSafeRedirectsPolicy, SameOriginRedirectsPolicy, UserVerifiedRedirectsPolicy)
+                    // QNetworkRequest::FollowRedirectsAttribute would allow auto redirect, but we use our approach as
+                    // it gives us better control \fixme: Check again on Qt 5.9: Added redirects policy to
+                    // QNetworkAccessManager (ManualRedirectsPolicy, NoLessSafeRedirectsPolicy,
+                    // SameOriginRedirectsPolicy, UserVerifiedRedirectsPolicy)
                     const bool isRedirect = CNetworkUtils::isHttpStatusRedirect(reply);
                     if (isRedirect && maxRedirects > 0)
                     {
@@ -1458,7 +1403,8 @@ namespace swift::core
                             QNetworkRequest redirectRequest(redirectUrl);
                             const int redirectsLeft = maxRedirects - 1;
                             CLogMessage(sApp).info(u"Redirecting '%1' to '%2'") << urlStr << redirectUrl.toString();
-                            this->httpRequestImplInQAMThread(redirectRequest, logId, callback, progress, redirectsLeft, getPostOrDeleteRequest);
+                            this->httpRequestImplInQAMThread(redirectRequest, logId, callback, progress, redirectsLeft,
+                                                             getPostOrDeleteRequest);
                             return;
                         }
                     }
@@ -1476,7 +1422,8 @@ namespace swift::core
         const QDir dir(d);
         if (!dir.exists() || !dir.isReadable()) { return; }
         const QString aiStr(this->getApplicationInfo().toJsonString());
-        const QString filePath(CFileUtils::appendFilePaths(dir.path(), CApplicationInfo::fileName())); // will be overridden by next swift app
+        const QString filePath(CFileUtils::appendFilePaths(
+            dir.path(), CApplicationInfo::fileName())); // will be overridden by next swift app
         CFileUtils::writeStringToFile(aiStr, filePath);
     }
 } // namespace swift::core

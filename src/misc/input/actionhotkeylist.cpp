@@ -9,7 +9,8 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CActionHotkey, CActionHotkeyLis
 
 namespace swift::misc::input
 {
-    CActionHotkeyList::CActionHotkeyList(const CSequence<CActionHotkey> &baseClass) : CSequence<CActionHotkey>(baseClass)
+    CActionHotkeyList::CActionHotkeyList(const CSequence<CActionHotkey> &baseClass)
+        : CSequence<CActionHotkey>(baseClass)
     {}
 
     CActionHotkeyList CActionHotkeyList::findSubsetsOf(const CActionHotkey &other) const
@@ -17,10 +18,7 @@ namespace swift::misc::input
         CActionHotkeyList subsets;
         for (const auto &actionHotkey : *this)
         {
-            if (actionHotkey.getCombination().isSubsetOf(other.getCombination()))
-            {
-                subsets.push_back(actionHotkey);
-            }
+            if (actionHotkey.getCombination().isSubsetOf(other.getCombination())) { subsets.push_back(actionHotkey); }
         }
         return subsets;
     }
@@ -30,10 +28,7 @@ namespace swift::misc::input
         CActionHotkeyList supersets;
         for (const CActionHotkey &actionHotkey : *this)
         {
-            if (other.getCombination().isSubsetOf(actionHotkey.getCombination()))
-            {
-                supersets.push_back(actionHotkey);
-            }
+            if (other.getCombination().isSubsetOf(actionHotkey.getCombination())) { supersets.push_back(actionHotkey); }
         }
         return supersets;
     }

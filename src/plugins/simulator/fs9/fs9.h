@@ -50,22 +50,13 @@ namespace swift::simplugin::fs9
         }
 
         //! Returns the FS9 pitch multiplier
-        static double pitchMultiplier()
-        {
-            return 256.0 / 90.0;
-        }
+        static double pitchMultiplier() { return 256.0 / 90.0; }
 
         //! Return the FS9 bank multiplier
-        static double bankMultiplier()
-        {
-            return 512.0 / 180.0;
-        }
+        static double bankMultiplier() { return 512.0 / 180.0; }
 
         //! Returns the FS9 heading multiplier
-        static double headingMultiplier()
-        {
-            return 1024.0 / 360.0;
-        }
+        static double headingMultiplier() { return 1024.0 / 360.0; }
 
         //! Max Path
         static double maxPath() { return 260; }

@@ -18,8 +18,7 @@ using namespace swift::misc::network;
 
 namespace swift::gui::editors
 {
-    CServerForm::CServerForm(QWidget *parent) : CForm(parent),
-                                                ui(new Ui::CNetworkServerForm)
+    CServerForm::CServerForm(QWidget *parent) : CForm(parent), ui(new Ui::CNetworkServerForm)
     {
         ui->setupUi(this);
         ui->le_Port->setValidator(new QIntValidator(1, 65535, this));
@@ -30,8 +29,7 @@ namespace swift::gui::editors
         connect(ui->tb_Unhide, &QToolButton::clicked, this, &CServerForm::tempUnhidePassword);
     }
 
-    CServerForm::~CServerForm()
-    {}
+    CServerForm::~CServerForm() {}
 
     void CServerForm::setServer(const CServer &server)
     {
@@ -50,22 +48,13 @@ namespace swift::gui::editors
 
     CServer CServerForm::getServer() const
     {
-        const CUser user(
-            ui->le_NetworkId->text().trimmed(),
-            ui->le_RealName->text().trimmed().simplified(),
-            QString(),
-            ui->le_Password->text().trimmed());
+        const CUser user(ui->le_NetworkId->text().trimmed(), ui->le_RealName->text().trimmed().simplified(), QString(),
+                         ui->le_Password->text().trimmed());
         const CFsdSetup fsdSetup(ui->form_ServerFsd->getValue());
-        const CServer server(
-            ui->le_Name->text().trimmed().simplified(),
-            ui->le_Description->text().trimmed().simplified(),
-            ui->le_Address->text().trimmed(),
-            ui->le_Port->text().trimmed().toInt(),
-            user,
-            fsdSetup,
-            ui->cbp_Ecosystem->getSelectedEcosystem(),
-            this->getServerType(),
-            true);
+        const CServer server(ui->le_Name->text().trimmed().simplified(),
+                             ui->le_Description->text().trimmed().simplified(), ui->le_Address->text().trimmed(),
+                             ui->le_Port->text().trimmed().toInt(), user, fsdSetup,
+                             ui->cbp_Ecosystem->getSelectedEcosystem(), this->getServerType(), true);
         return server;
     }
 
@@ -74,10 +63,7 @@ namespace swift::gui::editors
         return ui->cb_ServerType->currentData().value<CServer::ServerType>();
     }
 
-    void CServerForm::resetToFirstTab()
-    {
-        ui->tw_ServerForm->setCurrentIndex(0);
-    }
+    void CServerForm::resetToFirstTab() { ui->tw_ServerForm->setCurrentIndex(0); }
 
     void CServerForm::setReadOnly(bool readOnly)
     {
@@ -136,10 +122,7 @@ namespace swift::gui::editors
         ui->cb_ServerType->setCurrentText(dummy.getServerTypeAsString());
     }
 
-    void CServerForm::tempUnhidePassword()
-    {
-        CGuiUtility::tempUnhidePassword(ui->le_Password);
-    }
+    void CServerForm::tempUnhidePassword() { CGuiUtility::tempUnhidePassword(ui->le_Password); }
 
     CStatusMessageList CServerForm::validate(bool nested) const
     {

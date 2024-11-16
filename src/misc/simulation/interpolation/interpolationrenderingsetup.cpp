@@ -46,7 +46,8 @@ namespace swift::misc::simulation
         m_enabledAircraftParts &= client.hasAircraftPartsCapability();
     }
 
-    bool CInterpolationAndRenderingSetupBase::setInterpolatorMode(CInterpolationAndRenderingSetupBase::InterpolatorMode mode)
+    bool
+    CInterpolationAndRenderingSetupBase::setInterpolatorMode(CInterpolationAndRenderingSetupBase::InterpolatorMode mode)
     {
         const int m = static_cast<int>(mode);
         if (m_interpolatorMode == m) { return false; }
@@ -148,16 +149,13 @@ namespace swift::misc::simulation
 
     bool CInterpolationAndRenderingSetupBase::canHandleIndex(int index)
     {
-        return index >= CInterpolationAndRenderingSetupBase::IndexLogInterpolation && index <= CInterpolationAndRenderingSetupBase::IndexFixSceneryOffset;
+        return index >= CInterpolationAndRenderingSetupBase::IndexLogInterpolation &&
+               index <= CInterpolationAndRenderingSetupBase::IndexFixSceneryOffset;
     }
 
-    CInterpolationAndRenderingSetupGlobal::CInterpolationAndRenderingSetupGlobal()
-    {}
+    CInterpolationAndRenderingSetupGlobal::CInterpolationAndRenderingSetupGlobal() {}
 
-    int CInterpolationAndRenderingSetupGlobal::InfiniteAircraft()
-    {
-        return 100;
-    }
+    int CInterpolationAndRenderingSetupGlobal::InfiniteAircraft() { return 100; }
 
     bool CInterpolationAndRenderingSetupGlobal::isRenderingEnabled() const
     {
@@ -184,14 +182,8 @@ namespace swift::misc::simulation
             // disable, we set both values to 0
             this->disableRendering();
         }
-        else if (maxRenderedAircraft >= InfiniteAircraft())
-        {
-            m_maxRenderedAircraft = InfiniteAircraft();
-        }
-        else
-        {
-            m_maxRenderedAircraft = maxRenderedAircraft;
-        }
+        else if (maxRenderedAircraft >= InfiniteAircraft()) { m_maxRenderedAircraft = InfiniteAircraft(); }
+        else { m_maxRenderedAircraft = maxRenderedAircraft; }
         return true;
     }
 
@@ -274,9 +266,9 @@ namespace swift::misc::simulation
     QString CInterpolationAndRenderingSetupGlobal::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n)
-        return CInterpolationAndRenderingSetupBase::convertToQString(i18n) %
-               QStringLiteral(" max.aircraft:") % QString::number(m_maxRenderedAircraft) %
-               QStringLiteral(" max.distance:") % m_maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::NM(), 2);
+        return CInterpolationAndRenderingSetupBase::convertToQString(i18n) % QStringLiteral(" max.aircraft:") %
+               QString::number(m_maxRenderedAircraft) % QStringLiteral(" max.distance:") %
+               m_maxRenderedDistance.valueRoundedWithUnit(CLengthUnit::NM(), 2);
     }
 
     QVariant CInterpolationAndRenderingSetupGlobal::propertyByIndex(CPropertyIndexRef index) const
@@ -289,7 +281,10 @@ namespace swift::misc::simulation
         case IndexMaxRenderedDistance: return QVariant::fromValue(m_maxRenderedDistance);
         default: break;
         }
-        if (CInterpolationAndRenderingSetupBase::canHandleIndex(i)) { return CInterpolationAndRenderingSetupBase::propertyByIndex(index); }
+        if (CInterpolationAndRenderingSetupBase::canHandleIndex(i))
+        {
+            return CInterpolationAndRenderingSetupBase::propertyByIndex(index);
+        }
         return CValueObject::propertyByIndex(index);
     }
 
@@ -315,27 +310,44 @@ namespace swift::misc::simulation
         CValueObject::setPropertyByIndex(index, variant);
     }
 
-    CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign()
-    {}
+    CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign() {}
 
-    CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign(const CCallsign &callsign, const CInterpolationAndRenderingSetupGlobal &globalSetup)
+    CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign(
+        const CCallsign &callsign, const CInterpolationAndRenderingSetupGlobal &globalSetup)
         : CInterpolationAndRenderingSetupBase(globalSetup), m_callsign(callsign)
     {}
 
-    CPropertyIndexList CInterpolationAndRenderingSetupPerCallsign::unequalToGlobal(const CInterpolationAndRenderingSetupGlobal &globalSetup) const
+    CPropertyIndexList CInterpolationAndRenderingSetupPerCallsign::unequalToGlobal(
+        const CInterpolationAndRenderingSetupGlobal &globalSetup) const
     {
         CPropertyIndexList diff;
         if (this->logInterpolation() != globalSetup.logInterpolation()) { diff.push_back(IndexLogInterpolation); }
-        if (this->showSimulatorDebugMessages() != globalSetup.showSimulatorDebugMessages()) { diff.push_back(IndexSimulatorDebugMessages); }
-        if (this->isForcingFullInterpolation() != globalSetup.isForcingFullInterpolation()) { diff.push_back(IndexForceFullInterpolation); }
-        if (this->isAircraftPartsEnabled() != globalSetup.isAircraftPartsEnabled()) { diff.push_back(IndexEnabledAircraftParts); }
-        if (this->isSendingGndFlagToSimulator() != globalSetup.isSendingGndFlagToSimulator()) { diff.push_back(IndexSendGndFlagToSimulator); }
-        if (this->isFixingSceneryOffset() != globalSetup.isFixingSceneryOffset()) { diff.push_back(IndexFixSceneryOffset); }
+        if (this->showSimulatorDebugMessages() != globalSetup.showSimulatorDebugMessages())
+        {
+            diff.push_back(IndexSimulatorDebugMessages);
+        }
+        if (this->isForcingFullInterpolation() != globalSetup.isForcingFullInterpolation())
+        {
+            diff.push_back(IndexForceFullInterpolation);
+        }
+        if (this->isAircraftPartsEnabled() != globalSetup.isAircraftPartsEnabled())
+        {
+            diff.push_back(IndexEnabledAircraftParts);
+        }
+        if (this->isSendingGndFlagToSimulator() != globalSetup.isSendingGndFlagToSimulator())
+        {
+            diff.push_back(IndexSendGndFlagToSimulator);
+        }
+        if (this->isFixingSceneryOffset() != globalSetup.isFixingSceneryOffset())
+        {
+            diff.push_back(IndexFixSceneryOffset);
+        }
         if (this->getPitchOnGround() != globalSetup.getPitchOnGround()) { diff.push_back(IndexPitchOnGround); }
         return diff;
     }
 
-    bool CInterpolationAndRenderingSetupPerCallsign::isEqualToGlobal(const CInterpolationAndRenderingSetupGlobal &globalSetup) const
+    bool CInterpolationAndRenderingSetupPerCallsign::isEqualToGlobal(
+        const CInterpolationAndRenderingSetupGlobal &globalSetup) const
     {
         const CPropertyIndexList il = this->unequalToGlobal(globalSetup);
         const bool equal = il.isEmpty();
@@ -354,7 +366,8 @@ namespace swift::misc::simulation
         return CInterpolationAndRenderingSetupBase::propertyByIndex(index);
     }
 
-    void CInterpolationAndRenderingSetupPerCallsign::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
+    void CInterpolationAndRenderingSetupPerCallsign::setPropertyByIndex(CPropertyIndexRef index,
+                                                                        const QVariant &variant)
     {
         if (index.isMyself())
         {

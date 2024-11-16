@@ -28,8 +28,8 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CMainKeypadAreaComponent::CMainKeypadAreaComponent(QWidget *parent) : QFrame(parent),
-                                                                          ui(new Ui::CMainKeypadAreaComponent)
+    CMainKeypadAreaComponent::CMainKeypadAreaComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CMainKeypadAreaComponent)
     {
         ui->setupUi(this);
 
@@ -60,12 +60,16 @@ namespace swift::gui::components
 
         // command line
         ui->lep_CommandLineInput->setIdentifier(m_identifier);
-        connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, this, &CMainKeypadAreaComponent::commandEntered);
+        connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, this,
+                &CMainKeypadAreaComponent::commandEntered);
         connect(ui->lep_CommandLineInput, &CCommandInput::textEntered, this, &CMainKeypadAreaComponent::textEntered);
 
-        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::connectionStatusChanged);
-        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ownAircraftCockpitChanged);
-        connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedOutputMute, this, &CMainKeypadAreaComponent::outputMuteChanged);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
+                &CMainKeypadAreaComponent::connectionStatusChanged);
+        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this,
+                &CMainKeypadAreaComponent::ownAircraftCockpitChanged);
+        connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedOutputMute, this,
+                &CMainKeypadAreaComponent::outputMuteChanged);
         connect(this, &CMainKeypadAreaComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
 
         QPointer<CMainKeypadAreaComponent> myself(this);
@@ -75,15 +79,16 @@ namespace swift::gui::components
         });
     }
 
-    CMainKeypadAreaComponent::~CMainKeypadAreaComponent()
-    {}
+    CMainKeypadAreaComponent::~CMainKeypadAreaComponent() {}
 
-    void CMainKeypadAreaComponent::onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes, const QList<int> &floatingIndexes)
+    void CMainKeypadAreaComponent::onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes,
+                                                         const QList<int> &floatingIndexes)
     {
         this->unsetInfoAreaButtons();
         if (currentTabIndex >= 0)
         {
-            QPushButton *pb = this->mainInfoAreaToButton(static_cast<CMainInfoAreaComponent::InfoArea>(currentTabIndex));
+            QPushButton *pb =
+                this->mainInfoAreaToButton(static_cast<CMainInfoAreaComponent::InfoArea>(currentTabIndex));
             if (pb)
             {
                 Q_ASSERT(pb->isCheckable());
@@ -103,10 +108,7 @@ namespace swift::gui::components
         Q_UNUSED(dockedIndexes)
     }
 
-    void CMainKeypadAreaComponent::focusInEntryField()
-    {
-        ui->lep_CommandLineInput->setFocus();
-    }
+    void CMainKeypadAreaComponent::focusInEntryField() { ui->lep_CommandLineInput->setFocus(); }
 
     void CMainKeypadAreaComponent::buttonSelected()
     {
@@ -122,18 +124,9 @@ namespace swift::gui::components
             senderButton->setChecked(true); // re-check if got unchecked, we use checked buttons like normal buttons
             return;
         }
-        else if (senderButton == ui->pb_CockpitIdent && sGui->getIContextOwnAircraft())
-        {
-            emit this->identPressed();
-        }
-        else if (senderButton == ui->pb_Opacity050)
-        {
-            emit this->changedOpacity(50);
-        }
-        else if (senderButton == ui->pb_Opacity100)
-        {
-            emit this->changedOpacity(100);
-        }
+        else if (senderButton == ui->pb_CockpitIdent && sGui->getIContextOwnAircraft()) { emit this->identPressed(); }
+        else if (senderButton == ui->pb_Opacity050) { emit this->changedOpacity(50); }
+        else if (senderButton == ui->pb_Opacity100) { emit this->changedOpacity(100); }
         else if (senderButton == ui->pb_SoundMaxVolume && sGui->getIContextAudio())
         {
             sGui->getCContextAudioBase()->setMasterOutputVolume(100);
@@ -148,10 +141,7 @@ namespace swift::gui::components
             emit this->connectPressed();
             this->updateConnectionStatus();
         }
-        else if (senderButton == ui->pb_Audio)
-        {
-            emit this->audioPressed();
-        }
+        else if (senderButton == ui->pb_Audio) { emit this->audioPressed(); }
     }
 
     void CMainKeypadAreaComponent::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
@@ -173,25 +163,20 @@ namespace swift::gui::components
         }
     }
 
-    void CMainKeypadAreaComponent::ownAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+    void CMainKeypadAreaComponent::ownAircraftCockpitChanged(const CSimulatedAircraft &aircraft,
+                                                             const CIdentifier &originator)
     {
         Q_UNUSED(originator)
         bool ident = aircraft.getTransponder().getTransponderMode() == CTransponder::StateIdent;
 
         // check state to avoid undelibarate signals
-        if (ident != ui->pb_CockpitIdent->isChecked())
-        {
-            ui->pb_CockpitIdent->setChecked(ident);
-        }
+        if (ident != ui->pb_CockpitIdent->isChecked()) { ui->pb_CockpitIdent->setChecked(ident); }
     }
 
     void CMainKeypadAreaComponent::outputMuteChanged(bool muted)
     {
         // check state to avoid undelibarate signals
-        if (muted != ui->pb_SoundMute->isChecked())
-        {
-            ui->pb_SoundMute->setChecked(muted);
-        }
+        if (muted != ui->pb_SoundMute->isChecked()) { ui->pb_SoundMute->setChecked(muted); }
     }
 
     CMainInfoAreaComponent::InfoArea CMainKeypadAreaComponent::buttonToMainInfoArea(const QObject *button) const
@@ -253,10 +238,7 @@ namespace swift::gui::components
     void CMainKeypadAreaComponent::update()
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
-        if (sGui->getCContextAudioBase())
-        {
-            this->outputMuteChanged(sGui->getCContextAudioBase()->isOutputMuted());
-        }
+        if (sGui->getCContextAudioBase()) { this->outputMuteChanged(sGui->getCContextAudioBase()->isOutputMuted()); }
         this->updateConnectionStatus();
     }
 
@@ -266,9 +248,6 @@ namespace swift::gui::components
         {
             this->connectionStatusChanged(CConnectionStatus::Connected, CConnectionStatus::Connected);
         }
-        else
-        {
-            this->connectionStatusChanged(CConnectionStatus::Disconnected, CConnectionStatus::Disconnected);
-        }
+        else { this->connectionStatusChanged(CConnectionStatus::Disconnected, CConnectionStatus::Disconnected); }
     }
 } // namespace swift::gui::components

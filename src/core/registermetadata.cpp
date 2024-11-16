@@ -34,7 +34,8 @@ namespace swift::core
         qRegisterMetaType<swift::core::afv::clients::CAfvClient::ConnectionStatus>();
         qRegisterMetaType<swift::core::afv::clients::CAfvClient::ConnectionStatus>("ConnectionStatus");
         qRegisterMetaType<swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs>();
-        qRegisterMetaType<swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs>("TransceiverReceivingCallsignsChangedArgs");
+        qRegisterMetaType<swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs>(
+            "TransceiverReceivingCallsignsChangedArgs");
 
         qDBusRegisterMetaType<context::CSettingsDictionary>();
         qDBusRegisterMetaType<swift::misc::network::CLoginMode>();

@@ -24,7 +24,8 @@ namespace swift::misc
         /*!
          * CRTP class template from which a derived class can inherit operator== implemented using its compare function.
          *
-         * \tparam Derived Must overload a function bool compare(const Derived &, const Derived &) which can be found by ADL.
+         * \tparam Derived Must overload a function bool compare(const Derived &, const Derived &) which can be found by
+         * ADL.
          */
         template <class Derived>
         class EqualsByCompare
@@ -63,7 +64,8 @@ namespace swift::misc
         template <class Derived>
         bool EqualsByMetaClass<Derived>::equals(const Derived &a, const Derived &b)
         {
-            bool result = baseEquals(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
+            bool result =
+                baseEquals(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
             introspect<Derived>().forEachMember([&](auto member) {
                 if constexpr (!decltype(member)::has(MetaFlags<DisabledForComparison>()))
                 {
@@ -96,14 +98,18 @@ namespace swift::misc
         template <typename T, typename Flags>
         bool EqualsByMetaClass<Derived>::membersEqual(const T &a, const T &b, Flags)
         {
-            if constexpr (static_cast<bool>(Flags::value & CaseInsensitiveComparison)) { return a.compare(b, Qt::CaseInsensitive) == 0; }
+            if constexpr (static_cast<bool>(Flags::value & CaseInsensitiveComparison))
+            {
+                return a.compare(b, Qt::CaseInsensitive) == 0;
+            }
             else { return a == b; }
         }
 
         /*!
          * CRTP class template from which a derived class can inherit operator< implemented using its compare function.
          *
-         * \tparam Derived Must overload a function bool compare(const Derived &, const Derived &) which can be found by ADL.
+         * \tparam Derived Must overload a function bool compare(const Derived &, const Derived &) which can be found by
+         * ADL.
          */
         template <class Derived>
         class LessThanByCompare
@@ -154,7 +160,8 @@ namespace swift::misc
         template <class Derived>
         bool LessThanByMetaClass<Derived>::less(const Derived &a, const Derived &b)
         {
-            bool result = baseLess(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
+            bool result =
+                baseLess(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
             bool gt = baseLess(static_cast<const TBaseOfT<Derived> *>(&b), static_cast<const TBaseOfT<Derived> *>(&a));
             introspect<Derived>().forEachMember([&](auto member) {
                 if constexpr (!decltype(member)::has(MetaFlags<DisabledForComparison>()))
@@ -224,11 +231,13 @@ namespace swift::misc
         template <class Derived>
         int CompareByMetaClass<Derived>::compareImpl(const Derived &a, const Derived &b)
         {
-            int result = baseCompare(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
+            int result =
+                baseCompare(static_cast<const TBaseOfT<Derived> *>(&a), static_cast<const TBaseOfT<Derived> *>(&b));
             introspect<Derived>().forEachMember([&](auto member) {
                 if constexpr (!decltype(member)::has(MetaFlags<DisabledForComparison>()))
                 {
-                    result = result ? result : CompareByMetaClass::membersCompare(member.in(a), member.in(b), member.m_flags);
+                    result = result ? result :
+                                      CompareByMetaClass::membersCompare(member.in(a), member.in(b), member.m_flags);
                 }
             });
             return result;
@@ -257,10 +266,12 @@ namespace swift::misc
         template <typename T, typename Flags>
         int CompareByMetaClass<Derived>::membersCompare(const T &a, const T &b, Flags)
         {
-            if constexpr (static_cast<bool>(Flags::value & CaseInsensitiveComparison)) { return a.compare(b, Qt::CaseInsensitive); }
+            if constexpr (static_cast<bool>(Flags::value & CaseInsensitiveComparison))
+            {
+                return a.compare(b, Qt::CaseInsensitive);
+            }
             else if constexpr (THasCompare<T, T>::value) { return compare(a, b); }
-            else { return a < b ? -1 : b < a ? 1 :
-                                               0; }
+            else { return a < b ? -1 : b < a ? 1 : 0; }
         }
 
     } // namespace mixin

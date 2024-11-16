@@ -36,9 +36,8 @@ using namespace swift::misc::network;
 
 namespace swift::gui::components
 {
-    CDbLoginComponent::CDbLoginComponent(QWidget *parent) : QFrame(parent),
-                                                            CLoadIndicatorEnabled(this),
-                                                            ui(new Ui::CDbLoginComponent)
+    CDbLoginComponent::CDbLoginComponent(QWidget *parent)
+        : QFrame(parent), CLoadIndicatorEnabled(this), ui(new Ui::CDbLoginComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         ui->setupUi(this);
@@ -60,7 +59,8 @@ namespace swift::gui::components
         connect(ui->pb_Login, &QPushButton::clicked, this, &CDbLoginComponent::onLoginClicked);
         connect(ui->pb_Logoff, &QPushButton::clicked, this, &CDbLoginComponent::onLogoffClicked);
         connect(ui->le_Password, &QLineEdit::returnPressed, this, &CDbLoginComponent::onLoginClicked);
-        connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this, &CDbLoginComponent::onAuthenticationFinished, Qt::QueuedConnection);
+        connect(&m_loginService, &CDatabaseAuthenticationService::userAuthenticationFinished, this,
+                &CDbLoginComponent::onAuthenticationFinished, Qt::QueuedConnection);
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
@@ -72,18 +72,11 @@ namespace swift::gui::components
         this->setUserInfo(this->getDbUser());
     }
 
-    CDbLoginComponent::~CDbLoginComponent()
-    {}
+    CDbLoginComponent::~CDbLoginComponent() {}
 
-    CAuthenticatedUser CDbLoginComponent::getDbUser() const
-    {
-        return m_loginService.getDbUser();
-    }
+    CAuthenticatedUser CDbLoginComponent::getDbUser() const { return m_loginService.getDbUser(); }
 
-    bool CDbLoginComponent::isUserAuthenticated() const
-    {
-        return m_loginService.isUserAuthenticated();
-    }
+    bool CDbLoginComponent::isUserAuthenticated() const { return m_loginService.isUserAuthenticated(); }
 
     void CDbLoginComponent::displayOverlayMessages(const CStatusMessageList &msgs)
     {
@@ -106,10 +99,7 @@ namespace swift::gui::components
             displayOverlayMessages(msgs);
             return;
         }
-        else if (!msgs.isEmpty())
-        {
-            CLogMessage::preformatted(msgs);
-        }
+        else if (!msgs.isEmpty()) { CLogMessage::preformatted(msgs); }
         this->showLoading(5000);
     }
 
@@ -119,7 +109,8 @@ namespace swift::gui::components
         this->setModeLogin(true);
     }
 
-    void CDbLoginComponent::onAuthenticationFinished(const CAuthenticatedUser &user, const CStatusMessageList &statusMsgs)
+    void CDbLoginComponent::onAuthenticationFinished(const CAuthenticatedUser &user,
+                                                     const CStatusMessageList &statusMsgs)
     {
         this->hideLoading();
         this->setUserInfo(user);
@@ -131,10 +122,7 @@ namespace swift::gui::components
         }
     }
 
-    void CDbLoginComponent::setModeLogin(bool modeLogin)
-    {
-        ui->sw_LoginLogoff->setCurrentIndex(modeLogin ? 0 : 1);
-    }
+    void CDbLoginComponent::setModeLogin(bool modeLogin) { ui->sw_LoginLogoff->setCurrentIndex(modeLogin ? 0 : 1); }
 
     void CDbLoginComponent::setUserInfo(const CAuthenticatedUser &user)
     {
@@ -145,18 +133,13 @@ namespace swift::gui::components
             this->setModeLogin(false);
             ui->le_Name->setText(user.getRealNameAndId());
             ui->te_Roles->setPlainText(user.getRolesAsString());
-            if (user.canDirectlyWriteModels())
-            {
-                ui->le_Info->setText("You can directly update models");
-            }
-            else
-            {
-                ui->le_Info->setText("You can create model change requests");
-            }
+            if (user.canDirectlyWriteModels()) { ui->le_Info->setText("You can directly update models"); }
+            else { ui->le_Info->setText("You can create model change requests"); }
 
             // crashpad info
             CCrashHandler::instance()->crashAndLogInfoUserName(user.getRealNameAndId());
-            CCrashHandler::instance()->crashAndLogAppendInfo(QStringLiteral("Login as user %1 %2").arg(user.getRealNameAndId(), user.getRolesAsString()));
+            CCrashHandler::instance()->crashAndLogAppendInfo(
+                QStringLiteral("Login as user %1 %2").arg(user.getRealNameAndId(), user.getRolesAsString()));
         }
         else
         {

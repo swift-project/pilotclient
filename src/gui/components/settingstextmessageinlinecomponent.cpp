@@ -18,8 +18,8 @@ using namespace swift::misc;
 
 namespace swift::gui::components
 {
-    CSettingsTextMessageInlineComponent::CSettingsTextMessageInlineComponent(QWidget *parent) : QFrame(parent),
-                                                                                                ui(new Ui::CSettingsTextMessageInlineComponent)
+    CSettingsTextMessageInlineComponent::CSettingsTextMessageInlineComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsTextMessageInlineComponent)
     {
         ui->setupUi(this);
         connect(ui->cb_All, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
@@ -27,14 +27,14 @@ namespace swift::gui::components
         connect(ui->cb_Private, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
         connect(ui->cb_Supervisor, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
         connect(ui->cb_Focus, &QCheckBox::released, this, &CSettingsTextMessageInlineComponent::changeSettings);
-        connect(ui->pb_Disable, &QPushButton::released, this, &CSettingsTextMessageInlineComponent::disableAllOverlayMessages);
+        connect(ui->pb_Disable, &QPushButton::released, this,
+                &CSettingsTextMessageInlineComponent::disableAllOverlayMessages);
         connect(ui->pb_Reset, &QPushButton::released, this, &CSettingsTextMessageInlineComponent::resetOverlayMessages);
 
         this->settingsChanged();
     }
 
-    CSettingsTextMessageInlineComponent::~CSettingsTextMessageInlineComponent()
-    {}
+    CSettingsTextMessageInlineComponent::~CSettingsTextMessageInlineComponent() {}
 
     void CSettingsTextMessageInlineComponent::settingsChanged()
     {

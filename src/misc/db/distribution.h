@@ -23,9 +23,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CDistribution)
 namespace swift::misc::db
 {
     //! Distributions for channel
-    class SWIFT_MISC_EXPORT CDistribution :
-        public CValueObject<CDistribution>,
-        public IDatastoreObjectWithIntegerKey
+    class SWIFT_MISC_EXPORT CDistribution : public CValueObject<CDistribution>, public IDatastoreObjectWithIntegerKey
     {
     public:
         //! Properties by index

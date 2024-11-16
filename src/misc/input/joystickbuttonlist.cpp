@@ -7,7 +7,8 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CJoystickButton, CJoystickButto
 
 namespace swift::misc::input
 {
-    CJoystickButtonList::CJoystickButtonList(const CSequence<CJoystickButton> &baseClass) : CSequence<CJoystickButton>(baseClass)
+    CJoystickButtonList::CJoystickButtonList(const CSequence<CJoystickButton> &baseClass)
+        : CSequence<CJoystickButton>(baseClass)
     {}
 
 } // namespace swift::misc::input

@@ -34,8 +34,7 @@ namespace swift::gui::components
     /*!
      * Info area containing the DB data (models, liveries ...)
      */
-    class SWIFT_GUI_EXPORT CDataInfoAreaComponent :
-        public swift::gui::CInfoArea
+    class SWIFT_GUI_EXPORT CDataInfoAreaComponent : public swift::gui::CInfoArea
     {
         Q_OBJECT
 

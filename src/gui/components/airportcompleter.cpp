@@ -17,21 +17,20 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::components
 {
-    CAirportCompleter::CAirportCompleter(QWidget *parent) : QFrame(parent),
-                                                            ui(new Ui::CAirportCompleter)
+    CAirportCompleter::CAirportCompleter(QWidget *parent) : QFrame(parent), ui(new Ui::CAirportCompleter)
     {
         ui->setupUi(this);
         ui->le_Icao->setValidator(new CUpperCaseValidator(ui->le_Icao));
 
-        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CAirportCompleter::onAirportsChanged);
+        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this,
+                &CAirportCompleter::onAirportsChanged);
         connect(ui->le_Icao, &QLineEdit::editingFinished, this, &CAirportCompleter::onIcaoChanged);
         connect(ui->le_Name, &QLineEdit::editingFinished, this, &CAirportCompleter::onNameChanged);
         connect(ui->le_Location, &QLineEdit::editingFinished, this, &CAirportCompleter::onLocationChanged);
         this->onAirportsChanged();
     }
 
-    CAirportCompleter::~CAirportCompleter()
-    {}
+    CAirportCompleter::~CAirportCompleter() {}
 
     void CAirportCompleter::setAirport(const CAirport &airport)
     {
@@ -43,10 +42,7 @@ namespace swift::gui::components
         emit this->changedAirport(m_current);
     }
 
-    QString CAirportCompleter::getIcaoText() const
-    {
-        return ui->le_Icao->text().trimmed().toUpper();
-    }
+    QString CAirportCompleter::getIcaoText() const { return ui->le_Icao->text().trimmed().toUpper(); }
 
     void CAirportCompleter::setReadOnly(bool readOnly)
     {
@@ -93,27 +89,31 @@ namespace swift::gui::components
         const CAirportList airports = sGui->getWebDataServices()->getAirports();
         ui->le_Icao->setCompleter(new QCompleter(airports.allIcaoCodes(true), ui->le_Icao));
         ui->le_Name->setCompleter(new QCompleter(airports.allDescriptivesNames(true), ui->le_Name));
-        ui->le_Location->setCompleter(new QCompleter(airports.allLocationsPlusOptionalDescription(true), ui->le_Location));
+        ui->le_Location->setCompleter(
+            new QCompleter(airports.allLocationsPlusOptionalDescription(true), ui->le_Location));
 
         if (ui->le_Icao->completer()->popup())
         {
             ui->le_Icao->completer()->setCaseSensitivity(Qt::CaseInsensitive);
             ui->le_Icao->completer()->popup()->setObjectName("AirportCompleter.Icao");
-            const int w5chars = ui->le_Icao->completer()->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+            const int w5chars =
+                ui->le_Icao->completer()->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
             ui->le_Icao->completer()->popup()->setMinimumWidth(w5chars * 5);
         }
         if (ui->le_Name->completer()->popup())
         {
             ui->le_Name->completer()->setCaseSensitivity(Qt::CaseInsensitive);
             ui->le_Name->completer()->popup()->setObjectName("AirportCompleter.Name");
-            const int w5chars = ui->le_Name->completer()->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+            const int w5chars =
+                ui->le_Name->completer()->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
             ui->le_Name->completer()->popup()->setMinimumWidth(w5chars * 10);
         }
         if (ui->le_Location->completer()->popup())
         {
             ui->le_Location->completer()->setCaseSensitivity(Qt::CaseInsensitive);
             ui->le_Location->completer()->popup()->setObjectName("AirportCompleter.Location");
-            const int w5chars = ui->le_Location->completer()->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
+            const int w5chars =
+                ui->le_Location->completer()->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
             ui->le_Location->completer()->popup()->setMinimumWidth(w5chars * 10);
         }
 

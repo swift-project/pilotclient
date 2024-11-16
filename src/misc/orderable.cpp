@@ -15,8 +15,7 @@ namespace swift::misc
 {
     IOrderable::IOrderable() {}
 
-    IOrderable::IOrderable(int order) : m_order(order)
-    {}
+    IOrderable::IOrderable(int order) : m_order(order) {}
 
     QString IOrderable::getOrderAsString() const
     {
@@ -24,10 +23,7 @@ namespace swift::misc
         return QStringLiteral("-");
     }
 
-    bool IOrderable::hasValidOrder() const
-    {
-        return this->getOrder() >= 0;
-    }
+    bool IOrderable::hasValidOrder() const { return this->getOrder() >= 0; }
 
     bool IOrderable::isAnyOrderIndex(int index)
     {
@@ -67,8 +63,7 @@ namespace swift::misc
             {
             case IndexOrder: this->setOrder(variant.toInt()); return;
             case IndexOrderString:
-            default:
-                break;
+            default: break;
             }
         }
         const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());

@@ -13,8 +13,7 @@ namespace swift::misc::simulation::settings
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDBusServerAddress:
-            return QVariant::fromValue(m_dBusServerAddress);
+        case IndexDBusServerAddress: return QVariant::fromValue(m_dBusServerAddress);
         default: break;
         }
         return CValueObject::propertyByIndex(index);
@@ -31,12 +30,8 @@ namespace swift::misc::simulation::settings
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDBusServerAddress:
-            m_dBusServerAddress = variant.toString();
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexDBusServerAddress: m_dBusServerAddress = variant.toString(); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 

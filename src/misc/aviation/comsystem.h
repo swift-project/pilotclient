@@ -61,7 +61,10 @@ namespace swift::misc::aviation
         CComSystem() {}
 
         //! Constructor
-        CComSystem(const QString &name, const physical_quantities::CFrequency &activeFrequency, const physical_quantities::CFrequency &standbyFrequency = { 0, physical_quantities::CFrequencyUnit::nullUnit() }) : CModulator(name, activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency)
+        CComSystem(const QString &name, const physical_quantities::CFrequency &activeFrequency,
+                   const physical_quantities::CFrequency
+                       &standbyFrequency = { 0, physical_quantities::CFrequencyUnit::nullUnit() })
+            : CModulator(name, activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency)
         {}
 
         //! Set active frequency
@@ -100,13 +103,15 @@ namespace swift::misc::aviation
 
         //! COM1 unit
         static CComSystem getCom1System(const physical_quantities::CFrequency &activeFrequency,
-                                        const physical_quantities::CFrequency &standbyFrequency = { 0, physical_quantities::CFrequencyUnit::nullUnit() });
+                                        const physical_quantities::CFrequency &standbyFrequency = {
+                                            0, physical_quantities::CFrequencyUnit::nullUnit() });
         //! COM2 unit
         static CComSystem getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1);
 
         //! COM2 unit
         static CComSystem getCom2System(const physical_quantities::CFrequency &activeFrequency,
-                                        const physical_quantities::CFrequency &standbyFrequency = { 0, physical_quantities::CFrequencyUnit::nullUnit() });
+                                        const physical_quantities::CFrequency &standbyFrequency = {
+                                            0, physical_quantities::CFrequencyUnit::nullUnit() });
 
         //! Valid civil aviation frequency?
         static bool isValidCivilAviationFrequency(const physical_quantities::CFrequency &f);
@@ -119,8 +124,7 @@ namespace swift::misc::aviation
 
         //! Round to channel spacing, set MHz as unit
         //! \see ChannelSpacing
-        static void roundToChannelSpacing(physical_quantities::CFrequency &frequency,
-                                          ChannelSpacing channelSpacing);
+        static void roundToChannelSpacing(physical_quantities::CFrequency &frequency, ChannelSpacing channelSpacing);
 
         //! Compare frequencies under consideration that on VATSIM
         //! frequencies .x20/.x25 and .x70/.x75 are the same
@@ -142,7 +146,8 @@ namespace swift::misc::aviation
         static bool isWithin25kHzChannel(const physical_quantities::CFrequency &freq);
 
         //! Parses almost any shitty string to a valid COM frequency
-        static physical_quantities::CFrequency parseComFrequency(const QString &input, physical_quantities::CPqString::SeparatorMode sep);
+        static physical_quantities::CFrequency parseComFrequency(const QString &input,
+                                                                 physical_quantities::CPqString::SeparatorMode sep);
 
         //! \copydoc swift::misc::CValueObject::registerMetadata
         static void registerMetadata();

@@ -18,8 +18,8 @@ namespace swift::core::fsd
     {
     public:
         //! Constructor
-        VisualPilotDataStopped(const QString &sender, double latitude, double longitude, double altitudeTrue, double heightAgl,
-                               double pitch, double bank, double heading, double noseGearAngle = 0.0);
+        VisualPilotDataStopped(const QString &sender, double latitude, double longitude, double altitudeTrue,
+                               double heightAgl, double pitch, double bank, double heading, double noseGearAngle = 0.0);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -52,13 +52,10 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const VisualPilotDataStopped &lhs, const VisualPilotDataStopped &rhs)
     {
-        return qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) &&
-               qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
+        return qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) && qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
                qFuzzyCompare(lhs.m_altitudeTrue, rhs.m_altitudeTrue) &&
-               qFuzzyCompare(lhs.m_heightAgl, rhs.m_heightAgl) &&
-               qFuzzyCompare(lhs.m_pitch, rhs.m_pitch) &&
-               qFuzzyCompare(lhs.m_bank, rhs.m_bank) &&
-               qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
+               qFuzzyCompare(lhs.m_heightAgl, rhs.m_heightAgl) && qFuzzyCompare(lhs.m_pitch, rhs.m_pitch) &&
+               qFuzzyCompare(lhs.m_bank, rhs.m_bank) && qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
                qFuzzyCompare(lhs.m_noseGearAngle, rhs.m_noseGearAngle);
     }
 

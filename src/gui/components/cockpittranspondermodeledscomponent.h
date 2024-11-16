@@ -20,9 +20,7 @@
 namespace swift::gui::components
 {
     //! LEDs representing transponder mode state
-    class SWIFT_GUI_EXPORT CCockpitTransponderModeLedsComponent :
-        public QFrame,
-        public swift::misc::CIdentifiable
+    class SWIFT_GUI_EXPORT CCockpitTransponderModeLedsComponent : public QFrame, public swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -37,7 +35,8 @@ namespace swift::gui::components
         static constexpr int LedWidth = 14; //!< LED width
 
         //! \copydoc IContextOwnAircraft::changedAircraftCockpit
-        void onAircraftCockpitChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+        void onAircraftCockpitChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                      const swift::misc::CIdentifier &originator);
 
         //! LED clicked
         void onLedClicked();

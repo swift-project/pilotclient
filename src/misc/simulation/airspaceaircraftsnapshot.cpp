@@ -16,16 +16,13 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAirspaceAircraftSnapsh
 
 namespace swift::misc::simulation
 {
-    CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot()
-    {}
+    CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot() {}
 
-    CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(
-        const CSimulatedAircraftList &allAircraft,
-        bool restricted, bool renderingEnabled, int maxAircraft,
-        const CLength &maxRenderedDistance) : m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch()),
-                                              m_restricted(restricted),
-                                              m_renderingEnabled(renderingEnabled),
-                                              m_threadName(QThread::currentThread()->objectName())
+    CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft, bool restricted,
+                                                         bool renderingEnabled, int maxAircraft,
+                                                         const CLength &maxRenderedDistance)
+        : m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch()), m_restricted(restricted),
+          m_renderingEnabled(renderingEnabled), m_threadName(QThread::currentThread()->objectName())
     {
         if (allAircraft.isEmpty()) { return; }
 
@@ -36,9 +33,11 @@ namespace swift::misc::simulation
         const CSimulatedAircraftList vtolAircraft(aircraft.findByVtol(true));
         const int numberVtol = vtolAircraft.size();
         m_aircraftCallsignsByDistance = aircraft.getCallsigns();
-        Q_ASSERT_X(m_aircraftCallsignsByDistance.size() == allAircraft.size(), Q_FUNC_INFO, "redundant or missing callsigns");
+        Q_ASSERT_X(m_aircraftCallsignsByDistance.size() == allAircraft.size(), Q_FUNC_INFO,
+                   "redundant or missing callsigns");
         m_vtolAircraftCallsignsByDistance = vtolAircraft.getCallsigns();
-        Q_ASSERT_X(m_vtolAircraftCallsignsByDistance.size() == numberVtol, Q_FUNC_INFO, "redundant or missing callsigns");
+        Q_ASSERT_X(m_vtolAircraftCallsignsByDistance.size() == numberVtol, Q_FUNC_INFO,
+                   "redundant or missing callsigns");
 
         // no restrictions, just find by attributes
         if (!restricted)
@@ -78,30 +77,20 @@ namespace swift::misc::simulation
                     if (currentAircraft.isVtol()) { m_enabledVtolAircraftCallsignsByDistance.push_back(cs); }
                 }
             }
-            else
-            {
-                m_disabledAircraftCallsignsByDistance.push_back(cs);
-            }
+            else { m_disabledAircraftCallsignsByDistance.push_back(cs); }
         }
     }
 
-    bool CAirspaceAircraftSnapshot::isValidSnapshot() const
-    {
-        return m_timestampMsSinceEpoch > 0;
-    }
+    bool CAirspaceAircraftSnapshot::isValidSnapshot() const { return m_timestampMsSinceEpoch > 0; }
 
     void CAirspaceAircraftSnapshot::setRestrictionChanged(const CAirspaceAircraftSnapshot &snapshot)
     {
         if (this->isValidSnapshot() == snapshot.isValidSnapshot())
         {
-            this->m_restrictionChanged =
-                (snapshot.m_restricted != this->m_restricted) ||
-                (snapshot.m_renderingEnabled != this->m_renderingEnabled);
+            this->m_restrictionChanged = (snapshot.m_restricted != this->m_restricted) ||
+                                         (snapshot.m_renderingEnabled != this->m_renderingEnabled);
         }
-        else
-        {
-            this->m_restrictionChanged = true;
-        }
+        else { this->m_restrictionChanged = true; }
     }
 
     QVariant CAirspaceAircraftSnapshot::propertyByIndex(CPropertyIndexRef index) const

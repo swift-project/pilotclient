@@ -15,20 +15,22 @@
 
 namespace swift::gui::components
 {
-    CCockpitComponent::CCockpitComponent(QWidget *parent) : COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
-                                                            ui(new Ui::CCockpitComponent)
+    CCockpitComponent::CCockpitComponent(QWidget *parent)
+        : COverlayMessagesFrameEnableForDockWidgetInfoArea(parent), ui(new Ui::CCockpitComponent)
     {
         ui->setupUi(this);
         ui->wip_CockpitComPanelShowHideBar->setVisible(false);
         m_minHeightInfoArea = ui->comp_CockpitInfoArea->minimumHeight();
 
-        connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this, &CCockpitComponent::onToggleShowHideDetails, Qt::QueuedConnection);
-        connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this, &CCockpitComponent::onRequestTextMessageCom1, Qt::QueuedConnection);
-        connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom2TextMessage, this, &CCockpitComponent::onRequestTextMessageCom2, Qt::QueuedConnection);
+        connect(ui->wip_CockpitComPanelShowHideBar, &CShowHideBar::toggleShowHide, this,
+                &CCockpitComponent::onToggleShowHideDetails, Qt::QueuedConnection);
+        connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom1TextMessage, this,
+                &CCockpitComponent::onRequestTextMessageCom1, Qt::QueuedConnection);
+        connect(ui->comp_CockpitComComponent, &CCockpitComComponent::requestCom2TextMessage, this,
+                &CCockpitComponent::onRequestTextMessageCom2, Qt::QueuedConnection);
     }
 
-    CCockpitComponent::~CCockpitComponent()
-    {}
+    CCockpitComponent::~CCockpitComponent() {}
 
     bool CCockpitComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
@@ -36,15 +38,13 @@ namespace swift::gui::components
         bool ok = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
         if (ok && parentDockableWidget)
         {
-            ok = connect(parentDockableWidget, &QDockWidget::topLevelChanged, this, &CCockpitComponent::onToggleFloating, Qt::QueuedConnection);
+            ok = connect(parentDockableWidget, &QDockWidget::topLevelChanged, this,
+                         &CCockpitComponent::onToggleFloating, Qt::QueuedConnection);
         }
         return ok;
     }
 
-    bool CCockpitComponent::isInfoAreaShown() const
-    {
-        return ui->wip_CockpitComPanelShowHideBar->isShown();
-    }
+    bool CCockpitComponent::isInfoAreaShown() const { return ui->wip_CockpitComPanelShowHideBar->isShown(); }
 
     void CCockpitComponent::setSelectedTransponderModeStateIdent()
     {
@@ -118,15 +118,9 @@ namespace swift::gui::components
         COverlayMessagesFrame::mouseDoubleClickEvent(event);
     }
 
-    void CCockpitComponent::onRequestTextMessageCom1()
-    {
-        emit requestTextMessageEntryTab(TextMessagesCom1);
-    }
+    void CCockpitComponent::onRequestTextMessageCom1() { emit requestTextMessageEntryTab(TextMessagesCom1); }
 
-    void CCockpitComponent::onRequestTextMessageCom2()
-    {
-        emit requestTextMessageEntryTab(TextMessagesCom2);
-    }
+    void CCockpitComponent::onRequestTextMessageCom2() { emit requestTextMessageEntryTab(TextMessagesCom2); }
 
     void CCockpitComponent::onATCStationsChanged()
     {

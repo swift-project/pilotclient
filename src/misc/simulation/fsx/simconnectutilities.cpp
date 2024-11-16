@@ -31,13 +31,16 @@ namespace swift::misc::simulation::fsx
 
     const QString &CSimConnectUtilities::getSwiftLocalSimConnectCfgFilename()
     {
-        static const QString n = CFileUtils::appendFilePaths(QCoreApplication::applicationDirPath(), simConnectFilename());
+        static const QString n =
+            CFileUtils::appendFilePaths(QCoreApplication::applicationDirPath(), simConnectFilename());
         return n;
     }
 
     const QString &CSimConnectUtilities::getUserSimConnectCfgFilename()
     {
-        static const QString n = CFileUtils::appendFilePaths(QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory), simConnectFilename());
+        static const QString n = CFileUtils::appendFilePaths(
+            QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory),
+            simConnectFilename());
         return n;
     }
 
@@ -125,7 +128,8 @@ namespace swift::misc::simulation::fsx
 
     QStringList CSimConnectUtilities::getSimConnectIniFileDirectories()
     {
-        const QString docDir = QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory);
+        const QString docDir =
+            QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory);
         if (docDir.isEmpty()) return QStringList();
 
         QDir directory(docDir);
@@ -159,11 +163,13 @@ namespace swift::misc::simulation::fsx
 
     QString CSimConnectUtilities::getSimConnectIniFileDirectory(CSimulatorInfo &simulator)
     {
-        static const QString docDir = QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory);
+        static const QString docDir =
+            QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory);
         if (docDir.isEmpty()) { return {}; }
         if (!simulator.isSingleSimulator() || !simulator.isFsxP3DFamily()) return {};
 
-        const QString iniDir = CFileUtils::appendFilePaths(docDir, simulator.isP3D() ? "Prepar3D v4 Files" : "Flight Simulator X Files");
+        const QString iniDir =
+            CFileUtils::appendFilePaths(docDir, simulator.isP3D() ? "Prepar3D v4 Files" : "Flight Simulator X Files");
         if (getSimConnectIniFileDirectories().isEmpty()) { return iniDir; }
 
         for (const QString &dir : getSimConnectIniFileDirectories())

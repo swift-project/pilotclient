@@ -16,10 +16,7 @@
 namespace swift::gui
 {
     CLevelMeter::CLevelMeter(QWidget *parent)
-        : QFrame(parent),
-          m_redrawTimer(new QTimer(this)),
-          m_lowColor(Qt::gray),
-          m_highColor(Qt::green),
+        : QFrame(parent), m_redrawTimer(new QTimer(this)), m_lowColor(Qt::gray), m_highColor(Qt::green),
           m_peakColor(255, 200, 200, 255)
     {
         this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -30,8 +27,7 @@ namespace swift::gui
         m_redrawTimer->setObjectName("CLevelMeter");
     }
 
-    CLevelMeter::~CLevelMeter()
-    {}
+    CLevelMeter::~CLevelMeter() {}
 
     void CLevelMeter::reset()
     {
@@ -56,10 +52,7 @@ namespace swift::gui
         if (m_peakLevelChanged.elapsed() > PeakHoldLevelDuration)
         {
             m_peakLevel -= DecayValue;
-            if (m_peakLevel < m_level || m_peakLevel < 0)
-            {
-                m_peakLevel = 0.0;
-            }
+            if (m_peakLevel < m_level || m_peakLevel < 0) { m_peakLevel = 0.0; }
         }
         this->update();
     }

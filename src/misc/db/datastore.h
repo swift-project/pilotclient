@@ -102,7 +102,10 @@ namespace swift::misc
             bool hasValidDbKey() const { return m_dbKey >= 0; }
 
             //! Same DB key and hence equal
-            bool isDbEqual(const IDatastoreObjectWithIntegerKey &other) const { return other.isLoadedFromDb() && this->isLoadedFromDb() && other.getDbKey() == this->getDbKey(); }
+            bool isDbEqual(const IDatastoreObjectWithIntegerKey &other) const
+            {
+                return other.isLoadedFromDb() && this->isLoadedFromDb() && other.getDbKey() == this->getDbKey();
+            }
 
             //! Loaded from DB
             //! \remarks here not really needed, but added to have similar signature as IDatastoreObjectWithStringKey
@@ -147,7 +150,8 @@ namespace swift::misc
             void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc swift::misc::mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(CPropertyIndexRef index, const IDatastoreObjectWithIntegerKey &compareValue) const;
+            int comparePropertyByIndex(CPropertyIndexRef index,
+                                       const IDatastoreObjectWithIntegerKey &compareValue) const;
 
             //! Can given index be handled?
             static bool canHandleIndex(swift::misc::CPropertyIndexRef index);
@@ -191,7 +195,10 @@ namespace swift::misc
             bool hasValidDbKey() const { return !m_dbKey.isEmpty(); }
 
             //! Same DB key and hence equal
-            bool isDbEqual(const IDatastoreObjectWithStringKey &other) const { return other.isLoadedFromDb() && this->isLoadedFromDb() && other.getDbKey() == this->getDbKey(); }
+            bool isDbEqual(const IDatastoreObjectWithStringKey &other) const
+            {
+                return other.isLoadedFromDb() && this->isLoadedFromDb() && other.getDbKey() == this->getDbKey();
+            }
 
             //! Loaded from DB
             bool isLoadedFromDb() const { return m_loadedFromDb; }
@@ -235,13 +242,15 @@ namespace swift::misc
             void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
 
             //! \copydoc swift::misc::mixin::Index::comparePropertyByIndex
-            int comparePropertyByIndex(swift::misc::CPropertyIndexRef index, const IDatastoreObjectWithStringKey &compareValue) const;
+            int comparePropertyByIndex(swift::misc::CPropertyIndexRef index,
+                                       const IDatastoreObjectWithStringKey &compareValue) const;
 
             //! Can given index be handled
             static bool canHandleIndex(swift::misc::CPropertyIndexRef index);
 
             QString m_dbKey; //!< key
-            bool m_loadedFromDb = false; //!< as we have no artificial key, it can happen key is set, but not loaded from DB
+            bool m_loadedFromDb =
+                false; //!< as we have no artificial key, it can happen key is set, but not loaded from DB
         };
     } // namespace db
 } // namespace swift::misc

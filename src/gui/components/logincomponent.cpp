@@ -67,8 +67,7 @@ namespace swift::gui::components
         return cats;
     }
 
-    CLoginComponent::CLoginComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                        ui(new Ui::CLoginComponent)
+    CLoginComponent::CLoginComponent(QWidget *parent) : COverlayMessagesFrame(parent), ui(new Ui::CLoginComponent)
     {
         ui->setupUi(this);
         m_logoffCountdownTimer.setObjectName("CLoginComponent:m_logoffCountdownTimer");
@@ -76,8 +75,10 @@ namespace swift::gui::components
         this->setLogoffCountdown();
         connect(&m_logoffCountdownTimer, &QTimer::timeout, this, &CLoginComponent::logoffCountdown);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &CLoginComponent::loginCancelled, Qt::QueuedConnection);
-        connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection, Qt::QueuedConnection);
-        connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::requestNetworkSettings, this, &CLoginComponent::requestNetworkSettings, Qt::QueuedConnection);
+        connect(ui->pb_Ok, &QPushButton::clicked, this, &CLoginComponent::toggleNetworkConnection,
+                Qt::QueuedConnection);
+        connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::requestNetworkSettings, this,
+                &CLoginComponent::requestNetworkSettings, Qt::QueuedConnection);
 
         // overlay
         this->setOverlaySizeFactors(0.8, 0.5);
@@ -93,15 +94,20 @@ namespace swift::gui::components
 
         if (sGui && sGui->getIContextSimulator())
         {
-            connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &CLoginComponent::onSimulatorModelChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::vitalityLost, this, &CLoginComponent::autoLogoffDetection, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CLoginComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::insufficientFrameRateDetected, this, &CLoginComponent::autoLogoffFrameRate, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this,
+                    &CLoginComponent::onSimulatorModelChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::vitalityLost, this,
+                    &CLoginComponent::autoLogoffDetection, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this,
+                    &CLoginComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::insufficientFrameRateDetected, this,
+                    &CLoginComponent::autoLogoffFrameRate, Qt::QueuedConnection);
         }
 
         if (sGui && sGui->getIContextNetwork())
         {
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CLoginComponent::onNetworkStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
+                    &CLoginComponent::onNetworkStatusChanged, Qt::QueuedConnection);
         }
 
         // server and UI elements when in disconnect state
@@ -127,8 +133,7 @@ namespace swift::gui::components
         });
     }
 
-    CLoginComponent::~CLoginComponent()
-    {}
+    CLoginComponent::~CLoginComponent() {}
 
     void CLoginComponent::mainInfoAreaChanged(const QWidget *currentWidget)
     {
@@ -186,14 +191,18 @@ namespace swift::gui::components
             const CStatusMessageList aircraftMsgs = ui->comp_OwnAircraft->validate();
             if (aircraftMsgs.isFailure())
             {
-                this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning(u"Invalid aircraft data, login not possible"), OverlayMessageMs);
+                this->showOverlayHTMLMessage(
+                    CStatusMessage(this).validationWarning(u"Invalid aircraft data, login not possible"),
+                    OverlayMessageMs);
                 return;
             }
 
             const CStatusMessageList pilotMsgs = ui->form_Pilot->validate();
             if (pilotMsgs.isFailure())
             {
-                this->showOverlayHTMLMessage(CStatusMessage(this).validationWarning(u"Invalid pilot data, login not possible"), OverlayMessageMs);
+                this->showOverlayHTMLMessage(
+                    CStatusMessage(this).validationWarning(u"Invalid pilot data, login not possible"),
+                    OverlayMessageMs);
                 return;
             }
 
@@ -224,20 +233,26 @@ namespace swift::gui::components
                 partnerCs = ui->comp_NetworkDetails->getPartnerCallsign();
                 if (partnerCs == ownAircraft.getCallsign())
                 {
-                    this->showOverlayHTMLMessage("Your callsign and the pilot/copilot callsign must be NOT the same", OverlayMessageMs);
+                    this->showOverlayHTMLMessage("Your callsign and the pilot/copilot callsign must be NOT the same",
+                                                 OverlayMessageMs);
                     return;
                 }
 
-                const bool ok = (partnerCs.asString().startsWith(ownAircraft.getCallsignAsString(), Qt::CaseInsensitive) || ownAircraft.getCallsignAsString().startsWith(partnerCs.asString(), Qt::CaseInsensitive));
+                const bool ok =
+                    (partnerCs.asString().startsWith(ownAircraft.getCallsignAsString(), Qt::CaseInsensitive) ||
+                     ownAircraft.getCallsignAsString().startsWith(partnerCs.asString(), Qt::CaseInsensitive));
                 if (!ok)
                 {
-                    this->showOverlayHTMLMessage("Callsign and the pilot/copilot callsign appear not to be synchronized", OverlayMessageMs);
+                    this->showOverlayHTMLMessage(
+                        "Callsign and the pilot/copilot callsign appear not to be synchronized", OverlayMessageMs);
                     return;
                 }
             }
 
             // Login
-            msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, values.ownLiverySend, values.useLivery, values.ownAircraftModelStringSend, values.useModelString, partnerCs, mode);
+            msg = sGui->getIContextNetwork()->connectToNetwork(currentServer, values.ownLiverySend, values.useLivery,
+                                                               values.ownAircraftModelStringSend, values.useModelString,
+                                                               partnerCs, mode);
             if (msg.isSuccess())
             {
                 Q_ASSERT_X(currentServer.isValidForLogin(), Q_FUNC_INFO, "invalid server");
@@ -253,10 +268,7 @@ namespace swift::gui::components
                 ui->le_LoginHomeBase->setText(currentServer.getUser().getHomeBase().asString());
                 if (vatsimLogin) { m_networkSetup.setLastVatsimServer(currentServer); }
             }
-            else
-            {
-                sGui->setExtraWindowTitle("");
-            }
+            else { sGui->setExtraWindowTitle(""); }
         }
         else
         {
@@ -273,10 +285,7 @@ namespace swift::gui::components
             this->setGuiLoginAsValues(ownAircraft);
             emit this->loginOrLogoffSuccessful();
         }
-        else
-        {
-            emit this->loginOrLogoffCancelled();
-        }
+        else { emit this->loginOrLogoffCancelled(); }
     }
 
     void CLoginComponent::loadRememberedUserData()
@@ -359,10 +368,7 @@ namespace swift::gui::components
         return server;
     }
 
-    CServer CLoginComponent::getCurrentOtherServer() const
-    {
-        return ui->comp_NetworkDetails->getCurrentOtherServer();
-    }
+    CServer CLoginComponent::getCurrentOtherServer() const { return ui->comp_NetworkDetails->getCurrentOtherServer(); }
 
     CServer CLoginComponent::getCurrentServer() const
     {
@@ -408,7 +414,9 @@ namespace swift::gui::components
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
 
-        const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Auto logoff in progress (could be simulator shutdown, crash, closing simulator)");
+        const CStatusMessage m =
+            CStatusMessage(this, CStatusMessage::SeverityInfo,
+                           u"Auto logoff in progress (could be simulator shutdown, crash, closing simulator)");
         const int delaySecs = 20;
         this->showOverlayHTMLMessage(m, qRound(1000 * delaySecs * 0.8));
         this->setLogoffCountdown(delaySecs);
@@ -423,7 +431,12 @@ namespace swift::gui::components
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; }
 
-        const auto msg = fatal ? CStatusMessage(this, CStatusMessage::SeverityError, u"Sim frame rate too low to maintain constant simulation rate. Disconnecting to avoid disrupting the network.") : CStatusMessage(this, CStatusMessage::SeverityWarning, u"Sim frame rate too low to maintain constant simulation rate. Reduce graphics quality to avoid disconnection.");
+        const auto msg = fatal ? CStatusMessage(this, CStatusMessage::SeverityError,
+                                                u"Sim frame rate too low to maintain constant simulation rate. "
+                                                u"Disconnecting to avoid disrupting the network.") :
+                                 CStatusMessage(this, CStatusMessage::SeverityWarning,
+                                                u"Sim frame rate too low to maintain constant simulation rate. Reduce "
+                                                u"graphics quality to avoid disconnection.");
         const int delaySecs = 20;
         this->showOverlayHTMLMessage(msg, qRound(1000 * delaySecs * 0.8));
         if (fatal)
@@ -452,7 +465,8 @@ namespace swift::gui::components
         const QString modelStr(reverseModel.hasModelString() ? reverseModel.getModelString() : "<unknown>");
         if (!reverseModel.hasModelString())
         {
-            CLogMessage(this).validationInfo(u"Invalid lookup for '%1' successful: %2") << modelStr << reverseModel.toQString();
+            CLogMessage(this).validationInfo(u"Invalid lookup for '%1' successful: %2")
+                << modelStr << reverseModel.toQString();
             CLogMessage(this).validationInfo(u"Hint: Are you using the emulated driver? Set a model if so!");
             return;
         }
@@ -500,10 +514,7 @@ namespace swift::gui::components
 
         auto timer = new QTimer(this);
         connect(timer, &QTimer::timeout, this, [this, timer, count = std::make_shared<int>(0)] {
-            if (++*count <= blinkTimes)
-            {
-                ui->pb_Ok->setProperty("blinkOn", !ui->pb_Ok->property("blinkOn").toBool());
-            }
+            if (++*count <= blinkTimes) { ui->pb_Ok->setProperty("blinkOn", !ui->pb_Ok->property("blinkOn").toBool()); }
             else
             {
                 ui->pb_Ok->setProperty("blinkOn", false);

@@ -48,7 +48,8 @@ namespace swift::core::db
 
         //! Get aircraft livery for ICAO code
         //! \threadsafe
-        swift::misc::aviation::CLivery getStdLiveryForAirlineVDesignator(const swift::misc::aviation::CAirlineIcaoCode &icao) const;
+        swift::misc::aviation::CLivery
+        getStdLiveryForAirlineVDesignator(const swift::misc::aviation::CAirlineIcaoCode &icao) const;
 
         //! Get aircraft livery for id
         //! \threadsafe
@@ -88,11 +89,14 @@ namespace swift::core::db
 
         //! Get aircraft ICAO designators (e.g. B737, ..) for given airline
         //! \threadsafe
-        swift::misc::aviation::CAircraftIcaoCodeList getAicraftIcaoCodesForAirline(const swift::misc::aviation::CAirlineIcaoCode &code) const;
+        swift::misc::aviation::CAircraftIcaoCodeList
+        getAicraftIcaoCodesForAirline(const swift::misc::aviation::CAirlineIcaoCode &code) const;
 
         //! Get model for designator/combined code
         //! \threadsafe
-        swift::misc::simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode);
+        swift::misc::simulation::CAircraftModelList
+        getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator,
+                                                            const QString &combinedCode);
 
         //! Get aircraft liveries count
         //! \threadsafe
@@ -104,11 +108,14 @@ namespace swift::core::db
 
         //! Best match specified by distributor
         //! \threadsafe
-        swift::misc::simulation::CDistributor smartDistributorSelector(const swift::misc::simulation::CDistributor &distributorPattern) const;
+        swift::misc::simulation::CDistributor
+        smartDistributorSelector(const swift::misc::simulation::CDistributor &distributorPattern) const;
 
         //! Best match specified by distributor
         //! \threadsafe
-        swift::misc::simulation::CDistributor smartDistributorSelector(const swift::misc::simulation::CDistributor &distributorPattern, const swift::misc::simulation::CAircraftModel &model) const;
+        swift::misc::simulation::CDistributor
+        smartDistributorSelector(const swift::misc::simulation::CDistributor &distributorPattern,
+                                 const swift::misc::simulation::CAircraftModel &model) const;
 
         //! Get models count
         //! \threadsafe
@@ -130,38 +137,53 @@ namespace swift::core::db
         bool writeToJsonFiles(const QString &dir);
 
         // Data read from local data
-        virtual swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
-        virtual bool readFromJsonFilesInBackground(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewerOnly) override;
+        virtual swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir,
+                                                                  swift::misc::network::CEntityFlags::Entity whatToRead,
+                                                                  bool overrideNewerOnly) override;
+        virtual bool readFromJsonFilesInBackground(const QString &dir,
+                                                   swift::misc::network::CEntityFlags::Entity whatToRead,
+                                                   bool overrideNewerOnly) override;
 
         // cache handling for base class
         virtual swift::misc::network::CEntityFlags::Entity getSupportedEntities() const override;
         virtual QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const override;
         virtual int getCacheCount(swift::misc::network::CEntityFlags::Entity entity) const override;
         virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
-        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const override;
+        virtual swift::misc::network::CEntityFlags::Entity
+        getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const override;
         virtual void synchronizeCaches(swift::misc::network::CEntityFlags::Entity entities) override;
         virtual void admitCaches(swift::misc::network::CEntityFlags::Entity entities) override;
 
     protected:
         // cache handling for base class
         virtual void invalidateCaches(swift::misc::network::CEntityFlags::Entity entities) override;
-        virtual bool hasChangedUrl(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CUrl &oldUrlInfo, swift::misc::network::CUrl &newUrlInfo) const override;
+        virtual bool hasChangedUrl(swift::misc::network::CEntityFlags::Entity entity,
+                                   swift::misc::network::CUrl &oldUrlInfo,
+                                   swift::misc::network::CUrl &newUrlInfo) const override;
         virtual swift::misc::network::CUrl getDbServiceBaseUrl() const override;
 
     private:
-        swift::misc::CData<swift::core::data::TDbLiveryCache> m_liveryCache { this, &CModelDataReader::liveryCacheChanged };
-        swift::misc::CData<swift::core::data::TDbModelCache> m_modelCache { this, &CModelDataReader::modelCacheChanged };
-        swift::misc::CData<swift::core::data::TDbDistributorCache> m_distributorCache { this, &CModelDataReader::distributorCacheChanged };
+        swift::misc::CData<swift::core::data::TDbLiveryCache> m_liveryCache { this,
+                                                                              &CModelDataReader::liveryCacheChanged };
+        swift::misc::CData<swift::core::data::TDbModelCache> m_modelCache { this,
+                                                                            &CModelDataReader::modelCacheChanged };
+        swift::misc::CData<swift::core::data::TDbDistributorCache> m_distributorCache {
+            this, &CModelDataReader::distributorCacheChanged
+        };
         std::atomic_bool m_syncedLiveryCache { false }; //!< already synchronized?
         std::atomic_bool m_syncedModelCache { false }; //!< already synchronized?
         std::atomic_bool m_syncedDistributorCache { false }; //!< already synchronized?
 
         //! \copydoc CDatabaseReader::read
-        virtual void read(swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::DistributorLiveryModel,
-                          swift::misc::db::CDbFlags::DataRetrievalModeFlag mode = swift::misc::db::CDbFlags::DbReading, const QDateTime &newerThan = QDateTime()) override;
+        virtual void read(swift::misc::network::CEntityFlags::Entity entities =
+                              swift::misc::network::CEntityFlags::DistributorLiveryModel,
+                          swift::misc::db::CDbFlags::DataRetrievalModeFlag mode = swift::misc::db::CDbFlags::DbReading,
+                          const QDateTime &newerThan = QDateTime()) override;
 
         //! Reader URL (we read from where?) used to detect changes of location
-        swift::misc::CData<swift::core::data::TDbModelReaderBaseUrl> m_readerUrlCache { this, &CModelDataReader::baseUrlCacheChanged };
+        swift::misc::CData<swift::core::data::TDbModelReaderBaseUrl> m_readerUrlCache {
+            this, &CModelDataReader::baseUrlCacheChanged
+        };
 
         //! Liveries have been read
         void parseLiveryData(QNetworkReply *nwReply);

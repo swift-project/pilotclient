@@ -18,12 +18,14 @@ namespace swift::misc::aviation
 {
     CAircraftParts::CAircraftParts(int flapsPercent) : m_flapsPercentage(flapsPercent) {}
 
-    CAircraftParts::CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut, const CAircraftEngineList &engines, bool onGround)
+    CAircraftParts::CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut,
+                                   const CAircraftEngineList &engines, bool onGround)
         : m_lights(lights), m_engines(engines), m_flapsPercentage(flapsPercent), m_gearDown(gearDown),
           m_spoilersOut(spoilersOut), m_isOnGround(onGround)
     {}
 
-    CAircraftParts::CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut, const CAircraftEngineList &engines, bool onGround, qint64 timestamp)
+    CAircraftParts::CAircraftParts(const CAircraftLights &lights, bool gearDown, int flapsPercent, bool spoilersOut,
+                                   const CAircraftEngineList &engines, bool onGround, qint64 timestamp)
         : m_lights(lights), m_engines(engines), m_flapsPercentage(flapsPercent), m_gearDown(gearDown),
           m_spoilersOut(spoilersOut), m_isOnGround(onGround)
     {
@@ -32,15 +34,12 @@ namespace swift::misc::aviation
 
     QString CAircraftParts::convertToQString(bool i18n) const
     {
-        return u"ts: " % this->getFormattedTimestampAndOffset(true) %
-               u" details: " % this->getPartsDetailsAsString() %
-               (m_guessingDetails.isEmpty() ? QString() : u" - " % m_guessingDetails) %
-               u" | on ground: " % swift::misc::boolToYesNo(m_isOnGround) %
-               u" | lights: " % m_lights.toQString(i18n) %
-               u" | gear down: " % swift::misc::boolToYesNo(m_gearDown) %
-               u" | flaps pct: " % QString::number(m_flapsPercentage) %
-               u" | spoilers out: " % swift::misc::boolToYesNo(m_spoilersOut) %
-               u" | engines on: " % m_engines.toQString(i18n);
+        return u"ts: " % this->getFormattedTimestampAndOffset(true) % u" details: " % this->getPartsDetailsAsString() %
+               (m_guessingDetails.isEmpty() ? QString() : u" - " % m_guessingDetails) % u" | on ground: " %
+               swift::misc::boolToYesNo(m_isOnGround) % u" | lights: " % m_lights.toQString(i18n) % u" | gear down: " %
+               swift::misc::boolToYesNo(m_gearDown) % u" | flaps pct: " % QString::number(m_flapsPercentage) %
+               u" | spoilers out: " % swift::misc::boolToYesNo(m_spoilersOut) % u" | engines on: " %
+               m_engines.toQString(i18n);
     }
 
     QJsonObject CAircraftParts::toIncrementalJson() const
@@ -59,10 +58,7 @@ namespace swift::misc::aviation
         return json;
     }
 
-    bool CAircraftParts::isNull() const
-    {
-        return this->getPartsDetails() == NotSet && m_flapsPercentage < 0;
-    }
+    bool CAircraftParts::isNull() const { return this->getPartsDetails() == NotSet && m_flapsPercentage < 0; }
 
     bool CAircraftParts::equalValues(const CAircraftParts &other) const
     {
@@ -102,7 +98,10 @@ namespace swift::misc::aviation
     QVariant CAircraftParts::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::propertyByIndex(index); }
+        if (ITimestampWithOffsetBased::canHandleIndex(index))
+        {
+            return ITimestampWithOffsetBased::propertyByIndex(index);
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -146,8 +145,14 @@ namespace swift::misc::aviation
 
     int CAircraftParts::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftParts &compareValue) const
     {
-        if (index.isMyself()) { return ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndex(), compareValue); }
-        if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue); }
+        if (index.isMyself())
+        {
+            return ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndex(), compareValue);
+        }
+        if (ITimestampWithOffsetBased::canHandleIndex(index))
+        {
+            return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue);
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -173,35 +178,17 @@ namespace swift::misc::aviation
         return lights;
     }
 
-    void CAircraftParts::setAllLightsOn()
-    {
-        m_lights.setAllOn();
-    }
+    void CAircraftParts::setAllLightsOn() { m_lights.setAllOn(); }
 
-    void CAircraftParts::setAllLightsOff()
-    {
-        m_lights.setAllOff();
-    }
+    void CAircraftParts::setAllLightsOff() { m_lights.setAllOff(); }
 
-    bool CAircraftParts::isFixedGearDown() const
-    {
-        return this->isGearDown() || this->isOnGround();
-    }
+    bool CAircraftParts::isFixedGearDown() const { return this->isGearDown() || this->isOnGround(); }
 
-    CAircraftEngine CAircraftParts::getEngine(int number) const
-    {
-        return m_engines.getEngine(number);
-    }
+    CAircraftEngine CAircraftParts::getEngine(int number) const { return m_engines.getEngine(number); }
 
-    bool CAircraftParts::isEngineOn(int number) const
-    {
-        return m_engines.isEngineOn(number);
-    }
+    bool CAircraftParts::isEngineOn(int number) const { return m_engines.isEngineOn(number); }
 
-    bool CAircraftParts::isAnyEngineOn() const
-    {
-        return m_engines.isAnyEngineOn();
-    }
+    bool CAircraftParts::isAnyEngineOn() const { return m_engines.isAnyEngineOn(); }
 
     void CAircraftParts::setEngines(const CAircraftEngine &engine, int engineNumber)
     {

@@ -41,16 +41,19 @@ namespace swift::misc::network
         CTextMessageList(const QString &message, const aviation::CCallsign &recipientCallsign);
 
         //! Constructor, single private message
-        CTextMessageList(const QString &message, const aviation::CCallsign &senderCallsign, const aviation::CCallsign &recipientCallsign);
+        CTextMessageList(const QString &message, const aviation::CCallsign &senderCallsign,
+                         const aviation::CCallsign &recipientCallsign);
 
         //! Constructor, single radio message
-        CTextMessageList(const QString &message, const physical_quantities::CFrequency &frequency, const aviation::CCallsign &senderCallsign = {});
+        CTextMessageList(const QString &message, const physical_quantities::CFrequency &frequency,
+                         const aviation::CCallsign &senderCallsign = {});
 
         //! Constructor, single message
         CTextMessageList(const CTextMessage &message);
 
         //! Constructor, multi-frequency radio messages
-        CTextMessageList(const QString &message, const QList<physical_quantities::CFrequency> &frequencies, const aviation::CCallsign &fromCallsign = {});
+        CTextMessageList(const QString &message, const QList<physical_quantities::CFrequency> &frequencies,
+                         const aviation::CCallsign &fromCallsign = {});
 
         //! Construct from a base class object.
         CTextMessageList(const CSequence<CTextMessage> &other);

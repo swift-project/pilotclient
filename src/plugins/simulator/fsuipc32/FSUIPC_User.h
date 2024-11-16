@@ -47,7 +47,8 @@ extern "C"
 
     // Library routines
     extern BOOL FSUIPC_Open(DWORD dwFSReq, DWORD *pdwResult); // For use externally (IPCuser.lib)
-    extern BOOL FSUIPC_Open2(DWORD dwFSReq, DWORD *pdwResult, BYTE *pMem, DWORD dwSize); // For use internally (ModuleUser.lib)
+    extern BOOL FSUIPC_Open2(DWORD dwFSReq, DWORD *pdwResult, BYTE *pMem,
+                             DWORD dwSize); // For use internally (ModuleUser.lib)
     extern void FSUIPC_Close(void);
     extern BOOL FSUIPC_Read(DWORD dwOffset, DWORD dwSize, void *pDest, DWORD *pdwResult);
     extern BOOL FSUIPC_ReadSpecial(DWORD dwOffset, DWORD dwSize, void *pDest, DWORD *pdwResult);

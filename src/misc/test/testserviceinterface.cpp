@@ -22,12 +22,12 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::misc::test
 {
-    ITestServiceInterface::ITestServiceInterface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)
+    ITestServiceInterface::ITestServiceInterface(const QString &service, const QString &path,
+                                                 const QDBusConnection &connection, QObject *parent)
         : QDBusAbstractInterface(service, path, ITestServiceInterface::InterfaceName(), connection, parent)
     {}
 
-    ITestServiceInterface::~ITestServiceInterface()
-    {}
+    ITestServiceInterface::~ITestServiceInterface() {}
 
     int ITestServiceInterface::pingTests(ITestServiceInterface &testServiceInterface, bool verbose)
     {

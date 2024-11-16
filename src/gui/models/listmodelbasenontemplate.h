@@ -33,9 +33,7 @@ namespace swift::misc
 namespace swift::gui::models
 {
     //! Non templated base class, allows Q_OBJECT and signals to be used
-    class SWIFT_GUI_EXPORT CListModelBaseNonTemplate :
-        public QStandardItemModel,
-        public CDropBase
+    class SWIFT_GUI_EXPORT CListModelBaseNonTemplate : public QStandardItemModel, public CDropBase
     {
         Q_OBJECT
 
@@ -89,14 +87,16 @@ namespace swift::gui::models
         void setNoSorting() { this->setSortColumn(-1); }
 
         //! Sort by index
-        void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+        void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex,
+                                 Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Set column for sorting
         //! \param propertyIndex index of column to be sorted
         virtual bool setSortColumnByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex);
 
         //! Sorting
-        virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+        virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex,
+                                Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Get sort column property index
         virtual int getSortColumn() const { return m_sortColumn; }
@@ -136,7 +136,8 @@ namespace swift::gui::models
         virtual QJsonObject toJson(bool selectedOnly = false) const = 0;
 
         //! Convert to JSON string
-        virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented, bool selectedOnly = false) const = 0;
+        virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented,
+                                     bool selectedOnly = false) const = 0;
 
         //! The columns
         const CColumns &getColumns() const { return m_columns; }
@@ -168,7 +169,8 @@ namespace swift::gui::models
 
     protected:
         //! Feedback when QStandardItemModel::dataChanged was called
-        virtual void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) = 0;
+        virtual void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                                   const QVector<int> &roles) = 0;
 
         //! Digest signal
         virtual void onChangedDigest() = 0;
@@ -183,10 +185,12 @@ namespace swift::gui::models
         bool m_modelDestroyed = false; //!< \todo rudimentary workaround for T579, can be removed
         Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
         Qt::DropActions m_dropActions = Qt::IgnoreAction; //!< drop actions
-        swift::misc::CPropertyIndexList m_sortTieBreakers; //!< how column values are sorted if equal, if no value is given this is random
+        swift::misc::CPropertyIndexList
+            m_sortTieBreakers; //!< how column values are sorted if equal, if no value is given this is random
 
     private:
-        swift::misc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::onChangedDigest, 500, 10 };
+        swift::misc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed,
+                                                       &CListModelBaseNonTemplate::onChangedDigest, 500, 10 };
     };
 
 } // namespace swift::gui::models

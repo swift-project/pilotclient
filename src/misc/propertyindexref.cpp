@@ -11,12 +11,10 @@
 
 namespace swift::misc
 {
-    CPropertyIndexRef::CPropertyIndexRef(int index) : m_begin(nullptr),
-                                                      m_sizeOrIndex(index)
-    {}
+    CPropertyIndexRef::CPropertyIndexRef(int index) : m_begin(nullptr), m_sizeOrIndex(index) {}
 
-    CPropertyIndexRef::CPropertyIndexRef(const QVector<int> &indexes) : m_begin(indexes.data()),
-                                                                        m_sizeOrIndex(indexes.size())
+    CPropertyIndexRef::CPropertyIndexRef(const QVector<int> &indexes)
+        : m_begin(indexes.data()), m_sizeOrIndex(indexes.size())
     {}
 
     CPropertyIndexRef CPropertyIndexRef::copyFrontRemoved() const
@@ -29,20 +27,11 @@ namespace swift::misc
         return copy;
     }
 
-    bool CPropertyIndexRef::isNested() const
-    {
-        return m_begin && m_sizeOrIndex > 1;
-    }
+    bool CPropertyIndexRef::isNested() const { return m_begin && m_sizeOrIndex > 1; }
 
-    bool CPropertyIndexRef::isMyself() const
-    {
-        return this->isEmpty();
-    }
+    bool CPropertyIndexRef::isMyself() const { return this->isEmpty(); }
 
-    bool CPropertyIndexRef::isEmpty() const
-    {
-        return m_begin ? m_sizeOrIndex < 1 : m_sizeOrIndex < 0;
-    }
+    bool CPropertyIndexRef::isEmpty() const { return m_begin ? m_sizeOrIndex < 1 : m_sizeOrIndex < 0; }
 
     int CPropertyIndexRef::frontToInt() const
     {

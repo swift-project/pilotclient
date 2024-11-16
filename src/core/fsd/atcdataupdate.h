@@ -21,8 +21,8 @@ namespace swift::core::fsd
 
     public:
         //! Constructor
-        AtcDataUpdate(const QString &sender, int frequencykHz, swift::misc::network::CFacilityType facility, int visibleRange, AtcRating rating,
-                      double latitude, double longitude, int elevation);
+        AtcDataUpdate(const QString &sender, int frequencykHz, swift::misc::network::CFacilityType facility,
+                      int visibleRange, AtcRating rating, double latitude, double longitude, int elevation);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -52,22 +52,15 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const AtcDataUpdate &lhs, const AtcDataUpdate &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.m_frequencykHz == rhs.m_frequencykHz &&
-               lhs.m_facility == rhs.m_facility &&
-               lhs.m_visibleRange == rhs.m_visibleRange &&
-               lhs.m_rating == rhs.m_rating &&
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+               lhs.m_frequencykHz == rhs.m_frequencykHz && lhs.m_facility == rhs.m_facility &&
+               lhs.m_visibleRange == rhs.m_visibleRange && lhs.m_rating == rhs.m_rating &&
                qFuzzyCompare(1 + lhs.m_latitude, 1 + rhs.m_latitude) &&
-               qFuzzyCompare(1 + lhs.m_longitude, 1 + rhs.m_longitude) &&
-               lhs.m_elevation == rhs.m_elevation;
+               qFuzzyCompare(1 + lhs.m_longitude, 1 + rhs.m_longitude) && lhs.m_elevation == rhs.m_elevation;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const AtcDataUpdate &lhs, const AtcDataUpdate &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const AtcDataUpdate &lhs, const AtcDataUpdate &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

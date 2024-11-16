@@ -78,6 +78,7 @@ namespace swift::core::afv::connection
     bool CClientConnectionData::voiceServerAlive() const
     {
         return (m_authenticatedDateTimeUtc.isValid() && timeSinceAuthenticationSecs() < ServerTimeoutSecs) ||
-               (m_lastVoiceServerHeartbeatAckUtc.isValid() && m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < ServerTimeoutSecs);
+               (m_lastVoiceServerHeartbeatAckUtc.isValid() &&
+                m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < ServerTimeoutSecs);
     }
 } // namespace swift::core::afv::connection

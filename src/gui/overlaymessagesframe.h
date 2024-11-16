@@ -40,7 +40,8 @@ namespace swift::gui
     /*!
      * Base class to display overlay messages in different widgets
      * (nested in this widget).
-     * \fixme KB 2017-12 all header version, if someone manages to create a cpp version go ahead, I failed on gcc with "undefined reference to `swift::gui::COverlayMessagesBase<QFrame>::showOverlayMessages`"
+     * \fixme KB 2017-12 all header version, if someone manages to create a cpp version go ahead, I failed on gcc with
+     * "undefined reference to `swift::gui::COverlayMessagesBase<QFrame>::showOverlayMessages`"
      */
     template <class WIDGET>
     class COverlayMessagesBase : public WIDGET
@@ -71,10 +72,7 @@ namespace swift::gui
         }
 
         //! Show the inner frame
-        void showStatusMessagesFrame()
-        {
-            this->initInnerFrame();
-        }
+        void showStatusMessagesFrame() { this->initInnerFrame(); }
 
         //! Set the size factors
         void setOverlaySizeFactors(double widthFactor, double heightFactor, double middleFactor = 2)
@@ -88,45 +86,35 @@ namespace swift::gui
         void showKillButton(bool killButton)
         {
             m_showKillButton = killButton;
-            if (m_overlayMessages)
-            {
-                m_overlayMessages->showKillButton(killButton);
-            }
+            if (m_overlayMessages) { m_overlayMessages->showKillButton(killButton); }
         }
 
         //! \copydoc swift::gui::COverlayMessages::setForceSmall
         void setForceSmall(bool force)
         {
             m_forceSmallMsgs = force;
-            if (m_overlayMessages)
-            {
-                m_overlayMessages->setForceSmall(force);
-            }
+            if (m_overlayMessages) { m_overlayMessages->setForceSmall(force); }
         }
 
         //! \copydoc swift::gui::COverlayMessages::setReducedInfo
         void setReducedInfo(bool reduced)
         {
             m_reducedInfo = reduced;
-            if (m_overlayMessages)
-            {
-                m_overlayMessages->setReducedInfo(reduced);
-            }
+            if (m_overlayMessages) { m_overlayMessages->setReducedInfo(reduced); }
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayMessagesWithConfirmation
-        void showOverlayMessagesWithConfirmation(
-            const swift::misc::CStatusMessageList &messages,
-            bool appendOldMessages,
-            const QString &confirmationMessage,
-            std::function<void()> okLambda,
-            QMessageBox::StandardButton defaultButton = QMessageBox::Cancel,
-            int timeOutMs = -1)
+        void showOverlayMessagesWithConfirmation(const swift::misc::CStatusMessageList &messages,
+                                                 bool appendOldMessages, const QString &confirmationMessage,
+                                                 std::function<void()> okLambda,
+                                                 QMessageBox::StandardButton defaultButton = QMessageBox::Cancel,
+                                                 int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
             if (!this->hasMinimumSize(150, 150)) { return; }
-            m_overlayMessages->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda, defaultButton, timeOutMs);
+            m_overlayMessages->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage,
+                                                                   okLambda, defaultButton, timeOutMs);
             WIDGET::repaint();
         }
 
@@ -145,7 +133,8 @@ namespace swift::gui
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayMessages
-        void showOverlayMessages(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
+        void showOverlayMessages(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false,
+                                 int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
@@ -154,7 +143,8 @@ namespace swift::gui
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayMessagesOrSingleMessage
-        void showOverlayMessagesOrSingleMessage(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
+        void showOverlayMessagesOrSingleMessage(const swift::misc::CStatusMessageList &messages,
+                                                bool appendOldMessages = false, int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
@@ -163,7 +153,8 @@ namespace swift::gui
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayMessagesOrHTMLMessage
-        void showOverlayMessagesOrHTMLMessage(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1)
+        void showOverlayMessagesOrHTMLMessage(const swift::misc::CStatusMessageList &messages,
+                                              bool appendOldMessages = false, int timeOutMs = -1)
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
@@ -206,15 +197,13 @@ namespace swift::gui
         //! \copydoc swift::gui::COverlayMessages::showOverlayVariant
         void showOverlayVariant(const swift::misc::CVariant &variant, int timeOutMs = -1)
         {
-            if (m_overlayMessages->isTextMessagesActivated() && variant.canConvert<swift::misc::network::CTextMessage>())
+            if (m_overlayMessages->isTextMessagesActivated() &&
+                variant.canConvert<swift::misc::network::CTextMessage>())
             {
                 this->initInnerFrame(0.75, 0.75);
                 if (!this->hasMinimumSize(150, 150)) { return; }
             }
-            else
-            {
-                this->initInnerFrame();
-            }
+            else { this->initInnerFrame(); }
 
             m_overlayMessages->showOverlayVariant(variant, timeOutMs);
             WIDGET::repaint();
@@ -349,20 +338,14 @@ namespace swift::gui
                 m_overlayMessages->close();
                 event->accept();
             }
-            else
-            {
-                WIDGET::keyPressEvent(event);
-            }
+            else { WIDGET::keyPressEvent(event); }
         }
 
         //! \copydoc QFrame::resizeEvent
         virtual void resizeEvent(QResizeEvent *event) override
         {
             WIDGET::resizeEvent(event);
-            if (m_overlayMessages && m_overlayMessages->isVisible())
-            {
-                this->initInnerFrame();
-            }
+            if (m_overlayMessages && m_overlayMessages->isVisible()) { this->initInnerFrame(); }
         }
 
     private:
@@ -424,7 +407,8 @@ namespace swift::gui
 
     public:
         //! Constructor
-        explicit COverlayMessagesFrameEnableForDockWidgetInfoArea(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+        explicit COverlayMessagesFrameEnableForDockWidgetInfoArea(QWidget *parent = nullptr,
+                                                                  Qt::WindowFlags f = Qt::WindowFlags());
 
     private:
         //! Forward overlay messages

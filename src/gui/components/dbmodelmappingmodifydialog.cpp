@@ -14,9 +14,8 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CDbModelMappingModifyDialog::CDbModelMappingModifyDialog(QWidget *parent) : QDialog(parent),
-                                                                                CDbMappingComponentAware(parent),
-                                                                                ui(new Ui::CDbModelMappingModifyDialog)
+    CDbModelMappingModifyDialog::CDbModelMappingModifyDialog(QWidget *parent)
+        : QDialog(parent), CDbMappingComponentAware(parent), ui(new Ui::CDbModelMappingModifyDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);

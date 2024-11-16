@@ -23,23 +23,25 @@ using namespace swift::core::db;
 
 namespace swift::gui::components
 {
-    CAutoPublishComponent::CAutoPublishComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                    ui(new Ui::CAutoPublishComponent)
+    CAutoPublishComponent::CAutoPublishComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CAutoPublishComponent)
     {
         ui->setupUi(this);
-        connect(ui->pb_Analyze, &QPushButton::released, this, &CAutoPublishComponent::analyzeAgainstDBData, Qt::QueuedConnection);
+        connect(ui->pb_Analyze, &QPushButton::released, this, &CAutoPublishComponent::analyzeAgainstDBData,
+                Qt::QueuedConnection);
         connect(ui->pb_SendToDB, &QPushButton::released, this, &CAutoPublishComponent::sendToDb, Qt::QueuedConnection);
-        connect(ui->pb_DeleteFiles, &QPushButton::released, this, &CAutoPublishComponent::deleteAllFiles, Qt::QueuedConnection);
+        connect(ui->pb_DeleteFiles, &QPushButton::released, this, &CAutoPublishComponent::deleteAllFiles,
+                Qt::QueuedConnection);
 
         if (sGui && sGui->hasWebDataServices() && sGui->getWebDataServices()->getDatabaseWriter())
         {
             CDatabaseWriter *w = sGui->getWebDataServices()->getDatabaseWriter();
-            connect(w, &CDatabaseWriter::autoPublished, this, &CAutoPublishComponent::onAutoPublished, Qt::QueuedConnection);
+            connect(w, &CDatabaseWriter::autoPublished, this, &CAutoPublishComponent::onAutoPublished,
+                    Qt::QueuedConnection);
         }
     }
 
-    CAutoPublishComponent::~CAutoPublishComponent()
-    {}
+    CAutoPublishComponent::~CAutoPublishComponent() {}
 
     int CAutoPublishComponent::readFiles()
     {
@@ -48,10 +50,7 @@ namespace swift::gui::components
         return r;
     }
 
-    bool CAutoPublishComponent::isEmpty() const
-    {
-        return m_data.isEmpty();
-    }
+    bool CAutoPublishComponent::isEmpty() const { return m_data.isEmpty(); }
 
     void CAutoPublishComponent::analyzeAgainstDBData()
     {
@@ -95,10 +94,7 @@ namespace swift::gui::components
     void CAutoPublishComponent::deleteAllFiles()
     {
         const int c = CAutoPublishData::deleteAutoPublishFiles();
-        if (c > 0)
-        {
-            this->showOverlayHTMLMessage(QStringLiteral("Deleted %1 file(s)").arg(c));
-        }
+        if (c > 0) { this->showOverlayHTMLMessage(QStringLiteral("Deleted %1 file(s)").arg(c)); }
         this->readFiles();
     }
 
@@ -123,10 +119,7 @@ namespace swift::gui::components
             });
             m_lastAutoPublish.set(QDateTime::currentMSecsSinceEpoch());
         }
-        else
-        {
-            this->showOverlayMessages(msgs, true);
-        }
+        else { this->showOverlayMessages(msgs, true); }
     }
 
     void CAutoPublishComponent::closeParentDialog()

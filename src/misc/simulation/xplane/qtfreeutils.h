@@ -24,14 +24,8 @@ namespace swift::misc::simulation::xplane::qtfreeutils
     {
         const std::string seperator = "/\\";
         const std::size_t sepPos = filePath.find_last_of(seperator);
-        if (sepPos != std::string::npos)
-        {
-            return filePath.substr(sepPos + 1, filePath.size() - 1);
-        }
-        else
-        {
-            return filePath;
-        }
+        if (sepPos != std::string::npos) { return filePath.substr(sepPos + 1, filePath.size() - 1); }
+        else { return filePath; }
     }
 
     //! Get the name of the parent directory
@@ -44,10 +38,7 @@ namespace swift::misc::simulation::xplane::qtfreeutils
             std::string dirPath = filePath.substr(0, sepPos);
             return getFileName(dirPath);
         }
-        else
-        {
-            return {};
-        }
+        else { return {}; }
     }
 
     //! Get the base name of the file
@@ -56,18 +47,13 @@ namespace swift::misc::simulation::xplane::qtfreeutils
         const std::string seperator = ".";
         const std::string fileName = getFileName(filePath);
         std::size_t sepPos = fileName.find(seperator);
-        if (sepPos != std::string::npos)
-        {
-            return fileName.substr(0, sepPos);
-        }
-        else
-        {
-            return fileName;
-        }
+        if (sepPos != std::string::npos) { return fileName.substr(0, sepPos); }
+        else { return fileName; }
     }
 
     //! Split string by delimiter and maxSplitCount times
-    inline std::vector<std::string> split(const std::string &str, size_t maxSplitCount = 0, const std::string &delimiter = " ")
+    inline std::vector<std::string> split(const std::string &str, size_t maxSplitCount = 0,
+                                          const std::string &delimiter = " ")
     {
         std::string s(str);
         size_t pos = 0;
@@ -109,7 +95,10 @@ namespace swift::misc::simulation::xplane::qtfreeutils
         {
             if (!acfProperties.modelName.empty())
             {
-                if (acfProperties.modelName.find(acfProperties.author) != std::string::npos) { return acfProperties.modelName; }
+                if (acfProperties.modelName.find(acfProperties.author) != std::string::npos)
+                {
+                    return acfProperties.modelName;
+                }
                 else { return acfProperties.author + ' ' + acfProperties.modelName; }
             }
             else if (!acfProperties.aircraftIcaoCode.empty())
@@ -123,9 +112,7 @@ namespace swift::misc::simulation::xplane::qtfreeutils
     //! String to lower case
     inline std::string toLower(std::string s)
     {
-        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) {
-            return std::tolower(c);
-        });
+        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
         return s;
     }
 
@@ -205,27 +192,16 @@ namespace swift::misc::simulation::xplane::qtfreeutils
                 auto tokens = split(line, 2);
                 if (tokens.size() < 3 || tokens.at(0) != "P") { continue; }
 
-                if (tokens.at(1) == "acf/_ICAO")
-                {
-                    acfProperties.aircraftIcaoCode = tokens.at(2);
-                }
-                else if (tokens.at(1) == "acf/_descrip")
-                {
-                    acfProperties.modelDescription = "[ACF] " + tokens.at(2);
-                }
-                else if (tokens.at(1) == "acf/_name")
-                {
-                    acfProperties.modelName = tokens.at(2);
-                }
-                else if (tokens.at(1) == "acf/_studio")
-                {
-                    acfProperties.author = tokens.at(2);
-                }
+                if (tokens.at(1) == "acf/_ICAO") { acfProperties.aircraftIcaoCode = tokens.at(2); }
+                else if (tokens.at(1) == "acf/_descrip") { acfProperties.modelDescription = "[ACF] " + tokens.at(2); }
+                else if (tokens.at(1) == "acf/_name") { acfProperties.modelName = tokens.at(2); }
+                else if (tokens.at(1) == "acf/_studio") { acfProperties.author = tokens.at(2); }
                 else if (tokens.at(1) == "acf/_author")
                 {
                     if (!acfProperties.author.empty()) { continue; }
                     std::string author = tokens.at(2);
-                    size_t pos = author.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_");
+                    size_t pos =
+                        author.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_");
                     author = author.substr(0, pos);
                     if (author.empty()) { continue; }
                     acfProperties.author = author;

@@ -50,8 +50,7 @@ namespace swift::gui
         class CAircraftModelValidationDialog;
 
         //! Aircraft view
-        class SWIFT_GUI_EXPORT CAircraftModelView :
-            public COrderableViewWithDbObjects<models::CAircraftModelListModel>
+        class SWIFT_GUI_EXPORT CAircraftModelView : public COrderableViewWithDbObjects<models::CAircraftModelListModel>
         {
             Q_OBJECT
 
@@ -87,13 +86,16 @@ namespace swift::gui
             swift::gui::filters::CAircraftModelFilterDialog *getFilterDialog() const;
 
             //! Remove models with model strings
-            int removeModelsWithModelString(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
+            int removeModelsWithModelString(const QStringList &modelStrings,
+                                            Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
             //! Remove models with model strings
-            int removeModelsWithModelString(const swift::misc::simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
+            int removeModelsWithModelString(const swift::misc::simulation::CAircraftModelList &models,
+                                            Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
             //! Replace models with sme model string, otherwise add
-            int replaceOrAddModelsWithString(const swift::misc::simulation::CAircraftModelList &models, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
+            int replaceOrAddModelsWithString(const swift::misc::simulation::CAircraftModelList &models,
+                                             Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
             //! \copydoc swift::gui::models::CAircraftModelListModel::setHighlightModels
             void setHighlightModels(const swift::misc::simulation::CAircraftModelList &highlightModels);
@@ -115,7 +117,8 @@ namespace swift::gui
 
             //! Corresponding simulator
             //! \remark used for validation or loading data will be restricted to simulator
-            void setCorrespondingSimulator(const swift::misc::simulation::CSimulatorInfo &simulator, const QString &simDir);
+            void setCorrespondingSimulator(const swift::misc::simulation::CSimulatorInfo &simulator,
+                                           const QString &simDir);
 
             //! Enable the validation context menu
             void setValidationContextMenu(const bool enabled) { m_withValidationContextMenu = enabled; }
@@ -148,10 +151,12 @@ namespace swift::gui
             virtual void customMenu(menus::CMenuActions &menuActions) override;
 
             //! \copydoc swift::gui::views::COrderableViewWithDbObjects::modifyLoadedJsonData
-            virtual swift::misc::CStatusMessage modifyLoadedJsonData(swift::misc::simulation::CAircraftModelList &models) const override;
+            virtual swift::misc::CStatusMessage
+            modifyLoadedJsonData(swift::misc::simulation::CAircraftModelList &models) const override;
 
             //! \copydoc swift::gui::views::COrderableViewWithDbObjects::validateLoadedJsonData
-            virtual swift::misc::CStatusMessage validateLoadedJsonData(const swift::misc::simulation::CAircraftModelList &models) const override;
+            virtual swift::misc::CStatusMessage
+            validateLoadedJsonData(const swift::misc::simulation::CAircraftModelList &models) const override;
 
             //! \copydoc swift::gui::views::COrderableViewWithDbObjects::jsonLoadedAndModelUpdated
             virtual void jsonLoadedAndModelUpdated(const swift::misc::simulation::CAircraftModelList &models) override;
@@ -183,7 +188,8 @@ namespace swift::gui
             bool m_withValidationContextMenu = true; //!< validation didalog context menu
             CAircraftModelStatisticsDialog *m_statisticsDialog = nullptr;
             CAircraftModelValidationDialog *m_fileValidationDialog = nullptr;
-            swift::misc::simulation::CSimulatorInfo m_correspondingSimulator; //!< validation, simulator required when loading
+            swift::misc::simulation::CSimulatorInfo
+                m_correspondingSimulator; //!< validation, simulator required when loading
             QString m_correspondingSimulatorDir;
         };
     } // namespace views

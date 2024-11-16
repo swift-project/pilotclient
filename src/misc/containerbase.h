@@ -51,7 +51,8 @@ namespace swift::misc
     };
 
     /*!
-     * Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.
+     * Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of
+     * CRangeBase.
      */
     template <class Derived>
     class CContainerBase :
@@ -97,8 +98,8 @@ namespace swift::misc
         //! Remove elements matching some particular key/value pair(s).
         //! \param k0 A pointer to a member function of T.
         //! \param v0 A value to compare against the value returned by k0.
-        //! \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
-        //! \return The number of elements removed.
+        //! \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it
+        //! against }. \return The number of elements removed.
         template <class K0, class V0, class... KeysValues>
         int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
         {
@@ -113,10 +114,7 @@ namespace swift::misc
         {
             QJsonArray array;
             QJsonObject json;
-            for (auto it = derived().cbegin(); it != derived().cend(); ++it)
-            {
-                array << (*it);
-            }
+            for (auto it = derived().cbegin(); it != derived().cend(); ++it) { array << (*it); }
             json.insert("containerbase", array);
             return json;
         }
@@ -169,7 +167,8 @@ namespace swift::misc
         {
             Derived obj;
             if (jsonString.isEmpty()) { return obj; }
-            const QJsonObject jsonObj = acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
+            const QJsonObject jsonObj =
+                acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
             obj.convertFromJson(jsonObj);
             return obj;
         }
@@ -182,7 +181,8 @@ namespace swift::misc
             try
             {
                 if (jsonString.isEmpty()) { return obj; }
-                const QJsonObject jsonObj = acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
+                const QJsonObject jsonObj =
+                    acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
                 obj.convertFromJson(jsonObj);
                 success = true;
             }
@@ -194,16 +194,21 @@ namespace swift::misc
         }
 
         //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
-        CStatusMessage convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix); // implemented in statusmessage.h
+        CStatusMessage convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                              const QString &prefix); // implemented in statusmessage.h
 
         //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
-        CStatusMessage convertFromJsonNoThrow(const QString &jsonString, const CLogCategoryList &categories, const QString &prefix); // implemented in statusmessage.h
+        CStatusMessage convertFromJsonNoThrow(const QString &jsonString, const CLogCategoryList &categories,
+                                              const QString &prefix); // implemented in statusmessage.h
 
         //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const
         {
             QString str;
-            for (const auto &value : derived()) { str += (str.isEmpty() ? "{" : ", ") + CContainerHelper::stringify(value, i18n); }
+            for (const auto &value : derived())
+            {
+                str += (str.isEmpty() ? "{" : ", ") + CContainerHelper::stringify(value, i18n);
+            }
             if (str.isEmpty()) { str = "{"; }
             return str += "}";
         }

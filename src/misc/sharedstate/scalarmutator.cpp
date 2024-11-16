@@ -9,13 +9,7 @@
 
 namespace swift::misc::shared_state
 {
-    void CGenericScalarMutator::initialize(IDataLink *dataLink)
-    {
-        dataLink->publish(m_mutator.data());
-    }
+    void CGenericScalarMutator::initialize(IDataLink *dataLink) { dataLink->publish(m_mutator.data()); }
 
-    void CGenericScalarMutator::setValue(const CVariant &value)
-    {
-        m_mutator->postEvent(value);
-    }
+    void CGenericScalarMutator::setValue(const CVariant &value) { m_mutator->postEvent(value); }
 } // namespace swift::misc::shared_state

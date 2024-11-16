@@ -35,7 +35,8 @@ namespace swift::sound
         //! Comparison operator
         friend bool operator<(const CTonePair &lhs, const CTonePair &rhs)
         {
-            return std::tie(lhs.m_firstFrequencyHz, lhs.m_secondFrequencyHz, lhs.m_durationMs) < std::tie(rhs.m_firstFrequencyHz, rhs.m_secondFrequencyHz, rhs.m_durationMs);
+            return std::tie(lhs.m_firstFrequencyHz, lhs.m_secondFrequencyHz, lhs.m_durationMs) <
+                   std::tie(rhs.m_firstFrequencyHz, rhs.m_secondFrequencyHz, rhs.m_durationMs);
         }
 
     private:

@@ -16,10 +16,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSelcal)
 
 namespace swift::misc::aviation
 {
-    QString CSelcal::convertToQString(bool /** i18n **/) const
-    {
-        return m_code;
-    }
+    QString CSelcal::convertToQString(bool /** i18n **/) const { return m_code; }
 
     QString CSelcal::unifyCode(const QString &selcalCandidate)
     {
@@ -42,10 +39,7 @@ namespace swift::misc::aviation
         QList<CFrequency> f;
         if (!CSelcal::isValidCode(m_code)) return f;
         f.reserve(m_code.length());
-        for (int pos = 0; pos < m_code.length(); pos++)
-        {
-            f.append(CSelcal::audioFrequencyEquivalent(m_code.at(pos)));
-        }
+        for (int pos = 0; pos < m_code.length(); pos++) { f.append(CSelcal::audioFrequencyEquivalent(m_code.at(pos))); }
         return f;
     }
 
@@ -55,10 +49,7 @@ namespace swift::misc::aviation
         return valid;
     }
 
-    bool CSelcal::isValidCharacter(QChar c)
-    {
-        return CSelcal::validCharacters().contains(c.toUpper());
-    }
+    bool CSelcal::isValidCharacter(QChar c) { return CSelcal::validCharacters().contains(c.toUpper()); }
 
     bool CSelcal::isValidCode(const QString &code)
     {
@@ -70,7 +61,8 @@ namespace swift::misc::aviation
         if ((p3 = CSelcal::validCharacters().indexOf(codeUpper.at(2))) < 0) return false;
         if ((p4 = CSelcal::validCharacters().indexOf(codeUpper.at(3))) < 0) return false;
         if (p1 >= p2 || p3 >= p4) return false; // pair in alphabetical order
-        if (p1 == p3 || p2 == p3 || p2 == p4 || p3 == p4) return false; // cppcheck-suppress knownConditionTrueFalse // given letter can be used only once in a SELCAL code
+        if (p1 == p3 || p2 == p3 || p2 == p4 || p3 == p4) // cppcheck-suppress knownConditionTrueFalse
+            return false; // given letter can be used only once in a SELCAL code
         return true;
     }
 
@@ -85,22 +77,14 @@ namespace swift::misc::aviation
     const QList<CFrequency> &CSelcal::audioFrequencyEquivalents()
     {
         static const QList<CFrequency> frequencies(
-            { CFrequency(312.7, CFrequencyUnit::Hz()),
-              CFrequency(346.7, CFrequencyUnit::Hz()),
-              CFrequency(384.6, CFrequencyUnit::Hz()),
-              CFrequency(426.6, CFrequencyUnit::Hz()),
-              CFrequency(473.2, CFrequencyUnit::Hz()),
-              CFrequency(524.8, CFrequencyUnit::Hz()),
-              CFrequency(582.1, CFrequencyUnit::Hz()),
-              CFrequency(645.7, CFrequencyUnit::Hz()),
-              CFrequency(716.1, CFrequencyUnit::Hz()),
-              CFrequency(794.3, CFrequencyUnit::Hz()),
-              CFrequency(881.0, CFrequencyUnit::Hz()),
-              CFrequency(977.2, CFrequencyUnit::Hz()),
-              CFrequency(1083.9, CFrequencyUnit::Hz()),
-              CFrequency(1202.3, CFrequencyUnit::Hz()),
-              CFrequency(1333.5, CFrequencyUnit::Hz()),
-              CFrequency(1479.1, CFrequencyUnit::Hz()) });
+            { CFrequency(312.7, CFrequencyUnit::Hz()), CFrequency(346.7, CFrequencyUnit::Hz()),
+              CFrequency(384.6, CFrequencyUnit::Hz()), CFrequency(426.6, CFrequencyUnit::Hz()),
+              CFrequency(473.2, CFrequencyUnit::Hz()), CFrequency(524.8, CFrequencyUnit::Hz()),
+              CFrequency(582.1, CFrequencyUnit::Hz()), CFrequency(645.7, CFrequencyUnit::Hz()),
+              CFrequency(716.1, CFrequencyUnit::Hz()), CFrequency(794.3, CFrequencyUnit::Hz()),
+              CFrequency(881.0, CFrequencyUnit::Hz()), CFrequency(977.2, CFrequencyUnit::Hz()),
+              CFrequency(1083.9, CFrequencyUnit::Hz()), CFrequency(1202.3, CFrequencyUnit::Hz()),
+              CFrequency(1333.5, CFrequencyUnit::Hz()), CFrequency(1479.1, CFrequencyUnit::Hz()) });
         return frequencies;
     }
 

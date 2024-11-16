@@ -20,9 +20,7 @@ namespace swift::misc
             for (int c = 0; c < columns; c++)
             {
                 const bool stillElements = (i < size);
-                html += stillElements ?
-                            u"<td>" % values.at(i) % u"</td>" :
-                            QStringLiteral("<td></td>");
+                html += stillElements ? u"<td>" % values.at(i) % u"</td>" : QStringLiteral("<td></td>");
                 if (c + 1 < columns) i++;
             }
             html += QStringLiteral("</tr>");
@@ -32,9 +30,8 @@ namespace swift::misc
 
     QString asHyperlink(const QString &url, const QString &text)
     {
-        return text.isEmpty() ?
-                   u"<a href=\"" % url % u"\">" % url % u"</a>" :
-                   u"<a href=\"" % url % u"\">" % text % u"</a>";
+        return text.isEmpty() ? u"<a href=\"" % url % u"\">" % url % u"</a>" :
+                                u"<a href=\"" % url % u"\">" % text % u"</a>";
     }
 
 } // namespace swift::misc

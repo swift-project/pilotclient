@@ -21,9 +21,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRawFsdMessage)
 namespace swift::misc::network
 {
     //! Value object for a raw FSD message
-    class SWIFT_MISC_EXPORT CRawFsdMessage :
-        public CValueObject<CRawFsdMessage>,
-        public ITimestampBased
+    class SWIFT_MISC_EXPORT CRawFsdMessage : public CValueObject<CRawFsdMessage>, public ITimestampBased
     {
     public:
         //! Properties by index

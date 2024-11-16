@@ -18,9 +18,7 @@ namespace swift::misc::db
     /*!
      * Info about the latest models
      */
-    class SWIFT_MISC_EXPORT CDbInfo :
-        public CValueObject<CDbInfo>,
-        public IDatastoreObjectWithIntegerKey
+    class SWIFT_MISC_EXPORT CDbInfo : public CValueObject<CDbInfo>, public IDatastoreObjectWithIntegerKey
     {
     public:
         //! Properties by index

@@ -14,23 +14,16 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::components
 {
-    CDbLiveryColorSearchDialog::CDbLiveryColorSearchDialog(QWidget *parent) : QDialog(parent),
-                                                                              ui(new Ui::CDbLiveryColorSearchDialog)
+    CDbLiveryColorSearchDialog::CDbLiveryColorSearchDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CDbLiveryColorSearchDialog)
     {
         ui->setupUi(this);
         connect(this, &CDbLiveryColorSearchDialog::accepted, this, &CDbLiveryColorSearchDialog::onAccepted);
     }
 
-    CDbLiveryColorSearchDialog::~CDbLiveryColorSearchDialog()
-    {}
+    CDbLiveryColorSearchDialog::~CDbLiveryColorSearchDialog() {}
 
-    const CLivery &CDbLiveryColorSearchDialog::getLivery() const
-    {
-        return m_foundLivery;
-    }
+    const CLivery &CDbLiveryColorSearchDialog::getLivery() const { return m_foundLivery; }
 
-    void CDbLiveryColorSearchDialog::onAccepted()
-    {
-        m_foundLivery = ui->comp_LiverySearch->getLivery();
-    }
+    void CDbLiveryColorSearchDialog::onAccepted() { m_foundLivery = ui->comp_LiverySearch->getLivery(); }
 } // namespace swift::gui::components

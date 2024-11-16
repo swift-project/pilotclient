@@ -59,7 +59,8 @@ namespace swift::gui::models
 
     protected:
         //! Standard string search supporting wildcard at begin and end: "*xyz", "abc*"
-        bool stringMatchesFilterExpression(const QString &value, const QString &filter, Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
+        bool stringMatchesFilterExpression(const QString &value, const QString &filter,
+                                           Qt::CaseSensitivity cs = Qt::CaseInsensitive) const;
 
         //! Remove the * wildcards
         QString stripWildcard(const QString &value) const;

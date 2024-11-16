@@ -31,10 +31,7 @@ namespace swift::misc
         }
 
         //! Return the values in the table as a flat list.
-        const CSequence<T> &getTable() const
-        {
-            return m_list;
-        }
+        const CSequence<T> &getTable() const { return m_list; }
 
     private:
         CSequence<T> m_list;
@@ -78,8 +75,8 @@ namespace swift::misc
                 return *this;
             }
 
-            //! If T is in Ts, return proxy that will assign to member through the value at the given index in the flat list.
-            //! Otherwise, return member as std::reference_wrapper.
+            //! If T is in Ts, return proxy that will assign to member through the value at the given index in the flat
+            //! list. Otherwise, return member as std::reference_wrapper.
             template <typename T>
             auto maybeUnmemoize(T &member) const
             {

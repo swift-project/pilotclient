@@ -36,14 +36,8 @@ namespace swift::misc::audio
 
     void CSettings::setNotificationFlag(CNotificationSounds::NotificationFlag notification, bool value)
     {
-        if (value)
-        {
-            m_notification |= notification;
-        }
-        else
-        {
-            m_notification &= ~notification;
-        }
+        if (value) { m_notification |= notification; }
+        else { m_notification &= ~notification; }
     }
 
     void CSettings::setNotificationSoundDirectory(const QString &dir)
@@ -75,35 +69,20 @@ namespace swift::misc::audio
         return CSwiftDirectories::soundFilePathOrDefaultPath(m_notificationSoundDir, fileName);
     }
 
-    void CSettings::setNotificationVolume(int volume)
-    {
-        m_notificationVolume = std::clamp(volume, 0, 100);
-    }
+    void CSettings::setNotificationVolume(int volume) { m_notificationVolume = std::clamp(volume, 0, 100); }
 
-    void CSettings::setOutVolume(int volume)
-    {
-        m_outVolume = fixOutVolume(volume);
-    }
+    void CSettings::setOutVolume(int volume) { m_outVolume = fixOutVolume(volume); }
 
-    void CSettings::setOutVolumeCom1(int volume)
-    {
-        m_outVolumeCom1 = fixOutVolume(volume);
-    }
+    void CSettings::setOutVolumeCom1(int volume) { m_outVolumeCom1 = fixOutVolume(volume); }
 
-    void CSettings::setOutVolumeCom2(int volume)
-    {
-        m_outVolumeCom2 = fixOutVolume(volume);
-    }
+    void CSettings::setOutVolumeCom2(int volume) { m_outVolumeCom2 = fixOutVolume(volume); }
 
-    void CSettings::setInVolume(int volume)
-    {
-        m_inVolume = fixInVolume(volume);
-    }
+    void CSettings::setInVolume(int volume) { m_inVolume = fixInVolume(volume); }
 
     QString CSettings::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n)
-        return u"Notification flags: " % CNotificationSounds::toString(this->getNotification()) %
-               u" volume: " % QString::number(m_notificationVolume);
+        return u"Notification flags: " % CNotificationSounds::toString(this->getNotification()) % u" volume: " %
+               QString::number(m_notificationVolume);
     }
 } // namespace swift::misc::audio

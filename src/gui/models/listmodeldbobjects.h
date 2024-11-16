@@ -21,8 +21,7 @@ namespace swift::gui::models
 {
     //! List model for DB objects
     template <typename T, typename K, bool UseCompare = false>
-    class CListModelDbObjects :
-        public CListModelBase<T, UseCompare>
+    class CListModelDbObjects : public CListModelBase<T, UseCompare>
     {
     public:
         //! Container type
@@ -51,10 +50,7 @@ namespace swift::gui::models
         }
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::hasHighlightedRows
-        virtual bool hasHighlightedRows() const override
-        {
-            return !m_highlightKeys.isEmpty();
-        }
+        virtual bool hasHighlightedRows() const override { return !m_highlightKeys.isEmpty(); }
 
         //! Set color for highlighting
         void setHighlightColor(QColor color) { m_highlightColor = color; }
@@ -79,8 +75,7 @@ namespace swift::gui::models
 
     //! List model for DB objects
     template <typename T, typename K, bool UseCompare = false>
-    class COrderableListModelDbObjects :
-        public CListModelDbObjects<T, K, UseCompare>
+    class COrderableListModelDbObjects : public CListModelDbObjects<T, K, UseCompare>
     {
     public:
         //! Container type

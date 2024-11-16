@@ -17,40 +17,33 @@ using namespace swift::simplugin::fsxcommon;
 
 namespace swift::simplugin::msfs
 {
-    CSimulatorMsFs::CSimulatorMsFs(const CSimulatorPluginInfo &info,
-                                   IOwnAircraftProvider *ownAircraftProvider,
-                                   IRemoteAircraftProvider *remoteAircraftProvider,
-                                   IClientProvider *clientProvider,
-                                   QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
+    CSimulatorMsFs::CSimulatorMsFs(const CSimulatorPluginInfo &info, IOwnAircraftProvider *ownAircraftProvider,
+                                   IRemoteAircraftProvider *remoteAircraftProvider, IClientProvider *clientProvider,
+                                   QObject *parent)
+        : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
-        this->setDefaultModel(
-            { "Airbus A320 Neo Asobo",
-              CAircraftModel::TypeModelMatchingDefaultModel,
-              "Airbus A320 default model",
-              CAircraftIcaoCode("A320", "L2J") });
+        this->setDefaultModel({ "Airbus A320 Neo Asobo", CAircraftModel::TypeModelMatchingDefaultModel,
+                                "Airbus A320 default model", CAircraftIcaoCode("A320", "L2J") });
     }
 
     bool CSimulatorMsFs::connectTo()
     {
-        if (!loadAndResolveMSFSimConnect())
-        {
-            return false;
-        }
+        if (!loadAndResolveMSFSimConnect()) { return false; }
         return CSimulatorFsxCommon::connectTo();
     }
 
-    void CSimulatorMsFs::setTrueAltitude(CAircraftSituation &aircraftSituation, const DataDefinitionOwnAircraft &simulatorOwnAircraft)
+    void CSimulatorMsFs::setTrueAltitude(CAircraftSituation &aircraftSituation,
+                                         const DataDefinitionOwnAircraft &simulatorOwnAircraft)
     {
-        aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitudeCalibratedFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-        m_altitudeDelta = { simulatorOwnAircraft.altitudeFt - simulatorOwnAircraft.altitudeCalibratedFt, CLengthUnit::ft() };
+        aircraftSituation.setAltitude(
+            CAltitude(simulatorOwnAircraft.altitudeCalibratedFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+        m_altitudeDelta = { simulatorOwnAircraft.altitudeFt - simulatorOwnAircraft.altitudeCalibratedFt,
+                            CLengthUnit::ft() };
     }
 
     void CSimulatorMsFsListener::startImpl()
     {
-        if (!loadAndResolveMSFSimConnect())
-        {
-            return;
-        }
+        if (!loadAndResolveMSFSimConnect()) { return; }
         CSimulatorFsxCommonListener::startImpl();
     }
 

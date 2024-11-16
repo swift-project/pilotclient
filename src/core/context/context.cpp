@@ -16,7 +16,8 @@ namespace swift::core::context
         return cats;
     }
 
-    IContext::IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent) : QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
+    IContext::IContext(CCoreFacadeConfig::ContextMode mode, QObject *parent)
+        : QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
     {
         if (sApp && !sApp->isShuttingDown())
         {
@@ -24,50 +25,29 @@ namespace swift::core::context
         }
     }
 
-    IContextNetwork *IContext::getIContextNetwork()
-    {
-        return this->getRuntime()->getIContextNetwork();
-    }
+    IContextNetwork *IContext::getIContextNetwork() { return this->getRuntime()->getIContextNetwork(); }
 
-    const IContextNetwork *IContext::getIContextNetwork() const
-    {
-        return this->getRuntime()->getIContextNetwork();
-    }
+    const IContextNetwork *IContext::getIContextNetwork() const { return this->getRuntime()->getIContextNetwork(); }
 
-    IContextAudio *IContext::getIContextAudio()
-    {
-        return this->getRuntime()->getIContextAudio();
-    }
+    IContextAudio *IContext::getIContextAudio() { return this->getRuntime()->getIContextAudio(); }
 
-    const IContextAudio *IContext::getIContextAudio() const
-    {
-        return this->getRuntime()->getIContextAudio();
-    }
+    const IContextAudio *IContext::getIContextAudio() const { return this->getRuntime()->getIContextAudio(); }
 
-    IContextApplication *IContext::getIContextApplication()
-    {
-        return this->getRuntime()->getIContextApplication();
-    }
+    IContextApplication *IContext::getIContextApplication() { return this->getRuntime()->getIContextApplication(); }
 
     const IContextApplication *IContext::getIContextApplication() const
     {
         return this->getRuntime()->getIContextApplication();
     }
 
-    IContextOwnAircraft *IContext::getIContextOwnAircraft()
-    {
-        return this->getRuntime()->getIContextOwnAircraft();
-    }
+    IContextOwnAircraft *IContext::getIContextOwnAircraft() { return this->getRuntime()->getIContextOwnAircraft(); }
 
     const IContextOwnAircraft *IContext::getIContextOwnAircraft() const
     {
         return this->getRuntime()->getIContextOwnAircraft();
     }
 
-    IContextSimulator *IContext::getIContextSimulator()
-    {
-        return this->getRuntime()->getIContextSimulator();
-    }
+    IContextSimulator *IContext::getIContextSimulator() { return this->getRuntime()->getIContextSimulator(); }
 
     void IContext::setDebugEnabled(bool debug)
     {
@@ -75,15 +55,13 @@ namespace swift::core::context
         emit this->changedLogOrDebugSettings();
     }
 
-    bool IContext::isDebugEnabled() const
-    {
-        return m_debugEnabled;
-    }
+    bool IContext::isDebugEnabled() const { return m_debugEnabled; }
 
-    void IContext::relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath, const QString &interfaceName)
+    void IContext::relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection,
+                                         const QString &objectPath, const QString &interfaceName)
     {
-        bool s = connection.connect(serviceName, objectPath, interfaceName,
-                                    "changedLogOrDebugSettings", this, SIGNAL(changedLogOrDebugSettings()));
+        bool s = connection.connect(serviceName, objectPath, interfaceName, "changedLogOrDebugSettings", this,
+                                    SIGNAL(changedLogOrDebugSettings()));
         Q_ASSERT(s);
     }
 
@@ -94,7 +72,8 @@ namespace swift::core::context
 
     const CStatusMessage &IContext::statusMessageEmptyContext()
     {
-        static const CStatusMessage m(static_cast<IContext *>(nullptr), CStatusMessage::SeverityWarning, u"empty context");
+        static const CStatusMessage m(static_cast<IContext *>(nullptr), CStatusMessage::SeverityWarning,
+                                      u"empty context");
         return m;
     }
 } // namespace swift::core::context

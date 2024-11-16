@@ -11,6 +11,5 @@ namespace swift::misc::network
 {
     CClientList::CClientList() {}
 
-    CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other)
-    {}
+    CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other) {}
 } // namespace swift::misc::network

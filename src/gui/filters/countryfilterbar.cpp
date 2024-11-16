@@ -19,8 +19,7 @@ using namespace swift::misc::network;
 
 namespace swift::gui::filters
 {
-    CCountryFilterBar::CCountryFilterBar(QWidget *parent) : CFilterWidget(parent),
-                                                            ui(new Ui::CCountryFilterBar)
+    CCountryFilterBar::CCountryFilterBar(QWidget *parent) : CFilterWidget(parent), ui(new Ui::CCountryFilterBar)
     {
         ui->setupUi(this);
         this->setButtonsAndCount(ui->filter_Buttons);
@@ -34,14 +33,11 @@ namespace swift::gui::filters
         this->clearForm();
     }
 
-    CCountryFilterBar::~CCountryFilterBar()
-    {}
+    CCountryFilterBar::~CCountryFilterBar() {}
 
     std::unique_ptr<swift::gui::models::IModelFilter<CCountryList>> CCountryFilterBar::createModelFilter() const
     {
-        return std::make_unique<CCountryFilter>(
-            ui->le_IsoCode->text(),
-            ui->le_Name->text());
+        return std::make_unique<CCountryFilter>(ui->le_IsoCode->text(), ui->le_Name->text());
     }
 
     void CCountryFilterBar::onRowCountChanged(int count, bool withFilter)

@@ -23,9 +23,7 @@ namespace swift::misc::network
     class CRole;
 
     //! Value object encapsulating a list of servers.
-    class SWIFT_MISC_EXPORT CRoleList :
-        public CSequence<CRole>,
-        public swift::misc::mixin::MetaType<CRoleList>
+    class SWIFT_MISC_EXPORT CRoleList : public CSequence<CRole>, public swift::misc::mixin::MetaType<CRoleList>
     {
     public:
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CRoleList)

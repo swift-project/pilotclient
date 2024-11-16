@@ -80,7 +80,8 @@ namespace XSwiftBus
 
     private:
         static void dbusObjectPathUnregisterFunction(DBusConnection *connection, void *data);
-        static DBusHandlerResult dbusObjectPathMessageFunction(DBusConnection *connection, DBusMessage *message, void *data);
+        static DBusHandlerResult dbusObjectPathMessageFunction(DBusConnection *connection, DBusMessage *message,
+                                                               void *data);
 
         std::shared_ptr<CDBusConnection> m_dbusConnection;
         std::string m_interfaceName;
@@ -89,7 +90,9 @@ namespace XSwiftBus
         std::mutex m_mutex; //!< DBus calls
         std::deque<std::function<void()>> m_qeuedDBusCalls;
 
-        const DBusObjectPathVTable m_dbusObjectPathVTable = { dbusObjectPathUnregisterFunction, dbusObjectPathMessageFunction, nullptr, nullptr, nullptr, nullptr };
+        const DBusObjectPathVTable m_dbusObjectPathVTable = {
+            dbusObjectPathUnregisterFunction, dbusObjectPathMessageFunction, nullptr, nullptr, nullptr, nullptr
+        };
     };
 } // namespace XSwiftBus
 

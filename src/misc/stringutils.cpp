@@ -14,9 +14,7 @@ namespace swift::misc
 {
     QString removeDateTimeSeparators(const QString &s)
     {
-        return removeChars(s, [](QChar c) {
-            return c == u' ' || c == u':' || c == u'_' || c == u'-' || c == u'.';
-        });
+        return removeChars(s, [](QChar c) { return c == u' ' || c == u':' || c == u'_' || c == u'-' || c == u'.'; });
     }
 
     QList<QStringRef> splitLinesRefs(const QString &s)
@@ -36,7 +34,8 @@ namespace swift::misc
         {
             if (const char latin = c.toLatin1())
             {
-                if ((latin >= 'a' && latin <= 'z') || (latin >= 'A' && latin <= 'Z') || (latin >= '0' && latin <= '9') || allow.contains(latin))
+                if ((latin >= 'a' && latin <= 'z') || (latin >= 'A' && latin <= 'Z') ||
+                    (latin >= '0' && latin <= '9') || allow.contains(latin))
                 {
                     result += c.toLatin1();
                 }
@@ -83,10 +82,7 @@ namespace swift::misc
                     ++i;
                 }
             }
-            else
-            {
-                result += ba[i];
-            }
+            else { result += ba[i]; }
         }
         return result;
     }
@@ -257,18 +253,20 @@ namespace swift::misc
     // https://german.stackexchange.com/questions/4992/conversion-table-for-diacritics-e-g-%C3%BC-%E2%86%92-ue
     QString simplifyAccents(const QString &candidate)
     {
-        static const QString diacriticLetters = QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
-        static const QStringList noDiacriticLetters({ "S", "OE", "Z", "s", "oe", "z", "Y", "Y", "u", "A", "A", "A", "A", "A", "A", "AE", "C", "E", "E", "E", "E", "I", "I", "I", "I", "D", "N", "O", "O", "O", "O", "O", "O", "U", "U", "U", "U", "Y", "s", "a", "a", "a", "a", "a", "a", "ae", "c", "e", "e", "e", "e", "i", "i", "i", "i", "o", "n", "o", "o", "o", "o", "o", "o", "u", "u", "u", "u", "y", "y" });
+        static const QString diacriticLetters =
+            QString::fromUtf8("ŠŒŽšœžŸ¥µÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýÿ");
+        static const QStringList noDiacriticLetters(
+            { "S", "OE", "Z", "s", "oe", "z", "Y", "Y", "u", "A",  "A", "A", "A", "A", "A", "AE", "C", "E",
+              "E", "E",  "E", "I", "I",  "I", "I", "D", "N", "O",  "O", "O", "O", "O", "O", "U",  "U", "U",
+              "U", "Y",  "s", "a", "a",  "a", "a", "a", "a", "ae", "c", "e", "e", "e", "e", "i",  "i", "i",
+              "i", "o",  "n", "o", "o",  "o", "o", "o", "o", "u",  "u", "u", "u", "y", "y" });
 
         QString output = "";
         for (int i = 0; i < candidate.length(); i++)
         {
             const QChar c = candidate[i];
             int dIndex = diacriticLetters.indexOf(c);
-            if (dIndex < 0)
-            {
-                output.append(c);
-            }
+            if (dIndex < 0) { output.append(c); }
             else
             {
                 const QString replacement = noDiacriticLetters[dIndex];
@@ -281,13 +279,11 @@ namespace swift::misc
     QString simplifyByDecomposition(const QString &s)
     {
         QString result;
-        // QChar c (NOT QChar &c), see https://discordapp.com/channels/539048679160676382/539925070550794240/686321311076581440
+        // QChar c (NOT QChar &c), see
+        // https://discordapp.com/channels/539048679160676382/539925070550794240/686321311076581440
         for (const QChar &c : s)
         {
-            if (c.decompositionTag() == QChar::NoDecomposition)
-            {
-                result.push_back(c);
-            }
+            if (c.decompositionTag() == QChar::NoDecomposition) { result.push_back(c); }
             else
             {
                 for (const QChar &dc : c.decomposition())
@@ -404,10 +400,7 @@ namespace swift::misc
         return dt;
     }
 
-    QString dotToLocaleDecimalPoint(QString &input)
-    {
-        return input.replace('.', QLocale::system().decimalPoint());
-    }
+    QString dotToLocaleDecimalPoint(QString &input) { return input.replace('.', QLocale::system().decimalPoint()); }
 
     QString dotToLocaleDecimalPoint(const QString &input)
     {
@@ -483,20 +476,14 @@ namespace swift::misc
     QString removeSurroundingApostrophes(const QString &in)
     {
         if (in.size() < 2) { return in; }
-        if (in.startsWith("'") && in.endsWith("'"))
-        {
-            return in.mid(1, in.length() - 2);
-        }
+        if (in.startsWith("'") && in.endsWith("'")) { return in.mid(1, in.length() - 2); }
         return in;
     }
 
     QString removeSurroundingQuotes(const QString &in)
     {
         if (in.size() < 2) { return in; }
-        if (in.startsWith("\"") && in.endsWith("\""))
-        {
-            return in.mid(1, in.length() - 2);
-        }
+        if (in.startsWith("\"") && in.endsWith("\"")) { return in.mid(1, in.length() - 2); }
         return in;
     }
 
@@ -579,17 +566,11 @@ namespace swift::misc
                 n.chop(1);
                 continue;
             }
-            else if (l == '.' || l == ',')
-            {
-                n.chop(1);
-            }
+            else if (l == '.' || l == ',') { n.chop(1); }
             break;
         }
 
-        while (n.startsWith("00"))
-        {
-            n.remove(0, 1);
-        }
+        while (n.startsWith("00")) { n.remove(0, 1); }
 
         return n;
     }

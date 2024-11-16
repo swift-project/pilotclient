@@ -12,25 +12,21 @@ using namespace swift::core;
 
 namespace swift::gui::components
 {
-    CInterpolationLogDisplayDialog::CInterpolationLogDisplayDialog(ISimulator *simulator, CAirspaceMonitor *airspaceMonitor, QWidget *parent) : QDialog(parent),
-                                                                                                                                                ui(new Ui::CInterpolationLogDisplayDialog)
+    CInterpolationLogDisplayDialog::CInterpolationLogDisplayDialog(ISimulator *simulator,
+                                                                   CAirspaceMonitor *airspaceMonitor, QWidget *parent)
+        : QDialog(parent), ui(new Ui::CInterpolationLogDisplayDialog)
     {
         ui->setupUi(this);
         this->setSimulator(simulator);
 
-        if (airspaceMonitor)
-        {
-            this->setAirspaceMonitor(airspaceMonitor);
-        }
-        else
-        {
-            ui->comp_InterpolationLogDisplay->linkWithAirspaceMonitor();
-        }
+        if (airspaceMonitor) { this->setAirspaceMonitor(airspaceMonitor); }
+        else { ui->comp_InterpolationLogDisplay->linkWithAirspaceMonitor(); }
     }
 
     CInterpolationLogDisplayDialog::~CInterpolationLogDisplayDialog()
     {
-        //! \todo KB 2018-05 this is a hack, I have no idea why I need to invalidate the parent. But without doing it, the dtor of comp_InterpolationLogDisplay is called tywice
+        //! \todo KB 2018-05 this is a hack, I have no idea why I need to invalidate the parent. But without doing it,
+        //! the dtor of comp_InterpolationLogDisplay is called tywice
         ui->comp_InterpolationLogDisplay->setParent(nullptr);
     }
 

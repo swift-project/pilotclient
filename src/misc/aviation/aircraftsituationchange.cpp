@@ -35,14 +35,18 @@ namespace swift::misc::aviation
         qRegisterMetaType<CAircraftSituationChange::GuessedSceneryDeviation>();
     }
 
-    CAircraftSituationChange::CAircraftSituationChange(const CAircraftSituationList &situations, const physical_quantities::CLength &cg, bool isVtol, bool alreadySortedLatestFirst, bool calcStdDeviations)
+    CAircraftSituationChange::CAircraftSituationChange(const CAircraftSituationList &situations,
+                                                       const physical_quantities::CLength &cg, bool isVtol,
+                                                       bool alreadySortedLatestFirst, bool calcStdDeviations)
     {
         if (situations.size() < 2) { return; }
-        const CAircraftSituationList sorted(alreadySortedLatestFirst ? situations : situations.getSortedAdjustedLatestFirst());
+        const CAircraftSituationList sorted(alreadySortedLatestFirst ? situations :
+                                                                       situations.getSortedAdjustedLatestFirst());
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            Q_ASSERT_X(sorted.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order or NULL position");
+            Q_ASSERT_X(sorted.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO,
+                       "Wrong sort order or NULL position");
         }
 
         const CAircraftSituation latest(sorted.front());
@@ -78,13 +82,11 @@ namespace swift::misc::aviation
             this->calculateStdDeviations(situations, cg);
             m_rotateUp = sorted.front().getPitch() > (m_pitchMean + m_pitchStdDev);
         }
-        else
-        {
-            m_rotateUp = sorted.isRotatingUp(true);
-        }
+        else { m_rotateUp = sorted.isRotatingUp(true); }
     }
 
-    bool CAircraftSituationChange::guessOnGround(CAircraftSituation &situation, const simulation::CAircraftModel &model) const
+    bool CAircraftSituationChange::guessOnGround(CAircraftSituation &situation,
+                                                 const simulation::CAircraftModel &model) const
     {
         if (!situation.shouldGuessOnGround()) { return false; }
 
@@ -198,7 +200,11 @@ namespace swift::misc::aviation
             if (situation.getGroundSpeed() < guessedRotateSpeed)
             {
                 situation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByGuessing });
-                if (details) { *details = QStringLiteral("Guessing, max.guessed gs.") + guessedRotateSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1); }
+                if (details)
+                {
+                    *details = QStringLiteral("Guessing, max.guessed gs.") +
+                               guessedRotateSpeed.valueRoundedWithUnit(CSpeedUnit::kts(), 1);
+                }
                 return true;
             }
         }
@@ -208,10 +214,7 @@ namespace swift::misc::aviation
         return true;
     }
 
-    bool CAircraftSituationChange::hasSceneryDeviation() const
-    {
-        return !m_guessedSceneryDeviation.isNull();
-    }
+    bool CAircraftSituationChange::hasSceneryDeviation() const { return !m_guessedSceneryDeviation.isNull(); }
 
     bool CAircraftSituationChange::hasElevationDevWithinAllowedRange() const
     {
@@ -230,29 +233,34 @@ namespace swift::misc::aviation
         Q_UNUSED(i18n)
         static const QString null("null");
         if (this->isNull()) { return null; }
-        return u"CS: '" % this->getCallsign().asString() %
-               u" ' ts: " % this->getTimestampAndOffset(true) %
-               u" | situations:" % QString::number(m_situationsCount) %
-               u" | ts adj.: " % QString::number(m_oldestAdjustedTimestampMSecsSinceEpoch) % u'-' % QString::number(m_latestAdjustedTimestampMSecsSinceEpoch) %
-               u" | just takeoff: " % boolToYesNo(this->isJustTakingOff()) % u" just touchdown: " % boolToYesNo(this->isJustTouchingDown()) %
+        return u"CS: '" % this->getCallsign().asString() % u" ' ts: " % this->getTimestampAndOffset(true) %
+               u" | situations:" % QString::number(m_situationsCount) % u" | ts adj.: " %
+               QString::number(m_oldestAdjustedTimestampMSecsSinceEpoch) % u'-' %
+               QString::number(m_latestAdjustedTimestampMSecsSinceEpoch) % u" | just takeoff: " %
+               boolToYesNo(this->isJustTakingOff()) % u" just touchdown: " % boolToYesNo(this->isJustTouchingDown()) %
                u" | all gnd: " % boolToYesNo(this->isConstOnGround()) % u'/' % boolToYesNo(this->wasConstOnGround()) %
-               u" | all not gnd: " % boolToYesNo(this->isConstNotOnGround()) % u'/' % boolToYesNo(this->wasConstNotOnGround()) %
-               u" | ascending: " % boolToYesNo(this->isConstAscending()) % u" descending: " % boolToYesNo(this->isConstDescending()) %
-               u" | accelerating.: " % boolToYesNo(this->isConstAccelerating()) % u" decelarating: " % boolToYesNo(this->isConstDecelarating()) %
-               u" | rotate up: " % boolToYesNo(this->isRotatingUp()) %
-               u" | push back: " % boolToYesNo(this->containsPushBack()) %
-               u" | scenery delta: " % m_guessedSceneryDeviation.valueRoundedWithUnit(1) % u" [" % this->getSceneryDeviationHintAsString() %
-               u"] | AGL delta: " % m_gndDistMean.valueRoundedWithUnit(1) % u'/' % m_gndDistStdDev.valueRoundedWithUnit(1) %
-               u" | std.dev/mean: pitch " % m_pitchMean.valueRoundedWithUnit(1) % u'/' % m_pitchStdDev.valueRoundedWithUnit(1) %
-               u" gs " % m_gsMean.valueRoundedWithUnit(1) % u'/' % m_gsStdDev.valueRoundedWithUnit(1) %
-               u" alt. " % m_altMean.valueRoundedWithUnit(1) % u'/' % m_altStdDev.valueRoundedWithUnit(1) %
-               u" elv. " % m_elvMean.valueRoundedWithUnit(1) % u'/' % m_elvStdDev.valueRoundedWithUnit(1);
+               u" | all not gnd: " % boolToYesNo(this->isConstNotOnGround()) % u'/' %
+               boolToYesNo(this->wasConstNotOnGround()) % u" | ascending: " % boolToYesNo(this->isConstAscending()) %
+               u" descending: " % boolToYesNo(this->isConstDescending()) % u" | accelerating.: " %
+               boolToYesNo(this->isConstAccelerating()) % u" decelarating: " %
+               boolToYesNo(this->isConstDecelarating()) % u" | rotate up: " % boolToYesNo(this->isRotatingUp()) %
+               u" | push back: " % boolToYesNo(this->containsPushBack()) % u" | scenery delta: " %
+               m_guessedSceneryDeviation.valueRoundedWithUnit(1) % u" [" % this->getSceneryDeviationHintAsString() %
+               u"] | AGL delta: " % m_gndDistMean.valueRoundedWithUnit(1) % u'/' %
+               m_gndDistStdDev.valueRoundedWithUnit(1) % u" | std.dev/mean: pitch " %
+               m_pitchMean.valueRoundedWithUnit(1) % u'/' % m_pitchStdDev.valueRoundedWithUnit(1) % u" gs " %
+               m_gsMean.valueRoundedWithUnit(1) % u'/' % m_gsStdDev.valueRoundedWithUnit(1) % u" alt. " %
+               m_altMean.valueRoundedWithUnit(1) % u'/' % m_altStdDev.valueRoundedWithUnit(1) % u" elv. " %
+               m_elvMean.valueRoundedWithUnit(1) % u'/' % m_elvStdDev.valueRoundedWithUnit(1);
     }
 
     QVariant CAircraftSituationChange::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::propertyByIndex(index); }
+        if (ITimestampWithOffsetBased::canHandleIndex(index))
+        {
+            return ITimestampWithOffsetBased::propertyByIndex(index);
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -306,35 +314,49 @@ namespace swift::misc::aviation
         case IndexAltitudeMean:
         case IndexAltitudeStdDev:
         case IndexElevationMean:
-        case IndexElevationStdDev:
-            break; // read only
+        case IndexElevationStdDev: break; // read only
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
-    int CAircraftSituationChange::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftSituationChange &compareValue) const
+    int CAircraftSituationChange::comparePropertyByIndex(CPropertyIndexRef index,
+                                                         const CAircraftSituationChange &compareValue) const
     {
-        if (index.isMyself()) { return ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndex(), compareValue); }
-        if (ITimestampWithOffsetBased::canHandleIndex(index)) { return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue); }
+        if (index.isMyself())
+        {
+            return ITimestampWithOffsetBased::comparePropertyByIndex(CPropertyIndex(), compareValue);
+        }
+        if (ITimestampWithOffsetBased::canHandleIndex(index))
+        {
+            return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue);
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexCallsign: return m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
-        case IndexSituationsCount: return Compare::compare(this->getSituationsCount(), compareValue.getSituationsCount());
+        case IndexCallsign:
+            return m_correspondingCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+        case IndexSituationsCount:
+            return Compare::compare(this->getSituationsCount(), compareValue.getSituationsCount());
         case IndexConstAscending: return Compare::compare(this->isConstAscending(), compareValue.isConstAscending());
         case IndexConstDescending: return Compare::compare(this->isConstDescending(), compareValue.isConstDescending());
-        case IndexConstNotOnGround: return Compare::compare(this->isConstNotOnGround(), compareValue.isConstNotOnGround());
+        case IndexConstNotOnGround:
+            return Compare::compare(this->isConstNotOnGround(), compareValue.isConstNotOnGround());
         case IndexConstOnGround: return Compare::compare(this->isConstOnGround(), compareValue.isConstOnGround());
         case IndexJustTakingOff: return Compare::compare(this->isJustTakingOff(), compareValue.isJustTakingOff());
-        case IndexJustTouchingDown: return Compare::compare(this->isJustTouchingDown(), compareValue.isJustTouchingDown());
+        case IndexJustTouchingDown:
+            return Compare::compare(this->isJustTouchingDown(), compareValue.isJustTouchingDown());
         case IndexRotatingUp: return Compare::compare(this->isRotatingUp(), compareValue.isRotatingUp());
         case IndexContainsPushBack: return Compare::compare(this->containsPushBack(), compareValue.containsPushBack());
         case IndexIsNull: return Compare::compare(this->isNull(), compareValue.isNull());
-        case IndexAltitudeMean: return m_altMean.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_altMean);
-        case IndexAltitudeStdDev: return m_altStdDev.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_altStdDev);
-        case IndexElevationMean: return m_elvMean.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_elvMean);
-        case IndexElevationStdDev: return m_elvStdDev.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_elvStdDev);
+        case IndexAltitudeMean:
+            return m_altMean.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_altMean);
+        case IndexAltitudeStdDev:
+            return m_altStdDev.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_altStdDev);
+        case IndexElevationMean:
+            return m_elvMean.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_elvMean);
+        case IndexElevationStdDev:
+            return m_elvStdDev.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_elvStdDev);
         default: return CValueObject::comparePropertyByIndex(index, *this);
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
@@ -415,7 +437,8 @@ namespace swift::misc::aviation
         return noInfo;
     }
 
-    void CAircraftSituationChange::setSceneryDeviation(const CLength &deviation, const CLength &cg, CAircraftSituationChange::GuessedSceneryDeviation hint)
+    void CAircraftSituationChange::setSceneryDeviation(const CLength &deviation, const CLength &cg,
+                                                       CAircraftSituationChange::GuessedSceneryDeviation hint)
     {
         m_guessedSceneryDeviation = deviation;
         m_guessedSceneryDeviationCG = cg.isNull() ? CLength::null() : deviation - cg;
@@ -435,8 +458,7 @@ namespace swift::misc::aviation
         // Small deviation means "const" AGL
         if (m_gndDistStdDev <= maxDeviation)
         {
-            do
-            {
+            do {
                 if (this->isConstOnGround())
                 {
                     this->setSceneryDeviation(m_gndDistMean, cg, AllOnGround);

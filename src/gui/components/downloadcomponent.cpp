@@ -29,9 +29,8 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CDownloadComponent::CDownloadComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                              CLoadIndicatorEnabled(this),
-                                                              ui(new Ui::CDownloadComponent)
+    CDownloadComponent::CDownloadComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), CLoadIndicatorEnabled(this), ui(new Ui::CDownloadComponent)
     {
         ui->setupUi(this);
         this->setOverlaySizeFactors(0.8, 0.9);
@@ -53,8 +52,7 @@ namespace swift::gui::components
         connect(ui->pb_Launch, &QPushButton::pressed, this, &CDownloadComponent::startDownloadedExecutable);
     }
 
-    CDownloadComponent::~CDownloadComponent()
-    {}
+    CDownloadComponent::~CDownloadComponent() {}
 
     bool CDownloadComponent::setDownloadFile(const CRemoteFile &remoteFile)
     {
@@ -80,13 +78,15 @@ namespace swift::gui::components
     void CDownloadComponent::selectDownloadDirectory()
     {
         QString downloadDir = ui->le_DownloadDir->text().trimmed();
-        downloadDir = QFileDialog::getExistingDirectory(parentWidget(),
-                                                        tr("Choose your download directory"), downloadDir, m_fileDialogOptions);
+        downloadDir = QFileDialog::getExistingDirectory(parentWidget(), tr("Choose your download directory"),
+                                                        downloadDir, m_fileDialogOptions);
 
         if (downloadDir.isEmpty()) { return; } // canceled
         if (!QDir(downloadDir).exists())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid download directory") << downloadDir;
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid download directory")
+                << downloadDir;
             this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -113,10 +113,7 @@ namespace swift::gui::components
         return this->triggerDownloadingOfNextFile();
     }
 
-    bool CDownloadComponent::isDownloading() const
-    {
-        return m_reply || m_fileInProgress.hasName();
-    }
+    bool CDownloadComponent::isDownloading() const { return m_reply || m_fileInProgress.hasName(); }
 
     bool CDownloadComponent::haveAllDownloadsCompleted() const
     {
@@ -175,7 +172,8 @@ namespace swift::gui::components
         if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return false; }
         if (!this->existsDownloadDir())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Invalid download directory");
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"Invalid download directory");
             this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
             return false;
         }
@@ -183,7 +181,9 @@ namespace swift::gui::components
         const CUrl download = remoteFile.getSmartUrl();
         if (download.isEmpty())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"No download URL for file name '%1'") << remoteFile.getBaseNameAndSize();
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"No download URL for file name '%1'")
+                << remoteFile.getBaseNameAndSize();
             this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
             return false;
         }
@@ -194,8 +194,10 @@ namespace swift::gui::components
         const QFileInfo fiSaveAs(saveAsFile);
         if (fiSaveAs.exists())
         {
-            const QString msg = QStringLiteral("File '%1' already exists locally.\n\nDo you want to reload the file?").arg(fiSaveAs.absoluteFilePath());
-            QMessageBox::StandardButton reply = QMessageBox::question(this, "File exists", msg, QMessageBox::Yes | QMessageBox::No);
+            const QString msg = QStringLiteral("File '%1' already exists locally.\n\nDo you want to reload the file?")
+                                    .arg(fiSaveAs.absoluteFilePath());
+            QMessageBox::StandardButton reply =
+                QMessageBox::question(this, "File exists", msg, QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes)
             {
                 const QPointer<CDownloadComponent> myself(this);
@@ -207,19 +209,23 @@ namespace swift::gui::components
             }
         }
 
-        QNetworkReply *reply = sGui->downloadFromNetwork(download, saveAsFile, { this, &CDownloadComponent::downloadedFile });
+        QNetworkReply *reply =
+            sGui->downloadFromNetwork(download, saveAsFile, { this, &CDownloadComponent::downloadedFile });
         bool success = false;
         if (reply)
         {
             // this->showLoading(10 * 1000);
             CLogMessage(this).info(u"Triggered downloading of file from '%1'") << download.getHost();
-            connect(reply, &QNetworkReply::downloadProgress, this, &CDownloadComponent::downloadProgress, Qt::QueuedConnection);
+            connect(reply, &QNetworkReply::downloadProgress, this, &CDownloadComponent::downloadProgress,
+                    Qt::QueuedConnection);
             m_reply = reply;
             success = true;
         }
         else
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Starting download for '%1' failed") << download.getFullUrl();
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"Starting download for '%1' failed")
+                << download.getFullUrl();
             this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
         }
         return success;
@@ -276,12 +282,7 @@ namespace swift::gui::components
                   "mount the disk image '%1' and run the installer inside "
                   "to proceed with the update.";
         }
-        else
-        {
-            msg = ui->cb_Shutdown->isChecked() ?
-                      QString("Start '%1' and close swift?") :
-                      QString("Start '%1'?");
-        }
+        else { msg = ui->cb_Shutdown->isChecked() ? QString("Start '%1' and close swift?") : QString("Start '%1'?"); }
 
         for (const CRemoteFile &rf : executables)
         {
@@ -289,7 +290,8 @@ namespace swift::gui::components
             QFile executableFile(executable);
             if (!executableFile.exists()) { continue; }
 
-            QMessageBox::StandardButton reply = QMessageBox::question(this, "Start?", msg.arg(rf.getName()), QMessageBox::Yes | QMessageBox::No);
+            QMessageBox::StandardButton reply =
+                QMessageBox::question(this, "Start?", msg.arg(rf.getName()), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) { return; }
 
             const CPlatform p = CArtifact::artifactNameToPlatform(rf.getName());
@@ -303,7 +305,8 @@ namespace swift::gui::components
 
             if (CBuildConfig::isRunningOnLinuxPlatform() && !executableFile.permissions().testFlag(QFile::ExeOwner))
             {
-                executableFile.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner | QFile::ReadGroup | QFile::ExeGroup | QFile::ReadOther | QFile::ExeOther);
+                executableFile.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner |
+                                              QFile::ReadGroup | QFile::ExeGroup | QFile::ReadOther | QFile::ExeOther);
             }
 
             const bool shutdown = ui->cb_Shutdown->isChecked();
@@ -357,10 +360,7 @@ namespace swift::gui::components
         ui->prb_Total->setValue(current);
     }
 
-    void CDownloadComponent::cancelOngoingDownloads()
-    {
-        this->clear();
-    }
+    void CDownloadComponent::cancelOngoingDownloads() { this->clear(); }
 
     void CDownloadComponent::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     {
@@ -370,6 +370,8 @@ namespace swift::gui::components
 
     void CDownloadComponent::showFileInfo()
     {
-        ui->le_Info->setText(QStringLiteral("Files: %1 size: %2").arg(m_remoteFiles.size()).arg(m_remoteFiles.getTotalFileSizeHumanReadable()));
+        ui->le_Info->setText(QStringLiteral("Files: %1 size: %2")
+                                 .arg(m_remoteFiles.size())
+                                 .arg(m_remoteFiles.getTotalFileSizeHumanReadable()));
     }
 } // namespace swift::gui::components

@@ -41,9 +41,10 @@ namespace swift::gui::components
     // If the dialog is a normal window, it stays open when the parent is minimized
     // (and the parent is null for the dialog). If the dialog is a tool winow it is always
     // minimized, regardless of dialog`s parent
-    CNavigatorDialog::CNavigatorDialog(QWidget *parent) : QDialog(parent, modeToWindowFlags(CEnableForFramelessWindow::WindowTool)),
-                                                          CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "navigatorFrameless", this),
-                                                          ui(new Ui::CNavigatorDialog)
+    CNavigatorDialog::CNavigatorDialog(QWidget *parent)
+        : QDialog(parent, modeToWindowFlags(CEnableForFramelessWindow::WindowTool)),
+          CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "navigatorFrameless", this),
+          ui(new Ui::CNavigatorDialog)
     {
         ui->setupUi(this);
 
@@ -64,12 +65,15 @@ namespace swift::gui::components
         this->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(m_input, &CMarginsInput::changedMargins, this, &CNavigatorDialog::menuChangeMargins);
         connect(this, &CNavigatorDialog::customContextMenuRequested, this, &CNavigatorDialog::showContextMenu);
-        if (sGui) { connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CNavigatorDialog::onStyleSheetsChanged, Qt::QueuedConnection); }
+        if (sGui)
+        {
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CNavigatorDialog::onStyleSheetsChanged,
+                    Qt::QueuedConnection);
+        }
         this->onStyleSheetsChanged();
     }
 
-    CNavigatorDialog::~CNavigatorDialog()
-    {}
+    CNavigatorDialog::~CNavigatorDialog() {}
 
     void CNavigatorDialog::buildNavigator(int columns)
     {
@@ -100,10 +104,7 @@ namespace swift::gui::components
             QToolButton *tb = new QToolButton(ui->fr_NavigatorDialogInner);
             tb->setDefaultAction(action);
             tb->setObjectName(this->objectName() % u':' % action->objectName());
-            if (!action->text().isEmpty())
-            {
-                tb->setToolTip(action->text());
-            }
+            if (!action->text().isEmpty()) { tb->setToolTip(action->text()); }
             gridLayout->addWidget(tb, r, c++);
             tb->show();
             if (c < columns) { continue; }
@@ -130,26 +131,18 @@ namespace swift::gui::components
         emit this->navigatorClosed();
     }
 
-    void CNavigatorDialog::toggleFrameless()
-    {
-        this->setFrameless(!this->isFrameless());
-    }
+    void CNavigatorDialog::toggleFrameless() { this->setFrameless(!this->isFrameless()); }
 
     void CNavigatorDialog::showNavigator(bool visible)
     {
         this->setVisible(visible);
         CGuiUtility::stayOnTop(visible, this);
         this->show();
-        QGuiApplication::setQuitOnLastWindowClosed(visible ? false : m_originalQuitOnLastWindow); // avoid issues with a dialog closing everything
+        QGuiApplication::setQuitOnLastWindowClosed(
+            visible ? false : m_originalQuitOnLastWindow); // avoid issues with a dialog closing everything
 
-        if (visible)
-        {
-            m_watchdog.start(4000);
-        }
-        else
-        {
-            m_watchdog.stop();
-        }
+        if (visible) { m_watchdog.start(4000); }
+        else { m_watchdog.stop(); }
     }
 
     void CNavigatorDialog::toggleNavigatorVisibility()
@@ -239,10 +232,7 @@ namespace swift::gui::components
             evt->ignore();
             hide();
         }
-        else
-        {
-            QDialog::changeEvent(evt);
-        }
+        else { QDialog::changeEvent(evt); }
     }
 
     void CNavigatorDialog::windowFlagsChanged()
@@ -321,7 +311,8 @@ namespace swift::gui::components
         this->addAction(a);
 
         // close
-        const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarCloseButton), Qt::white, QSize(16, 16)));
+        const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarCloseButton),
+                                                        Qt::white, QSize(16, 16)));
         a = new QAction(i, "Close", this);
         c = connect(a, &QAction::triggered, this, &CNavigatorDialog::close, Qt::QueuedConnection);
         Q_ASSERT(c);
@@ -336,10 +327,7 @@ namespace swift::gui::components
         return (c * rows) < items ? c + 1 : c;
     }
 
-    QGridLayout *CNavigatorDialog::myGridLayout() const
-    {
-        return qobject_cast<QGridLayout *>(this->layout());
-    }
+    QGridLayout *CNavigatorDialog::myGridLayout() const { return qobject_cast<QGridLayout *>(this->layout()); }
 
     void CNavigatorDialog::adjustNavigatorSize(QGridLayout *layout)
     {

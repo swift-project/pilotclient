@@ -50,7 +50,8 @@ namespace swift::misc
         return fileName.mid(index);
     }
 
-    QString CCacheSettingsUtils::otherVersionSettingsFileName(const CApplicationInfo &info, const QString &mySettingFile)
+    QString CCacheSettingsUtils::otherVersionSettingsFileName(const CApplicationInfo &info,
+                                                              const QString &mySettingFile)
     {
         const QString relativeMySetting = relativeSettingsPath(mySettingFile);
         return otherVersionFileName(info, relativeMySetting);
@@ -84,7 +85,8 @@ namespace swift::misc
         return {};
     }
 
-    QString CCacheSettingsUtils::otherVersionSettingsFileContent(const CApplicationInfo &info, const QString &mySettingFile)
+    QString CCacheSettingsUtils::otherVersionSettingsFileContent(const CApplicationInfo &info,
+                                                                 const QString &mySettingFile)
     {
         const QString file = otherVersionSettingsFileName(info, mySettingFile);
         if (file.isEmpty()) { return {}; }

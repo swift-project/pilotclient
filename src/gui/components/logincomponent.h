@@ -168,7 +168,8 @@ namespace swift::gui::components
         void onSimulatorStatusChanged(int status);
 
         //! Network status has changed
-        void onNetworkStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+        void onNetworkStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                    const swift::misc::network::CConnectionStatus &to);
 
         //! Tab widget (server) changed
         void onServerTabWidgetChanged(int index);
@@ -180,7 +181,8 @@ namespace swift::gui::components
         static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
 
         QScopedPointer<Ui::CLoginComponent> ui;
-        swift::misc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest, 1500, 10 };
+        swift::misc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest,
+                                                                    1500, 10 };
         bool m_updatePilotOnServerChanges = true;
         bool m_networkConnected = false;
         bool m_simulatorConnected = false;
@@ -189,7 +191,9 @@ namespace swift::gui::components
         int m_logoffIntervalSeconds = LogoffIntervalSeconds;
         QTimer m_logoffCountdownTimer; //!< timer for logoff countdown
 
-        swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
+        swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel {
+            this
+        }; //!< recently used aircraft model
         swift::core::data::CNetworkSetup m_networkSetup; //!< servers last used
     };
 } // namespace swift::gui::components

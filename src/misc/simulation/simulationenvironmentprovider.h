@@ -37,7 +37,9 @@ namespace swift::misc::simulation
 
         //! Average elevation of "on ground" cached values
         //! \threadsafe
-        geo::CElevationPlane averageElevationOfOnGroundAircraft(const aviation::CAircraftSituation &reference, const physical_quantities::CLength &range, int minValues, int sufficientValues) const;
+        geo::CElevationPlane averageElevationOfOnGroundAircraft(const aviation::CAircraftSituation &reference,
+                                                                const physical_quantities::CLength &range,
+                                                                int minValues, int sufficientValues) const;
 
         //! Highest elevation
         //! \threadsafe
@@ -45,15 +47,19 @@ namespace swift::misc::simulation
 
         //! Find closest elevation (or return NULL)
         //! \threadsafe
-        geo::CElevationPlane findClosestElevationWithinRange(const geo::ICoordinateGeodetic &reference, const physical_quantities::CLength &range) const;
+        geo::CElevationPlane findClosestElevationWithinRange(const geo::ICoordinateGeodetic &reference,
+                                                             const physical_quantities::CLength &range) const;
 
         //! Find closest elevation or request elevation
         //! \threadsafe
-        geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const geo::ICoordinateGeodetic &reference, const physical_quantities::CLength &range, const aviation::CCallsign &callsign);
+        geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const geo::ICoordinateGeodetic &reference,
+                                                                      const physical_quantities::CLength &range,
+                                                                      const aviation::CCallsign &callsign);
 
         //! Request elevation, there is no guarantee the requested elevation will be available in the provider
         //! \threadsafe
-        virtual bool requestElevation(const geo::ICoordinateGeodetic &reference, const aviation::CCallsign &callsign) = 0;
+        virtual bool requestElevation(const geo::ICoordinateGeodetic &reference,
+                                      const aviation::CCallsign &callsign) = 0;
 
         //! Request elevation, there is no guarantee the requested elevation will be available in the provider
         //! \threadsafe
@@ -105,7 +111,8 @@ namespace swift::misc::simulation
 
         //! Get CG per callsign, NULL if not found
         //! \threadsafe
-        physical_quantities::CLength getSimulatorOrDbCG(const aviation::CCallsign &callsign, const physical_quantities::CLength &dbCG) const;
+        physical_quantities::CLength getSimulatorOrDbCG(const aviation::CCallsign &callsign,
+                                                        const physical_quantities::CLength &dbCG) const;
 
         //! Get CG per model string, NULL if not found
         //! \threadsafe
@@ -113,11 +120,13 @@ namespace swift::misc::simulation
 
         //! Get CG per model string, NULL if not found
         //! \threadsafe
-        physical_quantities::CLength getSimulatorOrDbCGPerModelString(const QString &modelString, const physical_quantities::CLength &dbCG) const;
+        physical_quantities::CLength getSimulatorOrDbCGPerModelString(const QString &modelString,
+                                                                      const physical_quantities::CLength &dbCG) const;
 
         //! Return the overridden CG value or the given default CG value
         //! \threadsafe
-        physical_quantities::CLength overriddenCGorDefault(const physical_quantities::CLength &defaultCG, const QString &modelString) const;
+        physical_quantities::CLength overriddenCGorDefault(const physical_quantities::CLength &defaultCG,
+                                                           const QString &modelString) const;
 
         //! Has a CG?
         //! \threadsafe
@@ -142,19 +151,23 @@ namespace swift::misc::simulation
         //! Remove cached elevations outside range,
         //! "forced" cleans always, otherwise only if max.values are reached
         //! \threadsafe
-        bool cleanElevationValues(const aviation::CAircraftSituation &reference, const physical_quantities::CLength &keptRange, bool forced = false);
+        bool cleanElevationValues(const aviation::CAircraftSituation &reference,
+                                  const physical_quantities::CLength &keptRange, bool forced = false);
 
         //! Remove cached elevations inside range,
         //! \remark this removes inside range, cleanElevationValues outside the range
         //! \threadsafe
-        int removeElevationValues(const aviation::CAircraftSituation &reference, const physical_quantities::CLength &removeRange);
+        int removeElevationValues(const aviation::CAircraftSituation &reference,
+                                  const physical_quantities::CLength &removeRange);
 
     protected:
         //! Ctor
         ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo);
 
         //! Ctor
-        ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, const settings::CSimulatorSettings &settings, bool supportElevation, bool supportCG);
+        ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo,
+                                       const settings::CSimulatorSettings &settings, bool supportElevation,
+                                       bool supportCG);
 
         //! @{
         //! Provider enabled
@@ -173,7 +186,8 @@ namespace swift::misc::simulation
         //! New plugin info and default model
         //! \remark normally only used by emulated driver
         //! \threadsafe
-        void setNewPluginInfo(const CSimulatorPluginInfo &info, const settings::CSimulatorSettings &settings, const CAircraftModel &defaultModel);
+        void setNewPluginInfo(const CSimulatorPluginInfo &info, const settings::CSimulatorSettings &settings,
+                              const CAircraftModel &defaultModel);
 
         //! New plugin info and default model
         //! \threadsafe
@@ -223,11 +237,15 @@ namespace swift::misc::simulation
 
         //! Remember a given elevation
         //! \threadsafe
-        bool rememberGroundElevation(const aviation::CCallsign &requestedForCallsign, bool likelyOnGroundElevation, const geo::ICoordinateGeodetic &elevationCoordinate, const physical_quantities::CLength &epsilon = geo::CElevationPlane::singlePointRadius());
+        bool rememberGroundElevation(
+            const aviation::CCallsign &requestedForCallsign, bool likelyOnGroundElevation,
+            const geo::ICoordinateGeodetic &elevationCoordinate,
+            const physical_quantities::CLength &epsilon = geo::CElevationPlane::singlePointRadius());
 
         //! Remember a given elevation
         //! \threadsafe
-        bool rememberGroundElevation(const aviation::CCallsign &requestedForCallsign, bool likelyOnGroundElevation, const geo::CElevationPlane &elevationPlane);
+        bool rememberGroundElevation(const aviation::CCallsign &requestedForCallsign, bool likelyOnGroundElevation,
+                                     const geo::CElevationPlane &elevationPlane);
 
         //! Insert or replace a CG
         //! \remark passing a NULL value will remove the CG
@@ -237,7 +255,8 @@ namespace swift::misc::simulation
         //! Insert or replace a CG
         //! \remark passing a NULL value will remove the CG
         //! \threadsafe
-        bool insertCG(const physical_quantities::CLength &cg, const QString &modelString, const aviation::CCallsign &cs);
+        bool insertCG(const physical_quantities::CLength &cg, const QString &modelString,
+                      const aviation::CCallsign &cs);
 
         //! Insert or replace a CG
         //! \remark passing a NULL value will remove the CG
@@ -289,11 +308,13 @@ namespace swift::misc::simulation
         geo::CCoordinateGeodeticList m_elvCoordinates; //!< elevation cache
         geo::CCoordinateGeodeticList m_elvCoordinatesGnd; //!< elevation cache for on ground situations
 
-        aviation::CTimestampPerCallsign m_pendingElevationRequests; //!< pending elevation requests for aircraft callsign
+        aviation::CTimestampPerCallsign
+            m_pendingElevationRequests; //!< pending elevation requests for aircraft callsign
         aviation::CLengthPerCallsign m_cgsPerCallsign; //!< CGs per callsign
         aviation::CLengthPerCallsign m_cgsPerCallsignOverridden; //!< CGs per callsign overridden (manually forced)
         QHash<QString, physical_quantities::CLength> m_cgsPerModel; //!< CGs per model string
-        QHash<QString, physical_quantities::CLength> m_cgsPerModelOverridden; //!< CGs per model string (manually forced)
+        QHash<QString, physical_quantities::CLength>
+            m_cgsPerModelOverridden; //!< CGs per model string (manually forced)
         qint64 m_statsMaxElevRequestTimeMs = -1;
         qint64 m_statsCurrentElevRequestTimeMs = -1;
 
@@ -303,7 +324,9 @@ namespace swift::misc::simulation
         mutable int m_elvFound = 0; //!< statistics only
         mutable int m_elvMissed = 0; //!< statistics only
 
-        mutable QReadWriteLock m_lockElvCoordinates { QReadWriteLock::Recursive }; //!< lock m_coordinates, m_pendingElevationRequests
+        mutable QReadWriteLock m_lockElvCoordinates {
+            QReadWriteLock::Recursive
+        }; //!< lock m_coordinates, m_pendingElevationRequests
         mutable QReadWriteLock m_lockCG { QReadWriteLock::Recursive }; //!< lock CGs
         mutable QReadWriteLock m_lockModel { QReadWriteLock::Recursive }; //!< lock models
         mutable QReadWriteLock m_lockSimInfo { QReadWriteLock::Recursive }; //!< lock plugin info
@@ -319,13 +342,18 @@ namespace swift::misc::simulation
         void setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider) { this->setProvider(provider); }
 
         //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRange
-        geo::CElevationPlane findClosestElevationWithinRange(const geo::ICoordinateGeodetic &reference, const physical_quantities::CLength &range) const;
+        geo::CElevationPlane findClosestElevationWithinRange(const geo::ICoordinateGeodetic &reference,
+                                                             const physical_quantities::CLength &range) const;
 
         //! \copydoc ISimulationEnvironmentProvider::findClosestElevationWithinRangeOrRequest
-        geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const geo::ICoordinateGeodetic &reference, const physical_quantities::CLength &range, const aviation::CCallsign &callsign);
+        geo::CElevationPlane findClosestElevationWithinRangeOrRequest(const geo::ICoordinateGeodetic &reference,
+                                                                      const physical_quantities::CLength &range,
+                                                                      const aviation::CCallsign &callsign);
 
         //! \copydoc ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft
-        geo::CElevationPlane averageElevationOfOnGroundAircraft(const aviation::CAircraftSituation &reference, const physical_quantities::CLength &range, int minValues, int sufficientValues) const;
+        geo::CElevationPlane averageElevationOfOnGroundAircraft(const aviation::CAircraftSituation &reference,
+                                                                const physical_quantities::CLength &range,
+                                                                int minValues, int sufficientValues) const;
 
         //! \copydoc ISimulationEnvironmentProvider::highestElevation
         aviation::CAltitude highestElevation() const;
@@ -364,23 +392,29 @@ namespace swift::misc::simulation
         physical_quantities::CLength getSimulatorCG(const aviation::CCallsign &callsign) const;
 
         //! \copydoc ISimulationEnvironmentProvider::getSimulatorOrDbCG
-        physical_quantities::CLength getSimulatorOrDbCG(const aviation::CCallsign &callsign, const physical_quantities::CLength &dbCG) const;
+        physical_quantities::CLength getSimulatorOrDbCG(const aviation::CCallsign &callsign,
+                                                        const physical_quantities::CLength &dbCG) const;
 
         //! \copydoc ISimulationEnvironmentProvider::hasSimulatorCG
         bool hasSimulatorCG(const aviation::CCallsign &callsign) const;
 
         //! \copydoc ISimulationEnvironmentProvider::cleanElevationValues
-        bool cleanElevationValues(const aviation::CAircraftSituation &reference, const physical_quantities::CLength &range, bool forced = false);
+        bool cleanElevationValues(const aviation::CAircraftSituation &reference,
+                                  const physical_quantities::CLength &range, bool forced = false);
 
     protected:
         //! Default constructor
         CSimulationEnvironmentAware() {}
 
         //! Constructor
-        CSimulationEnvironmentAware(ISimulationEnvironmentProvider *simEnvProvider) : IProviderAware(simEnvProvider) { Q_ASSERT(simEnvProvider); }
+        CSimulationEnvironmentAware(ISimulationEnvironmentProvider *simEnvProvider) : IProviderAware(simEnvProvider)
+        {
+            Q_ASSERT(simEnvProvider);
+        }
     };
 } // namespace swift::misc::simulation
 
-Q_DECLARE_INTERFACE(swift::misc::simulation::ISimulationEnvironmentProvider, "org.swift-project.misc::simulation::isimulationenvironmentprovider")
+Q_DECLARE_INTERFACE(swift::misc::simulation::ISimulationEnvironmentProvider,
+                    "org.swift-project.misc::simulation::isimulationenvironmentprovider")
 
 #endif // guard

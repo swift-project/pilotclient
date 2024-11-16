@@ -15,8 +15,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRawFsdMessage)
 
 namespace swift::misc::network
 {
-    CRawFsdMessage::CRawFsdMessage(const QString &rawMessage)
-        : m_rawMessage(rawMessage) {}
+    CRawFsdMessage::CRawFsdMessage(const QString &rawMessage) : m_rawMessage(rawMessage) {}
 
     QString CRawFsdMessage::convertToQString(bool i18n) const
     {
@@ -29,17 +28,36 @@ namespace swift::misc::network
         return m_rawMessage.startsWith("FSD Sent=>" + type) || m_rawMessage.startsWith("FSD Recv=>" + type);
     }
 
-    bool CRawFsdMessage::containsString(const QString &str) const
-    {
-        return m_rawMessage.contains(str);
-    }
+    bool CRawFsdMessage::containsString(const QString &str) const { return m_rawMessage.contains(str); }
 
     const QStringList &CRawFsdMessage::getAllPacketTypes()
     {
-        static const QStringList allPacketTypes = { "@", "%", "#AA", "#DA", "#AP", "#DP", "#TM", "#WX", "#DL", "#TD", "#WD"
-                                                                                                                      "#CD",
-                                                    "#PC", "#SB", "$FP", "$AM", "$PI", "$PO", "$HO", "$HA", "$AX", "$AR",
-                                                    "$CQ", "$CR", "$ER", "$!!" };
+        static const QStringList allPacketTypes = { "@",
+                                                    "%",
+                                                    "#AA",
+                                                    "#DA",
+                                                    "#AP",
+                                                    "#DP",
+                                                    "#TM",
+                                                    "#WX",
+                                                    "#DL",
+                                                    "#TD",
+                                                    "#WD"
+                                                    "#CD",
+                                                    "#PC",
+                                                    "#SB",
+                                                    "$FP",
+                                                    "$AM",
+                                                    "$PI",
+                                                    "$PO",
+                                                    "$HO",
+                                                    "$HA",
+                                                    "$AX",
+                                                    "$AR",
+                                                    "$CQ",
+                                                    "$CR",
+                                                    "$ER",
+                                                    "$!!" };
         return allPacketTypes;
     }
 
@@ -72,12 +90,8 @@ namespace swift::misc::network
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexRawMessage:
-            this->setRawMessage(variant.value<QString>());
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexRawMessage: this->setRawMessage(variant.value<QString>()); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::misc::network

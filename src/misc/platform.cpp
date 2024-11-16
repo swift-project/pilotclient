@@ -16,11 +16,9 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CPlatform)
 
 namespace swift::misc
 {
-    CPlatform::CPlatform(const QString &p) : m_platform(stringToPlatform(p))
-    {}
+    CPlatform::CPlatform(const QString &p) : m_platform(stringToPlatform(p)) {}
 
-    CPlatform::CPlatform(Platform p) : m_platform(p)
-    {}
+    CPlatform::CPlatform(Platform p) : m_platform(p) {}
 
     CPlatform::PlatformFlag CPlatform::getPlatformFlag() const
     {
@@ -44,10 +42,7 @@ namespace swift::misc
         return c;
     }
 
-    bool CPlatform::isSinglePlatform() const
-    {
-        return this->numberPlatforms() == 1;
-    }
+    bool CPlatform::isSinglePlatform() const { return this->numberPlatforms() == 1; }
 
     bool CPlatform::isAnyWindows() const
     {
@@ -55,10 +50,7 @@ namespace swift::misc
         return p.testFlag(Win32) || p.testFlag(Win64);
     }
 
-    QString CPlatform::getPlatformName() const
-    {
-        return this->convertToQString(true);
-    }
+    QString CPlatform::getPlatformName() const { return this->convertToQString(true); }
 
     CIcons::IconIndex CPlatform::toIcon() const
     {
@@ -187,10 +179,7 @@ namespace swift::misc
         return isCurrentPlatform(CPlatform::stringToPlatform(platform));
     }
 
-    bool CPlatform::isCurrentPlatform(const CPlatform &platform)
-    {
-        return platform == CPlatform::currentPlatform();
-    }
+    bool CPlatform::isCurrentPlatform(const CPlatform &platform) { return platform == CPlatform::currentPlatform(); }
 
     bool CPlatform::canRunOnCurrentPlatform(const CPlatform &platform)
     {

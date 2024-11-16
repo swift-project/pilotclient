@@ -27,9 +27,7 @@ namespace swift::simplugin::fs9
     }
 
     CDirectPlayPeer::CDirectPlayPeer(const CCallsign &callsign, QObject *parent)
-        : QObject(parent),
-          m_callsign(callsign),
-          m_callbackWrapper(this, &CDirectPlayPeer::directPlayMessageHandler)
+        : QObject(parent), m_callsign(callsign), m_callbackWrapper(this, &CDirectPlayPeer::directPlayMessageHandler)
     {}
 
     CDirectPlayPeer::~CDirectPlayPeer()
@@ -97,7 +95,8 @@ namespace swift::simplugin::fs9
             // Proceeed only, if the sender is our local player
             if (pReceiveMsg->dpnidSender == m_playerUser)
             {
-                const QByteArray messageData = QByteArray((char *)pReceiveMsg->pReceiveData, pReceiveMsg->dwReceiveDataSize);
+                const QByteArray messageData =
+                    QByteArray((char *)pReceiveMsg->pReceiveData, pReceiveMsg->dwReceiveDataSize);
                 emit customPacketReceived(messageData);
             }
             break;
@@ -148,10 +147,7 @@ namespace swift::simplugin::fs9
         case DPN_MSGID_CONNECT_COMPLETE:
         {
             const PDPNMSG_CONNECT_COMPLETE connectCompleteMsg = static_cast<PDPNMSG_CONNECT_COMPLETE>(msgBuffer);
-            if (connectCompleteMsg->hResultCode == DPN_OK)
-            {
-                emit connectionComplete();
-            }
+            if (connectCompleteMsg->hResultCode == DPN_OK) { emit connectionComplete(); }
             else
             {
                 CLogMessage(this).warning(u"DirectPlay connection returned: %1") << connectCompleteMsg->hResultCode;
@@ -179,11 +175,9 @@ namespace swift::simplugin::fs9
 
         // Continue here only if CoInitializeEx was successful
         // S_OK: The COM library was initialized successfully on this thread.
-        // S_FALSE: The COM library is already initialized on this thread. Reference count was incremented. This is not an error.
-        if (hr == S_OK || hr == S_FALSE)
-        {
-            m_coInitializeSucceeded = true;
-        }
+        // S_FALSE: The COM library is already initialized on this thread. Reference count was incremented. This is not
+        // an error.
+        if (hr == S_OK || hr == S_FALSE) { m_coInitializeSucceeded = true; }
         else
         {
             CLogMessage(this).warning(u"CoInitializeEx returned error code %1");
@@ -191,10 +185,7 @@ namespace swift::simplugin::fs9
         }
 
         // Create the IDirectPlay8Peer Object
-        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Peer,
-                                         nullptr,
-                                         CLSCTX_INPROC_SERVER,
-                                         IID_IDirectPlay8Peer,
+        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Peer, nullptr, CLSCTX_INPROC_SERVER, IID_IDirectPlay8Peer,
                                          reinterpret_cast<void **>(&m_directPlayPeer))))
         {
             CLogMessage(this).warning(u"Failed to create DirectPlay8Peer object!");
@@ -238,7 +229,8 @@ namespace swift::simplugin::fs9
         QScopedArrayPointer<unsigned char> memPtr(new unsigned char[dwSize]);
         DPN_SERVICE_PROVIDER_INFO *dpnSPInfo = reinterpret_cast<DPN_SERVICE_PROVIDER_INFO *>(memPtr.data());
 
-        if (FAILED(hr = m_directPlayPeer->EnumServiceProviders(&CLSID_DP8SP_TCPIP, nullptr, dpnSPInfo, &dwSize, &dwItems, 0)))
+        if (FAILED(hr = m_directPlayPeer->EnumServiceProviders(&CLSID_DP8SP_TCPIP, nullptr, dpnSPInfo, &dwSize,
+                                                               &dwItems, 0)))
         {
             CLogMessage(this).warning(u"Failed to enumerate service providers!");
             return false;
@@ -256,10 +248,8 @@ namespace swift::simplugin::fs9
         HRESULT hr = S_OK;
 
         // Create our IDirectPlay8Address Device Address
-        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
-                                         CLSCTX_INPROC_SERVER,
-                                         IID_IDirectPlay8Address,
-                                         reinterpret_cast<void **>(&m_deviceAddress))))
+        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr, CLSCTX_INPROC_SERVER,
+                                         IID_IDirectPlay8Address, reinterpret_cast<void **>(&m_deviceAddress))))
         {
             CLogMessage(this).warning(u"Failed to create DirectPlay8Address instance!");
             return hr;
@@ -280,17 +270,12 @@ namespace swift::simplugin::fs9
         HRESULT hr = S_OK;
 
         // Create our IDirectPlay8Address Device Address
-        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
-                                         CLSCTX_INPROC_SERVER,
-                                         IID_IDirectPlay8Address,
-                                         reinterpret_cast<void **>(&m_deviceAddress))))
+        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr, CLSCTX_INPROC_SERVER,
+                                         IID_IDirectPlay8Address, reinterpret_cast<void **>(&m_deviceAddress))))
             return logDirectPlayError(hr);
 
         // Set the SP for our Device Address
-        if (FAILED(hr = m_deviceAddress->SetSP(&CLSID_DP8SP_TCPIP)))
-        {
-            return logDirectPlayError(hr);
-        }
+        if (FAILED(hr = m_deviceAddress->SetSP(&CLSID_DP8SP_TCPIP))) { return logDirectPlayError(hr); }
 
         return S_OK;
     }
@@ -307,11 +292,7 @@ namespace swift::simplugin::fs9
 
         DPNHANDLE asyncHandle;
         // If m_playerUser is non zero, send it only to him
-        if (FAILED(hr = m_directPlayPeer->SendTo(m_playerUser,
-                                                 &dpBufferDesc,
-                                                 1, 0,
-                                                 nullptr,
-                                                 &asyncHandle,
+        if (FAILED(hr = m_directPlayPeer->SendTo(m_playerUser, &dpBufferDesc, 1, 0, nullptr, &asyncHandle,
                                                  DPNSEND_GUARANTEED)))
         {
             const QString m(message);
@@ -321,8 +302,5 @@ namespace swift::simplugin::fs9
         return hr;
     }
 
-    void CDirectPlayPeer::reset()
-    {
-        m_playerUser = 0;
-    }
+    void CDirectPlayPeer::reset() { m_playerUser = 0; }
 } // namespace swift::simplugin::fs9

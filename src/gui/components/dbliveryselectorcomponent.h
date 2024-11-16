@@ -34,9 +34,7 @@ namespace swift::gui::components
     /*!
      * Selector for liveries
      */
-    class SWIFT_GUI_EXPORT CDbLiverySelectorComponent :
-        public QFrame,
-        public swift::gui::CDropBase
+    class SWIFT_GUI_EXPORT CDbLiverySelectorComponent : public QFrame, public swift::gui::CDropBase
     {
         Q_OBJECT
 
@@ -96,7 +94,8 @@ namespace swift::gui::components
         void onCompleterActivated(const QString &liveryCode);
 
         //! Distributors have been read
-        void onLiveriesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+        void onLiveriesRead(swift::misc::network::CEntityFlags::Entity entity,
+                            swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
         //! Strip extra info from livery code
         QString stripExtraInfo(const QString &liveryCode) const;

@@ -12,20 +12,11 @@ namespace swift::misc
 
     CLogMessage::CLogMessage(const char *file, int line, const char *function) : m_logger(file, line, function) {}
 
-    CLogMessage::operator CStatusMessage()
-    {
-        return { m_categories, m_severity, message() };
-    }
+    CLogMessage::operator CStatusMessage() { return { m_categories, m_severity, message() }; }
 
-    CLogMessage::~CLogMessage()
-    {
-        ostream(qtCategory()).noquote() << message();
-    }
+    CLogMessage::~CLogMessage() { ostream(qtCategory()).noquote() << message(); }
 
-    QByteArray CLogMessage::qtCategory() const
-    {
-        return m_categories.toQString().toLatin1();
-    }
+    QByteArray CLogMessage::qtCategory() const { return m_categories.toQString().toLatin1(); }
 
     QDebug CLogMessage::ostream(const QByteArray &category) const
     {
@@ -56,15 +47,13 @@ namespace swift::misc
     void CLogMessage::preformatted(const CStatusMessage &statusMessage)
     {
         if (statusMessage.isEmpty()) { return; } // just skip empty messages
-        CLogMessage(statusMessage.getCategories()).log(statusMessage.getSeverity(), u"%1") << statusMessage.getMessage();
+        CLogMessage(statusMessage.getCategories()).log(statusMessage.getSeverity(), u"%1")
+            << statusMessage.getMessage();
     }
 
     void CLogMessage::preformatted(const CStatusMessageList &statusMessages)
     {
-        for (const auto &msg : statusMessages)
-        {
-            preformatted(msg);
-        }
+        for (const auto &msg : statusMessages) { preformatted(msg); }
     }
 } // namespace swift::misc
 

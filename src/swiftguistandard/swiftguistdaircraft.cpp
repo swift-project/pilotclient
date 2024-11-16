@@ -37,13 +37,12 @@ bool SwiftGuiStd::reloadOwnAircraft()
     return true;
 }
 
-void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude, const CAltitude &pressureAltitude)
+void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude,
+                                  const CAltitude &pressureAltitude)
 {
     if (!sGui) { return; }
-    CCoordinateGeodetic coordinate(
-        CLatitude::fromWgs84(wgsLatitude),
-        CLongitude::fromWgs84(wgsLongitude),
-        CAltitude(0, CLengthUnit::m()));
+    CCoordinateGeodetic coordinate(CLatitude::fromWgs84(wgsLatitude), CLongitude::fromWgs84(wgsLongitude),
+                                   CAltitude(0, CLengthUnit::m()));
 
     m_ownAircraft.setPosition(coordinate);
     m_ownAircraft.setAltitude(altitude);

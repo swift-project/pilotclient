@@ -8,14 +8,11 @@
 
 namespace swift::core::fsd
 {
-    RevBClientParts::RevBClientParts()
-    {}
+    RevBClientParts::RevBClientParts() {}
 
-    RevBClientParts::RevBClientParts(const QString &sender, const QString &partsval1, const QString &partsval2, const QString &partsval3)
-        : MessageBase(sender),
-          m_partsval1(partsval1),
-          m_partsval2(partsval2),
-          m_partsval3(partsval3)
+    RevBClientParts::RevBClientParts(const QString &sender, const QString &partsval1, const QString &partsval2,
+                                     const QString &partsval3)
+        : MessageBase(sender), m_partsval1(partsval1), m_partsval2(partsval2), m_partsval3(partsval3)
 
     {}
 

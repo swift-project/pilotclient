@@ -15,15 +15,9 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CPixmap)
 
 namespace swift::misc
 {
-    CPixmap::CPixmap(const QPixmap &pixmap) : m_pixmap(pixmap), m_hasCachedPixmap(true)
-    {
-        this->fillByteArray();
-    }
+    CPixmap::CPixmap(const QPixmap &pixmap) : m_pixmap(pixmap), m_hasCachedPixmap(true) { this->fillByteArray(); }
 
-    CPixmap::CPixmap(const CPixmap &other) : CValueObject(other)
-    {
-        *this = other;
-    }
+    CPixmap::CPixmap(const CPixmap &other) : CValueObject(other) { *this = other; }
 
     CPixmap &CPixmap::operator=(const CPixmap &other)
     {
@@ -60,10 +54,7 @@ namespace swift::misc
         return (this->m_array.isEmpty() || this->m_array.isNull());
     }
 
-    CPixmap::operator QPixmap() const
-    {
-        return pixmap();
-    }
+    CPixmap::operator QPixmap() const { return pixmap(); }
 
     QString CPixmap::convertToQString(bool i18n) const
     {
@@ -71,10 +62,7 @@ namespace swift::misc
         return "Pixmap";
     }
 
-    QPixmap CPixmap::toPixmap() const
-    {
-        return this->pixmap();
-    }
+    QPixmap CPixmap::toPixmap() const { return this->pixmap(); }
 
     void CPixmap::fillByteArray()
     {

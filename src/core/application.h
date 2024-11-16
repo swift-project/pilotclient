@@ -85,9 +85,7 @@ namespace swift::core
      *
      * \sa swift::gui::CGuiApplication for the GUI version of application
      */
-    class SWIFT_CORE_EXPORT CApplication :
-        public QObject,
-        public swift::misc::CIdentifiable
+    class SWIFT_CORE_EXPORT CApplication : public QObject, public swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -102,7 +100,10 @@ namespace swift::core
         explicit CApplication(swift::misc::CApplicationInfo::Application application, bool init = true);
 
         //! Constructor
-        explicit CApplication(const QString &applicationName = executable(), swift::misc::CApplicationInfo::Application application = swift::misc::CApplicationInfo::Unknown, bool init = true);
+        explicit CApplication(
+            const QString &applicationName = executable(),
+            swift::misc::CApplicationInfo::Application application = swift::misc::CApplicationInfo::Unknown,
+            bool init = true);
 
         //! Destructor
         ~CApplication() override;
@@ -206,9 +207,9 @@ namespace swift::core
         static void exit(int retcode = EXIT_SUCCESS);
 
         //! Process all events for some time
-        //! \remark unlike QCoreApplication::processEvents this will spend at least the given time in the function, using QThread::msleep
-        //! \remark using processEventsFor can lead to undesired behaviour: A function may be called again before it is finished, even with only one thread
-        //! \sa swift::misc::CEventLoop
+        //! \remark unlike QCoreApplication::processEvents this will spend at least the given time in the function,
+        //! using QThread::msleep \remark using processEventsFor can lead to undesired behaviour: A function may be
+        //! called again before it is finished, even with only one thread \sa swift::misc::CEventLoop
         static void processEventsFor(int milliseconds);
 
         //! Clear the caches
@@ -232,7 +233,8 @@ namespace swift::core
         // ----------------------- cmd line args / parsing ----------------------------------------
 
         //! Current parameters replaced by new arguments without the cmd line argument
-        QStringList argumentsJoined(const QStringList &newArguments = {}, const QStringList &removeArguments = {}) const;
+        QStringList argumentsJoined(const QStringList &newArguments = {},
+                                    const QStringList &removeArguments = {}) const;
 
         //! Similar to QCoreApplication::arguments
         static QStringList arguments();
@@ -278,7 +280,8 @@ namespace swift::core
         //! \see parseCommandLineArguments
         //! \see loadSetupAndHandleErrors
         //! \remark This function cannot automatically called from the constructor because (1) it calls virtual
-        //! functions to show error messages and (2) the some command line arguments are added after constructing the object
+        //! functions to show error messages and (2) the some command line arguments are added after constructing the
+        //! object
         bool parseCommandLineArgsAndLoadSetup();
 
         //! Display error message
@@ -326,8 +329,8 @@ namespace swift::core
         //! @{
 
         //! Supports contexts
-        //! \remark checks the real availability of the contexts, so it can happen that we want to use contexts, and they are not yet initialized (false here)
-        //! \sa m_useContexts we use or we will use contexts
+        //! \remark checks the real availability of the contexts, so it can happen that we want to use contexts, and
+        //! they are not yet initialized (false here) \sa m_useContexts we use or we will use contexts
         bool supportsContexts(bool ignoreShutdownTest = false) const;
 
         //! The core facade config
@@ -346,7 +349,9 @@ namespace swift::core
         //! Init web data services and start them
         //! \sa webDataServicesStarted
         //! \remark requires setup loaded
-        swift::misc::CStatusMessageList initAndStartWebDataServices(CWebReaderFlags::WebReader webReader, const db::CDatabaseReaderConfigList &dbReaderConfig);
+        swift::misc::CStatusMessageList
+        initAndStartWebDataServices(CWebReaderFlags::WebReader webReader,
+                                    const db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! Get the facade
         CCoreFacade *getCoreFacade() { return m_coreFacade.data(); }
@@ -446,60 +451,66 @@ namespace swift::core
 
         //! Request to get network reply
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const swift::misc::network::CUrl &url,
-                                      const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
+        QNetworkReply *getFromNetwork(const swift::misc::network::CUrl &url, const CallbackSlot &callback,
+                                      int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const swift::misc::network::CUrl &url,
-                                      const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
+        QNetworkReply *getFromNetwork(const swift::misc::network::CUrl &url, const CallbackSlot &callback,
+                                      const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply, supporting swift::misc::network::CUrlLog
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const swift::misc::network::CUrl &url, int logId,
-                                      const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
+        QNetworkReply *getFromNetwork(const swift::misc::network::CUrl &url, int logId, const CallbackSlot &callback,
+                                      const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
+        QNetworkReply *getFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback,
+                                      int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const QNetworkRequest &request,
-                                      const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
+        QNetworkReply *getFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback,
+                                      const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to get network reply, supporting swift::misc::network::CUrlLog
         //! \threadsafe
-        QNetworkReply *getFromNetwork(const QNetworkRequest &request, int logId,
-                                      const CallbackSlot &callback, const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
+        QNetworkReply *getFromNetwork(const QNetworkRequest &request, int logId, const CallbackSlot &callback,
+                                      const ProgressSlot &progress, int maxRedirects = DefaultMaxRedirects);
 
         //! Request to delete a network resource from network, supporting swift::misc::network::CUrlLog
         //! \threadsafe
         QNetworkReply *deleteResourceFromNetwork(const QNetworkRequest &request, int logId,
-                                                 const CallbackSlot &callback,
-                                                 int maxRedirects = DefaultMaxRedirects);
+                                                 const CallbackSlot &callback, int maxRedirects = DefaultMaxRedirects);
 
         //! Post to network
         //! \threadsafe
-        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data, const CallbackSlot &callback);
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, const QByteArray &data,
+                                     const CallbackSlot &callback);
 
         //! Post to network
         //! \note This method takes ownership over \c multiPart.
         //! \threadsafe
-        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart, const CallbackSlot &callback);
+        QNetworkReply *postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart,
+                                     const CallbackSlot &callback);
 
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
-        QNetworkReply *headerFromNetwork(const swift::misc::network::CUrl &url, const CallbackSlot &callback, int maxRedirects = NoRedirects);
+        QNetworkReply *headerFromNetwork(const swift::misc::network::CUrl &url, const CallbackSlot &callback,
+                                         int maxRedirects = NoRedirects);
 
         //! Request to get network repy using HTTP's HEADER method
         //! \threadsafe
-        QNetworkReply *headerFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback, int maxRedirects = NoRedirects);
+        QNetworkReply *headerFromNetwork(const QNetworkRequest &request, const CallbackSlot &callback,
+                                         int maxRedirects = NoRedirects);
 
         //! Download file from network and store it as passed
         //! \threadsafe
-        QNetworkReply *downloadFromNetwork(const swift::misc::network::CUrl &url, const QString &saveAsFileName,
-                                           const swift::misc::CSlot<void(const swift::misc::CStatusMessage &)> &callback, int maxRedirects = DefaultMaxRedirects);
+        QNetworkReply *
+        downloadFromNetwork(const swift::misc::network::CUrl &url, const QString &saveAsFileName,
+                            const swift::misc::CSlot<void(const swift::misc::CStatusMessage &)> &callback,
+                            int maxRedirects = DefaultMaxRedirects);
         //! @}
 
     signals:
@@ -530,7 +541,8 @@ namespace swift::core
         void init(bool withMetadata);
 
         //! Is the command line option represented in the given arguments?
-        static int indexOfCommandLineOption(const QCommandLineOption &option, const QStringList &args = CApplication::arguments());
+        static int indexOfCommandLineOption(const QCommandLineOption &option,
+                                            const QStringList &args = CApplication::arguments());
 
         //! Arguments without that given option
         static void argumentsWithoutOption(const QCommandLineOption &option, QStringList &args);
@@ -553,7 +565,8 @@ namespace swift::core
 
         //! Start the web data services
         //! \note does nothing when setup is not yet loaded
-        swift::misc::CStatusMessageList startWebDataServices(CWebReaderFlags::WebReader webReader, const db::CDatabaseReaderConfigList &dbReaderConfig);
+        swift::misc::CStatusMessageList startWebDataServices(CWebReaderFlags::WebReader webReader,
+                                                             const db::CDatabaseReaderConfigList &dbReaderConfig);
 
         //! executable name
         static const QString &executable();
@@ -603,24 +616,24 @@ namespace swift::core
         //! Init the local settings
         swift::misc::CStatusMessage initLocalSettings();
 
-        using NetworkRequestOrPostFunction = std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)>;
+        using NetworkRequestOrPostFunction =
+            std::function<QNetworkReply *(QNetworkAccessManager &, const QNetworkRequest &)>;
 
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
         //! \return QNetworkReply reply will only be returned, if the QNetworkAccessManager is in the same thread
-        QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
-                                       int logId, const CallbackSlot &callback,
+        QNetworkReply *httpRequestImpl(const QNetworkRequest &request, int logId, const CallbackSlot &callback,
                                        int maxRedirects, NetworkRequestOrPostFunction requestOrPostMethod);
 
         //! Implementation for getFromNetwork(), postToNetwork() and headerFromNetwork()
         //! \return QNetworkReply reply will only be returned, if the QNetworkAccessManager is in the same thread
-        QNetworkReply *httpRequestImpl(const QNetworkRequest &request,
-                                       int logId, const CallbackSlot &callback, const ProgressSlot &progress,
-                                       int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest);
+        QNetworkReply *httpRequestImpl(const QNetworkRequest &request, int logId, const CallbackSlot &callback,
+                                       const ProgressSlot &progress, int maxRedirects,
+                                       NetworkRequestOrPostFunction getPostOrDeleteRequest);
 
         //! Call httpRequestImpl in correct thread
-        void httpRequestImplInQAMThread(const QNetworkRequest &request,
-                                        int logId, const CallbackSlot &callback, const ProgressSlot &progress,
-                                        int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest);
+        void httpRequestImplInQAMThread(const QNetworkRequest &request, int logId, const CallbackSlot &callback,
+                                        const ProgressSlot &progress, int maxRedirects,
+                                        NetworkRequestOrPostFunction getPostOrDeleteRequest);
 
         //! Write meta information into the application directory so other swift versions can display them
         void tagApplicationDataDirectory();
@@ -657,7 +670,9 @@ namespace swift::core
         bool m_localSettingsLoaded = false; //!< local settings loaded?
 
         // -------------- crashpad -----------------
-        swift::misc::CSettingReadOnly<application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this, &CApplication::onCrashDumpUploadEnabledChanged };
+        swift::misc::CSettingReadOnly<application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled {
+            this, &CApplication::onCrashDumpUploadEnabledChanged
+        };
 
         //! Upload settings changed
         void onCrashDumpUploadEnabledChanged();

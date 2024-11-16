@@ -46,7 +46,10 @@ namespace swift::misc::physical_quantities
         CTime(QTime time, bool negative = false);
 
         //! \copydoc CPhysicalQuantity(const QString &unitString)
-        CTime(const QString &unitString) : CPhysicalQuantity(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }
+        CTime(const QString &unitString) : CPhysicalQuantity(0, CTimeUnit::nullUnit())
+        {
+            this->parseFromString(unitString);
+        }
 
         //! From string hh:mm, or hh:mm:ss, or time units such as s, min
         void parseFromString(const QString &time);

@@ -17,7 +17,9 @@ using namespace swift::misc::aviation;
 namespace swift::gui::models
 {
     template <typename T, bool UseCompare>
-    CListModelCallsignObjects<T, UseCompare>::CListModelCallsignObjects(const QString &translationContext, QObject *parent) : CListModelBase<ContainerType, UseCompare>(translationContext, parent)
+    CListModelCallsignObjects<T, UseCompare>::CListModelCallsignObjects(const QString &translationContext,
+                                                                        QObject *parent)
+        : CListModelBase<ContainerType, UseCompare>(translationContext, parent)
     {}
 
     template <typename T, bool UseCompare>
@@ -29,7 +31,8 @@ namespace swift::gui::models
     }
 
     template <typename T, bool UseCompare>
-    swift::misc::aviation::CCallsign CListModelCallsignObjects<T, UseCompare>::callsignForIndex(const QModelIndex &index) const
+    swift::misc::aviation::CCallsign
+    CListModelCallsignObjects<T, UseCompare>::callsignForIndex(const QModelIndex &index) const
     {
         if (!index.isValid()) { return CCallsign(); }
         return this->at(index).getCallsign();

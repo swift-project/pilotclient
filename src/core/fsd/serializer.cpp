@@ -181,8 +181,7 @@ namespace swift::core::fsd
         // future versions
         case SimType::XPLANE12:
         case SimType::P3Dv5:
-        case SimType::MSFS:
-            return "0";
+        case SimType::MSFS: return "0";
         }
 
         Q_UNREACHABLE();
@@ -407,8 +406,7 @@ namespace swift::core::fsd
     {
         switch (value)
         {
-        case CTransponder::StateStandby:
-            return QStringLiteral("S");
+        case CTransponder::StateStandby: return QStringLiteral("S");
         case CTransponder::ModeMil1:
         case CTransponder::ModeMil2:
         case CTransponder::ModeMil3:
@@ -416,10 +414,8 @@ namespace swift::core::fsd
         case CTransponder::ModeMil5:
         case CTransponder::ModeA:
         case CTransponder::ModeC:
-        case CTransponder::ModeS:
-            return QStringLiteral("N");
-        case CTransponder::StateIdent:
-            return QStringLiteral("Y");
+        case CTransponder::ModeS: return QStringLiteral("N");
+        case CTransponder::StateIdent: return QStringLiteral("Y");
         }
 
         Q_UNREACHABLE();

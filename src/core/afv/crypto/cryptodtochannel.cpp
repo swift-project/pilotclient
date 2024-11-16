@@ -11,7 +11,10 @@ using namespace swift::misc;
 
 namespace swift::core::afv::crypto
 {
-    CCryptoDtoChannel::CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize) : m_aeadTransmitKey(channelConfig.aeadTransmitKey), m_aeadReceiveKey(channelConfig.aeadReceiveKey), m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_hmacKey(channelConfig.hmacKey), m_channelTag(channelConfig.channelTag)
+    CCryptoDtoChannel::CCryptoDtoChannel(const CryptoDtoChannelConfigDto &channelConfig, int receiveSequenceHistorySize)
+        : m_aeadTransmitKey(channelConfig.aeadTransmitKey), m_aeadReceiveKey(channelConfig.aeadReceiveKey),
+          m_receiveSequenceSizeMaxSize(receiveSequenceHistorySize), m_hmacKey(channelConfig.hmacKey),
+          m_channelTag(channelConfig.channelTag)
     {
         if (m_aeadTransmitKey.size() != crypto_aead_chacha20poly1305_IETF_KEYBYTES)
         {
@@ -62,10 +65,7 @@ namespace swift::core::afv::crypto
         return {};
     }
 
-    QString CCryptoDtoChannel::getChannelTag() const
-    {
-        return m_channelTag;
-    }
+    QString CCryptoDtoChannel::getChannelTag() const { return m_channelTag; }
 
     QByteArray CCryptoDtoChannel::getReceiveKey(CryptoDtoMode mode)
     {

@@ -22,8 +22,7 @@ namespace swift::misc
 namespace swift::gui::models
 {
     //! Country list model
-    class SWIFT_GUI_EXPORT CCountryListModel :
-        public CListModelDbObjects<swift::misc::CCountryList, QString, true>
+    class SWIFT_GUI_EXPORT CCountryListModel : public CListModelDbObjects<swift::misc::CCountryList, QString, true>
     {
         Q_OBJECT
 

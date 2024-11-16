@@ -91,7 +91,8 @@ namespace swift::gui::components
         void setServerButtonsVisible(bool visible);
 
         //! VATSIM data file was loaded
-        void onWebServiceDataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void onWebServiceDataRead(swift::misc::network::CEntityFlags::Entity entity,
+                                  swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         swift::core::data::CNetworkSetup m_networkSetup; //!< servers last used
         bool m_updatePilotOnServerChanges = true;

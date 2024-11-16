@@ -14,17 +14,18 @@ using namespace swift::misc;
 
 namespace swift::gui::models
 {
-    CColumn::CColumn(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable) : m_columnName(headerName), m_columnToolTip(toolTip), m_formatter(formatter ? formatter : new CDefaultFormatter()), m_propertyIndex(propertyIndex),
-                                                                                                                                                            m_editable(editable)
+    CColumn::CColumn(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex,
+                     CDefaultFormatter *formatter, bool editable)
+        : m_columnName(headerName), m_columnToolTip(toolTip),
+          m_formatter(formatter ? formatter : new CDefaultFormatter()), m_propertyIndex(propertyIndex),
+          m_editable(editable)
     {}
 
-    CColumn::CColumn(const CPropertyIndex &propertyIndex) : m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
+    CColumn::CColumn(const CPropertyIndex &propertyIndex)
+        : m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
     {}
 
-    bool CColumn::hasSortPropertyIndex() const
-    {
-        return !m_sortPropertyIndex.isEmpty();
-    }
+    bool CColumn::hasSortPropertyIndex() const { return !m_sortPropertyIndex.isEmpty(); }
 
     void CColumn::setSortPropertyIndex(const CPropertyIndex &propertyIndex)
     {
@@ -35,12 +36,11 @@ namespace swift::gui::models
     const CDefaultFormatter *CColumn::getFormatter() const
     {
         const bool incogntio = this->isIncognito() && sGui && sGui->isIncognito();
-        return incogntio ?
-                   CColumn::incongitoFormatter() :
-                   m_formatter.data();
+        return incogntio ? CColumn::incongitoFormatter() : m_formatter.data();
     }
 
-    CColumn::CColumn(const QString &toolTip, const CPropertyIndex &propertyIndex) : m_columnToolTip(toolTip), m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
+    CColumn::CColumn(const QString &toolTip, const CPropertyIndex &propertyIndex)
+        : m_columnToolTip(toolTip), m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
     {}
 
     CColumn CColumn::standardValueObject(const QString &headerName, const CPropertyIndex &propertyIndex, int alignment)
@@ -48,7 +48,8 @@ namespace swift::gui::models
         return CColumn(headerName, propertyIndex, new CValueObjectFormatter(alignment));
     }
 
-    CColumn CColumn::standardValueObject(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, int alignment)
+    CColumn CColumn::standardValueObject(const QString &headerName, const QString &toolTip,
+                                         const CPropertyIndex &propertyIndex, int alignment)
     {
         return CColumn(headerName, toolTip, propertyIndex, new CValueObjectFormatter(alignment));
     }
@@ -58,7 +59,8 @@ namespace swift::gui::models
         return CColumn(headerName, propertyIndex, new CStringFormatter(alignment));
     }
 
-    CColumn CColumn::standardString(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, int alignment)
+    CColumn CColumn::standardString(const QString &headerName, const QString &toolTip,
+                                    const CPropertyIndex &propertyIndex, int alignment)
     {
         return CColumn(headerName, toolTip, propertyIndex, new CStringFormatter(alignment));
     }
@@ -68,7 +70,8 @@ namespace swift::gui::models
         return CColumn("#", "order", propertyIndex, new CStringFormatter(alignment));
     }
 
-    CColumn CColumn::standardInteger(const QString &headerName, const QString &toolTip, const CPropertyIndex &propertyIndex, int alignment)
+    CColumn CColumn::standardInteger(const QString &headerName, const QString &toolTip,
+                                     const CPropertyIndex &propertyIndex, int alignment)
     {
         return CColumn(headerName, toolTip, propertyIndex, new CIntegerFormatter(alignment));
     }
@@ -88,7 +91,8 @@ namespace swift::gui::models
 
     // --------------- columns ----------------------------------------------
 
-    CColumns::CColumns(const QString &translationContext, QObject *parent) : QObject(parent), m_translationContext(translationContext)
+    CColumns::CColumns(const QString &translationContext, QObject *parent)
+        : QObject(parent), m_translationContext(translationContext)
     {
         // void
     }
@@ -142,10 +146,7 @@ namespace swift::gui::models
     {
         for (int i = 0; i < m_columns.size(); i++)
         {
-            if (m_columns.at(i).getPropertyIndex() == propertyIndex)
-            {
-                return i;
-            }
+            if (m_columns.at(i).getPropertyIndex() == propertyIndex) { return i; }
         }
         return -1;
     }
@@ -159,10 +160,7 @@ namespace swift::gui::models
         return -1;
     }
 
-    int CColumns::size() const
-    {
-        return m_columns.size();
-    }
+    int CColumns::size() const { return m_columns.size(); }
 
     bool CColumns::hasAlignment(const QModelIndex &index) const
     {
@@ -199,10 +197,7 @@ namespace swift::gui::models
         return (index.column() >= 0 && index.column() < m_columns.size());
     }
 
-    bool CColumns::isValidColumn(int column) const
-    {
-        return column >= 0 && column < m_columns.size();
-    }
+    bool CColumns::isValidColumn(int column) const { return column >= 0 && column < m_columns.size(); }
 
     bool CColumns::hasAnyWidthPercentage() const
     {
@@ -222,10 +217,7 @@ namespace swift::gui::models
         }
 
         int c = 0;
-        for (CColumn &column : m_columns)
-        {
-            column.setWidthPercentage(percentages.at(c++));
-        }
+        for (CColumn &column : m_columns) { column.setWidthPercentage(percentages.at(c++)); }
     }
 
     QList<int> CColumns::calculateWidths(int totalWidth) const

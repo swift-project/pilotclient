@@ -17,9 +17,11 @@ using namespace swift::core::afv::clients;
 
 namespace swift::core::context
 {
-    CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContextAudioBase(mode, runtime)
+    CContextAudio::CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+        : CContextAudioBase(mode, runtime)
     {
-        connect(this, &CContextAudio::changedLocalAudioDevices, this, &CContextAudio::onChangedLocalDevices, Qt::QueuedConnection);
+        connect(this, &CContextAudio::changedLocalAudioDevices, this, &CContextAudio::onChangedLocalDevices,
+                Qt::QueuedConnection);
     }
 
     CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
@@ -67,9 +69,6 @@ namespace swift::core::context
         return false;
     }
 
-    CAudioDeviceInfoList CContextAudio::getRegisteredDevices() const
-    {
-        return m_registeredDevices;
-    }
+    CAudioDeviceInfoList CContextAudio::getRegisteredDevices() const { return m_registeredDevices; }
 
 } // namespace swift::core::context

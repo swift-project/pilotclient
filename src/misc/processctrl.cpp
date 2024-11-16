@@ -15,8 +15,7 @@
 
 namespace swift::misc
 {
-    CProcessCtrl::CProcessCtrl(QObject *parent) : QProcess(parent)
-    {}
+    CProcessCtrl::CProcessCtrl(QObject *parent) : QProcess(parent) {}
 
 #ifdef Q_OS_WIN
     bool startDetachedWithConsoleWindow(const QString &program, const QStringList &arguments)
@@ -31,10 +30,7 @@ namespace swift::misc
         startupInfo.cb = sizeof(startupInfo);
 
         QString command = '"' % QString(program).replace('/', '\\') % '"';
-        if (!arguments.isEmpty())
-        {
-            command += " \"" % arguments.join("\" \"").replace('/', '\\') % '"';
-        }
+        if (!arguments.isEmpty()) { command += " \"" % arguments.join("\" \"").replace('/', '\\') % '"'; }
 
         DWORD flags = 0;
         flags |= NORMAL_PRIORITY_CLASS;
@@ -45,11 +41,13 @@ namespace swift::misc
         std::array<WCHAR, MAX_PATH> wszCommandLine = { {} };
         command.toWCharArray(wszCommandLine.data());
 
-        int result = CreateProcess(nullptr, wszCommandLine.data(), nullptr, nullptr, inherit, flags, nullptr, nullptr, &startupInfo, &processInfo);
+        int result = CreateProcess(nullptr, wszCommandLine.data(), nullptr, nullptr, inherit, flags, nullptr, nullptr,
+                                   &startupInfo, &processInfo);
 
         if (result == 0)
         {
-            CLogMessage(static_cast<CProcessCtrl *>(nullptr)).warning(u"Failed to start %1: %2") << program << GetLastError();
+            CLogMessage(static_cast<CProcessCtrl *>(nullptr)).warning(u"Failed to start %1: %2")
+                << program << GetLastError();
             return false;
         }
 

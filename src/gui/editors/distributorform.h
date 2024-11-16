@@ -55,7 +55,8 @@ namespace swift::gui::editors
         void clear();
 
         //! Set value
-        bool setValue(const swift::misc::simulation::CDistributor &distributor = swift::misc::simulation::CDistributor());
+        bool
+        setValue(const swift::misc::simulation::CDistributor &distributor = swift::misc::simulation::CDistributor());
 
     protected:
         //! \copydoc CForm::jsonPasted

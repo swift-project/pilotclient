@@ -20,7 +20,8 @@ namespace swift::misc::aviation
         }
     }
 
-    CAircraftEngineList::CAircraftEngineList(const CSequence<CAircraftEngine> &other) : CSequence<CAircraftEngine>(other)
+    CAircraftEngineList::CAircraftEngineList(const CSequence<CAircraftEngine> &other)
+        : CSequence<CAircraftEngine>(other)
     {}
 
     CAircraftEngine CAircraftEngineList::getEngine(int engineNumber) const
@@ -69,10 +70,7 @@ namespace swift::misc::aviation
         }
     }
 
-    bool CAircraftEngineList::isAnyEngineOn() const
-    {
-        return this->contains(&CAircraftEngine::isOn, true);
-    }
+    bool CAircraftEngineList::isAnyEngineOn() const { return this->contains(&CAircraftEngine::isOn, true); }
 
     QJsonObject CAircraftEngineList::toJson() const
     {

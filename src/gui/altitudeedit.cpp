@@ -26,10 +26,7 @@ namespace swift::gui
         return a;
     }
 
-    void CAltitudeEdit::setAltitude(const CAltitude &altitude)
-    {
-        this->setText(altitude.asFpICAOAltitudeString());
-    }
+    void CAltitudeEdit::setAltitude(const CAltitude &altitude) { this->setText(altitude.asFpICAOAltitudeString()); }
 
     bool CAltitudeEdit::isValid(CStatusMessageList *msgs) const
     {

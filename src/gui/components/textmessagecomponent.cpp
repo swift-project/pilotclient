@@ -55,8 +55,7 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CTextMessageComponent::CTextMessageComponent(QWidget *parent) : QFrame(parent),
-                                                                    ui(new Ui::CTextMessageComponent)
+    CTextMessageComponent::CTextMessageComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CTextMessageComponent)
     {
         ui->setupUi(this);
         ui->tw_TextMessages->setCurrentIndex(0);
@@ -66,34 +65,45 @@ namespace swift::gui::components
         ui->comp_AtcStations->setWithIcons(false);
 
         // lep_textMessages is the own line edit
-        bool c = connect(ui->lep_TextMessages, &CLineEditHistory::returnPressedUnemptyLine, this, &CTextMessageComponent::textMessageEntered, Qt::QueuedConnection);
+        bool c = connect(ui->lep_TextMessages, &CLineEditHistory::returnPressedUnemptyLine, this,
+                         &CTextMessageComponent::textMessageEntered, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-        c = connect(ui->gb_Settings, &QGroupBox::toggled, this, &CTextMessageComponent::onSettingsChecked, Qt::QueuedConnection);
+        c = connect(ui->gb_Settings, &QGroupBox::toggled, this, &CTextMessageComponent::onSettingsChecked,
+                    Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-        c = connect(ui->gb_MessageTo, &QGroupBox::toggled, this, &CTextMessageComponent::onMessageToChecked, Qt::QueuedConnection);
+        c = connect(ui->gb_MessageTo, &QGroupBox::toggled, this, &CTextMessageComponent::onMessageToChecked,
+                    Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
-        c = connect(ui->comp_AtcStations, &CAtcButtonComponent::requestAtcStation, this, &CTextMessageComponent::onAtcButtonClicked, Qt::QueuedConnection);
+        c = connect(ui->comp_AtcStations, &CAtcButtonComponent::requestAtcStation, this,
+                    &CTextMessageComponent::onAtcButtonClicked, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
-        c = connect(ui->cb_LatestFirst, &QCheckBox::toggled, this, &CTextMessageComponent::onLatestFirstChanged, Qt::QueuedConnection);
+        c = connect(ui->cb_LatestFirst, &QCheckBox::toggled, this, &CTextMessageComponent::onLatestFirstChanged,
+                    Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
         // style sheet
-        c = connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageComponent::onStyleSheetChanged, Qt::QueuedConnection);
+        c = connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CTextMessageComponent::onStyleSheetChanged,
+                    Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-        c = connect(ui->comp_SettingsStyle, &CSettingsTextMessageStyle::changed, this, &CTextMessageComponent::updateSettings, Qt::QueuedConnection);
+        c = connect(ui->comp_SettingsStyle, &CSettingsTextMessageStyle::changed, this,
+                    &CTextMessageComponent::updateSettings, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
 
         if (sGui && sGui->getCoreFacade() && sGui->getIContextNetwork() && sGui->getIContextOwnAircraft())
         {
-            c = connect(this, &CTextMessageComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine, Qt::QueuedConnection);
+            c = connect(this, &CTextMessageComponent::commandEntered, sGui->getCoreFacade(),
+                        &CCoreFacade::parseCommandLine, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-            c = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this, &CTextMessageComponent::onTextMessageReceived, Qt::QueuedConnection);
+            c = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this,
+                        &CTextMessageComponent::onTextMessageReceived, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-            c = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, this, &CTextMessageComponent::onTextMessageSent, Qt::QueuedConnection);
+            c = connect(sGui->getIContextNetwork(), &IContextNetwork::textMessageSent, this,
+                        &CTextMessageComponent::onTextMessageSent, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-            c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::onChangedAircraftCockpit, Qt::QueuedConnection);
+            c = connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this,
+                        &CTextMessageComponent::onChangedAircraftCockpit, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
         }
         Q_UNUSED(c)
@@ -106,7 +116,8 @@ namespace swift::gui::components
             this->onSettingsChanged(); // init
             this->showCurrentFrequenciesFromCockpit();
             const bool latestFirst = m_messageSettings.get().isLatestFirst();
-            ui->tvp_TextMessagesAll->setSorting(CTextMessage::IndexUtcTimestamp, latestFirst ? Qt::DescendingOrder : Qt::AscendingOrder);
+            ui->tvp_TextMessagesAll->setSorting(CTextMessage::IndexUtcTimestamp,
+                                                latestFirst ? Qt::DescendingOrder : Qt::AscendingOrder);
 
             // hide for the beginning
             ui->gb_Settings->setChecked(false);
@@ -114,13 +125,13 @@ namespace swift::gui::components
         });
     }
 
-    CTextMessageComponent::~CTextMessageComponent()
-    {}
+    CTextMessageComponent::~CTextMessageComponent() {}
 
     bool CTextMessageComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
         bool c = CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
-        c = c && connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CTextMessageComponent::topLevelChanged, Qt::QueuedConnection);
+        c = c && connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this,
+                         &CTextMessageComponent::topLevelChanged, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
         return c;
     }
@@ -133,9 +144,7 @@ namespace swift::gui::components
         case TextMessagesCom1: return ui->tb_TextMessagesCOM1;
         case TextMessagesCom2: return ui->tb_TextMessagesCOM2;
         case TextMessagesUnicom: return ui->tb_TextMessagesUnicom;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong index"); break;
         }
         return nullptr;
     }
@@ -150,10 +159,7 @@ namespace swift::gui::components
     void CTextMessageComponent::selectTabWidget(TextMessageTab tab)
     {
         QWidget *w = this->getTabWidget(tab);
-        if (w)
-        {
-            ui->tw_TextMessages->setCurrentWidget(w);
-        }
+        if (w) { ui->tw_TextMessages->setCurrentWidget(w); }
     }
 
     void CTextMessageComponent::selectTabWidget(const CCallsign &callsign, bool addIfNotExisting)
@@ -187,13 +193,11 @@ namespace swift::gui::components
             CNotificationSounds::NotificationFlag notification = CNotificationSounds::NoNotifications;
 
             // SELCAL
-            if (!m_usedAsOverlayWidget && message.isSelcalMessage() && ownAircraft.isSelcalSelected(message.getSelcalCode()))
+            if (!m_usedAsOverlayWidget && message.isSelcalMessage() &&
+                ownAircraft.isSelcalSelected(message.getSelcalCode()))
             {
                 // this is SELCAL for me
-                if (playNotification)
-                {
-                    sGui->getCContextAudioBase()->playSelcalTone(message.getSelcalCode());
-                }
+                if (playNotification) { sGui->getCContextAudioBase()->playSelcalTone(message.getSelcalCode()); }
 
                 if (msgSettings.popupSelcalMessages())
                 {
@@ -209,10 +213,7 @@ namespace swift::gui::components
                 ui->tep_TextMessagesUnicom->insertTextMessage(message);
 
                 // Message was received from others
-                if (!message.wasSent())
-                {
-                    notification = CNotificationSounds::NotificationTextMessageUnicom;
-                }
+                if (!message.wasSent()) { notification = CNotificationSounds::NotificationTextMessageUnicom; }
                 relevantForMe = true;
             }
 
@@ -250,7 +251,8 @@ namespace swift::gui::components
                 }
 
                 // callsign mentioned notification
-                if (relevantForMe && audioCsMentioned && ownAircraft.hasCallsign() && message.mentionsCallsign(ownAircraft.getCallsign()))
+                if (relevantForMe && audioCsMentioned && ownAircraft.hasCallsign() &&
+                    message.mentionsCallsign(ownAircraft.getCallsign()))
                 {
                     notification = CNotificationSounds::NotificationTextCallsignMentioned;
                     // Flash taskbar icon
@@ -309,7 +311,8 @@ namespace swift::gui::components
         }
     }
 
-    void CTextMessageComponent::onChangedAircraftCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+    void CTextMessageComponent::onChangedAircraftCockpit(const CSimulatedAircraft &aircraft,
+                                                         const CIdentifier &originator)
     {
         // this is called for every overlay widget as well
         Q_UNUSED(originator)
@@ -451,14 +454,8 @@ namespace swift::gui::components
         const QString f2n = QString::asprintf("%03.3f", freq2.valueRounded(CFrequencyUnit::MHz(), 3));
         QString f1 = QStringLiteral("COM1: %1").arg(f1n);
         QString f2 = QStringLiteral("COM2: %1").arg(f2n);
-        if (f1Stations.size() == 1)
-        {
-            f1 += u' ' % f1Stations.front().getCallsignAndControllerRealName();
-        }
-        if (f2Stations.size() == 1)
-        {
-            f2 += u' ' % f2Stations.front().getCallsignAndControllerRealName();
-        }
+        if (f1Stations.size() == 1) { f1 += u' ' % f1Stations.front().getCallsignAndControllerRealName(); }
+        if (f2Stations.size() == 1) { f2 += u' ' % f2Stations.front().getCallsignAndControllerRealName(); }
 
         ui->tb_TextMessagesCOM1->setToolTip(f1);
         ui->tb_TextMessagesCOM1->setToolTip(f2);
@@ -539,10 +536,7 @@ namespace swift::gui::components
         if (m_showRealNames && sGui && !sGui->isShuttingDown() && sGui->getIContextNetwork())
         {
             const QString realName = sGui->getIContextNetwork()->getUserForCallsign(callsign).getRealName();
-            if (!realName.isEmpty())
-            {
-                return callsign.asString() % u": " % realName;
-            }
+            if (!realName.isEmpty()) { return callsign.asString() % u": " % realName; }
         }
         return callsign.asString();
     }
@@ -584,17 +578,20 @@ namespace swift::gui::components
         if (textMessage.isServerMessage()) { return; }
         if (isBroadcast) { return; }
 
-        const bool playSound = !textMessage.wasSent() && !m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() && sGui->getIContextAudio();
+        const bool playSound = !textMessage.wasSent() && !m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() &&
+                               sGui->getIContextAudio();
         if (sGui && sGui->getIContextAudio() && playSound)
         {
             const CSettings settings = m_audioSettings.get();
             if (textMessage.isSupervisorMessage() && settings.textMessageSupervisor())
             {
-                sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextMessageSupervisor, true);
+                sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextMessageSupervisor,
+                                                               true);
             }
             else if (textMessage.isPrivateMessage() && settings.textMessagePrivate())
             {
-                sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextMessagePrivate, true);
+                sGui->getCContextAudioBase()->playNotification(CNotificationSounds::NotificationTextMessagePrivate,
+                                                               true);
             }
         }
     }
@@ -605,16 +602,14 @@ namespace swift::gui::components
         return sGui->getIContextOwnAircraft()->getOwnAircraft();
     }
 
-    QWidget *CTextMessageComponent::findTextMessageTabByCallsign(const CCallsign &callsign, bool callsignResolution) const
+    QWidget *CTextMessageComponent::findTextMessageTabByCallsign(const CCallsign &callsign,
+                                                                 bool callsignResolution) const
     {
         // search the private message tabs by property first
         for (int index = ui->tw_TextMessages->count() - 1; index >= 0; index--)
         {
             QWidget *tab = ui->tw_TextMessages->widget(index);
-            if (tab && tab->property("callsign").toString() == callsign.asString())
-            {
-                return tab;
-            }
+            if (tab && tab->property("callsign").toString() == callsign.asString()) { return tab; }
         }
 
         QWidget *w = this->findTextMessageTabByName(callsign.asString());
@@ -678,10 +673,7 @@ namespace swift::gui::components
         if (!this->isVisible()) { return; }
 
         const QString cl(ui->lep_TextMessages->getLastEnteredLineFormatted());
-        if (!cl.isEmpty())
-        {
-            this->handleEnteredTextMessage(cl);
-        }
+        if (!cl.isEmpty()) { this->handleEnteredTextMessage(cl); }
     }
 
     bool CTextMessageComponent::isVisibleWidgetHack() const
@@ -700,10 +692,16 @@ namespace swift::gui::components
             if (sGui && sGui->getIContextNetwork())
             {
                 const CAtcStation atc = sGui->getIContextNetwork()->getOnlineStationForCallsign(cs);
-                if (atc.hasCallsign()) { return atc.getCallsign(); } // first hand callsign diretcly from network context
+                if (atc.hasCallsign())
+                {
+                    return atc.getCallsign();
+                } // first hand callsign diretcly from network context
 
                 const CSimulatedAircraft aircraft = sGui->getIContextNetwork()->getAircraftInRangeForCallsign(cs);
-                if (aircraft.hasCallsign()) { return aircraft.getCallsign(); } // first hand callsign diretcly from network context
+                if (aircraft.hasCallsign())
+                {
+                    return aircraft.getCallsign();
+                } // first hand callsign diretcly from network context
             }
             return cs;
         }
@@ -749,22 +747,26 @@ namespace swift::gui::components
         }
         else if (ui->tw_TextMessages->tabText(index) == "SUP")
         {
-            CLogMessage(this).validationError(u"Message cannot be send to SUP channel. To send another wallop message use .wallop instead");
+            CLogMessage(this).validationError(
+                u"Message cannot be send to SUP channel. To send another wallop message use .wallop instead");
             return {};
         }
         else
         {
             if (index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesCOM1))
             {
-                cmd.append(QString::number(this->getOwnAircraft().getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3)));
+                cmd.append(QString::number(this->getOwnAircraft().getCom1System().getFrequencyActive().valueRounded(
+                    CFrequencyUnit::MHz(), 3)));
             }
             else if (index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesCOM2))
             {
-                cmd.append(QString::number(this->getOwnAircraft().getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3)));
+                cmd.append(QString::number(this->getOwnAircraft().getCom2System().getFrequencyActive().valueRounded(
+                    CFrequencyUnit::MHz(), 3)));
             }
             else if (index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesUnicom))
             {
-                cmd.append(QString::number(CPhysicalQuantitiesConstants::FrequencyUnicom().valueRounded(CFrequencyUnit::MHz(), 3)));
+                cmd.append(QString::number(
+                    CPhysicalQuantitiesConstants::FrequencyUnicom().valueRounded(CFrequencyUnit::MHz(), 3)));
             }
             else
             {
@@ -784,20 +786,11 @@ namespace swift::gui::components
                         // selectedTabText expected to be the callsign
                         // with T664 we resolve against the callsigns in the context if possible
                         const CCallsign cs = this->getCallsignPropertyForTab(index, true);
-                        if (cs.isEmpty())
-                        {
-                            cmd.append(selectedTabText);
-                        }
-                        else
-                        {
-                            cmd.append(cs.isAtcCallsign() ? cs.getStringAsSet() : cs.asString());
-                        }
+                        if (cs.isEmpty()) { cmd.append(selectedTabText); }
+                        else { cmd.append(cs.isAtcCallsign() ? cs.getStringAsSet() : cs.asString()); }
                     }
                 }
-                else
-                {
-                    cmd.append(selectedTabText);
-                }
+                else { cmd.append(selectedTabText); }
             }
             return cmd % u" " % enteredLine;
         }
@@ -875,15 +868,9 @@ namespace swift::gui::components
         this->setTab(TextMessagesAll);
     }
 
-    void CTextMessageComponent::fontSizeMinus()
-    {
-        ui->comp_SettingsStyle->fontSizeMinus();
-    }
+    void CTextMessageComponent::fontSizeMinus() { ui->comp_SettingsStyle->fontSizeMinus(); }
 
-    void CTextMessageComponent::fontSizePlus()
-    {
-        ui->comp_SettingsStyle->fontSizePlus();
-    }
+    void CTextMessageComponent::fontSizePlus() { ui->comp_SettingsStyle->fontSizePlus(); }
 
     void CTextMessageComponent::setTab(TextMessageTab tab)
     {
@@ -921,15 +908,9 @@ namespace swift::gui::components
         return ui->tw_TextMessages->widget(0) == ui->tb_TextMessagesAll;
     }
 
-    void CTextMessageComponent::showSettings(bool show)
-    {
-        ui->gb_Settings->setVisible(show);
-    }
+    void CTextMessageComponent::showSettings(bool show) { ui->gb_Settings->setVisible(show); }
 
-    void CTextMessageComponent::showTextMessageEntry(bool show)
-    {
-        ui->fr_TextMessage->setVisible(show);
-    }
+    void CTextMessageComponent::showTextMessageEntry(bool show) { ui->fr_TextMessage->setVisible(show); }
 
     void CTextMessageComponent::focusTextEntry()
     {
@@ -939,10 +920,7 @@ namespace swift::gui::components
         ui->lep_TextMessages->setFocus();
     }
 
-    void CTextMessageComponent::removeAllMessagesTab()
-    {
-        ui->tw_TextMessages->removeTab(0);
-    }
+    void CTextMessageComponent::removeAllMessagesTab() { ui->tw_TextMessages->removeTab(0); }
 
     void CTextMessageComponent::activate(bool send, bool receive)
     {
@@ -955,10 +933,7 @@ namespace swift::gui::components
         if (tabText.isEmpty()) { return {}; }
         int index = tabText.indexOf(':');
         if (index < 0) { index = tabText.indexOf(' '); }
-        if (index >= 0)
-        {
-            return tabText.left(index);
-        }
+        if (index >= 0) { return tabText.left(index); }
         return tabText;
     }
 } // namespace swift::gui::components

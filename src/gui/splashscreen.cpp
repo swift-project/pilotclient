@@ -42,8 +42,5 @@ namespace swift::gui
         this->showStatusMessage(message.toHtml(true, true));
     }
 
-    void CSplashScreen::setSplashFont(const QFont &font)
-    {
-        this->setFont(font);
-    }
+    void CSplashScreen::setSplashFont(const QFont &font) { this->setFont(font); }
 } // namespace swift::gui

@@ -14,20 +14,23 @@ class QDBusConnection;
 
 namespace swift::simplugin::flightgear
 {
-    CFGSwiftBusServiceProxy::CFGSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
+    CFGSwiftBusServiceProxy::CFGSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy)
+        : QObject(parent)
     {
-        m_dbusInterface = new swift::misc::CGenericDBusInterface(FGSWIFTBUS_SERVICE_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
+        m_dbusInterface = new swift::misc::CGenericDBusInterface(FGSWIFTBUS_SERVICE_SERVICENAME, ObjectPath(),
+                                                                 InterfaceName(), connection, this);
         if (!dummy)
         {
             bool s;
-            s = connection.connect(QString(), "/fgswiftbus/service", "org.swift_project.fgswiftbus.service",
-                                   "aircraftModelChanged", this,
-                                   SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
+            s = connection.connect(
+                QString(), "/fgswiftbus/service", "org.swift_project.fgswiftbus.service", "aircraftModelChanged", this,
+                SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
             Q_ASSERT(s);
 
-            s = connection.connect(QString(), "/fgswiftbus/service", "org.swift_project.fgswiftbus.service",
-                                   "airportsInRangeUpdated", this,
-                                   SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
+            s = connection.connect(
+                QString(), "/fgswiftbus/service", "org.swift_project.fgswiftbus.service", "airportsInRangeUpdated",
+                this,
+                SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
             Q_ASSERT(s);
         }
     }

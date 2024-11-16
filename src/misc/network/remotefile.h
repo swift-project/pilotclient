@@ -24,9 +24,7 @@ namespace swift::misc::network
     /*!
      * Remote file, i.e. a file residing on a server
      */
-    class SWIFT_MISC_EXPORT CRemoteFile :
-        public CValueObject<CRemoteFile>,
-        public ITimestampBased
+    class SWIFT_MISC_EXPORT CRemoteFile : public CValueObject<CRemoteFile>, public ITimestampBased
     {
     public:
         //! Properties by index

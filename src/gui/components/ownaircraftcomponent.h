@@ -103,7 +103,9 @@ namespace swift::gui::components
         //! Get a prefill model
         swift::misc::simulation::CAircraftModel getPrefillModel() const;
 
-        swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
+        swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel {
+            this
+        }; //!< recently used aircraft model
         QScopedPointer<Ui::COwnAircraftComponent> ui;
     };
 } // namespace swift::gui::components

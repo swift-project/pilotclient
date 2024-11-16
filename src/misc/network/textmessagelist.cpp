@@ -24,24 +24,24 @@ namespace swift::misc::network
         this->push_back(pm);
     }
 
-    CTextMessageList::CTextMessageList(const QString &message, const CCallsign &fromCallsign, const CCallsign &toCallsign)
+    CTextMessageList::CTextMessageList(const QString &message, const CCallsign &fromCallsign,
+                                       const CCallsign &toCallsign)
     {
         CTextMessage pm(message, fromCallsign, toCallsign);
         this->push_back(pm);
     }
 
-    CTextMessageList::CTextMessageList(const QString &message, const CFrequency &frequency, const CCallsign &fromCallsign)
+    CTextMessageList::CTextMessageList(const QString &message, const CFrequency &frequency,
+                                       const CCallsign &fromCallsign)
     {
         CTextMessage pm(message, frequency, fromCallsign);
         this->push_back(pm);
     }
 
-    CTextMessageList::CTextMessageList(const CTextMessage &message)
-    {
-        this->push_back(message);
-    }
+    CTextMessageList::CTextMessageList(const CTextMessage &message) { this->push_back(message); }
 
-    CTextMessageList::CTextMessageList(const QString &message, const QList<CFrequency> &frequencies, const CCallsign &fromCallsign)
+    CTextMessageList::CTextMessageList(const QString &message, const QList<CFrequency> &frequencies,
+                                       const CCallsign &fromCallsign)
     {
         if (frequencies.isEmpty()) return;
         for (const CFrequency &frequency : frequencies)
@@ -51,8 +51,7 @@ namespace swift::misc::network
         }
     }
 
-    CTextMessageList::CTextMessageList(const CSequence<CTextMessage> &other) : CSequence<CTextMessage>(other)
-    {}
+    CTextMessageList::CTextMessageList(const CSequence<CTextMessage> &other) : CSequence<CTextMessage>(other) {}
 
     CTextMessageList CTextMessageList::getPrivateMessages() const
     {
@@ -79,10 +78,7 @@ namespace swift::misc::network
         return this->findBy(&CTextMessage::isSupervisorMessage, true);
     }
 
-    bool CTextMessageList::containsRadioMessages() const
-    {
-        return this->contains(&CTextMessage::isRadioMessage, true);
-    }
+    bool CTextMessageList::containsRadioMessages() const { return this->contains(&CTextMessage::isRadioMessage, true); }
 
     CTextMessageList CTextMessageList::findByFrequency(const CFrequency &frequency) const
     {
@@ -106,10 +102,7 @@ namespace swift::misc::network
         for (const CTextMessage &m : *this)
         {
             if (m.getRecipientCallsign().isEmpty()) { continue; }
-            if (m.getRecipientCallsign() != recipient)
-            {
-                result.push_back(m);
-            }
+            if (m.getRecipientCallsign() != recipient) { result.push_back(m); }
         }
         return result;
     }

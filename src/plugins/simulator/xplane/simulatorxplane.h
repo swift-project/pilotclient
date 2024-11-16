@@ -120,44 +120,59 @@ namespace swift::simplugin::xplane
         CSimulatorXPlane(const swift::misc::simulation::CSimulatorPluginInfo &info,
                          swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                          swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                         swift::misc::network::IClientProvider *clientProvider,
-                         QObject *parent = nullptr);
+                         swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! Dtor
         virtual ~CSimulatorXPlane() override;
 
         //! \name ISimulator implementations
         //! @{
-        virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
+        virtual bool isTimeSynchronized() const override
+        {
+            return false;
+        } // TODO: Can we query the XP intrinisc feature?
         virtual bool connectTo() override;
         virtual bool disconnectFrom() override;
-        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator) override;
-        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
+        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                               const swift::misc::CIdentifier &originator) override;
+        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                              const swift::misc::CIdentifier &originator) override;
         virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
         virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
         virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
-        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) override;
-        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override { return swift::misc::physical_quantities::CTime(0, swift::misc::physical_quantities::CTimeUnit::hrmin()); }
+        virtual bool setTimeSynchronization(bool enable,
+                                            const swift::misc::physical_quantities::CTime &offset) override;
+        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override
+        {
+            return swift::misc::physical_quantities::CTime(0, swift::misc::physical_quantities::CTimeUnit::hrmin());
+        }
         virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
         virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
         virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override;
         virtual void unload() override;
         virtual QString getStatisticsSimulatorSpecific() const override;
         virtual void resetAircraftStatistics() override;
-        virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
-        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) override;
-        virtual void callbackReceivedRequestedElevation(const swift::misc::geo::CElevationPlane &plane, const swift::misc::aviation::CCallsign &callsign, bool isWater) override;
+        virtual swift::misc::CStatusMessageList
+        getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
+        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::aviation::CAircraftSituation &situation,
+                                               const swift::misc::aviation::CAircraftParts &parts) override;
+        virtual void callbackReceivedRequestedElevation(const swift::misc::geo::CElevationPlane &plane,
+                                                        const swift::misc::aviation::CCallsign &callsign,
+                                                        bool isWater) override;
         virtual void setFlightNetworkConnected(bool connected) override;
         //! @}
 
         //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation
-        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &callsign) override;
+        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
+                                      const swift::misc::aviation::CCallsign &callsign) override;
 
     protected:
         //! \name ISimulator implementations
         //! @{
         virtual bool isConnected() const override;
-        virtual bool physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft) override;
+        virtual bool
+        physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft) override;
         virtual bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
         virtual int physicallyRemoveAllRemoteAircraft() override;
         virtual void clearAllRemoteAircraftData() override;
@@ -183,9 +198,12 @@ namespace swift::simplugin::xplane
         using QDoubleList = QList<double>;
         using QBoolList = QList<bool>;
 
-        void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const swift::misc::CSequence<double> &lats, const swift::misc::CSequence<double> &lons, const swift::misc::CSequence<double> &alts);
-        void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao,
-                                         const QString &modelString, const QString &name, const QString &description);
+        void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names,
+                                const swift::misc::CSequence<double> &lats, const swift::misc::CSequence<double> &lons,
+                                const swift::misc::CSequence<double> &alts);
+        void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
+                                         const QString &icao, const QString &modelString, const QString &name,
+                                         const QString &description);
         void fastTimerTimeout();
         void slowTimerTimeout();
 
@@ -228,8 +246,9 @@ namespace swift::simplugin::xplane
         //! Callbacks from simulator
         void onRemoteAircraftAdded(const QString &callsign);
         void onRemoteAircraftAddingFailed(const QString &callsign);
-        void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-                                               const QDoubleList &elevationsMeters, const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters);
+        void updateRemoteAircraftFromSimulator(const QStringList &callsigns, const QDoubleList &latitudesDeg,
+                                               const QDoubleList &longitudesDeg, const QDoubleList &elevationsMeters,
+                                               const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters);
         //! @}
 
         //! Disconnect from DBus
@@ -248,15 +267,21 @@ namespace swift::simplugin::xplane
         void setMinTerrainProbeDistance(const swift::misc::physical_quantities::CLength &distance);
 
         //! Handle a probe value
-        bool handleProbeValue(const swift::misc::geo::CElevationPlane &plane, const swift::misc::aviation::CCallsign &callsign, bool waterFlag, const QString &hint, bool ignoreOutsideRange);
+        bool handleProbeValue(const swift::misc::geo::CElevationPlane &plane,
+                              const swift::misc::aviation::CCallsign &callsign, bool waterFlag, const QString &hint,
+                              bool ignoreOutsideRange);
 
         static bool isSuspiciousTerrainValue(const swift::misc::geo::CElevationPlane &elevation);
         static const swift::misc::physical_quantities::CLength &maxTerrainRequestDistance();
 
-        static swift::misc::physical_quantities::CLength fixSimulatorCg(const swift::misc::physical_quantities::CLength &cg, const swift::misc::simulation::CAircraftModel &model);
+        static swift::misc::physical_quantities::CLength
+        fixSimulatorCg(const swift::misc::physical_quantities::CLength &cg,
+                       const swift::misc::simulation::CAircraftModel &model);
 
         DBusMode m_dbusMode;
-        swift::misc::CSetting<swift::misc::simulation::settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlane::onXSwiftBusSettingsChanged };
+        swift::misc::CSetting<swift::misc::simulation::settings::TXSwiftBusSettings> m_xSwiftBusServerSettings {
+            this, &CSimulatorXPlane::onXSwiftBusSettingsChanged
+        };
         static constexpr qint64 TimeoutAdding = 10000;
         QDBusConnection m_dBusConnection { "default" };
         QDBusServiceWatcher *m_watcher { nullptr };
@@ -275,19 +300,19 @@ namespace swift::simplugin::xplane
         swift::misc::simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft; //!< aircraft to be added
         QHash<swift::misc::aviation::CCallsign, qint64> m_addingInProgressAircraft; //!< aircraft just adding
         swift::misc::simulation::CSimulatedAircraftList m_aircraftAddedFailed; //!< aircraft for which adding failed
-        swift::misc::physical_quantities::CLength m_minSuspicousTerrainProbe { nullptr }; //!< min. distance of "failed" (suspicious) terrain probe requests
+        swift::misc::physical_quantities::CLength m_minSuspicousTerrainProbe {
+            nullptr
+        }; //!< min. distance of "failed" (suspicious) terrain probe requests
         XPlaneData m_xplaneData; //!< XPlane data
-        swift::misc::physical_quantities::CLength m_altitudeDelta; //!< XP12 altitude difference cause by temperature effect
+        swift::misc::physical_quantities::CLength
+            m_altitudeDelta; //!< XP12 altitude difference cause by temperature effect
 
         // statistics
         qint64 m_statsAddMaxTimeMs = -1;
         qint64 m_statsAddCurrentTimeMs = -1;
 
         //! Reset the XPlane data
-        void resetXPlaneData()
-        {
-            m_xplaneData = {};
-        }
+        void resetXPlaneData() { m_xplaneData = {}; }
     };
 
     //! Listener waits for xswiftbus service to show up
@@ -321,7 +346,9 @@ namespace swift::simplugin::xplane
         QTimer m_timer { this };
         QDBusConnection m_DBusConnection { "default" };
         QString m_dBusServerAddress;
-        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneListener::onXSwiftBusServerSettingChanged };
+        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TXSwiftBusSettings> m_xSwiftBusServerSettings {
+            this, &CSimulatorXPlaneListener::onXSwiftBusServerSettingChanged
+        };
     };
 
     //! Factory for creating CSimulatorXPlane instance
@@ -333,13 +360,18 @@ namespace swift::simplugin::xplane
 
     public:
         //! \copydoc swift::core::ISimulatorFactory::create
-        virtual swift::core::ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
-                                                swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-                                                swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                                swift::misc::network::IClientProvider *clientProvider) override;
+        virtual swift::core::ISimulator *
+        create(const swift::misc::simulation::CSimulatorPluginInfo &info,
+               swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+               swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+               swift::misc::network::IClientProvider *clientProvider) override;
 
         //! \copydoc swift::core::ISimulatorFactory::createListener
-        virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }
+        virtual swift::core::ISimulatorListener *
+        createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override
+        {
+            return new CSimulatorXPlaneListener(info);
+        }
     };
 } // namespace swift::simplugin::xplane
 

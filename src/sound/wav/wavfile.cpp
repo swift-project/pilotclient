@@ -52,9 +52,7 @@ namespace swift::sound::wav
         WAVEHeader wave; //!< WAVE header
     };
 
-    CWavFile::CWavFile(QObject *parent) : QFile(parent),
-                                          m_headerLength(0)
-    {}
+    CWavFile::CWavFile(QObject *parent) : QFile(parent), m_headerLength(0) {}
 
     bool CWavFile::open(const QString &fileName)
     {
@@ -63,15 +61,9 @@ namespace swift::sound::wav
         return QFile::open(QIODevice::ReadOnly) && readHeader();
     }
 
-    const QAudioFormat &CWavFile::fileFormat() const
-    {
-        return m_fileFormat;
-    }
+    const QAudioFormat &CWavFile::fileFormat() const { return m_fileFormat; }
 
-    qint64 CWavFile::headerLength() const
-    {
-        return m_headerLength;
-    }
+    qint64 CWavFile::headerLength() const { return m_headerLength; }
 
     bool CWavFile::readHeader()
     {
@@ -81,22 +73,22 @@ namespace swift::sound::wav
         bool result = read(reinterpret_cast<char *>(&header), sizeof(CombinedHeader)) == sizeof(CombinedHeader);
         if (result)
         {
-            if ((memcmp(&header.riff.descriptor.id, "RIFF", 4) == 0 || memcmp(&header.riff.descriptor.id, "RIFX", 4) == 0) && memcmp(&header.riff.type, "WAVE", 4) == 0 && memcmp(&header.wave.descriptor.id, "fmt ", 4) == 0 && (header.wave.audioFormat == 1 || header.wave.audioFormat == 0 || header.wave.audioFormat == 3))
+            if ((memcmp(&header.riff.descriptor.id, "RIFF", 4) == 0 ||
+                 memcmp(&header.riff.descriptor.id, "RIFX", 4) == 0) &&
+                memcmp(&header.riff.type, "WAVE", 4) == 0 && memcmp(&header.wave.descriptor.id, "fmt ", 4) == 0 &&
+                (header.wave.audioFormat == 1 || header.wave.audioFormat == 0 || header.wave.audioFormat == 3))
             {
                 // Read off remaining header information
                 if (qFromLittleEndian<quint32>(header.wave.descriptor.size) > sizeof(WAVEHeader))
                 {
                     // Extended data available
                     quint16 extraFormatBytes;
-                    if (peek((char *)&extraFormatBytes, sizeof(quint16)) != sizeof(quint16))
-                        return false;
+                    if (peek((char *)&extraFormatBytes, sizeof(quint16)) != sizeof(quint16)) return false;
                     const qint64 throwAwayBytes = sizeof(quint16) + qFromLittleEndian<quint16>(extraFormatBytes);
-                    if (read(throwAwayBytes).size() != throwAwayBytes)
-                        return false;
+                    if (read(throwAwayBytes).size() != throwAwayBytes) return false;
                 }
 
-                if (read((char *)&dataHeader, sizeof(DATAHeader)) != sizeof(DATAHeader))
-                    return false;
+                if (read((char *)&dataHeader, sizeof(DATAHeader)) != sizeof(DATAHeader)) return false;
 
                 // Establish format
                 int bps = qFromLittleEndian<quint16>(header.wave.bitsPerSample);
@@ -105,28 +97,13 @@ namespace swift::sound::wav
 
                 if (header.wave.audioFormat == 1 || header.wave.audioFormat == 0)
                 {
-                    if (bps == 8)
-                    {
-                        m_fileFormat.setSampleFormat(QAudioFormat::UInt8);
-                    }
-                    else if (bps == 16)
-                    {
-                        m_fileFormat.setSampleFormat(QAudioFormat::Int16);
-                    }
-                    else
-                    {
-                        m_fileFormat.setSampleFormat(QAudioFormat::Int32);
-                    }
+                    if (bps == 8) { m_fileFormat.setSampleFormat(QAudioFormat::UInt8); }
+                    else if (bps == 16) { m_fileFormat.setSampleFormat(QAudioFormat::Int16); }
+                    else { m_fileFormat.setSampleFormat(QAudioFormat::Int32); }
                 }
-                else
-                {
-                    m_fileFormat.setSampleFormat(QAudioFormat::Float);
-                }
+                else { m_fileFormat.setSampleFormat(QAudioFormat::Float); }
             }
-            else
-            {
-                result = false;
-            }
+            else { result = false; }
         }
         m_headerLength = pos();
 

@@ -23,9 +23,9 @@ class QTimerEvent;
 namespace swift::gui
 {
     /*!
-     * The QProgressIndicator class lets an application display a progress indicator to show that a lengthy task is under way.
-     * Progress indicators are indeterminate and do nothing more than spin to show that the application is busy.
-     * \note based on https://github.com/mojocorp/QProgressIndicator under MIT license
+     * The QProgressIndicator class lets an application display a progress indicator to show that a lengthy task is
+     * under way. Progress indicators are indeterminate and do nothing more than spin to show that the application is
+     * busy. \note based on https://github.com/mojocorp/QProgressIndicator under MIT license
      */
     class SWIFT_GUI_EXPORT CLoadIndicator : public QWidget
     {
@@ -36,8 +36,8 @@ namespace swift::gui
         CLoadIndicator(int width = 64, int height = 64, QWidget *parent = nullptr);
 
         //! Returns the delay between animation steps.
-        //! \return The number of milliseconds between animation steps. By default, the animation delay is set to 40 milliseconds.
-        //! \sa setAnimationDelay
+        //! \return The number of milliseconds between animation steps. By default, the animation delay is set to 40
+        //! milliseconds. \sa setAnimationDelay
         int getAnimationDelayTimeMs() const { return m_delayMs; }
 
         //! Returns a Boolean value indicating whether the component is currently animated.
@@ -46,8 +46,8 @@ namespace swift::gui
         bool isAnimated() const;
 
         //! Returns a Boolean value indicating whether the receiver shows itself even when it is not animating.
-        //! \return Return true if the progress indicator shows itself even when it is not animating. By default, it returns false.
-        //! \sa setDisplayedWhenStopped
+        //! \return Return true if the progress indicator shows itself even when it is not animating. By default, it
+        //! returns false. \sa setDisplayedWhenStopped
         bool isDisplayedWhenStopped() const;
 
         //! Returns the color of the component.
@@ -80,14 +80,13 @@ namespace swift::gui
         void stopAnimation(int indicatorId = -1);
 
         //! Sets the delay between animation steps.
-        //! Setting the \a delay to a value larger than 40 slows the animation, while setting the \a delay to a smaller value speeds it up.
-        //! \param delay The delay, in milliseconds.
-        //! \sa animationDelay
+        //! Setting the \a delay to a value larger than 40 slows the animation, while setting the \a delay to a smaller
+        //! value speeds it up. \param delay The delay, in milliseconds. \sa animationDelay
         void setAnimationDelay(int delay);
 
         //! Sets whether the component hides itself when it is not animating.
-        //! \param state The animation state. Set false to hide the progress indicator when it is not animating; otherwise true.
-        //! \sa isDisplayedWhenStopped
+        //! \param state The animation state. Set false to hide the progress indicator when it is not animating;
+        //! otherwise true. \sa isDisplayedWhenStopped
         void setDisplayedWhenStopped(bool state);
 
         //! Sets the color of the components to the given color.

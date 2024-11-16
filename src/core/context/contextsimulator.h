@@ -70,7 +70,8 @@ namespace swift::core::context
         virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
-        static IContextSimulator *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, swift::misc::CDBusServer *server, QDBusConnection &connection);
+        static IContextSimulator *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode,
+                                         swift::misc::CDBusServer *server, QDBusConnection &connection);
 
         //! Destructor
         virtual ~IContextSimulator() override {}
@@ -106,7 +107,8 @@ namespace swift::core::context
         void insufficientFrameRateDetected(bool fatal);
 
         //! Render restrictions have been changed
-        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const swift::misc::physical_quantities::CLength &maxRenderedDistance);
+        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft,
+                                       const swift::misc::physical_quantities::CLength &maxRenderedDistance);
 
         //! Setup changed
         void interpolationAndRenderingSetupChanged();
@@ -121,7 +123,8 @@ namespace swift::core::context
         void modelMatchingCompleted(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Adding a remote aircraft failed
-        void addingRemoteModelFailed(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const swift::misc::CStatusMessage &message);
+        void addingRemoteModelFailed(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool disabled,
+                                     bool failover, const swift::misc::CStatusMessage &message);
 
         //! Aircraft rendering changed
         void aircraftRenderingChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft);
@@ -137,8 +140,9 @@ namespace swift::core::context
 
         //! Validated model set
         void validatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator,
-                               const swift::misc::simulation::CAircraftModelList &valid, const swift::misc::simulation::CAircraftModelList &invalid,
-                               bool stopped, const swift::misc::CStatusMessageList &msgs);
+                               const swift::misc::simulation::CAircraftModelList &valid,
+                               const swift::misc::simulation::CAircraftModelList &invalid, bool stopped,
+                               const swift::misc::CStatusMessageList &msgs);
 
         //! Auto publish data written for simulator
         void autoPublishDataWritten(const swift::misc::simulation::CSimulatorInfo &simulator);
@@ -154,7 +158,8 @@ namespace swift::core::context
         virtual swift::misc::simulation::settings::CSimulatorSettings getSimulatorSettings() const = 0;
 
         //! Set settings for give simulator
-        virtual bool setSimulatorSettings(const swift::misc::simulation::settings::CSimulatorSettings &settings, const swift::misc::simulation::CSimulatorInfo &simulator) = 0;
+        virtual bool setSimulatorSettings(const swift::misc::simulation::settings::CSimulatorSettings &settings,
+                                          const swift::misc::simulation::CSimulatorInfo &simulator) = 0;
 
         //! Check all listeners enabled if simulator is connected
         virtual int checkListeners() = 0;
@@ -196,7 +201,8 @@ namespace swift::core::context
         virtual int getModelSetCount() const = 0;
 
         //! Models for model string
-        virtual swift::misc::simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const = 0;
+        virtual swift::misc::simulation::CAircraftModelList
+        getModelSetModelsStartingWith(const QString &modelString) const = 0;
 
         //! Model strings
         virtual QStringList getModelSetStrings() const = 0;
@@ -208,7 +214,8 @@ namespace swift::core::context
         virtual int removeModelsFromSet(const swift::misc::simulation::CAircraftModelList &removeModels) = 0;
 
         //! \copydoc CAircraftMatcher::disableModelsForMatching
-        virtual void disableModelsForMatching(const swift::misc::simulation::CAircraftModelList &removedModels, bool incremental) = 0;
+        virtual void disableModelsForMatching(const swift::misc::simulation::CAircraftModelList &removedModels,
+                                              bool incremental) = 0;
 
         //! \copydoc CAircraftMatcher::getDisabledModelsForMatching
         virtual swift::misc::simulation::CAircraftModelList getDisabledModelsForMatching() const = 0;
@@ -233,22 +240,30 @@ namespace swift::core::context
         virtual bool isTimeSynchronized() const = 0;
 
         //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::getInterpolationSetupGlobal
-        virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const = 0;
+        virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal
+        getInterpolationAndRenderingSetupGlobal() const = 0;
 
         //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::getInterpolationSetupsPerCallsign
-        virtual swift::misc::simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const = 0;
+        virtual swift::misc::simulation::CInterpolationSetupList
+        getInterpolationAndRenderingSetupsPerCallsign() const = 0;
 
         //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault
-        virtual swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationAndRenderingSetupPerCallsignOrDefault(const swift::misc::aviation::CCallsign &callsign) const = 0;
+        virtual swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign
+        getInterpolationAndRenderingSetupPerCallsignOrDefault(
+            const swift::misc::aviation::CCallsign &callsign) const = 0;
 
         //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
-        virtual void setInterpolationAndRenderingSetupGlobal(const swift::misc::simulation::CInterpolationAndRenderingSetupGlobal &setup) = 0;
+        virtual void setInterpolationAndRenderingSetupGlobal(
+            const swift::misc::simulation::CInterpolationAndRenderingSetupGlobal &setup) = 0;
 
         //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::setInterpolationSetupsPerCallsign
-        virtual bool setInterpolationAndRenderingSetupsPerCallsign(const swift::misc::simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) = 0;
+        virtual bool
+        setInterpolationAndRenderingSetupsPerCallsign(const swift::misc::simulation::CInterpolationSetupList &setups,
+                                                      bool ignoreSameAsGlobal) = 0;
 
         //! Interpolation messages
-        virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
+        virtual swift::misc::CStatusMessageList
+        getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
 
         //! Time synchronization offset
         virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const = 0;
@@ -263,7 +278,8 @@ namespace swift::core::context
         virtual swift::misc::CPixmap iconForModel(const QString &modelString) const = 0;
 
         //! Get mapping messages
-        virtual swift::misc::CStatusMessageList getMatchingMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
+        virtual swift::misc::CStatusMessageList
+        getMatchingMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
 
         //! Enabled mapping logging?
         virtual swift::misc::simulation::MatchingLog isMatchingMessagesEnabled() const = 0;
@@ -284,7 +300,9 @@ namespace swift::core::context
         virtual bool requestElevationBySituation(const swift::misc::aviation::CAircraftSituation &situation) = 0;
 
         //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::findClosestElevationWithinRange
-        virtual swift::misc::geo::CElevationPlane findClosestElevationWithinRange(const swift::misc::geo::CCoordinateGeodetic &reference, const swift::misc::physical_quantities::CLength &range) const = 0;
+        virtual swift::misc::geo::CElevationPlane
+        findClosestElevationWithinRange(const swift::misc::geo::CCoordinateGeodetic &reference,
+                                        const swift::misc::physical_quantities::CLength &range) const = 0;
 
         //! Repeat all matchings
         virtual int doMatchingsAgain() = 0;
@@ -302,7 +320,9 @@ namespace swift::core::context
         virtual bool testRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool add) = 0;
 
         //! Test update remote aircraft
-        virtual bool testUpdateRemoteAircraft(const swift::misc::aviation::CCallsign &cs, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) = 0;
+        virtual bool testUpdateRemoteAircraft(const swift::misc::aviation::CCallsign &cs,
+                                              const swift::misc::aviation::CAircraftSituation &situation,
+                                              const swift::misc::aviation::CAircraftParts &parts) = 0;
 
         //! Get matching setup
         virtual swift::misc::simulation::CAircraftMatcherSetup getMatchingSetup() const = 0;

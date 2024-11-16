@@ -87,9 +87,9 @@ namespace swift::misc
             //! Set a human readable name as "wallop-channel" callsign
             void markAsWallopCallsign();
 
-            //! Returns true if this is a co-pilot callsign of pilot. The logic is that the callsign is the same as the pilot one
-            //! but with a single character as suffix.
-            //! e.g Pilot logged in as DLH123, observer logged in as DLH123A
+            //! Returns true if this is a co-pilot callsign of pilot. The logic is that the callsign is the same as the
+            //! pilot one but with a single character as suffix. e.g Pilot logged in as DLH123, observer logged in as
+            //! DLH123A
             bool isMaybeCopilotCallsign(const CCallsign &pilotCallsign) const;
 
             //! Get callsign (normalized)
@@ -206,15 +206,14 @@ namespace swift::misc
 
             //! Specialized log message for matching / reverse lookup
             //! \threadsafe
-            static CStatusMessage logMessage(
-                const CCallsign &callsign,
-                const QString &message, const QStringList &extraCategories = {},
-                CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+            static CStatusMessage logMessage(const CCallsign &callsign, const QString &message,
+                                             const QStringList &extraCategories = {},
+                                             CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Specialized log for matching / reverse lookup
             //! \threadsafe
-            static void addLogDetailsToList(CStatusMessageList *log, const CCallsign &callsign,
-                                            const QString &message, const QStringList &extraCategories = {},
+            static void addLogDetailsToList(CStatusMessageList *log, const CCallsign &callsign, const QString &message,
+                                            const QStringList &extraCategories = {},
                                             CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
             //! Register metadata

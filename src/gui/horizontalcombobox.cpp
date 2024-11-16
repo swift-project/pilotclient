@@ -37,8 +37,5 @@ namespace swift::gui
         view()->setFixedWidth(w);
     }
 
-    void CHorizontalComboBox::setPopupWidth(int w)
-    {
-        m_popupWidth = w;
-    }
+    void CHorizontalComboBox::setPopupWidth(int w) { m_popupWidth = w; }
 } // namespace swift::gui

@@ -21,18 +21,11 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CRgbColor)
 
 namespace swift::misc
 {
-    CRgbColor::CRgbColor(const QString &color, bool isName)
-    {
-        this->setByString(color, isName);
-    }
+    CRgbColor::CRgbColor(const QString &color, bool isName) { this->setByString(color, isName); }
 
-    CRgbColor::CRgbColor(int r, int g, int b) : m_r(r), m_g(g), m_b(b)
-    {}
+    CRgbColor::CRgbColor(int r, int g, int b) : m_r(r), m_g(g), m_b(b) {}
 
-    CRgbColor::CRgbColor(const QColor &color)
-    {
-        this->setQColor(color);
-    }
+    CRgbColor::CRgbColor(const QColor &color) { this->setQColor(color); }
 
     QPixmap CRgbColor::toPixmap() const
     {
@@ -56,10 +49,7 @@ namespace swift::misc
         }
     }
 
-    QColor CRgbColor::toQColor() const
-    {
-        return QColor(red(), green(), blue());
-    }
+    QColor CRgbColor::toQColor() const { return QColor(red(), green(), blue()); }
 
     bool CRgbColor::setQColor(const QColor &color)
     {
@@ -77,10 +67,7 @@ namespace swift::misc
         }
     }
 
-    int CRgbColor::red() const
-    {
-        return m_r;
-    }
+    int CRgbColor::red() const { return m_r; }
 
     double CRgbColor::normalizedRed() const
     {
@@ -88,15 +75,9 @@ namespace swift::misc
         return c / colorRange();
     }
 
-    QString CRgbColor::redHex(int digits) const
-    {
-        return intToHex(m_r, digits);
-    }
+    QString CRgbColor::redHex(int digits) const { return intToHex(m_r, digits); }
 
-    int CRgbColor::green() const
-    {
-        return m_g;
-    }
+    int CRgbColor::green() const { return m_g; }
 
     double CRgbColor::normalizedGreen() const
     {
@@ -104,15 +85,9 @@ namespace swift::misc
         return c / colorRange();
     }
 
-    QString CRgbColor::greenHex(int digits) const
-    {
-        return intToHex(m_g, digits);
-    }
+    QString CRgbColor::greenHex(int digits) const { return intToHex(m_g, digits); }
 
-    int CRgbColor::blue() const
-    {
-        return m_b;
-    }
+    int CRgbColor::blue() const { return m_b; }
 
     double CRgbColor::normalizedBlue() const
     {
@@ -120,10 +95,7 @@ namespace swift::misc
         return c / colorRange();
     }
 
-    QString CRgbColor::blueHex(int digits) const
-    {
-        return intToHex(m_b, digits);
-    }
+    QString CRgbColor::blueHex(int digits) const { return intToHex(m_b, digits); }
 
     QString CRgbColor::hex(bool withHash) const
     {
@@ -138,10 +110,7 @@ namespace swift::misc
         return static_cast<int>(toQColor().rgb() & qRgba(255, 255, 255, 0));
     }
 
-    CRgbColor CRgbColor::fromPacked(int rgb)
-    {
-        return { qRed(rgb), qGreen(rgb), qBlue(rgb) };
-    }
+    CRgbColor CRgbColor::fromPacked(int rgb) { return { qRed(rgb), qGreen(rgb), qBlue(rgb) }; }
 
     void CRgbColor::setByString(const QString &color, bool isName)
     {
@@ -168,10 +137,7 @@ namespace swift::misc
         }
     }
 
-    bool CRgbColor::isValid() const
-    {
-        return m_r >= 0 && m_g >= 0 && m_b >= 0;
-    }
+    bool CRgbColor::isValid() const { return m_r >= 0 && m_g >= 0 && m_b >= 0; }
 
     double CRgbColor::colorDistance(const CRgbColor &color) const
     {
@@ -241,9 +207,7 @@ namespace swift::misc
         case IndexRed: return Compare::compare(m_r, compareValue.m_r);
         case IndexGreen: return Compare::compare(m_g, compareValue.m_g);
         case IndexWebHex: return this->compare(compareValue);
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Missing compare");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Missing compare"); break;
         }
         return 0;
     }
@@ -265,9 +229,6 @@ namespace swift::misc
         return 65535;
     }
 
-    QString CRgbColor::intToHex(int h, int digits)
-    {
-        return swift::misc::intToHex(h, digits);
-    }
+    QString CRgbColor::intToHex(int h, int digits) { return swift::misc::intToHex(h, digits); }
 
 } // namespace swift::misc

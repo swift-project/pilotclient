@@ -14,25 +14,26 @@ class QDBusConnection;
 
 namespace swift::simplugin::xplane
 {
-    CXSwiftBusServiceProxy::CXSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
+    CXSwiftBusServiceProxy::CXSwiftBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy)
+        : QObject(parent)
     {
-        m_dbusInterface = new swift::misc::CGenericDBusInterface(XSWIFTBUS_SERVICE_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
+        m_dbusInterface = new swift::misc::CGenericDBusInterface(XSWIFTBUS_SERVICE_SERVICENAME, ObjectPath(),
+                                                                 InterfaceName(), connection, this);
         if (!dummy)
         {
             bool s;
-            s = connection.connect(QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service",
-                                   "aircraftModelChanged", this,
-                                   SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
+            s = connection.connect(
+                QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service", "aircraftModelChanged", this,
+                SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
+            Q_ASSERT(s);
+
+            s = connection.connect(
+                QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service", "airportsInRangeUpdated", this,
+                SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
             Q_ASSERT(s);
 
             s = connection.connect(QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service",
-                                   "airportsInRangeUpdated", this,
-                                   SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
-            Q_ASSERT(s);
-
-            s = connection.connect(QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service",
-                                   "sceneryLoaded", this,
-                                   SIGNAL(sceneryLoaded()));
+                                   "sceneryLoaded", this, SIGNAL(sceneryLoaded()));
             Q_ASSERT(s);
         }
     }
@@ -331,7 +332,8 @@ namespace swift::simplugin::xplane
         m_dbusInterface->callDBusAsync(QLatin1String("isUsingRealTime"), setterCallback(o_isRealTime));
     }
 
-    void CXSwiftBusServiceProxy::getFrameStats(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate) const
+    void CXSwiftBusServiceProxy::getFrameStats(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort,
+                                               double *o_minutesLate) const
     {
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             QDBusPendingReply<double, double, double, double> reply = *watcher;
@@ -347,7 +349,8 @@ namespace swift::simplugin::xplane
         m_dbusInterface->callDBusAsync(QLatin1String("getFrameStats"), callback)->waitForFinished();
     }
 
-    void CXSwiftBusServiceProxy::getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio, double *o_trackMilesShort, double *o_minutesLate)
+    void CXSwiftBusServiceProxy::getFrameStatsAsync(double *o_averageFps, double *o_simTimeRatio,
+                                                    double *o_trackMilesShort, double *o_minutesLate)
     {
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
             QDBusPendingReply<double, double, double, double> reply = *watcher;
@@ -363,10 +366,7 @@ namespace swift::simplugin::xplane
         m_dbusInterface->callDBusAsync(QLatin1String("getFrameStats"), callback);
     }
 
-    void CXSwiftBusServiceProxy::resetFrameTotals()
-    {
-        m_dbusInterface->callDBus(QLatin1String("resetFrameTotals"));
-    }
+    void CXSwiftBusServiceProxy::resetFrameTotals() { m_dbusInterface->callDBus(QLatin1String("resetFrameTotals")); }
 
     double CXSwiftBusServiceProxy::getLatitudeDeg() const
     {

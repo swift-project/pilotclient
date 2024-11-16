@@ -26,8 +26,9 @@ namespace swift::core::afv::audio
         return cats;
     }
 
-    CReceiverSampleProvider::CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent) : ISampleProvider(parent),
-                                                                                                                                           m_id(id)
+    CReceiverSampleProvider::CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber,
+                                                     QObject *parent)
+        : ISampleProvider(parent), m_id(id)
     {
         const QString on = QStringLiteral("%1 id: %2").arg(classNameShort(this)).arg(id);
         this->setObjectName(on);
@@ -57,19 +58,16 @@ namespace swift::core::afv::audio
     {
         if (frequencyHz != m_frequencyHz)
         {
-            for (CCallsignSampleProvider *voiceInput : std::as_const(m_voiceInputs))
-            {
-                voiceInput->clear();
-            }
+            for (CCallsignSampleProvider *voiceInput : std::as_const(m_voiceInputs)) { voiceInput->clear(); }
         }
         m_frequencyHz = frequencyHz;
     }
 
     int CReceiverSampleProvider::activeCallsigns() const
     {
-        const int numberOfCallsigns = static_cast<int>(std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider *p) {
-            return p->inUse() == true;
-        }));
+        const int numberOfCallsigns =
+            static_cast<int>(std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(),
+                                           [](const CCallsignSampleProvider *p) { return p->inUse() == true; }));
         return numberOfCallsigns;
     }
 
@@ -78,10 +76,7 @@ namespace swift::core::afv::audio
         m_mute = value;
         if (value)
         {
-            for (CCallsignSampleProvider *voiceInput : std::as_const(m_voiceInputs))
-            {
-                voiceInput->clear();
-            }
+            for (CCallsignSampleProvider *voiceInput : std::as_const(m_voiceInputs)) { voiceInput->clear(); }
         }
     }
 
@@ -93,14 +88,12 @@ namespace swift::core::afv::audio
             m_blockTone->setFrequency(180.0);
             m_blockTone->setGain(m_blockToneGain);
         }
-        else
-        {
-            m_blockTone->setGain(0.0);
-        }
+        else { m_blockTone->setGain(0.0); }
 
         if (m_doClickWhenAppropriate && numberOfInUseInputs == 0)
         {
-            CResourceSoundSampleProvider *resourceSound = new CResourceSoundSampleProvider(Samples::instance().click(), m_mixer);
+            CResourceSoundSampleProvider *resourceSound =
+                new CResourceSoundSampleProvider(Samples::instance().click(), m_mixer);
             m_mixer->addMixerInput(resourceSound);
             m_doClickWhenAppropriate = false;
             // CLogMessage(this).debug(u"AFV Click...");
@@ -113,10 +106,7 @@ namespace swift::core::afv::audio
             for (const CCallsignSampleProvider *voiceInput : std::as_const(m_voiceInputs))
             {
                 const QString callsign = voiceInput->callsign();
-                if (!callsign.isEmpty())
-                {
-                    receivingCallsigns.push_back(callsign);
-                }
+                if (!callsign.isEmpty()) { receivingCallsigns.push_back(callsign); }
             }
 
             m_receivingCallsignsString = receivingCallsigns.join(',');
@@ -133,18 +123,16 @@ namespace swift::core::afv::audio
         if (m_frequencyHz != frequency) { return; } // Lag in the backend means we get the tail end of a transmission
         CCallsignSampleProvider *voiceInput = nullptr;
 
-        auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CCallsignSampleProvider *p) {
-            return p->callsign() == audioDto.callsign;
-        });
+        auto it =
+            std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
+                         [audioDto](const CCallsignSampleProvider *p) { return p->callsign() == audioDto.callsign; });
 
-        if (it != m_voiceInputs.end())
-        {
-            voiceInput = *it;
-        }
+        if (it != m_voiceInputs.end()) { voiceInput = *it; }
 
         if (!voiceInput)
         {
-            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider *p) { return p->inUse() == false; });
+            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
+                              [](const CCallsignSampleProvider *p) { return p->inUse() == false; });
             if (it != m_voiceInputs.end())
             {
                 voiceInput = *it;
@@ -152,10 +140,7 @@ namespace swift::core::afv::audio
             }
         }
 
-        if (voiceInput)
-        {
-            voiceInput->addOpusSamples(audioDto, distanceRatio);
-        }
+        if (voiceInput) { voiceInput->addOpusSamples(audioDto, distanceRatio); }
 
         const CSettings s = m_audioSettings.get();
         m_doClickWhenAppropriate = s.afvClicked();
@@ -168,18 +153,16 @@ namespace swift::core::afv::audio
         if (m_frequencyHz != frequency) { return; } // Lag in the backend means we get the tail end of a transmission
 
         CCallsignSampleProvider *voiceInput = nullptr;
-        auto it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [audioDto](const CCallsignSampleProvider *p) {
-            return p->callsign() == audioDto.callsign;
-        });
+        auto it =
+            std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
+                         [audioDto](const CCallsignSampleProvider *p) { return p->callsign() == audioDto.callsign; });
 
-        if (it != m_voiceInputs.end())
-        {
-            voiceInput = *it;
-        }
+        if (it != m_voiceInputs.end()) { voiceInput = *it; }
 
         if (!voiceInput)
         {
-            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider *p) { return p->inUse() == false; });
+            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
+                              [](const CCallsignSampleProvider *p) { return p->inUse() == false; });
             if (it != m_voiceInputs.end())
             {
                 voiceInput = *it;
@@ -187,16 +170,10 @@ namespace swift::core::afv::audio
             }
         }
 
-        if (voiceInput)
-        {
-            voiceInput->addSilentSamples(audioDto);
-        }
+        if (voiceInput) { voiceInput->addSilentSamples(audioDto); }
     }
 
-    uint CReceiverSampleProvider::getFrequencyHz() const
-    {
-        return m_frequencyHz;
-    }
+    uint CReceiverSampleProvider::getFrequencyHz() const { return m_frequencyHz; }
 
     void CReceiverSampleProvider::logVoiceInputs(const QString &prefix, qint64 timeCheckOffsetMs)
     {
@@ -212,9 +189,8 @@ namespace swift::core::afv::audio
         for (const CCallsignSampleProvider *sp : std::as_const(m_voiceInputs))
         {
             if (!sp || !sp->inUse()) { continue; } // only log the ones in use
-            l += (l.isEmpty() ? QStringLiteral("") : QStringLiteral("\n")) %
-                 prefix %
-                 QString::number(no++) % QStringLiteral(": ") % sp->toQString();
+            l += (l.isEmpty() ? QStringLiteral("") : QStringLiteral("\n")) % prefix % QString::number(no++) %
+                 QStringLiteral(": ") % sp->toQString();
         }
 
         if (l.isEmpty()) { return; }

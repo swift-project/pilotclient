@@ -60,7 +60,8 @@ namespace swift::misc::simulation::fscommon
         static QStringList msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
 
         //! P3D's simObject dir and the add on dirs
-        static QStringList p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir, const QString &versionHint);
+        static QStringList p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir,
+                                                                       const QString &versionHint);
 
         //! Guess the P3D version such as v4, v5
         static QString guessP3DVersion(const QString &candidate);
@@ -118,12 +119,14 @@ namespace swift::misc::simulation::fscommon
         static QSet<QString> findP3dSimObjectsConfigFiles(const QString &versionHint = "v5");
 
         //! All PATH values from the config files
-        static QSet<QString> allConfigFilesPathValues(const QStringList &configFiles, bool checked, const QString &pathPrefix);
+        static QSet<QString> allConfigFilesPathValues(const QStringList &configFiles, bool checked,
+                                                      const QString &pathPrefix);
 
         //! All add-on paths from the XML add-on files "add-on.xml"
         static QSet<QString> allP3dAddOnXmlSimObjectPaths(const QStringList &addOnPaths, bool checked);
 
-        //! All add-on paths from the XML add-on files "add-on.xml" files, use CFsCommonUtil::findP3dAddOnConfigFiles to find config files
+        //! All add-on paths from the XML add-on files "add-on.xml" files, use CFsCommonUtil::findP3dAddOnConfigFiles to
+        //! find config files
         static QSet<QString> allP3dAddOnXmlSimObjectPaths(const QString &versionHint = "v4");
 
         //! Get all the SimObjects paths from all config files

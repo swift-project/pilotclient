@@ -33,9 +33,7 @@ namespace swift::gui::components
     /*!
      * Distributor selector
      */
-    class SWIFT_GUI_EXPORT CDbDistributorSelectorComponent :
-        public QFrame,
-        public CDropBase
+    class SWIFT_GUI_EXPORT CDbDistributorSelectorComponent : public QFrame, public CDropBase
     {
         Q_OBJECT
 
@@ -86,7 +84,8 @@ namespace swift::gui::components
 
     private:
         //! Distributors have been read
-        void onDistributorsRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
+        void onDistributorsRead(swift::misc::network::CEntityFlags::Entity entity,
+                                swift::misc::network::CEntityFlags::ReadState readState, int count);
 
         //! Data have been changed
         void onDataChanged();

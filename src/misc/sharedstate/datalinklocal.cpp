@@ -11,19 +11,14 @@
 
 namespace swift::misc::shared_state
 {
-    CDataLinkLocal::CDataLinkLocal(QObject *parent) : QObject(parent)
-    {
-        setConnectionStatus(true);
-    }
+    CDataLinkLocal::CDataLinkLocal(QObject *parent) : QObject(parent) { setConnectionStatus(true); }
 
-    CDataLinkLocal::~CDataLinkLocal()
-    {
-        setConnectionStatus(false);
-    }
+    CDataLinkLocal::~CDataLinkLocal() { setConnectionStatus(false); }
 
     void CDataLinkLocal::publish(const CPassiveMutator *mutator)
     {
-        connect(mutator, &CPassiveMutator::eventPosted, this, [this, channel = getChannelName(mutator)](const CVariant &param) { dispatchEvent(param, channel); });
+        connect(mutator, &CPassiveMutator::eventPosted, this,
+                [this, channel = getChannelName(mutator)](const CVariant &param) { dispatchEvent(param, channel); });
     }
 
     void CDataLinkLocal::publish(const CActiveMutator *mutator)
@@ -44,9 +39,10 @@ namespace swift::misc::shared_state
     {
         subscribe(static_cast<const CPassiveObserver *>(observer));
 
-        connect(observer, &CActiveObserver::requestPosted, this, [this, channel = getChannelName(observer)](const CVariant &param, CPromise<CVariant> reply) {
-            reply.chainResult(handleRequest(param, channel));
-        });
+        connect(observer, &CActiveObserver::requestPosted, this,
+                [this, channel = getChannelName(observer)](const CVariant &param, CPromise<CVariant> reply) {
+                    reply.chainResult(handleRequest(param, channel));
+                });
     }
 
     void CDataLinkLocal::dispatchEvent(const CVariant &param, const QString &channel)
@@ -54,10 +50,7 @@ namespace swift::misc::shared_state
         for (const auto &observerWeak : std::as_const(getChannel(channel).passiveObservers))
         {
             auto observer = observerWeak.lock();
-            if (observer && observer->eventSubscription().matches(param))
-            {
-                observer->handleEvent(param);
-            }
+            if (observer && observer->eventSubscription().matches(param)) { observer->handleEvent(param); }
         }
     }
 

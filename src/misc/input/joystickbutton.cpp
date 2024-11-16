@@ -7,7 +7,8 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CJoystickButton)
 
 namespace swift::misc::input
 {
-    CJoystickButton::CJoystickButton(const QString &deviceName, int index) : m_deviceName(deviceName), m_buttonIndex(index)
+    CJoystickButton::CJoystickButton(const QString &deviceName, int index)
+        : m_deviceName(deviceName), m_buttonIndex(index)
     {}
 
     QString CJoystickButton::getButtonAsStringWithDeviceName() const
@@ -15,15 +16,9 @@ namespace swift::misc::input
         return QStringLiteral("%1%2 - %3").arg(buttonIndentifier()).arg(m_buttonIndex).arg(m_deviceName);
     }
 
-    void CJoystickButton::setButtonIndex(int buttonIndex)
-    {
-        m_buttonIndex = buttonIndex;
-    }
+    void CJoystickButton::setButtonIndex(int buttonIndex) { m_buttonIndex = buttonIndex; }
 
-    bool CJoystickButton::isValid() const
-    {
-        return (!m_deviceName.isEmpty() && m_buttonIndex >= 0);
-    }
+    bool CJoystickButton::isValid() const { return (!m_deviceName.isEmpty() && m_buttonIndex >= 0); }
 
     void CJoystickButton::setButtonObject(CJoystickButton button)
     {
@@ -41,19 +36,11 @@ namespace swift::misc::input
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexDeviceName:
-            this->setDeviceName(variant.value<QString>());
-            break;
+        case IndexDeviceName: this->setDeviceName(variant.value<QString>()); break;
         case IndexButton:
-        case IndexButtonAsString:
-            this->setButtonIndex(buttonIndexFromString(variant.value<QString>()));
-            break;
-        case IndexButtonObject:
-            this->setButtonObject(variant.value<swift::misc::input::CJoystickButton>());
-            break;
-        default:
-            Q_ASSERT_X(false, "CJoystickButton", "index unknown (setter)");
-            break;
+        case IndexButtonAsString: this->setButtonIndex(buttonIndexFromString(variant.value<QString>())); break;
+        case IndexButtonObject: this->setButtonObject(variant.value<swift::misc::input::CJoystickButton>()); break;
+        default: Q_ASSERT_X(false, "CJoystickButton", "index unknown (setter)"); break;
         }
     }
 
@@ -88,9 +75,6 @@ namespace swift::misc::input
         return name.trimmed().toInt();
     }
 
-    QString CJoystickButton::convertToQString(bool /* i18n */) const
-    {
-        return getButtonAsString().trimmed();
-    }
+    QString CJoystickButton::convertToQString(bool /* i18n */) const { return getButtonAsString().trimmed(); }
 
 } // namespace swift::misc::input

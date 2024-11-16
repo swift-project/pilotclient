@@ -19,19 +19,25 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::models
 {
-    CAirlineIcaoCodeListModel::CAirlineIcaoCodeListModel(QObject *parent) : CListModelDbObjects("AircraftIcaoListModel", parent)
+    CAirlineIcaoCodeListModel::CAirlineIcaoCodeListModel(QObject *parent)
+        : CListModelDbObjects("AircraftIcaoListModel", parent)
     {
-        m_columns.addColumn(CColumn::standardString("id", CAirlineIcaoCode::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
+        m_columns.addColumn(
+            CColumn::standardString("id", CAirlineIcaoCode::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
         m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirlineIcaoCode::IndexAirlineDesignator));
 
         CColumn col("airline", CAirlineIcaoCode::IndexIcon);
         col.setSortPropertyIndex(CAirlineIcaoCode::IndexAirlineDesignator);
         m_columns.addColumn(col);
-        m_columns.addColumn(CColumn("VA", "virtual airline", CAirlineIcaoCode::IndexIsVirtualAirline, new CBoolIconFormatter("VA", "real airline")));
-        m_columns.addColumn(CColumn("mil.", "military (air force)", CAirlineIcaoCode::IndexIsMilitary, new CBoolIconFormatter("military", "civilian")));
-        m_columns.addColumn(CColumn("op.", "operating", CAirlineIcaoCode::IndexIsOperating, new CBoolIconFormatter("operating", "ceased")));
+        m_columns.addColumn(CColumn("VA", "virtual airline", CAirlineIcaoCode::IndexIsVirtualAirline,
+                                    new CBoolIconFormatter("VA", "real airline")));
+        m_columns.addColumn(CColumn("mil.", "military (air force)", CAirlineIcaoCode::IndexIsMilitary,
+                                    new CBoolIconFormatter("military", "civilian")));
+        m_columns.addColumn(CColumn("op.", "operating", CAirlineIcaoCode::IndexIsOperating,
+                                    new CBoolIconFormatter("operating", "ceased")));
         m_columns.addColumn(CColumn::standardValueObject("name", CAirlineIcaoCode::IndexAirlineName));
-        m_columns.addColumn(CColumn::standardValueObject("gr.des.", "group designator", CAirlineIcaoCode::IndexGroupDesignator));
+        m_columns.addColumn(
+            CColumn::standardValueObject("gr.des.", "group designator", CAirlineIcaoCode::IndexGroupDesignator));
         m_columns.addColumn(CColumn::standardValueObject("groupname", CAirlineIcaoCode::IndexGroupName));
         col = CColumn("country", { CAirlineIcaoCode::IndexAirlineCountry, CCountry::IndexIcon });
         col.setSortPropertyIndex(CAirlineIcaoCode::IndexAirlineDesignator);

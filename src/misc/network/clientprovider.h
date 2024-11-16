@@ -59,7 +59,8 @@ namespace swift::misc
 
             //! Update or add a client
             //! \threadsafe
-            virtual int updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues = true) = 0;
+            virtual int updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm,
+                                          bool skipEqualValues = true) = 0;
 
             //! Remove client
             //! \threadsafe
@@ -95,7 +96,8 @@ namespace swift::misc
             virtual bool hasClientInfo(const aviation::CCallsign &callsign) const override;
             virtual bool addNewClient(const CClient &client) override;
             virtual bool setOtherClient(const swift::misc::network::CClient &client) override;
-            virtual int updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues = true) override;
+            virtual int updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm,
+                                          bool skipEqualValues = true) override;
             virtual int removeClient(const aviation::CCallsign &callsign) override;
             virtual bool autoAdjustCientGndCapability(const aviation::CAircraftSituation &situation) override;
             virtual bool addClientGndCapability(const aviation::CCallsign &callsign) override;
@@ -135,7 +137,8 @@ namespace swift::misc
             bool addNewClient(const CClient &client);
 
             //! \copydoc CClientProvider::updateOrAddClient
-            int updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues);
+            int updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm,
+                                  bool skipEqualValues);
 
             //! \copydoc CClientProvider::removeClient
             int removeClient(const aviation::CCallsign &callsign);

@@ -52,10 +52,7 @@ namespace swift::misc::simulation::xplane
     {
         for (auto &e : path)
         {
-            if (e == '/' || e == ':' || e == '\\')
-            {
-                e = '/';
-            }
+            if (e == '/' || e == ':' || e == '\\') { e = '/'; }
         }
     }
 
@@ -64,30 +61,27 @@ namespace swift::misc::simulation::xplane
     {
         if (!model.getName().isEmpty())
         {
-            if (model.getDistributor().hasDescription() && !model.getName().contains(model.getDistributor().getDescription()))
+            if (model.getDistributor().hasDescription() &&
+                !model.getName().contains(model.getDistributor().getDescription()))
             {
                 return u"[ACF] " % model.getName() % u" by " % model.getDistributor().getDescription();
             }
-            else
-            {
-                return u"[ACF] " % model.getName();
-            }
+            else { return u"[ACF] " % model.getName(); }
         }
         else if (model.hasAircraftDesignator())
         {
             if (model.getDistributor().hasDescription())
             {
-                return u"[ACF] " % model.getAircraftIcaoCodeDesignator() % u" by " % model.getDistributor().getDescription();
+                return u"[ACF] " % model.getAircraftIcaoCodeDesignator() % u" by " %
+                       model.getDistributor().getDescription();
             }
-            else
-            {
-                return u"[ACF] " % model.getAircraftIcaoCodeDesignator();
-            }
+            else { return u"[ACF] " % model.getAircraftIcaoCodeDesignator(); }
         }
         return QStringLiteral("[ACF]");
     }
 
-    CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane(QObject *parent) : IAircraftModelLoader(CSimulatorInfo::xplane(), parent)
+    CAircraftModelLoaderXPlane::CAircraftModelLoaderXPlane(QObject *parent)
+        : IAircraftModelLoader(CSimulatorInfo::xplane(), parent)
     {}
 
     CAircraftModelLoaderXPlane::~CAircraftModelLoaderXPlane()
@@ -96,16 +90,22 @@ namespace swift::misc::simulation::xplane
         if (m_parserWorker) { m_parserWorker->waitForFinished(); }
     }
 
-    void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
+    void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode,
+                                                          const ModelConsolidationCallback &modelConsolidation,
+                                                          const QStringList &modelDirectories)
     {
         const CSimulatorInfo simulator = CSimulatorInfo::xplane();
         const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
-        const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
+        const QStringList excludedDirectoryPatterns(
+            m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
         if (modelDirs.isEmpty())
         {
             this->clearCachedModels(CSimulatorInfo::xplane());
-            emit this->loadingFinished(CStatusMessage(this, CStatusMessage::SeverityError, u"XPlane model directories '%1' are empty") << modelDirectories.join(", "), simulator, ParsedData);
+            emit this->loadingFinished(
+                CStatusMessage(this, CStatusMessage::SeverityError, u"XPlane model directories '%1' are empty")
+                    << modelDirectories.join(", "),
+                simulator, ParsedData);
             return;
         }
 
@@ -116,7 +116,8 @@ namespace swift::misc::simulation::xplane
 
             m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
                                                [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]() {
-                                                   auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
+                                                   auto models =
+                                                       this->performParsing(modelDirs, excludedDirectoryPatterns);
                                                    if (modelConsolidation) { modelConsolidation(models, true); }
                                                    return models;
                                                });
@@ -142,20 +143,20 @@ namespace swift::misc::simulation::xplane
     void CAircraftModelLoaderXPlane::updateInstalledModels(const CAircraftModelList &models)
     {
         this->setModelsForSimulator(models, CSimulatorInfo::xplane());
-        const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"XPlane updated '%1' models") << models.size();
+        const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"XPlane updated '%1' models")
+                                 << models.size();
         m_loadingMessages.push_back(m);
     }
 
     QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
     {
-        QString modelName =
-            dirNames.join(' ') %
-            u' ' % objectName;
+        QString modelName = dirNames.join(' ') % u' ' % objectName;
         if (objectVersion == OBJ7) { modelName += u' ' % textureName; }
         return std::move(modelName).trimmed();
     }
 
-    CAircraftModelList CAircraftModelLoaderXPlane::performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories)
+    CAircraftModelList CAircraftModelLoaderXPlane::performParsing(const QStringList &rootDirectories,
+                                                                  const QStringList &excludeDirectories)
     {
         CAircraftModelList allModels;
         for (const QString &rootDirectory : rootDirectories)
@@ -171,13 +172,17 @@ namespace swift::misc::simulation::xplane
     {
         if (models.containsModelString(model.getModelString()))
         {
-            const CStatusMessage m = CStatusMessage(this).warning(u"XPlane model '%1' exists already! Potential model string conflict! Ignoring it.") << model.getModelString();
+            const CStatusMessage m =
+                CStatusMessage(this).warning(
+                    u"XPlane model '%1' exists already! Potential model string conflict! Ignoring it.")
+                << model.getModelString();
             m_loadingMessages.push_back(m);
         }
         models.push_back(model);
     }
 
-    CAircraftModelList CAircraftModelLoaderXPlane::parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
+    CAircraftModelList CAircraftModelLoaderXPlane::parseFlyableAirplanes(const QString &rootDirectory,
+                                                                         const QStringList &excludeDirectories)
     {
         Q_UNUSED(excludeDirectories)
         if (rootDirectory.isEmpty()) { return {}; }
@@ -185,13 +190,17 @@ namespace swift::misc::simulation::xplane
         QDir searchPath(rootDirectory, fileFilterFlyable());
         QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
 
-        emit loadingProgress(this->getSimulator(), QStringLiteral("Parsing flyable airplanes in '%1'").arg(rootDirectory), -1);
+        emit loadingProgress(this->getSimulator(),
+                             QStringLiteral("Parsing flyable airplanes in '%1'").arg(rootDirectory), -1);
 
         CAircraftModelList installedModels;
         while (aircraftIt.hasNext())
         {
             aircraftIt.next();
-            if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
+            if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive))
+            {
+                continue;
+            }
 
             using namespace swift::misc::simulation::xplane::qtfreeutils;
             AcfProperties acfProperties = extractAcfProperties(aircraftIt.filePath().toStdString());
@@ -211,8 +220,12 @@ namespace swift::misc::simulation::xplane
             addUniqueModel(model, installedModels);
 
             const QString baseModelString = model.getModelString();
-            QDirIterator liveryIt(CFileUtils::appendFilePaths(aircraftIt.fileInfo().canonicalPath(), QStringLiteral("liveries")), QDir::Dirs | QDir::NoDotAndDotDot);
-            emit this->loadingProgress(this->getSimulator(), QStringLiteral("Parsing flyable liveries in '%1'").arg(aircraftIt.fileInfo().canonicalPath()), -1);
+            QDirIterator liveryIt(
+                CFileUtils::appendFilePaths(aircraftIt.fileInfo().canonicalPath(), QStringLiteral("liveries")),
+                QDir::Dirs | QDir::NoDotAndDotDot);
+            emit this->loadingProgress(
+                this->getSimulator(),
+                QStringLiteral("Parsing flyable liveries in '%1'").arg(aircraftIt.fileInfo().canonicalPath()), -1);
             while (liveryIt.hasNext())
             {
                 liveryIt.next();
@@ -223,7 +236,8 @@ namespace swift::misc::simulation::xplane
         return installedModels;
     }
 
-    CAircraftModelList CAircraftModelLoaderXPlane::parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories)
+    CAircraftModelList CAircraftModelLoaderXPlane::parseCslPackages(const QString &rootDirectory,
+                                                                    const QStringList &excludeDirectories)
     {
         Q_UNUSED(excludeDirectories);
         if (rootDirectory.isEmpty()) { return {}; }
@@ -271,7 +285,10 @@ namespace swift::misc::simulation::xplane
             {
                 if (installedModels.containsModelString(plane.getModelName()))
                 {
-                    const CStatusMessage msg = CStatusMessage(this).warning(u"XPlane model '%1' exists already! Potential model string conflict! Ignoring it.") << plane.getModelName();
+                    const CStatusMessage msg =
+                        CStatusMessage(this).warning(
+                            u"XPlane model '%1' exists already! Potential model string conflict! Ignoring it.")
+                        << plane.getModelName();
                     m_loadingMessages.push_back(msg);
                     continue;
                 }
@@ -318,16 +335,20 @@ namespace swift::misc::simulation::xplane
         return false;
     }
 
-    bool CAircraftModelLoaderXPlane::parseExportCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseExportCommand(const QStringList &tokens, CSLPackage &package,
+                                                        const QString &path, int lineNum)
     {
         if (tokens.size() != 2)
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : EXPORT_NAME command requires 1 argument.") << path << lineNum;
+            const CStatusMessage m =
+                CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : EXPORT_NAME command requires 1 argument.")
+                << path << lineNum;
             m_loadingMessages.push_back(m);
             return false;
         }
 
-        auto p = std::find_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage &p) { return p.name == tokens[1]; });
+        auto p = std::find_if(m_cslPackages.cbegin(), m_cslPackages.cend(),
+                              [&tokens](const CSLPackage &p) { return p.name == tokens[1]; });
         if (p == m_cslPackages.cend())
         {
             package.path = path;
@@ -336,25 +357,33 @@ namespace swift::misc::simulation::xplane
         }
         else
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"XPlane package name '%1' already in use by '%2' reqested by use by '%3'") << tokens[1] << p->path << path;
+            const CStatusMessage m =
+                CStatusMessage(this).error(u"XPlane package name '%1' already in use by '%2' reqested by use by '%3'")
+                << tokens[1] << p->path << path;
             m_loadingMessages.push_back(m);
             return false;
         }
     }
 
-    bool CAircraftModelLoaderXPlane::parseDependencyCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseDependencyCommand(const QStringList &tokens, CSLPackage &package,
+                                                            const QString &path, int lineNum)
     {
         Q_UNUSED(package);
         if (tokens.size() != 2)
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : DEPENDENCY command requires 1 argument.") << path << lineNum;
+            const CStatusMessage m =
+                CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : DEPENDENCY command requires 1 argument.")
+                << path << lineNum;
             m_loadingMessages.push_back(m);
             return false;
         }
 
-        if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(), [&tokens](const CSLPackage &p) { return p.name == tokens[1]; }) == 0)
+        if (std::count_if(m_cslPackages.cbegin(), m_cslPackages.cend(),
+                          [&tokens](const CSLPackage &p) { return p.name == tokens[1]; }) == 0)
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"XPlane required package %1 not found. Aborting processing of this package.") << tokens[1];
+            const CStatusMessage m = CStatusMessage(this).error(
+                                         u"XPlane required package %1 not found. Aborting processing of this package.")
+                                     << tokens[1];
             m_loadingMessages.push_back(m);
             return false;
         }
@@ -367,55 +396,60 @@ namespace swift::misc::simulation::xplane
     QString readLineFrom(QTextStream &stream)
     {
         QString line;
-        do
-        {
+        do {
             line = stream.readLine();
         }
         while (line.isEmpty() && !stream.atEnd());
         return line;
     }
 
-    bool CAircraftModelLoaderXPlane::parseObjectCommand(const QStringList &, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseObjectCommand(const QStringList &, CSLPackage &package, const QString &path,
+                                                        int lineNum)
     {
         package.planes.push_back(CSLPlane());
 
-        const auto m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported legacy CSL format.") << path << lineNum;
+        const auto m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported legacy CSL format.")
+                       << path << lineNum;
         m_loadingMessages.push_back(m);
         return false;
     }
 
-    bool CAircraftModelLoaderXPlane::parseTextureCommand(const QStringList &, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseTextureCommand(const QStringList &, CSLPackage &package, const QString &path,
+                                                         int lineNum)
     {
         if (!package.planes.isEmpty() && !package.planes.back().hasErrors)
         {
-            const auto m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported legacy CSL format.") << path << lineNum;
+            const auto m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported legacy CSL format.")
+                           << path << lineNum;
             m_loadingMessages.push_back(m);
         }
         return false;
     }
 
-    bool CAircraftModelLoaderXPlane::parseAircraftCommand(const QStringList &, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseAircraftCommand(const QStringList &, CSLPackage &package, const QString &path,
+                                                          int lineNum)
     {
         package.planes.push_back(CSLPlane());
 
-        const auto m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported legacy CSL format.") << path << lineNum;
+        const auto m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported legacy CSL format.")
+                       << path << lineNum;
         m_loadingMessages.push_back(m);
         return false;
     }
 
-    bool CAircraftModelLoaderXPlane::parseObj8AircraftCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseObj8AircraftCommand(const QStringList &tokens, CSLPackage &package,
+                                                              const QString &path, int lineNum)
     {
         package.planes.push_back(CSLPlane());
 
         // OBJ8_AIRCRAFT <path>
         if (tokens.size() != 2)
         {
-            const CStatusMessage m = CStatusMessage(this).warning(u"%1/xsb_aircraft.txt Line %2 : OBJ8_AIRCARFT command requires 1 argument.") << path << lineNum;
+            const CStatusMessage m = CStatusMessage(this).warning(
+                                         u"%1/xsb_aircraft.txt Line %2 : OBJ8_AIRCARFT command requires 1 argument.")
+                                     << path << lineNum;
             m_loadingMessages.push_back(m);
-            if (tokens.size() < 2)
-            {
-                return false;
-            }
+            if (tokens.size() < 2) { return false; }
         }
 
         package.planes.back().objectName = tokens[1];
@@ -423,26 +457,34 @@ namespace swift::misc::simulation::xplane
         return true;
     }
 
-    bool CAircraftModelLoaderXPlane::parseObj8Command(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseObj8Command(const QStringList &tokens, CSLPackage &package,
+                                                      const QString &path, int lineNum)
     {
         // OBJ8 <group> <animate YES|NO> <filename>
         if (tokens.size() != 4)
         {
             if (tokens.size() == 5 || tokens.size() == 6)
             {
-                const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unsupported IVAO CSL format - consider using CSL2XSB.") << path << lineNum;
+                const CStatusMessage m =
+                    CStatusMessage(this).error(
+                        u"%1/xsb_aircraft.txt Line %2 : Unsupported IVAO CSL format - consider using CSL2XSB.")
+                    << path << lineNum;
                 m_loadingMessages.push_back(m);
             }
             else
             {
-                const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJ8 command takes 3 arguments.") << path << lineNum;
+                const CStatusMessage m =
+                    CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : OBJ8 command takes 3 arguments.")
+                    << path << lineNum;
                 m_loadingMessages.push_back(m);
             }
             return false;
         }
         if (package.planes.isEmpty())
         {
-            m_loadingMessages.push_back(CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.") << path << lineNum);
+            m_loadingMessages.push_back(
+                CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.")
+                << path << lineNum);
             return false;
         }
 
@@ -453,7 +495,8 @@ namespace swift::misc::simulation::xplane
         QString fullPath(relativePath);
         if (!doPackageSub(fullPath))
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : package not found.") << path << lineNum;
+            const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : package not found.")
+                                     << path << lineNum;
             m_loadingMessages.push_back(m);
             return false;
         }
@@ -466,7 +509,8 @@ namespace swift::misc::simulation::xplane
         return true;
     }
 
-    bool CAircraftModelLoaderXPlane::parseHasGearCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseHasGearCommand(const QStringList &tokens, CSLPackage &package,
+                                                         const QString &path, int lineNum)
     {
         Q_UNUSED(tokens)
         Q_UNUSED(package)
@@ -475,18 +519,23 @@ namespace swift::misc::simulation::xplane
         return true;
     }
 
-    bool CAircraftModelLoaderXPlane::parseIcaoCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseIcaoCommand(const QStringList &tokens, CSLPackage &package,
+                                                      const QString &path, int lineNum)
     {
         // ICAO <code>
         if (tokens.size() != 2)
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : ICAO command requires 1 argument.") << path << lineNum;
+            const CStatusMessage m =
+                CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : ICAO command requires 1 argument.")
+                << path << lineNum;
             m_loadingMessages.push_back(m);
             return false;
         }
         if (package.planes.isEmpty())
         {
-            m_loadingMessages.push_back(CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.") << path << lineNum);
+            m_loadingMessages.push_back(
+                CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.")
+                << path << lineNum);
             return false;
         }
 
@@ -495,18 +544,23 @@ namespace swift::misc::simulation::xplane
         return true;
     }
 
-    bool CAircraftModelLoaderXPlane::parseAirlineCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseAirlineCommand(const QStringList &tokens, CSLPackage &package,
+                                                         const QString &path, int lineNum)
     {
         // AIRLINE <code> <airline>
         if (tokens.size() != 3)
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : AIRLINE command requires 2 arguments.") << path << lineNum;
+            const CStatusMessage m =
+                CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : AIRLINE command requires 2 arguments.")
+                << path << lineNum;
             m_loadingMessages.push_back(m);
             return false;
         }
         if (package.planes.isEmpty())
         {
-            m_loadingMessages.push_back(CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.") << path << lineNum);
+            m_loadingMessages.push_back(
+                CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.")
+                << path << lineNum);
             return false;
         }
 
@@ -517,18 +571,23 @@ namespace swift::misc::simulation::xplane
         return true;
     }
 
-    bool CAircraftModelLoaderXPlane::parseLiveryCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum)
+    bool CAircraftModelLoaderXPlane::parseLiveryCommand(const QStringList &tokens, CSLPackage &package,
+                                                        const QString &path, int lineNum)
     {
         // LIVERY <code> <airline> <livery>
         if (tokens.size() != 4)
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : LIVERY command requires 3 arguments.") << path << lineNum;
+            const CStatusMessage m =
+                CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : LIVERY command requires 3 arguments.")
+                << path << lineNum;
             m_loadingMessages.push_back(m);
             return false;
         }
         if (package.planes.isEmpty())
         {
-            m_loadingMessages.push_back(CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.") << path << lineNum);
+            m_loadingMessages.push_back(
+                CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : invalid position for command.")
+                << path << lineNum);
             return false;
         }
 
@@ -541,12 +600,14 @@ namespace swift::misc::simulation::xplane
         return true;
     }
 
-    bool CAircraftModelLoaderXPlane::parseDummyCommand(const QStringList & /* tokens */, CSLPackage & /* package */, const QString & /* path */, int /*lineNum*/)
+    bool CAircraftModelLoaderXPlane::parseDummyCommand(const QStringList & /* tokens */, CSLPackage & /* package */,
+                                                       const QString & /* path */, int /*lineNum*/)
     {
         return true;
     }
 
-    CAircraftModelLoaderXPlane::CSLPackage CAircraftModelLoaderXPlane::parsePackageHeader(const QString &path, const QString &content)
+    CAircraftModelLoaderXPlane::CSLPackage CAircraftModelLoaderXPlane::parsePackageHeader(const QString &path,
+                                                                                          const QString &content)
     {
         using command = std::function<bool(const QStringList &, CSLPackage &, const QString &, int)>;
         using namespace std::placeholders;
@@ -623,16 +684,17 @@ namespace swift::misc::simulation::xplane
                 }
                 else
                 {
-                    const CStatusMessage m = CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unrecognized CSL command: '%3'") << package.path << lineNum << tokens[0];
+                    const CStatusMessage m =
+                        CStatusMessage(this).error(u"%1/xsb_aircraft.txt Line %2 : Unrecognized CSL command: '%3'")
+                        << package.path << lineNum << tokens[0];
                     m_loadingMessages.push_back(m);
                 }
             }
         }
 
         // Remove all planes with errors
-        auto it = std::remove_if(package.planes.begin(), package.planes.end(), [](const CSLPlane &plane) {
-            return plane.hasErrors;
-        });
+        auto it = std::remove_if(package.planes.begin(), package.planes.end(),
+                                 [](const CSLPlane &plane) { return plane.hasErrors; });
         package.planes.erase(it, package.planes.end());
     }
 

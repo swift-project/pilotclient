@@ -15,14 +15,13 @@ using namespace swift::misc;
 
 namespace swift::gui::components
 {
-    CStatusMessageFormSmall::CStatusMessageFormSmall(QWidget *parent) : QFrame(parent),
-                                                                        ui(new Ui::CStatusMessageFormSmall)
+    CStatusMessageFormSmall::CStatusMessageFormSmall(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CStatusMessageFormSmall)
     {
         ui->setupUi(this);
     }
 
-    CStatusMessageFormSmall::~CStatusMessageFormSmall()
-    {}
+    CStatusMessageFormSmall::~CStatusMessageFormSmall() {}
 
     void CStatusMessageFormSmall::setVariant(const CVariant &messageVariant)
     {
@@ -39,10 +38,7 @@ namespace swift::gui::components
         ui->le_Timestamp->setText(message.getFormattedUtcTimestampYmdhms());
     }
 
-    void CStatusMessageFormSmall::toggleVisibility()
-    {
-        this->setVisible(!isVisible());
-    }
+    void CStatusMessageFormSmall::toggleVisibility() { this->setVisible(!isVisible()); }
 
     void CStatusMessageFormSmall::setReducedInfo(bool minimized)
     {

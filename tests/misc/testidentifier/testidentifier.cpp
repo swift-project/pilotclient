@@ -63,7 +63,9 @@ namespace MiscTest
     void CTestIdentifier::machineUniqueId()
     {
         CIdentifier o;
-        QVERIFY2(!o.getMachineId().isEmpty(), "Machine id shall never be empty! If this test failed on a supported platform, get a fallback solution!");
+        QVERIFY2(
+            !o.getMachineId().isEmpty(),
+            "Machine id shall never be empty! If this test failed on a supported platform, get a fallback solution!");
     }
 
     void CTestIdentifier::dbusObjectPath()
@@ -72,11 +74,11 @@ namespace MiscTest
         q.setObjectName(QString::fromUtf16(u"!@#$%^&*()_+\u263a"));
         CTestIdentifiable id(&q);
         QString s(id.identifier().toDBusObjectPath());
-        QVERIFY2(id.identifier() == CIdentifier::fromDBusObjectPath(s), "Conversion from dbus object path and back compares equal");
+        QVERIFY2(id.identifier() == CIdentifier::fromDBusObjectPath(s),
+                 "Conversion from dbus object path and back compares equal");
     }
 
-    CTestIdentifiable::CTestIdentifiable(QObject *nameObject) : CIdentifiable(nameObject)
-    {}
+    CTestIdentifiable::CTestIdentifiable(QObject *nameObject) : CIdentifiable(nameObject) {}
 
 } // namespace MiscTest
 

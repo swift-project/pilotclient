@@ -31,16 +31,10 @@ namespace swift::core::afv::audio
     {
         m_format = format;
         m_buffer.clear();
-        if (!this->isOpen())
-        {
-            open(QIODevice::WriteOnly | QIODevice::Unbuffered);
-        }
+        if (!this->isOpen()) { open(QIODevice::WriteOnly | QIODevice::Unbuffered); }
     }
 
-    void CAudioInputBuffer::stop()
-    {
-        this->close();
-    }
+    void CAudioInputBuffer::stop() { this->close(); }
 
     qint64 CAudioInputBuffer::readData(char *data, qint64 maxlen)
     {
@@ -62,9 +56,8 @@ namespace swift::core::afv::audio
         return len;
     }
 
-    CInput::CInput(int sampleRate, QObject *parent) : QObject(parent),
-                                                      m_sampleRate(sampleRate),
-                                                      m_encoder(sampleRate, 1, OPUS_APPLICATION_VOIP)
+    CInput::CInput(int sampleRate, QObject *parent)
+        : QObject(parent), m_sampleRate(sampleRate), m_encoder(sampleRate, 1, OPUS_APPLICATION_VOIP)
     {
         this->setObjectName("CInput");
         m_encoder.setBitRate(16 * 1024);
@@ -123,7 +116,8 @@ namespace swift::core::afv::audio
         }
         else if (status == CMacOSMicrophoneAccess::NotDetermined)
         {
-            connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this, &CInput::delayedInitMicrophone);
+            connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this,
+                    &CInput::delayedInitMicrophone);
             m_micAccess.requestAccess();
             CLogMessage(this).info(u"MacOS requested input device");
         }
@@ -160,10 +154,7 @@ namespace swift::core::afv::audio
         static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
         QVector<qint16> samples = convertBytesTo16BitPCM(frame);
 
-        if (m_inputFormat.channelCount() == 2)
-        {
-            samples = convertFromStereoToMono(samples);
-        }
+        if (m_inputFormat.channelCount() == 2) { samples = convertFromStereoToMono(samples); }
 
         const double volume = m_gainRatio;
         for (qint16 &sample : samples)

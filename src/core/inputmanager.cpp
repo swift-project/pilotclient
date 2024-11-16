@@ -21,10 +21,7 @@ using namespace swift::misc::input;
 
 namespace swift::core
 {
-    CInputManager::CInputManager(QObject *parent) : QObject(parent)
-    {
-        reloadHotkeySettings();
-    }
+    CInputManager::CInputManager(QObject *parent) : QObject(parent) { reloadHotkeySettings(); }
 
     void CInputManager::registerAction(const QString &action, swift::misc::CIcons::IconIndex icon)
     {
@@ -49,11 +46,9 @@ namespace swift::core
 
     void CInputManager::unbind(int index)
     {
-        auto info = std::find_if(m_boundActions.begin(), m_boundActions.end(), [index](const BindInfo &info) { return info.m_index == index; });
-        if (info != m_boundActions.end())
-        {
-            m_boundActions.erase(info);
-        }
+        auto info = std::find_if(m_boundActions.begin(), m_boundActions.end(),
+                                 [index](const BindInfo &info) { return info.m_index == index; });
+        if (info != m_boundActions.end()) { m_boundActions.erase(info); }
     }
 
     void CInputManager::reloadHotkeySettings()
@@ -101,10 +96,7 @@ namespace swift::core
 
         for (const auto &boundAction : std::as_const(m_boundActions))
         {
-            if (boundAction.m_action == action)
-            {
-                boundAction.m_function(isKeyDown);
-            }
+            if (boundAction.m_action == action) { boundAction.m_function(isKeyDown); }
         }
     }
 
@@ -122,8 +114,10 @@ namespace swift::core
     {
         m_keyboard = IKeyboard::create(this);
         m_joystick = IJoystick::create(this);
-        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::processKeyCombinationChanged, Qt::QueuedConnection);
-        connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this, &CInputManager::processButtonCombinationChanged, Qt::QueuedConnection);
+        connect(m_keyboard.get(), &IKeyboard::keyCombinationChanged, this, &CInputManager::processKeyCombinationChanged,
+                Qt::QueuedConnection);
+        connect(m_joystick.get(), &IJoystick::buttonCombinationChanged, this,
+                &CInputManager::processButtonCombinationChanged, Qt::QueuedConnection);
     }
 
     void CInputManager::releaseDevices()
@@ -176,23 +170,14 @@ namespace swift::core
         QSet<QString> newActiveActions;
         for (const auto [combination, action] : makePairsRange(std::as_const(m_configuredActions)))
         {
-            if (combination.isSubsetOf(currentCombination))
-            {
-                newActiveActions.insert(action);
-            }
+            if (combination.isSubsetOf(currentCombination)) { newActiveActions.insert(action); }
         }
 
         const QSet<QString> pressedActions = newActiveActions - m_activeActions;
         const QSet<QString> releasedActions = m_activeActions - newActiveActions;
         m_activeActions = newActiveActions;
-        for (const QString &action : pressedActions)
-        {
-            callFunctionsBy(action, true);
-        }
-        for (const QString &action : releasedActions)
-        {
-            callFunctionsBy(action, false);
-        }
+        for (const QString &action : pressedActions) { callFunctionsBy(action, true); }
+        for (const QString &action : releasedActions) { callFunctionsBy(action, false); }
 
         // combination
         m_lastCombination = currentCombination;

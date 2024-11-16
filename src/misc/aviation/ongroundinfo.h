@@ -113,7 +113,9 @@ namespace swift::misc::aviation
         int m_onGroundDetails = static_cast<int>(OnGroundDetails::NotSetGroundDetails);
         double m_onGroundFactor = -1.0; //!< interpolated ground flag, 1..on ground, 0..not on ground, -1 no info
 
-        static constexpr double m_groundFactorThreshold = 0.95; //!< With m_onGroundDetails == "OnGroundByInterpolation", this is the threshold used to decide if the ground factor is OnGround or NotOnGround
+        static constexpr double m_groundFactorThreshold =
+            0.95; //!< With m_onGroundDetails == "OnGroundByInterpolation", this is the threshold used to decide if the
+                  //!< ground factor is OnGround or NotOnGround
 
         SWIFT_METACLASS(
             COnGroundInfo,

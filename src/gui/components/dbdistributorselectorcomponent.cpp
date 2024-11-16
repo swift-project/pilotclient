@@ -34,8 +34,8 @@ using namespace swift::misc::network;
 
 namespace swift::gui::components
 {
-    CDbDistributorSelectorComponent::CDbDistributorSelectorComponent(QWidget *parent) : QFrame(parent),
-                                                                                        ui(new Ui::CDbDistributorSelectorComponent)
+    CDbDistributorSelectorComponent::CDbDistributorSelectorComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CDbDistributorSelectorComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         ui->setupUi(this);
@@ -44,15 +44,19 @@ namespace swift::gui::components
         this->setAcceptedMetaTypeIds({ qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>() });
         ui->le_Distributor->setValidator(new CUpperCaseValidator(this));
 
-        bool c = connect(ui->le_Distributor, &QLineEdit::editingFinished, this, &CDbDistributorSelectorComponent::onDataChanged, Qt::QueuedConnection);
+        bool c = connect(ui->le_Distributor, &QLineEdit::editingFinished, this,
+                         &CDbDistributorSelectorComponent::onDataChanged, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-        // c = connect(ui->le_Distributor, &QLineEdit::returnPressed, this, &CDbDistributorSelectorComponent::returnPressed, Qt::QueuedConnection);
-        // Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
-        c = connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorSelectorComponent::onDistributorsRead, Qt::QueuedConnection);
+        // c = connect(ui->le_Distributor, &QLineEdit::returnPressed, this,
+        // &CDbDistributorSelectorComponent::returnPressed, Qt::QueuedConnection); Q_ASSERT_X(c, Q_FUNC_INFO, "Missing
+        // connect");
+        c = connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this,
+                    &CDbDistributorSelectorComponent::onDistributorsRead, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Missing connect");
         Q_UNUSED(c);
 
-        this->onDistributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getDistributorsCount());
+        this->onDistributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished,
+                                 sApp->getWebDataServices()->getDistributorsCount());
     }
 
     CDbDistributorSelectorComponent::~CDbDistributorSelectorComponent()
@@ -77,10 +81,7 @@ namespace swift::gui::components
         QString keyOrAlias(distributorKeyOrAlias.toUpper().trimmed());
         if (m_currentDistributor.matchesKeyOrAlias(keyOrAlias)) { return; }
         CDistributor d(sGui->getWebDataServices()->getDistributors().findByKeyOrAlias(keyOrAlias));
-        if (d.hasCompleteData())
-        {
-            this->setDistributor(d);
-        }
+        if (d.hasCompleteData()) { this->setDistributor(d); }
         else
         {
             ui->lbl_Description->setText("");
@@ -104,20 +105,14 @@ namespace swift::gui::components
         return d;
     }
 
-    void CDbDistributorSelectorComponent::setReadOnly(bool readOnly)
-    {
-        ui->le_Distributor->setReadOnly(readOnly);
-    }
+    void CDbDistributorSelectorComponent::setReadOnly(bool readOnly) { ui->le_Distributor->setReadOnly(readOnly); }
 
     void CDbDistributorSelectorComponent::withDistributorDescription(bool description)
     {
         ui->lbl_Description->setVisible(description);
     }
 
-    bool CDbDistributorSelectorComponent::isSet() const
-    {
-        return this->getDistributor().hasCompleteData();
-    }
+    bool CDbDistributorSelectorComponent::isSet() const { return this->getDistributor().hasCompleteData(); }
 
     void CDbDistributorSelectorComponent::clear()
     {
@@ -165,19 +160,22 @@ namespace swift::gui::components
         }
     }
 
-    void CDbDistributorSelectorComponent::onDistributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+    void CDbDistributorSelectorComponent::onDistributorsRead(CEntityFlags::Entity entity,
+                                                             CEntityFlags::ReadState readState, int count)
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
         if (entity.testFlag(CEntityFlags::DistributorEntity) && CEntityFlags::isFinishedReadState(readState))
         {
             if (count > 0)
             {
-                const QStringList keysAndAliases(sGui->getWebDataServices()->getDistributors().getDbKeysAndAliases(true));
+                const QStringList keysAndAliases(
+                    sGui->getWebDataServices()->getDistributors().getDbKeysAndAliases(true));
                 QCompleter *c = new QCompleter(keysAndAliases, this);
                 c->setCaseSensitivity(Qt::CaseInsensitive);
                 c->setCompletionMode(QCompleter::PopupCompletion);
                 c->setMaxVisibleItems(10);
-                connect(c, qOverload<const QString &>(&QCompleter::activated), this, &CDbDistributorSelectorComponent::onCompleterActivated);
+                connect(c, qOverload<const QString &>(&QCompleter::activated), this,
+                        &CDbDistributorSelectorComponent::onCompleterActivated);
 
                 ui->le_Distributor->setCompleter(c);
                 m_completerDistributors.reset(c); // deletes any old completer

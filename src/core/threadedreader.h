@@ -93,7 +93,9 @@ namespace swift::core
         QPair<qint64, qint64> getNetworkReplyBytes() const;
 
     protected:
-        mutable QReadWriteLock m_lock { QReadWriteLock::Recursive }; //!< lock which can be used from the derived classes
+        mutable QReadWriteLock m_lock {
+            QReadWriteLock::Recursive
+        }; //!< lock which can be used from the derived classes
         std::atomic_int m_networkReplyProgress; //!< Progress percentage 0...100
         std::atomic_llong m_networkReplyCurrent; //!< current bytes
         std::atomic_llong m_networkReplyNax; //!< max bytes
@@ -123,7 +125,8 @@ namespace swift::core
 
         //! Get request from network, and log with m_urlReadLog
         //! \threadsafe read log access is thread safe
-        QNetworkReply *getFromNetworkAndLog(const swift::misc::network::CUrl &url, const swift::misc::CSlot<void(QNetworkReply *)> &callback);
+        QNetworkReply *getFromNetworkAndLog(const swift::misc::network::CUrl &url,
+                                            const swift::misc::CSlot<void(QNetworkReply *)> &callback);
 
         //! Network request progress
         virtual void networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url);

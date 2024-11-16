@@ -13,12 +13,13 @@ using namespace swift::misc::simulation;
 
 namespace swift::simplugin::xplane
 {
-    CXPlaneMPAircraft::CXPlaneMPAircraft()
-    {}
+    CXPlaneMPAircraft::CXPlaneMPAircraft() {}
 
-    CXPlaneMPAircraft::CXPlaneMPAircraft(
-        const CSimulatedAircraft &aircraft, ISimulator *simulator, CInterpolationLogger *logger) : m_aircraft(aircraft),
-                                                                                                   m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simulator, simulator, simulator->getRemoteAircraftProvider(), logger))
+    CXPlaneMPAircraft::CXPlaneMPAircraft(const CSimulatedAircraft &aircraft, ISimulator *simulator,
+                                         CInterpolationLogger *logger)
+        : m_aircraft(aircraft),
+          m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simulator, simulator,
+                                                                    simulator->getRemoteAircraftProvider(), logger))
     {
         m_interpolator->attachLogger(logger);
         m_interpolator->initCorrespondingModel(aircraft.getModel());
@@ -41,21 +42,21 @@ namespace swift::simplugin::xplane
         m_interpolator->attachLogger(logger);
     }
 
-    CInterpolationResult CXPlaneMPAircraft::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const
+    CInterpolationResult CXPlaneMPAircraft::getInterpolation(qint64 currentTimeSinceEpoch,
+                                                             const CInterpolationAndRenderingSetupPerCallsign &setup,
+                                                             uint32_t aircraftNumber) const
     {
         Q_ASSERT(m_interpolator);
         return m_interpolator->getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
     }
 
-    CStatusMessageList CXPlaneMPAircraft::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
+    CStatusMessageList
+    CXPlaneMPAircraft::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
     {
         return this->getInterpolator() ? this->getInterpolator()->getInterpolationMessages(mode) : CStatusMessageList();
     }
 
-    CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const
-    {
-        return CCallsignSet(this->keys());
-    }
+    CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const { return CCallsignSet(this->keys()); }
 
     QStringList CXPlaneMPAircraftObjects::getAllCallsignStrings(bool sorted) const
     {

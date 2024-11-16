@@ -38,18 +38,13 @@ namespace MiscTest
         void marshalUnmarshal();
     };
 
-    void CTestDataStream::initTestCase()
-    {
-        swift::misc::registerMetadata();
-    }
+    void CTestDataStream::initTestCase() { swift::misc::registerMetadata(); }
 
     void CTestDataStream::marshalUnmarshal()
     {
-        CSimulatedAircraftList testData {
-            { CCallsign("BAW123"), {}, {} },
-            { CCallsign("DLH456"), {}, {} },
-            { CCallsign("AAL789"), {}, {} }
-        };
+        CSimulatedAircraftList testData { { CCallsign("BAW123"), {}, {} },
+                                          { CCallsign("DLH456"), {}, {} },
+                                          { CCallsign("AAL789"), {}, {} } };
 
         QByteArray bytes;
         {

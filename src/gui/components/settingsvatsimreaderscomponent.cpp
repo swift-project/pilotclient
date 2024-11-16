@@ -12,8 +12,8 @@ using namespace swift::core::vatsim;
 
 namespace swift::gui::components
 {
-    CSettingsVatsimReadersComponent::CSettingsVatsimReadersComponent(QWidget *parent) : QFrame(parent),
-                                                                                        ui(new Ui::CSettingsVatsimReadersComponent)
+    CSettingsVatsimReadersComponent::CSettingsVatsimReadersComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsVatsimReadersComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsVatsimReadersComponent::save);
@@ -21,13 +21,9 @@ namespace swift::gui::components
         this->initValues();
     }
 
-    CSettingsVatsimReadersComponent::~CSettingsVatsimReadersComponent()
-    {}
+    CSettingsVatsimReadersComponent::~CSettingsVatsimReadersComponent() {}
 
-    void CSettingsVatsimReadersComponent::onSettingsChanged()
-    {
-        this->initValues();
-    }
+    void CSettingsVatsimReadersComponent::onSettingsChanged() { this->initValues(); }
 
     void CSettingsVatsimReadersComponent::save()
     {
@@ -37,19 +33,20 @@ namespace swift::gui::components
         const int newMetarSec = ui->sb_Metar->value();
         if (newMetarSec != metarSec)
         {
-            m_settingsMetars.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime { static_cast<double>(newMetarSec), CTimeUnit::s() }));
+            m_settingsMetars.setAndSaveProperty(
+                CReaderSettings::IndexPeriodicTime,
+                CVariant::fromValue(CTime { static_cast<double>(newMetarSec), CTimeUnit::s() }));
         }
         const int newDataFileSec = ui->sb_DataFile->value();
         if (newDataFileSec != dataFileSec)
         {
-            m_settingsDataFile.setAndSaveProperty(CReaderSettings::IndexPeriodicTime, CVariant::fromValue(CTime { static_cast<double>(newDataFileSec), CTimeUnit::s() }));
+            m_settingsDataFile.setAndSaveProperty(
+                CReaderSettings::IndexPeriodicTime,
+                CVariant::fromValue(CTime { static_cast<double>(newDataFileSec), CTimeUnit::s() }));
         }
     }
 
-    void CSettingsVatsimReadersComponent::reload()
-    {
-        this->initValues();
-    }
+    void CSettingsVatsimReadersComponent::reload() { this->initValues(); }
 
     void CSettingsVatsimReadersComponent::initValues()
     {

@@ -10,8 +10,5 @@ using namespace swift::gui::models;
 
 namespace swift::gui::views
 {
-    CAirportView::CAirportView(QWidget *parent) : CViewBase(parent)
-    {
-        this->standardInit(new CAirportListModel(this));
-    }
+    CAirportView::CAirportView(QWidget *parent) : CViewBase(parent) { this->standardInit(new CAirportListModel(this)); }
 } // namespace swift::gui::views

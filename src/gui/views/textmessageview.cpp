@@ -25,10 +25,7 @@ namespace swift::gui::views
         this->setSortIndicator();
     }
 
-    bool CTextMessageView::isSortedByTimestampProperty() const
-    {
-        return m_model->isSortedByTimestampProperty();
-    }
+    bool CTextMessageView::isSortedByTimestampProperty() const { return m_model->isSortedByTimestampProperty(); }
 
     bool CTextMessageView::isSortedByTimestampPropertyLatestLast() const
     {

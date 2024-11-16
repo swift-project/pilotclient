@@ -12,10 +12,10 @@ namespace swift::misc
 {
     /*!
      * \brief Token bucket algorithm
-     * \details This class implements the token bucket algorithm. Tokens as arbitrary unit are added to the bucket at a defined rate.
-     *   Token can be consumsed as long as there are enough available. This class can be used to throttle traffic and packet
-     *   generation. Each time a packet needs to be generated and sent a token is consumed. If no token is available, consumption
-     *   will fail the the packet cannot be sent.
+     * \details This class implements the token bucket algorithm. Tokens as arbitrary unit are added to the bucket at a
+     * defined rate. Token can be consumsed as long as there are enough available. This class can be used to throttle
+     * traffic and packet generation. Each time a packet needs to be generated and sent a token is consumed. If no token
+     * is available, consumption will fail the the packet cannot be sent.
      */
     class SWIFT_MISC_EXPORT CTokenBucket
     {

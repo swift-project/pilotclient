@@ -77,10 +77,12 @@ namespace swift::misc
         void convertFromJson(const QJsonObject &json, const QStringList &keys);
 
         //! Call convertFromJson, catch any CJsonException that are thrown and return them as CStatusMessage.
-        CStatusMessageList convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
+        CStatusMessageList convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                                  const QString &prefix);
 
         //! Call convertFromJson, catch any CJsonException that are thrown and return them as CStatusMessage.
-        CStatusMessageList convertFromJsonNoThrow(const QJsonObject &json, const QStringList &keys, const CLogCategoryList &categories, const QString &prefix);
+        CStatusMessageList convertFromJsonNoThrow(const QJsonObject &json, const QStringList &keys,
+                                                  const CLogCategoryList &categories, const QString &prefix);
 
         //! Insert values from this map into an existing compact JSON object.
         QJsonObject &mergeToMemoizedJson(QJsonObject &json) const;
@@ -96,10 +98,12 @@ namespace swift::misc
         void convertFromMemoizedJson(const QJsonObject &json, const QStringList &keys);
 
         //! Call convertFromMemoizedJson, catch any CJsonException that are thrown and return them as CStatusMessage.
-        CStatusMessageList convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
+        CStatusMessageList convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                                          const QString &prefix);
 
         //! Call convertFromMemoizedJson, catch any CJsonException that are thrown and return them as CStatusMessage.
-        CStatusMessageList convertFromMemoizedJsonNoThrow(const QJsonObject &json, const QStringList &keys, const CLogCategoryList &categories, const QString &prefix);
+        CStatusMessageList convertFromMemoizedJsonNoThrow(const QJsonObject &json, const QStringList &keys,
+                                                          const CLogCategoryList &categories, const QString &prefix);
     };
 
 } // namespace swift::misc

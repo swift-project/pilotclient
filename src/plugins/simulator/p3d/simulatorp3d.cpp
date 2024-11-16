@@ -24,14 +24,14 @@ using namespace swift::simplugin::fscommon;
 
 namespace swift::simplugin::p3d
 {
-    CSimulatorP3D::CSimulatorP3D(const CSimulatorPluginInfo &info,
-                                 IOwnAircraftProvider *ownAircraftProvider,
-                                 IRemoteAircraftProvider *remoteAircraftProvider,
-                                 IClientProvider *clientProvider,
-                                 QObject *parent) : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
+    CSimulatorP3D::CSimulatorP3D(const CSimulatorPluginInfo &info, IOwnAircraftProvider *ownAircraftProvider,
+                                 IRemoteAircraftProvider *remoteAircraftProvider, IClientProvider *clientProvider,
+                                 QObject *parent)
+        : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         // set build/sim specific SimConnectProc, which is the FSX SimConnectProc on WIN32 systems
-        if (CBuildConfig::isCompiledWithP3DSupport() && CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::buildWordSize() == 64)
+        if (CBuildConfig::isCompiledWithP3DSupport() && CBuildConfig::isRunningOnWindowsNtPlatform() &&
+            CBuildConfig::buildWordSize() == 64)
         {
             // modern x64 P3D
             this->setUsingFsxTerrainProbe(false);
@@ -44,16 +44,10 @@ namespace swift::simplugin::p3d
     bool CSimulatorP3D::connectTo()
     {
 #ifdef Q_OS_WIN64
-        if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get()))
-        {
-            return false;
-        }
+        if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get())) { return false; }
         return CSimulatorFsxCommon::connectTo();
 #else
-        if (!loadAndResolveFsxSimConnect(true))
-        {
-            return false;
-        }
+        if (!loadAndResolveFsxSimConnect(true)) { return false; }
         return CSimulatorFsxCommon::connectTo();
 #endif
     }
@@ -93,9 +87,7 @@ namespace swift::simplugin::p3d
             simulatorP3D->callbackReceivedRequestedElevation(ep, cs, false);
         }
         break;
-        default:
-            CSimulatorFsxCommon::SimConnectProc(pData, cbData, pContext);
-            break;
+        default: CSimulatorFsxCommon::SimConnectProc(pData, cbData, pContext); break;
         }
     }
 
@@ -114,16 +106,15 @@ namespace swift::simplugin::p3d
         const DWORD dwGridWidth = 1.0;
         const DWORD dwGridHeight = 1.0;
 
-        const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjTerrainProbe(); // P3D we use new request id each time (no simobject)
+        const SIMCONNECT_DATA_REQUEST_ID requestId =
+            this->obtainRequestIdForSimObjTerrainProbe(); // P3D we use new request id each time (no simobject)
 
         // returns SIMCONNECT_RECV_GROUND_INFO -> SIMCONNECT_DATA_GROUND_INFO
         const HRESULT hr = this->logAndTraceSendId(
-            SimConnect_RequestGroundInfo(
-                m_hSimConnect, requestId, latDeg, lngDeg, 0, latDeg, lngDeg, maxAltFt,
-                dwGridWidth, dwGridHeight,
-                SIMCONNECT_GROUND_INFO_LATLON_FORMAT_DEGREES,
-                SIMCONNECT_GROUND_INFO_ALT_FORMAT_FEET,
-                SIMCONNECT_GROUND_INFO_SOURCE_FLAG_PLATFORMS),
+            SimConnect_RequestGroundInfo(m_hSimConnect, requestId, latDeg, lngDeg, 0, latDeg, lngDeg, maxAltFt,
+                                         dwGridWidth, dwGridHeight, SIMCONNECT_GROUND_INFO_LATLON_FORMAT_DEGREES,
+                                         SIMCONNECT_GROUND_INFO_ALT_FORMAT_FEET,
+                                         SIMCONNECT_GROUND_INFO_SOURCE_FLAG_PLATFORMS),
             Q_FUNC_INFO, "SimConnect_RequestGroundInfo");
 
         bool ok = false;
@@ -135,7 +126,8 @@ namespace swift::simplugin::p3d
         }
         else
         {
-            const CStatusMessage msg = CStatusMessage(this).error(u"SimConnect, can not request ground info: '%1' '%2'") << requestId << callsign.asString();
+            const CStatusMessage msg = CStatusMessage(this).error(u"SimConnect, can not request ground info: '%1' '%2'")
+                                       << requestId << callsign.asString();
             CLogMessage::preformatted(msg);
         }
 
@@ -169,8 +161,8 @@ namespace swift::simplugin::p3d
             // SIMCONNECT_CAMERA_TYPE_LATLONALT_ORTHOGONAL is a top down view
             // SIMCONNECT_CAMERA_TYPE_FIXED position at one place
             const SIMCONNECT_CAMERA_TYPE cameraType = SIMCONNECT_CAMERA_TYPE_OBJECT_AI_CENTER;
-            hr = SimConnect_CreateCameraDefinition(m_hSimConnect, guid, cameraType, cameraName, simObject.cameraPosition(), simObject.cameraRotation());
-            if (isOk(hr))
+            hr = SimConnect_CreateCameraDefinition(m_hSimConnect, guid, cameraType, cameraName,
+        simObject.cameraPosition(), simObject.cameraRotation()); if (isOk(hr))
             {
                 const SIMCONNECT_OBJECT_ID objectId = static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId());
                 const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjAircraft();
@@ -261,26 +253,29 @@ namespace swift::simplugin::p3d
     {
         // completely remove AI control
         const SIMCONNECT_OBJECT_ID objectId = simObject.getObjectId();
-        const HRESULT hr1 = this->logAndTraceSendId(
-            SimConnect_AIReleaseControlEx(m_hSimConnect, objectId, requestId, TRUE),
-            simObject, "Release control", Q_FUNC_INFO, "SimConnect_AIReleaseControlEx");
-        const HRESULT hr2 = this->logAndTraceSendId(
-            SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLatLng, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-            simObject, "EventFreezeLatLng", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
-        const HRESULT hr3 = this->logAndTraceSendId(
-            SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-            simObject, "EventFreezeAlt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
-        const HRESULT hr4 = this->logAndTraceSendId(
-            SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-            simObject, "EventFreezeAtt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+        const HRESULT hr1 =
+            this->logAndTraceSendId(SimConnect_AIReleaseControlEx(m_hSimConnect, objectId, requestId, TRUE), simObject,
+                                    "Release control", Q_FUNC_INFO, "SimConnect_AIReleaseControlEx");
+        const HRESULT hr2 =
+            this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeLatLng, 1,
+                                                                   SIMCONNECT_GROUP_PRIORITY_HIGHEST,
+                                                                   SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeLatLng", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+        const HRESULT hr3 =
+            this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAlt, 1,
+                                                                   SIMCONNECT_GROUP_PRIORITY_HIGHEST,
+                                                                   SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeAlt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
+        const HRESULT hr4 =
+            this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFreezeAtt, 1,
+                                                                   SIMCONNECT_GROUP_PRIORITY_HIGHEST,
+                                                                   SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    simObject, "EventFreezeAtt", Q_FUNC_INFO, "SimConnect_TransmitClientEvent");
 
         return isOk(hr1, hr2, hr3, hr4);
     }
 #else
-    HRESULT CSimulatorP3D::initEventsP3D()
-    {
-        return s_ok();
-    }
+    HRESULT CSimulatorP3D::initEventsP3D() { return s_ok(); }
 
     void CSimulatorP3D::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
     {
@@ -291,16 +286,10 @@ namespace swift::simplugin::p3d
     void CSimulatorP3DListener::startImpl()
     {
 #ifdef Q_OS_WIN64
-        if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get()))
-        {
-            return;
-        }
+        if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get())) { return; }
         CSimulatorFsxCommonListener::startImpl();
 #else
-        if (!loadAndResolveFsxSimConnect(true))
-        {
-            return;
-        }
+        if (!loadAndResolveFsxSimConnect(true)) { return; }
         CSimulatorFsxCommonListener::startImpl();
 #endif
     }

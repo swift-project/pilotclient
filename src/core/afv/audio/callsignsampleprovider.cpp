@@ -22,10 +22,10 @@ using namespace swift::config;
 
 namespace swift::core::afv::audio
 {
-    CCallsignSampleProvider::CCallsignSampleProvider(const QAudioFormat &audioFormat, const CReceiverSampleProvider *receiver, QObject *parent) : ISampleProvider(parent),
-                                                                                                                                                  m_audioFormat(audioFormat),
-                                                                                                                                                  m_receiver(receiver),
-                                                                                                                                                  m_decoder(audioFormat.sampleRate(), 1)
+    CCallsignSampleProvider::CCallsignSampleProvider(const QAudioFormat &audioFormat,
+                                                     const CReceiverSampleProvider *receiver, QObject *parent)
+        : ISampleProvider(parent), m_audioFormat(audioFormat), m_receiver(receiver),
+          m_decoder(audioFormat.sampleRate(), 1)
     {
         Q_ASSERT(audioFormat.channelCount() == 1);
         Q_ASSERT(receiver);
@@ -51,7 +51,8 @@ namespace swift::core::afv::audio
         m_simpleCompressorEffect->setMakeUpGain(-5.5);
 
         // Create the voice EQ
-        m_voiceEqualizer = new CEqualizerSampleProvider(m_simpleCompressorEffect, EqualizerPresets::VHFEmulation, m_mixer);
+        m_voiceEqualizer =
+            new CEqualizerSampleProvider(m_simpleCompressorEffect, EqualizerPresets::VHFEmulation, m_mixer);
 
         m_mixer->addMixerInput(m_whiteNoise);
         m_mixer->addMixerInput(m_acBusNoise);
@@ -87,7 +88,8 @@ namespace swift::core::afv::audio
 
     void CCallsignSampleProvider::timerElapsed()
     {
-        if (m_inUse && m_audioInput->getBufferedBytes() == 0 && m_lastSamplesAddedUtc.msecsTo(QDateTime::currentDateTimeUtc()) > m_idleTimeoutMs)
+        if (m_inUse && m_audioInput->getBufferedBytes() == 0 &&
+            m_lastSamplesAddedUtc.msecsTo(QDateTime::currentDateTimeUtc()) > m_idleTimeoutMs)
         {
             idle();
         }
@@ -224,8 +226,7 @@ namespace swift::core::afv::audio
 
     QString CCallsignSampleProvider::toQString() const
     {
-        return QStringLiteral("In use: ") % boolToYesNo(m_inUse) %
-               QStringLiteral(" cs: ") % m_callsign %
+        return QStringLiteral("In use: ") % boolToYesNo(m_inUse) % QStringLiteral(" cs: ") % m_callsign %
                QStringLiteral(" type: ") % m_aircraftType;
     }
 

@@ -9,6 +9,5 @@ namespace swift::misc::aviation
 {
     CFlightPlanList::CFlightPlanList() {}
 
-    CFlightPlanList::CFlightPlanList(const CSequence<CFlightPlan> &other) : CSequence<CFlightPlan>(other)
-    {}
+    CFlightPlanList::CFlightPlanList(const CSequence<CFlightPlan> &other) : CSequence<CFlightPlan>(other) {}
 } // namespace swift::misc::aviation

@@ -51,10 +51,12 @@ namespace swift::core
             virtual void unRegisterDevicesFor(const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::registerAudioCallsign
-            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) override;
+            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::unRegisterAudioCallsign
-            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CIdentifier &identifier) override;
+            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                                 const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::hasRegisteredAudioCallsign
             virtual bool hasRegisteredAudioCallsign(const swift::misc::aviation::CCallsign &callsign) const override;

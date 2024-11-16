@@ -12,7 +12,8 @@
 #include "misc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "misc/swiftmiscexport.h"
 
-SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList)
+SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign,
+                              CInterpolationSetupList)
 
 namespace swift::misc::simulation
 {

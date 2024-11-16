@@ -19,7 +19,8 @@ namespace swift::misc
 
     QString CDirectories::getLastViewJsonDirectoryOrDefault() const
     {
-        return this->existingOrDefaultDir(this->getLastViewJsonDirectory(), CSwiftDirectories::documentationDirectory());
+        return this->existingOrDefaultDir(this->getLastViewJsonDirectory(),
+                                          CSwiftDirectories::documentationDirectory());
     }
 
     QString CDirectories::getLastModelDirectoryOrDefault() const
@@ -48,10 +49,7 @@ namespace swift::misc
 
     QString CDirectories::getMatchingScriptDirectoryOrDefault() const
     {
-        if (m_dirMatchingScript.isEmpty())
-        {
-            return CSwiftDirectories::shareMatchingScriptDirectory();
-        }
+        if (m_dirMatchingScript.isEmpty()) { return CSwiftDirectories::shareMatchingScriptDirectory(); }
         return m_dirMatchingScript;
     }
 
@@ -75,7 +73,8 @@ namespace swift::misc
         case IndexDirLastModelJsonOrDefault: return QVariant::fromValue(this->getLastModelDirectoryOrDefault());
         case IndexDirLastModelStashJson: return QVariant::fromValue(m_dirLastModelStashJson);
         case IndexDirMatchingScript: return QVariant::fromValue(this->getMatchingScriptDirectoryOrDefault());
-        case IndexDirLastModelStashJsonOrDefault: return QVariant::fromValue(this->getLastModelStashDirectoryOrDefault());
+        case IndexDirLastModelStashJsonOrDefault:
+            return QVariant::fromValue(this->getLastModelStashDirectoryOrDefault());
         default: return CValueObject::propertyByIndex(index);
         }
     }

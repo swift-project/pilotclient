@@ -74,7 +74,8 @@ namespace swift::misc
         using base_type = CDictionary;
 
         //! Constructor.
-        CValueCachePacket(bool saved = false, bool valuesChanged = true) : m_saved(saved), m_valuesChanged(valuesChanged)
+        CValueCachePacket(bool saved = false, bool valuesChanged = true)
+            : m_saved(saved), m_valuesChanged(valuesChanged)
         {}
 
         //! Construct from CVariantMap and a timestamp.
@@ -198,7 +199,8 @@ namespace swift::misc
 
         //! Call loadFromJson, catch any CJsonException that are thrown and return them as CStatusMessage.
         //! \threadsafe
-        CStatusMessageList loadFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix);
+        CStatusMessageList loadFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                               const QString &prefix);
 
         //! Save values to Json files in a given directory.
         //! If prefix is provided then only those values whose keys start with that prefix.
@@ -239,28 +241,30 @@ namespace swift::misc
 
         //! Begins a batch of changes to be made through CCached instances owned by owner.
         //! \details All changes made through those CCached instances will be deferred until the returned RAII object is
-        //! destroyed. If the destruction happens during stack unwinding due to an exception being thrown, the changes are
-        //! abandoned, otherwise they are applied in one single change signal instead of lots of individual ones.
-        //! Can be called multiple times; the batch will be applied (or abandoned) when the last RAII object is destroyed.
-        //! CCached::getValue will continue to return the old value until the batched changes are applied.
+        //! destroyed. If the destruction happens during stack unwinding due to an exception being thrown, the changes
+        //! are abandoned, otherwise they are applied in one single change signal instead of lots of individual ones.
+        //! Can be called multiple times; the batch will be applied (or abandoned) when the last RAII object is
+        //! destroyed. CCached::getValue will continue to return the old value until the batched changes are applied.
         //! \note Must be called in the thread where owner lives.
         BatchGuard batchChanges(QObject *owner);
 
     public slots:
-        //! Notify this cache that values have been changed by one of the duplicate caches in the multi-process environment.
-        //! \see swift::misc::CValueCache::valuesChangedByLocal.
-        //! \param values The values that were changed.
-        //! \param originator Identifier of the process which made the change. Can be this very process, or a different one.
-        void changeValuesFromRemote(const swift::misc::CValueCachePacket &values, const swift::misc::CIdentifier &originator);
+        //! Notify this cache that values have been changed by one of the duplicate caches in the multi-process
+        //! environment. \see swift::misc::CValueCache::valuesChangedByLocal. \param values The values that were
+        //! changed. \param originator Identifier of the process which made the change. Can be this very process, or a
+        //! different one.
+        void changeValuesFromRemote(const swift::misc::CValueCachePacket &values,
+                                    const swift::misc::CIdentifier &originator);
 
     signals:
         //! Emitted when values in the cache are changed by an object in this very process.
-        //! The interprocess communication (e.g. DBus) should arrange for this signal to call the slot changeValueFromRemote
-        //! of CValueCache instances in all processes including this one. The slot will do its own round-trip detection.
+        //! The interprocess communication (e.g. DBus) should arrange for this signal to call the slot
+        //! changeValueFromRemote of CValueCache instances in all processes including this one. The slot will do its own
+        //! round-trip detection.
         void valuesChangedByLocal(const swift::misc::CValueCachePacket &values);
 
-        //! Emitted when this cache has ratified a change which included a request to save (i.e. via CCaches::setAndSave).
-        //! If the derived class does not handle such requests, the signal can be ignored.
+        //! Emitted when this cache has ratified a change which included a request to save (i.e. via
+        //! CCaches::setAndSave). If the derived class does not handle such requests, the signal can be ignored.
         void valuesSaveRequested(const swift::misc::CValueCachePacket &values);
 
     protected:
@@ -268,21 +272,26 @@ namespace swift::misc
         //! Returns a range referring to all elements which start with the given prefix.
         auto elementsStartingWith(const QString &keyPrefix)
         {
-            return makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
+            return makeRange(m_elements.lowerBound(keyPrefix),
+                             m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
         }
         auto elementsStartingWith(const QString &keyPrefix) const
         {
-            return makeRange(m_elements.lowerBound(keyPrefix), m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
+            return makeRange(m_elements.lowerBound(keyPrefix),
+                             m_elements.lowerBound(keyPrefix + QChar(QChar::LastValidCodePoint)));
         }
         //! @}
 
         //! Save specific values to Json files in a given directory.
         //! \threadsafe
-        CStatusMessage saveToFiles(const QString &directory, const CVariantMap &values, const QString &keysMessage = {}) const;
+        CStatusMessage saveToFiles(const QString &directory, const CVariantMap &values,
+                                   const QString &keysMessage = {}) const;
 
-        //! Load from Json files in a given directory any values which differ from the current ones, and insert them in o_values.
-        //! \threadsafe
-        CStatusMessage loadFromFiles(const QString &directory, const QSet<QString> &keys, const CVariantMap &current, CValueCachePacket &o_values, const QString &keysMessage = {}, bool keysOnly = false) const;
+        //! Load from Json files in a given directory any values which differ from the current ones, and insert them in
+        //! o_values. \threadsafe
+        CStatusMessage loadFromFiles(const QString &directory, const QSet<QString> &keys, const CVariantMap &current,
+                                     CValueCachePacket &o_values, const QString &keysMessage = {},
+                                     bool keysOnly = false) const;
 
         //! Mark all values with keys that start with the given prefix as having been saved.
         //! \threadsafe
@@ -351,7 +360,8 @@ namespace swift::misc
         //! \param name Human readable name corresponding to the key.
         //! \param owner Will be the parent of the internal QObject used for signal/slot connections.
         template <typename U>
-        CCached(CValueCache *cache, const QString &key, const QString &name, U *owner) : CCached(cache, key, name, nullptr, T {}, owner)
+        CCached(CValueCache *cache, const QString &key, const QString &name, U *owner)
+            : CCached(cache, key, name, nullptr, T {}, owner)
         {}
 
         //! Constructor.
@@ -362,8 +372,11 @@ namespace swift::misc
         //! \param defaultValue A value which will be used as default if the value is invalid.
         //! \param owner Will be the parent of the internal QObject used for signal/slot connections.
         template <typename U, typename F>
-        CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue, U *owner) : m_page(&private_ns::CValuePage::getPageFor(owner, cache)),
-                                                                                                                             m_element(&m_page->createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue)))
+        CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue,
+                U *owner)
+            : m_page(&private_ns::CValuePage::getPageFor(owner, cache)),
+              m_element(
+                  &m_page->createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue)))
         {
             if (isInitialized()) { cache->setHumanReadableName(getKey(), name); }
         }
@@ -378,8 +391,11 @@ namespace swift::misc
                 return;
             }
             using U = typename private_ns::TClassOfPointerToMember<F>::type;
-            Q_ASSERT_X(m_page->parent()->metaObject()->inherits(&U::staticMetaObject), Q_FUNC_INFO, "Slot is member function of wrong class");
-            m_page->setNotifySlot(*m_element, { [slot](QObject *obj) { private_ns::invokeSlot(slot, static_cast<U *>(obj)); }, makeId(slot) });
+            Q_ASSERT_X(m_page->parent()->metaObject()->inherits(&U::staticMetaObject), Q_FUNC_INFO,
+                       "Slot is member function of wrong class");
+            m_page->setNotifySlot(
+                *m_element,
+                { [slot](QObject *obj) { private_ns::invokeSlot(slot, static_cast<U *>(obj)); }, makeId(slot) });
         }
 
         //! Read the current value.
@@ -394,10 +410,16 @@ namespace swift::misc
         T get() const { return isValid() ? getVariantCopy().template value<T>() : T {}; }
 
         //! Write a new value. Must be called from the thread in which the owner lives.
-        CStatusMessage set(const T &value, qint64 timestamp = 0) { return m_page->setValue(*m_element, CVariant::from(value), timestamp); }
+        CStatusMessage set(const T &value, qint64 timestamp = 0)
+        {
+            return m_page->setValue(*m_element, CVariant::from(value), timestamp);
+        }
 
         //! Write and save in the same step. Must be called from the thread in which the owner lives.
-        CStatusMessage setAndSave(const T &value, qint64 timestamp = 0) { return m_page->setValue(*m_element, CVariant::from(value), timestamp, true); }
+        CStatusMessage setAndSave(const T &value, qint64 timestamp = 0)
+        {
+            return m_page->setValue(*m_element, CVariant::from(value), timestamp, true);
+        }
 
         //! Save using the currently set value. Must be called from the thread in which the owner lives.
         CStatusMessage save() { return m_page->setValue(*m_element, {}, 0, true); }
@@ -481,7 +503,8 @@ namespace swift::misc
         }
 
         private_ns::CValuePage *m_page = (throw std::logic_error("Uninitialized member"), nullptr); //!< \private
-        private_ns::CValuePage::Element *m_element = (throw std::logic_error("Uninitialized member"), nullptr); //!< \private
+        private_ns::CValuePage::Element *m_element =
+            (throw std::logic_error("Uninitialized member"), nullptr); //!< \private
     };
 
     /*!

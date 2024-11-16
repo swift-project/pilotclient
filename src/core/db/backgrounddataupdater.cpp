@@ -25,7 +25,8 @@ namespace swift::core::db
 {
     const QStringList &CBackgroundDataUpdater::getLogCategories()
     {
-        static const QStringList cats({ CLogCategories::worker(), CLogCategories::modelSetCache(), CLogCategories::modelCache() });
+        static const QStringList cats(
+            { CLogCategories::worker(), CLogCategories::modelSetCache(), CLogCategories::modelCache() });
         return cats;
     }
 
@@ -35,7 +36,8 @@ namespace swift::core::db
         m_updateTimer.setInterval(60 * 1000);
         if (sApp && sApp->hasWebDataServices())
         {
-            connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModelsSimplified, this, &CBackgroundDataUpdater::onModelsPublished, Qt::QueuedConnection);
+            connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModelsSimplified, this,
+                    &CBackgroundDataUpdater::onModelsPublished, Qt::QueuedConnection);
         }
     }
 
@@ -79,8 +81,7 @@ namespace swift::core::db
             this->addHistory(CLogMessage(this).info(u"Synchronize %1") << this->modelCaches(false).getDescription());
             this->syncModelOrModelSetCacheWithDbData(false);
             break;
-        default:
-            break;
+        default: break;
         }
 
         ++cycle %= 4;
@@ -96,13 +97,14 @@ namespace swift::core::db
         sApp->getWebDataServices()->triggerReadOfSharedInfoObjects();
     }
 
-    void CBackgroundDataUpdater::syncModelOrModelSetCacheWithDbData(bool modelSetFlag, const CAircraftModelList &dbModelsConsidered)
+    void CBackgroundDataUpdater::syncModelOrModelSetCacheWithDbData(bool modelSetFlag,
+                                                                    const CAircraftModelList &dbModelsConsidered)
     {
         if (!this->doWorkCheck()) { return; }
         IMultiSimulatorModelCaches &modelCaches = this->modelCaches(modelSetFlag);
-        const QDateTime latestDbModelsTs = dbModelsConsidered.isEmpty() ?
-                                               sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity) :
-                                               dbModelsConsidered.latestTimestamp();
+        const QDateTime latestDbModelsTs =
+            dbModelsConsidered.isEmpty() ? sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity) :
+                                           dbModelsConsidered.latestTimestamp();
         if (!latestDbModelsTs.isValid()) { return; }
 
         // newer DB models as cache
@@ -114,9 +116,8 @@ namespace swift::core::db
         const CSimulatorInfo simulators = modelCaches.simulatorsWithInitializedCache(); // simulators ever used
         if (simulators.isNoSimulator()) { return; }
 
-        const CAircraftModelList dbModels = dbModelsConsidered.isEmpty() ?
-                                                sApp->getWebDataServices()->getModels() :
-                                                dbModelsConsidered;
+        const CAircraftModelList dbModels =
+            dbModelsConsidered.isEmpty() ? sApp->getWebDataServices()->getModels() : dbModelsConsidered;
         if (dbModels.isEmpty()) { return; }
         const QSet<CSimulatorInfo> simulatorsSet = simulators.asSingleSimulatorSet();
         QElapsedTimer time;
@@ -135,13 +136,15 @@ namespace swift::core::db
             {
                 const CStatusMessage m = modelCaches.setCachedModels(simulatorModels, singleSimulator);
                 const int msElapsed = time.elapsed();
-                this->addHistory(CLogMessage(this).info(u"Consolidated %1 models (%2) for '%3' in %4ms") << c << description << singleSimulator.convertToQString() << msElapsed);
+                this->addHistory(CLogMessage(this).info(u"Consolidated %1 models (%2) for '%3' in %4ms")
+                                 << c << description << singleSimulator.convertToQString() << msElapsed);
                 CLogMessage::preformatted(m);
                 this->addHistory(m);
             }
             else
             {
-                this->addHistory(CLogMessage(this).info(u"Synchronized, no changes for '%1'") << singleSimulator.convertToQString());
+                this->addHistory(CLogMessage(this).info(u"Synchronized, no changes for '%1'")
+                                 << singleSimulator.convertToQString());
             }
 
             if (simulatorsSet.size() > 1)
@@ -167,8 +170,11 @@ namespace swift::core::db
         if (!latestDbTs.isValid()) { return; }
         if (latestDbTs <= latestCacheTs)
         {
-            this->addHistory(CLogMessage(this).info(u"Background updater (%1), no auto synchronization with DB, entity '%2', DB ts: %3 cache ts: %4")
-                             << CThreadUtils::currentThreadInfo() << entityStr << latestDbTs.toString(Qt::ISODate) << latestCacheTsStr);
+            this->addHistory(
+                CLogMessage(this).info(
+                    u"Background updater (%1), no auto synchronization with DB, entity '%2', DB ts: %3 cache ts: %4")
+                << CThreadUtils::currentThreadInfo() << entityStr << latestDbTs.toString(Qt::ISODate)
+                << latestCacheTsStr);
             return;
         }
 

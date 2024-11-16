@@ -75,7 +75,8 @@ namespace swift::core
             //! @{
 
             //! \copydoc swift::core::context::IContextNetwork::getAtcStationsOnline
-            virtual swift::misc::aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
+            virtual swift::misc::aviation::CAtcStationList
+            getAtcStationsOnline(bool recalculateDistance) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getClosestAtcStationsOnline
             virtual swift::misc::aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override;
@@ -93,19 +94,26 @@ namespace swift::core
             virtual bool isAircraftInRange(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getAircraftInRangeForCallsign
-            virtual swift::misc::simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::simulation::CSimulatedAircraft
+            getAircraftInRangeForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getOnlineStationsForFrequency
-            virtual swift::misc::aviation::CAtcStationList getOnlineStationsForFrequency(const swift::misc::physical_quantities::CFrequency &frequency) const override;
+            virtual swift::misc::aviation::CAtcStationList
+            getOnlineStationsForFrequency(const swift::misc::physical_quantities::CFrequency &frequency) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getOnlineStationForCallsign
-            virtual swift::misc::aviation::CAtcStation getOnlineStationForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CAtcStation
+            getOnlineStationForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::isOnlineStation
             virtual bool isOnlineStation(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::connectToNetwork
-            virtual swift::misc::CStatusMessage connectToNetwork(const swift::misc::network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const swift::misc::aviation::CCallsign &partnerCallsign, swift::misc::network::CLoginMode mode) override;
+            virtual swift::misc::CStatusMessage
+            connectToNetwork(const swift::misc::network::CServer &server, const QString &extraLiveryString,
+                             bool sendLivery, const QString &extraModelString, bool sendModelString,
+                             const swift::misc::aviation::CCallsign &partnerCallsign,
+                             swift::misc::network::CLoginMode mode) override;
 
             //! \copydoc swift::core::context::IContextNetwork::disconnectFromNetwork
             virtual swift::misc::CStatusMessage disconnectFromNetwork() override;
@@ -120,7 +128,8 @@ namespace swift::core
             virtual swift::misc::network::CLoginMode getLoginMode() const override;
 
             //! \copydoc swift::core::context::IContextNetwork::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine,
+                                          const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::core::context::IContextNetwork::sendTextMessages
             virtual void sendTextMessages(const swift::misc::network::CTextMessageList &textMessages) override;
@@ -129,19 +138,23 @@ namespace swift::core
             virtual void sendFlightPlan(const swift::misc::aviation::CFlightPlan &flightPlan) override;
 
             //! \copydoc swift::core::context::IContextNetwork::loadFlightPlanFromNetwork
-            virtual swift::misc::aviation::CFlightPlan loadFlightPlanFromNetwork(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CFlightPlan
+            loadFlightPlanFromNetwork(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getMetarForAirport
-            swift::misc::weather::CMetar getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &airportIcaoCode) const override;
+            swift::misc::weather::CMetar
+            getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &airportIcaoCode) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getUsers
             virtual swift::misc::network::CUserList getUsers() const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getUsersForCallsigns
-            virtual swift::misc::network::CUserList getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
+            virtual swift::misc::network::CUserList
+            getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getUserForCallsign
-            virtual swift::misc::network::CUser getUserForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::network::CUser
+            getUserForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getClients
             virtual swift::misc::network::CClientList getClients() const override;
@@ -150,7 +163,8 @@ namespace swift::core
             virtual swift::misc::network::CServerList getVatsimFsdServers() const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getClientsForCallsigns
-            virtual swift::misc::network::CClientList getClientsForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
+            virtual swift::misc::network::CClientList
+            getClientsForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::setOtherClient
             virtual bool setOtherClient(const swift::misc::network::CClient &client) override;
@@ -162,22 +176,30 @@ namespace swift::core
             virtual void requestAtisUpdates() override;
 
             //! \copydoc swift::core::context::IContextNetwork::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const swift::misc::aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual bool updateAircraftEnabled(const swift::misc::aviation::CCallsign &callsign,
+                                               bool enabledForRendering) override;
 
             //! \copydoc swift::core::context::IContextNetwork::setAircraftEnabledFlag
-            virtual bool setAircraftEnabledFlag(const swift::misc::aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual bool setAircraftEnabledFlag(const swift::misc::aviation::CCallsign &callsign,
+                                                bool enabledForRendering) override;
 
             //! \copydoc swift::core::context::IContextNetwork::updateAircraftModel
-            virtual bool updateAircraftModel(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateAircraftModel(const swift::misc::aviation::CCallsign &callsign,
+                                             const swift::misc::simulation::CAircraftModel &model,
+                                             const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::core::context::IContextNetwork::updateAircraftNetworkModel
-            virtual bool updateAircraftNetworkModel(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateAircraftNetworkModel(const swift::misc::aviation::CCallsign &callsign,
+                                                    const swift::misc::simulation::CAircraftModel &model,
+                                                    const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::core::context::IContextNetwork::updateFastPositionEnabled
-            virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign, bool enableFastPositionSending) override;
+            virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign,
+                                                   bool enableFastPositionSending) override;
 
             //! \copydoc swift::core::context::IContextNetwork::updateAircraftSupportingGndFLag
-            virtual bool updateAircraftSupportingGndFLag(const swift::misc::aviation::CCallsign &callsign, bool supportGndFlag) override;
+            virtual bool updateAircraftSupportingGndFLag(const swift::misc::aviation::CCallsign &callsign,
+                                                         bool supportGndFlag) override;
 
             //! \copydoc swift::core::context::IContextNetwork::reInitializeAllAircraft
             virtual int reInitializeAllAircraft() override;
@@ -189,7 +211,8 @@ namespace swift::core
             virtual swift::misc::aviation::CCallsignSet getFastPositionEnabledCallsigns() const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getReverseLookupMessages
-            virtual swift::misc::CStatusMessageList getReverseLookupMessages(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::CStatusMessageList
+            getReverseLookupMessages(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::isReverseLookupMessagesEnabled
             virtual swift::misc::simulation::ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
@@ -198,10 +221,12 @@ namespace swift::core
             virtual void enableReverseLookupMessages(swift::misc::simulation::ReverseLookupLogging enable) override;
 
             //! \copydoc swift::core::context::IContextNetwork::getAircraftPartsHistory
-            virtual swift::misc::CStatusMessageList getAircraftPartsHistory(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::CStatusMessageList
+            getAircraftPartsHistory(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getRemoteAircraftParts
-            virtual swift::misc::aviation::CAircraftPartsList getRemoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CAircraftPartsList
+            getRemoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getLibraryInfo
             virtual QString getLibraryInfo(bool detailed) const override;
@@ -210,7 +235,8 @@ namespace swift::core
             virtual bool isAircraftPartsHistoryEnabled() const override;
 
             //! \copydoc swift::core::context::IContextNetwork::isRemoteAircraftSupportingParts
-            virtual bool isRemoteAircraftSupportingParts(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual bool
+            isRemoteAircraftSupportingParts(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::enableAircraftPartsHistory
             virtual void enableAircraftPartsHistory(bool enabled) override;
@@ -231,24 +257,30 @@ namespace swift::core
             virtual void testCreateDummyOnlineAtcStations(int number) override;
 
             //! \copydoc swift::core::context::IContextNetwork::testAddAircraftParts
-            virtual void testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts, bool incremental) override;
+            virtual void testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign,
+                                              const swift::misc::aviation::CAircraftParts &parts,
+                                              bool incremental) override;
 
             //! \copydoc swift::core::context::IContextNetwork::testReceivedTextMessages
             virtual void testReceivedTextMessages(const swift::misc::network::CTextMessageList &textMessages) override;
 
             //! \copydoc swift::core::context::IContextNetwork::testReceivedAtisMessage
-            virtual void testReceivedAtisMessage(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CInformationMessage &msg) override;
+            virtual void testReceivedAtisMessage(const swift::misc::aviation::CCallsign &callsign,
+                                                 const swift::misc::aviation::CInformationMessage &msg) override;
 
             //! \copydoc swift::core::context::IContextNetwork::testRequestAircraftConfig
             virtual void testRequestAircraftConfig(const swift::misc::aviation::CCallsign &callsign) override;
 
             //! \copydoc swift::core::context::IContextNetwork::testAddAltitudeOffset
-            virtual bool testAddAltitudeOffset(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CLength &offset = swift::misc::physical_quantities::CLength::null()) override;
+            virtual bool testAddAltitudeOffset(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::physical_quantities::CLength &offset =
+                                                   swift::misc::physical_quantities::CLength::null()) override;
             //! @}
 
         public:
             //! \copydoc IContextNetwork::connectRawFsdMessageSignal
-            virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
+            virtual QMetaObject::Connection
+            connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
 
         private:
             swift::misc::CGenericDBusInterface *m_dBusInterface; /*!< DBus interface */
@@ -258,10 +290,13 @@ namespace swift::core
 
         protected:
             //! Constructor
-            CContextNetworkProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextNetwork(mode, runtime), m_dBusInterface(nullptr) {}
+            CContextNetworkProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+                : IContextNetwork(mode, runtime), m_dBusInterface(nullptr)
+            {}
 
             //! DBus version constructor
-            CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
+            CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection,
+                                 CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
         };
     } // namespace context
 } // namespace swift::core

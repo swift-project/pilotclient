@@ -60,7 +60,8 @@ namespace XSwiftBus
         //! Initialize the multiplayer planes rendering and return true if successful
         bool initialize();
 
-        //! Returns whether multiplayer planes have been acquired. If not, owner will be set to the plugin that acquired it.
+        //! Returns whether multiplayer planes have been acquired. If not, owner will be set to the plugin that acquired
+        //! it.
         bool acquireMultiplayerPlanes(std::string *owner = nullptr);
 
         //! Reverse the actions of initialize().
@@ -85,7 +86,8 @@ namespace XSwiftBus
         void setMaxDrawDistance(double nauticalMiles);
 
         //! Introduce a new traffic aircraft
-        void addPlane(const std::string &callsign, const std::string &modelName, const std::string &aircraftIcao, const std::string &airlineIcao, const std::string &livery);
+        void addPlane(const std::string &callsign, const std::string &modelName, const std::string &aircraftIcao,
+                      const std::string &airlineIcao, const std::string &livery);
 
         //! Remove a traffic aircraft
         void removePlane(const std::string &callsign);
@@ -94,26 +96,34 @@ namespace XSwiftBus
         void removeAllPlanes();
 
         //! Set the position of multiple traffic aircrafts
-        void setPlanesPositions(const std::vector<std::string> &callsigns,
-                                std::vector<double> latitudesDeg, std::vector<double> longitudesDeg, std::vector<double> altitudesFt,
-                                std::vector<double> pitchesDeg, std::vector<double> rollsDeg, std::vector<double> headingsDeg, const std::vector<bool> &onGrounds);
+        void setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudesDeg,
+                                std::vector<double> longitudesDeg, std::vector<double> altitudesFt,
+                                std::vector<double> pitchesDeg, std::vector<double> rollsDeg,
+                                std::vector<double> headingsDeg, const std::vector<bool> &onGrounds);
 
         //! Set the flight control surfaces and lights of multiple traffic aircrafts
-        void setPlanesSurfaces(const std::vector<std::string> &callsigns, const std::vector<double> &gears, const std::vector<double> &flaps, const std::vector<double> &spoilers,
-                               const std::vector<double> &speedBrakes, const std::vector<double> &slats, const std::vector<double> &wingSweeps, const std::vector<double> &thrusts,
-                               const std::vector<double> &elevators, const std::vector<double> &rudders, const std::vector<double> &ailerons,
-                               const std::vector<bool> &landLights, const std::vector<bool> &taxiLights,
-                               const std::vector<bool> &beaconLights, const std::vector<bool> &strobeLights, const std::vector<bool> &navLights, const std::vector<int> &lightPatterns);
+        void setPlanesSurfaces(const std::vector<std::string> &callsigns, const std::vector<double> &gears,
+                               const std::vector<double> &flaps, const std::vector<double> &spoilers,
+                               const std::vector<double> &speedBrakes, const std::vector<double> &slats,
+                               const std::vector<double> &wingSweeps, const std::vector<double> &thrusts,
+                               const std::vector<double> &elevators, const std::vector<double> &rudders,
+                               const std::vector<double> &ailerons, const std::vector<bool> &landLights,
+                               const std::vector<bool> &taxiLights, const std::vector<bool> &beaconLights,
+                               const std::vector<bool> &strobeLights, const std::vector<bool> &navLights,
+                               const std::vector<int> &lightPatterns);
 
         //! Set the transponder of multiple traffic aircraft
-        void setPlanesTransponders(const std::vector<std::string> &callsigns, const std::vector<int> &codes, const std::vector<bool> &modeCs, const std::vector<bool> &idents);
+        void setPlanesTransponders(const std::vector<std::string> &callsigns, const std::vector<int> &codes,
+                                   const std::vector<bool> &modeCs, const std::vector<bool> &idents);
 
         //! Get remote aircrafts data (lat, lon, elevation and CG)
-        void getRemoteAircraftData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg, std::vector<double> &longitudesDeg,
-                                   std::vector<double> &elevationsM, std::vector<bool> &waterFlags, std::vector<double> &verticalOffsets) const;
+        void getRemoteAircraftData(std::vector<std::string> &callsigns, std::vector<double> &latitudesDeg,
+                                   std::vector<double> &longitudesDeg, std::vector<double> &elevationsM,
+                                   std::vector<bool> &waterFlags, std::vector<double> &verticalOffsets) const;
 
         //! Get the ground elevation at an arbitrary position
-        std::array<double, 3> getElevationAtPosition(const std::string &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters, bool &o_isWater) const;
+        std::array<double, 3> getElevationAtPosition(const std::string &callsign, double latitudeDeg,
+                                                     double longitudeDeg, double altitudeMeters, bool &o_isWater) const;
 
         //! Sets the aircraft with callsign to be followed in plane view
         void setFollowedAircraft(const std::string &callsign);
@@ -186,8 +196,8 @@ namespace XSwiftBus
             std::chrono::steady_clock::time_point positionTimes[3];
             XPMPPlanePosition_t positions[4]; // 1 as input for extrapolation, 1 as next input, 1 latest, 1 as output
             XPMPPlaneSurveillance_t surveillance;
-            Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_, const std::string &airlineIcao_,
-                  const std::string &livery_, const std::string &modelName_);
+            Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_,
+                  const std::string &airlineIcao_, const std::string &livery_, const std::string &modelName_);
         };
 
         //! Label renderer
@@ -195,7 +205,11 @@ namespace XSwiftBus
         {
         public:
             Labels(CTraffic *traffic) : CDrawable(xplm_Phase_Window, false), m_traffic(traffic) {}
-            void setColor(int r, int g, int b) { m_color = { { static_cast<float>(r) / 255.f, static_cast<float>(g) / 255.f, static_cast<float>(b) / 255.f } }; }
+            void setColor(int r, int g, int b)
+            {
+                m_color = { { static_cast<float>(r) / 255.f, static_cast<float>(g) / 255.f,
+                              static_cast<float>(b) / 255.f } };
+            }
 
         protected:
             virtual void draw() override;

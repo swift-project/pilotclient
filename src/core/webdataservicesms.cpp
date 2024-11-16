@@ -23,8 +23,5 @@ namespace swift::core
         return sApp->getWebDataServices()->getAirlineIcaoCodesForDesignatorCount(designator);
     }
 
-    bool MSWebServices::checkApp()
-    {
-        return (sApp && !sApp->isShuttingDown() && sApp->getWebDataServices());
-    }
+    bool MSWebServices::checkApp() { return (sApp && !sApp->isShuttingDown() && sApp->getWebDataServices()); }
 } // namespace swift::core

@@ -29,10 +29,7 @@ namespace swift::sample
     int CSamplesAlgorithm::samples()
     {
         swift::misc::CSequence<int> seq;
-        for (int i = 1; i <= 100; ++i)
-        {
-            seq.push_back(i);
-        }
+        for (int i = 1; i <= 100; ++i) { seq.push_back(i); }
         const int samples = 200;
         swift::misc::CSequence<int> means;
         {
@@ -42,7 +39,9 @@ namespace swift::sample
                 means.push_back(std::accumulate(randoms.cbegin(), randoms.cend(), 0) / 10);
             }
             int mean = std::accumulate(means.cbegin(), means.cend(), 0) / samples;
-            int stdDev = std::sqrt(std::accumulate(means.cbegin(), means.cend(), 0, [&](int a, int n) { return a + (n - mean) * (n - mean); }) / samples);
+            int stdDev = std::sqrt(std::accumulate(means.cbegin(), means.cend(), 0,
+                                                   [&](int a, int n) { return a + (n - mean) * (n - mean); }) /
+                                   samples);
             qDebug() << "randomElements";
             qDebug() << "means:" << means;
             qDebug() << "mean of the means:" << mean;
@@ -56,7 +55,9 @@ namespace swift::sample
                 means.push_back(std::accumulate(randoms.cbegin(), randoms.cend(), 0) / 10);
             }
             int mean = std::accumulate(means.cbegin(), means.cend(), 0) / samples;
-            int stdDev = std::sqrt(std::accumulate(means.cbegin(), means.cend(), 0, [&](int a, int n) { return a + (n - mean) * (n - mean); }) / samples);
+            int stdDev = std::sqrt(std::accumulate(means.cbegin(), means.cend(), 0,
+                                                   [&](int a, int n) { return a + (n - mean) * (n - mean); }) /
+                                   samples);
             qDebug() << "sampleElements";
             qDebug() << "means:" << means;
             qDebug() << "mean of the means:" << mean;
@@ -69,7 +70,10 @@ namespace swift::sample
         qDebug() << "topologicallySortedInsert";
         QStringList dst;
         int count = 0;
-        auto cmp = [&](const QString &a, const QString &b) { count++; return a[0] == b[0] && a[1] < b[1]; };
+        auto cmp = [&](const QString &a, const QString &b) {
+            count++;
+            return a[0] == b[0] && a[1] < b[1];
+        };
         for (const auto &s : src) { swift::misc::topologicallySortedInsert(dst, s, cmp); }
         qDebug() << count << "comparisons";
         qDebug() << dst;

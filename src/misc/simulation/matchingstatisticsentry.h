@@ -46,7 +46,9 @@ namespace swift::misc::simulation
         CMatchingStatisticsEntry();
 
         //! Constructor
-        CMatchingStatisticsEntry(EntryType type, const QString &sessionId, const QString &modelSetId, const QString &description, const QString &aircraftDesignator, const QString &airlineDesignator = {});
+        CMatchingStatisticsEntry(EntryType type, const QString &sessionId, const QString &modelSetId,
+                                 const QString &description, const QString &aircraftDesignator,
+                                 const QString &airlineDesignator = {});
 
         //! Session id
         const QString &getSessionId() const { return m_sessionId; }
@@ -94,7 +96,8 @@ namespace swift::misc::simulation
         void increaseCount();
 
         //! Matches given value?
-        bool matches(EntryType type, const QString &sessionId, const QString &aircraftDesignator, const QString &airlineDesignator) const;
+        bool matches(EntryType type, const QString &sessionId, const QString &aircraftDesignator,
+                     const QString &airlineDesignator) const;
 
         //! \copydoc swift::misc::mixin::Index::propertyByIndex
         QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;

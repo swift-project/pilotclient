@@ -33,11 +33,10 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::misc::simulation
 {
-    CInterpolator::CInterpolator(const CCallsign &callsign,
-                                 ISimulationEnvironmentProvider *simEnvProvider,
-                                 IInterpolationSetupProvider *setupProvider,
-                                 IRemoteAircraftProvider *remoteProvider,
-                                 CInterpolationLogger *logger) : m_callsign(callsign)
+    CInterpolator::CInterpolator(const CCallsign &callsign, ISimulationEnvironmentProvider *simEnvProvider,
+                                 IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteProvider,
+                                 CInterpolationLogger *logger)
+        : m_callsign(callsign)
     {
         // normally when created m_cg is still null since there is no CG in the provider yet
 
@@ -59,13 +58,20 @@ namespace swift::misc::simulation
         if (cgDb.isNull())
         {
             // no input DB value, try to find one
-            cgDb = this->getRemoteAircraftProvider() ? this->getRemoteAircraftProvider()->getCGFromDB(m_callsign) : CLength::null();
+            cgDb = this->getRemoteAircraftProvider() ? this->getRemoteAircraftProvider()->getCGFromDB(m_callsign) :
+                                                       CLength::null();
         }
         else if (this->getRemoteAircraftProvider())
         {
             // if a value has been passed, remember it
-            if (m_model.hasModelString()) { this->getRemoteAircraftProvider()->rememberCGFromDB(cgDb, m_model.getModelString()); }
-            if (!m_model.getCallsign().isEmpty()) { this->getRemoteAircraftProvider()->rememberCGFromDB(cgDb, m_model.getCallsign()); }
+            if (m_model.hasModelString())
+            {
+                this->getRemoteAircraftProvider()->rememberCGFromDB(cgDb, m_model.getModelString());
+            }
+            if (!m_model.getCallsign().isEmpty())
+            {
+                this->getRemoteAircraftProvider()->rememberCGFromDB(cgDb, m_model.getCallsign());
+            }
         }
 
         const CLength cg = this->getSimulatorOrDbCG(m_callsign, cgDb); // simulation environment
@@ -74,7 +80,8 @@ namespace swift::misc::simulation
         return cg;
     }
 
-    CAircraftSituationList CInterpolator::remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup)
+    CAircraftSituationList
+    CInterpolator::remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
         CAircraftSituationList validSituations = this->remoteAircraftSituations(m_callsign);
 
@@ -95,19 +102,18 @@ namespace swift::misc::simulation
                 Q_UNUSED(changed)
             }
         }
-        else
-        {
-            m_currentSceneryOffset = CLength::null();
-        }
+        else { m_currentSceneryOffset = CLength::null(); }
         return validSituations;
     }
 
-    bool CInterpolator::presetGroundElevation(CAircraftSituation &situationToPreset, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const CAircraftSituationChange &change)
+    bool CInterpolator::presetGroundElevation(CAircraftSituation &situationToPreset,
+                                              const CAircraftSituation &oldSituation,
+                                              const CAircraftSituation &newSituation,
+                                              const CAircraftSituationChange &change)
     {
         // IMPORTANT: we do not know what the situation will be (interpolated to), so we cannot transfer
         situationToPreset.resetGroundElevation();
-        do
-        {
+        do {
             if (oldSituation.equalNormalVectorDouble(newSituation))
             {
                 if (oldSituation.hasGroundElevation())
@@ -138,7 +144,8 @@ namespace swift::misc::simulation
                 break;
             }
 
-            const CElevationPlane epInterpolated = CAircraftSituation::interpolatedElevation(CAircraftSituation::null(), oldSituation, newSituation, distance);
+            const CElevationPlane epInterpolated = CAircraftSituation::interpolatedElevation(
+                CAircraftSituation::null(), oldSituation, newSituation, distance);
             if (!epInterpolated.isNull())
             {
                 situationToPreset.setGroundElevation(epInterpolated, CAircraftSituation::Interpolated);
@@ -161,7 +168,9 @@ namespace swift::misc::simulation
         return cats;
     }
 
-    CInterpolationResult CInterpolator::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
+    CInterpolationResult CInterpolator::getInterpolation(qint64 currentTimeSinceEpoch,
+                                                         const CInterpolationAndRenderingSetupPerCallsign &setup,
+                                                         uint32_t aircraftNumber)
     {
         CInterpolationResult result;
 
@@ -198,8 +207,7 @@ namespace swift::misc::simulation
         CAircraftSituation::AltitudeCorrection altCorrection = CAircraftSituation::NoCorrection;
 
         bool isValidInterpolation = false;
-        do
-        {
+        do {
             if (!isValidInterpolant) { break; }
 
             const IInterpolatorPbh &pbh = interpolant.pbh();
@@ -219,18 +227,20 @@ namespace swift::misc::simulation
             currentSituation.setAltitude(interpolatedAltitude);
             currentSituation.setMSecsSinceEpoch(interpolant.getInterpolatedTime());
 
-            const bool interpolateGndFlag = pbh.getEndSituation().hasGroundDetailsForGndInterpolation() && pbh.getStartSituation().hasGroundDetailsForGndInterpolation();
-            if (interpolateGndFlag)
-            {
-                currentSituation.setOnGroundInfo(interpolant.interpolateGroundFactor());
-            }
+            const bool interpolateGndFlag = pbh.getEndSituation().hasGroundDetailsForGndInterpolation() &&
+                                            pbh.getStartSituation().hasGroundDetailsForGndInterpolation();
+            if (interpolateGndFlag) { currentSituation.setOnGroundInfo(interpolant.interpolateGroundFactor()); }
 
             if (currentSituation.isNull()) { break; }
 
-            // if we get here and the vector is invalid it means we haven't handled it correctly in one of the interpolators
+            // if we get here and the vector is invalid it means we haven't handled it correctly in one of the
+            // interpolators
             if (!currentSituation.isValidVectorRange())
             {
-                if (CBuildConfig::isLocalDeveloperDebugBuild()) { SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Invalid interpolation situation"); }
+                if (CBuildConfig::isLocalDeveloperDebugBuild())
+                {
+                    SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Invalid interpolation situation");
+                }
                 return CAircraftSituation::null();
             }
 
@@ -251,14 +261,16 @@ namespace swift::misc::simulation
                     }
                     else
                     {
-                        const CElevationPlane groundElevation = this->findClosestElevationWithinRange(currentSituation, radius);
+                        const CElevationPlane groundElevation =
+                            this->findClosestElevationWithinRange(currentSituation, radius);
                         m_lastSituation.setGroundElevationChecked(groundElevation, CAircraftSituation::FromCache);
                     }
                 }
             }
 
             // correct altitude itself
-            if (!interpolateGndFlag && currentSituation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::OnGroundByGuessing)
+            if (!interpolateGndFlag &&
+                currentSituation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::OnGroundByGuessing)
             {
                 // just in case
                 altCorrection = currentSituation.correctAltitude(true); // we have CG set
@@ -268,10 +280,7 @@ namespace swift::misc::simulation
             if (currentSituation.isOnGround())
             {
                 const CAngle correctedPitchOnGround = m_currentSetup.getPitchOnGround();
-                if (!correctedPitchOnGround.isNull())
-                {
-                    currentSituation.setPitch(correctedPitchOnGround);
-                }
+                if (!correctedPitchOnGround.isNull()) { currentSituation.setPitch(correctedPitchOnGround); }
             }
 
             isValidInterpolation = true;
@@ -295,12 +304,18 @@ namespace swift::misc::simulation
                 CStatusMessage m;
                 if (noSituation)
                 {
-                    m = CStatusMessage(this).warning(u"No situation #%1 for interpolation reported for '%2' (Interpolant: %3 interpolation: %4)") << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
+                    m = CStatusMessage(this).warning(
+                            u"No situation #%1 for interpolation reported for '%2' (Interpolant: %3 interpolation: %4)")
+                        << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant)
+                        << boolToTrueFalse(isValidInterpolation);
                 }
                 else
                 {
                     const qint64 diff = m_currentTimeMsSinceEpoch - currentSituation.getAdjustedMSecsSinceEpoch();
-                    m = CStatusMessage(this).warning(u"Invalid situation, diff. %1ms #%2 for interpolation reported for '%3' (Interpolant: %4 interpolation: %5)") << diff << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant) << boolToTrueFalse(isValidInterpolation);
+                    m = CStatusMessage(this).warning(u"Invalid situation, diff. %1ms #%2 for interpolation reported "
+                                                     u"for '%3' (Interpolant: %4 interpolation: %5)")
+                        << diff << m_invalidSituations << m_callsign.asString() << boolToTrueFalse(isValidInterpolant)
+                        << boolToTrueFalse(isValidInterpolation);
                 }
                 if (!m.isEmpty())
                 {
@@ -371,14 +386,13 @@ namespace swift::misc::simulation
         CAircraftParts currentParts;
 
         // find the first parts earlier than the current time
-        const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [=](auto &&p) { return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
+        const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [=](auto &&p) {
+            return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch;
+        });
         const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
         const auto partsOlder = makeRange(pivot, validParts.end());
 
-        if (partsOlder.isEmpty())
-        {
-            currentParts = *(partsNewer.begin());
-        }
+        if (partsOlder.isEmpty()) { currentParts = *(partsNewer.begin()); }
         else
         {
             currentParts = partsOlder.front(); // latest older parts
@@ -390,10 +404,14 @@ namespace swift::misc::simulation
 
     CAircraftParts CInterpolator::getInterpolatedOrGuessedParts(int aircraftNumber)
     {
-        Q_ASSERT_X(m_partsToSituationInterpolationRatio >= 1 && m_partsToSituationInterpolationRatio < 11, Q_FUNC_INFO, "Wrong ratio");
+        Q_ASSERT_X(m_partsToSituationInterpolationRatio >= 1 && m_partsToSituationInterpolationRatio < 11, Q_FUNC_INFO,
+                   "Wrong ratio");
         const bool needParts = m_unitTest || m_lastParts.isNull();
-        const bool doInterpolation = needParts || ((m_interpolatedSituationsCounter + aircraftNumber) % m_partsToSituationInterpolationRatio == 0);
-        const bool doGuess = needParts || ((m_interpolatedSituationsCounter + aircraftNumber) % m_partsToSituationGuessingRatio == 0);
+        const bool doInterpolation =
+            needParts ||
+            ((m_interpolatedSituationsCounter + aircraftNumber) % m_partsToSituationInterpolationRatio == 0);
+        const bool doGuess =
+            needParts || ((m_interpolatedSituationsCounter + aircraftNumber) % m_partsToSituationGuessingRatio == 0);
 
         if (!doGuess && !doInterpolation)
         {
@@ -411,10 +429,7 @@ namespace swift::misc::simulation
         // if we have supported parts, we skip this step, but it can happen the parts are still empty
         if (!m_currentPartsStatus.isSupportingParts())
         {
-            if (!doGuess)
-            {
-                return this->logAndReturnNullParts("not supporting parts, and marked for guessing", true);
-            }
+            if (!doGuess) { return this->logAndReturnNullParts("not supporting parts, and marked for guessing", true); }
 
             // check if model has been thru model matching
             if (!m_lastSituation.isNull())
@@ -445,7 +460,8 @@ namespace swift::misc::simulation
 
         if (log)
         {
-            const CStatusMessage m = CStatusMessage(this).warning(u"NULL parts reported for '%1', '%2')") << m_callsign.asString() << info;
+            const CStatusMessage m = CStatusMessage(this).warning(u"NULL parts reported for '%1', '%2')")
+                                     << m_callsign.asString() << info;
             if (m_interpolationMessages.isEmpty()) { CLogMessage::preformatted(m); }
             m_interpolationMessages.push_back(m);
         }
@@ -453,12 +469,10 @@ namespace swift::misc::simulation
         return CAircraftParts::null();
     }
 
-    bool CInterpolator::doLogging() const
-    {
-        return this->hasAttachedLogger() && m_currentSetup.logInterpolation();
-    }
+    bool CInterpolator::doLogging() const { return this->hasAttachedLogger() && m_currentSetup.logInterpolation(); }
 
-    CAircraftParts CInterpolator::guessParts(const CAircraftSituation &situation, const CAircraftSituationChange &change, const CAircraftModel &model)
+    CAircraftParts CInterpolator::guessParts(const CAircraftSituation &situation,
+                                             const CAircraftSituationChange &change, const CAircraftModel &model)
     {
         CAircraftParts parts;
         parts.setMSecsSinceEpoch(situation.getMSecsSinceEpoch());
@@ -477,8 +491,7 @@ namespace swift::misc::simulation
 
         if (situation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::NotSetGroundDetails)
         {
-            do
-            {
+            do {
                 // set some reasonable values
                 const bool isOnGround = situation.isOnGround();
                 engines.initEngines(engineCount, !isOnGround || situation.isMoving());
@@ -524,7 +537,8 @@ namespace swift::misc::simulation
         }
 
         const double pitchDeg = situation.getPitch().value(CAngleUnit::deg());
-        const bool isLikelyTakeOffOrClimbing = change.isNull() ? pitchDeg > 20 : (change.isRotatingUp() || change.isConstAscending());
+        const bool isLikelyTakeOffOrClimbing =
+            change.isNull() ? pitchDeg > 20 : (change.isRotatingUp() || change.isConstAscending());
         const bool isLikelyLanding = change.isNull() ? false : change.isConstDescending();
 
         if (situation.hasGroundElevation())
@@ -539,9 +553,16 @@ namespace swift::misc::simulation
             const double nearGround1Ft = 300;
             const double nearGround2Ft = isLikelyTakeOffOrClimbing ? 500 : 1000;
             const double aGroundFt = aboveGnd.value(CLengthUnit::ft());
-            static const QString detailsInfo("above ground: %1ft near grounds: %2ft %3ft likely takeoff: %4 likely landing: %5");
+            static const QString detailsInfo(
+                "above ground: %1ft near grounds: %2ft %3ft likely takeoff: %4 likely landing: %5");
 
-            if (details) { *details = detailsInfo.arg(aGroundFt).arg(nearGround1Ft).arg(nearGround2Ft).arg(boolToYesNo(isLikelyTakeOffOrClimbing), boolToYesNo(isLikelyLanding)); }
+            if (details)
+            {
+                *details = detailsInfo.arg(aGroundFt)
+                               .arg(nearGround1Ft)
+                               .arg(nearGround2Ft)
+                               .arg(boolToYesNo(isLikelyTakeOffOrClimbing), boolToYesNo(isLikelyLanding));
+            }
             if (aGroundFt < nearGround1Ft)
             {
                 if (details) { details->prepend(QStringLiteral("near ground: ")); }
@@ -551,7 +572,8 @@ namespace swift::misc::simulation
             else if (aGroundFt < nearGround2Ft)
             {
                 if (details) { details->prepend(QStringLiteral("2nd layer: ")); }
-                const bool gearDown = !isLikelyTakeOffOrClimbing && (situation.getGroundSpeed() < guessedVRotate || isLikelyLanding);
+                const bool gearDown =
+                    !isLikelyTakeOffOrClimbing && (situation.getGroundSpeed() < guessedVRotate || isLikelyLanding);
                 parts.setGearDown(gearDown);
                 parts.setFlapsPercent(10);
             }
@@ -578,7 +600,11 @@ namespace swift::misc::simulation
                     {
                         const bool gearDown = situation.getGroundSpeed() < guessedVRotate;
                         parts.setGearDown(gearDown);
-                        if (details) { *details = QStringLiteral("not on ground elv., gs < ") + guessedVRotate.valueRoundedWithUnit(1); }
+                        if (details)
+                        {
+                            *details =
+                                QStringLiteral("not on ground elv., gs < ") + guessedVRotate.valueRoundedWithUnit(1);
+                        }
                     }
                 }
             }
@@ -601,27 +627,23 @@ namespace swift::misc::simulation
 
     QString CInterpolator::getInterpolatorInfo() const
     {
-        return QStringLiteral("Callsign: ") %
-               m_callsign.asString() %
-               QStringLiteral(" situations: ") %
-               QString::number(this->remoteAircraftSituationsCount(m_callsign)) %
-               QStringLiteral(" parts: ") %
-               QString::number(this->remoteAircraftPartsCount(m_callsign)) %
-               QStringLiteral(" 1st interpolation: ") %
+        return QStringLiteral("Callsign: ") % m_callsign.asString() % QStringLiteral(" situations: ") %
+               QString::number(this->remoteAircraftSituationsCount(m_callsign)) % QStringLiteral(" parts: ") %
+               QString::number(this->remoteAircraftPartsCount(m_callsign)) % QStringLiteral(" 1st interpolation: ") %
                boolToYesNo(m_lastSituation.isNull());
     }
 
-    void CInterpolator::resetLastInterpolation()
-    {
-        m_lastSituation.setNull();
-    }
+    void CInterpolator::resetLastInterpolation() { m_lastSituation.setNull(); }
 
-    bool CInterpolator::initIniterpolationStepData(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber)
+    bool CInterpolator::initIniterpolationStepData(qint64 currentTimeSinceEpoch,
+                                                   const CInterpolationAndRenderingSetupPerCallsign &setup,
+                                                   int aircraftNumber)
     {
         Q_ASSERT_X(!m_callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
         const qint64 lastModifed = this->situationsLastModified(m_callsign);
-        const bool slowUpdateStep = (((m_interpolatedSituationsCounter + aircraftNumber) % 25) == 0); // flag when parts are updated, which need not to be updated every time
+        const bool slowUpdateStep = (((m_interpolatedSituationsCounter + aircraftNumber) % 25) ==
+                                     0); // flag when parts are updated, which need not to be updated every time
         const bool changedSituations = lastModifed > m_situationsLastModified;
 
         m_currentTimeMsSinceEpoch = currentTimeSinceEpoch;
@@ -649,7 +671,8 @@ namespace swift::misc::simulation
             m_lastSituation = CAircraftSituation::null(); // no interpolation possible for that step
             static const QString extraNoSituations("No situations, but remote aircraft '%1'");
             static const QString extraNoRemoteAircraft("Unknown remote aircraft: '%1'");
-            m_currentInterpolationStatus.setExtraInfo((inRange ? extraNoSituations : extraNoRemoteAircraft).arg(m_callsign.asString()));
+            m_currentInterpolationStatus.setExtraInfo(
+                (inRange ? extraNoSituations : extraNoRemoteAircraft).arg(m_callsign.asString()));
         }
         else
         {
@@ -660,15 +683,18 @@ namespace swift::misc::simulation
             // so even mixing fast/slow updates shall work
             if (!CBuildConfig::isReleaseBuild())
             {
-                Q_ASSERT_X(m_currentSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO, "Wrong sort order");
-                Q_ASSERT_X(m_currentSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO, "Wrong size");
+                Q_ASSERT_X(m_currentSituations.isSortedAdjustedLatestFirstWithoutNullPositions(), Q_FUNC_INFO,
+                           "Wrong sort order");
+                Q_ASSERT_X(m_currentSituations.size() <= IRemoteAircraftProvider::MaxSituationsPerCallsign, Q_FUNC_INFO,
+                           "Wrong size");
             }
         }
 
         return success;
     }
 
-    CAircraftSituation CInterpolator::initInterpolatedSituation(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation) const
+    CAircraftSituation CInterpolator::initInterpolatedSituation(const CAircraftSituation &oldSituation,
+                                                                const CAircraftSituation &newSituation) const
     {
         if (m_currentSituations.isEmpty()) { return CAircraftSituation::null(); }
 
@@ -696,23 +722,14 @@ namespace swift::misc::simulation
 
     void CInterpolator::initCorrespondingModel(const CAircraftModel &model)
     {
-        if (model.hasModelString())
-        {
-            m_model = model;
-        }
+        if (model.hasModelString()) { m_model = model; }
         else
         {
             CAircraftModel foundModel = this->getAircraftInRangeForCallsign(m_callsign).getModel();
-            if (foundModel.hasModelString())
-            {
-                m_model = foundModel;
-            }
+            if (foundModel.hasModelString()) { m_model = foundModel; }
         }
         this->getAndFetchModelCG(model.getCG());
     }
 
-    void CInterpolator::markAsUnitTest()
-    {
-        m_unitTest = true;
-    }
+    void CInterpolator::markAsUnitTest() { m_unitTest = true; }
 } // namespace swift::misc::simulation

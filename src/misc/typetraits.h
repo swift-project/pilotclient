@@ -45,7 +45,10 @@ namespace swift::misc
     struct TParameter
     {
         //! Whether the input parameter type T should be passed by value or by const reference.
-        static constexpr ParameterPassBy passBy = (sizeof(T) <= 16 && std::is_trivially_copy_constructible_v<T> && std::is_trivially_destructible_v<T>) ? ParameterPassBy::Value : ParameterPassBy::ConstRef;
+        static constexpr ParameterPassBy passBy =
+            (sizeof(T) <= 16 && std::is_trivially_copy_constructible_v<T> && std::is_trivially_destructible_v<T>) ?
+                ParameterPassBy::Value :
+                ParameterPassBy::ConstRef;
     };
 
     /*!
@@ -68,7 +71,8 @@ namespace swift::misc
     {};
     //! \cond
     template <typename T>
-    struct THasPushBack<T, std::void_t<decltype(std::declval<T>().push_back(std::declval<typename T::value_type>()))>> : public std::true_type
+    struct THasPushBack<T, std::void_t<decltype(std::declval<T>().push_back(std::declval<typename T::value_type>()))>> :
+        public std::true_type
     {};
     //! \endcond
 
@@ -92,7 +96,8 @@ namespace swift::misc
     {};
     //! \cond
     template <typename T>
-    struct TModelsQHashKey<T, std::void_t<decltype(std::declval<T>() == std::declval<T>(), qHash(std::declval<T>()))>> : public std::true_type
+    struct TModelsQHashKey<T, std::void_t<decltype(std::declval<T>() == std::declval<T>(), qHash(std::declval<T>()))>> :
+        public std::true_type
     {};
     //! \endcond
 
@@ -116,7 +121,8 @@ namespace swift::misc
     {};
     //! \cond
     template <typename T, typename U>
-    struct THasCompare<T, U, std::void_t<decltype(compare(std::declval<T>(), std::declval<U>()))>> : public std::true_type
+    struct THasCompare<T, U, std::void_t<decltype(compare(std::declval<T>(), std::declval<U>()))>> :
+        public std::true_type
     {};
     //! \endcond
 
@@ -129,7 +135,9 @@ namespace swift::misc
     {};
     //! \cond
     template <typename T>
-    struct THasComparePropertyByIndex<T, std::void_t<decltype(std::declval<T>().comparePropertyByIndex(std::declval<CPropertyIndexRef>(), std::declval<const T &>()))>> : public std::true_type
+    struct THasComparePropertyByIndex<T, std::void_t<decltype(std::declval<T>().comparePropertyByIndex(
+                                             std::declval<CPropertyIndexRef>(), std::declval<const T &>()))>> :
+        public std::true_type
     {};
     //! \endcond
 
@@ -142,7 +150,9 @@ namespace swift::misc
     {};
     //! \cond
     template <typename T>
-    struct THasPropertyByIndex<T, std::void_t<decltype(std::declval<T>().propertyByIndex(std::declval<CPropertyIndexRef>()))>> : public std::true_type
+    struct THasPropertyByIndex<
+        T, std::void_t<decltype(std::declval<T>().propertyByIndex(std::declval<CPropertyIndexRef>()))>> :
+        public std::true_type
     {};
     //! \endcond
 
@@ -154,7 +164,8 @@ namespace swift::misc
     {};
     //! \cond
     template <typename T, typename U>
-    struct TIsEqualityComparable<T, U, std::void_t<decltype(std::declval<T>() == std::declval<U>())>> : public std::true_type
+    struct TIsEqualityComparable<T, U, std::void_t<decltype(std::declval<T>() == std::declval<U>())>> :
+        public std::true_type
     {};
     //! \endcond
 
@@ -166,8 +177,10 @@ namespace swift::misc
     {};
     //! \cond
     template <typename T>
-    struct THasMarshallMethods<T, std::void_t<decltype(std::declval<const T &>().marshallToDbus(std::declval<QDBusArgument &>()),
-                                                       std::declval<T &>().unmarshallFromDbus(std::declval<const QDBusArgument &>()))>> : public std::true_type
+    struct THasMarshallMethods<
+        T, std::void_t<decltype(std::declval<const T &>().marshallToDbus(std::declval<QDBusArgument &>()),
+                                std::declval<T &>().unmarshallFromDbus(std::declval<const QDBusArgument &>()))>> :
+        public std::true_type
     {};
     //! \endcond
 
@@ -179,7 +192,8 @@ namespace swift::misc
     {};
     //! \cond
     template <typename T>
-    struct TIsQPrivateSignal<T, std::void_t<typename private_ns::SyntheticDerived<T>::QPrivateSignal>> : public std::is_same<T, typename private_ns::SyntheticDerived<T>::QPrivateSignal>
+    struct TIsQPrivateSignal<T, std::void_t<typename private_ns::SyntheticDerived<T>::QPrivateSignal>> :
+        public std::is_same<T, typename private_ns::SyntheticDerived<T>::QPrivateSignal>
     {};
     //! \endcond
 

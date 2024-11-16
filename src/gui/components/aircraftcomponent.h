@@ -39,9 +39,7 @@ namespace swift::gui
     namespace components
     {
         //! Aircraft widget
-        class SWIFT_GUI_EXPORT CAircraftComponent :
-            public QTabWidget,
-            public CEnableForDockWidgetInfoArea
+        class SWIFT_GUI_EXPORT CAircraftComponent : public QTabWidget, public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -90,7 +88,8 @@ namespace swift::gui
             void onRowCountChanged(int count, bool withFilter);
 
             //! Connection status has been changed
-            void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+            void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                           const swift::misc::network::CConnectionStatus &to);
 
             //! Settings have been changed
             void onSettingsChanged();
@@ -99,7 +98,9 @@ namespace swift::gui
             void onOwnAircraftMoved(const swift::misc::physical_quantities::CLength &distance);
 
             QScopedPointer<Ui::CAircraftComponent> ui;
-            swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settings { this, &CAircraftComponent::onSettingsChanged }; //!< settings changed
+            swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settings {
+                this, &CAircraftComponent::onSettingsChanged
+            }; //!< settings changed
             QTimer m_updateTimer;
             int m_updateCounter = 0;
         };

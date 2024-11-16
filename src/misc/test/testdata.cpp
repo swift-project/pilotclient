@@ -24,25 +24,21 @@ using namespace swift::misc::simulation;
 //! \cond
 namespace swift::misc::test
 {
-    int randomIndex(int size)
-    {
-        return CMathUtils::randomInteger(0, size - 1);
-    }
+    int randomIndex(int size) { return CMathUtils::randomInteger(0, size - 1); }
 
     const CServer &CTestData::getTrafficServer()
     {
         static const CServer trafficServer("fooserver", "a foo server", "localhost", 1234,
-                                           CUser("112233", "Some real name", "email@xyz.com", "secret"),
-                                           CFsdSetup(), CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
+                                           CUser("112233", "Some real name", "email@xyz.com", "secret"), CFsdSetup(),
+                                           CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
         return trafficServer;
     }
 
     const CVariantList &CTestData::getCVariantList()
     {
-        static const CVariantList vl(
-            { CVariant::from(CLength(100, CLengthUnit::m())),
-              CVariant::from(CSpeed(200, CSpeedUnit::m_s())),
-              CVariant::from(CTestData::getCoordinateMunichTower()) });
+        static const CVariantList vl({ CVariant::from(CLength(100, CLengthUnit::m())),
+                                       CVariant::from(CSpeed(200, CSpeedUnit::m_s())),
+                                       CVariant::from(CTestData::getCoordinateMunichTower()) });
         return vl;
     }
 
@@ -65,59 +61,57 @@ namespace swift::misc::test
 
     const CCoordinateGeodetic &CTestData::getCoordinateMunichTower()
     {
-        static const CCoordinateGeodetic c = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
+        static const CCoordinateGeodetic c =
+            CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         return c;
     }
 
     const CCoordinateGeodetic &CTestData::getCoordinateFrankfurtTower()
     {
-        static const CCoordinateGeodetic c = CCoordinateGeodetic::fromWgs84("50° 1' 18.38″ N", "8° 33' 23.24″ E", { 355, CLengthUnit::ft() });
+        static const CCoordinateGeodetic c =
+            CCoordinateGeodetic::fromWgs84("50° 1' 18.38″ N", "8° 33' 23.24″ E", { 355, CLengthUnit::ft() });
         return c;
     }
 
     const CFlightPlan &CTestData::getFlightPlan()
     {
         static const CFlightPlanAircraftInfo info("T/A320/F");
-        static const CFlightPlan fp(CCallsign("DAMBZ", CCallsign::Aircraft),
-                                    info, "EDDF", "EDDM", "EDDN",
-                                    QDateTime::currentDateTimeUtc(), QDateTime::currentDateTime().addSecs(600),
-                                    CTime(1.0, CTimeUnit::h()), CTime(2.0, CTimeUnit::h()),
-                                    CAltitude(10000, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CSpeed(400, CSpeedUnit::kts()), CFlightPlan::IFR,
-                                    "DKB T104 ANORA", "Testing flight");
+        static const CFlightPlan fp(
+            CCallsign("DAMBZ", CCallsign::Aircraft), info, "EDDF", "EDDM", "EDDN", QDateTime::currentDateTimeUtc(),
+            QDateTime::currentDateTime().addSecs(600), CTime(1.0, CTimeUnit::h()), CTime(2.0, CTimeUnit::h()),
+            CAltitude(10000, CAltitude::MeanSeaLevel, CLengthUnit::ft()), CSpeed(400, CSpeedUnit::kts()),
+            CFlightPlan::IFR, "DKB T104 ANORA", "Testing flight");
         return fp;
     }
 
     const CAtcStation &CTestData::getMunichTower()
     {
         static const CAtcStation t(CCallsign("EDDM_TWR"), CUser("654321", "John Doe"),
-                                   CFrequency(119.9, CFrequencyUnit::MHz()), CTestData::getCoordinateFrankfurtTower(), CLength(50, CLengthUnit::km()),
-                                   false);
+                                   CFrequency(119.9, CFrequencyUnit::MHz()), CTestData::getCoordinateFrankfurtTower(),
+                                   CLength(50, CLengthUnit::km()), false);
         return t;
     }
 
     const CAtcStation &CTestData::getFrankfurtTower()
     {
         static const CAtcStation t(CCallsign("EDDF_TWR"), CUser("654321", "Joe Bar"),
-                                   CFrequency(118.7, CFrequencyUnit::MHz()), CTestData::getCoordinateMunichTower(), CLength(50, CLengthUnit::km()),
-                                   true, QDateTime::currentDateTimeUtc().addSecs(2400));
+                                   CFrequency(118.7, CFrequencyUnit::MHz()), CTestData::getCoordinateMunichTower(),
+                                   CLength(50, CLengthUnit::km()), true, QDateTime::currentDateTimeUtc().addSecs(2400));
         return t;
     }
 
     const CAtcStation &CTestData::getMunichApproach()
     {
         static const CAtcStation t(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
-                                   CFrequency(120.7, CFrequencyUnit::MHz()),
-                                   CTestData::getCoordinateMunichTower(), CLength(100, CLengthUnit::km()),
-                                   false);
+                                   CFrequency(120.7, CFrequencyUnit::MHz()), CTestData::getCoordinateMunichTower(),
+                                   CLength(100, CLengthUnit::km()), false);
         return t;
     }
 
     const CAtcStationList &CTestData::getAtcStations()
     {
         static const CAtcStationList stations(
-            { CTestData::getFrankfurtTower(),
-              CTestData::getMunichTower(),
-              CTestData::getMunichApproach() });
+            { CTestData::getFrankfurtTower(), CTestData::getMunichTower(), CTestData::getMunichApproach() });
         return stations;
     }
 
@@ -129,9 +123,8 @@ namespace swift::misc::test
 
     const CCallsignSet &CTestData::getPilotCallsigns()
     {
-        static const CCallsignSet callsigns(
-            { CCallsign("DEMBZ"), CCallsign("DLH123"), CCallsign("RYR635L"),
-              CCallsign("LGL974"), CCallsign("AUI129"), CCallsign("CLX756") });
+        static const CCallsignSet callsigns({ CCallsign("DEMBZ"), CCallsign("DLH123"), CCallsign("RYR635L"),
+                                              CCallsign("LGL974"), CCallsign("AUI129"), CCallsign("CLX756") });
         return callsigns;
     }
 
@@ -143,9 +136,8 @@ namespace swift::misc::test
 
     const CCallsignSet &CTestData::getControllerCallsigns()
     {
-        static const CCallsignSet callsigns(
-            { CCallsign("EDDM_TWR"), CCallsign("EDDM_APP"), CCallsign("EDDM_GND"),
-              CCallsign("EDDF_TWR"), CCallsign("EDDF_APP"), CCallsign("EDDF_GND") });
+        static const CCallsignSet callsigns({ CCallsign("EDDM_TWR"), CCallsign("EDDM_APP"), CCallsign("EDDM_GND"),
+                                              CCallsign("EDDF_TWR"), CCallsign("EDDF_APP"), CCallsign("EDDF_GND") });
         return callsigns;
     }
 
@@ -158,15 +150,14 @@ namespace swift::misc::test
     const CUserList &CTestData::getPilots()
     {
         static const QList<CCallsign> callsigns(CTestData::getPilotCallsigns().toQList());
-        static const CUserList pilots(
-            {
-                CUser("100100", "Joe Doe", callsigns[0]),
-                CUser("100101", "Jane Foo", callsigns[1]),
-                CUser("100200", "Frank Sky", callsigns[2]),
-                CUser("100300", "Richard F. Frings", callsigns[3]),
-                CUser("100301", "Torben Frey", callsigns[4]),
-                CUser("100400", "Kay Dòresn", callsigns[5]),
-            });
+        static const CUserList pilots({
+            CUser("100100", "Joe Doe", callsigns[0]),
+            CUser("100101", "Jane Foo", callsigns[1]),
+            CUser("100200", "Frank Sky", callsigns[2]),
+            CUser("100300", "Richard F. Frings", callsigns[3]),
+            CUser("100301", "Torben Frey", callsigns[4]),
+            CUser("100400", "Kay Dòresn", callsigns[5]),
+        });
         return pilots;
     }
 
@@ -179,15 +170,14 @@ namespace swift::misc::test
     const CUserList &CTestData::getControllers()
     {
         static const QList<CCallsign> callsigns(CTestData::getControllerCallsigns().toQList());
-        static const CUserList controllers(
-            {
-                CUser("300100", "Jeff Doe", callsigns[0]),
-                CUser("300101", "Foo Mister", callsigns[1]),
-                CUser("300200", "Sky Du", callsigns[2]),
-                CUser("300300", "F. Frings", callsigns[3]),
-                CUser("300301", "Ralf Smith", callsigns[4]),
-                CUser("300400", "Doreen Jump", callsigns[5]),
-            });
+        static const CUserList controllers({
+            CUser("300100", "Jeff Doe", callsigns[0]),
+            CUser("300101", "Foo Mister", callsigns[1]),
+            CUser("300200", "Sky Du", callsigns[2]),
+            CUser("300300", "F. Frings", callsigns[3]),
+            CUser("300301", "Ralf Smith", callsigns[4]),
+            CUser("300400", "Doreen Jump", callsigns[5]),
+        });
         return controllers;
     }
 
@@ -199,9 +189,9 @@ namespace swift::misc::test
 
     CAircraftSituation getAircraftSituationAboveMunichTowerImpl()
     {
-        CAircraftSituation situation(CTestData::getCoordinateMunichTower(), CHeading(10, CHeading::True, CAngleUnit::deg()),
-                                     CAngle(12, CAngleUnit::deg()), CAngle(5, CAngleUnit::deg()),
-                                     CSpeed(111, CSpeedUnit::km_h()));
+        CAircraftSituation situation(CTestData::getCoordinateMunichTower(),
+                                     CHeading(10, CHeading::True, CAngleUnit::deg()), CAngle(12, CAngleUnit::deg()),
+                                     CAngle(5, CAngleUnit::deg()), CSpeed(111, CSpeedUnit::km_h()));
         situation.setAltitude({ 2500, CLengthUnit::ft() });
         situation.setCallsign(CTestData::getRandomPilotCallsign());
         return situation;
@@ -215,9 +205,9 @@ namespace swift::misc::test
 
     CAircraftSituation getAircraftSituationAboveFrankfurtTowerImpl()
     {
-        CAircraftSituation situation(CTestData::getCoordinateFrankfurtTower(), CHeading(290, CHeading::True, CAngleUnit::deg()),
-                                     CAngle(4, CAngleUnit::deg()), CAngle(10, CAngleUnit::deg()),
-                                     CSpeed(200, CSpeedUnit::km_h()));
+        CAircraftSituation situation(CTestData::getCoordinateFrankfurtTower(),
+                                     CHeading(290, CHeading::True, CAngleUnit::deg()), CAngle(4, CAngleUnit::deg()),
+                                     CAngle(10, CAngleUnit::deg()), CSpeed(200, CSpeedUnit::km_h()));
         situation.setAltitude({ 4000, CLengthUnit::ft() });
         situation.setCallsign(CTestData::getRandomPilotCallsign());
         return situation;
@@ -231,7 +221,8 @@ namespace swift::misc::test
 
     const CAircraftIcaoCode &CTestData::getDBAircraftIcaoB737()
     {
-        static const QString json = CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBAircraftIcaoB737Boeing.json");
+        static const QString json =
+            CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBAircraftIcaoB737Boeing.json");
         static const CAircraftIcaoCode icao(CAircraftIcaoCode::fromJson(json));
         Q_ASSERT(icao.hasValidDbKey());
         return icao;
@@ -239,7 +230,8 @@ namespace swift::misc::test
 
     const CAircraftIcaoCode &CTestData::getDBAircraftIcaoC172()
     {
-        static const QString json = CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBAircraftIcaoC172Cessna.json");
+        static const QString json =
+            CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBAircraftIcaoC172Cessna.json");
         static const CAircraftIcaoCode icao(CAircraftIcaoCode::fromJson(json));
         Q_ASSERT(icao.hasValidDbKey());
         return icao;
@@ -247,7 +239,8 @@ namespace swift::misc::test
 
     const CAirlineIcaoCode &CTestData::getDbAirlineIcaoDLH()
     {
-        static const QString json = CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBAirlineIcaoDLH.json");
+        static const QString json =
+            CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBAirlineIcaoDLH.json");
         static const CAirlineIcaoCode icao(CAirlineIcaoCode::fromJson(json));
         Q_ASSERT(icao.hasValidDbKey());
         return icao;
@@ -255,7 +248,8 @@ namespace swift::misc::test
 
     const CAirlineIcaoCode &CTestData::getDbAirlineIcaoBAW()
     {
-        static const QString json = CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBAirlineIcaoBAW.json");
+        static const QString json =
+            CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBAirlineIcaoBAW.json");
         static const CAirlineIcaoCode icao(CAirlineIcaoCode::fromJson(json));
         Q_ASSERT(icao.hasValidDbKey());
         return icao;
@@ -263,7 +257,8 @@ namespace swift::misc::test
 
     const CLivery &CTestData::getDbLiveryDLHStarAlliance()
     {
-        static const QString json = CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBLiveryDLHStarAlliance.json");
+        static const QString json =
+            CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBLiveryDLHStarAlliance.json");
         static const CLivery livery(CLivery::fromJson(json));
         Q_ASSERT(livery.hasValidDbKey());
         return livery;
@@ -271,7 +266,8 @@ namespace swift::misc::test
 
     const CAircraftModel &CTestData::getDbAircraftModelFsxA2AC172Skyhawk()
     {
-        static const QString json = CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBModelFSXA2ACessnaC172.json");
+        static const QString json =
+            CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBModelFSXA2ACessnaC172.json");
         static const CAircraftModel model(CAircraftModel::fromDatabaseJson(json::jsonObjectFromString(json)));
         Q_ASSERT(model.hasValidDbKey());
         Q_ASSERT(!model.getModelString().isEmpty());
@@ -280,7 +276,8 @@ namespace swift::misc::test
 
     const CAircraftModel &CTestData::getDbAircraftModelFsxAerosoftA320()
     {
-        static const QString json = CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBModelFSXAerosoftA320.json");
+        static const QString json =
+            CFileUtils::readFileToString(CSwiftDirectories::testFilesDirectory(), "DBModelFSXAerosoftA320.json");
         static const CAircraftModel model(CAircraftModel::fromDatabaseJson(json::jsonObjectFromString(json)));
         Q_ASSERT(model.hasValidDbKey());
         Q_ASSERT(!model.getModelString().isEmpty());
@@ -290,7 +287,8 @@ namespace swift::misc::test
     CSimulatedAircraft getC172AircraftImpl()
     {
         CUser pilot = CTestData::getRandomPilot();
-        CSimulatedAircraft aircraft(pilot.getCallsign(), CTestData::getDbAircraftModelFsxA2AC172Skyhawk(), pilot, CTestData::getAircraftSituationAboveMunichTower());
+        CSimulatedAircraft aircraft(pilot.getCallsign(), CTestData::getDbAircraftModelFsxA2AC172Skyhawk(), pilot,
+                                    CTestData::getAircraftSituationAboveMunichTower());
         CTransponder t = CTransponder(7000, CTransponder::ModeC);
         aircraft.setTransponder(t);
         aircraft.setCom1ActiveFrequency(CTestData::getRandomAtcStation().getFrequency());
@@ -307,7 +305,8 @@ namespace swift::misc::test
     CSimulatedAircraft getA320AircraftImpl()
     {
         CUser pilot = CTestData::getRandomPilot();
-        CSimulatedAircraft aircraft(pilot.getCallsign(), CTestData::getDbAircraftModelFsxAerosoftA320(), pilot, CTestData::getAircraftSituationAboveFrankfurtTower());
+        CSimulatedAircraft aircraft(pilot.getCallsign(), CTestData::getDbAircraftModelFsxAerosoftA320(), pilot,
+                                    CTestData::getAircraftSituationAboveFrankfurtTower());
         const CTransponder t = CTransponder(7000, CTransponder::ModeC);
         aircraft.setTransponder(t);
         aircraft.setCom1ActiveFrequency(CTestData::getRandomAtcStation().getFrequency());

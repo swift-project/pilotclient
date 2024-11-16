@@ -27,9 +27,7 @@ namespace swift::misc
     /*!
      * Icon list (swift standard icons)
      */
-    class SWIFT_MISC_EXPORT CIconList :
-        public CSequence<CIcon>,
-        public mixin::MetaType<CIconList>
+    class SWIFT_MISC_EXPORT CIconList : public CSequence<CIcon>, public mixin::MetaType<CIconList>
     {
         using CSequence::CSequence;
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CIconList)

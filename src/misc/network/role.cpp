@@ -11,22 +11,21 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRole)
 
 namespace swift::misc::network
 {
-    CRole::CRole(const QString &name, const QString &description)
-        : m_name(name), m_description(description)
-    {}
+    CRole::CRole(const QString &name, const QString &description) : m_name(name), m_description(description) {}
 
     QString CRole::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        return u"Role: " % m_name %
-               u" description: " % m_description %
-               this->getDbKeyAsStringInParentheses(" ");
+        return u"Role: " % m_name % u" description: " % m_description % this->getDbKeyAsStringInParentheses(" ");
     }
 
     QVariant CRole::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

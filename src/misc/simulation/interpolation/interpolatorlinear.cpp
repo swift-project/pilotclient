@@ -24,27 +24,33 @@ using namespace swift::misc::simulation;
 
 namespace swift::misc::simulation
 {
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation) : m_startSituation(startSituation), m_pbh(0, startSituation, startSituation)
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation)
+        : m_startSituation(startSituation), m_pbh(0, startSituation, startSituation)
     {}
 
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation, const CInterpolatorLinearPbh &pbh) : m_startSituation(startSituation), m_pbh(pbh)
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation,
+                                                    const CInterpolatorLinearPbh &pbh)
+        : m_startSituation(startSituation), m_pbh(pbh)
     {}
 
-    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation, const CAircraftSituation &endSituation, double timeFraction, qint64 interpolatedTime) : IInterpolant(interpolatedTime),
-                                                                                                                                                                                      m_startSituation(startSituation), m_endSituation(endSituation),
-                                                                                                                                                                                      m_simulationTimeFraction(timeFraction)
+    CInterpolatorLinear::CInterpolant::CInterpolant(const CAircraftSituation &startSituation,
+                                                    const CAircraftSituation &endSituation, double timeFraction,
+                                                    qint64 interpolatedTime)
+        : IInterpolant(interpolatedTime), m_startSituation(startSituation), m_endSituation(endSituation),
+          m_simulationTimeFraction(timeFraction)
     {
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            SWIFT_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Time fraction needs to be within [0;1]");
+            SWIFT_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO,
+                           "Time fraction needs to be within [0;1]");
         }
         m_pbh = CInterpolatorLinearPbh(m_simulationTimeFraction, startSituation, endSituation);
     }
 
-    void CInterpolatorLinear::anchor()
-    {}
+    void CInterpolatorLinear::anchor() {}
 
-    std::tuple<geo::CCoordinateGeodetic, aviation::CAltitude> CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude() const
+    std::tuple<geo::CCoordinateGeodetic, aviation::CAltitude>
+    CInterpolatorLinear::CInterpolant::interpolatePositionAndAltitude() const
     {
         const std::array<double, 3> startVec(m_startSituation.getPosition().normalVectorDouble());
         const std::array<double, 3> endVec(m_endSituation.getPosition().normalVectorDouble());
@@ -72,9 +78,10 @@ namespace swift::misc::simulation
         // avoid underflow below ground elevation by using getCorrectedAltitude
         const CAltitude oldAlt(m_startSituation.getCorrectedAltitude());
         const CAltitude newAlt(m_endSituation.getCorrectedAltitude());
-        Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel && oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(), Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
-        const CAltitude altitude((newAlt - oldAlt) * tf + oldAlt,
-                                 oldAlt.getReferenceDatum());
+        Q_ASSERT_X(oldAlt.getReferenceDatum() == CAltitude::MeanSeaLevel &&
+                       oldAlt.getReferenceDatum() == newAlt.getReferenceDatum(),
+                   Q_FUNC_INFO, "mismatch in reference"); // otherwise no calculation is possible
+        const CAltitude altitude((newAlt - oldAlt) * tf + oldAlt, oldAlt.getReferenceDatum());
 
         return { interpolatedPosition, altitude };
     }
@@ -105,7 +112,8 @@ namespace swift::misc::simulation
         CAircraftSituation startSituation = m_interpolant.getStartSituation();
         CAircraftSituation endSituation = m_interpolant.getEndSituation();
 
-        Q_ASSERT_X(endSituation.getAdjustedMSecsSinceEpoch() >= startSituation.getAdjustedMSecsSinceEpoch(), Q_FUNC_INFO, "Wrong order");
+        Q_ASSERT_X(endSituation.getAdjustedMSecsSinceEpoch() >= startSituation.getAdjustedMSecsSinceEpoch(),
+                   Q_FUNC_INFO, "Wrong order");
 
         const bool updated = m_situationsLastModifiedUsed < m_situationsLastModified;
         const bool newSplit = endSituation.getAdjustedMSecsSinceEpoch() < m_currentTimeMsSinceEpoch;
@@ -116,7 +124,10 @@ namespace swift::misc::simulation
             m_situationsLastModifiedUsed = m_situationsLastModified;
 
             // find the first situation earlier than the current time
-            const auto pivot = std::partition_point(m_currentSituations.begin(), m_currentSituations.end(), [=](auto &&s) { return s.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
+            const auto pivot =
+                std::partition_point(m_currentSituations.begin(), m_currentSituations.end(), [=](auto &&s) {
+                    return s.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch;
+                });
             const auto situationsNewer = makeRange(m_currentSituations.begin(), pivot);
             const auto situationsOlder = makeRange(pivot, m_currentSituations.end());
 
@@ -165,12 +176,14 @@ namespace swift::misc::simulation
             // adjust ground if required
             if (!startSituation.canLikelySkipNearGroundInterpolation() && !startSituation.hasGroundElevation())
             {
-                const CElevationPlane planeOld = this->findClosestElevationWithinRange(startSituation, CElevationPlane::singlePointRadius());
+                const CElevationPlane planeOld =
+                    this->findClosestElevationWithinRange(startSituation, CElevationPlane::singlePointRadius());
                 startSituation.setGroundElevationChecked(planeOld, CAircraftSituation::FromCache);
             }
             if (!endSituation.canLikelySkipNearGroundInterpolation() && !endSituation.hasGroundElevation())
             {
-                const CElevationPlane planeNew = this->findClosestElevationWithinRange(endSituation, CElevationPlane::singlePointRadius());
+                const CElevationPlane planeNew =
+                    this->findClosestElevationWithinRange(endSituation, CElevationPlane::singlePointRadius());
                 endSituation.setGroundElevationChecked(planeNew, CAircraftSituation::FromCache);
             }
         } // modified situations
@@ -178,7 +191,8 @@ namespace swift::misc::simulation
         CAircraftSituation currentSituation(startSituation); // also sets ground elevation if available
 
         // Time between start and end packet
-        const qint64 sampleDeltaTimeMs = endSituation.getAdjustedMSecsSinceEpoch() - startSituation.getAdjustedMSecsSinceEpoch();
+        const qint64 sampleDeltaTimeMs =
+            endSituation.getAdjustedMSecsSinceEpoch() - startSituation.getAdjustedMSecsSinceEpoch();
         Q_ASSERT_X(sampleDeltaTimeMs >= 0, Q_FUNC_INFO, "Negative delta time");
         log.interpolator = 'l';
 
@@ -191,14 +205,19 @@ namespace swift::misc::simulation
         if (simulationTimeFraction >= 1.0)
         {
             simulationTimeFraction = 1.0;
-            if (qAbs(distanceToSplitTimeMs) > 100) { CLogMessage(this).debug(u"Distance to split: %1") << distanceToSplitTimeMs; }
+            if (qAbs(distanceToSplitTimeMs) > 100)
+            {
+                CLogMessage(this).debug(u"Distance to split: %1") << distanceToSplitTimeMs;
+            }
         }
 
         const double deltaTimeFractionMs = sampleDeltaTimeMs * simulationTimeFraction;
         const qint64 interpolatedTime = startSituation.getMSecsSinceEpoch() + qRound(deltaTimeFractionMs);
 
         // Ref T297 adjust offset time, but this already the interpolated situation
-        currentSituation.setTimeOffsetMs(startSituation.getTimeOffsetMs() + qRound((endSituation.getTimeOffsetMs() - startSituation.getTimeOffsetMs()) * simulationTimeFraction));
+        currentSituation.setTimeOffsetMs(
+            startSituation.getTimeOffsetMs() +
+            qRound((endSituation.getTimeOffsetMs() - startSituation.getTimeOffsetMs()) * simulationTimeFraction));
         currentSituation.setMSecsSinceEpoch(interpolatedTime);
         m_currentInterpolationStatus.setInterpolatedAndCheckSituation(true, currentSituation);
 

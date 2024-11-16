@@ -27,10 +27,7 @@ namespace swift::misc::network
         m_responseTimeMs = m_responseTimeMSecsSinceEpoch - ITimestampBased::getMSecsSinceEpoch();
     }
 
-    bool CUrlLog::isPending() const
-    {
-        return m_responseTimeMs < 0;
-    }
+    bool CUrlLog::isPending() const { return m_responseTimeMs < 0; }
 
     QVariant CUrlLog::propertyByIndex(CPropertyIndexRef index) const
     {
@@ -77,7 +74,11 @@ namespace swift::misc::network
     {
         Q_UNUSED(i18n);
         static const QString s("Id: %1, success: %2 response: %3ms, started: %4 ended: %5");
-        return s.arg(m_id).arg(boolToYesNo(m_success)).arg(m_responseTimeMs).arg(this->getMSecsSinceEpoch()).arg(m_responseTimeMSecsSinceEpoch);
+        return s.arg(m_id)
+            .arg(boolToYesNo(m_success))
+            .arg(m_responseTimeMs)
+            .arg(this->getMSecsSinceEpoch())
+            .arg(m_responseTimeMSecsSinceEpoch);
     }
 
     const char *CUrlLog::propertyNameId()

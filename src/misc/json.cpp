@@ -415,10 +415,7 @@ namespace swift::misc::json
 
         QJsonParseError error {};
         const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8(), &error));
-        if (error.error != QJsonParseError::NoError)
-        {
-            throw CJsonException(error.errorString());
-        }
+        if (error.error != QJsonParseError::NoError) { throw CJsonException(error.errorString()); }
 
         return acceptCacheFormat ? json::unwrapCache(jsonDoc.object()) : jsonDoc.object();
     }
@@ -441,10 +438,7 @@ namespace swift::misc::json
     {
         if (toBeAppended.isEmpty()) return target;
         const QStringList keys = toBeAppended.keys();
-        foreach (const QString &key, keys)
-        {
-            target.insert(key, toBeAppended.value(key));
-        }
+        foreach (const QString &key, keys) { target.insert(key, toBeAppended.value(key)); }
         return target;
     }
 
@@ -455,7 +449,8 @@ namespace swift::misc::json
         {
             if (previousObject.value(key).isObject())
             {
-                auto child = getIncrementalObject(previousObject.value(key).toObject(), currentObject.value(key).toObject());
+                auto child =
+                    getIncrementalObject(previousObject.value(key).toObject(), currentObject.value(key).toObject());
                 if (child.isEmpty())
                     incrementalObject.remove(key);
                 else
@@ -463,8 +458,7 @@ namespace swift::misc::json
             }
             else
             {
-                if (currentObject.value(key) == previousObject.value(key))
-                    incrementalObject.remove(key);
+                if (currentObject.value(key) == previousObject.value(key)) incrementalObject.remove(key);
             }
         }
         return incrementalObject;
@@ -476,13 +470,11 @@ namespace swift::misc::json
         for (const auto &key : incrementalObject.keys()) // clazy:exclude=range-loop
         {
             // If it is not an object, just insert the value
-            if (!incrementalObject.value(key).isObject())
-            {
-                currentObject.insert(key, incrementalObject.value(key));
-            }
+            if (!incrementalObject.value(key).isObject()) { currentObject.insert(key, incrementalObject.value(key)); }
             else
             {
-                auto child = applyIncrementalObject(currentObject.value(key).toObject(), incrementalObject.value(key).toObject());
+                auto child = applyIncrementalObject(currentObject.value(key).toObject(),
+                                                    incrementalObject.value(key).toObject());
                 currentObject.insert(key, child);
             }
         }
@@ -574,10 +566,7 @@ namespace swift::misc::json
         return (object.contains("type") && object.contains("value"));
     }
 
-    bool looksLikeSwiftDbJson(const QJsonObject &object)
-    {
-        return (object.contains("data"));
-    }
+    bool looksLikeSwiftDbJson(const QJsonObject &object) { return (object.contains("data")); }
 
     QString firstJsonValueAsString(const QString &json)
     {
@@ -593,10 +582,7 @@ namespace swift::misc::json
         if (json.isEmpty()) { return empty; }
         const QStringList keys1 = json.keys();
         if (keys1.isEmpty()) { return empty; }
-        if (keys1.contains("value", Qt::CaseInsensitive))
-        {
-            return json.value("value").toString();
-        }
+        if (keys1.contains("value", Qt::CaseInsensitive)) { return json.value("value").toString(); }
 
         const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
         return jsonLevel1.value("value").toString();
@@ -642,10 +628,7 @@ namespace swift::misc::json
         if (json.isEmpty()) { return empty; }
         const QStringList keys1 = json.keys();
         if (keys1.isEmpty()) { return empty; }
-        if (keys1.contains("value", Qt::CaseInsensitive))
-        {
-            return arrayToQStringList(json.value("value").toArray());
-        }
+        if (keys1.contains("value", Qt::CaseInsensitive)) { return arrayToQStringList(json.value("value").toArray()); }
 
         const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
         return arrayToQStringList(jsonLevel1.value("value").toArray());

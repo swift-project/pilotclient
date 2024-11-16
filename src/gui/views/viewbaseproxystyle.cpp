@@ -7,9 +7,12 @@
 
 namespace swift::gui::views
 {
-    CViewBaseProxyStyle::CViewBaseProxyStyle(CViewBaseNonTemplate *view, QStyle *style) : QProxyStyle(style), m_view(view) {}
+    CViewBaseProxyStyle::CViewBaseProxyStyle(CViewBaseNonTemplate *view, QStyle *style)
+        : QProxyStyle(style), m_view(view)
+    {}
 
-    void CViewBaseProxyStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+    void CViewBaseProxyStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option,
+                                            QPainter *painter, const QWidget *widget) const
     {
         const bool indicator = (element == QStyle::PE_IndicatorItemViewItemDrop);
         if (indicator)

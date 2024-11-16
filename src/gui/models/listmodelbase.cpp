@@ -34,7 +34,8 @@ namespace swift::gui::models
     }
 
     template <typename T, bool UseCompare>
-    bool CListModelBase<T, UseCompare>::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) const
+    bool CListModelBase<T, UseCompare>::canDropMimeData(const QMimeData *data, Qt::DropAction action, int row,
+                                                        int column, const QModelIndex &parent) const
     {
         Q_UNUSED(action)
         Q_UNUSED(row)
@@ -46,7 +47,8 @@ namespace swift::gui::models
     }
 
     template <typename T, bool UseCompare>
-    bool CListModelBase<T, UseCompare>::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+    bool CListModelBase<T, UseCompare>::dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row,
+                                                     int column, const QModelIndex &parent)
     {
         Q_UNUSED(row)
         Q_UNUSED(column)
@@ -70,8 +72,8 @@ namespace swift::gui::models
     bool CListModelBase<T, UseCompare>::isValidIndex(const QModelIndex &index) const
     {
         if (!index.isValid()) { return false; }
-        return (index.row() >= 0 && index.row() < this->rowCount(index) &&
-                index.column() >= 0 && index.column() < this->columnCount(index));
+        return (index.row() >= 0 && index.row() < this->rowCount(index) && index.column() >= 0 &&
+                index.column() < this->columnCount(index));
     }
 
     template <typename T, bool UseCompare>
@@ -80,10 +82,7 @@ namespace swift::gui::models
         // check / init
         if (!this->isValidIndex(index)) { return QVariant(); }
 
-        if (role == Qt::BackgroundRole)
-        {
-            return CListModelBaseNonTemplate::data(index, role);
-        }
+        if (role == Qt::BackgroundRole) { return CListModelBaseNonTemplate::data(index, role); }
 
         // Formatter
         const CDefaultFormatter *formatter = m_columns.getFormatter(index);
@@ -161,10 +160,7 @@ namespace swift::gui::models
         // Keep sorting out of begin/end reset model
         ContainerType sortedContainer;
         ContainerType selection;
-        if (m_selectionModel)
-        {
-            selection = m_selectionModel->selectedObjects();
-        }
+        if (m_selectionModel) { selection = m_selectionModel->selectedObjects(); }
         const int oldSize = m_container.size();
         const bool performSort = sort && container.size() > 1 && this->hasValidSortColumn();
         if (performSort)
@@ -179,10 +175,7 @@ namespace swift::gui::models
         this->endResetModel();
 
         // reselect if implemented in specialized view
-        if (!selection.isEmpty())
-        {
-            m_selectionModel->selectObjects(selection);
-        }
+        if (!selection.isEmpty()) { m_selectionModel->selectObjects(selection); }
 
         const int newSize = m_container.size();
         Q_UNUSED(oldSize)
@@ -237,10 +230,7 @@ namespace swift::gui::models
             // larger container with sorting
             this->updateAsync(container, sort);
         }
-        else
-        {
-            this->update(container, sort);
-        }
+        else { this->update(container, sort); }
     }
 
     template <typename T, bool UseCompare>
@@ -265,10 +255,7 @@ namespace swift::gui::models
     void CListModelBase<T, UseCompare>::takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType>> &filter)
     {
         ContainerType selection;
-        if (m_selectionModel)
-        {
-            selection = m_selectionModel->selectedObjects();
-        }
+        if (m_selectionModel) { selection = m_selectionModel->selectedObjects(); }
 
         if (!filter)
         {
@@ -290,24 +277,19 @@ namespace swift::gui::models
         }
 
         // reselect if implemented in specialized views
-        if (!selection.isEmpty())
-        {
-            m_selectionModel->selectObjects(selection);
-        }
+        if (!selection.isEmpty()) { m_selectionModel->selectObjects(selection); }
     }
 
     template <typename T, bool UseCompare>
-    const typename CListModelBase<T, UseCompare>::ObjectType &CListModelBase<T, UseCompare>::at(const QModelIndex &index) const
+    const typename CListModelBase<T, UseCompare>::ObjectType &
+    CListModelBase<T, UseCompare>::at(const QModelIndex &index) const
     {
         if (index.row() < 0 || index.row() >= this->rowCount())
         {
             static const ObjectType def {}; // default object
             return def;
         }
-        else
-        {
-            return this->containerOrFilteredContainer()[index.row()];
-        }
+        else { return this->containerOrFilteredContainer()[index.row()]; }
     }
 
     template <typename T, bool UseCompare>
@@ -317,13 +299,15 @@ namespace swift::gui::models
     }
 
     template <typename T, bool UseCompare>
-    const typename CListModelBase<T, UseCompare>::ContainerType &CListModelBase<T, UseCompare>::containerFiltered() const
+    const typename CListModelBase<T, UseCompare>::ContainerType &
+    CListModelBase<T, UseCompare>::containerFiltered() const
     {
         return m_containerFiltered;
     }
 
     template <typename T, bool UseCompare>
-    const typename CListModelBase<T, UseCompare>::ContainerType &CListModelBase<T, UseCompare>::containerOrFilteredContainer(bool *filtered) const
+    const typename CListModelBase<T, UseCompare>::ContainerType &
+    CListModelBase<T, UseCompare>::containerOrFilteredContainer(bool *filtered) const
     {
         if (this->hasFilter())
         {
@@ -445,14 +429,8 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::updateFilteredContainer()
     {
-        if (this->hasFilter())
-        {
-            m_containerFiltered = m_filter->filter(m_container);
-        }
-        else
-        {
-            m_containerFiltered.clear();
-        }
+        if (this->hasFilter()) { m_containerFiltered = m_filter->filter(m_container); }
+        else { m_containerFiltered.clear(); }
     }
 
     template <typename T, bool UseCompare>
@@ -464,7 +442,8 @@ namespace swift::gui::models
     }
 
     template <typename T, bool UseCompare>
-    void CListModelBase<T, UseCompare>::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+    void CListModelBase<T, UseCompare>::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                                                      const QVector<int> &roles)
     {
         // underlying base class changed
         Q_UNUSED(topLeft)
@@ -533,7 +512,9 @@ namespace swift::gui::models
     }
 
     template <typename T, bool UseCompare>
-    typename CListModelBase<T, UseCompare>::ContainerType CListModelBase<T, UseCompare>::sortContainerByColumn(const ContainerType &container, int column, Qt::SortOrder order) const
+    typename CListModelBase<T, UseCompare>::ContainerType
+    CListModelBase<T, UseCompare>::sortContainerByColumn(const ContainerType &container, int column,
+                                                         Qt::SortOrder order) const
     {
         if (m_modelDestroyed) { return container; }
         if (container.size() < 2 || !m_columns.isSortable(column))
@@ -550,7 +531,8 @@ namespace swift::gui::models
         }
 
         // sort the values
-        const auto tieBreakersCopy = m_sortTieBreakers; //! \todo workaround T579 still not thread-safe, but less likely to crash
+        const auto tieBreakersCopy =
+            m_sortTieBreakers; //! \todo workaround T579 still not thread-safe, but less likely to crash
         const std::integral_constant<bool, UseCompare> marker {};
         const auto p = [=](const ObjectType &a, const ObjectType &b) -> bool {
             return Private::compareForModelSort<ObjectType>(a, b, order, propertyIndex, tieBreakersCopy, marker);
@@ -589,20 +571,16 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     QJsonObject CListModelBase<T, UseCompare>::toJson(bool selectedOnly) const
     {
-        const CVariant variant = CVariant::fromValue(
-            selectedOnly && m_selectionModel ?
-                m_selectionModel->selectedObjects() :
-                container());
+        const CVariant variant =
+            CVariant::fromValue(selectedOnly && m_selectionModel ? m_selectionModel->selectedObjects() : container());
         return variant.toJson();
     }
 
     template <typename T, bool UseCompare>
     QString CListModelBase<T, UseCompare>::toJsonString(QJsonDocument::JsonFormat format, bool selectedOnly) const
     {
-        const CVariant variant = CVariant::fromValue(
-            selectedOnly && m_selectionModel ?
-                m_selectionModel->selectedObjects() :
-                container());
+        const CVariant variant =
+            CVariant::fromValue(selectedOnly && m_selectionModel ? m_selectionModel->selectedObjects() : container());
         return variant.toJsonString(format);
     }
 

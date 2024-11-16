@@ -17,11 +17,11 @@ using namespace swift::misc::math;
 
 namespace swift::gui::components
 {
-    CConfigurationWizard::CConfigurationWizard(QWidget *parent) : QWizard(parent),
-                                                                  ui(new Ui::CConfigurationWizard)
+    CConfigurationWizard::CConfigurationWizard(QWidget *parent) : QWizard(parent), ui(new Ui::CConfigurationWizard)
     {
         ui->setupUi(this);
-        this->setWindowFlags(windowFlags() | Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+        this->setWindowFlags(windowFlags() | Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint |
+                             Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
 
         ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
         ui->wp_CopySettingsAndCaches->setConfigComponent(ui->comp_CopySettingsAndCachesComponent);
@@ -61,13 +61,9 @@ namespace swift::gui::components
         CGuiUtility::setWizardButtonWidths(this);
     }
 
-    CConfigurationWizard::~CConfigurationWizard()
-    {}
+    CConfigurationWizard::~CConfigurationWizard() {}
 
-    bool CConfigurationWizard::lastStepSkipped() const
-    {
-        return m_skipped;
-    }
+    bool CConfigurationWizard::lastStepSkipped() const { return m_skipped; }
 
     bool CConfigurationWizard::lastWizardStepSkipped(const QWizard *standardWizard)
     {
@@ -105,16 +101,10 @@ namespace swift::gui::components
             m_skipped = true;
             this->next();
         }
-        else
-        {
-            m_skipped = false;
-        }
+        else { m_skipped = false; }
     }
 
-    void CConfigurationWizard::ended()
-    {
-        this->setParentOpacity(1.0);
-    }
+    void CConfigurationWizard::ended() { this->setParentOpacity(1.0); }
 
     void CConfigurationWizard::setParentOpacity(qreal opacity)
     {

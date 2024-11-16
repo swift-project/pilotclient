@@ -20,15 +20,16 @@ namespace swift::simplugin::msfs
         CSimulatorMsFs(const swift::misc::simulation::CSimulatorPluginInfo &info,
                        swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                        swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                       swift::misc::network::IClientProvider *clientProvider,
-                       QObject *parent = nullptr);
+                       swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! \name ISimulator implementations
         //! @{
         virtual bool connectTo() override;
         //! @}
 
-        virtual void setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation, const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
+        virtual void
+        setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation,
+                        const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
     };
 
     //! Listener for MSFS

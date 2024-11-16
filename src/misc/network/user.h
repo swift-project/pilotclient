@@ -24,8 +24,7 @@ namespace swift::misc::network
     /*!
      * Value object encapsulating information of a user.
      */
-    class SWIFT_MISC_EXPORT CUser :
-        public CValueObject<CUser>
+    class SWIFT_MISC_EXPORT CUser : public CValueObject<CUser>
     {
     public:
         /*!
@@ -53,7 +52,8 @@ namespace swift::misc::network
         CUser(const QString &id, const QString &realname, const aviation::CCallsign &callsign);
 
         //! Constructor.
-        CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const aviation::CCallsign &callsign = {});
+        CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "",
+              const aviation::CCallsign &callsign = {});
 
         //! Get full name.
         const QString &getRealName() const { return m_realname; }

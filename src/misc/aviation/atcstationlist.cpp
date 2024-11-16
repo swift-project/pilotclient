@@ -21,32 +21,28 @@ namespace swift::misc::aviation
 {
     CAtcStationList::CAtcStationList() {}
 
-    CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) : CSequence<CAtcStation>(other)
-    {}
+    CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) : CSequence<CAtcStation>(other) {}
 
     CAtcStationList CAtcStationList::findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
     {
-        return this->findBy([&](const CAtcStation &atcStation) {
-            return atcStation.isComUnitTunedToFrequency(comUnit);
-        });
+        return this->findBy(
+            [&](const CAtcStation &atcStation) { return atcStation.isComUnitTunedToFrequency(comUnit); });
     }
 
     bool CAtcStationList::hasComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
     {
-        return this->containsBy([&](const CAtcStation &atcStation) {
-            return atcStation.isComUnitTunedToFrequency(comUnit);
-        });
+        return this->containsBy(
+            [&](const CAtcStation &atcStation) { return atcStation.isComUnitTunedToFrequency(comUnit); });
     }
 
     CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency)
     {
         if (frequency.isNull()) { return CAtcStationList(); }
-        return this->findBy([&](const CAtcStation &atcStation) {
-            return atcStation.isAtcStationFrequency(frequency);
-        });
+        return this->findBy([&](const CAtcStation &atcStation) { return atcStation.isAtcStationFrequency(frequency); });
     }
 
-    bool CAtcStationList::updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign, bool overrideWithNewer)
+    bool CAtcStationList::updateIfMessageChanged(const CInformationMessage &im, const CCallsign &callsign,
+                                                 bool overrideWithNewer)
     {
         const CInformationMessage::InformationType type = im.getType();
 
@@ -64,10 +60,7 @@ namespace swift::misc::aviation
                 if (!overrideWithNewer) { break; }
                 if (!im.isNewerThan(m)) { break; }
             }
-            else
-            {
-                unequal = true;
-            }
+            else { unequal = true; }
             station.setMessage(im);
             break; // only count unequals
         }
@@ -92,13 +85,11 @@ namespace swift::misc::aviation
 
     CUserList CAtcStationList::getControllers() const
     {
-        return this->findBy(predicates::MemberValid(&CAtcStation::getController)).transform(predicates::MemberTransform(&CAtcStation::getController));
+        return this->findBy(predicates::MemberValid(&CAtcStation::getController))
+            .transform(predicates::MemberTransform(&CAtcStation::getController));
     }
 
-    int CAtcStationList::removeIfOutsideRange()
-    {
-        return this->removeIf(&CAtcStation::isInRange, false);
-    }
+    int CAtcStationList::removeIfOutsideRange() { return this->removeIf(&CAtcStation::isInRange, false); }
 
     CAtcStationList CAtcStationList::findInRange() const
     {

@@ -19,16 +19,18 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CTransponderModeComponent::CTransponderModeComponent(QWidget *parent) : QFrame(parent), CIdentifiable(this),
-                                                                            ui(new Ui::CTransponderModeComponent)
+    CTransponderModeComponent::CTransponderModeComponent(QWidget *parent)
+        : QFrame(parent), CIdentifiable(this), ui(new Ui::CTransponderModeComponent)
     {
         ui->setupUi(this);
 
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sApp");
         Q_ASSERT_X(sGui->getIContextOwnAircraft(), Q_FUNC_INFO, "Need own aircraft");
 
-        connect(ui->tb_TransponderMode, &QToolButton::released, this, &CTransponderModeComponent::onClicked, Qt::QueuedConnection);
-        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTransponderModeComponent::onChangedAircraftCockpit, Qt::QueuedConnection);
+        connect(ui->tb_TransponderMode, &QToolButton::released, this, &CTransponderModeComponent::onClicked,
+                Qt::QueuedConnection);
+        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this,
+                &CTransponderModeComponent::onChangedAircraftCockpit, Qt::QueuedConnection);
 
         this->onChangedAircraftCockpit(sGui->getIContextOwnAircraft()->getOwnAircraft(), CIdentifier::null());
         this->init();
@@ -40,8 +42,7 @@ namespace swift::gui::components
         });
     }
 
-    CTransponderModeComponent::~CTransponderModeComponent()
-    {}
+    CTransponderModeComponent::~CTransponderModeComponent() {}
 
     void CTransponderModeComponent::init()
     {
@@ -71,7 +72,8 @@ namespace swift::gui::components
         sGui->getIContextOwnAircraft()->setTransponderMode(xpdr.getTransponderMode());
     }
 
-    void CTransponderModeComponent::onChangedAircraftCockpit(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
+    void CTransponderModeComponent::onChangedAircraftCockpit(const CSimulatedAircraft &aircraft,
+                                                             const CIdentifier &originator)
     {
         if (this->identifier() == originator) { return; }
         if (m_transponder == aircraft.getTransponder()) { return; }

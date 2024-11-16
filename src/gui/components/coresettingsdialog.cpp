@@ -11,8 +11,7 @@
 
 namespace swift::gui::components
 {
-    CCoreSettingsDialog::CCoreSettingsDialog(QWidget *parent) : QDialog(parent),
-                                                                ui(new Ui::CCoreSettingsDialog)
+    CCoreSettingsDialog::CCoreSettingsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CCoreSettingsDialog)
     {
         Q_ASSERT(sGui);
         ui->setupUi(this);
@@ -22,11 +21,7 @@ namespace swift::gui::components
         connect(overview, &QPushButton::released, this, &CCoreSettingsDialog::showOverview);
     }
 
-    CCoreSettingsDialog::~CCoreSettingsDialog()
-    {}
+    CCoreSettingsDialog::~CCoreSettingsDialog() {}
 
-    void CCoreSettingsDialog::showOverview()
-    {
-        ui->comp_SettingsComponent->setSettingsOverviewTab();
-    }
+    void CCoreSettingsDialog::showOverview() { ui->comp_SettingsComponent->setSettingsOverviewTab(); }
 } // namespace swift::gui::components

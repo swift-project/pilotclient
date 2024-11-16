@@ -11,12 +11,13 @@ using namespace swift::misc::aviation;
 namespace swift::gui::models
 {
     CLiveryFilter::CLiveryFilter(int id, const QString &combinedCode, const QString &descriptiom,
-                                 const QString &airlineDesignator,
-                                 const swift::misc::CRgbColor &fuselageColor, const swift::misc::CRgbColor &tailColor, double maxColorDistance, bool colorLiveries, bool airlineLiveries) : m_id(id),
-                                                                                                                                                                                            m_combinedCode(combinedCode.trimmed().toUpper()), m_description(descriptiom),
-                                                                                                                                                                                            m_airlineIcaoDesignator(airlineDesignator.trimmed().toUpper()),
-                                                                                                                                                                                            m_fuselageColor(fuselageColor), m_tailColor(tailColor), m_maxColorDistance(maxColorDistance),
-                                                                                                                                                                                            m_colorLiveries(colorLiveries), m_airlineLiveries(airlineLiveries)
+                                 const QString &airlineDesignator, const swift::misc::CRgbColor &fuselageColor,
+                                 const swift::misc::CRgbColor &tailColor, double maxColorDistance, bool colorLiveries,
+                                 bool airlineLiveries)
+        : m_id(id), m_combinedCode(combinedCode.trimmed().toUpper()), m_description(descriptiom),
+          m_airlineIcaoDesignator(airlineDesignator.trimmed().toUpper()), m_fuselageColor(fuselageColor),
+          m_tailColor(tailColor), m_maxColorDistance(maxColorDistance), m_colorLiveries(colorLiveries),
+          m_airlineLiveries(airlineLiveries)
     {
         m_valid = valid();
     }
@@ -53,7 +54,11 @@ namespace swift::gui::models
             }
             if (!m_airlineIcaoDesignator.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(livery.getAirlineIcaoCode().getVDesignator(), m_airlineIcaoDesignator)) { continue; }
+                if (!this->stringMatchesFilterExpression(livery.getAirlineIcaoCode().getVDesignator(),
+                                                         m_airlineIcaoDesignator))
+                {
+                    continue;
+                }
             }
             if (m_fuselageColor.isValid())
             {
@@ -72,8 +77,7 @@ namespace swift::gui::models
     {
         if (filterByLiveryType()) { return true; }
         if (m_fuselageColor.isValid() || m_tailColor.isValid()) { return true; }
-        return !(m_id < 0 && m_combinedCode.isEmpty() && m_description.isEmpty() &&
-                 m_airlineIcaoDesignator.isEmpty());
+        return !(m_id < 0 && m_combinedCode.isEmpty() && m_description.isEmpty() && m_airlineIcaoDesignator.isEmpty());
     }
 
     bool CLiveryFilter::filterByLiveryType() const

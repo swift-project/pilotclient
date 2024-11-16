@@ -80,11 +80,13 @@ namespace swift::misc
             changeValuesFromRemote(values, CIdentifier());
         });
         connect(&m_watcher, &QFileSystemWatcher::fileChanged, this, &CDataCache::loadFromStoreAsync);
-        connect(m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote, Qt::DirectConnection);
+        connect(m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote,
+                Qt::DirectConnection);
 
         if (!QFile::exists(revisionFileName())) { QFile(revisionFileName()).open(QFile::WriteOnly); }
         m_serializer->loadFromStore({}, false, true); // load pinned values
-        singleShot(0, this, [this] // only start the serializer if the main thread event loop runs
+        singleShot(0, this,
+                   [this] // only start the serializer if the main thread event loop runs
                    {
                        m_serializer->start();
                        m_watcher.addPath(revisionFileName());
@@ -92,10 +94,7 @@ namespace swift::misc
                    });
     }
 
-    CDataCache::~CDataCache()
-    {
-        m_serializer->quitAndWait();
-    }
+    CDataCache::~CDataCache() { m_serializer->quitAndWait(); }
 
     CDataCache *CDataCache::instance()
     {
@@ -122,10 +121,7 @@ namespace swift::misc
         return CFileUtils::appendFilePaths(persistentStore(), instance()->CValueCache::filenameForKey(key));
     }
 
-    QStringList CDataCache::enumerateStore() const
-    {
-        return enumerateFiles(persistentStore());
-    }
+    QStringList CDataCache::enumerateStore() const { return enumerateFiles(persistentStore()); }
 
     bool CDataCache::synchronize(const QString &key)
     {
@@ -144,7 +140,8 @@ namespace swift::misc
             if (s != ready) { s = future.wait_for(zero); }
             if (s != ready) { return false; }
 
-            //! \todo KB 2018-07 In datastore with consolidation "on" I see many of these exceptions. Is that a normal state?
+            //! \todo KB 2018-07 In datastore with consolidation "on" I see many of these exceptions. Is that a normal
+            //! state?
             //  maybe this happens if a cache is written and this takes a while, maybe we can
             //  use a write in prgress flag or such?
             try
@@ -170,10 +167,7 @@ namespace swift::misc
         singleShot(0, m_serializer, [this, key, timestamp] { m_revision.overrideTimestamp(key, timestamp); });
     }
 
-    qint64 CDataCache::getTimestampOnDisk(const QString &key)
-    {
-        return m_revision.getTimestampOnDisk(key);
-    }
+    qint64 CDataCache::getTimestampOnDisk(const QString &key) { return m_revision.getTimestampOnDisk(key); }
 
     void CDataCache::pinValue(const QString &key)
     {
@@ -204,16 +198,13 @@ namespace swift::misc
 
     void CDataCache::saveToStoreAsync(const swift::misc::CValueCachePacket &values)
     {
-        singleShot(0, m_serializer, [this, values] {
-            m_serializer->saveToStore(values.toVariantMap(), getAllValuesWithTimestamps());
-        });
+        singleShot(0, m_serializer,
+                   [this, values] { m_serializer->saveToStore(values.toVariantMap(), getAllValuesWithTimestamps()); });
     }
 
     void CDataCache::loadFromStoreAsync()
     {
-        singleShot(0, m_serializer, [this] {
-            m_serializer->loadFromStore(getAllValuesWithTimestamps());
-        });
+        singleShot(0, m_serializer, [this] { m_serializer->loadFromStore(getAllValuesWithTimestamps()); });
     }
 
     void CDataCache::connectPage(CValuePage *page)
@@ -240,10 +231,7 @@ namespace swift::misc
         std::swap(m_queue, queue);
         lock.unlock();
 
-        for (const auto &pair : std::as_const(queue))
-        {
-            m_page->setValuesFromCache(pair.first, pair.second);
-        }
+        for (const auto &pair : std::as_const(queue)) { m_page->setValuesFromCache(pair.first, pair.second); }
     }
 
     void CDataPageQueue::setQueuedValueFromCache(const QString &key)
@@ -253,16 +241,10 @@ namespace swift::misc
         decltype(m_queue) filtered;
         for (auto &pair : m_queue)
         {
-            if (pair.first.contains(key))
-            {
-                filtered.push_back({ pair.first.takeByKey(key), pair.second });
-            }
+            if (pair.first.contains(key)) { filtered.push_back({ pair.first.takeByKey(key), pair.second }); }
         }
         lock.unlock();
-        for (const auto &pair : filtered)
-        {
-            m_page->setValuesFromCache(pair.first, pair.second);
-        }
+        for (const auto &pair : filtered) { m_page->setValuesFromCache(pair.first, pair.second); }
     }
 
     const QStringList &CDataCacheSerializer::getLogCategories()
@@ -271,21 +253,23 @@ namespace swift::misc
         return cats;
     }
 
-    CDataCacheSerializer::CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName) : CContinuousWorker(owner, QStringLiteral("CDataCacheSerializer '%1'").arg(revisionFileName)),
-                                                                                                     m_cache(owner),
-                                                                                                     m_revisionFileName(revisionFileName)
+    CDataCacheSerializer::CDataCacheSerializer(CDataCache *owner, const QString &revisionFileName)
+        : CContinuousWorker(owner, QStringLiteral("CDataCacheSerializer '%1'").arg(revisionFileName)), m_cache(owner),
+          m_revisionFileName(revisionFileName)
     {}
 
-    const QString &CDataCacheSerializer::persistentStore() const
-    {
-        return m_cache->persistentStore();
-    }
+    const QString &CDataCacheSerializer::persistentStore() const { return m_cache->persistentStore(); }
 
-    void CDataCacheSerializer::saveToStore(const swift::misc::CVariantMap &values, const swift::misc::CValueCachePacket &baseline)
+    void CDataCacheSerializer::saveToStore(const swift::misc::CVariantMap &values,
+                                           const swift::misc::CValueCachePacket &baseline)
     {
         m_cache->m_revision.notifyPendingWrite();
-        auto lock = loadFromStore(baseline, true); // last-minute check for remote changes before clobbering the revision file
-        for (const auto &key : values.keys()) { m_deferredChanges.remove(key); } // ignore changes that we are about to overwrite
+        auto lock =
+            loadFromStore(baseline, true); // last-minute check for remote changes before clobbering the revision file
+        for (const auto &key : values.keys())
+        {
+            m_deferredChanges.remove(key);
+        } // ignore changes that we are about to overwrite
 
         if (!lock) { return; }
         m_cache->m_revision.writeNewRevision(baseline.toTimestampMap());
@@ -297,7 +281,8 @@ namespace swift::misc
         applyDeferredChanges(); // apply changes which we grabbed at the last minute above
     }
 
-    CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const CValueCachePacket &baseline, bool defer, bool pinsOnly)
+    CDataCacheRevision::LockGuard CDataCacheSerializer::loadFromStore(const CValueCachePacket &baseline, bool defer,
+                                                                      bool pinsOnly)
     {
         auto lock = m_cache->m_revision.beginUpdate(baseline.toTimestampMap(), !pinsOnly, pinsOnly);
         if (lock && m_cache->m_revision.isPendingRead())
@@ -309,7 +294,9 @@ namespace swift::misc
                 m_cache->m_revision.regenerate(newValues);
                 newValues.clear();
             }
-            auto msg = m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(), baseline.toVariantMap(), newValues, m_cache->m_revision.timestampsAsString());
+            auto msg =
+                m_cache->loadFromFiles(persistentStore(), m_cache->m_revision.keysWithNewerTimestamps(),
+                                       baseline.toVariantMap(), newValues, m_cache->m_revision.timestampsAsString());
             newValues.setTimestamps(m_cache->m_revision.newerTimestamps());
 
             auto missingKeys = m_cache->m_revision.keysWithNewerTimestamps() - newValues.keys();
@@ -337,12 +324,10 @@ namespace swift::misc
 
     void CDataCacheSerializer::deliverPromises(std::vector<std::promise<void>> i_promises)
     {
-        QTimer::singleShot(0, Qt::PreciseTimer, this, [promises = std::make_shared<decltype(i_promises)>(std::move(i_promises))]() {
-            for (auto &promise : *promises)
-            {
-                promise.set_value();
-            }
-        });
+        QTimer::singleShot(0, Qt::PreciseTimer, this,
+                           [promises = std::make_shared<decltype(i_promises)>(std::move(i_promises))]() {
+                               for (auto &promise : *promises) { promise.set_value(); }
+                           });
     }
 
     class SWIFT_MISC_EXPORT CDataCacheRevision::Session
@@ -358,11 +343,14 @@ namespace swift::misc
         QUuid m_uuid;
     };
 
-    CDataCacheRevision::CDataCacheRevision(const QString &basename) : m_basename(basename), m_session(std::make_unique<Session>(m_basename + "/.session")) {}
+    CDataCacheRevision::CDataCacheRevision(const QString &basename)
+        : m_basename(basename), m_session(std::make_unique<Session>(m_basename + "/.session"))
+    {}
 
     CDataCacheRevision::~CDataCacheRevision() = default;
 
-    CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps, bool updateUuid, bool pinsOnly)
+    CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps,
+                                                                  bool updateUuid, bool pinsOnly)
     {
         QMutexLocker lock(&m_mutex);
 
@@ -385,7 +373,8 @@ namespace swift::misc
         {
             if (!revisionFile.open(QFile::ReadOnly | QFile::Text))
             {
-                CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                CLogMessage(this).error(u"Failed to open %1: %2")
+                    << revisionFile.fileName() << revisionFile.errorString();
                 return {};
             }
 
@@ -430,7 +419,10 @@ namespace swift::misc
                 auto deferrals = fromJson(json.value("deferrals").toArray());
                 m_admittedValues.unite(m_admittedQueue);
                 if (updateUuid) { m_admittedQueue.clear(); }
-                else if (!m_admittedQueue.isEmpty()) { m_admittedQueue.intersect(QSet<QString>(m_timestamps.keyBegin(), m_timestamps.keyEnd())); }
+                else if (!m_admittedQueue.isEmpty())
+                {
+                    m_admittedQueue.intersect(QSet<QString>(m_timestamps.keyBegin(), m_timestamps.keyEnd()));
+                }
 
                 for (const auto &key : m_timestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
                 {
@@ -463,7 +455,8 @@ namespace swift::misc
         return guard;
     }
 
-    void CDataCacheRevision::writeNewRevision(const QMap<QString, qint64> &i_timestamps, const QSet<QString> &excludeKeys)
+    void CDataCacheRevision::writeNewRevision(const QMap<QString, qint64> &i_timestamps,
+                                              const QSet<QString> &excludeKeys)
     {
         QMutexLocker lock(&m_mutex);
 
@@ -501,8 +494,10 @@ namespace swift::misc
 
         if (!revisionFile.checkedClose())
         {
-            static const QString advice = QStringLiteral("If this error persists, try restarting your computer or delete the file manually.");
-            CLogMessage(this).error(u"Failed to replace %1: %2 (%3)") << revisionFile.fileName() << revisionFile.errorString() << advice;
+            static const QString advice =
+                QStringLiteral("If this error persists, try restarting your computer or delete the file manually.");
+            CLogMessage(this).error(u"Failed to replace %1: %2 (%3)")
+                << revisionFile.fileName() << revisionFile.errorString() << advice;
         }
     }
 
@@ -576,7 +571,8 @@ namespace swift::misc
         // Temporary guard object returned by beginUpdate is deleted at the end of the full expression,
         // don't try to split the conditional into multiple statements.
         // If a future is still waiting for the next update to begin, we don't want to break its associated promise.
-        return (m_updateInProgress || m_pendingWrite || beginUpdate({ { key, timestamp } }, false).keepPromises()) && (m_timestamps.contains(key) || m_admittedQueue.contains(key));
+        return (m_updateInProgress || m_pendingWrite || beginUpdate({ { key, timestamp } }, false).keepPromises()) &&
+               (m_timestamps.contains(key) || m_admittedQueue.contains(key));
     }
 
     std::future<void> CDataCacheRevision::promiseLoadedValue(const QString &key, qint64 currentTimestamp)
@@ -619,7 +615,8 @@ namespace swift::misc
         QStringList result;
         for (auto it = m_timestamps.cbegin(); it != m_timestamps.cend(); ++it)
         {
-            result.push_back(it.key() + "(" + QDateTime::fromMSecsSinceEpoch(it.value(), Qt::UTC).toString(Qt::ISODate) + ")");
+            result.push_back(it.key() + "(" +
+                             QDateTime::fromMSecsSinceEpoch(it.value(), Qt::UTC).toString(Qt::ISODate) + ")");
         }
         return result.join(",");
     }
@@ -651,7 +648,8 @@ namespace swift::misc
         {
             if (!revisionFile.open(QFile::ReadWrite | QFile::Text))
             {
-                CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                CLogMessage(this).error(u"Failed to open %1: %2")
+                    << revisionFile.fileName() << revisionFile.errorString();
                 m_lockFile.unlock();
                 return;
             }
@@ -665,13 +663,16 @@ namespace swift::misc
             {
                 if (!revisionFile.checkedClose())
                 {
-                    static const QString advice = QStringLiteral("If this error persists, try restarting your computer or delete the file manually.");
-                    CLogMessage(this).error(u"Failed to replace %1: %2 (%3)") << revisionFile.fileName() << revisionFile.errorString() << advice;
+                    static const QString advice = QStringLiteral(
+                        "If this error persists, try restarting your computer or delete the file manually.");
+                    CLogMessage(this).error(u"Failed to replace %1: %2 (%3)")
+                        << revisionFile.fileName() << revisionFile.errorString() << advice;
                 }
             }
             else
             {
-                CLogMessage(this).error(u"Failed to write to %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                CLogMessage(this).error(u"Failed to write to %1: %2")
+                    << revisionFile.fileName() << revisionFile.errorString();
             }
         }
         m_lockFile.unlock();
@@ -701,7 +702,8 @@ namespace swift::misc
             }
             else
             {
-                CLogMessage(this).error(u"Failed to open %1: %2") << revisionFile.fileName() << revisionFile.errorString();
+                CLogMessage(this).error(u"Failed to open %1: %2")
+                    << revisionFile.fileName() << revisionFile.errorString();
             }
         }
         m_lockFile.unlock();
@@ -742,10 +744,7 @@ namespace swift::misc
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)
     {
         QJsonObject result;
-        for (auto it = timestamps.begin(); it != timestamps.end(); ++it)
-        {
-            result.insert(it.key(), it.value());
-        }
+        for (auto it = timestamps.begin(); it != timestamps.end(); ++it) { result.insert(it.key(), it.value()); }
         return result;
     }
 
@@ -762,20 +761,14 @@ namespace swift::misc
     QJsonArray CDataCacheRevision::toJson(const QSet<QString> &pins)
     {
         QJsonArray result;
-        for (auto it = pins.begin(); it != pins.end(); ++it)
-        {
-            result.push_back(*it);
-        }
+        for (auto it = pins.begin(); it != pins.end(); ++it) { result.push_back(*it); }
         return result;
     }
 
     QSet<QString> CDataCacheRevision::fromJson(const QJsonArray &pins)
     {
         QSet<QString> result;
-        for (auto it = pins.begin(); it != pins.end(); ++it)
-        {
-            result.insert(it->toString());
-        }
+        for (auto it = pins.begin(); it != pins.end(); ++it) { result.insert(it->toString()); }
         return result;
     }
 
@@ -811,7 +804,8 @@ namespace swift::misc
         auto json = QJsonDocument::fromJson(file.readAll()).object();
         QUuid id(json.value("uuid").toString());
         CSequence<CProcessInfo> apps;
-        auto status = apps.convertFromJsonNoThrow(json.value("apps").toObject(), this, QStringLiteral("Error in %1 apps object").arg(m_filename));
+        auto status = apps.convertFromJsonNoThrow(json.value("apps").toObject(), this,
+                                                  QStringLiteral("Error in %1 apps object").arg(m_filename));
         apps.removeIf([](const CProcessInfo &pi) { return !pi.exists(); });
 
         if (apps.isEmpty()) { id = CIdentifier().toUuid(); }
@@ -826,14 +820,13 @@ namespace swift::misc
         {
             if (!file.checkedClose())
             {
-                static const QString advice = QStringLiteral("If this error persists, try restarting your computer or delete the file manually.");
-                CLogMessage(this).error(u"Failed to replace %1: %2 (%3)") << file.fileName() << file.errorString() << advice;
+                static const QString advice =
+                    QStringLiteral("If this error persists, try restarting your computer or delete the file manually.");
+                CLogMessage(this).error(u"Failed to replace %1: %2 (%3)")
+                    << file.fileName() << file.errorString() << advice;
             }
         }
-        else
-        {
-            CLogMessage(this).error(u"Failed to write to %1: %2") << file.fileName() << file.errorString();
-        }
+        else { CLogMessage(this).error(u"Failed to write to %1: %2") << file.fileName() << file.errorString(); }
     }
 
 } // namespace swift::misc

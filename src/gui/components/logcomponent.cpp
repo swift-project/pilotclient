@@ -31,7 +31,8 @@ namespace swift::gui::components
 {
     CConsoleTextEdit::CConsoleTextEdit(QWidget *parent) : QPlainTextEdit(parent)
     {
-        bool c = connect(this, &CConsoleTextEdit::customContextMenuRequested, this, &CConsoleTextEdit::customMenuRequested);
+        bool c =
+            connect(this, &CConsoleTextEdit::customContextMenuRequested, this, &CConsoleTextEdit::customMenuRequested);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Custom menu");
         Q_UNUSED(c);
         this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -48,9 +49,8 @@ namespace swift::gui::components
     {
         ui->setupUi(this);
 
-        connect(&m_history, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
-            ui->comp_StatusMessages->appendStatusMessageToList(message);
-        });
+        connect(&m_history, &CLogHistoryReplica::elementAdded, this,
+                [this](const CStatusMessage &message) { ui->comp_StatusMessages->appendStatusMessageToList(message); });
         connect(&m_history, &CLogHistoryReplica::elementsReplaced, this, [this](const CStatusMessageList &messages) {
             ui->comp_StatusMessages->appendStatusMessagesToList(messages);
         });
@@ -62,8 +62,7 @@ namespace swift::gui::components
         m_history.initialize(sApp->getDataLinkDBus());
     }
 
-    CLogComponent::~CLogComponent()
-    {}
+    CLogComponent::~CLogComponent() {}
 
     void CLogComponent::displayLog(bool attention)
     {
@@ -75,48 +74,24 @@ namespace swift::gui::components
         ui->comp_StatusMessages->filterUseRadioButtonDescriptiveIcons(oneLetterText);
     }
 
-    void CLogComponent::showFilterDialog()
-    {
-        ui->comp_StatusMessages->showFilterDialog();
-    }
+    void CLogComponent::showFilterDialog() { ui->comp_StatusMessages->showFilterDialog(); }
 
-    void CLogComponent::showFilterBar()
-    {
-        ui->comp_StatusMessages->showFilterBar();
-    }
+    void CLogComponent::showFilterBar() { ui->comp_StatusMessages->showFilterBar(); }
 
-    void CLogComponent::hideFilterBar()
-    {
-        ui->comp_StatusMessages->hideFilterBar();
-    }
+    void CLogComponent::hideFilterBar() { ui->comp_StatusMessages->hideFilterBar(); }
 
-    void CLogComponent::showDetails(bool details)
-    {
-        ui->comp_StatusMessages->showDetails(details);
-    }
+    void CLogComponent::showDetails(bool details) { ui->comp_StatusMessages->showDetails(details); }
 
-    void CLogComponent::setMaxLogMessages(int max)
-    {
-        ui->comp_StatusMessages->setMaxLogMessages(max);
-    }
+    void CLogComponent::setMaxLogMessages(int max) { ui->comp_StatusMessages->setMaxLogMessages(max); }
 
-    void CLogComponent::setNoSorting()
-    {
-        ui->comp_StatusMessages->setNoSorting();
-    }
+    void CLogComponent::setNoSorting() { ui->comp_StatusMessages->setNoSorting(); }
 
     void CLogComponent::setSorting(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
     {
         ui->comp_StatusMessages->setSorting(propertyIndex, order);
     }
 
-    void CLogComponent::clear()
-    {
-        ui->comp_StatusMessages->clear();
-    }
+    void CLogComponent::clear() { ui->comp_StatusMessages->clear(); }
 
-    void CLogComponent::clearMessages()
-    {
-        ui->comp_StatusMessages->clear();
-    }
+    void CLogComponent::clearMessages() { ui->comp_StatusMessages->clear(); }
 } // namespace swift::gui::components

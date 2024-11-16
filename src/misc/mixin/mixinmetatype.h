@@ -19,7 +19,8 @@ namespace swift::misc
     namespace mixin
     {
         /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with the metatype of the class.
+         * CRTP class template from which a derived class can inherit common methods dealing with the metatype of the
+         * class.
          *
          * \see SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE
          */
@@ -31,13 +32,15 @@ namespace swift::misc
             static void registerMetadata();
 
             //! Returns the Qt meta type ID of this object
-            //! \remark for CVariant this returns the id of CVariant, not of the encapsulated object. valueVariant.userType()` returns metatype of the contained object
+            //! \remark for CVariant this returns the id of CVariant, not of the encapsulated object.
+            //! valueVariant.userType()` returns metatype of the contained object
             int getMetaTypeId() const;
 
             //! Class name
             QString getClassName() const;
 
-            //! Returns true if this object is an instance of the class with the given meta type ID, or one of its subclasses.
+            //! Returns true if this object is an instance of the class with the given meta type ID, or one of its
+            //! subclasses.
             bool isA(int metaTypeId) const;
 
         private:
@@ -105,10 +108,10 @@ namespace swift::misc
          * When a derived class and a base class both inherit from mixin::MetaType,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-#define SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)             \
-    using ::swift::misc::mixin::MetaType<DERIVED>::registerMetadata; \
-    using ::swift::misc::mixin::MetaType<DERIVED>::getMetaTypeId;    \
-    using ::swift::misc::mixin::MetaType<DERIVED>::getClassName;     \
+#define SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(DERIVED)                                                               \
+    using ::swift::misc::mixin::MetaType<DERIVED>::registerMetadata;                                                   \
+    using ::swift::misc::mixin::MetaType<DERIVED>::getMetaTypeId;                                                      \
+    using ::swift::misc::mixin::MetaType<DERIVED>::getClassName;                                                       \
     using ::swift::misc::mixin::MetaType<DERIVED>::isA;
         // *INDENT-ON*
 

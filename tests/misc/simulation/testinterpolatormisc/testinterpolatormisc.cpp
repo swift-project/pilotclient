@@ -54,9 +54,12 @@ namespace MiscTest
 
     void CTestInterpolatorMisc::equalSituationTests()
     {
-        const CCoordinateGeodetic geoPos0 = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
-        const CCoordinateGeodetic geoPos1 = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1488, CLengthUnit::ft() });
-        const CCoordinateGeodetic geoPos2 = CCoordinateGeodetic::fromWgs84("48° 21′ 14″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
+        const CCoordinateGeodetic geoPos0 =
+            CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
+        const CCoordinateGeodetic geoPos1 =
+            CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1488, CLengthUnit::ft() });
+        const CCoordinateGeodetic geoPos2 =
+            CCoordinateGeodetic::fromWgs84("48° 21′ 14″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
 
         CAngle pitch(3.33, CAngleUnit::deg());
         CAngle bank(-1.0, CAngleUnit::deg());

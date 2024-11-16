@@ -137,7 +137,8 @@ namespace swift::misc
             bool m_sendGndToSim = true; //!< Send the gnd.flag to simulator
             bool m_fixSceneryOffset = false; //!< Fix. scenery offset
             int m_interpolatorMode = static_cast<int>(Spline); //!< interpolator mode (spline, ...)
-            physical_quantities::CAngle m_pitchOnGround = physical_quantities::CAngle::null(); //!< pitch angle on ground
+            physical_quantities::CAngle m_pitchOnGround =
+                physical_quantities::CAngle::null(); //!< pitch angle on ground
         };
 
         //! Value object for interpolator and rendering
@@ -241,7 +242,8 @@ namespace swift::misc
             CInterpolationAndRenderingSetupPerCallsign();
 
             //! Constructor from global setup
-            CInterpolationAndRenderingSetupPerCallsign(const aviation::CCallsign &callsign, const CInterpolationAndRenderingSetupGlobal &globalSetup);
+            CInterpolationAndRenderingSetupPerCallsign(const aviation::CCallsign &callsign,
+                                                       const CInterpolationAndRenderingSetupGlobal &globalSetup);
 
             //! Properties unequal to global setup
             CPropertyIndexList unequalToGlobal(const CInterpolationAndRenderingSetupGlobal &globalSetup) const;

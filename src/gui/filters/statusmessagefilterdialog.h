@@ -43,7 +43,8 @@ namespace swift::gui::filters
         virtual ~CStatusMessageFilterDialog() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>> createModelFilter() const override;
+        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>>
+        createModelFilter() const override;
 
     private:
         QScopedPointer<Ui::CStatusMessageFilterDialog> ui;

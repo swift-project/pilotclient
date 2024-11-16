@@ -114,26 +114,46 @@ namespace swift::gui::components
         swift::misc::CSetting<settings::TGeneralGui> m_settingsGuiGeneral { this };
         swift::misc::CSetting<settings::TDockWidget> m_settingsDockWidget { this };
         swift::misc::CSetting<settings::TViewUpdateSettings> m_settingsViewUpdate { this };
-        swift::misc::CSetting<settings::TBackgroundConsolidation> m_settingsConsolidation { this }; //!< consolidation time
+        swift::misc::CSetting<settings::TBackgroundConsolidation> m_settingsConsolidation {
+            this
+        }; //!< consolidation time
         swift::misc::CSetting<settings::TextMessageSettings> m_settingsTextMessage { this };
         swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_settingsEnabledSimulators { this };
         swift::misc::CSetting<swift::core::application::TActionHotkeys> m_settingsActionHotkeys { this };
         swift::misc::CSetting<swift::misc::audio::TSettings> m_settingsAudio { this };
         swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_settingsDirectories { this };
         swift::misc::CSetting<swift::misc::network::settings::TTrafficServers> m_settingsNetworkServers { this };
-        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorFsx> m_settingsSimulatorFsx { this }; //!< FSX settings
-        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorFs9> m_settingsSimulatorFs9 { this }; //!< FS9 settings
-        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorP3D> m_settingsSimulatorP3D { this }; //!< P3D settings
-        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorXP> m_settingsSimulatorXPlane { this }; //!< XP settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorFsx> m_settingsSimulatorFsx {
+            this
+        }; //!< FSX settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorFs9> m_settingsSimulatorFs9 {
+            this
+        }; //!< FS9 settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorP3D> m_settingsSimulatorP3D {
+            this
+        }; //!< P3D settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorXP> m_settingsSimulatorXPlane {
+            this
+        }; //!< XP settings
         swift::misc::CSetting<swift::misc::simulation::settings::TModel> m_settingsModel { this }; //!< model setting
 
-        swift::misc::CData<swift::core::data::TVatsimLastServer> m_cacheLastVatsimServer { this }; //!< recently used VATSIM server
+        swift::misc::CData<swift::core::data::TVatsimLastServer> m_cacheLastVatsimServer {
+            this
+        }; //!< recently used VATSIM server
         swift::misc::CData<swift::core::data::TLauncherSetup> m_cacheLauncherSetup { this };
         swift::misc::CData<swift::core::data::TVatsimSetup> m_cacheVatsimSetup { this };
-        swift::misc::CData<swift::misc::network::data::TLastServer> m_cacheLastNetworkServer { this }; //!< recently used server (VATSIM, other)
-        swift::misc::CData<swift::misc::simulation::data::TSimulatorLastSelection> m_cacheModelSetCurrentSimulator { this };
-        swift::misc::CData<swift::misc::simulation::data::TModelCacheLastSelection> m_cacheModelsCurrentSimulator { this };
-        swift::misc::CData<swift::misc::simulation::data::TLastModel> m_cacheLastAircraftModel { this }; //!< recently used aircraft model
+        swift::misc::CData<swift::misc::network::data::TLastServer> m_cacheLastNetworkServer {
+            this
+        }; //!< recently used server (VATSIM, other)
+        swift::misc::CData<swift::misc::simulation::data::TSimulatorLastSelection> m_cacheModelSetCurrentSimulator {
+            this
+        };
+        swift::misc::CData<swift::misc::simulation::data::TModelCacheLastSelection> m_cacheModelsCurrentSimulator {
+            this
+        };
+        swift::misc::CData<swift::misc::simulation::data::TLastModel> m_cacheLastAircraftModel {
+            this
+        }; //!< recently used aircraft model
     };
 
     /*!

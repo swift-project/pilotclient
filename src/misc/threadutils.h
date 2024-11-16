@@ -30,14 +30,16 @@ namespace swift::misc
     auto singleShot(int msec, QObject *target, F &&task)
     {
         CPromise<decltype(task())> promise;
-        QSharedPointer<QTimer> timer(new QTimer, [](QObject *o) { QMetaObject::invokeMethod(o, &QObject::deleteLater); });
+        QSharedPointer<QTimer> timer(new QTimer,
+                                     [](QObject *o) { QMetaObject::invokeMethod(o, &QObject::deleteLater); });
         timer->setSingleShot(true);
         timer->moveToThread(target->thread());
-        QObject::connect(timer.data(), &QTimer::timeout, target, [trace = getStackTrace(), task = std::forward<F>(task), timer, promise]() mutable {
-            static_cast<void>(trace);
-            timer.clear();
-            promise.setResultFrom(task);
-        });
+        QObject::connect(timer.data(), &QTimer::timeout, target,
+                         [trace = getStackTrace(), task = std::forward<F>(task), timer, promise]() mutable {
+                             static_cast<void>(trace);
+                             timer.clear();
+                             promise.setResultFrom(task);
+                         });
         QMetaObject::invokeMethod(timer.data(), [t = timer.data(), msec] { t->start(msec); });
         return promise.future();
     }

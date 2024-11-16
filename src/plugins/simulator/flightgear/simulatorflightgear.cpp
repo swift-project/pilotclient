@@ -81,14 +81,15 @@ namespace swift::simplugin::flightgear
     CSimulatorFlightgear::CSimulatorFlightgear(const CSimulatorPluginInfo &info,
                                                IOwnAircraftProvider *ownAircraftProvider,
                                                IRemoteAircraftProvider *remoteAircraftProvider,
-                                               IClientProvider *clientProvider,
-                                               QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
+                                               IClientProvider *clientProvider, QObject *parent)
+        : CSimulatorPluginCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         m_watcher = new QDBusServiceWatcher(this);
         m_watcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
         m_watcher->addWatchedService(fgswiftbusServiceName());
         m_watcher->setObjectName("QDBusServiceWatcher");
-        connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorFlightgear::onDBusServiceUnregistered, Qt::QueuedConnection);
+        connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this,
+                &CSimulatorFlightgear::onDBusServiceUnregistered, Qt::QueuedConnection);
 
         m_fastTimer.setObjectName(this->objectName().append(":m_fastTimer"));
         m_slowTimer.setObjectName(this->objectName().append(":m_slowTimer"));
@@ -101,15 +102,12 @@ namespace swift::simplugin::flightgear
         m_airportUpdater.start(60 * 1000);
         m_pendingAddedTimer.start(5000);
 
-        this->setDefaultModel({ "FG c172p", CAircraftModel::TypeModelMatchingDefaultModel,
-                                "C172", CAircraftIcaoCode("C172", "L1P") });
+        this->setDefaultModel(
+            { "FG c172p", CAircraftModel::TypeModelMatchingDefaultModel, "C172", CAircraftIcaoCode("C172", "L1P") });
         this->resetFlightgearData();
     }
 
-    CSimulatorFlightgear::~CSimulatorFlightgear()
-    {
-        this->unload();
-    }
+    CSimulatorFlightgear::~CSimulatorFlightgear() { this->unload(); }
 
     void CSimulatorFlightgear::unload()
     {
@@ -135,11 +133,13 @@ namespace swift::simplugin::flightgear
     CStatusMessageList CSimulatorFlightgear::getInterpolationMessages(const CCallsign &callsign) const
     {
         if (callsign.isEmpty() || !m_flightgearAircraftObjects.contains(callsign)) { return CStatusMessageList(); }
-        const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign, false);
+        const CInterpolationAndRenderingSetupPerCallsign setup =
+            this->getInterpolationSetupConsolidated(callsign, false);
         return m_flightgearAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
     }
 
-    bool CSimulatorFlightgear::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation, const CAircraftParts &parts)
+    bool CSimulatorFlightgear::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation,
+                                                         const CAircraftParts &parts)
     {
         if (this->isShuttingDownOrDisconnected()) { return false; }
         if (!m_trafficProxy) { return false; }
@@ -179,10 +179,7 @@ namespace swift::simplugin::flightgear
     }
 
     // convert swift squawk mode to flightgear squawk mode
-    int xpdrMode(CTransponder::TransponderMode mode)
-    {
-        return mode == CTransponder::StateStandby ? 1 : 4;
-    }
+    int xpdrMode(CTransponder::TransponderMode mode) { return mode == CTransponder::StateStandby ? 1 : 4; }
 
     void CSimulatorFlightgear::fastTimerTimeout()
     {
@@ -206,22 +203,27 @@ namespace swift::simplugin::flightgear
             CAircraftSituation situation;
             situation.setPosition({ m_flightgearData.latitudeDeg, m_flightgearData.longitudeDeg, 0 });
             situation.setAltitude({ m_flightgearData.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft() });
-            situation.setPressureAltitude({ m_flightgearData.pressureAltitudeFt, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft() });
+            situation.setPressureAltitude({ m_flightgearData.pressureAltitudeFt, CAltitude::MeanSeaLevel,
+                                            CAltitude::PressureAltitude, CLengthUnit::ft() });
             situation.setHeading({ m_flightgearData.trueHeadingDeg, CHeading::True, CAngleUnit::deg() });
             situation.setPitch({ m_flightgearData.pitchDeg, CAngleUnit::deg() });
             situation.setBank({ m_flightgearData.rollDeg, CAngleUnit::deg() });
             situation.setGroundSpeed({ m_flightgearData.groundspeedKts, CSpeedUnit::kts() });
-            situation.setGroundElevation(CAltitude(m_flightgearData.groundElevation, CAltitude::MeanSeaLevel, CLengthUnit::m()), CAircraftSituation::FromProvider);
+            situation.setGroundElevation(
+                CAltitude(m_flightgearData.groundElevation, CAltitude::MeanSeaLevel, CLengthUnit::m()),
+                CAircraftSituation::FromProvider);
 
             if (!m_simulatorPaused)
             {
-                situation.setVelocity({ m_flightgearData.velocityXMs, m_flightgearData.velocityYMs, m_flightgearData.velocityZMs,
-                                        CSpeedUnit::m_s(), m_flightgearData.pitchRateRadPerSec, m_flightgearData.rollRateRadPerSec, m_flightgearData.yawRateRadPerSec,
-                                        CAngleUnit::rad(), CTimeUnit::s() });
+                situation.setVelocity({ m_flightgearData.velocityXMs, m_flightgearData.velocityYMs,
+                                        m_flightgearData.velocityZMs, CSpeedUnit::m_s(),
+                                        m_flightgearData.pitchRateRadPerSec, m_flightgearData.rollRateRadPerSec,
+                                        m_flightgearData.yawRateRadPerSec, CAngleUnit::rad(), CTimeUnit::s() });
             }
             else
             {
-                situation.setVelocity({ 0.0, 0.0, 0.0, CSpeedUnit::m_s(), 0.0, 0.0, 0.0, CAngleUnit::rad(), CTimeUnit::s() });
+                situation.setVelocity(
+                    { 0.0, 0.0, 0.0, CSpeedUnit::m_s(), 0.0, 0.0, 0.0, CAngleUnit::rad(), CTimeUnit::s() });
             }
 
             // Updates
@@ -246,7 +248,8 @@ namespace swift::simplugin::flightgear
             com2.setVolumeReceive(qRound(m_flightgearData.volumeCom2 * 100));
             const bool changedCom2 = myAircraft.getCom2System() != com2;
 
-            transponder = CTransponder::getStandardTransponder(m_flightgearData.xpdrCode, xpdrMode(m_flightgearData.xpdrMode, m_flightgearData.xpdrIdent));
+            transponder = CTransponder::getStandardTransponder(
+                m_flightgearData.xpdrCode, xpdrMode(m_flightgearData.xpdrMode, m_flightgearData.xpdrIdent));
             const bool changedXpr = (myAircraft.getTransponder() != transponder);
 
             if (changedCom1 || changedCom2 || changedXpr)
@@ -260,7 +263,8 @@ namespace swift::simplugin::flightgear
     {
         if (!this->isShuttingDownOrDisconnected())
         {
-            m_serviceProxy->getAircraftModelPathAsync(&m_flightgearData.aircraftModelPath); // this is NOT the model string
+            m_serviceProxy->getAircraftModelPathAsync(
+                &m_flightgearData.aircraftModelPath); // this is NOT the model string
             m_serviceProxy->getAircraftIcaoCodeAsync(&m_flightgearData.aircraftIcaoCode);
             m_serviceProxy->getBeaconLightsOnAsync(&m_flightgearData.beaconLightsOn);
             m_serviceProxy->getLandingLightsOnAsync(&m_flightgearData.landingLightsOn);
@@ -277,12 +281,14 @@ namespace swift::simplugin::flightgear
             {
                 // Engine number start counting at 1
                 // We consider the engine running when N1 is bigger than 5 %
-                CAircraftEngine engine { engineNumber + 1, m_flightgearData.enginesN1Percentage.at(engineNumber) > 5.0 };
+                CAircraftEngine engine { engineNumber + 1,
+                                         m_flightgearData.enginesN1Percentage.at(engineNumber) > 5.0 };
                 engines.push_back(engine);
             }
 
-            CAircraftParts parts { { m_flightgearData.strobeLightsOn, m_flightgearData.landingLightsOn, m_flightgearData.taxiLightsOn,
-                                     m_flightgearData.beaconLightsOn, m_flightgearData.navLightsOn, false },
+            CAircraftParts parts { { m_flightgearData.strobeLightsOn, m_flightgearData.landingLightsOn,
+                                     m_flightgearData.taxiLightsOn, m_flightgearData.beaconLightsOn,
+                                     m_flightgearData.navLightsOn, false },
                                    m_flightgearData.gearReployRatio > 0,
                                    static_cast<int>(m_flightgearData.flapsReployRatio * 100),
                                    m_flightgearData.speedBrakeRatio > 0.5,
@@ -308,17 +314,11 @@ namespace swift::simplugin::flightgear
 
             int i = 0;
 
-            for (const CCallsign &cs : invalid)
-            {
-                this->triggerRemoveAircraft(cs, ++i * 100);
-            }
+            for (const CCallsign &cs : invalid) { this->triggerRemoveAircraft(cs, ++i * 100); }
         }
     }
 
-    bool CSimulatorFlightgear::isConnected() const
-    {
-        return m_serviceProxy && m_trafficProxy;
-    }
+    bool CSimulatorFlightgear::isConnected() const { return m_serviceProxy && m_trafficProxy; }
 
     bool CSimulatorFlightgear::connectTo()
     {
@@ -340,8 +340,8 @@ namespace swift::simplugin::flightgear
         m_serviceProxy = new CFGSwiftBusServiceProxy(m_dBusConnection, this);
         m_trafficProxy = new CFGSwiftBusTrafficProxy(m_dBusConnection, this);
 
-        const bool s = m_dBusConnection.connect(QString(), DBUS_PATH_LOCAL, DBUS_INTERFACE_LOCAL,
-                                                "Disconnected", this, SLOT(onDBusServiceUnregistered()));
+        const bool s = m_dBusConnection.connect(QString(), DBUS_PATH_LOCAL, DBUS_INTERFACE_LOCAL, "Disconnected", this,
+                                                SLOT(onDBusServiceUnregistered()));
         Q_ASSERT(s);
         if (!m_serviceProxy->isValid() || !m_trafficProxy->isValid())
         {
@@ -349,14 +349,20 @@ namespace swift::simplugin::flightgear
             return false;
         }
 
-        emitOwnAircraftModelChanged(m_serviceProxy->getAircraftModelPath(), m_serviceProxy->getAircraftModelFilename(), m_serviceProxy->getAircraftLivery(),
-                                    m_serviceProxy->getAircraftIcaoCode(), m_serviceProxy->getAircraftModelString(), m_serviceProxy->getAircraftName(), m_serviceProxy->getAircraftDescription());
+        emitOwnAircraftModelChanged(m_serviceProxy->getAircraftModelPath(), m_serviceProxy->getAircraftModelFilename(),
+                                    m_serviceProxy->getAircraftLivery(), m_serviceProxy->getAircraftIcaoCode(),
+                                    m_serviceProxy->getAircraftModelString(), m_serviceProxy->getAircraftName(),
+                                    m_serviceProxy->getAircraftDescription());
         setSimulatorDetails("Flightgear", {}, "");
-        connect(m_serviceProxy, &CFGSwiftBusServiceProxy::aircraftModelChanged, this, &CSimulatorFlightgear::emitOwnAircraftModelChanged);
-        connect(m_serviceProxy, &CFGSwiftBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorFlightgear::setAirportsInRange);
+        connect(m_serviceProxy, &CFGSwiftBusServiceProxy::aircraftModelChanged, this,
+                &CSimulatorFlightgear::emitOwnAircraftModelChanged);
+        connect(m_serviceProxy, &CFGSwiftBusServiceProxy::airportsInRangeUpdated, this,
+                &CSimulatorFlightgear::setAirportsInRange);
         connect(m_trafficProxy, &CFGSwiftBusTrafficProxy::simFrame, this, &CSimulatorFlightgear::updateRemoteAircraft);
-        connect(m_trafficProxy, &CFGSwiftBusTrafficProxy::remoteAircraftAdded, this, &CSimulatorFlightgear::onRemoteAircraftAdded);
-        connect(m_trafficProxy, &CFGSwiftBusTrafficProxy::remoteAircraftAddingFailed, this, &CSimulatorFlightgear::onRemoteAircraftAddingFailed);
+        connect(m_trafficProxy, &CFGSwiftBusTrafficProxy::remoteAircraftAdded, this,
+                &CSimulatorFlightgear::onRemoteAircraftAdded);
+        connect(m_trafficProxy, &CFGSwiftBusTrafficProxy::remoteAircraftAddingFailed, this,
+                &CSimulatorFlightgear::onRemoteAircraftAddingFailed);
         if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
         m_trafficProxy->removeAllPlanes();
         this->emitSimulatorCombinedStatus();
@@ -393,10 +399,13 @@ namespace swift::simplugin::flightgear
         this->emitSimulatorCombinedStatus();
     }
 
-    void CSimulatorFlightgear::emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
-                                                           const QString &icao, const QString &modelString, const QString &name, const QString &description)
+    void CSimulatorFlightgear::emitOwnAircraftModelChanged(const QString &path, const QString &filename,
+                                                           const QString &livery, const QString &icao,
+                                                           const QString &modelString, const QString &name,
+                                                           const QString &description)
     {
-        CAircraftModel model(modelString, CAircraftModel::TypeOwnSimulatorModel, CSimulatorInfo::XPLANE, name, description, icao);
+        CAircraftModel model(modelString, CAircraftModel::TypeOwnSimulatorModel, CSimulatorInfo::XPLANE, name,
+                             description, icao);
         if (!livery.isEmpty()) { model.setModelString(model.getModelString()); }
         model.setFileName(path + "/" + filename);
 
@@ -423,7 +432,9 @@ namespace swift::simplugin::flightgear
         m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage());
     }
 
-    void CSimulatorFlightgear::setAirportsInRange(const QStringList &icaos, const QStringList &names, const CSequence<double> &lats, const CSequence<double> &lons, const CSequence<double> &alts)
+    void CSimulatorFlightgear::setAirportsInRange(const QStringList &icaos, const QStringList &names,
+                                                  const CSequence<double> &lats, const CSequence<double> &lons,
+                                                  const CSequence<double> &alts)
     {
         //! \todo restrict to maxAirportsInRange()
         m_airportsInRange.clear();
@@ -432,9 +443,14 @@ namespace swift::simplugin::flightgear
         auto latIt = lats.begin();
         auto lonIt = lons.begin();
         auto altIt = alts.begin();
-        for (; icaoIt != icaos.end() && nameIt != names.end() && latIt != lats.end() && lonIt != lons.end() && altIt != alts.end(); ++icaoIt, ++nameIt, ++latIt, ++lonIt, ++altIt)
+        for (; icaoIt != icaos.end() && nameIt != names.end() && latIt != lats.end() && lonIt != lons.end() &&
+               altIt != alts.end();
+             ++icaoIt, ++nameIt, ++latIt, ++lonIt, ++altIt)
         {
-            m_airportsInRange.push_back({ *icaoIt, { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()), CAltitude(*altIt, CLengthUnit::m()) }, *nameIt });
+            m_airportsInRange.push_back({ *icaoIt,
+                                          { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()),
+                                            CAltitude(*altIt, CLengthUnit::m()) },
+                                          *nameIt });
         }
     }
 
@@ -449,10 +465,7 @@ namespace swift::simplugin::flightgear
     bool CSimulatorFlightgear::setTimeSynchronization(bool enable, const physical_quantities::CTime &offset)
     {
         Q_UNUSED(offset)
-        if (enable)
-        {
-            CLogMessage(this).info(u"Flightgear provides real time synchronization, use this one");
-        }
+        if (enable) { CLogMessage(this).info(u"Flightgear provides real time synchronization, use this one"); }
         return false;
     }
 
@@ -461,20 +474,28 @@ namespace swift::simplugin::flightgear
         return m_flightgearAircraftObjects.contains(callsign);
     }
 
-    bool CSimulatorFlightgear::updateOwnSimulatorCockpit(const simulation::CSimulatedAircraft &aircraft, const CIdentifier &originator)
+    bool CSimulatorFlightgear::updateOwnSimulatorCockpit(const simulation::CSimulatedAircraft &aircraft,
+                                                         const CIdentifier &originator)
     {
         if (originator == this->identifier()) { return false; }
         if (this->isShuttingDownOrDisconnected()) { return false; }
 
-        auto com1 = CComSystem::getCom1System({ m_flightgearData.com1ActiveKhz, CFrequencyUnit::kHz() }, { m_flightgearData.com1StandbyKhz, CFrequencyUnit::kHz() });
-        auto com2 = CComSystem::getCom2System({ m_flightgearData.com2ActiveKhz, CFrequencyUnit::kHz() }, { m_flightgearData.com2StandbyKhz, CFrequencyUnit::kHz() });
-        auto xpdr = CTransponder::getStandardTransponder(m_flightgearData.xpdrCode, xpdrMode(m_flightgearData.xpdrMode, m_flightgearData.xpdrIdent));
+        auto com1 = CComSystem::getCom1System({ m_flightgearData.com1ActiveKhz, CFrequencyUnit::kHz() },
+                                              { m_flightgearData.com1StandbyKhz, CFrequencyUnit::kHz() });
+        auto com2 = CComSystem::getCom2System({ m_flightgearData.com2ActiveKhz, CFrequencyUnit::kHz() },
+                                              { m_flightgearData.com2StandbyKhz, CFrequencyUnit::kHz() });
+        auto xpdr = CTransponder::getStandardTransponder(
+            m_flightgearData.xpdrCode, xpdrMode(m_flightgearData.xpdrMode, m_flightgearData.xpdrIdent));
         if (aircraft.hasChangedCockpitData(com1, com2, xpdr))
         {
-            m_flightgearData.com1ActiveKhz = aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
-            m_flightgearData.com1StandbyKhz = aircraft.getCom1System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
-            m_flightgearData.com2ActiveKhz = aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
-            m_flightgearData.com2StandbyKhz = aircraft.getCom2System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
+            m_flightgearData.com1ActiveKhz =
+                aircraft.getCom1System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+            m_flightgearData.com1StandbyKhz =
+                aircraft.getCom1System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
+            m_flightgearData.com2ActiveKhz =
+                aircraft.getCom2System().getFrequencyActive().valueInteger(CFrequencyUnit::kHz());
+            m_flightgearData.com2StandbyKhz =
+                aircraft.getCom2System().getFrequencyStandby().valueInteger(CFrequencyUnit::kHz());
             m_flightgearData.xpdrCode = aircraft.getTransponderCode();
             m_flightgearData.xpdrMode = xpdrMode(aircraft.getTransponderMode());
             m_serviceProxy->setCom1ActiveKhz(m_flightgearData.com1ActiveKhz);
@@ -484,7 +505,8 @@ namespace swift::simplugin::flightgear
             m_serviceProxy->setTransponderCode(m_flightgearData.xpdrCode);
             m_serviceProxy->setTransponderMode(m_flightgearData.xpdrMode);
 
-            m_serviceProxy->cancelAllPendingAsyncCalls(); // in case there is already a reply with some old data incoming
+            m_serviceProxy
+                ->cancelAllPendingAsyncCalls(); // in case there is already a reply with some old data incoming
             return true;
         }
         return false;
@@ -515,7 +537,8 @@ namespace swift::simplugin::flightgear
         if (!this->isAircraftInRangeOrTestMode(newRemoteAircraft.getCallsign()))
         {
             // next cycle will be called by callbacks or timer
-            CLogMessage(this).warning(u"Aircraft '%1' no longer in range, will not add") << newRemoteAircraft.getCallsign();
+            CLogMessage(this).warning(u"Aircraft '%1' no longer in range, will not add")
+                << newRemoteAircraft.getCallsign();
             return false;
         }
 
@@ -535,8 +558,7 @@ namespace swift::simplugin::flightgear
             const QString livery = aircraftModel.getLivery().getCombinedCode(); //! \todo livery resolution for XP
             m_trafficProxy->addPlane(callsign, aircraftModel.getFileName(),
                                      newRemoteAircraft.getAircraftIcaoCode().getDesignator(),
-                                     newRemoteAircraft.getAirlineIcaoCode().getDesignator(),
-                                     livery);
+                                     newRemoteAircraft.getAirlineIcaoCode().getDesignator(), livery);
 
             PlanesPositions pos;
             pos.push_back(newRemoteAircraft.getSituation());
@@ -565,7 +587,8 @@ namespace swift::simplugin::flightgear
         if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
 
         // really remove from simulator
-        if (!m_flightgearAircraftObjects.contains(callsign) && !m_pendingToBeAddedAircraft.containsCallsign(callsign) && !m_addingInProgressAircraft.contains(callsign))
+        if (!m_flightgearAircraftObjects.contains(callsign) && !m_pendingToBeAddedAircraft.containsCallsign(callsign) &&
+            !m_addingInProgressAircraft.contains(callsign))
         {
             // not existing aircraft
             return false;
@@ -663,10 +686,12 @@ namespace swift::simplugin::flightgear
             planesTransponders.modeCs.push_back(transponderMode == CTransponder::ModeC);
 
             // setup
-            const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupConsolidated(callsign, updateAllAircraft);
+            const CInterpolationAndRenderingSetupPerCallsign setup =
+                this->getInterpolationSetupConsolidated(callsign, updateAllAircraft);
 
             // interpolated situation/parts
-            const CInterpolationResult result = flightgearAircraft.getInterpolation(currentTimestamp, setup, aircraftNumber++);
+            const CInterpolationResult result =
+                flightgearAircraft.getInterpolation(currentTimestamp, setup, aircraftNumber++);
             if (result.getInterpolationStatus().hasValidSituation())
             {
                 const CAircraftSituation interpolatedSituation(result);
@@ -680,7 +705,8 @@ namespace swift::simplugin::flightgear
             }
             else
             {
-                CLogMessage(this).warning(this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus()));
+                CLogMessage(this).warning(
+                    this->getInvalidSituationLogMessage(callsign, result.getInterpolationStatus()));
             }
 
             const CAircraftParts parts(result);
@@ -724,7 +750,8 @@ namespace swift::simplugin::flightgear
 
         // It is not required to request all elevations and CGs, but only for aircraft "near ground relevant"
         // - we could use the elevation cache and CG cache to decide if we need to request
-        // - if an aircraft is on ground but not moving, we do not need to request elevation if we already have it (it will not change
+        // - if an aircraft is on ground but not moving, we do not need to request elevation if we already have it (it
+        // will not change
         CCallsignSet callsigns = m_flightgearAircraftObjects.getAllCallsigns();
         const CCallsignSet remove = this->getLastSentCanLikelySkipNearGroundInterpolation().getCallsigns();
         callsigns.remove(remove);
@@ -737,10 +764,14 @@ namespace swift::simplugin::flightgear
         if (!m_trafficProxy || this->isShuttingDown()) { return; }
         const QStringList csStrings = callsigns.getCallsignStrings();
         QPointer<CSimulatorFlightgear> myself(this);
-        m_trafficProxy->getRemoteAircraftData(csStrings, [=](const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg, const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters) {
-            if (!myself) { return; }
-            this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters, verticalOffsetsMeters);
-        });
+        m_trafficProxy->getRemoteAircraftData(
+            csStrings,
+            [=](const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
+                const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters) {
+                if (!myself) { return; }
+                this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters,
+                                                        verticalOffsetsMeters);
+            });
     }
 
     void CSimulatorFlightgear::triggerRequestRemoteAircraftDataFromFlightgear(const CCallsignSet &callsigns)
@@ -753,9 +784,11 @@ namespace swift::simplugin::flightgear
         });
     }
 
-    void CSimulatorFlightgear::updateRemoteAircraftFromSimulator(
-        const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-        const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters)
+    void CSimulatorFlightgear::updateRemoteAircraftFromSimulator(const QStringList &callsigns,
+                                                                 const QDoubleList &latitudesDeg,
+                                                                 const QDoubleList &longitudesDeg,
+                                                                 const QDoubleList &elevationsMeters,
+                                                                 const QDoubleList &verticalOffsetsMeters)
     {
         const int size = callsigns.size();
 
@@ -784,22 +817,20 @@ namespace swift::simplugin::flightgear
             if (!std::isnan(elevationsMeters[i]))
             {
                 const CAltitude elevationAlt = CAltitude(elevationsMeters[i], CLengthUnit::m(), CLengthUnit::ft());
-                elevation = CElevationPlane(CLatitude(latitudesDeg[i], CAngleUnit::deg()), CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt, CElevationPlane::singlePointRadius());
+                elevation = CElevationPlane(CLatitude(latitudesDeg[i], CAngleUnit::deg()),
+                                            CLongitude(longitudesDeg[i], CAngleUnit::deg()), elevationAlt,
+                                            CElevationPlane::singlePointRadius());
             }
 
             const double cgValue = verticalOffsetsMeters[i]; // XP offset is swift CG
-            const CLength cg = std::isnan(cgValue) ?
-                                   CLength::null() :
-                                   CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
+            const CLength cg =
+                std::isnan(cgValue) ? CLength::null() : CLength(cgValue, CLengthUnit::m(), CLengthUnit::ft());
 
             // if we knew "on ground" here we could set it as parameter of rememberElevationAndSimulatorCG
             this->rememberElevationAndSimulatorCG(cs, fgAircraft.getAircraftModel(), false, elevation, cg);
 
             // loopback
-            if (logCallsigns.contains(cs))
-            {
-                this->addLoopbackSituation(cs, elevation, cg);
-            }
+            if (logCallsigns.contains(cs)) { this->addLoopbackSituation(cs, elevation, cg); }
         }
     }
 
@@ -857,11 +888,13 @@ namespace swift::simplugin::flightgear
 
         Q_ASSERT_X(addedRemoteAircraft.hasCallsign(), Q_FUNC_INFO, "No callsign");
         Q_ASSERT_X(addedRemoteAircraft.getCallsign() == cs, Q_FUNC_INFO, "No callsign");
-        m_flightgearAircraftObjects.insert(cs, CFlightgearMPAircraft(addedRemoteAircraft, this, &m_interpolationLogger));
+        m_flightgearAircraftObjects.insert(cs,
+                                           CFlightgearMPAircraft(addedRemoteAircraft, this, &m_interpolationLogger));
         emit this->aircraftRenderingChanged(addedRemoteAircraft);
     }
 
-    bool CSimulatorFlightgear::requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &callsign)
+    bool CSimulatorFlightgear::requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
+                                                const swift::misc::aviation::CCallsign &callsign)
     {
         if (this->isShuttingDownOrDisconnected()) { return false; }
         if (reference.isNull()) { return false; }
@@ -882,11 +915,9 @@ namespace swift::simplugin::flightgear
         auto callback = std::bind(&CSimulatorFlightgear::callbackReceivedRequestedElevation, this, _1, _2, false);
 
         // Request
-        m_trafficProxy->getElevationAtPosition(callsign,
-                                               pos.latitude().value(CAngleUnit::deg()),
+        m_trafficProxy->getElevationAtPosition(callsign, pos.latitude().value(CAngleUnit::deg()),
                                                pos.longitude().value(CAngleUnit::deg()),
-                                               pos.geodeticHeight().value(CLengthUnit::m()),
-                                               callback);
+                                               pos.geodeticHeight().value(CLengthUnit::m()), callback);
         emit this->requestedElevation(callsign);
         return true;
     }
@@ -905,7 +936,8 @@ namespace swift::simplugin::flightgear
         }
         else
         {
-            CLogMessage(this).warning(u"Adding '%1' failed, but aircraft no longer in range, will be removed") << callsign;
+            CLogMessage(this).warning(u"Adding '%1' failed, but aircraft no longer in range, will be removed")
+                << callsign;
         }
 
         const bool wasPending = (static_cast<int>(m_addingInProgressAircraft.remove(cs)) > 0);
@@ -932,7 +964,9 @@ namespace swift::simplugin::flightgear
         // next add cycle
         const CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
         m_pendingToBeAddedAircraft.pop_front();
-        CLogMessage(this).info(u"Adding next pending aircraft '%1', pending %2, in progress %3") << newRemoteAircraft.getCallsignAsString() << m_pendingToBeAddedAircraft.size() << m_addingInProgressAircraft.size();
+        CLogMessage(this).info(u"Adding next pending aircraft '%1', pending %2, in progress %3")
+            << newRemoteAircraft.getCallsignAsString() << m_pendingToBeAddedAircraft.size()
+            << m_addingInProgressAircraft.size();
         this->physicallyAddRemoteAircraft(newRemoteAircraft);
     }
 
@@ -1005,7 +1039,8 @@ namespace swift::simplugin::flightgear
         return new CSimulatorFlightgear(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, this);
     }
 
-    CSimulatorFlightgearListener::CSimulatorFlightgearListener(const CSimulatorPluginInfo &info) : ISimulatorListener(info)
+    CSimulatorFlightgearListener::CSimulatorFlightgearListener(const CSimulatorPluginInfo &info)
+        : ISimulatorListener(info)
     {
         constexpr int QueryInterval = 5 * 1000; // 5 seconds
         m_timer.setInterval(QueryInterval);
@@ -1013,15 +1048,9 @@ namespace swift::simplugin::flightgear
         connect(&m_timer, &QTimer::timeout, this, &CSimulatorFlightgearListener::checkConnection);
     }
 
-    void CSimulatorFlightgearListener::startImpl()
-    {
-        m_timer.start();
-    }
+    void CSimulatorFlightgearListener::startImpl() { m_timer.start(); }
 
-    void CSimulatorFlightgearListener::stopImpl()
-    {
-        m_timer.stop();
-    }
+    void CSimulatorFlightgearListener::stopImpl() { m_timer.stop(); }
 
     void CSimulatorFlightgearListener::checkImpl()
     {
@@ -1042,14 +1071,8 @@ namespace swift::simplugin::flightgear
         Q_ASSERT_X(!CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Expect to run in background");
 
         QString dbusAddress = m_fgSswiftBusServerSetting.getThreadLocal().getDBusServerAddress();
-        if (CDBusServer::isSessionOrSystemAddress(dbusAddress))
-        {
-            checkConnectionViaSessionBus();
-        }
-        else if (CDBusServer::isQtDBusAddress(dbusAddress))
-        {
-            checkConnectionViaPeer(dbusAddress);
-        }
+        if (CDBusServer::isSessionOrSystemAddress(dbusAddress)) { checkConnectionViaSessionBus(); }
+        else if (CDBusServer::isQtDBusAddress(dbusAddress)) { checkConnectionViaPeer(dbusAddress); }
     }
 
     void CSimulatorFlightgearListener::checkConnectionViaSessionBus()
@@ -1089,7 +1112,8 @@ namespace swift::simplugin::flightgear
 
         if (flightgear::incompatibleVersions.contains(flightgear::FGSWIFTBUS_API_VERSION))
         {
-            CLogMessage(this).error(u"This version of swift is not compatible with this Flightgear version. For further information check http://wiki.flightgear.org/Swift.");
+            CLogMessage(this).error(u"This version of swift is not compatible with this Flightgear version. For "
+                                    u"further information check http://wiki.flightgear.org/Swift.");
             return;
         }
         if (!traffic.initialize())
@@ -1101,8 +1125,12 @@ namespace swift::simplugin::flightgear
         const MultiplayerAcquireInfo info = traffic.acquireMultiplayerPlanes();
         if (!info.hasAcquired)
         {
-            const QString owner = info.owner.trimmed().isEmpty() ? QStringLiteral("Some/this plugin/application") : info.owner.trimmed();
-            CLogMessage(this).error(u"Connection to FGSwiftBus successful, but could not acquire multiplayer planes. '%1' has acquired them already. Disable '%2' or remove it if not required and reload FGSwiftBus.") << owner << owner.toLower();
+            const QString owner =
+                info.owner.trimmed().isEmpty() ? QStringLiteral("Some/this plugin/application") : info.owner.trimmed();
+            CLogMessage(this).error(
+                u"Connection to FGSwiftBus successful, but could not acquire multiplayer planes. '%1' has acquired "
+                u"them already. Disable '%2' or remove it if not required and reload FGSwiftBus.")
+                << owner << owner.toLower();
             return;
         }
 
@@ -1111,10 +1139,7 @@ namespace swift::simplugin::flightgear
 
     void CSimulatorFlightgearListener::serviceRegistered(const QString &serviceName)
     {
-        if (serviceName == fgswiftbusServiceName())
-        {
-            emit simulatorStarted(getPluginInfo());
-        }
+        if (serviceName == fgswiftbusServiceName()) { emit simulatorStarted(getPluginInfo()); }
         m_conn.disconnectFromBus(m_conn.name());
     }
 

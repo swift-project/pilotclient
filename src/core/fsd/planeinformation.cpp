@@ -7,15 +7,11 @@
 
 namespace swift::core::fsd
 {
-    PlaneInformation::PlaneInformation() : MessageBase()
-    {}
+    PlaneInformation::PlaneInformation() : MessageBase() {}
 
     PlaneInformation::PlaneInformation(const QString &sender, const QString &receiver, const QString &aircraft,
                                        const QString &airline = QString(), const QString &livery = QString())
-        : MessageBase(sender, receiver),
-          m_aircraft(aircraft),
-          m_airline(airline),
-          m_livery(livery)
+        : MessageBase(sender, receiver), m_aircraft(aircraft), m_airline(airline), m_livery(livery)
     {}
 
     QStringList PlaneInformation::toTokens() const

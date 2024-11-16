@@ -55,13 +55,16 @@ namespace MiscTest
         fpRemarks = CFlightPlanRemarks(remarks);
         QVERIFY2(fpRemarks.getRegistration().asString() == "GVGAS", "Wrong registration");
         QVERIFY2(fpRemarks.getFlightOperator() == "VIRGIN AIRLINES", "Wrong operator");
-        QVERIFY2(fpRemarks.getVoiceCapabilities().getCapabilities() == CVoiceCapabilities::Voice, "Wrong airline, expect UAL");
+        QVERIFY2(fpRemarks.getVoiceCapabilities().getCapabilities() == CVoiceCapabilities::Voice,
+                 "Wrong airline, expect UAL");
 
-        remarks = QStringLiteral("/v/FPL-VIR9-IS-A346/ OPR/VIRGIN AIRLINES DEP/S-EGLL/ARR/KJFK/REG/G-VGAS/TCAS RVR/200");
+        remarks =
+            QStringLiteral("/v/FPL-VIR9-IS-A346/ OPR/VIRGIN AIRLINES DEP/S-EGLL/ARR/KJFK/REG/G-VGAS/TCAS RVR/200");
         fpRemarks = CFlightPlanRemarks(remarks);
         QVERIFY2(fpRemarks.getRegistration().asString() == "GVGAS", "Wrong registration");
         QVERIFY2(fpRemarks.getFlightOperator() == "VIRGIN AIRLINES", "Wrong operator");
-        QVERIFY2(fpRemarks.getVoiceCapabilities().getCapabilities() == CVoiceCapabilities::Voice, "Wrong airline, expect UAL");
+        QVERIFY2(fpRemarks.getVoiceCapabilities().getCapabilities() == CVoiceCapabilities::Voice,
+                 "Wrong airline, expect UAL");
     }
 
     void CTestFlightPlan::flightPlanAltitude()

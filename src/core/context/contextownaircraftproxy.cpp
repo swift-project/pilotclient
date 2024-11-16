@@ -19,27 +19,33 @@ using namespace swift::misc::simulation;
 
 namespace swift::core::context
 {
-    CContextOwnAircraftProxy::CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr)
+    CContextOwnAircraftProxy::CContextOwnAircraftProxy(const QString &serviceName, QDBusConnection &connection,
+                                                       CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+        : IContextOwnAircraft(mode, runtime), m_dBusInterface(nullptr)
     {
         m_dBusInterface = new swift::misc::CGenericDBusInterface(
-            serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-            connection, this);
+            serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(), connection, this);
         this->relaySignals(serviceName, connection);
     }
 
     void CContextOwnAircraftProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
-        bool s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                                    "changedAircraftCockpit", this, SIGNAL(changedAircraftCockpit(swift::misc::simulation::CSimulatedAircraft, swift::misc::CIdentifier)));
+        bool s = connection.connect(
+            serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
+            "changedAircraftCockpit", this,
+            SIGNAL(changedAircraftCockpit(swift::misc::simulation::CSimulatedAircraft, swift::misc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                               "changedSelcal", this, SIGNAL(changedSelcal(swift::misc::aviation::CSelcal, swift::misc::CIdentifier)));
+                               "changedSelcal", this,
+                               SIGNAL(changedSelcal(swift::misc::aviation::CSelcal, swift::misc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                "changedCallsign", this, SIGNAL(changedCallsign(swift::misc::aviation::CCallsign)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                               "changedAircraftIcaoCodes", this, SIGNAL(changedAircraftIcaoCodes(swift::misc::aviation::CAircraftIcaoCode, swift::misc::aviation::CAirlineIcaoCode)));
+                               "changedAircraftIcaoCodes", this,
+                               SIGNAL(changedAircraftIcaoCodes(swift::misc::aviation::CAircraftIcaoCode,
+                                                               swift::misc::aviation::CAirlineIcaoCode)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                "changedPilot", this, SIGNAL(changedPilot(swift::misc::network::CUser)));
@@ -54,7 +60,8 @@ namespace swift::core::context
                                "isTouchingDown", this, SIGNAL(isTouchingDown()));
         Q_ASSERT(s);
 
-        this->relayBaseClassSignals(serviceName, connection, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName());
+        this->relayBaseClassSignals(serviceName, connection, IContextOwnAircraft::ObjectPath(),
+                                    IContextOwnAircraft::InterfaceName());
         Q_UNUSED(s)
     }
 
@@ -68,7 +75,8 @@ namespace swift::core::context
 
     swift::misc::simulation::CSimulatedAircraft CContextOwnAircraftProxy::getOwnAircraft() const
     {
-        return m_dBusInterface->callDBusRet<swift::misc::simulation::CSimulatedAircraft>(QLatin1String("getOwnAircraft"));
+        return m_dBusInterface->callDBusRet<swift::misc::simulation::CSimulatedAircraft>(
+            QLatin1String("getOwnAircraft"));
     }
 
     CComSystem CContextOwnAircraftProxy::getOwnComSystem(CComSystem::ComUnit unit) const
@@ -83,22 +91,30 @@ namespace swift::core::context
 
     CAircraftSituation CContextOwnAircraftProxy::getOwnAircraftSituation() const
     {
-        return m_dBusInterface->callDBusRet<swift::misc::aviation::CAircraftSituation>(QLatin1String("getOwnAircraftSituation"));
+        return m_dBusInterface->callDBusRet<swift::misc::aviation::CAircraftSituation>(
+            QLatin1String("getOwnAircraftSituation"));
     }
 
-    bool CContextOwnAircraftProxy::updateCockpit(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2, const swift::misc::aviation::CTransponder &transponder, const CIdentifier &originator)
+    bool CContextOwnAircraftProxy::updateCockpit(const swift::misc::aviation::CComSystem &com1,
+                                                 const swift::misc::aviation::CComSystem &com2,
+                                                 const swift::misc::aviation::CTransponder &transponder,
+                                                 const CIdentifier &originator)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateCockpit"), com1, com2, transponder, originator);
     }
 
-    bool CContextOwnAircraftProxy::updateTransponderMode(const CTransponder::TransponderMode &transponderMode, const CIdentifier &originator)
+    bool CContextOwnAircraftProxy::updateTransponderMode(const CTransponder::TransponderMode &transponderMode,
+                                                         const CIdentifier &originator)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateTransponderMode"), transponderMode, originator);
     }
 
-    bool CContextOwnAircraftProxy::updateActiveComFrequency(const physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit comUnit, const CIdentifier &originator)
+    bool CContextOwnAircraftProxy::updateActiveComFrequency(const physical_quantities::CFrequency &frequency,
+                                                            swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                                            const CIdentifier &originator)
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateActiveComFrequency"), frequency, comUnit, originator);
+        return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateActiveComFrequency"), frequency, comUnit,
+                                                  originator);
     }
 
     bool CContextOwnAircraftProxy::updateOwnAircraftPilot(const swift::misc::network::CUser &pilot)
@@ -111,9 +127,12 @@ namespace swift::core::context
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateSelcal"), selcal, originator);
     }
 
-    bool CContextOwnAircraftProxy::updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::aviation::CAltitude &altitude, const CAltitude &pressureAltitude)
+    bool CContextOwnAircraftProxy::updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position,
+                                                     const swift::misc::aviation::CAltitude &altitude,
+                                                     const CAltitude &pressureAltitude)
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnPosition"), position, altitude, pressureAltitude);
+        return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnPosition"), position, altitude,
+                                                  pressureAltitude);
     }
 
     bool CContextOwnAircraftProxy::updateOwnCallsign(const CCallsign &callsign)
@@ -121,9 +140,11 @@ namespace swift::core::context
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnCallsign"), callsign);
     }
 
-    bool CContextOwnAircraftProxy::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode)
+    bool CContextOwnAircraftProxy::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode,
+                                                      const CAirlineIcaoCode &airlineIcaoCode)
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnIcaoCodes"), aircraftIcaoCode, airlineIcaoCode);
+        return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnIcaoCodes"), aircraftIcaoCode,
+                                                  airlineIcaoCode);
     }
 
     void CContextOwnAircraftProxy::toggleTransponderMode()

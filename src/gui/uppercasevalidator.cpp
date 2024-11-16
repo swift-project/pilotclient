@@ -12,17 +12,16 @@ using namespace swift::misc;
 
 namespace swift::gui
 {
-    CUpperCaseValidator::CUpperCaseValidator(QObject *parent) : QValidator(parent)
-    {}
+    CUpperCaseValidator::CUpperCaseValidator(QObject *parent) : QValidator(parent) {}
 
-    CUpperCaseValidator::CUpperCaseValidator(int minLength, int maxLength, QObject *parent) : QValidator(parent),
-                                                                                              m_minLength(minLength), m_maxLength(maxLength)
+    CUpperCaseValidator::CUpperCaseValidator(int minLength, int maxLength, QObject *parent)
+        : QValidator(parent), m_minLength(minLength), m_maxLength(maxLength)
     {
         if (minLength < 1) { m_optionalValue = true; };
     }
 
-    CUpperCaseValidator::CUpperCaseValidator(bool optionalValue, int minLength, int maxLength, QObject *parent) : QValidator(parent),
-                                                                                                                  m_optionalValue(optionalValue), m_minLength(minLength), m_maxLength(maxLength)
+    CUpperCaseValidator::CUpperCaseValidator(bool optionalValue, int minLength, int maxLength, QObject *parent)
+        : QValidator(parent), m_optionalValue(optionalValue), m_minLength(minLength), m_maxLength(maxLength)
     {
         if (minLength < 1) { m_optionalValue = true; };
     }
@@ -62,9 +61,6 @@ namespace swift::gui
     {
         if (input.isEmpty()) { return; }
         input = input.toUpper();
-        if (!m_allowedCharacters.isEmpty())
-        {
-            input = removeIfNotInString(input, m_allowedCharacters);
-        }
+        if (!m_allowedCharacters.isEmpty()) { input = removeIfNotInString(input, m_allowedCharacters); }
     }
 } // namespace swift::gui

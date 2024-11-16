@@ -42,33 +42,39 @@ namespace MiscTest
         };
 
         QList<TestEntry> m_testEntries {
-            { "B737/M-SDE2E3FGHIRWXY/LB1",
-              "B737/L",
-              "B737",
-              CWakeTurbulenceCategory::MEDIUM,
-              CComNavEquipment(CComNavEquipment::ComNavEquipment(CComNavEquipment::Standard | CComNavEquipment::Dme | CComNavEquipment::DFisAcars | CComNavEquipment::PdcAcars | CComNavEquipment::Adf | CComNavEquipment::Gnss | CComNavEquipment::HfRtf | CComNavEquipment::InertiaNavigation | CComNavEquipment::Pbn | CComNavEquipment::Rvsm | CComNavEquipment::Mnps | CComNavEquipment::Vhf833),
+            { "B737/M-SDE2E3FGHIRWXY/LB1", "B737/L", "B737", CWakeTurbulenceCategory::MEDIUM,
+              CComNavEquipment(CComNavEquipment::ComNavEquipment(
+                                   CComNavEquipment::Standard | CComNavEquipment::Dme | CComNavEquipment::DFisAcars |
+                                   CComNavEquipment::PdcAcars | CComNavEquipment::Adf | CComNavEquipment::Gnss |
+                                   CComNavEquipment::HfRtf | CComNavEquipment::InertiaNavigation |
+                                   CComNavEquipment::Pbn | CComNavEquipment::Rvsm | CComNavEquipment::Mnps |
+                                   CComNavEquipment::Vhf833),
                                CComNavEquipment::CpdlcSatcomEquipment()),
               CSsrEquipment::SSrEquipment(CSsrEquipment::ModeSTypeL | CSsrEquipment::AdsBB1) },
-            { "B748/H-SDE3FGHIM1M2RWXY/LB1",
-              "H/B748/L",
-              "B748",
-              CWakeTurbulenceCategory::HEAVY,
-              CComNavEquipment(CComNavEquipment::ComNavEquipment(CComNavEquipment::Standard | CComNavEquipment::Dme | CComNavEquipment::PdcAcars | CComNavEquipment::Adf | CComNavEquipment::Gnss | CComNavEquipment::HfRtf | CComNavEquipment::InertiaNavigation | CComNavEquipment::Pbn | CComNavEquipment::Rvsm | CComNavEquipment::Mnps | CComNavEquipment::Vhf833),
-                               CComNavEquipment::CpdlcSatcomEquipment(CComNavEquipment::AtcSatvoiceInmarsat | CComNavEquipment::AtcSatvoiceMtsat)),
+            { "B748/H-SDE3FGHIM1M2RWXY/LB1", "H/B748/L", "B748", CWakeTurbulenceCategory::HEAVY,
+              CComNavEquipment(CComNavEquipment::ComNavEquipment(
+                                   CComNavEquipment::Standard | CComNavEquipment::Dme | CComNavEquipment::PdcAcars |
+                                   CComNavEquipment::Adf | CComNavEquipment::Gnss | CComNavEquipment::HfRtf |
+                                   CComNavEquipment::InertiaNavigation | CComNavEquipment::Pbn |
+                                   CComNavEquipment::Rvsm | CComNavEquipment::Mnps | CComNavEquipment::Vhf833),
+                               CComNavEquipment::CpdlcSatcomEquipment(CComNavEquipment::AtcSatvoiceInmarsat |
+                                                                      CComNavEquipment::AtcSatvoiceMtsat)),
               CSsrEquipment::SSrEquipment(CSsrEquipment::ModeSTypeL | CSsrEquipment::AdsBB1) },
-            { "C172/L-DGV/C",
-              "C172/G",
-              "C172",
-              CWakeTurbulenceCategory::LIGHT,
-              CComNavEquipment(CComNavEquipment::ComNavEquipment(CComNavEquipment::VhfRtf | CComNavEquipment::Gnss | CComNavEquipment::Dme),
+            { "C172/L-DGV/C", "C172/G", "C172", CWakeTurbulenceCategory::LIGHT,
+              CComNavEquipment(CComNavEquipment::ComNavEquipment(CComNavEquipment::VhfRtf | CComNavEquipment::Gnss |
+                                                                 CComNavEquipment::Dme),
                                CComNavEquipment::CpdlcSatcomEquipment()),
               CSsrEquipment::SSrEquipment(CSsrEquipment::ModeAC) },
-            { "A388/J-SADE2E3FGHIJ3J4J5M1RWXY/LB1D1",
-              "J/A388/L",
-              "A388",
-              CWakeTurbulenceCategory::SUPER,
-              CComNavEquipment(CComNavEquipment::ComNavEquipment(CComNavEquipment::Standard | CComNavEquipment::Gbas | CComNavEquipment::Dme | CComNavEquipment::DFisAcars | CComNavEquipment::PdcAcars | CComNavEquipment::Adf | CComNavEquipment::Gnss | CComNavEquipment::HfRtf | CComNavEquipment::InertiaNavigation | CComNavEquipment::Pbn | CComNavEquipment::Rvsm | CComNavEquipment::Mnps | CComNavEquipment::Vhf833),
-                               CComNavEquipment::CpdlcSatcomEquipment(CComNavEquipment::CpdlcFansVdlA | CComNavEquipment::CpdlcFansVdl2 | CComNavEquipment::CpdlcFansSatcomInmarsat | CComNavEquipment::AtcSatvoiceInmarsat)),
+            { "A388/J-SADE2E3FGHIJ3J4J5M1RWXY/LB1D1", "J/A388/L", "A388", CWakeTurbulenceCategory::SUPER,
+              CComNavEquipment(CComNavEquipment::ComNavEquipment(
+                                   CComNavEquipment::Standard | CComNavEquipment::Gbas | CComNavEquipment::Dme |
+                                   CComNavEquipment::DFisAcars | CComNavEquipment::PdcAcars | CComNavEquipment::Adf |
+                                   CComNavEquipment::Gnss | CComNavEquipment::HfRtf |
+                                   CComNavEquipment::InertiaNavigation | CComNavEquipment::Pbn |
+                                   CComNavEquipment::Rvsm | CComNavEquipment::Mnps | CComNavEquipment::Vhf833),
+                               CComNavEquipment::CpdlcSatcomEquipment(
+                                   CComNavEquipment::CpdlcFansVdlA | CComNavEquipment::CpdlcFansVdl2 |
+                                   CComNavEquipment::CpdlcFansSatcomInmarsat | CComNavEquipment::AtcSatvoiceInmarsat)),
               CSsrEquipment::SSrEquipment(CSsrEquipment::ModeSTypeL | CSsrEquipment::AdsBB1 | CSsrEquipment::AdsCD1) }
         };
     };
@@ -80,7 +86,8 @@ namespace MiscTest
             CFlightPlanAircraftInfo info(entry.m_icaoEquipment);
 
             QVERIFY2(info.getAircraftIcao().hasDesignator(), "Should have designator");
-            QVERIFY2(info.getAircraftIcao().getDesignator() == entry.m_aircraftIcao, "Should have same aircraft ICAO code");
+            QVERIFY2(info.getAircraftIcao().getDesignator() == entry.m_aircraftIcao,
+                     "Should have same aircraft ICAO code");
             QCOMPARE(info.getWtc(), entry.m_wtc);
             QCOMPARE(info.getComNavEquipment(), entry.m_equipment);
             QCOMPARE(info.getSsrEquipment(), entry.m_ssrEquipment);
@@ -98,14 +105,12 @@ namespace MiscTest
             QCOMPARE(info.getAircraftIcao().getDesignator(), entry.m_aircraftIcao);
 
             // FAA code only contains information about heavy and super wake turbulence category
-            if (entry.m_wtc.isCategory(CWakeTurbulenceCategory::HEAVY) || entry.m_wtc.isCategory(CWakeTurbulenceCategory::SUPER))
+            if (entry.m_wtc.isCategory(CWakeTurbulenceCategory::HEAVY) ||
+                entry.m_wtc.isCategory(CWakeTurbulenceCategory::SUPER))
             {
                 QCOMPARE(info.getWtc(), entry.m_wtc);
             }
-            else
-            {
-                QVERIFY2(info.getWtc().isUnknown(), "Should have UNKNOWN wake turbulence category");
-            }
+            else { QVERIFY2(info.getWtc().isUnknown(), "Should have UNKNOWN wake turbulence category"); }
 
             // Cannot compare COM/NAV equipment and SSR equipment as the FAA code does not contain that much detail
 

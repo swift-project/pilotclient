@@ -69,7 +69,9 @@ namespace swift::misc
 
             //! Ctor with n situations
             //! \remark the timestamps of the latest situation will be used
-            CAircraftSituationChange(const CAircraftSituationList &situations, const physical_quantities::CLength &cg, bool isVtol, bool alreadySortedLatestFirst = false, bool calcStdDeviations = false);
+            CAircraftSituationChange(const CAircraftSituationList &situations, const physical_quantities::CLength &cg,
+                                     bool isVtol, bool alreadySortedLatestFirst = false,
+                                     bool calcStdDeviations = false);
 
             //! Get callsign
             const CCallsign &getCallsign() const { return m_correspondingCallsign; }
@@ -130,10 +132,16 @@ namespace swift::misc
             physical_quantities::CLength getGuessedSceneryDeviationCG() const { return m_guessedSceneryDeviationCG; }
 
             //! Scenery deviation hint
-            GuessedSceneryDeviation getSceneryDeviationHint() const { return static_cast<GuessedSceneryDeviation>(m_guessedSceneryDeviationHint); }
+            GuessedSceneryDeviation getSceneryDeviationHint() const
+            {
+                return static_cast<GuessedSceneryDeviation>(m_guessedSceneryDeviationHint);
+            }
 
             //! Scenery deviation hint hint as string
-            const QString &getSceneryDeviationHintAsString() const { return guessedSceneryDeviationToString(this->getSceneryDeviationHint()); }
+            const QString &getSceneryDeviationHintAsString() const
+            {
+                return guessedSceneryDeviationToString(this->getSceneryDeviationHint());
+            }
 
             //! Scenery deviation available?
             bool hasSceneryDeviation() const;
@@ -157,7 +165,8 @@ namespace swift::misc
             int comparePropertyByIndex(CPropertyIndexRef index, const CAircraftSituationChange &compareValue) const;
 
             //! Calculate the standard deviiations
-            bool calculateStdDeviations(const CAircraftSituationList &situations, const physical_quantities::CLength &cg);
+            bool calculateStdDeviations(const CAircraftSituationList &situations,
+                                        const physical_quantities::CLength &cg);
 
             //! NULL object
             static const CAircraftSituationChange &null();
@@ -170,10 +179,14 @@ namespace swift::misc
 
         private:
             //! Scenery deviation hint
-            void setSceneryDeviationHint(GuessedSceneryDeviation hint) { m_guessedSceneryDeviationHint = static_cast<int>(hint); }
+            void setSceneryDeviationHint(GuessedSceneryDeviation hint)
+            {
+                m_guessedSceneryDeviationHint = static_cast<int>(hint);
+            }
 
             //! Set scenery deviation
-            void setSceneryDeviation(const physical_quantities::CLength &deviation, const physical_quantities::CLength &cg, GuessedSceneryDeviation hint);
+            void setSceneryDeviation(const physical_quantities::CLength &deviation,
+                                     const physical_quantities::CLength &cg, GuessedSceneryDeviation hint);
 
             //! Guess scenery deviation
             void guessSceneryDeviation(const physical_quantities::CLength &cg);

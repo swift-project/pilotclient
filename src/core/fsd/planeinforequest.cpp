@@ -7,11 +7,9 @@
 
 namespace swift::core::fsd
 {
-    PlaneInfoRequest::PlaneInfoRequest() : MessageBase()
-    {}
+    PlaneInfoRequest::PlaneInfoRequest() : MessageBase() {}
 
-    PlaneInfoRequest::PlaneInfoRequest(const QString &sender, const QString &receiver)
-        : MessageBase(sender, receiver)
+    PlaneInfoRequest::PlaneInfoRequest(const QString &sender, const QString &receiver) : MessageBase(sender, receiver)
     {}
 
     QStringList PlaneInfoRequest::toTokens() const

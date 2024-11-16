@@ -15,28 +15,16 @@
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CIdentifier)
 
 //! \private Escape characters not allowed in dbus paths
-QString toDBusPath(const QString &s)
-{
-    return swift::misc::utfToPercentEncoding(s, "/", '_');
-}
+QString toDBusPath(const QString &s) { return swift::misc::utfToPercentEncoding(s, "/", '_'); }
 
 //! \private Escape characters not allowed in dbus path elements
-QString toDBusPathElement(const QString &s)
-{
-    return swift::misc::utfToPercentEncoding(s, {}, '_');
-}
+QString toDBusPathElement(const QString &s) { return swift::misc::utfToPercentEncoding(s, {}, '_'); }
 
 //! \private Unescape characters not allowed in dbus paths
-QString fromDBusPath(const QString &s)
-{
-    return swift::misc::utfFromPercentEncoding(s.toLatin1(), '_');
-}
+QString fromDBusPath(const QString &s) { return swift::misc::utfFromPercentEncoding(s.toLatin1(), '_'); }
 
 //! \private Unescape characters not allowed in dbus path elements
-QString fromDBusPathElement(const QString &s)
-{
-    return swift::misc::utfFromPercentEncoding(s.toLatin1(), '_');
-}
+QString fromDBusPathElement(const QString &s) { return swift::misc::utfFromPercentEncoding(s.toLatin1(), '_'); }
 
 //! \private
 const QString &cachedEscapedApplicationName()
@@ -66,10 +54,8 @@ QByteArray cachedMachineUniqueId()
 namespace swift::misc
 {
     CIdentifier::CIdentifier(const QString &name)
-        : m_name(name.trimmed()),
-          m_machineIdBase64(cachedMachineUniqueId().toBase64(QByteArray::OmitTrailingEquals)),
-          m_machineName(cachedLocalHostName()),
-          m_processName(cachedEscapedApplicationName()),
+        : m_name(name.trimmed()), m_machineIdBase64(cachedMachineUniqueId().toBase64(QByteArray::OmitTrailingEquals)),
+          m_machineName(cachedLocalHostName()), m_processName(cachedEscapedApplicationName()),
           m_processId(QCoreApplication::applicationPid())
     {}
 
@@ -84,8 +70,9 @@ namespace swift::misc
     }
 
     CIdentifier::CIdentifier(const QString &name, const QString &machineId, const QString &machineName,
-                             const QString &processName, qint64 processId) : m_name(name), m_machineIdBase64(machineId), m_machineName(machineName),
-                                                                             m_processName(processName), m_processId(processId)
+                             const QString &processName, qint64 processId)
+        : m_name(name), m_machineIdBase64(machineId), m_machineName(machineName), m_processName(processName),
+          m_processId(processId)
     {}
 
     const CIdentifier &CIdentifier::anonymous()
@@ -102,7 +89,9 @@ namespace swift::misc
 
     const CIdentifier &CIdentifier::fake()
     {
-        static const CIdentifier id("fake", QByteArrayLiteral("00000000-0000-0000-0000-000000000000").toBase64(QByteArray::OmitTrailingEquals), "fake machine", "fake process", 0);
+        static const CIdentifier id(
+            "fake", QByteArrayLiteral("00000000-0000-0000-0000-000000000000").toBase64(QByteArray::OmitTrailingEquals),
+            "fake machine", "fake process", 0);
         return id;
     }
 
@@ -116,10 +105,7 @@ namespace swift::misc
         return QUuid::createUuidV5(ns, baseData);
     }
 
-    QString CIdentifier::toUuidString() const
-    {
-        return toUuid().toString();
-    }
+    QString CIdentifier::toUuidString() const { return toUuid().toString(); }
 
     void CIdentifier::appendName(const QString &name)
     {
@@ -133,7 +119,8 @@ namespace swift::misc
     void CIdentifier::linkWithQObjectName(QObject *object)
     {
         if (!object) { return; }
-        QObject::connect(object, &QObject::objectNameChanged, object, [=](const QString &name) { this->appendName(name); });
+        QObject::connect(object, &QObject::objectNameChanged, object,
+                         [=](const QString &name) { this->appendName(name); });
     }
 
     QByteArray CIdentifier::getMachineId() const
@@ -199,15 +186,9 @@ namespace swift::misc
         return cachedEscapedApplicationName() == toDBusPathElement(getProcessName());
     }
 
-    bool CIdentifier::isAnonymous() const
-    {
-        return &anonymous() == this || anonymous() == *this;
-    }
+    bool CIdentifier::isAnonymous() const { return &anonymous() == this || anonymous() == *this; }
 
-    bool CIdentifier::isNull() const
-    {
-        return &null() == this || null() == *this;
-    }
+    bool CIdentifier::isNull() const { return &null() == this || null() == *this; }
 
     void CIdentifier::updateToCurrentMachine()
     {
@@ -224,11 +205,8 @@ namespace swift::misc
     QString CIdentifier::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        const QString s = m_name %
-                          u' ' % m_machineIdBase64 %
-                          u' ' % m_machineName %
-                          u' ' % QString::number(m_processId) %
-                          u' ' % m_processName;
+        const QString s = m_name % u' ' % m_machineIdBase64 % u' ' % m_machineName % u' ' %
+                          QString::number(m_processId) % u' ' % m_processName;
         return s;
     }
 
@@ -267,9 +245,12 @@ namespace swift::misc
         case IndexMachineId: return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
         case IndexProcessId: return Compare::compare(m_processId, compareValue.m_processId);
         case IndexProcessName: return m_processName.compare(compareValue.m_processName, Qt::CaseInsensitive);
-        case IndexIsFromLocalMachine: return Compare::compare(this->isFromLocalMachine(), compareValue.isFromLocalMachine());
-        case IndexIsFromSameProcess: return Compare::compare(this->hasApplicationProcessId(), compareValue.hasApplicationProcessId());
-        case IndexIsFromSameProcessName: return Compare::compare(this->hasApplicationProcessName(), compareValue.hasApplicationProcessName());
+        case IndexIsFromLocalMachine:
+            return Compare::compare(this->isFromLocalMachine(), compareValue.isFromLocalMachine());
+        case IndexIsFromSameProcess:
+            return Compare::compare(this->hasApplicationProcessId(), compareValue.hasApplicationProcessId());
+        case IndexIsFromSameProcessName:
+            return Compare::compare(this->hasApplicationProcessName(), compareValue.hasApplicationProcessName());
         default: return CValueObject::comparePropertyByIndex(index, compareValue);
         }
     }

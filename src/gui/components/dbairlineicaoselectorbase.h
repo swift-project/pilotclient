@@ -28,9 +28,7 @@ namespace swift::gui::components
     /*!
      * Airline ICAO selector base class
      */
-    class SWIFT_GUI_EXPORT CDbAirlineIcaoSelectorBase :
-        public QFrame,
-        public swift::gui::CDropBase
+    class SWIFT_GUI_EXPORT CDbAirlineIcaoSelectorBase : public QFrame, public swift::gui::CDropBase
     {
         Q_OBJECT
 
@@ -84,7 +82,8 @@ namespace swift::gui::components
 
     private:
         //! Airlines have been read
-        void onCodesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+        void onCodesRead(swift::misc::network::CEntityFlags::Entity entity,
+                         swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
         //! Data have been changed
         void onCompleterActivated(const QString &icaoString);

@@ -13,8 +13,7 @@
 namespace swift::gui::views
 {
     //! Distributors
-    class SWIFT_GUI_EXPORT CLiveryView :
-        public CViewWithDbObjects<models::CLiveryListModel>
+    class SWIFT_GUI_EXPORT CLiveryView : public CViewWithDbObjects<models::CLiveryListModel>
     {
         Q_OBJECT
 

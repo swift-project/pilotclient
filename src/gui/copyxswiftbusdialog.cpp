@@ -19,7 +19,8 @@ using namespace swift::core::context;
 
 namespace swift::gui
 {
-    int CCopyXSwiftBusDialog::displayDialogAndCopyBuildFiles(const QString &xplaneRootDir, bool checkLatestFile, QWidget *parent)
+    int CCopyXSwiftBusDialog::displayDialogAndCopyBuildFiles(const QString &xplaneRootDir, bool checkLatestFile,
+                                                             QWidget *parent)
     {
         if (!sGui || sGui->isShuttingDown()) { return 0; }
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return -1; }
@@ -34,10 +35,11 @@ namespace swift::gui
             }
         }
 
-        const QMessageBox::StandardButton reply = QMessageBox::question(parent,
-                                                                        "Copy xswiftbus",
-                                                                        QStringLiteral("Copy xswiftbus from build directory '%1' to plugin directory '%2'?").arg(CSwiftDirectories::getXSwiftBusBuildDirectory(), CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir)),
-                                                                        QMessageBox::Yes | QMessageBox::No);
+        const QMessageBox::StandardButton reply = QMessageBox::question(
+            parent, "Copy xswiftbus",
+            QStringLiteral("Copy xswiftbus from build directory '%1' to plugin directory '%2'?")
+                .arg(CSwiftDirectories::getXSwiftBusBuildDirectory(), CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir)),
+            QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) { return 0; }
         return CXPlaneUtil::copyXSwiftBusBuildFiles(xplaneRootDir);
     } // ns

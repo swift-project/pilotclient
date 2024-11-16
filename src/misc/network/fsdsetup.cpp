@@ -18,11 +18,11 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CFsdSetup)
 
 namespace swift::misc::network
 {
-    CFsdSetup::CFsdSetup(SendReceiveDetails sendReceive) : m_sendReceive(sendReceive)
-    {}
+    CFsdSetup::CFsdSetup(SendReceiveDetails sendReceive) : m_sendReceive(sendReceive) {}
 
     CFsdSetup::CFsdSetup(const QString &codec, SendReceiveDetails sendReceive)
-        : m_textCodec(codec), m_sendReceive(sendReceive) {}
+        : m_textCodec(codec), m_sendReceive(sendReceive)
+    {}
 
     CFsdSetup::SendReceiveDetails CFsdSetup::getSendReceiveDetails() const
     {
@@ -38,19 +38,20 @@ namespace swift::misc::network
 
     QString CFsdSetup::sendReceiveDetailsToString(SendReceiveDetails details)
     {
-        static const QString ds("Send parts; %1 gnd: %2 interim: %3 Receive parts: %4 gnd: %5 interim: %6 3letter: %7 ICAO equipment %8");
-        return ds.arg(boolToYesNo(details.testFlag(SendAircraftParts)),
-                      boolToYesNo(details.testFlag(SendGndFlag)),
-                      boolToYesNo(details.testFlag(SendInterimPositions)),
-                      boolToYesNo(details.testFlag(SendVisualPositions)),
-                      boolToYesNo(details.testFlag(ReceiveAircraftParts)),
-                      boolToYesNo(details.testFlag(ReceiveGndFlag)),
-                      boolToYesNo(details.testFlag(ReceiveInterimPositions)),
-                      boolToYesNo(details.testFlag(Force3LetterAirlineICAO)),
-                      boolToYesNo(details.testFlag(SendFplWithIcaoEquipment)));
+        static const QString ds(
+            "Send parts; %1 gnd: %2 interim: %3 Receive parts: %4 gnd: %5 interim: %6 3letter: %7 ICAO equipment %8");
+        return ds.arg(
+            boolToYesNo(details.testFlag(SendAircraftParts)), boolToYesNo(details.testFlag(SendGndFlag)),
+            boolToYesNo(details.testFlag(SendInterimPositions)), boolToYesNo(details.testFlag(SendVisualPositions)),
+            boolToYesNo(details.testFlag(ReceiveAircraftParts)), boolToYesNo(details.testFlag(ReceiveGndFlag)),
+            boolToYesNo(details.testFlag(ReceiveInterimPositions)),
+            boolToYesNo(details.testFlag(Force3LetterAirlineICAO)),
+            boolToYesNo(details.testFlag(SendFplWithIcaoEquipment)));
     }
 
-    void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive, bool icaoEquipment)
+    void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive,
+                                          bool interimSend, bool interimReceive, bool visualSend,
+                                          bool euroscopeSimDataReceive, bool icaoEquipment)
     {
         SendReceiveDetails s = Nothing;
         if (partsSend) { s |= SendAircraftParts; }
@@ -82,8 +83,14 @@ namespace swift::misc::network
     {
         static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
         CStatusMessageList msgs;
-        if (this->getTextCodec().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"No codec")); }
-        if (!textCodecNames(true, true).contains(this->getTextCodec())) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Unrecognized codec name")); }
+        if (this->getTextCodec().isEmpty())
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"No codec"));
+        }
+        if (!textCodecNames(true, true).contains(this->getTextCodec()))
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Unrecognized codec name"));
+        }
         msgs.addCategories(cats);
         return msgs;
     }
@@ -112,9 +119,7 @@ namespace swift::misc::network
         {
         case IndexTextCodec: this->setTextCodec(variant.value<QString>()); break;
         case IndexSendReceiveDetails: this->setSendReceiveDetails(variant.value<SendReceiveDetails>()); break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 

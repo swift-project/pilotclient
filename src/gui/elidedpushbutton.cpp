@@ -9,8 +9,7 @@
 
 namespace swift::gui
 {
-    CElidedPushButton::CElidedPushButton(QWidget *parent) : QPushButton(parent)
-    {}
+    CElidedPushButton::CElidedPushButton(QWidget *parent) : QPushButton(parent) {}
 
     CElidedPushButton::CElidedPushButton(const QString &text, QWidget *parent)
         : QPushButton(parent), m_elided(false), m_content(text)

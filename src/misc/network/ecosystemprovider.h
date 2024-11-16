@@ -86,7 +86,10 @@ namespace swift::misc::network
 
     protected:
         //! Constructor
-        CEcosystemAware(IEcosystemProvider *EcosystemProvider) : IProviderAware(EcosystemProvider) { Q_ASSERT(EcosystemProvider); }
+        CEcosystemAware(IEcosystemProvider *EcosystemProvider) : IProviderAware(EcosystemProvider)
+        {
+            Q_ASSERT(EcosystemProvider);
+        }
     };
 } // namespace swift::misc::network
 

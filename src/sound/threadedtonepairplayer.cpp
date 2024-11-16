@@ -14,9 +14,9 @@ using namespace swift::sound;
 
 namespace swift::sound
 {
-    CThreadedTonePairPlayer::CThreadedTonePairPlayer(QObject *owner, const QString &name, const CAudioDeviceInfo &device)
-        : CContinuousWorker(owner, name),
-          m_deviceInfo(device)
+    CThreadedTonePairPlayer::CThreadedTonePairPlayer(QObject *owner, const QString &name,
+                                                     const CAudioDeviceInfo &device)
+        : CContinuousWorker(owner, name), m_deviceInfo(device)
     {}
 
     void CThreadedTonePairPlayer::play(int volume, const QList<CTonePair> &tonePairs)
@@ -141,16 +141,19 @@ namespace swift::sound
         {
             // http://hyperphysics.phy-astr.gsu.edu/hbase/audio/sumdif.html
             // http://math.stackexchange.com/questions/164369/how-do-you-calculate-the-frequency-perceived-by-humans-of-two-sinusoidal-waves-a
-            const double pseudoTime = static_cast<double>(sampleIndexPerTonePair % this->m_audioFormat.sampleRate()) / this->m_audioFormat.sampleRate();
+            const double pseudoTime = static_cast<double>(sampleIndexPerTonePair % this->m_audioFormat.sampleRate()) /
+                                      this->m_audioFormat.sampleRate();
             double amplitude = 0.0; // amplitude -1 -> +1 , 0 is silence
             if (tonePair.getFirstFrequencyHz() > 10)
             {
                 // the combination of two frequencies actually would have 2*amplitude,
                 // but I have to normalize with amplitude -1 -> +1
-                amplitude = tonePair.getSecondFrequencyHz() == 0 ?
-                                qSin(2 * M_PI * tonePair.getFirstFrequencyHz() * pseudoTime) :
-                                qSin(M_PI * (tonePair.getFirstFrequencyHz() + tonePair.getSecondFrequencyHz()) * pseudoTime) *
-                                    qCos(M_PI * (tonePair.getFirstFrequencyHz() - tonePair.getSecondFrequencyHz()) * pseudoTime);
+                amplitude =
+                    tonePair.getSecondFrequencyHz() == 0 ?
+                        qSin(2 * M_PI * tonePair.getFirstFrequencyHz() * pseudoTime) :
+                        qSin(M_PI * (tonePair.getFirstFrequencyHz() + tonePair.getSecondFrequencyHz()) * pseudoTime) *
+                            qCos(M_PI * (tonePair.getFirstFrequencyHz() - tonePair.getSecondFrequencyHz()) *
+                                 pseudoTime);
             }
 
             // avoid overflow

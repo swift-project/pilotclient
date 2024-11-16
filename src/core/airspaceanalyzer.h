@@ -42,9 +42,11 @@ namespace swift::core
     //! Class monitoring and analyzing (closest aircraft, outdated aircraft / watchdog) airspace
     //! in background.
     //!
-    //! \details Watchdog functionality: This class was introduced due to a flaw in the VATSIM server implementation: Every client needs to send an add/delete packet on its own to inform other
-    //!          clients nearby. The server does not take care of that. When a client crashes, no delete packet is ever sent. This class therefore monitors callsigns and emits a timeout signal if it
-    //!          wasn't resetted during the specified timeout value.
+    //! \details Watchdog functionality: This class was introduced due to a flaw in the VATSIM server implementation:
+    //! Every client needs to send an add/delete packet on its own to inform other
+    //!          clients nearby. The server does not take care of that. When a client crashes, no delete packet is ever
+    //!          sent. This class therefore monitors callsigns and emits a timeout signal if it wasn't resetted during
+    //!          the specified timeout value.
     //!
     class SWIFT_CORE_EXPORT CAirspaceAnalyzer :
         public swift::misc::CContinuousWorker,
@@ -59,8 +61,7 @@ namespace swift::core
 
         //! Constructor
         CAirspaceAnalyzer(swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-                          fsd::CFSDClient *fsdClient,
-                          CAirspaceMonitor *airspaceMonitorParent);
+                          fsd::CFSDClient *fsdClient, CAirspaceMonitor *airspaceMonitorParent);
 
         //! Destructor
         virtual ~CAirspaceAnalyzer() override;
@@ -70,7 +71,9 @@ namespace swift::core
         swift::misc::simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const;
 
         //! Render restrictions in simulator
-        void setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const swift::misc::physical_quantities::CLength &maxRenderedDistance);
+        void
+        setSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft,
+                                              const swift::misc::physical_quantities::CLength &maxRenderedDistance);
 
         //! Enable/disable watchdog
         //! \remark primarily for debugging, where stopping at a breakpoint can cause multiple timeouts
@@ -100,14 +103,18 @@ namespace swift::core
         void watchdogTouchAircraftCallsign(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Reset timestamp for callsign
-        void watchdogTouchAtcCallsign(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CFrequency &frequency,
-                                      const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::physical_quantities::CLength &range);
+        void watchdogTouchAtcCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                      const swift::misc::physical_quantities::CFrequency &frequency,
+                                      const swift::misc::geo::CCoordinateGeodetic &position,
+                                      const swift::misc::physical_quantities::CLength &range);
 
         //! Connection status of network changed
-        void onConnectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus, swift::misc::network::CConnectionStatus newStatus);
+        void onConnectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus,
+                                       swift::misc::network::CConnectionStatus newStatus);
 
         //! Network position update
-        void onNetworkPositionUpdate(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CTransponder &transponder);
+        void onNetworkPositionUpdate(const swift::misc::aviation::CAircraftSituation &situation,
+                                     const swift::misc::aviation::CTransponder &transponder);
 
         //! ATC station disconnected
         void onAtcStationDisconnected(const swift::misc::aviation::CAtcStation &station);
@@ -124,8 +131,12 @@ namespace swift::core
         // watchdog
         CCallsignTimestampSet m_aircraftCallsignTimestamps; //!< for watchdog (pilots)
         CCallsignTimestampSet m_atcCallsignTimestamps; //!< for watchdog (ATC)
-        swift::misc::physical_quantities::CTime m_timeoutAircraft = { 15, swift::misc::physical_quantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
-        swift::misc::physical_quantities::CTime m_timeoutAtc = { 50, swift::misc::physical_quantities::CTimeUnit::s() }; //!< Timeout value for watchdog functionality
+        swift::misc::physical_quantities::CTime m_timeoutAircraft = {
+            15, swift::misc::physical_quantities::CTimeUnit::s()
+        }; //!< Timeout value for watchdog functionality
+        swift::misc::physical_quantities::CTime m_timeoutAtc = {
+            50, swift::misc::physical_quantities::CTimeUnit::s()
+        }; //!< Timeout value for watchdog functionality
         qint64 m_lastWatchdogCallMsSinceEpoch; //!< when last called
         qint64 m_doNotRunAgainBefore = -1; //!< do not run again before, also used to detect debugging
         std::atomic_bool m_enabledWatchdog { true }; //!< watchdog enabled

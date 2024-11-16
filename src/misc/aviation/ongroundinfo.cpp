@@ -12,19 +12,14 @@ using namespace swift::misc::physical_quantities;
 namespace swift::misc::aviation
 {
 
-    COnGroundInfo::COnGroundInfo(IsOnGround onGround, OnGroundDetails details) : m_onGroundDetails(static_cast<int>(details))
+    COnGroundInfo::COnGroundInfo(IsOnGround onGround, OnGroundDetails details)
+        : m_onGroundDetails(static_cast<int>(details))
     {
         switch (onGround)
         {
-        case IsOnGround::OnGroundSituationUnknown:
-            m_onGroundFactor = -1.0;
-            break;
-        case IsOnGround::OnGround:
-            m_onGroundFactor = 1.0;
-            break;
-        case IsOnGround::NotOnGround:
-            m_onGroundFactor = 0.0;
-            break;
+        case IsOnGround::OnGroundSituationUnknown: m_onGroundFactor = -1.0; break;
+        case IsOnGround::OnGround: m_onGroundFactor = 1.0; break;
+        case IsOnGround::NotOnGround: m_onGroundFactor = 0.0; break;
         }
     }
 
@@ -73,30 +68,20 @@ namespace swift::misc::aviation
         qRegisterMetaType<OnGroundDetails>();
     }
 
-    COnGroundInfo::COnGroundInfo(double interpolatedGndFactor) : m_onGroundDetails(static_cast<int>(OnGroundDetails::OnGroundByInterpolation)), m_onGroundFactor(interpolatedGndFactor)
+    COnGroundInfo::COnGroundInfo(double interpolatedGndFactor)
+        : m_onGroundDetails(static_cast<int>(OnGroundDetails::OnGroundByInterpolation)),
+          m_onGroundFactor(interpolatedGndFactor)
     {
         // Clip small ground factor values
-        if (m_onGroundFactor < 0.0)
-        {
-            m_onGroundFactor = -1.0;
-        }
-        else if (m_onGroundFactor < 0.001)
-        {
-            m_onGroundFactor = 0.0;
-        }
-        else if (m_onGroundFactor > 0.999)
-        {
-            m_onGroundFactor = 1.0;
-        }
+        if (m_onGroundFactor < 0.0) { m_onGroundFactor = -1.0; }
+        else if (m_onGroundFactor < 0.001) { m_onGroundFactor = 0.0; }
+        else if (m_onGroundFactor > 0.999) { m_onGroundFactor = 1.0; }
     }
 
     COnGroundInfo::COnGroundInfo(const CLength &cg, const CLength &groundDistance)
     {
         m_onGroundDetails = static_cast<int>(OnGroundDetails::OnGroundByElevationAndCG);
-        if (groundDistance.isNull())
-        {
-            m_onGroundFactor = -1.0;
-        }
+        if (groundDistance.isNull()) { m_onGroundFactor = -1.0; }
         else if (groundDistance.isNegativeWithEpsilonConsidered()) { m_onGroundFactor = 1.0; }
         else if (groundDistance.abs() < deltaNearGround()) { m_onGroundFactor = 1.0; }
         else if (!cg.isNull())
@@ -115,18 +100,12 @@ namespace swift::misc::aviation
         {
             return m_onGroundFactor > m_groundFactorThreshold;
         }
-        else
-        {
-            return math::CMathUtils::epsilonEqual(m_onGroundFactor, 1.0);
-        }
+        else { return math::CMathUtils::epsilonEqual(m_onGroundFactor, 1.0); }
     }
 
     COnGroundInfo::IsOnGround COnGroundInfo::getOnGround() const
     {
-        if (this->m_onGroundFactor < 0.0)
-        {
-            return OnGroundSituationUnknown;
-        }
+        if (this->m_onGroundFactor < 0.0) { return OnGroundSituationUnknown; }
 
         const bool onGround = isOnGround();
         return onGround ? OnGround : NotOnGround;
@@ -145,8 +124,8 @@ namespace swift::misc::aviation
 
     QString COnGroundInfo::convertToQString(bool /*i18n*/) const
     {
-        return u" | factor: " % QString::number(m_onGroundFactor, 'f', 2) %
-               u" | source: " % onGroundDetailsToString(static_cast<OnGroundDetails>(m_onGroundDetails));
+        return u" | factor: " % QString::number(m_onGroundFactor, 'f', 2) % u" | source: " %
+               onGroundDetailsToString(static_cast<OnGroundDetails>(m_onGroundDetails));
     }
 
     QVariant COnGroundInfo::propertyByIndex(CPropertyIndexRef index) const

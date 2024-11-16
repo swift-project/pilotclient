@@ -15,10 +15,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirportIcaoCode)
 
 namespace swift::misc::aviation
 {
-    QString CAirportIcaoCode::convertToQString(bool /** i18n **/) const
-    {
-        return m_icaoCode;
-    }
+    QString CAirportIcaoCode::convertToQString(bool /** i18n **/) const { return m_icaoCode; }
 
     bool CAirportIcaoCode::hasValidIcaoCode(bool strict) const
     {
@@ -80,7 +77,7 @@ namespace swift::misc::aviation
         return l >= 3 && l <= 6;
 
         // https://en.wikipedia.org/wiki/Location_identifier#FAA_identifier says can be up to 5 characters
-        // https://en.wikipedia.org/wiki/ICAO_airport_code#Pseudo_ICAO-codes says France has some 6-character airport codes
-        // and ZZZZ can be used in a flight plan as ICAO code for any airport that doesn't have one
+        // https://en.wikipedia.org/wiki/ICAO_airport_code#Pseudo_ICAO-codes says France has some 6-character airport
+        // codes and ZZZZ can be used in a flight plan as ICAO code for any airport that doesn't have one
     }
 } // namespace swift::misc::aviation

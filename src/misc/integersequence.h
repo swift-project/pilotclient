@@ -24,7 +24,8 @@ namespace swift::misc::private_ns
     template <size_t I, size_t... Is, bool... Mask, size_t... Js>
     struct MaskSequenceImpl<std::index_sequence<I, Is...>, std::index_sequence<Js...>, true, Mask...>
     {
-        using type = typename MaskSequenceImpl<std::index_sequence<Is...>, std::index_sequence<Js..., I>, Mask...>::type;
+        using type =
+            typename MaskSequenceImpl<std::index_sequence<Is...>, std::index_sequence<Js..., I>, Mask...>::type;
     };
 
     template <size_t I, size_t... Is, bool... Mask, size_t... Js>

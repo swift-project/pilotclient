@@ -23,7 +23,8 @@ namespace swift::misc
     {
 
         /*!
-         * \private Trait for obtaining the class type of a pointer to member type, or QObject if T is not a pointer to member.
+         * \private Trait for obtaining the class type of a pointer to member type, or QObject if T is not a pointer to
+         * member.
          */
         template <typename T>
         struct TClassOfPointerToMember
@@ -50,8 +51,8 @@ namespace swift::misc
 
         /*!
          * \private QObject subclass used by CCached<T> class template for signal/slot communication with CValueCache.
-         * An instance of this class is shared between all CCached<T> referring to the same CValueCache and owned by the same QObject,
-         * with the latter QObject becoming parent of this instance.
+         * An instance of this class is shared between all CCached<T> referring to the same CValueCache and owned by the
+         * same QObject, with the latter QObject becoming parent of this instance.
          */
         class SWIFT_MISC_EXPORT CValuePage : public QObject
         {
@@ -79,7 +80,8 @@ namespace swift::misc
             //! \param metaType The Qt metatype ID of the value object's expected type.
             //! \param validator Optional functor which returns true if the value is valid.
             //! \param defaultValue Optional value which is used in case the value is invalid.
-            Element &createElement(const QString &key, const QString &name, int metaType, const Validator &validator, const CVariant &defaultValue);
+            Element &createElement(const QString &key, const QString &name, int metaType, const Validator &validator,
+                                   const CVariant &defaultValue);
 
             //! Set the functor to call to notify that the value corresponding to the element's key was modified.
             void setNotifySlot(Element &element, const NotifySlot &slot);
@@ -116,7 +118,8 @@ namespace swift::misc
             //! Synchronize with a change caused by another page.
             //! Connected to signal CValueCache::valuesChanged.
             //! \param values The new values.
-            //! \param changedBy Pointer to the CValuePage which caused the change. Null if it was changed by another process.
+            //! \param changedBy Pointer to the CValuePage which caused the change. Null if it was changed by another
+            //! process.
             void setValuesFromCache(const swift::misc::CValueCachePacket &values, QObject *changedBy);
 
             //! Put this page into batching mode.
@@ -142,7 +145,8 @@ namespace swift::misc
             CVariantMap m_batchedValues;
 
             CValuePage(QObject *parent, CValueCache *cache);
-            CStatusMessage validate(const Element &element, const CVariant &value, CStatusMessage::StatusSeverity invalidSeverity) const;
+            CStatusMessage validate(const Element &element, const CVariant &value,
+                                    CStatusMessage::StatusSeverity invalidSeverity) const;
         };
 
     } // namespace private_ns

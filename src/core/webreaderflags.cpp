@@ -10,22 +10,19 @@ namespace swift::core
     CWebReaderFlags::WebReader CWebReaderFlags::entitiesToReaders(CEntityFlags::Entity entities)
     {
         WebReader f = None;
-        if (
-            entities.testFlag(CEntityFlags::AircraftIcaoEntity) || entities.testFlag(CEntityFlags::AirlineIcaoEntity) ||
+        if (entities.testFlag(CEntityFlags::AircraftIcaoEntity) || entities.testFlag(CEntityFlags::AirlineIcaoEntity) ||
             entities.testFlag(CEntityFlags::CountryEntity) || entities.testFlag(CEntityFlags::AircraftCategoryEntity))
         {
             f |= IcaoDataReader;
         }
 
-        if (entities.testFlag(CEntityFlags::ModelEntity) || entities.testFlag(CEntityFlags::DistributorEntity) || entities.testFlag(CEntityFlags::LiveryEntity))
+        if (entities.testFlag(CEntityFlags::ModelEntity) || entities.testFlag(CEntityFlags::DistributorEntity) ||
+            entities.testFlag(CEntityFlags::LiveryEntity))
         {
             f |= ModelReader;
         }
 
-        if (entities.testFlag(CEntityFlags::AirportEntity))
-        {
-            f |= AirportReader;
-        }
+        if (entities.testFlag(CEntityFlags::AirportEntity)) { f |= AirportReader; }
 
         if (entities.testFlag(CEntityFlags::DbInfoObjectEntity)) { f |= DbInfoDataReader; }
         if (entities.testFlag(CEntityFlags::VatsimDataFile)) { f |= VatsimDataReader; }
@@ -64,7 +61,8 @@ namespace swift::core
 
     bool CWebReaderFlags::isFromSwiftDb(WebReader reader)
     {
-        return reader.testFlag(ModelReader) || reader.testFlag(IcaoDataReader) || reader.testFlag(DbInfoDataReader) || reader.testFlag(AirportReader);
+        return reader.testFlag(ModelReader) || reader.testFlag(IcaoDataReader) || reader.testFlag(DbInfoDataReader) ||
+               reader.testFlag(AirportReader);
     }
 
     int CWebReaderFlags::numberOfReaders(WebReader readers)
@@ -77,8 +75,5 @@ namespace swift::core
         return n;
     }
 
-    bool CWebReaderFlags::isSingleReader(WebReader readers)
-    {
-        return numberOfReaders(readers) == 1;
-    }
+    bool CWebReaderFlags::isSingleReader(WebReader readers) { return numberOfReaders(readers) == 1; }
 } // namespace swift::core

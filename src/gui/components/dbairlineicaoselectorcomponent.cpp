@@ -26,8 +26,8 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::components
 {
-    CDbAirlineIcaoSelectorComponent::CDbAirlineIcaoSelectorComponent(QWidget *parent) : CDbAirlineIcaoSelectorBase(parent),
-                                                                                        ui(new Ui::CDbAirlineIcaoSelectorComponent)
+    CDbAirlineIcaoSelectorComponent::CDbAirlineIcaoSelectorComponent(QWidget *parent)
+        : CDbAirlineIcaoSelectorBase(parent), ui(new Ui::CDbAirlineIcaoSelectorComponent)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->le_Airline);
@@ -35,20 +35,17 @@ namespace swift::gui::components
         connect(ui->le_Airline, &QLineEdit::editingFinished, this, &CDbAirlineIcaoSelectorComponent::onDataChanged);
     }
 
-    CDbAirlineIcaoSelectorComponent::~CDbAirlineIcaoSelectorComponent()
-    {}
+    CDbAirlineIcaoSelectorComponent::~CDbAirlineIcaoSelectorComponent() {}
 
-    void CDbAirlineIcaoSelectorComponent::setReadOnly(bool readOnly)
-    {
-        ui->le_Airline->setReadOnly(readOnly);
-    }
+    void CDbAirlineIcaoSelectorComponent::setReadOnly(bool readOnly) { ui->le_Airline->setReadOnly(readOnly); }
 
     bool CDbAirlineIcaoSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
     {
         const bool changed = CDbAirlineIcaoSelectorBase::setAirlineIcao(icao);
 
         // Always update GUI regardless of changed because of formattimg
-        const QString icaoStr(m_display == DisplayVDesignatorAndId ? this->m_currentIcao.getVDesignatorDbKey() : this->m_currentIcao.getCombinedStringWithKey());
+        const QString icaoStr(m_display == DisplayVDesignatorAndId ? this->m_currentIcao.getVDesignatorDbKey() :
+                                                                     this->m_currentIcao.getCombinedStringWithKey());
         ui->le_Airline->setText(icaoStr);
         ui->lbl_Description->setText(this->m_currentIcao.getName());
         return changed;
@@ -75,7 +72,8 @@ namespace swift::gui::components
         // done for performance reasons
         // init only once, future instance can share thte list
         // only to be called when data are read!
-        static const QStringList cs(sGui->getWebDataServices()->getAirlineIcaoCodes().toIcaoDesignatorCompleterStrings(true, true));
+        static const QStringList cs(
+            sGui->getWebDataServices()->getAirlineIcaoCodes().toIcaoDesignatorCompleterStrings(true, true));
         return cs;
     }
 
@@ -98,10 +96,7 @@ namespace swift::gui::components
         if (s.isEmpty()) { return; }
         CAirlineIcaoCode icao;
         int dbKey = CDatastoreUtility::extractIntegerKey(s);
-        if (dbKey >= 0)
-        {
-            icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey);
-        }
+        if (dbKey >= 0) { icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey); }
         else
         {
             const QString designator = this->getRawDesignator();

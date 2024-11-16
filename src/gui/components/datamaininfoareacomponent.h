@@ -30,8 +30,7 @@ namespace swift::gui::components
     /*!
      * Main info area for data entry tool
      */
-    class SWIFT_GUI_EXPORT CDataMainInfoAreaComponent :
-        public swift::gui::CInfoArea
+    class SWIFT_GUI_EXPORT CDataMainInfoAreaComponent : public swift::gui::CInfoArea
     {
         Q_OBJECT
 

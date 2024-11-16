@@ -23,8 +23,7 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CCallsignCompleter::CCallsignCompleter(QWidget *parent) : QFrame(parent),
-                                                              ui(new Ui::CCallsignCompleter)
+    CCallsignCompleter::CCallsignCompleter(QWidget *parent) : QFrame(parent), ui(new Ui::CCallsignCompleter)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         Q_ASSERT_X(sGui->getIContextNetwork(), Q_FUNC_INFO, "Need network context");
@@ -37,31 +36,27 @@ namespace swift::gui::components
         ui->led_Status->setToolTips("network connected", "network disconnected", "data");
         ui->led_Status->setShape(CLedWidget::Rounded);
         connect(ui->le_Callsign, &QLineEdit::editingFinished, this, &CCallsignCompleter::onEditingFinished);
-        connect(sGui->getIContextNetwork(), &IContextNetwork::changedAircraftInRange, &m_dsAircraftsInRangeChanged, &CDigestSignal::inputSignal);
-        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CCallsignCompleter::onChangedConnectionStatus, Qt::QueuedConnection);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::changedAircraftInRange, &m_dsAircraftsInRangeChanged,
+                &CDigestSignal::inputSignal);
+        connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
+                &CCallsignCompleter::onChangedConnectionStatus, Qt::QueuedConnection);
         m_dsAircraftsInRangeChanged.inputSignal(); // trigger
     }
 
-    CCallsignCompleter::~CCallsignCompleter()
-    {}
+    CCallsignCompleter::~CCallsignCompleter() {}
 
     CCallsign CCallsignCompleter::getCallsign(bool onlyKnownCallsign) const
     {
         const QString csString = ui->le_Callsign->text().trimmed().toUpper();
-        const bool valid = onlyKnownCallsign ? this->isValidKnownCallsign(csString) : CCallsign::isValidAircraftCallsign(csString);
+        const bool valid =
+            onlyKnownCallsign ? this->isValidKnownCallsign(csString) : CCallsign::isValidAircraftCallsign(csString);
         if (!valid) { return CCallsign(); }
         return CCallsign(csString, CCallsign::Aircraft);
     }
 
-    void CCallsignCompleter::setCallsign(const CCallsign &cs)
-    {
-        ui->le_Callsign->setText(cs.asString());
-    }
+    void CCallsignCompleter::setCallsign(const CCallsign &cs) { ui->le_Callsign->setText(cs.asString()); }
 
-    QString CCallsignCompleter::getRawCallsignString() const
-    {
-        return ui->le_Callsign->text();
-    }
+    QString CCallsignCompleter::getRawCallsignString() const { return ui->le_Callsign->text(); }
 
     bool CCallsignCompleter::hasValidCallsign() const
     {
@@ -87,18 +82,12 @@ namespace swift::gui::components
             //! \todo KB 2020-04 transfers allaircraft via DBus
             validCallsigns = sGui->getIContextNetwork()->getAircraftInRange().getCallsignsWithSynchronizedParts();
         }
-        else
-        {
-            validCallsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns();
-        }
+        else { validCallsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns(); }
 
         if (m_addOwnCallsign && sGui->getIContextOwnAircraft())
         {
             const CCallsign ownCs = sGui->getIContextOwnAircraft()->getOwnAircraft().getCallsign();
-            if (!ownCs.isEmpty())
-            {
-                validCallsigns.insert(ownCs);
-            }
+            if (!ownCs.isEmpty()) { validCallsigns.insert(ownCs); }
         }
 
         const QStringList modelData = validCallsigns.getCallsignStrings(true);
@@ -119,10 +108,7 @@ namespace swift::gui::components
         }
     }
 
-    void CCallsignCompleter::onChangedAircraftInRange()
-    {
-        this->updateCallsignsFromContext();
-    }
+    void CCallsignCompleter::onChangedAircraftInRange() { this->updateCallsignsFromContext(); }
 
     void CCallsignCompleter::onChangedConnectionStatus(const CConnectionStatus &from, const CConnectionStatus &to)
     {
@@ -131,10 +117,7 @@ namespace swift::gui::components
         ui->led_Status->setOn(connected);
         ui->le_Callsign->clear();
         ui->le_Callsign->setEnabled(connected);
-        if (!connected)
-        {
-            completer()->clearData();
-        }
+        if (!connected) { completer()->clearData(); }
     }
 
     bool CCallsignCompleter::isValidKnownCallsign(const QString &callsignString) const

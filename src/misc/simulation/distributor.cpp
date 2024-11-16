@@ -18,12 +18,11 @@ namespace swift::misc::simulation
 {
     CDistributor::CDistributor() {}
 
-    CDistributor::CDistributor(const QString &key)
-    {
-        this->setDbKey(unifyKeyOrAlias(key));
-    }
+    CDistributor::CDistributor(const QString &key) { this->setDbKey(unifyKeyOrAlias(key)); }
 
-    CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1, const QString &alias2, const CSimulatorInfo &simulator) : m_description(description), m_alias1(alias1), m_alias2(alias2), m_simulator(simulator)
+    CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1,
+                               const QString &alias2, const CSimulatorInfo &simulator)
+        : m_description(description), m_alias1(alias1), m_alias2(alias2), m_simulator(simulator)
     {
         this->setDbKey(unifyKeyOrAlias(id));
     }
@@ -60,7 +59,10 @@ namespace swift::misc::simulation
     QVariant CDistributor::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::propertyByIndex(index); }
+        if (IDatastoreObjectWithStringKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithStringKey::propertyByIndex(index);
+        }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -70,8 +72,7 @@ namespace swift::misc::simulation
         case IndexAlias2: return QVariant::fromValue(m_alias2);
         case IndexDescription: return QVariant::fromValue(m_description);
         case IndexSimulator: return m_simulator.propertyByIndex(index.copyFrontRemoved());
-        default:
-            return CValueObject::propertyByIndex(index);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -106,7 +107,10 @@ namespace swift::misc::simulation
 
     int CDistributor::comparePropertyByIndex(CPropertyIndexRef index, const CDistributor &compareValue) const
     {
-        if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue); }
+        if (IDatastoreObjectWithStringKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue);
+        }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -115,9 +119,9 @@ namespace swift::misc::simulation
         case IndexAlias1: return m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
         case IndexAlias2: return m_alias2.compare(compareValue.m_alias2, Qt::CaseInsensitive);
         case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
-        case IndexSimulator: return m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_simulator);
-        default:
-            break;
+        case IndexSimulator:
+            return m_simulator.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_simulator);
+        default: break;
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
         return 0;
@@ -132,17 +136,20 @@ namespace swift::misc::simulation
         return s;
     }
 
-    bool CDistributor::hasCompleteData() const
-    {
-        return !m_description.isEmpty() && !m_dbKey.isEmpty();
-    }
+    bool CDistributor::hasCompleteData() const { return !m_description.isEmpty() && !m_dbKey.isEmpty(); }
 
     CStatusMessageList CDistributor::validate() const
     {
         static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
         CStatusMessageList msgs;
-        if (!hasValidDbKey()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Distributor: missing id")); }
-        if (!hasDescription()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Distributor: missing description")); }
+        if (!hasValidDbKey())
+        {
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Distributor: missing id"));
+        }
+        if (!hasDescription())
+        {
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Distributor: missing description"));
+        }
         return msgs;
     }
 

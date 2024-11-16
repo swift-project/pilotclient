@@ -40,7 +40,11 @@ namespace swift::misc::geo
         CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other);
 
         //! Average height within range and having an height
-        CElevationPlane averageGeodeticHeight(const CCoordinateGeodetic &reference, const physical_quantities::CLength &range, const physical_quantities::CLength &maxDeviation = physical_quantities::CLength(1.0, physical_quantities::CLengthUnit::m()), int minValues = 3, int sufficentValues = 5) const;
+        CElevationPlane
+        averageGeodeticHeight(const CCoordinateGeodetic &reference, const physical_quantities::CLength &range,
+                              const physical_quantities::CLength &maxDeviation =
+                                  physical_quantities::CLength(1.0, physical_quantities::CLengthUnit::m()),
+                              int minValues = 3, int sufficentValues = 5) const;
     };
 } // namespace swift::misc::geo
 

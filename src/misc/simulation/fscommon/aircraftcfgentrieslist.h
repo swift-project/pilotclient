@@ -53,16 +53,20 @@ namespace swift::misc::simulation::fscommon
         QString getTitlesAsString(bool sorted, const QString &separator = ", ") const;
 
         //! As aircraft models
-        swift::misc::simulation::CAircraftModelList toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
+        swift::misc::simulation::CAircraftModelList toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings,
+                                                                        CStatusMessageList &msgs) const;
 
         //! As aircraft models for simulator
-        swift::misc::simulation::CAircraftModelList toAircraftModelList(const swift::misc::simulation::CSimulatorInfo &simInfo, bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
+        swift::misc::simulation::CAircraftModelList
+        toAircraftModelList(const swift::misc::simulation::CSimulatorInfo &simInfo,
+                            bool ignoreDuplicatesAndEmptyModelStrings, CStatusMessageList &msgs) const;
 
         //! Ambiguous titles
         QStringList detectAmbiguousTitles() const;
 
         //! Find by title
-        CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
+        CAircraftCfgEntriesList findByTitle(const QString &title,
+                                            Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive) const;
 
         //! Can check if a title (model string) is known
         bool containsTitle(const QString &title) const;

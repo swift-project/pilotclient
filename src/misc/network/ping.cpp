@@ -16,10 +16,7 @@ namespace swift::misc::network
         if (hostAddress.isEmpty()) { return false; }
         QProcess process;
         process.setProgram("ping");
-        if (CBuildConfig::isRunningOnWindowsNtPlatform())
-        {
-            process.setArguments({ "-n", "1", hostAddress });
-        }
+        if (CBuildConfig::isRunningOnWindowsNtPlatform()) { process.setArguments({ "-n", "1", hostAddress }); }
         else
         {
             // all UNIX alike

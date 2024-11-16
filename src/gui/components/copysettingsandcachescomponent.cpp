@@ -31,8 +31,8 @@ using namespace swift::gui::settings;
 
 namespace swift::gui::components
 {
-    CCopySettingsAndCachesComponent::CCopySettingsAndCachesComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                                        ui(new Ui::CCopySettingsAndCachesComponent)
+    CCopySettingsAndCachesComponent::CCopySettingsAndCachesComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CCopySettingsAndCachesComponent)
     {
         ui->setupUi(this);
         this->initAll();
@@ -40,11 +40,11 @@ namespace swift::gui::components
         connect(ui->pb_SelectAll, &QPushButton::clicked, this, &CCopySettingsAndCachesComponent::selectAll);
         connect(ui->pb_DeselectAll, &QPushButton::clicked, this, &CCopySettingsAndCachesComponent::deselectAll);
         connect(ui->pb_Copy, &QPushButton::clicked, this, &CCopySettingsAndCachesComponent::copy);
-        connect(ui->comp_OtherSwiftVersions, &COtherSwiftVersionsComponent::versionChanged, this, &CCopySettingsAndCachesComponent::onOtherVersionChanged);
+        connect(ui->comp_OtherSwiftVersions, &COtherSwiftVersionsComponent::versionChanged, this,
+                &CCopySettingsAndCachesComponent::onOtherVersionChanged);
     }
 
-    CCopySettingsAndCachesComponent::~CCopySettingsAndCachesComponent()
-    {}
+    CCopySettingsAndCachesComponent::~CCopySettingsAndCachesComponent() {}
 
     void CCopySettingsAndCachesComponent::reloadOtherVersions(int deferMs)
     {
@@ -53,29 +53,47 @@ namespace swift::gui::components
 
     void CCopySettingsAndCachesComponent::onOtherVersionChanged(const CApplicationInfo &info)
     {
-        readOnlyCheckbox(ui->cb_SettingsAudio, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAudio.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsAudioInputDevice, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAudio.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsAudioOutputDevice, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAudioOutputDevice.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsAudio,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAudio.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsAudioInputDevice,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsAudio.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsAudioOutputDevice, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
+                                                               info, m_settingsAudioOutputDevice.getFilename()));
 
-        readOnlyCheckbox(ui->cb_SettingsNetworkTrafficServers, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsNetworkServers.getFilename()));
-        readOnlyCheckbox(ui->cb_CacheLastNetworkServer, !CCacheSettingsUtils::hasOtherVersionCacheFile(info, m_cacheLastNetworkServer.getFilename()));
-        readOnlyCheckbox(ui->cb_CacheLastVatsimServer, !CCacheSettingsUtils::hasOtherVersionCacheFile(info, m_cacheLastVatsimServer.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsNetworkTrafficServers, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
+                                                                   info, m_settingsNetworkServers.getFilename()));
+        readOnlyCheckbox(ui->cb_CacheLastNetworkServer,
+                         !CCacheSettingsUtils::hasOtherVersionCacheFile(info, m_cacheLastNetworkServer.getFilename()));
+        readOnlyCheckbox(ui->cb_CacheLastVatsimServer,
+                         !CCacheSettingsUtils::hasOtherVersionCacheFile(info, m_cacheLastVatsimServer.getFilename()));
 
-        readOnlyCheckbox(ui->cb_SettingsGuiGeneral, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsGuiGeneral.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsDockWidget, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsDockWidget.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsViewUpdate, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsViewUpdate.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsGuiGeneral,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsGuiGeneral.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsDockWidget,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsDockWidget.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsViewUpdate,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsViewUpdate.getFilename()));
 
-        readOnlyCheckbox(ui->cb_SettingsEnabledSimulators, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsEnabledSimulators.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsSimulatorFSX, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorFsx.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsSimulatorP3D, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorP3D.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsSimulatorXPlane, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorXPlane.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsEnabledSimulators, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
+                                                               info, m_settingsEnabledSimulators.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsSimulatorFSX,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorFsx.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsSimulatorP3D,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorP3D.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsSimulatorXPlane, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
+                                                             info, m_settingsSimulatorXPlane.getFilename()));
 
-        readOnlyCheckbox(ui->cb_SettingsActionHotkeys, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsActionHotkeys.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsTextMessages, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsTextMessage.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsDirectories, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsDirectories.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsActionHotkeys, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
+                                                           info, m_settingsActionHotkeys.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsTextMessages,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsTextMessage.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsDirectories,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsDirectories.getFilename()));
 
-        readOnlyCheckbox(ui->cb_SettingsConsolidation, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsConsolidation.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsModel, !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsModel.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsConsolidation, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
+                                                           info, m_settingsConsolidation.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsModel,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsModel.getFilename()));
     }
 
     void CCopySettingsAndCachesComponent::initAll()
@@ -145,13 +163,15 @@ namespace swift::gui::components
         // ------- audio -------
         if (ui->cb_SettingsAudio->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAudio.getFilename());
+            const QString joStr =
+                CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAudio.getFilename());
             if (!joStr.isEmpty())
             {
                 const audio::CSettings audioSettings = audio::CSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                 if (this->parsingMessage(success, errMsg, m_settingsAudio.getKey()))
                 {
-                    this->displayStatusMessage(m_settingsAudio.setAndSave(audioSettings), audioSettings.toQString(true));
+                    this->displayStatusMessage(m_settingsAudio.setAndSave(audioSettings),
+                                               audioSettings.toQString(true));
                     copied++;
                 }
             }
@@ -159,22 +179,26 @@ namespace swift::gui::components
 
         if (ui->cb_SettingsAudioInputDevice->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAudioInputDevice.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsAudioInputDevice.getFilename());
             const QString audioInputSettings = json::firstJsonValueAsString(joStr);
             if (!audioInputSettings.isEmpty())
             {
-                this->displayStatusMessage(m_settingsAudioInputDevice.setAndSave(audioInputSettings), audioInputSettings);
+                this->displayStatusMessage(m_settingsAudioInputDevice.setAndSave(audioInputSettings),
+                                           audioInputSettings);
                 copied++;
             }
         }
 
         if (ui->cb_SettingsAudioOutputDevice->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsAudioOutputDevice.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsAudioOutputDevice.getFilename());
             const QString audioOutputSettings = json::firstJsonValueAsString(joStr);
             if (!audioOutputSettings.isEmpty())
             {
-                this->displayStatusMessage(m_settingsAudioOutputDevice.setAndSave(audioOutputSettings), audioOutputSettings);
+                this->displayStatusMessage(m_settingsAudioOutputDevice.setAndSave(audioOutputSettings),
+                                           audioOutputSettings);
                 copied++;
             }
         }
@@ -182,11 +206,16 @@ namespace swift::gui::components
         // ------- directories -------
         if (ui->cb_SettingsDirectories->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsDirectories.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsDirectories.getFilename());
             if (!joStr.isEmpty())
             {
                 const CDirectories directories = CDirectories::fromJsonNoThrow(joStr, true, success, errMsg);
-                if (this->parsingMessage(success, errMsg, m_settingsDirectories.getKey())) { this->displayStatusMessage(m_settingsDirectories.setAndSave(directories), directories.toQString(true)); }
+                if (this->parsingMessage(success, errMsg, m_settingsDirectories.getKey()))
+                {
+                    this->displayStatusMessage(m_settingsDirectories.setAndSave(directories),
+                                               directories.toQString(true));
+                }
                 copied++;
             }
         }
@@ -194,13 +223,15 @@ namespace swift::gui::components
         // ------- network -------
         if (ui->cb_SettingsNetworkTrafficServers->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsNetworkServers.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsNetworkServers.getFilename());
             if (!joStr.isEmpty())
             {
                 const CServerList networkServers = CServerList::fromJsonNoThrow(joStr, true, success, errMsg);
                 if (this->parsingMessage(success, errMsg, m_settingsNetworkServers.getKey()))
                 {
-                    this->displayStatusMessage(m_settingsNetworkServers.setAndSave(networkServers), networkServers.toQString(true));
+                    this->displayStatusMessage(m_settingsNetworkServers.setAndSave(networkServers),
+                                               networkServers.toQString(true));
                     copied++;
                 }
             }
@@ -208,7 +239,8 @@ namespace swift::gui::components
 
         if (ui->cb_CacheLastNetworkServer->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionCacheFileContent(otherVersionInfo, m_cacheLastNetworkServer.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionCacheFileContent(
+                otherVersionInfo, m_cacheLastNetworkServer.getFilename());
             if (!joStr.isEmpty())
             {
                 const CServer server = CServer::fromJsonNoThrow(joStr, true, success, errMsg);
@@ -222,7 +254,8 @@ namespace swift::gui::components
 
         if (ui->cb_CacheLastVatsimServer->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionCacheFileContent(otherVersionInfo, m_cacheLastVatsimServer.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionCacheFileContent(
+                otherVersionInfo, m_cacheLastVatsimServer.getFilename());
             if (!joStr.isEmpty())
             {
                 const CServer server = CServer::fromJsonNoThrow(joStr, true, success, errMsg);
@@ -237,10 +270,12 @@ namespace swift::gui::components
         // ------- GUI -------
         if (ui->cb_SettingsGuiGeneral->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsGuiGeneral.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsGuiGeneral.getFilename());
             if (!joStr.isEmpty())
             {
-                const CGeneralGuiSettings guiGeneral = CGeneralGuiSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                const CGeneralGuiSettings guiGeneral =
+                    CGeneralGuiSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                 this->displayStatusMessage(m_settingsGuiGeneral.setAndSave(guiGeneral), guiGeneral.toQString(true));
                 copied++;
             }
@@ -248,10 +283,12 @@ namespace swift::gui::components
 
         if (ui->cb_SettingsDockWidget->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsDockWidget.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsDockWidget.getFilename());
             if (!joStr.isEmpty())
             {
-                const CDockWidgetSettings dwSettings = CDockWidgetSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                const CDockWidgetSettings dwSettings =
+                    CDockWidgetSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                 this->displayStatusMessage(m_settingsDockWidget.setAndSave(dwSettings), dwSettings.toQString(true));
                 copied++;
             }
@@ -259,10 +296,12 @@ namespace swift::gui::components
 
         if (ui->cb_SettingsViewUpdate->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsViewUpdate.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsViewUpdate.getFilename());
             if (!joStr.isEmpty())
             {
-                const CViewUpdateSettings viewUpdate = CViewUpdateSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                const CViewUpdateSettings viewUpdate =
+                    CViewUpdateSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                 this->displayStatusMessage(m_settingsViewUpdate.setAndSave(viewUpdate), viewUpdate.toQString(true));
                 copied++;
             }
@@ -271,13 +310,15 @@ namespace swift::gui::components
         // ------- sims -------
         if (ui->cb_SettingsEnabledSimulators->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsEnabledSimulators.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsEnabledSimulators.getFilename());
             if (!joStr.isEmpty())
             {
                 const QStringList enabledSims = json::firstJsonValueAsStringList(joStr);
                 if (!enabledSims.isEmpty())
                 {
-                    this->displayStatusMessage(m_settingsEnabledSimulators.setAndSave(enabledSims), enabledSims.join(", "));
+                    this->displayStatusMessage(m_settingsEnabledSimulators.setAndSave(enabledSims),
+                                               enabledSims.join(", "));
                     copied++;
                 }
             }
@@ -285,33 +326,46 @@ namespace swift::gui::components
 
         if (ui->cb_SettingsSimulatorFSX->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsSimulatorFsx.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsSimulatorFsx.getFilename());
             if (!joStr.isEmpty())
             {
                 const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                if (this->parsingMessage(success, errMsg, m_settingsSimulatorFsx.getKey())) { this->displayStatusMessage(m_settingsSimulatorFsx.setAndSave(settings), settings.toQString(true)); }
+                if (this->parsingMessage(success, errMsg, m_settingsSimulatorFsx.getKey()))
+                {
+                    this->displayStatusMessage(m_settingsSimulatorFsx.setAndSave(settings), settings.toQString(true));
+                }
                 copied++;
             }
         }
 
         if (ui->cb_SettingsSimulatorP3D->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsSimulatorP3D.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsSimulatorP3D.getFilename());
             if (!joStr.isEmpty())
             {
                 const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                if (this->parsingMessage(success, errMsg, m_settingsSimulatorP3D.getKey())) { this->displayStatusMessage(m_settingsSimulatorP3D.setAndSave(settings), settings.toQString(true)); }
+                if (this->parsingMessage(success, errMsg, m_settingsSimulatorP3D.getKey()))
+                {
+                    this->displayStatusMessage(m_settingsSimulatorP3D.setAndSave(settings), settings.toQString(true));
+                }
                 copied++;
             }
         }
 
         if (ui->cb_SettingsSimulatorXPlane->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsSimulatorXPlane.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsSimulatorXPlane.getFilename());
             if (!joStr.isEmpty())
             {
                 const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                if (this->parsingMessage(success, errMsg, m_settingsSimulatorXPlane.getKey())) { this->displayStatusMessage(m_settingsSimulatorXPlane.setAndSave(settings), settings.toQString(true)); }
+                if (this->parsingMessage(success, errMsg, m_settingsSimulatorXPlane.getKey()))
+                {
+                    this->displayStatusMessage(m_settingsSimulatorXPlane.setAndSave(settings),
+                                               settings.toQString(true));
+                }
                 copied++;
             }
         }
@@ -319,7 +373,8 @@ namespace swift::gui::components
         // ------ model ------
         if (ui->cb_SettingsModel->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsModel.getFilename());
+            const QString joStr =
+                CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsModel.getFilename());
             if (!joStr.isEmpty())
             {
                 const CModelSettings settings = CModelSettings::fromJsonNoThrow(joStr, true, success, errMsg);
@@ -333,14 +388,16 @@ namespace swift::gui::components
 
         if (ui->cb_SettingsConsolidation->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsConsolidation.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsConsolidation.getFilename());
             if (!joStr.isEmpty())
             {
                 bool ok = false;
                 const int consolidation = json::firstJsonValueAsInt(joStr, -1, &ok);
                 if (ok)
                 {
-                    this->displayStatusMessage(m_settingsConsolidation.setAndSave(consolidation), QString::number(consolidation));
+                    this->displayStatusMessage(m_settingsConsolidation.setAndSave(consolidation),
+                                               QString::number(consolidation));
                     copied++;
                 }
             }
@@ -349,7 +406,8 @@ namespace swift::gui::components
         // ------ misc -------
         if (ui->cb_SettingsActionHotkeys->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsActionHotkeys.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsActionHotkeys.getFilename());
             if (!joStr.isEmpty())
             {
                 CActionHotkeyList hotkeys = CActionHotkeyList::fromJsonNoThrow(joStr, true, success, errMsg);
@@ -364,10 +422,12 @@ namespace swift::gui::components
 
         if (ui->cb_SettingsTextMessages->isChecked())
         {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(otherVersionInfo, m_settingsTextMessage.getFilename());
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsTextMessage.getFilename());
             if (!joStr.isEmpty())
             {
-                const CTextMessageSettings settings = CTextMessageSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                const CTextMessageSettings settings =
+                    CTextMessageSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                 if (this->parsingMessage(success, errMsg, m_settingsTextMessage.getKey()))
                 {
                     this->displayStatusMessage(m_settingsTextMessage.setAndSave(settings), settings.toQString(true));
@@ -387,24 +447,15 @@ namespace swift::gui::components
 
     void CCopySettingsAndCachesComponent::selectAll()
     {
-        for (QCheckBox *cb : this->checkBoxes())
-        {
-            cb->setChecked(cb->isEnabled());
-        }
+        for (QCheckBox *cb : this->checkBoxes()) { cb->setChecked(cb->isEnabled()); }
     }
 
     void CCopySettingsAndCachesComponent::deselectAll()
     {
-        for (QCheckBox *cb : this->checkBoxes())
-        {
-            cb->setChecked(false);
-        }
+        for (QCheckBox *cb : this->checkBoxes()) { cb->setChecked(false); }
     }
 
-    QList<QCheckBox *> CCopySettingsAndCachesComponent::checkBoxes() const
-    {
-        return this->findChildren<QCheckBox *>();
-    }
+    QList<QCheckBox *> CCopySettingsAndCachesComponent::checkBoxes() const { return this->findChildren<QCheckBox *>(); }
 
     bool CCopySettingsAndCachesComponent::parsingMessage(bool success, const QString &msg, const QString &value)
     {
@@ -417,23 +468,14 @@ namespace swift::gui::components
     void CCopySettingsAndCachesComponent::displayStatusMessage(const CStatusMessage &msg, const QString &value)
     {
         if (msg.isEmpty()) { return; }
-        if (value.isEmpty())
-        {
-            ui->le_Status->setText(msg.getMessage());
-        }
-        else
-        {
-            ui->le_Status->setText(msg.getMessage() % u' ' % value);
-        }
+        if (value.isEmpty()) { ui->le_Status->setText(msg.getMessage()); }
+        else { ui->le_Status->setText(msg.getMessage() % u' ' % value); }
         if (sGui) { sGui->processEventsToRefreshGui(); }
     }
 
     void CCopySettingsAndCachesComponent::allCheckBoxesReadOnly()
     {
-        for (QCheckBox *cb : checkBoxes())
-        {
-            readOnlyCheckbox(cb, true);
-        }
+        for (QCheckBox *cb : checkBoxes()) { readOnlyCheckbox(cb, true); }
     }
 
     void CCopySettingsAndCachesComponent::readOnlyCheckbox(QCheckBox *cb, bool readOnly)
@@ -456,9 +498,6 @@ namespace swift::gui::components
         if (m_copyCachesAndSettings) { m_copyCachesAndSettings->reloadOtherVersions(1000); }
     }
 
-    bool CCopySettingsAndCachesWizardPage::validatePage()
-    {
-        return true;
-    }
+    bool CCopySettingsAndCachesWizardPage::validatePage() { return true; }
 
 } // namespace swift::gui::components

@@ -71,7 +71,8 @@ namespace XSwiftBus
         //! \param interfaceName
         //! \param objectPath
         //! \param dbusObjectPathVTable Virtual table handling DBus messages
-        void registerObjectPath(CDBusObject *object, const std::string &interfaceName, const std::string &objectPath, const DBusObjectPathVTable &dbusObjectPathVTable);
+        void registerObjectPath(CDBusObject *object, const std::string &interfaceName, const std::string &objectPath,
+                                const DBusObjectPathVTable &dbusObjectPathVTable);
 
         //! Send message to bus
         void sendMessage(const CDBusMessage &message);
@@ -89,7 +90,8 @@ namespace XSwiftBus
     private:
         void setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status);
         static void setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status, void *data);
-        static DBusHandlerResult filterDisconnectedFunction(DBusConnection *connection, DBusMessage *message, void *data);
+        static DBusHandlerResult filterDisconnectedFunction(DBusConnection *connection, DBusMessage *message,
+                                                            void *data);
 
         struct DBusConnectionDeleter
         {

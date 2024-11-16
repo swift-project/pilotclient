@@ -20,7 +20,8 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CPrecipitationRateFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay()) {}
+        CPrecipitationRateFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay())
+        {}
 
         //! \copydoc CDefaultFormatter::displayRole
         virtual CVariant displayRole(const CVariant &dataCVariant) const override
@@ -115,8 +116,10 @@ namespace swift::gui::models
     {
         this->m_columns.addColumn(CColumn("base", CCloudLayer::IndexBase, new CAltitudeFormatter()));
         this->m_columns.addColumn(CColumn("top", CCloudLayer::IndexTop, new CAltitudeFormatter()));
-        this->m_columns.addColumn(CColumn("precipitation rate", CCloudLayer::IndexPrecipitationRate, new CPrecipitationRateFormatter()));
-        this->m_columns.addColumn(CColumn("precipitation", CCloudLayer::IndexPrecipitation, new CPrecipitationFormatter()));
+        this->m_columns.addColumn(
+            CColumn("precipitation rate", CCloudLayer::IndexPrecipitationRate, new CPrecipitationRateFormatter()));
+        this->m_columns.addColumn(
+            CColumn("precipitation", CCloudLayer::IndexPrecipitation, new CPrecipitationFormatter()));
         this->m_columns.addColumn(CColumn("clouds", CCloudLayer::IndexClouds, new CCloudsFormatter()));
         this->m_columns.addColumn(CColumn("coverage", CCloudLayer::IndexCoveragePercent, new CCoverageFormatter()));
 

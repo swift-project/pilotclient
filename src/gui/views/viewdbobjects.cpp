@@ -71,10 +71,7 @@ namespace swift::gui::views
         {
             r++;
             if (!obj.hasValidDbKey()) { continue; }
-            if (keys.contains(obj.getDbKey()))
-            {
-                rows.insert(r);
-            }
+            if (keys.contains(obj.getDbKey())) { rows.insert(r); }
         }
         return this->selectRows(rows);
     }
@@ -95,10 +92,7 @@ namespace swift::gui::views
 
         ContainerType newObjects(this->container());
         int delta = newObjects.removeObjectsWithKeys(keys);
-        if (delta > 0)
-        {
-            this->updateContainerMaybeAsync(newObjects);
-        }
+        if (delta > 0) { this->updateContainerMaybeAsync(newObjects); }
         return delta;
     }
 
@@ -128,7 +122,8 @@ namespace swift::gui::views
     }
 
     template <class T>
-    COrderableViewWithDbObjects<T>::COrderableViewWithDbObjects(QWidget *parent) : CViewWithDbObjects<T>::CViewWithDbObjects(parent)
+    COrderableViewWithDbObjects<T>::COrderableViewWithDbObjects(QWidget *parent)
+        : CViewWithDbObjects<T>::CViewWithDbObjects(parent)
     {
         // void
     }
@@ -163,7 +158,8 @@ namespace swift::gui::views
                     m_leOrder->setValidator(m_validator);
                     QWidgetAction *orderAction = new QWidgetAction(this);
                     orderAction->setDefaultWidget(m_frame);
-                    QObject::connect(m_leOrder, &QLineEdit::returnPressed, this, &COrderableViewWithDbObjects<T>::orderToLineEdit);
+                    QObject::connect(m_leOrder, &QLineEdit::returnPressed, this,
+                                     &COrderableViewWithDbObjects<T>::orderToLineEdit);
                     m_menuActions[0] = orderAction;
                 }
             }
@@ -172,9 +168,15 @@ namespace swift::gui::views
             m_leOrder->setPlaceholderText("New order 0-" + QString::number(maxOrder));
 
             menuActions.addAction(m_menuActions[0], CMenuAction::pathViewOrder());
-            m_menuActions[1] = menuActions.addAction(CIcons::arrowMediumNorth16(), "To top", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<T>::orderToTop });
-            m_menuActions[2] = menuActions.addAction(CIcons::arrowMediumSouth16(), "To bottom", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<T>::orderToBottom });
-            m_menuActions[3] = menuActions.addAction(CIcons::arrowMediumWest16(), "Freeze current order", CMenuAction::pathViewOrder(), { this, &COrderableViewWithDbObjects<T>::freezeCurrentOrder });
+            m_menuActions[1] =
+                menuActions.addAction(CIcons::arrowMediumNorth16(), "To top", CMenuAction::pathViewOrder(),
+                                      { this, &COrderableViewWithDbObjects<T>::orderToTop });
+            m_menuActions[2] =
+                menuActions.addAction(CIcons::arrowMediumSouth16(), "To bottom", CMenuAction::pathViewOrder(),
+                                      { this, &COrderableViewWithDbObjects<T>::orderToBottom });
+            m_menuActions[3] =
+                menuActions.addAction(CIcons::arrowMediumWest16(), "Freeze current order", CMenuAction::pathViewOrder(),
+                                      { this, &COrderableViewWithDbObjects<T>::freezeCurrentOrder });
         }
         CViewWithDbObjects<T>::customMenu(menuActions);
     }
@@ -205,10 +207,7 @@ namespace swift::gui::views
     void COrderableViewWithDbObjects<T>::orderToBottom()
     {
         int c = this->model()->rowCount() - 1;
-        if (c >= 0)
-        {
-            this->moveSelectedItems(c);
-        }
+        if (c >= 0) { this->moveSelectedItems(c); }
     }
 
     template <class T>

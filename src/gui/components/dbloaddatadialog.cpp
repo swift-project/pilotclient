@@ -25,8 +25,7 @@ using namespace swift::core::db;
 
 namespace swift::gui::components
 {
-    CDbLoadDataDialog::CDbLoadDataDialog(QWidget *parent) : QDialog(parent),
-                                                            ui(new Ui::CDbLoadDataDialog)
+    CDbLoadDataDialog::CDbLoadDataDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CDbLoadDataDialog)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         ui->setupUi(this);
@@ -38,15 +37,16 @@ namespace swift::gui::components
         ui->wi_WorkStatus->setVisible(false);
         ui->wi_Consolidate->setVisible(false);
         ui->comp_SimulatorSelector->setRememberSelection(true);
-        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadDataDialog::onDataRead, Qt::QueuedConnection);
-        connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbLoadDataDialog::onEntityDownloadProgress, Qt::QueuedConnection);
+        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbLoadDataDialog::onDataRead,
+                Qt::QueuedConnection);
+        connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this,
+                &CDbLoadDataDialog::onEntityDownloadProgress, Qt::QueuedConnection);
         connect(ui->bb_loadDataDialog, &QDialogButtonBox::clicked, this, &CDbLoadDataDialog::onButtonClicked);
         connect(ui->pb_Consolidate, &QPushButton::clicked, this, &CDbLoadDataDialog::consolidate);
         connect(this, &CDbLoadDataDialog::rejected, this, &CDbLoadDataDialog::onRejected);
     }
 
-    CDbLoadDataDialog::~CDbLoadDataDialog()
-    {}
+    CDbLoadDataDialog::~CDbLoadDataDialog() {}
 
     bool CDbLoadDataDialog::newerOrEmptyEntitiesDetected(CEntityFlags::Entity loadEntities)
     {
@@ -71,10 +71,7 @@ namespace swift::gui::components
     {
         QStringList entities;
         const QModelIndexList indexes = ui->lv_Entities->selectionModel()->selectedIndexes();
-        for (const QModelIndex &index : indexes)
-        {
-            entities.append(index.data(Qt::DisplayRole).toString());
-        }
+        for (const QModelIndex &index : indexes) { entities.append(index.data(Qt::DisplayRole).toString()); }
         return entities;
     }
 
@@ -97,7 +94,8 @@ namespace swift::gui::components
         }
     }
 
-    void CDbLoadDataDialog::onDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
+    void CDbLoadDataDialog::onDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number,
+                                       const QUrl &url)
     {
         if (m_pendingEntities == CEntityFlags::NoEntity) { return; } // not triggered from here
         if (!m_pendingEntities.testFlag(CEntityFlags::entityToEntityFlag(entity))) { return; }
@@ -115,10 +113,7 @@ namespace swift::gui::components
         m_pendingEntities &= ~entity;
         const int pending = CEntityFlags::numberOfEntities(m_pendingEntities);
         const int max = ui->pb_Loading->maximum();
-        if (m_pendingEntitiesCount < 0)
-        {
-            ui->pb_Loading->setValue(max - pending);
-        }
+        if (m_pendingEntitiesCount < 0) { ui->pb_Loading->setValue(max - pending); }
         else
         {
             m_pendingEntitiesCount -= number;
@@ -137,7 +132,8 @@ namespace swift::gui::components
                 if (defaultConsolidate)
                 {
                     m_autoConsolidate = true;
-                    QPointer<CDbLoadDataDialog> self(this); // 2nd "self"/"myself" for cppcheck identicalConditionAfterEarlyExit
+                    QPointer<CDbLoadDataDialog> self(
+                        this); // 2nd "self"/"myself" for cppcheck identicalConditionAfterEarlyExit
                     QTimer::singleShot(1000, this, [=] {
                         if (!self) { return; }
                         self->consolidate();
@@ -147,7 +143,8 @@ namespace swift::gui::components
         }
     }
 
-    void CDbLoadDataDialog::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
+    void CDbLoadDataDialog::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress,
+                                                     qint64 current, qint64 max, const QUrl &url)
     {
         Q_UNUSED(entity)
         Q_UNUSED(logId)
@@ -176,8 +173,7 @@ namespace swift::gui::components
         ui->pb_Loading->setMaximum(0); // 0/0 causing busy indicator
         const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
 
-        do
-        {
+        do {
             if (set)
             {
                 ui->le_Info->setText("Model set");

@@ -16,8 +16,7 @@ class QObject;
 namespace swift::gui::models
 {
     //! Wind layer list model
-    class SWIFT_GUI_EXPORT CWindLayerListModel :
-        public CListModelBase<swift::misc::weather::CWindLayerList, false>
+    class SWIFT_GUI_EXPORT CWindLayerListModel : public CListModelBase<swift::misc::weather::CWindLayerList, false>
     {
         Q_OBJECT
 

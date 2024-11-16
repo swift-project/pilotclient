@@ -130,10 +130,7 @@ namespace swift::misc
     QStringList CFileUtils::stripFirstSlashParts(const QStringList &paths)
     {
         QStringList stripped;
-        for (const QString &path : paths)
-        {
-            stripped.push_back(stripFileFromPath(path));
-        }
+        for (const QString &path : paths) { stripped.push_back(stripFileFromPath(path)); }
         return stripped;
     }
 
@@ -147,10 +144,7 @@ namespace swift::misc
     QStringList CFileUtils::stripLeadingSlashOrDriveLetters(const QStringList &paths)
     {
         QStringList stripped;
-        for (const QString &path : paths)
-        {
-            stripped.push_back(stripLeadingSlashOrDriveLetter(path));
-        }
+        for (const QString &path : paths) { stripped.push_back(stripLeadingSlashOrDriveLetter(path)); }
         return stripped;
     }
 
@@ -170,9 +164,9 @@ namespace swift::misc
     QString CFileUtils::appendFilePathsAndFixUnc(const QString &path1, const QString &path2, const QString &path3)
     {
         static const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
-        return win ?
-                   CFileUtils::fixWindowsUncPath(CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3)) :
-                   CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3);
+        return win ? CFileUtils::fixWindowsUncPath(
+                         CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3)) :
+                     CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path1, path2), path3);
     }
 
     QString CFileUtils::pathUp(const QString &path)
@@ -190,7 +184,8 @@ namespace swift::misc
         return n;
     }
 
-    QStringList CFileUtils::makeDirectoriesRelative(const QStringList &directories, const QString &rootDirectory, Qt::CaseSensitivity cs)
+    QStringList CFileUtils::makeDirectoriesRelative(const QStringList &directories, const QString &rootDirectory,
+                                                    Qt::CaseSensitivity cs)
     {
         // not using QDir::relativePath because I do not want "../xyz" paths
         if (rootDirectory.isEmpty() || rootDirectory == "/") { return directories; }
@@ -199,10 +194,7 @@ namespace swift::misc
         QStringList relativeDirectories;
         for (const QString &dir : directories)
         {
-            if (dir.startsWith(rd, cs) && dir.length() > p + 1)
-            {
-                relativeDirectories.append(dir.mid(p + 1));
-            }
+            if (dir.startsWith(rd, cs) && dir.length() > p + 1) { relativeDirectories.append(dir.mid(p + 1)); }
             else
             {
                 relativeDirectories.append(dir); // absolute
@@ -237,32 +229,33 @@ namespace swift::misc
         return CBuildConfig::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;
     }
 
-    bool CFileUtils::isFileNameCaseSensitive()
-    {
-        return CFileUtils::osFileNameCaseSensitivity() == Qt::CaseSensitive;
-    }
+    bool CFileUtils::isFileNameCaseSensitive() { return CFileUtils::osFileNameCaseSensitivity() == Qt::CaseSensitive; }
 
-    bool CFileUtils::matchesExcludeDirectory(const QString &directoryPath, const QString &excludePattern, Qt::CaseSensitivity cs)
+    bool CFileUtils::matchesExcludeDirectory(const QString &directoryPath, const QString &excludePattern,
+                                             Qt::CaseSensitivity cs)
     {
         if (directoryPath.isEmpty() || excludePattern.isEmpty()) { return false; }
         const QString normalizedExcludePattern(normalizeFilePathToQtStandard(excludePattern));
         return directoryPath.contains(normalizedExcludePattern, cs);
     }
 
-    bool CFileUtils::isExcludedDirectory(const QDir &directory, const QStringList &excludeDirectories, Qt::CaseSensitivity cs)
+    bool CFileUtils::isExcludedDirectory(const QDir &directory, const QStringList &excludeDirectories,
+                                         Qt::CaseSensitivity cs)
     {
         if (excludeDirectories.isEmpty()) { return false; }
         const QString d = directory.absolutePath();
         return isExcludedDirectory(d, excludeDirectories, cs);
     }
 
-    bool CFileUtils::isExcludedDirectory(const QFileInfo &fileInfo, const QStringList &excludeDirectories, Qt::CaseSensitivity cs)
+    bool CFileUtils::isExcludedDirectory(const QFileInfo &fileInfo, const QStringList &excludeDirectories,
+                                         Qt::CaseSensitivity cs)
     {
         if (excludeDirectories.isEmpty()) { return false; }
         return isExcludedDirectory(fileInfo.absoluteDir(), excludeDirectories, cs);
     }
 
-    bool CFileUtils::isExcludedDirectory(const QString &directoryPath, const QStringList &excludeDirectories, Qt::CaseSensitivity cs)
+    bool CFileUtils::isExcludedDirectory(const QString &directoryPath, const QStringList &excludeDirectories,
+                                         Qt::CaseSensitivity cs)
     {
         if (excludeDirectories.isEmpty()) { return false; }
         for (const QString &ex : excludeDirectories)
@@ -285,10 +278,7 @@ namespace swift::misc
         for (const QString &path : std::as_const(dirs))
         {
             if (path.isEmpty()) { continue; }
-            if (last.isEmpty() || !path.startsWith(last, cs))
-            {
-                result.append(path);
-            }
+            if (last.isEmpty() || !path.startsWith(last, cs)) { result.append(path); }
             last = path;
         }
         return result;
@@ -307,7 +297,9 @@ namespace swift::misc
         return {};
     }
 
-    QString CFileUtils::findFirstFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories, std::function<bool(const QFileInfo &)> predicate)
+    QString CFileUtils::findFirstFile(const QDir &dir, bool recursive, const QStringList &nameFilters,
+                                      const QStringList &excludeDirectories,
+                                      std::function<bool(const QFileInfo &)> predicate)
     {
         if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
         const QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
@@ -325,35 +317,44 @@ namespace swift::misc
             for (const auto &subdir : dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot))
             {
                 if (isExcludedDirectory(subdir, excludeDirectories)) { continue; }
-                const QString first = findFirstFile(subdir.filePath(), true, nameFilters, excludeDirectories, predicate);
+                const QString first =
+                    findFirstFile(subdir.filePath(), true, nameFilters, excludeDirectories, predicate);
                 if (!first.isEmpty()) { return first; }
             }
         }
         return {};
     }
 
-    bool CFileUtils::containsFile(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories, std::function<bool(const QFileInfo &)> predicate)
+    bool CFileUtils::containsFile(const QDir &dir, bool recursive, const QStringList &nameFilters,
+                                  const QStringList &excludeDirectories,
+                                  std::function<bool(const QFileInfo &)> predicate)
     {
         return !findFirstFile(dir, recursive, nameFilters, excludeDirectories, predicate).isEmpty();
     }
 
-    QString CFileUtils::findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
+    QString CFileUtils::findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive,
+                                           const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
-        return findFirstFile(dir, recursive, nameFilters, excludeDirectories, [time](const QFileInfo &fi) { return fi.lastModified() > time; });
+        return findFirstFile(dir, recursive, nameFilters, excludeDirectories,
+                             [time](const QFileInfo &fi) { return fi.lastModified() > time; });
     }
 
-    bool CFileUtils::containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
+    bool CFileUtils::containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive,
+                                           const QStringList &nameFilters, const QStringList &excludeDirectories)
     {
         return !findFirstNewerThan(time, dir, recursive, nameFilters, excludeDirectories).isEmpty();
     }
 
-    QFileInfoList CFileUtils::enumerateFiles(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories, std::function<bool(const QFileInfo &)> predicate)
+    QFileInfoList CFileUtils::enumerateFiles(const QDir &dir, bool recursive, const QStringList &nameFilters,
+                                             const QStringList &excludeDirectories,
+                                             std::function<bool(const QFileInfo &)> predicate)
     {
         if (isExcludedDirectory(dir, excludeDirectories)) { return QFileInfoList(); }
         QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {
-            result.erase(std::remove_if(result.begin(), result.end(), [=](const auto &f) { return !predicate(f); }), result.end());
+            result.erase(std::remove_if(result.begin(), result.end(), [=](const auto &f) { return !predicate(f); }),
+                         result.end());
         }
         if (recursive)
         {
@@ -366,7 +367,8 @@ namespace swift::misc
         return result;
     }
 
-    QFileInfo CFileUtils::findLastModified(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
+    QFileInfo CFileUtils::findLastModified(const QDir &dir, bool recursive, const QStringList &nameFilters,
+                                           const QStringList &excludeDirectories)
     {
         if (isExcludedDirectory(dir, excludeDirectories)) { return {}; }
         const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
@@ -378,7 +380,8 @@ namespace swift::misc
         return *it;
     }
 
-    QFileInfo CFileUtils::findLastCreated(const QDir &dir, bool recursive, const QStringList &nameFilters, const QStringList &excludeDirectories)
+    QFileInfo CFileUtils::findLastCreated(const QDir &dir, bool recursive, const QStringList &nameFilters,
+                                          const QStringList &excludeDirectories)
     {
         if (isExcludedDirectory(dir, excludeDirectories)) { return {}; }
         const QFileInfoList files = enumerateFiles(dir, recursive, nameFilters, excludeDirectories);
@@ -393,9 +396,7 @@ namespace swift::misc
     const QStringList &CFileUtils::getSwiftExecutables()
     {
         static const QStringList executables(
-            QFileInfo(QCoreApplication::applicationFilePath())
-                .dir()
-                .entryList(QDir::Executable | QDir::Files));
+            QFileInfo(QCoreApplication::applicationFilePath()).dir().entryList(QDir::Executable | QDir::Files));
         return executables;
     }
 
@@ -433,7 +434,8 @@ namespace swift::misc
             QString hostname, appname;
             qint64 pid = 0;
             lockFile.getLockInfo(&pid, &hostname, &appname);
-            return QStringLiteral("Lock open in another process (%1 %2 on %3)").arg(hostname, QString::number(pid), appname);
+            return QStringLiteral("Lock open in another process (%1 %2 on %3)")
+                .arg(hostname, QString::number(pid), appname);
         }
         default: return QStringLiteral("Bad error number");
         }
@@ -454,10 +456,7 @@ namespace swift::misc
         if (!win) { return filePaths; }
 
         QStringList fixedPaths;
-        for (const QString &path : filePaths)
-        {
-            fixedPaths << fixWindowsUncPath(path);
-        }
+        for (const QString &path : filePaths) { fixedPaths << fixWindowsUncPath(path); }
         return fixedPaths;
     }
 
@@ -535,7 +534,8 @@ namespace swift::misc
     const QStringList &CFileUtils::executableSuffixes()
     {
         // incomplete list of file name appendixes
-        // dmg is not a executable. It is a MacOS container. If you open it, a new virtual drive will be mapped which includes a executable.
+        // dmg is not a executable. It is a MacOS container. If you open it, a new virtual drive will be mapped which
+        // includes a executable.
         static const QStringList appendixes({ ".exe", ".dmg", ".run" });
         return appendixes;
     }

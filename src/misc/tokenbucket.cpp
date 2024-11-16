@@ -38,15 +38,9 @@ namespace swift::misc
         return false;
     }
 
-    void CTokenBucket::setNumberOfTokensToRefill(int numTokens)
-    {
-        m_numTokensToRefill = numTokens;
-    }
+    void CTokenBucket::setNumberOfTokensToRefill(int numTokens) { m_numTokensToRefill = numTokens; }
 
-    void CTokenBucket::setCapacity(int capacity)
-    {
-        m_capacity = capacity;
-    }
+    void CTokenBucket::setCapacity(int capacity) { m_capacity = capacity; }
 
     void CTokenBucket::setCapacityAndTokensToRefill(int numTokens)
     {

@@ -14,7 +14,9 @@ namespace swift::core::data
     QString CLauncherSetup::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n)
-        return QStringLiteral("DBus: %1 frameless: %2 mode: %3").arg(m_dBusAddress, boolToYesNo(m_windowFrameless)).arg(m_coreMode);
+        return QStringLiteral("DBus: %1 frameless: %2 mode: %3")
+            .arg(m_dBusAddress, boolToYesNo(m_windowFrameless))
+            .arg(m_coreMode);
     }
 
     QVariant CLauncherSetup::propertyByIndex(swift::misc::CPropertyIndexRef index) const
@@ -45,9 +47,7 @@ namespace swift::core::data
         case IndexFramelessWindow: m_windowFrameless = variant.toBool(); break;
         case IndexCoreMode: m_coreMode = variant.toInt(); break;
         case IndexAudioMode: m_audioMode = variant.toInt(); break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::core::data

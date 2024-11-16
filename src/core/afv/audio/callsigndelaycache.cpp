@@ -11,10 +11,7 @@ namespace swift::core::afv::audio
         if (!successfulTransmissionsCache.contains(callsign)) { successfulTransmissionsCache[callsign] = 0; }
     }
 
-    int CallsignDelayCache::get(const QString &callsign)
-    {
-        return m_delayCache[callsign];
-    }
+    int CallsignDelayCache::get(const QString &callsign) { return m_delayCache[callsign]; }
 
     void CallsignDelayCache::underflow(const QString &callsign)
     {
@@ -38,26 +35,18 @@ namespace swift::core::afv::audio
 
     void CallsignDelayCache::increaseDelayMs(const QString &callsign)
     {
-        if (!m_delayCache.contains(callsign))
-            return;
+        if (!m_delayCache.contains(callsign)) return;
 
         m_delayCache[callsign] += delayIncrement;
-        if (m_delayCache[callsign] > delayMax)
-        {
-            m_delayCache[callsign] = delayMax;
-        }
+        if (m_delayCache[callsign] > delayMax) { m_delayCache[callsign] = delayMax; }
     }
 
     void CallsignDelayCache::decreaseDelayMs(const QString &callsign)
     {
-        if (!m_delayCache.contains(callsign))
-            return;
+        if (!m_delayCache.contains(callsign)) return;
 
         m_delayCache[callsign] -= delayIncrement;
-        if (m_delayCache[callsign] < delayMin)
-        {
-            m_delayCache[callsign] = delayMin;
-        }
+        if (m_delayCache[callsign] < delayMin) { m_delayCache[callsign] = delayMin; }
     }
 
     CallsignDelayCache &CallsignDelayCache::instance()

@@ -26,8 +26,5 @@ namespace swift::misc::shared_state
         return CVariant::from(copy);
     }
 
-    void CGenericListJournal::handleEvent(const CVariant &param)
-    {
-        m_value.push_back(param);
-    }
+    void CGenericListJournal::handleEvent(const CVariant &param) { m_value.push_back(param); }
 } // namespace swift::misc::shared_state

@@ -86,8 +86,14 @@ namespace swift::misc::shared_state
         virtual void onElementsReplaced(const T &values) = 0;
 
     private:
-        virtual void onGenericElementAdded(const CVariant &value) override final { onElementAdded(value.to<typename T::value_type>()); }
-        virtual void onGenericElementsReplaced(const CVariantList &values) override final { onElementsReplaced(values.to<T>()); }
+        virtual void onGenericElementAdded(const CVariant &value) override final
+        {
+            onElementAdded(value.to<typename T::value_type>());
+        }
+        virtual void onGenericElementsReplaced(const CVariantList &values) override final
+        {
+            onElementsReplaced(values.to<T>());
+        }
     };
 } // namespace swift::misc::shared_state
 

@@ -16,13 +16,9 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CStatusMessage, CStatusMessageList)
 
 namespace swift::misc
 {
-    CStatusMessageList::CStatusMessageList(const CSequence<CStatusMessage> &other) : CSequence<CStatusMessage>(other)
-    {}
+    CStatusMessageList::CStatusMessageList(const CSequence<CStatusMessage> &other) : CSequence<CStatusMessage>(other) {}
 
-    CStatusMessageList::CStatusMessageList(const CStatusMessage &statusMessage)
-    {
-        this->push_back(statusMessage);
-    }
+    CStatusMessageList::CStatusMessageList(const CStatusMessage &statusMessage) { this->push_back(statusMessage); }
 
     CStatusMessageList CStatusMessageList::findByCategory(const CLogCategory &category) const
     {
@@ -46,53 +42,38 @@ namespace swift::misc
 
     bool CStatusMessageList::hasWarningOrErrorMessages() const
     {
-        return this->containsBy([=](const CStatusMessage &m) { return m.getSeverity() == CStatusMessage::SeverityWarning || m.getSeverity() == CStatusMessage::SeverityError; });
+        return this->containsBy([=](const CStatusMessage &m) {
+            return m.getSeverity() == CStatusMessage::SeverityWarning ||
+                   m.getSeverity() == CStatusMessage::SeverityError;
+        });
     }
 
-    bool CStatusMessageList::isSuccess() const
-    {
-        return !this->isFailure();
-    }
+    bool CStatusMessageList::isSuccess() const { return !this->isFailure(); }
 
-    bool CStatusMessageList::isFailure() const
-    {
-        return this->contains(&CStatusMessage::isFailure, true);
-    }
+    bool CStatusMessageList::isFailure() const { return this->contains(&CStatusMessage::isFailure, true); }
 
-    CStatusMessageList CStatusMessageList::getErrorMessages() const
-    {
-        return findBySeverity(SeverityError);
-    }
+    CStatusMessageList CStatusMessageList::getErrorMessages() const { return findBySeverity(SeverityError); }
 
     CStatusMessageList CStatusMessageList::getWarningAndErrorMessages() const
     {
-        return this->findBy([&](const CStatusMessage &msg) {
-            return msg.getSeverity() >= CStatusMessage::SeverityWarning;
-        });
+        return this->findBy(
+            [&](const CStatusMessage &msg) { return msg.getSeverity() >= CStatusMessage::SeverityWarning; });
     }
 
     void CStatusMessageList::addCategory(const CLogCategory &category)
     {
-        for (auto &msg : *this)
-        {
-            msg.addCategory(category);
-        }
+        for (auto &msg : *this) { msg.addCategory(category); }
     }
 
-    void CStatusMessageList::addValidationCategory()
-    {
-        this->addCategory(CLogCategories::validation());
-    }
+    void CStatusMessageList::addValidationCategory() { this->addCategory(CLogCategories::validation()); }
 
     void CStatusMessageList::addCategories(const CLogCategoryList &categories)
     {
-        for (auto &msg : *this)
-        {
-            msg.addCategories(categories);
-        }
+        for (auto &msg : *this) { msg.addCategories(categories); }
     }
 
-    void CStatusMessageList::addValidationMessage(const QString &validationText, CStatusMessage::StatusSeverity severity)
+    void CStatusMessageList::addValidationMessage(const QString &validationText,
+                                                  CStatusMessage::StatusSeverity severity)
     {
         static const CLogCategoryList cats({ CLogCategories::validation() });
         const CStatusMessage msg(cats, severity, validationText);
@@ -101,26 +82,17 @@ namespace swift::misc
 
     void CStatusMessageList::setCategory(const CLogCategory &category)
     {
-        for (auto &msg : *this)
-        {
-            msg.setCategory(category);
-        }
+        for (auto &msg : *this) { msg.setCategory(category); }
     }
 
     void CStatusMessageList::setCategories(const CLogCategoryList &categories)
     {
-        for (auto &msg : *this)
-        {
-            msg.setCategories(categories);
-        }
+        for (auto &msg : *this) { msg.setCategories(categories); }
     }
 
     void CStatusMessageList::clampSeverity(CStatusMessage::StatusSeverity severity)
     {
-        for (auto &msg : *this)
-        {
-            msg.clampSeverity(severity);
-        }
+        for (auto &msg : *this) { msg.clampSeverity(severity); }
     }
 
     void CStatusMessageList::warningToError()
@@ -132,10 +104,7 @@ namespace swift::misc
         }
     }
 
-    void CStatusMessageList::sortBySeverity()
-    {
-        this->sortBy(&CStatusMessage::getSeverity);
-    }
+    void CStatusMessageList::sortBySeverity() { this->sortBy(&CStatusMessage::getSeverity); }
 
     void CStatusMessageList::sortBySeverityHighestFirst()
     {
@@ -202,10 +171,7 @@ namespace swift::misc
         counts.insert(SeverityInfo, 0);
         counts.insert(SeverityWarning, 0);
         counts.insert(SeverityError, 0);
-        for (const CStatusMessage &m : *this)
-        {
-            counts[m.getSeverity()]++;
-        }
+        for (const CStatusMessage &m : *this) { counts[m.getSeverity()]++; }
         return counts;
     }
 
@@ -239,10 +205,7 @@ namespace swift::misc
         for (const CStatusMessage &statusMessage : *this)
         {
             QString rowHtml;
-            if (withLineNumbers)
-            {
-                rowHtml = u"<td>" % QString::number(line++) % u"</td>";
-            }
+            if (withLineNumbers) { rowHtml = u"<td>" % QString::number(line++) % u"</td>"; }
 
             for (const CPropertyIndex &index : usedIndexes)
             {
@@ -259,22 +222,25 @@ namespace swift::misc
 
     const CPropertyIndexList &CStatusMessageList::simpleHtmlOutput()
     {
-        static const CPropertyIndexList properties({ CPropertyIndexRef::GlobalIndexLineNumber, CStatusMessage::IndexMessage });
+        static const CPropertyIndexList properties(
+            { CPropertyIndexRef::GlobalIndexLineNumber, CStatusMessage::IndexMessage });
         return properties;
     }
 
     const CPropertyIndexList &CStatusMessageList::timestampHtmlOutput()
     {
-        static const CPropertyIndexList properties({ CStatusMessage::IndexUtcTimestampFormattedHms, CStatusMessage::IndexMessage });
+        static const CPropertyIndexList properties(
+            { CStatusMessage::IndexUtcTimestampFormattedHms, CStatusMessage::IndexMessage });
         return properties;
     }
 
     QString htmlStyleSheetImpl()
     {
-        const QString style = u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityDebug) % u" { color: lightgreen; } " %
-                              u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityInfo) % u" { color: lightgreen; } " %
-                              u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityWarning) % u" { color: yellow; } " %
-                              u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityError) % u" { color: red; }";
+        const QString style =
+            u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityDebug) % u" { color: lightgreen; } " %
+            u'.' % CStatusMessage::severityToString(CStatusMessage::SeverityInfo) % u" { color: lightgreen; } " % u'.' %
+            CStatusMessage::severityToString(CStatusMessage::SeverityWarning) % u" { color: yellow; } " % u'.' %
+            CStatusMessage::severityToString(CStatusMessage::SeverityError) % u" { color: red; }";
         return style;
     }
 

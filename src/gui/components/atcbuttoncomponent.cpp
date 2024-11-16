@@ -22,21 +22,21 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CAtcButtonComponent::CAtcButtonComponent(QWidget *parent) : QFrame(parent),
-                                                                ui(new Ui::CAtcButtonComponent)
+    CAtcButtonComponent::CAtcButtonComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CAtcButtonComponent)
     {
         ui->setupUi(this);
         if (sGui && sGui->getIContextNetwork())
         {
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcButtonComponent::onChangedAtcStations);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcButtonComponent::onConnectionStatusChanged);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this,
+                    &CAtcButtonComponent::onChangedAtcStations);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
+                    &CAtcButtonComponent::onConnectionStatusChanged);
         }
 
         this->setVisible(false); // will be changed when ATC stations are reported
     }
 
-    CAtcButtonComponent::~CAtcButtonComponent()
-    {}
+    CAtcButtonComponent::~CAtcButtonComponent() {}
 
     void CAtcButtonComponent::updateStations()
     {
@@ -112,10 +112,7 @@ namespace swift::gui::components
     void CAtcButtonComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from);
-        if (to.isDisconnected())
-        {
-            this->setVisible(false);
-        }
+        if (to.isDisconnected()) { this->setVisible(false); }
     }
 
     void CAtcButtonComponent::onButtonClicked()

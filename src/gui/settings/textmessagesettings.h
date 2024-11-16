@@ -27,8 +27,7 @@ namespace swift::misc
 namespace swift::gui::settings
 {
     //! Text message settings
-    class SWIFT_GUI_EXPORT CTextMessageSettings :
-        public swift::misc::CValueObject<CTextMessageSettings>
+    class SWIFT_GUI_EXPORT CTextMessageSettings : public swift::misc::CValueObject<CTextMessageSettings>
     {
     public:
         //! Properties by index
@@ -96,7 +95,8 @@ namespace swift::gui::settings
         bool popup(const swift::misc::network::CTextMessage &textMessage) const;
 
         //! Popup the given message? Complete check including frequencies.
-        bool popup(const swift::misc::network::CTextMessage &textMessage, const swift::misc::simulation::CSimulatedAircraft &ownAircraft) const;
+        bool popup(const swift::misc::network::CTextMessage &textMessage,
+                   const swift::misc::simulation::CSimulatedAircraft &ownAircraft) const;
 
         //! Latest messages 1st?
         bool isLatestFirst() const { return m_latestFirst; }

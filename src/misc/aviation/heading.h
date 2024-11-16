@@ -67,7 +67,9 @@ namespace swift::misc::aviation
         CHeading(double value, const physical_quantities::CAngleUnit &unit) : CAngle(value, unit), m_north(True) {}
 
         //! Constructor
-        CHeading(double value, ReferenceNorth north, const physical_quantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
+        CHeading(double value, ReferenceNorth north, const physical_quantities::CAngleUnit &unit)
+            : CAngle(value, unit), m_north(north)
+        {}
 
         //! Constructor by CAngle
         CHeading(const CAngle &heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}

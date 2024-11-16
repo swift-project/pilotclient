@@ -42,7 +42,10 @@ namespace swift::gui::components
         virtual ~CAircraftModelSetValidationDialog() override;
 
         //! \copydoc CAircraftModelValidationComponent::validatedModelSet
-        void validatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator, const swift::misc::simulation::CAircraftModelList &valid, const swift::misc::simulation::CAircraftModelList &invalid, bool stopped, const swift::misc::CStatusMessageList &msgs);
+        void validatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator,
+                               const swift::misc::simulation::CAircraftModelList &valid,
+                               const swift::misc::simulation::CAircraftModelList &invalid, bool stopped,
+                               const swift::misc::CStatusMessageList &msgs);
 
     protected:
         //! \copydoc QObject::event

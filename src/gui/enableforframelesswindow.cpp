@@ -31,7 +31,12 @@ using namespace swift::misc;
 
 namespace swift::gui
 {
-    CEnableForFramelessWindow::CEnableForFramelessWindow(CEnableForFramelessWindow::WindowMode mode, bool isMainApplicationWindow, const char *framelessPropertyName, QWidget *correspondingWidget) : m_windowMode(mode), m_isMainApplicationWindow(isMainApplicationWindow), m_widget(correspondingWidget), m_framelessPropertyName(framelessPropertyName)
+    CEnableForFramelessWindow::CEnableForFramelessWindow(CEnableForFramelessWindow::WindowMode mode,
+                                                         bool isMainApplicationWindow,
+                                                         const char *framelessPropertyName,
+                                                         QWidget *correspondingWidget)
+        : m_windowMode(mode), m_isMainApplicationWindow(isMainApplicationWindow), m_widget(correspondingWidget),
+          m_framelessPropertyName(framelessPropertyName)
     {
         Q_ASSERT(correspondingWidget);
         Q_ASSERT(!m_framelessPropertyName.isEmpty());
@@ -90,14 +95,8 @@ namespace swift::gui
     void CEnableForFramelessWindow::alwaysOnTop(bool onTop)
     {
         Qt::WindowFlags flags = m_widget->windowFlags();
-        if (onTop)
-        {
-            flags |= Qt::WindowStaysOnTopHint;
-        }
-        else
-        {
-            flags &= ~Qt::WindowStaysOnTopHint;
-        }
+        if (onTop) { flags |= Qt::WindowStaysOnTopHint; }
+        else { flags &= ~Qt::WindowStaysOnTopHint; }
         m_widget->setWindowFlags(flags);
         this->windowFlagsChanged();
     }
@@ -141,7 +140,8 @@ namespace swift::gui
     void CEnableForFramelessWindow::setWindowAttributes(CEnableForFramelessWindow::WindowMode mode)
     {
         Q_ASSERT_X(m_widget, "CEnableForFramelessWindow::setWindowAttributes", "Missing widget representing window");
-        Q_ASSERT_X(!m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setWindowAttributes", "Missing property name");
+        Q_ASSERT_X(!m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setWindowAttributes",
+                   "Missing property name");
 
         const bool frameless = (mode == WindowFrameless);
 
@@ -166,17 +166,15 @@ namespace swift::gui
     void CEnableForFramelessWindow::setDynamicProperties(bool frameless)
     {
         Q_ASSERT_X(m_widget, "CEnableForFramelessWindow::setDynamicProperties", "Missing widget representing window");
-        Q_ASSERT_X(!m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setDynamicProperties", "Missing property name");
+        Q_ASSERT_X(!m_framelessPropertyName.isEmpty(), "CEnableForFramelessWindow::setDynamicProperties",
+                   "Missing property name");
 
         // property selector will check on string, so I directly provide a string
         const QString f(swift::misc::boolToTrueFalse(frameless));
         m_widget->setProperty(m_framelessPropertyName.constData(), f);
         for (QObject *w : m_widget->children())
         {
-            if (w && w->isWidgetType())
-            {
-                w->setProperty(m_framelessPropertyName.constData(), f);
-            }
+            if (w && w->isWidgetType()) { w->setProperty(m_framelessPropertyName.constData(), f); }
         }
     }
 
@@ -270,10 +268,7 @@ namespace swift::gui
             m_framelessSizeGrip->setObjectName("sg_FramelessSizeGrip");
             statusBar->addPermanentWidget(m_framelessSizeGrip);
         }
-        else
-        {
-            m_framelessSizeGrip->show();
-        }
+        else { m_framelessSizeGrip->show(); }
         statusBar->repaint();
     }
 
@@ -294,7 +289,8 @@ namespace swift::gui
             m_framelessCloseButton = new QPushButton(m_widget);
             m_framelessCloseButton->setObjectName("pb_FramelessCloseButton");
             m_framelessCloseButton->setIcon(CIcons::close16());
-            QObject::connect(m_framelessCloseButton, &QPushButton::clicked, m_widget, &QWidget::close, Qt::QueuedConnection);
+            QObject::connect(m_framelessCloseButton, &QPushButton::clicked, m_widget, &QWidget::close,
+                             Qt::QueuedConnection);
         }
 
         QHBoxLayout *menuBarLayout = new QHBoxLayout;
@@ -318,24 +314,21 @@ namespace swift::gui
         m_originalWindowMode = WindowTool;
     }
 
-    bool CEnableForFramelessWindow::isToolWindow() const
-    {
-        return (m_widget->windowFlags() & Qt::Tool) == Qt::Tool;
-    }
+    bool CEnableForFramelessWindow::isToolWindow() const { return (m_widget->windowFlags() & Qt::Tool) == Qt::Tool; }
 
     Qt::WindowFlags CEnableForFramelessWindow::modeToWindowFlags(CEnableForFramelessWindow::WindowMode mode)
     {
         switch (mode)
         {
-        case WindowFrameless:
-            return (Qt::Window | Qt::FramelessWindowHint);
+        case WindowFrameless: return (Qt::Window | Qt::FramelessWindowHint);
         case WindowTool:
             // tool window and minimized not supported on Windows
             // tool window always with close button on Windows
             return (Qt::Tool | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         case WindowNormal:
         default:
-            return (Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+            return (Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowMinimizeButtonHint |
+                    Qt::WindowCloseButtonHint);
         }
     }
 } // namespace swift::gui

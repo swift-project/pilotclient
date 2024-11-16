@@ -19,22 +19,26 @@ namespace swift::misc::aviation
         qDBusRegisterMetaType<CTransponder::TransponderMode>();
     }
 
-    CTransponder::CTransponder(int transponderCode, CTransponder::TransponderMode transponderMode) : m_transponderCode(transponderCode), m_transponderMode(transponderMode)
+    CTransponder::CTransponder(int transponderCode, CTransponder::TransponderMode transponderMode)
+        : m_transponderCode(transponderCode), m_transponderMode(transponderMode)
     {}
 
-    CTransponder::CTransponder(int transponderCode, const QString &transponderMode) : m_transponderCode(transponderCode), m_transponderMode(StateStandby)
+    CTransponder::CTransponder(int transponderCode, const QString &transponderMode)
+        : m_transponderCode(transponderCode), m_transponderMode(StateStandby)
     {
         this->setModeAsString(transponderMode);
     }
 
-    CTransponder::CTransponder(const QString &transponderCode, CTransponder::TransponderMode transponderMode) : m_transponderCode(0), m_transponderMode(transponderMode)
+    CTransponder::CTransponder(const QString &transponderCode, CTransponder::TransponderMode transponderMode)
+        : m_transponderCode(0), m_transponderMode(transponderMode)
     {
         bool ok = false;
         m_transponderCode = transponderCode.toInt(&ok);
         if (!ok) m_transponderCode = -1; // will cause assert / exception
     }
 
-    CTransponder::CTransponder(const QString &transponderCode, const QString &transponderMode) : m_transponderCode(0), m_transponderMode(StateStandby)
+    CTransponder::CTransponder(const QString &transponderCode, const QString &transponderMode)
+        : m_transponderCode(0), m_transponderMode(StateStandby)
     {
         bool ok = false;
         m_transponderCode = transponderCode.toInt(&ok);
@@ -42,10 +46,7 @@ namespace swift::misc::aviation
         this->setModeAsString(transponderMode);
     }
 
-    bool CTransponder::validValues() const
-    {
-        return CTransponder::isValidTransponderCode(m_transponderCode);
-    }
+    bool CTransponder::validValues() const { return CTransponder::isValidTransponderCode(m_transponderCode); }
 
     bool CTransponder::isInNormalSendingMode() const
     {
@@ -57,12 +58,10 @@ namespace swift::misc::aviation
         case ModeMil2:
         case ModeMil3:
         case ModeMil4:
-        case ModeMil5:
-            return true;
+        case ModeMil5: return true;
         case StateIdent:
         case StateStandby:
-        default:
-            return false;
+        default: return false;
         }
     }
 
@@ -72,10 +71,7 @@ namespace swift::misc::aviation
         {
             this->setTransponderMode(StateStandby);
         }
-        else
-        {
-            this->setTransponderMode(ModeC);
-        }
+        else { this->setTransponderMode(ModeC); }
     }
 
     QString CTransponder::convertToQString(bool /* i18n */) const
@@ -127,10 +123,7 @@ namespace swift::misc::aviation
             bool ok;
             this->setTransponderCode(transponderCode.toInt(&ok));
         }
-        else
-        {
-            Q_ASSERT_X(false, "CTransponder::setTransponderCode", "illegal transponder value");
-        }
+        else { Q_ASSERT_X(false, "CTransponder::setTransponderCode", "illegal transponder value"); }
     }
 
     bool CTransponder::isValidTransponderCode(const QString &transponderCode)
@@ -221,7 +214,8 @@ namespace swift::misc::aviation
         case IndexModeAsString: return QVariant::fromValue(this->getModeAsString());
         case IndexTransponderCode: return QVariant::fromValue(this->getTransponderCode());
         case IndexTransponderCodeFormatted: return QVariant::fromValue(this->getTransponderCodeFormatted());
-        case IndexTransponderCodeAndModeFormatted: return QVariant::fromValue(this->getTransponderCodeAndModeFormatted());
+        case IndexTransponderCodeAndModeFormatted:
+            return QVariant::fromValue(this->getTransponderCodeAndModeFormatted());
         default: break;
         }
 
@@ -244,19 +238,11 @@ namespace swift::misc::aviation
         case IndexModeAsString: this->setTransponderMode(modeFromString(variant.toString())); break;
         case IndexTransponderCode:
         case IndexTransponderCodeFormatted:
-            if (variant.canConvert<int>())
-            {
-                this->setTransponderCode(variant.toInt());
-            }
-            else
-            {
-                this->setTransponderCode(variant.toString());
-            }
+            if (variant.canConvert<int>()) { this->setTransponderCode(variant.toInt()); }
+            else { this->setTransponderCode(variant.toString()); }
             break;
         case IndexTransponderCodeAndModeFormatted:
-        default:
-            Q_ASSERT_X(false, "CTransponder", "index unknown");
-            break;
+        default: Q_ASSERT_X(false, "CTransponder", "index unknown"); break;
         }
     }
 } // namespace swift::misc::aviation

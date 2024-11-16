@@ -79,10 +79,12 @@ namespace swift::gui::components
         void updateSelcalInContext(const swift::misc::aviation::CSelcal &selcal);
 
         //! SELCAL was changed
-        void updateSelcalFromContext(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator);
+        void updateSelcalFromContext(const swift::misc::aviation::CSelcal &selcal,
+                                     const swift::misc::CIdentifier &originator);
 
         //! Update cockpit from context
-        void updateCockpitFromContext(const swift::misc::simulation::CSimulatedAircraft &ownAircraft, const swift::misc::CIdentifier &originator);
+        void updateCockpitFromContext(const swift::misc::simulation::CSimulatedAircraft &ownAircraft,
+                                      const swift::misc::CIdentifier &originator);
 
         //! Update the cockpit from aircraft context
         void forceCockpitUpdateFromOwnAircraftContext();

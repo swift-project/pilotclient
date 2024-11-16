@@ -21,7 +21,9 @@ using namespace swift::core::data;
 
 namespace swift::core::db
 {
-    CInfoDataReader::CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config, CDbFlags::DataRetrievalModeFlag mode) : CDatabaseReader(owner, config, "CInfoDataReader"), m_mode(mode)
+    CInfoDataReader::CInfoDataReader(QObject *owner, const CDatabaseReaderConfigList &config,
+                                     CDbFlags::DataRetrievalModeFlag mode)
+        : CDatabaseReader(owner, config, "CInfoDataReader"), m_mode(mode)
     {
         Q_ASSERT_X(mode == CDbFlags::DbReading || mode == CDbFlags::Shared, Q_FUNC_INFO, "Wrong mode");
     }
@@ -38,10 +40,7 @@ namespace swift::core::db
         return m_infoObjects.size();
     }
 
-    bool CInfoDataReader::areAllInfoObjectsRead() const
-    {
-        return this->getInfoObjectCount() > 4;
-    }
+    bool CInfoDataReader::areAllInfoObjectsRead() const { return this->getInfoObjectCount() > 4; }
 
     void CInfoDataReader::synchronizeCaches(CEntityFlags::Entity entities)
     {
@@ -124,10 +123,7 @@ namespace swift::core::db
         return false;
     }
 
-    CUrl CInfoDataReader::getDbServiceBaseUrl() const
-    {
-        return sApp->getGlobalSetup().getDbInfoReaderUrl();
-    }
+    CUrl CInfoDataReader::getDbServiceBaseUrl() const { return sApp->getGlobalSetup().getDbInfoReaderUrl(); }
 
     void CInfoDataReader::readInfoData()
     {
@@ -146,10 +142,7 @@ namespace swift::core::db
             this->getFromNetworkAndLog(url, { this, &CInfoDataReader::parseInfoObjectsData });
             emit this->dataRead(this->getEntityForMode(), CEntityFlags::ReadStarted, 0, url);
         }
-        else
-        {
-            this->logNoWorkingUrl(this->getEntityForMode());
-        }
+        else { this->logNoWorkingUrl(this->getEntityForMode()); }
     }
 
     void CInfoDataReader::parseInfoObjectsData(QNetworkReply *nwReplyPtr)
@@ -159,7 +152,8 @@ namespace swift::core::db
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         if (!this->doWorkCheck()) { return; }
 
-        const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
+        const CDatabaseReader::JsonDatastoreResponse res =
+            this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
         {
             CLogMessage::preformatted(res.lastWarningOrAbove());
@@ -203,7 +197,8 @@ namespace swift::core::db
         return CEntityFlags::NoEntity;
     }
 
-    void CInfoDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+    void CInfoDataReader::read(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode,
+                               const QDateTime &newerThan)
     {
         Q_UNUSED(entities)
         Q_UNUSED(mode)
@@ -222,7 +217,8 @@ namespace swift::core::db
         return CUrl();
     }
 
-    CStatusMessageList CInfoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewer)
+    CStatusMessageList CInfoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead,
+                                                          bool overrideNewer)
     {
         Q_UNUSED(dir)
         Q_UNUSED(whatToRead)
@@ -232,7 +228,8 @@ namespace swift::core::db
         return CStatusMessage(this).error(u"Not supported");
     }
 
-    bool CInfoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewer)
+    bool CInfoDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead,
+                                                        bool overrideNewer)
     {
         Q_UNUSED(dir)
         Q_UNUSED(whatToRead)
@@ -241,8 +238,5 @@ namespace swift::core::db
         return false;
     }
 
-    CEntityFlags::Entity CInfoDataReader::getSupportedEntities() const
-    {
-        return this->getEntityForMode();
-    }
+    CEntityFlags::Entity CInfoDataReader::getSupportedEntities() const { return this->getEntityForMode(); }
 } // namespace swift::core::db

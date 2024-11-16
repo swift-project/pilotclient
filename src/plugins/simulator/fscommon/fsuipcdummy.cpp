@@ -12,12 +12,9 @@ namespace swift::simplugin
 {
     namespace fscommon
     {
-        CFsuipc::CFsuipc(QObject *parent)
-            : QObject(parent)
-        {}
+        CFsuipc::CFsuipc(QObject *parent) : QObject(parent) {}
 
-        CFsuipc::~CFsuipc()
-        {}
+        CFsuipc::~CFsuipc() {}
 
         bool CFsuipc::open(bool force)
         {
@@ -25,18 +22,11 @@ namespace swift::simplugin
             return false;
         }
 
-        void CFsuipc::close()
-        {}
+        void CFsuipc::close() {}
 
-        bool CFsuipc::isOpened() const
-        {
-            return false;
-        }
+        bool CFsuipc::isOpened() const { return false; }
 
-        bool CFsuipc::isOpen() const
-        {
-            return false;
-        }
+        bool CFsuipc::isOpen() const { return false; }
 
         bool CFsuipc::write(const CTransponder &xpdr)
         {
@@ -51,10 +41,7 @@ namespace swift::simplugin
             return false;
         }
 
-        QString CFsuipc::getVersion() const
-        {
-            return QStringLiteral("N/A");
-        }
+        QString CFsuipc::getVersion() const { return QStringLiteral("N/A"); }
 
         // cppcheck-suppress constParameter
         bool CFsuipc::read(CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts)

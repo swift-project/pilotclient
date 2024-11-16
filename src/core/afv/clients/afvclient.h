@@ -42,7 +42,8 @@ namespace swift::core::afv::clients
         //! AFV client properties
         Q_PROPERTY(double inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
         Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
-        Q_PROPERTY(swift::core::afv::clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
+        Q_PROPERTY(swift::core::afv::clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus
+                       NOTIFY connectionStatusChanged)
         Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsStringCom1 NOTIFY receivingCallsignsChanged)
         Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsStringCom2 NOTIFY receivingCallsignsChanged)
         //! @}
@@ -83,7 +84,8 @@ namespace swift::core::afv::clients
         //! Connect to network
         //! \threadsafe
         //! \remark runs in thread of CAfvClient object and is ASYNC when called from another thread
-        Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client);
+        Q_INVOKABLE void connectTo(const QString &cid, const QString &password, const QString &callsign,
+                                   const QString &client);
 
         //! @{
         //! Disconnect from network
@@ -116,7 +118,8 @@ namespace swift::core::afv::clients
         //! @{
         //! Start/stop client
         void startAudio();
-        void startAudio(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
+        void startAudio(const swift::misc::audio::CAudioDeviceInfo &inputDevice,
+                        const swift::misc::audio::CAudioDeviceInfo &outputDevice);
         Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName);
         void stopAudio();
         void restartAudio();
@@ -190,8 +193,10 @@ namespace swift::core::afv::clients
         //! Update frequency
         //! \threadsafe
         Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz);
-        void updateComFrequency(swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::physical_quantities::CFrequency &comFrequency);
-        void updateComFrequency(swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::aviation::CComSystem &comSystem);
+        void updateComFrequency(swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                const swift::misc::physical_quantities::CFrequency &comFrequency);
+        void updateComFrequency(swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                const swift::misc::aviation::CComSystem &comSystem);
         //! @}
 
         //! Update own aircraft position
@@ -201,7 +206,8 @@ namespace swift::core::afv::clients
         //! Update from own aircraft
         //! \remark full update of frequency, position and enabled transceivers in one step
         //! \threadsafe
-        void updateFromOwnAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool withSignals = true);
+        void updateFromOwnAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                   bool withSignals = true);
 
         //! Push to talk
         //! \threadsafe
@@ -255,7 +261,8 @@ namespace swift::core::afv::clients
         //! \threadsafe
         const swift::misc::audio::CAudioDeviceInfo &getInputDevice() const;
         const swift::misc::audio::CAudioDeviceInfo &getOutputDevice() const;
-        bool usesSameDevices(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
+        bool usesSameDevices(const swift::misc::audio::CAudioDeviceInfo &inputDevice,
+                             const swift::misc::audio::CAudioDeviceInfo &outputDevice);
         //! @}
 
         //! @{
@@ -281,7 +288,8 @@ namespace swift::core::afv::clients
 
         //! Received callsigns have been changed
         //! \remark swift style per com units
-        void receivedCallsignsChanged(const swift::misc::aviation::CCallsignSet &com1Callsigns, const swift::misc::aviation::CCallsignSet &com2Callsigns);
+        void receivedCallsignsChanged(const swift::misc::aviation::CCallsignSet &com1Callsigns,
+                                      const swift::misc::aviation::CCallsignSet &com2Callsigns);
 
         //! Connection status has been changed
         void connectionStatusChanged(ConnectionStatus status);
@@ -302,7 +310,8 @@ namespace swift::core::afv::clients
         //! @}
 
         //! Started audio with devices
-        void startedAudio(const swift::misc::audio::CAudioDeviceInfo &inputDevice, const swift::misc::audio::CAudioDeviceInfo &outputDevice);
+        void startedAudio(const swift::misc::audio::CAudioDeviceInfo &inputDevice,
+                          const swift::misc::audio::CAudioDeviceInfo &outputDevice);
 
         //! Audio has been stopped
         void stoppedAudio();
@@ -328,14 +337,17 @@ namespace swift::core::afv::clients
         void autoLogoffWithoutFsdNetwork();
 
         void updateTransceivers(bool updateFrequencies = true);
-        void onUpdateTransceiversFromContext(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+        void onUpdateTransceiversFromContext(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                             const swift::misc::CIdentifier &originator);
         void onReceivingCallsignsChanged(const swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs &args);
 
         //! Re-try connection to server
-        void retryConnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, const QString &reason);
+        void retryConnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client,
+                            const QString &reason);
 
         //! Connect again in given ms
-        void reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client, int delayMs, const swift::misc::CStatusMessage &msg);
+        void reconnectTo(const QString &cid, const QString &password, const QString &callsign, const QString &client,
+                         int delayMs, const swift::misc::CStatusMessage &msg);
 
         //! Toggle (enable/disable) the transmission capability.
         //! This is triggered by the #MU FSD packet to mute the user remotely.

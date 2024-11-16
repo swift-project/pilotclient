@@ -7,13 +7,11 @@
 
 namespace swift::gui::components
 {
-    CFirstModelSetDialog::CFirstModelSetDialog(QWidget *parent) : QDialog(parent),
-                                                                  ui(new Ui::CFirstModelSetDialog)
+    CFirstModelSetDialog::CFirstModelSetDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CFirstModelSetDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CFirstModelSetDialog::~CFirstModelSetDialog()
-    {}
+    CFirstModelSetDialog::~CFirstModelSetDialog() {}
 } // namespace swift::gui::components

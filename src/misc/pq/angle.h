@@ -50,7 +50,10 @@ namespace swift::misc::physical_quantities
             QString secAsString() const { return QString::number(sec); }
 
             //! Fractional seconds as string
-            QString fractionalSecAsString(int width = -1) const { return swift::misc::math::CMathUtils::fractionalPartAsString(fractionalSec, width); }
+            QString fractionalSecAsString(int width = -1) const
+            {
+                return swift::misc::math::CMathUtils::fractionalPartAsString(fractionalSec, width);
+            }
         };
 
         //! \brief Init as sexagesimal degrees, minutes, seconds

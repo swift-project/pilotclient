@@ -16,11 +16,10 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::audio, CAudioDeviceInfo)
 
 namespace swift::misc::audio
 {
-    CAudioDeviceInfo::CAudioDeviceInfo() : m_type(Unknown)
-    {}
+    CAudioDeviceInfo::CAudioDeviceInfo() : m_type(Unknown) {}
 
-    CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const QString &name) : m_type(static_cast<int>(type)),
-                                                                               m_deviceName(name)
+    CAudioDeviceInfo::CAudioDeviceInfo(DeviceType type, const QString &name)
+        : m_type(static_cast<int>(type)), m_deviceName(name)
     {}
 
     bool CAudioDeviceInfo::isDefault() const
@@ -28,7 +27,10 @@ namespace swift::misc::audio
         if (m_deviceName.isEmpty()) { return false; }
         if (m_deviceName == "default") { return true; }
         if (this->isInputDevice() && m_deviceName == QMediaDevices::defaultAudioInput().description()) { return true; }
-        if (this->isOutputDevice() && m_deviceName == QMediaDevices::defaultAudioOutput().description()) { return true; }
+        if (this->isOutputDevice() && m_deviceName == QMediaDevices::defaultAudioOutput().description())
+        {
+            return true;
+        }
         return false;
     }
 
@@ -96,7 +98,8 @@ namespace swift::misc::audio
         case IndexDeviceTypeAsString:
         case IndexDeviceType: return Compare::compare(m_type, compareValue.m_type);
         case IndexName: return m_deviceName.compare(compareValue.m_deviceName, Qt::CaseInsensitive);
-        case IndexIdentifier: return m_identifier.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIdentifier());
+        case IndexIdentifier:
+            return m_identifier.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIdentifier());
         default: break;
         }
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));

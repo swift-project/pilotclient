@@ -24,7 +24,8 @@ namespace swift::gui::views
         m_model->setIconMode(withIcon);
     }
 
-    bool CNameVariantPairView::addOrUpdateByName(const QString &name, const swift::misc::CVariant &value, const CIcon &icon, bool resize, bool skipEqualValues)
+    bool CNameVariantPairView::addOrUpdateByName(const QString &name, const swift::misc::CVariant &value,
+                                                 const CIcon &icon, bool resize, bool skipEqualValues)
     {
         Q_ASSERT(m_model);
         bool changed = m_model->addOrUpdateByName(name, value, icon, skipEqualValues);
@@ -38,8 +39,5 @@ namespace swift::gui::views
         if (resize) { this->resizeToContents(); }
     }
 
-    bool CNameVariantPairView::containsName(const QString &name)
-    {
-        return m_model->containsName(name);
-    }
+    bool CNameVariantPairView::containsName(const QString &name) { return m_model->containsName(name); }
 } // namespace swift::gui::views

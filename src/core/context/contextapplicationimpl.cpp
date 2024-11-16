@@ -21,7 +21,8 @@ using namespace swift::misc;
 
 namespace swift::core::context
 {
-    CContextApplication::CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextApplication(mode, runtime), CIdentifiable(this)
+    CContextApplication::CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+        : IContextApplication(mode, runtime), CIdentifiable(this)
     {}
 
     CContextApplication *CContextApplication::registerWithDBus(swift::misc::CDBusServer *server)
@@ -71,7 +72,10 @@ namespace swift::core::context
 
     swift::misc::CStatusMessage CContextApplication::saveSettingsByKey(const QStringList &keys)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keys.join(", "); }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keys.join(", ");
+        }
         return CSettingsCache::instance()->saveToStore(keys);
     }
 
@@ -107,7 +111,10 @@ namespace swift::core::context
 
     CIdentifier CContextApplication::registerApplication(const CIdentifier &application)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application;
+        }
 
         if (!m_registeredApplications.contains(application))
         {
@@ -122,7 +129,10 @@ namespace swift::core::context
 
     void CContextApplication::unregisterApplication(const CIdentifier &application)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << application;
+        }
         int r = m_registeredApplications.remove(application);
         this->cleanupRegisteredApplications();
         if (r > 0) { emit registrationChanged(); }

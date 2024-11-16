@@ -13,8 +13,7 @@ namespace swift::misc::simulation
 {
     CSimulatorInfoList::CSimulatorInfoList() {}
 
-    CSimulatorInfoList::CSimulatorInfoList(const CSequence<CSimulatorInfo> &other) : CSequence<CSimulatorInfo>(other)
-    {}
+    CSimulatorInfoList::CSimulatorInfoList(const CSequence<CSimulatorInfo> &other) : CSequence<CSimulatorInfo>(other) {}
 
     CSimulatorInfoList CSimulatorInfoList::withNoDuplicates() const
     {
@@ -38,14 +37,8 @@ namespace swift::misc::simulation
         for (const CSimulatorInfo &simulator : *this)
         {
             if (simulator.isUnspecified() || simulator.isNoSimulator()) { continue; }
-            if (simulator.isSingleSimulator())
-            {
-                newList.push_back(simulator);
-            }
-            else
-            {
-                newList.push_back(splitIntoSingleSimulators(simulator));
-            }
+            if (simulator.isSingleSimulator()) { newList.push_back(simulator); }
+            else { newList.push_back(splitIntoSingleSimulators(simulator)); }
         }
         return newList;
     }

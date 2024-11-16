@@ -12,7 +12,8 @@ using namespace swift::misc;
 namespace swift::gui::models
 {
     template <class ContainerType>
-    bool IModelFilter<ContainerType>::stringMatchesFilterExpression(const QString &value, const QString &filter, Qt::CaseSensitivity cs) const
+    bool IModelFilter<ContainerType>::stringMatchesFilterExpression(const QString &value, const QString &filter,
+                                                                    Qt::CaseSensitivity cs) const
     {
         QString v = value.trimmed();
         QString f = filter.trimmed();
@@ -21,30 +22,18 @@ namespace swift::gui::models
         if (v.isEmpty()) { return false; }
 
         // no wildcard, just string matching
-        if (!filter.contains('*'))
-        {
-            return (v.indexOf(f, 0, cs) == 0) && (v.length() == f.length());
-        }
+        if (!filter.contains('*')) { return (v.indexOf(f, 0, cs) == 0) && (v.length() == f.length()); }
 
         const QString filterNoWildcard = stripWildcard(f);
 
         // included?
-        if (f.startsWith('*') && f.endsWith('*'))
-        {
-            return v.contains(filterNoWildcard, cs);
-        }
+        if (f.startsWith('*') && f.endsWith('*')) { return v.contains(filterNoWildcard, cs); }
 
         // ends with
-        if (f.endsWith('*'))
-        {
-            return v.startsWith(filterNoWildcard, cs);
-        }
+        if (f.endsWith('*')) { return v.startsWith(filterNoWildcard, cs); }
 
         // starting with
-        if (f.startsWith('*'))
-        {
-            return v.endsWith(filterNoWildcard, cs);
-        }
+        if (f.startsWith('*')) { return v.endsWith(filterNoWildcard, cs); }
 
         // wildcard in middle
         if (f.contains('*'))

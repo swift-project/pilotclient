@@ -38,7 +38,8 @@ namespace swift::core::vatsim
         CReaderSettings();
 
         //! Simplified constructor
-        CReaderSettings(const swift::misc::physical_quantities::CTime &initialTime, const swift::misc::physical_quantities::CTime &periodicTime, bool neverUpdate = false);
+        CReaderSettings(const swift::misc::physical_quantities::CTime &initialTime,
+                        const swift::misc::physical_quantities::CTime &periodicTime, bool neverUpdate = false);
 
         //! Get time
         const swift::misc::physical_quantities::CTime &getInitialTime() const { return m_initialTime; }
@@ -68,8 +69,10 @@ namespace swift::core::vatsim
         static const CReaderSettings &neverUpdateSettings();
 
     private:
-        swift::misc::physical_quantities::CTime m_initialTime { 30.0, swift::misc::physical_quantities::CTimeUnit::s() };
-        swift::misc::physical_quantities::CTime m_periodicTime { 30.0, swift::misc::physical_quantities::CTimeUnit::s() };
+        swift::misc::physical_quantities::CTime m_initialTime { 30.0,
+                                                                swift::misc::physical_quantities::CTimeUnit::s() };
+        swift::misc::physical_quantities::CTime m_periodicTime { 30.0,
+                                                                 swift::misc::physical_quantities::CTimeUnit::s() };
         bool m_neverUpdate = false;
 
         SWIFT_METACLASS(
@@ -95,7 +98,10 @@ namespace swift::core::vatsim
         //! \copydoc swift::misc::TSettingTrait::defaultValue
         static const swift::core::vatsim::CReaderSettings &defaultValue()
         {
-            static const swift::core::vatsim::CReaderSettings reader { { 25.0, swift::misc::physical_quantities::CTimeUnit::s() }, { 120.0, swift::misc::physical_quantities::CTimeUnit::s() } };
+            static const swift::core::vatsim::CReaderSettings reader {
+                { 25.0, swift::misc::physical_quantities::CTimeUnit::s() },
+                { 120.0, swift::misc::physical_quantities::CTimeUnit::s() }
+            };
             return reader;
         }
     };
@@ -116,13 +122,17 @@ namespace swift::core::vatsim
         //! \copydoc swift::misc::TSettingTrait::defaultValue
         static const swift::core::vatsim::CReaderSettings &defaultValue()
         {
-            static const swift::core::vatsim::CReaderSettings reader { { 35.0, swift::misc::physical_quantities::CTimeUnit::s() }, { 300.0, swift::misc::physical_quantities::CTimeUnit::s() } };
+            static const swift::core::vatsim::CReaderSettings reader {
+                { 35.0, swift::misc::physical_quantities::CTimeUnit::s() },
+                { 300.0, swift::misc::physical_quantities::CTimeUnit::s() }
+            };
             return reader;
         }
     };
 
     //! FSD Message settings
-    class SWIFT_CORE_EXPORT CRawFsdMessageSettings : public swift::misc::CValueObject<swift::core::vatsim::CRawFsdMessageSettings>
+    class SWIFT_CORE_EXPORT CRawFsdMessageSettings :
+        public swift::misc::CValueObject<swift::core::vatsim::CRawFsdMessageSettings>
     {
     public:
         //! File writing mode

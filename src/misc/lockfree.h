@@ -96,12 +96,15 @@ namespace swift::misc
         //! @}
 
         //! Move constructor.
-        LockFreeUniqueWriter(LockFreeUniqueWriter &&other) noexcept : m_old(std::move(other.m_old)), m_now(std::move(other.m_now)), m_ptr(std::move(other.m_ptr)) {}
+        LockFreeUniqueWriter(LockFreeUniqueWriter &&other) noexcept
+            : m_old(std::move(other.m_old)), m_now(std::move(other.m_now)), m_ptr(std::move(other.m_ptr))
+        {}
 
         //! Move assignment operator.
         LockFreeUniqueWriter &operator=(LockFreeUniqueWriter &&other) noexcept
         {
-            std::tie(m_old, m_now, m_ptr) = std::forward_as_tuple(std::move(other.m_old), std::move(other.m_now), std::move(other.m_ptr));
+            std::tie(m_old, m_now, m_ptr) =
+                std::forward_as_tuple(std::move(other.m_old), std::move(other.m_now), std::move(other.m_ptr));
             return *this;
         }
 
@@ -117,7 +120,9 @@ namespace swift::misc
     private:
         friend class LockFree<T>;
 
-        LockFreeUniqueWriter(std::shared_ptr<const T> ptr, std::shared_ptr<const T> *now) : m_old(ptr), m_now(now), m_ptr(std::make_shared<T>(*m_old)) {}
+        LockFreeUniqueWriter(std::shared_ptr<const T> ptr, std::shared_ptr<const T> *now)
+            : m_old(ptr), m_now(now), m_ptr(std::make_shared<T>(*m_old))
+        {}
         std::shared_ptr<const T> m_old;
         std::shared_ptr<const T> *m_now;
         std::shared_ptr<T> m_ptr;
@@ -131,7 +136,8 @@ namespace swift::misc
     {
     public:
         //! @{
-        //! The value can be modified through the returned reference. The modification is applied by evaluating in a bool context.
+        //! The value can be modified through the returned reference. The modification is applied by evaluating in a
+        //! bool context.
         T &get() { return *m_ptr; }
         T *operator->() { return m_ptr.get(); }
         T &operator*() { return *m_ptr; }
@@ -153,11 +159,13 @@ namespace swift::misc
         }
 
         //! Try to overwrite the original object with the new one stored in the writer, and return false on success.
-        //! If true is returned, then the caller must try again. This would happen if another simultaneous write had occurred.
+        //! If true is returned, then the caller must try again. This would happen if another simultaneous write had
+        //! occurred.
         bool operator!() { return !operator bool(); }
 
         //! Try to overwrite the original object with the new one stored in the writer, and return true on success.
-        //! If false is returned, then the caller must try again. This would happen if another simultaneous write had occurred.
+        //! If false is returned, then the caller must try again. This would happen if another simultaneous write had
+        //! occurred.
         operator bool()
         {
             Q_ASSERT_X(m_ptr.use_count() > 0, Q_FUNC_INFO, "SharedWriter tried to commit changes twice");
@@ -185,19 +193,24 @@ namespace swift::misc
         //! @}
 
         //! Move constructor.
-        LockFreeSharedWriter(LockFreeSharedWriter &&other) noexcept : m_old(std::move(other.m_old)), m_now(std::move(other.m_now)), m_ptr(std::move(other.m_ptr)) {}
+        LockFreeSharedWriter(LockFreeSharedWriter &&other) noexcept
+            : m_old(std::move(other.m_old)), m_now(std::move(other.m_now)), m_ptr(std::move(other.m_ptr))
+        {}
 
         //! Move assignment operator.
         LockFreeSharedWriter &operator=(LockFreeSharedWriter &&other) noexcept
         {
-            std::tie(m_old, m_now, m_ptr) = std::forward_as_tuple(std::move(other.m_old), std::move(other.m_now), std::move(other.m_ptr));
+            std::tie(m_old, m_now, m_ptr) =
+                std::forward_as_tuple(std::move(other.m_old), std::move(other.m_now), std::move(other.m_ptr));
             return *this;
         }
 
     private:
         friend class LockFree<T>;
 
-        LockFreeSharedWriter(std::shared_ptr<const T> ptr, std::shared_ptr<const T> *now) : m_old(ptr), m_now(now), m_ptr(std::make_shared<T>(*m_old)) {}
+        LockFreeSharedWriter(std::shared_ptr<const T> ptr, std::shared_ptr<const T> *now)
+            : m_old(ptr), m_now(now), m_ptr(std::make_shared<T>(*m_old))
+        {}
         std::shared_ptr<const T> m_old;
         std::shared_ptr<const T> *m_now;
         std::shared_ptr<T> m_ptr;
@@ -219,7 +232,9 @@ namespace swift::misc
         LockFree(const T &other) : m_ptr(std::make_shared<const T>(other)) {}
 
         //! Construct by moving from a T.
-        LockFree(T &&other) noexcept(std::is_nothrow_move_assignable_v<T>) : m_ptr(std::make_shared<const T>(std::move(other))) {}
+        LockFree(T &&other) noexcept(std::is_nothrow_move_assignable_v<T>)
+            : m_ptr(std::make_shared<const T>(std::move(other)))
+        {}
 
         //! @{
         //! LockFree cannot be copied or moved.
@@ -230,22 +245,13 @@ namespace swift::misc
         //! @}
 
         //! Return an object which can read the current value.
-        LockFreeReader<const T> read() const
-        {
-            return { std::atomic_load(&m_ptr) };
-        }
+        LockFreeReader<const T> read() const { return { std::atomic_load(&m_ptr) }; }
 
         //! Return an object which can write a new value, as long as there are no other writes.
-        LockFreeUniqueWriter<T> uniqueWrite()
-        {
-            return { std::atomic_load(&m_ptr), &m_ptr };
-        }
+        LockFreeUniqueWriter<T> uniqueWrite() { return { std::atomic_load(&m_ptr), &m_ptr }; }
 
         //! Return an object which can write a new value, even if there are other writes.
-        LockFreeSharedWriter<T> sharedWrite()
-        {
-            return { std::atomic_load(&m_ptr), &m_ptr };
-        }
+        LockFreeSharedWriter<T> sharedWrite() { return { std::atomic_load(&m_ptr), &m_ptr }; }
 
         //! Pass the current value to the functor inspector, and return whatever inspector returns.
         template <typename F>
@@ -284,12 +290,13 @@ namespace swift::misc
     class LockFreeMulti
     {
     public:
-        //! Construct from a forwarded tuple. Prefer to construct via swift::misc::multiRead or swift::misc::multiUniqueWrite.
+        //! Construct from a forwarded tuple. Prefer to construct via swift::misc::multiRead or
+        //! swift::misc::multiUniqueWrite.
         LockFreeMulti(std::tuple<T<Ts> &&...> &&tup) : m_tup(std::move(tup)) {}
 
         //! Function call operator.
-        //! \param function The LockFree values from which this LockFreeMulti was constructed will be passed as arguments to this functor.
-        //! \return The value returned by the functor, if any.
+        //! \param function The LockFree values from which this LockFreeMulti was constructed will be passed as
+        //! arguments to this functor. \return The value returned by the functor, if any.
         template <typename F>
         auto operator()(F &&function) &&
         {

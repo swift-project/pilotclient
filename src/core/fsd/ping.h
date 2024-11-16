@@ -35,16 +35,11 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const Ping &lhs, const Ping &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.m_timestamp == rhs.m_timestamp;
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.m_timestamp == rhs.m_timestamp;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const Ping &lhs, const Ping &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const Ping &lhs, const Ping &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

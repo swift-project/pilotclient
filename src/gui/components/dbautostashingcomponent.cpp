@@ -47,9 +47,9 @@ namespace swift::gui::components
         return cats;
     }
 
-    CDbAutoStashingComponent::CDbAutoStashingComponent(QWidget *parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint),
-                                                                          CDbMappingComponentAware(qobject_cast<CDbMappingComponent *>(parent)),
-                                                                          ui(new Ui::CDbAutoStashingComponent)
+    CDbAutoStashingComponent::CDbAutoStashingComponent(QWidget *parent)
+        : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint),
+          CDbMappingComponentAware(qobject_cast<CDbMappingComponent *>(parent)), ui(new Ui::CDbAutoStashingComponent)
     {
         ui->setupUi(this);
         ui->tvp_StatusMessages->setResizeMode(CAircraftModelView::ResizingAuto);
@@ -62,8 +62,7 @@ namespace swift::gui::components
         this->resetDescription();
     }
 
-    CDbAutoStashingComponent::~CDbAutoStashingComponent()
-    {}
+    CDbAutoStashingComponent::~CDbAutoStashingComponent() {}
 
     void CDbAutoStashingComponent::accept()
     {
@@ -80,7 +79,8 @@ namespace swift::gui::components
                 {
                     this->currentModelView()->removeModelsWithModelString(m_modelsToStash);
                 }
-                const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Auto stashed %1 models").arg(m_modelsToStash.size()));
+                const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo,
+                                                QStringLiteral("Auto stashed %1 models").arg(m_modelsToStash.size()));
                 this->addStatusMessage(stashedMsg);
                 m_modelsToStash.clear();
             }
@@ -174,14 +174,8 @@ namespace swift::gui::components
     int CDbAutoStashingComponent::getSelectedOrAllCount() const
     {
         if (!this->currentModelView()) { return 0; }
-        if (ui->rb_Selected->isChecked())
-        {
-            return this->currentModelView()->selectedRowCount();
-        }
-        else
-        {
-            return this->currentModelView()->rowCount();
-        }
+        if (ui->rb_Selected->isChecked()) { return this->currentModelView()->selectedRowCount(); }
+        else { return this->currentModelView()->rowCount(); }
     }
 
     CAircraftModelView *CDbAutoStashingComponent::currentModelView() const
@@ -204,16 +198,15 @@ namespace swift::gui::components
             prefixMessage.prependMessage(QString(model.getModelString() + ", " + model.getMembersDbStatus() + ": "));
             ui->tvp_StatusMessages->insert(prefixMessage);
         }
-        else
-        {
-            ui->tvp_StatusMessages->insert(msg);
-        }
+        else { ui->tvp_StatusMessages->insert(msg); }
     }
 
     void CDbAutoStashingComponent::tryToStashModels()
     {
         Q_ASSERT_X(this->currentModelView(), Q_FUNC_INFO, "No view");
-        const CAircraftModelList models(ui->rb_Selected->isChecked() ? this->currentModelView()->selectedObjects() : this->currentModelView()->containerOrFilteredContainer());
+        const CAircraftModelList models(ui->rb_Selected->isChecked() ?
+                                            this->currentModelView()->selectedObjects() :
+                                            this->currentModelView()->containerOrFilteredContainer());
         if (models.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
 
@@ -242,10 +235,7 @@ namespace swift::gui::components
             const bool stashed = this->tryToStashModel(stashModel, tempLivery);
             if (stashed)
             {
-                if (!description.isEmpty())
-                {
-                    this->setModelDescription(stashModel, description);
-                }
+                if (!description.isEmpty()) { this->setModelDescription(stashModel, description); }
                 autoStashed.push_back(stashModel);
             }
 
@@ -269,7 +259,8 @@ namespace swift::gui::components
         this->updateProgressIndicator(100);
         sGui->processEventsToRefreshGui();
 
-        const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo, QStringLiteral("Ready to auto stash %1 models").arg(autoStashed.size()));
+        const CStatusMessage stashedMsg(this, CStatusMessage::SeverityInfo,
+                                        QStringLiteral("Ready to auto stash %1 models").arg(autoStashed.size()));
         this->addStatusMessage(stashedMsg);
         m_modelsToStash = autoStashed;
         m_state = Completed;
@@ -295,7 +286,8 @@ namespace swift::gui::components
 
         if (!model.hasAircraftDesignator())
         {
-            this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"No aircraft designator"), model);
+            this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"No aircraft designator"),
+                                   model);
             m_noData++;
             return false;
         }
@@ -319,7 +311,8 @@ namespace swift::gui::components
             // if there is no livery (normal) we need an airline
             if (!fallback)
             {
-                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"No airline designator"), model);
+                this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"No airline designator"),
+                                       model);
                 m_noData++;
                 return false;
             }
@@ -331,10 +324,7 @@ namespace swift::gui::components
         CStatusMessageList validationMsgs(stashModel.validate(true));
         validationMsgs.removeWarningsAndBelow();
         CStatusMessage msg = validationMsgs.toSingleMessage();
-        if (msg.getSeverity() == CStatusMessage::SeverityError)
-        {
-            m_noValidationFailed++;
-        }
+        if (msg.getSeverity() == CStatusMessage::SeverityError) { m_noValidationFailed++; }
         else
         {
             msg = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Stashed succesfully");
@@ -349,10 +339,7 @@ namespace swift::gui::components
     void CDbAutoStashingComponent::setModelDescription(CAircraftModel &model, const QString &description) const
     {
         if (description.isEmpty()) { return; }
-        if (ui->rb_All->isChecked())
-        {
-            model.setDescription(description);
-        }
+        if (ui->rb_All->isChecked()) { model.setDescription(description); }
         else
         {
             // only for "empty" ones

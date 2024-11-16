@@ -66,10 +66,7 @@ swift::gui::CGuiApplication *sGui = nullptr; // set by constructor
 
 namespace swift::gui
 {
-    CGuiApplication *CGuiApplication::instance()
-    {
-        return qobject_cast<CGuiApplication *>(CApplication::instance());
-    }
+    CGuiApplication *CGuiApplication::instance() { return qobject_cast<CGuiApplication *>(CApplication::instance()); }
 
     const QStringList &CGuiApplication::getLogCategories()
     {
@@ -102,7 +99,9 @@ namespace swift::gui
         return true;
     }
 
-    CGuiApplication::CGuiApplication(const QString &applicationName, CApplicationInfo::Application application, const QPixmap &icon) : CApplication(applicationName, application, false)
+    CGuiApplication::CGuiApplication(const QString &applicationName, CApplicationInfo::Application application,
+                                     const QPixmap &icon)
+        : CApplication(applicationName, application, false)
     {
         this->addWindowModeOption();
         this->addWindowResetSizeOption();
@@ -121,15 +120,14 @@ namespace swift::gui
             this->setCurrentFontValues(); // most likely the default font and not any stylesheet font at this time
             sGui = this;
 
-            connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this, &CGuiApplication::onStyleSheetsChanged, Qt::QueuedConnection);
-            connect(this, &CGuiApplication::startUpCompleted, this, &CGuiApplication::superviseWindowMinSizes, Qt::QueuedConnection);
+            connect(&m_styleSheetUtility, &CStyleSheetUtility::styleSheetsChanged, this,
+                    &CGuiApplication::onStyleSheetsChanged, Qt::QueuedConnection);
+            connect(this, &CGuiApplication::startUpCompleted, this, &CGuiApplication::superviseWindowMinSizes,
+                    Qt::QueuedConnection);
         }
     }
 
-    CGuiApplication::~CGuiApplication()
-    {
-        sGui = nullptr;
-    }
+    CGuiApplication::~CGuiApplication() { sGui = nullptr; }
 
     void CGuiApplication::registerMetadata()
     {
@@ -139,13 +137,16 @@ namespace swift::gui
 
     void CGuiApplication::addWindowModeOption()
     {
-        m_cmdWindowMode = QCommandLineOption({ "w", "window" }, QCoreApplication::translate("main", "Windows: (n)ormal, (f)rameless, (t)ool."), "windowtype");
+        m_cmdWindowMode = QCommandLineOption(
+            { "w", "window" }, QCoreApplication::translate("main", "Windows: (n)ormal, (f)rameless, (t)ool."),
+            "windowtype");
         this->addParserOption(m_cmdWindowMode);
     }
 
     void CGuiApplication::addWindowResetSizeOption()
     {
-        m_cmdWindowSizeReset = QCommandLineOption({ { "r", "resetsize" }, QCoreApplication::translate("main", "Reset window size (ignore saved values).") });
+        m_cmdWindowSizeReset = QCommandLineOption(
+            { { "r", "resetsize" }, QCoreApplication::translate("main", "Reset window size (ignore saved values).") });
         this->addParserOption(m_cmdWindowSizeReset);
     }
 
@@ -153,13 +154,15 @@ namespace swift::gui
     {
         // just added here to display it in help
         // parseScaleFactor() is used since it is needed upfront (before application is created)
-        m_cmdWindowScaleSize = QCommandLineOption("scale", QCoreApplication::translate("main", "Scale: number."), "scalevalue");
+        m_cmdWindowScaleSize =
+            QCommandLineOption("scale", QCoreApplication::translate("main", "Scale: number."), "scalevalue");
         this->addParserOption(m_cmdWindowScaleSize);
     }
 
     void CGuiApplication::addWindowStateOption()
     {
-        m_cmdWindowStateMinimized = QCommandLineOption({ { "m", "minimized" }, QCoreApplication::translate("main", "Start minimized in system tray.") });
+        m_cmdWindowStateMinimized = QCommandLineOption(
+            { { "m", "minimized" }, QCoreApplication::translate("main", "Start minimized in system tray.") });
         this->addParserOption(m_cmdWindowStateMinimized);
     }
 
@@ -177,10 +180,7 @@ namespace swift::gui
             const QString v(this->getParserValue(m_cmdWindowMode));
             return CEnableForFramelessWindow::stringToWindowMode(v);
         }
-        else
-        {
-            return CEnableForFramelessWindow::WindowNormal;
-        }
+        else { return CEnableForFramelessWindow::WindowNormal; }
     }
 
     void CGuiApplication::splashScreen(const QPixmap &pixmap)
@@ -208,10 +208,7 @@ namespace swift::gui
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     }
 
-    QWidget *CGuiApplication::mainApplicationWidget()
-    {
-        return CGuiUtility::mainApplicationWidget();
-    }
+    QWidget *CGuiApplication::mainApplicationWidget() { return CGuiUtility::mainApplicationWidget(); }
 
     void CGuiApplication::registerMainApplicationWidget(QWidget *mainWidget)
     {
@@ -222,7 +219,9 @@ namespace swift::gui
     {
         if (this->getGlobalSetup().isSwiftVersionMinimumMappingVersion()) { return true; }
 
-        const QString msg = QStringLiteral("Your are using swift version: '%1'.\nCreating mappings requires at least '%2'.").arg(CBuildConfig::getVersionString(), this->getGlobalSetup().getMappingMinimumVersionString());
+        const QString msg =
+            QStringLiteral("Your are using swift version: '%1'.\nCreating mappings requires at least '%2'.")
+                .arg(CBuildConfig::getVersionString(), this->getGlobalSetup().getMappingMinimumVersionString());
         QMessageBox::warning(CGuiApplication::mainApplicationWindow(), "Version check", msg, QMessageBox::Close);
         return false;
     }
@@ -287,10 +286,7 @@ namespace swift::gui
         QApplication::setWindowIcon(icon);
     }
 
-    void CGuiApplication::exit(int retcode)
-    {
-        CApplication::exit(retcode);
-    }
+    void CGuiApplication::exit(int retcode) { CApplication::exit(retcode); }
 
     void CGuiApplication::highDpiScreenSupport(const QString &scaleFactor)
     {
@@ -312,10 +308,7 @@ namespace swift::gui
         qputenv("QT_SCALE_FACTOR", sfa);
     }
 
-    bool CGuiApplication::isUsingHighDpiScreenSupport()
-    {
-        return CGuiUtility::isUsingHighDpiScreenSupport();
-    }
+    bool CGuiApplication::isUsingHighDpiScreenSupport() { return CGuiUtility::isUsingHighDpiScreenSupport(); }
 
     QScreen *CGuiApplication::currentScreen()
     {
@@ -347,8 +340,10 @@ namespace swift::gui
     const QString &CGuiApplication::fileForWindowGeometryAndStateSettings()
     {
         static const QString filename = [] {
-            QString dir = CFileUtils::appendFilePaths(CSwiftDirectories::normalizedApplicationDataDirectory(), "settings/qgeom");
-            return CFileUtils::appendFilePaths(dir, QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName() + ".ini");
+            QString dir =
+                CFileUtils::appendFilePaths(CSwiftDirectories::normalizedApplicationDataDirectory(), "settings/qgeom");
+            return CFileUtils::appendFilePaths(
+                dir, QFileInfo(QCoreApplication::applicationFilePath()).completeBaseName() + ".ini");
         }();
         return filename;
     }
@@ -401,15 +396,15 @@ namespace swift::gui
             const QString parameter = m_cmdWindowSizeReset.names().first();
             CLogSubscriber logSub(this, [&](const CStatusMessage &message) {
                 // handles an error in restoreGeometry/State
-                const int ret = QMessageBox::critical(sGui->mainApplicationWidget(), sGui->getApplicationNameAndVersion(),
-                                                      QStringLiteral(
-                                                          "Restoring the window state/geometry failed!\n"
-                                                          "You need to reset the window size (command -%1).\n\n"
-                                                          "Original msg: %2\n\n"
-                                                          "We can try to reset the values and restart\n"
-                                                          "Do you want to try?")
-                                                          .arg(parameter, message.getMessage()),
-                                                      QMessageBox::Yes | QMessageBox::No);
+                const int ret =
+                    QMessageBox::critical(sGui->mainApplicationWidget(), sGui->getApplicationNameAndVersion(),
+                                          QStringLiteral("Restoring the window state/geometry failed!\n"
+                                                         "You need to reset the window size (command -%1).\n\n"
+                                                         "Original msg: %2\n\n"
+                                                         "We can try to reset the values and restart\n"
+                                                         "Do you want to try?")
+                                              .arg(parameter, message.getMessage()),
+                                          QMessageBox::Yes | QMessageBox::No);
                 if (ret == QMessageBox::Yes)
                 {
                     this->resetWindowGeometryAndState();
@@ -526,17 +521,15 @@ namespace swift::gui
         if (msgs.isEmpty()) { return; }
         if (!msgs.hasErrorMessages()) { return; }
         static const CPropertyIndexList propertiesSingle({ CStatusMessage::IndexMessage });
-        static const CPropertyIndexList propertiesMulti({ CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
+        static const CPropertyIndexList propertiesMulti(
+            { CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
         const QString msgsHtml = msgs.toHtml(msgs.size() > 1 ? propertiesMulti : propertiesSingle);
-        QMessageBox::critical(nullptr,
-                              QGuiApplication::applicationDisplayName(),
-                              "<html><head><body>" + msgsHtml + "</body></html>", QMessageBox::Abort, QMessageBox::NoButton);
+        QMessageBox::critical(nullptr, QGuiApplication::applicationDisplayName(),
+                              "<html><head><body>" + msgsHtml + "</body></html>", QMessageBox::Abort,
+                              QMessageBox::NoButton);
     }
 
-    bool CGuiApplication::isCmdWindowSizeResetSet() const
-    {
-        return this->isParserOptionSet(m_cmdWindowSizeReset);
-    }
+    bool CGuiApplication::isCmdWindowSizeResetSet() const { return this->isParserOptionSet(m_cmdWindowSizeReset); }
 
     bool CGuiApplication::displayInStatusBar(const CStatusMessage &message)
     {
@@ -581,10 +574,7 @@ namespace swift::gui
         bool c = connect(a, &QAction::triggered, this, [=]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
-            if (QDir(path).exists())
-            {
-                QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-            }
+            if (QDir(path).exists()) { QDesktopServices::openUrl(QUrl::fromLocalFile(path)); }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -609,10 +599,7 @@ namespace swift::gui
         a = sm->addAction(CIcons::disk16(), "Cache directory");
         c = connect(a, &QAction::triggered, this, [=]() {
             const QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
-            if (QDir(path).exists())
-            {
-                QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-            }
+            if (QDir(path).exists()) { QDesktopServices::openUrl(QUrl::fromLocalFile(path)); }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
@@ -689,7 +676,8 @@ namespace swift::gui
         a = menu.addAction("E&xit");
         // a->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q)); // avoid accidentally closing
         c = connect(
-            a, &QAction::triggered, this, [=]() {
+            a, &QAction::triggered, this,
+            [=]() {
                 // a close event might already trigger a shutdown
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 if (!CGuiApplication::mainApplicationWidget()) { return; }
@@ -709,7 +697,8 @@ namespace swift::gui
         QMenu *sm = menu.addMenu("JSON files/Templates");
         QAction *a = sm->addAction("JSON bootstrap");
         bool c = connect(
-            a, &QAction::triggered, this, [=]() {
+            a, &QAction::triggered, this,
+            [=]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 const CGlobalSetup s = this->getGlobalSetup();
                 CLogMessage(this).info(s.toJsonString());
@@ -719,7 +708,8 @@ namespace swift::gui
 
         a = sm->addAction("JSON version update info (for info only)");
         c = connect(
-            a, &QAction::triggered, this, [=]() {
+            a, &QAction::triggered, this,
+            [=]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 const CUpdateInfo info = this->getUpdateInfo();
                 CLogMessage(this).info(info.toJsonString());
@@ -731,7 +721,8 @@ namespace swift::gui
         {
             a = menu.addAction("Services log.(console)");
             c = connect(
-                a, &QAction::triggered, this, [=]() {
+                a, &QAction::triggered, this,
+                [=]() {
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     CLogMessage(this).info(this->getWebDataServices()->getReadersLog());
                 },
@@ -740,7 +731,8 @@ namespace swift::gui
 
             a = sm->addAction("JSON DB info (for info only)");
             c = connect(
-                a, &QAction::triggered, this, [=]() {
+                a, &QAction::triggered, this,
+                [=]() {
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
                     const CDbInfoList info = this->getWebDataServices()->getDbInfoDataReader()->getInfoObjects();
@@ -751,7 +743,8 @@ namespace swift::gui
 
             a = sm->addAction("JSON shared info (for info only)");
             c = connect(
-                a, &QAction::triggered, this, [=]() {
+                a, &QAction::triggered, this,
+                [=]() {
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
                     const CDbInfoList info = this->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
@@ -763,7 +756,8 @@ namespace swift::gui
 
         a = menu.addAction("Metadata (slow)");
         c = connect(
-            a, &QAction::triggered, this, [=]() {
+            a, &QAction::triggered, this,
+            [=]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 CLogMessage(this).info(getAllUserMetatypesTypes());
             },
@@ -860,9 +854,7 @@ namespace swift::gui
 
         // https://joekuan.wordpress.com/2015/09/23/list-of-qt-icons/
         a = menu.addAction(QApplication::style()->standardIcon(QStyle::SP_TitleBarMenuButton), "About Qt");
-        c = connect(a, &QAction::triggered, this, []() {
-            QApplication::aboutQt();
-        });
+        c = connect(a, &QAction::triggered, this, []() { QApplication::aboutQt(); });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c)
     }
@@ -904,10 +896,7 @@ namespace swift::gui
         return true;
     }
 
-    const CStyleSheetUtility &CGuiApplication::getStyleSheetUtility() const
-    {
-        return m_styleSheetUtility;
-    }
+    const CStyleSheetUtility &CGuiApplication::getStyleSheetUtility() const { return m_styleSheetUtility; }
 
     QString CGuiApplication::getWidgetStyle() const
     {
@@ -916,10 +905,7 @@ namespace swift::gui
         return currentWidgetStyle.replace("Style", "");
     }
 
-    bool CGuiApplication::reloadStyleSheets()
-    {
-        return m_styleSheetUtility.read();
-    }
+    bool CGuiApplication::reloadStyleSheets() { return m_styleSheetUtility.read(); }
 
     bool CGuiApplication::openStandardWidgetStyleSheet()
     {
@@ -941,20 +927,15 @@ namespace swift::gui
         return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }
 
-    bool CGuiApplication::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
+    bool CGuiApplication::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle,
+                                     const QString &fontWeight, const QString &fontColor)
     {
         return m_styleSheetUtility.updateFont(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
     }
 
-    bool CGuiApplication::updateFont(const QString &qss)
-    {
-        return m_styleSheetUtility.updateFont(qss);
-    }
+    bool CGuiApplication::updateFont(const QString &qss) { return m_styleSheetUtility.updateFont(qss); }
 
-    bool CGuiApplication::resetFont()
-    {
-        return m_styleSheetUtility.resetFont();
-    }
+    bool CGuiApplication::resetFont() { return m_styleSheetUtility.resetFont(); }
 
     void CGuiApplication::setMinimumSizeInCharacters(int widthChars, int heightChars)
     {
@@ -970,8 +951,7 @@ namespace swift::gui
             if (sGui)
             {
                 static const QString style = sGui->getStyleSheetUtility().styles(
-                    { CStyleSheetUtility::fileNameFonts(),
-                      CStyleSheetUtility::fileNameStandardWidget() });
+                    { CStyleSheetUtility::fileNameFonts(), CStyleSheetUtility::fileNameStandardWidget() });
                 dialog.setStyleSheet(style);
             }
 
@@ -1003,16 +983,12 @@ namespace swift::gui
         case QDialog::Rejected:
             if (closeEvent) { closeEvent->ignore(); }
             break;
-        default:
-            break;
+        default: break;
         }
         return c;
     }
 
-    bool CGuiApplication::parsingHookIn()
-    {
-        return true;
-    }
+    bool CGuiApplication::parsingHookIn() { return true; }
 
     void CGuiApplication::onCoreFacadeStarted()
     {
@@ -1036,7 +1012,9 @@ namespace swift::gui
     {
         const QWidget *w = CGuiApplication::mainApplicationWidget();
         if (!w) { return QStringLiteral("Font info not available"); }
-        return QStringLiteral("Family: '%1', average width: %2").arg(w->font().family()).arg(w->fontMetrics().averageCharWidth());
+        return QStringLiteral("Family: '%1', average width: %2")
+            .arg(w->font().family())
+            .arg(w->fontMetrics().averageCharWidth());
     }
 
     bool CGuiApplication::toggleStayOnTop()
@@ -1100,14 +1078,8 @@ namespace swift::gui
             return;
         }
 
-        if (m_frontBack)
-        {
-            this->windowToBack();
-        }
-        else
-        {
-            this->windowToFront();
-        }
+        if (m_frontBack) { this->windowToBack(); }
+        else { this->windowToFront(); }
     }
 
     void CGuiApplication::windowMinimizeNormalToggle()
@@ -1115,10 +1087,7 @@ namespace swift::gui
         if (this->isShuttingDown()) { return; }
         QMainWindow *w = CGuiApplication::mainApplicationWindow();
         if (!w) { return; }
-        if (m_normalizeMinimize)
-        {
-            w->showMinimized();
-        }
+        if (m_normalizeMinimize) { w->showMinimized(); }
         else
         {
             // trick here is to minimize first and the normalize from minimized state
@@ -1158,16 +1127,19 @@ namespace swift::gui
         if (modals.count() > 0)
         {
             // that is a pretty normal situation
-            CLogMessage(this).info(u"Graceful shutdown, still %1 modal widget(s), closed: %2") << modals.count() << modals.join(", ");
+            CLogMessage(this).info(u"Graceful shutdown, still %1 modal widget(s), closed: %2")
+                << modals.count() << modals.join(", ");
         }
 
         //! \todo KB 3-2020 remove as soon as the info status bar blocks shutdown bug is fixed
         //! ref: https://discordapp.com/channels/539048679160676382/539846348275449887/693848134811517029
-        const QStringList docks = CGuiUtility::deleteLaterAllDockWidgetsGetTitles(CGuiApplication::mainApplicationWidget(), true);
+        const QStringList docks =
+            CGuiUtility::deleteLaterAllDockWidgetsGetTitles(CGuiApplication::mainApplicationWidget(), true);
         if (docks.count() > 0)
         {
             // that should not happen
-            CLogMessage(this).warning(u"Graceful shutdown, still %1 floating dock widget(s), closed: %2") << docks.count() << docks.join(", ");
+            CLogMessage(this).warning(u"Graceful shutdown, still %1 floating dock widget(s), closed: %2")
+                << docks.count() << docks.join(", ");
         }
     }
 
@@ -1195,21 +1167,16 @@ namespace swift::gui
                     QApplication::setStyle(style); // subject of crash
                     if (style)
                     {
-                        CLogMessage(this).info(u"Changed style to '%1', req.: '%2'") << style->objectName() << widgetStyle;
+                        CLogMessage(this).info(u"Changed style to '%1', req.: '%2'")
+                            << style->objectName() << widgetStyle;
                     }
-                    else
-                    {
-                        CLogMessage(this).error(u"Unable to set requested style '%1'") << widgetStyle;
-                    }
+                    else { CLogMessage(this).error(u"Unable to set requested style '%1'") << widgetStyle; }
                 }
             } // valid style
         }
     }
 
-    void CGuiApplication::checkNewVersionMenu()
-    {
-        this->checkNewVersion(false);
-    }
+    void CGuiApplication::checkNewVersionMenu() { this->checkNewVersion(false); }
 
     void CGuiApplication::adjustPalette()
     {
@@ -1241,8 +1208,5 @@ namespace swift::gui
         m_fontPointSize = font.pointSize();
     }
 
-    void CGuiApplication::superviseWindowMinSizes()
-    {
-        CGuiUtility::superviseMainWindowMinSizes();
-    }
+    void CGuiApplication::superviseWindowMinSizes() { CGuiUtility::superviseMainWindowMinSizes(); }
 } // namespace swift::gui

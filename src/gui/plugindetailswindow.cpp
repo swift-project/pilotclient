@@ -15,8 +15,8 @@
 
 namespace swift::gui
 {
-    CPluginDetailsWindow::CPluginDetailsWindow(QWidget *parent) : QWidget(parent, Qt::Dialog),
-                                                                  ui(new Ui::CPluginDetailsWindow)
+    CPluginDetailsWindow::CPluginDetailsWindow(QWidget *parent)
+        : QWidget(parent, Qt::Dialog), ui(new Ui::CPluginDetailsWindow)
     {
         ui->setupUi(this);
         this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -29,8 +29,7 @@ namespace swift::gui
         connect(ui->pb_Close, &QPushButton::clicked, this, &CPluginDetailsWindow::close);
     }
 
-    CPluginDetailsWindow::~CPluginDetailsWindow()
-    {}
+    CPluginDetailsWindow::~CPluginDetailsWindow() {}
 
     void CPluginDetailsWindow::setPluginName(const QString &name)
     {
@@ -38,18 +37,12 @@ namespace swift::gui
         this->setWindowTitle(name);
     }
 
-    void CPluginDetailsWindow::setPluginIdentifier(const QString &id)
-    {
-        ui->lbl_PluginIdentifier->setText(id);
-    }
+    void CPluginDetailsWindow::setPluginIdentifier(const QString &id) { ui->lbl_PluginIdentifier->setText(id); }
 
     void CPluginDetailsWindow::setPluginDescription(const QString &description)
     {
         ui->lbl_Description->setText(description);
     }
 
-    void CPluginDetailsWindow::setPluginAuthors(const QString &authors)
-    {
-        ui->lbl_Authors->setText(authors);
-    }
+    void CPluginDetailsWindow::setPluginAuthors(const QString &authors) { ui->lbl_Authors->setText(authors); }
 } // namespace swift::gui

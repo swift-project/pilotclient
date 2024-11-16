@@ -16,8 +16,8 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CAircraftModelValidationComponent::CAircraftModelValidationComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                                            ui(new Ui::CAircraftModelValidationComponent)
+    CAircraftModelValidationComponent::CAircraftModelValidationComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CAircraftModelValidationComponent)
     {
         ui->setupUi(this);
         ui->comp_Simulator->setMode(CSimulatorSelector::ComboBox);
@@ -29,16 +29,24 @@ namespace swift::gui::components
         ui->cb_EnableStartupCheck->setChecked(setup.doVerificationAtStartup());
         ui->cb_OnlyIfErrorsOrWarnings->setChecked(setup.onlyShowVerificationWarningsAndErrors());
 
-        connect(ui->cb_EnableStartupCheck, &QCheckBox::toggled, this, &CAircraftModelValidationComponent::onCheckAtStartupChanged);
-        connect(ui->cb_OnlyIfErrorsOrWarnings, &QCheckBox::toggled, this, &CAircraftModelValidationComponent::onOnlyErrorWarningChanged);
+        connect(ui->cb_EnableStartupCheck, &QCheckBox::toggled, this,
+                &CAircraftModelValidationComponent::onCheckAtStartupChanged);
+        connect(ui->cb_OnlyIfErrorsOrWarnings, &QCheckBox::toggled, this,
+                &CAircraftModelValidationComponent::onOnlyErrorWarningChanged);
 
-        connect(ui->pb_TempDisableInvalid, &QPushButton::released, this, &CAircraftModelValidationComponent::onTempDisabledButtonClicked, Qt::QueuedConnection);
-        connect(ui->pb_TempDisableSelected, &QPushButton::released, this, &CAircraftModelValidationComponent::onTempDisabledButtonClicked, Qt::QueuedConnection);
-        connect(ui->pb_RemoveInvalid, &QPushButton::released, this, &CAircraftModelValidationComponent::onRemoveButtonClicked, Qt::QueuedConnection);
-        connect(ui->pb_RemoveSelected, &QPushButton::released, this, &CAircraftModelValidationComponent::onRemoveButtonClicked, Qt::QueuedConnection);
+        connect(ui->pb_TempDisableInvalid, &QPushButton::released, this,
+                &CAircraftModelValidationComponent::onTempDisabledButtonClicked, Qt::QueuedConnection);
+        connect(ui->pb_TempDisableSelected, &QPushButton::released, this,
+                &CAircraftModelValidationComponent::onTempDisabledButtonClicked, Qt::QueuedConnection);
+        connect(ui->pb_RemoveInvalid, &QPushButton::released, this,
+                &CAircraftModelValidationComponent::onRemoveButtonClicked, Qt::QueuedConnection);
+        connect(ui->pb_RemoveSelected, &QPushButton::released, this,
+                &CAircraftModelValidationComponent::onRemoveButtonClicked, Qt::QueuedConnection);
 
-        connect(ui->pb_TriggerValidation, &QPushButton::released, this, &CAircraftModelValidationComponent::triggerValidation, Qt::QueuedConnection);
-        connect(ui->pb_Help, &QPushButton::released, this, &CAircraftModelValidationComponent::showHelp, Qt::QueuedConnection);
+        connect(ui->pb_TriggerValidation, &QPushButton::released, this,
+                &CAircraftModelValidationComponent::triggerValidation, Qt::QueuedConnection);
+        connect(ui->pb_Help, &QPushButton::released, this, &CAircraftModelValidationComponent::showHelp,
+                Qt::QueuedConnection);
 
         // 1st init when running in distributed environment
         QPointer<CAircraftModelValidationComponent> myself(this);
@@ -50,10 +58,12 @@ namespace swift::gui::components
         });
     }
 
-    CAircraftModelValidationComponent::~CAircraftModelValidationComponent()
-    {}
+    CAircraftModelValidationComponent::~CAircraftModelValidationComponent() {}
 
-    void CAircraftModelValidationComponent::validatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
+    void CAircraftModelValidationComponent::validatedModelSet(const CSimulatorInfo &simulator,
+                                                              const CAircraftModelList &valid,
+                                                              const CAircraftModelList &invalid, bool stopped,
+                                                              const CStatusMessageList &msgs)
     {
         // swift::misc::simulation::CBackgroundValidation
         Q_UNUSED(simulator)
@@ -72,10 +82,7 @@ namespace swift::gui::components
             // messages but no invalid models
             ui->tw_CAircraftModelValidationComponent->setCurrentWidget(ui->tb_Messages);
         }
-        else
-        {
-            ui->tw_CAircraftModelValidationComponent->setCurrentWidget(ui->tb_InvalidModels);
-        }
+        else { ui->tw_CAircraftModelValidationComponent->setCurrentWidget(ui->tb_InvalidModels); }
 
         const CAircraftMatcherSetup setup = m_matchingSettings.get();
         ui->cb_EnableStartupCheck->setChecked(setup.doVerificationAtStartup());
@@ -84,22 +91,22 @@ namespace swift::gui::components
         ui->pb_RemoveInvalid->setEnabled(!invalid.isEmpty());
         ui->pb_RemoveSelected->setEnabled(!invalid.isEmpty());
 
-        const QString msg = stopped ?
-                                QStringLiteral("Validation for '%1' stopped, maybe your models are not accessible or too many issues").arg(simulator.toQString(true)) :
-                                QStringLiteral("Validated for '%1'. Valid: %2 Invalid: %3").arg(simulator.toQString(true)).arg(valid.size()).arg(invalid.size());
+        const QString msg =
+            stopped ?
+                QStringLiteral("Validation for '%1' stopped, maybe your models are not accessible or too many issues")
+                    .arg(simulator.toQString(true)) :
+                QStringLiteral("Validated for '%1'. Valid: %2 Invalid: %3")
+                    .arg(simulator.toQString(true))
+                    .arg(valid.size())
+                    .arg(invalid.size());
         ui->lbl_Summay->setText(msg);
-        if (stopped)
-        {
-            this->showOverlayHTMLMessage(msg, MsgTimeout);
-        }
+        if (stopped) { this->showOverlayHTMLMessage(msg, MsgTimeout); }
         else if (msgs.hasWarningOrErrorMessages() || !invalid.isEmpty())
         {
-            this->showOverlayHTMLMessage(u"There are warnings or errors, please check the messages and invalid models.", MsgTimeout);
+            this->showOverlayHTMLMessage(u"There are warnings or errors, please check the messages and invalid models.",
+                                         MsgTimeout);
         }
-        else
-        {
-            this->showOverlayHTMLMessage(u"There are NO warnings or errors, your set looks good.", MsgTimeout);
-        }
+        else { this->showOverlayHTMLMessage(u"There are NO warnings or errors, your set looks good.", MsgTimeout); }
     }
 
     void CAircraftModelValidationComponent::tempDisableModels(const CAircraftModelList &models)
@@ -142,11 +149,13 @@ namespace swift::gui::components
         const CSimulatorInfo simulator = ui->comp_Simulator->getValue();
         if (sGui->getIContextSimulator()->triggerModelSetValidation(simulator))
         {
-            this->showOverlayHTMLMessage(QStringLiteral("Triggered validation for '%1'").arg(simulator.toQString(true)), 5000);
+            this->showOverlayHTMLMessage(QStringLiteral("Triggered validation for '%1'").arg(simulator.toQString(true)),
+                                         5000);
         }
         else
         {
-            this->showOverlayHTMLMessage(QStringLiteral("Cannot trigger validation for '%1'").arg(simulator.toQString(true)), 5000);
+            this->showOverlayHTMLMessage(
+                QStringLiteral("Cannot trigger validation for '%1'").arg(simulator.toQString(true)), 5000);
         }
     }
 
@@ -171,10 +180,7 @@ namespace swift::gui::components
         if (sender == ui->pb_TempDisableInvalid) { disableModels = ui->tvp_InvalidModels->container(); }
         else if (sender == ui->pb_TempDisableSelected) { disableModels = ui->tvp_InvalidModels->selectedObjects(); }
 
-        if (disableModels.isEmpty())
-        {
-            this->showOverlayHTMLMessage("No models disabled", 4000);
-        }
+        if (disableModels.isEmpty()) { this->showOverlayHTMLMessage("No models disabled", 4000); }
         else
         {
             this->tempDisableModels(disableModels);
@@ -192,16 +198,13 @@ namespace swift::gui::components
         if (sender == ui->pb_RemoveInvalid) { removeModels = ui->tvp_InvalidModels->container(); }
         else if (sender == ui->pb_RemoveSelected) { removeModels = ui->tvp_InvalidModels->selectedObjects(); }
 
-        if (removeModels.isEmpty())
-        {
-            this->showOverlayHTMLMessage("No models removed", 4000);
-        }
+        if (removeModels.isEmpty()) { this->showOverlayHTMLMessage("No models removed", 4000); }
         else
         {
-            const QMessageBox::StandardButton ret = QMessageBox::question(this,
-                                                                          tr("Model validation"),
-                                                                          tr("Do you really want to delete %1 models from model set?").arg(removeModels.sizeInt()),
-                                                                          QMessageBox::Ok | QMessageBox::Cancel);
+            const QMessageBox::StandardButton ret = QMessageBox::question(
+                this, tr("Model validation"),
+                tr("Do you really want to delete %1 models from model set?").arg(removeModels.sizeInt()),
+                QMessageBox::Ok | QMessageBox::Cancel);
             if (ret != QMessageBox::Ok) { return; }
 
             const int r = sGui->getIContextSimulator()->removeModelsFromSet(removeModels);

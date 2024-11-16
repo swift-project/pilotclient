@@ -52,7 +52,8 @@ namespace swift::core::db
 
     signals:
         //! User authenticated
-        void userAuthenticationFinished(const swift::misc::network::CAuthenticatedUser &user, const swift::misc::CStatusMessageList &loginStatus);
+        void userAuthenticationFinished(const swift::misc::network::CAuthenticatedUser &user,
+                                        const swift::misc::CStatusMessageList &loginStatus);
 
         //! Logoff completed
         void logoffFinished();
@@ -64,7 +65,9 @@ namespace swift::core::db
         //! User object changed
         void userChanged();
 
-        swift::misc::CData<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDatabaseAuthenticationService::userChanged };
+        swift::misc::CData<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser {
+            this, &CDatabaseAuthenticationService::userChanged
+        };
         bool m_shutdown = false;
     };
 } // namespace swift::core::db

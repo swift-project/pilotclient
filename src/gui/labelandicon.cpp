@@ -9,14 +9,9 @@
 
 namespace swift::gui
 {
-    CLabelAndIcon::CLabelAndIcon(QWidget *parent) : QFrame(parent),
-                                                    ui(new Ui::CLabelAndIcon)
-    {
-        ui->setupUi(this);
-    }
+    CLabelAndIcon::CLabelAndIcon(QWidget *parent) : QFrame(parent), ui(new Ui::CLabelAndIcon) { ui->setupUi(this); }
 
-    CLabelAndIcon::~CLabelAndIcon()
-    {}
+    CLabelAndIcon::~CLabelAndIcon() {}
 
     void CLabelAndIcon::set(const QPixmap &pixmap, const QString &text)
     {

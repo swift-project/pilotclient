@@ -57,8 +57,7 @@ namespace swift::misc
          * When a derived class and a base class both inherit from mixin::Icon,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-#define SWIFT_MISC_DECLARE_USING_MIXIN_ICON(DERIVED) \
-    using ::swift::misc::mixin::Icon<DERIVED>::toIcon;
+#define SWIFT_MISC_DECLARE_USING_MIXIN_ICON(DERIVED) using ::swift::misc::mixin::Icon<DERIVED>::toIcon;
     } // namespace mixin
 } // namespace swift::misc
 

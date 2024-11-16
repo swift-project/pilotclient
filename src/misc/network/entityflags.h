@@ -40,13 +40,16 @@ namespace swift::misc::network
             AircraftCategoryEntity = 1 << 12, //!< aircraft category entities
             AllEntities = ((1 << 13) - 1), //!< everything
             AllIcaoEntities = AircraftIcaoEntity | AirlineIcaoEntity, //!< all ICAO codes
-            AllIcaoAndCountries = AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity, //!< all ICAO codes and countries
+            AllIcaoAndCountries =
+                AircraftIcaoEntity | AirlineIcaoEntity | CountryEntity, //!< all ICAO codes and countries
             AllIcaoCountriesCategory = AllIcaoAndCountries | AircraftCategoryEntity, //!< includes category
             DistributorLiveryModel = DistributorEntity | LiveryEntity | ModelEntity, //!< Combined
             ModelMatchingEntities = AllIcaoEntities | LiveryEntity | ModelEntity, //!< all needed for model matching
-            AllDbEntitiesNoInfoObjects = AllIcaoCountriesCategory | DistributorLiveryModel | AirportEntity, //!< all DB entities, no info objects
+            AllDbEntitiesNoInfoObjects =
+                AllIcaoCountriesCategory | DistributorLiveryModel | AirportEntity, //!< all DB entities, no info objects
             AllDbEntities = AllDbEntitiesNoInfoObjects | DbInfoObjectEntity, //!< all DB stuff
-            AllDbEntitiesNoInfoObjectsNoAirportsAndCategories = AllIcaoAndCountries | DistributorLiveryModel //!< all DB entities, no info objects and airports
+            AllDbEntitiesNoInfoObjectsNoAirportsAndCategories =
+                AllIcaoAndCountries | DistributorLiveryModel //!< all DB entities, no info objects and airports
         };
         Q_DECLARE_FLAGS(Entity, EntityFlag)
 

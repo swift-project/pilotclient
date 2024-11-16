@@ -10,11 +10,12 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::components
 {
-    CSettingsViewUpdateTimes::CSettingsViewUpdateTimes(QWidget *parent) : QFrame(parent),
-                                                                          ui(new Ui::CSettingsViewUpdateTimes)
+    CSettingsViewUpdateTimes::CSettingsViewUpdateTimes(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsViewUpdateTimes)
     {
         ui->setupUi(this);
-        connect(ui->hs_RenderingUpdateTime, &QSlider::sliderReleased, this, &CSettingsViewUpdateTimes::ps_sliderChanged);
+        connect(ui->hs_RenderingUpdateTime, &QSlider::sliderReleased, this,
+                &CSettingsViewUpdateTimes::ps_sliderChanged);
         connect(ui->hs_AircraftUpdateTime, &QSlider::sliderReleased, this, &CSettingsViewUpdateTimes::ps_sliderChanged);
         connect(ui->hs_AtcUpdateTime, &QSlider::sliderReleased, this, &CSettingsViewUpdateTimes::ps_sliderChanged);
         connect(ui->hs_UserUpdateTime, &QSlider::sliderReleased, this, &CSettingsViewUpdateTimes::ps_sliderChanged);
@@ -23,8 +24,7 @@ namespace swift::gui::components
         this->ps_settingsChanged();
     }
 
-    CSettingsViewUpdateTimes::~CSettingsViewUpdateTimes()
-    {}
+    CSettingsViewUpdateTimes::~CSettingsViewUpdateTimes() {}
 
     void CSettingsViewUpdateTimes::ps_sliderChanged()
     {

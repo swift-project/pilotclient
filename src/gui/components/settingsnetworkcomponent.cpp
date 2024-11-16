@@ -14,8 +14,8 @@ using namespace swift::core;
 
 namespace swift::gui::components
 {
-    CSettingsNetworkComponent::CSettingsNetworkComponent(QWidget *parent) : QFrame(parent),
-                                                                            ui(new Ui::CSettingsNetworkComponent)
+    CSettingsNetworkComponent::CSettingsNetworkComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsNetworkComponent)
     {
         ui->setupUi(this);
     }

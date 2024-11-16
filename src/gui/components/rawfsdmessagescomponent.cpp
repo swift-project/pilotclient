@@ -21,13 +21,18 @@ using namespace swift::core::vatsim;
 
 namespace swift::gui::components
 {
-    CRawFsdMessagesComponent::CRawFsdMessagesComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CRawFsdMessagesComponent)
+    CRawFsdMessagesComponent::CRawFsdMessagesComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CRawFsdMessagesComponent)
     {
         ui->setupUi(this);
-        ui->cb_FileWritingMode->addItem(QApplication::translate("CRawFsdMessagesComponent", "None", nullptr), QVariant::fromValue(CRawFsdMessageSettings::None));
-        ui->cb_FileWritingMode->addItem(QApplication::translate("CRawFsdMessagesComponent", "Truncate", nullptr), QVariant::fromValue(CRawFsdMessageSettings::Truncate));
-        ui->cb_FileWritingMode->addItem(QApplication::translate("CRawFsdMessagesComponent", "Append", nullptr), QVariant::fromValue(CRawFsdMessageSettings::Append));
-        ui->cb_FileWritingMode->addItem(QApplication::translate("CRawFsdMessagesComponent", "Timestamped", nullptr), QVariant::fromValue(CRawFsdMessageSettings::Timestamped));
+        ui->cb_FileWritingMode->addItem(QApplication::translate("CRawFsdMessagesComponent", "None", nullptr),
+                                        QVariant::fromValue(CRawFsdMessageSettings::None));
+        ui->cb_FileWritingMode->addItem(QApplication::translate("CRawFsdMessagesComponent", "Truncate", nullptr),
+                                        QVariant::fromValue(CRawFsdMessageSettings::Truncate));
+        ui->cb_FileWritingMode->addItem(QApplication::translate("CRawFsdMessagesComponent", "Append", nullptr),
+                                        QVariant::fromValue(CRawFsdMessageSettings::Append));
+        ui->cb_FileWritingMode->addItem(QApplication::translate("CRawFsdMessagesComponent", "Timestamped", nullptr),
+                                        QVariant::fromValue(CRawFsdMessageSettings::Timestamped));
 
         ui->cb_FilterPacketType->addItem("");
         ui->cb_FilterPacketType->addItems(CRawFsdMessage::getAllPacketTypes());
@@ -39,38 +44,44 @@ namespace swift::gui::components
         expandWritingToFile(false);
     }
 
-    CRawFsdMessagesComponent::~CRawFsdMessagesComponent()
-    {}
+    CRawFsdMessagesComponent::~CRawFsdMessagesComponent() {}
 
     void CRawFsdMessagesComponent::setupConnections()
     {
 
         connect(ui->le_FilterText, &QLineEdit::returnPressed, this, &CRawFsdMessagesComponent::changeStringFilter);
-        connect(ui->cb_FilterPacketType, &QComboBox::currentTextChanged, this, &CRawFsdMessagesComponent::changePacketTypeFilter);
+        connect(ui->cb_FilterPacketType, &QComboBox::currentTextChanged, this,
+                &CRawFsdMessagesComponent::changePacketTypeFilter);
         connect(ui->gb_Filter, &QGroupBox::toggled, this, &CRawFsdMessagesComponent::expandFilters);
         connect(ui->gb_WriteToFile, &QGroupBox::toggled, this, &CRawFsdMessagesComponent::expandWritingToFile);
         connect(ui->pb_SelectFileDir, &QPushButton::clicked, this, &CRawFsdMessagesComponent::selectFileDir);
-        connect(ui->le_MaxDisplayedMessages, &QLineEdit::returnPressed, this, &CRawFsdMessagesComponent::changeMaxDisplayedMessages);
-        connect(ui->pb_EnableDisable, &QPushButton::clicked, this, &CRawFsdMessagesComponent::enableDisableRawFsdMessages);
+        connect(ui->le_MaxDisplayedMessages, &QLineEdit::returnPressed, this,
+                &CRawFsdMessagesComponent::changeMaxDisplayedMessages);
+        connect(ui->pb_EnableDisable, &QPushButton::clicked, this,
+                &CRawFsdMessagesComponent::enableDisableRawFsdMessages);
         connect(ui->pb_ClearMessages, &QPushButton::clicked, this, &CRawFsdMessagesComponent::clearAllMessages);
 
         QValidator *validator = new QIntValidator(10, 200, this);
         ui->le_MaxDisplayedMessages->setValidator(validator);
 
         using namespace std::placeholders;
-        QMetaObject::Connection c = sGui->getIContextNetwork()->connectRawFsdMessageSignal(this, std::bind(&CRawFsdMessagesComponent::addFsdMessage, this, _1));
+        QMetaObject::Connection c = sGui->getIContextNetwork()->connectRawFsdMessageSignal(
+            this, std::bind(&CRawFsdMessagesComponent::addFsdMessage, this, _1));
         if (!c)
         {
             ui->pte_RawFsdMessages->appendPlainText(QStringLiteral("Could not connect to raw FSD message."));
-            ui->pte_RawFsdMessages->appendPlainText(QStringLiteral("This is most likely because core is not running in this process."));
-            ui->pte_RawFsdMessages->appendPlainText(QStringLiteral("Open this component again from the process running core."));
+            ui->pte_RawFsdMessages->appendPlainText(
+                QStringLiteral("This is most likely because core is not running in this process."));
+            ui->pte_RawFsdMessages->appendPlainText(
+                QStringLiteral("Open this component again from the process running core."));
             return;
         }
         m_signalConnections.append(c);
 
         readSettings();
         // Connect them after settings are read. Otherwise they get called.
-        connect(ui->cb_FileWritingMode, qOverload<int>(&QComboBox::currentIndexChanged), this, &CRawFsdMessagesComponent::changeFileWritingMode);
+        connect(ui->cb_FileWritingMode, qOverload<int>(&QComboBox::currentIndexChanged), this,
+                &CRawFsdMessagesComponent::changeFileWritingMode);
     }
 
     void CRawFsdMessagesComponent::enableDisableRawFsdMessages()
@@ -187,7 +198,8 @@ namespace swift::gui::components
 
     void CRawFsdMessagesComponent::changeFileWritingMode()
     {
-        const CRawFsdMessageSettings::FileWriteMode mode = ui->cb_FileWritingMode->currentData().value<CRawFsdMessageSettings::FileWriteMode>();
+        const CRawFsdMessageSettings::FileWriteMode mode =
+            ui->cb_FileWritingMode->currentData().value<CRawFsdMessageSettings::FileWriteMode>();
         m_setting.setProperty(vatsim::CRawFsdMessageSettings::IndexFileWriteMode, CVariant::fromValue(mode));
     }
 

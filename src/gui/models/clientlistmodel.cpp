@@ -25,10 +25,12 @@ namespace swift::gui::models
         m_columns.addColumn(CColumn("client", CClient::IndexIcon));
         m_columns.addColumn(CColumn::standardValueObject("callsign", CClient::IndexCallsign));
         m_columns.addColumn(CColumn::standardString("realname", { CClient::IndexUser, CUser::IndexRealName }));
-        m_columns.addColumn(CColumn("vo.", "voice capabilities", CClient::IndexVoiceCapabilitiesIcon, new CPixmapFormatter()));
+        m_columns.addColumn(
+            CColumn("vo.", "voice capabilities", CClient::IndexVoiceCapabilitiesIcon, new CPixmapFormatter()));
         m_columns.addColumn(CColumn::standardString("capabilities", CClient::IndexCapabilitiesString));
         m_columns.addColumn(CColumn::standardString("model", CClient::IndexModelString));
-        m_columns.addColumn(CColumn("q.?", "queried", { CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString },
+        m_columns.addColumn(CColumn("q.?", "queried",
+                                    { CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString },
                                     new CBoolIconFormatter("queried", "not queried")));
         m_columns.addColumn(CColumn::standardString("server", CClient::IndexServer));
 

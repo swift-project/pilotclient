@@ -27,10 +27,7 @@ namespace swift::misc
         m_info += u' ' % extraInfo;
     }
 
-    void CCrashInfo::setLogPathAndFileName(const QString &fileName)
-    {
-        m_logFileAndPath = fileName;
-    }
+    void CCrashInfo::setLogPathAndFileName(const QString &fileName) { m_logFileAndPath = fileName; }
 
     QVariant CCrashInfo::propertyByIndex(CPropertyIndexRef index) const
     {
@@ -71,7 +68,8 @@ namespace swift::misc
         case IndexUserName: return this->getUserName().compare(compareValue.getUserName());
         case IndexInfo: return this->getInfo().compare(compareValue.getInfo());
         case IndexSimulatorString: return this->getSimulatorString().compare(compareValue.getInfo());
-        case IndexFlightNetworkInfo: return this->getFlightNetworkString().compare(compareValue.getFlightNetworkString());
+        case IndexFlightNetworkInfo:
+            return this->getFlightNetworkString().compare(compareValue.getFlightNetworkString());
         default: return CValueObject::comparePropertyByIndex(index.copyFrontRemoved(), compareValue);
         }
     }

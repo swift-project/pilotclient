@@ -29,8 +29,7 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CDbQuickMappingWizard::CDbQuickMappingWizard(QWidget *parent) : QWizard(parent),
-                                                                    ui(new Ui::CDbQuickMappingWizard)
+    CDbQuickMappingWizard::CDbQuickMappingWizard(QWidget *parent) : QWizard(parent), ui(new Ui::CDbQuickMappingWizard)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
@@ -48,13 +47,18 @@ namespace swift::gui::components
         CGuiUtility::checkBoxReadOnly(ui->cb_Military, true);
         CGuiUtility::checkBoxReadOnly(ui->cb_VirtualAirline, true);
 
-        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CDbQuickMappingWizard::onWebDataRead, Qt::QueuedConnection);
-        connect(sGui->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this, &CDbQuickMappingWizard::onPublishedModels, Qt::QueuedConnection);
+        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this,
+                &CDbQuickMappingWizard::onWebDataRead, Qt::QueuedConnection);
+        connect(sGui->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModels, this,
+                &CDbQuickMappingWizard::onPublishedModels, Qt::QueuedConnection);
 
         connect(this, &CDbQuickMappingWizard::currentIdChanged, this, &CDbQuickMappingWizard::currentWizardPageChanged);
-        connect(ui->selector_AircraftIcaoCode, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CDbQuickMappingWizard::onAircraftSelected, Qt::QueuedConnection);
-        connect(ui->selector_AirlineIcaoCode, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::onAirlineSelected, Qt::QueuedConnection);
-        connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CDbQuickMappingWizard::onAirlineSelected, Qt::QueuedConnection);
+        connect(ui->selector_AircraftIcaoCode, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this,
+                &CDbQuickMappingWizard::onAircraftSelected, Qt::QueuedConnection);
+        connect(ui->selector_AirlineIcaoCode, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this,
+                &CDbQuickMappingWizard::onAirlineSelected, Qt::QueuedConnection);
+        connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this,
+                &CDbQuickMappingWizard::onAirlineSelected, Qt::QueuedConnection);
 
         ui->comp_Log->showFilterDialog(); // filter for log normally not needed, so dialog (not bar)
         CGuiUtility::setWizardButtonWidths(this);
@@ -63,8 +67,7 @@ namespace swift::gui::components
         this->onWebDataRead();
     }
 
-    CDbQuickMappingWizard::~CDbQuickMappingWizard()
-    {}
+    CDbQuickMappingWizard::~CDbQuickMappingWizard() {}
 
     const QStringList &CDbQuickMappingWizard::getLogCategories()
     {
@@ -80,10 +83,7 @@ namespace swift::gui::components
             // disable enter, interferes with filter returnPressed
             event->accept();
         }
-        else
-        {
-            QWizard::keyPressEvent(event);
-        }
+        else { QWizard::keyPressEvent(event); }
     }
 
     void CDbQuickMappingWizard::presetAircraftIcao(const CAircraftIcaoCode &aircraftIcao)
@@ -96,10 +96,7 @@ namespace swift::gui::components
     void CDbQuickMappingWizard::presetModel(const CAircraftModel &model)
     {
         QString ms = model.getModelString();
-        if (!model.getDescription().isEmpty())
-        {
-            ms += u" (" % model.getDescription() % u")";
-        }
+        if (!model.getDescription().isEmpty()) { ms += u" (" % model.getDescription() % u")"; }
 
         this->presetAircraftIcao(model.getAircraftIcaoCode());
         ui->selector_AirlineIcaoCode->setAirlineIcao(model.getAirlineIcaoCode());
@@ -198,7 +195,10 @@ namespace swift::gui::components
         if (!sGui || !sGui->hasWebDataServices()) { return; }
     }
 
-    void CDbQuickMappingWizard::onPublishedModels(const CAircraftModelList &modelsPublished, const CAircraftModelList &modelsSkipped, const CStatusMessageList &messages, bool requestSuccessful, bool directWrite)
+    void CDbQuickMappingWizard::onPublishedModels(const CAircraftModelList &modelsPublished,
+                                                  const CAircraftModelList &modelsSkipped,
+                                                  const CStatusMessageList &messages, bool requestSuccessful,
+                                                  bool directWrite)
     {
         Q_UNUSED(modelsPublished);
         Q_UNUSED(modelsSkipped);
@@ -208,10 +208,7 @@ namespace swift::gui::components
         {
             msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, u"Publishing request sent"));
         }
-        else
-        {
-            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"Publishing request failed"));
-        }
+        else { msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"Publishing request failed")); }
         msgs.push_back(messages);
         ui->comp_Log->appendStatusMessagesToList(msgs);
     }
@@ -231,21 +228,12 @@ namespace swift::gui::components
         }
         break;
         case PageColor:
-            if (!colorMode)
-            {
-                forward ? this->next() : this->back();
-            }
+            if (!colorMode) { forward ? this->next() : this->back(); }
             break;
         case PageLiverySelect:
         {
-            if (colorMode)
-            {
-                this->setColorFilter();
-            }
-            else
-            {
-                this->setAirlineIcaoFilter();
-            }
+            if (colorMode) { this->setColorFilter(); }
+            else { this->setAirlineIcaoFilter(); }
         }
         break;
         case PageDistributorSelect:
@@ -264,10 +252,7 @@ namespace swift::gui::components
             const bool errorFree = !msgs.hasWarningOrErrorMessages();
             ui->fr_ConfirmationOk->setVisible(errorFree);
             ui->fr_ConfirmationStillErrors->setVisible(!errorFree);
-            if (!errorFree)
-            {
-                ui->wp6_Confirmation->showOverlayMessages(msgs);
-            }
+            if (!errorFree) { ui->wp6_Confirmation->showOverlayMessages(msgs); }
         }
         break;
         case PageCredentials:
@@ -286,8 +271,7 @@ namespace swift::gui::components
             this->button(BackButton)->hide();
         }
         break;
-        default:
-            break;
+        default: break;
         }
     }
 
@@ -300,10 +284,7 @@ namespace swift::gui::components
         case PageConfirmation:
         {
             const CStatusMessageList msgs(this->validateData());
-            if (!msgs.isEmpty())
-            {
-                ui->wp6_Confirmation->showOverlayMessages(msgs);
-            }
+            if (!msgs.isEmpty()) { ui->wp6_Confirmation->showOverlayMessages(msgs); }
             ok = !msgs.hasWarningOrErrorMessages();
         }
         break;
@@ -336,10 +317,7 @@ namespace swift::gui::components
         }
 
         const CStatusMessage vMsg = ui->selector_Simulator->getValue().validateSimulatorsForModel();
-        if (vMsg.isWarningOrAbove())
-        {
-            msgs.push_back(vMsg);
-        }
+        if (vMsg.isWarningOrAbove()) { msgs.push_back(vMsg); }
 
         return msgs;
     }
@@ -363,7 +341,8 @@ namespace swift::gui::components
             if (m.isLoadedFromDb()) { sims = m.getSimulator(); }
         }
 
-        if (sGui && !sGui->isShuttingDown() && sGui->getIContextSimulator() && sGui->getIContextSimulator()->isSimulatorAvailable())
+        if (sGui && !sGui->isShuttingDown() && sGui->getIContextSimulator() &&
+            sGui->getIContextSimulator()->isSimulatorAvailable())
         {
             sims.add(sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator());
         }
@@ -372,7 +351,11 @@ namespace swift::gui::components
 
     void CDbQuickMappingWizard::writeModelToDb()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices() || !sGui->getWebDataServices()->getDatabaseWriter()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices() ||
+            !sGui->getWebDataServices()->getDatabaseWriter())
+        {
+            return;
+        }
         this->consolidateModelWithUIData();
 
         // make sure the model is correctly excluded for XP etc.
@@ -381,7 +364,8 @@ namespace swift::gui::components
         m_model.setVersion(CBuildConfig::getVersionString());
         const QString extraInfo = QString(m_model.getDescription() % u" " % qmw).simplified().trimmed();
 
-        const CStatusMessageList msgs = sGui->getWebDataServices()->getDatabaseWriter()->asyncPublishModel(m_model, extraInfo);
+        const CStatusMessageList msgs =
+            sGui->getWebDataServices()->getDatabaseWriter()->asyncPublishModel(m_model, extraInfo);
         ui->comp_Log->appendStatusMessagesToList(msgs);
     }
 

@@ -12,12 +12,12 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::data, CVatsimSetup)
 
 namespace swift::core::data
 {
-    CVatsimSetup::CVatsimSetup() : ITimestampBased(0)
-    {}
+    CVatsimSetup::CVatsimSetup() : ITimestampBased(0) {}
 
     bool CVatsimSetup::setUrls(const CUrl &dataFileUrl, const CUrl &serverFileUrl, const CUrl &metarFileUrl)
     {
-        const bool changed = (dataFileUrl != getDataFileUrl() || serverFileUrl != getServerFileUrl() || metarFileUrl != getMetarFileUrl());
+        const bool changed = (dataFileUrl != getDataFileUrl() || serverFileUrl != getServerFileUrl() ||
+                              metarFileUrl != getMetarFileUrl());
         this->setServerFileUrl(serverFileUrl);
         this->setMetarFileUrl(metarFileUrl);
         this->setDataFileUrl(dataFileUrl);
@@ -32,10 +32,7 @@ namespace swift::core::data
         return changed;
     }
 
-    QString CVatsimSetup::convertToQString(bool i18n) const
-    {
-        return convertToQString(", ", i18n);
-    }
+    QString CVatsimSetup::convertToQString(bool i18n) const { return convertToQString(", ", i18n); }
 
     QString CVatsimSetup::convertToQString(const QString &separator, bool i18n) const
     {

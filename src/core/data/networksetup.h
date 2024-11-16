@@ -69,9 +69,15 @@ namespace swift::core::data
         //! Settings have been changed
         void onSettingsChanged();
 
-        swift::misc::CSettingReadOnly<swift::misc::network::settings::TTrafficServers> m_otherTrafficNetworkServers { this, &CNetworkSetup::onSettingsChanged };
-        swift::misc::CData<swift::misc::network::data::TLastServer> m_lastServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used server (VATSIM, other)
-        swift::misc::CData<swift::core::data::TVatsimLastServer> m_lastVatsimServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used VATSIM server
+        swift::misc::CSettingReadOnly<swift::misc::network::settings::TTrafficServers> m_otherTrafficNetworkServers {
+            this, &CNetworkSetup::onSettingsChanged
+        };
+        swift::misc::CData<swift::misc::network::data::TLastServer> m_lastServer {
+            this, &CNetworkSetup::onSettingsChanged
+        }; //!< recently used server (VATSIM, other)
+        swift::misc::CData<swift::core::data::TVatsimLastServer> m_lastVatsimServer {
+            this, &CNetworkSetup::onSettingsChanged
+        }; //!< recently used VATSIM server
     };
 } // namespace swift::core::data
 

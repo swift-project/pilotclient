@@ -20,19 +20,24 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CCockpitTransponderModeLedsComponent::CCockpitTransponderModeLedsComponent(QWidget *parent) : QFrame(parent),
-                                                                                                  CIdentifiable(this),
-                                                                                                  m_ledStandby(new CLedWidget(false, CLedWidget::Blue, CLedWidget::Black, CLedWidget::Rounded, "standby", "", LedWidth, this)),
-                                                                                                  m_ledModes(new CLedWidget(false, CLedWidget::Green, CLedWidget::Black, CLedWidget::Rounded, "mode C", "", LedWidth, this)),
-                                                                                                  m_ledIdent(new CLedWidget(false, CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, "ident", "", LedWidth, this))
+    CCockpitTransponderModeLedsComponent::CCockpitTransponderModeLedsComponent(QWidget *parent)
+        : QFrame(parent), CIdentifiable(this),
+          m_ledStandby(new CLedWidget(false, CLedWidget::Blue, CLedWidget::Black, CLedWidget::Rounded, "standby", "",
+                                      LedWidth, this)),
+          m_ledModes(new CLedWidget(false, CLedWidget::Green, CLedWidget::Black, CLedWidget::Rounded, "mode C", "",
+                                    LedWidth, this)),
+          m_ledIdent(new CLedWidget(false, CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, "ident", "",
+                                    LedWidth, this))
     {
         this->init(true);
 
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
-        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged);
+        connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this,
+                &CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged);
     }
 
-    void CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged(const CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator)
+    void CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged(const CSimulatedAircraft &aircraft,
+                                                                        const swift::misc::CIdentifier &originator)
     {
         if (isMyIdentifier(originator)) { return; }
         this->setMode(aircraft.getTransponderMode(), true);
@@ -44,22 +49,10 @@ namespace swift::gui::components
         if (!w) { return; }
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
         CTransponder::TransponderMode mode;
-        if (m_ledStandby.data() == w)
-        {
-            mode = CTransponder::StateStandby;
-        }
-        else if (m_ledIdent.data() == w)
-        {
-            mode = CTransponder::StateIdent;
-        }
-        else if (m_ledModes.data() == w)
-        {
-            mode = CTransponder::ModeC;
-        }
-        else
-        {
-            return;
-        }
+        if (m_ledStandby.data() == w) { mode = CTransponder::StateStandby; }
+        else if (m_ledIdent.data() == w) { mode = CTransponder::StateIdent; }
+        else if (m_ledModes.data() == w) { mode = CTransponder::ModeC; }
+        else { return; }
         CSimulatedAircraft ownAircraft(this->getOwnAircraft());
         if (ownAircraft.getTransponderMode() == mode) { return; }
 
@@ -69,7 +62,8 @@ namespace swift::gui::components
 
         if (sGui)
         {
-            sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), xpdr, identifier());
+            sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(),
+                                                          xpdr, identifier());
         }
     }
 
@@ -108,17 +102,13 @@ namespace swift::gui::components
         case CTransponder::ModeMil2:
         case CTransponder::ModeMil3:
         case CTransponder::ModeMil4:
-        case CTransponder::ModeMil5:
-            m_ledModes->setOn(true);
-            break;
+        case CTransponder::ModeMil5: m_ledModes->setOn(true); break;
         case CTransponder::StateIdent:
             m_ledModes->setOn(true);
             m_ledIdent->setOn(true);
             break;
         default:
-        case CTransponder::StateStandby:
-            m_ledStandby->setOn(true);
-            break;
+        case CTransponder::StateStandby: m_ledStandby->setOn(true); break;
         }
     }
 

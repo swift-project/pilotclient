@@ -10,14 +10,13 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::editors
 {
-    CRelativeAircraftPosition::CRelativeAircraftPosition(QWidget *parent) : CForm(parent),
-                                                                            ui(new Ui::CRelativeAircraftPosition)
+    CRelativeAircraftPosition::CRelativeAircraftPosition(QWidget *parent)
+        : CForm(parent), ui(new Ui::CRelativeAircraftPosition)
     {
         ui->setupUi(this);
     }
 
-    CRelativeAircraftPosition::~CRelativeAircraftPosition()
-    {}
+    CRelativeAircraftPosition::~CRelativeAircraftPosition() {}
 
     void CRelativeAircraftPosition::setReadOnly(bool readOnly)
     {
@@ -43,7 +42,6 @@ namespace swift::gui::editors
     void CRelativeAircraftPosition::displayInfo(const CCoordinateGeodetic &relPos)
     {
         const CCoordinateGeodetic p = relPos.isNull() ? this->getRelativeCoordinate() : relPos;
-        ui->le_Info->setText(
-            QStringLiteral("%1 / %2").arg(m_originCoordinate.toQString(true), p.toQString(true)));
+        ui->le_Info->setText(QStringLiteral("%1 / %2").arg(m_originCoordinate.toQString(true), p.toQString(true)));
     }
 } // namespace swift::gui::editors

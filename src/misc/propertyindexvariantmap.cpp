@@ -24,10 +24,7 @@ namespace swift::misc
         return a.m_wildcard == b.m_wildcard && a.m_values == b.m_values;
     }
 
-    bool operator!=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b)
-    {
-        return !(b == a);
-    }
+    bool operator!=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b) { return !(b == a); }
 
     bool CPropertyIndexVariantMap::matchesVariant(const CVariant &variant) const
     {
@@ -51,9 +48,7 @@ namespace swift::misc
         {
             CVariant v = m_values.value(index);
 
-            s.isEmpty() ?
-                s.append("{wildcard: ").append(m_wildcard ? "true" : "false").append(" ") :
-                s.append(", ");
+            s.isEmpty() ? s.append("{wildcard: ").append(m_wildcard ? "true" : "false").append(" ") : s.append(", ");
 
             s.append('{').append(index.toQString(i18n)).append(": ");
             s.append("(").append(QString::number(v.userType())).append(") ");
@@ -79,10 +74,7 @@ namespace swift::misc
         argument >> values;
         Q_ASSERT(indexes.size() == values.size());
         QMap<CPropertyIndex, CVariant> newMap;
-        for (int i = 0; i < indexes.size(); i++)
-        {
-            newMap.insert(indexes[i], values[i]);
-        }
+        for (int i = 0; i < indexes.size(); i++) { newMap.insert(indexes[i], values[i]); }
         // replace values in one step
         m_values.swap(newMap);
     }
@@ -101,10 +93,7 @@ namespace swift::misc
         stream >> values;
         Q_ASSERT(indexes.size() == values.size());
         QMap<CPropertyIndex, CVariant> newMap;
-        for (int i = 0; i < indexes.size(); i++)
-        {
-            newMap.insert(indexes[i], values[i]);
-        }
+        for (int i = 0; i < indexes.size(); i++) { newMap.insert(indexes[i], values[i]); }
         // replace values in one step
         m_values.swap(newMap);
     }
@@ -131,15 +120,9 @@ namespace swift::misc
         m_values = newMap;
     }
 
-    CPropertyIndexList CPropertyIndexVariantMap::indexes() const
-    {
-        return m_values.keys();
-    }
+    CPropertyIndexList CPropertyIndexVariantMap::indexes() const { return m_values.keys(); }
 
-    int CPropertyIndexVariantMap::size() const
-    {
-        return m_values.size();
-    }
+    int CPropertyIndexVariantMap::size() const { return m_values.size(); }
 
     size_t CPropertyIndexVariantMap::getValueHash() const
     {

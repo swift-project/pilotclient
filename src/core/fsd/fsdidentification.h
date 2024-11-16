@@ -15,7 +15,8 @@ namespace swift::core::fsd
     {
     public:
         //! Constructor
-        FSDIdentification(const QString &callsign, const QString &receiver, const QString &serverVersion, const QString &initialChallenge);
+        FSDIdentification(const QString &callsign, const QString &receiver, const QString &serverVersion,
+                          const QString &initialChallenge);
 
         //! Message converted to tokens
         QStringList toTokens() const;

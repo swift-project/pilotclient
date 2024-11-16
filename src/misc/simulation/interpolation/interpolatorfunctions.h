@@ -9,16 +9,10 @@
 namespace swift::misc::simulation
 {
     //! Valid time fraction [0,1]
-    inline bool isValidTimeFraction(double timeFraction)
-    {
-        return timeFraction >= 0.0 && timeFraction <= 1.0;
-    }
+    inline bool isValidTimeFraction(double timeFraction) { return timeFraction >= 0.0 && timeFraction <= 1.0; }
 
     //! Valid time fraction [0,1], this allows minor overshooting
-    inline bool isAcceptableTimeFraction(double timeFraction)
-    {
-        return timeFraction >= 0.0 && timeFraction <= 1.01;
-    }
+    inline bool isAcceptableTimeFraction(double timeFraction) { return timeFraction >= 0.0 && timeFraction <= 1.01; }
 
     //! Clamp time fraction [0,1]
     inline double clampValidTimeFraction(double timeFraction)

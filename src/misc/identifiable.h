@@ -17,7 +17,8 @@
 namespace swift::misc
 {
     /*!
-     * Base class with a member CIdentifier to be inherited by a class which has an identity in the environment of modular distributed swift processes
+     * Base class with a member CIdentifier to be inherited by a class which has an identity in the environment of
+     * modular distributed swift processes
      */
     class SWIFT_MISC_EXPORT CIdentifiable
     {

@@ -90,7 +90,8 @@ namespace swift::misc::aviation
         CValueObject::setPropertyByIndex(index, variant);
     }
 
-    int CInformationMessage::comparePropertyByIndex(CPropertyIndexRef index, const CInformationMessage &compareValue) const
+    int CInformationMessage::comparePropertyByIndex(CPropertyIndexRef index,
+                                                    const CInformationMessage &compareValue) const
     {
         if (index.isMyself())
         {
@@ -98,14 +99,16 @@ namespace swift::misc::aviation
             if (c != 0) return c;
             return m_message.compare(compareValue.m_message, Qt::CaseInsensitive);
         }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMessage: return m_message.compare(compareValue.m_message, Qt::CaseInsensitive);
         case IndexType: return Compare::compare(this->getType(), compareValue.getType());
-        default:
-            return CValueObject::comparePropertyByIndex(index, *this);
+        default: return CValueObject::comparePropertyByIndex(index, *this);
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
         return 0;

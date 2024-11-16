@@ -26,14 +26,8 @@ namespace swift::gui::models
         if (!handled) { return QVariant(); }
         if (section < 0 || section >= m_columns.size()) { return QVariant(); }
 
-        if (role == Qt::DisplayRole)
-        {
-            return QVariant(m_columns.at(section).getColumnName());
-        }
-        if (role == Qt::ToolTipRole)
-        {
-            return QVariant(m_columns.at(section).getColumnToolTip());
-        }
+        if (role == Qt::DisplayRole) { return QVariant(m_columns.at(section).getColumnName()); }
+        if (role == Qt::ToolTipRole) { return QVariant(m_columns.at(section).getColumnToolTip()); }
         return QVariant();
     }
 
@@ -125,10 +119,7 @@ namespace swift::gui::models
         return isOrderable() ? Qt::CopyAction | Qt::MoveAction : Qt::CopyAction;
     }
 
-    Qt::DropActions CListModelBaseNonTemplate::supportedDropActions() const
-    {
-        return m_dropActions;
-    }
+    Qt::DropActions CListModelBaseNonTemplate::supportedDropActions() const { return m_dropActions; }
 
     QStringList CListModelBaseNonTemplate::mimeTypes() const
     {
@@ -136,15 +127,9 @@ namespace swift::gui::models
         return mimes;
     }
 
-    void CListModelBaseNonTemplate::markDestroyed()
-    {
-        m_modelDestroyed = true;
-    }
+    void CListModelBaseNonTemplate::markDestroyed() { m_modelDestroyed = true; }
 
-    bool CListModelBaseNonTemplate::isModelDestroyed()
-    {
-        return m_modelDestroyed;
-    }
+    bool CListModelBaseNonTemplate::isModelDestroyed() { return m_modelDestroyed; }
 
     void CListModelBaseNonTemplate::clearHighlighting()
     {

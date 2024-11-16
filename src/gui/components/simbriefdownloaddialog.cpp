@@ -9,15 +9,14 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::components
 {
-    CSimBriefDownloadDialog::CSimBriefDownloadDialog(QWidget *parent) : QDialog(parent),
-                                                                        ui(new Ui::CSimBriefDownloadDialog)
+    CSimBriefDownloadDialog::CSimBriefDownloadDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CSimBriefDownloadDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CSimBriefDownloadDialog::~CSimBriefDownloadDialog()
-    {}
+    CSimBriefDownloadDialog::~CSimBriefDownloadDialog() {}
 
     CSimBriefData CSimBriefDownloadDialog::getSimBriefData() const
     {
@@ -34,10 +33,7 @@ namespace swift::gui::components
     {
         this->setSimBriefData(m_simBrief.get());
         const int r = QDialog::exec();
-        if (r == Accepted)
-        {
-            m_simBrief.set(this->getSimBriefData());
-        }
+        if (r == Accepted) { m_simBrief.set(this->getSimBriefData()); }
         return r;
     }
 } // namespace swift::gui::components

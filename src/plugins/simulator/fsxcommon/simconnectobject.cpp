@@ -18,21 +18,20 @@ using namespace swift::core;
 
 namespace swift::simplugin::fsxcommon
 {
-    CSimConnectObject::CSimConnectObject()
-    {
-        this->resetCameraPositions();
-    }
+    CSimConnectObject::CSimConnectObject() { this->resetCameraPositions(); }
 
     CSimConnectObject::CSimConnectObject(CSimConnectObject::SimObjectType type) : m_type(type)
     {
         this->resetCameraPositions();
     }
 
-    CSimConnectObject::CSimConnectObject(const CSimulatedAircraft &aircraft,
-                                         DWORD requestId,
-                                         ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteAircraftProvider,
-                                         CInterpolationLogger *logger) : m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
-                                                                         m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simEnvProvider, setupProvider, remoteAircraftProvider, logger))
+    CSimConnectObject::CSimConnectObject(const CSimulatedAircraft &aircraft, DWORD requestId,
+                                         ISimulationEnvironmentProvider *simEnvProvider,
+                                         IInterpolationSetupProvider *setupProvider,
+                                         IRemoteAircraftProvider *remoteAircraftProvider, CInterpolationLogger *logger)
+        : m_aircraft(aircraft), m_requestId(requestId), m_validRequestId(true),
+          m_interpolator(QSharedPointer<CInterpolatorMulti>::create(aircraft.getCallsign(), simEnvProvider,
+                                                                    setupProvider, remoteAircraftProvider, logger))
     {
         this->resetCameraPositions();
         m_type = aircraft.isTerrainProbe() ? TerrainProbe : AircraftNonAtc;
@@ -79,14 +78,10 @@ namespace swift::simplugin::fsxcommon
         DWORD os = 0;
         switch (this->getType())
         {
-        case TerrainProbe:
-            os = static_cast<DWORD>(CSimulatorFsxCommon::offsetSimObjTerrainProbe(offset));
-            break;
+        case TerrainProbe: os = static_cast<DWORD>(CSimulatorFsxCommon::offsetSimObjTerrainProbe(offset)); break;
         case AircraftNonAtc:
         case AircraftSimulatedObject:
-        default:
-            os = static_cast<DWORD>(CSimulatorFsxCommon::offsetSimObjAircraft(offset));
-            break;
+        default: os = static_cast<DWORD>(CSimulatorFsxCommon::offsetSimObjAircraft(offset)); break;
         }
         return os + m_requestId;
     }
@@ -97,10 +92,7 @@ namespace swift::simplugin::fsxcommon
         m_validObjectId = true;
     }
 
-    bool CSimConnectObject::isPendingAdded() const
-    {
-        return !this->hasValidRequestAndObjectId() || !m_confirmedAdded;
-    }
+    bool CSimConnectObject::isPendingAdded() const { return !this->hasValidRequestAndObjectId() || !m_confirmedAdded; }
 
     bool CSimConnectObject::isOutdatedPendingAdded(qint64 thresholdMs, qint64 currentMsSinceEpoch) const
     {
@@ -125,10 +117,7 @@ namespace swift::simplugin::fsxcommon
         m_aircraft.setRendered(true);
     }
 
-    void CSimConnectObject::setAddedWhileRemoving(bool addedWileRemoved)
-    {
-        m_addedWhileRemoving = addedWileRemoved;
-    }
+    void CSimConnectObject::setAddedWhileRemoving(bool addedWileRemoved) { m_addedWhileRemoving = addedWileRemoved; }
 
     void CSimConnectObject::setRemovedWhileAdding(bool removedWhileAdding)
     {
@@ -206,22 +195,23 @@ namespace swift::simplugin::fsxcommon
         m_interpolator->attachLogger(logger);
     }
 
-    CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const
+    CInterpolationResult CSimConnectObject::getInterpolation(qint64 currentTimeSinceEpoch,
+                                                             const CInterpolationAndRenderingSetupPerCallsign &setup,
+                                                             uint32_t aircraftNumber) const
     {
-        if (!m_interpolator)
-        {
-            return {};
-        }
+        if (!m_interpolator) { return {}; }
         return m_interpolator->getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
     }
 
-    const CAircraftSituation &CSimConnectObject::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
+    const CAircraftSituation &
+    CSimConnectObject::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
     {
         if (!m_interpolator) { return CAircraftSituation::null(); }
         return m_interpolator->getLastInterpolatedSituation(mode);
     }
 
-    const CStatusMessageList &CSimConnectObject::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
+    const CStatusMessageList &
+    CSimConnectObject::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
     {
         static const CStatusMessageList empty;
         if (!m_interpolator) { return empty; }
@@ -230,8 +220,15 @@ namespace swift::simplugin::fsxcommon
 
     QString CSimConnectObject::toQString() const
     {
-        static const QString s("CS: '%1' obj: %2 req: %3 conf.added: %4 pend.rem.: %5 rwa: %6 awr: %7 aEx: %8 aRem: %9");
-        return s.arg(this->getCallsign().asString()).arg(m_objectId).arg(m_requestId).arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved), boolToYesNo(m_removedWhileAdding), boolToYesNo(m_addedWhileRemoving)).arg(m_addingExceptions).arg(m_addingDirectlyRemoved);
+        static const QString s(
+            "CS: '%1' obj: %2 req: %3 conf.added: %4 pend.rem.: %5 rwa: %6 awr: %7 aEx: %8 aRem: %9");
+        return s.arg(this->getCallsign().asString())
+            .arg(m_objectId)
+            .arg(m_requestId)
+            .arg(boolToYesNo(m_confirmedAdded), boolToYesNo(m_pendingRemoved), boolToYesNo(m_removedWhileAdding),
+                 boolToYesNo(m_addedWhileRemoving))
+            .arg(m_addingExceptions)
+            .arg(m_addingDirectlyRemoved);
     }
 
     CSimConnectObject::SimObjectType CSimConnectObject::requestIdToType(DWORD requestId)
@@ -278,17 +275,15 @@ namespace swift::simplugin::fsxcommon
             simObj.resetTimestampToNow();
             (*this)[simObj.getCallsign()] = simObj;
         }
-        else
-        {
-            (*this)[simObject.getCallsign()] = simObject;
-        }
+        else { (*this)[simObject.getCallsign()] = simObject; }
         return true;
     }
 
     bool CSimConnectObjects::setSimConnectObjectIdForRequestId(DWORD requestId, DWORD objectId)
     {
         // First check, if this request id belongs to us
-        auto it = std::find_if(this->begin(), this->end(), [requestId](const CSimConnectObject &obj) { return obj.getRequestId() == requestId; });
+        auto it = std::find_if(this->begin(), this->end(),
+                               [requestId](const CSimConnectObject &obj) { return obj.getRequestId() == requestId; });
         if (it == this->end()) { return false; }
 
         // belongs to us
@@ -339,7 +334,8 @@ namespace swift::simplugin::fsxcommon
         for (const CSimConnectObject &simObj : *this)
         {
             if (!simObj.hasCreatedTimestamp()) { continue; }
-            if (!oldestSimObj.hasCreatedTimestamp() || oldestSimObj.getCreatedTimestamp() > simObj.getCreatedTimestamp())
+            if (!oldestSimObj.hasCreatedTimestamp() ||
+                oldestSimObj.getCreatedTimestamp() > simObj.getCreatedTimestamp())
             {
                 oldestSimObj = simObj;
             }
@@ -499,7 +495,8 @@ namespace swift::simplugin::fsxcommon
         {
             if (simObject.getType() == CSimConnectObject::TerrainProbe && !simObject.isPending())
             {
-                if (!oldestProbe.hasCreatedTimestamp() || oldestProbe.getCreatedTimestamp() > simObject.getCreatedTimestamp())
+                if (!oldestProbe.hasCreatedTimestamp() ||
+                    oldestProbe.getCreatedTimestamp() > simObject.getCreatedTimestamp())
                 {
                     oldestProbe = simObject;
                 }
@@ -519,16 +516,14 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimConnectObjects::containsAircraft() const
     {
-        return this->containsType(CSimConnectObject::AircraftNonAtc) || this->containsType(CSimConnectObject::AircraftSimulatedObject);
+        return this->containsType(CSimConnectObject::AircraftNonAtc) ||
+               this->containsType(CSimConnectObject::AircraftSimulatedObject);
     }
 
     int CSimConnectObjects::removeCallsigns(const CCallsignSet &callsigns)
     {
         int c = 0;
-        for (const CCallsign &cs : callsigns)
-        {
-            c += this->remove(cs);
-        }
+        for (const CCallsign &cs : callsigns) { c += this->remove(cs); }
         return c;
     }
 
@@ -546,10 +541,7 @@ namespace swift::simplugin::fsxcommon
             removedObjects.insert(simObject);
             removeCallsigns.insert(simObject.getCallsign());
         }
-        if (!removeCallsigns.isEmpty())
-        {
-            this->removeCallsigns(removeCallsigns);
-        }
+        if (!removeCallsigns.isEmpty()) { this->removeCallsigns(removeCallsigns); }
         return removedObjects;
     }
 } // namespace swift::simplugin::fsxcommon

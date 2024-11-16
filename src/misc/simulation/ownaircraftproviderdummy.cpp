@@ -63,7 +63,9 @@ namespace swift::misc::simulation
         return getOwnAircraft().calculateGreatCircleDistance(position);
     }
 
-    bool COwnAircraftProviderDummy::updateCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2, const aviation::CTransponder &transponder, const CIdentifier &originator)
+    bool COwnAircraftProviderDummy::updateCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2,
+                                                  const aviation::CTransponder &transponder,
+                                                  const CIdentifier &originator)
     {
         QWriteLocker l(&m_lock);
         m_ownAircraft.setCom1System(com1);
@@ -73,7 +75,9 @@ namespace swift::misc::simulation
         return true;
     }
 
-    bool COwnAircraftProviderDummy::updateActiveComFrequency(const physical_quantities::CFrequency &frequency, CComSystem::ComUnit comUnit, const swift::misc::CIdentifier &originator)
+    bool COwnAircraftProviderDummy::updateActiveComFrequency(const physical_quantities::CFrequency &frequency,
+                                                             CComSystem::ComUnit comUnit,
+                                                             const swift::misc::CIdentifier &originator)
     {
         if (!CComSystem::isValidComFrequency(frequency)) { return false; }
         QWriteLocker l(&m_lock);
@@ -126,7 +130,8 @@ namespace swift::misc::simulation
         return true;
     }
 
-    bool COwnAircraftProviderDummy::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode)
+    bool COwnAircraftProviderDummy::updateOwnIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode,
+                                                       const CAirlineIcaoCode &airlineIcaoCode)
     {
         QWriteLocker l(&m_lock);
         m_ownAircraft.setIcaoCodes(aircraftIcaoCode, airlineIcaoCode);

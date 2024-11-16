@@ -86,7 +86,8 @@ namespace swift::simplugin::fsxcommon
     struct TraceFsxSendId
     {
         //! Ctor
-        TraceFsxSendId(DWORD sendId, const CSimConnectObject &simObject, const QString &comment) : sendId(sendId), simObject(simObject), comment(comment)
+        TraceFsxSendId(DWORD sendId, const CSimConnectObject &simObject, const QString &comment)
+            : sendId(sendId), simObject(simObject), comment(comment)
         {}
 
         // DWORD is unsigned
@@ -127,8 +128,7 @@ namespace swift::simplugin::fsxcommon
         CSimulatorFsxCommon(const swift::misc::simulation::CSimulatorPluginInfo &info,
                             swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                             swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                            swift::misc::network::IClientProvider *clientProvider,
-                            QObject *parent = nullptr);
+                            swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CSimulatorFsxCommon() override;
@@ -137,11 +137,14 @@ namespace swift::simplugin::fsxcommon
         //! @{
         virtual bool connectTo() override;
         virtual bool disconnectFrom() override;
-        virtual bool physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft) override;
+        virtual bool
+        physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft) override;
         virtual bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
         virtual int physicallyRemoveAllRemoteAircraft() override;
-        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &ownAircraft, const swift::misc::CIdentifier &originator) override;
-        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
+        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &ownAircraft,
+                                               const swift::misc::CIdentifier &originator) override;
+        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                              const swift::misc::CIdentifier &originator) override;
         virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
         virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
         virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
@@ -150,14 +153,18 @@ namespace swift::simplugin::fsxcommon
         virtual QString getStatisticsSimulatorSpecific() const override;
         virtual void resetAircraftStatistics() override;
         virtual void setFlightNetworkConnected(bool connected) override;
-        virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
-        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) override;
+        virtual swift::misc::CStatusMessageList
+        getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
+        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::aviation::CAircraftSituation &situation,
+                                               const swift::misc::aviation::CAircraftParts &parts) override;
         //! @}
 
         //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation
         //! \remark x86 FSX version, x64 version is overridden
         //! \sa CSimulatorFsxCommon::is
-        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &aircraftCallsign) override;
+        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
+                                      const swift::misc::aviation::CCallsign &aircraftCallsign) override;
 
         //! Tracing right now?
         bool isTracingSendId() const;
@@ -192,10 +199,16 @@ namespace swift::simplugin::fsxcommon
         void setAddingAsSimulatedObjectEnabled(bool enabled);
 
         //! Request for sim data (request in range of sim data)?
-        static bool isRequestForSimObjAircraft(DWORD requestId) { return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd; }
+        static bool isRequestForSimObjAircraft(DWORD requestId)
+        {
+            return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd;
+        }
 
         //! Request for probe (elevation)?
-        static bool isRequestForSimObjTerrainProbe(DWORD requestId) { return requestId >= RequestSimObjTerrainProbeStart && requestId <= RequestSimObjTerrainProbeRangeEnd; }
+        static bool isRequestForSimObjTerrainProbe(DWORD requestId)
+        {
+            return requestId >= RequestSimObjTerrainProbeStart && requestId <= RequestSimObjTerrainProbeRangeEnd;
+        }
 
         //! Request for any CSimConnectObject?
         static bool isRequestForSimConnectObject(DWORD requestId)
@@ -215,7 +228,8 @@ namespace swift::simplugin::fsxcommon
 
     protected:
         //! SimConnect callback
-        //! \note all tasks called in this function (i.e, all called functions) must perform fast or shall be called asynchronously
+        //! \note all tasks called in this function (i.e, all called functions) must perform fast or shall be called
+        //! asynchronously
         static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
         //! \name Interface implementations
@@ -279,13 +293,17 @@ namespace swift::simplugin::fsxcommon
         virtual void removeObserver(CSimConnectObject &simObject);
 
         //! Trace if required, log errors
-        HRESULT logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+        HRESULT logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName,
+                                  const QString &functionDetails = {});
 
         //! Trace if required, log errors
-        HRESULT logAndTraceSendId(HRESULT hr, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+        HRESULT logAndTraceSendId(HRESULT hr, const CSimConnectObject &simObject, const QString &warningMsg,
+                                  const QString &functionName, const QString &functionDetails = {});
 
         //! Trace if required, log errors
-        HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject, const QString &warningMsg, const QString &functionName, const QString &functionDetails = {});
+        HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject,
+                                  const QString &warningMsg, const QString &functionName,
+                                  const QString &functionDetails = {});
 
         //! Convert to FSX char array
         static QByteArray toFsxChar(const QString &string);
@@ -301,19 +319,23 @@ namespace swift::simplugin::fsxcommon
 
         //! Format conversion
         //! \note must be valid situation
-        static SIMCONNECT_DATA_INITPOSITION aircraftSituationToFsxPosition(
-            const swift::misc::aviation::CAircraftSituation &situation, bool sendGnd = true,
-            bool forceUnderflowDetection = false, swift::misc::CStatusMessage *details = nullptr);
+        static SIMCONNECT_DATA_INITPOSITION
+        aircraftSituationToFsxPosition(const swift::misc::aviation::CAircraftSituation &situation, bool sendGnd = true,
+                                       bool forceUnderflowDetection = false,
+                                       swift::misc::CStatusMessage *details = nullptr);
 
         //! Format conversion
         //! \note must be valid situation
-        static SIMCONNECT_DATA_PBH aircraftSituationToFsxPBH(const swift::misc::aviation::CAircraftSituation &situation);
+        static SIMCONNECT_DATA_PBH
+        aircraftSituationToFsxPBH(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Format conversion
-        static SIMCONNECT_DATA_INITPOSITION coordinateToFsxPosition(const swift::misc::geo::ICoordinateGeodetic &coordinate);
+        static SIMCONNECT_DATA_INITPOSITION
+        coordinateToFsxPosition(const swift::misc::geo::ICoordinateGeodetic &coordinate);
 
         //! Format conversion
-        static SIMCONNECT_DATA_LATLONALT coordinateToFsxLatLonAlt(const swift::misc::geo::ICoordinateGeodetic &coordinate);
+        static SIMCONNECT_DATA_LATLONALT
+        coordinateToFsxLatLonAlt(const swift::misc::geo::ICoordinateGeodetic &coordinate);
 
         //! Valid FSX/P3D position
         static bool isValidFsxPosition(const SIMCONNECT_DATA_INITPOSITION &fsxPos);
@@ -323,14 +345,16 @@ namespace swift::simplugin::fsxcommon
 
         static constexpr qint64 AutoTraceOffsetMs = 10 * 1000; //!< how long do we trace?
         HANDLE m_hSimConnect = nullptr; //!< handle to SimConnect object
-        DispatchProc m_dispatchProc = &CSimulatorFsxCommon::SimConnectProc; //!< called function for dispatch, can be overriden by specialized P3D function
+        DispatchProc m_dispatchProc = &CSimulatorFsxCommon::SimConnectProc; //!< called function for dispatch, can be
+                                                                            //!< overriden by specialized P3D function
         CSimConnectObjects m_simConnectObjects; //!< AI objects and their object and request ids
 
         // probes
         bool m_useFsxTerrainProbe = is32bit(); //!< Use FSX Terrain probe?
         bool m_initFsxTerrainProbes = false; //!< initialized terrain probes
         int m_addedProbes = 0; //!< added probes
-        QMap<DWORD, swift::misc::aviation::CCallsign> m_pendingProbeRequests; //!< pending elevation requests: requestId/aircraft callsign
+        QMap<DWORD, swift::misc::aviation::CCallsign>
+            m_pendingProbeRequests; //!< pending elevation requests: requestId/aircraft callsign
 
         swift::misc::physical_quantities::CLength m_altitudeDelta; //!< FS2020 effect of temperature on altitude
 
@@ -352,8 +376,11 @@ namespace swift::simplugin::fsxcommon
         void dispatch();
 
         //! Implementation of add remote aircraft, which also handles FSX specific adding one by one
-        //! \remark main purpose of this function is to only add one aircraft at a time, and only if simulator is not paused/stopped
-        bool physicallyAddRemoteAircraftImpl(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft, AircraftAddMode addMode, const CSimConnectObject &correspondingSimObject = {});
+        //! \remark main purpose of this function is to only add one aircraft at a time, and only if simulator is not
+        //! paused/stopped
+        bool physicallyAddRemoteAircraftImpl(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft,
+                                             AircraftAddMode addMode,
+                                             const CSimConnectObject &correspondingSimObject = {});
 
         //! Add AI object for terrain probe
         //! \remark experimental
@@ -431,7 +458,8 @@ namespace swift::simplugin::fsxcommon
         void updateRemoteAircraft();
 
         //! Update remote aircraft parts (send to FSX)
-        bool updateRemoteAircraftParts(const CSimConnectObject &simObject, const swift::misc::simulation::CInterpolationResult &result, bool forcedUpdate);
+        bool updateRemoteAircraftParts(const CSimConnectObject &simObject,
+                                       const swift::misc::simulation::CInterpolationResult &result, bool forcedUpdate);
 
         //! Calling CSimulatorFsxCommon::updateAirports
         void triggerUpdateAirports(const swift::misc::aviation::CAirportList &airports);
@@ -441,35 +469,45 @@ namespace swift::simplugin::fsxcommon
 
         //! Send parts to simulator
         //! \remark does not send if there is no change
-        bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject, const swift::misc::aviation::CAircraftParts &parts);
+        bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject,
+                                                const swift::misc::aviation::CAircraftParts &parts);
 
         //! Send ATC data (callsign etc.) to simulator
         bool sendRemoteAircraftAtcDataToSimulator(const CSimConnectObject &simObject);
 
         //! Send lights to simulator (those which have to be toggled)
-        //! \remark challenge here is that I can only sent those value if I have already obtained the current light state from simulator
-        //! \param force send lights even if they appear to be the same
-        void sendToggledLightsToSimulator(const CSimConnectObject &simObject, const swift::misc::aviation::CAircraftLights &lightsWanted, bool force = false);
+        //! \remark challenge here is that I can only sent those value if I have already obtained the current light
+        //! state from simulator \param force send lights even if they appear to be the same
+        void sendToggledLightsToSimulator(const CSimConnectObject &simObject,
+                                          const swift::misc::aviation::CAircraftLights &lightsWanted,
+                                          bool force = false);
 
         //! Call CSimulatorFsxCommon::updateRemoteAircraftFromSimulator asynchronously
         //! \remark do not to send SimConnect data in event loop
-        void triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionPosData &remoteAircraftData);
+        void triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
+                                                      const DataDefinitionPosData &remoteAircraftData);
 
         //! Call CSimulatorFsxCommon::updateRemoteAircraftFromSimulator asynchronously
         //! \remark do not to send SimConnect data in event loop
-        void triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftModel &remoteAircraftModel);
+        void triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
+                                                      const DataDefinitionRemoteAircraftModel &remoteAircraftModel);
 
         //! Remote aircraft data sent from simulator
-        void updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionPosData &remoteAircraftData);
+        void updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
+                                               const DataDefinitionPosData &remoteAircraftData);
 
         //! Remote aircraft data sent from simulator
-        void updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftModel &remoteAircraftModel);
+        void updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
+                                               const DataDefinitionRemoteAircraftModel &remoteAircraftModel);
 
         //! Probe data sent from simulator
-        void updateProbeFromSimulator(const swift::misc::aviation::CCallsign &callsign, const DataDefinitionPosData &remoteAircraftData);
+        void updateProbeFromSimulator(const swift::misc::aviation::CCallsign &callsign,
+                                      const DataDefinitionPosData &remoteAircraftData);
 
         //! Customization point for adjusting altitude to compensate for temperature effect
-        virtual void setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation, const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft);
+        virtual void
+        setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation,
+                        const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
         //! Called when data about our own aircraft are received
         void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
@@ -495,10 +533,12 @@ namespace swift::simplugin::fsxcommon
         bool setSimConnectObjectId(DWORD requestId, DWORD objectId);
 
         //! Remember current lights
-        bool setCurrentLights(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftLights &lights);
+        bool setCurrentLights(const swift::misc::aviation::CCallsign &callsign,
+                              const swift::misc::aviation::CAircraftLights &lights);
 
         //! Remember lights sent
-        bool setLightsAsSent(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftLights &lights);
+        bool setLightsAsSent(const swift::misc::aviation::CCallsign &callsign,
+                             const swift::misc::aviation::CAircraftLights &lights);
 
         //! Display receive exceptions?
         bool stillDisplayReceiveExceptions();
@@ -513,10 +553,12 @@ namespace swift::simplugin::fsxcommon
         void synchronizeTime(const DataDefinitionSimEnvironment *simEnv);
 
         //! Request data for a CSimConnectObject (aka remote aircraft)
-        bool requestPositionDataForSimObject(const CSimConnectObject &simObject, SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
+        bool requestPositionDataForSimObject(const CSimConnectObject &simObject,
+                                             SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
 
         //! Request data for the terrain probe
-        bool requestTerrainProbeData(const CSimConnectObject &simObject, const swift::misc::aviation::CCallsign &aircraftCallsign);
+        bool requestTerrainProbeData(const CSimConnectObject &simObject,
+                                     const swift::misc::aviation::CCallsign &aircraftCallsign);
 
         //! Request lights for a CSimConnectObject
         bool requestLightsForSimObject(const CSimConnectObject &simObject);
@@ -537,7 +579,8 @@ namespace swift::simplugin::fsxcommon
         void setTraceSendId(bool traceSendId) { m_traceSendId = traceSendId; }
 
         //! Trace the send id
-        void traceSendId(const CSimConnectObject &simObject, const QString &functionName, const QString &details = {}, bool forceTrace = false);
+        void traceSendId(const CSimConnectObject &simObject, const QString &functionName, const QString &details = {},
+                         bool forceTrace = false);
 
         //! Send id trace or given send id
         TraceFsxSendId getSendIdTrace(DWORD sendId) const;
@@ -552,15 +595,14 @@ namespace swift::simplugin::fsxcommon
         int removeAllProbes();
 
         //! Insert a new SimConnect object
-        CSimConnectObject insertNewSimConnectObject(
-            const swift::misc::simulation::CSimulatedAircraft &aircraft, DWORD requestId,
-            CSimConnectObject::SimObjectType type, const CSimConnectObject &removedPendingObject = {});
+        CSimConnectObject insertNewSimConnectObject(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                                    DWORD requestId, CSimConnectObject::SimObjectType type,
+                                                    const CSimConnectObject &removedPendingObject = {});
 
         //! Update simulator COM from swift data. Returns true if simulator frequency was changed
         bool updateCOMFromSwiftToSimulator(const swift::misc::physical_quantities::CFrequency &newFreq,
                                            const swift::misc::physical_quantities::CFrequency &lastSimFreq,
-                                           swift::misc::physical_quantities::CFrequency &last25kHzSimFreq,
-                                           EventIds id);
+                                           swift::misc::physical_quantities::CFrequency &last25kHzSimFreq, EventIds id);
 
         //! Used for terrain probes
         static const swift::misc::aviation::CAltitude &terrainProbeAltitude();
@@ -579,18 +621,25 @@ namespace swift::simplugin::fsxcommon
         // -- range for sim data, each sim object will get its own request id and use the offset ranges
         static constexpr int RequestSimObjAircraftStart = static_cast<int>(CSimConnectDefinitions::RequestEndMarker);
         static constexpr int RequestSimObjAircraftEnd = RequestSimObjAircraftStart - 1 + MaxSimObjAircraft;
-        static constexpr int RequestSimObjAircraftRangeEnd = RequestSimObjAircraftStart - 1 + static_cast<int>(CSimConnectDefinitions::SimObjectEndMarker) * MaxSimObjAircraft;
+        static constexpr int RequestSimObjAircraftRangeEnd =
+            RequestSimObjAircraftStart - 1 +
+            static_cast<int>(CSimConnectDefinitions::SimObjectEndMarker) * MaxSimObjAircraft;
 
         // -- range for probe data, each probe object will get its own request id and use the offset ranges
         static constexpr int RequestSimObjTerrainProbeStart = RequestSimObjAircraftRangeEnd + 1;
         static constexpr int RequestSimObjTerrainProbeEnd = RequestSimObjTerrainProbeStart - 1 + MaxSimObjProbes;
-        static constexpr int RequestSimObjTerrainProbeRangeEnd = RequestSimObjTerrainProbeStart - 1 + static_cast<int>(CSimConnectDefinitions::SimObjectEndMarker) * MaxSimObjProbes;
+        static constexpr int RequestSimObjTerrainProbeRangeEnd =
+            RequestSimObjTerrainProbeStart - 1 +
+            static_cast<int>(CSimConnectDefinitions::SimObjectEndMarker) * MaxSimObjProbes;
 
         // times
         static constexpr int AddPendingAircraftIntervalMs = 20 * 1000;
         static constexpr int DispatchIntervalMs = 10; //!< how often with run the FSX event queue
-        static constexpr int DeferSimulatingFlagMs = 1500; //!< simulating can jitter at startup (simulating->stopped->simulating, multiple start events), so we defer detection
-        static constexpr int DeferResendingLights = 2500; //!< Resend light state when aircraft light state was not yet available
+        static constexpr int DeferSimulatingFlagMs =
+            1500; //!< simulating can jitter at startup (simulating->stopped->simulating, multiple start events), so we
+                  //!< defer detection
+        static constexpr int DeferResendingLights =
+            2500; //!< Resend light state when aircraft light state was not yet available
 
         QString m_simConnectVersion; //!< SimConnect version
         bool m_simConnected = false; //!< Is simulator connected?
@@ -614,9 +663,12 @@ namespace swift::simplugin::fsxcommon
         qint64 m_dispatchProcMaxTimeMs = -1; //!< \sa ISimulator::getStatisticsSimulatorSpecific
 
         SIMCONNECT_RECV_ID m_dispatchReceiveIdLast = SIMCONNECT_RECV_ID_NULL; //!< last receive id from dispatching
-        SIMCONNECT_RECV_ID m_dispatchReceiveIdMaxTime = SIMCONNECT_RECV_ID_NULL; //!< receive id corresponding to max.time
-        DWORD m_dispatchRequestIdLast = CSimConnectDefinitions::RequestEndMarker; //!< request id if any for last request
-        DWORD m_dispatchRequestIdMaxTime = CSimConnectDefinitions::RequestEndMarker; //!< request id corresponding to max.time
+        SIMCONNECT_RECV_ID m_dispatchReceiveIdMaxTime =
+            SIMCONNECT_RECV_ID_NULL; //!< receive id corresponding to max.time
+        DWORD m_dispatchRequestIdLast =
+            CSimConnectDefinitions::RequestEndMarker; //!< request id if any for last request
+        DWORD m_dispatchRequestIdMaxTime =
+            CSimConnectDefinitions::RequestEndMarker; //!< request id corresponding to max.time
 
         // sending via SimConnect
         QList<TraceFsxSendId> m_sendIdTraces; //!< Send id traces for debugging, latest first
@@ -627,17 +679,28 @@ namespace swift::simplugin::fsxcommon
         swift::misc::simulation::settings::CMultiSimulatorDetailsSettings m_detailsSettings;
 
         // objects
-        CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet added, excluded, disabled etc.
+        CSimConnectObjects m_simConnectObjectsPositionAndPartsTraces; //!< position/parts received, but object not yet
+                                                                      //!< added, excluded, disabled etc.
         CSimConnectObjects m_addPendingAircraft; //!< aircraft/probes awaiting to be added;
-        SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart); //!< request id, use obtainRequestIdForSimObjAircraft to get id
-        SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjTerrainProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjTerrainProbeStart); //!< request id, use obtainRequestIdForSimObjTerrainProbe to get id
+        SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(
+            RequestSimObjAircraftStart); //!< request id, use obtainRequestIdForSimObjAircraft to get id
+        SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjTerrainProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(
+            RequestSimObjTerrainProbeStart); //!< request id, use obtainRequestIdForSimObjTerrainProbe to get id
         QTimer m_simObjectTimer; //!< updating of SimObjects awaiting to be added
 
         // Last selected frequencies in simulator before setting 8.33 kHz spacing frequency
-        swift::misc::physical_quantities::CFrequency m_lastCom1Active { 0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit() }; //!< last COM1 active frequency
-        swift::misc::physical_quantities::CFrequency m_lastCom1Standby { 0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit() }; //!< last COM1 standby frequency
-        swift::misc::physical_quantities::CFrequency m_lastCom2Active { 0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit() }; //!< last COM2 active frequency
-        swift::misc::physical_quantities::CFrequency m_lastCom2Standby { 0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit() }; //!< last COM2 standby frequency
+        swift::misc::physical_quantities::CFrequency m_lastCom1Active {
+            0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit()
+        }; //!< last COM1 active frequency
+        swift::misc::physical_quantities::CFrequency m_lastCom1Standby {
+            0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit()
+        }; //!< last COM1 standby frequency
+        swift::misc::physical_quantities::CFrequency m_lastCom2Active {
+            0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit()
+        }; //!< last COM2 active frequency
+        swift::misc::physical_quantities::CFrequency m_lastCom2Standby {
+            0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit()
+        }; //!< last COM2 standby frequency
 
         //! Request id to string
         static QString requestIdToString(DWORD requestId);
@@ -645,8 +708,14 @@ namespace swift::simplugin::fsxcommon
     public:
         //! @{
         //! Offsets
-        static DWORD offsetSimObjAircraft(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjAircraft * static_cast<DWORD>(req); }
-        static DWORD offsetSimObjTerrainProbe(CSimConnectDefinitions::SimObjectRequest req) { return MaxSimObjProbes * static_cast<DWORD>(req); }
+        static DWORD offsetSimObjAircraft(CSimConnectDefinitions::SimObjectRequest req)
+        {
+            return MaxSimObjAircraft * static_cast<DWORD>(req);
+        }
+        static DWORD offsetSimObjTerrainProbe(CSimConnectDefinitions::SimObjectRequest req)
+        {
+            return MaxSimObjProbes * static_cast<DWORD>(req);
+        }
         //! @}
     };
 

@@ -15,7 +15,8 @@ namespace swift::misc::simulation::flightgear
         ;
     }
 
-    CAircraftModelLoaderFlightgear::CAircraftModelLoaderFlightgear(QObject *parent) : simulation::IAircraftModelLoader(simulation::CSimulatorInfo::fg(), parent)
+    CAircraftModelLoaderFlightgear::CAircraftModelLoaderFlightgear(QObject *parent)
+        : simulation::IAircraftModelLoader(simulation::CSimulatorInfo::fg(), parent)
     {}
 
     CAircraftModelLoaderFlightgear::~CAircraftModelLoaderFlightgear()
@@ -27,11 +28,13 @@ namespace swift::misc::simulation::flightgear
     void CAircraftModelLoaderFlightgear::updateInstalledModels(const CAircraftModelList &models)
     {
         this->setModelsForSimulator(models, CSimulatorInfo::fg());
-        const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Flightgear updated '%1' models") << models.size();
+        const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Flightgear updated '%1' models")
+                                 << models.size();
         m_loadingMessages.push_back(m);
     }
 
-    CAircraftModelList CAircraftModelLoaderFlightgear::parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
+    CAircraftModelList CAircraftModelLoaderFlightgear::parseFlyableAirplanes(const QString &rootDirectory,
+                                                                             const QStringList &excludeDirectories)
     {
         Q_UNUSED(excludeDirectories);
         if (rootDirectory.isEmpty()) { return {}; }
@@ -44,7 +47,10 @@ namespace swift::misc::simulation::flightgear
         while (aircraftIt.hasNext())
         {
             aircraftIt.next();
-            if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
+            if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive))
+            {
+                continue;
+            }
             if (aircraftIt.filePath().contains("/AI/Aircraft")) { continue; }
             CAircraftModel model;
             QString modelName = aircraftIt.fileName();
@@ -61,7 +67,8 @@ namespace swift::misc::simulation::flightgear
         return installedModels;
     }
 
-    CAircraftModelList CAircraftModelLoaderFlightgear::parseAIAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories)
+    CAircraftModelList CAircraftModelLoaderFlightgear::parseAIAirplanes(const QString &rootDirectory,
+                                                                        const QStringList &excludeDirectories)
     {
         Q_UNUSED(excludeDirectories);
         if (rootDirectory.isEmpty()) { return {}; }
@@ -75,7 +82,10 @@ namespace swift::misc::simulation::flightgear
         while (aircraftIt.hasNext())
         {
             aircraftIt.next();
-            if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive)) { continue; }
+            if (CFileUtils::isExcludedDirectory(aircraftIt.fileInfo(), excludeDirectories, Qt::CaseInsensitive))
+            {
+                continue;
+            }
             CAircraftModel model;
             QString modelName = aircraftIt.fileName();
             modelName = modelName.remove(".xml");
@@ -97,31 +107,29 @@ namespace swift::misc::simulation::flightgear
         models.push_back(model);
     }
 
-    CAircraftModelList CAircraftModelLoaderFlightgear::performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories)
+    CAircraftModelList CAircraftModelLoaderFlightgear::performParsing(const QStringList &rootDirectories,
+                                                                      const QStringList &excludeDirectories)
     {
         CAircraftModelList allModels;
         for (const QString &rootDirectory : rootDirectories)
         {
             QString dir = rootDirectory;
             dir.replace('\\', '/');
-            if (dir.contains("/AI/Aircraft"))
-            {
-                allModels.push_back(parseAIAirplanes(dir, excludeDirectories));
-            }
-            else
-            {
-                allModels.push_back(parseFlyableAirplanes(dir, excludeDirectories));
-            }
+            if (dir.contains("/AI/Aircraft")) { allModels.push_back(parseAIAirplanes(dir, excludeDirectories)); }
+            else { allModels.push_back(parseFlyableAirplanes(dir, excludeDirectories)); }
         }
 
         return allModels;
     }
 
-    void CAircraftModelLoaderFlightgear::startLoadingFromDisk(IAircraftModelLoader::LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
+    void CAircraftModelLoaderFlightgear::startLoadingFromDisk(
+        IAircraftModelLoader::LoadMode mode, const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation,
+        const QStringList &modelDirectories)
     {
         const CSimulatorInfo simulator = CSimulatorInfo::fg();
         const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
-        const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
+        const QStringList excludedDirectoryPatterns(
+            m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
         if (mode.testFlag(LoadInBackground))
         {
@@ -130,7 +138,8 @@ namespace swift::misc::simulation::flightgear
 
             m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderFlightgear::performParsing",
                                                [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]() {
-                                                   auto models = this->performParsing(modelDirs, excludedDirectoryPatterns);
+                                                   auto models =
+                                                       this->performParsing(modelDirs, excludedDirectoryPatterns);
                                                    if (modelConsolidation) { modelConsolidation(models, true); }
                                                    return models;
                                                });

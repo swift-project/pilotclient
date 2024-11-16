@@ -7,8 +7,7 @@
 
 namespace XSwiftBus
 {
-    CDBusObject::CDBusObject(CSettingsProvider *settingsProvider) : CSettingsAware(settingsProvider)
-    {}
+    CDBusObject::CDBusObject(CSettingsProvider *settingsProvider) : CSettingsAware(settingsProvider) {}
 
     CDBusObject::~CDBusObject()
     {
@@ -19,7 +18,8 @@ namespace XSwiftBus
     {
         m_dbusConnection = dbusConnection;
         dbusConnectedHandler();
-        CDBusConnection::DisconnectedCallback disconnectedHandler = std::bind(&CDBusObject::dbusDisconnectedHandler, this);
+        CDBusConnection::DisconnectedCallback disconnectedHandler =
+            std::bind(&CDBusObject::dbusDisconnectedHandler, this);
         m_dbusConnection->registerDisconnectedCallback(this, disconnectedHandler);
     }
 
@@ -75,7 +75,8 @@ namespace XSwiftBus
         (void)data; // unused
     }
 
-    DBusHandlerResult CDBusObject::dbusObjectPathMessageFunction(DBusConnection *connection, DBusMessage *message, void *data)
+    DBusHandlerResult CDBusObject::dbusObjectPathMessageFunction(DBusConnection *connection, DBusMessage *message,
+                                                                 void *data)
     {
         (void)connection; // unused
 

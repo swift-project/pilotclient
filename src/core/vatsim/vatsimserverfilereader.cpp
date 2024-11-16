@@ -32,10 +32,7 @@ namespace swift::core::vatsim
     CVatsimServerFileReader::CVatsimServerFileReader(QObject *owner) : CThreadedReader(owner, "CVatsimServerFileReader")
     {}
 
-    CServerList CVatsimServerFileReader::getFsdServers() const
-    {
-        return m_lastGoodSetup.get().getFsdServers();
-    }
+    CServerList CVatsimServerFileReader::getFsdServers() const { return m_lastGoodSetup.get().getFsdServers(); }
 
     void CVatsimServerFileReader::readInBackgroundThread()
     {
@@ -46,10 +43,7 @@ namespace swift::core::vatsim
         });
     }
 
-    void CVatsimServerFileReader::doWorkImpl()
-    {
-        this->read();
-    }
+    void CVatsimServerFileReader::doWorkImpl() { this->read(); }
 
     void CVatsimServerFileReader::read()
     {
@@ -123,12 +117,14 @@ namespace swift::core::vatsim
 
             // data read finished
             emit this->dataFileRead(dataFileData.size());
-            emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, dataFileData.size() / 1000, url);
+            emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, dataFileData.size() / 1000,
+                                url);
         }
         else
         {
             // network error
-            CLogMessage(this).warning(u"Reading VATSIM data file failed '%1' '%2'") << nwReply->errorString() << urlString;
+            CLogMessage(this).warning(u"Reading VATSIM data file failed '%1' '%2'")
+                << nwReply->errorString() << urlString;
             nwReply->abort();
             emit this->dataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFailed, 0, url);
         }
@@ -136,10 +132,9 @@ namespace swift::core::vatsim
 
     CServer CVatsimServerFileReader::parseServer(const QJsonObject &server) const
     {
-        return CServer(server["name"].toString(), server["location"].toString(),
-                       server["hostname_or_ip"].toString(), 6809, CUser("id", "real name", "email", "password"),
-                       CFsdSetup::vatsimStandard(), CEcosystem::VATSIM,
-                       CServer::FSDServerVatsim, server["clients_connection_allowed"].toInt());
+        return CServer(server["name"].toString(), server["location"].toString(), server["hostname_or_ip"].toString(),
+                       6809, CUser("id", "real name", "email", "password"), CFsdSetup::vatsimStandard(),
+                       CEcosystem::VATSIM, CServer::FSDServerVatsim, server["clients_connection_allowed"].toInt());
     }
 
 } // namespace swift::core::vatsim

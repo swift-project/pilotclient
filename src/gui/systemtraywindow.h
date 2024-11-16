@@ -73,7 +73,8 @@ namespace swift::gui
         void createActions();
         void createTrayIcon(const QIcon &icon);
 
-        SystemTrayMode m_systemTrayMode = SystemTrayMode { MinimizeToTray | QuitOnClose }; //!< Minimize mode, \sa MinimizeMode
+        SystemTrayMode m_systemTrayMode =
+            SystemTrayMode { MinimizeToTray | QuitOnClose }; //!< Minimize mode, \sa MinimizeMode
 
         // System Tray actions
         QAction *m_actionRestore = nullptr;

@@ -34,7 +34,9 @@ namespace swift::gui::views
         void setIconMode(bool withIcon);
 
         //! Update or add value, QVariant version
-        bool addOrUpdateByName(const QString &name, const swift::misc::CVariant &value, const swift::misc::CIcon &icon = swift::misc::CIcon(), bool isResizeConditionMet = true, bool skipEqualValues = true);
+        bool addOrUpdateByName(const QString &name, const swift::misc::CVariant &value,
+                               const swift::misc::CIcon &icon = swift::misc::CIcon(), bool isResizeConditionMet = true,
+                               bool skipEqualValues = true);
 
         //! Remove by name
         void removeByName(const QString &name, bool isResizeConditionMet = true);

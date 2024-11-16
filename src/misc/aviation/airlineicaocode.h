@@ -58,7 +58,8 @@ namespace swift::misc::aviation
         CAirlineIcaoCode(const QString &airlineDesignator);
 
         //! Constructor.
-        CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const CCountry &country, const QString &telephony, bool virtualAirline, bool operating);
+        CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const CCountry &country,
+                         const QString &telephony, bool virtualAirline, bool operating);
 
         //! Get airline, e.g. "DLH"
         const QString &getDesignator() const { return m_designator; }
@@ -254,15 +255,14 @@ namespace swift::misc::aviation
 
         //! Specialized log message for matching / reverse lookup
         //! \threadsafe
-        static CStatusMessage logMessage(
-            const CAirlineIcaoCode &icaoCode,
-            const QString &message, const QStringList &extraCategories = {},
-            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+        static CStatusMessage logMessage(const CAirlineIcaoCode &icaoCode, const QString &message,
+                                         const QStringList &extraCategories = {},
+                                         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
         //! Specialized log for matching / reverse lookup
         //! \threadsafe
-        static void addLogDetailsToList(CStatusMessageList *log, const CAirlineIcaoCode &icao,
-                                        const QString &message, const QStringList &extraCategories = {},
+        static void addLogDetailsToList(CStatusMessageList *log, const CAirlineIcaoCode &icao, const QString &message,
+                                        const QStringList &extraCategories = {},
                                         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
         //! From our DB JSON

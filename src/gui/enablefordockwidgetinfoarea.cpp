@@ -34,7 +34,8 @@ namespace swift::gui
         {
             // we already have a value
             // changes should not happen
-            Q_ASSERT_X(m_parentDockableInfoArea == parentDockableWidget, Q_FUNC_INFO, "Reassigned parent dock widget area");
+            Q_ASSERT_X(m_parentDockableInfoArea == parentDockableWidget, Q_FUNC_INFO,
+                       "Reassigned parent dock widget area");
             return m_parentDockableInfoArea == parentDockableWidget;
         }
 
@@ -63,7 +64,10 @@ namespace swift::gui
 
     bool CEnableForDockWidgetInfoArea::isVisibleWidget() const
     {
-        if (!m_parentDockableInfoArea) { return false; } // can happen function is used while dock widget not yet fully initialized
+        if (!m_parentDockableInfoArea)
+        {
+            return false;
+        } // can happen function is used while dock widget not yet fully initialized
         return m_parentDockableInfoArea->isVisibleWidget();
     }
 
@@ -85,9 +89,6 @@ namespace swift::gui
         if (this->isVisibleWidget()) { return; }
 
         // select myself
-        if (this->getParentInfoArea())
-        {
-            this->getParentInfoArea()->selectArea(this->getDockWidgetInfoArea());
-        }
+        if (this->getParentInfoArea()) { this->getParentInfoArea()->selectArea(this->getDockWidgetInfoArea()); }
     }
 } // namespace swift::gui

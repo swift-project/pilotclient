@@ -50,9 +50,8 @@ namespace swift::gui::models
             QList<QStandardItem *> categoryRow;
 
             // ownership of QStandardItem is taken by model
-            QStandardItem *si = new QStandardItem(
-                category.isAssignable() ? CIcons::paperPlane16() : CIcons::folder16(),
-                category.getLevelAndName());
+            QStandardItem *si = new QStandardItem(category.isAssignable() ? CIcons::paperPlane16() : CIcons::folder16(),
+                                                  category.getLevelAndName());
             si->setEditable(false);
             categoryRow.push_back(si);
 
@@ -71,10 +70,7 @@ namespace swift::gui::models
             if (categoryRow.isEmpty()) { continue; }
 
             QStandardItem *parent = categoryRow.first();
-            if (category.isFirstLevel())
-            {
-                this->invisibleRootItem()->appendRow(categoryRow);
-            }
+            if (category.isFirstLevel()) { this->invisibleRootItem()->appendRow(categoryRow); }
             else
             {
                 const int p = category.getDepth() - 1;

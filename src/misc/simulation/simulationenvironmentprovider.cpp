@@ -19,7 +19,10 @@ using namespace swift::misc::simulation::settings;
 
 namespace swift::misc::simulation
 {
-    bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign, bool likelyOnGroundElevation, const ICoordinateGeodetic &elevationCoordinate, const CLength &epsilon)
+    bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign,
+                                                                 bool likelyOnGroundElevation,
+                                                                 const ICoordinateGeodetic &elevationCoordinate,
+                                                                 const CLength &epsilon)
     {
         if (!elevationCoordinate.hasMSLGeodeticHeight())
         {
@@ -51,8 +54,11 @@ namespace swift::misc::simulation
             if (distFt > maxDistFt)
             {
                 // such a huge distance to existing value
-                CLogMessage(this).debug(u"Suspicious GND elevation distance '%1': %2ft at %3") << requestedForCallsign.asString() << distFt << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
-                SWIFT_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious gnd. elevation distance");
+                CLogMessage(this).debug(u"Suspicious GND elevation distance '%1': %2ft at %3")
+                    << requestedForCallsign.asString() << distFt
+                    << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
+                SWIFT_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO,
+                              "Suspicious gnd. elevation distance");
             }
             return false;
         }
@@ -66,8 +72,11 @@ namespace swift::misc::simulation
             if (distFt > maxDistFt)
             {
                 // such a huge distance to existing value
-                CLogMessage(this).debug(u"Suspicious NON GND elevation distance for '%1': %2ft at %3") << requestedForCallsign.asString() << distFt << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
-                // SWIFT_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious elevation distance");
+                CLogMessage(this).debug(u"Suspicious NON GND elevation distance for '%1': %2ft at %3")
+                    << requestedForCallsign.asString() << distFt
+                    << elevationCoordinate.geodeticHeight().valueRoundedAsString(CLengthUnit::ft(), 1);
+                // SWIFT_AUDIT_X(!CBuildConfig::isLocalDeveloperDebugBuild(), Q_FUNC_INFO, "Suspicious elevation
+                // distance");
             }
             return false;
         }
@@ -102,14 +111,17 @@ namespace swift::misc::simulation
         return true;
     }
 
-    bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign, bool likelyOnGroundElevation, const CElevationPlane &elevationPlane)
+    bool ISimulationEnvironmentProvider::rememberGroundElevation(const CCallsign &requestedForCallsign,
+                                                                 bool likelyOnGroundElevation,
+                                                                 const CElevationPlane &elevationPlane)
     {
         if (!elevationPlane.hasMSLGeodeticHeight())
         {
             SWIFT_AUDIT_X(false, Q_FUNC_INFO, "Elevation plane needs to be MSL NON NULL");
             return false;
         }
-        return this->rememberGroundElevation(requestedForCallsign, likelyOnGroundElevation, elevationPlane, elevationPlane.getRadius());
+        return this->rememberGroundElevation(requestedForCallsign, likelyOnGroundElevation, elevationPlane,
+                                             elevationPlane.getRadius());
     }
 
     bool ISimulationEnvironmentProvider::insertCG(const CLength &cg, const CCallsign &cs)
@@ -184,14 +196,8 @@ namespace swift::misc::simulation
         if (!m_enableCG) { return false; }
         for (const CCallsign &cs : callsigns)
         {
-            if (cg.isNull())
-            {
-                m_cgsPerCallsignOverridden.remove(cs);
-            }
-            else
-            {
-                m_cgsPerCallsignOverridden[cs] = cg;
-            }
+            if (cg.isNull()) { m_cgsPerCallsignOverridden.remove(cs); }
+            else { m_cgsPerCallsignOverridden[cs] = cg; }
         }
         return true;
     }
@@ -233,7 +239,8 @@ namespace swift::misc::simulation
         return m_cgsPerCallsign; // all remaining CGs
     }
 
-    CLength ISimulationEnvironmentProvider::overriddenCGorDefault(const CLength &defaultCG, const QString &modelString) const
+    CLength ISimulationEnvironmentProvider::overriddenCGorDefault(const CLength &defaultCG,
+                                                                  const QString &modelString) const
     {
         if (modelString.isEmpty()) { return defaultCG; }
         const QString ms = modelString.toUpper();
@@ -259,9 +266,8 @@ namespace swift::misc::simulation
 
     CLength ISimulationEnvironmentProvider::minRange(const CLength &range)
     {
-        return (range.isNull() || range < CElevationPlane::singlePointRadius()) ?
-                   CElevationPlane::singlePointRadius() :
-                   range;
+        return (range.isNull() || range < CElevationPlane::singlePointRadius()) ? CElevationPlane::singlePointRadius() :
+                                                                                  range;
     }
 
     CCoordinateGeodeticList ISimulationEnvironmentProvider::getAllElevationCoordinates() const
@@ -278,10 +284,12 @@ namespace swift::misc::simulation
         return m_elvCoordinatesGnd;
     }
 
-    CElevationPlane ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
+    CElevationPlane ISimulationEnvironmentProvider::averageElevationOfOnGroundAircraft(
+        const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
     {
         const CCoordinateGeodeticList coordinates = this->getElevationCoordinatesOnGround();
-        return coordinates.averageGeodeticHeight(reference, range, CAircraftSituation::allowedAltitudeDeviation(), minValues, sufficientValues);
+        return coordinates.averageGeodeticHeight(reference, range, CAircraftSituation::allowedAltitudeDeviation(),
+                                                 minValues, sufficientValues);
     }
 
     CAltitude ISimulationEnvironmentProvider::highestElevation() const
@@ -317,16 +325,19 @@ namespace swift::misc::simulation
         return delta;
     }
 
-    CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const CLength &range) const
+    CElevationPlane
+    ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference,
+                                                                    const CLength &range) const
     {
         if (!this->isElevationProviderEnabled()) { return CElevationPlane::null(); }
 
         // for single point we use a slightly optimized version
-        const bool singlePoint = (&range == &CElevationPlane::singlePointRadius() || range.isNull() || range <= CElevationPlane::singlePointRadius());
+        const bool singlePoint = (&range == &CElevationPlane::singlePointRadius() || range.isNull() ||
+                                  range <= CElevationPlane::singlePointRadius());
         const CCoordinateGeodeticList elevations = this->getAllElevationCoordinates();
-        const CCoordinateGeodetic coordinate = singlePoint ?
-                                                   elevations.findFirstWithinRangeOrDefault(reference, CElevationPlane::singlePointRadius()) :
-                                                   elevations.findClosestWithinRange(reference, range);
+        const CCoordinateGeodetic coordinate =
+            singlePoint ? elevations.findFirstWithinRangeOrDefault(reference, CElevationPlane::singlePointRadius()) :
+                          elevations.findClosestWithinRange(reference, range);
         const bool found = !coordinate.isNull();
 
         {
@@ -344,7 +355,8 @@ namespace swift::misc::simulation
         }
     }
 
-    CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRangeOrRequest(const ICoordinateGeodetic &reference, const CLength &range, const CCallsign &callsign)
+    CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRangeOrRequest(
+        const ICoordinateGeodetic &reference, const CLength &range, const CCallsign &callsign)
     {
         if (!this->isElevationProviderEnabled()) { return CElevationPlane::null(); }
         const CElevationPlane ep = ISimulationEnvironmentProvider::findClosestElevationWithinRange(reference, range);
@@ -456,10 +468,7 @@ namespace swift::misc::simulation
         if (callsign.isEmpty()) { return CLength::null(); }
         QReadLocker l(&m_lockCG);
         if (!m_enableCG) { return CLength::null(); }
-        if (m_cgsPerCallsignOverridden.contains(callsign))
-        {
-            return m_cgsPerCallsignOverridden[callsign];
-        }
+        if (m_cgsPerCallsignOverridden.contains(callsign)) { return m_cgsPerCallsignOverridden[callsign]; }
         if (!m_cgsPerCallsign.contains(callsign)) { return CLength::null(); }
         return m_cgsPerCallsign.value(callsign);
     }
@@ -468,9 +477,17 @@ namespace swift::misc::simulation
     {
         if (callsign.isEmpty()) { return CLength::null(); }
         const CSimulatorSettings::CGSource source = m_settings.getCGSource();
-        if (source == CSimulatorSettings::CGFromDBOnly || (source == CSimulatorSettings::CGFromDBFirst && !dbCG.isNull())) { return dbCG; }
+        if (source == CSimulatorSettings::CGFromDBOnly ||
+            (source == CSimulatorSettings::CGFromDBFirst && !dbCG.isNull()))
+        {
+            return dbCG;
+        }
         const CLength simCG = this->getSimulatorCG(callsign);
-        if (source == CSimulatorSettings::CGFromSimulatorOnly || (source == CSimulatorSettings::CGFromSimulatorFirst && !simCG.isNull())) { return simCG; }
+        if (source == CSimulatorSettings::CGFromSimulatorOnly ||
+            (source == CSimulatorSettings::CGFromSimulatorFirst && !simCG.isNull()))
+        {
+            return simCG;
+        }
         return dbCG;
     }
 
@@ -480,15 +497,13 @@ namespace swift::misc::simulation
         const QString ms = modelString.toUpper();
         QReadLocker l(&m_lockCG);
         if (!m_enableCG) { return CLength::null(); }
-        if (m_cgsPerModelOverridden.contains(ms))
-        {
-            return m_cgsPerModelOverridden.value(ms);
-        }
+        if (m_cgsPerModelOverridden.contains(ms)) { return m_cgsPerModelOverridden.value(ms); }
         if (!m_cgsPerModel.contains(ms)) { return CLength::null(); }
         return m_cgsPerModel.value(ms);
     }
 
-    CLength ISimulationEnvironmentProvider::getSimulatorOrDbCGPerModelString(const QString &modelString, const CLength &dbCG) const
+    CLength ISimulationEnvironmentProvider::getSimulatorOrDbCGPerModelString(const QString &modelString,
+                                                                             const CLength &dbCG) const
     {
         if (modelString.isEmpty()) { return CLength::null(); }
         const CSimulatorSettings::CGSource source = m_settings.getCGSource();
@@ -497,9 +512,17 @@ namespace swift::misc::simulation
             QReadLocker l(&m_lockCG);
             if (m_cgsPerModelOverridden.contains(ms)) { return m_cgsPerModelOverridden.value(ms); }
         }
-        if (source == CSimulatorSettings::CGFromDBOnly || (!dbCG.isNull() && source == CSimulatorSettings::CGFromDBFirst)) { return dbCG; }
+        if (source == CSimulatorSettings::CGFromDBOnly ||
+            (!dbCG.isNull() && source == CSimulatorSettings::CGFromDBFirst))
+        {
+            return dbCG;
+        }
         const CLength simCG = this->getSimulatorCGPerModelString(modelString);
-        if (source == CSimulatorSettings::CGFromSimulatorOnly || (source == CSimulatorSettings::CGFromSimulatorFirst && simCG.isNull())) { return simCG; }
+        if (source == CSimulatorSettings::CGFromSimulatorOnly ||
+            (source == CSimulatorSettings::CGFromSimulatorFirst && simCG.isNull()))
+        {
+            return simCG;
+        }
         return dbCG;
     }
 
@@ -514,10 +537,7 @@ namespace swift::misc::simulation
     {
         if (callsign.isEmpty()) { return false; }
         QReadLocker l(&m_lockCG);
-        if (m_cgsPerCallsignOverridden.contains(callsign))
-        {
-            return m_cgsPerCallsignOverridden[callsign] == cg;
-        }
+        if (m_cgsPerCallsignOverridden.contains(callsign)) { return m_cgsPerCallsignOverridden[callsign] == cg; }
 
         // normal values
         if (!m_cgsPerCallsign.contains(callsign)) { return false; }
@@ -545,14 +565,16 @@ namespace swift::misc::simulation
         m_elvFound = m_elvMissed = 0;
     }
 
-    int ISimulationEnvironmentProvider::removeElevationValues(const CAircraftSituation &reference, const CLength &removeRange)
+    int ISimulationEnvironmentProvider::removeElevationValues(const CAircraftSituation &reference,
+                                                              const CLength &removeRange)
     {
         QWriteLocker l(&m_lockElvCoordinates);
         const int r = m_elvCoordinatesGnd.removeInsideRange(reference, removeRange);
         return r;
     }
 
-    bool ISimulationEnvironmentProvider::cleanElevationValues(const CAircraftSituation &reference, const CLength &keptRange, bool forced)
+    bool ISimulationEnvironmentProvider::cleanElevationValues(const CAircraftSituation &reference,
+                                                              const CLength &keptRange, bool forced)
     {
         if (reference.isNull() || keptRange.isNull()) { return false; }
         const CLength r = minRange(keptRange);
@@ -597,10 +619,15 @@ namespace swift::misc::simulation
         return cleaned;
     }
 
-    ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo) : m_simulatorPluginInfo(pluginInfo)
+    ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo)
+        : m_simulatorPluginInfo(pluginInfo)
     {}
 
-    ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo, const CSimulatorSettings &settings, bool supportElevation, bool supportCG) : m_simulatorPluginInfo(pluginInfo), m_settings(settings), m_enableElevation(supportElevation), m_enableCG(supportCG)
+    ISimulationEnvironmentProvider::ISimulationEnvironmentProvider(const CSimulatorPluginInfo &pluginInfo,
+                                                                   const CSimulatorSettings &settings,
+                                                                   bool supportElevation, bool supportCG)
+        : m_simulatorPluginInfo(pluginInfo), m_settings(settings), m_enableElevation(supportElevation),
+          m_enableCG(supportCG)
     {}
 
     bool ISimulationEnvironmentProvider::isCgProviderEnabled() const
@@ -633,20 +660,24 @@ namespace swift::misc::simulation
         setCgProviderEnabled(cgEnabled);
     }
 
-    void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info, const CSimulatorSettings &settings, const CAircraftModel &defaultModel)
+    void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info,
+                                                          const CSimulatorSettings &settings,
+                                                          const CAircraftModel &defaultModel)
     {
         this->setNewPluginInfo(info, settings);
         this->setDefaultModel(defaultModel);
     }
 
-    void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info, const CSimulatorSettings &settings)
+    void ISimulationEnvironmentProvider::setNewPluginInfo(const CSimulatorPluginInfo &info,
+                                                          const CSimulatorSettings &settings)
     {
         QWriteLocker l(&m_lockSimInfo);
         m_simulatorPluginInfo = info;
         m_settings = settings;
     }
 
-    void ISimulationEnvironmentProvider::setSimulatorDetails(const QString &name, const QString &details, const QString &version)
+    void ISimulationEnvironmentProvider::setSimulatorDetails(const QString &name, const QString &details,
+                                                             const QString &version)
     {
         QWriteLocker l(&m_lockSimInfo);
         m_simulatorName = name;
@@ -712,22 +743,26 @@ namespace swift::misc::simulation
     }
 
     // pin vtables to this file
-    void CSimulationEnvironmentAware::anchor()
-    {}
+    void CSimulationEnvironmentAware::anchor() {}
 
-    CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference, const physical_quantities::CLength &range) const
+    CElevationPlane
+    CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference,
+                                                                 const physical_quantities::CLength &range) const
     {
         if (!this->hasProvider()) { return CElevationPlane::null(); }
         return this->provider()->findClosestElevationWithinRange(reference, range);
     }
 
-    CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRangeOrRequest(const ICoordinateGeodetic &reference, const CLength &range, const CCallsign &callsign)
+    CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRangeOrRequest(
+        const ICoordinateGeodetic &reference, const CLength &range, const CCallsign &callsign)
     {
         if (!this->hasProvider()) { return CElevationPlane::null(); }
         return this->provider()->findClosestElevationWithinRangeOrRequest(reference, range, callsign);
     }
 
-    CElevationPlane CSimulationEnvironmentAware::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
+    CElevationPlane CSimulationEnvironmentAware::averageElevationOfOnGroundAircraft(const CAircraftSituation &reference,
+                                                                                    const CLength &range, int minValues,
+                                                                                    int sufficientValues) const
     {
         if (!this->hasProvider()) { return CElevationPlane::null(); }
         return this->provider()->averageElevationOfOnGroundAircraft(reference, range, minValues, sufficientValues);
@@ -816,7 +851,8 @@ namespace swift::misc::simulation
         return this->provider()->hasSimulatorCG(callsign);
     }
 
-    bool CSimulationEnvironmentAware::cleanElevationValues(const CAircraftSituation &reference, const CLength &range, bool forced)
+    bool CSimulationEnvironmentAware::cleanElevationValues(const CAircraftSituation &reference, const CLength &range,
+                                                           bool forced)
     {
         if (!this->hasProvider()) { return false; }
         return this->provider()->cleanElevationValues(reference, range, forced);

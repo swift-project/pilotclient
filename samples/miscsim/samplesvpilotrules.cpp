@@ -32,7 +32,8 @@ namespace swift::sample
         QScopedPointer<CVPilotRulesReader> vPilotReader(new CVPilotRulesReader());
         bool s = vPilotReader->read(false);
         streamOut << "Read success: " << swift::misc::boolToYesNo(s) << Qt::endl;
-        streamOut << "Read " << vPilotReader->countRulesLoaded() << " rules from " << vPilotReader->countFilesLoaded() << " files" << Qt::endl;
+        streamOut << "Read " << vPilotReader->countRulesLoaded() << " rules from " << vPilotReader->countFilesLoaded()
+                  << " files" << Qt::endl;
         streamOut << "Distributors: " << vPilotReader->getRules().getSortedDistributors().join(", ");
 
         Q_UNUSED(streamIn);

@@ -12,16 +12,15 @@
 
 namespace swift::misc::shared_state::dbus
 {
-    CHubProxy::CHubProxy(const QDBusConnection &connection, const QString &service, QObject *parent) : IHub(parent), m_service(service)
+    CHubProxy::CHubProxy(const QDBusConnection &connection, const QString &service, QObject *parent)
+        : IHub(parent), m_service(service)
     {
-        m_interface = new CGenericDBusInterface(service, SWIFT_MISC_HUB_PATH, SWIFT_MISC_HUB_INTERFACE, connection, this);
+        m_interface =
+            new CGenericDBusInterface(service, SWIFT_MISC_HUB_PATH, SWIFT_MISC_HUB_INTERFACE, connection, this);
         m_interface->relayParentSignals();
     }
 
-    bool CHubProxy::isConnected() const
-    {
-        return m_interface->isValid();
-    }
+    bool CHubProxy::isConnected() const { return m_interface->isValid(); }
 
     std::pair<QSharedPointer<IDuplex>, QFuture<bool>> CHubProxy::getDuplex(const CIdentifier &identifier)
     {
@@ -45,8 +44,5 @@ namespace swift::misc::shared_state::dbus
         return m_interface->callDBusFuture<bool>(QLatin1String("openDuplex"), client);
     }
 
-    CHubProxy::~CHubProxy()
-    {
-        closeDuplex(CIdentifier::anonymous());
-    }
+    CHubProxy::~CHubProxy() { closeDuplex(CIdentifier::anonymous()); }
 } // namespace swift::misc::shared_state::dbus

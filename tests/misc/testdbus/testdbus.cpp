@@ -41,10 +41,7 @@ namespace MiscTest
         void signatureSize();
     };
 
-    void CTestDBus::initTestCase()
-    {
-        swift::misc::registerMetadata();
-    }
+    void CTestDBus::initTestCase() { swift::misc::registerMetadata(); }
 
     void CTestDBus::marshallUnmarshall()
     {
@@ -56,7 +53,8 @@ namespace MiscTest
         }
         CTestService *testService = CTestService::registerTestService(connection, false, QCoreApplication::instance());
         Q_UNUSED(testService);
-        ITestServiceInterface testServiceInterface(CTestService::InterfaceName(), CTestService::ObjectPath(), connection);
+        ITestServiceInterface testServiceInterface(CTestService::InterfaceName(), CTestService::ObjectPath(),
+                                                   connection);
         const int errors = ITestServiceInterface::pingTests(testServiceInterface, false);
         QVERIFY2(errors == 0, "DBus Ping tests fail");
     }

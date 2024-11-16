@@ -26,10 +26,7 @@ namespace swift::misc::db
         return cats;
     }
 
-    bool CDatastoreUtility::dbBoolStringToBool(const QString &dbBool)
-    {
-        return swift::misc::stringToBool(dbBool);
-    }
+    bool CDatastoreUtility::dbBoolStringToBool(const QString &dbBool) { return swift::misc::stringToBool(dbBool); }
 
     const QString &CDatastoreUtility::boolToDbYN(bool v)
     {
@@ -75,7 +72,8 @@ namespace swift::misc::db
     {
         if (jsonResponse.isEmpty())
         {
-            messages.push_back(CStatusMessage(static_cast<CDatastoreUtility *>(nullptr), CStatusMessage::SeverityError, u"Empty JSON data for published models"));
+            messages.push_back(CStatusMessage(static_cast<CDatastoreUtility *>(nullptr), CStatusMessage::SeverityError,
+                                              u"Empty JSON data for published models"));
             return false;
         }
 
@@ -93,7 +91,8 @@ namespace swift::misc::db
         if (!jsonDoc.isObject())
         {
             const QString phpError(CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonResponse));
-            messages.push_back(CStatusMessage(static_cast<CDatastoreUtility *>(nullptr), CStatusMessage::SeverityError, phpError));
+            messages.push_back(
+                CStatusMessage(static_cast<CDatastoreUtility *>(nullptr), CStatusMessage::SeverityError, phpError));
             return false;
         }
 

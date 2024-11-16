@@ -42,14 +42,8 @@ namespace swift::gui
         cb->setObjectName(identifier);
         cb->setProperty("pluginIdentifier", identifier);
         connect(cb, &QCheckBox::stateChanged, this, &CPluginSelector::handlePluginStateChange);
-        if (enabled)
-        {
-            cb->setCheckState(Qt::Checked);
-        }
-        else
-        {
-            cb->setCheckState(Qt::Unchecked);
-        }
+        if (enabled) { cb->setCheckState(Qt::Checked); }
+        else { cb->setCheckState(Qt::Unchecked); }
 
         pw->layout()->addWidget(cb);
 

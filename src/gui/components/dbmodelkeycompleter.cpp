@@ -21,7 +21,8 @@ namespace swift::gui::components
 
         this->setValidator(new CUpperCaseValidator(this));
         this->initCompleter();
-        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this, &CDbModelKeyCompleter::onModelsRead);
+        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this,
+                &CDbModelKeyCompleter::onModelsRead);
     }
 
     void CDbModelKeyCompleter::setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator)
@@ -36,10 +37,7 @@ namespace swift::gui::components
         return sGui->getWebDataServices()->getModelForModelString(this->text().toUpper().trimmed());
     }
 
-    void CDbModelKeyCompleter::onModelsRead()
-    {
-        this->initCompleter();
-    }
+    void CDbModelKeyCompleter::onModelsRead() { this->initCompleter(); }
 
     void CDbModelKeyCompleter::initCompleter()
     {

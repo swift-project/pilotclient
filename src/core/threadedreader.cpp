@@ -34,8 +34,7 @@ namespace swift::core
         m_updateTimer.setSingleShot(true);
     }
 
-    CThreadedReader::~CThreadedReader()
-    {}
+    CThreadedReader::~CThreadedReader() {}
 
     qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const
     {
@@ -68,10 +67,7 @@ namespace swift::core
         QTimer::singleShot(m_initialTime, this, [=] { this->doWork(); });
     }
 
-    void CThreadedReader::pauseReader()
-    {
-        QTimer::singleShot(0, &m_updateTimer, &QTimer::stop);
-    }
+    void CThreadedReader::pauseReader() { QTimer::singleShot(0, &m_updateTimer, &QTimer::stop); }
 
     bool CThreadedReader::hasPendingUrls() const
     {
@@ -101,15 +97,9 @@ namespace swift::core
         return true;
     }
 
-    bool CThreadedReader::isMarkedAsFailed() const
-    {
-        return m_markedAsFailed;
-    }
+    bool CThreadedReader::isMarkedAsFailed() const { return m_markedAsFailed; }
 
-    void CThreadedReader::setMarkedAsFailed(bool failed)
-    {
-        m_markedAsFailed = failed;
-    }
+    void CThreadedReader::setMarkedAsFailed(bool failed) { m_markedAsFailed = failed; }
 
     CUrlLogList CThreadedReader::getReadLog() const
     {
@@ -119,7 +109,8 @@ namespace swift::core
 
     void CThreadedReader::threadAssertCheck() const
     {
-        Q_ASSERT_X(QCoreApplication::instance()->thread() != QThread::currentThread(), Q_FUNC_INFO, "Needs to run in own thread");
+        Q_ASSERT_X(QCoreApplication::instance()->thread() != QThread::currentThread(), Q_FUNC_INFO,
+                   "Needs to run in own thread");
         Q_ASSERT_X(this->thread() == QThread::currentThread(), Q_FUNC_INFO, "Wrong object thread");
     }
 
@@ -164,7 +155,8 @@ namespace swift::core
         const CUrlLogList outdatedPendingUrls = m_urlReadLog.findOutdatedPending(OutdatedPendingCallMs);
         if (!outdatedPendingUrls.isEmpty())
         {
-            CLogMessage(this).warning(u"Detected outdated reader pending calls: '%1'") << outdatedPendingUrls.toQString(true);
+            CLogMessage(this).warning(u"Detected outdated reader pending calls: '%1'")
+                << outdatedPendingUrls.toQString(true);
             m_urlReadLog.removeOlderThanNowMinusOffset(OutdatedPendingCallMs); // clean up
         }
 

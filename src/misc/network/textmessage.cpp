@@ -28,7 +28,8 @@ namespace swift::misc::network
         m_frequency.switchUnit(physical_quantities::CFrequencyUnit::MHz());
     }
 
-    CTextMessage::CTextMessage(const QString &message, const CCallsign &senderCallsign, const CCallsign &recipientCallsign)
+    CTextMessage::CTextMessage(const QString &message, const CCallsign &senderCallsign,
+                               const CCallsign &recipientCallsign)
         : m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, nullptr)
     {
         this->setMessage(message); // single place to modify message
@@ -38,9 +39,7 @@ namespace swift::misc::network
     {
         if (this->isPrivateMessage())
         {
-            return m_message %
-                   u' ' % m_senderCallsign.toQString(i18n) %
-                   u' ' % m_recipientCallsign.toQString(i18n);
+            return m_message % u' ' % m_senderCallsign.toQString(i18n) % u' ' % m_recipientCallsign.toQString(i18n);
         }
         return m_message % u' ' % m_frequency.toQString(i18n);
     }
@@ -68,10 +67,7 @@ namespace swift::misc::network
     void CTextMessage::markAsSent()
     {
         m_wasSent = true;
-        if (!this->hasValidTimestamp())
-        {
-            this->setCurrentUtcTime();
-        }
+        if (!this->hasValidTimestamp()) { this->setCurrentUtcTime(); }
     }
 
     bool CTextMessage::isRelayedMessage() const
@@ -79,9 +75,7 @@ namespace swift::misc::network
         return m_relayedMessage || this->getMessage().startsWith(CTextMessage::swiftRelayMessage());
     }
 
-    void CTextMessage::markAsBroadcastMessage()
-    {
-    }
+    void CTextMessage::markAsBroadcastMessage() {}
 
     void CTextMessage::makeRelayedMessage(const CCallsign &partnerCallsign)
     {
@@ -91,7 +85,8 @@ namespace swift::misc::network
         this->markAsRelayedMessage();
         this->setRecipientCallsign(partnerCallsign);
         m_recipientCallsign.setTypeHint(CCallsign::Aircraft);
-        const QString newMessage = CTextMessage::swiftRelayMessage() % sender % u" " % recipient % u";" % this->getMessage();
+        const QString newMessage =
+            CTextMessage::swiftRelayMessage() % sender % u" " % recipient % u";" % this->getMessage();
         m_message = newMessage;
     }
 
@@ -180,15 +175,9 @@ namespace swift::misc::network
         return m_message.toHtmlEscaped();
     }
 
-    void CTextMessage::setMessage(const QString &message)
-    {
-        m_message = message.simplified().trimmed();
-    }
+    void CTextMessage::setMessage(const QString &message) { m_message = message.simplified().trimmed(); }
 
-    bool CTextMessage::isRadioMessage() const
-    {
-        return (CComSystem::isValidCivilAviationFrequency(m_frequency));
-    }
+    bool CTextMessage::isRadioMessage() const { return (CComSystem::isValidCivilAviationFrequency(m_frequency)); }
 
     bool CTextMessage::isServerMessage() const
     {
@@ -251,17 +240,17 @@ namespace swift::misc::network
         return this->asString(true, true, separator);
     }
 
-    void CTextMessage::toggleSenderRecipient()
-    {
-        std::swap(m_senderCallsign, m_recipientCallsign);
-    }
+    void CTextMessage::toggleSenderRecipient() { std::swap(m_senderCallsign, m_recipientCallsign); }
 
     bool CTextMessage::isSelcalMessage() const
     {
         // some first level checks, before really parsing the message
         if (this->isEmpty()) { return false; }
         if (this->isPrivateMessage()) { return false; }
-        if (m_message.length() > 15 || m_message.length() < 10) { return false; } // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it exactly matches
+        if (m_message.length() > 15 || m_message.length() < 10)
+        {
+            return false;
+        } // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it exactly matches
         return this->getSelcalCode().length() == 4;
     }
 
@@ -281,21 +270,17 @@ namespace swift::misc::network
         if (this->isEmpty()) return {};
         if (this->isPrivateMessage()) return {};
         if (!m_message.startsWith(QLatin1String("SELCAL"), Qt::CaseInsensitive)) return {};
-        if (m_message.length() > 15 || m_message.length() < 10) return {}; // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it exactly matches
+        if (m_message.length() > 15 || m_message.length() < 10)
+            return {}; // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it
+                       // exactly matches
         QString candidate = removeChars(m_message, [](QChar c) { return !c.isLetter(); }); // SELCALABCD
         if (candidate.length() != 10) return {};
         return std::move(candidate).right(4).toUpper();
     }
 
-    CIcons::IconIndex CTextMessage::toIcon() const
-    {
-        return m_senderCallsign.toIcon();
-    }
+    CIcons::IconIndex CTextMessage::toIcon() const { return m_senderCallsign.toIcon(); }
 
-    QPixmap CTextMessage::toPixmap() const
-    {
-        return CIcon(toIcon()).toPixmap();
-    }
+    QPixmap CTextMessage::toPixmap() const { return CIcon(toIcon()).toPixmap(); }
 
     QVariant CTextMessage::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
@@ -338,15 +323,22 @@ namespace swift::misc::network
 
     int CTextMessage::comparePropertyByIndex(CPropertyIndexRef index, const CTextMessage &compareValue) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexSenderCallsign: return m_senderCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSenderCallsign());
-        case IndexRecipientCallsign: return m_recipientCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRecipientCallsign());
+        case IndexSenderCallsign:
+            return m_senderCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSenderCallsign());
+        case IndexRecipientCallsign:
+            return m_recipientCallsign.comparePropertyByIndex(index.copyFrontRemoved(),
+                                                              compareValue.getRecipientCallsign());
         case IndexRecipientCallsignOrFrequency:
             if (this->isRadioMessage()) { return this->getFrequency().compare(compareValue.getFrequency()); }
-            return m_recipientCallsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRecipientCallsign());
+            return m_recipientCallsign.comparePropertyByIndex(index.copyFrontRemoved(),
+                                                              compareValue.getRecipientCallsign());
         default: return CValueObject::comparePropertyByIndex(index, *this);
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");

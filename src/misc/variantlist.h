@@ -25,9 +25,7 @@ namespace swift::misc
      *
      * A CVariant containing any registered sequential container type can be converted to a CVariantList.
      */
-    class SWIFT_MISC_EXPORT CVariantList :
-        public CSequence<CVariant>,
-        public swift::misc::mixin::MetaType<CVariantList>
+    class SWIFT_MISC_EXPORT CVariantList : public CSequence<CVariant>, public swift::misc::mixin::MetaType<CVariantList>
     {
     public:
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CVariantList)

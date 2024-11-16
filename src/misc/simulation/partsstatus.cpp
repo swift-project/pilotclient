@@ -9,8 +9,7 @@ namespace swift::misc::simulation
 {
     QString CPartsStatus::toQString() const
     {
-        return QStringLiteral("Supported parts: ") % boolToYesNo(m_supportsParts) %
-               QStringLiteral(" | reused: ") % boolToYesNo(m_resusedParts) %
-               QStringLiteral(" | same: ") % boolToYesNo(m_isSameParts);
+        return QStringLiteral("Supported parts: ") % boolToYesNo(m_supportsParts) % QStringLiteral(" | reused: ") %
+               boolToYesNo(m_resusedParts) % QStringLiteral(" | same: ") % boolToYesNo(m_isSameParts);
     }
 } // namespace swift::misc::simulation

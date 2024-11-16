@@ -7,16 +7,14 @@
 
 namespace swift::gui::components
 {
-    CStringListDialog::CStringListDialog(QWidget *parent) : QDialog(parent),
-                                                            ui(new Ui::CStringListDialog)
+    CStringListDialog::CStringListDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CStringListDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
         ui->lw_StringList->setSelectionMode(QAbstractItemView::SingleSelection);
     }
 
-    CStringListDialog::~CStringListDialog()
-    {}
+    CStringListDialog::~CStringListDialog() {}
 
     void CStringListDialog::setStrings(const QStringList &strings)
     {

@@ -39,7 +39,8 @@ namespace swift::misc::simulation
 
     signals:
         //! \copydoc IAircraftModelLoader::loadingFinished
-        void loadingFinished(const swift::misc::CStatusMessageList &status, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info);
+        void loadingFinished(const swift::misc::CStatusMessageList &status, const CSimulatorInfo &simulator,
+                             IAircraftModelLoader::LoadFinishedInfo info);
 
         //! \copydoc IAircraftModelLoader::diskLoadingStarted
         void diskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode);

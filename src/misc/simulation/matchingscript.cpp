@@ -9,32 +9,27 @@ using namespace swift::misc::aviation;
 
 namespace swift::misc::simulation
 {
-    MSInOutValues::MSInOutValues(const CCallsign &cs,
-                                 const CAircraftIcaoCode &aircraftIcao,
-                                 const CAirlineIcaoCode &airlineIcao,
-                                 const QString &livery, int liveryId) : MSInOutValues(cs.asString(), cs.getStringAsSet(), cs.getFlightNumber(),
-                                                                                      aircraftIcao.getDesignator(), aircraftIcao.getFamily(), aircraftIcao.getCombinedType(), aircraftIcao.getDbKey(),
-                                                                                      airlineIcao.getDesignator(), airlineIcao.getVDesignator(), airlineIcao.getDbKey(),
-                                                                                      livery, liveryId)
+    MSInOutValues::MSInOutValues(const CCallsign &cs, const CAircraftIcaoCode &aircraftIcao,
+                                 const CAirlineIcaoCode &airlineIcao, const QString &livery, int liveryId)
+        : MSInOutValues(cs.asString(), cs.getStringAsSet(), cs.getFlightNumber(), aircraftIcao.getDesignator(),
+                        aircraftIcao.getFamily(), aircraftIcao.getCombinedType(), aircraftIcao.getDbKey(),
+                        airlineIcao.getDesignator(), airlineIcao.getVDesignator(), airlineIcao.getDbKey(), livery,
+                        liveryId)
     {}
 
-    MSInOutValues::MSInOutValues(const CCallsign &cs,
-                                 const CAircraftIcaoCode &aircraftIcao,
-                                 const CLivery &livery) : MSInOutValues(cs,
-                                                                        aircraftIcao,
-                                                                        livery.getAirlineIcaoCode(),
-                                                                        livery.getCombinedCode(), livery.getDbKey())
+    MSInOutValues::MSInOutValues(const CCallsign &cs, const CAircraftIcaoCode &aircraftIcao, const CLivery &livery)
+        : MSInOutValues(cs, aircraftIcao, livery.getAirlineIcaoCode(), livery.getCombinedCode(), livery.getDbKey())
     {}
 
-    MSInOutValues::MSInOutValues(const CAircraftModel &model) : MSInOutValues(model.getCallsign(), model.getAircraftIcaoCode(), model.getLivery())
+    MSInOutValues::MSInOutValues(const CAircraftModel &model)
+        : MSInOutValues(model.getCallsign(), model.getAircraftIcaoCode(), model.getLivery())
     {}
 
-    MSInOutValues::MSInOutValues(const MSInOutValues &sv) : MSInOutValues(sv.m_callsign, sv.m_callsignAsSet, sv.m_flightNumber,
-                                                                          sv.getAircraftIcao(), sv.getCombinedType(), sv.getAircraftFamily(), sv.getDbAircraftIcaoId(),
-                                                                          sv.getAirlineIcao(), sv.getVirtualAirlineIcao(), sv.getDbAirlineIcaoId(),
-                                                                          sv.getLivery(), sv.getDbLiveryId(),
-                                                                          sv.m_logMessage,
-                                                                          sv.isModified(), sv.isRerun())
+    MSInOutValues::MSInOutValues(const MSInOutValues &sv)
+        : MSInOutValues(sv.m_callsign, sv.m_callsignAsSet, sv.m_flightNumber, sv.getAircraftIcao(),
+                        sv.getCombinedType(), sv.getAircraftFamily(), sv.getDbAircraftIcaoId(), sv.getAirlineIcao(),
+                        sv.getVirtualAirlineIcao(), sv.getDbAirlineIcaoId(), sv.getLivery(), sv.getDbLiveryId(),
+                        sv.m_logMessage, sv.isModified(), sv.isRerun())
     {}
 
     void MSInOutValues::setCallsign(const QString &callsign)
@@ -139,14 +134,8 @@ namespace swift::misc::simulation
     {
         m_modifiedAircraftDesignator = aircraft.getDesignator() != m_aircraftIcao;
         m_modifiedAircraftFamily = aircraft.getFamily() != m_aircraftFamily;
-        if (airline.isVirtualAirline())
-        {
-            m_modifiedAirlineDesignator = airline.getVDesignator() != m_vAirlineIcao;
-        }
-        else
-        {
-            m_modifiedAirlineDesignator = airline.getDesignator() != m_airlineIcao;
-        }
+        if (airline.isVirtualAirline()) { m_modifiedAirlineDesignator = airline.getVDesignator() != m_vAirlineIcao; }
+        else { m_modifiedAirlineDesignator = airline.getDesignator() != m_airlineIcao; }
     }
 
     bool MSInOutValues::hasChangedAircraftIcao(const aviation::CAircraftIcaoCode &aircraftIcao) const
@@ -235,7 +224,8 @@ namespace swift::misc::simulation
         emit this->inputAircraftAndAirlineCountChanged();
     }
 
-    QString MSModelSet::findCombinedTypeWithClosestColorLivery(const QString &combinedType, const QString &rgbColor) const
+    QString MSModelSet::findCombinedTypeWithClosestColorLivery(const QString &combinedType,
+                                                               const QString &rgbColor) const
     {
         if (combinedType.isEmpty() || rgbColor.isEmpty()) { return QString(); }
         CAircraftModelList models = m_modelSet.findByCombinedTypeWithColorLivery(combinedType);
@@ -245,7 +235,8 @@ namespace swift::misc::simulation
         return models.isEmpty() ? QString() : models.front().getModelString();
     }
 
-    QString MSModelSet::findClosestCombinedTypeWithClosestColorLivery(const QString &combinedType, const QString &rgbColor) const
+    QString MSModelSet::findClosestCombinedTypeWithClosestColorLivery(const QString &combinedType,
+                                                                      const QString &rgbColor) const
     {
         QString ms = this->findCombinedTypeWithClosestColorLivery(combinedType, rgbColor);
         if (!ms.isEmpty()) { return ms; }
@@ -266,10 +257,7 @@ namespace swift::misc::simulation
         return models.isEmpty() ? QString() : models.front().getModelString();
     }
 
-    MSModelSet::MSModelSet(const CAircraftModelList &modelSet)
-    {
-        this->initByModelSet(modelSet);
-    }
+    MSModelSet::MSModelSet(const CAircraftModelList &modelSet) { this->initByModelSet(modelSet); }
 
     void MSModelSet::initByModelSet(const CAircraftModelList &modelSet)
     {

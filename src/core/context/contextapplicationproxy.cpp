@@ -19,12 +19,16 @@ using namespace swift::misc;
 
 namespace swift::core::context
 {
-    CContextApplicationProxy::CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextApplication(mode, runtime)
+    CContextApplicationProxy::CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection,
+                                                       CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+        : IContextApplication(mode, runtime)
     {
-        m_dBusInterface = new CGenericDBusInterface(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(), connection, this);
+        m_dBusInterface = new CGenericDBusInterface(serviceName, IContextApplication::ObjectPath(),
+                                                    IContextApplication::InterfaceName(), connection, this);
         this->relaySignals(serviceName, connection);
 
-        connect(this, &CContextApplicationProxy::remoteHotkeyAction, this, &CContextApplicationProxy::processRemoteHotkeyActionCall);
+        connect(this, &CContextApplicationProxy::remoteHotkeyAction, this,
+                &CContextApplicationProxy::processRemoteHotkeyActionCall);
 
         m_pingTimer.setObjectName(serviceName + "::m_pingTimer");
         connect(&m_pingTimer, &QTimer::timeout, this, &CContextApplicationProxy::reRegisterApplications);
@@ -34,20 +38,24 @@ namespace swift::core::context
     void CContextApplicationProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         // signals originating from impl side
-        bool s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                    "settingsChanged", this, SIGNAL(settingsChanged(swift::misc::CValueCachePacket, swift::misc::CIdentifier)));
+        bool s = connection.connect(serviceName, IContextApplication::ObjectPath(),
+                                    IContextApplication::InterfaceName(), "settingsChanged", this,
+                                    SIGNAL(settingsChanged(swift::misc::CValueCachePacket, swift::misc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "registrationChanged", this, SIGNAL(registrationChanged()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                               "hotkeyActionsRegistered", this, SIGNAL(hotkeyActionsRegistered(QStringList, swift::misc::CIdentifier)));
+                               "hotkeyActionsRegistered", this,
+                               SIGNAL(hotkeyActionsRegistered(QStringList, swift::misc::CIdentifier)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                               "remoteHotkeyAction", this, SIGNAL(remoteHotkeyAction(QString, bool, swift::misc::CIdentifier)));
+                               "remoteHotkeyAction", this,
+                               SIGNAL(remoteHotkeyAction(QString, bool, swift::misc::CIdentifier)));
         Q_ASSERT(s);
         Q_UNUSED(s);
-        this->relayBaseClassSignals(serviceName, connection, IContextApplication::ObjectPath(), IContextApplication::InterfaceName());
+        this->relayBaseClassSignals(serviceName, connection, IContextApplication::ObjectPath(),
+                                    IContextApplication::InterfaceName());
     }
 
     void CContextApplicationProxy::changeSettings(const CValueCachePacket &settings, const CIdentifier &origin)
@@ -67,7 +75,8 @@ namespace swift::core::context
 
     CSettingsDictionary CContextApplicationProxy::getUnsavedSettingsKeysDescribed() const
     {
-        CSettingsDictionary result = m_dBusInterface->callDBusRet<CSettingsDictionary>(QLatin1String("getUnsavedSettingsKeysDescribed"));
+        CSettingsDictionary result =
+            m_dBusInterface->callDBusRet<CSettingsDictionary>(QLatin1String("getUnsavedSettingsKeysDescribed"));
         for (auto it = result.begin(); it != result.end(); ++it)
         {
             // consolidate with local names to fill any gaps in remote names
@@ -102,7 +111,8 @@ namespace swift::core::context
         m_dBusInterface->callDBus(QLatin1String("registerHotkeyActions"), actions, origin);
     }
 
-    void CContextApplicationProxy::callHotkeyActionRemotely(const QString &action, bool argument, const CIdentifier &origin)
+    void CContextApplicationProxy::callHotkeyActionRemotely(const QString &action, bool argument,
+                                                            const CIdentifier &origin)
     {
         m_dBusInterface->callDBus(QLatin1String("callHotkeyActionRemotely"), action, argument, origin);
     }
@@ -111,7 +121,8 @@ namespace swift::core::context
     {
         m_proxyPingIdentifiers.insert(application);
         if (m_pingTimer.isActive()) { m_pingTimer.start(); } // restart, no need to ping again
-        return m_dBusInterface->callDBusRet<swift::misc::CIdentifier>(QLatin1String("registerApplication"), application);
+        return m_dBusInterface->callDBusRet<swift::misc::CIdentifier>(QLatin1String("registerApplication"),
+                                                                      application);
     }
 
     void CContextApplicationProxy::unregisterApplication(const CIdentifier &application)
@@ -135,10 +146,7 @@ namespace swift::core::context
         if (!m_dBusInterface) { return; }
         if (m_proxyPingIdentifiers.isEmpty()) { return; }
         const QSet<swift::misc::CIdentifier> identifiers = m_proxyPingIdentifiers; // copy so member can be modified
-        for (const CIdentifier &identifier : identifiers)
-        {
-            this->registerApplication(identifier);
-        }
+        for (const CIdentifier &identifier : identifiers) { this->registerApplication(identifier); }
     }
 
     bool CContextApplicationProxy::isContextResponsive(const QString &dBusAddress, QString &msg, int timeoutMs)
@@ -148,26 +156,23 @@ namespace swift::core::context
 
         static const QString dBusName("contexttest");
         QDBusConnection connection = CDBusServer::connectToDBus(dBusAddress, dBusName);
-        CContextApplicationProxy proxy(swift::misc::CDBusServer::coreServiceName(), connection, CCoreFacadeConfig::Remote, nullptr);
+        CContextApplicationProxy proxy(swift::misc::CDBusServer::coreServiceName(), connection,
+                                       CCoreFacadeConfig::Remote, nullptr);
         const CIdentifier id("swift proxy test");
         const CIdentifier pingId = proxy.registerApplication(id);
         const bool ok = (id == pingId);
-        if (ok)
-        {
-            proxy.unregisterApplication(id);
-        }
-        else
-        {
-            msg = "Mismatch in proxy ping, context not ready.";
-        }
+        if (ok) { proxy.unregisterApplication(id); }
+        else { msg = "Mismatch in proxy ping, context not ready."; }
         CDBusServer::disconnectFromDBus(connection, dBusAddress);
         return ok;
     }
 
-    void CContextApplicationProxy::processRemoteHotkeyActionCall(const QString &action, bool argument, const CIdentifier &origin)
+    void CContextApplicationProxy::processRemoteHotkeyActionCall(const QString &action, bool argument,
+                                                                 const CIdentifier &origin)
     {
         if (!sApp || origin.isFromLocalMachine()) { return; }
         sApp->getInputManager()->callFunctionsBy(action, argument);
-        CLogMessage(this, CLogCategories::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
+        CLogMessage(this, CLogCategories::contextSlot()).debug()
+            << "Calling function" << action << "from origin" << origin.getMachineName();
     }
 } // namespace swift::core::context

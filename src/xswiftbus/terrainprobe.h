@@ -31,10 +31,12 @@ namespace XSwiftBus
 
         //! @{
         //! Get the elevation in meters at the given point in OpenGL space.
-        //! \note Due to the Earth's curvature, the OpenGL vertical axis may not be exactly perpendicular to the surface of the geoid.
-        //! \return NaN if no ground was detected.
-        std::array<double, 3> getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude) const;
-        std::array<double, 3> getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude, const std::string &callsign, bool &o_isWater) const;
+        //! \note Due to the Earth's curvature, the OpenGL vertical axis may not be exactly perpendicular to the surface
+        //! of the geoid. \return NaN if no ground was detected.
+        std::array<double, 3> getElevation(double degreesLatitude, double degreesLongitude,
+                                           double metersAltitude) const;
+        std::array<double, 3> getElevation(double degreesLatitude, double degreesLongitude, double metersAltitude,
+                                           const std::string &callsign, bool &o_isWater) const;
         //! @}
 
     private:

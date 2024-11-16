@@ -35,33 +35,36 @@ using namespace swift::misc;
 
 namespace swift::gui
 {
-    CInfoArea::CInfoArea(QWidget *parent) : QMainWindow(parent),
-                                            CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessInfoArea", this)
+    CInfoArea::CInfoArea(QWidget *parent)
+        : QMainWindow(parent),
+          CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessInfoArea", this)
     {
         this->setWholeInfoAreaFloating(m_infoAreaFloating);
     }
 
-    CInfoArea::~CInfoArea()
-    {}
+    CInfoArea::~CInfoArea() {}
 
     void CInfoArea::initInfoArea()
     {
         // initInfoArea() needs be called after(!) GUI is setup
 
         // Ref T184, child areas are now "cached" in m_childInfoAreas
-        // The original version did always use "findChildInfoAreas", so if there are ever any issues T184 might be reverted
+        // The original version did always use "findChildInfoAreas", so if there are ever any issues T184 might be
+        // reverted
         m_childInfoAreas = this->findOwnChildInfoAreas();
         m_dockWidgetInfoAreas = this->findOwnDockWidgetInfoAreas();
 
         this->setDockArea(Qt::TopDockWidgetArea);
         this->connectTopLevelChanged();
-        this->setFeaturesForDockableWidgets(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
+        this->setFeaturesForDockableWidgets(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable |
+                                            QDockWidget::DockWidgetClosable);
         this->tabifyAllWidgets();
 
         // context menu
         this->setContextMenuPolicy(Qt::CustomContextMenu);
         connect(this, &CInfoArea::customContextMenuRequested, this, &CInfoArea::showContextMenu);
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CInfoArea::onStyleSheetChanged, Qt::QueuedConnection);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CInfoArea::onStyleSheetChanged,
+                Qt::QueuedConnection);
 
         // initial style sheet setting
         this->onStyleSheetChanged();
@@ -88,10 +91,12 @@ namespace swift::gui
         {
             menu->addAction(CIcons::dockTop16(), "Dock all", this, &CInfoArea::dockAllWidgets);
             menu->addAction(CIcons::floatAll16(), "Float all", this, &CInfoArea::floatAllWidgets);
-            menu->addAction(CIcons::refresh16(), "Reset all floating to defaults", this, &CInfoArea::resetAllFloatingWidgetSettings);
+            menu->addAction(CIcons::refresh16(), "Reset all floating to defaults", this,
+                            &CInfoArea::resetAllFloatingWidgetSettings);
             menu->addAction(CIcons::refresh16(), "Reset all to defaults", this, &CInfoArea::resetAllWidgetSettings);
 
-            menu->addAction(CIcons::floatOne16(), QStringLiteral("Dock / float '%1'").arg(this->windowTitle()), this, &CInfoArea::toggleFloatingWholeInfoArea);
+            menu->addAction(CIcons::floatOne16(), QStringLiteral("Dock / float '%1'").arg(this->windowTitle()), this,
+                            &CInfoArea::toggleFloatingWholeInfoArea);
             QAction *lockTabBarMenuAction = new QAction(menu);
             lockTabBarMenuAction->setObjectName(this->objectName().append("LockTabBar"));
             lockTabBarMenuAction->setIconText("Lock tab bar");
@@ -128,13 +133,16 @@ namespace swift::gui
                 toggleFloatingMenuAction->setCheckable(true);
                 toggleFloatingMenuAction->setChecked(!dw->isFloating());
                 subMenuToggleFloat->addAction(toggleFloatingMenuAction);
-                c = connect(toggleFloatingMenuAction, &QAction::toggled, signalMapperToggleFloating, qOverload<>(&QSignalMapper::map));
-                SWIFT_VERIFY_X(c, Q_FUNC_INFO, "Cannot map floating action"); // do not make that shutdown reason in a release build
+                c = connect(toggleFloatingMenuAction, &QAction::toggled, signalMapperToggleFloating,
+                            qOverload<>(&QSignalMapper::map));
+                SWIFT_VERIFY_X(c, Q_FUNC_INFO,
+                               "Cannot map floating action"); // do not make that shutdown reason in a release build
                 signalMapperToggleFloating->setMapping(toggleFloatingMenuAction, i);
             }
 
             c = connect(signalMapperToggleFloating, &QSignalMapper::mappedInt, this, &CInfoArea::toggleFloatingByIndex);
-            SWIFT_VERIFY_X(c, Q_FUNC_INFO, "Cannot connect mapper"); // do not make that shutdown reason in a release build
+            SWIFT_VERIFY_X(c, Q_FUNC_INFO,
+                           "Cannot connect mapper"); // do not make that shutdown reason in a release build
 
             menu->addMenu(subMenuDisplay);
             if (c) { menu->addMenu(subMenuToggleFloat); }
@@ -295,10 +303,7 @@ namespace swift::gui
         QList<int> indexes;
         for (int i = 0; i < m_dockWidgetInfoAreas.size(); i++)
         {
-            if (m_dockWidgetInfoAreas.at(i)->isFloating() == floating)
-            {
-                indexes.append(i);
-            }
+            if (m_dockWidgetInfoAreas.at(i)->isFloating() == floating) { indexes.append(i); }
         }
         return indexes;
     }
@@ -321,23 +326,14 @@ namespace swift::gui
             this->selectLeftTab();
             event->accept();
         }
-        else
-        {
-            QWidget::keyPressEvent(event);
-        }
+        else { QWidget::keyPressEvent(event); }
     }
 
-    void CInfoArea::dockAllWidgets()
-    {
-        this->tabifyAllWidgets();
-    }
+    void CInfoArea::dockAllWidgets() { this->tabifyAllWidgets(); }
 
     void CInfoArea::adjustSizeForAllDockWidgets()
     {
-        for (CDockWidgetInfoArea *dw : std::as_const(m_dockWidgetInfoAreas))
-        {
-            dw->adjustSize();
-        }
+        for (CDockWidgetInfoArea *dw : std::as_const(m_dockWidgetInfoAreas)) { dw->adjustSize(); }
     }
 
     void CInfoArea::floatAllWidgets()
@@ -377,10 +373,7 @@ namespace swift::gui
         }
     }
 
-    void CInfoArea::toggleFloatingWholeInfoArea()
-    {
-        this->setWholeInfoAreaFloating(!m_infoAreaFloating);
-    }
+    void CInfoArea::toggleFloatingWholeInfoArea() { this->setWholeInfoAreaFloating(!m_infoAreaFloating); }
 
     void CInfoArea::toggleFloatingByIndex(int areaIndex)
     {
@@ -408,14 +401,8 @@ namespace swift::gui
         Q_ASSERT(m_tabBar);
         if (m_tabBar->count() < 1) { return; }
 
-        if (dw->isFloating())
-        {
-            dw->show();
-        }
-        else
-        {
-            this->selectArea(dw);
-        }
+        if (dw->isFloating()) { dw->show(); }
+        else { this->selectArea(dw); }
     }
 
     void CInfoArea::resetPosition(int areaIndex)
@@ -479,14 +466,8 @@ namespace swift::gui
     {
         if (!m_tabBar) return;
         if (m_tabBar->count() < 2) return;
-        if (m_tabBar->currentIndex() > 0)
-        {
-            m_tabBar->setCurrentIndex(m_tabBar->currentIndex() - 1);
-        }
-        else
-        {
-            m_tabBar->setCurrentIndex(m_tabBar->count() - 1);
-        }
+        if (m_tabBar->currentIndex() > 0) { m_tabBar->setCurrentIndex(m_tabBar->currentIndex() - 1); }
+        else { m_tabBar->setCurrentIndex(m_tabBar->count() - 1); }
     }
 
     void CInfoArea::selectRightTab()
@@ -497,10 +478,7 @@ namespace swift::gui
         {
             m_tabBar->setCurrentIndex(m_tabBar->currentIndex() + 1);
         }
-        else
-        {
-            m_tabBar->setCurrentIndex(0);
-        }
+        else { m_tabBar->setCurrentIndex(0); }
     }
 
     void CInfoArea::displayStatusMessage(const CStatusMessage &statusMessage)
@@ -509,10 +487,7 @@ namespace swift::gui
         {
             dw->displayStatusMessage(statusMessage);
         }
-        for (CInfoArea *ia : std::as_const(m_childInfoAreas))
-        {
-            ia->displayStatusMessage(statusMessage);
-        }
+        for (CInfoArea *ia : std::as_const(m_childInfoAreas)) { ia->displayStatusMessage(statusMessage); }
     }
 
     void CInfoArea::displayStatusMessages(const CStatusMessageList &statusMessages)
@@ -521,10 +496,7 @@ namespace swift::gui
         {
             dw->displayStatusMessages(statusMessages);
         }
-        for (CInfoArea *ia : std::as_const(m_childInfoAreas))
-        {
-            ia->displayStatusMessages(statusMessages);
-        }
+        for (CInfoArea *ia : std::as_const(m_childInfoAreas)) { ia->displayStatusMessages(statusMessages); }
     }
 
     void CInfoArea::setDockArea(Qt::DockWidgetArea area)
@@ -605,10 +577,7 @@ namespace swift::gui
                 // reset floating flag, we want new resizing and position for first real floating
                 after->resetWasAlreadyFloating();
             }
-            else
-            {
-                after->setFloating(false);
-            }
+            else { after->setFloating(false); }
 
             // we can not tabify first
             if (!first) { continue; }
@@ -636,8 +605,10 @@ namespace swift::gui
                 m_tabBar->setShape(QTabBar::TriangularSouth);
 
                 // signals, use Qt::QueuedConnection to avoid issues during shutdown
-                connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::onTabBarDoubleClicked, Qt::QueuedConnection);
-                connect(m_tabBar, &QTabBar::currentChanged, this, &CInfoArea::onTabBarIndexChanged, Qt::QueuedConnection);
+                connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::onTabBarDoubleClicked,
+                        Qt::QueuedConnection);
+                connect(m_tabBar, &QTabBar::currentChanged, this, &CInfoArea::onTabBarIndexChanged,
+                        Qt::QueuedConnection);
             }
             else
             {
@@ -674,7 +645,8 @@ namespace swift::gui
     {
         for (CDockWidgetInfoArea *dw : std::as_const(m_dockWidgetInfoAreas))
         {
-            connect(dw, &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CInfoArea::onWidgetTopLevelChanged, Qt::QueuedConnection);
+            connect(dw, &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CInfoArea::onWidgetTopLevelChanged,
+                    Qt::QueuedConnection);
         }
     }
 
@@ -748,7 +720,10 @@ namespace swift::gui
 
         for (int i = 0; i < m_dockWidgetInfoAreas.size(); i++)
         {
-            if (CGuiUtility::lenientTitleComparison(m_dockWidgetInfoAreas.at(i)->windowTitleOrBackup(), title)) { return i; }
+            if (CGuiUtility::lenientTitleComparison(m_dockWidgetInfoAreas.at(i)->windowTitleOrBackup(), title))
+            {
+                return i;
+            }
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "No area for title");
         return -1;
@@ -801,18 +776,12 @@ namespace swift::gui
     {
         if (!m_tabBar) { return; }
         int tabIndex = this->dockWidgetInfoAreaToTabBarIndex(dockWidgetInfoArea);
-        if (tabIndex >= 0 && tabIndex < m_tabBar->count())
-        {
-            m_tabBar->setCurrentIndex(tabIndex);
-        }
+        if (tabIndex >= 0 && tabIndex < m_tabBar->count()) { m_tabBar->setCurrentIndex(tabIndex); }
     }
 
     void CInfoArea::setFeaturesForDockableWidgets(QDockWidget::DockWidgetFeatures features)
     {
-        for (CDockWidgetInfoArea *dw : std::as_const(m_dockWidgetInfoAreas))
-        {
-            dw->setFeatures(features);
-        }
+        for (CDockWidgetInfoArea *dw : std::as_const(m_dockWidgetInfoAreas)) { dw->setFeatures(features); }
     }
 
     void CInfoArea::setTabPixmaps()
@@ -891,10 +860,7 @@ namespace swift::gui
     {
         if (show == m_showTabTexts) { return; }
         m_showTabTexts = show;
-        for (CDockWidgetInfoArea *dw : std::as_const(m_dockWidgetInfoAreas))
-        {
-            dw->showTitleWhenDocked(show);
-        }
+        for (CDockWidgetInfoArea *dw : std::as_const(m_dockWidgetInfoAreas)) { dw->showTitleWhenDocked(show); }
     }
 
     void CInfoArea::showTabBar(bool show)
@@ -907,22 +873,19 @@ namespace swift::gui
         this->adjustSizeForAllDockWidgets();
     }
 
-    void CInfoArea::toggleTabBarLocked(bool locked)
-    {
-        m_lockTabBar = locked;
-    }
+    void CInfoArea::toggleTabBarLocked(bool locked) { m_lockTabBar = locked; }
 
     void CInfoArea::setTabBarPosition(QTabWidget::TabPosition position)
     {
-        Q_ASSERT_X(position == QTabWidget::North || position == QTabWidget::South, Q_FUNC_INFO, "Wrong tabbar position");
+        Q_ASSERT_X(position == QTabWidget::North || position == QTabWidget::South, Q_FUNC_INFO,
+                   "Wrong tabbar position");
         this->setTabPosition(Qt::TopDockWidgetArea, position);
     }
 
     void CInfoArea::toggleTabBarPosition()
     {
-        QTabWidget::TabPosition p = (this->tabPosition(Qt::TopDockWidgetArea) == QTabWidget::North) ?
-                                        QTabWidget::South :
-                                        QTabWidget::North;
+        QTabWidget::TabPosition p =
+            (this->tabPosition(Qt::TopDockWidgetArea) == QTabWidget::North) ? QTabWidget::South : QTabWidget::North;
         this->setTabBarPosition(p);
     }
 
@@ -933,9 +896,6 @@ namespace swift::gui
             this->toggleFloatingWholeInfoArea();
             event->setAccepted(false); // refuse -> do not close
         }
-        else
-        {
-            QMainWindow::closeEvent(event);
-        }
+        else { QMainWindow::closeEvent(event); }
     }
 } // namespace swift::gui

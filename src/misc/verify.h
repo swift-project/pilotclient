@@ -14,7 +14,8 @@ namespace swift::misc::private_ns
     inline void noop() {}
 
     //! \private Called by SWIFT_VERIFY when the condition is false.
-    SWIFT_MISC_EXPORT SWIFT_NO_INLINE void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit);
+    SWIFT_MISC_EXPORT SWIFT_NO_INLINE void failedVerify(const char *condition, const char *filename, int line,
+                                                        const char *context, const char *message, bool audit);
 } // namespace swift::misc::private_ns
 
 //! @{
@@ -22,7 +23,9 @@ namespace swift::misc::private_ns
  * A weaker kind of assert. Still indicates a programmer mistake, but one which is recoverable.
  * In debug builds, triggers a debugger breakpoint. In release builds, generates a warning.
  */
-#define SWIFT_VERIFY_X(COND, WHERE, WHAT) ((COND) ? swift::misc::private_ns::noop() : swift::misc::private_ns::failedVerify(#COND, __FILE__, __LINE__, WHERE, WHAT, false))
+#define SWIFT_VERIFY_X(COND, WHERE, WHAT)                                                                              \
+    ((COND) ? swift::misc::private_ns::noop() :                                                                        \
+              swift::misc::private_ns::failedVerify(#COND, __FILE__, __LINE__, WHERE, WHAT, false))
 #define SWIFT_VERIFY(COND) SWIFT_VERIFY_X(COND, nullptr, nullptr)
 //! @}
 
@@ -32,7 +35,9 @@ namespace swift::misc::private_ns
  * In debug builds under debugging, triggers a debugger breakpoint. Otherwise generates a warning.
  * Not a substitute for proper validation. A failed audit in production is suggestive of insufficient validation.
  */
-#define SWIFT_AUDIT_X(COND, WHERE, WHAT) ((COND) ? swift::misc::private_ns::noop() : swift::misc::private_ns::failedVerify(#COND, __FILE__, __LINE__, WHERE, WHAT, true))
+#define SWIFT_AUDIT_X(COND, WHERE, WHAT)                                                                               \
+    ((COND) ? swift::misc::private_ns::noop() :                                                                        \
+              swift::misc::private_ns::failedVerify(#COND, __FILE__, __LINE__, WHERE, WHAT, true))
 #define SWIFT_AUDIT(COND) SWIFT_AUDIT_X(COND, nullptr, nullptr)
 //! @}
 

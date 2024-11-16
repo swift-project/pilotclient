@@ -31,8 +31,7 @@ namespace swift::gui
 
         public:
             //! Constructor
-            IAircraftModelViewMenu(swift::gui::views::CAircraftModelView *modelView) : IMenuDelegate(modelView)
-            {}
+            IAircraftModelViewMenu(swift::gui::views::CAircraftModelView *modelView) : IMenuDelegate(modelView) {}
 
             //! Log.categories
             static const QStringList &getLogCategories();
@@ -45,7 +44,8 @@ namespace swift::gui
             const swift::misc::simulation::CAircraftModelList &getAircraftModels() const;
 
             //! Get aircraft models (all, or all filtered)
-            const swift::misc::simulation::CAircraftModelList &getAllOrAllFilteredAircraftModels(bool *filtered = nullptr) const;
+            const swift::misc::simulation::CAircraftModelList &
+            getAllOrAllFilteredAircraftModels(bool *filtered = nullptr) const;
 
             //! Selected aircraft models
             swift::misc::simulation::CAircraftModelList getSelectedAircraftModels() const;

@@ -66,10 +66,7 @@ namespace swift::core
         QString getIdByPlugin(const QObject *instance) const;
 
         //! Gets direct access to all plugins' metadata
-        const swift::misc::CSequence<QJsonObject> &getPlugins() const
-        {
-            return m_metadata;
-        }
+        const swift::misc::CSequence<QJsonObject> &getPlugins() const { return m_metadata; }
 
     private:
         //! Tries to load the given plugin.

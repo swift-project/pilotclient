@@ -37,16 +37,11 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const DeletePilot &lhs, const DeletePilot &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.m_cid == rhs.m_cid;
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.m_cid == rhs.m_cid;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const DeletePilot &lhs, const DeletePilot &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const DeletePilot &lhs, const DeletePilot &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

@@ -26,8 +26,7 @@ namespace swift::simplugin::fs9
         template <typename Value>
         QByteArray readValue(const QByteArray &data, Value &val)
         {
-            static_assert(std::is_arithmetic<Value>::value ||
-                              std::is_same<CFs9Sdk::EngineType, Value>::value,
+            static_assert(std::is_arithmetic<Value>::value || std::is_same<CFs9Sdk::EngineType, Value>::value,
                           "Unsupported type");
 
             val = *reinterpret_cast<const Value *>(data.constData());
@@ -37,8 +36,7 @@ namespace swift::simplugin::fs9
         template <typename Value>
         QByteArray writeValue(QByteArray data, const Value &value)
         {
-            static_assert(std::is_arithmetic<Value>::value ||
-                              std::is_same<CFs9Sdk::EngineType, Value>::value,
+            static_assert(std::is_arithmetic<Value>::value || std::is_same<CFs9Sdk::EngineType, Value>::value,
                           "Unsupported type");
 
             data.append(reinterpret_cast<const char *>(&value), sizeof(Value));
@@ -64,11 +62,13 @@ namespace swift::simplugin::fs9
         {
             static QByteArray read(const QByteArray &data, MessageTuple &messageTuple)
             {
-                return readValue(Serializer<MessageTuple, Size - 1>::read(data, messageTuple), std::get<Size - 1>(messageTuple));
+                return readValue(Serializer<MessageTuple, Size - 1>::read(data, messageTuple),
+                                 std::get<Size - 1>(messageTuple));
             }
             static QByteArray write(QByteArray &data, const MessageTuple &messageTuple)
             {
-                return writeValue(Serializer<MessageTuple, Size - 1>::write(data, messageTuple), std::get<Size - 1>(messageTuple));
+                return writeValue(Serializer<MessageTuple, Size - 1>::write(data, messageTuple),
+                                  std::get<Size - 1>(messageTuple));
             }
         };
 

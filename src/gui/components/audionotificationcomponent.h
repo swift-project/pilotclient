@@ -57,7 +57,9 @@ namespace swift::gui::components
         swift::misc::audio::CNotificationSounds::NotificationFlag checkBoxToFlag(const QCheckBox *cb) const;
 
         QScopedPointer<Ui::CAudioNotificationComponent> ui;
-        swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &CAudioNotificationComponent::reloadSettings };
+        swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings {
+            this, &CAudioNotificationComponent::reloadSettings
+        };
     };
 } // namespace swift::gui::components
 

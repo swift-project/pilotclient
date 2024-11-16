@@ -43,9 +43,8 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::components
 {
-    CCockpitComComponent::CCockpitComComponent(QWidget *parent) : QFrame(parent),
-                                                                  CIdentifiable(this),
-                                                                  ui(new Ui::CCockpitComComponent)
+    CCockpitComComponent::CCockpitComComponent(QWidget *parent)
+        : QFrame(parent), CIdentifiable(this), ui(new Ui::CCockpitComComponent)
     {
         ui->setupUi(this);
 
@@ -54,27 +53,36 @@ namespace swift::gui::components
 
         // COM form
         connect(ui->editor_Com, &CCockpitComForm::testSelcal, this, &CCockpitComComponent::testSelcal);
-        connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CCockpitComComponent::updateOwnCockpitInContext);
+        connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this,
+                &CCockpitComComponent::updateOwnCockpitInContext);
         connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CCockpitComComponent::updateSelcalInContext);
-        connect(ui->editor_Com, &CCockpitComForm::requestCom1TextMessage, this, &CCockpitComComponent::requestCom1TextMessage);
-        connect(ui->editor_Com, &CCockpitComForm::requestCom2TextMessage, this, &CCockpitComComponent::requestCom2TextMessage);
+        connect(ui->editor_Com, &CCockpitComForm::requestCom1TextMessage, this,
+                &CCockpitComComponent::requestCom1TextMessage);
+        connect(ui->editor_Com, &CCockpitComForm::requestCom2TextMessage, this,
+                &CCockpitComComponent::requestCom2TextMessage);
 
         // Relay COM form signals
-        connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged, this, &CCockpitComComponent::transponderModeChanged);
-        connect(ui->editor_Com, &CCockpitComForm::transponderStateIdentEnded, this, &CCockpitComComponent::transponderStateIdentEnded);
+        connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged, this,
+                &CCockpitComComponent::transponderModeChanged);
+        connect(ui->editor_Com, &CCockpitComForm::transponderStateIdentEnded, this,
+                &CCockpitComComponent::transponderStateIdentEnded);
 
         // hook up with changes from own aircraft context
         if (sGui)
         {
             // own aircraft
-            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::updateCockpitFromContext, Qt::QueuedConnection);
-            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal, this, &CCockpitComComponent::updateSelcalFromContext, Qt::QueuedConnection);
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this,
+                    &CCockpitComComponent::updateCockpitFromContext, Qt::QueuedConnection);
+            connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal, this,
+                    &CCockpitComComponent::updateSelcalFromContext, Qt::QueuedConnection);
 
             // hook up with audio context
-            // connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::updateVoiceRoomStatusFromContext, Qt::QueuedConnection);
+            // connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this,
+            // &CCockpitComComponent::updateVoiceRoomStatusFromContext, Qt::QueuedConnection);
 
             // network
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CCockpitComComponent::onAtcStationsChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this,
+                    &CCockpitComComponent::onAtcStationsChanged, Qt::QueuedConnection);
 
             QPointer<CCockpitComComponent> myself(this);
             QTimer::singleShot(10 * 1000, this, [=] {
@@ -85,13 +93,9 @@ namespace swift::gui::components
         }
     }
 
-    CCockpitComComponent::~CCockpitComComponent()
-    {}
+    CCockpitComComponent::~CCockpitComComponent() {}
 
-    void CCockpitComComponent::setTransponderModeStateIdent()
-    {
-        ui->editor_Com->setTransponderModeStateIdent();
-    }
+    void CCockpitComComponent::setTransponderModeStateIdent() { ui->editor_Com->setTransponderModeStateIdent(); }
 
     void CCockpitComComponent::paintEvent(QPaintEvent *event)
     {
@@ -99,7 +103,8 @@ namespace swift::gui::components
         CStyleSheetUtility::useStyleSheetInDerivedWidget(this);
     }
 
-    void CCockpitComComponent::updateCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
+    void CCockpitComComponent::updateCockpitFromContext(const CSimulatedAircraft &ownAircraft,
+                                                        const CIdentifier &originator)
     {
         if (isMyIdentifier(originator)) { return; } // comes from myself
 
@@ -120,18 +125,9 @@ namespace swift::gui::components
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         const CSelcal selcal = ui->editor_Com->getSelcal();
-        if (!selcal.isValid())
-        {
-            CLogMessage().validationWarning(u"Invalid SELCAL code");
-        }
-        else if (sGui->getCContextAudioBase())
-        {
-            sGui->getCContextAudioBase()->playSelcalTone(selcal);
-        }
-        else
-        {
-            CLogMessage().validationWarning(u"No audio available");
-        }
+        if (!selcal.isValid()) { CLogMessage().validationWarning(u"Invalid SELCAL code"); }
+        else if (sGui->getCContextAudioBase()) { sGui->getCContextAudioBase()->playSelcalTone(selcal); }
+        else { CLogMessage().validationWarning(u"No audio available"); }
     }
 
     void CCockpitComComponent::updateSelcalFromContext(const CSelcal &selcal, const CIdentifier &originator)
@@ -153,14 +149,16 @@ namespace swift::gui::components
         // unavailable context during shutdown possible
         // mostly when client runs with DBus, but DBus is down
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return false; }
-        return sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), identifier());
+        return sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(),
+                                                             ownAircraft.getTransponder(), identifier());
     }
 
     void CCockpitComComponent::forceCockpitUpdateFromOwnAircraftContext()
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
         const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
-        this->updateCockpitFromContext(ownAircraft, CIdentifier("dummyInitialValues")); // intentionally different name here
+        this->updateCockpitFromContext(ownAircraft,
+                                       CIdentifier("dummyInitialValues")); // intentionally different name here
     }
 
     void CCockpitComComponent::onAtcStationsChanged()

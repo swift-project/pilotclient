@@ -13,7 +13,8 @@
 namespace swift::gui::views
 {
     //! Aircraft situations view
-    class SWIFT_GUI_EXPORT CAircraftSituationView : public CViewWithTimestampWithOffsetObjects<models::CAircraftSituationListModel>
+    class SWIFT_GUI_EXPORT CAircraftSituationView :
+        public CViewWithTimestampWithOffsetObjects<models::CAircraftSituationListModel>
     {
         Q_OBJECT
 

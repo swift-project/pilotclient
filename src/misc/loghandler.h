@@ -63,7 +63,8 @@ namespace swift::misc
         //! \warning This must only be called from the main thread.
         CLogPatternHandler *handlerForValidation()
         {
-            return handlerForPattern(CLogPattern::exactMatch(CLogCategories::validation()).withSeverityAtOrAbove(CStatusMessage::SeverityWarning));
+            return handlerForPattern(CLogPattern::exactMatch(CLogCategories::validation())
+                                         .withSeverityAtOrAbove(CStatusMessage::SeverityWarning));
         }
 
         //! Returns all log patterns for which there are currently subscribed log pattern handlers.
@@ -150,10 +151,11 @@ namespace swift::misc
          * When all slots are disconnected from this signal, the CLogPatternHandler could be deleted.
          *
          * Note that if a message matches more that one handler's pattern, then this signal will be emitted for all of
-         * those handlers, so if a slot is connected to all of them then it will be called multiple times. Use the methods
-         * CStatusMessage::markAsHandledBy() and CStatusMessage::wasHandledBy() to detect this case in the slot and avoid
-         * multiple handlings of the same message. Caveat: for this to work, the slot must take its argument by non-const
-         * reference, and be connected by Qt::DirectConnection (i.e. the receiver is in the same thread as the CLogHandler).
+         * those handlers, so if a slot is connected to all of them then it will be called multiple times. Use the
+         * methods CStatusMessage::markAsHandledBy() and CStatusMessage::wasHandledBy() to detect this case in the slot
+         * and avoid multiple handlings of the same message. Caveat: for this to work, the slot must take its argument
+         * by non-const reference, and be connected by Qt::DirectConnection (i.e. the receiver is in the same thread as
+         * the CLogHandler).
          */
         void messageLogged(const swift::misc::CStatusMessage &message);
 
@@ -180,13 +182,19 @@ namespace swift::misc
         //! \copydoc QObject::connectNotify
         virtual void connectNotify(const QMetaMethod &signal) override
         {
-            if (signal == QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged)) { m_subscriptionNeedsUpdate = true; }
+            if (signal == QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged))
+            {
+                m_subscriptionNeedsUpdate = true;
+            }
         }
 
         //! \copydoc QObject::disconnectNotify
         virtual void disconnectNotify(const QMetaMethod &signal) override
         {
-            if (signal == QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged)) { m_subscriptionNeedsUpdate = true; }
+            if (signal == QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged))
+            {
+                m_subscriptionNeedsUpdate = true;
+            }
         }
 
     private:

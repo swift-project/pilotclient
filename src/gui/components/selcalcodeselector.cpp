@@ -28,12 +28,13 @@ namespace swift::gui::components
         ui->cb_SelcalPairs1->setStyleSheet("combobox-popup: 0;");
         ui->cb_SelcalPairs2->setStyleSheet("combobox-popup: 0;");
 
-        connect(ui->cb_SelcalPairs1, qOverload<int>(&QComboBox::currentIndexChanged), this, &CSelcalCodeSelector::selcalIndexChanged);
-        connect(ui->cb_SelcalPairs2, qOverload<int>(&QComboBox::currentIndexChanged), this, &CSelcalCodeSelector::selcalIndexChanged);
+        connect(ui->cb_SelcalPairs1, qOverload<int>(&QComboBox::currentIndexChanged), this,
+                &CSelcalCodeSelector::selcalIndexChanged);
+        connect(ui->cb_SelcalPairs2, qOverload<int>(&QComboBox::currentIndexChanged), this,
+                &CSelcalCodeSelector::selcalIndexChanged);
     }
 
-    CSelcalCodeSelector::~CSelcalCodeSelector()
-    {}
+    CSelcalCodeSelector::~CSelcalCodeSelector() {}
 
     QString CSelcalCodeSelector::getSelcalCode() const
     {
@@ -65,14 +66,8 @@ namespace swift::gui::components
         if (this->getSelcalCode() == s) { return; } // avoid unintended signals
         const QString s1 = s.left(2);
         const QString s2 = s.right(2);
-        if (swift::misc::aviation::CSelcal::codePairs().contains(s1))
-        {
-            ui->cb_SelcalPairs1->setCurrentText(s1);
-        }
-        if (swift::misc::aviation::CSelcal::codePairs().contains(s2))
-        {
-            ui->cb_SelcalPairs2->setCurrentText(s2);
-        }
+        if (swift::misc::aviation::CSelcal::codePairs().contains(s1)) { ui->cb_SelcalPairs1->setCurrentText(s1); }
+        if (swift::misc::aviation::CSelcal::codePairs().contains(s2)) { ui->cb_SelcalPairs2->setCurrentText(s2); }
     }
 
     void CSelcalCodeSelector::setSelcal(const swift::misc::aviation::CSelcal &selcal)
@@ -94,10 +89,7 @@ namespace swift::gui::components
         ui->cb_SelcalPairs2->setCurrentIndex(0);
     }
 
-    int CSelcalCodeSelector::getComboBoxHeight() const
-    {
-        return ui->cb_SelcalPairs1->height();
-    }
+    int CSelcalCodeSelector::getComboBoxHeight() const { return ui->cb_SelcalPairs1->height(); }
 
     void CSelcalCodeSelector::setComboBoxMinimumHeight(int h)
     {
@@ -112,8 +104,5 @@ namespace swift::gui::components
         emit valueChanged();
     }
 
-    void CSelcalCodeSelector::setValidityHint()
-    {
-        ui->lblp_ValidCodeIcon->setTicked(this->hasValidCode());
-    }
+    void CSelcalCodeSelector::setValidityHint() { ui->lblp_ValidCodeIcon->setTicked(this->hasValidCode()); }
 } // namespace swift::gui::components

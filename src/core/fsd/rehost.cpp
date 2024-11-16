@@ -12,18 +12,11 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    Rehost::Rehost() : MessageBase()
-    {}
+    Rehost::Rehost() : MessageBase() {}
 
-    Rehost::Rehost(const QString &sender, const QString &hostname)
-        : MessageBase(sender, {}),
-          m_hostname(hostname)
-    {}
+    Rehost::Rehost(const QString &sender, const QString &hostname) : MessageBase(sender, {}), m_hostname(hostname) {}
 
-    QStringList Rehost::toTokens() const
-    {
-        return { m_sender, m_hostname };
-    }
+    QStringList Rehost::toTokens() const { return { m_sender, m_hostname }; }
 
     Rehost Rehost::fromTokens(const QStringList &tokens)
     {

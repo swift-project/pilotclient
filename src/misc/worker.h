@@ -117,8 +117,8 @@ namespace swift::misc
             if (!m_finished) { functor(); }
         }
 
-        //! Executes some code (in the caller's thread) if the task has finished and some different code if it has not finished.
-        //! \threadsafe The functor may not call any method that observes the worker's finished flag.
+        //! Executes some code (in the caller's thread) if the task has finished and some different code if it has not
+        //! finished. \threadsafe The functor may not call any method that observes the worker's finished flag.
         template <typename F1, typename F2>
         void doIfFinishedElse(F1 ifFunctor, F2 elseFunctor) const
         {
@@ -260,7 +260,8 @@ namespace swift::misc
 
     private:
         CWorker(const std::function<QVariant()> &task) : m_task(task) {}
-        static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId, const std::function<QVariant()> &task);
+        static CWorker *fromTaskImpl(QObject *owner, const QString &name, int typeId,
+                                     const std::function<QVariant()> &task);
 
         template <typename R>
         R resultNoWait()

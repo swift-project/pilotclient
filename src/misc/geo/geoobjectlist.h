@@ -29,29 +29,29 @@ namespace swift::misc::geo
         //! Find 0..n objects within range of given coordinate
         //! \param coordinate other position
         //! \param range      within range of other position
-        CONTAINER findWithinRange(const ICoordinateGeodetic &coordinate, const physical_quantities::CLength &range) const
+        CONTAINER findWithinRange(const ICoordinateGeodetic &coordinate,
+                                  const physical_quantities::CLength &range) const
         {
-            return this->container().findBy([&](const OBJ &geoObj) {
-                return calculateGreatCircleDistance(geoObj, coordinate) <= range;
-            });
+            return this->container().findBy(
+                [&](const OBJ &geoObj) { return calculateGreatCircleDistance(geoObj, coordinate) <= range; });
         }
 
         //! Find 0..n objects outside range of given coordinate
         //! \param coordinate other position
         //! \param range      outside range of other position
-        CONTAINER findOutsideRange(const ICoordinateGeodetic &coordinate, const physical_quantities::CLength &range) const
+        CONTAINER findOutsideRange(const ICoordinateGeodetic &coordinate,
+                                   const physical_quantities::CLength &range) const
         {
-            return this->container().findBy([&](const OBJ &geoObj) {
-                return calculateGreatCircleDistance(geoObj, coordinate) > range;
-            });
+            return this->container().findBy(
+                [&](const OBJ &geoObj) { return calculateGreatCircleDistance(geoObj, coordinate) > range; });
         }
 
         //! Find first in range
-        OBJ findFirstWithinRangeOrDefault(const ICoordinateGeodetic &coordinate, const physical_quantities::CLength &range) const
+        OBJ findFirstWithinRangeOrDefault(const ICoordinateGeodetic &coordinate,
+                                          const physical_quantities::CLength &range) const
         {
-            return this->container().findFirstByOrDefault([&](const OBJ &geoObj) {
-                return calculateGreatCircleDistance(geoObj, coordinate) <= range;
-            });
+            return this->container().findFirstByOrDefault(
+                [&](const OBJ &geoObj) { return calculateGreatCircleDistance(geoObj, coordinate) <= range; });
         }
 
         //! Elements with geodetic height (only MSL)
@@ -61,7 +61,8 @@ namespace swift::misc::geo
         }
 
         //! Any object in range?
-        bool containsObjectInRange(const ICoordinateGeodetic &coordinate, const physical_quantities::CLength &range) const
+        bool containsObjectInRange(const ICoordinateGeodetic &coordinate,
+                                   const physical_quantities::CLength &range) const
         {
             return this->container().containsBy([&](const OBJ &geoObj) {
                 const physical_quantities::CLength d = coordinate.calculateGreatCircleDistance(geoObj);
@@ -70,7 +71,8 @@ namespace swift::misc::geo
         }
 
         //! Any object in range?
-        bool containsObjectOutsideRange(const ICoordinateGeodetic &coordinate, const physical_quantities::CLength &range) const
+        bool containsObjectOutsideRange(const ICoordinateGeodetic &coordinate,
+                                        const physical_quantities::CLength &range) const
         {
             return this->container().containsBy([&](const OBJ &geoObj) {
                 const physical_quantities::CLength d = coordinate.calculateGreatCircleDistance(geoObj);
@@ -81,23 +83,21 @@ namespace swift::misc::geo
         //! Any NULL position?
         bool containsNullPosition() const
         {
-            return this->container().containsBy([&](const ICoordinateGeodetic &geoObj) {
-                return geoObj.isNull();
-            });
+            return this->container().containsBy([&](const ICoordinateGeodetic &geoObj) { return geoObj.isNull(); });
         }
 
         //! Any NULL position or NULL height
         bool containsNullPositionOrHeight() const
         {
-            return this->container().containsBy([&](const ICoordinateGeodetic &geoObj) {
-                return geoObj.isNull() || geoObj.isGeodeticHeightNull();
-            });
+            return this->container().containsBy(
+                [&](const ICoordinateGeodetic &geoObj) { return geoObj.isNull() || geoObj.isGeodeticHeightNull(); });
         }
 
         //! Find min/max/average height
         MinMaxAverageHeight findMinMaxAverageHeight() const
         {
-            MinMaxAverageHeight stats { aviation::CAltitude::null(), aviation::CAltitude::null(), aviation::CAltitude::null(), 0 };
+            MinMaxAverageHeight stats { aviation::CAltitude::null(), aviation::CAltitude::null(),
+                                        aviation::CAltitude::null(), 0 };
             if (this->container().isEmpty()) { return stats; } // avoid div by zero
             int count = 0;
             double avgFt = 0;
@@ -117,7 +117,11 @@ namespace swift::misc::geo
                 count++;
             }
 
-            if (count > 0) { std::get<2>(stats) = aviation::CAltitude(avgFt / count, aviation::CAltitude::MeanSeaLevel, physical_quantities::CLengthUnit::ft()); }
+            if (count > 0)
+            {
+                std::get<2>(stats) = aviation::CAltitude(avgFt / count, aviation::CAltitude::MeanSeaLevel,
+                                                         physical_quantities::CLengthUnit::ft());
+            }
             std::get<3>(stats) = count;
             return stats;
         }
@@ -170,7 +174,8 @@ namespace swift::misc::geo
         CONTAINER findClosest(int number, const ICoordinateGeodetic &coordinate) const
         {
             CONTAINER closest = this->container().partiallySorted(number, [&](const OBJ &a, const OBJ &b) {
-                return calculateEuclideanDistanceSquared(a, coordinate) < calculateEuclideanDistanceSquared(b, coordinate);
+                return calculateEuclideanDistanceSquared(a, coordinate) <
+                       calculateEuclideanDistanceSquared(b, coordinate);
             });
             closest.truncate(number);
             return closest;
@@ -180,14 +185,16 @@ namespace swift::misc::geo
         CONTAINER findFarthest(int number, const ICoordinateGeodetic &coordinate) const
         {
             CONTAINER farthest = this->container().partiallySorted(number, [&](const OBJ &a, const OBJ &b) {
-                return calculateEuclideanDistanceSquared(a, coordinate) > calculateEuclideanDistanceSquared(b, coordinate);
+                return calculateEuclideanDistanceSquared(a, coordinate) >
+                       calculateEuclideanDistanceSquared(b, coordinate);
             });
             farthest.truncate(number);
             return farthest;
         }
 
         //! Find closest within range to the given coordinate
-        OBJ findClosestWithinRange(const ICoordinateGeodetic &coordinate, const physical_quantities::CLength &range) const
+        OBJ findClosestWithinRange(const ICoordinateGeodetic &coordinate,
+                                   const physical_quantities::CLength &range) const
         {
             OBJ closest;
             physical_quantities::CLength distance = physical_quantities::CLength::null();
@@ -208,7 +215,8 @@ namespace swift::misc::geo
         void sortByEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate)
         {
             this->container().sort([&](const OBJ &a, const OBJ &b) {
-                return calculateEuclideanDistanceSquared(a, coordinate) < calculateEuclideanDistanceSquared(b, coordinate);
+                return calculateEuclideanDistanceSquared(a, coordinate) <
+                       calculateEuclideanDistanceSquared(b, coordinate);
             });
         }
 
@@ -222,20 +230,13 @@ namespace swift::misc::geo
 
     protected:
         //! Constructor
-        IGeoObjectList()
-        {}
+        IGeoObjectList() {}
 
         //! Container
-        const CONTAINER &container() const
-        {
-            return static_cast<const CONTAINER &>(*this);
-        }
+        const CONTAINER &container() const { return static_cast<const CONTAINER &>(*this); }
 
         //! Container
-        CONTAINER &container()
-        {
-            return static_cast<CONTAINER &>(*this);
-        }
+        CONTAINER &container() { return static_cast<CONTAINER &>(*this); }
     };
 
     //! List of objects with geo coordinates.
@@ -246,24 +247,24 @@ namespace swift::misc::geo
         //! Calculate distances, then sort by range
         void sortByRange(const ICoordinateGeodetic &position, bool updateValues)
         {
-            if (updateValues)
-            {
-                this->calculcateAndUpdateRelativeDistanceAndBearing(position);
-            }
-            this->container().sort([&](const OBJ &a, const OBJ &b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
+            if (updateValues) { this->calculcateAndUpdateRelativeDistanceAndBearing(position); }
+            this->container().sort(
+                [&](const OBJ &a, const OBJ &b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         //! If distance is already set, just sort container
         //! \remark requires calculcateAndUpdateRelativeDistanceAndBearing
         void sortByDistanceToReferencePosition()
         {
-            this->container().sort([&](const OBJ &a, const OBJ &b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
+            this->container().sort(
+                [&](const OBJ &a, const OBJ &b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         //! Sort the first n closest objects
         void partiallySortByDistanceToReferencePosition(int number)
         {
-            this->container().partiallySort(number, [&](const OBJ &a, const OBJ &b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
+            this->container().partiallySort(
+                number, [&](const OBJ &a, const OBJ &b) { return a.getRelativeDistance() < b.getRelativeDistance(); });
         }
 
         //! Get n closest objects
@@ -278,28 +279,24 @@ namespace swift::misc::geo
         }
 
         //! Calculate distances, remove if outside range
-        void removeIfOutsideRange(const ICoordinateGeodetic &position, const physical_quantities::CLength &maxDistance, bool updateValues)
+        void removeIfOutsideRange(const ICoordinateGeodetic &position, const physical_quantities::CLength &maxDistance,
+                                  bool updateValues)
         {
             this->container().removeIf([&](OBJ &geoObj) {
-                return updateValues ?
-                           geoObj.calculcateAndUpdateRelativeDistanceAndBearing(position) > maxDistance :
-                           geoObj.calculateGreatCircleDistance(position) > maxDistance;
+                return updateValues ? geoObj.calculcateAndUpdateRelativeDistanceAndBearing(position) > maxDistance :
+                                      geoObj.calculateGreatCircleDistance(position) > maxDistance;
             });
         }
 
         //! Calculate distances
         void calculcateAndUpdateRelativeDistanceAndBearing(const ICoordinateGeodetic &position)
         {
-            for (OBJ &geoObj : this->container())
-            {
-                geoObj.calculcateAndUpdateRelativeDistanceAndBearing(position);
-            }
+            for (OBJ &geoObj : this->container()) { geoObj.calculcateAndUpdateRelativeDistanceAndBearing(position); }
         }
 
     protected:
         //! Constructor
-        IGeoObjectWithRelativePositionList()
-        {}
+        IGeoObjectWithRelativePositionList() {}
     };
 } // namespace swift::misc::geo
 

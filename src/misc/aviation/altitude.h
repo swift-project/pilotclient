@@ -87,25 +87,36 @@ namespace swift::misc::aviation
         CAltitude() : CLength(0, physical_quantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
 
         //! Constructor
-        CAltitude(double value, ReferenceDatum datum, const physical_quantities::CLengthUnit &unit) : CLength(value, unit), m_datum(datum) {}
+        CAltitude(double value, ReferenceDatum datum, const physical_quantities::CLengthUnit &unit)
+            : CLength(value, unit), m_datum(datum)
+        {}
 
         //! Constructor
-        CAltitude(double value, ReferenceDatum datum, AltitudeType type, const physical_quantities::CLengthUnit &unit) : CLength(value, unit), m_datum(datum), m_altitudeType(type) {}
+        CAltitude(double value, ReferenceDatum datum, AltitudeType type, const physical_quantities::CLengthUnit &unit)
+            : CLength(value, unit), m_datum(datum), m_altitudeType(type)
+        {}
 
         //! Constructor, value as CAltitude::MeanSeaLevel
-        CAltitude(double value, const physical_quantities::CLengthUnit &unit) : CLength(value, unit), m_datum(MeanSeaLevel) {}
+        CAltitude(double value, const physical_quantities::CLengthUnit &unit)
+            : CLength(value, unit), m_datum(MeanSeaLevel)
+        {}
 
         //! Constructor, value as CAltitude::MeanSeaLevel
-        CAltitude(double value, const physical_quantities::CLengthUnit &unit, const physical_quantities::CLengthUnit &switchUnit) : CLength(value, unit), m_datum(MeanSeaLevel)
+        CAltitude(double value, const physical_quantities::CLengthUnit &unit,
+                  const physical_quantities::CLengthUnit &switchUnit)
+            : CLength(value, unit), m_datum(MeanSeaLevel)
         {
             this->switchUnit(switchUnit);
         }
 
         //! Altitude as string
-        CAltitude(const QString &altitudeAsString, physical_quantities::CPqString::SeparatorMode mode = physical_quantities::CPqString::SeparatorBestGuess);
+        CAltitude(const QString &altitudeAsString, physical_quantities::CPqString::SeparatorMode mode =
+                                                       physical_quantities::CPqString::SeparatorBestGuess);
 
         //! Constructor by CLength
-        CAltitude(const physical_quantities::CLength &altitude, ReferenceDatum datum) : CLength(altitude), m_datum(datum) {}
+        CAltitude(const physical_quantities::CLength &altitude, ReferenceDatum datum)
+            : CLength(altitude), m_datum(datum)
+        {}
 
         //! Altitude with offset
         //! \remark null offset adds nothing
@@ -167,9 +178,12 @@ namespace swift::misc::aviation
 
         //! Altitude string (official version)
         //! * flight level, expressed as "F" followed by 3 figures, example: F085 (which means flight level 085),
-        //! * standard metric level in tens of meters, expressed as "S" followed by 4 figures, example: S0150 (which means 1500 metres)
-        //! * altitude in hundreds of feet, expressed as "A" followed by 3 figures, example: A055 (which means 5500 feet altitude)
-        //! * altitude in tens of meters expressed as "M" followed by 4 figures, example: M0610 (which means 6100 metres altitude)
+        //! * standard metric level in tens of meters, expressed as "S" followed by 4 figures, example: S0150 (which
+        //! means 1500 metres)
+        //! * altitude in hundreds of feet, expressed as "A" followed by 3 figures, example: A055 (which means 5500 feet
+        //! altitude)
+        //! * altitude in tens of meters expressed as "M" followed by 4 figures, example: M0610 (which means 6100 metres
+        //! altitude)
         QString asFpICAOAltitudeString() const;
 
         //! As simple VATSIM string, only FLxxx or altitude as ft

@@ -35,10 +35,7 @@ namespace swift::misc::simulation::xplane
         const QFileInfo fileInfo(filePath);
         if (!fileInfo.exists()) { return {}; }
         QFile file(fileInfo.absoluteFilePath());
-        if (!file.open(QIODevice::ReadOnly))
-        {
-            return {};
-        }
+        if (!file.open(QIODevice::ReadOnly)) { return {}; }
 
         QString lastLine;
         QTextStream ts(&file);
@@ -55,11 +52,7 @@ namespace swift::misc::simulation::xplane
     {
         QString result;
         TCHAR szLocalAppDataPath[MAX_PATH];
-        if (SUCCEEDED(SHGetFolderPath(NULL,
-                                      CSIDL_LOCAL_APPDATA,
-                                      NULL,
-                                      0,
-                                      szLocalAppDataPath)))
+        if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, szLocalAppDataPath)))
         {
             result = QString::fromWCharArray(szLocalAppDataPath);
         }
@@ -90,7 +83,8 @@ namespace swift::misc::simulation::xplane
 
     QString CXPlaneUtil::xplaneDir(const QString &xplaneInstallFile)
     {
-        //! \fixme KB 8/17 we could also use the runtime CBuildConfig decision here, which looks nicer (I personally always try to avoid ifdef)
+        //! \fixme KB 8/17 we could also use the runtime CBuildConfig decision here, which looks nicer (I personally
+        //! always try to avoid ifdef)
 #if defined(Q_OS_WIN)
         return CFileUtils::appendFilePathsAndFixUnc(getWindowsLocalAppDataPath(), xplaneInstallFile);
 #elif defined(Q_OS_LINUX)
@@ -121,7 +115,8 @@ namespace swift::misc::simulation::xplane
 
     const QString &CXPlaneUtil::xplanePluginDir()
     {
-        static const QString pd(xplaneRootDir().isEmpty() ? "" : CFileUtils::appendFilePaths(xplaneRootDir(), xplanePluginPathName()));
+        static const QString pd(
+            xplaneRootDir().isEmpty() ? "" : CFileUtils::appendFilePaths(xplaneRootDir(), xplanePluginPathName()));
         return pd;
     }
 
@@ -179,11 +174,9 @@ namespace swift::misc::simulation::xplane
         const QString rootDir = xplaneRootDir.isEmpty() ? CXPlaneUtil::xplaneRootDir() : xplaneRootDir;
         if (!rootDir.isEmpty())
         {
-            const QString xswiftbusDir = CFileUtils::appendFilePathsAndFixUnc(CXPlaneUtil::pluginDirFromRootDir(xplaneRootDir), CXPlaneUtil::xswiftbusPathName());
-            if (CDirectoryUtils::isDirExisting(xswiftbusDir))
-            {
-                return xswiftbusDir;
-            }
+            const QString xswiftbusDir = CFileUtils::appendFilePathsAndFixUnc(
+                CXPlaneUtil::pluginDirFromRootDir(xplaneRootDir), CXPlaneUtil::xswiftbusPathName());
+            if (CDirectoryUtils::isDirExisting(xswiftbusDir)) { return xswiftbusDir; }
         }
         return {};
     }
@@ -197,10 +190,7 @@ namespace swift::misc::simulation::xplane
         if (!rootDir.isEmpty())
         {
             const QString xswiftbusLegacy = CFileUtils::appendFilePathsAndFixUnc(xplaneRootDir, legacyPath);
-            if (CDirectoryUtils::isDirExisting(xswiftbusLegacy))
-            {
-                return xswiftbusLegacy;
-            }
+            if (CDirectoryUtils::isDirExisting(xswiftbusLegacy)) { return xswiftbusLegacy; }
         }
         return {};
     }
@@ -247,10 +237,7 @@ namespace swift::misc::simulation::xplane
             const QString subDir = CFileUtils::appendFilePaths(dirName, dir);
             const QStringList subDirFiles = CXPlaneUtil::findAllXplFiles(subDir);
             if (subDirFiles.isEmpty()) { continue; }
-            for (const QString &file : subDirFiles)
-            {
-                files.push_back(CFileUtils::appendFilePaths(dir, file));
-            }
+            for (const QString &file : subDirFiles) { files.push_back(CFileUtils::appendFilePaths(dir, file)); }
         }
         return files;
     }
@@ -261,7 +248,8 @@ namespace swift::misc::simulation::xplane
         const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
         if (xswiftBusPluginDir.isEmpty()) { return false; }
 
-        const QFileInfo fiLatestBuild = CFileUtils::findLastModified(CSwiftDirectories::getXSwiftBusBuildDirectory(), true, xplFileFilter());
+        const QFileInfo fiLatestBuild =
+            CFileUtils::findLastModified(CSwiftDirectories::getXSwiftBusBuildDirectory(), true, xplFileFilter());
         if (!fiLatestBuild.lastModified().isValid()) { return false; }
 
         const QFileInfo fiLatestDeployed = CFileUtils::findLastModified(xswiftBusPluginDir, true, xplFileFilter());
@@ -277,7 +265,8 @@ namespace swift::misc::simulation::xplane
         const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
         if (xswiftBusPluginDir.isEmpty()) { return -1; }
 
-        return CDirectoryUtils::copyDirectoryRecursively(CSwiftDirectories::getXSwiftBusBuildDirectory(), xswiftBusPluginDir, true);
+        return CDirectoryUtils::copyDirectoryRecursively(CSwiftDirectories::getXSwiftBusBuildDirectory(),
+                                                         xswiftBusPluginDir, true);
     }
 
     const QStringList &CXPlaneUtil::xplFileFilter()
@@ -290,7 +279,8 @@ namespace swift::misc::simulation::xplane
     {
         if (simDir.isEmpty())
         {
-            return CStatusMessage(static_cast<CXPlaneUtil *>(nullptr), CStatusMessage::SeverityWarning, u"no simulator directory", true);
+            return CStatusMessage(static_cast<CXPlaneUtil *>(nullptr), CStatusMessage::SeverityWarning,
+                                  u"no simulator directory", true);
         }
 
         CStatusMessageList msgs;
@@ -302,9 +292,12 @@ namespace swift::misc::simulation::xplane
             const bool exists = simDirExists ?
                                     CDirectoryUtils::isSameOrSubDirectoryOf(modelDir, sd) :
                                     CDirectoryUtils::isSameOrSubDirectoryOfStringBased(modelDir, sd.absolutePath());
-            const CStatusMessage m = exists ?
-                                         CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).info(u"Model directory '%1' inside '%2'") << modelDir << sd.absolutePath() :
-                                         CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).error(u"Model directory '%1' NOT inside '%2'") << modelDir << sd.absolutePath();
+            const CStatusMessage m =
+                exists ?
+                    CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).info(u"Model directory '%1' inside '%2'")
+                        << modelDir << sd.absolutePath() :
+                    CStatusMessage(static_cast<CXPlaneUtil *>(nullptr)).error(u"Model directory '%1' NOT inside '%2'")
+                        << modelDir << sd.absolutePath();
             msgs.push_back(m);
         }
         msgs.addValidationCategory();

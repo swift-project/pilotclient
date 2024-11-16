@@ -47,10 +47,7 @@ namespace swift::core::db
         this->logoff();
     }
 
-    CAuthenticatedUser CDatabaseAuthenticationService::getDbUser() const
-    {
-        return m_swiftDbUser.get();
-    }
+    CAuthenticatedUser CDatabaseAuthenticationService::getDbUser() const { return m_swiftDbUser.get(); }
 
     bool CDatabaseAuthenticationService::isUserAuthenticated() const
     {
@@ -89,8 +86,10 @@ namespace swift::core::db
         if (sApp->getGlobalSetup().dbDebugFlag()) { CNetworkUtils::addDebugFlag(params); }
 
         const QString query = params.toString();
-        const QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url, CNetworkUtils::PostUrlEncoded, sApp->getApplicationNameAndVersion()));
-        sApp->postToNetwork(request, CApplication::NoLogRequestId, query.toUtf8(), { this, &CDatabaseAuthenticationService::parseServerResponse });
+        const QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url, CNetworkUtils::PostUrlEncoded,
+                                                                            sApp->getApplicationNameAndVersion()));
+        sApp->postToNetwork(request, CApplication::NoLogRequestId, query.toUtf8(),
+                            { this, &CDatabaseAuthenticationService::parseServerResponse });
         static const QString rm("Sent request to authentication server '%1'");
         msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityInfo, rm.arg(url.toQString())));
         return msgs;
@@ -130,13 +129,15 @@ namespace swift::core::db
             }
             if (!json::looksLikeJson(json))
             {
-                CLogMessage(this).error(u"Illegal JSON object: %1") << CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(json);
+                CLogMessage(this).error(u"Illegal JSON object: %1")
+                    << CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(json);
                 return;
             }
 
             static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
             const QJsonObject jsonObj(json::jsonObjectFromString(json));
-            CAuthenticatedUser user = CAuthenticatedUser::fromDatabaseJson(jsonObj.contains("user") ? jsonObj["user"].toObject() : jsonObj);
+            CAuthenticatedUser user =
+                CAuthenticatedUser::fromDatabaseJson(jsonObj.contains("user") ? jsonObj["user"].toObject() : jsonObj);
             CStatusMessageList msgs;
             if (jsonObj.contains("messages"))
             {
@@ -158,7 +159,8 @@ namespace swift::core::db
             {
                 if (!msgs.hasErrorMessages())
                 {
-                    msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Cannot login, user or password wrong"));
+                    msgs.push_back(
+                        CStatusMessage(cats, CStatusMessage::SeverityError, u"Cannot login, user or password wrong"));
                 }
             }
             else

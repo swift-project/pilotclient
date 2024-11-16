@@ -91,7 +91,8 @@ namespace swift::gui
             void setTab(TabWidget tab);
 
             //! Find models starting with
-            swift::misc::simulation::CAircraftModelList findModelsStartingWith(const QString &modelName, Qt::CaseSensitivity cs);
+            swift::misc::simulation::CAircraftModelList findModelsStartingWith(const QString &modelName,
+                                                                               Qt::CaseSensitivity cs);
 
         signals:
             //! Request the validation dialog
@@ -106,7 +107,8 @@ namespace swift::gui
 
             //! Simulated aircraft did change in view
             //! \sa CViewBaseNonTemplate::objectChanged
-            void onChangedSimulatedAircraftInView(const swift::misc::CVariant &simulatedAircraft, const swift::misc::CPropertyIndex &index);
+            void onChangedSimulatedAircraftInView(const swift::misc::CVariant &simulatedAircraft,
+                                                  const swift::misc::CPropertyIndex &index);
 
             //! Aircraft selected (in view)
             void onAircraftSelectedInView(const QModelIndex &index);
@@ -130,10 +132,12 @@ namespace swift::gui
             void onTempDisableModelsForMatchingRequested(const swift::misc::simulation::CAircraftModelList &models);
 
             //! Rendered aircraft changed in backend
-            void onRemoteAircraftModelChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+            void onRemoteAircraftModelChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                              const swift::misc::CIdentifier &originator);
 
             //! Connection status has been changed
-            void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+            void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                           const swift::misc::network::CConnectionStatus &to);
 
             //! Widget changed
             void onTabWidgetChanged(int index);
@@ -148,7 +152,8 @@ namespace swift::gui
             void showAircraftModelDetails(bool show);
 
             //! Adding a remote aircraft failed
-            void onAddingRemoteAircraftFailed(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool disabled, bool failover, const swift::misc::CStatusMessage &message);
+            void onAddingRemoteAircraftFailed(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                              bool disabled, bool failover, const swift::misc::CStatusMessage &message);
 
             //! Timer update
             void timerUpdate();
@@ -163,7 +168,8 @@ namespace swift::gui
             void settingsChanged();
 
             //! Connection status has been changed
-            void onNetworkConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+            void onNetworkConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                                  const swift::misc::network::CConnectionStatus &to);
 
             //! Update simulated aircraft view
             void updateRenderedAircraftView(bool forceUpdate = false);
@@ -188,7 +194,9 @@ namespace swift::gui
             QTimer m_updateTimer;
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
             swift::misc::CTokenBucket m_bucket { 3, 5000, 1 };
-            swift::misc::CSettingReadOnly<settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::settingsChanged }; //!< settings changed
+            swift::misc::CSettingReadOnly<settings::TViewUpdateSettings> m_settings {
+                this, &CMappingComponent::settingsChanged
+            }; //!< settings changed
             views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
         };
     } // namespace components

@@ -29,8 +29,7 @@ namespace swift::gui
     {
         //! Base class for views with DB objects
         template <class T>
-        class CViewWithDbObjects :
-            public CViewBase<T>
+        class CViewWithDbObjects : public CViewBase<T>
         {
         public:
             //! Model type
@@ -79,8 +78,7 @@ namespace swift::gui
 
         //! Base class for views with DB objects also orderable (based on swift::misc::IOrderableList )
         template <class T>
-        class COrderableViewWithDbObjects :
-            public CViewWithDbObjects<T>
+        class COrderableViewWithDbObjects : public CViewWithDbObjects<T>
         {
         public:
             //! Model type

@@ -36,7 +36,8 @@ namespace swift::core::afv::audio
         static const QStringList &getLogCategories();
 
         //! Ctor
-        CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber, QObject *parent = nullptr);
+        CReceiverSampleProvider(const QAudioFormat &audioFormat, quint16 id, int voiceInputNumber,
+                                QObject *parent = nullptr);
 
         //! Bypass effects
         void setBypassEffects(bool value);

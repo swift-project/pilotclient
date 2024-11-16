@@ -61,15 +61,19 @@ namespace swift::misc::aviation
 
         //! Constructor
         CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer,
-                          const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank);
+                          const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military,
+                          int rank);
 
         //! Constructor
-        CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType, const QString &manufacturer,
-                          const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank);
+        CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType,
+                          const QString &manufacturer, const QString &model, CWakeTurbulenceCategory wtc,
+                          bool realworld, bool legacy, bool military, int rank);
 
         //! Constructor
-        CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &family, const QString &combinedType, const QString &manufacturer,
-                          const QString &model, const QString &modelIata, const QString &modelSwift, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank);
+        CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &family, const QString &combinedType,
+                          const QString &manufacturer, const QString &model, const QString &modelIata,
+                          const QString &modelSwift, CWakeTurbulenceCategory wtc, bool realworld, bool legacy,
+                          bool military, int rank);
 
         //! Get ICAO designator, e.g. "B737"
         const QString &getDesignator() const { return m_designator; }
@@ -172,10 +176,16 @@ namespace swift::misc::aviation
         void setModelDescription(const QString &modelDescription) { m_modelDescription = modelDescription.trimmed(); }
 
         //! Set the alternative IATA model description
-        void setModelIataDescription(const QString &modelDescription) { m_modelIataDescription = modelDescription.trimmed(); }
+        void setModelIataDescription(const QString &modelDescription)
+        {
+            m_modelIataDescription = modelDescription.trimmed();
+        }
 
         //! Set the  alternative swift model description
-        void setModelSwiftDescription(const QString &modelDescription) { m_modelSwiftDescription = modelDescription.trimmed(); }
+        void setModelSwiftDescription(const QString &modelDescription)
+        {
+            m_modelSwiftDescription = modelDescription.trimmed();
+        }
 
         //! Has model description?
         bool hasModelDescription() const { return !m_modelDescription.isEmpty(); }
@@ -314,7 +324,8 @@ namespace swift::misc::aviation
 
         //! Guess aircraft model parameters
         //! \remark values will not be overridden, pass null values to obtain guessed values
-        void guessModelParameters(physical_quantities::CLength &guessedCGOut, physical_quantities::CSpeed &guessedVRotateOut) const;
+        void guessModelParameters(physical_quantities::CLength &guessedCGOut,
+                                  physical_quantities::CSpeed &guessedVRotateOut) const;
 
         //! Null ICAO?
         bool isNull() const;
@@ -351,15 +362,14 @@ namespace swift::misc::aviation
 
         //! Specialized log message for matching / reverse lookup
         //! \threadsafe
-        static CStatusMessage logMessage(
-            const CAircraftIcaoCode &icaoCode,
-            const QString &message, const QStringList &extraCategories = {},
-            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+        static CStatusMessage logMessage(const CAircraftIcaoCode &icaoCode, const QString &message,
+                                         const QStringList &extraCategories = {},
+                                         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
         //! Specialized log for matching / reverse lookup
         //! \threadsafe
-        static void addLogDetailsToList(CStatusMessageList *log, const CAircraftIcaoCode &icao,
-                                        const QString &message, const QStringList &extraCategories = {},
+        static void addLogDetailsToList(CStatusMessageList *log, const CAircraftIcaoCode &icao, const QString &message,
+                                        const QStringList &extraCategories = {},
                                         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
         //! From our database JSON format

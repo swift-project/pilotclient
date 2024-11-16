@@ -53,7 +53,8 @@ namespace swift::sample
         static const qint64 DeltaTime = 10;
 
         //! Situation values for testing
-        static swift::misc::aviation::CAircraftSituationList createSituations(qint64 baseTimeEpoch, int numberOfCallsigns, int numberOfTimes);
+        static swift::misc::aviation::CAircraftSituationList createSituations(qint64 baseTimeEpoch,
+                                                                              int numberOfCallsigns, int numberOfTimes);
 
         //! Model values for testing
         static swift::misc::simulation::CAircraftModelList createModels(int numberOfModels, int numberOfMemoParts);
@@ -68,10 +69,12 @@ namespace swift::sample
         static const swift::misc::aviation::CAtcStationList &stations10k();
 
         //! Access properties of given stations
-        static void accessStationsData(const swift::misc::aviation::CAtcStationList &stations, bool byPropertyIndex = false);
+        static void accessStationsData(const swift::misc::aviation::CAtcStationList &stations,
+                                       bool byPropertyIndex = false);
 
         //! Read properties of a station and concatenate them
-        static QString accessStationData(const swift::misc::aviation::CAtcStation &station, bool byPropertyIndex = false);
+        static QString accessStationData(const swift::misc::aviation::CAtcStation &station,
+                                         bool byPropertyIndex = false);
 
         //! parse coordinates from WGS
         static void parseWgs(int times);
@@ -92,10 +95,12 @@ namespace swift::sample
         static swift::misc::aviation::CCallsignSet callsigns(int number);
 
         //! Situations map
-        static QMap<swift::misc::aviation::CCallsign, swift::misc::aviation::CAircraftSituation> situationsMap(const swift::misc::aviation::CCallsignSet &callsigns);
+        static QMap<swift::misc::aviation::CCallsign, swift::misc::aviation::CAircraftSituation>
+        situationsMap(const swift::misc::aviation::CCallsignSet &callsigns);
 
         //! Situations hash
-        static QHash<swift::misc::aviation::CCallsign, swift::misc::aviation::CAircraftSituation> situationsHash(const swift::misc::aviation::CCallsignSet &callsigns);
+        static QHash<swift::misc::aviation::CCallsign, swift::misc::aviation::CAircraftSituation>
+        situationsHash(const swift::misc::aviation::CCallsignSet &callsigns);
     };
 } // namespace swift::sample
 

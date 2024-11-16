@@ -101,12 +101,16 @@ namespace swift::gui
         return w.append(" ").append(s);
     }
 
-    QString CStyleSheetUtility::asStylesheet(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
+    QString CStyleSheetUtility::asStylesheet(const QString &fontFamily, const QString &fontSize,
+                                             const QString &fontStyle, const QString &fontWeight,
+                                             const QString &fontColor)
     {
         static const QString indent("     ");
         static const QString lf("\n");
-        static const QString fontStyleSheet("%1font-family: \"%3\";%2%1font-size: %4;%2%1font-style: %5;%2%1font-weight: %6;%2%1color: %7;%2");
-        static const QString fontStyleSheetNoColor("%1font-family: \"%3\";%2%1font-size: %4;%2%1font-style: %5;%2%1font-weight: %6;%2");
+        static const QString fontStyleSheet(
+            "%1font-family: \"%3\";%2%1font-size: %4;%2%1font-style: %5;%2%1font-weight: %6;%2%1color: %7;%2");
+        static const QString fontStyleSheetNoColor(
+            "%1font-family: \"%3\";%2%1font-size: %4;%2%1font-style: %5;%2%1font-weight: %6;%2");
 
         return fontColor.isEmpty() ?
                    fontStyleSheetNoColor.arg(indent, lf, fontFamily, fontSize, fontStyle, fontWeight) :
@@ -118,10 +122,8 @@ namespace swift::gui
         Q_ASSERT_X(widget, Q_FUNC_INFO, "Missing widget");
         const QFont f = widget->font();
         return CStyleSheetUtility::asStylesheet(
-            f.family(),
-            QStringLiteral("%1pt").arg(pointSize < 0 ? f.pointSize() : pointSize),
-            CStyleSheetUtility::fontStyleAsString(f),
-            CStyleSheetUtility::fontWeightAsString(f));
+            f.family(), QStringLiteral("%1pt").arg(pointSize < 0 ? f.pointSize() : pointSize),
+            CStyleSheetUtility::fontStyleAsString(f), CStyleSheetUtility::fontWeightAsString(f));
     }
 
     QString CStyleSheetUtility::fontColorString() const
@@ -140,7 +142,10 @@ namespace swift::gui
 
         // qss/css files
         const bool needsWatcher = m_fileWatcher.files().isEmpty();
-        if (needsWatcher) { m_fileWatcher.addPath(CSwiftDirectories::stylesheetsDirectory()); } // directory to deleted file watching
+        if (needsWatcher)
+        {
+            m_fileWatcher.addPath(CSwiftDirectories::stylesheetsDirectory());
+        } // directory to deleted file watching
         directory.setNameFilters({ "*.qss", "*.css" });
         directory.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
@@ -203,20 +208,12 @@ namespace swift::gui
             {
                 if (fontAdded) { continue; }
                 fontAdded = true;
-                s = hasModifiedFont ?
-                        m_styleSheets[fileNameFontsModified().toLower()] :
-                        m_styleSheets[fileNameFonts()];
+                s = hasModifiedFont ? m_styleSheets[fileNameFontsModified().toLower()] : m_styleSheets[fileNameFonts()];
             }
-            else
-            {
-                s = m_styleSheets[key];
-            }
+            else { s = m_styleSheets[key]; }
             if (s.isEmpty()) { continue; }
 
-            style +=
-                (style.isEmpty() ? QString() : "\n\n") %
-                u"/** file: " % fileName % " **/\n" %
-                s;
+            style += (style.isEmpty() ? QString() : "\n\n") % u"/** file: " % fileName % " **/\n" % s;
         }
         return style;
     }
@@ -230,18 +227,13 @@ namespace swift::gui
     bool CStyleSheetUtility::updateFont(const QFont &font)
     {
         QString fs;
-        if (font.pixelSize() >= 0)
-        {
-            fs.append(QString::number(font.pixelSize())).append("px");
-        }
-        else
-        {
-            fs.append(QString::number(font.pointSizeF())).append("pt");
-        }
+        if (font.pixelSize() >= 0) { fs.append(QString::number(font.pixelSize())).append("px"); }
+        else { fs.append(QString::number(font.pointSizeF())).append("pt"); }
         return updateFont(font.family(), fs, fontStyleAsString(font), fontWeightAsString(font), "white");
     }
 
-    bool CStyleSheetUtility::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
+    bool CStyleSheetUtility::updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle,
+                                        const QString &fontWeight, const QString &fontColor)
     {
         const QString qss = CStyleSheetUtility::asStylesheet(fontFamily, fontSize, fontStyle, fontWeight, fontColor);
         return CStyleSheetUtility::updateFont(qss);
@@ -250,7 +242,8 @@ namespace swift::gui
     bool CStyleSheetUtility::updateFont(const QString &qss)
     {
         const QString qssWidget(u"QWidget {\n" % qss % u"}\n");
-        const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(), fileNameFontsModified());
+        const QString fn =
+            CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(), fileNameFontsModified());
         QFile fontFile(fn);
         bool ok = fontFile.open(QFile::Text | QFile::WriteOnly);
         if (ok)
@@ -279,10 +272,7 @@ namespace swift::gui
         const QString c = combinedStyleAndWeight.toLower();
         for (const QString &s : fontStyles())
         {
-            if (c.contains(s))
-            {
-                return s;
-            }
+            if (c.contains(s)) { return s; }
         }
         return n;
     }
@@ -312,7 +302,8 @@ namespace swift::gui
 
     bool CStyleSheetUtility::deleteModifiedFontFile()
     {
-        const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(), fileNameFontsModified());
+        const QString fn =
+            CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(), fileNameFontsModified());
         QFile file(fn);
         if (!file.exists()) { return false; }
         bool r = file.remove();
@@ -329,7 +320,8 @@ namespace swift::gui
 
     const QString &CStyleSheetUtility::fileNameAndPathSwiftStandardGui()
     {
-        static const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(), CStyleSheetUtility::fileNameSwiftStandardGui());
+        static const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(),
+                                                              CStyleSheetUtility::fileNameSwiftStandardGui());
         return fn;
     }
 
@@ -359,7 +351,8 @@ namespace swift::gui
 
     const QString &CStyleSheetUtility::fileNameAndPathStandardWidget()
     {
-        static const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(), CStyleSheetUtility::fileNameStandardWidget());
+        static const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(),
+                                                              CStyleSheetUtility::fileNameStandardWidget());
         return fn;
     }
 
@@ -425,9 +418,7 @@ namespace swift::gui
         // 2) With viewport based widgets viewport has to be used
         // see http://stackoverflow.com/questions/37952348/enable-own-widget-for-stylesheet
         QAbstractScrollArea *sa = qobject_cast<QAbstractScrollArea *>(usedWidget);
-        QStylePainter p(
-            sa ? sa->viewport() :
-                 usedWidget);
+        QStylePainter p(sa ? sa->viewport() : usedWidget);
         if (!p.isActive()) { return false; }
 
         QStyleOption opt;
@@ -436,12 +427,14 @@ namespace swift::gui
         return true;
     }
 
-    QString CStyleSheetUtility::styleForIconCheckBox(const QString &checkedIcon, const QString &uncheckedIcon, const QString &width, const QString &height)
+    QString CStyleSheetUtility::styleForIconCheckBox(const QString &checkedIcon, const QString &uncheckedIcon,
+                                                     const QString &width, const QString &height)
     {
         Q_ASSERT(!checkedIcon.isEmpty());
         Q_ASSERT(!uncheckedIcon.isEmpty());
 
-        static const QString st = "QCheckBox::indicator { width: %1; height: %2; } QCheckBox::indicator:checked { image: url(%3); } QCheckBox::indicator:unchecked { image: url(%4); }";
+        static const QString st = "QCheckBox::indicator { width: %1; height: %2; } QCheckBox::indicator:checked { "
+                                  "image: url(%3); } QCheckBox::indicator:unchecked { image: url(%4); }";
         return st.arg(width, height, checkedIcon, uncheckedIcon);
     }
 
@@ -490,18 +483,9 @@ namespace swift::gui
         if (fn.endsWith(qss)) { fn.chop(qss.length()); }
 
         QString specific;
-        if (CBuildConfig::isRunningOnWindowsNtPlatform())
-        {
-            specific = fn % u".win" % qss;
-        }
-        else if (CBuildConfig::isRunningOnMacOSPlatform())
-        {
-            specific = fn % u".mac" % qss;
-        }
-        else if (CBuildConfig::isRunningOnLinuxPlatform())
-        {
-            specific = fn % u".linux" % qss;
-        }
+        if (CBuildConfig::isRunningOnWindowsNtPlatform()) { specific = fn % u".win" % qss; }
+        else if (CBuildConfig::isRunningOnMacOSPlatform()) { specific = fn % u".mac" % qss; }
+        else if (CBuildConfig::isRunningOnLinuxPlatform()) { specific = fn % u".linux" % qss; }
         return qssFileExists(specific) ? specific : fn + qss;
     }
 

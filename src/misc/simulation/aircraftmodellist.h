@@ -69,10 +69,12 @@ namespace swift::misc
             CAircraftModelList(const CSequence<CAircraftModel> &other);
 
             //! Contains model string?
-            bool containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+            bool containsModelString(const QString &modelString,
+                                     Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Contains model with model string or id?
-            bool containsModelStringOrDbKey(const simulation::CAircraftModel &model, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+            bool containsModelStringOrDbKey(const simulation::CAircraftModel &model,
+                                            Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Contains model for callsign?
             bool containsCallsign(const aviation::CCallsign &callsign) const;
@@ -84,7 +86,8 @@ namespace swift::misc
             bool containsModelsWithAircraftIcaoDesignator(const QString &aircraftDesignator) const;
 
             //! Contains any model with aircraft and airline ICAO designator?
-            bool containsModelsWithAircraftAndAirlineIcaoDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const;
+            bool containsModelsWithAircraftAndAirlineIcaoDesignator(const QString &aircraftDesignator,
+                                                                    const QString &airlineDesignator) const;
 
             //! Contains airline livery for given airline
             bool containsAirlineLivery(const aviation::CAirlineIcaoCode &airline) const;
@@ -115,46 +118,58 @@ namespace swift::misc
 
             //! Find by model string
             //! \remark normally CAircraftModelList::findFirstByModelStringOrDefault would be used
-            CAircraftModelList findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+            CAircraftModelList findByModelString(const QString &modelString,
+                                                 Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find empty model strings
             CAircraftModelList findEmptyModelStrings() const;
 
             //! Find first by model string
-            CAircraftModel findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+            CAircraftModel findFirstByModelStringOrDefault(const QString &modelString,
+                                                           Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find first by model string
-            CAircraftModel findFirstByModelStringAliasOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+            CAircraftModel
+            findFirstByModelStringAliasOrDefault(const QString &modelString,
+                                                 Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find first by callsign
             CAircraftModel findFirstByCallsignOrDefault(const aviation::CCallsign &callsign) const;
 
             //! Find models starting with
-            CAircraftModelList findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
+            CAircraftModelList findModelsStartingWith(const QString &modelString,
+                                                      Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive) const;
 
             //! Find by a given list of models by strings
-            CAircraftModelList findByModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const;
+            CAircraftModelList findByModelStrings(const QStringList &modelStrings,
+                                                  Qt::CaseSensitivity sensitivity) const;
 
             //! Find by excluding given list of models strings
-            CAircraftModelList findByNotInModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const;
+            CAircraftModelList findByNotInModelStrings(const QStringList &modelStrings,
+                                                       Qt::CaseSensitivity sensitivity) const;
 
             //! Find by ICAO designators
-            CAircraftModelList findByIcaoDesignators(const aviation::CAircraftIcaoCode &aircraftIcaoCode, const aviation::CAirlineIcaoCode &airlineIcaoCode) const;
+            CAircraftModelList findByIcaoDesignators(const aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                                     const aviation::CAirlineIcaoCode &airlineIcaoCode) const;
 
             //! Find by ICAO of aircraft and airline
-            CAircraftModelList findByAircraftAndAirline(const aviation::CAircraftIcaoCode &aircraftIcaoCode, const aviation::CAirlineIcaoCode &airlineIcaoCode) const;
+            CAircraftModelList findByAircraftAndAirline(const aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                                        const aviation::CAirlineIcaoCode &airlineIcaoCode) const;
 
             //! Find by designator and livery code
-            CAircraftModelList findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
+            CAircraftModelList findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator,
+                                                                             const QString &combinedCode) const;
 
             //! Find by aircraft and livery
-            CAircraftModelList findByAircraftAndLivery(const aviation::CAircraftIcaoCode &aircraftIcaoCode, const aviation::CLivery &livery) const;
+            CAircraftModelList findByAircraftAndLivery(const aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                                       const aviation::CLivery &livery) const;
 
             //! Find by the corresponding airline group
             CAircraftModelList findByAirlineGroup(const swift::misc::aviation::CAirlineIcaoCode &airline) const;
 
             //! Find by airline name and telephony
-            CAircraftModelList findByAirlineNameAndTelephonyDesignator(const QString &name, const QString &telephony, bool onlyIfExistInModel = true) const;
+            CAircraftModelList findByAirlineNameAndTelephonyDesignator(const QString &name, const QString &telephony,
+                                                                       bool onlyIfExistInModel = true) const;
 
             //! Find by airline name and telephony, similar to CAirlineIcaoCodeList::findByNamesOrTelephonyDesignator
             CAircraftModelList findByAirlineNamesOrTelephonyDesignator(const QString &name) const;
@@ -205,15 +220,19 @@ namespace swift::misc
             CAircraftModelList findByCombinedTypeWithColorLivery(const QString &combinedType) const;
 
             //! Combined WTC/livery
-            CAircraftModelList findByCombinedTypeAndWtcWithColorLivery(const QString &combinedType, const QString &wtc) const;
+            CAircraftModelList findByCombinedTypeAndWtcWithColorLivery(const QString &combinedType,
+                                                                       const QString &wtc) const;
 
             //! Combined type and manufacturer
-            //! \remark kind of pseudo family, as in most cases the same combined type of a manufacturer means similar aircraft
+            //! \remark kind of pseudo family, as in most cases the same combined type of a manufacturer means similar
+            //! aircraft
             CAircraftModelList findByCombinedAndManufacturer(const aviation::CAircraftIcaoCode &icao) const;
 
             //! Combined typeand manufacturer
-            //! \remark kind of pseudo family, as in most cases the same combined type of a manufacturer means similar aircraft
-            CAircraftModelList findByCombinedAndManufacturer(const QString &combinedType, const QString &manufacturer) const;
+            //! \remark kind of pseudo family, as in most cases the same combined type of a manufacturer means similar
+            //! aircraft
+            CAircraftModelList findByCombinedAndManufacturer(const QString &combinedType,
+                                                             const QString &manufacturer) const;
 
             //! Find color liveries
             CAircraftModelList findColorLiveries() const;
@@ -352,11 +371,13 @@ namespace swift::misc
 
             //! Remove if aircraft and livery
             //! \return number of elements removed
-            int removeByAircraftAndLivery(const aviation::CAircraftIcaoCode &aircraftIcao, const aviation::CLivery &livery);
+            int removeByAircraftAndLivery(const aviation::CAircraftIcaoCode &aircraftIcao,
+                                          const aviation::CLivery &livery);
 
             //! Remove if aircraft and airline
             //! \return number of elements removed
-            int removeByAircraftAndAirline(const aviation::CAircraftIcaoCode &aircraftIcao, const aviation::CAirlineIcaoCode &airline);
+            int removeByAircraftAndAirline(const aviation::CAircraftIcaoCode &aircraftIcao,
+                                           const aviation::CAirlineIcaoCode &airline);
 
             //! Remove if NOT FS family model, ie. FSX/P3D/FS9/MSFS
             //! \return number of elements removed
@@ -372,7 +393,8 @@ namespace swift::misc
 
             //! Replace or add based on model string
             //! \return number of elements removed
-            int replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity);
+            int replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList,
+                                             Qt::CaseSensitivity sensitivity);
 
             //! Model strings
             QStringList getModelStringList(bool sort = true) const;
@@ -449,7 +471,8 @@ namespace swift::misc
 
             //! Aircraft ICAO codes for airline
             //! \remark gives all aircraft flown by an airline
-            aviation::CAircraftIcaoCodeList getAicraftIcaoCodesForAirline(const aviation::CAirlineIcaoCode &airlineCode) const;
+            aviation::CAircraftIcaoCodeList
+            getAicraftIcaoCodesForAirline(const aviation::CAirlineIcaoCode &airlineCode) const;
 
             //! Airline ICAO codes from DB, without duplicates
             aviation::CAirlineIcaoCodeList getAirlineIcaoCodesFromDb() const;
@@ -501,22 +524,30 @@ namespace swift::misc
             void normalizeFileNamesForDb();
 
             //! Score by aircraft ICAO code
-            ScoredModels scoreFull(const CAircraftModel &remoteModel, bool preferColorLiveries, bool ignoreZeroScores = true, CStatusMessageList *log = nullptr) const;
+            ScoredModels scoreFull(const CAircraftModel &remoteModel, bool preferColorLiveries,
+                                   bool ignoreZeroScores = true, CStatusMessageList *log = nullptr) const;
 
             //! Completer strings
-            QStringList toCompleterStrings(bool sorted = true, const CSimulatorInfo &simulator = { CSimulatorInfo::All }) const;
+            QStringList toCompleterStrings(bool sorted = true,
+                                           const CSimulatorInfo &simulator = { CSimulatorInfo::All }) const;
 
             //! Validate for publishing
             CStatusMessageList validateForPublishing() const;
 
             //! Validate for publishing
-            CStatusMessageList validateForPublishing(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
+            CStatusMessageList validateForPublishing(CAircraftModelList &validModels,
+                                                     CAircraftModelList &invalidModels) const;
 
             //! Validate distributors
-            CStatusMessageList validateDistributors(const CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const;
+            CStatusMessageList validateDistributors(const CDistributorList &distributors,
+                                                    CAircraftModelList &validModels,
+                                                    CAircraftModelList &invalidModels) const;
 
             //! Validate files (file exists etc.)
-            CStatusMessageList validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simRootDirectory, bool alreadySortedByFn = false) const;
+            CStatusMessageList validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels,
+                                             bool ignoreEmptyFileNames, int stopAtFailedFiles,
+                                             std::atomic_bool &wasStopped, const QString &simRootDirectory,
+                                             bool alreadySortedByFn = false) const;
 
             //! To compact JSON format
             QJsonObject toMemoizedJson() const;
@@ -553,16 +584,18 @@ namespace swift::misc
 
             //! @{
             //! Add as valid or invalid model (mutual exclusive)
-            static void addAsValidOrInvalidModel(const CAircraftModel &model, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels);
-            static void addAsValidOrInvalidModels(const CAircraftModelList &models, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels);
+            static void addAsValidOrInvalidModel(const CAircraftModel &model, bool valid,
+                                                 CAircraftModelList &validModels, CAircraftModelList &invalidModels);
+            static void addAsValidOrInvalidModels(const CAircraftModelList &models, bool valid,
+                                                  CAircraftModelList &validModels, CAircraftModelList &invalidModels);
             //! @}
 
             //! Newer version
-            static CAircraftModelList fromDatabaseJsonCaching(const QJsonArray &array,
-                                                              const aviation::CAircraftIcaoCodeList &aircraftIcaos = {},
-                                                              const aviation::CAircraftCategoryList &aircraftCategories = {},
-                                                              const aviation::CLiveryList &liveries = {},
-                                                              const CDistributorList &distributors = {});
+            static CAircraftModelList
+            fromDatabaseJsonCaching(const QJsonArray &array, const aviation::CAircraftIcaoCodeList &aircraftIcaos = {},
+                                    const aviation::CAircraftCategoryList &aircraftCategories = {},
+                                    const aviation::CLiveryList &liveries = {},
+                                    const CDistributorList &distributors = {});
 
         private:
             //! Validate UNC paths (Windows)

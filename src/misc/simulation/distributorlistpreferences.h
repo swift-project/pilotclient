@@ -25,8 +25,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributorListPrefer
 namespace swift::misc::simulation
 {
     //! Preferences for distributors
-    class SWIFT_MISC_EXPORT CDistributorListPreferences :
-        public CValueObject<CDistributorListPreferences>
+    class SWIFT_MISC_EXPORT CDistributorListPreferences : public CValueObject<CDistributorListPreferences>
     {
     public:
         //! Default constructor.

@@ -39,7 +39,10 @@ namespace swift::misc::simulation
     {
         if (log == MatchingLogNothing) { return matchingLogFlagToString(MatchingLogNothing); }
         QStringList l;
-        if (log.testFlag(MatchingLogCombinedDefaultType)) { l << matchingLogFlagToString(MatchingLogCombinedDefaultType); }
+        if (log.testFlag(MatchingLogCombinedDefaultType))
+        {
+            l << matchingLogFlagToString(MatchingLogCombinedDefaultType);
+        }
         if (log.testFlag(MatchingLogModelstring)) { l << matchingLogFlagToString(MatchingLogModelstring); }
         if (log.testFlag(MatchingLogStepwiseReduce)) { l << matchingLogFlagToString(MatchingLogStepwiseReduce); }
         if (log.testFlag(MatchingLogScoring)) { l << matchingLogFlagToString(MatchingLogScoring); }

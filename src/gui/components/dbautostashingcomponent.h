@@ -101,7 +101,8 @@ namespace swift::gui
             void addStatusMessage(const swift::misc::CStatusMessage &msg);
 
             //! Add a status message for a given model (prefixed)
-            void addStatusMessage(const swift::misc::CStatusMessage &msg, const swift::misc::simulation::CAircraftModel &model);
+            void addStatusMessage(const swift::misc::CStatusMessage &msg,
+                                  const swift::misc::simulation::CAircraftModel &model);
 
             //! Try stashing selected or all models
             void tryToStashModels();
@@ -109,7 +110,8 @@ namespace swift::gui
             //! Try stashing a model
             //! \param model this model can be updated with consolidated data
             //! \return true means stashing is possible
-            bool tryToStashModel(swift::misc::simulation::CAircraftModel &model, const swift::misc::aviation::CLivery &tempLivery);
+            bool tryToStashModel(swift::misc::simulation::CAircraftModel &model,
+                                 const swift::misc::aviation::CLivery &tempLivery);
 
             //! Set the model description
             void setModelDescription(swift::misc::simulation::CAircraftModel &model, const QString &description) const;

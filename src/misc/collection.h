@@ -20,27 +20,27 @@
 #include "misc/mixin/mixinicon.h"
 
 //! \cond
-#define SWIFT_TEMPLATE_COLLECTION_MIXINS(NS, T, Set, Extern)             \
-    namespace NS                                                         \
-    {                                                                    \
-        class Set;                                                       \
-    }                                                                    \
-    namespace swift::misc::private_ns                                    \
-    {                                                                    \
-        Extern template struct CValueObjectMetaInfo<NS::Set>;            \
-        Extern template struct CValueObjectMetaInfo<CCollection<NS::T>>; \
-        Extern template struct MetaTypeHelper<NS::Set>;                  \
-        Extern template struct MetaTypeHelper<CCollection<NS::T>>;       \
-    }                                                                    \
-    namespace swift::misc::mixin                                         \
-    {                                                                    \
-        Extern template class MetaType<NS::Set>;                         \
-        Extern template class MetaType<CCollection<NS::T>>;              \
-        Extern template class DBusOperators<CCollection<NS::T>>;         \
-        Extern template class JsonOperators<CCollection<NS::T>>;         \
-        Extern template class String<CCollection<NS::T>>;                \
-        Extern template class DataStreamOperators<CCollection<NS::T>>;   \
-        Extern template class Icon<CCollection<NS::T>>;                  \
+#define SWIFT_TEMPLATE_COLLECTION_MIXINS(NS, T, Set, Extern)                                                           \
+    namespace NS                                                                                                       \
+    {                                                                                                                  \
+        class Set;                                                                                                     \
+    }                                                                                                                  \
+    namespace swift::misc::private_ns                                                                                  \
+    {                                                                                                                  \
+        Extern template struct CValueObjectMetaInfo<NS::Set>;                                                          \
+        Extern template struct CValueObjectMetaInfo<CCollection<NS::T>>;                                               \
+        Extern template struct MetaTypeHelper<NS::Set>;                                                                \
+        Extern template struct MetaTypeHelper<CCollection<NS::T>>;                                                     \
+    }                                                                                                                  \
+    namespace swift::misc::mixin                                                                                       \
+    {                                                                                                                  \
+        Extern template class MetaType<NS::Set>;                                                                       \
+        Extern template class MetaType<CCollection<NS::T>>;                                                            \
+        Extern template class DBusOperators<CCollection<NS::T>>;                                                       \
+        Extern template class JsonOperators<CCollection<NS::T>>;                                                       \
+        Extern template class String<CCollection<NS::T>>;                                                              \
+        Extern template class DataStreamOperators<CCollection<NS::T>>;                                                 \
+        Extern template class Icon<CCollection<NS::T>>;                                                                \
     }
 //! \endcond
 
@@ -58,7 +58,8 @@
 #    define SWIFT_DECLARE_COLLECTION_MIXINS(Namespace, T, Set)
 #    define SWIFT_DEFINE_COLLECTION_MIXINS(Namespace, T, Set)
 #else
-#    define SWIFT_DECLARE_COLLECTION_MIXINS(Namespace, T, Set) SWIFT_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, extern)
+#    define SWIFT_DECLARE_COLLECTION_MIXINS(Namespace, T, Set)                                                         \
+        SWIFT_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, extern)
 #    define SWIFT_DEFINE_COLLECTION_MIXINS(Namespace, T, Set) SWIFT_TEMPLATE_COLLECTION_MIXINS(Namespace, T, Set, )
 #endif
 
@@ -271,7 +272,8 @@ namespace swift::misc
             return result;
         }
 
-        //! Returns a collection which contains all the elements from this collection which are not in the other collection.
+        //! Returns a collection which contains all the elements from this collection which are not in the other
+        //! collection.
         template <class C>
         CCollection difference(const C &other) const
         {
@@ -282,10 +284,7 @@ namespace swift::misc
 
         //! Remove the element pointed to by the given iterator.
         //! \return An iterator to the position of the next element after the one removed.
-        iterator erase(iterator pos)
-        {
-            return m_impl.erase(pos);
-        }
+        iterator erase(iterator pos) { return m_impl.erase(pos); }
 
         //! Remove the range of elements between two iterators.
         //! \return An iterator to the position of the next element after the one removed.
@@ -343,10 +342,7 @@ namespace swift::misc
         }
 
         //! Convert to a QList
-        QList<T> toQList() const
-        {
-            return this->to(QList<T>());
-        }
+        QList<T> toQList() const { return this->to(QList<T>()); }
 
         //! \private Calls detach on the internal QMap.
         void detach() { m_impl.detach(); }

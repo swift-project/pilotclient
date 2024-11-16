@@ -62,7 +62,8 @@ namespace swift::gui::components
         void toggleHistoryEnabled(bool enabled);
 
         //! Connection status changed
-        void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+        void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                     const swift::misc::network::CConnectionStatus &to);
     };
 } // namespace swift::gui::components
 

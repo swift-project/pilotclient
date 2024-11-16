@@ -11,8 +11,8 @@ using namespace swift::misc;
 
 namespace swift::sound::sample_provider
 {
-    CVolumeSampleProvider::CVolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent) : ISampleProvider(parent),
-                                                                                                     m_sourceProvider(sourceProvider)
+    CVolumeSampleProvider::CVolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent)
+        : ISampleProvider(parent), m_sourceProvider(sourceProvider)
     {
         Q_ASSERT_X(sourceProvider, Q_FUNC_INFO, "Need source provider");
         const QString on = QStringLiteral("%1 with source: %2").arg(classNameShort(this), sourceProvider->objectName());
@@ -24,10 +24,7 @@ namespace swift::sound::sample_provider
         const int samplesRead = m_sourceProvider->readSamples(samples, count);
         if (!qFuzzyCompare(m_gainRatio, 1.0))
         {
-            for (int n = 0; n < samplesRead; n++)
-            {
-                samples[n] = static_cast<float>(m_gainRatio * samples[n]);
-            }
+            for (int n = 0; n < samplesRead; n++) { samples[n] = static_cast<float>(m_gainRatio * samples[n]); }
         }
         return samplesRead;
     }

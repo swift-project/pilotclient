@@ -17,10 +17,7 @@ namespace swift::sound::sample_provider
         return samples;
     }
 
-    Samples::Samples()
-    {
-        this->initSounds();
-    }
+    Samples::Samples() { this->initSounds(); }
 
     void Samples::initSounds()
     {
@@ -54,8 +51,5 @@ namespace swift::sound::sample_provider
         }
     }
 
-    void Samples::onSettingsChanged()
-    {
-        this->initSounds();
-    }
+    void Samples::onSettingsChanged() { this->initSounds(); }
 } // namespace swift::sound::sample_provider

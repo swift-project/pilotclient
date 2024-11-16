@@ -58,7 +58,8 @@ namespace swift::core
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
     //! Central instance of data for \sa IRemoteAircraftProvider.
     class SWIFT_CORE_EXPORT CAirspaceMonitor :
-        public swift::misc::simulation::CRemoteAircraftProvider, // those data will be provided from the class CAirspaceMonitor
+        public swift::misc::simulation::CRemoteAircraftProvider, // those data will be provided from the class
+                                                                 // CAirspaceMonitor
         public swift::misc::network::CClientProvider, // those data will be provided from the class CAirspaceMonitor
         public swift::misc::simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
         public swift::misc::simulation::CSimulationEnvironmentAware, // elevation info etc. from simulator
@@ -76,22 +77,23 @@ namespace swift::core
         //! Constructor
         CAirspaceMonitor(swift::misc::simulation::IOwnAircraftProvider *ownAircraft,
                          swift::misc::simulation::IAircraftModelSetProvider *modelSetProvider,
-                         fsd::CFSDClient *fsdClient,
-                         QObject *parent);
+                         fsd::CFSDClient *fsdClient, QObject *parent);
 
         //! @{
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
         //! \ingroup remoteaircraftprovider
         virtual QObject *asQObject() override { return this; }
         virtual swift::misc::simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
-        virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
+        virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign,
+                                               bool enableFastPositonUpdates) override;
         //! @}
 
         //! Returns the list of users we know about
         swift::misc::network::CUserList getUsers() const;
 
         //! Returns a list of the users corresponding to the given callsigns
-        swift::misc::network::CUserList getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const;
+        swift::misc::network::CUserList
+        getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const;
 
         //! Returns the loaded flight plan for the given callsign
         //! \remarks only use this if a network loaded flight plan is directly needed
@@ -101,7 +103,8 @@ namespace swift::core
         //! Try to get flight plan remarks
         //! \remarks returns a value only if the flight plan is already cached or can be obtained from VATSIM reader
         //! \threadsafe
-        swift::misc::aviation::CFlightPlanRemarks tryToGetFlightPlanRemarks(const swift::misc::aviation::CCallsign &callsign) const;
+        swift::misc::aviation::CFlightPlanRemarks
+        tryToGetFlightPlanRemarks(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Returns the current online ATC stations
         swift::misc::aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
@@ -110,7 +113,8 @@ namespace swift::core
         swift::misc::aviation::CAtcStationList getAtcStationsOnlineRecalculated();
 
         //! Returns the closest ATC station operating on the given frequency, if any
-        swift::misc::aviation::CAtcStation getAtcStationForComUnit(const swift::misc::aviation::CComSystem &comSystem) const;
+        swift::misc::aviation::CAtcStation
+        getAtcStationForComUnit(const swift::misc::aviation::CComSystem &comSystem) const;
 
         //! Clear the contents
         void clear();
@@ -142,7 +146,8 @@ namespace swift::core
 
         //! Test injected aircraft parts
         //! \private for testing purposes
-        void testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts, bool incremental);
+        void testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign,
+                                  const swift::misc::aviation::CAircraftParts &parts, bool incremental);
 
         //! Matching readiness
         enum MatchingReadinessFlag
@@ -187,7 +192,8 @@ namespace swift::core
         //! Raw data as received from network
         //! \remark used for statistics
         //! \private
-        void requestedNewAircraft(const swift::misc::aviation::CCallsign &callsign, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &livery);
+        void requestedNewAircraft(const swift::misc::aviation::CCallsign &callsign, const QString &aircraftDesignator,
+                                  const QString &airlineDesignator, const QString &livery);
 
         //! Ready for model matching
         void readyForModelMatching(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft);
@@ -203,7 +209,8 @@ namespace swift::core
             FsInnPacket() {}
 
             //! Constructor
-            FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineDesignator, const QString &combinedCode, const QString &modelString);
+            FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineDesignator,
+                        const QString &combinedCode, const QString &modelString);
 
             QString aircraftIcaoDesignator;
             QString airlineIcaoDesignator;
@@ -241,7 +248,10 @@ namespace swift::core
             }
 
             //! Received all data?
-            bool receivedAll() const { return readyness.testFlag(ReceivedIcaoCodes) && readyness.testFlag(ReceivedFsInnPacket); }
+            bool receivedAll() const
+            {
+                return readyness.testFlag(ReceivedIcaoCodes) && readyness.testFlag(ReceivedFsInnPacket);
+            }
 
             //! Received ICAO codes?
             bool receivedIcaoCodes() const { return readyness.testFlag(ReceivedIcaoCodes); }
@@ -268,9 +278,12 @@ namespace swift::core
 
         swift::misc::aviation::CAtcStationList m_atcStationsOnline; //!< online ATC stations
         QHash<swift::misc::aviation::CCallsign, FsInnPacket> m_tempFsInnPackets; //!< unhandled FsInn packets
-        QHash<swift::misc::aviation::CCallsign, swift::misc::aviation::CFlightPlan> m_flightPlanCache; //!< flight plan information retrieved from network and cached
+        QHash<swift::misc::aviation::CCallsign, swift::misc::aviation::CFlightPlan>
+            m_flightPlanCache; //!< flight plan information retrieved from network and cached
         QHash<swift::misc::aviation::CCallsign, Readiness> m_readiness; //!< readiness
-        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModelMatching> m_matchingSettings { this }; //!< settings
+        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModelMatching> m_matchingSettings {
+            this
+        }; //!< settings
         QQueue<swift::misc::aviation::CCallsign> m_queryAtis; //!< query the ATIS
         QQueue<swift::misc::aviation::CCallsign> m_queryPilot; //!< query the pilot data
         fsd::CFSDClient *m_fsdClient = nullptr; //!< corresponding network interface
@@ -321,7 +334,8 @@ namespace swift::core
         bool sendNextStaggeredAtisQuery();
 
         //! Network queries for pilots
-        void sendInitialPilotQueries(const swift::misc::aviation::CCallsign &callsign, bool withIcaoQuery, bool withFsInn);
+        void sendInitialPilotQueries(const swift::misc::aviation::CCallsign &callsign, bool withIcaoQuery,
+                                     bool withFsInn);
 
         //! Network queries for pilot
         bool sendNextStaggeredPilotDataQuery();
@@ -343,19 +357,27 @@ namespace swift::core
         bool supportsVatsimDataFile() const;
 
         //! Distance calculation
-        swift::misc::physical_quantities::CLength calculateDistanceToOwnAircraft(const swift::misc::aviation::CAircraftSituation &situation) const;
+        swift::misc::physical_quantities::CLength
+        calculateDistanceToOwnAircraft(const swift::misc::aviation::CAircraftSituation &situation) const;
 
         //! Angle calculation
-        swift::misc::physical_quantities::CAngle calculateBearingToOwnAircraft(const swift::misc::aviation::CAircraftSituation &situation) const;
+        swift::misc::physical_quantities::CAngle
+        calculateBearingToOwnAircraft(const swift::misc::aviation::CAircraftSituation &situation) const;
 
         //! Store an aircraft situation under consideration of gnd.flags/CG and elevation
         //! \threadsafe
         //! \remark sets gnd.flag from parts if parts are available
         //! \remark uses gnd.elevation if found
-        virtual swift::misc::aviation::CAircraftSituation storeAircraftSituation(const swift::misc::aviation::CAircraftSituation &situation, bool allowTestOffset = true) override;
+        virtual swift::misc::aviation::CAircraftSituation
+        storeAircraftSituation(const swift::misc::aviation::CAircraftSituation &situation,
+                               bool allowTestOffset = true) override;
 
         //! Add or update aircraft
-        swift::misc::simulation::CSimulatedAircraft addOrUpdateAircraftInRange(const swift::misc::aviation::CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery, const QString &modelString, swift::misc::simulation::CAircraftModel::ModelType modelType, swift::misc::CStatusMessageList *log);
+        swift::misc::simulation::CSimulatedAircraft
+        addOrUpdateAircraftInRange(const swift::misc::aviation::CCallsign &callsign, const QString &aircraftIcao,
+                                   const QString &airlineIcao, const QString &livery, const QString &modelString,
+                                   swift::misc::simulation::CAircraftModel::ModelType modelType,
+                                   swift::misc::CStatusMessageList *log);
 
         //! Add new aircraft, ignored if aircraft already exists
         //! \remark position to own aircraft set, VATSIM data file data considered
@@ -365,10 +387,13 @@ namespace swift::core
         //! Asynchronously add aircraft
         //! \threadsafe
         //! \sa addNewAircraftInRange
-        void asyncReInitializeAllAircraft(const swift::misc::simulation::CSimulatedAircraftList &aircraft, bool readyForModelMatching);
+        void asyncReInitializeAllAircraft(const swift::misc::simulation::CSimulatedAircraftList &aircraft,
+                                          bool readyForModelMatching);
 
         //! Update online stations by callsign
-        int updateOnlineStation(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true, bool sendSignal = true);
+        int updateOnlineStation(const swift::misc::aviation::CCallsign &callsign,
+                                const swift::misc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true,
+                                bool sendSignal = true);
 
         //! Handle max.range
         bool handleMaxRange(const swift::misc::aviation::CAircraftSituation &situation);
@@ -377,8 +402,8 @@ namespace swift::core
         bool recallFsInnPacket(const swift::misc::aviation::CCallsign &callsign);
 
         //! Send the information if aircraft and(!) client are available
-        //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if something is still missing (trial)
-        //! \sa reverseLookupModelWithFlightplanData
+        //! \note it can take some time to obtain all data for model matching, so function recursively calls itself if
+        //! something is still missing (trial) \sa reverseLookupModelWithFlightplanData
         void sendReadyForModelMatching(const swift::misc::aviation::CCallsign &callsign, MatchingReadinessFlag rf);
 
         //! Make sure we got ICAO data
@@ -388,54 +413,78 @@ namespace swift::core
         //! Reverse lookup, if available flight plan data are considered
         //! \remark this is where a model is created based on network data
         //! \ingroup reverselookup
-        swift::misc::simulation::CAircraftModel reverseLookupModelWithFlightplanData(
-            const swift::misc::aviation::CCallsign &callsign, const QString &aircraftIcao,
-            const QString &airlineIcao, const QString &liveryString, const QString &modelString,
-            swift::misc::simulation::CAircraftModel::ModelType type, swift::misc::CStatusMessageList *log, bool runMatchinScript = true);
+        swift::misc::simulation::CAircraftModel
+        reverseLookupModelWithFlightplanData(const swift::misc::aviation::CCallsign &callsign,
+                                             const QString &aircraftIcao, const QString &airlineIcao,
+                                             const QString &liveryString, const QString &modelString,
+                                             swift::misc::simulation::CAircraftModel::ModelType type,
+                                             swift::misc::CStatusMessageList *log, bool runMatchinScript = true);
 
         //! Does this look like a co-pilot callsign
         bool isCopilotAircraft(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Set matching readiness flag
-        Readiness &addMatchingReadinessFlag(const swift::misc::aviation::CCallsign &callsign, MatchingReadinessFlag mrf);
+        Readiness &addMatchingReadinessFlag(const swift::misc::aviation::CCallsign &callsign,
+                                            MatchingReadinessFlag mrf);
 
         //! Extrapolates elevation into front (first) element from 2nd and 3rd element
         //! \pre the list must be sorted latest first and containt at least 3 elements
-        static bool extrapolateElevation(swift::misc::aviation::CAircraftSituationList &situations, const swift::misc::aviation::CAircraftSituationChange &change);
+        static bool extrapolateElevation(swift::misc::aviation::CAircraftSituationList &situations,
+                                         const swift::misc::aviation::CAircraftSituationChange &change);
 
         //! Extrapolated between the 2 situations for situation
-        //! \remark normally used if situationToBeUpdated is not between oldSituation and olderSituation (that would be interpolation)
-        //! \return false if there are no two elevations, there is already an elevation, or no extrapolation is possible (too much deviation)
-        static bool extrapolateElevation(swift::misc::aviation::CAircraftSituation &situationToBeUpdated, const swift::misc::aviation::CAircraftSituation &oldSituation,
-                                         const swift::misc::aviation::CAircraftSituation &olderSituation, const swift::misc::aviation::CAircraftSituationChange &oldChange);
+        //! \remark normally used if situationToBeUpdated is not between oldSituation and olderSituation (that would be
+        //! interpolation) \return false if there are no two elevations, there is already an elevation, or no
+        //! extrapolation is possible (too much deviation)
+        static bool extrapolateElevation(swift::misc::aviation::CAircraftSituation &situationToBeUpdated,
+                                         const swift::misc::aviation::CAircraftSituation &oldSituation,
+                                         const swift::misc::aviation::CAircraftSituation &olderSituation,
+                                         const swift::misc::aviation::CAircraftSituationChange &oldChange);
 
         //! Create aircraft in range, this is the only place where a new aircraft should be added
-        void onAircraftUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CTransponder &transponder);
+        void onAircraftUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation,
+                                      const swift::misc::aviation::CTransponder &transponder);
 
         //! Create ATC station, this is the only place where an online ATC station should be added
-        void onAtcPositionUpdate(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CFrequency &frequency, const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::physical_quantities::CLength &range);
+        void onAtcPositionUpdate(const swift::misc::aviation::CCallsign &callsign,
+                                 const swift::misc::physical_quantities::CFrequency &frequency,
+                                 const swift::misc::geo::CCoordinateGeodetic &position,
+                                 const swift::misc::physical_quantities::CLength &range);
 
         //! Receive FSInn packet
         //! \remark This can happen even without a query before
-        void onCustomFSInnPacketReceived(const swift::misc::aviation::CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftDesignator, const QString &combinedAircraftType, const QString &modelString);
+        void onCustomFSInnPacketReceived(const swift::misc::aviation::CCallsign &callsign,
+                                         const QString &airlineIcaoDesignator, const QString &aircraftDesignator,
+                                         const QString &combinedAircraftType, const QString &modelString);
 
         void onRealNameReplyReceived(const swift::misc::aviation::CCallsign &callsign, const QString &realname);
-        void onCapabilitiesReplyReceived(const swift::misc::aviation::CCallsign &callsign, swift::misc::network::CClient::Capabilities clientCaps);
+        void onCapabilitiesReplyReceived(const swift::misc::aviation::CCallsign &callsign,
+                                         swift::misc::network::CClient::Capabilities clientCaps);
         void onServerReplyReceived(const swift::misc::aviation::CCallsign &callsign, const QString &server);
-        void onFlightPlanReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CFlightPlan &flightPlan);
+        void onFlightPlanReceived(const swift::misc::aviation::CCallsign &callsign,
+                                  const swift::misc::aviation::CFlightPlan &flightPlan);
         void onAtcControllerDisconnected(const swift::misc::aviation::CCallsign &callsign);
-        void onAtisReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CInformationMessage &atisMessage);
+        void onAtisReceived(const swift::misc::aviation::CCallsign &callsign,
+                            const swift::misc::aviation::CInformationMessage &atisMessage);
         void onAtisLogoffTimeReceived(const swift::misc::aviation::CCallsign &callsign, const QString &zuluTime);
-        void onIcaoCodesReceived(const swift::misc::aviation::CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery);
+        void onIcaoCodesReceived(const swift::misc::aviation::CCallsign &callsign,
+                                 const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator,
+                                 const QString &livery);
         void onPilotDisconnected(const swift::misc::aviation::CCallsign &callsign);
-        void onFrequencyReceived(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CFrequency &frequency);
+        void onFrequencyReceived(const swift::misc::aviation::CCallsign &callsign,
+                                 const swift::misc::physical_quantities::CFrequency &frequency);
         void onReceivedVatsimDataFile();
-        void onAircraftConfigReceived(const swift::misc::aviation::CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs);
+        void onAircraftConfigReceived(const swift::misc::aviation::CCallsign &callsign, const QJsonObject &jsonObject,
+                                      qint64 currentOffsetMs);
         void onAircraftInterimUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation);
         void onAircraftVisualUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation);
-        void onAircraftSimDataUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts, qint64 currentOffsetMs, const QString &aircraftIcao, const QString &airlineIcao);
-        void onConnectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus, swift::misc::network::CConnectionStatus newStatus);
-        void onRevBAircraftConfigReceived(const swift::misc::aviation::CCallsign &callsign, const QString &config, qint64 currentOffsetMs);
+        void onAircraftSimDataUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation,
+                                             const swift::misc::aviation::CAircraftParts &parts, qint64 currentOffsetMs,
+                                             const QString &aircraftIcao, const QString &airlineIcao);
+        void onConnectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus,
+                                       swift::misc::network::CConnectionStatus newStatus);
+        void onRevBAircraftConfigReceived(const swift::misc::aviation::CCallsign &callsign, const QString &config,
+                                          qint64 currentOffsetMs);
     };
 } // namespace swift::core
 

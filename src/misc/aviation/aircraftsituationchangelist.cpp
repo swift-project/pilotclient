@@ -9,7 +9,8 @@ namespace swift::misc::aviation
 {
     CAircraftSituationChangeList::CAircraftSituationChangeList() {}
 
-    CAircraftSituationChangeList::CAircraftSituationChangeList(const CSequence<CAircraftSituationChange> &other) : CSequence<CAircraftSituationChange>(other)
+    CAircraftSituationChangeList::CAircraftSituationChangeList(const CSequence<CAircraftSituationChange> &other)
+        : CSequence<CAircraftSituationChange>(other)
     {}
 
     CAircraftSituationChange CAircraftSituationChangeList::frontOrNull() const

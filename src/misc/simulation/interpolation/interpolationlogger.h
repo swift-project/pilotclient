@@ -39,18 +39,17 @@ namespace swift::misc
             QString altCorrection; //!< info about altitude correction as CAircraftSituation::AltitudeCorrection
             aviation::CCallsign callsign; //!< current callsign
             aviation::CAircraftParts parts; //!< corresponding parts used in interpolator
-            aviation::CAircraftSituationList interpolationSituations; //!< the interpolator uses 2, 3 situations (latest at end)
+            aviation::CAircraftSituationList
+                interpolationSituations; //!< the interpolator uses 2, 3 situations (latest at end)
             aviation::CAircraftSituation situationCurrent; //!< interpolated situation
             aviation::CAircraftSituationChange change; //!< change
-            physical_quantities::CLength cgAboveGround = physical_quantities::CLength::null(); //!< center of gravity (CG)
+            physical_quantities::CLength cgAboveGround =
+                physical_quantities::CLength::null(); //!< center of gravity (CG)
             physical_quantities::CLength sceneryOffset = physical_quantities::CLength::null(); //!< scenery offset
             CInterpolationAndRenderingSetupPerCallsign usedSetup; //!< used setup
 
             //! Delta time between interpolation and current time
-            double deltaCurrentToInterpolatedTime() const
-            {
-                return static_cast<double>(tsCurrent - tsInterpolated);
-            }
+            double deltaCurrentToInterpolatedTime() const { return static_cast<double>(tsCurrent - tsInterpolated); }
 
             //! Full name of interpolator
             const QString &interpolationType() const;
@@ -71,9 +70,8 @@ namespace swift::misc
             const aviation::CAircraftSituation &secondInterpolationSituation() const;
 
             //! To string
-            QString toQString(bool withSetup,
-                              bool withCurrentSituation, bool withElevation,
-                              bool withOtherPositions, bool withDeltaTimes, const QString &separator = { " " }) const;
+            QString toQString(bool withSetup, bool withCurrentSituation, bool withElevation, bool withOtherPositions,
+                              bool withDeltaTimes, const QString &separator = { " " }) const;
         };
 
         //! Log entry for parts interpolation
@@ -209,7 +207,8 @@ namespace swift::misc
             static QString getHtmlPartsLog(const QList<PartsLog> &logs);
 
             //! Write log to file
-            static CStatusMessageList writeLogFiles(const QList<SituationLog> &interpolation, const QList<PartsLog> &getPartsLog);
+            static CStatusMessageList writeLogFiles(const QList<SituationLog> &interpolation,
+                                                    const QList<PartsLog> &getPartsLog);
 
             //! Status of file operation
             static CStatusMessage logStatusFileWriting(bool success, const QString &fileName);

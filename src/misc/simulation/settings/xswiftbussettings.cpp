@@ -11,10 +11,7 @@ namespace swift::misc::simulation::settings
 {
     CXSwiftBusSettings::CXSwiftBusSettings() {}
 
-    CXSwiftBusSettings::CXSwiftBusSettings(const QString &json)
-    {
-        this->parseXSwiftBusStringQt(json);
-    }
+    CXSwiftBusSettings::CXSwiftBusSettings(const QString &json) { this->parseXSwiftBusStringQt(json); }
 
     QVariant CXSwiftBusSettings::propertyByIndex(CPropertyIndexRef index) const
     {
@@ -56,9 +53,7 @@ namespace swift::misc::simulation::settings
         case IndexBundleTaxiLandingLights: m_bundleTaxiLandingLights = variant.toBool(); break;
         case IndexMaxDrawingDistance: m_maxDrawDistanceNM = variant.toDouble(); break;
         case IndexFollowAircraftDistance: m_followAircraftDistanceM = variant.toInt(); break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
@@ -80,7 +75,8 @@ namespace swift::misc::simulation::settings
         const QString dbus = QString::fromStdString(m_dBusServerAddress);
         if (!CDBusServer::isSessionOrSystemAddress(dbus) && !CDBusServer::isQtDBusAddress(dbus))
         {
-            msgs.addValidationMessage(QStringLiteral("Invalid DBus address '%1'").arg(dbus), CStatusMessage::SeverityError);
+            msgs.addValidationMessage(QStringLiteral("Invalid DBus address '%1'").arg(dbus),
+                                      CStatusMessage::SeverityError);
         }
         return msgs;
     }
@@ -91,8 +87,5 @@ namespace swift::misc::simulation::settings
         return s;
     }
 
-    void CXSwiftBusSettings::objectUpdated()
-    {
-        m_timestampMSecsSinceEpoch = m_msSinceEpochQtFree;
-    }
+    void CXSwiftBusSettings::objectUpdated() { m_timestampMSecsSinceEpoch = m_msSinceEpochQtFree; }
 } // namespace swift::misc::simulation::settings

@@ -42,9 +42,10 @@ namespace swift::misc
         template <typename T, typename F1, typename F2>
         void stopWhen(const T *sender, F1 signal, F2 &&condition)
         {
-            QObject::connect(sender, signal, &m_eventLoop, [this, condition = std::forward<F2>(condition)](auto &&...args) {
-                if (condition(std::forward<decltype(args)>(args)...)) { m_eventLoop.exit(GotSignal); }
-            });
+            QObject::connect(sender, signal, &m_eventLoop,
+                             [this, condition = std::forward<F2>(condition)](auto &&...args) {
+                                 if (condition(std::forward<decltype(args)>(args)...)) { m_eventLoop.exit(GotSignal); }
+                             });
         }
 
         //! Begin processing events until the timeout or stop condition occurs.
@@ -59,10 +60,7 @@ namespace swift::misc
         }
 
         //! True if the guard object still exists.
-        bool isGuardAlive() const
-        {
-            return m_guard;
-        }
+        bool isGuardAlive() const { return m_guard; }
 
     private:
         enum Result

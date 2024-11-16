@@ -53,10 +53,7 @@ namespace swift::gui
             if (this->isMinimized()) { return false; }
             return true;
         }
-        else
-        {
-            return isSelectedDockWidget();
-        }
+        else { return isSelectedDockWidget(); }
     }
 
     void CDockWidgetInfoArea::addToContextMenu(QMenu *contextMenu) const
@@ -80,10 +77,7 @@ namespace swift::gui
         {
             const CInfoArea *infoArea = parentInfoAreas.at(i);
             QString title(infoArea->windowTitle());
-            if (title.isEmpty())
-            {
-                title = infoArea->objectName();
-            }
+            if (title.isEmpty()) { title = infoArea->objectName(); }
             QMenu *m = contextMenu->addMenu(title);
             infoArea->addToContextMenu(m);
         }
@@ -112,10 +106,7 @@ namespace swift::gui
 
             // CEnableForDockWidgetInfoArea is no QObject, so we use dynamic_cast
             CEnableForDockWidgetInfoArea *dwc = dynamic_cast<CEnableForDockWidgetInfoArea *>(w);
-            if (dwc)
-            {
-                widgetsWithDockWidgetInfoAreaComponent.append(dwc);
-            }
+            if (dwc) { widgetsWithDockWidgetInfoAreaComponent.append(dwc); }
         }
         QList<CDockWidgetInfoArea *> nestedInfoAreas = this->findNestedInfoAreas();
         if (nestedInfoAreas.isEmpty()) return widgetsWithDockWidgetInfoAreaComponent;
@@ -123,7 +114,8 @@ namespace swift::gui
         // we have to exclude the nested embedded areas
         for (CDockWidgetInfoArea *ia : nestedInfoAreas)
         {
-            QList<CEnableForDockWidgetInfoArea *> nestedInfoAreaComponents = ia->findEmbeddedDockWidgetInfoAreaComponents();
+            QList<CEnableForDockWidgetInfoArea *> nestedInfoAreaComponents =
+                ia->findEmbeddedDockWidgetInfoAreaComponents();
             if (nestedInfoAreaComponents.isEmpty()) { continue; }
             for (CEnableForDockWidgetInfoArea *iac : nestedInfoAreaComponents)
             {

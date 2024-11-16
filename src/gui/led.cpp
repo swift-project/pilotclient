@@ -25,10 +25,10 @@ namespace swift::gui
         this->init();
     }
 
-    CLedWidget::CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName, const QString &offName, int targetWidth, QWidget *parent) : QWidget(parent),
-                                                                                                                                                                            m_blinkState(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor),
-                                                                                                                                                                            m_shape(shape), m_widthTarget(targetWidth), m_tooltipOn(onName), m_tooltipOff(offName),
-                                                                                                                                                                            m_renderer(new QSvgRenderer(this))
+    CLedWidget::CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName,
+                           const QString &offName, int targetWidth, QWidget *parent)
+        : QWidget(parent), m_blinkState(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor), m_shape(shape),
+          m_widthTarget(targetWidth), m_tooltipOn(onName), m_tooltipOff(offName), m_renderer(new QSvgRenderer(this))
     {
         this->setLed();
         this->init();
@@ -37,13 +37,11 @@ namespace swift::gui
     void CLedWidget::init()
     {
         m_resetTimer.setSingleShot(true);
-        m_resetTimer.setObjectName(this->objectName().isEmpty() ? "CLedWidget::ResetTimer" : this->objectName() + "::ResetTimer");
+        m_resetTimer.setObjectName(this->objectName().isEmpty() ? "CLedWidget::ResetTimer" :
+                                                                  this->objectName() + "::ResetTimer");
     }
 
-    CLedWidget::~CLedWidget()
-    {
-        m_resetTimer.stop();
-    }
+    CLedWidget::~CLedWidget() { m_resetTimer.stop(); }
 
     void CLedWidget::setLed(LedColor ledColor)
     {
@@ -196,7 +194,8 @@ namespace swift::gui
         this->setLed();
     }
 
-    void CLedWidget::setValues(LedColor onColor, LedColor offColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, int width)
+    void CLedWidget::setValues(LedColor onColor, LedColor offColor, LedShape shape, const QString &toolTipOn,
+                               const QString &toolTipOff, int width)
     {
         m_colorOn = onColor;
         m_colorOff = offColor;
@@ -207,7 +206,9 @@ namespace swift::gui
         this->setLed();
     }
 
-    void CLedWidget::setValues(LedColor onColor, LedColor offColor, LedColor triStateColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, const QString &toolTipTriState, int width)
+    void CLedWidget::setValues(LedColor onColor, LedColor offColor, LedColor triStateColor, LedShape shape,
+                               const QString &toolTipOn, const QString &toolTipOff, const QString &toolTipTriState,
+                               int width)
     {
         m_colorOn = onColor;
         m_colorOff = offColor;
@@ -220,10 +221,7 @@ namespace swift::gui
         this->setLed();
     }
 
-    QPixmap CLedWidget::asPixmap() const
-    {
-        return this->renderToPixmap();
-    }
+    QPixmap CLedWidget::asPixmap() const { return this->renderToPixmap(); }
 
     void CLedWidget::setOn(bool on, int resetTimeMs)
     {
@@ -254,10 +252,7 @@ namespace swift::gui
 
     void CLedWidget::setTriState(int resetTimeMs)
     {
-        if (resetTimeMs > 0)
-        {
-            m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::resetState);
-        }
+        if (resetTimeMs > 0) { m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::resetState); }
         else
         {
             m_resetTimer.stop();
@@ -294,21 +289,20 @@ namespace swift::gui
             emit clicked();
             event->accept();
         }
-        else
-        {
-            QWidget::mousePressEvent(event);
-        }
+        else { QWidget::mousePressEvent(event); }
     }
 
     const QStringList &CLedWidget::shapes()
     {
-        static const QStringList shapes({ ":/qled/icons/qled/circle_", ":/qled/icons/qled/square_", ":/qled/icons/qled/triang_", ":/qled/icons/qled/round_" });
+        static const QStringList shapes({ ":/qled/icons/qled/circle_", ":/qled/icons/qled/square_",
+                                          ":/qled/icons/qled/triang_", ":/qled/icons/qled/round_" });
         return shapes;
     }
 
     const QStringList &CLedWidget::colorFiles()
     {
-        static const QStringList colors({ "red.svg", "green.svg", "yellow.svg", "grey.svg", "orange.svg", "purple.svg", "blue.svg", "black.svg" });
+        static const QStringList colors(
+            { "red.svg", "green.svg", "yellow.svg", "grey.svg", "orange.svg", "purple.svg", "blue.svg", "black.svg" });
         return colors;
     }
 

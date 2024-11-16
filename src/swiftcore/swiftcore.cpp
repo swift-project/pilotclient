@@ -38,9 +38,8 @@ using namespace swift::core;
 using namespace swift::gui;
 using namespace swift::gui::components;
 
-CSwiftCore::CSwiftCore(QWidget *parent) : CSystemTrayWindow(CIcons::swiftCore24(), parent),
-                                          CIdentifiable(this),
-                                          ui(new Ui::CSwiftCore)
+CSwiftCore::CSwiftCore(QWidget *parent)
+    : CSystemTrayWindow(CIcons::swiftCore24(), parent), CIdentifiable(this), ui(new Ui::CSwiftCore)
 {
     Q_ASSERT(sGui);
     ui->setupUi(this);
@@ -56,7 +55,8 @@ CSwiftCore::CSwiftCore(QWidget *parent) : CSystemTrayWindow(CIcons::swiftCore24(
     connect(ui->pb_Restart, &QPushButton::clicked, this, &CSwiftCore::restart);
     connect(ui->pb_Audio, &QPushButton::clicked, this, &CSwiftCore::audioDialog, Qt::QueuedConnection);
     connect(ui->pb_AudioAdvanced, &QPushButton::clicked, this, &CSwiftCore::audioAdvancedDialog, Qt::QueuedConnection);
-    connect(ui->pb_DisconnectNetwork, &QPushButton::clicked, this, &CSwiftCore::disconnectFromNetwork, Qt::QueuedConnection);
+    connect(ui->pb_DisconnectNetwork, &QPushButton::clicked, this, &CSwiftCore::disconnectFromNetwork,
+            Qt::QueuedConnection);
     connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CSwiftCore::onStyleSheetsChanged, Qt::QueuedConnection);
 
     this->initLogDisplay();
@@ -68,45 +68,35 @@ CSwiftCore::CSwiftCore(QWidget *parent) : CSystemTrayWindow(CIcons::swiftCore24(
 
     // command line
     ui->lep_CommandLineInput->setIdentifier(this->identifier());
-    connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
+    connect(ui->lep_CommandLineInput, &CCommandInput::commandEntered, sGui->getCoreFacade(),
+            &CCoreFacade::parseCommandLine);
 }
 
-CSwiftCore::~CSwiftCore()
-{}
+CSwiftCore::~CSwiftCore() {}
 
 void CSwiftCore::initStyleSheet()
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
-    const QString s = sGui->getStyleSheetUtility().styles(
-        { CStyleSheetUtility::fileNameFonts(),
-          CStyleSheetUtility::fileNameStandardWidget(),
-          CStyleSheetUtility::fileNameSwiftCore() });
+    const QString s = sGui->getStyleSheetUtility().styles({ CStyleSheetUtility::fileNameFonts(),
+                                                            CStyleSheetUtility::fileNameStandardWidget(),
+                                                            CStyleSheetUtility::fileNameSwiftCore() });
     this->setStyleSheet(""); // avoid crash, need to reset before
     this->setStyleSheet(s);
 }
 
 void CSwiftCore::showSettingsDialog()
 {
-    if (!m_settingsDialog)
-    {
-        m_settingsDialog.reset(new CCoreSettingsDialog(this));
-    }
+    if (!m_settingsDialog) { m_settingsDialog.reset(new CCoreSettingsDialog(this)); }
     m_settingsDialog->show();
 }
 
 void CSwiftCore::showRawFsdMessageDialog()
 {
-    if (!m_rawFsdMessageDialog)
-    {
-        m_rawFsdMessageDialog.reset(new CRawFsdMessagesDialog(this));
-    }
+    if (!m_rawFsdMessageDialog) { m_rawFsdMessageDialog.reset(new CRawFsdMessagesDialog(this)); }
     m_rawFsdMessageDialog->show();
 }
 
-void CSwiftCore::onStyleSheetsChanged()
-{
-    this->initStyleSheet();
-}
+void CSwiftCore::onStyleSheetsChanged() { this->initStyleSheet(); }
 
 void CSwiftCore::initLogDisplay()
 {
@@ -139,27 +129,22 @@ void CSwiftCore::disconnectFromNetwork()
     if (!sGui->getIContextNetwork()) { return; }
     if (!sGui->getIContextNetwork()->isConnected()) { return; }
 
-    const QMessageBox::StandardButton reply = QMessageBox::question(this, "Disconnect", "Disconnect from network?", QMessageBox::Yes | QMessageBox::No);
+    const QMessageBox::StandardButton reply =
+        QMessageBox::question(this, "Disconnect", "Disconnect from network?", QMessageBox::Yes | QMessageBox::No);
     if (reply != QMessageBox::Yes) { return; }
     sGui->getIContextNetwork()->disconnectFromNetwork();
 }
 
 void CSwiftCore::audioDialog()
 {
-    if (!m_audioDialog)
-    {
-        m_audioDialog.reset(new CCockpitComAudioDialog(this));
-    }
+    if (!m_audioDialog) { m_audioDialog.reset(new CCockpitComAudioDialog(this)); }
     m_audioDialog->setModal(false);
     m_audioDialog->show();
 }
 
 void CSwiftCore::audioAdvancedDialog()
 {
-    if (!m_audioAdvDialog)
-    {
-        m_audioAdvDialog.reset(new CAudioAdvancedDistributedDialog(this));
-    }
+    if (!m_audioAdvDialog) { m_audioAdvDialog.reset(new CAudioAdvancedDistributedDialog(this)); }
     m_audioAdvDialog->setModal(false);
     m_audioAdvDialog->show();
 }

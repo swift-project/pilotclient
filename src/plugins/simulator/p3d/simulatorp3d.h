@@ -33,8 +33,7 @@ namespace swift::simplugin::p3d
         CSimulatorP3D(const swift::misc::simulation::CSimulatorPluginInfo &info,
                       swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                       swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                      swift::misc::network::IClientProvider *clientProvider,
-                      QObject *parent = nullptr);
+                      swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! \name ISimulator implementations
         //! @{
@@ -43,7 +42,8 @@ namespace swift::simplugin::p3d
 
 #ifdef Q_OS_WIN64
         //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation
-        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &callsign) override;
+        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
+                                      const swift::misc::aviation::CCallsign &callsign) override;
 
         //! \copydoc swift::core::ISimulator::followAircraft
         virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override;
@@ -62,7 +62,8 @@ namespace swift::simplugin::p3d
 
         //! \copydoc fsxcommon::CSimulatorFsxCommon::releaseAIControl
         //! \remark P3D API release of control
-        virtual bool releaseAIControl(const fsxcommon::CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId) override;
+        virtual bool releaseAIControl(const fsxcommon::CSimConnectObject &simObject,
+                                      SIMCONNECT_DATA_REQUEST_ID requestId) override;
 #endif
         //! SimConnect Callback
         static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
@@ -78,9 +79,11 @@ namespace swift::simplugin::p3d
 
     public:
         //! Constructor
-        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67054 - Constructor inheritance with non-default constructible members
-        // using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
-        CSimulatorP3DListener(const swift::misc::simulation::CSimulatorPluginInfo &info) : fsxcommon::CSimulatorFsxCommonListener(info) {}
+        // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67054 - Constructor inheritance with non-default constructible
+        // members using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
+        CSimulatorP3DListener(const swift::misc::simulation::CSimulatorPluginInfo &info)
+            : fsxcommon::CSimulatorFsxCommonListener(info)
+        {}
 
     protected:
         virtual void startImpl() override;

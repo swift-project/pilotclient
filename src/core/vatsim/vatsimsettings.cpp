@@ -11,10 +11,10 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::vatsim, CRawFsdMessageSettings)
 
 namespace swift::core::vatsim
 {
-    CReaderSettings::CReaderSettings()
-    {}
+    CReaderSettings::CReaderSettings() {}
 
-    CReaderSettings::CReaderSettings(const CTime &initialTime, const CTime &periodicTime, bool neverUpdate) : m_initialTime(initialTime), m_periodicTime(periodicTime), m_neverUpdate(neverUpdate)
+    CReaderSettings::CReaderSettings(const CTime &initialTime, const CTime &periodicTime, bool neverUpdate)
+        : m_initialTime(initialTime), m_periodicTime(periodicTime), m_neverUpdate(neverUpdate)
     {}
 
     QString CReaderSettings::convertToQString(bool i18n) const
@@ -37,14 +37,10 @@ namespace swift::core::vatsim
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexInitialTime:
-            return this->m_initialTime.propertyByIndex(index.copyFrontRemoved());
-        case IndexPeriodicTime:
-            return this->m_periodicTime.propertyByIndex(index.copyFrontRemoved());
-        case IndexNeverUpdate:
-            return QVariant::fromValue(this->m_neverUpdate);
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexInitialTime: return this->m_initialTime.propertyByIndex(index.copyFrontRemoved());
+        case IndexPeriodicTime: return this->m_periodicTime.propertyByIndex(index.copyFrontRemoved());
+        case IndexNeverUpdate: return QVariant::fromValue(this->m_neverUpdate);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -58,25 +54,17 @@ namespace swift::core::vatsim
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexInitialTime:
-            this->m_initialTime.setPropertyByIndex(index.copyFrontRemoved(), variant);
-            break;
-        case IndexPeriodicTime:
-            this->m_periodicTime.setPropertyByIndex(index.copyFrontRemoved(), variant);
-            break;
-        case IndexNeverUpdate:
-            this->m_neverUpdate = variant.toBool();
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexInitialTime: this->m_initialTime.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexPeriodicTime: this->m_periodicTime.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexNeverUpdate: this->m_neverUpdate = variant.toBool(); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
-    CRawFsdMessageSettings::CRawFsdMessageSettings()
-    {}
+    CRawFsdMessageSettings::CRawFsdMessageSettings() {}
 
-    CRawFsdMessageSettings::CRawFsdMessageSettings(bool enabled, const QString &FileDir) : m_rawFsdMessagesEnabled(enabled), m_FileDir(FileDir)
+    CRawFsdMessageSettings::CRawFsdMessageSettings(bool enabled, const QString &FileDir)
+        : m_rawFsdMessagesEnabled(enabled), m_FileDir(FileDir)
     {}
 
     QString CRawFsdMessageSettings::convertToQString(bool i18n) const

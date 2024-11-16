@@ -6,10 +6,7 @@
 namespace XSwiftBus
 {
 
-    CDBusMessage::CDBusMessage(DBusMessage *message)
-    {
-        m_message = dbus_message_ref(message);
-    }
+    CDBusMessage::CDBusMessage(DBusMessage *message) { m_message = dbus_message_ref(message); }
 
     CDBusMessage::CDBusMessage(const CDBusMessage &other)
     {
@@ -23,10 +20,7 @@ namespace XSwiftBus
         m_serial = serial;
     }
 
-    CDBusMessage::~CDBusMessage()
-    {
-        dbus_message_unref(m_message);
-    }
+    CDBusMessage::~CDBusMessage() { dbus_message_unref(m_message); }
 
     CDBusMessage &CDBusMessage::operator=(CDBusMessage other)
     {
@@ -40,10 +34,7 @@ namespace XSwiftBus
         return dbus_message_get_type(m_message) == DBUS_MESSAGE_TYPE_METHOD_CALL;
     }
 
-    bool CDBusMessage::wantsReply() const
-    {
-        return !dbus_message_get_no_reply(m_message);
-    }
+    bool CDBusMessage::wantsReply() const { return !dbus_message_get_no_reply(m_message); }
 
     std::string CDBusMessage::getSender() const
     {
@@ -51,30 +42,15 @@ namespace XSwiftBus
         return sender ? std::string(sender) : std::string();
     }
 
-    dbus_uint32_t CDBusMessage::getSerial() const
-    {
-        return dbus_message_get_serial(m_message);
-    }
+    dbus_uint32_t CDBusMessage::getSerial() const { return dbus_message_get_serial(m_message); }
 
-    std::string_view CDBusMessage::getInterfaceName() const
-    {
-        return dbus_message_get_interface(m_message);
-    }
+    std::string_view CDBusMessage::getInterfaceName() const { return dbus_message_get_interface(m_message); }
 
-    std::string_view CDBusMessage::getObjectPath() const
-    {
-        return dbus_message_get_path(m_message);
-    }
+    std::string_view CDBusMessage::getObjectPath() const { return dbus_message_get_path(m_message); }
 
-    std::string_view CDBusMessage::getMethodName() const
-    {
-        return dbus_message_get_member(m_message);
-    }
+    std::string_view CDBusMessage::getMethodName() const { return dbus_message_get_member(m_message); }
 
-    void CDBusMessage::beginArgumentWrite()
-    {
-        dbus_message_iter_init_append(m_message, &m_messageIterator);
-    }
+    void CDBusMessage::beginArgumentWrite() { dbus_message_iter_init_append(m_message, &m_messageIterator); }
 
     void CDBusMessage::appendArgument(bool value)
     {
@@ -114,7 +90,8 @@ namespace XSwiftBus
         // discussion: https://discordapp.com/channels/539048679160676382/539925070550794240/698552502831939676
 
         DBusMessageIter arrayIterator;
-        dbus_message_iter_open_container(&m_messageIterator, DBUS_TYPE_ARRAY, DBUS_TYPE_BOOLEAN_AS_STRING, &arrayIterator);
+        dbus_message_iter_open_container(&m_messageIterator, DBUS_TYPE_ARRAY, DBUS_TYPE_BOOLEAN_AS_STRING,
+                                         &arrayIterator);
 
         const std::vector<unsigned> ints(array.begin(), array.end());
         const unsigned *ptr = ints.data();
@@ -125,7 +102,8 @@ namespace XSwiftBus
     void CDBusMessage::appendArgument(const std::vector<double> &array)
     {
         DBusMessageIter arrayIterator;
-        dbus_message_iter_open_container(&m_messageIterator, DBUS_TYPE_ARRAY, DBUS_TYPE_DOUBLE_AS_STRING, &arrayIterator);
+        dbus_message_iter_open_container(&m_messageIterator, DBUS_TYPE_ARRAY, DBUS_TYPE_DOUBLE_AS_STRING,
+                                         &arrayIterator);
         const double *ptr = array.data();
         dbus_message_iter_append_fixed_array(&arrayIterator, DBUS_TYPE_DOUBLE, &ptr, static_cast<int>(array.size()));
         dbus_message_iter_close_container(&m_messageIterator, &arrayIterator);
@@ -134,7 +112,8 @@ namespace XSwiftBus
     void CDBusMessage::appendArgument(const std::vector<std::string> &array)
     {
         DBusMessageIter arrayIterator;
-        dbus_message_iter_open_container(&m_messageIterator, DBUS_TYPE_ARRAY, DBUS_TYPE_STRING_AS_STRING, &arrayIterator);
+        dbus_message_iter_open_container(&m_messageIterator, DBUS_TYPE_ARRAY, DBUS_TYPE_STRING_AS_STRING,
+                                         &arrayIterator);
         for (const auto &i : array)
         {
             const char *ptr = i.c_str();
@@ -143,10 +122,7 @@ namespace XSwiftBus
         dbus_message_iter_close_container(&m_messageIterator, &arrayIterator);
     }
 
-    void CDBusMessage::beginArgumentRead()
-    {
-        dbus_message_iter_init(m_message, &m_messageIterator);
-    }
+    void CDBusMessage::beginArgumentRead() { dbus_message_iter_init(m_message, &m_messageIterator); }
 
     void CDBusMessage::getArgument(int &value)
     {
@@ -187,8 +163,7 @@ namespace XSwiftBus
     {
         DBusMessageIter arrayIterator;
         dbus_message_iter_recurse(&m_messageIterator, &arrayIterator);
-        do
-        {
+        do {
             if (dbus_message_iter_get_arg_type(&arrayIterator) != DBUS_TYPE_INT32) { return; }
             dbus_int32_t i;
             dbus_message_iter_get_basic(&arrayIterator, &i);
@@ -203,8 +178,7 @@ namespace XSwiftBus
         if (dbus_message_iter_get_arg_type(&m_messageIterator) != DBUS_TYPE_ARRAY) { return; }
         DBusMessageIter arrayIterator;
         dbus_message_iter_recurse(&m_messageIterator, &arrayIterator);
-        do
-        {
+        do {
             if (dbus_message_iter_get_arg_type(&arrayIterator) != DBUS_TYPE_BOOLEAN) { return; }
             dbus_bool_t b;
             dbus_message_iter_get_basic(&arrayIterator, &b);
@@ -219,8 +193,7 @@ namespace XSwiftBus
     {
         DBusMessageIter arrayIterator;
         dbus_message_iter_recurse(&m_messageIterator, &arrayIterator);
-        do
-        {
+        do {
             if (dbus_message_iter_get_arg_type(&arrayIterator) != DBUS_TYPE_DOUBLE) { return; }
             double d;
             dbus_message_iter_get_basic(&arrayIterator, &d);
@@ -234,8 +207,7 @@ namespace XSwiftBus
     {
         DBusMessageIter arrayIterator;
         dbus_message_iter_recurse(&m_messageIterator, &arrayIterator);
-        do
-        {
+        do {
             if (dbus_message_iter_get_arg_type(&arrayIterator) != DBUS_TYPE_STRING) { return; }
             const char *str = nullptr;
             dbus_message_iter_get_basic(&arrayIterator, &str);
@@ -245,7 +217,8 @@ namespace XSwiftBus
         dbus_message_iter_next(&m_messageIterator);
     }
 
-    CDBusMessage CDBusMessage::createSignal(const std::string &path, const std::string &interfaceName, const std::string &signalName)
+    CDBusMessage CDBusMessage::createSignal(const std::string &path, const std::string &interfaceName,
+                                            const std::string &signalName)
     {
         DBusMessage *signal = dbus_message_new_signal(path.c_str(), interfaceName.c_str(), signalName.c_str());
         return CDBusMessage(signal);

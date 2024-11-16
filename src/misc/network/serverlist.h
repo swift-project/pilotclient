@@ -19,9 +19,7 @@ SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CServer, CServerList)
 namespace swift::misc::network
 {
     //! Value object encapsulating a list of servers.
-    class SWIFT_MISC_EXPORT CServerList :
-        public CSequence<CServer>,
-        public mixin::MetaType<CServerList>
+    class SWIFT_MISC_EXPORT CServerList : public CSequence<CServer>, public mixin::MetaType<CServerList>
     {
     public:
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CServerList)

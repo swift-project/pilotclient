@@ -40,7 +40,8 @@ namespace swift::misc
             virtual void requestPeerSubscriptions() override;
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::submitRequest
-            virtual void submitRequest(const QString &channel, const swift::misc::CVariant &param, quint32 token) override;
+            virtual void submitRequest(const QString &channel, const swift::misc::CVariant &param,
+                                       quint32 token) override;
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::reply
             virtual void reply(const swift::misc::CVariant &param, quint32 token) override;

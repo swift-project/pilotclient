@@ -18,15 +18,17 @@ using namespace swift::gui;
 namespace swift::gui::views
 {
 
-    CCheckBoxDelegate::CCheckBoxDelegate(QObject *parent) : QItemDelegate(parent)
-    {}
+    CCheckBoxDelegate::CCheckBoxDelegate(QObject *parent) : QItemDelegate(parent) {}
 
-    CCheckBoxDelegate::CCheckBoxDelegate(const QString &iconCheckedUrl, const QString &iconUncheckedUrl, QObject *parent) : QItemDelegate(parent), m_iconCheckedUrl(iconCheckedUrl), m_iconUncheckedUrl(iconUncheckedUrl)
+    CCheckBoxDelegate::CCheckBoxDelegate(const QString &iconCheckedUrl, const QString &iconUncheckedUrl,
+                                         QObject *parent)
+        : QItemDelegate(parent), m_iconCheckedUrl(iconCheckedUrl), m_iconUncheckedUrl(iconUncheckedUrl)
     {}
 
     CCheckBoxDelegate::~CCheckBoxDelegate() {}
 
-    QWidget *CCheckBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    QWidget *CCheckBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                                             const QModelIndex &index) const
     {
         Q_UNUSED(index);
         Q_UNUSED(option);
@@ -54,7 +56,8 @@ namespace swift::gui::views
         model->setData(index, QVariant(v), Qt::EditRole);
     }
 
-    void CCheckBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void CCheckBoxDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
+                                                 const QModelIndex &index) const
     {
         Q_UNUSED(index);
         editor->setGeometry(option.rect);

@@ -187,10 +187,7 @@ namespace swift::core::fsd
         return lhs;
     }
 
-    inline bool operator&(Capabilities lhs, Capabilities rhs)
-    {
-        return static_cast<int>(lhs) & static_cast<int>(rhs);
-    }
+    inline bool operator&(Capabilities lhs, Capabilities rhs) { return static_cast<int>(lhs) & static_cast<int>(rhs); }
     //! @}
 
     //! ATIS line type

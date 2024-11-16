@@ -18,8 +18,7 @@ using namespace swift::misc::network;
 
 namespace swift::gui::components
 {
-    CInfoBarWebReadersStatusBase::CInfoBarWebReadersStatusBase(QWidget *parent) : QFrame(parent)
-    {}
+    CInfoBarWebReadersStatusBase::CInfoBarWebReadersStatusBase(QWidget *parent) : QFrame(parent) {}
 
     void CInfoBarWebReadersStatusBase::init()
     {
@@ -35,17 +34,15 @@ namespace swift::gui::components
 
         if (sGui->hasWebDataServices())
         {
-            c = connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CInfoBarWebReadersStatusBase::dataRead, Qt::QueuedConnection);
+            c = connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this,
+                        &CInfoBarWebReadersStatusBase::dataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Failed connect");
         }
 
         Q_UNUSED(c)
     }
 
-    CInfoBarWebReadersStatusBase::~CInfoBarWebReadersStatusBase()
-    {
-        m_timer.stop();
-    }
+    CInfoBarWebReadersStatusBase::~CInfoBarWebReadersStatusBase() { m_timer.stop(); }
 
     void CInfoBarWebReadersStatusBase::consolidationRunning(bool running)
     {
@@ -57,17 +54,28 @@ namespace swift::gui::components
     {
         CLedWidget::LedShape shape = CLedWidget::Rounded;
         m_ledDataReady->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "all data ready", "data missing", 14);
-        if (m_ledConsolidation) { m_ledConsolidation->setValues(CLedWidget::Blue, CLedWidget::Black, shape, "consolidation running", "idle", 14); }
+        if (m_ledConsolidation)
+        {
+            m_ledConsolidation->setValues(CLedWidget::Blue, CLedWidget::Black, shape, "consolidation running", "idle",
+                                          14);
+        }
 
-        m_ledIcaoAircraft->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-        m_ledIcaoAirline->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-        m_ledCountries->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-        m_ledModels->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-        m_ledLiveries->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
-        m_ledDistributors->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle", "failed", 14);
+        m_ledIcaoAircraft->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle",
+                                     "failed", 14);
+        m_ledIcaoAirline->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle",
+                                    "failed", 14);
+        m_ledCountries->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle",
+                                  "failed", 14);
+        m_ledModels->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle",
+                               "failed", 14);
+        m_ledLiveries->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle",
+                                 "failed", 14);
+        m_ledDistributors->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Red, shape, "reading", "idle",
+                                     "failed", 14);
     }
 
-    void CInfoBarWebReadersStatusBase::dataRead(CEntityFlags::Entity entities, CEntityFlags::ReadState readState, int count)
+    void CInfoBarWebReadersStatusBase::dataRead(CEntityFlags::Entity entities, CEntityFlags::ReadState readState,
+                                                int count)
     {
         Q_UNUSED(count);
         QList<CLedWidget *> leds = this->entitiesToLeds(entities);
@@ -82,18 +90,13 @@ namespace swift::gui::components
 
     void CInfoBarWebReadersStatusBase::showConsolidationStatus(bool show)
     {
-        if (m_ledConsolidation)
-        {
-            m_ledConsolidation->setVisible(show);
-        }
+        if (m_ledConsolidation) { m_ledConsolidation->setVisible(show); }
     }
 
-    void CInfoBarWebReadersStatusBase::setLedReadStates(const QList<CLedWidget *> &leds, CEntityFlags::ReadState readState)
+    void CInfoBarWebReadersStatusBase::setLedReadStates(const QList<CLedWidget *> &leds,
+                                                        CEntityFlags::ReadState readState)
     {
-        for (CLedWidget *led : leds)
-        {
-            this->setLedReadState(led, readState);
-        }
+        for (CLedWidget *led : leds) { this->setLedReadState(led, readState); }
     }
 
     void CInfoBarWebReadersStatusBase::setLedReadState(CLedWidget *led, CEntityFlags::ReadState readState)
@@ -109,15 +112,9 @@ namespace swift::gui::components
             led->blink(resetTimeMs); // blink here (temp. "on"), since read from cache results in immediate ReadFinished
             break;
         case CEntityFlags::ReadStarted:
-        case CEntityFlags::ReadParsing:
-            led->setOn(true);
-            break;
-        case CEntityFlags::ReadFailed:
-            led->setTriState(2 * resetTimeMs);
-            break;
-        default:
-            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "read state not handled");
-            break;
+        case CEntityFlags::ReadParsing: led->setOn(true); break;
+        case CEntityFlags::ReadFailed: led->setTriState(2 * resetTimeMs); break;
+        default: SWIFT_VERIFY_X(false, Q_FUNC_INFO, "read state not handled"); break;
         }
     }
 
@@ -140,14 +137,14 @@ namespace swift::gui::components
         return sGui->getWebDataServices()->getAirlineIcaoCodesCount() > 0 &&
                sGui->getWebDataServices()->getAircraftIcaoCodesCount() > 0 &&
                sGui->getWebDataServices()->getDistributorsCount() > 0 &&
-               sGui->getWebDataServices()->getModelsCount() > 0 &&
-               sGui->getWebDataServices()->getLiveriesCount() > 0 &&
+               sGui->getWebDataServices()->getModelsCount() > 0 && sGui->getWebDataServices()->getLiveriesCount() > 0 &&
                sGui->getWebDataServices()->getCountriesCount() > 0;
     }
 
-    void CInfoBarWebReadersStatusBase::setLeds(
-        CLedWidget *ledDataReady, CLedWidget *ledConsolidation, CLedWidget *ledIcaoAircraft,
-        CLedWidget *ledIcaoAirline, CLedWidget *ledCountries, CLedWidget *ledDistributors, CLedWidget *ledLiveries, CLedWidget *ledModels)
+    void CInfoBarWebReadersStatusBase::setLeds(CLedWidget *ledDataReady, CLedWidget *ledConsolidation,
+                                               CLedWidget *ledIcaoAircraft, CLedWidget *ledIcaoAirline,
+                                               CLedWidget *ledCountries, CLedWidget *ledDistributors,
+                                               CLedWidget *ledLiveries, CLedWidget *ledModels)
     {
         m_ledDataReady = ledDataReady;
         m_ledConsolidation = ledConsolidation;
@@ -159,15 +156,16 @@ namespace swift::gui::components
         m_ledModels = ledModels;
     }
 
-    CInfoBarWebReadersStatusComponent::CInfoBarWebReadersStatusComponent(QWidget *parent) : CInfoBarWebReadersStatusBase(parent), ui(new Ui::CInfoBarWebReadersStatusComponent)
+    CInfoBarWebReadersStatusComponent::CInfoBarWebReadersStatusComponent(QWidget *parent)
+        : CInfoBarWebReadersStatusBase(parent), ui(new Ui::CInfoBarWebReadersStatusComponent)
     {
         ui->setupUi(this);
-        this->setLeds(ui->led_DataReady, ui->led_Consolidation, ui->led_IcaoAircraft, ui->led_IcaoAirline, ui->led_Countries, ui->led_Distributors, ui->led_Liveries, ui->led_Models);
+        this->setLeds(ui->led_DataReady, ui->led_Consolidation, ui->led_IcaoAircraft, ui->led_IcaoAirline,
+                      ui->led_Countries, ui->led_Distributors, ui->led_Liveries, ui->led_Models);
         this->init();
     }
 
-    CInfoBarWebReadersStatusComponent::~CInfoBarWebReadersStatusComponent()
-    {}
+    CInfoBarWebReadersStatusComponent::~CInfoBarWebReadersStatusComponent() {}
 
     void CInfoBarWebReadersStatusComponent::showConsolidationStatus(bool show)
     {

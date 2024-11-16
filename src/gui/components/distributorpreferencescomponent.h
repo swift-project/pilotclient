@@ -62,10 +62,12 @@ namespace swift::gui
 
         private:
             QScopedPointer<Ui::CDistributorPreferencesComponent> ui;
-            swift::misc::CSetting<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences { this, &CDistributorPreferencesComponent::onPreferencesChanged };
+            swift::misc::CSetting<swift::misc::simulation::settings::TDistributorListPreferences>
+                m_distributorPreferences { this, &CDistributorPreferencesComponent::onPreferencesChanged };
 
             //! Update
-            void updateContainerMaybeAsync(const swift::misc::simulation::CDistributorList &models, bool sortByOrder = true);
+            void updateContainerMaybeAsync(const swift::misc::simulation::CDistributorList &models,
+                                           bool sortByOrder = true);
         };
     } // namespace components
 } // namespace swift::gui

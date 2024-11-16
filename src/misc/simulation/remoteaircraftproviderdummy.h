@@ -32,8 +32,10 @@ namespace swift::misc::simulation
         //! For testing, add new situation and fire signals
         void insertNewSituation(const aviation::CAircraftSituation &situation);
         void insertNewSituations(const aviation::CAircraftSituationList &situations);
-        void insertNewAircraftParts(const aviation::CCallsign &callsign, const aviation::CAircraftParts &parts, bool removeOutdatedParts);
-        void insertNewAircraftParts(const aviation::CCallsign &callsign, const aviation::CAircraftPartsList &partsList, bool removeOutdatedParts);
+        void insertNewAircraftParts(const aviation::CCallsign &callsign, const aviation::CAircraftParts &parts,
+                                    bool removeOutdatedParts);
+        void insertNewAircraftParts(const aviation::CCallsign &callsign, const aviation::CAircraftPartsList &partsList,
+                                    bool removeOutdatedParts);
         //! @}
 
         //! @{

@@ -64,27 +64,38 @@ namespace swift::misc::aviation
     void CComSystem::setActiveInternationalAirDistress()
     {
         this->toggleActiveStandby();
-        this->setFrequencyActive(physical_quantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
+        this->setFrequencyActive(
+            physical_quantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
     }
 
     CComSystem CComSystem::getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz)
     {
-        return CComSystem(CModulator::NameCom1(), physical_quantities::CFrequency(activeFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()), physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()));
+        return CComSystem(
+            CModulator::NameCom1(),
+            physical_quantities::CFrequency(activeFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()),
+            physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz,
+                                            physical_quantities::CFrequencyUnit::MHz()));
     }
 
     CComSystem CComSystem::getCom1System(const CFrequency &activeFrequency, const CFrequency &standbyFrequency)
     {
-        return CComSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
+        return CComSystem(CModulator::NameCom1(), activeFrequency,
+                          standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
     }
 
     CComSystem CComSystem::getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz)
     {
-        return CComSystem(CModulator::NameCom2(), physical_quantities::CFrequency(activeFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()), physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()));
+        return CComSystem(
+            CModulator::NameCom2(),
+            physical_quantities::CFrequency(activeFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()),
+            physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz,
+                                            physical_quantities::CFrequencyUnit::MHz()));
     }
 
     CComSystem CComSystem::getCom2System(const CFrequency &activeFrequency, const CFrequency &standbyFrequency)
     {
-        return CComSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
+        return CComSystem(CModulator::NameCom2(), activeFrequency,
+                          standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
     }
 
     bool CComSystem::isValidCivilAviationFrequency(const CFrequency &f)
@@ -182,10 +193,7 @@ namespace swift::misc::aviation
         // Normalize .x20 => .x25 and .70 => .x75
         auto normalize = [](CFrequency freq) {
             const int freq_end = static_cast<int>(freq.value(CFrequencyUnit::kHz())) % 100;
-            if (freq_end == 20 || freq_end == 70)
-            {
-                freq += 5_kHz;
-            }
+            if (freq_end == 20 || freq_end == 70) { freq += 5_kHz; }
             return freq;
         };
 
@@ -195,7 +203,8 @@ namespace swift::misc::aviation
         if (normalized_freq1 == normalized_freq2) { return true; } // shortcut for many of such comparisons
 
         // Avoid precision errors in Hz range
-        return normalized_freq1.valueInteger(CFrequencyUnit::kHz()) == normalized_freq2.valueInteger(CFrequencyUnit::kHz());
+        return normalized_freq1.valueInteger(CFrequencyUnit::kHz()) ==
+               normalized_freq2.valueInteger(CFrequencyUnit::kHz());
     }
 
     CFrequency CComSystem::parseComFrequency(const QString &input, CPqString::SeparatorMode sep)
@@ -214,14 +223,8 @@ namespace swift::misc::aviation
             {
                 bool ok;
                 const double f = CPqString::parseNumber(input, ok, sep);
-                if (ok)
-                {
-                    comFreq = CFrequency(f, f > 999 ? CFrequencyUnit::kHz() : CFrequencyUnit::MHz());
-                }
-                else
-                {
-                    comFreq = CFrequency::null();
-                }
+                if (ok) { comFreq = CFrequency(f, f > 999 ? CFrequencyUnit::kHz() : CFrequencyUnit::MHz()); }
+                else { comFreq = CFrequency::null(); }
             }
         }
 

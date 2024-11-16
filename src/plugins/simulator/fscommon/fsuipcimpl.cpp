@@ -46,15 +46,9 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::simplugin::fscommon
 {
-    CFsuipc::CFsuipc(QObject *parent) : QObject(parent)
-    {
-        startTimer(100);
-    }
+    CFsuipc::CFsuipc(QObject *parent) : QObject(parent) { startTimer(100); }
 
-    CFsuipc::~CFsuipc()
-    {
-        this->close();
-    }
+    CFsuipc::~CFsuipc() { this->close(); }
 
     bool CFsuipc::open(bool force)
     {
@@ -73,12 +67,15 @@ namespace swift::simplugin::fscommon
             {
                 const int simIndex = static_cast<int>(FSUIPC_FS_Version);
                 const QString sim = CFsuipc::simulator(simIndex);
-                const QString ver = QStringLiteral("%1.%2.%3.%4%5")
-                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
-                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
-                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
-                                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
-                                        .arg((FSUIPC_Version & 0xffff) ? QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) : "");
+                const QString ver =
+                    QStringLiteral("%1.%2.%3.%4%5")
+                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 28))))
+                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 24))))
+                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 20))))
+                        .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
+                        .arg((FSUIPC_Version & 0xffff) ?
+                                 QString(QLatin1Char('a' + static_cast<char>(FSUIPC_Version & 0xff) - 1)) :
+                                 "");
                 m_fsuipcVersion = QStringLiteral("FSUIPC %1 (%2)").arg(ver, sim);
                 CLogMessage(this).info(u"FSUIPC connected: %1") << m_fsuipcVersion;
             }
@@ -105,19 +102,13 @@ namespace swift::simplugin::fscommon
     void CFsuipc::close()
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Open not threadsafe");
-        if (m_opened)
-        {
-            CLogMessage(this).info(u"Closing FSUIPC: %1") << m_fsuipcVersion;
-        }
+        if (m_opened) { CLogMessage(this).info(u"Closing FSUIPC: %1") << m_fsuipcVersion; }
         FSUIPC_Close(); // Closing when it wasn't open is okay, so this is safe here
         m_closeCount++;
         m_opened = false;
     }
 
-    bool CFsuipc::isOpened() const
-    {
-        return m_opened;
-    }
+    bool CFsuipc::isOpened() const { return m_opened; }
 
     bool CFsuipc::isOpen() const
     {
@@ -126,10 +117,7 @@ namespace swift::simplugin::fscommon
         // test read
         DWORD dwResult;
         char localFsTimeRaw[3];
-        if (FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) && FSUIPC_Process(&dwResult))
-        {
-            return dwResult == 0;
-        }
+        if (FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) && FSUIPC_Process(&dwResult)) { return dwResult == 0; }
         return false;
     }
 
@@ -144,10 +132,9 @@ namespace swift::simplugin::fscommon
         DWORD dwResult;
         byte xpdrModeSb3Raw = xpdr.isInStandby() ? 1U : 0U;
         byte xpdrIdentSb3Raw = xpdr.isIdentifying() ? 1U : 0U;
-        const bool ok =
-            FSUIPC_Write(0x7b91, 1, &xpdrModeSb3Raw, &dwResult) &&
-            FSUIPC_Write(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult) &&
-            FSUIPC_Write(0x0354, 2, &transponderCodeRaw, &dwResult);
+        const bool ok = FSUIPC_Write(0x7b91, 1, &xpdrModeSb3Raw, &dwResult) &&
+                        FSUIPC_Write(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult) &&
+                        FSUIPC_Write(0x0354, 2, &transponderCodeRaw, &dwResult);
         if (ok) { FSUIPC_Process(&dwResult); }
         return ok && dwResult == 0;
     }
@@ -162,17 +149,12 @@ namespace swift::simplugin::fscommon
         quint8 hourRaw = static_cast<quint8>(hour);
         quint8 minuteRaw = static_cast<quint8>(minute);
 
-        const bool ok =
-            FSUIPC_Write(0x023b, 1, &hourRaw, &dwResult) &&
-            FSUIPC_Write(0x023c, 1, &minuteRaw, &dwResult);
+        const bool ok = FSUIPC_Write(0x023b, 1, &hourRaw, &dwResult) && FSUIPC_Write(0x023c, 1, &minuteRaw, &dwResult);
         if (ok) { FSUIPC_Process(&dwResult); }
         return ok && dwResult == 0;
     }
 
-    QString CFsuipc::getVersion() const
-    {
-        return m_fsuipcVersion;
-    }
+    QString CFsuipc::getVersion() const { return m_fsuipcVersion; }
 
     bool CFsuipc::read(CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts)
     {
@@ -192,7 +174,8 @@ namespace swift::simplugin::fscommon
         qint16 onGroundRaw = 0;
         qint32 flapsControlRaw = 0, gearControlRaw = 0, spoilersControlRaw = 0;
         qint16 numberOfEngines = 0;
-        qint16 engine1CombustionFlag = 0, engine2CombustionFlag = 0, engine3CombustionFlag = 0, engine4CombustionFlag = 0;
+        qint16 engine1CombustionFlag = 0, engine2CombustionFlag = 0, engine3CombustionFlag = 0,
+               engine4CombustionFlag = 0;
         double velocityWorld[3];
         double rotationVelocityBody[3];
 
@@ -227,8 +210,7 @@ namespace swift::simplugin::fscommon
         }
         **/
 
-        if (
-            FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) &&
+        if (FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) &&
 
             // COM settings
             (cockpitN || FSUIPC_Read(0x034e, 2, &com1ActiveRaw, &dwResult)) &&
@@ -336,7 +318,10 @@ namespace swift::simplugin::fscommon
                 // MSFS has inverted pitch and bank angles
                 pitchRaw = ~pitchRaw;
                 bankRaw = ~bankRaw;
-                if (pitchRaw < -90 || pitchRaw > 89) { CLogMessage(this).warning(u"FSUIPC: Pitch value out of limits: %1") << pitchRaw; }
+                if (pitchRaw < -90 || pitchRaw > 89)
+                {
+                    CLogMessage(this).warning(u"FSUIPC: Pitch value out of limits: %1") << pitchRaw;
+                }
 
                 // speeds, situation
                 CAngle pitch = CAngle(pitchRaw, CAngleUnit::deg());
@@ -344,15 +329,17 @@ namespace swift::simplugin::fscommon
                 CHeading heading = CHeading(headingRaw * angleCorrectionFactor, CHeading::True, CAngleUnit::deg());
                 CSpeed groundspeed(groundspeedRaw / 65536.0, CSpeedUnit::m_s());
                 CAltitude altitude(altitudeRaw / (65536.0 * 65536.0), CAltitude::MeanSeaLevel, CLengthUnit::m());
-                CAltitude pressureAltitude(pressureAltitudeRaw, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m());
+                CAltitude pressureAltitude(pressureAltitudeRaw, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude,
+                                           CLengthUnit::m());
                 situation.setBank(bank);
                 situation.setHeading(heading);
                 situation.setPitch(pitch);
                 situation.setGroundSpeed(groundspeed);
                 situation.setAltitude(altitude);
                 situation.setPressureAltitude(pressureAltitude);
-                situation.setVelocity({ velocityWorld[0], velocityWorld[1], velocityWorld[2], CSpeedUnit::ft_s(), rotationVelocityBody[0],
-                                        rotationVelocityBody[1], rotationVelocityBody[2], CAngleUnit::rad(), CTimeUnit::s() });
+                situation.setVelocity({ velocityWorld[0], velocityWorld[1], velocityWorld[2], CSpeedUnit::ft_s(),
+                                        rotationVelocityBody[0], rotationVelocityBody[1], rotationVelocityBody[2],
+                                        CAngleUnit::rad(), CTimeUnit::s() });
                 situation.setGroundElevation(groundAltitude, CAircraftSituation::FromProvider);
                 aircraft.setSituation(situation);
                 // aircraft.setCG(altitude - groundAltitude); // calculate the CG
@@ -364,8 +351,8 @@ namespace swift::simplugin::fscommon
 
             if (aircraftParts)
             {
-                const CAircraftLights lights(lightsRaw & (1 << 4), lightsRaw & (1 << 2), lightsRaw & (1 << 3), lightsRaw & (1 << 1),
-                                             lightsRaw & (1 << 0), lightsRaw & (1 << 8));
+                const CAircraftLights lights(lightsRaw & (1 << 4), lightsRaw & (1 << 2), lightsRaw & (1 << 3),
+                                             lightsRaw & (1 << 1), lightsRaw & (1 << 0), lightsRaw & (1 << 8));
 
                 const QList<bool> helperList { engine1CombustionFlag != 0, engine2CombustionFlag != 0,
                                                engine3CombustionFlag != 0, engine4CombustionFlag != 0 };

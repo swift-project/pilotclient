@@ -15,8 +15,7 @@ using namespace swift::misc::network;
 
 namespace swift::gui::editors
 {
-    CFsdSetupForm::CFsdSetupForm(QWidget *parent) : CForm(parent),
-                                                    ui(new Ui::CFsdSetupForm)
+    CFsdSetupForm::CFsdSetupForm(QWidget *parent) : CForm(parent), ui(new Ui::CFsdSetupForm)
     {
         ui->setupUi(this);
         this->resetToDefaultValues();
@@ -26,18 +25,17 @@ namespace swift::gui::editors
         connect(ui->pb_SetDefaults, &QPushButton::clicked, this, &CFsdSetupForm::resetToDefaultValues);
     }
 
-    CFsdSetupForm::~CFsdSetupForm()
-    {}
+    CFsdSetupForm::~CFsdSetupForm() {}
 
     CFsdSetup CFsdSetupForm::getValue() const
     {
         if (!this->isEnabled()) { return this->getDisabledValue(); }
         CFsdSetup s(ui->le_TextCodec->text().trimmed());
-        s.setSendReceiveDetails(
-            ui->cb_AircraftPartsSend->isChecked(), ui->cb_AircraftPartsReceive->isChecked(),
-            ui->cb_GndFlagSend->isChecked(), ui->cb_GndFlagReceive->isChecked(),
-            ui->cb_FastPositionSend->isChecked(), ui->cb_FastPositionReceive->isChecked(),
-            ui->cb_VisualPositionSend->isChecked(), ui->cb_EuroscopeSimData->isChecked(), ui->cb_IcaoEquipment->isChecked());
+        s.setSendReceiveDetails(ui->cb_AircraftPartsSend->isChecked(), ui->cb_AircraftPartsReceive->isChecked(),
+                                ui->cb_GndFlagSend->isChecked(), ui->cb_GndFlagReceive->isChecked(),
+                                ui->cb_FastPositionSend->isChecked(), ui->cb_FastPositionReceive->isChecked(),
+                                ui->cb_VisualPositionSend->isChecked(), ui->cb_EuroscopeSimData->isChecked(),
+                                ui->cb_IcaoEquipment->isChecked());
         s.setForce3LetterAirlineCodes(ui->cb_3LetterAirlineICAO->isChecked());
         return s;
     }
@@ -72,15 +70,9 @@ namespace swift::gui::editors
         }
     }
 
-    bool CFsdSetupForm::isFsdSetupEnabled() const
-    {
-        return ui->cb_Override->isChecked();
-    }
+    bool CFsdSetupForm::isFsdSetupEnabled() const { return ui->cb_Override->isChecked(); }
 
-    void CFsdSetupForm::setFsdSetupEnabled(bool enabled)
-    {
-        ui->cb_Override->setChecked(enabled);
-    }
+    void CFsdSetupForm::setFsdSetupEnabled(bool enabled) { ui->cb_Override->setChecked(enabled); }
 
     void CFsdSetupForm::showEnableInfo(bool visible)
     {

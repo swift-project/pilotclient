@@ -75,15 +75,9 @@ namespace swift::misc
         {
             // MacOS bundle may or may not be a bundle
             const QDir dir(s + QLatin1String(".app/Contents/MacOS"));
-            if (dir.exists())
-            {
-                s += QLatin1String(".app/Contents/MacOS/") + executable;
-            }
+            if (dir.exists()) { s += QLatin1String(".app/Contents/MacOS/") + executable; }
         }
-        else if (CBuildConfig::isRunningOnWindowsNtPlatform())
-        {
-            s += QLatin1String(".exe");
-        }
+        else if (CBuildConfig::isRunningOnWindowsNtPlatform()) { s += QLatin1String(".exe"); }
         return s;
     }
 
@@ -104,7 +98,8 @@ namespace swift::misc
 
     const QString &CSwiftDirectories::applicationDataDirectory()
     {
-        static const QString p = CFileUtils::appendFilePaths(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation), "/org.swift-project/");
+        static const QString p = CFileUtils::appendFilePaths(
+            QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation), "/org.swift-project/");
         return p;
     }
 
@@ -121,27 +116,24 @@ namespace swift::misc
         return swiftAppData.entryInfoList({}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
     }
 
-    int CSwiftDirectories::applicationDataDirectoriesCount()
-    {
-        return applicationDataDirectories().size();
-    }
+    int CSwiftDirectories::applicationDataDirectoriesCount() { return applicationDataDirectories().size(); }
 
     QStringList CSwiftDirectories::applicationDataDirectoryList(bool withoutCurrent, bool decodedDirName)
     {
         QStringList dirs;
         for (const QFileInfo &info : applicationDataDirectories())
         {
-            if (withoutCurrent && info.filePath().contains(normalizedApplicationDirectory(), Qt::CaseInsensitive)) continue;
-            dirs.append(decodedDirName ?
-                            CDirectoryUtils::decodeNormalizedDirectory(info.filePath()) :
-                            info.filePath());
+            if (withoutCurrent && info.filePath().contains(normalizedApplicationDirectory(), Qt::CaseInsensitive))
+                continue;
+            dirs.append(decodedDirName ? CDirectoryUtils::decodeNormalizedDirectory(info.filePath()) : info.filePath());
         }
         return dirs;
     }
 
     const QString &CSwiftDirectories::normalizedApplicationDataDirectory()
     {
-        static const QString p = CFileUtils::appendFilePaths(applicationDataDirectory(), normalizedApplicationDirectory());
+        static const QString p =
+            CFileUtils::appendFilePaths(applicationDataDirectory(), normalizedApplicationDirectory());
         return p;
     }
 
@@ -198,7 +190,8 @@ namespace swift::misc
     {
         const QString d(CSwiftDirectories::shareDirectory());
         if (d.isEmpty()) { return {}; }
-        const QFile file(QDir::cleanPath(d + QDir::separator() + "shared/bootstrap/" + CSwiftDirectories::bootstrapFileName()));
+        const QFile file(
+            QDir::cleanPath(d + QDir::separator() + "shared/bootstrap/" + CSwiftDirectories::bootstrapFileName()));
         Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing bootstrap file");
         return QFileInfo(file).absoluteFilePath();
     }

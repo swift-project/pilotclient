@@ -80,10 +80,7 @@ Q_DECLARE_METATYPE(MiscTest::CTestMatcher)
 
 namespace MiscTest
 {
-    void CTestVariantAndMap::initTestCase()
-    {
-        swift::misc::registerMetadata();
-    }
+    void CTestVariantAndMap::initTestCase() { swift::misc::registerMetadata(); }
 
     void CTestVariantAndMap::variant()
     {
@@ -91,12 +88,10 @@ namespace MiscTest
         CCoordinateGeodetic geoPos =
             CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         CAtcStation station1(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
-                             CFrequency(118.7, CFrequencyUnit::MHz()),
-                             geoPos, CLength(50, CLengthUnit::km()), false);
+                             CFrequency(118.7, CFrequencyUnit::MHz()), geoPos, CLength(50, CLengthUnit::km()), false);
         CAtcStation station2(station1);
         CAtcStation station3(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
-                             CFrequency(120.7, CFrequencyUnit::MHz()),
-                             geoPos, CLength(100, CLengthUnit::km()), false);
+                             CFrequency(120.7, CFrequencyUnit::MHz()), geoPos, CLength(100, CLengthUnit::km()), false);
 
         // compare
         CLength l1(0, nullptr);
@@ -165,8 +160,7 @@ namespace MiscTest
         CCoordinateGeodetic geoPos =
             CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         CAtcStation station1(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
-                             CFrequency(118.7, CFrequencyUnit::MHz()),
-                             geoPos, CLength(50, CLengthUnit::km()), false);
+                             CFrequency(118.7, CFrequencyUnit::MHz()), geoPos, CLength(50, CLengthUnit::km()), false);
 
         // value maps
         CPropertyIndexVariantMap vmWildcard(true);

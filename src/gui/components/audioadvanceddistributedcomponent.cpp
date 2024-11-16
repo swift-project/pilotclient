@@ -15,16 +15,16 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CAudioAdvancedDistributedComponent::CAudioAdvancedDistributedComponent(QWidget *parent) : QFrame(parent),
-                                                                                              ui(new Ui::CAudioAdvancedDistributedComponent)
+    CAudioAdvancedDistributedComponent::CAudioAdvancedDistributedComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CAudioAdvancedDistributedComponent)
     {
         ui->setupUi(this);
 
-        connect(ui->pb_ReloadRegistered, &QPushButton::pressed, this, &CAudioAdvancedDistributedComponent::reloadRegisteredDevices, Qt::QueuedConnection);
+        connect(ui->pb_ReloadRegistered, &QPushButton::pressed, this,
+                &CAudioAdvancedDistributedComponent::reloadRegisteredDevices, Qt::QueuedConnection);
     }
 
-    CAudioAdvancedDistributedComponent::~CAudioAdvancedDistributedComponent()
-    {}
+    CAudioAdvancedDistributedComponent::~CAudioAdvancedDistributedComponent() {}
 
     void CAudioAdvancedDistributedComponent::reloadRegisteredDevices()
     {

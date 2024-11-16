@@ -35,8 +35,7 @@ using namespace swift::core::data;
 
 namespace swift::core
 {
-    CSetupReader::CSetupReader(QObject *parent) : QObject(parent)
-    {}
+    CSetupReader::CSetupReader(QObject *parent) : QObject(parent) {}
 
     CStatusMessageList CSetupReader::loadSetup()
     {
@@ -54,10 +53,7 @@ namespace swift::core
         if (fileName.isEmpty()) { return CStatusMessage(this).error(u"No file name for local bootstrap file"); }
         if (!sApp || sApp->isShuttingDown()) { return CStatusMessage(this).error(u"No sApp, shutting down?"); }
         const QFile file(fileName);
-        if (!file.exists())
-        {
-            return CStatusMessage(this).error(u"File '%1' not existing") << fileName;
-        }
+        if (!file.exists()) { return CStatusMessage(this).error(u"File '%1' not existing") << fileName; }
 
         const QString content(CFileUtils::readFileToString(fileName));
         if (content.isEmpty()) { return CStatusMessage(this).error(u"File '%1' empty") << fileName; }
@@ -69,7 +65,8 @@ namespace swift::core
         }
         catch (const CJsonException &ex)
         {
-            return CStatusMessage::fromJsonException(ex, this, QStringLiteral("Parsing local setup file '%1'").arg(fileName));
+            return CStatusMessage::fromJsonException(ex, this,
+                                                     QStringLiteral("Parsing local setup file '%1'").arg(fileName));
         }
     }
 
@@ -79,8 +76,5 @@ namespace swift::core
         return cats;
     }
 
-    CGlobalSetup CSetupReader::getSetup() const
-    {
-        return m_setup;
-    }
+    CGlobalSetup CSetupReader::getSetup() const { return m_setup; }
 } // namespace swift::core

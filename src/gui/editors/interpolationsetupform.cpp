@@ -13,8 +13,8 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::editors
 {
-    CInterpolationSetupForm::CInterpolationSetupForm(QWidget *parent) : CForm(parent),
-                                                                        ui(new Ui::CInterpolationSetupForm)
+    CInterpolationSetupForm::CInterpolationSetupForm(QWidget *parent)
+        : CForm(parent), ui(new Ui::CInterpolationSetupForm)
     {
         ui->setupUi(this);
         m_allCheckBoxes = this->findChildren<QCheckBox *>(QString(), Qt::FindDirectChildrenOnly);
@@ -30,8 +30,7 @@ namespace swift::gui::editors
         connect(ui->le_PitchOnGround, &QLineEdit::editingFinished, this, &CInterpolationSetupForm::onPitchChanged);
     }
 
-    CInterpolationSetupForm::~CInterpolationSetupForm()
-    {}
+    CInterpolationSetupForm::~CInterpolationSetupForm() {}
 
     void CInterpolationSetupForm::setValue(const CInterpolationAndRenderingSetupBase &setup)
     {
@@ -98,9 +97,7 @@ namespace swift::gui::editors
         {
         case CInterpolationAndRenderingSetupBase::Linear: ui->rb_Linear->setChecked(true); break;
         case CInterpolationAndRenderingSetupBase::Spline:
-        default:
-            ui->rb_Spline->setChecked(true);
-            break;
+        default: ui->rb_Spline->setChecked(true); break;
         }
     }
 

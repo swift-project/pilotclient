@@ -22,7 +22,8 @@ namespace swift::misc::aviation
     {}
 
     CCallsign::CCallsign(const QString &callsign, const QString &telephonyDesignator, CCallsign::TypeHint hint)
-        : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign, hint)), m_telephonyDesignator(telephonyDesignator.trimmed()), m_typeHint(hint)
+        : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign, hint)),
+          m_telephonyDesignator(telephonyDesignator.trimmed()), m_typeHint(hint)
     {}
 
     CCallsign::CCallsign(const char *callsign, CCallsign::TypeHint hint)
@@ -41,10 +42,7 @@ namespace swift::misc::aviation
         return m_callsign;
     }
 
-    void CCallsign::clear()
-    {
-        *this = CCallsign();
-    }
+    void CCallsign::clear() { *this = CCallsign(); }
 
     int CCallsign::suffixToSortOrder(const QString &suffix)
     {
@@ -91,21 +89,26 @@ namespace swift::misc::aviation
 
     const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)
     {
-        if (callsign.m_callsign.startsWith(QStringView(u"VATGOV"))) { return CIcon::iconByIndex(CIcons::NetworkRolePilot); }
+        if (callsign.m_callsign.startsWith(QStringView(u"VATGOV")))
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRolePilot);
+        }
         const bool pilot = callsign.getTypeHint() == CCallsign::Aircraft || !callsign.hasSuffix();
-        return pilot ?
-                   CIcon::iconByIndex(CIcons::NetworkRolePilot) :
-                   CCallsign::atcSuffixToIcon(callsign.getSuffix());
+        return pilot ? CIcon::iconByIndex(CIcons::NetworkRolePilot) : CCallsign::atcSuffixToIcon(callsign.getSuffix());
     }
 
-    CStatusMessage CCallsign::logMessage(const CCallsign &callsign, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+    CStatusMessage CCallsign::logMessage(const CCallsign &callsign, const QString &message,
+                                         const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
     {
         static const CLogCategoryList cats({ CLogCategories::aviation() });
-        const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s, callsign.isEmpty() ? message.trimmed() : callsign.toQString() + ": " + message.trimmed());
+        const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s,
+                               callsign.isEmpty() ? message.trimmed() :
+                                                    callsign.toQString() + ": " + message.trimmed());
         return m;
     }
 
-    void CCallsign::addLogDetailsToList(CStatusMessageList *log, const CCallsign &callsign, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+    void CCallsign::addLogDetailsToList(CStatusMessageList *log, const CCallsign &callsign, const QString &message,
+                                        const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
     {
         if (!log) { return; }
         if (message.isEmpty()) { return; }
@@ -177,19 +180,13 @@ namespace swift::misc::aviation
         return this->asString();
     }
 
-    bool CCallsign::isSameAsSet() const
-    {
-        return m_callsign == m_callsignAsSet;
-    }
+    bool CCallsign::isSameAsSet() const { return m_callsign == m_callsignAsSet; }
 
     QString CCallsign::getIcaoCode() const
     {
         if (this->isAtcCallsign())
         {
-            if (m_callsign.length() >= 4)
-            {
-                return m_callsign.left(4).toUpper();
-            }
+            if (m_callsign.length() >= 4) { return m_callsign.left(4).toUpper(); }
         }
         return {};
     }
@@ -201,10 +198,7 @@ namespace swift::misc::aviation
         return atcAlikeCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
     }
 
-    bool CCallsign::isObserverCallsign() const
-    {
-        return m_callsignAsSet.endsWith("_OBS", Qt::CaseInsensitive);
-    }
+    bool CCallsign::isObserverCallsign() const { return m_callsignAsSet.endsWith("_OBS", Qt::CaseInsensitive); }
 
     QString CCallsign::getAsObserverCallsignString() const
     {
@@ -218,10 +212,7 @@ namespace swift::misc::aviation
     QString CCallsign::getSuffix() const
     {
         QString s;
-        if (this->hasSuffix())
-        {
-            s = this->getStringAsSet().section('_', -1).toUpper();
-        }
+        if (this->hasSuffix()) { s = this->getStringAsSet().section('_', -1).toUpper(); }
         return s;
     }
 
@@ -300,10 +291,7 @@ namespace swift::misc::aviation
         return ok ? fn : -1;
     }
 
-    bool CCallsign::hasSuffix() const
-    {
-        return this->getStringAsSet().contains('_');
-    }
+    bool CCallsign::hasSuffix() const { return this->getStringAsSet().contains('_'); }
 
     bool CCallsign::hasAtcSuffix() const
     {
@@ -311,10 +299,7 @@ namespace swift::misc::aviation
         return !s.isEmpty() && atcCallsignSuffixes().contains(s);
     }
 
-    int CCallsign::getSuffixSortOrder() const
-    {
-        return suffixToSortOrder(this->getSuffix());
-    }
+    int CCallsign::getSuffixSortOrder() const { return suffixToSortOrder(this->getSuffix()); }
 
     bool CCallsign::equalsString(const QString &callsignString) const
     {
@@ -349,9 +334,7 @@ namespace swift::misc::aviation
         case IndexCallsignString: m_callsign = unifyCallsign(variant.toString()); break;
         case IndexCallsignStringAsSet: m_callsignAsSet = variant.toString(); break;
         case IndexTelephonyDesignator: m_telephonyDesignator = variant.toString(); break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
@@ -362,11 +345,12 @@ namespace swift::misc::aviation
         switch (i)
         {
         case IndexCallsignString: return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
-        case IndexCallsignStringAsSet: return m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
-        case IndexTelephonyDesignator: return m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
+        case IndexCallsignStringAsSet:
+            return m_callsignAsSet.compare(compareValue.m_callsignAsSet, Qt::CaseInsensitive);
+        case IndexTelephonyDesignator:
+            return m_telephonyDesignator.compare(compareValue.m_telephonyDesignator, Qt::CaseInsensitive);
         case IndexSuffix: return this->getSuffix().compare(compareValue.getSuffix(), Qt::CaseInsensitive);
-        default:
-            return CValueObject::comparePropertyByIndex(index, compareValue);
+        default: return CValueObject::comparePropertyByIndex(index, compareValue);
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
         return 0;
@@ -400,10 +384,7 @@ namespace swift::misc::aviation
         return !containsChar(callsign, [](QChar c) { return c != '-' && c != '_' && !c.isUpper() && !c.isDigit(); });
     }
 
-    bool CCallsign::isValidAtcCallsign(const CCallsign &callsign)
-    {
-        return isValidAtcCallsign(callsign.asString());
-    }
+    bool CCallsign::isValidAtcCallsign(const CCallsign &callsign) { return isValidAtcCallsign(callsign.asString()); }
 
     const QStringList &CCallsign::atcCallsignSuffixes()
     {

@@ -16,27 +16,32 @@ using namespace swift::core;
 
 namespace swift::gui::editors
 {
-    CMatchingForm::CMatchingForm(QWidget *parent) : CForm(parent),
-                                                    ui(new Ui::CMatchingForm)
+    CMatchingForm::CMatchingForm(QWidget *parent) : CForm(parent), ui(new Ui::CMatchingForm)
     {
         ui->setupUi(this);
-        connect(ui->rb_Reduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+        connect(ui->rb_Reduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged,
+                Qt::QueuedConnection);
 
-        connect(ui->pb_ResetAlgorithm, &QPushButton::released, this, &CMatchingForm::resetByAlgorithm, Qt::QueuedConnection);
+        connect(ui->pb_ResetAlgorithm, &QPushButton::released, this, &CMatchingForm::resetByAlgorithm,
+                Qt::QueuedConnection);
         connect(ui->pb_ResetAll, &QPushButton::released, this, &CMatchingForm::resetAll, Qt::QueuedConnection);
         connect(ui->pb_MsReverseLookup, &QPushButton::released, this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
         connect(ui->pb_MsMatching, &QPushButton::released, this, &CMatchingForm::fileDialog, Qt::QueuedConnection);
 
-        connect(ui->rb_ScoreAndReduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
-        connect(ui->rb_ScoreOnly, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged, Qt::QueuedConnection);
+        connect(ui->rb_ScoreAndReduction, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged,
+                Qt::QueuedConnection);
+        connect(ui->rb_ScoreOnly, &QRadioButton::released, this, &CMatchingForm::onAlgorithmChanged,
+                Qt::QueuedConnection);
 
-        connect(ui->rb_AirlineGroupIfNoAirline, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
-        connect(ui->rb_AirlineGroupAsAirline, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
-        connect(ui->rb_AirlineGroupNo, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged, Qt::QueuedConnection);
+        connect(ui->rb_AirlineGroupIfNoAirline, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged,
+                Qt::QueuedConnection);
+        connect(ui->rb_AirlineGroupAsAirline, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged,
+                Qt::QueuedConnection);
+        connect(ui->rb_AirlineGroupNo, &QRadioButton::released, this, &CMatchingForm::onAirlineGroupChanged,
+                Qt::QueuedConnection);
     }
 
-    CMatchingForm::~CMatchingForm()
-    {}
+    CMatchingForm::~CMatchingForm() {}
 
     void CMatchingForm::setReadOnly(bool readonly)
     {
@@ -93,15 +98,14 @@ namespace swift::gui::editors
         ui->rb_ByIcaoDataAircraft1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAircraftFirst));
         ui->rb_ByIcaoDataAirline1st->setChecked(mode.testFlag(CAircraftMatcherSetup::ByIcaoOrderAirlineFirst));
 
-        const bool nag = !mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupSameAsAirline) && !mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupIfNoAirline);
-        if (nag)
-        {
-            ui->rb_AirlineGroupNo->setChecked(nag);
-        }
+        const bool nag = !mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupSameAsAirline) &&
+                         !mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupIfNoAirline);
+        if (nag) { ui->rb_AirlineGroupNo->setChecked(nag); }
         else
         {
             ui->rb_AirlineGroupAsAirline->setChecked(mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupSameAsAirline));
-            ui->rb_AirlineGroupIfNoAirline->setChecked(mode.testFlag(CAircraftMatcherSetup::CAircraftMatcherSetup::ByAirlineGroupIfNoAirline));
+            ui->rb_AirlineGroupIfNoAirline->setChecked(
+                mode.testFlag(CAircraftMatcherSetup::CAircraftMatcherSetup::ByAirlineGroupIfNoAirline));
         }
 
         ui->cb_ByLivery->setChecked(mode.testFlag(CAircraftMatcherSetup::ByLivery));
@@ -116,10 +120,12 @@ namespace swift::gui::editors
         ui->cb_ScorePreferColorLiveries->setChecked(mode.testFlag(CAircraftMatcherSetup::ScorePreferColorLiveries));
         ui->cb_ExclNoExcludedModels->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoExcluded));
         ui->cb_ExclNoDbData->setChecked(mode.testFlag(CAircraftMatcherSetup::ExcludeNoDbData));
-        ui->cb_ModelSetRemoveFailed->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelSetRemoveFailedModel) || mode.testFlag(CAircraftMatcherSetup::ModelFailoverIfNoModelCanBeAdded));
+        ui->cb_ModelSetRemoveFailed->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelSetRemoveFailedModel) ||
+                                                mode.testFlag(CAircraftMatcherSetup::ModelFailoverIfNoModelCanBeAdded));
         ui->cb_ModelFailedFailover->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelFailoverIfNoModelCanBeAdded));
         ui->cb_ModelSetVerification->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelVerificationAtStartup));
-        ui->cb_ModelSetVerificationOnlyErrorWarning->setChecked(mode.testFlag(CAircraftMatcherSetup::ModelVerificationOnlyWarnError));
+        ui->cb_ModelSetVerificationOnlyErrorWarning->setChecked(
+            mode.testFlag(CAircraftMatcherSetup::ModelVerificationOnlyWarnError));
         ui->cb_ReverseUseModelString->setChecked(mode.testFlag(CAircraftMatcherSetup::ReverseLookupModelString));
         ui->cb_ReverseUseSwiftLiveryIds->setChecked(mode.testFlag(CAircraftMatcherSetup::ReverseLookupSwiftLiveryIds));
 
@@ -135,7 +141,8 @@ namespace swift::gui::editors
     CAircraftMatcherSetup CMatchingForm::value() const
     {
         CAircraftMatcherSetup setup(algorithm(), matchingMode(), pickStrategy());
-        setup.setAirlineGroupBehaviour(ui->rb_AirlineGroupIfNoAirline->isChecked(), ui->rb_AirlineGroupAsAirline->isChecked());
+        setup.setAirlineGroupBehaviour(ui->rb_AirlineGroupIfNoAirline->isChecked(),
+                                       ui->rb_AirlineGroupAsAirline->isChecked());
         setup.setMsReverseLookupFile(ui->le_MsReverseLookup->text());
         setup.setMsMatchingStageFile(ui->le_MsMatching->text());
         setup.setMsReverseLookupEnabled(ui->cb_MsReverseLookup->isChecked());
@@ -143,10 +150,7 @@ namespace swift::gui::editors
         return setup;
     }
 
-    void CMatchingForm::clear()
-    {
-        this->resetAll();
-    }
+    void CMatchingForm::clear() { this->resetAll(); }
 
     void CMatchingForm::resetByAlgorithm()
     {
@@ -166,17 +170,13 @@ namespace swift::gui::editors
         QString fn = nw ? ui->le_MsReverseLookup->text() : ui->le_MsMatching->text();
         CDirectories swiftDirs = m_directories.get();
 
-        fn = QFileDialog::getOpenFileName(nullptr, tr("Matching script"), fn.isEmpty() ? swiftDirs.getMatchingScriptDirectoryOrDefault() : fn, "Matching script (*.js)");
+        fn = QFileDialog::getOpenFileName(nullptr, tr("Matching script"),
+                                          fn.isEmpty() ? swiftDirs.getMatchingScriptDirectoryOrDefault() : fn,
+                                          "Matching script (*.js)");
         const QFileInfo fi(fn);
         if (!fi.exists()) { return; }
-        if (nw)
-        {
-            ui->le_MsReverseLookup->setText(fi.absoluteFilePath());
-        }
-        else
-        {
-            ui->le_MsMatching->setText(fi.absoluteFilePath());
-        }
+        if (nw) { ui->le_MsReverseLookup->setText(fi.absoluteFilePath()); }
+        else { ui->le_MsMatching->setText(fi.absoluteFilePath()); }
 
         swiftDirs.setMatchingScriptDirectory(fi.absolutePath());
         m_directories.setAndSave(swiftDirs);
@@ -193,21 +193,15 @@ namespace swift::gui::editors
     {
         return CAircraftMatcherSetup::matchingMode(
             ui->cb_ReverseUseModelString->isChecked(), ui->cb_ReverseUseSwiftLiveryIds->isChecked(),
-            ui->cb_ByModelString->isChecked(),
-            ui->rb_ByIcaoDataAircraft1st->isChecked(), ui->rb_ByIcaoDataAirline1st->isChecked(),
-            ui->cb_ByFamily->isChecked(), ui->cb_ByLivery->isChecked(),
-            ui->cb_ByCombinedCode->isChecked(),
-            ui->cb_ByMilitary->isChecked(),
-            ui->cb_ByCivilian->isChecked(),
-            ui->cb_ByVtol->isChecked(),
-            ui->cb_CategoryGlider->isChecked(),
-            ui->cb_CategoryMilitaryAircraft->isChecked(),
-            ui->cb_CategorySmallAircraft->isChecked(),
+            ui->cb_ByModelString->isChecked(), ui->rb_ByIcaoDataAircraft1st->isChecked(),
+            ui->rb_ByIcaoDataAirline1st->isChecked(), ui->cb_ByFamily->isChecked(), ui->cb_ByLivery->isChecked(),
+            ui->cb_ByCombinedCode->isChecked(), ui->cb_ByMilitary->isChecked(), ui->cb_ByCivilian->isChecked(),
+            ui->cb_ByVtol->isChecked(), ui->cb_CategoryGlider->isChecked(),
+            ui->cb_CategoryMilitaryAircraft->isChecked(), ui->cb_CategorySmallAircraft->isChecked(),
             ui->cb_ScoreIgnoreZeros->isChecked(), ui->cb_ScorePreferColorLiveries->isChecked(),
             ui->cb_ExclNoDbData->isChecked(), ui->cb_ExclNoExcludedModels->isChecked(),
             ui->cb_ModelSetVerification->isChecked(), ui->cb_ModelSetVerificationOnlyErrorWarning->isChecked(),
-            ui->cb_ModelSetRemoveFailed->isChecked(),
-            ui->cb_ModelFailedFailover->isChecked());
+            ui->cb_ModelSetRemoveFailed->isChecked(), ui->cb_ModelFailedFailover->isChecked());
     }
 
     CAircraftMatcherSetup::PickSimilarStrategy CMatchingForm::pickStrategy() const
@@ -224,9 +218,7 @@ namespace swift::gui::editors
         case CAircraftMatcherSetup::PickByOrder: ui->rb_PickByOrder->setChecked(true); break;
         case CAircraftMatcherSetup::PickRandom: ui->rb_PickRandom->setChecked(true); break;
         case CAircraftMatcherSetup::PickFirst:
-        default:
-            ui->rb_PickFirst->setChecked(true);
-            break;
+        default: ui->rb_PickFirst->setChecked(true); break;
         }
     }
 

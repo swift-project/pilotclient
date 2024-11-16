@@ -22,8 +22,8 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    CDbDistributorComponent::CDbDistributorComponent(QWidget *parent) : QFrame(parent),
-                                                                        ui(new Ui::CDbDistributorComponent)
+    CDbDistributorComponent::CDbDistributorComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CDbDistributorComponent)
     {
         ui->setupUi(this);
         this->setViewWithIndicator(ui->tvp_Distributors);
@@ -38,18 +38,16 @@ namespace swift::gui::components
 
         if (sGui && sGui->getWebDataServices())
         {
-            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbDistributorComponent::onDistributorsRead, Qt::QueuedConnection);
-            this->onDistributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getDistributorsCount());
+            connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this,
+                    &CDbDistributorComponent::onDistributorsRead, Qt::QueuedConnection);
+            this->onDistributorsRead(CEntityFlags::DistributorEntity, CEntityFlags::ReadFinished,
+                                     sGui->getWebDataServices()->getDistributorsCount());
         }
     }
 
-    CDbDistributorComponent::~CDbDistributorComponent()
-    {}
+    CDbDistributorComponent::~CDbDistributorComponent() {}
 
-    CDistributorView *CDbDistributorComponent::view() const
-    {
-        return ui->tvp_Distributors;
-    }
+    CDistributorView *CDbDistributorComponent::view() const { return ui->tvp_Distributors; }
 
     void CDbDistributorComponent::filterBySimulator(const CSimulatorInfo &simulator)
     {
@@ -67,12 +65,10 @@ namespace swift::gui::components
         return ui->tvp_Distributors->selectDbKey(distributor.getDbKey());
     }
 
-    bool CDbDistributorComponent::hasSelectedDistributors() const
-    {
-        return ui->tvp_Distributors->hasSelection();
-    }
+    bool CDbDistributorComponent::hasSelectedDistributors() const { return ui->tvp_Distributors->hasSelection(); }
 
-    void CDbDistributorComponent::onDistributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+    void CDbDistributorComponent::onDistributorsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState,
+                                                     int count)
     {
         Q_UNUSED(count)
         if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }

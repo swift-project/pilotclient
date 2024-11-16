@@ -23,8 +23,5 @@ namespace swift::misc::shared_state
         return m_eventSubscription;
     }
 
-    void CPassiveObserver::handleEvent(const CVariant &param) const
-    {
-        m_eventHandler(param);
-    }
+    void CPassiveObserver::handleEvent(const CVariant &param) const { m_eventHandler(param); }
 } // namespace swift::misc::shared_state

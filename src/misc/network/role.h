@@ -23,9 +23,7 @@ namespace swift::misc::network
     /*!
      * Role
      */
-    class SWIFT_MISC_EXPORT CRole :
-        public CValueObject<CRole>,
-        public db::IDatastoreObjectWithIntegerKey
+    class SWIFT_MISC_EXPORT CRole : public CValueObject<CRole>, public db::IDatastoreObjectWithIntegerKey
     {
     public:
         //! Properties by index

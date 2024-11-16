@@ -37,7 +37,8 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, CFlightPlan)
 namespace swift::misc::aviation
 {
     //! Flight plan remarks, parsed values
-    //! \remark Actually the term "remarks" is not accurate, as the FP remarks are normally only the /RMK part of a flight plan.
+    //! \remark Actually the term "remarks" is not accurate, as the FP remarks are normally only the /RMK part of a
+    //! flight plan.
     //!         But on flight sim. networks "remarks" is used to fill in all parts not fitting in other fields.
     //!         The correct term would be ITEM18 ("OTHER INFORMATION") or ITEM19 ("SUPPLEMENTARY INFORMATION")
     //!         according to https://www.skybrary.aero/index.php/Flight_Plan_Filling
@@ -143,9 +144,7 @@ namespace swift::misc::aviation
     };
 
     //! Value object for a flight plan
-    class SWIFT_MISC_EXPORT CFlightPlan :
-        public CValueObject<CFlightPlan>,
-        public ITimestampBased
+    class SWIFT_MISC_EXPORT CFlightPlan : public CValueObject<CFlightPlan>, public ITimestampBased
     {
     public:
         //! The log. catgeories
@@ -171,7 +170,8 @@ namespace swift::misc::aviation
             IndexRemarks
         };
 
-        //! \fixme max.length of complete flight plan is 768 characters, this here is an assumption and should be part of the underlying network layers
+        //! \fixme max.length of complete flight plan is 768 characters, this here is an assumption and should be part
+        //! of the underlying network layers
         //  https://forums.vatsim.net/viewtopic.php?f=6&t=63416
         static constexpr int MaxRemarksLength = 512; //!< Max.remarks length
         static constexpr int MaxRouteLength = 512; //!< Max.route length
@@ -181,10 +181,13 @@ namespace swift::misc::aviation
         CFlightPlan() = default;
 
         //! Constructor
-        CFlightPlan(const CCallsign &callsign,
-                    const CFlightPlanAircraftInfo &aircraftInfo, const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao, const CAirportIcaoCode &alternateAirportIcao,
-                    const QDateTime &takeoffTimePlanned, const QDateTime &takeoffTimeActual, const physical_quantities::CTime &enrouteTime, const physical_quantities::CTime &fuelTime,
-                    const CAltitude &cruiseAltitude, const physical_quantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks);
+        CFlightPlan(const CCallsign &callsign, const CFlightPlanAircraftInfo &aircraftInfo,
+                    const CAirportIcaoCode &originAirportIcao, const CAirportIcaoCode &destinationAirportIcao,
+                    const CAirportIcaoCode &alternateAirportIcao, const QDateTime &takeoffTimePlanned,
+                    const QDateTime &takeoffTimeActual, const physical_quantities::CTime &enrouteTime,
+                    const physical_quantities::CTime &fuelTime, const CAltitude &cruiseAltitude,
+                    const physical_quantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules,
+                    const QString &route, const QString &remarks);
 
         //! Callsign (of aircraft)
         void setCallsign(const CCallsign &callsign);
@@ -196,19 +199,34 @@ namespace swift::misc::aviation
         void setOriginAirportIcao(const QString &originAirportIcao) { m_originAirportIcao = originAirportIcao; }
 
         //! Set origin airport ICAO code
-        void setOriginAirportIcao(const CAirportIcaoCode &originAirportIcao) { m_originAirportIcao = originAirportIcao; }
+        void setOriginAirportIcao(const CAirportIcaoCode &originAirportIcao)
+        {
+            m_originAirportIcao = originAirportIcao;
+        }
 
         //! Set destination airport ICAO code
-        void setDestinationAirportIcao(const QString &destinationAirportIcao) { m_destinationAirportIcao = destinationAirportIcao; }
+        void setDestinationAirportIcao(const QString &destinationAirportIcao)
+        {
+            m_destinationAirportIcao = destinationAirportIcao;
+        }
 
         //! Set destination airport ICAO code
-        void setDestinationAirportIcao(const CAirportIcaoCode &destinationAirportIcao) { m_destinationAirportIcao = destinationAirportIcao; }
+        void setDestinationAirportIcao(const CAirportIcaoCode &destinationAirportIcao)
+        {
+            m_destinationAirportIcao = destinationAirportIcao;
+        }
 
         //! Set alternate destination airport ICAO code
-        void setAlternateAirportIcao(const QString &alternateAirportIcao) { m_alternateAirportIcao = alternateAirportIcao; }
+        void setAlternateAirportIcao(const QString &alternateAirportIcao)
+        {
+            m_alternateAirportIcao = alternateAirportIcao;
+        }
 
         //! Set alternate destination airport ICAO code
-        void setAlternateAirportIcao(const CAirportIcaoCode &alternateAirportIcao) { m_alternateAirportIcao = alternateAirportIcao; }
+        void setAlternateAirportIcao(const CAirportIcaoCode &alternateAirportIcao)
+        {
+            m_alternateAirportIcao = alternateAirportIcao;
+        }
 
         //! Set planned takeoff time
         void setTakeoffTimePlanned(const QDateTime &takeoffTimePlanned);
@@ -258,7 +276,10 @@ namespace swift::misc::aviation
         void setCruiseAltitudeString(const QString &altitudeString) { m_cruiseAltitudeString = altitudeString; }
 
         //! Set planned cruise TAS
-        void setCruiseTrueAirspeed(const physical_quantities::CSpeed &cruiseTrueAirspeed) { m_cruiseTrueAirspeed = cruiseTrueAirspeed; }
+        void setCruiseTrueAirspeed(const physical_quantities::CSpeed &cruiseTrueAirspeed)
+        {
+            m_cruiseTrueAirspeed = cruiseTrueAirspeed;
+        }
 
         //! Set flight rules (VFR or IFR)
         void setFlightRule(FlightRules flightRule) { m_flightRules = flightRule; }
@@ -309,13 +330,19 @@ namespace swift::misc::aviation
         const physical_quantities::CTime &getEnrouteTime() const { return m_enrouteTime; }
 
         //! Get planned enroute flight time
-        QString getEnrouteTimeHourMin() const { return m_enrouteTime.valueRoundedWithUnit(physical_quantities::CTimeUnit::hrmin()); }
+        QString getEnrouteTimeHourMin() const
+        {
+            return m_enrouteTime.valueRoundedWithUnit(physical_quantities::CTimeUnit::hrmin());
+        }
 
         //! Get amount of fuel load in time
         const physical_quantities::CTime &getFuelTime() const { return m_fuelTime; }
 
         //! Get amount of fuel load in time
-        QString getFuelTimeHourMin() const { return m_fuelTime.valueRoundedWithUnit(physical_quantities::CTimeUnit::hrmin()); }
+        QString getFuelTimeHourMin() const
+        {
+            return m_fuelTime.valueRoundedWithUnit(physical_quantities::CTimeUnit::hrmin());
+        }
 
         //! Cruising altitudes
         const CAltitude &getCruiseAltitude() const { return m_cruiseAltitude; }

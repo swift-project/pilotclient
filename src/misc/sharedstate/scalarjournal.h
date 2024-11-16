@@ -39,7 +39,8 @@ namespace swift::misc::shared_state
         void handleEvent(const CVariant &param);
 
         QSharedPointer<CActiveMutator> m_mutator = CActiveMutator::create(this, &CGenericScalarJournal::handleRequest);
-        QSharedPointer<CPassiveObserver> m_observer = CPassiveObserver::create(this, &CGenericScalarJournal::handleEvent);
+        QSharedPointer<CPassiveObserver> m_observer =
+            CPassiveObserver::create(this, &CGenericScalarJournal::handleEvent);
         CVariant m_value;
     };
 

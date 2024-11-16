@@ -96,7 +96,8 @@ namespace swift::misc
                 Test, //!< unit test
                 SituationChange, //!< from swift::misc::aviation::CAircraftSituationChange
                 Extrapolated, //!< extrapolated ("guessing")
-                Average, //!< average value of "nearby" situation CAircraftSituationList::averageElevationOfNonMovingAircraft
+                Average, //!< average value of "nearby" situation
+                         //!< CAircraftSituationList::averageElevationOfNonMovingAircraft
                 Interpolated, //!< interpolated between 2 elevations
                 FromCache, //!< from cache
                 FromProvider //!< from swift::misc::simulation::ISimulationEnvironmentProvider
@@ -109,20 +110,15 @@ namespace swift::misc
             CAircraftSituation(const CCallsign &correspondingCallsign);
 
             //! Comprehensive constructor
-            CAircraftSituation(const geo::CCoordinateGeodetic &position,
-                               const CHeading &heading = {},
+            CAircraftSituation(const geo::CCoordinateGeodetic &position, const CHeading &heading = {},
                                const physical_quantities::CAngle &pitch = {},
-                               const physical_quantities::CAngle &bank = {},
-                               const physical_quantities::CSpeed &gs = {},
+                               const physical_quantities::CAngle &bank = {}, const physical_quantities::CSpeed &gs = {},
                                const geo::CElevationPlane &groundElevation = {});
 
             //! Comprehensive constructor
-            CAircraftSituation(const CCallsign &correspondingCallsign,
-                               const geo::CCoordinateGeodetic &position,
-                               const CHeading &heading = {},
-                               const physical_quantities::CAngle &pitch = {},
-                               const physical_quantities::CAngle &bank = {},
-                               const physical_quantities::CSpeed &gs = {},
+            CAircraftSituation(const CCallsign &correspondingCallsign, const geo::CCoordinateGeodetic &position,
+                               const CHeading &heading = {}, const physical_quantities::CAngle &pitch = {},
+                               const physical_quantities::CAngle &bank = {}, const physical_quantities::CSpeed &gs = {},
                                const geo::CElevationPlane &groundElevation = {});
 
             //! \copydoc mixin::String::toQString
@@ -217,7 +213,10 @@ namespace swift::misc
             virtual QVector3D normalVector() const override { return m_position.normalVector(); }
 
             //! \copydoc geo::ICoordinateGeodetic::normalVectorDouble
-            virtual std::array<double, 3> normalVectorDouble() const override { return m_position.normalVectorDouble(); }
+            virtual std::array<double, 3> normalVectorDouble() const override
+            {
+                return m_position.normalVectorDouble();
+            }
 
             //! Elevation of the ground directly beneath
             const CAltitude &getGroundElevation() const { return m_groundElevationPlane.getAltitude(); }
@@ -241,16 +240,21 @@ namespace swift::misc
             void setGroundElevationInfo(GndElevationInfo details) { m_elvInfo = static_cast<int>(details); }
 
             //! Can the elevation be transferred to another situation?
-            bool canTransferGroundElevation(const CAircraftSituation &transferToSituation, const physical_quantities::CLength &radius = geo::CElevationPlane::singlePointRadius()) const;
+            bool canTransferGroundElevation(
+                const CAircraftSituation &transferToSituation,
+                const physical_quantities::CLength &radius = geo::CElevationPlane::singlePointRadius()) const;
 
             //! Transfer from "this" situation to \c otherSituation
             //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
             //! \sa CAircraftSituation::interpolateGroundElevation
             //! \sa CAircraftSituation::interpolateElevation
-            bool transferGroundElevationFromMe(CAircraftSituation &transferToSituation, const physical_quantities::CLength &radius = geo::CElevationPlane::singlePointRadius()) const;
+            bool transferGroundElevationFromMe(
+                CAircraftSituation &transferToSituation,
+                const physical_quantities::CLength &radius = geo::CElevationPlane::singlePointRadius()) const;
 
             //! Transfer ground elevation from given situation (to me)
-            bool transferGroundElevationToMe(const CAircraftSituation &fromSituation, const physical_quantities::CLength &radius, bool transferred);
+            bool transferGroundElevationToMe(const CAircraftSituation &fromSituation,
+                                             const physical_quantities::CLength &radius, bool transferred);
 
             //! Transfer ground elevation from given situation (to me)
             bool transferGroundElevationToMe(const CAircraftSituation &fromSituation, bool transferred);
@@ -259,7 +263,8 @@ namespace swift::misc
             //! \remark "transfer" can be used, if the positions are known, "preset" if they are still unknown
             //! \sa CAircraftSituation::transferGroundElevation
             //! \sa CAircraftSituation::presetGroundElevation
-            bool interpolateElevation(const aviation::CAircraftSituation &oldSituation, const aviation::CAircraftSituation &newSituation);
+            bool interpolateElevation(const aviation::CAircraftSituation &oldSituation,
+                                      const aviation::CAircraftSituation &newSituation);
 
             //! Is ground elevation value available
             bool hasGroundElevation() const;
@@ -268,14 +273,17 @@ namespace swift::misc
             bool hasInboundGroundDetails() const;
 
             //! Elevation of the ground directly beneath at the given situation
-            bool setGroundElevation(const aviation::CAltitude &altitude, GndElevationInfo info, bool transferred = false);
+            bool setGroundElevation(const aviation::CAltitude &altitude, GndElevationInfo info,
+                                    bool transferred = false);
 
             //! Elevation of the ground directly beneath
-            bool setGroundElevation(const geo::CElevationPlane &elevationPlane, GndElevationInfo info, bool transferred = false);
+            bool setGroundElevation(const geo::CElevationPlane &elevationPlane, GndElevationInfo info,
+                                    bool transferred = false);
 
             //! Set elevation of the ground directly beneath, but checked
             //! \remark override if better
-            bool setGroundElevationChecked(const geo::CElevationPlane &elevationPlane, GndElevationInfo info, bool transferred = false);
+            bool setGroundElevationChecked(const geo::CElevationPlane &elevationPlane, GndElevationInfo info,
+                                           bool transferred = false);
 
             //! Reset ground elevation
             void resetGroundElevation();
@@ -301,14 +309,19 @@ namespace swift::misc
             //! @{
             //! Get altitude under consideration of ground elevation and ground flag
             //! \remark with dragToGround it will also compensate overflows, otherwise only underflow
-            CAltitude getCorrectedAltitude(bool enableDragToGround = true, AltitudeCorrection *correction = nullptr) const;
-            CAltitude getCorrectedAltitude(const physical_quantities::CLength &centerOfGravity, bool enableDragToGround = true, AltitudeCorrection *correction = nullptr) const;
+            CAltitude getCorrectedAltitude(bool enableDragToGround = true,
+                                           AltitudeCorrection *correction = nullptr) const;
+            CAltitude getCorrectedAltitude(const physical_quantities::CLength &centerOfGravity,
+                                           bool enableDragToGround = true,
+                                           AltitudeCorrection *correction = nullptr) const;
             //! @}
 
             //! @{
             //! Set the corrected altitude from CAircraftSituation::getCorrectedAltitude
             AltitudeCorrection correctAltitude(bool enableDragToGround = true);
-            AltitudeCorrection correctAltitude(const physical_quantities::CLength &centerOfGravity = physical_quantities::CLength::null(), bool enableDragToGround = true);
+            AltitudeCorrection
+            correctAltitude(const physical_quantities::CLength &centerOfGravity = physical_quantities::CLength::null(),
+                            bool enableDragToGround = true);
             //! @}
 
             //! Set altitude
@@ -373,13 +386,18 @@ namespace swift::misc
             bool canLikelySkipNearGroundInterpolation() const;
 
             //! Distance per time
-            physical_quantities::CLength getDistancePerTime(const physical_quantities::CTime &time, const physical_quantities::CLength &min = physical_quantities::CLength::null()) const;
+            physical_quantities::CLength
+            getDistancePerTime(const physical_quantities::CTime &time,
+                               const physical_quantities::CLength &min = physical_quantities::CLength::null()) const;
 
             //! Distance per milliseconds
-            physical_quantities::CLength getDistancePerTime(int milliseconds, const physical_quantities::CLength &min = physical_quantities::CLength::null()) const;
+            physical_quantities::CLength
+            getDistancePerTime(int milliseconds,
+                               const physical_quantities::CLength &min = physical_quantities::CLength::null()) const;
 
             //! Distance per milliseconds (250ms)
-            physical_quantities::CLength getDistancePerTime250ms(const physical_quantities::CLength &min = physical_quantities::CLength::null()) const;
+            physical_quantities::CLength getDistancePerTime250ms(
+                const physical_quantities::CLength &min = physical_quantities::CLength::null()) const;
 
             //! Corresponding callsign
             const CCallsign &getCallsign() const { return m_correspondingCallsign; }
@@ -407,14 +425,16 @@ namespace swift::misc
             //! \param alwaysSetDetails mark as CAircraftSituation::InFromParts regardless of parts
             //! \param timeDeviationFactor 0..1 (of offset time) small deviations from time are accepted
             //! \param differenceMs returns time difference
-            bool adjustGroundFlag(const CAircraftParts &parts, bool alwaysSetDetails, double timeDeviationFactor = 0.1, qint64 *differenceMs = nullptr);
+            bool adjustGroundFlag(const CAircraftParts &parts, bool alwaysSetDetails, double timeDeviationFactor = 0.1,
+                                  qint64 *differenceMs = nullptr);
 
             //! Transfer ground flag from parts list
             //! \param partsList containing the gnd flag
             //! \param alwaysSetDetails mark as CAircraftSituation::InFromParts regardless of parts
             //! \param timeDeviationFactor 0..1 (of offset time) small deviations from time are accepted
             //! \param differenceMs returns time difference
-            bool adjustGroundFlag(const CAircraftPartsList &partsList, bool alwaysSetDetails, double timeDeviationFactor = 0.1, qint64 *differenceMs = nullptr);
+            bool adjustGroundFlag(const CAircraftPartsList &partsList, bool alwaysSetDetails,
+                                  double timeDeviationFactor = 0.1, qint64 *differenceMs = nullptr);
 
             //! Get flag indicating this is an interim position update
             bool isInterim() const { return m_isInterim; }
@@ -444,34 +464,41 @@ namespace swift::misc
             static bool isGfEqualOnGround(double oldGroundFactor, double newGroundFactor)
             {
                 using namespace swift::misc::math;
-                return CMathUtils::epsilonEqualLimits(1.0, oldGroundFactor) && CMathUtils::epsilonEqualLimits(1.0, newGroundFactor);
+                return CMathUtils::epsilonEqualLimits(1.0, oldGroundFactor) &&
+                       CMathUtils::epsilonEqualLimits(1.0, newGroundFactor);
             }
 
             //! Both not on ground
             static bool isGfEqualAirborne(double oldGroundFactor, double newGroundFactor)
             {
                 using namespace swift::misc::math;
-                return CMathUtils::epsilonEqualLimits(0.0, oldGroundFactor) && CMathUtils::epsilonEqualLimits(0.0, newGroundFactor);
+                return CMathUtils::epsilonEqualLimits(0.0, oldGroundFactor) &&
+                       CMathUtils::epsilonEqualLimits(0.0, newGroundFactor);
             }
 
             //! Aircraft is starting
             static bool isGfStarting(double oldGroundFactor, double newGroundFactor)
             {
                 using namespace swift::misc::math;
-                return CMathUtils::epsilonEqualLimits(0.0, oldGroundFactor) && CMathUtils::epsilonEqualLimits(1.0, newGroundFactor);
+                return CMathUtils::epsilonEqualLimits(0.0, oldGroundFactor) &&
+                       CMathUtils::epsilonEqualLimits(1.0, newGroundFactor);
             }
 
             //! Aircraft is landing
             static bool isGfLanding(double oldGroundFactor, double newGroundFactor)
             {
                 using namespace swift::misc::math;
-                return CMathUtils::epsilonEqualLimits(1.0, oldGroundFactor) && CMathUtils::epsilonEqualLimits(0.0, newGroundFactor);
+                return CMathUtils::epsilonEqualLimits(1.0, oldGroundFactor) &&
+                       CMathUtils::epsilonEqualLimits(0.0, newGroundFactor);
             }
             //! @}
 
             //! Interpolate between the 2 situations for situation
             //! \remark NULL if there are no two elevations or threshold MaxDeltaElevationFt is exceeded
-            static geo::CElevationPlane interpolatedElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, const physical_quantities::CLength &distance = physical_quantities::CLength::null());
+            static geo::CElevationPlane
+            interpolatedElevation(const CAircraftSituation &situation, const CAircraftSituation &oldSituation,
+                                  const CAircraftSituation &newSituation,
+                                  const physical_quantities::CLength &distance = physical_quantities::CLength::null());
 
             //! Threshold until we interpolate elevations
             static constexpr double MaxDeltaElevationFt = 25.0;

@@ -11,15 +11,13 @@ using namespace swift::misc::network;
 
 namespace swift::gui::components
 {
-    CDownloadDialog::CDownloadDialog(QWidget *parent) : QDialog(parent),
-                                                        ui(new Ui::CDownloadDialog)
+    CDownloadDialog::CDownloadDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CDownloadDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CDownloadDialog::~CDownloadDialog()
-    {}
+    CDownloadDialog::~CDownloadDialog() {}
 
     void CDownloadDialog::setDownloadFile(const CRemoteFile &remoteFile)
     {
@@ -37,10 +35,7 @@ namespace swift::gui::components
         ui->comp_Download->triggerDownloadingOfFiles(delayMs);
     }
 
-    void CDownloadDialog::setMode(CDownloadComponent::Mode mode)
-    {
-        ui->comp_Download->setMode(mode);
-    }
+    void CDownloadDialog::setMode(CDownloadComponent::Mode mode) { ui->comp_Download->setMode(mode); }
 
     void CDownloadDialog::showAndStartDownloading()
     {
@@ -57,17 +52,15 @@ namespace swift::gui::components
         if (!ui->comp_Download->haveAllDownloadsCompleted())
         {
             const QString msg = QStringLiteral("Download ongoing. Do you want to abort it?");
-            QMessageBox::StandardButton reply = QMessageBox::question(this, "Abort?", msg, QMessageBox::Yes | QMessageBox::No);
+            QMessageBox::StandardButton reply =
+                QMessageBox::question(this, "Abort?", msg, QMessageBox::Yes | QMessageBox::No);
             if (reply == QMessageBox::Yes)
             {
                 ui->comp_Download->cancelOngoingDownloads();
                 this->done(CDownloadDialog::Rejected);
             }
         }
-        else
-        {
-            this->done(CDownloadDialog::Accepted);
-        }
+        else { this->done(CDownloadDialog::Accepted); }
     }
 
 } // namespace swift::gui::components

@@ -16,8 +16,7 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CCommandInput::CCommandInput(QWidget *parent) : CLineEditHistory(parent),
-                                                    CIdentifiable(this)
+    CCommandInput::CCommandInput(QWidget *parent) : CLineEditHistory(parent), CIdentifiable(this)
     {
         if (!CSimpleCommandParser::registered("swift::gui::components::CCommandInput"))
         {
@@ -25,10 +24,7 @@ namespace swift::gui::components
             CSimpleCommandParser::registerCommand({ ".help", "show help" });
         }
 
-        if (this->placeholderText().isEmpty())
-        {
-            this->setPlaceholderText(".dot commands");
-        }
+        if (this->placeholderText().isEmpty()) { this->setPlaceholderText(".dot commands"); }
 
         const QPointer<CCommandInput> myself(this);
         QTimer::singleShot(5000, this, [=] {
@@ -40,14 +36,17 @@ namespace swift::gui::components
         {
             if (sGui->getIContextSimulator())
             {
-                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CCommandInput::onSimulatorPluginChanged, Qt::QueuedConnection);
+                connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this,
+                        &CCommandInput::onSimulatorPluginChanged, Qt::QueuedConnection);
             }
             if (sGui->getIContextNetwork())
             {
-                connect(sGui->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this, &CCommandInput::onConnectedServerChanged, Qt::QueuedConnection);
+                connect(sGui->getIContextNetwork(), &IContextNetwork::connectedServerChanged, this,
+                        &CCommandInput::onConnectedServerChanged, Qt::QueuedConnection);
             }
         }
-        connect(this, &CCommandInput::returnPressedUnemptyLine, this, &CCommandInput::validateCommand, Qt::QueuedConnection);
+        connect(this, &CCommandInput::returnPressedUnemptyLine, this, &CCommandInput::validateCommand,
+                Qt::QueuedConnection);
     }
 
     void CCommandInput::showToolTip(bool show)
@@ -74,22 +73,13 @@ namespace swift::gui::components
             }
             emit this->commandEntered(c, this->identifier());
         }
-        else
-        {
-            emit this->textEntered(c, this->identifier());
-        }
+        else { emit this->textEntered(c, this->identifier()); }
     }
 
     void CCommandInput::setCommandToolTip()
     {
-        if (m_showToolTip)
-        {
-            this->setToolTip(CSimpleCommandParser::commandsHtmlHelp());
-        }
-        else
-        {
-            this->setToolTip("");
-        }
+        if (m_showToolTip) { this->setToolTip(CSimpleCommandParser::commandsHtmlHelp()); }
+        else { this->setToolTip(""); }
     }
 
     void CCommandInput::onSimulatorPluginChanged(const CSimulatorPluginInfo &info)

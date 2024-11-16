@@ -21,8 +21,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CViewUpdateSettings)
 namespace swift::gui::settings
 {
     //! Settings about view update rates
-    class SWIFT_GUI_EXPORT CViewUpdateSettings :
-        public swift::misc::CValueObject<CViewUpdateSettings>
+    class SWIFT_GUI_EXPORT CViewUpdateSettings : public swift::misc::CValueObject<CViewUpdateSettings>
     {
     public:
         //! Properties by index
@@ -50,7 +49,10 @@ namespace swift::gui::settings
         const swift::misc::physical_quantities::CTime &getAircraftUpdateTime() const { return m_updateAircraft; }
 
         //! Set time
-        void setAircraftUpdateTime(const swift::misc::physical_quantities::CTime &time) { this->m_updateAircraft = time; }
+        void setAircraftUpdateTime(const swift::misc::physical_quantities::CTime &time)
+        {
+            this->m_updateAircraft = time;
+        }
 
         //! Get time
         const swift::misc::physical_quantities::CTime &getUserUpdateTime() const { return m_updateUser; }
@@ -62,7 +64,10 @@ namespace swift::gui::settings
         const swift::misc::physical_quantities::CTime &getRenderingUpdateTime() const { return m_updateRendering; }
 
         //! Set time
-        void setRenderingUpdateTime(const swift::misc::physical_quantities::CTime &time) { this->m_updateRendering = time; }
+        void setRenderingUpdateTime(const swift::misc::physical_quantities::CTime &time)
+        {
+            this->m_updateRendering = time;
+        }
 
         //! Valid?
         bool isValid() const;
@@ -78,8 +83,10 @@ namespace swift::gui::settings
 
     private:
         swift::misc::physical_quantities::CTime m_updateAtc { 10.0, swift::misc::physical_quantities::CTimeUnit::s() };
-        swift::misc::physical_quantities::CTime m_updateAircraft { 10.0, swift::misc::physical_quantities::CTimeUnit::s() };
-        swift::misc::physical_quantities::CTime m_updateRendering { 10.0, swift::misc::physical_quantities::CTimeUnit::s() };
+        swift::misc::physical_quantities::CTime m_updateAircraft { 10.0,
+                                                                   swift::misc::physical_quantities::CTimeUnit::s() };
+        swift::misc::physical_quantities::CTime m_updateRendering { 10.0,
+                                                                    swift::misc::physical_quantities::CTimeUnit::s() };
         swift::misc::physical_quantities::CTime m_updateUser { 10.0, swift::misc::physical_quantities::CTimeUnit::s() };
 
         SWIFT_METACLASS(

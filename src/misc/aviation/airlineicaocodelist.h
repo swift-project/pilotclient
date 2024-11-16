@@ -54,7 +54,8 @@ namespace swift::misc::aviation
         CAirlineIcaoCodeList findByVDesignator(const QString &designator) const;
 
         //! Find by ICAO code if this is unique, otherwise return default object
-        CAirlineIcaoCode findByUniqueVDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
+        CAirlineIcaoCode findByUniqueVDesignatorOrDefault(const QString &designator,
+                                                          bool preferOperatingAirlines) const;
 
         //! Find by IATA code
         //! Not unique because of virtual airlines and ceased airlines
@@ -97,7 +98,11 @@ namespace swift::misc::aviation
         CAirlineIcaoCode smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const;
 
         //! Reduce by airline name/telephone designator, ISO country
-        CAirlineIcaoCodeList ifPossibleReduceNameTelephonyCountry(const swift::misc::aviation::CCallsign &cs, const QString &airlineName, const QString &telephony, const QString &countryIso, bool &reduced, const QString &logInfo, CStatusMessageList *log) const;
+        CAirlineIcaoCodeList ifPossibleReduceNameTelephonyCountry(const swift::misc::aviation::CCallsign &cs,
+                                                                  const QString &airlineName, const QString &telephony,
+                                                                  const QString &countryIso, bool &reduced,
+                                                                  const QString &logInfo,
+                                                                  CStatusMessageList *log) const;
 
         //! Reduce by ISO country
         CAirlineIcaoCodeList ifPossibleReduceByCountry(const QString &countryIso) const;
@@ -130,7 +135,8 @@ namespace swift::misc::aviation
         AirlineIcaoIdMap toIdMap() const;
 
         //! From our DB JSON
-        static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true, CAirlineIcaoCodeList *inconsistent = nullptr);
+        static CAirlineIcaoCodeList fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete = true,
+                                                     CAirlineIcaoCodeList *inconsistent = nullptr);
     };
 } // namespace swift::misc::aviation
 

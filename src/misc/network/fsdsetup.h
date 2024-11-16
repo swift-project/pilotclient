@@ -60,7 +60,8 @@ namespace swift::misc::network
         //! Offset times basically telling when to expect the next value from network plus some reserve
         //! \remark related to CNetworkVatlib::c_updatePostionIntervalMsec / c_updateInterimPostionIntervalMsec
         static constexpr qint64 c_positionTimeOffsetMsec = 6000; //!< offset time for received position updates Ref T297
-        static constexpr qint64 c_interimPositionTimeOffsetMsec = 1500; //!< offset time for received interim position updates Ref T297
+        static constexpr qint64 c_interimPositionTimeOffsetMsec =
+            1500; //!< offset time for received interim position updates Ref T297
         //! @}
 
         //! Default constructor.
@@ -91,7 +92,9 @@ namespace swift::misc::network
         void removeSendReceiveDetails(SendReceiveDetails sendReceive) { m_sendReceive &= ~sendReceive; }
 
         //! Set send / receive details
-        void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend, bool interimReceive, bool visualSend, bool euroscopeSimDataReceive, bool icaoEquipment);
+        void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend,
+                                   bool interimReceive, bool visualSend, bool euroscopeSimDataReceive,
+                                   bool icaoEquipment);
 
         //! @{
         //! FSD setup flags
@@ -104,12 +107,18 @@ namespace swift::misc::network
         bool receiveGndFlag() const { return this->getSendReceiveDetails().testFlag(ReceiveGndFlag); }
         bool receiveInterimPositions() const { return this->getSendReceiveDetails().testFlag(ReceiveInterimPositions); }
         bool receiveEuroscopeSimData() const { return this->getSendReceiveDetails().testFlag(ReceiveEuroscopeSimData); }
-        bool shouldSendFlightPlanEquipmentInIcaoFormat() const { return this->getSendReceiveDetails().testFlag(SendFplWithIcaoEquipment); }
+        bool shouldSendFlightPlanEquipmentInIcaoFormat() const
+        {
+            return this->getSendReceiveDetails().testFlag(SendFplWithIcaoEquipment);
+        }
         //! @}
 
         //! @{
         //! Airline codes
-        bool force3LetterAirlineCodes() const { return this->getSendReceiveDetails().testFlag(Force3LetterAirlineICAO); }
+        bool force3LetterAirlineCodes() const
+        {
+            return this->getSendReceiveDetails().testFlag(Force3LetterAirlineICAO);
+        }
         void setForce3LetterAirlineCodes(bool force);
         //! @}
 

@@ -7,16 +7,15 @@
 
 namespace swift::gui::components
 {
-    CAudioAdvancedDistributedDialog::CAudioAdvancedDistributedDialog(QWidget *parent) : QDialog(parent),
-                                                                                        ui(new Ui::CAudioAdvancedDistributedDialog)
+    CAudioAdvancedDistributedDialog::CAudioAdvancedDistributedDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CAudioAdvancedDistributedDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
         this->reloadRegisteredDevices();
     }
 
-    CAudioAdvancedDistributedDialog::~CAudioAdvancedDistributedDialog()
-    {}
+    CAudioAdvancedDistributedDialog::~CAudioAdvancedDistributedDialog() {}
 
     void CAudioAdvancedDistributedDialog::reloadRegisteredDevices()
     {

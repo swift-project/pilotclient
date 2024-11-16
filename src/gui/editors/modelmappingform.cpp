@@ -25,8 +25,7 @@ using namespace swift::gui::components;
 
 namespace swift::gui::editors
 {
-    CModelMappingForm::CModelMappingForm(QWidget *parent) : CFormDbUser(parent),
-                                                            ui(new Ui::CModelMappingForm)
+    CModelMappingForm::CModelMappingForm(QWidget *parent) : CFormDbUser(parent), ui(new Ui::CModelMappingForm)
     {
         ui->setupUi(this);
         ui->le_LastUpdated->setReadOnly(true);
@@ -44,8 +43,7 @@ namespace swift::gui::editors
         this->userChanged();
     }
 
-    CModelMappingForm::~CModelMappingForm()
-    {}
+    CModelMappingForm::~CModelMappingForm() {}
 
     swift::misc::simulation::CAircraftModel CModelMappingForm::getValue() const
     {
@@ -76,10 +74,7 @@ namespace swift::gui::editors
         this->forceStyleSheetUpdate();
     }
 
-    void CModelMappingForm::setSelectOnly()
-    {
-        this->setReadOnly(true);
-    }
+    void CModelMappingForm::setSelectOnly() { this->setReadOnly(true); }
 
     void CModelMappingForm::setValue(swift::misc::simulation::CAircraftModel &model)
     {
@@ -104,10 +99,7 @@ namespace swift::gui::editors
             ui->selector_ModelMode->setValue(CAircraftModel::Include);
             ui->selector_ModelMode->setReadOnly(false);
         }
-        else
-        {
-            ui->selector_ModelMode->setReadOnly(true);
-        }
+        else { ui->selector_ModelMode->setReadOnly(true); }
 
         CFormDbUser::userChanged();
     }
@@ -133,14 +125,8 @@ namespace swift::gui::editors
 
     void CModelMappingForm::setCGtoUI(const CLength &cg)
     {
-        if (cg.isNull())
-        {
-            ui->le_CG->clear();
-        }
-        else
-        {
-            ui->le_CG->setText(cg.valueRoundedWithUnit(CLengthUnit::ft(), 1));
-        }
+        if (cg.isNull()) { ui->le_CG->clear(); }
+        else { ui->le_CG->setText(cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)); }
     }
 
     void CModelMappingForm::onCgEditFinished()

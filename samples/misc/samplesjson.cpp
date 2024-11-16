@@ -67,7 +67,8 @@ namespace swift::sample
         qDebug() << "------- Enter -----";
         cin.readLine();
 
-        CSimulatedAircraft aircraft(CCallsign("DAMBZ"), CUser("123456", "Joe Pilot"), CTestData::getAircraftSituationAboveMunichTower());
+        CSimulatedAircraft aircraft(CCallsign("DAMBZ"), CUser("123456", "Joe Pilot"),
+                                    CTestData::getAircraftSituationAboveMunichTower());
         aircraft.setCom1System(CComSystem::getCom1System(122.8, 118.75));
         aircraft.setCom2System(CComSystem::getCom2System(123.8, 124.00));
         aircraft.setTransponder(CTransponder::getStandardTransponder(7000, CTransponder::ModeC));

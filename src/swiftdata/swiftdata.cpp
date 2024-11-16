@@ -40,9 +40,7 @@ using namespace swift::gui;
 using namespace swift::gui::components;
 using namespace swift::config;
 
-CSwiftData::CSwiftData(QWidget *parent) : QMainWindow(parent),
-                                          CIdentifiable(this),
-                                          ui(new Ui::CSwiftData)
+CSwiftData::CSwiftData(QWidget *parent) : QMainWindow(parent), CIdentifiable(this), ui(new Ui::CSwiftData)
 {
 
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
@@ -53,17 +51,15 @@ CSwiftData::CSwiftData(QWidget *parent) : QMainWindow(parent),
 
 void CSwiftData::initStyleSheet()
 {
-    const QString s = sGui->getStyleSheetUtility().styles(
-        { CStyleSheetUtility::fileNameFonts(),
-          CStyleSheetUtility::fileNameStandardWidget(),
-          CStyleSheetUtility::fileNameSwiftData() });
+    const QString s = sGui->getStyleSheetUtility().styles({ CStyleSheetUtility::fileNameFonts(),
+                                                            CStyleSheetUtility::fileNameStandardWidget(),
+                                                            CStyleSheetUtility::fileNameSwiftData() });
 
     this->setStyleSheet("");
     this->setStyleSheet(s);
 }
 
-CSwiftData::~CSwiftData()
-{}
+CSwiftData::~CSwiftData() {}
 
 void CSwiftData::closeEvent(QCloseEvent *event)
 {
@@ -75,10 +71,7 @@ void CSwiftData::closeEvent(QCloseEvent *event)
     this->performGracefulShutdown();
 }
 
-void CSwiftData::onStyleSheetsChanged()
-{
-    this->initStyleSheet();
-}
+void CSwiftData::onStyleSheetsChanged() { this->initStyleSheet(); }
 
 void CSwiftData::init()
 {
@@ -115,9 +108,8 @@ void CSwiftData::initLogDisplay()
     m_statusBar.initStatusBar(ui->sb_SwiftData);
     // m_statusBar.setSizeGripEnabled(false);
 
-    connect(&m_logHistory, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
-        m_statusBar.displayStatusMessage(message);
-    });
+    connect(&m_logHistory, &CLogHistoryReplica::elementAdded, this,
+            [this](const CStatusMessage &message) { m_statusBar.displayStatusMessage(message); });
     m_logHistory.setFilter(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
     m_logHistory.initialize(sApp->getDataLinkDBus());
 
@@ -165,7 +157,8 @@ void CSwiftData::consolidationSettingChanged()
         if (!m_updater)
         {
             m_updater = new CBackgroundDataUpdater(this);
-            connect(m_updater, &CBackgroundDataUpdater::consolidating, ui->comp_InfoBar, &CInfoBarWebReadersStatusComponent::consolidationRunning, Qt::QueuedConnection);
+            connect(m_updater, &CBackgroundDataUpdater::consolidating, ui->comp_InfoBar,
+                    &CInfoBarWebReadersStatusComponent::consolidationRunning, Qt::QueuedConnection);
             m_updater->start(QThread::LowestPriority);
             ui->comp_MainInfoArea->getDataSettingsComponent()->setBackgroundUpdater(m_updater);
         }
@@ -173,21 +166,22 @@ void CSwiftData::consolidationSettingChanged()
     }
 }
 
-void CSwiftData::displayLog()
-{
-    ui->comp_MainInfoArea->displayLog();
-}
+void CSwiftData::displayLog() { ui->comp_MainInfoArea->displayLog(); }
 
 void CSwiftData::checkMinimumVersion()
 {
     if (!sApp || sApp->isShuttingDown()) { return; }
     if (sApp->getGlobalSetup().isSwiftVersionMinimumMappingVersion())
     {
-        CLogMessage(this).info(u"Checked mapping tool version, required '%1', this version '%2'") << sApp->getGlobalSetup().getMappingMinimumVersionString() << CBuildConfig::getVersionString();
+        CLogMessage(this).info(u"Checked mapping tool version, required '%1', this version '%2'")
+            << sApp->getGlobalSetup().getMappingMinimumVersionString() << CBuildConfig::getVersionString();
     }
     else
     {
-        const CStatusMessage sm = CStatusMessage(this, CStatusMessage::SeverityWarning, u"Your are using swift version: '%1'. Creating mappings requires at least '%2'.") << CBuildConfig::getVersionString() << sApp->getGlobalSetup().getMappingMinimumVersionString();
+        const CStatusMessage sm =
+            CStatusMessage(this, CStatusMessage::SeverityWarning,
+                           u"Your are using swift version: '%1'. Creating mappings requires at least '%2'.")
+            << CBuildConfig::getVersionString() << sApp->getGlobalSetup().getMappingMinimumVersionString();
         CLogMessage::preformatted(sm);
         this->displayInOverlayWindow(sm);
     }

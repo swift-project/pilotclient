@@ -28,9 +28,11 @@ namespace swift::misc
     namespace mixin
     {
         /*!
-         * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
+         * CRTP class template which will generate marshalling operators for a derived class with its own marshalling
+         * implementation.
          *
-         * \tparam Must implement public methods QJsonObject toJson() const and void convertFromJson(const QJsonObject &json).
+         * \tparam Must implement public methods QJsonObject toJson() const and void convertFromJson(const QJsonObject
+         * &json).
          */
         template <class Derived>
         class JsonOperators
@@ -72,7 +74,8 @@ namespace swift::misc
             }
 
             //! operator << for JSON
-            friend QJsonObject &operator<<(QJsonObject &json, const std::pair<CExplicitLatin1String, const Derived &> &value)
+            friend QJsonObject &operator<<(QJsonObject &json,
+                                           const std::pair<CExplicitLatin1String, const Derived &> &value)
             {
                 json[value.first] = QJsonValue(value.second.toJson());
                 return json;
@@ -110,7 +113,8 @@ namespace swift::misc
 
             //! Get object from JSON string
             template <class DerivedObj = Derived>
-            static DerivedObj fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson, bool &success, QString &errMsg);
+            static DerivedObj fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson, bool &success,
+                                              QString &errMsg);
 
         private:
             const Derived *derived() const;
@@ -133,7 +137,8 @@ namespace swift::misc
             introspect<Derived>().forEachMember([&, this](auto member) {
                 if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
                 {
-                    json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(member.in(*this->derived())));
+                    json << std::make_pair(CExplicitLatin1String(member.latin1Name()),
+                                           std::cref(member.in(*this->derived())));
                 }
             });
             return json::appendJsonObject(json, baseToJson(static_cast<const TBaseOfT<Derived> *>(derived())));
@@ -157,9 +162,13 @@ namespace swift::misc
                     if (value.isUndefined())
                     {
                         constexpr bool required = decltype(member)::has(MetaFlags<RequiredForJson>());
-                        // QLatin1String used instead of QStringLiteral below since the latter causes an internal compiler bug
-                        // in GCC 8 and higher
-                        if (required) { throw CJsonException(QLatin1String("Missing required member '%1'").arg(member.latin1Name())); } // cppcheck-suppress knownConditionTrueFalse
+                        // QLatin1String used instead of QStringLiteral below since the latter causes an internal
+                        // compiler bug in GCC 8 and higher
+                        if (required)
+                        {
+                            throw CJsonException(
+                                QLatin1String("Missing required member '%1'").arg(member.latin1Name()));
+                        } // cppcheck-suppress knownConditionTrueFalse
                     }
                     else
                     {
@@ -193,21 +202,24 @@ namespace swift::misc
         {
             DerivedObj obj;
             if (jsonString.isEmpty()) { return obj; }
-            const QJsonObject jsonObj = acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
+            const QJsonObject jsonObj =
+                acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
             obj.convertFromJson(jsonObj);
             return obj;
         }
 
         template <class Derived>
         template <class DerivedObj>
-        DerivedObj JsonByMetaClass<Derived>::fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson, bool &success, QString &errMsg)
+        DerivedObj JsonByMetaClass<Derived>::fromJsonNoThrow(const QString &jsonString, bool acceptCacheJson,
+                                                             bool &success, QString &errMsg)
         {
             success = false;
             DerivedObj obj;
             try
             {
                 if (jsonString.isEmpty()) { return obj; }
-                const QJsonObject jsonObj = acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
+                const QJsonObject jsonObj =
+                    acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
                 obj.convertFromJson(jsonObj);
                 success = true;
             }
@@ -268,8 +280,8 @@ namespace swift::misc
  * When a derived class and a base class both inherit from mixin::JsonByTuple,
  * the derived class uses this macro to disambiguate the inherited members.
  */
-#define SWIFT_MISC_DECLARE_USING_MIXIN_JSON(DERIVED)              \
-    using ::swift::misc::mixin::JsonByMetaClass<DERIVED>::toJson; \
+#define SWIFT_MISC_DECLARE_USING_MIXIN_JSON(DERIVED)                                                                   \
+    using ::swift::misc::mixin::JsonByMetaClass<DERIVED>::toJson;                                                      \
     using ::swift::misc::mixin::JsonByMetaClass<DERIVED>::convertFromJson;
     } // namespace mixin
 } // namespace swift::misc

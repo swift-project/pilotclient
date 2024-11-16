@@ -7,7 +7,9 @@ using namespace swift::misc::aviation;
 
 namespace swift::misc::simulation
 {
-    void CMatchingUtils::addLogDetailsToList(CStatusMessageList *log, const CSimulatedAircraft &remoteAircraft, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+    void CMatchingUtils::addLogDetailsToList(CStatusMessageList *log, const CSimulatedAircraft &remoteAircraft,
+                                             const QString &message, const QStringList &extraCategories,
+                                             CStatusMessage::StatusSeverity s)
     {
         CCallsign::addLogDetailsToList(log, remoteAircraft.getCallsign(), message, extraCategories, s);
     }

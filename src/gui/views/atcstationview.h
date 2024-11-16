@@ -32,7 +32,8 @@ namespace swift::gui
     namespace views
     {
         //! ATC stations view
-        class SWIFT_GUI_EXPORT CAtcStationView : public CViewWithCallsignObjects<swift::gui::models::CAtcStationListModel>
+        class SWIFT_GUI_EXPORT CAtcStationView :
+            public CViewWithCallsignObjects<swift::gui::models::CAtcStationListModel>
         {
             Q_OBJECT
 
@@ -51,7 +52,8 @@ namespace swift::gui
             void testRequestDummyAtcOnlineStations(int number);
 
             //! Request COM frequency
-            void requestComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit unit);
+            void requestComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                     swift::misc::aviation::CComSystem::ComUnit unit);
 
             //! Request a text message to
             void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);

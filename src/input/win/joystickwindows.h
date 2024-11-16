@@ -40,7 +40,8 @@ namespace swift::input
 
     public:
         //! Constructor
-        CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance, QObject *parent = nullptr);
+        CJoystickDevice(DirectInput8Ptr directInputPtr, const DIDEVICEINSTANCE *pdidInstance,
+                        QObject *parent = nullptr);
 
         //! Initialize DirectInput device
         bool init(HWND helperWindow);

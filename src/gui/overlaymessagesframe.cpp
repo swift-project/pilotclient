@@ -26,7 +26,9 @@ namespace swift::gui
     COverlayMessagesFrame::COverlayMessagesFrame(QWidget *parent, Qt::WindowFlags f) : COverlayMessagesBase(parent, f)
     {}
 
-    COverlayMessagesFrameEnableForDockWidgetInfoArea::COverlayMessagesFrameEnableForDockWidgetInfoArea(QWidget *parent, Qt::WindowFlags f) : COverlayMessagesFrame(parent, f)
+    COverlayMessagesFrameEnableForDockWidgetInfoArea::COverlayMessagesFrameEnableForDockWidgetInfoArea(
+        QWidget *parent, Qt::WindowFlags f)
+        : COverlayMessagesFrame(parent, f)
     {}
 
     bool COverlayMessagesFrameEnableForDockWidgetInfoArea::isForwardingOverlayMessages() const
@@ -36,19 +38,14 @@ namespace swift::gui
         return true;
     }
 
-    COverlayMessagesTabWidget::COverlayMessagesTabWidget(QWidget *parent) : COverlayMessagesBase(parent)
-    {}
+    COverlayMessagesTabWidget::COverlayMessagesTabWidget(QWidget *parent) : COverlayMessagesBase(parent) {}
 
-    COverlayMessagesWizardPage::COverlayMessagesWizardPage(QWidget *parent) : COverlayMessagesBase(parent)
-    {}
+    COverlayMessagesWizardPage::COverlayMessagesWizardPage(QWidget *parent) : COverlayMessagesBase(parent) {}
 
-    COverlayMessagesDockWidget::COverlayMessagesDockWidget(QWidget *parent) : COverlayMessagesBase(parent)
-    {}
+    COverlayMessagesDockWidget::COverlayMessagesDockWidget(QWidget *parent) : COverlayMessagesBase(parent) {}
 
-    COverlayMessagesTableView::COverlayMessagesTableView(QWidget *parent) : COverlayMessagesBase(parent)
-    {}
+    COverlayMessagesTableView::COverlayMessagesTableView(QWidget *parent) : COverlayMessagesBase(parent) {}
 
-    COverlayMessagesTreeView::COverlayMessagesTreeView(QWidget *parent) : COverlayMessagesBase<QTreeView>(parent)
-    {}
+    COverlayMessagesTreeView::COverlayMessagesTreeView(QWidget *parent) : COverlayMessagesBase<QTreeView>(parent) {}
 
 } // namespace swift::gui

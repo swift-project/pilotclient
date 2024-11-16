@@ -112,7 +112,8 @@ namespace swift::misc::network
         return CIcons::NetworkCapabilityUnknown; // never reached
     }
 
-    const CVoiceCapabilities &CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::VoiceCapabilities capabilities)
+    const CVoiceCapabilities &
+    CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::VoiceCapabilities capabilities)
     {
         static const CVoiceCapabilities u(CVoiceCapabilities::Unknown);
         static const CVoiceCapabilities to(CVoiceCapabilities::TextOnly);
@@ -152,7 +153,9 @@ namespace swift::misc::network
 
     const QList<CVoiceCapabilities> &CVoiceCapabilities::allCapabilities()
     {
-        static const QList<CVoiceCapabilities> all({ fromVoiceCapabilities(Unknown), fromVoiceCapabilities(Voice), fromVoiceCapabilities(VoiceReceivingOnly), fromVoiceCapabilities(TextOnly) });
+        static const QList<CVoiceCapabilities> all({ fromVoiceCapabilities(Unknown), fromVoiceCapabilities(Voice),
+                                                     fromVoiceCapabilities(VoiceReceivingOnly),
+                                                     fromVoiceCapabilities(TextOnly) });
         return all;
     }
 } // namespace swift::misc::network

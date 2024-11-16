@@ -7,30 +7,20 @@
 
 namespace swift::gui::components
 {
-    CInitialDataLoadComponent::CInitialDataLoadComponent(QWidget *parent) : QFrame(parent),
-                                                                            ui(new Ui::CInitialDataLoadComponent)
+    CInitialDataLoadComponent::CInitialDataLoadComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CInitialDataLoadComponent)
     {
         ui->setupUi(this);
         ui->comp_DataUpdates->showVisibleLoadAllButtons(true, false, true);
     }
 
-    CInitialDataLoadComponent::~CInitialDataLoadComponent()
-    {}
+    CInitialDataLoadComponent::~CInitialDataLoadComponent() {}
 
-    void CInitialDataLoadComponent::loadAllFromShared()
-    {
-        ui->comp_DataUpdates->loadAllFromShared();
-    }
+    void CInitialDataLoadComponent::loadAllFromShared() { ui->comp_DataUpdates->loadAllFromShared(); }
 
-    void CInitialDataLoadComponent::loadAllFromDb()
-    {
-        ui->comp_DataUpdates->loadAllFromDb();
-    }
+    void CInitialDataLoadComponent::loadAllFromDb() { ui->comp_DataUpdates->loadAllFromDb(); }
 
-    bool CInitialDataLoadComponent::isLoadInProgress() const
-    {
-        return ui->comp_DataUpdates->isLoadInProgress();
-    }
+    bool CInitialDataLoadComponent::isLoadInProgress() const { return ui->comp_DataUpdates->isLoadInProgress(); }
 
     void CInitialDataLoadWizardPage::initializePage()
     {

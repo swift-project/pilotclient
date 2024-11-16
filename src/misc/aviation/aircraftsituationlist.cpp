@@ -17,7 +17,8 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituation, CAircraf
 
 namespace swift::misc::aviation
 {
-    CAircraftSituationList::CAircraftSituationList(const CSequence<CAircraftSituation> &other) : CSequence<CAircraftSituation>(other)
+    CAircraftSituationList::CAircraftSituationList(const CSequence<CAircraftSituation> &other)
+        : CSequence<CAircraftSituation>(other)
     {}
 
     CAircraftSituation CAircraftSituationList::frontOrNull() const
@@ -38,7 +39,9 @@ namespace swift::misc::aviation
         return CAircraftSituation::null();
     }
 
-    int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, qint64 newerThanAdjustedMs)
+    int CAircraftSituationList::setGroundElevationChecked(const CElevationPlane &elevationPlane,
+                                                          CAircraftSituation::GndElevationInfo info,
+                                                          qint64 newerThanAdjustedMs)
     {
         if (elevationPlane.isNull()) { return 0; }
         int c = 0;
@@ -64,7 +67,9 @@ namespace swift::misc::aviation
 
     bool CAircraftSituationList::containsOnGroundDetails(COnGroundInfo::OnGroundDetails details) const
     {
-        return std::any_of(begin(), end(), [&details](const CAircraftSituation &sit) { return sit.getOnGroundInfo().getGroundDetails() == details; });
+        return std::any_of(begin(), end(), [&details](const CAircraftSituation &sit) {
+            return sit.getOnGroundInfo().getGroundDetails() == details;
+        });
     }
 
     bool CAircraftSituationList::areAllOnGroundDetailsSame(COnGroundInfo::OnGroundDetails details) const
@@ -87,7 +92,9 @@ namespace swift::misc::aviation
     {
         if (this->isEmpty()) { return false; }
         if (this->containsNullPositionOrHeight()) { return false; }
-        return std::all_of(begin(), end(), [](const CAircraftSituation &situation) { return situation.getOnGroundInfo().getOnGround() == COnGroundInfo::NotOnGround; });
+        return std::all_of(begin(), end(), [](const CAircraftSituation &situation) {
+            return situation.getOnGroundInfo().getOnGround() == COnGroundInfo::NotOnGround;
+        });
     }
 
     bool CAircraftSituationList::isConstDescending(bool alreadySortedLatestFirst) const
@@ -101,7 +108,9 @@ namespace swift::misc::aviation
         {
             if (!newerSituation.isNull())
             {
-                Q_ASSERT_X(situation.getAltitude().getReferenceDatum() == newerSituation.getAltitude().getReferenceDatum(), Q_FUNC_INFO, "Wrong reference");
+                Q_ASSERT_X(situation.getAltitude().getReferenceDatum() ==
+                               newerSituation.getAltitude().getReferenceDatum(),
+                           Q_FUNC_INFO, "Wrong reference");
                 const CLength delta = newerSituation.getAltitude() - situation.getAltitude();
                 if (!delta.isNegativeWithEpsilonConsidered()) { return false; }
             }
@@ -122,7 +131,9 @@ namespace swift::misc::aviation
             // latest first
             if (!newerSituation.isNull())
             {
-                Q_ASSERT_X(situation.getAltitude().getReferenceDatum() == newerSituation.getAltitude().getReferenceDatum(), Q_FUNC_INFO, "Wrong reference");
+                Q_ASSERT_X(situation.getAltitude().getReferenceDatum() ==
+                               newerSituation.getAltitude().getReferenceDatum(),
+                           Q_FUNC_INFO, "Wrong reference");
                 const CLength delta = newerSituation.getAltitude() - situation.getAltitude();
                 if (!delta.isPositiveWithEpsilonConsidered()) { return false; }
             }
@@ -169,9 +180,13 @@ namespace swift::misc::aviation
         return true;
     }
 
-    QPair<bool, COnGroundInfo::IsOnGround> CAircraftSituationList::isGndFlagStableChanging(bool alreadySortedLatestFirst) const
+    QPair<bool, COnGroundInfo::IsOnGround>
+    CAircraftSituationList::isGndFlagStableChanging(bool alreadySortedLatestFirst) const
     {
-        if (this->size() < 2) { return QPair<bool, COnGroundInfo::IsOnGround>(false, COnGroundInfo::OnGroundSituationUnknown); }
+        if (this->size() < 2)
+        {
+            return QPair<bool, COnGroundInfo::IsOnGround>(false, COnGroundInfo::OnGroundSituationUnknown);
+        }
 
         const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
         const COnGroundInfo::IsOnGround f = sorted.front().getOnGroundInfo().getOnGround();
@@ -251,12 +266,17 @@ namespace swift::misc::aviation
 
     int CAircraftSituationList::countOnGround(COnGroundInfo::IsOnGround og) const
     {
-        return std::count_if(begin(), end(), [&og](const CAircraftSituation &situation) { return situation.getOnGroundInfo().getOnGround() == og; });
+        return std::count_if(begin(), end(), [&og](const CAircraftSituation &situation) {
+            return situation.getOnGroundInfo().getOnGround() == og;
+        });
     }
 
-    CAircraftSituation CAircraftSituationList::findClosestElevationWithinRange(const ICoordinateGeodetic &coordinate, const CLength &range) const
+    CAircraftSituation CAircraftSituationList::findClosestElevationWithinRange(const ICoordinateGeodetic &coordinate,
+                                                                               const CLength &range) const
     {
-        const CLength r = range.isNull() || range < CElevationPlane::singlePointRadius() ? CElevationPlane::singlePointRadius() : range;
+        const CLength r = range.isNull() || range < CElevationPlane::singlePointRadius() ?
+                              CElevationPlane::singlePointRadius() :
+                              range;
         CAircraftSituation situationWithElevation = CAircraftSituation::null();
 
         CLength bestDistance = CLength::null();
@@ -281,18 +301,12 @@ namespace swift::misc::aviation
 
     void CAircraftSituationList::setOnGroundInfo(const COnGroundInfo &info)
     {
-        for (CAircraftSituation &situation : *this)
-        {
-            situation.setOnGroundInfo(info);
-        }
+        for (CAircraftSituation &situation : *this) { situation.setOnGroundInfo(info); }
     }
 
     void CAircraftSituationList::setOnGroundDetails(COnGroundInfo::OnGroundDetails details)
     {
-        for (CAircraftSituation &situation : *this)
-        {
-            situation.setOnGroundDetails(details);
-        }
+        for (CAircraftSituation &situation : *this) { situation.setOnGroundDetails(details); }
     }
 
     int CAircraftSituationList::addAltitudeOffset(const CLength &offset)
@@ -323,10 +337,7 @@ namespace swift::misc::aviation
     QList<double> CAircraftSituationList::pitchValues(const CAngleUnit &unit) const
     {
         QList<double> values;
-        for (const CAircraftSituation &s : *this)
-        {
-            values.push_back(s.getPitch().value(unit));
-        }
+        for (const CAircraftSituation &s : *this) { values.push_back(s.getPitch().value(unit)); }
         return values;
     }
 
@@ -383,7 +394,8 @@ namespace swift::misc::aviation
     int CAircraftSituationList::transferElevationForward(const CLength &radius)
     {
         if (this->size() < 2) { return 0; }
-        Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO, "need latest first");
+        Q_ASSERT_X(m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO,
+                   "need latest first");
         int c = 0;
         for (int i = 1; i < this->size(); ++i)
         {
@@ -394,17 +406,21 @@ namespace swift::misc::aviation
         return c;
     }
 
-    CElevationPlane CAircraftSituationList::averageElevationOfTaxiingOnGroundAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
+    CElevationPlane CAircraftSituationList::averageElevationOfTaxiingOnGroundAircraft(
+        const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
     {
         if (this->size() < minValues) { return CElevationPlane::null(); } // no change to succeed
 
-        const CAircraftSituationList sorted = this->findWithGeodeticMSLHeight().findWithinRange(reference, range).sortedByEuclideanDistanceSquared(reference);
+        const CAircraftSituationList sorted = this->findWithGeodeticMSLHeight()
+                                                  .findWithinRange(reference, range)
+                                                  .sortedByEuclideanDistanceSquared(reference);
         if (sorted.size() < minValues) { return CElevationPlane::null(); }
         QList<double> valuesInFt;
         for (const CAircraftSituation &situation : *this)
         {
             if (situation.getGroundElevationInfo() != CAircraftSituation::FromProvider) { continue; }
-            const bool canUse = !situation.isMoving() || (situation.isOnGroundFromNetwork() || situation.isOnGroundFromParts());
+            const bool canUse =
+                !situation.isMoving() || (situation.isOnGroundFromNetwork() || situation.isOnGroundFromParts());
             if (!canUse) { continue; }
 
             const double elvFt = situation.getGroundElevationPlane().getAltitude().value(CLengthUnit::ft());

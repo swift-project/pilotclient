@@ -30,8 +30,7 @@ using namespace swift::gui::components;
 
 namespace swift::gui::editors
 {
-    CLiveryForm::CLiveryForm(QWidget *parent) : CForm(parent),
-                                                ui(new Ui::CLiveryForm)
+    CLiveryForm::CLiveryForm(QWidget *parent) : CForm(parent), ui(new Ui::CLiveryForm)
     {
         ui->setupUi(this);
         ui->le_Updated->setReadOnly(true);
@@ -43,7 +42,8 @@ namespace swift::gui::editors
         connect(ui->le_Id, &QLineEdit::returnPressed, this, &CLiveryForm::onIdEntered);
 
         // selector
-        connect(ui->comp_LiverySelector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue, Qt::QueuedConnection);
+        connect(ui->comp_LiverySelector, &CDbLiverySelectorComponent::changedLivery, this, &CLiveryForm::setValue,
+                Qt::QueuedConnection);
 
         // drag and drop, paste
         connect(ui->tb_Paste, &QToolButton::clicked, this, &CLiveryForm::pasted);
@@ -52,7 +52,8 @@ namespace swift::gui::editors
         ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CLivery>(), qMetaTypeId<CLiveryList>() });
 
         // embedded form
-        connect(ui->editor_AirlineIcao, &CAirlineIcaoForm::airlineChangedDigest, this, &CLiveryForm::onAirlineChanged, Qt::QueuedConnection);
+        connect(ui->editor_AirlineIcao, &CAirlineIcaoForm::airlineChangedDigest, this, &CLiveryForm::onAirlineChanged,
+                Qt::QueuedConnection);
 
         // Set as temp.livery or search color
         connect(ui->pb_TempLivery, &QPushButton::pressed, this, &CLiveryForm::setTemporaryLivery);
@@ -69,17 +70,11 @@ namespace swift::gui::editors
         {
             bool ok;
             const int dbKey = id.toInt(&ok);
-            if (ok)
-            {
-                livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey);
-            }
+            if (ok) { livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey); }
         }
 
         // fallback
-        if (!livery.hasValidDbKey())
-        {
-            livery = ui->comp_LiverySelector->getLivery();
-        }
+        if (!livery.hasValidDbKey()) { livery = ui->comp_LiverySelector->getLivery(); }
 
         if (livery.hasCompleteData() && livery.hasValidDbKey())
         {
@@ -94,10 +89,7 @@ namespace swift::gui::editors
         return livery;
     }
 
-    CAirlineIcaoCode CLiveryForm::getValueAirlineIcao() const
-    {
-        return ui->editor_AirlineIcao->getValue();
-    }
+    CAirlineIcaoCode CLiveryForm::getValueAirlineIcao() const { return ui->editor_AirlineIcao->getValue(); }
 
     bool CLiveryForm::setValue(const CLivery &livery)
     {
@@ -112,14 +104,8 @@ namespace swift::gui::editors
         ui->color_Tail->setColor(livery.getColorTail());
         ui->cb_Military->setChecked(livery.isMilitary());
 
-        if (livery.isColorLivery())
-        {
-            ui->editor_AirlineIcao->clear();
-        }
-        else
-        {
-            ui->editor_AirlineIcao->setValue(livery.getAirlineIcaoCode());
-        }
+        if (livery.isColorLivery()) { ui->editor_AirlineIcao->clear(); }
+        else { ui->editor_AirlineIcao->setValue(livery.getAirlineIcaoCode()); }
         return true;
     }
 
@@ -132,10 +118,7 @@ namespace swift::gui::editors
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CLiveryList>()) { return; }
             const CLiveryList liveries = jsonVariant.value<CLiveryList>();
-            if (!liveries.isEmpty())
-            {
-                this->setValue(liveries.front());
-            }
+            if (!liveries.isEmpty()) { this->setValue(liveries.front()); }
         }
         catch (const CJsonException &ex)
         {
@@ -149,10 +132,7 @@ namespace swift::gui::editors
         CStatusMessageList msgs(livery.validate());
         if (withNestedForms)
         {
-            if (!livery.isColorLivery())
-            {
-                msgs.push_back(ui->editor_AirlineIcao->validate());
-            }
+            if (!livery.isColorLivery()) { msgs.push_back(ui->editor_AirlineIcao->validate()); }
         }
         if (this->isReadOnly())
         {
@@ -163,10 +143,7 @@ namespace swift::gui::editors
         return msgs;
     }
 
-    CStatusMessageList CLiveryForm::validateAirlineIcao() const
-    {
-        return ui->editor_AirlineIcao->validate();
-    }
+    CStatusMessageList CLiveryForm::validateAirlineIcao() const { return ui->editor_AirlineIcao->validate(); }
 
     void CLiveryForm::allowDrop(bool allowDrop)
     {
@@ -175,10 +152,7 @@ namespace swift::gui::editors
         ui->editor_AirlineIcao->allowDrop(allowDrop);
     }
 
-    bool CLiveryForm::isDropAllowed() const
-    {
-        return ui->drop_DropData->isDropAllowed();
-    }
+    bool CLiveryForm::isDropAllowed() const { return ui->drop_DropData->isDropAllowed(); }
 
     void CLiveryForm::setReadOnly(bool readOnly)
     {
@@ -209,23 +183,14 @@ namespace swift::gui::editors
         ui->tb_Paste->setVisible(true);
     }
 
-    void CLiveryForm::clear()
-    {
-        this->setValue(CLivery());
-    }
+    void CLiveryForm::clear() { this->setValue(CLivery()); }
 
-    void CLiveryForm::resetValue()
-    {
-        this->setValue(m_originalLivery);
-    }
+    void CLiveryForm::resetValue() { this->setValue(m_originalLivery); }
 
     void CLiveryForm::onDroppedLivery(const swift::misc::CVariant &variantDropped)
     {
         CLivery livery;
-        if (variantDropped.canConvert<CLivery>())
-        {
-            livery = variantDropped.value<CLivery>();
-        }
+        if (variantDropped.canConvert<CLivery>()) { livery = variantDropped.value<CLivery>(); }
         else if (variantDropped.canConvert<CLiveryList>())
         {
             CLiveryList liveryList(variantDropped.value<CLiveryList>());
@@ -247,20 +212,14 @@ namespace swift::gui::editors
         if (currentLivery.hasValidDbKey() && currentLivery.getAirlineIcaoCode() == code) { return; }
 
         const CLivery stdLivery(sGui->getWebDataServices()->getLiveries().findStdLiveryByAirlineIcaoVDesignator(code));
-        if (stdLivery.hasValidDbKey())
-        {
-            this->setValue(stdLivery);
-        }
+        if (stdLivery.hasValidDbKey()) { this->setValue(stdLivery); }
     }
 
     void CLiveryForm::setTemporaryLivery()
     {
         if (!sGui || !sGui->hasWebDataServices()) { return; }
         const CLivery l = sGui->getWebDataServices()->getTempLiveryOrDefault();
-        if (l.isLoadedFromDb())
-        {
-            this->setValue(l);
-        }
+        if (l.isLoadedFromDb()) { this->setValue(l); }
     }
 
     void CLiveryForm::searchForColor()
@@ -273,10 +232,7 @@ namespace swift::gui::editors
         const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(m_colorSearch->exec());
         if (c == QDialog::Rejected) { return; }
         const CLivery found = m_colorSearch->getLivery();
-        if (found.isLoadedFromDb())
-        {
-            this->setValue(found);
-        }
+        if (found.isLoadedFromDb()) { this->setValue(found); }
     }
 
     void CLiveryForm::onIdEntered()

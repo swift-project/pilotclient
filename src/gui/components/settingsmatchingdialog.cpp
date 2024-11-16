@@ -9,14 +9,13 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CSettingsMatchingDialog::CSettingsMatchingDialog(QWidget *parent) : QDialog(parent),
-                                                                        ui(new Ui::CSettingsMatchingDialog)
+    CSettingsMatchingDialog::CSettingsMatchingDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CSettingsMatchingDialog)
     {
         ui->setupUi(this);
     }
 
-    CSettingsMatchingDialog::~CSettingsMatchingDialog()
-    {}
+    CSettingsMatchingDialog::~CSettingsMatchingDialog() {}
 
     CAircraftMatcherSetup CSettingsMatchingDialog::getMatchingSetup() const
     {

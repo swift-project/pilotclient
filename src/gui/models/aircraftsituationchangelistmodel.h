@@ -18,7 +18,8 @@ class QObject;
 namespace swift::gui::models
 {
     //! Aircraft situation changes list model
-    class SWIFT_GUI_EXPORT CAircraftSituationChangeListModel : public CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftSituationChangeList, true>
+    class SWIFT_GUI_EXPORT CAircraftSituationChangeListModel :
+        public CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftSituationChangeList, true>
     {
         Q_OBJECT
 

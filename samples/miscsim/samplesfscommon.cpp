@@ -43,7 +43,8 @@ namespace swift::sample
             return;
         }
 
-        const CSimulatorInfo sim = fsDir.contains("simobjects", Qt::CaseInsensitive) ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
+        const CSimulatorInfo sim =
+            fsDir.contains("simobjects", Qt::CaseInsensitive) ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
         CMultiSimulatorSettings multiSettings;
         const CSimulatorSettings originalSettings = multiSettings.getSettings(sim);
         CSimulatorSettings newSettings(originalSettings);
@@ -60,7 +61,8 @@ namespace swift::sample
         time.start();
         streamOut << "reading " << parser.getFirstModelDirectoryOrDefault() << Qt::endl;
         parser.startLoading();
-        streamOut << "read entries: " << parser.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << Qt::endl;
+        streamOut << "read entries: " << parser.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms"
+                  << Qt::endl;
 
         CAircraftCfgEntriesList entriesList = parser.getAircraftCfgEntriesList();
         QJsonDocument doc(entriesList.toJson());

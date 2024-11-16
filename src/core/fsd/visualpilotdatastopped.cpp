@@ -14,20 +14,13 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    VisualPilotDataStopped::VisualPilotDataStopped() : MessageBase()
-    {}
+    VisualPilotDataStopped::VisualPilotDataStopped() : MessageBase() {}
 
-    VisualPilotDataStopped::VisualPilotDataStopped(const QString &sender, double latitude, double longitude, double altitudeTrue, double heightAgl,
-                                                   double pitch, double bank, double heading, double noseGearAngle)
-        : MessageBase(sender, {}),
-          m_latitude(latitude),
-          m_longitude(longitude),
-          m_altitudeTrue(altitudeTrue),
-          m_heightAgl(heightAgl),
-          m_pitch(pitch),
-          m_bank(bank),
-          m_heading(heading),
-          m_noseGearAngle(noseGearAngle)
+    VisualPilotDataStopped::VisualPilotDataStopped(const QString &sender, double latitude, double longitude,
+                                                   double altitudeTrue, double heightAgl, double pitch, double bank,
+                                                   double heading, double noseGearAngle)
+        : MessageBase(sender, {}), m_latitude(latitude), m_longitude(longitude), m_altitudeTrue(altitudeTrue),
+          m_heightAgl(heightAgl), m_pitch(pitch), m_bank(bank), m_heading(heading), m_noseGearAngle(noseGearAngle)
     {}
 
     QStringList VisualPilotDataStopped::toTokens() const
@@ -60,13 +53,14 @@ namespace swift::core::fsd
         bool unused = false; //! \todo check if needed?
         unpackPBH(tokens[5].toUInt(), pitch, bank, heading, unused);
 
-        return VisualPilotDataStopped(tokens[0], tokens[1].toDouble(), tokens[2].toDouble(), tokens[3].toDouble(), tokens[4].toDouble(),
-                                      pitch, bank, heading, tokens.value(12, QStringLiteral("0")).toDouble());
+        return VisualPilotDataStopped(tokens[0], tokens[1].toDouble(), tokens[2].toDouble(), tokens[3].toDouble(),
+                                      tokens[4].toDouble(), pitch, bank, heading,
+                                      tokens.value(12, QStringLiteral("0")).toDouble());
     }
 
     VisualPilotDataUpdate VisualPilotDataStopped::toUpdate() const
     {
-        return VisualPilotDataUpdate(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading,
-                                     0, 0, 0, 0, 0, 0, m_noseGearAngle);
+        return VisualPilotDataUpdate(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank,
+                                     m_heading, 0, 0, 0, 0, 0, 0, m_noseGearAngle);
     }
 } // namespace swift::core::fsd

@@ -30,13 +30,14 @@ namespace swift::core::afv::connection
         return cats;
     }
 
-    CApiServerConnection::CApiServerConnection(const QString &address, QObject *parent) : QObject(parent),
-                                                                                          m_addressUrl(address)
+    CApiServerConnection::CApiServerConnection(const QString &address, QObject *parent)
+        : QObject(parent), m_addressUrl(address)
     {
         CLogMessage(this).debug(u"ApiServerConnection instantiated");
     }
 
-    void CApiServerConnection::connectTo(const QString &username, const QString &password, const QString &client, const QUuid &networkVersion, ConnectionCallback callback)
+    void CApiServerConnection::connectTo(const QString &username, const QString &password, const QString &client,
+                                         const QUuid &networkVersion, ConnectionCallback callback)
     {
         if (isShuttingDown()) { return; }
 
@@ -49,12 +50,10 @@ namespace swift::core::afv::connection
         QUrl url(m_addressUrl);
         url.setPath("/api/v1/auth");
 
-        QJsonObject obj {
-            { "username", username },
-            { "password", password },
-            { "networkversion", networkVersion.toString() },
-            { "client", client }
-        };
+        QJsonObject obj { { "username", username },
+                          { "password", password },
+                          { "networkversion", networkVersion.toString() },
+                          { "client", client } };
 
         QNetworkRequest request(url);
         QPointer<CApiServerConnection> myself(this);
@@ -65,7 +64,10 @@ namespace swift::core::afv::connection
                             { this, [=](QNetworkReply *nwReply) {
                                  // called in "this" thread
                                  const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
-                                 if (!myself || isShuttingDown()) { return; } // cppcheck-suppress knownConditionTrueFalse
+                                 if (!myself || isShuttingDown()) // cppcheck-suppress knownConditionTrueFalse
+                                 {
+                                     return;
+                                 }
 
                                  this->logRequestDuration(reply.data(), "authentication");
                                  if (reply->error() != QNetworkReply::NoError)
@@ -82,8 +84,7 @@ namespace swift::core::afv::connection
                                  m_jwt = reply->readAll().trimmed();
                                  qint64 lifeTimeSecs = -1;
                                  qint64 serverToUserOffsetSecs = -1;
-                                 do
-                                 {
+                                 do {
                                      const QString jwtToken(m_jwt);
                                      const QJsonWebToken token = QJsonWebToken::fromTokenAndSecret(jwtToken, "");
 
@@ -128,11 +129,9 @@ namespace swift::core::afv::connection
     {
         if (!this->sendToNetworkIfAuthenticated()) { return; }
         QJsonArray array;
-        for (const TransceiverDto &tx : transceivers)
-        {
-            array.append(tx.toJson());
-        }
-        this->postNoResponse("/api/v1/users/" + m_username + "/callsigns/" + callsign + "/transceivers", QJsonDocument(array));
+        for (const TransceiverDto &tx : transceivers) { array.append(tx.toJson()); }
+        this->postNoResponse("/api/v1/users/" + m_username + "/callsigns/" + callsign + "/transceivers",
+                             QJsonDocument(array));
     }
 
     void CApiServerConnection::forceDisconnect()
@@ -170,14 +169,8 @@ namespace swift::core::afv::connection
                                   if (loop && !isShuttingDown())
                                   {
                                       this->logRequestDuration(reply.data());
-                                      if (reply->error() == QNetworkReply::NoError)
-                                      {
-                                          receivedData = reply->readAll();
-                                      }
-                                      else
-                                      {
-                                          this->logReplyErrorMessage(reply.data());
-                                      }
+                                      if (reply->error() == QNetworkReply::NoError) { receivedData = reply->readAll(); }
+                                      else { this->logReplyErrorMessage(reply.data()); }
                                   }
                                   if (loop) { loop->exit(); }
                               } });
@@ -202,14 +195,8 @@ namespace swift::core::afv::connection
                                  if (loop && !isShuttingDown())
                                  {
                                      this->logRequestDuration(reply.data());
-                                     if (reply->error() == QNetworkReply::NoError)
-                                     {
-                                         receivedData = reply->readAll();
-                                     }
-                                     else
-                                     {
-                                         this->logReplyErrorMessage(reply.data());
-                                     }
+                                     if (reply->error() == QNetworkReply::NoError) { receivedData = reply->readAll(); }
+                                     else { this->logReplyErrorMessage(reply.data()); }
                                  }
                                  if (loop) { loop->exit(); }
                              } });
@@ -257,7 +244,8 @@ namespace swift::core::afv::connection
         sApp->deleteResourceFromNetwork(request, CApplication::NoLogRequestId,
                                         { this, [=](QNetworkReply *nwReply) {
                                              // called in "this" thread
-                                             const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
+                                             const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(
+                                                 nwReply);
                                              if (isShuttingDown()) { return; }
                                              this->logRequestDuration(reply.data());
                                              if (reply->error() != QNetworkReply::NoError)
@@ -275,7 +263,8 @@ namespace swift::core::afv::connection
             this->connectTo(m_username, m_password, m_client, m_networkVersion,
                             { this, [=](bool authenticated) {
                                  if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
-                                 CLogMessage(this).info(u"API server authenticated '%1': %2") << m_username << boolToYesNo(authenticated);
+                                 CLogMessage(this).info(u"API server authenticated '%1': %2")
+                                     << m_username << boolToYesNo(authenticated);
                              } });
         }
     }
@@ -285,11 +274,15 @@ namespace swift::core::afv::connection
         if (!reply) { return; }
         if (addMsg.isEmpty())
         {
-            CLogMessage(this).warning(u"AFV network error for '%1' '%2': '%3'") << reply->url().toString() << CNetworkUtils::networkOperationToString(reply->operation()) << reply->errorString();
+            CLogMessage(this).warning(u"AFV network error for '%1' '%2': '%3'")
+                << reply->url().toString() << CNetworkUtils::networkOperationToString(reply->operation())
+                << reply->errorString();
         }
         else
         {
-            CLogMessage(this).warning(u"AFV network error (%1) for '%2' '%3': '%4'") << addMsg << reply->url().toString() << CNetworkUtils::networkOperationToString(reply->operation()) << reply->errorString();
+            CLogMessage(this).warning(u"AFV network error (%1) for '%2' '%3': '%4'")
+                << addMsg << reply->url().toString() << CNetworkUtils::networkOperationToString(reply->operation())
+                << reply->errorString();
         }
     }
 
@@ -306,7 +299,8 @@ namespace swift::core::afv::connection
         }
         else
         {
-            CLogMessage(this).info(u"AFV network request (%1) for '%2': '%3'") << addMsg << reply->url().toString() << d;
+            CLogMessage(this).info(u"AFV network request (%1) for '%2': '%3'")
+                << addMsg << reply->url().toString() << d;
         }
     }
 
@@ -320,14 +314,8 @@ namespace swift::core::afv::connection
         return loop;
     }
 
-    bool CApiServerConnection::sendToNetworkIfAuthenticated() const
-    {
-        return m_isAuthenticated && !isShuttingDown();
-    }
+    bool CApiServerConnection::sendToNetworkIfAuthenticated() const { return m_isAuthenticated && !isShuttingDown(); }
 
-    bool CApiServerConnection::isShuttingDown()
-    {
-        return !sApp || sApp->isShuttingDown();
-    }
+    bool CApiServerConnection::isShuttingDown() { return !sApp || sApp->isShuttingDown(); }
 
 } // namespace swift::core::afv::connection

@@ -9,24 +9,15 @@ using namespace swift::core::afv;
 
 namespace swift::core::afv::model
 {
-    CSampleAtcStation::CSampleAtcStation(const QString &callsign, const TransceiverDto &transceiver) : m_callsign(callsign),
-                                                                                                       m_transceiver(transceiver)
+    CSampleAtcStation::CSampleAtcStation(const QString &callsign, const TransceiverDto &transceiver)
+        : m_callsign(callsign), m_transceiver(transceiver)
     {}
 
-    double CSampleAtcStation::latitude() const
-    {
-        return m_transceiver.LatDeg;
-    }
+    double CSampleAtcStation::latitude() const { return m_transceiver.LatDeg; }
 
-    double CSampleAtcStation::longitude() const
-    {
-        return m_transceiver.LonDeg;
-    }
+    double CSampleAtcStation::longitude() const { return m_transceiver.LonDeg; }
 
-    quint32 CSampleAtcStation::frequency() const
-    {
-        return m_transceiver.frequencyHz;
-    }
+    quint32 CSampleAtcStation::frequency() const { return m_transceiver.frequencyHz; }
 
     QString CSampleAtcStation::formattedFrequency() const
     {
@@ -40,8 +31,7 @@ namespace swift::core::afv::model
         return radioFactor * sqrtAltM;
     }
 
-    CSampleAtcStationModel::CSampleAtcStationModel(QObject *parent) : QAbstractListModel(parent)
-    {}
+    CSampleAtcStationModel::CSampleAtcStationModel(QObject *parent) : QAbstractListModel(parent) {}
 
     CSampleAtcStationModel::~CSampleAtcStationModel() {}
 
@@ -57,10 +47,7 @@ namespace swift::core::afv::model
         for (int i = m_atcStations.size() - 1; i >= 0; i--)
         {
             CSampleAtcStation &station = m_atcStations[i];
-            if (!m_atcStations.contains(station))
-            {
-                removeStationAtPosition(i);
-            }
+            if (!m_atcStations.contains(station)) { removeStationAtPosition(i); }
         }
     }
 
@@ -86,8 +73,7 @@ namespace swift::core::afv::model
 
     QVariant CSampleAtcStationModel::data(const QModelIndex &index, int role) const
     {
-        if (index.row() < 0 || index.row() >= m_atcStations.count())
-            return QVariant();
+        if (index.row() < 0 || index.row() >= m_atcStations.count()) return QVariant();
 
         const CSampleAtcStation &atcStation = m_atcStations[index.row()];
         if (role == CallsignRole) return atcStation.callsign();

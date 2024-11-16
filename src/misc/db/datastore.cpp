@@ -13,10 +13,7 @@
 
 namespace swift::misc::db
 {
-    QVersionNumber IDatastoreObject::getQVersion() const
-    {
-        return QVersionNumber::fromString(this->getVersion());
-    }
+    QVersionNumber IDatastoreObject::getQVersion() const { return QVersionNumber::fromString(this->getVersion()); }
 
     void IDatastoreObject::setTimestampVersionFromDatabaseJson(const QJsonObject &json, const QString &prefix)
     {
@@ -49,10 +46,7 @@ namespace swift::misc::db
         m_dbKey = ok ? k : -1;
     }
 
-    bool IDatastoreObjectWithIntegerKey::isLoadedFromDb() const
-    {
-        return this->hasValidDbKey();
-    }
+    bool IDatastoreObjectWithIntegerKey::isLoadedFromDb() const { return this->hasValidDbKey(); }
 
     bool IDatastoreObjectWithIntegerKey::matchesDbKeyState(db::DbKeyStateFilter filter) const
     {
@@ -82,7 +76,8 @@ namespace swift::misc::db
         return QJsonValue();
     }
 
-    void IDatastoreObjectWithIntegerKey::setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
+    void IDatastoreObjectWithIntegerKey::setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json,
+                                                                                const QString &prefix)
     {
         // this function is performance sensitive, as it is called for all DB data
         const int dbKey = json.value(prefix % u"id").toInt(-1);
@@ -129,9 +124,13 @@ namespace swift::misc::db
         }
     }
 
-    int IDatastoreObjectWithIntegerKey::comparePropertyByIndex(CPropertyIndexRef index, const IDatastoreObjectWithIntegerKey &compareValue) const
+    int IDatastoreObjectWithIntegerKey::comparePropertyByIndex(CPropertyIndexRef index,
+                                                               const IDatastoreObjectWithIntegerKey &compareValue) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -178,7 +177,8 @@ namespace swift::misc::db
         return empty;
     }
 
-    void IDatastoreObjectWithStringKey::setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json, const QString &prefix)
+    void IDatastoreObjectWithStringKey::setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json,
+                                                                               const QString &prefix)
     {
         QString dbKey = json.value(prefix % u"id").toString();
         this->setDbKey(dbKey);
@@ -218,19 +218,20 @@ namespace swift::misc::db
         switch (i)
         {
         case IndexDbStringKey:
-        case IndexDbKeyAsString:
-            m_dbKey = variant.value<QString>();
-            break;
+        case IndexDbKeyAsString: m_dbKey = variant.value<QString>(); break;
         case IndexIsLoadedFromDb: m_loadedFromDb = variant.toBool(); break;
         case IndexVersion: this->setVersion(variant.toString()); break;
-        default:
-            break;
+        default: break;
         }
     }
 
-    int IDatastoreObjectWithStringKey::comparePropertyByIndex(CPropertyIndexRef index, const IDatastoreObjectWithStringKey &compareValue) const
+    int IDatastoreObjectWithStringKey::comparePropertyByIndex(CPropertyIndexRef index,
+                                                              const IDatastoreObjectWithStringKey &compareValue) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

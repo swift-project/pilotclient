@@ -11,10 +11,13 @@ using namespace swift::sound::dsp;
 
 namespace swift::sound::sample_provider
 {
-    CEqualizerSampleProvider::CEqualizerSampleProvider(ISampleProvider *sourceProvider, EqualizerPresets preset, QObject *parent) : ISampleProvider(parent)
+    CEqualizerSampleProvider::CEqualizerSampleProvider(ISampleProvider *sourceProvider, EqualizerPresets preset,
+                                                       QObject *parent)
+        : ISampleProvider(parent)
     {
         Q_ASSERT_X(sourceProvider, Q_FUNC_INFO, "Need provider");
-        const QString on = QStringLiteral("%1 of %2").arg(this->metaObject()->className(), sourceProvider->objectName());
+        const QString on =
+            QStringLiteral("%1 of %2").arg(this->metaObject()->className(), sourceProvider->objectName());
         this->setObjectName(on);
 
         m_sourceProvider = sourceProvider;
@@ -28,10 +31,7 @@ namespace swift::sound::sample_provider
 
         for (int n = 0; n < samplesRead; n++)
         {
-            for (int band = 0; band < m_filters.size(); band++)
-            {
-                samples[n] = m_filters[band].transform(samples[n]);
-            }
+            for (int band = 0; band < m_filters.size(); band++) { samples[n] = m_filters[band].transform(samples[n]); }
             samples[n] *= static_cast<float>(m_outputGain);
         }
         return samplesRead;
@@ -51,13 +51,7 @@ namespace swift::sound::sample_provider
         }
     }
 
-    double CEqualizerSampleProvider::outputGain() const
-    {
-        return m_outputGain;
-    }
+    double CEqualizerSampleProvider::outputGain() const { return m_outputGain; }
 
-    void CEqualizerSampleProvider::setOutputGain(double outputGain)
-    {
-        m_outputGain = outputGain;
-    }
+    void CEqualizerSampleProvider::setOutputGain(double outputGain) { m_outputGain = outputGain; }
 } // namespace swift::sound::sample_provider

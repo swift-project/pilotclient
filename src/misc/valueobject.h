@@ -32,29 +32,29 @@
 #include "misc/swiftmiscexport.h"
 
 //! \cond
-#define SWIFT_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, Extern)    \
-    namespace Namespace                                                \
-    {                                                                  \
-        class Class;                                                   \
-    }                                                                  \
-    namespace swift::misc::private_ns                                  \
-    {                                                                  \
-        Extern template struct CValueObjectMetaInfo<Namespace::Class>; \
-        Extern template struct MetaTypeHelper<Namespace::Class>;       \
-    }                                                                  \
-    namespace swift::misc::mixin                                       \
-    {                                                                  \
-        Extern template class MetaType<Namespace::Class>;              \
-        Extern template class HashByMetaClass<Namespace::Class>;       \
-        Extern template class DBusByMetaClass<Namespace::Class>;       \
-        Extern template class DataStreamByMetaClass<Namespace::Class>; \
-        Extern template class JsonByMetaClass<Namespace::Class>;       \
-        Extern template class EqualsByMetaClass<Namespace::Class>;     \
-        Extern template class LessThanByMetaClass<Namespace::Class>;   \
-        Extern template class CompareByMetaClass<Namespace::Class>;    \
-        Extern template class String<Namespace::Class>;                \
-        Extern template class Index<Namespace::Class>;                 \
-        Extern template class Icon<Namespace::Class>;                  \
+#define SWIFT_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, Extern)                                                    \
+    namespace Namespace                                                                                                \
+    {                                                                                                                  \
+        class Class;                                                                                                   \
+    }                                                                                                                  \
+    namespace swift::misc::private_ns                                                                                  \
+    {                                                                                                                  \
+        Extern template struct CValueObjectMetaInfo<Namespace::Class>;                                                 \
+        Extern template struct MetaTypeHelper<Namespace::Class>;                                                       \
+    }                                                                                                                  \
+    namespace swift::misc::mixin                                                                                       \
+    {                                                                                                                  \
+        Extern template class MetaType<Namespace::Class>;                                                              \
+        Extern template class HashByMetaClass<Namespace::Class>;                                                       \
+        Extern template class DBusByMetaClass<Namespace::Class>;                                                       \
+        Extern template class DataStreamByMetaClass<Namespace::Class>;                                                 \
+        Extern template class JsonByMetaClass<Namespace::Class>;                                                       \
+        Extern template class EqualsByMetaClass<Namespace::Class>;                                                     \
+        Extern template class LessThanByMetaClass<Namespace::Class>;                                                   \
+        Extern template class CompareByMetaClass<Namespace::Class>;                                                    \
+        Extern template class String<Namespace::Class>;                                                                \
+        Extern template class Index<Namespace::Class>;                                                                 \
+        Extern template class Icon<Namespace::Class>;                                                                  \
     }
 //! \endcond
 
@@ -72,7 +72,8 @@
 #    define SWIFT_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class)
 #    define SWIFT_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class)
 #else
-#    define SWIFT_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class) SWIFT_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, extern)
+#    define SWIFT_DECLARE_VALUEOBJECT_MIXINS(Namespace, Class)                                                         \
+        SWIFT_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, extern)
 #    define SWIFT_DEFINE_VALUEOBJECT_MIXINS(Namespace, Class) SWIFT_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, )
 #endif
 

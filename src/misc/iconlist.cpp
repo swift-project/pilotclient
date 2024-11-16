@@ -11,8 +11,7 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CIcon, CIconList)
 
 namespace swift::misc
 {
-    CIconList::CIconList(const CSequence<CIcon> &other) : CSequence<CIcon>(other)
-    {}
+    CIconList::CIconList(const CSequence<CIcon> &other) : CSequence<CIcon>(other) {}
 
     CIcon CIconList::findByIndex(CIcons::IconIndex index) const
     {

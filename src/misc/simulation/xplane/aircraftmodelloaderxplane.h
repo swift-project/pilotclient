@@ -49,7 +49,8 @@ namespace swift::misc
         protected:
             //! \name Interface functions
             //! @{
-            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) override;
+            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                              const QStringList &modelDirectories) override;
             //! @}
 
         private:
@@ -82,28 +83,29 @@ namespace swift::misc
             //! CSL package
             struct CSLPackage
             {
-                bool hasValidHeader() const
-                {
-                    return !name.isEmpty() && !path.isEmpty();
-                }
+                bool hasValidHeader() const { return !name.isEmpty() && !path.isEmpty(); }
 
                 QString name;
                 QString path;
                 QVector<CSLPlane> planes;
             };
 
-            CAircraftModelList performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories);
-            CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
+            CAircraftModelList performParsing(const QStringList &rootDirectories,
+                                              const QStringList &excludeDirectories);
+            CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory,
+                                                     const QStringList &excludeDirectories);
             CAircraftModelList parseCslPackages(const QString &rootDirectory, const QStringList &excludeDirectories);
 
             bool doPackageSub(QString &ioPath);
 
             bool parseExportCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
-            bool parseDependencyCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
+            bool parseDependencyCommand(const QStringList &tokens, CSLPackage &package, const QString &path,
+                                        int lineNum);
             bool parseObjectCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
             bool parseTextureCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
             bool parseAircraftCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
-            bool parseObj8AircraftCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
+            bool parseObj8AircraftCommand(const QStringList &tokens, CSLPackage &package, const QString &path,
+                                          int lineNum);
             bool parseObj8Command(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
             bool parseHasGearCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
             bool parseIcaoCommand(const QStringList &tokens, CSLPackage &package, const QString &path, int lineNum);
@@ -117,7 +119,8 @@ namespace swift::misc
             void addUniqueModel(const CAircraftModel &model, CAircraftModelList &models);
 
             QPointer<CWorker> m_parserWorker; //!< worker will destroy itself, so weak pointer
-            QVector<CSLPackage> m_cslPackages; //!< Parsed Packages. No lock required since accessed only from one thread
+            QVector<CSLPackage>
+                m_cslPackages; //!< Parsed Packages. No lock required since accessed only from one thread
 
             static const QString &fileFilterFlyable();
             static const QString &fileFilterCsl();

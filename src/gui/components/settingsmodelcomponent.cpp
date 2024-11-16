@@ -18,18 +18,22 @@ using namespace swift::core::db;
 
 namespace swift::gui::components
 {
-    CSettingsModelComponent::CSettingsModelComponent(QWidget *parent) : QFrame(parent),
-                                                                        ui(new Ui::CSettingsModelComponent)
+    CSettingsModelComponent::CSettingsModelComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsModelComponent)
     {
         ui->setupUi(this);
-        ui->le_ConsolidateSecs->setValidator(new QIntValidator(0, TBackgroundConsolidation::maxSecs(), ui->le_ConsolidateSecs));
+        ui->le_ConsolidateSecs->setValidator(
+            new QIntValidator(0, TBackgroundConsolidation::maxSecs(), ui->le_ConsolidateSecs));
 
         this->cacheChanged();
         const QString lbl("Consolidate (%1-%2s):");
-        ui->lbl_Consolidate->setText(lbl.arg(TBackgroundConsolidation::minSecs()).arg(TBackgroundConsolidation::maxSecs()));
+        ui->lbl_Consolidate->setText(
+            lbl.arg(TBackgroundConsolidation::minSecs()).arg(TBackgroundConsolidation::maxSecs()));
 
-        connect(ui->le_ConsolidateSecs, &QLineEdit::returnPressed, this, &CSettingsModelComponent::consolidationEntered);
-        connect(ui->cb_AllowExcludeModels, &QCheckBox::toggled, this, &CSettingsModelComponent::allowExcludedModelsChanged);
+        connect(ui->le_ConsolidateSecs, &QLineEdit::returnPressed, this,
+                &CSettingsModelComponent::consolidationEntered);
+        connect(ui->cb_AllowExcludeModels, &QCheckBox::toggled, this,
+                &CSettingsModelComponent::allowExcludedModelsChanged);
 
         // start updater if not yet done
         QPointer<CSettingsModelComponent> myself(this);
@@ -39,8 +43,7 @@ namespace swift::gui::components
         });
     }
 
-    CSettingsModelComponent::~CSettingsModelComponent()
-    {}
+    CSettingsModelComponent::~CSettingsModelComponent() {}
 
     int CSettingsModelComponent::getBackgroundUpdaterIntervallSecs() const
     {
@@ -51,10 +54,7 @@ namespace swift::gui::components
         return ok ? secs : -1;
     }
 
-    void CSettingsModelComponent::setBackgroundUpdater(const CBackgroundDataUpdater *updater)
-    {
-        m_updater = updater;
-    }
+    void CSettingsModelComponent::setBackgroundUpdater(const CBackgroundDataUpdater *updater) { m_updater = updater; }
 
     void CSettingsModelComponent::consolidationEntered()
     {
@@ -82,10 +82,7 @@ namespace swift::gui::components
         const QString s = on ? QString::number(v) : "";
         ui->le_ConsolidateSecs->setText(s);
 
-        const bool updater =
-            on &&
-            sApp && !sApp->isShuttingDown() &&
-            m_updater && m_updater->isEnabled();
+        const bool updater = on && sApp && !sApp->isShuttingDown() && m_updater && m_updater->isEnabled();
         ui->comp_Led->setOn(updater);
 
         // avoid unnecessary roundtrips

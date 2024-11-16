@@ -16,16 +16,18 @@ using namespace swift::misc;
 
 namespace swift::core::context
 {
-    IContextNetwork *IContextNetwork::create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
+    IContextNetwork *IContextNetwork::create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode,
+                                             CDBusServer *server, QDBusConnection &connection)
     {
         switch (mode)
         {
         case CCoreFacadeConfig::Local:
-        case CCoreFacadeConfig::LocalInDBusServer: return (new CContextNetwork(mode, runtime))->registerWithDBus(server);
-        case CCoreFacadeConfig::Remote: return new CContextNetworkProxy(CDBusServer::coreServiceName(connection), connection, mode, runtime);
+        case CCoreFacadeConfig::LocalInDBusServer:
+            return (new CContextNetwork(mode, runtime))->registerWithDBus(server);
+        case CCoreFacadeConfig::Remote:
+            return new CContextNetworkProxy(CDBusServer::coreServiceName(connection), connection, mode, runtime);
         case CCoreFacadeConfig::NotUsed:
-        default:
-            return new CContextNetworkEmpty(runtime);
+        default: return new CContextNetworkEmpty(runtime);
         }
     }
 
@@ -35,7 +37,9 @@ namespace swift::core::context
         static const QList<QCommandLineOption> opts {
 #ifdef SWIFT_VATSIM_SUPPORT
             QCommandLineOption({ "idAndKey", "clientIdAndKey" },
-                               QCoreApplication::translate("CContextNetwork", "Client id and key pair separated by ':', e.g. <id>:<key>."), "clientIdAndKey")
+                               QCoreApplication::translate("CContextNetwork",
+                                                           "Client id and key pair separated by ':', e.g. <id>:<key>."),
+                               "clientIdAndKey")
 #endif
         };
 

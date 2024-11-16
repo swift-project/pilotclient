@@ -19,8 +19,7 @@ using namespace swift::config;
 
 namespace swift::core
 {
-    CGitHubPackagesReader::CGitHubPackagesReader(QObject *parent) : QObject(parent)
-    {}
+    CGitHubPackagesReader::CGitHubPackagesReader(QObject *parent) : QObject(parent) {}
 
     void CGitHubPackagesReader::readUpdateInfo()
     {
@@ -32,17 +31,11 @@ namespace swift::core
             if (reply->error() == QNetworkReply::NoError)
             {
                 const auto updateInfo = CUpdateInfo::fromGitHubReleasesJson(reply->readAll());
-                if (!updateInfo.isEmpty())
-                {
-                    m_updateInfo.set(updateInfo);
-                }
+                if (!updateInfo.isEmpty()) { m_updateInfo.set(updateInfo); }
             }
             reply->deleteLater();
         });
     }
 
-    CUpdateInfo CGitHubPackagesReader::getUpdateInfo() const
-    {
-        return m_updateInfo.get();
-    }
+    CUpdateInfo CGitHubPackagesReader::getUpdateInfo() const { return m_updateInfo.get(); }
 } // namespace swift::core

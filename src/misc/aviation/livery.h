@@ -25,9 +25,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CLivery)
 namespace swift::misc::aviation
 {
     //! Value object encapsulating information about an airpot.
-    class SWIFT_MISC_EXPORT CLivery :
-        public CValueObject<CLivery>,
-        public db::IDatastoreObjectWithIntegerKey
+    class SWIFT_MISC_EXPORT CLivery : public CValueObject<CLivery>, public db::IDatastoreObjectWithIntegerKey
     {
     public:
         //! Properties by index
@@ -48,16 +46,20 @@ namespace swift::misc::aviation
         CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description);
 
         //! Constructor
-        CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const QString &colorFuselage, const QString &colorTail, bool isMilitary);
+        CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description,
+                const QString &colorFuselage, const QString &colorTail, bool isMilitary);
 
         //! Constructor
-        CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const CRgbColor &colorFuselage, const CRgbColor &colorTail, bool isMilitary);
+        CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description,
+                const CRgbColor &colorFuselage, const CRgbColor &colorTail, bool isMilitary);
 
         //! Constructor
-        CLivery(int dbKey, const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const QString &colorFuselage, const QString &colorTail, bool isMilitary);
+        CLivery(int dbKey, const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description,
+                const QString &colorFuselage, const QString &colorTail, bool isMilitary);
 
         //! Constructor
-        CLivery(int dbKey, const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description, const CRgbColor &colorFuselage, const CRgbColor &colorTail, bool isMilitary);
+        CLivery(int dbKey, const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description,
+                const CRgbColor &colorFuselage, const CRgbColor &colorTail, bool isMilitary);
 
         //! Corresponding airline, if any
         const CAirlineIcaoCode &getAirlineIcaoCode() const { return m_airline; }
@@ -184,7 +186,8 @@ namespace swift::misc::aviation
 
         //! Score by comparison to another livery 0..100
         //! \remark normally used with liveries preselect by airline ICAO code
-        int calculateScore(const CLivery &otherLivery, bool preferColorLiveries = false, CStatusMessageList *log = nullptr) const;
+        int calculateScore(const CLivery &otherLivery, bool preferColorLiveries = false,
+                           CStatusMessageList *log = nullptr) const;
 
         //! Null livery?
         bool isNull() const;
@@ -196,7 +199,8 @@ namespace swift::misc::aviation
         static CLivery fromDatabaseJson(const QJsonObject &json, const QString &prefix = QString("liv_"));
 
         //! Object from JSON caching
-        static CLivery fromDatabaseJsonCaching(const QJsonObject &json, AirlineIcaoIdMap &airlineIcaos, const QString &prefix = QString("liv_"));
+        static CLivery fromDatabaseJsonCaching(const QJsonObject &json, AirlineIcaoIdMap &airlineIcaos,
+                                               const QString &prefix = QString("liv_"));
 
         //! Valid combined code string?
         static bool isValidCombinedCode(const QString &candidate);
@@ -215,15 +219,14 @@ namespace swift::misc::aviation
 
         //! Specialized log message for matching / reverse lookup
         //! \threadsafe
-        static CStatusMessage logMessage(
-            const CLivery &livery,
-            const QString &message, const QStringList &extraCategories = {},
-            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+        static CStatusMessage logMessage(const CLivery &livery, const QString &message,
+                                         const QStringList &extraCategories = {},
+                                         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
         //! Specialized log for matching / reverse lookup
         //! \threadsafe
-        static void addLogDetailsToList(CStatusMessageList *log, const CLivery &livery,
-                                        const QString &message, const QStringList &extraCategories = {},
+        static void addLogDetailsToList(CStatusMessageList *log, const CLivery &livery, const QString &message,
+                                        const QStringList &extraCategories = {},
                                         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
     private:

@@ -56,7 +56,9 @@ namespace swift::gui::components
 
     private:
         QScopedPointer<Ui::CInfoBarStatusComponent> ui;
-        swift::core::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::input::pttHotkeyIcon(), this, &CInfoBarStatusComponent::onPttChanged };
+        swift::core::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(),
+                                               swift::misc::input::pttHotkeyIcon(), this,
+                                               &CInfoBarStatusComponent::onPttChanged };
 
         swift::misc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
 
@@ -73,7 +75,8 @@ namespace swift::gui::components
         void onSimulatorStatusChanged(int status);
 
         //! Network connection has been changed
-        void onNetworkConnectionChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+        void onNetworkConnectionChanged(const swift::misc::network::CConnectionStatus &from,
+                                        const swift::misc::network::CConnectionStatus &to);
 
         //! Context menu requested
         void onCustomAudioContextMenuRequested(const QPoint &position);
@@ -82,7 +85,8 @@ namespace swift::gui::components
         void onOutputMuteChanged(bool muted);
 
         //! Audio started
-        void onAudioStarted(const swift::misc::audio::CAudioDeviceInfo &input, const swift::misc::audio::CAudioDeviceInfo &output);
+        void onAudioStarted(const swift::misc::audio::CAudioDeviceInfo &input,
+                            const swift::misc::audio::CAudioDeviceInfo &output);
 
         //! Audio stopped
         void onAudioStopped();

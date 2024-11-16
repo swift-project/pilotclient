@@ -126,10 +126,7 @@ namespace swift::input
         **/
     };
 
-    CKeyboardLinux::CKeyboardLinux(QObject *parent) : IKeyboard(parent)
-    {
-        m_display = XOpenDisplay(nullptr);
-    }
+    CKeyboardLinux::CKeyboardLinux(QObject *parent) : IKeyboard(parent) { m_display = XOpenDisplay(nullptr); }
 
     CKeyboardLinux::~CKeyboardLinux()
     {
@@ -140,7 +137,8 @@ namespace swift::input
     {
         QString dir = QLatin1String("/dev/input");
         m_devInputWatcher = new QFileSystemWatcher(QStringList(dir), this);
-        connect(m_devInputWatcher, &QFileSystemWatcher::directoryChanged, this, &CKeyboardLinux::deviceDirectoryChanged);
+        connect(m_devInputWatcher, &QFileSystemWatcher::directoryChanged, this,
+                &CKeyboardLinux::deviceDirectoryChanged);
         deviceDirectoryChanged(dir);
 
         return true;
@@ -153,8 +151,7 @@ namespace swift::input
         foreach (QFileInfo fileInfo, eventFiles.entryInfoList())
         {
             QString path = fileInfo.absoluteFilePath();
-            if (!m_keyboardDevices.contains(path))
-                addRawInputDevice(path);
+            if (!m_keyboardDevices.contains(path)) addRawInputDevice(path);
         }
     }
 
@@ -163,27 +160,20 @@ namespace swift::input
         struct input_event eventInput;
 
         QFile *fileInput = qobject_cast<QFile *>(sender()->parent());
-        if (!fileInput)
-            return;
+        if (!fileInput) return;
 
         bool found = false;
 
         while (fileInput->read(reinterpret_cast<char *>(&eventInput), sizeof(eventInput)) == sizeof(eventInput))
         {
             found = true;
-            if (eventInput.type != EV_KEY)
-                continue;
+            if (eventInput.type != EV_KEY) continue;
             bool isPressed = false;
             switch (eventInput.value)
             {
-            case 0:
-                isPressed = false;
-                break;
-            case 1:
-                isPressed = true;
-                break;
-            default:
-                continue;
+            case 0: isPressed = false; break;
+            case 1: isPressed = true; break;
+            default: continue;
             }
 
             // The + 8 offset is required for XkbKeycodeToKeysym to output the correct Keysym
@@ -223,10 +213,8 @@ namespace swift::input
 
             // Keyboards support EV_SYN and EV_KEY
             // but do NOT support EV_REL and EV_ABS
-            if (!(bitmask[EV_SYN / 8] & (1 << (EV_SYN % 8))) &&
-                !(bitmask[EV_KEY / 8] & (1 << (EV_KEY % 8))) &&
-                (bitmask[EV_REL / 8] & (1 << (EV_REL % 8))) &&
-                (bitmask[EV_ABS / 8] & (1 << (EV_ABS % 8))))
+            if (!(bitmask[EV_SYN / 8] & (1 << (EV_SYN % 8))) && !(bitmask[EV_KEY / 8] & (1 << (EV_KEY % 8))) &&
+                (bitmask[EV_REL / 8] & (1 << (EV_REL % 8))) && (bitmask[EV_ABS / 8] & (1 << (EV_ABS % 8))))
             {
                 return;
             }
@@ -234,18 +222,22 @@ namespace swift::input
             // Is it grabbed by someone else?
             if ((ioctl(fd, EVIOCGRAB, 1) < 0))
             {
-                swift::misc::CLogMessage(this).warning(u"Device exclusively grabbed by someone else (X11 using exclusive-mode evdev?)") << deviceName;
+                swift::misc::CLogMessage(this).warning(
+                    u"Device exclusively grabbed by someone else (X11 using exclusive-mode evdev?)")
+                    << deviceName;
             }
             else
             {
                 ioctl(fd, EVIOCGRAB, 0);
                 uint8_t keys[KEY_MAX / 8 + 1];
-                if ((ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keys)), &keys) >= 0) && (keys[KEY_SPACE / 8] & (1 << (KEY_SPACE % 8))))
+                if ((ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keys)), &keys) >= 0) &&
+                    (keys[KEY_SPACE / 8] & (1 << (KEY_SPACE % 8))))
                 {
                     swift::misc::CLogMessage(this).info(u"Found keyboard: %1") << deviceName;
 
                     fcntl(inputFile->handle(), F_SETFL, O_NONBLOCK);
-                    connect(new QSocketNotifier(inputFile->handle(), QSocketNotifier::Read, inputFile.data()), &QSocketNotifier::activated, this, &CKeyboardLinux::inputReadyRead);
+                    connect(new QSocketNotifier(inputFile->handle(), QSocketNotifier::Read, inputFile.data()),
+                            &QSocketNotifier::activated, this, &CKeyboardLinux::inputReadyRead);
 
                     m_keyboardDevices.insert(filePath, inputFile);
                 }
@@ -253,7 +245,8 @@ namespace swift::input
         }
         else
         {
-            swift::misc::CLogMessage(this).error(u"Failed to open keyboard device %1: %2") << inputFile->fileName() << inputFile->errorString();
+            swift::misc::CLogMessage(this).error(u"Failed to open keyboard device %1: %2")
+                << inputFile->fileName() << inputFile->errorString();
         }
     }
 
@@ -277,10 +270,7 @@ namespace swift::input
             m_keyCombination.removeKeyboardKey(key);
         }
 
-        if (oldCombination != m_keyCombination)
-        {
-            emit keyCombinationChanged(m_keyCombination);
-        }
+        if (oldCombination != m_keyCombination) { emit keyCombinationChanged(m_keyCombination); }
     }
 
     swift::misc::input::KeyCode CKeyboardLinux::convertToKey(int keyCode)
@@ -306,8 +296,7 @@ namespace swift::input
         case XK_Control_L:
         case XK_Control_R:
         case XK_Alt_L:
-        case XK_Alt_R:
-            return true;
+        case XK_Alt_R: return true;
         default: return false;
         }
 
@@ -320,10 +309,8 @@ namespace swift::input
         {
         case BTN_LEFT:
         case BTN_RIGHT:
-        case BTN_MIDDLE:
-            return true;
-        default:
-            return false;
+        case BTN_MIDDLE: return true;
+        default: return false;
         }
     }
 } // namespace swift::input

@@ -63,11 +63,11 @@ using namespace swift::gui::menus;
 
 namespace swift::gui::components
 {
-    CDbMappingComponent::CDbMappingComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                ui(new Ui::CDbMappingComponent),
-                                                                m_autoStashDialog(new CDbAutoStashingComponent(this)),
-                                                                m_autoSimulatorDialog(new CDbAutoSimulatorStashingComponent(this)),
-                                                                m_modelModifyDialog(new CDbModelMappingModifyDialog(this))
+    CDbMappingComponent::CDbMappingComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CDbMappingComponent),
+          m_autoStashDialog(new CDbAutoStashingComponent(this)),
+          m_autoSimulatorDialog(new CDbAutoSimulatorStashingComponent(this)),
+          m_modelModifyDialog(new CDbModelMappingModifyDialog(this))
     {
         ui->setupUi(this);
         ui->comp_StashAircraft->setMappingComponent(this);
@@ -78,7 +78,8 @@ namespace swift::gui::components
         ui->tvp_AircraftModelsForVPilot->addFilterDialog();
 
         // model menus
-        ui->comp_OwnAircraftModels->view()->setCustomMenu(new CShowSimulatorFileMenu(ui->comp_OwnAircraftModels->view(), this));
+        ui->comp_OwnAircraftModels->view()->setCustomMenu(
+            new CShowSimulatorFileMenu(ui->comp_OwnAircraftModels->view(), this));
         ui->comp_OwnAircraftModels->view()->setCustomMenu(new CMergeWithVPilotMenu(this));
         ui->comp_OwnAircraftModels->view()->setCustomMenu(new COwnModelSetMenu(this));
         ui->comp_OwnAircraftModels->view()->setCustomMenu(new CStashToolsMenu(this));
@@ -91,44 +92,67 @@ namespace swift::gui::components
         ui->comp_StashAircraft->view()->setCustomMenu(new COwnModelSetMenu(this));
         ui->comp_StashAircraft->view()->setCustomMenu(new CStashToolsMenu(this));
 
-        ui->comp_ModelWorkbench->view()->menuAddItems(CAircraftModelView::MenuClear | CAircraftModelView::MenuRemoveSelectedRows);
+        ui->comp_ModelWorkbench->view()->menuAddItems(CAircraftModelView::MenuClear |
+                                                      CAircraftModelView::MenuRemoveSelectedRows);
         ui->comp_ModelWorkbench->view()->setCustomMenu(new CApplyDbDataMenu(this));
         ui->comp_ModelWorkbench->view()->setCustomMenu(new COwnModelSetMenu(this));
         ui->comp_ModelWorkbench->view()->setCustomMenu(new CStashToolsMenu(this));
         ui->comp_ModelWorkbench->view()->setCustomMenu(new CRemovedModelsMenu(this));
 
         // connects
-        connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this, &CDbMappingComponent::stashCurrentModel);
+        connect(ui->editor_ModelMapping, &CModelMappingForm::requestStash, this,
+                &CDbMappingComponent::stashCurrentModel);
 
-        connect(ui->comp_OwnAircraftModels, &CDbOwnModelsComponent::ownModelsSimulatorChanged, this, &CDbMappingComponent::onOwnModelsSimulatorChanged, Qt::QueuedConnection);
-        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
-        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onOwnModelsChangedDigest, Qt::QueuedConnection);
-        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
-        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
+        connect(ui->comp_OwnAircraftModels, &CDbOwnModelsComponent::ownModelsSimulatorChanged, this,
+                &CDbMappingComponent::onOwnModelsSimulatorChanged, Qt::QueuedConnection);
+        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::doubleClicked, this,
+                &CDbMappingComponent::onModelRowSelected);
+        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::modelDataChangedDigest, this,
+                &CDbMappingComponent::onOwnModelsChangedDigest, Qt::QueuedConnection);
+        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::requestStash, this,
+                &CDbMappingComponent::stashSelectedModels);
+        connect(ui->comp_OwnAircraftModels->view(), &CAircraftModelView::toggledHighlightStashedModels, this,
+                &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
 
-        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
-        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onWorkbenchDataChanged, Qt::QueuedConnection);
-        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
-        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
+        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::doubleClicked, this,
+                &CDbMappingComponent::onModelRowSelected);
+        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::modelDataChangedDigest, this,
+                &CDbMappingComponent::onWorkbenchDataChanged, Qt::QueuedConnection);
+        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::requestStash, this,
+                &CDbMappingComponent::stashSelectedModels);
+        connect(ui->comp_ModelWorkbench->view(), &CAircraftModelView::toggledHighlightStashedModels, this,
+                &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
 
-        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onStashedModelsDataChangedDigest);
-        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
-        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::requestHandlingOfStashDrop, this, &CDbMappingComponent::handleStashDropRequest);
-        connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
-        connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this, &CDbMappingComponent::onModelsSuccessfullyPublished, Qt::QueuedConnection);
+        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::modelDataChangedDigest, this,
+                &CDbMappingComponent::onStashedModelsDataChangedDigest);
+        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::doubleClicked, this,
+                &CDbMappingComponent::onModelRowSelected);
+        connect(ui->comp_StashAircraft->view(), &CAircraftModelView::requestHandlingOfStashDrop, this,
+                &CDbMappingComponent::handleStashDropRequest);
+        connect(ui->comp_StashAircraft, &CDbStashComponent::stashedModelsChanged, this,
+                &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
+        connect(ui->comp_StashAircraft, &CDbStashComponent::modelsSuccessfullyPublished, this,
+                &CDbMappingComponent::onModelsSuccessfullyPublished, Qt::QueuedConnection);
 
-        connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChangedDigest, this, &CDbMappingComponent::onModelSetChangedDigest, Qt::QueuedConnection);
-        connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
+        connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::modelDataChangedDigest, this,
+                &CDbMappingComponent::onModelSetChangedDigest, Qt::QueuedConnection);
+        connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::requestStash, this,
+                &CDbMappingComponent::stashSelectedModels);
 
         connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, this, &CDbMappingComponent::onTabIndexChanged);
-        connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, ui->comp_ModelMatcher, &CModelMatcherComponent::tabIndexChanged);
+        connect(ui->tw_ModelsToBeMapped, &QTabWidget::currentChanged, ui->comp_ModelMatcher,
+                &CModelMatcherComponent::tabIndexChanged);
 
-        connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
+        connect(ui->comp_OwnModelSet->view(), &CAircraftModelView::doubleClicked, this,
+                &CDbMappingComponent::onModelRowSelected);
 
         // initial values
-        this->onModelSetChangedDigest(ui->comp_OwnModelSet->view()->rowCount(), ui->comp_OwnModelSet->view()->hasFilter());
-        this->onStashedModelsDataChangedDigest(ui->comp_StashAircraft->view()->rowCount(), ui->comp_StashAircraft->view()->hasFilter());
-        this->onOwnModelsChangedDigest(ui->comp_OwnAircraftModels->view()->rowCount(), ui->comp_OwnAircraftModels->view()->hasFilter());
+        this->onModelSetChangedDigest(ui->comp_OwnModelSet->view()->rowCount(),
+                                      ui->comp_OwnModelSet->view()->hasFilter());
+        this->onStashedModelsDataChangedDigest(ui->comp_StashAircraft->view()->rowCount(),
+                                               ui->comp_StashAircraft->view()->hasFilter());
+        this->onOwnModelsChangedDigest(ui->comp_OwnAircraftModels->view()->rowCount(),
+                                       ui->comp_OwnAircraftModels->view()->hasFilter());
 
         // allow to use workbench data
         ui->comp_ModelMatcher->setWorkbenchView(ui->comp_ModelWorkbench->view());
@@ -143,17 +167,15 @@ namespace swift::gui::components
 
         // custom menu and shortcut
         this->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(this, &CDbMappingComponent::customContextMenuRequested, this, &CDbMappingComponent::onCustomContextMenu);
+        connect(this, &CDbMappingComponent::customContextMenuRequested, this,
+                &CDbMappingComponent::onCustomContextMenu);
         new QShortcut(CShortcut::keyAddToModelSet(), this, SLOT(ps_addToOwnModelSet()));
 
         // vPilot
         this->initVPilotLoading();
     }
 
-    CDbMappingComponent::~CDbMappingComponent()
-    {
-        this->gracefulShutdown();
-    }
+    CDbMappingComponent::~CDbMappingComponent() { this->gracefulShutdown(); }
 
     void CDbMappingComponent::initVPilotLoading()
     {
@@ -163,12 +185,18 @@ namespace swift::gui::components
         if (m_vPilot1stInit && vPilotSupport)
         {
             m_vPilot1stInit = false;
-            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this, &CDbMappingComponent::onModelRowSelected);
-            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this, &CDbMappingComponent::onVPilotDataChanged);
-            connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this, &CDbMappingComponent::onLoadVPilotDataFinished);
-            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this, &CDbMappingComponent::stashSelectedModels);
-            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this, &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
-            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestUpdate, this, &CDbMappingComponent::requestVPilotDataUpdate);
+            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::doubleClicked, this,
+                    &CDbMappingComponent::onModelRowSelected);
+            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::modelDataChanged, this,
+                    &CDbMappingComponent::onVPilotDataChanged);
+            connect(&m_vPilotReader, &CVPilotRulesReader::readFinished, this,
+                    &CDbMappingComponent::onLoadVPilotDataFinished);
+            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestStash, this,
+                    &CDbMappingComponent::stashSelectedModels);
+            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::toggledHighlightStashedModels, this,
+                    &CDbMappingComponent::onStashedModelsChangedTriggerDigest);
+            connect(ui->tvp_AircraftModelsForVPilot, &CAircraftModelView::requestUpdate, this,
+                    &CDbMappingComponent::requestVPilotDataUpdate);
 
             ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CMappingVPilotMenu(this));
             ui->tvp_AircraftModelsForVPilot->setCustomMenu(new CStashToolsMenu(this));
@@ -186,7 +214,8 @@ namespace swift::gui::components
         {
             // create / restore tab
             ui->tw_ModelsToBeMapped->addTab(ui->tab_VPilot, tabName);
-            this->onVPilotDataChanged(ui->tvp_AircraftModelsForVPilot->rowCount(), ui->tvp_AircraftModelsForVPilot->hasFilter());
+            this->onVPilotDataChanged(ui->tvp_AircraftModelsForVPilot->rowCount(),
+                                      ui->tvp_AircraftModelsForVPilot->hasFilter());
         }
         else
         {
@@ -210,7 +239,10 @@ namespace swift::gui::components
         // check if we have an explicit sender
         if (sender == ui->tvp_AircraftModelsForVPilot) { return ui->tvp_AircraftModelsForVPilot->at(index); }
         if (sender == ui->comp_OwnAircraftModels->view()) { return ui->comp_OwnAircraftModels->view()->at(index); }
-        if (sender == ui->comp_StashAircraft || sender == ui->comp_StashAircraft->view()) { return ui->comp_StashAircraft->view()->at(index); }
+        if (sender == ui->comp_StashAircraft || sender == ui->comp_StashAircraft->view())
+        {
+            return ui->comp_StashAircraft->view()->at(index);
+        }
         if (sender == ui->comp_OwnModelSet->view()) { return ui->comp_OwnModelSet->view()->at(index); }
 
         // no sender, use current tab
@@ -287,10 +319,7 @@ namespace swift::gui::components
             if (ui->editor_AircraftModel->setAircraftIcao(stashedIcaoCode)) { updated = true; }
         }
 
-        if (updated)
-        {
-            CLogMessage(this).info(u"Updated editor data for '%1'") << modelString;
-        }
+        if (updated) { CLogMessage(this).info(u"Updated editor data for '%1'") << modelString; }
     }
 
     CAircraftModelList CDbMappingComponent::getSelectedModelsToStash() const
@@ -305,10 +334,7 @@ namespace swift::gui::components
         return ui->comp_StashAircraft->getStashedModels();
     }
 
-    bool CDbMappingComponent::hasStashedModels() const
-    {
-        return !this->getStashedModels().isEmpty();
-    }
+    bool CDbMappingComponent::hasStashedModels() const { return !this->getStashedModels().isEmpty(); }
 
     QStringList CDbMappingComponent::getStashedModelStrings() const
     {
@@ -322,19 +348,14 @@ namespace swift::gui::components
         return static_cast<TabIndex>(t);
     }
 
-    bool CDbMappingComponent::isStashTab() const
-    {
-        return this->currentTabIndex() == TabStash;
-    }
+    bool CDbMappingComponent::isStashTab() const { return this->currentTabIndex() == TabStash; }
 
-    bool CDbMappingComponent::isWorkbenchTab() const
-    {
-        return this->currentTabIndex() == TabWorkbench;
-    }
+    bool CDbMappingComponent::isWorkbenchTab() const { return this->currentTabIndex() == TabWorkbench; }
 
     bool CDbMappingComponent::canAddToModelSetTab() const
     {
-        const bool allowed = this->currentTabIndex() == CDbMappingComponent::TabOwnModels || this->currentTabIndex() == CDbMappingComponent::TabStash;
+        const bool allowed = this->currentTabIndex() == CDbMappingComponent::TabOwnModels ||
+                             this->currentTabIndex() == CDbMappingComponent::TabStash;
         return allowed && this->currentModelView()->hasSelection();
     }
 
@@ -372,24 +393,14 @@ namespace swift::gui::components
 
             // from stash, do not consolidate, because we want to keep data as they are from the editor
             const bool consolidate = !this->isStashTab();
-            msgs.push_back(
-                ui->comp_StashAircraft->stashModel(editorModel, true, consolidate));
+            msgs.push_back(ui->comp_StashAircraft->stashModel(editorModel, true, consolidate));
         }
-        if (msgs.hasErrorMessages())
-        {
-            this->showOverlayMessagesOrHTMLMessage(msgs);
-        }
+        if (msgs.hasErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
     }
 
-    void CDbMappingComponent::displayAutoStashingDialog()
-    {
-        m_autoStashDialog->exec();
-    }
+    void CDbMappingComponent::displayAutoStashingDialog() { m_autoStashDialog->exec(); }
 
-    void CDbMappingComponent::displayAutoSimulatorStashingDialog()
-    {
-        m_autoSimulatorDialog->exec();
-    }
+    void CDbMappingComponent::displayAutoSimulatorStashingDialog() { m_autoSimulatorDialog->exec(); }
 
     void CDbMappingComponent::removeDbModelsFromView()
     {
@@ -406,51 +417,30 @@ namespace swift::gui::components
         ui->comp_StashAircraft->showChangedAttributes();
     }
 
-    void CDbMappingComponent::toggleAutoFiltering()
-    {
-        m_autoFilterInDbViews = !m_autoFilterInDbViews;
-    }
+    void CDbMappingComponent::toggleAutoFiltering() { m_autoFilterInDbViews = !m_autoFilterInDbViews; }
 
     void CDbMappingComponent::applyFormLiveryData()
     {
         if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
         const CStatusMessageList msgs = ui->editor_AircraftModel->validateLivery(true);
-        if (msgs.hasErrorMessages())
-        {
-            this->showOverlayMessagesOrHTMLMessage(msgs);
-        }
-        else
-        {
-            ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getLivery());
-        }
+        if (msgs.hasErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
+        else { ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getLivery()); }
     }
 
     void CDbMappingComponent::applyFormAircraftIcaoData()
     {
         if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
         const CStatusMessageList msgs = ui->editor_AircraftModel->validateAircraftIcao(true);
-        if (msgs.hasErrorMessages())
-        {
-            this->showOverlayMessagesOrHTMLMessage(msgs);
-        }
-        else
-        {
-            ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getAircraftIcao());
-        }
+        if (msgs.hasErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
+        else { ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getAircraftIcao()); }
     }
 
     void CDbMappingComponent::applyFormDistributorData()
     {
         if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
         const CStatusMessageList msgs = ui->editor_AircraftModel->validateDistributor(true);
-        if (msgs.hasErrorMessages())
-        {
-            this->showOverlayMessagesOrHTMLMessage(msgs);
-        }
-        else
-        {
-            ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getDistributor());
-        }
+        if (msgs.hasErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
+        else { ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getDistributor()); }
     }
 
     void CDbMappingComponent::modifyModelDialog()
@@ -467,10 +457,7 @@ namespace swift::gui::components
         ui->comp_StashAircraft->applyToSelected(vm);
     }
 
-    void CDbMappingComponent::resizeForSelect()
-    {
-        this->maxTableView();
-    }
+    void CDbMappingComponent::resizeForSelect() { this->maxTableView(); }
 
     void CDbMappingComponent::resizeForMapping()
     {
@@ -511,10 +498,7 @@ namespace swift::gui::components
             CLogMessage(this).info(u"Start loading vPilot rulesets");
             ui->tvp_AircraftModelsForVPilot->showLoadIndicator();
         }
-        else
-        {
-            CLogMessage(this).warning(u"Loading vPilot rulesets already in progress");
-        }
+        else { CLogMessage(this).warning(u"Loading vPilot rulesets already in progress"); }
     }
 
     void CDbMappingComponent::onLoadVPilotDataFinished(bool success)
@@ -529,10 +513,7 @@ namespace swift::gui::components
                 ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(models);
             }
         }
-        else
-        {
-            CLogMessage(this).error(u"Loading vPilot ruleset failed");
-        }
+        else { CLogMessage(this).error(u"Loading vPilot ruleset failed"); }
         ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
     }
 
@@ -549,16 +530,10 @@ namespace swift::gui::components
         {
             ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(m_vPilotReader.getAsModelsFromCache());
         }
-        else
-        {
-            ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
-        }
+        else { ui->tvp_AircraftModelsForVPilot->hideLoadIndicator(); }
     }
 
-    void CDbMappingComponent::requestVPilotDataUpdate()
-    {
-        this->onVPilotCacheChanged();
-    }
+    void CDbMappingComponent::requestVPilotDataUpdate() { this->onVPilotCacheChanged(); }
 
     void CDbMappingComponent::onStashedModelsChangedTriggerDigest()
     {
@@ -633,14 +608,16 @@ namespace swift::gui::components
     {
         Q_UNUSED(count)
         Q_UNUSED(withFilter)
-        ui->tvp_AircraftModelsForVPilot->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_VPilot));
+        ui->tvp_AircraftModelsForVPilot->setTabWidgetViewText(ui->tw_ModelsToBeMapped,
+                                                              ui->tw_ModelsToBeMapped->indexOf(ui->tab_VPilot));
     }
 
     void CDbMappingComponent::onWorkbenchDataChanged(int count, bool withFilter)
     {
         Q_UNUSED(count)
         Q_UNUSED(withFilter)
-        ui->comp_ModelWorkbench->view()->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_Workbench));
+        ui->comp_ModelWorkbench->view()->setTabWidgetViewText(ui->tw_ModelsToBeMapped,
+                                                              ui->tw_ModelsToBeMapped->indexOf(ui->tab_Workbench));
     }
 
     void CDbMappingComponent::ps_addToOwnModelSet()
@@ -687,8 +664,10 @@ namespace swift::gui::components
         QPoint globalPos = this->mapToGlobal(point);
         QScopedPointer<QMenu> contextMenu(new QMenu(this));
 
-        contextMenu->addAction("Max.data area", this, &CDbMappingComponent::resizeForSelect, QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_D));
-        contextMenu->addAction("Max.mapping area", this, &CDbMappingComponent::resizeForMapping, QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_M));
+        contextMenu->addAction("Max.data area", this, &CDbMappingComponent::resizeForSelect,
+                               QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_D));
+        contextMenu->addAction("Max.mapping area", this, &CDbMappingComponent::resizeForMapping,
+                               QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_M));
         QAction *selectedItem = contextMenu.data()->exec(globalPos);
         Q_UNUSED(selectedItem)
     }
@@ -697,7 +676,8 @@ namespace swift::gui::components
     {
         Q_UNUSED(count)
         Q_UNUSED(withFilter)
-        ui->comp_StashAircraft->view()->setTabWidgetViewText(ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_StashAircraftModels));
+        ui->comp_StashAircraft->view()->setTabWidgetViewText(
+            ui->tw_ModelsToBeMapped, ui->tw_ModelsToBeMapped->indexOf(ui->tab_StashAircraftModels));
 
         // update editors
         this->updateEditorsWhenApplicable();
@@ -732,21 +712,13 @@ namespace swift::gui::components
         ui->tw_ModelsToBeMapped->setTabText(i, o);
     }
 
-    void CDbMappingComponent::onUserChanged()
-    {
-        this->initVPilotLoading();
-    }
+    void CDbMappingComponent::onUserChanged() { this->initVPilotLoading(); }
 
     void CDbMappingComponent::stashSelectedModels()
     {
         if (!this->hasSelectedModelsToStash()) { return; }
-        CStatusMessageList msgs =
-            ui->comp_StashAircraft->stashModels(
-                this->getSelectedModelsToStash());
-        if (msgs.hasWarningOrErrorMessages())
-        {
-            this->showOverlayMessagesOrHTMLMessage(msgs);
-        }
+        CStatusMessageList msgs = ui->comp_StashAircraft->stashModels(this->getSelectedModelsToStash());
+        if (msgs.hasWarningOrErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
     }
 
     void CDbMappingComponent::onModelRowSelected(const QModelIndex &index)
@@ -756,38 +728,25 @@ namespace swift::gui::components
 
         // we either use the model, or try to resolve the data to DB data
         bool dbModel = model.hasValidDbKey();
-        const CLivery livery(dbModel ? model.getLivery() : sGui->getWebDataServices()->smartLiverySelector(model.getLivery()));
-        const CAircraftIcaoCode aircraftIcao(dbModel ? model.getAircraftIcaoCode() : sGui->getWebDataServices()->smartAircraftIcaoSelector(model.getAircraftIcaoCode()));
-        const CDistributor distributor(dbModel ? model.getDistributor() : sGui->getWebDataServices()->smartDistributorSelector(model.getDistributor()));
+        const CLivery livery(dbModel ? model.getLivery() :
+                                       sGui->getWebDataServices()->smartLiverySelector(model.getLivery()));
+        const CAircraftIcaoCode aircraftIcao(
+            dbModel ? model.getAircraftIcaoCode() :
+                      sGui->getWebDataServices()->smartAircraftIcaoSelector(model.getAircraftIcaoCode()));
+        const CDistributor distributor(
+            dbModel ? model.getDistributor() :
+                      sGui->getWebDataServices()->smartDistributorSelector(model.getDistributor()));
 
         // set model part
         ui->editor_ModelMapping->setValue(model);
 
         // if found, then set in editor
-        if (livery.hasValidDbKey())
-        {
-            ui->editor_AircraftModel->setLivery(livery);
-        }
-        else
-        {
-            ui->editor_AircraftModel->clearLivery();
-        }
-        if (aircraftIcao.hasValidDbKey())
-        {
-            ui->editor_AircraftModel->setAircraftIcao(aircraftIcao);
-        }
-        else
-        {
-            ui->editor_AircraftModel->clearAircraftIcao();
-        }
-        if (distributor.hasValidDbKey())
-        {
-            ui->editor_AircraftModel->setDistributor(distributor);
-        }
-        else
-        {
-            ui->editor_AircraftModel->clearDistributor();
-        }
+        if (livery.hasValidDbKey()) { ui->editor_AircraftModel->setLivery(livery); }
+        else { ui->editor_AircraftModel->clearLivery(); }
+        if (aircraftIcao.hasValidDbKey()) { ui->editor_AircraftModel->setAircraftIcao(aircraftIcao); }
+        else { ui->editor_AircraftModel->clearAircraftIcao(); }
+        if (distributor.hasValidDbKey()) { ui->editor_AircraftModel->setDistributor(distributor); }
+        else { ui->editor_AircraftModel->clearDistributor(); }
 
         // request filtering
         if (m_autoFilterInDbViews)
@@ -816,10 +775,7 @@ namespace swift::gui::components
         return model;
     }
 
-    CAircraftModelList CDbMappingComponent::getOwnModels() const
-    {
-        return ui->comp_OwnAircraftModels->getOwnModels();
-    }
+    CAircraftModelList CDbMappingComponent::getOwnModels() const { return ui->comp_OwnAircraftModels->getOwnModels(); }
 
     CAircraftModelList CDbMappingComponent::getOwnCachedModels(const CSimulatorInfo &simulator) const
     {
@@ -846,15 +802,9 @@ namespace swift::gui::components
         ui->comp_OwnAircraftModels->setSimulator(simulator);
     }
 
-    int CDbMappingComponent::getOwnModelsCount() const
-    {
-        return ui->comp_OwnAircraftModels->getOwnModelsCount();
-    }
+    int CDbMappingComponent::getOwnModelsCount() const { return ui->comp_OwnAircraftModels->getOwnModelsCount(); }
 
-    QString CDbMappingComponent::getOwnModelsInfoString() const
-    {
-        return ui->comp_OwnAircraftModels->getInfoString();
-    }
+    QString CDbMappingComponent::getOwnModelsInfoString() const { return ui->comp_OwnAircraftModels->getInfoString(); }
 
     QString CDbMappingComponent::getOwnModelsInfoStringFsFamily() const
     {
@@ -882,7 +832,8 @@ namespace swift::gui::components
         return ui->comp_StashAircraft->stashModels(models);
     }
 
-    CStatusMessage CDbMappingComponent::addToOwnModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+    CStatusMessage CDbMappingComponent::addToOwnModelSet(const CAircraftModelList &models,
+                                                         const CSimulatorInfo &simulator)
     {
         return ui->comp_OwnModelSet->addToModelSet(models, simulator);
     }
@@ -905,7 +856,9 @@ namespace swift::gui::components
         const bool canUseVPilot = mappingComponent()->withVPilot();
         if (canUseVPilot)
         {
-            m_menuAction = menuActions.addAction(m_menuAction, CIcons::appMappings16(), "Load vPilot Rules", CMenuAction::pathVPilot(), this, { mapComp, &CDbMappingComponent::loadVPilotData });
+            m_menuAction = menuActions.addAction(m_menuAction, CIcons::appMappings16(), "Load vPilot Rules",
+                                                 CMenuAction::pathVPilot(), this,
+                                                 { mapComp, &CDbMappingComponent::loadVPilotData });
         }
         this->nestedCustomMenu(menuActions);
     }
@@ -915,27 +868,38 @@ namespace swift::gui::components
         return qobject_cast<CDbMappingComponent *>(this->parent());
     }
 
-    CDbMappingComponent::CStashToolsMenu::CStashToolsMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent)
+    CDbMappingComponent::CStashToolsMenu::CStashToolsMenu(CDbMappingComponent *mappingComponent)
+        : menus::IMenuDelegate(mappingComponent)
     {}
 
     void CDbMappingComponent::CStashToolsMenu::customMenu(CMenuActions &menuActions)
     {
         CDbMappingComponent *mapComp = mappingComponent();
         Q_ASSERT_X(mapComp, Q_FUNC_INFO, "no mapping component");
-        if (!mapComp->currentModelView()->isEmpty() && mapComp->currentModelView()->getMenu().testFlag(CViewBaseNonTemplate::MenuCanStashModels))
+        if (!mapComp->currentModelView()->isEmpty() &&
+            mapComp->currentModelView()->getMenu().testFlag(CViewBaseNonTemplate::MenuCanStashModels))
         {
             menuActions.addMenuStash();
 
             // auto filter in DB views
-            m_stashFiltering = menuActions.addAction(m_stashFiltering, CIcons::filter16(), "Auto filtering in DB views (on/off)", CMenuAction::pathModelStash(), this, { mapComp, &CDbMappingComponent::toggleAutoFiltering });
+            m_stashFiltering = menuActions.addAction(
+                m_stashFiltering, CIcons::filter16(), "Auto filtering in DB views (on/off)",
+                CMenuAction::pathModelStash(), this, { mapComp, &CDbMappingComponent::toggleAutoFiltering });
             m_stashFiltering->setCheckable(true);
             m_stashFiltering->setChecked(mapComp->m_autoFilterInDbViews);
 
-            m_autoStashing = menuActions.addAction(m_autoStashing, CIcons::appDbStash16(), "Auto stashing", CMenuAction::pathModelStash(), this, { mapComp, &CDbMappingComponent::displayAutoStashingDialog });
-            m_autoSimulatorStashing = menuActions.addAction(m_autoSimulatorStashing, CIcons::appDbStash16(), "Cross simulator updating (FSX-P3D-FS9)", CMenuAction::pathModelStash(), this, { mapComp, &CDbMappingComponent::displayAutoSimulatorStashingDialog });
+            m_autoStashing = menuActions.addAction(m_autoStashing, CIcons::appDbStash16(), "Auto stashing",
+                                                   CMenuAction::pathModelStash(), this,
+                                                   { mapComp, &CDbMappingComponent::displayAutoStashingDialog });
+            m_autoSimulatorStashing =
+                menuActions.addAction(m_autoSimulatorStashing, CIcons::appDbStash16(),
+                                      "Cross simulator updating (FSX-P3D-FS9)", CMenuAction::pathModelStash(), this,
+                                      { mapComp, &CDbMappingComponent::displayAutoSimulatorStashingDialog });
             if (mapComp->m_autoStashDialog && mapComp->m_autoStashDialog->isCompleted())
             {
-                menuActions.addAction(CIcons::appDbStash16(), "Last auto stash run", CMenuAction::pathModelStash(), nullptr, { mapComp->m_autoStashDialog.data(), &CDbAutoStashingComponent::showLastResults });
+                menuActions.addAction(
+                    CIcons::appDbStash16(), "Last auto stash run", CMenuAction::pathModelStash(), nullptr,
+                    { mapComp->m_autoStashDialog.data(), &CDbAutoStashingComponent::showLastResults });
             }
         }
         else if (mapComp->currentTabIndex() == CDbMappingComponent::TabStash)
@@ -956,11 +920,14 @@ namespace swift::gui::components
             menuActions.addMenu(CIcons::appDbStash16(), "Stash", CMenuAction::pathModelStash());
 
             // we have keys and data by which we could delete them from view
-            const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from '" + mapComp->currentTabText() + "'");
-            menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathModelStash(), nullptr, { mapComp, &CDbMappingComponent::removeDbModelsFromView });
+            const QString msgDelete("Delete " + QString::number(dbModels) + " DB model(s) from '" +
+                                    mapComp->currentTabText() + "'");
+            menuActions.addAction(CIcons::delete16(), msgDelete, CMenuAction::pathModelStash(), nullptr,
+                                  { mapComp, &CDbMappingComponent::removeDbModelsFromView });
 
             // attribute info
-            menuActions.addAction(CIcons::info16(), "Show changed attributes", CMenuAction::pathModelStash(), nullptr, { mapComp, &CDbMappingComponent::showChangedAttributes });
+            menuActions.addAction(CIcons::info16(), "Show changed attributes", CMenuAction::pathModelStash(), nullptr,
+                                  { mapComp, &CDbMappingComponent::showChangedAttributes });
         }
     }
 
@@ -976,11 +943,11 @@ namespace swift::gui::components
         if (mapComp->canAddToModelSetTab())
         {
             menuActions.addMenuModelSet();
-            m_menuAction = menuActions.addAction(m_menuAction, CIcons::appModels16(),
-                                                 "Add to own model set " + CShortcut::toParenthesisString(CShortcut::keyAddToModelSet()),
-                                                 CMenuAction::pathModelSet(),
-                                                 this, { mapComp, &CDbMappingComponent::ps_addToOwnModelSet },
-                                                 CShortcut::keyAddToModelSet());
+            m_menuAction = menuActions.addAction(
+                m_menuAction, CIcons::appModels16(),
+                "Add to own model set " + CShortcut::toParenthesisString(CShortcut::keyAddToModelSet()),
+                CMenuAction::pathModelSet(), this, { mapComp, &CDbMappingComponent::ps_addToOwnModelSet },
+                CShortcut::keyAddToModelSet());
         }
         this->nestedCustomMenu(menuActions);
     }
@@ -1002,10 +969,18 @@ namespace swift::gui::components
             // stash view and selection
             menuActions.addMenuStashEditor();
 
-            m_menuActions[0] = menuActions.addAction(m_menuActions[0], CIcons::appAircraftIcao16(), "Current aircraft ICAO", CMenuAction::pathModelStashEditor(), this, { mapComp, &CDbMappingComponent::applyFormAircraftIcaoData });
-            m_menuActions[1] = menuActions.addAction(m_menuActions[1], CIcons::appDistributors16(), "Current distributor", CMenuAction::pathModelStashEditor(), this, { mapComp, &CDbMappingComponent::applyFormDistributorData });
-            m_menuActions[2] = menuActions.addAction(m_menuActions[2], CIcons::appLiveries16(), "Current livery", CMenuAction::pathModelStashEditor(), this, { mapComp, &CDbMappingComponent::applyFormLiveryData });
-            m_menuActions[3] = menuActions.addAction(m_menuActions[3], CIcons::databaseTable16(), "Modify DB model data", CMenuAction::pathModelStashEditor(), this, { mapComp, &CDbMappingComponent::modifyModelDialog });
+            m_menuActions[0] = menuActions.addAction(m_menuActions[0], CIcons::appAircraftIcao16(),
+                                                     "Current aircraft ICAO", CMenuAction::pathModelStashEditor(), this,
+                                                     { mapComp, &CDbMappingComponent::applyFormAircraftIcaoData });
+            m_menuActions[1] = menuActions.addAction(m_menuActions[1], CIcons::appDistributors16(),
+                                                     "Current distributor", CMenuAction::pathModelStashEditor(), this,
+                                                     { mapComp, &CDbMappingComponent::applyFormDistributorData });
+            m_menuActions[2] = menuActions.addAction(m_menuActions[2], CIcons::appLiveries16(), "Current livery",
+                                                     CMenuAction::pathModelStashEditor(), this,
+                                                     { mapComp, &CDbMappingComponent::applyFormLiveryData });
+            m_menuActions[3] = menuActions.addAction(m_menuActions[3], CIcons::databaseTable16(),
+                                                     "Modify DB model data", CMenuAction::pathModelStashEditor(), this,
+                                                     { mapComp, &CDbMappingComponent::modifyModelDialog });
         }
         this->nestedCustomMenu(menuActions);
     }
@@ -1015,7 +990,8 @@ namespace swift::gui::components
         return qobject_cast<CDbMappingComponent *>(this->parent());
     }
 
-    CDbMappingComponent::CMergeWithVPilotMenu::CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent) : IMenuDelegate(mappingComponent)
+    CDbMappingComponent::CMergeWithVPilotMenu::CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent)
+        : IMenuDelegate(mappingComponent)
     {
         Q_ASSERT_X(mappingComponent, Q_FUNC_INFO, "Missing vPilot reader");
     }
@@ -1024,7 +1000,8 @@ namespace swift::gui::components
     {
         const CAircraftModelView *mv = mappingComponent()->ui->comp_OwnAircraftModels->view();
         const CSimulatorInfo sim = mappingComponent()->ui->comp_OwnAircraftModels->getOwnModelsSimulator();
-        if (!mappingComponent()->withVPilot() || mv->isEmpty() || !sim.isSingleSimulator() || !sim.isMicrosoftOrPrepare3DSimulator())
+        if (!mappingComponent()->withVPilot() || mv->isEmpty() || !sim.isSingleSimulator() ||
+            !sim.isMicrosoftOrPrepare3DSimulator())
         {
             this->nestedCustomMenu(menuActions);
             return;
@@ -1032,10 +1009,13 @@ namespace swift::gui::components
 
         if (m_menuActions.isEmpty()) { m_menuActions = QList<QAction *>({ nullptr, nullptr }); }
         menuActions.addMenu("Merge with vPilot data", CMenuAction::pathVPilot());
-        m_menuActions[0] = menuActions.addAction(m_menuActions[0], "All", CMenuAction::pathVPilot(), this, { mappingComponent(), &CDbMappingComponent::mergeWithVPilotModels });
+        m_menuActions[0] = menuActions.addAction(m_menuActions[0], "All", CMenuAction::pathVPilot(), this,
+                                                 { mappingComponent(), &CDbMappingComponent::mergeWithVPilotModels });
         if (mv->hasSelection())
         {
-            m_menuActions[1] = menuActions.addAction(m_menuActions[1], "Selected only", CMenuAction::pathVPilot(), this, { mappingComponent(), &CDbMappingComponent::mergeSelectedWithVPilotModels });
+            m_menuActions[1] =
+                menuActions.addAction(m_menuActions[1], "Selected only", CMenuAction::pathVPilot(), this,
+                                      { mappingComponent(), &CDbMappingComponent::mergeSelectedWithVPilotModels });
         }
         this->nestedCustomMenu(menuActions);
     }
@@ -1047,8 +1027,9 @@ namespace swift::gui::components
         if (mapComp->isWorkbenchTab())
         {
             menuActions.addMenuModelSet();
-            m_menuAction = menuActions.addAction(m_menuAction, CIcons::appModels16(), "Removed models", CMenuAction::pathModel(),
-                                                 this, { mapComp, &CDbMappingComponent::loadRemovedModels });
+            m_menuAction =
+                menuActions.addAction(m_menuAction, CIcons::appModels16(), "Removed models", CMenuAction::pathModel(),
+                                      this, { mapComp, &CDbMappingComponent::loadRemovedModels });
         }
         this->nestedCustomMenu(menuActions);
     }

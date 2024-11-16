@@ -20,8 +20,7 @@ namespace swift::misc::aviation
 namespace swift::gui::models
 {
     //! Distributor list model
-    class SWIFT_GUI_EXPORT CLiveryListModel :
-        public CListModelDbObjects<swift::misc::aviation::CLiveryList, int, true>
+    class SWIFT_GUI_EXPORT CLiveryListModel : public CListModelDbObjects<swift::misc::aviation::CLiveryList, int, true>
     {
         Q_OBJECT
 

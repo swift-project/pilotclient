@@ -20,9 +20,7 @@ namespace swift::misc
     /*!
      * Value object encapsulating a list of object identifiers
      */
-    class SWIFT_MISC_EXPORT CIdentifierList :
-        public CSequence<CIdentifier>,
-        public mixin::MetaType<CIdentifierList>
+    class SWIFT_MISC_EXPORT CIdentifierList : public CSequence<CIdentifier>, public mixin::MetaType<CIdentifierList>
     {
     public:
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CIdentifierList)

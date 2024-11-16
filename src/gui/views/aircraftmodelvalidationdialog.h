@@ -19,7 +19,8 @@ namespace swift::gui::views
 {
     /*!
      * Model validation
-     * \remark there is also a more specific validation version swift::gui::components::CAircraftModelSetValidationDialog
+     * \remark there is also a more specific validation version
+     * swift::gui::components::CAircraftModelSetValidationDialog
      */
     class CAircraftModelValidationDialog : public QDialog
     {
@@ -33,10 +34,8 @@ namespace swift::gui::views
         virtual ~CAircraftModelValidationDialog() override;
 
         //! Models
-        void setModels(
-            const swift::misc::simulation::CAircraftModelList &models,
-            const swift::misc::simulation::CSimulatorInfo &simulator,
-            const QString &simulatorDir);
+        void setModels(const swift::misc::simulation::CAircraftModelList &models,
+                       const swift::misc::simulation::CSimulatorInfo &simulator, const QString &simulatorDir);
 
         //! Trigger a validation
         void triggerValidation(int delayMs = 2500);

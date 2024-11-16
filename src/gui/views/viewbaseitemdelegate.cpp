@@ -7,7 +7,8 @@
 
 namespace swift::gui::views
 {
-    void CViewBaseItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void CViewBaseItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+                                      const QModelIndex &index) const
     {
         const bool isMouseOver = option.state & QStyle::State_MouseOver;
         viewBase()->mouseOverCallback(index, isMouseOver);

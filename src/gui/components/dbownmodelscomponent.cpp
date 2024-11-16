@@ -39,8 +39,8 @@ using namespace swift::gui::models;
 
 namespace swift::gui::components
 {
-    CDbOwnModelsComponent::CDbOwnModelsComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                    ui(new Ui::CDbOwnModelsComponent)
+    CDbOwnModelsComponent::CDbOwnModelsComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CDbOwnModelsComponent)
     {
         ui->setupUi(this);
         ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
@@ -50,23 +50,36 @@ namespace swift::gui::components
         ui->tvp_OwnAircraftModels->setCustomMenu(new CLoadModelsMenu(this));
 
         const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
-        ui->tvp_OwnAircraftModels->setCorrespondingSimulator(sim, m_simulatorSettings.getSimulatorDirectoryOrDefault(sim));
+        ui->tvp_OwnAircraftModels->setCorrespondingSimulator(sim,
+                                                             m_simulatorSettings.getSimulatorDirectoryOrDefault(sim));
 
-        bool c = connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this, &CDbOwnModelsComponent::requestOwnModelsUpdate);
+        bool c = connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::requestUpdate, this,
+                         &CDbOwnModelsComponent::requestOwnModelsUpdate);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::jsonLoadCompleted, this, &CDbOwnModelsComponent::onViewDiskLoadingFinished, Qt::QueuedConnection);
+        c = connect(ui->tvp_OwnAircraftModels, &CAircraftModelView::jsonLoadCompleted, this,
+                    &CDbOwnModelsComponent::onViewDiskLoadingFinished, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDbOwnModelsComponent::onSimulatorSelectorChanged);
+        c = connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this,
+                    &CDbOwnModelsComponent::onSimulatorSelectorChanged);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingFinished, this, &CDbOwnModelsComponent::onModelLoaderLoadingFinished, Qt::QueuedConnection);
+        c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(),
+                    &CMultiAircraftModelLoaderProvider::loadingFinished, this,
+                    &CDbOwnModelsComponent::onModelLoaderLoadingFinished, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::diskLoadingStarted, this, &CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted, Qt::QueuedConnection);
+        c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(),
+                    &CMultiAircraftModelLoaderProvider::diskLoadingStarted, this,
+                    &CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::loadingProgress, this, &CDbOwnModelsComponent::onModelLoadingProgress, Qt::QueuedConnection);
+        c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(),
+                    &CMultiAircraftModelLoaderProvider::loadingProgress, this,
+                    &CDbOwnModelsComponent::onModelLoadingProgress, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(), &CMultiAircraftModelLoaderProvider::cacheChanged, this, &CDbOwnModelsComponent::onCacheChanged, Qt::QueuedConnection);
+        c = connect(&CMultiAircraftModelLoaderProvider::multiModelLoaderInstance(),
+                    &CMultiAircraftModelLoaderProvider::cacheChanged, this, &CDbOwnModelsComponent::onCacheChanged,
+                    Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(ui->pb_ForceReload, &QPushButton::released, this, &CDbOwnModelsComponent::confirmedForcedReloadCurrentSimulator, Qt::QueuedConnection);
+        c = connect(ui->pb_ForceReload, &QPushButton::released, this,
+                    &CDbOwnModelsComponent::confirmedForcedReloadCurrentSimulator, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         // Last selection isPinned -> no sync needed
@@ -77,10 +90,7 @@ namespace swift::gui::components
             m_simulator = simulator;
             this->setUiSimulatorString(simulator);
             const bool success = this->initModelLoader(simulator, IAircraftModelLoader::CacheOnly);
-            if (!success)
-            {
-                CLogMessage(this).error(u"Init of model loader failed in component");
-            }
+            if (!success) { CLogMessage(this).error(u"Init of model loader failed in component"); }
         }
 
         // menu
@@ -98,21 +108,16 @@ namespace swift::gui::components
         return l;
     }
 
-    CAircraftModelView *CDbOwnModelsComponent::view() const
-    {
-        return ui->tvp_OwnAircraftModels;
-    }
+    CAircraftModelView *CDbOwnModelsComponent::view() const { return ui->tvp_OwnAircraftModels; }
 
-    CAircraftModelListModel *CDbOwnModelsComponent::model() const
-    {
-        return ui->tvp_OwnAircraftModels->derivedModel();
-    }
+    CAircraftModelListModel *CDbOwnModelsComponent::model() const { return ui->tvp_OwnAircraftModels->derivedModel(); }
 
     bool CDbOwnModelsComponent::requestModelsInBackground(const CSimulatorInfo &simulator, bool onlyIfNotEmpty)
     {
         this->setSimulator(simulator);
         if (onlyIfNotEmpty && this->getOwnModelsCount() > 0) { return false; }
-        const IAircraftModelLoader::LoadMode mode = onlyIfNotEmpty ? IAircraftModelLoader::InBackgroundNoCache : IAircraftModelLoader::LoadInBackground;
+        const IAircraftModelLoader::LoadMode mode =
+            onlyIfNotEmpty ? IAircraftModelLoader::InBackgroundNoCache : IAircraftModelLoader::LoadInBackground;
         this->requestSimulatorModels(simulator, mode);
         return true;
     }
@@ -158,7 +163,8 @@ namespace swift::gui::components
         this->requestSimulatorModelsWithCacheInBackground(simulator);
         ui->comp_SimulatorSelector->setValue(simulator);
         this->setUiSimulatorString(simulator);
-        ui->tvp_OwnAircraftModels->setCorrespondingSimulator(simulator, m_simulatorSettings.getSimulatorDirectoryOrDefault(simulator));
+        ui->tvp_OwnAircraftModels->setCorrespondingSimulator(
+            simulator, m_simulatorSettings.getSimulatorDirectoryOrDefault(simulator));
         return true;
     }
 
@@ -194,17 +200,11 @@ namespace swift::gui::components
     CStatusMessage CDbOwnModelsComponent::updateViewAndCache(const CAircraftModelList &models)
     {
         const CStatusMessage m = m_modelLoader->setCachedModels(models, this->getOwnModelsSimulator());
-        if (m.isSuccess())
-        {
-            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
-        }
+        if (m.isSuccess()) { ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models); }
         return m;
     }
 
-    void CDbOwnModelsComponent::clearView()
-    {
-        ui->tvp_OwnAircraftModels->clear();
-    }
+    void CDbOwnModelsComponent::clearView() { ui->tvp_OwnAircraftModels->clear(); }
 
     void CDbOwnModelsComponent::gracefulShutdown()
     {
@@ -218,7 +218,8 @@ namespace swift::gui::components
         ui->tvp_OwnAircraftModels->replaceOrAddModelsWithString(models);
     }
 
-    int CDbOwnModelsComponent::updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+    int CDbOwnModelsComponent::updateModelsForSimulator(const CAircraftModelList &models,
+                                                        const CSimulatorInfo &simulator)
     {
         if (!m_modelLoader) { return 0; }
         const int c = m_modelLoader->updateModelsForSimulator(models, simulator);
@@ -252,8 +253,9 @@ namespace swift::gui::components
     QString CDbOwnModelsComponent::directorySelector(const CSimulatorInfo &simulatorInfo)
     {
         QString dir = m_directorySettings.get().getLastModelDirectoryOrDefault();
-        dir = QFileDialog::getExistingDirectory(this, QStringLiteral("Open directory (%1)").arg(simulatorInfo.toQString()), dir,
-                                                QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+        dir = QFileDialog::getExistingDirectory(this,
+                                                QStringLiteral("Open directory (%1)").arg(simulatorInfo.toQString()),
+                                                dir, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
         const QDir d(dir);
         if (d.exists())
         {
@@ -272,10 +274,7 @@ namespace swift::gui::components
         ui->pb_ForceReload->setText(QStringLiteral("force reload '%1'").arg(s));
     }
 
-    void CDbOwnModelsComponent::confirmedForcedReloadCurrentSimulator()
-    {
-        this->confirmedForcedReload(m_simulator);
-    }
+    void CDbOwnModelsComponent::confirmedForcedReloadCurrentSimulator() { this->confirmedForcedReload(m_simulator); }
 
     void CDbOwnModelsComponent::confirmedForcedReload(const CSimulatorInfo &simulator)
     {
@@ -311,7 +310,10 @@ namespace swift::gui::components
             QPointer<CDbOwnModelsComponent> ownModelsComp(qobject_cast<CDbOwnModelsComponent *>(this->parent()));
             Q_ASSERT_X(ownModelsComp, Q_FUNC_INFO, "Cannot access parent");
 
-            if (m_loadActions.isEmpty()) { m_loadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }); }
+            if (m_loadActions.isEmpty())
+            {
+                m_loadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
+            }
             menuActions.addMenuSimulator();
             if (sims.isFSX())
             {
@@ -396,8 +398,13 @@ namespace swift::gui::components
             // I need those models because I want to merge with DB data in the loader
             if (sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->getModelsCount() > 0)
             {
-                if (m_reloadActions.isEmpty()) { m_reloadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }); }
-                menuActions.addMenu(CIcons::refresh16(), "Force model reload", CMenuAction::pathSimulatorModelsReload());
+                if (m_reloadActions.isEmpty())
+                {
+                    m_reloadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+                                                         nullptr, nullptr, nullptr, nullptr, nullptr });
+                }
+                menuActions.addMenu(CIcons::refresh16(), "Force model reload",
+                                    CMenuAction::pathSimulatorModelsReload());
                 if (sims.isFSX())
                 {
                     if (!m_reloadActions[0])
@@ -406,7 +413,8 @@ namespace swift::gui::components
                         connect(m_reloadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked)
-                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::fsx(), IAircraftModelLoader::InBackgroundNoCache);
+                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::fsx(),
+                                                                  IAircraftModelLoader::InBackgroundNoCache);
                         });
 
                         m_reloadActions[1] = new QAction(CIcons::appModels16(), "FSX models from directory", this);
@@ -417,7 +425,8 @@ namespace swift::gui::components
                             const QString dir = ownModelsComp->directorySelector(sim);
                             if (!dir.isEmpty())
                             {
-                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
+                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache,
+                                                                      QStringList(dir));
                             }
                         });
                     }
@@ -432,7 +441,8 @@ namespace swift::gui::components
                         connect(m_reloadActions[2], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked)
-                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::p3d(), IAircraftModelLoader::InBackgroundNoCache);
+                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::p3d(),
+                                                                  IAircraftModelLoader::InBackgroundNoCache);
                         });
 
                         m_reloadActions[3] = new QAction(CIcons::appModels16(), "P3D models from directoy", this);
@@ -443,7 +453,8 @@ namespace swift::gui::components
                             const QString dir = ownModelsComp->directorySelector(sim);
                             if (!dir.isEmpty())
                             {
-                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
+                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache,
+                                                                      QStringList(dir));
                             }
                         });
                     }
@@ -458,7 +469,8 @@ namespace swift::gui::components
                         connect(m_reloadActions[4], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked)
-                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::fs9(), IAircraftModelLoader::InBackgroundNoCache);
+                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::fs9(),
+                                                                  IAircraftModelLoader::InBackgroundNoCache);
                         });
 
                         m_reloadActions[5] = new QAction(CIcons::appModels16(), "FS9 models from directoy", this);
@@ -469,7 +481,8 @@ namespace swift::gui::components
                             const QString dir = ownModelsComp->directorySelector(sim);
                             if (!dir.isEmpty())
                             {
-                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
+                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache,
+                                                                      QStringList(dir));
                             }
                         });
                     }
@@ -484,7 +497,8 @@ namespace swift::gui::components
                         connect(m_reloadActions[6], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked)
-                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::xplane(), IAircraftModelLoader::InBackgroundNoCache);
+                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::xplane(),
+                                                                  IAircraftModelLoader::InBackgroundNoCache);
                         });
                         m_reloadActions[7] = new QAction(CIcons::appModels16(), "XPlane models from directoy", this);
                         connect(m_reloadActions[7], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
@@ -494,7 +508,8 @@ namespace swift::gui::components
                             const QString dir = ownModelsComp->directorySelector(sim);
                             if (!dir.isEmpty())
                             {
-                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
+                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache,
+                                                                      QStringList(dir));
                             }
                         });
                     }
@@ -510,7 +525,8 @@ namespace swift::gui::components
                         connect(m_reloadActions[8], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked)
-                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::fg(), IAircraftModelLoader::InBackgroundNoCache);
+                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::fg(),
+                                                                  IAircraftModelLoader::InBackgroundNoCache);
                         });
                         m_reloadActions[9] = new QAction(CIcons::appModels16(), "FG models from directoy", this);
                         connect(m_reloadActions[9], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
@@ -520,7 +536,8 @@ namespace swift::gui::components
                             const QString dir = ownModelsComp->directorySelector(sim);
                             if (!dir.isEmpty())
                             {
-                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
+                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache,
+                                                                      QStringList(dir));
                             }
                         });
                     }
@@ -535,7 +552,8 @@ namespace swift::gui::components
                         connect(m_reloadActions[10], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked)
-                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::msfs(), IAircraftModelLoader::InBackgroundNoCache);
+                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::msfs(),
+                                                                  IAircraftModelLoader::InBackgroundNoCache);
                         });
                         m_reloadActions[11] = new QAction(CIcons::appModels16(), "MSFS models from directoy", this);
                         connect(m_reloadActions[11], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
@@ -545,7 +563,8 @@ namespace swift::gui::components
                             const QString dir = ownModelsComp->directorySelector(sim);
                             if (!dir.isEmpty())
                             {
-                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache, QStringList(dir));
+                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache,
+                                                                      QStringList(dir));
                             }
                         });
                     }
@@ -556,11 +575,15 @@ namespace swift::gui::components
             else
             {
                 // dummy action grayed out
-                CMenuAction a = menuActions.addAction(CIcons::refresh16(), "Force model reload impossible, no DB data", CMenuAction::pathSimulator());
+                CMenuAction a = menuActions.addAction(CIcons::refresh16(), "Force model reload impossible, no DB data",
+                                                      CMenuAction::pathSimulator());
                 a.setActionEnabled(false); // gray out
             }
 
-            if (m_clearCacheActions.isEmpty()) { m_clearCacheActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }); }
+            if (m_clearCacheActions.isEmpty())
+            {
+                m_clearCacheActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
+            }
             menuActions.addMenu(CIcons::delete16(), "Clear model caches", CMenuAction::pathSimulatorModelsClearCache());
             if (sims.isFSX())
             {
@@ -664,7 +687,9 @@ namespace swift::gui::components
         ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->getOwnModels());
     }
 
-    void CDbOwnModelsComponent::loadInstalledModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories)
+    void CDbOwnModelsComponent::loadInstalledModels(const CSimulatorInfo &simulator,
+                                                    IAircraftModelLoader::LoadMode mode,
+                                                    const QStringList &modelDirectories)
     {
         if (!m_modelLoader) { return; }
 
@@ -673,47 +698,62 @@ namespace swift::gui::components
         {
             if (m_modelLoader->supportsSimulator(simulator))
             {
-                const CStatusMessage msg = CLogMessage(this).warning(u"Loading for '%1' already in progress, will NOT load.") << simulator.toQString();
+                const CStatusMessage msg =
+                    CLogMessage(this).warning(u"Loading for '%1' already in progress, will NOT load.")
+                    << simulator.toQString();
                 this->showOverlayMessage(msg);
                 return;
             }
             else
             {
-                const CStatusMessage msg = CLogMessage(this).warning(u"Loading for another simulator '%1' already in progress. Loading might be slow.") << simulator.toQString();
+                const CStatusMessage msg =
+                    CLogMessage(this).warning(
+                        u"Loading for another simulator '%1' already in progress. Loading might be slow.")
+                    << simulator.toQString();
                 this->showOverlayMessage(msg);
             }
         }
 
         if (!this->initModelLoader(simulator))
         {
-            const CStatusMessage msg = CLogMessage(this).error(u"Cannot init model loader for %1") << simulator.toQString();
+            const CStatusMessage msg = CLogMessage(this).error(u"Cannot init model loader for %1")
+                                       << simulator.toQString();
             this->showOverlayMessage(msg);
             return;
         }
 
         // Do not check for empty models die here, as depending on mode we could still load
         // will be checked in model loader
-        CLogMessage(this).info(u"Starting loading for '%1' in mode '%2'") << simulator.toQString() << IAircraftModelLoader::enumToString(mode);
+        CLogMessage(this).info(u"Starting loading for '%1' in mode '%2'")
+            << simulator.toQString() << IAircraftModelLoader::enumToString(mode);
         ui->tvp_OwnAircraftModels->showLoadIndicator();
         Q_ASSERT_X(sGui && sGui->getWebDataServices(), Q_FUNC_INFO, "missing web data services");
-        m_modelLoader->startLoading(mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData), modelDirectories);
+        m_modelLoader->startLoading(
+            mode, static_cast<int (*)(CAircraftModelList &, bool)>(&CDatabaseUtils::consolidateModelsWithDbData),
+            modelDirectories);
     }
 
-    void CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode)
+    void CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted(const CSimulatorInfo &simulator,
+                                                                IAircraftModelLoader::LoadMode mode)
     {
-        const CStatusMessage msg = CLogMessage(this).info(u"Started disk loading for '%1' in mode '%2'") << simulator.toQString(true) << IAircraftModelLoader::enumToString(mode);
+        const CStatusMessage msg = CLogMessage(this).info(u"Started disk loading for '%1' in mode '%2'")
+                                   << simulator.toQString(true) << IAircraftModelLoader::enumToString(mode);
         this->showOverlayHTMLMessage(msg, 5000);
     }
 
-    void CDbOwnModelsComponent::onModelLoadingProgress(const CSimulatorInfo &simulator, const QString &message, int progress)
+    void CDbOwnModelsComponent::onModelLoadingProgress(const CSimulatorInfo &simulator, const QString &message,
+                                                       int progress)
     {
-        const CStatusMessage loadingMsg = CStatusMessage(this).info(u"%1 loading: %2") << simulator.toQString(true) << message;
+        const CStatusMessage loadingMsg = CStatusMessage(this).info(u"%1 loading: %2")
+                                          << simulator.toQString(true) << message;
         this->showOverlayHTMLMessage(loadingMsg, 5000);
         ui->tvp_OwnAircraftModels->showLoadIndicatorWithTimeout(5000); // trigger new load indicator
         Q_UNUSED(progress)
     }
 
-    void CDbOwnModelsComponent::onModelLoaderLoadingFinished(const CStatusMessageList &statusMessages, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info)
+    void CDbOwnModelsComponent::onModelLoaderLoadingFinished(const CStatusMessageList &statusMessages,
+                                                             const CSimulatorInfo &simulator,
+                                                             IAircraftModelLoader::LoadFinishedInfo info)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
 
@@ -729,12 +769,14 @@ namespace swift::gui::components
             if (modelsLoaded < 1)
             {
                 // loading ok, but no data
-                summaryMsg = CLogMessage(this).warning(u"Loading completed for simulator '%1', but no models") << simulator;
+                summaryMsg = CLogMessage(this).warning(u"Loading completed for simulator '%1', but no models")
+                             << simulator;
                 hideIndicator = true;
             }
             else
             {
-                summaryMsg = CLogMessage(this).info(u"Loading completed for simulator '%1' with %2 models") << simulator << modelsLoaded;
+                summaryMsg = CLogMessage(this).info(u"Loading completed for simulator '%1' with %2 models")
+                             << simulator << modelsLoaded;
             }
 
             // overlay
@@ -776,7 +818,8 @@ namespace swift::gui::components
             else
             {
                 QPointer<CDbOwnModelsComponent> myself(this);
-                const QString confirmMessage = QStringLiteral("Do you want to see the %1 detailled messages?").arg(statusMessages.size());
+                const QString confirmMessage =
+                    QStringLiteral("Do you want to see the %1 detailled messages?").arg(statusMessages.size());
                 this->showOverlayMessagesWithConfirmation(summaryMsg, false, confirmMessage, [=] {
                     if (!myself) { return; }
                     myself->showOverlayMessagesOrHTMLMessage(statusMessages);
@@ -796,7 +839,11 @@ namespace swift::gui::components
     void CDbOwnModelsComponent::onViewDiskLoadingFinished(const CStatusMessage &status)
     {
         if (status.isFailure()) { return; }
-        QMessageBox msgBox(QMessageBox::Question, "Loaded models from disk", "Loaded models from disk file.\nSave to cache or just temporarily keep them?\n\nHint: Saving them will override the loaded models from the simulator.\nNormally you would not want that (cancel).", QMessageBox::Save | QMessageBox::Cancel, this);
+        QMessageBox msgBox(
+            QMessageBox::Question, "Loaded models from disk",
+            "Loaded models from disk file.\nSave to cache or just temporarily keep them?\n\nHint: Saving them will "
+            "override the loaded models from the simulator.\nNormally you would not want that (cancel).",
+            QMessageBox::Save | QMessageBox::Cancel, this);
         msgBox.setDefaultButton(QMessageBox::Cancel);
         const QMessageBox::StandardButton reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
         if (reply != QMessageBox::Cancel) { return; }
@@ -812,7 +859,9 @@ namespace swift::gui::components
         ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
     }
 
-    void CDbOwnModelsComponent::requestSimulatorModels(const CSimulatorInfo &simulator, IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories)
+    void CDbOwnModelsComponent::requestSimulatorModels(const CSimulatorInfo &simulator,
+                                                       IAircraftModelLoader::LoadMode mode,
+                                                       const QStringList &modelDirectories)
     {
         this->loadInstalledModels(simulator, mode, modelDirectories);
     }

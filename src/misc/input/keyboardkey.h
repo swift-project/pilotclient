@@ -57,16 +57,10 @@ namespace swift::misc::input
         bool isUnknown() const { return !this->hasKey(); }
 
         //! Modifier?
-        bool isModifier() const
-        {
-            return allModifiers().contains(m_keyCode);
-        }
+        bool isModifier() const { return allModifiers().contains(m_keyCode); }
 
         //! with key?
-        bool hasKey() const
-        {
-            return !(m_keyCode == KeyCode::Key_Unknown);
-        }
+        bool hasKey() const { return !(m_keyCode == KeyCode::Key_Unknown); }
 
         //! Set key object
         void setKeyObject(CKeyboardKey key);

@@ -45,7 +45,9 @@ namespace swift::simplugin::flightgear
         swift::misc::simulation::settings::CFGSwiftBusSettings getSettingsFromUI() const;
 
         QScopedPointer<Ui::CSimulatorFlightgearConfigWindow> ui;
-        swift::misc::CSetting<swift::misc::simulation::settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this, &CSimulatorFlightgearConfigWindow::onSettingsChanged };
+        swift::misc::CSetting<swift::misc::simulation::settings::TFGSwiftBusServer> m_fgswiftbusServerSetting {
+            this, &CSimulatorFlightgearConfigWindow::onSettingsChanged
+        };
     };
 } // namespace swift::simplugin::flightgear
 

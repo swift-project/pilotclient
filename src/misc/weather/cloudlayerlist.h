@@ -29,9 +29,7 @@ namespace swift::misc
         /*!
          * Value object encapsulating a set of cloud layers
          */
-        class SWIFT_MISC_EXPORT CCloudLayerList :
-            public CSequence<CCloudLayer>,
-            public mixin::MetaType<CCloudLayerList>
+        class SWIFT_MISC_EXPORT CCloudLayerList : public CSequence<CCloudLayer>, public mixin::MetaType<CCloudLayerList>
         {
         public:
             SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CCloudLayerList)

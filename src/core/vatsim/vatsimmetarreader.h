@@ -21,8 +21,7 @@ class QNetworkReply;
 namespace swift::core::vatsim
 {
     //! Read METARs from VATSIM
-    class SWIFT_CORE_EXPORT CVatsimMetarReader :
-        public swift::core::CThreadedReader
+    class SWIFT_CORE_EXPORT CVatsimMetarReader : public swift::core::CThreadedReader
     {
         Q_OBJECT
 
@@ -39,14 +38,16 @@ namespace swift::core::vatsim
 
         //! Get METAR for airport
         //! \threadsafe
-        virtual swift::misc::weather::CMetar getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &icao) const;
+        virtual swift::misc::weather::CMetar
+        getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &icao) const;
 
     signals:
         //! METARs have been read and converted to swift::misc::weather::CMetarList
         void metarsRead(const swift::misc::weather::CMetarList &metars);
 
         //! Data have been read
-        void dataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entity,
+                      swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
     protected:
         // CThreadedReader overrides
@@ -66,7 +67,9 @@ namespace swift::core::vatsim
     private:
         swift::misc::weather::CMetarDecoder m_metarDecoder;
         swift::misc::weather::CMetarList m_metars;
-        swift::misc::CSettingReadOnly<swift::core::vatsim::TVatsimMetars> m_settings { this, &CVatsimMetarReader::reloadSettings };
+        swift::misc::CSettingReadOnly<swift::core::vatsim::TVatsimMetars> m_settings {
+            this, &CVatsimMetarReader::reloadSettings
+        };
     };
 } // namespace swift::core::vatsim
 #endif // guard

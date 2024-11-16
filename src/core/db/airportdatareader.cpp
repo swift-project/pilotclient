@@ -21,15 +21,13 @@ using namespace swift::misc::db;
 
 namespace swift::core::db
 {
-    CAirportDataReader::CAirportDataReader(QObject *parent, const CDatabaseReaderConfigList &config) : CDatabaseReader(parent, config, QStringLiteral("CAirportDataReader"))
+    CAirportDataReader::CAirportDataReader(QObject *parent, const CDatabaseReaderConfigList &config)
+        : CDatabaseReader(parent, config, QStringLiteral("CAirportDataReader"))
     {
         // void
     }
 
-    swift::misc::aviation::CAirportList CAirportDataReader::getAirports() const
-    {
-        return m_airportCache.get();
-    }
+    swift::misc::aviation::CAirportList CAirportDataReader::getAirports() const { return m_airportCache.get(); }
 
     CAirport CAirportDataReader::getAirportForIcaoDesignator(const QString &designator) const
     {
@@ -41,12 +39,10 @@ namespace swift::core::db
         return this->getAirports().findFirstByNameOrLocation(nameOrLocation);
     }
 
-    int CAirportDataReader::getAirportsCount() const
-    {
-        return this->getAirports().size();
-    }
+    int CAirportDataReader::getAirportsCount() const { return this->getAirports().size(); }
 
-    bool CAirportDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
+    bool CAirportDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead,
+                                                           bool overrideNewerOnly)
     {
         if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
 
@@ -54,26 +50,22 @@ namespace swift::core::db
         QTimer::singleShot(0, this, [=]() {
             if (!myself) { return; }
             const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
-            if (msgs.isFailure())
-            {
-                CLogMessage::preformatted(msgs);
-            }
+            if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
         });
         return true;
     }
 
-    CStatusMessageList CAirportDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead, bool overrideNewerOnly)
+    CStatusMessageList CAirportDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead,
+                                                             bool overrideNewerOnly)
     {
         const QDir directory(dir);
-        if (!directory.exists())
-        {
-            return CStatusMessage(this).error(u"Missing directory '%1'") << dir;
-        }
+        if (!directory.exists()) { return CStatusMessage(this).error(u"Missing directory '%1'") << dir; }
 
         whatToRead &= CEntityFlags::AirportEntity; // can handle these entities
         if (whatToRead == CEntityFlags::NoEntity)
         {
-            return CStatusMessage(this).info(u"'%1' No entity for this reader") << CEntityFlags::entitiesToString(whatToRead);
+            return CStatusMessage(this).info(u"'%1' No entity for this reader")
+                   << CEntityFlags::entitiesToString(whatToRead);
         }
 
         int c = 0;
@@ -82,10 +74,7 @@ namespace swift::core::db
         CStatusMessageList msgs;
         const QString fileName = CFileUtils::appendFilePaths(dir, "airports.json");
         const QFileInfo fi(fileName);
-        if (!fi.exists())
-        {
-            msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
-        }
+        if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
         else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::AirportEntity, msgs))
         {
             // void
@@ -108,17 +97,15 @@ namespace swift::core::db
                 catch (const CJsonException &ex)
                 {
                     emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFailed, 0, url);
-                    return CStatusMessage::fromJsonException(ex, this, QStringLiteral("Reading airports from '%1'").arg(fileName));
+                    return CStatusMessage::fromJsonException(
+                        ex, this, QStringLiteral("Reading airports from '%1'").arg(fileName));
                 }
             }
         }
         return msgs;
     }
 
-    CEntityFlags::Entity CAirportDataReader::getSupportedEntities() const
-    {
-        return CEntityFlags::AirportEntity;
-    }
+    CEntityFlags::Entity CAirportDataReader::getSupportedEntities() const { return CEntityFlags::AirportEntity; }
 
     QDateTime CAirportDataReader::getCacheTimestamp(CEntityFlags::Entity entities) const
     {
@@ -140,7 +127,10 @@ namespace swift::core::db
     CEntityFlags::Entity CAirportDataReader::getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const
     {
         CEntityFlags::Entity entities = CEntityFlags::NoEntity;
-        if (this->hasCacheTimestampNewerThan(CEntityFlags::AirportEntity, threshold)) { entities |= CEntityFlags::AirportEntity; }
+        if (this->hasCacheTimestampNewerThan(CEntityFlags::AirportEntity, threshold))
+        {
+            entities |= CEntityFlags::AirportEntity;
+        }
         return entities;
     }
 
@@ -161,7 +151,10 @@ namespace swift::core::db
 
     void CAirportDataReader::invalidateCaches(CEntityFlags::Entity entities)
     {
-        if (entities.testFlag(CEntityFlags::AirportEntity)) { CDataCache::instance()->clearAllValues(m_airportCache.getKey()); }
+        if (entities.testFlag(CEntityFlags::AirportEntity))
+        {
+            CDataCache::instance()->clearAllValues(m_airportCache.getKey());
+        }
     }
 
     bool CAirportDataReader::hasChangedUrl(CEntityFlags::Entity entity, CUrl &oldUrlInfo, CUrl &newUrlInfo) const
@@ -172,10 +165,7 @@ namespace swift::core::db
         return CDatabaseReader::isChangedUrl(oldUrlInfo, newUrlInfo);
     }
 
-    CUrl CAirportDataReader::getDbServiceBaseUrl() const
-    {
-        return sApp->getGlobalSetup().getDbAirportReaderUrl();
-    }
+    CUrl CAirportDataReader::getDbServiceBaseUrl() const { return sApp->getGlobalSetup().getDbAirportReaderUrl(); }
 
     CUrl CAirportDataReader::getAirportsUrl(CDbFlags::DataRetrievalModeFlag mode) const
     {
@@ -189,7 +179,8 @@ namespace swift::core::db
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
         if (!this->doWorkCheck()) { return; }
 
-        const CDatabaseReader::JsonDatastoreResponse res = this->setStatusAndTransformReplyIntoDatastoreResponse(nwReplyPtr);
+        const CDatabaseReader::JsonDatastoreResponse res =
+            this->setStatusAndTransformReplyIntoDatastoreResponse(nwReplyPtr);
         const QUrl url = nwReply->url();
 
         if (res.hasErrorMessage())
@@ -220,9 +211,9 @@ namespace swift::core::db
 
         if (!inconsistent.isEmpty())
         {
-            logInconsistentData(
-                CStatusMessage(this, CStatusMessage::SeverityInfo, u"Inconsistent airports: " % inconsistent.dbKeysAsString(", ")),
-                Q_FUNC_INFO);
+            logInconsistentData(CStatusMessage(this, CStatusMessage::SeverityInfo,
+                                               u"Inconsistent airports: " % inconsistent.dbKeysAsString(", ")),
+                                Q_FUNC_INFO);
         }
 
         if (!this->doWorkCheck()) { return; }
@@ -240,7 +231,8 @@ namespace swift::core::db
         this->emitAndLogDataRead(CEntityFlags::AirportEntity, size, res);
     }
 
-    void CAirportDataReader::read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+    void CAirportDataReader::read(CEntityFlags::Entity entity, CDbFlags::DataRetrievalModeFlag mode,
+                                  const QDateTime &newerThan)
     {
         this->threadAssertCheck();
         if (!this->doWorkCheck()) { return; }
@@ -255,17 +247,11 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CAirportDataReader::parseAirportData });
                 emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadStarted, 0, url);
             }
-            else
-            {
-                this->logNoWorkingUrl(CEntityFlags::AirportEntity);
-            }
+            else { this->logNoWorkingUrl(CEntityFlags::AirportEntity); }
         }
     }
 
-    void CAirportDataReader::airportCacheChanged()
-    {
-        this->cacheHasChanged(CEntityFlags::AirportEntity);
-    }
+    void CAirportDataReader::airportCacheChanged() { this->cacheHasChanged(CEntityFlags::AirportEntity); }
 
     void CAirportDataReader::baseUrlCacheChanged()
     {
@@ -277,9 +263,6 @@ namespace swift::core::db
         const CUrl current = m_readerUrlCache.get();
         if (current == url) { return; }
         const CStatusMessage m = m_readerUrlCache.set(url);
-        if (m.isFailure())
-        {
-            CLogMessage::preformatted(m);
-        }
+        if (m.isFailure()) { CLogMessage::preformatted(m); }
     }
 } // namespace swift::core::db

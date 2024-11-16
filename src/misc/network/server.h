@@ -24,9 +24,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CServer)
 namespace swift::misc::network
 {
     //! Value object encapsulating information of a server
-    class SWIFT_MISC_EXPORT CServer :
-        public CValueObject<CServer>,
-        public ITimestampBased
+    class SWIFT_MISC_EXPORT CServer : public CValueObject<CServer>, public ITimestampBased
     {
     public:
         //! Properties by index
@@ -65,10 +63,8 @@ namespace swift::misc::network
         CServer() {}
 
         //! Constructor.
-        CServer(const QString &name, const QString &description, const QString &address, int port,
-                const CUser &user,
-                const CFsdSetup &fsdSetup,
-                const CEcosystem &ecosytem, ServerType serverType,
+        CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user,
+                const CFsdSetup &fsdSetup, const CEcosystem &ecosytem, ServerType serverType,
                 bool isAcceptingConnections = true);
 
         //! Constructor (minimal for testing)
@@ -147,10 +143,16 @@ namespace swift::misc::network
         void setFsdSetup(const CFsdSetup &setup) { m_fsdSetup = setup; }
 
         //! Add send / receive details
-        void addSendReceiveDetails(CFsdSetup::SendReceiveDetails sendReceive) { m_fsdSetup.addSendReceiveDetails(sendReceive); }
+        void addSendReceiveDetails(CFsdSetup::SendReceiveDetails sendReceive)
+        {
+            m_fsdSetup.addSendReceiveDetails(sendReceive);
+        }
 
         //! Remove send / receive details
-        void removeSendReceiveDetails(CFsdSetup::SendReceiveDetails sendReceive) { m_fsdSetup.removeSendReceiveDetails(sendReceive); }
+        void removeSendReceiveDetails(CFsdSetup::SendReceiveDetails sendReceive)
+        {
+            m_fsdSetup.removeSendReceiveDetails(sendReceive);
+        }
 
         //! A FSD server?
         bool isFsdServer() const;

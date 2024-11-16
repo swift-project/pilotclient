@@ -38,9 +38,9 @@ namespace swift::misc::audio
             PTTClickKeyUp = 1 << 8,
             // 1 << 9 previously used for PTTBlocked
 
-            // AFVClicked and AFVBlocked are not played back from the notification player itself (except for preview playback).
-            // Instead, they are provided from swift::sound::sample_provider::Samples.
-            // They are included here to allow to disable playing them.
+            // AFVClicked and AFVBlocked are not played back from the notification player itself (except for preview
+            // playback). Instead, they are provided from swift::sound::sample_provider::Samples. They are included here
+            // to allow to disable playing them.
             AFVClicked = 1 << 14,
             AFVBlocked = 1 << 15
         };
@@ -48,7 +48,8 @@ namespace swift::misc::audio
 
         //! All text notification flags
         constexpr static Notification AllTextNotifications = Notification(
-            NotificationTextMessageFrequency | NotificationTextMessagePrivate | NotificationTextCallsignMentioned | NotificationTextMessageSupervisor | NotificationTextMessageUnicom);
+            NotificationTextMessageFrequency | NotificationTextMessagePrivate | NotificationTextCallsignMentioned |
+            NotificationTextMessageSupervisor | NotificationTextMessageUnicom);
 
         //! All login notification flags
         constexpr static Notification AllLoginNotifications = Notification(NotificationLogin | NotificationLogoff);
@@ -60,10 +61,12 @@ namespace swift::misc::audio
         constexpr static Notification AllAfv = Notification(AFVClicked | AFVBlocked);
 
         //! All notification flags
-        constexpr static Notification AllNotifications = Notification(NotificationError | AllTextNotifications | AllLoginNotifications | AllPTTNotifications | AllAfv);
+        constexpr static Notification AllNotifications = Notification(
+            NotificationError | AllTextNotifications | AllLoginNotifications | AllPTTNotifications | AllAfv);
 
         //! Default notification flags
-        constexpr static Notification DefaultNotifications = Notification(AllNotifications & ~(NotificationTextMessageFrequency | NotificationTextMessageUnicom));
+        constexpr static Notification DefaultNotifications =
+            Notification(AllNotifications & ~(NotificationTextMessageFrequency | NotificationTextMessageUnicom));
 
         //! As string
         static const QString &flagToString(NotificationFlag notification);

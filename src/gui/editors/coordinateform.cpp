@@ -21,8 +21,7 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::editors
 {
-    CCoordinateForm::CCoordinateForm(QWidget *parent) : CForm(parent),
-                                                        ui(new Ui::CCoordinateForm)
+    CCoordinateForm::CCoordinateForm(QWidget *parent) : CForm(parent), ui(new Ui::CCoordinateForm)
     {
         ui->setupUi(this);
 
@@ -63,8 +62,7 @@ namespace swift::gui::editors
         this->setCoordinate(c);
     }
 
-    CCoordinateForm::~CCoordinateForm()
-    {}
+    CCoordinateForm::~CCoordinateForm() {}
 
     bool CCoordinateForm::setCoordinate(const ICoordinateGeodetic &coordinate)
     {
@@ -76,28 +74,16 @@ namespace swift::gui::editors
         ui->le_Latitude->setText(latWgs);
         ui->le_Latitude->setToolTip(QString::number(lat.value(CAngleUnit::deg())));
         ui->lblp_LatCheck->setTicked(!lat.isNull());
-        if (latWgs.contains('S'))
-        {
-            ui->rb_S->setChecked(true);
-        }
-        else
-        {
-            ui->rb_N->setChecked(true);
-        }
+        if (latWgs.contains('S')) { ui->rb_S->setChecked(true); }
+        else { ui->rb_N->setChecked(true); }
 
         const CLongitude lng = coordinate.longitude();
         const QString lngWgs = lng.toWgs84();
         ui->le_Longitude->setText(lngWgs);
         ui->le_Longitude->setToolTip(QString::number(lng.value(CAngleUnit::deg())));
         ui->lblp_LngCheck->setTicked(!lng.isNull());
-        if (lngWgs.contains('W'))
-        {
-            ui->rb_W->setChecked(true);
-        }
-        else
-        {
-            ui->rb_E->setChecked(true);
-        }
+        if (lngWgs.contains('W')) { ui->rb_W->setChecked(true); }
+        else { ui->rb_E->setChecked(true); }
 
         const CLatitude::DegMinSecFractionalSec latParts = lat.asSexagesimalDegMinSec(true);
         ui->le_LatDeg->setText(latParts.degAsString());
@@ -160,10 +146,7 @@ namespace swift::gui::editors
         return ml;
     }
 
-    void CCoordinateForm::showSetButton(bool visible)
-    {
-        ui->pb_Set->setVisible(visible);
-    }
+    void CCoordinateForm::showSetButton(bool visible) { ui->pb_Set->setVisible(visible); }
 
     void CCoordinateForm::showElevation(bool show)
     {
@@ -207,14 +190,8 @@ namespace swift::gui::editors
             const QStringList parts = l.split(' ');
             for (const QString &p : parts)
             {
-                if (p.contains('S') || p.contains('N'))
-                {
-                    lat = p;
-                }
-                else if (p.contains('E') || p.contains('W'))
-                {
-                    lng = p;
-                }
+                if (p.contains('S') || p.contains('N')) { lat = p; }
+                else if (p.contains('E') || p.contains('W')) { lng = p; }
             }
             if (!lat.isEmpty() && !lng.isEmpty())
             {

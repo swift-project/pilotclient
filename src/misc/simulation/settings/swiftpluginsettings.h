@@ -93,7 +93,10 @@ namespace swift::misc::simulation::settings
         }
 
         //! \copydoc swift::misc::TSettingTrait::isValid
-        static bool isValid(const CSwiftPluginSettings &value, QString &) { return value.getEmulatedSimulator().isSingleSimulator(); }
+        static bool isValid(const CSwiftPluginSettings &value, QString &)
+        {
+            return value.getEmulatedSimulator().isSingleSimulator();
+        }
     };
 } // namespace swift::misc::simulation::settings
 

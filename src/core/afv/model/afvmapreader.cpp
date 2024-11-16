@@ -32,12 +32,10 @@ namespace swift::core::afv::model
         QEventLoop loop(sApp);
         connect(sApp->getNetworkAccessManager(), &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
         connect(sApp, &CApplication::aboutToShutdown, &loop, &QEventLoop::quit);
-        const QUrl url = sApp->getGlobalSetup().getAfvApiServerUrl().withAppendedPath("/api/v1/network/online/callsigns");
+        const QUrl url =
+            sApp->getGlobalSetup().getAfvApiServerUrl().withAppendedPath("/api/v1/network/online/callsigns");
         QNetworkReply *reply = sApp->getNetworkAccessManager()->get(QNetworkRequest(url));
-        while (reply && !reply->isFinished() && sApp && !sApp->isShuttingDown())
-        {
-            loop.exec();
-        }
+        while (reply && !reply->isFinished() && sApp && !sApp->isShuttingDown()) { loop.exec(); }
         const QByteArray jsonData = reply ? reply->readAll() : QByteArray {};
         if (reply) { reply->deleteLater(); }
 
@@ -56,10 +54,7 @@ namespace swift::core::afv::model
                 {
                     const QJsonObject stationObject = it->toObject();
 
-                    if (stationObject.contains("callsign"))
-                    {
-                        callsign = stationObject.value("callsign").toString();
-                    }
+                    if (stationObject.contains("callsign")) { callsign = stationObject.value("callsign").toString(); }
 
                     if (callsign.isEmpty() || !CCallsign::looksLikeAtcCallsign(callsign)) { continue; }
 
@@ -76,10 +71,10 @@ namespace swift::core::afv::model
             }
 
             if (transceivers.isEmpty()) { return; }
-            transceivers.erase(std::remove_if(transceivers.begin(), transceivers.end(), [this](const CSampleAtcStation &s) {
-                                   return s.callsign() == m_callsign;
-                               }),
-                               transceivers.end());
+            transceivers.erase(
+                std::remove_if(transceivers.begin(), transceivers.end(),
+                               [this](const CSampleAtcStation &s) { return s.callsign() == m_callsign; }),
+                transceivers.end());
             m_model->updateAtcStations(transceivers);
         }
     }

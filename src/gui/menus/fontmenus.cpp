@@ -44,10 +44,7 @@ namespace swift::gui::menus
         this->nestedCustomMenu(menuActions);
     }
 
-    QList<QAction *> CFontMenu::getActions() const
-    {
-        return QList<QAction *>({ m_fontDialogAction.data() });
-    }
+    QList<QAction *> CFontMenu::getActions() const { return QList<QAction *>({ m_fontDialogAction.data() }); }
 
     QList<QShortcut *> CFontMenu::getShortcuts() const
     {

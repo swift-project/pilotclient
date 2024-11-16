@@ -19,8 +19,7 @@ namespace swift::gui::models
 {
     //! List model for timestamp based objects with offset
     template <typename T, bool UseCompare = false>
-    class CListModelTimestampObjects :
-        public CListModelBase<T, UseCompare>
+    class CListModelTimestampObjects : public CListModelBase<T, UseCompare>
     {
     public:
         //! Container type
@@ -42,8 +41,7 @@ namespace swift::gui::models
 
     //! List model for timestamp based objects with offset
     template <typename T, bool UseCompare = false>
-    class CListModelTimestampWithOffsetObjects :
-        public CListModelTimestampObjects<T, UseCompare>
+    class CListModelTimestampWithOffsetObjects : public CListModelTimestampObjects<T, UseCompare>
     {
     public:
         //! Container type

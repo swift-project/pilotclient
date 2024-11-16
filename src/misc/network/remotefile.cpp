@@ -12,13 +12,10 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRemoteFile)
 
 namespace swift::misc::network
 {
-    CRemoteFile::CRemoteFile(const QString &name, const QString &description)
-        : m_name(name), m_description(description)
+    CRemoteFile::CRemoteFile(const QString &name, const QString &description) : m_name(name), m_description(description)
     {}
 
-    CRemoteFile::CRemoteFile(const QString &name, qint64 size)
-        : m_name(name), m_size(size)
-    {}
+    CRemoteFile::CRemoteFile(const QString &name, qint64 size) : m_name(name), m_size(size) {}
 
     CRemoteFile::CRemoteFile(const QString &name, qint64 size, const QString &url)
         : m_name(name), m_url(url), m_size(size)
@@ -46,25 +43,13 @@ namespace swift::misc::network
         return this->getUrl().withAppendedPath(this->getName());
     }
 
-    bool CRemoteFile::isExecutableFile() const
-    {
-        return CFileUtils::isExecutableFile(this->getName());
-    }
+    bool CRemoteFile::isExecutableFile() const { return CFileUtils::isExecutableFile(this->getName()); }
 
-    bool CRemoteFile::isSwiftInstaller() const
-    {
-        return CFileUtils::isSwiftInstaller(this->getName());
-    }
+    bool CRemoteFile::isSwiftInstaller() const { return CFileUtils::isSwiftInstaller(this->getName()); }
 
-    void CRemoteFile::setUrl(const QString &url)
-    {
-        this->setUrl(CUrl(url));
-    }
+    void CRemoteFile::setUrl(const QString &url) { this->setUrl(CUrl(url)); }
 
-    QString CRemoteFile::getSizeHumanReadable() const
-    {
-        return CFileUtils::humanReadableFileSize(this->getSize());
-    }
+    QString CRemoteFile::getSizeHumanReadable() const { return CFileUtils::humanReadableFileSize(this->getSize()); }
 
     QString CRemoteFile::getFormattedCreatedYmdhms() const
     {
@@ -76,12 +61,9 @@ namespace swift::misc::network
     QString CRemoteFile::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        return "Name: " + m_name +
-               " description: " + m_description +
-               " size: " + QString::number(m_size) +
+        return "Name: " + m_name + " description: " + m_description + " size: " + QString::number(m_size) +
                " modified: " + this->getFormattedUtcTimestampYmdhms() +
-               " created: " + this->getFormattedUtcTimestampYmdhms() +
-               " URL: " + m_url.getFullUrl();
+               " created: " + this->getFormattedUtcTimestampYmdhms() + " URL: " + m_url.getFullUrl();
     }
 
     QVariant CRemoteFile::propertyByIndex(CPropertyIndexRef index) const

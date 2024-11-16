@@ -23,10 +23,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::physical_quantities, CPqString)
 
 namespace swift::misc::physical_quantities
 {
-    QString CPqString::convertToQString(bool /** i18n **/) const
-    {
-        return m_string;
-    }
+    QString CPqString::convertToQString(bool /** i18n **/) const { return m_string; }
 
     CVariant CPqString::parseToVariant(const QString &value, SeparatorMode mode)
     {
@@ -111,19 +108,13 @@ namespace swift::misc::physical_quantities
         double numberD = -1;
         switch (mode)
         {
-        case SeparatorLocale:
-            numberD = QLocale::system().toDouble(number, &success);
-            break;
-        case SeparatorQtDefault:
-            numberD = number.toDouble(&success);
-            break;
+        case SeparatorLocale: numberD = QLocale::system().toDouble(number, &success); break;
+        case SeparatorQtDefault: numberD = number.toDouble(&success); break;
         case SeparatorBestGuess:
             numberD = number.toDouble(&success);
             if (!success) { numberD = QLocale::system().toDouble(number, &success); }
             break;
-        default:
-            qFatal("Wrong mode");
-            break;
+        default: qFatal("Wrong mode"); break;
         }
         return numberD;
     }

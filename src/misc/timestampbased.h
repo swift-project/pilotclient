@@ -44,19 +44,31 @@ namespace swift::misc
         qint64 getTimeDifferenceMs(qint64 compareTime) const { return compareTime - this->getMSecsSinceEpoch(); }
 
         //! Time difference in ms
-        qint64 getTimeDifferenceAbsMs(qint64 compareTime) const { return qAbs(compareTime - this->getMSecsSinceEpoch()); }
+        qint64 getTimeDifferenceAbsMs(qint64 compareTime) const
+        {
+            return qAbs(compareTime - this->getMSecsSinceEpoch());
+        }
 
         //! Time difference to now
-        qint64 getTimeDifferenceToNowMs() const { return this->getTimeDifferenceMs(QDateTime::currentMSecsSinceEpoch()); }
+        qint64 getTimeDifferenceToNowMs() const
+        {
+            return this->getTimeDifferenceMs(QDateTime::currentMSecsSinceEpoch());
+        }
 
         //! Time difference in ms
-        qint64 getTimeDifferenceMs(const ITimestampBased &compare) const { return compare.getMSecsSinceEpoch() - this->getMSecsSinceEpoch(); }
+        qint64 getTimeDifferenceMs(const ITimestampBased &compare) const
+        {
+            return compare.getMSecsSinceEpoch() - this->getMSecsSinceEpoch();
+        }
 
         //! Time difference in ms
         qint64 getAbsTimeDifferenceMs(qint64 compareTime) const { return qAbs(this->getTimeDifferenceMs(compareTime)); }
 
         //! Time difference in ms
-        qint64 getAbsTimeDifferenceMs(const ITimestampBased &compare) const { return qAbs(this->getTimeDifferenceMs(compare)); }
+        qint64 getAbsTimeDifferenceMs(const ITimestampBased &compare) const
+        {
+            return qAbs(this->getTimeDifferenceMs(compare));
+        }
 
         //! Set to null
         void setTimestampToNull();
@@ -168,7 +180,8 @@ namespace swift::misc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexOffsetMs = static_cast<int>(CPropertyIndexRef::GlobalIndexITimestampBased) + ITimestampBased::IndexMSecsSinceEpoch + 1,
+            IndexOffsetMs = static_cast<int>(CPropertyIndexRef::GlobalIndexITimestampBased) +
+                            ITimestampBased::IndexMSecsSinceEpoch + 1,
             IndexAdjustedMsWithOffset,
             IndexOffsetWithUnit // keep this as last item
         };
@@ -192,10 +205,16 @@ namespace swift::misc
         qint64 getAdjustedMSecsSinceEpoch() const { return this->getMSecsSinceEpoch() + this->getTimeOffsetMs(); }
 
         //! Set timestamp with offset added for interpolation
-        void setAdjustedMSecsSinceEpoch(qint64 adjustedTimeMs) { this->setMSecsSinceEpoch(adjustedTimeMs - this->getTimeOffsetMs()); }
+        void setAdjustedMSecsSinceEpoch(qint64 adjustedTimeMs)
+        {
+            this->setMSecsSinceEpoch(adjustedTimeMs - this->getTimeOffsetMs());
+        }
 
         //! Time difference in ms (this -> compare)
-        qint64 getAdjustedTimeDifferenceMs(qint64 compareTime) const { return this->getAdjustedMSecsSinceEpoch() - compareTime; }
+        qint64 getAdjustedTimeDifferenceMs(qint64 compareTime) const
+        {
+            return this->getAdjustedMSecsSinceEpoch() - compareTime;
+        }
 
         //! Timestamp and offset
         QString getTimestampAndOffset(bool formatted) const;

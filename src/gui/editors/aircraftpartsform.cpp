@@ -20,8 +20,7 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::editors
 {
-    CAircraftPartsForm::CAircraftPartsForm(QWidget *parent) : CForm(parent),
-                                                              ui(new Ui::CAircraftPartsForm)
+    CAircraftPartsForm::CAircraftPartsForm(QWidget *parent) : CForm(parent), ui(new Ui::CAircraftPartsForm)
     {
         ui->setupUi(this);
         connect(ui->pb_AircraftPartsLightsOn, &QPushButton::pressed, this, &CAircraftPartsForm::setAllLights);
@@ -29,11 +28,11 @@ namespace swift::gui::editors
         connect(ui->pb_AircraftPartsEnginesOn, &QPushButton::pressed, this, &CAircraftPartsForm::setAllEngines);
         connect(ui->pb_AircraftPartsEnginesOff, &QPushButton::pressed, this, &CAircraftPartsForm::setAllEngines);
         connect(ui->pb_AircraftPartsUiToJson, &QPushButton::pressed, this, &CAircraftPartsForm::guiToJson);
-        connect(ui->pb_Set, &QPushButton::pressed, this, &CAircraftPartsForm::changeAircraftParts); // force change signal
+        connect(ui->pb_Set, &QPushButton::pressed, this,
+                &CAircraftPartsForm::changeAircraftParts); // force change signal
     }
 
-    CAircraftPartsForm::~CAircraftPartsForm()
-    {}
+    CAircraftPartsForm::~CAircraftPartsForm() {}
 
     void CAircraftPartsForm::setReadOnly(bool readonly)
     {
@@ -42,10 +41,7 @@ namespace swift::gui::editors
         this->forceStyleSheetUpdate();
     }
 
-    void CAircraftPartsForm::setSelectOnly()
-    {
-        this->setReadOnly(true);
-    }
+    void CAircraftPartsForm::setSelectOnly() { this->setReadOnly(true); }
 
     CStatusMessageList CAircraftPartsForm::validate(bool nested) const
     {
@@ -54,10 +50,7 @@ namespace swift::gui::editors
         return msgs;
     }
 
-    CAircraftParts CAircraftPartsForm::getAircraftPartsFromGui() const
-    {
-        return this->guiToAircraftParts();
-    }
+    CAircraftParts CAircraftPartsForm::getAircraftPartsFromGui() const { return this->guiToAircraftParts(); }
 
     CAircraftParts CAircraftPartsForm::getAircraftPartsFromJson() const
     {
@@ -94,15 +87,9 @@ namespace swift::gui::editors
         ui->te_AircraftPartsJson->setText(parts.toJsonString());
     }
 
-    void CAircraftPartsForm::showSetButton(bool visible)
-    {
-        ui->pb_Set->setVisible(visible);
-    }
+    void CAircraftPartsForm::showSetButton(bool visible) { ui->pb_Set->setVisible(visible); }
 
-    void CAircraftPartsForm::showJson(bool visible)
-    {
-        ui->te_AircraftPartsJson->setVisible(visible);
-    }
+    void CAircraftPartsForm::showJson(bool visible) { ui->te_AircraftPartsJson->setVisible(visible); }
 
     void CAircraftPartsForm::setAllLights()
     {
@@ -129,25 +116,16 @@ namespace swift::gui::editors
     aviation::CAircraftParts CAircraftPartsForm::guiToAircraftParts() const
     {
         const CAircraftLights lights(
-            ui->cb_AircraftPartsLightsStrobe->isChecked(),
-            ui->cb_AircraftPartsLightsLanding->isChecked(),
-            ui->cb_AircraftPartsLightsTaxi->isChecked(),
-            ui->cb_AircraftPartsLightsBeacon->isChecked(),
-            ui->cb_AircraftPartsLightsNav->isChecked(),
-            ui->cb_AircraftPartsLightsLogo->isChecked());
+            ui->cb_AircraftPartsLightsStrobe->isChecked(), ui->cb_AircraftPartsLightsLanding->isChecked(),
+            ui->cb_AircraftPartsLightsTaxi->isChecked(), ui->cb_AircraftPartsLightsBeacon->isChecked(),
+            ui->cb_AircraftPartsLightsNav->isChecked(), ui->cb_AircraftPartsLightsLogo->isChecked());
         const CAircraftEngineList engines(
-            { ui->cb_AircraftPartsEngine1->isChecked(),
-              ui->cb_AircraftPartsEngine2->isChecked(),
-              ui->cb_AircraftPartsEngine3->isChecked(),
-              ui->cb_AircraftPartsEngine4->isChecked(),
-              ui->cb_AircraftPartsEngine5->isChecked(),
-              ui->cb_AircraftPartsEngine6->isChecked() });
-        const CAircraftParts parts(lights,
-                                   ui->cb_AircraftPartsGearDown->isChecked(),
-                                   ui->sb_AircraftPartsFlapsPercentage->value(),
-                                   ui->cb_AircraftPartsSpoilers->isChecked(),
-                                   engines,
-                                   ui->cb_AircraftPartsIsOnGround->isChecked());
+            { ui->cb_AircraftPartsEngine1->isChecked(), ui->cb_AircraftPartsEngine2->isChecked(),
+              ui->cb_AircraftPartsEngine3->isChecked(), ui->cb_AircraftPartsEngine4->isChecked(),
+              ui->cb_AircraftPartsEngine5->isChecked(), ui->cb_AircraftPartsEngine6->isChecked() });
+        const CAircraftParts parts(
+            lights, ui->cb_AircraftPartsGearDown->isChecked(), ui->sb_AircraftPartsFlapsPercentage->value(),
+            ui->cb_AircraftPartsSpoilers->isChecked(), engines, ui->cb_AircraftPartsIsOnGround->isChecked());
         return parts;
     }
 

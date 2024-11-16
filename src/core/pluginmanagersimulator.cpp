@@ -19,9 +19,7 @@ namespace swift::core
     using namespace swift::misc;
     using namespace swift::misc::simulation;
 
-    CPluginManagerSimulator::CPluginManagerSimulator(QObject *parent) : IPluginManager(parent)
-    {
-    }
+    CPluginManagerSimulator::CPluginManagerSimulator(QObject *parent) : IPluginManager(parent) {}
 
     ISimulatorFactory *CPluginManagerSimulator::getFactory(const QString &pluginId)
     {
@@ -60,10 +58,7 @@ namespace swift::core
     CSimulatorPluginInfoList CPluginManagerSimulator::getAvailableSimulatorPlugins() const
     {
         CSimulatorPluginInfoList list;
-        for (const auto &i : m_plugins)
-        {
-            list.push_back(i.info);
-        }
+        for (const auto &i : m_plugins) { list.push_back(i.info); }
         return list;
     }
 
@@ -100,10 +95,8 @@ namespace swift::core
 
     CSequence<QString> CPluginManagerSimulator::acceptedIids() const
     {
-        return {
-            QStringLiteral("org.swift-project.swift_core.simulatorinterface"),
-            QStringLiteral("org.swift-project.swiftgui.pluginconfiginterface")
-        };
+        return { QStringLiteral("org.swift-project.swift_core.simulatorinterface"),
+                 QStringLiteral("org.swift-project.swiftgui.pluginconfiginterface") };
     }
 
     const QString &CPluginManagerSimulator::pluginDirectory() const

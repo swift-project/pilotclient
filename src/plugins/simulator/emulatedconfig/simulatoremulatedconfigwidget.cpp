@@ -9,14 +9,13 @@ using namespace swift::gui;
 
 namespace swift::simplugin::emulated
 {
-    CSimulatorEmulatedConfigWidget::CSimulatorEmulatedConfigWidget(QWidget *parent) : swift::gui::CPluginConfigWindow(parent),
-                                                                                      ui(new Ui::CSimulatorEmulatedConfigWidget)
+    CSimulatorEmulatedConfigWidget::CSimulatorEmulatedConfigWidget(QWidget *parent)
+        : swift::gui::CPluginConfigWindow(parent), ui(new Ui::CSimulatorEmulatedConfigWidget)
     {
         ui->setupUi(this);
         CGuiUtility::disableMinMaxCloseButtons(this);
         connect(ui->bb_Close, &QDialogButtonBox::rejected, this, &CSimulatorEmulatedConfigWidget::close);
     }
 
-    CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget()
-    {}
+    CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget() {}
 } // namespace swift::simplugin::emulated

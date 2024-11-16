@@ -20,11 +20,13 @@ namespace swift::misc::simulation
     class SWIFT_MISC_EXPORT IInterpolationSetupProvider : public IProvider
     {
     public:
-        using SetupsPerCallsign = QMap<aviation::CCallsign, CInterpolationAndRenderingSetupPerCallsign>; //!< setups per callsign
+        using SetupsPerCallsign =
+            QMap<aviation::CCallsign, CInterpolationAndRenderingSetupPerCallsign>; //!< setups per callsign
 
         //! Get the setup for callsign, if not existing the global setup
         //! \threadsafe
-        CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupPerCallsignOrDefault(const aviation::CCallsign &callsign) const;
+        CInterpolationAndRenderingSetupPerCallsign
+        getInterpolationSetupPerCallsignOrDefault(const aviation::CCallsign &callsign) const;
 
         //! Get all setups per callsign
         //! \threadsafe
@@ -65,7 +67,9 @@ namespace swift::misc::simulation
 
         //! Insert specialized setup per callsign
         //! \threadsafe
-        virtual bool setInterpolationSetupPerCallsign(const CInterpolationAndRenderingSetupPerCallsign &setup, const aviation::CCallsign &callsign, bool removeGlobalSetup = true);
+        virtual bool setInterpolationSetupPerCallsign(const CInterpolationAndRenderingSetupPerCallsign &setup,
+                                                      const aviation::CCallsign &callsign,
+                                                      bool removeGlobalSetup = true);
 
         //! Log/un-log given callsign
         //! \threadsafe
@@ -106,7 +110,8 @@ namespace swift::misc::simulation
 
     public:
         //! \copydoc IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault
-        CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupPerCallsignOrDefault(const aviation::CCallsign &callsign) const;
+        CInterpolationAndRenderingSetupPerCallsign
+        getInterpolationSetupPerCallsignOrDefault(const aviation::CCallsign &callsign) const;
 
         //! \copydoc IInterpolationSetupProvider::getInterpolationSetupGlobal
         CInterpolationAndRenderingSetupGlobal getInterpolationSetupGlobal() const;
@@ -123,6 +128,7 @@ namespace swift::misc::simulation
     };
 } // namespace swift::misc::simulation
 
-Q_DECLARE_INTERFACE(swift::misc::simulation::IInterpolationSetupProvider, "org.swift-project.misc::network::iinterpolationsetupprovider")
+Q_DECLARE_INTERFACE(swift::misc::simulation::IInterpolationSetupProvider,
+                    "org.swift-project.misc::network::iinterpolationsetupprovider")
 
 #endif // guard

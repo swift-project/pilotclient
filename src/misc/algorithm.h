@@ -73,7 +73,8 @@ namespace swift::misc
     }
 
     /*!
-     * Split the range [in,end) into n equal chunks and use the random number generator rng to choose one element from each.
+     * Split the range [in,end) into n equal chunks and use the random number generator rng to choose one element from
+     * each.
      */
     template <typename ForwardIt, typename OutputIt, typename Generator>
     void copySampleElements(ForwardIt in, ForwardIt end, OutputIt out, int n, Generator &&rng)
@@ -117,11 +118,10 @@ namespace swift::misc
         while (part != end)
         {
             auto newPart = std::partition(part, end, [=](const value_type &a) {
-                return std::none_of(part, end, [=, &a](const value_type &b) {
-                    return comparator(b, a);
-                });
+                return std::none_of(part, end, [=, &a](const value_type &b) { return comparator(b, a); });
             });
-            Q_ASSERT_X(newPart != part, "swift::misc::topologicalSort", "Cyclic less-than relation detected (not a partial ordering)");
+            Q_ASSERT_X(newPart != part, "swift::misc::topologicalSort",
+                       "Cyclic less-than relation detected (not a partial ordering)");
             part = newPart;
         }
     }
@@ -143,11 +143,12 @@ namespace swift::misc
     {
         using value_type = typename C::value_type;
         using reverse = std::reverse_iterator<typename C::iterator>;
-        auto rit = std::find_if(reverse(container.end()), reverse(container.begin()), [=, &value](const value_type &lhs) {
-            return comparator(lhs, value);
-        });
-        Q_ASSERT_X(std::none_of(rit, reverse(container.begin()), [=, &value](const value_type &rhs) { return comparator(value, rhs); }),
-                   "swift::misc::topologicallySortedInsert", "Cyclic less-than relation detected (not a partial ordering)");
+        auto rit = std::find_if(reverse(container.end()), reverse(container.begin()),
+                                [=, &value](const value_type &lhs) { return comparator(lhs, value); });
+        Q_ASSERT_X(std::none_of(rit, reverse(container.begin()),
+                                [=, &value](const value_type &rhs) { return comparator(value, rhs); }),
+                   "swift::misc::topologicallySortedInsert",
+                   "Cyclic less-than relation detected (not a partial ordering)");
         container.insert(rit.base(), std::forward<T>(value));
     }
 
@@ -158,7 +159,9 @@ namespace swift::misc
         void tupleForEachPairImpl(T &&tuple, F &&visitor, std::index_sequence<Is...>)
         {
             // cppcheck-suppress accessForwarded
-            (static_cast<void>(std::forward<F>(visitor)(std::get<Is * 2>(std::forward<T>(tuple)), std::get<Is * 2 + 1>(std::forward<T>(tuple)))), ...);
+            (static_cast<void>(std::forward<F>(visitor)(std::get<Is * 2>(std::forward<T>(tuple)),
+                                                        std::get<Is * 2 + 1>(std::forward<T>(tuple)))),
+             ...);
         }
     } // namespace private_ns
 

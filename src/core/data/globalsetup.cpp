@@ -28,37 +28,18 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::data, CGlobalSetup)
 
 namespace swift::core::data
 {
-    CGlobalSetup::CGlobalSetup() : CIdentifiable("CGlobalSetup")
-    {}
+    CGlobalSetup::CGlobalSetup() : CIdentifiable("CGlobalSetup") {}
 
-    CUrl CGlobalSetup::getDbIcaoReaderUrl() const
-    {
-        return getDbRootDirectoryUrl();
-    }
+    CUrl CGlobalSetup::getDbIcaoReaderUrl() const { return getDbRootDirectoryUrl(); }
 
-    CUrl CGlobalSetup::getDbModelReaderUrl() const
-    {
-        return getDbRootDirectoryUrl();
-    }
+    CUrl CGlobalSetup::getDbModelReaderUrl() const { return getDbRootDirectoryUrl(); }
 
-    CUrl CGlobalSetup::getDbAirportReaderUrl() const
-    {
-        return getDbRootDirectoryUrl();
-    }
+    CUrl CGlobalSetup::getDbAirportReaderUrl() const { return getDbRootDirectoryUrl(); }
 
-    CUrl CGlobalSetup::getDbInfoReaderUrl() const
-    {
-        return getDbRootDirectoryUrl();
-    }
+    CUrl CGlobalSetup::getDbInfoReaderUrl() const { return getDbRootDirectoryUrl(); }
 
-    const CUrl &CGlobalSetup::getSwiftSharedUrl() const
-    {
-        return m_sharedUrl;
-    }
-    CUrl CGlobalSetup::getDbHomePageUrl() const
-    {
-        return getDbRootDirectoryUrl().withAppendedPath("/page/index.php");
-    }
+    const CUrl &CGlobalSetup::getSwiftSharedUrl() const { return m_sharedUrl; }
+    CUrl CGlobalSetup::getDbHomePageUrl() const { return getDbRootDirectoryUrl().withAppendedPath("/page/index.php"); }
 
     CUrl CGlobalSetup::getHelpPageUrl(const QString &context) const
     {
@@ -69,34 +50,24 @@ namespace swift::core::data
 
         // context string something like "application.moreSpecific.evenMoreSpecific"
         QString c = "client";
-        if (QCoreApplication::instance())
-        {
-            c = QCoreApplication::instance()->applicationName();
-        }
+        if (QCoreApplication::instance()) { c = QCoreApplication::instance()->applicationName(); }
         if (!context.isEmpty()) { c += "." + context; }
         url.appendQuery("context", c);
         return url;
     }
 
-    CUrl CGlobalSetup::getLegalDirectoryUrl() const
-    {
-        return getDbRootDirectoryUrl().withAppendedPath("/legal/");
-    }
+    CUrl CGlobalSetup::getLegalDirectoryUrl() const { return getDbRootDirectoryUrl().withAppendedPath("/legal/"); }
 
     CUrl CGlobalSetup::getDbLoginServiceUrl() const
     {
-        return getDbRootDirectoryUrl().withAppendedPath("/service/jsonauthenticate.php").withSwitchedScheme("https", m_dbHttpsPort);
+        return getDbRootDirectoryUrl()
+            .withAppendedPath("/service/jsonauthenticate.php")
+            .withSwitchedScheme("https", m_dbHttpsPort);
     }
 
-    bool CGlobalSetup::dbDebugFlag() const
-    {
-        return m_dbDebugFlag && CBuildConfig::isLocalDeveloperDebugBuild();
-    }
+    bool CGlobalSetup::dbDebugFlag() const { return m_dbDebugFlag && CBuildConfig::isLocalDeveloperDebugBuild(); }
 
-    void CGlobalSetup::setServerDebugFlag(bool debug)
-    {
-        m_dbDebugFlag = debug;
-    }
+    void CGlobalSetup::setServerDebugFlag(bool debug) { m_dbDebugFlag = debug; }
 
     CUrl CGlobalSetup::getSharedDbDataDirectoryUrl()
     {
@@ -105,9 +76,7 @@ namespace swift::core::data
 
     CServerList CGlobalSetup::getPredefinedServersPlusHardcodedServers() const
     {
-        static const CServerList hardcoded(
-            { CServer::fscFsdServer(),
-              CServer::esTowerView() });
+        static const CServerList hardcoded({ CServer::fscFsdServer(), CServer::esTowerView() });
         CServerList testServers(m_predefinedServers);
         testServers.addIfAddressNotExists(hardcoded);
         return testServers;
@@ -120,27 +89,29 @@ namespace swift::core::data
         return CBuildConfig::getVersion() >= min;
     }
 
-    QString CGlobalSetup::convertToQString(bool i18n) const
-    {
-        return convertToQString(", ", i18n);
-    }
+    QString CGlobalSetup::convertToQString(bool i18n) const { return convertToQString(", ", i18n); }
 
     QString CGlobalSetup::convertToQString(const QString &separator, bool i18n) const
     {
-        QString s =
-            u"Global setup loaded: " % separator % u"Mapping min.version: " % this->getMappingMinimumVersionString() % separator
+        QString s = u"Global setup loaded: " % separator % u"Mapping min.version: " %
+                    this->getMappingMinimumVersionString() % separator
 
-            % u"Help URL: " % m_onlineHelpUrl.toQString(i18n) % separator;
-        s +=
-            u"DB root directory: " % getDbRootDirectoryUrl().toQString(i18n) % separator % u"ICAO DB reader: " % getDbIcaoReaderUrl().toQString(i18n) % separator % u"Model DB reader: " % getDbModelReaderUrl().toQString(i18n) % separator % u"Airport DB reader: " % getDbAirportReaderUrl().toQString(i18n) % separator % u"DB home page: " % getDbHomePageUrl().toQString(i18n) % separator % u"DB login service: " % getDbLoginServiceUrl().toQString(i18n) % separator;
-        s +=
-            u"VATSIM METARs: " % getVatsimMetarsUrl().toQString(i18n) % separator % u"VATSIM data file: " % getVatsimDataFileUrl().toQString(i18n) % separator % u"VATSIM server file: " % getVatsimServerFileUrl().toQString(i18n) % separator
+                    % u"Help URL: " % m_onlineHelpUrl.toQString(i18n) % separator;
+        s += u"DB root directory: " % getDbRootDirectoryUrl().toQString(i18n) % separator % u"ICAO DB reader: " %
+             getDbIcaoReaderUrl().toQString(i18n) % separator % u"Model DB reader: " %
+             getDbModelReaderUrl().toQString(i18n) % separator % u"Airport DB reader: " %
+             getDbAirportReaderUrl().toQString(i18n) % separator % u"DB home page: " %
+             getDbHomePageUrl().toQString(i18n) % separator % u"DB login service: " %
+             getDbLoginServiceUrl().toQString(i18n) % separator;
+        s += u"VATSIM METARs: " % getVatsimMetarsUrl().toQString(i18n) % separator % u"VATSIM data file: " %
+             getVatsimDataFileUrl().toQString(i18n) % separator % u"VATSIM server file: " %
+             getVatsimServerFileUrl().toQString(i18n) % separator
 
-            % u"Predefined servers: " % getPredefinedServers().toQString(i18n) % separator
+             % u"Predefined servers: " % getPredefinedServers().toQString(i18n) % separator
 
-            % u"AFV voice server URL: " % getAfvApiServerUrl().toQString(i18n) % separator
+             % u"AFV voice server URL: " % getAfvApiServerUrl().toQString(i18n) % separator
 
-            % u"AFV map URL: " % getAfvMapUrl().toQString(i18n);
+             % u"AFV map URL: " % getAfvMapUrl().toQString(i18n);
 
         return s;
     }

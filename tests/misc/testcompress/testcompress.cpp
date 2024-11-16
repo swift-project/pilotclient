@@ -60,7 +60,8 @@ namespace MiscTest
         QVERIFY2(zip7Exists, "No 7zip");
 
         const QString td = tempDir.path();
-        const QString compressedFile(CFileUtils::appendFilePaths(CSwiftDirectories::shareTestDirectory(), "countries.json.gz"));
+        const QString compressedFile(
+            CFileUtils::appendFilePaths(CSwiftDirectories::shareTestDirectory(), "countries.json.gz"));
         const QString unCompressedFile(CFileUtils::appendFilePaths(td, "countries.json"));
         const bool c = CCompressUtils::zip7Uncompress(compressedFile, td);
 

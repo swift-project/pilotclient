@@ -9,20 +9,15 @@
 
 namespace swift::gui::components
 {
-    CAutoPublishDialog::CAutoPublishDialog(QWidget *parent) : QDialog(parent),
-                                                              ui(new Ui::CAutoPublishDialog)
+    CAutoPublishDialog::CAutoPublishDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CAutoPublishDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CAutoPublishDialog::~CAutoPublishDialog()
-    {}
+    CAutoPublishDialog::~CAutoPublishDialog() {}
 
-    int CAutoPublishDialog::readFiles()
-    {
-        return ui->comp_AutoPublish->readFiles();
-    }
+    int CAutoPublishDialog::readFiles() { return ui->comp_AutoPublish->readFiles(); }
 
     int CAutoPublishDialog::readAndShow()
     {

@@ -30,9 +30,7 @@ namespace swift::gui::components
      * Login to DB
      * \sa swift::core::db::CDatabaseAuthenticationService
      */
-    class SWIFT_GUI_EXPORT CDbLoginComponent :
-        public QFrame,
-        public CLoadIndicatorEnabled
+    class SWIFT_GUI_EXPORT CDbLoginComponent : public QFrame, public CLoadIndicatorEnabled
     {
         Q_OBJECT
 
@@ -69,7 +67,8 @@ namespace swift::gui::components
         void onLogoffClicked();
 
         //! User authentication completed
-        void onAuthenticationFinished(const swift::misc::network::CAuthenticatedUser &user, const swift::misc::CStatusMessageList &statusMsgs);
+        void onAuthenticationFinished(const swift::misc::network::CAuthenticatedUser &user,
+                                      const swift::misc::CStatusMessageList &statusMsgs);
     };
 } // namespace swift::gui::components
 

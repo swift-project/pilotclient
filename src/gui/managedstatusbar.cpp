@@ -82,7 +82,8 @@ namespace swift::gui
             sizePolicy.setVerticalStretch(0);
             sizePolicy.setHeightForWidth(m_statusBar->sizePolicy().hasHeightForWidth());
 
-            m_statusBar->setMinimumHeight(24); // with no minimum height the layout always adjustes when displaying a status message
+            m_statusBar->setMinimumHeight(
+                24); // with no minimum height the layout always adjustes when displaying a status message
             m_statusBar->setSizePolicy(sizePolicy);
             m_statusBar->setSizeGripEnabled(false);
         }
@@ -90,26 +91,14 @@ namespace swift::gui
 
     void CManagedStatusBar::showWarningButton()
     {
-        if (!m_warningButton)
-        {
-            m_showWarnButtonInitially = true;
-        }
-        else
-        {
-            m_warningButton->setHidden(false);
-        }
+        if (!m_warningButton) { m_showWarnButtonInitially = true; }
+        else { m_warningButton->setHidden(false); }
     }
 
     void CManagedStatusBar::showErrorButton()
     {
-        if (!m_errorButton)
-        {
-            m_showErrorButtonInitially = true;
-        }
-        else
-        {
-            m_errorButton->setHidden(false);
-        }
+        if (!m_errorButton) { m_showErrorButtonInitially = true; }
+        else { m_errorButton->setHidden(false); }
     }
 
     void CManagedStatusBar::show()
@@ -124,10 +113,7 @@ namespace swift::gui
         m_statusBar->hide();
 
         // reset minimum width
-        if (m_ownedStatusBar)
-        {
-            m_statusBar->setMinimumWidth(50);
-        }
+        if (m_ownedStatusBar) { m_statusBar->setMinimumWidth(50); }
     }
 
     void CManagedStatusBar::displayStatusMessage(const CStatusMessage &statusMessage)
@@ -159,19 +145,13 @@ namespace swift::gui
             const QString elidedText = metrics.elidedText(statusMessage.getMessage(), m_elideMode, qRound(0.90 * w));
             m_statusBarLabel->setText(elidedText);
         }
-        else
-        {
-            m_statusBarLabel->setText(statusMessage.getMessage());
-        }
+        else { m_statusBarLabel->setText(statusMessage.getMessage()); }
         m_currentSeverity = statusMessage.getSeverity();
     }
 
     void CManagedStatusBar::displayStatusMessages(const CStatusMessageList &statusMessages)
     {
-        for (const CStatusMessage &m : statusMessages)
-        {
-            this->displayStatusMessage(m);
-        }
+        for (const CStatusMessage &m : statusMessages) { this->displayStatusMessage(m); }
     }
 
     void CManagedStatusBar::setSizeGripEnabled(bool enabled)

@@ -14,19 +14,18 @@ using namespace swift::misc::db;
 
 namespace swift::gui::components
 {
-    CUpdateInfoDialog::CUpdateInfoDialog(QWidget *parent) : QDialog(parent),
-                                                            ui(new Ui::CUpdateInfoDialog)
+    CUpdateInfoDialog::CUpdateInfoDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CUpdateInfoDialog)
     {
         ui->setupUi(this);
         ui->bb_UpdateInfolDialog->button(QDialogButtonBox::Ok)->setText(" Download and install ");
         ui->cb_DontShowAgain->setChecked(!m_setting.get());
         this->selectionChanged();
-        connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::selectionChanged, this, &CUpdateInfoDialog::selectionChanged);
+        connect(ui->comp_UpdateInfo, &CUpdateInfoComponent::selectionChanged, this,
+                &CUpdateInfoDialog::selectionChanged);
         connect(ui->cb_DontShowAgain, &QCheckBox::toggled, this, &CUpdateInfoDialog::onDontShowAgain);
     }
 
-    CUpdateInfoDialog::~CUpdateInfoDialog()
-    {}
+    CUpdateInfoDialog::~CUpdateInfoDialog() {}
 
     bool CUpdateInfoDialog::isNewVersionAvailable() const
     {
@@ -52,10 +51,7 @@ namespace swift::gui::components
         return QDialog::event(event);
     }
 
-    void CUpdateInfoDialog::onDontShowAgain(bool dontShowAgain)
-    {
-        m_setting.setAndSave(!dontShowAgain);
-    }
+    void CUpdateInfoDialog::onDontShowAgain(bool dontShowAgain) { m_setting.setAndSave(!dontShowAgain); }
 
     void CUpdateInfoDialog::selectionChanged()
     {

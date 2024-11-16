@@ -34,16 +34,22 @@ namespace swift::gui::editors
         virtual void setReadOnly(bool readOnly) override;
 
         //! Set origin coordinate
-        void setOriginCoordinate(const swift::misc::geo::CCoordinateGeodetic &originCoordinate) { m_originCoordinate = originCoordinate; }
+        void setOriginCoordinate(const swift::misc::geo::CCoordinateGeodetic &originCoordinate)
+        {
+            m_originCoordinate = originCoordinate;
+        }
 
         //! Set the distance
         void setDistance(const swift::misc::physical_quantities::CLength &distance);
 
         //! Relative coordinate based on entered data
-        swift::misc::geo::CCoordinateGeodetic getRelativeCoordinate(const swift::misc::physical_quantities::CAngle &bearingOffset = swift::misc::physical_quantities::CAngle::null()) const;
+        swift::misc::geo::CCoordinateGeodetic
+        getRelativeCoordinate(const swift::misc::physical_quantities::CAngle &bearingOffset =
+                                  swift::misc::physical_quantities::CAngle::null()) const;
 
         //! Display coordinate info
-        void displayInfo(const swift::misc::geo::CCoordinateGeodetic &relPos = swift::misc::geo::CCoordinateGeodetic::null());
+        void displayInfo(
+            const swift::misc::geo::CCoordinateGeodetic &relPos = swift::misc::geo::CCoordinateGeodetic::null());
 
     private:
         QScopedPointer<Ui::CRelativeAircraftPosition> ui;

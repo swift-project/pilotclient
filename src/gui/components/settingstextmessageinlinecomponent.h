@@ -45,7 +45,9 @@ namespace swift::gui::components
         void resetOverlayMessages();
 
         QScopedPointer<Ui::CSettingsTextMessageInlineComponent> ui;
-        swift::misc::CSetting<swift::gui::settings::TextMessageSettings> m_settings { this, &CSettingsTextMessageInlineComponent::settingsChanged }; //!< settings changed
+        swift::misc::CSetting<swift::gui::settings::TextMessageSettings> m_settings {
+            this, &CSettingsTextMessageInlineComponent::settingsChanged
+        }; //!< settings changed
     };
 } // namespace swift::gui::components
 

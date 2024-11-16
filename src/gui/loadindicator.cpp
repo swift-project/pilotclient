@@ -19,8 +19,7 @@ using namespace swift::misc;
 
 namespace swift::gui
 {
-    CLoadIndicator::CLoadIndicator(int width, int height, QWidget *parent)
-        : QWidget(parent)
+    CLoadIndicator::CLoadIndicator(int width, int height, QWidget *parent) : QWidget(parent)
     {
         this->setObjectName("CLoadIndicator");
         this->resize(width, height);
@@ -30,10 +29,7 @@ namespace swift::gui
         this->setStyleSheet("background-color: transparent;");
     }
 
-    bool CLoadIndicator::isAnimated() const
-    {
-        return (m_timerId != -1);
-    }
+    bool CLoadIndicator::isAnimated() const { return (m_timerId != -1); }
 
     void CLoadIndicator::setDisplayedWhenStopped(bool state)
     {
@@ -41,10 +37,7 @@ namespace swift::gui
         this->update();
     }
 
-    bool CLoadIndicator::isDisplayedWhenStopped() const
-    {
-        return m_displayedWhenStopped;
-    }
+    bool CLoadIndicator::isDisplayedWhenStopped() const { return m_displayedWhenStopped; }
 
     int CLoadIndicator::startAnimation(int timeoutMs, bool processEvents)
     {
@@ -57,7 +50,10 @@ namespace swift::gui
         if (processEvents && sGui)
         {
             sGui->processEventsToRefreshGui();
-            if (!myself) { return -1; } // cppcheck-suppress knownConditionTrueFalse // deleted in meantime (process events)
+            if (!myself) // cppcheck-suppress knownConditionTrueFalse
+            {
+                return -1; // deleted in meantime (process events)
+            }
         }
 
         const int stopId = m_currentId++; // copy
@@ -112,15 +108,9 @@ namespace swift::gui
         update();
     }
 
-    QSize CLoadIndicator::sizeHint() const
-    {
-        return QSize(64, 64);
-    }
+    QSize CLoadIndicator::sizeHint() const { return QSize(64, 64); }
 
-    int CLoadIndicator::heightForWidth(int w) const
-    {
-        return w;
-    }
+    int CLoadIndicator::heightForWidth(int w) const { return w; }
 
     void CLoadIndicator::timerEvent(QTimerEvent *event)
     {
@@ -170,7 +160,8 @@ namespace swift::gui
             painter.save();
             painter.translate(rect().center());
             painter.rotate(m_angle - qRound(i * 30.0f));
-            painter.drawRoundedRect(-qRound(capsuleWidth * 0.5), -(innerRadius + capsuleHeight), capsuleWidth, capsuleHeight, capsuleRadius, capsuleRadius);
+            painter.drawRoundedRect(-qRound(capsuleWidth * 0.5), -(innerRadius + capsuleHeight), capsuleWidth,
+                                    capsuleHeight, capsuleRadius, capsuleRadius);
             painter.restore();
         }
     }
@@ -194,10 +185,7 @@ namespace swift::gui
         return m_loadIndicator && m_usingWidget->isVisible() && m_loadIndicator->isAnimated();
     }
 
-    bool CLoadIndicatorEnabled::isLoadInProgress() const
-    {
-        return m_loadInProgress;
-    }
+    bool CLoadIndicatorEnabled::isLoadInProgress() const { return m_loadInProgress; }
 
     void CLoadIndicatorEnabled::showLoading(int timeoutMs, bool processEvents)
     {
@@ -213,10 +201,7 @@ namespace swift::gui
 
     void CLoadIndicatorEnabled::hideLoading()
     {
-        if (m_loadIndicator)
-        {
-            m_loadIndicator->stopAnimation();
-        }
+        if (m_loadIndicator) { m_loadIndicator->stopAnimation(); }
     }
 
     void CLoadIndicatorEnabled::centerLoadIndicator()

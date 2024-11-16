@@ -14,8 +14,8 @@ using namespace swift::misc;
 
 namespace swift::gui::components
 {
-    CModelConverterXSetupComponent::CModelConverterXSetupComponent(QWidget *parent) : QFrame(parent),
-                                                                                      ui(new Ui::CModelConverterXSetupComponent)
+    CModelConverterXSetupComponent::CModelConverterXSetupComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CModelConverterXSetupComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_DirBrowser, &QPushButton::clicked, this, &CModelConverterXSetupComponent::selectBinary);
@@ -23,19 +23,14 @@ namespace swift::gui::components
         ui->le_McxBinary->setText(m_setting.get());
     }
 
-    CModelConverterXSetupComponent::~CModelConverterXSetupComponent()
-    {}
+    CModelConverterXSetupComponent::~CModelConverterXSetupComponent() {}
 
     void CModelConverterXSetupComponent::selectBinary()
     {
         QString defaultValue = m_setting.get();
-        if (defaultValue.isEmpty())
-        {
-            defaultValue = QDir::currentPath();
-        }
-        const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                                              tr("ModelConverterX binary"), defaultValue,
-                                                              "*.exe");
+        if (defaultValue.isEmpty()) { defaultValue = QDir::currentPath(); }
+        const QString fileName =
+            QFileDialog::getOpenFileName(nullptr, tr("ModelConverterX binary"), defaultValue, "*.exe");
         ui->le_McxBinary->setText(fileName);
         this->saveSettings();
     }

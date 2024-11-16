@@ -23,17 +23,19 @@ using namespace swift::gui::components;
 
 namespace swift::gui::editors
 {
-    COwnModelSetForm::COwnModelSetForm(QWidget *parent) : CForm(parent),
-                                                          ui(new Ui::COwnModelSetForm)
+    COwnModelSetForm::COwnModelSetForm(QWidget *parent) : CForm(parent), ui(new Ui::COwnModelSetForm)
     {
         ui->setupUi(this);
         ui->tvp_Distributors->setDistributorMode(CDistributorListModel::Minimal);
         ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
         ui->comp_SimulatorSelector->setLeftMargin(0);
 
-        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &COwnModelSetForm::onSimulatorChanged, Qt::QueuedConnection);
-        connect(ui->rb_DisplayAllDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::changeDistributorDisplay);
-        connect(ui->rb_DisplayPreferencesDistributors, &QRadioButton::clicked, this, &COwnModelSetForm::changeDistributorDisplay);
+        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &COwnModelSetForm::onSimulatorChanged,
+                Qt::QueuedConnection);
+        connect(ui->rb_DisplayAllDistributors, &QRadioButton::clicked, this,
+                &COwnModelSetForm::changeDistributorDisplay);
+        connect(ui->rb_DisplayPreferencesDistributors, &QRadioButton::clicked, this,
+                &COwnModelSetForm::changeDistributorDisplay);
 
         QPointer<COwnModelSetForm> myself(this);
         QTimer::singleShot(1250, [=] {
@@ -57,25 +59,13 @@ namespace swift::gui::editors
         this->initDistributorDisplay();
     }
 
-    bool COwnModelSetForm::optionUseSelectedDistributors() const
-    {
-        return ui->rb_DistributorsSelected->isChecked();
-    }
+    bool COwnModelSetForm::optionUseSelectedDistributors() const { return ui->rb_DistributorsSelected->isChecked(); }
 
-    bool COwnModelSetForm::optionUseAllDistributors() const
-    {
-        return ui->rb_DistributorsAll->isChecked();
-    }
+    bool COwnModelSetForm::optionUseAllDistributors() const { return ui->rb_DistributorsAll->isChecked(); }
 
-    bool COwnModelSetForm::optionDbDataOnly() const
-    {
-        return ui->rb_DbDataOnly->isChecked();
-    }
+    bool COwnModelSetForm::optionDbDataOnly() const { return ui->rb_DbDataOnly->isChecked(); }
 
-    bool COwnModelSetForm::optionIncrementalBuild() const
-    {
-        return ui->rb_Incremental->isChecked();
-    }
+    bool COwnModelSetForm::optionIncrementalBuild() const { return ui->rb_Incremental->isChecked(); }
 
     bool COwnModelSetForm::optionSortByDistributorPreferences() const
     {
@@ -120,22 +110,18 @@ namespace swift::gui::editors
 
     void COwnModelSetForm::initDistributorDisplay()
     {
-        if (this->hasDistributorPreferences())
-        {
-            ui->rb_DisplayPreferencesDistributors->setChecked(true);
-        }
-        else
-        {
-            ui->rb_DisplayAllDistributors->setChecked(true);
-        }
+        if (this->hasDistributorPreferences()) { ui->rb_DisplayPreferencesDistributors->setChecked(true); }
+        else { ui->rb_DisplayAllDistributors->setChecked(true); }
         this->changeDistributorDisplay();
     }
 
     void COwnModelSetForm::setDistributorView(bool hasPreferences)
     {
-        ui->tvp_Distributors->setDistributorMode(hasPreferences ? CDistributorListModel::MinimalWithOrder : CDistributorListModel::Minimal);
+        ui->tvp_Distributors->setDistributorMode(hasPreferences ? CDistributorListModel::MinimalWithOrder :
+                                                                  CDistributorListModel::Minimal);
         ui->tvp_Distributors->fullResizeToContents();
-        const CPropertyIndex i = hasPreferences ? CPropertyIndex(CDistributor::IndexOrder) : CPropertyIndex(CDistributor::IndexDbStringKey);
+        const CPropertyIndex i =
+            hasPreferences ? CPropertyIndex(CDistributor::IndexOrder) : CPropertyIndex(CDistributor::IndexDbStringKey);
         ui->tvp_Distributors->sortByPropertyIndex(i);
     }
 
@@ -163,10 +149,7 @@ namespace swift::gui::editors
         return CDistributorList();
     }
 
-    bool COwnModelSetForm::optionDbIcaoCodesOnly() const
-    {
-        return ui->rb_DbIcaoCodesOnly->isChecked();
-    }
+    bool COwnModelSetForm::optionDbIcaoCodesOnly() const { return ui->rb_DbIcaoCodesOnly->isChecked(); }
 
     CDistributorList COwnModelSetForm::getSelectedDistributors() const
     {
@@ -181,14 +164,13 @@ namespace swift::gui::editors
     void COwnModelSetForm::setSimulator(const CSimulatorInfo &simulator)
     {
         // Ref T663, avoid ASSERT in some weird cases
-        if (simulator.isSingleSimulator())
-        {
-            m_simulator = simulator;
-        }
+        if (simulator.isSingleSimulator()) { m_simulator = simulator; }
         else
         {
-            const CSimulatorInfo resetSim = m_simulator.isSingleSimulator() ? m_simulator : CSimulatorInfo::guessDefaultSimulator();
-            const QString msg = QStringLiteral("Set invalid simulator, continue to use '%1'").arg(resetSim.toQString(true));
+            const CSimulatorInfo resetSim =
+                m_simulator.isSingleSimulator() ? m_simulator : CSimulatorInfo::guessDefaultSimulator();
+            const QString msg =
+                QStringLiteral("Set invalid simulator, continue to use '%1'").arg(resetSim.toQString(true));
             this->showOverlayHTMLMessage(msg);
             m_simulator = resetSim;
         }

@@ -25,7 +25,8 @@ using namespace swift::misc::simulation::xplane;
 
 namespace swift::misc::simulation
 {
-    IAircraftModelLoader *CMultiAircraftModelLoaderProvider::createModelLoader(const CSimulatorInfo &simulator, QObject *parent)
+    IAircraftModelLoader *CMultiAircraftModelLoaderProvider::createModelLoader(const CSimulatorInfo &simulator,
+                                                                               QObject *parent)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
         if (simulator.isXPlane()) { return new CAircraftModelLoaderXPlane(parent); }
@@ -68,9 +69,7 @@ namespace swift::misc::simulation
             if (!m_loaderMsfs) { m_loaderMsfs = this->initLoader(CSimulatorInfo::msfs()); }
             return m_loaderMsfs;
         }
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
         return nullptr;
     }
@@ -86,13 +85,17 @@ namespace swift::misc::simulation
         // in some cases the loading progress signal was not send properly
         // changing to Qt::QueuedConnection has solved the issues (Ref T529)
         IAircraftModelLoader *loader = createModelLoader(simulator, this);
-        bool c = connect(loader, &IAircraftModelLoader::loadingFinished, this, &CMultiAircraftModelLoaderProvider::loadingFinished, Qt::QueuedConnection);
+        bool c = connect(loader, &IAircraftModelLoader::loadingFinished, this,
+                         &CMultiAircraftModelLoaderProvider::loadingFinished, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(loader, &IAircraftModelLoader::diskLoadingStarted, this, &CMultiAircraftModelLoaderProvider::diskLoadingStarted, Qt::QueuedConnection);
+        c = connect(loader, &IAircraftModelLoader::diskLoadingStarted, this,
+                    &CMultiAircraftModelLoaderProvider::diskLoadingStarted, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(loader, &IAircraftModelLoader::cacheChanged, this, &CMultiAircraftModelLoaderProvider::cacheChanged, Qt::QueuedConnection);
+        c = connect(loader, &IAircraftModelLoader::cacheChanged, this, &CMultiAircraftModelLoaderProvider::cacheChanged,
+                    Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
-        c = connect(loader, &IAircraftModelLoader::loadingProgress, this, &CMultiAircraftModelLoaderProvider::loadingProgress, Qt::QueuedConnection);
+        c = connect(loader, &IAircraftModelLoader::loadingProgress, this,
+                    &CMultiAircraftModelLoaderProvider::loadingProgress, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         return loader;
     }

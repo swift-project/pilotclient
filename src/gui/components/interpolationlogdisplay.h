@@ -34,9 +34,7 @@ namespace swift::gui::components
     /*!
      * Display live data of interpolation
      */
-    class SWIFT_GUI_EXPORT CInterpolationLogDisplay :
-        public COverlayMessagesFrame,
-        public swift::misc::CIdentifiable
+    class SWIFT_GUI_EXPORT CInterpolationLogDisplay : public COverlayMessagesFrame, public swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -117,13 +115,15 @@ namespace swift::gui::components
         void onSituationAdded(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! \copydoc swift::core::CAirspaceMonitor::addedAircraftSituation
-        void onPartsAdded(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts);
+        void onPartsAdded(const swift::misc::aviation::CCallsign &callsign,
+                          const swift::misc::aviation::CAircraftParts &parts);
 
         //! \copydoc swift::core::ISimulator::simulatorStatusChanged
         void onSimulatorStatusChanged(swift::core::ISimulator::SimulatorStatus status);
 
         //! \copydoc swift::core::ISimulator::receivedRequestedElevation
-        void onElevationReceived(const swift::misc::geo::CElevationPlane &elevationPlane, const swift::misc::aviation::CCallsign &callsign);
+        void onElevationReceived(const swift::misc::geo::CElevationPlane &elevationPlane,
+                                 const swift::misc::aviation::CCallsign &callsign);
 
         //! \copydoc swift::core::ISimulator::requestedElevation
         void onElevationRequested(const swift::misc::aviation::CCallsign &callsign);

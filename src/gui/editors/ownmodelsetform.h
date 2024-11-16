@@ -104,7 +104,9 @@ namespace swift::gui::editors
 
         QScopedPointer<Ui::COwnModelSetForm> ui;
         swift::misc::simulation::CSimulatorInfo m_simulator;
-        swift::misc::CSetting<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::onPreferencesChanged };
+        swift::misc::CSetting<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences {
+            this, &COwnModelSetForm::onPreferencesChanged
+        };
     };
 } // namespace swift::gui::editors
 

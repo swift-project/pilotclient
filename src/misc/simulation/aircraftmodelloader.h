@@ -71,10 +71,7 @@ namespace swift::misc::simulation
         };
 
         //! Loaded info
-        static bool isLoadedInfo(LoadFinishedInfo info)
-        {
-            return info == CacheLoaded || info == ParsedData;
-        }
+        static bool isLoadedInfo(LoadFinishedInfo info) { return info == CacheLoaded || info == ParsedData; }
 
         //! Enum as string
         static const QString &enumToString(LoadFinishedInfo info);
@@ -100,7 +97,9 @@ namespace swift::misc::simulation
 
         //! Start the loading process from disk.
         //! Optional DB models can be passed and used for data consolidation.
-        void startLoading(LoadMode mode = InBackgroundWithCache, const ModelConsolidationCallback &modelConsolidation = {}, const QStringList &modelDirectories = {});
+        void startLoading(LoadMode mode = InBackgroundWithCache,
+                          const ModelConsolidationCallback &modelConsolidation = {},
+                          const QStringList &modelDirectories = {});
 
         //! Loading in progress
         //! \threadsafe
@@ -132,7 +131,8 @@ namespace swift::misc::simulation
 
         //! Parsing is finished or cache has been loaded
         //! \remark does to fire if the cache has been changed elsewhere and it has just been reloaded here!
-        void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator, IAircraftModelLoader::LoadFinishedInfo info);
+        void loadingFinished(const CStatusMessageList &status, const CSimulatorInfo &simulator,
+                             IAircraftModelLoader::LoadFinishedInfo info);
 
         //! Loading progress, normally from disk
         //! \param simulator corresponding simulator
@@ -149,10 +149,12 @@ namespace swift::misc::simulation
         IAircraftModelLoader(const CSimulatorInfo &simulator, QObject *parent = nullptr);
 
         //! Start the loading process from disk
-        virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) = 0;
+        virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                          const QStringList &modelDirectories) = 0;
 
         //! Get model directories from settings if empty, otherwise checked and UNC path fixed
-        QStringList getInitializedModelDirectories(const QStringList &modelDirectories, const CSimulatorInfo &simulator) const;
+        QStringList getInitializedModelDirectories(const QStringList &modelDirectories,
+                                                   const CSimulatorInfo &simulator) const;
 
         //! Any cached data?
         bool hasCachedData() const;
@@ -160,7 +162,9 @@ namespace swift::misc::simulation
         const CSimulatorInfo m_simulator; //!< related simulator
         std::atomic<bool> m_loadingInProgress { false }; //!< loading in progress
         std::atomic<bool> m_cancelLoading { false }; //!< flag, requesting to cancel loading
-        std::atomic<bool> m_skipLoadingEmptyModelDir { true }; //!< loading empty model dirs might erase the cache, so normally we skip it
+        std::atomic<bool> m_skipLoadingEmptyModelDir {
+            true
+        }; //!< loading empty model dirs might erase the cache, so normally we skip it
         CStatusMessageList m_loadingMessages; //!< loading messages
         settings::CMultiSimulatorSettings m_settings { this }; //!< settings
 
@@ -169,7 +173,8 @@ namespace swift::misc::simulation
         void setObjectInfo(const CSimulatorInfo &simulatorInfo);
 
         //! Loading completed
-        void onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator, LoadFinishedInfo info);
+        void onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator,
+                               LoadFinishedInfo info);
 
         //! Cache has been changed
         void onCacheChanged(const CSimulatorInfo &simulator);
@@ -191,7 +196,8 @@ namespace swift::misc::simulation
 
     protected:
         //! IAircraftModelLoader::startLoadingFromDisk
-        virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) override;
+        virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                          const QStringList &modelDirectories) override;
 
     private:
         qint64 m_loadingStartedTs = -1;

@@ -46,7 +46,8 @@ namespace swift::misc::aviation
         CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn);
 
         //! Constructor
-        CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn, bool recognition, bool cabin);
+        CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn,
+                        bool recognition, bool cabin);
 
         //! Strobes lights on?
         bool isStrobeOn() const { return m_strobeOn; }

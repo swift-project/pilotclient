@@ -15,14 +15,10 @@ namespace swift::misc
     static QThreadStorage<std::vector<const CJsonScope *>> g_stack;
 
     //! \private
-    auto &jsonStack() noexcept
-    {
-        return g_stack.localData();
-    }
+    auto &jsonStack() noexcept { return g_stack.localData(); }
 
     // pin vtables to this file
-    void CJsonException::anchor()
-    {}
+    void CJsonException::anchor() {}
 
     QString CJsonException::toString(const QString &prefix) const
     {
@@ -41,10 +37,7 @@ namespace swift::misc
         return list.isEmpty() ? QStringLiteral("<document root>") : list.join('.');
     }
 
-    void CJsonScope::push() const noexcept
-    {
-        jsonStack().push_back(this);
-    }
+    void CJsonScope::push() const noexcept { jsonStack().push_back(this); }
 
     void CJsonScope::pop() const noexcept
     {

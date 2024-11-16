@@ -19,11 +19,9 @@ namespace swift::misc::aviation
         return cats;
     }
 
-    CSimBriefData::CSimBriefData() : m_url("https://www.simbrief.com/api/xml.fetcher.php")
-    {}
+    CSimBriefData::CSimBriefData() : m_url("https://www.simbrief.com/api/xml.fetcher.php") {}
 
-    CSimBriefData::CSimBriefData(const QString &url, const QString &username) : m_url(url), m_username(username)
-    {}
+    CSimBriefData::CSimBriefData(const QString &url, const QString &username) : m_url(url), m_username(username) {}
 
     CUrl CSimBriefData::getUrlAndUsername() const
     {

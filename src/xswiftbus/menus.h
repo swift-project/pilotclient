@@ -45,7 +45,9 @@ namespace XSwiftBus
 
         struct Data
         {
-            Data(XPLMMenuID parent_, int index_, bool checkable_, std::function<void(bool)> callback_) : parent(parent_), index(index_), checkable(checkable_), callback(callback_) {}
+            Data(XPLMMenuID parent_, int index_, bool checkable_, std::function<void(bool)> callback_)
+                : parent(parent_), index(index_), checkable(checkable_), callback(callback_)
+            {}
             XPLMMenuID parent;
             int index;
             bool checkable;
@@ -93,7 +95,8 @@ namespace XSwiftBus
         struct Data
         {
             Data(XPLMMenuID id_, bool isMainMenu_, std::unique_ptr<ItemList> items_)
-                : id(id_), isMainMenu(isMainMenu_), items(std::move(items_)) {}
+                : id(id_), isMainMenu(isMainMenu_), items(std::move(items_))
+            {}
             XPLMMenuID id;
             bool isMainMenu;
             std::unique_ptr<ItemList> items;

@@ -9,8 +9,7 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CMetar, CMetarList)
 
 namespace swift::misc::weather
 {
-    CMetarList::CMetarList(const CSequence<CMetar> &other) : CSequence<CMetar>(other)
-    {}
+    CMetarList::CMetarList(const CSequence<CMetar> &other) : CSequence<CMetar>(other) {}
 
     CMetar CMetarList::getMetarForAirport(const aviation::CAirportIcaoCode &icao) const
     {

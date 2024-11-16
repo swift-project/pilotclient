@@ -55,15 +55,9 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::load16()
-    {
-        return disk16();
-    }
+    const QPixmap &CIcons::load16() { return disk16(); }
 
-    const QPixmap &CIcons::save16()
-    {
-        return disk16();
-    }
+    const QPixmap &CIcons::save16() { return disk16(); }
 
     const QPixmap &CIcons::colorPicker16()
     {
@@ -426,10 +420,7 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::filter16()
-    {
-        return tableSheet16();
-    }
+    const QPixmap &CIcons::filter16() { return tableSheet16(); }
 
     const QPixmap &CIcons::font16()
     {
@@ -497,10 +488,7 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::osAll()
-    {
-        return empty16();
-    }
+    const QPixmap &CIcons::osAll() { return empty16(); }
 
     const QPixmap &CIcons::osLinux()
     {
@@ -748,35 +736,17 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::appWeather16()
-    {
-        return weatherCloudy16();
-    }
+    const QPixmap &CIcons::appWeather16() { return weatherCloudy16(); }
 
-    const QPixmap &CIcons::appSettings16()
-    {
-        return wrench16();
-    }
+    const QPixmap &CIcons::appSettings16() { return wrench16(); }
 
-    const QPixmap &CIcons::appUsers16()
-    {
-        return users16();
-    }
+    const QPixmap &CIcons::appUsers16() { return users16(); }
 
-    const QPixmap &CIcons::appFlightPlan16()
-    {
-        return tableSheet16();
-    }
+    const QPixmap &CIcons::appFlightPlan16() { return tableSheet16(); }
 
-    const QPixmap &CIcons::appCockpit16()
-    {
-        return radio16();
-    }
+    const QPixmap &CIcons::appCockpit16() { return radio16(); }
 
-    const QPixmap &CIcons::appSimulator16()
-    {
-        return joystick16();
-    }
+    const QPixmap &CIcons::appSimulator16() { return joystick16(); }
 
     const QPixmap &CIcons::appTerminal16()
     {
@@ -784,95 +754,41 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::appTextMessages16()
-    {
-        return text16();
-    }
+    const QPixmap &CIcons::appTextMessages16() { return text16(); }
 
-    const QPixmap &CIcons::appAtc16()
-    {
-        return building16();
-    }
+    const QPixmap &CIcons::appAtc16() { return building16(); }
 
-    const QPixmap &CIcons::appAircraft16()
-    {
-        return paperPlane16();
-    }
+    const QPixmap &CIcons::appAircraft16() { return paperPlane16(); }
 
-    const QPixmap &CIcons::appMappings16()
-    {
-        return tableRelationship16();
-    }
+    const QPixmap &CIcons::appMappings16() { return tableRelationship16(); }
 
-    const QPixmap &CIcons::appInterpolation16()
-    {
-        return paperPlane16();
-    }
+    const QPixmap &CIcons::appInterpolation16() { return paperPlane16(); }
 
-    const QPixmap &CIcons::appLog16()
-    {
-        return monitorError16();
-    }
+    const QPixmap &CIcons::appLog16() { return monitorError16(); }
 
-    const QPixmap &CIcons::appAudio16()
-    {
-        return speakerNetwork16();
-    }
+    const QPixmap &CIcons::appAudio16() { return speakerNetwork16(); }
 
-    const QPixmap &CIcons::appVoiceRooms16()
-    {
-        return tableRelationship16();
-    }
+    const QPixmap &CIcons::appVoiceRooms16() { return tableRelationship16(); }
 
-    const QPixmap &CIcons::appDatabase16()
-    {
-        return database16();
-    }
+    const QPixmap &CIcons::appDatabase16() { return database16(); }
 
-    const QPixmap &CIcons::appAircraftIcao16()
-    {
-        return paperPlane16();
-    }
+    const QPixmap &CIcons::appAircraftIcao16() { return paperPlane16(); }
 
-    const QPixmap &CIcons::appAirlineIcao16()
-    {
-        return paperPlane16();
-    }
+    const QPixmap &CIcons::appAirlineIcao16() { return paperPlane16(); }
 
-    const QPixmap &CIcons::appLiveries16()
-    {
-        return paintCan16();
-    }
+    const QPixmap &CIcons::appLiveries16() { return paintCan16(); }
 
-    const QPixmap &CIcons::appModels16()
-    {
-        return appAircraft16();
-    }
+    const QPixmap &CIcons::appModels16() { return appAircraft16(); }
 
-    const QPixmap &CIcons::appCountries16()
-    {
-        return globe16();
-    }
+    const QPixmap &CIcons::appCountries16() { return globe16(); }
 
-    const QPixmap &CIcons::appDistributors16()
-    {
-        return users16();
-    }
+    const QPixmap &CIcons::appDistributors16() { return users16(); }
 
-    const QPixmap &CIcons::appAircraftCategories16()
-    {
-        return folderEdit16();
-    }
+    const QPixmap &CIcons::appAircraftCategories16() { return folderEdit16(); }
 
-    const QPixmap &CIcons::appDbStash16()
-    {
-        return databaseAdd16();
-    }
+    const QPixmap &CIcons::appDbStash16() { return databaseAdd16(); }
 
-    const QPixmap &CIcons::appRadar16()
-    {
-        return radar16();
-    }
+    const QPixmap &CIcons::appRadar16() { return radar16(); }
 
     const QPixmap &CIcons::roleC1()
     {
@@ -971,10 +887,7 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::roleFss()
-    {
-        return info16();
-    }
+    const QPixmap &CIcons::roleFss() { return info16(); }
 
     const QPixmap &CIcons::roleTower()
     {
@@ -1002,7 +915,8 @@ namespace swift::misc
 
     const QPixmap &CIcons::capabilityVoiceBackground()
     {
-        static const QPixmap pm(changeResourceBackgroundColor(":/diagona/icons/diagona/icons/headphone.png", Qt::green));
+        static const QPixmap pm(
+            changeResourceBackgroundColor(":/diagona/icons/diagona/icons/headphone.png", Qt::green));
         return pm;
     }
 
@@ -1014,19 +928,14 @@ namespace swift::misc
 
     const QPixmap &CIcons::capabilityVoiceReceiveOnlyBackground()
     {
-        static const QPixmap pm(changeResourceBackgroundColor(":/diagona/icons/diagona/icons/headphone.png", Qt::yellow));
+        static const QPixmap pm(
+            changeResourceBackgroundColor(":/diagona/icons/diagona/icons/headphone.png", Qt::yellow));
         return pm;
     }
 
-    const QPixmap &CIcons::capabilityTextOnly()
-    {
-        return appTextMessages16();
-    }
+    const QPixmap &CIcons::capabilityTextOnly() { return appTextMessages16(); }
 
-    const QPixmap &CIcons::capabilityUnknown()
-    {
-        return unknown16();
-    }
+    const QPixmap &CIcons::capabilityUnknown() { return unknown16(); }
 
     const QPixmap &CIcons::attitudeIndicator16()
     {
@@ -1034,20 +943,11 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::metar()
-    {
-        return weatherCloudy16();
-    }
+    const QPixmap &CIcons::metar() { return weatherCloudy16(); }
 
-    const QPixmap &CIcons::atis()
-    {
-        return tableSheet16();
-    }
+    const QPixmap &CIcons::atis() { return tableSheet16(); }
 
-    const QPixmap &CIcons::geoPosition16()
-    {
-        return globe16();
-    }
+    const QPixmap &CIcons::geoPosition16() { return globe16(); }
 
     const QPixmap &CIcons::modelInclude16()
     {
@@ -1250,7 +1150,8 @@ namespace swift::misc
 
     const QPixmap &CIcons::pixmapByResourceFileName(const QString &relativeFileName, QString &fullFilePath)
     {
-        //! \fixme KB 20170701 noticed the "cache" is not threadsafe. However, there has never be an issue so far. Added thread assert.
+        //! \fixme KB 20170701 noticed the "cache" is not threadsafe. However, there has never be an issue so far. Added
+        //! thread assert.
         Q_ASSERT_X(!relativeFileName.isEmpty(), Q_FUNC_INFO, "missing filename");
         Q_ASSERT_X(CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "not thread safe");
 

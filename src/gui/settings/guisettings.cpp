@@ -11,17 +11,13 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CGeneralGuiSettings)
 
 namespace swift::gui::settings
 {
-    CGeneralGuiSettings::CGeneralGuiSettings()
-    {}
+    CGeneralGuiSettings::CGeneralGuiSettings() {}
 
     void CGeneralGuiSettings::setWidgetStyle(const QString &widgetStyle)
     {
         if (this->m_widgetStyle == widgetStyle) { return; }
         const auto availableStyles = QStyleFactory::keys();
-        if (availableStyles.contains(widgetStyle))
-        {
-            m_widgetStyle = widgetStyle;
-        }
+        if (availableStyles.contains(widgetStyle)) { m_widgetStyle = widgetStyle; }
     }
 
     bool CGeneralGuiSettings::isDifferentValidWidgetStyle(const QString &style) const
@@ -52,12 +48,9 @@ namespace swift::gui::settings
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexWidgetStyle:
-            return QVariant::fromValue(this->m_widgetStyle);
-        case IndexPreferredSelection:
-            return QVariant::fromValue(this->m_preferredSelection);
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexWidgetStyle: return QVariant::fromValue(this->m_widgetStyle);
+        case IndexPreferredSelection: return QVariant::fromValue(this->m_preferredSelection);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -71,15 +64,9 @@ namespace swift::gui::settings
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexWidgetStyle:
-            this->setWidgetStyle(variant.toString());
-            break;
-        case IndexPreferredSelection:
-            this->m_preferredSelection = variant.toInt();
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexWidgetStyle: this->setWidgetStyle(variant.toString()); break;
+        case IndexPreferredSelection: this->m_preferredSelection = variant.toInt(); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::gui::settings

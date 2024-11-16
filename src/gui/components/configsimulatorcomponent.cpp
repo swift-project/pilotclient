@@ -17,15 +17,14 @@ using namespace swift::config;
 
 namespace swift::gui::components
 {
-    CConfigSimulatorComponent::CConfigSimulatorComponent(QWidget *parent) : QFrame(parent),
-                                                                            ui(new Ui::CConfigSimulatorComponent)
+    CConfigSimulatorComponent::CConfigSimulatorComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CConfigSimulatorComponent)
     {
         ui->setupUi(this);
         this->preselectSimulators();
     }
 
-    CConfigSimulatorComponent::~CConfigSimulatorComponent()
-    {}
+    CConfigSimulatorComponent::~CConfigSimulatorComponent() {}
 
     void CConfigSimulatorComponent::save()
     {
@@ -40,10 +39,7 @@ namespace swift::gui::components
         return ui->comp_SettingsSimulator->hasUnsavedChanges();
     }
 
-    void CConfigSimulatorComponent::resetUnsavedChanges()
-    {
-        ui->comp_SettingsSimulator->resetUnsavedChanges();
-    }
+    void CConfigSimulatorComponent::resetUnsavedChanges() { ui->comp_SettingsSimulator->resetUnsavedChanges(); }
 
     void CConfigSimulatorComponent::preselectSimulators()
     {
@@ -55,10 +51,14 @@ namespace swift::gui::components
         }
 
         // no x64 check as we would allow to config 32bit with launcher x64 and vice versa
-        const bool p3d = (sims.isP3D() || !CFsDirectories::p3dDir().isEmpty()) && CBuildConfig::isCompiledWithP3DSupport();
-        const bool fsx = (sims.isFSX() || !CFsDirectories::fsxDir().isEmpty()) && CBuildConfig::isCompiledWithFsxSupport();
-        const bool fs9 = (sims.isFS9() || !CFsDirectories::fs9Dir().isEmpty()) && CBuildConfig::isCompiledWithFs9Support();
-        const bool msfs = (sims.isMSFS() || !CFsDirectories::msfsDir().isEmpty()) && CBuildConfig::isCompiledWithMSFSSupport();
+        const bool p3d =
+            (sims.isP3D() || !CFsDirectories::p3dDir().isEmpty()) && CBuildConfig::isCompiledWithP3DSupport();
+        const bool fsx =
+            (sims.isFSX() || !CFsDirectories::fsxDir().isEmpty()) && CBuildConfig::isCompiledWithFsxSupport();
+        const bool fs9 =
+            (sims.isFS9() || !CFsDirectories::fs9Dir().isEmpty()) && CBuildConfig::isCompiledWithFs9Support();
+        const bool msfs =
+            (sims.isMSFS() || !CFsDirectories::msfsDir().isEmpty()) && CBuildConfig::isCompiledWithMSFSSupport();
         const bool xp = sims.isXPlane() && CBuildConfig::isCompiledWithXPlaneSupport();
         const bool fg = sims.isFG() && CBuildConfig::isCompiledWithFGSupport();
 
@@ -106,10 +106,7 @@ namespace swift::gui::components
         return ids;
     }
 
-    void CConfigSimulatorWizardPage::initializePage()
-    {
-        m_config->resetUnsavedChanges();
-    }
+    void CConfigSimulatorWizardPage::initializePage() { m_config->resetUnsavedChanges(); }
 
     bool CConfigSimulatorWizardPage::validatePage()
     {

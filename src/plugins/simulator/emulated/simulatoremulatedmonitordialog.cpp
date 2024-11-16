@@ -29,9 +29,8 @@ namespace swift::simplugin::emulated
         return cats;
     }
 
-    CSimulatorEmulatedMonitorDialog::CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent) : QDialog(parent),
-                                                                                                                       CIdentifiable("Emulated driver dialog"),
-                                                                                                                       ui(new Ui::CSimulatorEmulatedMonitorDialog)
+    CSimulatorEmulatedMonitorDialog::CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent)
+        : QDialog(parent), CIdentifiable("Emulated driver dialog"), ui(new Ui::CSimulatorEmulatedMonitorDialog)
     {
         Q_ASSERT_X(simulator, Q_FUNC_INFO, "Need simulator");
 
@@ -44,28 +43,43 @@ namespace swift::simplugin::emulated
         m_uiUpdateTimer.setObjectName(this->objectName() + ":uiUpdateTimer");
         m_uiUpdateTimer.start(2500);
 
-        connect(m_simulator, &CSimulatorEmulated::internalAircraftChanged, this, &CSimulatorEmulatedMonitorDialog::setInternalAircraftUiValues, Qt::QueuedConnection);
+        connect(m_simulator, &CSimulatorEmulated::internalAircraftChanged, this,
+                &CSimulatorEmulatedMonitorDialog::setInternalAircraftUiValues, Qt::QueuedConnection);
         connect(&m_uiUpdateTimer, &QTimer::timeout, this, &CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates);
 
-        connect(ui->cb_Connected, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
+        connect(ui->cb_Connected, &QCheckBox::released, this,
+                &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
         connect(ui->cb_Paused, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
-        connect(ui->cb_Simulating, &QCheckBox::released, this, &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
+        connect(ui->cb_Simulating, &QCheckBox::released, this,
+                &CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged);
 
-        connect(ui->editor_Situation, &CSituationForm::changeAircraftSituation, this, &CSimulatorEmulatedMonitorDialog::changeSituationFromUi, Qt::QueuedConnection);
-        connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this, &CSimulatorEmulatedMonitorDialog::changePartsFromUi, Qt::QueuedConnection);
-        connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this, &CSimulatorEmulatedMonitorDialog::changeComFromUi, Qt::QueuedConnection);
-        connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this, &CSimulatorEmulatedMonitorDialog::changeSelcalFromUi, Qt::QueuedConnection);
-        connect(ui->comp_ComTransmissions, &CCockpitComTransmissionComponent::changedValues, this, &CSimulatorEmulatedMonitorDialog::onSavedComTransmissionValues, Qt::QueuedConnection);
+        connect(ui->editor_Situation, &CSituationForm::changeAircraftSituation, this,
+                &CSimulatorEmulatedMonitorDialog::changeSituationFromUi, Qt::QueuedConnection);
+        connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this,
+                &CSimulatorEmulatedMonitorDialog::changePartsFromUi, Qt::QueuedConnection);
+        connect(ui->editor_Com, &CCockpitComForm::changedCockpitValues, this,
+                &CSimulatorEmulatedMonitorDialog::changeComFromUi, Qt::QueuedConnection);
+        connect(ui->editor_Com, &CCockpitComForm::changedSelcal, this,
+                &CSimulatorEmulatedMonitorDialog::changeSelcalFromUi, Qt::QueuedConnection);
+        connect(ui->comp_ComTransmissions, &CCockpitComTransmissionComponent::changedValues, this,
+                &CSimulatorEmulatedMonitorDialog::onSavedComTransmissionValues, Qt::QueuedConnection);
 
         connect(ui->pb_ResetStatistics, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::resetStatistics);
-        connect(ui->pb_InterpolatorStopLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
-        connect(ui->pb_InterpolatorWriteLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
-        connect(ui->pb_InterpolatorClearLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
-        connect(ui->pb_InterpolatorShowLogs, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
-        connect(ui->pb_InterpolatorStartLog, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
-        connect(ui->pb_InterpolatorFetch, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+        connect(ui->pb_InterpolatorStopLog, &QPushButton::clicked, this,
+                &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+        connect(ui->pb_InterpolatorWriteLog, &QPushButton::clicked, this,
+                &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+        connect(ui->pb_InterpolatorClearLog, &QPushButton::clicked, this,
+                &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+        connect(ui->pb_InterpolatorShowLogs, &QPushButton::clicked, this,
+                &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+        connect(ui->pb_InterpolatorStartLog, &QPushButton::clicked, this,
+                &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
+        connect(ui->pb_InterpolatorFetch, &QPushButton::clicked, this,
+                &CSimulatorEmulatedMonitorDialog::interpolatorLogButton);
         connect(ui->pb_EmitAddedFailed, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::emitSignal);
-        connect(ui->pb_AddAutoPublishData, &QPushButton::clicked, this, &CSimulatorEmulatedMonitorDialog::addAutoPublishTestData);
+        connect(ui->pb_AddAutoPublishData, &QPushButton::clicked, this,
+                &CSimulatorEmulatedMonitorDialog::addAutoPublishTestData);
 
         ui->led_Receiving->setToolTips("receiving", "idle");
         ui->led_Receiving->setShape(CLedWidget::Rounded);
@@ -82,54 +96,45 @@ namespace swift::simplugin::emulated
         this->updateWindowTitleAndUiValues(simulator->getSimulatorInfo());
     }
 
-    CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog()
-    {}
+    CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog() {}
 
     void CSimulatorEmulatedMonitorDialog::appendStatusMessageToList(const swift::misc::CStatusMessage &statusMessage)
     {
         ui->comp_LogComponent->appendStatusMessagesToList(statusMessage);
     }
 
-    void CSimulatorEmulatedMonitorDialog::appendStatusMessagesToList(const swift::misc::CStatusMessageList &statusMessages)
+    void
+    CSimulatorEmulatedMonitorDialog::appendStatusMessagesToList(const swift::misc::CStatusMessageList &statusMessages)
     {
         ui->comp_LogComponent->appendStatusMessagesToList(statusMessages);
     }
 
-    void CSimulatorEmulatedMonitorDialog::appendReceivingCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)
+    void CSimulatorEmulatedMonitorDialog::appendReceivingCall(const QString &function, const QString &p1,
+                                                              const QString &p2, const QString &p3)
     {
         ui->led_Receiving->blink();
         this->appendFunctionCall(function, p1, p2, p3);
     }
 
-    void CSimulatorEmulatedMonitorDialog::appendSendingCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)
+    void CSimulatorEmulatedMonitorDialog::appendSendingCall(const QString &function, const QString &p1,
+                                                            const QString &p2, const QString &p3)
     {
         ui->led_Sending->blink();
         this->appendFunctionCall(function, p1, p2, p3);
     }
 
-    void CSimulatorEmulatedMonitorDialog::appendFunctionCall(const QString &function, const QString &p1, const QString &p2, const QString &p3)
+    void CSimulatorEmulatedMonitorDialog::appendFunctionCall(const QString &function, const QString &p1,
+                                                             const QString &p2, const QString &p3)
     {
         static const QString c1("%1 %2");
         static const QString c2("%1 %2 %3");
         static const QString c3("%1 %2 %3 %4");
 
         CStatusMessage msg;
-        if (!p3.isEmpty())
-        {
-            msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c3.arg(function, p1, p2, p3));
-        }
-        else if (!p2.isEmpty())
-        {
-            msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c2.arg(function, p1, p2));
-        }
-        else if (!p1.isEmpty())
-        {
-            msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c1.arg(function, p1));
-        }
-        else
-        {
-            msg = CStatusMessage(this, CStatusMessage::SeverityInfo, function);
-        }
+        if (!p3.isEmpty()) { msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c3.arg(function, p1, p2, p3)); }
+        else if (!p2.isEmpty()) { msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c2.arg(function, p1, p2)); }
+        else if (!p1.isEmpty()) { msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c1.arg(function, p1)); }
+        else { msg = CStatusMessage(this, CStatusMessage::SeverityInfo, function); }
         this->appendStatusMessageToList(msg);
     }
 
@@ -152,10 +157,8 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulatedMonitorDialog::onSimulatorValuesChanged()
     {
-        m_simulator->setCombinedStatus(
-            ui->cb_Connected->isChecked(),
-            ui->cb_Simulating->isChecked(),
-            ui->cb_Paused->isChecked());
+        m_simulator->setCombinedStatus(ui->cb_Connected->isChecked(), ui->cb_Simulating->isChecked(),
+                                       ui->cb_Paused->isChecked());
     }
 
     void CSimulatorEmulatedMonitorDialog::onSavedComTransmissionValues(CComSystem::ComUnit unit)
@@ -278,10 +281,7 @@ namespace swift::simplugin::emulated
             this->enableInterpolationLogButtons(fetching);
             ok = true;
         }
-        else
-        {
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Unhandled button");
-        }
+        else { Q_ASSERT_X(false, Q_FUNC_INFO, "Unhandled button"); }
         if (!ok) { CLogMessage(this).warning(u"Cannot parse command for button: %1") << sender->objectName(); }
     }
 
@@ -303,7 +303,8 @@ namespace swift::simplugin::emulated
         if (sender == ui->pb_EmitAddedFailed && cs.isValid())
         {
             const CSimulatedAircraft aircraft = m_simulator->getAircraftInRangeForCallsign(cs);
-            const CStatusMessage msg(this, CStatusMessage::SeverityError, "Simulated driver driver failed for " + cs.asString());
+            const CStatusMessage msg(this, CStatusMessage::SeverityError,
+                                     "Simulated driver driver failed for " + cs.asString());
             emit m_simulator->physicallyAddingRemoteModelFailed(aircraft, true, ui->cb_Failover->isChecked(), msg);
         }
     }

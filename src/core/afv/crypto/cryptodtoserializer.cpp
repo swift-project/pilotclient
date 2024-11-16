@@ -7,7 +7,8 @@ namespace swift::core::afv::crypto
 {
     CryptoDtoSerializer::CryptoDtoSerializer() {}
 
-    CryptoDtoSerializer::Deserializer CryptoDtoSerializer::deserialize(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback)
+    CryptoDtoSerializer::Deserializer CryptoDtoSerializer::deserialize(CCryptoDtoChannel &channel,
+                                                                       const QByteArray &bytes, bool loopback)
     {
         return Deserializer(channel, bytes, loopback);
     }
@@ -49,11 +50,12 @@ namespace swift::core::afv::crypto
             if (loopback) { key = channel.getTransmitKey(CryptoDtoMode::AEAD_ChaCha20Poly1305); }
             else { key = channel.getReceiveKey(CryptoDtoMode::AEAD_ChaCha20Poly1305); }
             Q_ASSERT_X(key.size() == crypto_aead_chacha20poly1305_IETF_KEYBYTES, Q_FUNC_INFO, "");
-            int result = crypto_aead_chacha20poly1305_ietf_decrypt(reinterpret_cast<unsigned char *>(decryptedPayload.data()), &mlen, nullptr,
-                                                                   reinterpret_cast<const unsigned char *>(aePayloadBuffer.constData()), aePayloadBuffer.size(),
-                                                                   reinterpret_cast<const unsigned char *>(adBuffer.constData()), adBuffer.size(),
-                                                                   reinterpret_cast<const unsigned char *>(nonce.constData()),
-                                                                   reinterpret_cast<const unsigned char *>(key.constData()));
+            int result = crypto_aead_chacha20poly1305_ietf_decrypt(
+                reinterpret_cast<unsigned char *>(decryptedPayload.data()), &mlen, nullptr,
+                reinterpret_cast<const unsigned char *>(aePayloadBuffer.constData()), aePayloadBuffer.size(),
+                reinterpret_cast<const unsigned char *>(adBuffer.constData()), adBuffer.size(),
+                reinterpret_cast<const unsigned char *>(nonce.constData()),
+                reinterpret_cast<const unsigned char *>(key.constData()));
 
             if (result == 0)
             {

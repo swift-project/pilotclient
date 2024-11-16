@@ -16,7 +16,8 @@ class QWidget;
 namespace swift::gui::views
 {
     //! Aircraft situation change view
-    class SWIFT_GUI_EXPORT CAircraftSituationChangeView : public CViewWithTimestampWithOffsetObjects<models::CAircraftSituationChangeListModel>
+    class SWIFT_GUI_EXPORT CAircraftSituationChangeView :
+        public CViewWithTimestampWithOffsetObjects<models::CAircraftSituationChangeListModel>
     {
         Q_OBJECT
 

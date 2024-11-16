@@ -22,45 +22,39 @@ using namespace swift::gui::components;
 
 namespace swift::gui::components
 {
-    CDataMainInfoAreaComponent::CDataMainInfoAreaComponent(QWidget *parent) : CInfoArea(parent),
-                                                                              ui(new Ui::CDataMainInfoAreaComponent)
+    CDataMainInfoAreaComponent::CDataMainInfoAreaComponent(QWidget *parent)
+        : CInfoArea(parent), ui(new Ui::CDataMainInfoAreaComponent)
     {
         ui->setupUi(this);
         this->initInfoArea(); // init base class
         this->setWindowIcon(CIcons::swiftDatabase24());
 
-        connect(ui->comp_Mapping, &CDbMappingComponent::filterByLivery, ui->comp_DataInfoArea->getLiveryComponent(), &CDbLiveryComponent::filter);
-        connect(ui->comp_Mapping, &CDbMappingComponent::filterByAircraftIcao, ui->comp_DataInfoArea->getAircraftComponent(), &CDbAircraftIcaoComponent::filter);
-        connect(ui->comp_Mapping, &CDbMappingComponent::requestUpdatedData, ui->comp_DataInfoArea, &CDataInfoAreaComponent::requestUpdatedData);
+        connect(ui->comp_Mapping, &CDbMappingComponent::filterByLivery, ui->comp_DataInfoArea->getLiveryComponent(),
+                &CDbLiveryComponent::filter);
+        connect(ui->comp_Mapping, &CDbMappingComponent::filterByAircraftIcao,
+                ui->comp_DataInfoArea->getAircraftComponent(), &CDbAircraftIcaoComponent::filter);
+        connect(ui->comp_Mapping, &CDbMappingComponent::requestUpdatedData, ui->comp_DataInfoArea,
+                &CDataInfoAreaComponent::requestUpdatedData);
 
-        connect(ui->comp_DataInfoArea->getModelComponent(), &CDbModelComponent::requestStash, ui->comp_Mapping, &CDbMappingComponent::stashModels);
+        connect(ui->comp_DataInfoArea->getModelComponent(), &CDbModelComponent::requestStash, ui->comp_Mapping,
+                &CDbMappingComponent::stashModels);
         connect(ui->comp_Log, &CLogComponent::requestAttention, this, &CDataMainInfoAreaComponent::selectLog);
 
         ui->comp_Log->showFilterBar();
     }
 
-    CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent()
-    {}
+    CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent() {}
 
-    CLogComponent *CDataMainInfoAreaComponent::getLogComponent() const
-    {
-        return ui->comp_Log;
-    }
+    CLogComponent *CDataMainInfoAreaComponent::getLogComponent() const { return ui->comp_Log; }
 
-    CDbMappingComponent *CDataMainInfoAreaComponent::getMappingComponent() const
-    {
-        return ui->comp_Mapping;
-    }
+    CDbMappingComponent *CDataMainInfoAreaComponent::getMappingComponent() const { return ui->comp_Mapping; }
 
     CDataInfoAreaComponent *CDataMainInfoAreaComponent::getDataInfoAreaComponent() const
     {
         return ui->comp_DataInfoArea;
     }
 
-    CDataSettingsComponent *CDataMainInfoAreaComponent::getDataSettingsComponent() const
-    {
-        return ui->comp_Settings;
-    }
+    CDataSettingsComponent *CDataMainInfoAreaComponent::getDataSettingsComponent() const { return ui->comp_Settings; }
 
     void CDataMainInfoAreaComponent::displayLog()
     {
@@ -70,10 +64,7 @@ namespace swift::gui::components
         this->getLogComponent()->displayLog();
     }
 
-    void CDataMainInfoAreaComponent::selectLog()
-    {
-        this->selectArea(InfoAreaLog);
-    }
+    void CDataMainInfoAreaComponent::selectLog() { this->selectArea(InfoAreaLog); }
 
     QSize CDataMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
@@ -84,8 +75,7 @@ namespace swift::gui::components
         case InfoAreaMapping:
         case InfoAreaSettings:
         case InfoAreaLog:
-        default:
-            return QSize(800, 600);
+        default: return QSize(800, 600);
         }
     }
 

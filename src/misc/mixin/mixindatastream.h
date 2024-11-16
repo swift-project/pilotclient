@@ -20,7 +20,8 @@ namespace swift::misc
         /*!
          * CRTP class template to generate non-member QDataStream streaming operators.
          *
-         * \tparam Derived Must implement public methods marshalToDataStream(QDataStream &) and unmarshalFromDataStream(QDataStream &).
+         * \tparam Derived Must implement public methods marshalToDataStream(QDataStream &) and
+         * unmarshalFromDataStream(QDataStream &).
          */
         template <class Derived>
         class DataStreamOperators
@@ -140,8 +141,8 @@ namespace swift::misc
          * When a derived class and a base class both inherit from mixin::DataStreamByMetaClass,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-#define SWIFT_MISC_DECLARE_USING_MIXIN_DATASTREAM(DERIVED)                           \
-    using ::swift::misc::mixin::DataStreamByMetaClass<DERIVED>::marshalToDataStream; \
+#define SWIFT_MISC_DECLARE_USING_MIXIN_DATASTREAM(DERIVED)                                                             \
+    using ::swift::misc::mixin::DataStreamByMetaClass<DERIVED>::marshalToDataStream;                                   \
     using ::swift::misc::mixin::DataStreamByMetaClass<DERIVED>::unmarshalFromDataStream;
     } // namespace mixin
 } // namespace swift::misc

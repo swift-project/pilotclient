@@ -17,8 +17,7 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    CRegisterComponent::CRegisterComponent(QWidget *parent) : QFrame(parent),
-                                                              ui(new Ui::CRegisterComponent)
+    CRegisterComponent::CRegisterComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CRegisterComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         Q_ASSERT_X(sGui->getIContextApplication(), Q_FUNC_INFO, "Need application context");
@@ -27,7 +26,8 @@ namespace swift::gui::components
         ui->tvp_RegisteredComponents->menuAddItems(CIdentifierView::MenuRefresh);
 
         connect(&m_updateTimer, &QTimer::timeout, this, &CRegisterComponent::update);
-        connect(sGui->getIContextApplication(), &IContextApplication::registrationChanged, this, &CRegisterComponent::update);
+        connect(sGui->getIContextApplication(), &IContextApplication::registrationChanged, this,
+                &CRegisterComponent::update);
         connect(ui->tvp_RegisteredComponents, &CIdentifierView::requestUpdate, this, &CRegisterComponent::update);
 
         // timer is there just in case something goes wrong
@@ -35,8 +35,7 @@ namespace swift::gui::components
         m_updateTimer.start();
     }
 
-    CRegisterComponent::~CRegisterComponent()
-    {}
+    CRegisterComponent::~CRegisterComponent() {}
 
     void CRegisterComponent::update()
     {

@@ -10,15 +10,15 @@
 
 namespace swift::misc
 {
-    QString CSampleUtils::selectDirectory(const QStringList &directoryOptions, QTextStream &streamOut, QTextStream &streamIn)
+    QString CSampleUtils::selectDirectory(const QStringList &directoryOptions, QTextStream &streamOut,
+                                          QTextStream &streamIn)
     {
         Q_ASSERT(!directoryOptions.isEmpty());
         if (directoryOptions.isEmpty()) { return {}; }
         if (directoryOptions.size() < 2) { return directoryOptions.first(); }
 
         QString selectedDir;
-        do
-        {
+        do {
             for (int i = 0; i < directoryOptions.size(); i++)
             {
                 if (i > 0) { streamOut << "  "; }

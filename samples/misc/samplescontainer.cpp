@@ -53,7 +53,8 @@ namespace swift::sample
         qDebug() << "-- list:";
         qDebug() << atcList.toQString();
 
-        CAtcStationList atcListFind = atcList.findBy(&CAtcStation::getCallsign, "eddm_twr", &CAtcStation::getFrequency, CFrequency(118.7, CFrequencyUnit::MHz()));
+        CAtcStationList atcListFind = atcList.findBy(&CAtcStation::getCallsign, "eddm_twr", &CAtcStation::getFrequency,
+                                                     CFrequency(118.7, CFrequencyUnit::MHz()));
         qDebug() << "-- find by:";
         qDebug() << atcListFind.toQString();
 

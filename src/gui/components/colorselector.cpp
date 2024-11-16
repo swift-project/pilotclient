@@ -34,8 +34,7 @@ using namespace swift::misc;
 
 namespace swift::gui::components
 {
-    CColorSelector::CColorSelector(QWidget *parent) : QFrame(parent),
-                                                      ui(new Ui::CColorSelector)
+    CColorSelector::CColorSelector(QWidget *parent) : QFrame(parent), ui(new Ui::CColorSelector)
     {
         ui->setupUi(this);
         ui->tb_ColorDialog->setIcon(CIcons::color16());
@@ -71,10 +70,7 @@ namespace swift::gui::components
         emit colorChanged(color);
     }
 
-    void CColorSelector::setColor(const QColor &color)
-    {
-        this->setColor(CRgbColor(color));
-    }
+    void CColorSelector::setColor(const QColor &color) { this->setColor(CRgbColor(color)); }
 
     swift::misc::CRgbColor CColorSelector::getColor() const
     {
@@ -108,10 +104,7 @@ namespace swift::gui::components
         event->acceptProposedAction();
     }
 
-    void CColorSelector::dragLeaveEvent(QDragLeaveEvent *event)
-    {
-        event->accept();
-    }
+    void CColorSelector::dragLeaveEvent(QDragLeaveEvent *event) { event->accept(); }
 
     void CColorSelector::dropEvent(QDropEvent *event)
     {
@@ -187,10 +180,7 @@ namespace swift::gui::components
     void CColorSelector::onReturnPressed()
     {
         const CRgbColor color = this->getColor();
-        if (color.isValid())
-        {
-            this->setColor(color);
-        }
+        if (color.isValid()) { this->setColor(color); }
     }
 
     void CColorSelector::setColorByName(const QString &colorName)

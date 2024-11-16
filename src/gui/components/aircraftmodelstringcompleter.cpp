@@ -21,8 +21,8 @@ using namespace swift::misc::simulation::data;
 
 namespace swift::gui::components
 {
-    CAircraftModelStringCompleter::CAircraftModelStringCompleter(QWidget *parent) : QFrame(parent),
-                                                                                    ui(new Ui::CAircraftModelStringCompleter)
+    CAircraftModelStringCompleter::CAircraftModelStringCompleter(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CAircraftModelStringCompleter)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
         Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "missing web services");
@@ -31,21 +31,21 @@ namespace swift::gui::components
         ui->le_modelString->setValidator(new CUpperCaseValidator(ui->le_modelString));
 
         connect(ui->le_modelString, &QLineEdit::editingFinished, this, &CAircraftModelStringCompleter::onTextChanged);
-        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this, &CAircraftModelStringCompleter::onSwiftModelDataRead);
+        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbModelsRead, this,
+                &CAircraftModelStringCompleter::onSwiftModelDataRead);
         connect(ui->rb_Db, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
         connect(ui->rb_ModelSet, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
         connect(ui->rb_OwnModels, &QRadioButton::clicked, this, &CAircraftModelStringCompleter::initGui);
-        connect(&m_modelCaches, &CModelCaches::cacheChanged, this, &CAircraftModelStringCompleter::setSimulator, Qt::QueuedConnection);
+        connect(&m_modelCaches, &CModelCaches::cacheChanged, this, &CAircraftModelStringCompleter::setSimulator,
+                Qt::QueuedConnection);
 
         CSimulatorInfo simulator = CSimulatorInfo(CSimulatorInfo::P3D); // default
         if (sGui->getIContextSimulator())
         {
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CAircraftModelStringCompleter::onSimulatorConnected, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this,
+                    &CAircraftModelStringCompleter::onSimulatorConnected, Qt::QueuedConnection);
             CSimulatorInfo pluginSimulator = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator();
-            if (pluginSimulator.isSingleSimulator())
-            {
-                simulator = pluginSimulator;
-            }
+            if (pluginSimulator.isSingleSimulator()) { simulator = pluginSimulator; }
             else
             {
                 this->setSourceVisible(OwnModels, false); // hide own models
@@ -55,18 +55,11 @@ namespace swift::gui::components
         this->initGui();
     }
 
-    CAircraftModelStringCompleter::~CAircraftModelStringCompleter()
-    {}
+    CAircraftModelStringCompleter::~CAircraftModelStringCompleter() {}
 
-    QString CAircraftModelStringCompleter::getModelString() const
-    {
-        return ui->le_modelString->text();
-    }
+    QString CAircraftModelStringCompleter::getModelString() const { return ui->le_modelString->text(); }
 
-    void CAircraftModelStringCompleter::showSourceSelection(bool show)
-    {
-        ui->wi_SourceSelection->setVisible(!show);
-    }
+    void CAircraftModelStringCompleter::showSourceSelection(bool show) { ui->wi_SourceSelection->setVisible(!show); }
 
     void CAircraftModelStringCompleter::setText(const QString &completersString)
     {
@@ -110,15 +103,9 @@ namespace swift::gui::components
         return true;
     }
 
-    CSimulatorInfo CAircraftModelStringCompleter::getSimulator() const
-    {
-        return m_currentSimulator;
-    }
+    CSimulatorInfo CAircraftModelStringCompleter::getSimulator() const { return m_currentSimulator; }
 
-    void CAircraftModelStringCompleter::clear()
-    {
-        ui->le_modelString->clear();
-    }
+    void CAircraftModelStringCompleter::clear() { ui->le_modelString->clear(); }
 
     void CAircraftModelStringCompleter::setCompleter(bool simChanged)
     {
@@ -148,18 +135,13 @@ namespace swift::gui::components
 
         m_currentDataSource = dataSource;
         ui->le_modelString->setCompleter(new QCompleter(modelStrings, this));
-        ui->le_modelString->setPlaceholderText(QStringLiteral("model strings (%1/%2)").arg(modelStrings.size()).arg(simInfo));
+        ui->le_modelString->setPlaceholderText(
+            QStringLiteral("model strings (%1/%2)").arg(modelStrings.size()).arg(simInfo));
     }
 
-    void CAircraftModelStringCompleter::onTextChanged()
-    {
-        emit this->modelStringChanged();
-    }
+    void CAircraftModelStringCompleter::onTextChanged() { emit this->modelStringChanged(); }
 
-    void CAircraftModelStringCompleter::initGui()
-    {
-        this->setCompleter(true);
-    }
+    void CAircraftModelStringCompleter::initGui() { this->setCompleter(true); }
 
     void CAircraftModelStringCompleter::onSimulatorConnected(int status)
     {
@@ -168,8 +150,5 @@ namespace swift::gui::components
         this->initGui();
     }
 
-    void CAircraftModelStringCompleter::onSwiftModelDataRead()
-    {
-        this->initGui();
-    }
+    void CAircraftModelStringCompleter::onSwiftModelDataRead() { this->initGui(); }
 } // namespace swift::gui::components

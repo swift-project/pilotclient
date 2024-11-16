@@ -23,10 +23,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatedAircraft)
 
 namespace swift::misc::simulation
 {
-    CSimulatedAircraft::CSimulatedAircraft()
-    {
-        this->init();
-    }
+    CSimulatedAircraft::CSimulatedAircraft() { this->init(); }
 
     CSimulatedAircraft::CSimulatedAircraft(const CAircraftModel &model) : m_models({ model, model })
     {
@@ -34,12 +31,16 @@ namespace swift::misc::simulation
         this->init();
     }
 
-    CSimulatedAircraft::CSimulatedAircraft(const CCallsign &callsign, const CUser &user, const CAircraftSituation &situation) : m_callsign(callsign), m_pilot(user), m_situation(situation)
+    CSimulatedAircraft::CSimulatedAircraft(const CCallsign &callsign, const CUser &user,
+                                           const CAircraftSituation &situation)
+        : m_callsign(callsign), m_pilot(user), m_situation(situation)
     {
         this->init();
     }
 
-    CSimulatedAircraft::CSimulatedAircraft(const CCallsign &callsign, const CAircraftModel &model, const CUser &user, const CAircraftSituation &situation) : m_callsign(callsign), m_pilot(user), m_situation(situation)
+    CSimulatedAircraft::CSimulatedAircraft(const CCallsign &callsign, const CAircraftModel &model, const CUser &user,
+                                           const CAircraftSituation &situation)
+        : m_callsign(callsign), m_pilot(user), m_situation(situation)
     {
         this->setModel(model);
         this->init();
@@ -63,7 +64,8 @@ namespace swift::misc::simulation
         this->setTransponder(transponder);
     }
 
-    void CSimulatedAircraft::setCockpit(const CComSystem &com1, const CComSystem &com2, int transponderCode, CTransponder::TransponderMode transponderMode)
+    void CSimulatedAircraft::setCockpit(const CComSystem &com1, const CComSystem &com2, int transponderCode,
+                                        CTransponder::TransponderMode transponderMode)
     {
         this->setCom1System(com1);
         this->setCom2System(com2);
@@ -71,12 +73,14 @@ namespace swift::misc::simulation
         m_transponder.setTransponderMode(transponderMode);
     }
 
-    bool CSimulatedAircraft::hasChangedCockpitData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder) const
+    bool CSimulatedAircraft::hasChangedCockpitData(const CComSystem &com1, const CComSystem &com2,
+                                                   const CTransponder &transponder) const
     {
         return this->getCom1System() != com1 || this->getCom2System() != com2 || this->getTransponder() != transponder;
     }
 
-    bool CSimulatedAircraft::hasSameComData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder)
+    bool CSimulatedAircraft::hasSameComData(const CComSystem &com1, const CComSystem &com2,
+                                            const CTransponder &transponder)
     {
         return this->getCom1System() == com1 && this->getCom2System() == com2 && this->getTransponder() == transponder;
     }
@@ -92,10 +96,7 @@ namespace swift::misc::simulation
     {
         CAircraftVelocity velocity = m_situation.getVelocity();
         m_situation = situation;
-        if (m_situation.getVelocity() == CAircraftVelocity {})
-        {
-            m_situation.setVelocity(velocity);
-        }
+        if (m_situation.getVelocity() == CAircraftVelocity {}) { m_situation.setVelocity(velocity); }
 
         m_situation.setCallsign(this->getCallsign());
         this->setSupportingGndFlag(situation.hasInboundGroundDetails());
@@ -151,7 +152,10 @@ namespace swift::misc::simulation
 
     QString CSimulatedAircraft::getAirlineAndAircraftIcaoCodeDesignators() const
     {
-        if (this->hasAircraftAndAirlineDesignator()) { return this->getAircraftIcaoCodeDesignator() % u'/' % this->getAirlineIcaoCodeDesignator(); }
+        if (this->hasAircraftAndAirlineDesignator())
+        {
+            return this->getAircraftIcaoCodeDesignator() % u'/' % this->getAirlineIcaoCodeDesignator();
+        }
         if (this->hasAirlineDesignator()) { return this->getAirlineIcaoCodeDesignator(); }
         return this->getAircraftIcaoCodeDesignator();
     }
@@ -161,12 +165,14 @@ namespace swift::misc::simulation
         return getAircraftIcaoCode().getCombinedType();
     }
 
-    bool CSimulatedAircraft::setIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode)
+    bool CSimulatedAircraft::setIcaoCodes(const CAircraftIcaoCode &aircraftIcaoCode,
+                                          const CAirlineIcaoCode &airlineIcaoCode)
     {
         if (this->getLivery().getAirlineIcaoCode() != airlineIcaoCode)
         {
             // create a dummy livery for given ICAO code
-            const CLivery newLivery(CLivery::getStandardCode(airlineIcaoCode), airlineIcaoCode, "Standard auto generated");
+            const CLivery newLivery(CLivery::getStandardCode(airlineIcaoCode), airlineIcaoCode,
+                                    "Standard auto generated");
             m_models[CurrentModel].setLivery(newLivery);
         }
         return m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode);
@@ -187,10 +193,7 @@ namespace swift::misc::simulation
         m_models[CurrentModel].setAircraftIcaoDesignator(designator);
     }
 
-    bool CSimulatedAircraft::hasAircraftDesignator() const
-    {
-        return this->getAircraftIcaoCode().hasDesignator();
-    }
+    bool CSimulatedAircraft::hasAircraftDesignator() const { return this->getAircraftIcaoCode().hasDesignator(); }
 
     bool CSimulatedAircraft::hasAircraftAndAirlineDesignator() const
     {
@@ -253,8 +256,10 @@ namespace swift::misc::simulation
 
     void CSimulatedAircraft::initComSystems()
     {
-        CComSystem com1("COM1", CPhysicalQuantitiesConstants::FrequencyUnicom(), CPhysicalQuantitiesConstants::FrequencyUnicom());
-        CComSystem com2("COM2", CPhysicalQuantitiesConstants::FrequencyUnicom(), CPhysicalQuantitiesConstants::FrequencyUnicom());
+        CComSystem com1("COM1", CPhysicalQuantitiesConstants::FrequencyUnicom(),
+                        CPhysicalQuantitiesConstants::FrequencyUnicom());
+        CComSystem com2("COM2", CPhysicalQuantitiesConstants::FrequencyUnicom(),
+                        CPhysicalQuantitiesConstants::FrequencyUnicom());
         this->setCom1System(com1);
         this->setCom2System(com2);
     }
@@ -271,40 +276,19 @@ namespace swift::misc::simulation
         return engines >= 0 ? engines : m_parts.getEnginesCount();
     }
 
-    CAircraftLights CSimulatedAircraft::getLights() const
-    {
-        return m_parts.getLights();
-    }
+    CAircraftLights CSimulatedAircraft::getLights() const { return m_parts.getLights(); }
 
-    void CSimulatedAircraft::setParts(const CAircraftParts &parts)
-    {
-        m_parts = parts;
-    }
+    void CSimulatedAircraft::setParts(const CAircraftParts &parts) { m_parts = parts; }
 
-    void CSimulatedAircraft::setLights(CAircraftLights &lights)
-    {
-        m_parts.setLights(lights);
-    }
+    void CSimulatedAircraft::setLights(CAircraftLights &lights) { m_parts.setLights(lights); }
 
-    void CSimulatedAircraft::setAllLightsOn()
-    {
-        m_parts.setAllLightsOn();
-    }
+    void CSimulatedAircraft::setAllLightsOn() { m_parts.setAllLightsOn(); }
 
-    void CSimulatedAircraft::setAllLightsOff()
-    {
-        m_parts.setAllLightsOff();
-    }
+    void CSimulatedAircraft::setAllLightsOff() { m_parts.setAllLightsOff(); }
 
-    bool CSimulatedAircraft::isVtol() const
-    {
-        return this->getModel().isVtol();
-    }
+    bool CSimulatedAircraft::isVtol() const { return this->getModel().isVtol(); }
 
-    bool CSimulatedAircraft::isMilitary() const
-    {
-        return this->getModel().isMilitary();
-    }
+    bool CSimulatedAircraft::isMilitary() const { return this->getModel().isMilitary(); }
 
     QString CSimulatedAircraft::getCombinedIcaoLiveryString(bool networkModel) const
     {
@@ -314,7 +298,8 @@ namespace swift::misc::simulation
             if (model.getLivery().hasCombinedCode())
             {
                 static const QString s("%1 (%2 %3)");
-                return s.arg(model.getAircraftIcaoCodeDesignator(), model.getAirlineIcaoCodeDesignator(), model.getLivery().getCombinedCode());
+                return s.arg(model.getAircraftIcaoCodeDesignator(), model.getAirlineIcaoCodeDesignator(),
+                             model.getLivery().getCombinedCode());
             }
             else
             {
@@ -323,10 +308,7 @@ namespace swift::misc::simulation
             }
         }
 
-        if (!this->hasAircraftDesignator())
-        {
-            return model.getLivery().getCombinedCode();
-        }
+        if (!this->hasAircraftDesignator()) { return model.getLivery().getCombinedCode(); }
         else if (model.getLivery().hasCombinedCode())
         {
             static const QString s("%1 (%2)");
@@ -364,7 +346,8 @@ namespace swift::misc::simulation
         case IndexParts: return m_parts.propertyByIndex(index.copyFrontRemoved());
         case IndexIsVtol: return QVariant::fromValue(this->isVtol());
         case IndexCombinedIcaoLiveryString: return QVariant::fromValue(this->getCombinedIcaoLiveryString(false));
-        case IndexCombinedIcaoLiveryStringNetworkModel: return QVariant::fromValue(this->getCombinedIcaoLiveryString(true));
+        case IndexCombinedIcaoLiveryStringNetworkModel:
+            return QVariant::fromValue(this->getCombinedIcaoLiveryString(true));
         default:
             return (ICoordinateWithRelativePosition::canHandleIndex(index)) ?
                        ICoordinateWithRelativePosition::propertyByIndex(index) :
@@ -406,41 +389,63 @@ namespace swift::misc::simulation
             {
                 ICoordinateWithRelativePosition::setPropertyByIndex(index, variant);
             }
-            else
-            {
-                CValueObject::setPropertyByIndex(index, variant);
-            }
+            else { CValueObject::setPropertyByIndex(index, variant); }
             break;
         }
     }
 
-    int CSimulatedAircraft::comparePropertyByIndex(CPropertyIndexRef index, const CSimulatedAircraft &compareValue) const
+    int CSimulatedAircraft::comparePropertyByIndex(CPropertyIndexRef index,
+                                                   const CSimulatedAircraft &compareValue) const
     {
-        if (index.isMyself()) { return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign()); }
+        if (index.isMyself())
+        {
+            return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+        case IndexCallsign:
+            return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
         case IndexPilot: return m_pilot.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPilot());
-        case IndexSituation: return m_situation.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSituation());
-        case IndexRelativeDistance: return m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
-        case IndexCom1System: return m_com1system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom1System());
-        case IndexCom2System: return m_com2system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom2System());
-        case IndexTransponder: return Compare::compare(m_transponder.getTransponderCode(), compareValue.getTransponder().getTransponderCode());
-        case IndexLivery: return this->getLivery().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLivery());
+        case IndexSituation:
+            return m_situation.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getSituation());
+        case IndexRelativeDistance:
+            return m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(),
+                                                             compareValue.getRelativeDistance());
+        case IndexCom1System:
+            return m_com1system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom1System());
+        case IndexCom2System:
+            return m_com2system.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCom2System());
+        case IndexTransponder:
+            return Compare::compare(m_transponder.getTransponderCode(),
+                                    compareValue.getTransponder().getTransponderCode());
+        case IndexLivery:
+            return this->getLivery().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getLivery());
         case IndexParts: return m_parts.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getParts());
-        case IndexModel: return m_models[CurrentModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
-        case IndexNetworkModel: return m_models[NetworkModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
-        case IndexNetworkModelAircraftIcaoDifference: return this->getNetworkModelAircraftIcaoDifference().compare(compareValue.getNetworkModelAircraftIcaoDifference());
-        case IndexNetworkModelAirlineIcaoDifference: return this->getNetworkModelAirlineIcaoDifference().compare(compareValue.getNetworkModelAirlineIcaoDifference());
-        case IndexNetworkModelLiveryDifference: return this->getNetworkModelLiveryDifference().compare(compareValue.getNetworkModelLiveryDifference());
+        case IndexModel:
+            return m_models[CurrentModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
+        case IndexNetworkModel:
+            return m_models[NetworkModel].comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getModel());
+        case IndexNetworkModelAircraftIcaoDifference:
+            return this->getNetworkModelAircraftIcaoDifference().compare(
+                compareValue.getNetworkModelAircraftIcaoDifference());
+        case IndexNetworkModelAirlineIcaoDifference:
+            return this->getNetworkModelAirlineIcaoDifference().compare(
+                compareValue.getNetworkModelAirlineIcaoDifference());
+        case IndexNetworkModelLiveryDifference:
+            return this->getNetworkModelLiveryDifference().compare(compareValue.getNetworkModelLiveryDifference());
         case IndexEnabled: return Compare::compare(this->isEnabled(), compareValue.isEnabled());
         case IndexRendered: return Compare::compare(this->isRendered(), compareValue.isRendered());
-        case IndexPartsSynchronized: return Compare::compare(this->isPartsSynchronized(), compareValue.isPartsSynchronized());
-        case IndexFastPositionUpdates: return Compare::compare(this->fastPositionUpdates(), compareValue.fastPositionUpdates());
-        case IndexSupportsGndFlag: return Compare::compare(this->isSupportingGndFlag(), compareValue.isSupportingGndFlag());
-        case IndexCombinedIcaoLiveryString: return this->getCombinedIcaoLiveryString(false).compare(compareValue.getCombinedIcaoLiveryString(false));
-        case IndexCombinedIcaoLiveryStringNetworkModel: return this->getCombinedIcaoLiveryString(true).compare(compareValue.getCombinedIcaoLiveryString(true));
+        case IndexPartsSynchronized:
+            return Compare::compare(this->isPartsSynchronized(), compareValue.isPartsSynchronized());
+        case IndexFastPositionUpdates:
+            return Compare::compare(this->fastPositionUpdates(), compareValue.fastPositionUpdates());
+        case IndexSupportsGndFlag:
+            return Compare::compare(this->isSupportingGndFlag(), compareValue.isSupportingGndFlag());
+        case IndexCombinedIcaoLiveryString:
+            return this->getCombinedIcaoLiveryString(false).compare(compareValue.getCombinedIcaoLiveryString(false));
+        case IndexCombinedIcaoLiveryStringNetworkModel:
+            return this->getCombinedIcaoLiveryString(true).compare(compareValue.getCombinedIcaoLiveryString(true));
         default:
             if (ICoordinateWithRelativePosition::canHandleIndex(index))
             {
@@ -508,9 +513,18 @@ namespace swift::misc::simulation
 
         const CLivery livery(this->getModel().getLivery());
         const CLivery liveryNw(this->getNetworkModel().getLivery());
-        if (livery.isDbEqual(liveryNw) || livery == liveryNw) { return QStringLiteral("[==] ") + livery.getCombinedCodePlusInfo(); }
-        if (livery.getCombinedCode() == liveryNw.getCombinedCode()) { return QStringLiteral("[=] ") + livery.getCombinedCodePlusInfo(); }
-        if (livery.isAirlineLivery() && liveryNw.isAirlineLivery()) { return this->getNetworkModelAirlineIcaoDifference(); }
+        if (livery.isDbEqual(liveryNw) || livery == liveryNw)
+        {
+            return QStringLiteral("[==] ") + livery.getCombinedCodePlusInfo();
+        }
+        if (livery.getCombinedCode() == liveryNw.getCombinedCode())
+        {
+            return QStringLiteral("[=] ") + livery.getCombinedCodePlusInfo();
+        }
+        if (livery.isAirlineLivery() && liveryNw.isAirlineLivery())
+        {
+            return this->getNetworkModelAirlineIcaoDifference();
+        }
 
         static const QString diff("%1 -> %2");
         return diff.arg(liveryNw.getCombinedCodePlusInfo(), livery.getCombinedCodePlusInfo());
@@ -576,15 +590,11 @@ namespace swift::misc::simulation
 
     QString CSimulatedAircraft::convertToQString(bool i18n) const
     {
-        const QString s = m_callsign.toQString(i18n) %
-                          u' ' % m_pilot.toQString(i18n) %
-                          u' ' % m_situation.toQString(i18n) %
-                          u' ' % m_com1system.toQString(i18n) %
-                          u' ' % m_com2system.toQString(i18n) %
-                          u' ' % m_transponder.toQString(i18n) %
-                          u" enabled: " % swift::misc::boolToYesNo(this->isEnabled()) %
-                          u" rendered: " % swift::misc::boolToYesNo(this->isRendered()) %
-                          u' ' % this->getModel().toQString(i18n);
+        const QString s = m_callsign.toQString(i18n) % u' ' % m_pilot.toQString(i18n) % u' ' %
+                          m_situation.toQString(i18n) % u' ' % m_com1system.toQString(i18n) % u' ' %
+                          m_com2system.toQString(i18n) % u' ' % m_transponder.toQString(i18n) % u" enabled: " %
+                          swift::misc::boolToYesNo(this->isEnabled()) % u" rendered: " %
+                          swift::misc::boolToYesNo(this->isRendered()) % u' ' % this->getModel().toQString(i18n);
         return s;
     }
 } // namespace swift::misc::simulation

@@ -41,15 +41,14 @@ namespace swift::gui
 
     //! \brief Our base class for dockable widgets containing some specialized functionality on top of QDockWidget.
     //! \details We currently use dockable widgets either as "info area" or "info bar" dockable widget.
-    //! Info area widgets reside in an info are and represent a larger piece of information (e.g. all ATC stations, all aircrafts in range).
-    //! An info bar is meant to be a small info window displaying information about status, menu state etc.
+    //! Info area widgets reside in an info are and represent a larger piece of information (e.g. all ATC stations, all
+    //! aircrafts in range). An info bar is meant to be a small info window displaying information about status, menu
+    //! state etc.
     //!
     //! \sa CInfoArea
     //! \sa CDockWidgetInfoArea
     //! \sa CDockWidgetInfoBar
-    class SWIFT_GUI_EXPORT CDockWidget :
-        public COverlayMessagesDockWidget,
-        public CEnableForFramelessWindow
+    class SWIFT_GUI_EXPORT CDockWidget : public COverlayMessagesDockWidget, public CEnableForFramelessWindow
     {
         Q_OBJECT
 

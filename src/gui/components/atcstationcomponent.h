@@ -105,7 +105,8 @@ namespace swift::gui
             void changedAtcStationsOnline();
 
             //! Connection status has been changed
-            void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+            void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                         const swift::misc::network::CConnectionStatus &to);
 
             //! Request dummy ATC online stations
             void testCreateDummyOnlineAtcStations(int number);
@@ -120,7 +121,8 @@ namespace swift::gui
             void setOnlineTabs(int count, int filtered);
 
             //! Set COM frequency
-            void setComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit unit);
+            void setComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                 swift::misc::aviation::CComSystem::ComUnit unit);
 
             //! Airports read from web readers
             void airportsRead();
@@ -155,7 +157,9 @@ namespace swift::gui
             swift::misc::aviation::CCallsign m_selectedCallsign;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
             QDateTime m_timestampOnlineStationsChanged; //!< stations marked as changed
-            swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settingsView { this, &CAtcStationComponent::settingsChanged };
+            swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settingsView {
+                this, &CAtcStationComponent::settingsChanged
+            };
         };
     } // namespace components
 } // namespace swift::gui

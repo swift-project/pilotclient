@@ -18,7 +18,8 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::models
 {
-    CDistributorListModel::CDistributorListModel(QObject *parent) : COrderableListModelDbObjects("ModelDistributorList", parent)
+    CDistributorListModel::CDistributorListModel(QObject *parent)
+        : COrderableListModelDbObjects("ModelDistributorList", parent)
     {
         this->setDistributorMode(Normal);
 
@@ -36,9 +37,7 @@ namespace swift::gui::models
         m_columns.clear();
         switch (distributorMode)
         {
-        case NormalWithOrder:
-            m_columns.addColumn(CColumn::orderColumn());
-            [[fallthrough]];
+        case NormalWithOrder: m_columns.addColumn(CColumn::orderColumn()); [[fallthrough]];
         case NotSet:
         case Normal:
         {
@@ -46,7 +45,8 @@ namespace swift::gui::models
             m_columns.addColumn(CColumn::standardString("description", CDistributor::IndexDescription));
             m_columns.addColumn(CColumn::standardString("alias1", CDistributor::IndexAlias1));
             m_columns.addColumn(CColumn::standardString("alias2", CDistributor::IndexAlias2));
-            m_columns.addColumn(CColumn::standardString("sim.", "simulator", { CDistributor::IndexSimulator, CSimulatorInfo::IndexString }));
+            m_columns.addColumn(CColumn::standardString("sim.", "simulator",
+                                                        { CDistributor::IndexSimulator, CSimulatorInfo::IndexString }));
             m_columns.addColumn(CColumn::standardString("changed", CDistributor::IndexUtcTimestampFormattedYmdhms));
 
             // default sort order
@@ -55,9 +55,7 @@ namespace swift::gui::models
         }
         break;
 
-        case MinimalWithOrder:
-            m_columns.addColumn(CColumn::orderColumn());
-            [[fallthrough]];
+        case MinimalWithOrder: m_columns.addColumn(CColumn::orderColumn()); [[fallthrough]];
         case Minimal:
         {
             m_columns.addColumn(CColumn::standardString("key", CDistributor::IndexDbStringKey));
@@ -69,9 +67,7 @@ namespace swift::gui::models
         }
         break;
 
-        default:
-            qFatal("Wrong mode");
-            break;
+        default: qFatal("Wrong mode"); break;
         }
     }
 } // namespace swift::gui::models

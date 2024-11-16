@@ -24,10 +24,7 @@ namespace swift::misc::network
         return this->getCurrentEcosystem() == system;
     }
 
-    bool IEcosystemProvider::isCurrentEcosystemVATSIM() const
-    {
-        return this->isCurrentEcosystem(CEcosystem::vatsim());
-    }
+    bool IEcosystemProvider::isCurrentEcosystemVATSIM() const { return this->isCurrentEcosystem(CEcosystem::vatsim()); }
 
     bool IEcosystemProvider::isLastEcosystem(const CEcosystem &system) const
     {
@@ -51,8 +48,7 @@ namespace swift::misc::network
     }
 
     // pin vtable to this file
-    void CEcosystemAware::anchor()
-    {}
+    void CEcosystemAware::anchor() {}
 
     CEcosystem CEcosystemAware::getCurrentEcosystem() const
     {
@@ -72,16 +68,16 @@ namespace swift::misc::network
         return this->provider()->isCurrentEcosystem(system);
     }
 
-    bool CEcosystemAware::isCurrentEcosystemVATSIM() const
-    {
-        return this->isCurrentEcosystem(CEcosystem::vatsim());
-    }
+    bool CEcosystemAware::isCurrentEcosystemVATSIM() const { return this->isCurrentEcosystem(CEcosystem::vatsim()); }
 
     bool CEcosystemAware::isNotVATSIMEcosystem() const
     {
         if (!this->hasProvider()) { return false; }
         if (this->isCurrentEcosystemVATSIM()) { return false; }
-        if (this->isCurrentEcosystem(CEcosystem::swiftTest())) { return false; } // our test server is supposed to be I VATSIM system
+        if (this->isCurrentEcosystem(CEcosystem::swiftTest()))
+        {
+            return false;
+        } // our test server is supposed to be I VATSIM system
         return !this->getCurrentEcosystem().isUnspecified(); // other know system which is specified
     }
 

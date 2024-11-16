@@ -9,10 +9,7 @@
 
 namespace swift::misc
 {
-    CConnectionGuard::CConnectionGuard(const QMetaObject::Connection &connection)
-    {
-        m_connections.append(connection);
-    }
+    CConnectionGuard::CConnectionGuard(const QMetaObject::Connection &connection) { m_connections.append(connection); }
 
     bool CConnectionGuard::append(const QMetaObject::Connection &connection)
     {
@@ -32,10 +29,7 @@ namespace swift::misc
         return c > 0;
     }
 
-    CConnectionGuard::~CConnectionGuard()
-    {
-        this->disconnectAll();
-    }
+    CConnectionGuard::~CConnectionGuard() { this->disconnectAll(); }
 
     int CConnectionGuard::disconnectAll()
     {

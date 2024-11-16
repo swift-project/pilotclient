@@ -44,18 +44,14 @@ namespace swift::misc::simulation::settings
         return u;
     }
 
-    CSimulatorSettings::CSimulatorSettings()
-    {}
+    CSimulatorSettings::CSimulatorSettings() {}
 
     void CSimulatorSettings::setSimulatorDirectory(const QString &simulatorDirectory)
     {
         m_simulatorDirectory = simulatorDirectory.trimmed();
     }
 
-    const QString &CSimulatorSettings::getSimulatorDirectory() const
-    {
-        return m_simulatorDirectory;
-    }
+    const QString &CSimulatorSettings::getSimulatorDirectory() const { return m_simulatorDirectory; }
 
     void CSimulatorSettings::setModelDirectories(const QStringList &modelDirectories)
     {
@@ -64,10 +60,7 @@ namespace swift::misc::simulation::settings
         m_modelDirectories.removeDuplicates(); // duplicates
     }
 
-    void CSimulatorSettings::clearModelDirectories()
-    {
-        m_modelDirectories.clear();
-    }
+    void CSimulatorSettings::clearModelDirectories() { m_modelDirectories.clear(); }
 
     void CSimulatorSettings::setModelDirectory(const QString &modelDirectory)
     {
@@ -76,7 +69,8 @@ namespace swift::misc::simulation::settings
 
     bool CSimulatorSettings::addModelDirectory(const QString &modelDirectory)
     {
-        const Qt::CaseSensitivity cs = CBuildConfig::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;
+        const Qt::CaseSensitivity cs =
+            CBuildConfig::isRunningOnWindowsNtPlatform() ? Qt::CaseInsensitive : Qt::CaseSensitive;
         if (m_modelDirectories.contains(modelDirectory, cs)) { return false; }
         m_modelDirectories.push_back(modelDirectory);
         m_modelDirectories.removeAll({});
@@ -84,10 +78,7 @@ namespace swift::misc::simulation::settings
         return true;
     }
 
-    const QStringList &CSimulatorSettings::getModelDirectories() const
-    {
-        return m_modelDirectories;
-    }
+    const QStringList &CSimulatorSettings::getModelDirectories() const { return m_modelDirectories; }
 
     void CSimulatorSettings::setModelExcludeDirectories(const QStringList &excludeDirectories)
     {
@@ -137,18 +128,12 @@ namespace swift::misc::simulation::settings
         m_simulatorDirectory.clear();
     }
 
-    QString CSimulatorSettings::convertToQString(bool i18n) const
-    {
-        return convertToQString(", ", i18n);
-    }
+    QString CSimulatorSettings::convertToQString(bool i18n) const { return convertToQString(", ", i18n); }
 
     QString CSimulatorSettings::convertToQString(const QString &separator, bool i18n) const
     {
         Q_UNUSED(i18n)
-        return u"model directories: " %
-               m_modelDirectories.join(',') %
-               separator %
-               u"exclude directories: " %
+        return u"model directories: " % m_modelDirectories.join(',') % separator % u"exclude directories: " %
                m_excludeDirectoryPatterns.join(',');
     }
 
@@ -185,7 +170,9 @@ namespace swift::misc::simulation::settings
         case IndexRecordOwnAircraftGnd: this->setRecordOwnAircraftGnd(variant.toBool()); break;
         case IndexModelExcludeDirectoryPatterns: m_excludeDirectoryPatterns = variant.value<QStringList>(); break;
         case IndexCGSource: m_cgSource = variant.toInt(); break;
-        case IndexRecordOwnAircraftGndRadius: m_recordedGndRadius.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexRecordOwnAircraftGndRadius:
+            m_recordedGndRadius.setPropertyByIndex(index.copyFrontRemoved(), variant);
+            break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
@@ -212,9 +199,7 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::MSFS: return m_simSettingsMsfs.get();
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.get();
 
-        default:
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            break;
+        default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
         return CSimulatorSettings();
     }
@@ -224,7 +209,8 @@ namespace swift::misc::simulation::settings
         return CSpecializedSimulatorSettings(this->getSettings(simulator), simulator);
     }
 
-    CStatusMessage CMultiSimulatorSettings::setSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
+    CStatusMessage CMultiSimulatorSettings::setSettings(const CSimulatorSettings &settings,
+                                                        const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
@@ -235,19 +221,19 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::P3D: return m_simSettingsP3D.set(settings);
         case CSimulatorInfo::MSFS: return m_simSettingsMsfs.set(settings);
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.set(settings);
-        default:
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            break;
+        default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
         return CStatusMessage({ CLogCategories::settings() }, CStatusMessage::SeverityError, u"wrong simulator");
     }
 
-    CStatusMessage CMultiSimulatorSettings::addModelDirectory(const QString &modelDirectory, const CSimulatorInfo &simulator)
+    CStatusMessage CMultiSimulatorSettings::addModelDirectory(const QString &modelDirectory,
+                                                              const CSimulatorInfo &simulator)
     {
         CSimulatorSettings s = this->getSettings(simulator);
         if (!s.addModelDirectory(modelDirectory))
         {
-            return CStatusMessage({ CLogCategories::settings() }, CStatusMessage::SeverityInfo, u"directory already existing");
+            return CStatusMessage({ CLogCategories::settings() }, CStatusMessage::SeverityInfo,
+                                  u"directory already existing");
         }
         return this->setSettings(s, simulator);
     }
@@ -259,7 +245,8 @@ namespace swift::misc::simulation::settings
         return this->setSettings(s, simulator);
     }
 
-    CStatusMessageList CMultiSimulatorSettings::setAndValidateSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
+    CStatusMessageList CMultiSimulatorSettings::setAndValidateSettings(const CSimulatorSettings &settings,
+                                                                       const CSimulatorInfo &simulator)
     {
         this->setSettings(settings, simulator);
         CStatusMessageList msgs;
@@ -279,14 +266,13 @@ namespace swift::misc::simulation::settings
             }
         }
         break;
-        default:
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            break;
+        default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
         return msgs;
     }
 
-    CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
+    CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSimulatorSettings &settings,
+                                                               const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
@@ -297,14 +283,13 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::P3D: return m_simSettingsP3D.setAndSave(settings);
         case CSimulatorInfo::MSFS: return m_simSettingsMsfs.setAndSave(settings);
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.setAndSave(settings);
-        default:
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            break;
+        default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
         return CStatusMessage({ CLogCategories::settings() }, CStatusMessage::SeverityError, u"wrong simulator");
     }
 
-    CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSpecializedSimulatorSettings &settings, const CSimulatorInfo &simulator)
+    CStatusMessage CMultiSimulatorSettings::setAndSaveSettings(const CSpecializedSimulatorSettings &settings,
+                                                               const CSimulatorInfo &simulator)
     {
         return this->setAndSaveSettings(settings.getGenericSettings(), simulator);
     }
@@ -320,9 +305,7 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::P3D: return m_simSettingsP3D.save();
         case CSimulatorInfo::MSFS: return m_simSettingsMsfs.save();
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.save();
-        default:
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            break;
+        default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
         return CStatusMessage({ CLogCategories::settings() }, CStatusMessage::SeverityError, u"wrong simulator");
     }
@@ -357,13 +340,15 @@ namespace swift::misc::simulation::settings
         return s.getFirstModelDirectoryOrDefault();
     }
 
-    QStringList CMultiSimulatorSettings::getModelExcludeDirectoryPatternsIfNotDefault(const CSimulatorInfo &simulator) const
+    QStringList
+    CMultiSimulatorSettings::getModelExcludeDirectoryPatternsIfNotDefault(const CSimulatorInfo &simulator) const
     {
         const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
         return s.getModelExcludeDirectoryPatternsIfNotDefault();
     }
 
-    QStringList CMultiSimulatorSettings::getModelExcludeDirectoryPatternsOrDefault(const CSimulatorInfo &simulator) const
+    QStringList
+    CMultiSimulatorSettings::getModelExcludeDirectoryPatternsOrDefault(const CSimulatorInfo &simulator) const
     {
         const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
         return s.getModelExcludeDirectoryPatternsOrDefault();
@@ -381,35 +366,17 @@ namespace swift::misc::simulation::settings
         return CSpecializedSimulatorSettings::defaultModelDirectories(simulator);
     }
 
-    void CMultiSimulatorSettings::onFsxSettingsChanged()
-    {
-        this->emitSettingsChanged(CSimulatorInfo::fsx());
-    }
+    void CMultiSimulatorSettings::onFsxSettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::fsx()); }
 
-    void CMultiSimulatorSettings::onP3DSettingsChanged()
-    {
-        this->emitSettingsChanged(CSimulatorInfo::p3d());
-    }
+    void CMultiSimulatorSettings::onP3DSettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::p3d()); }
 
-    void CMultiSimulatorSettings::onFs9SettingsChanged()
-    {
-        this->emitSettingsChanged(CSimulatorInfo::fs9());
-    }
+    void CMultiSimulatorSettings::onFs9SettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::fs9()); }
 
-    void CMultiSimulatorSettings::onMsfsSettingsChanged()
-    {
-        this->emitSettingsChanged(CSimulatorInfo::msfs());
-    }
+    void CMultiSimulatorSettings::onMsfsSettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::msfs()); }
 
-    void CMultiSimulatorSettings::onXPSettingsChanged()
-    {
-        this->emitSettingsChanged(CSimulatorInfo::xplane());
-    }
+    void CMultiSimulatorSettings::onXPSettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::xplane()); }
 
-    void CMultiSimulatorSettings::onFGSettingsChanged()
-    {
-        this->emitSettingsChanged(CSimulatorInfo::fg());
-    }
+    void CMultiSimulatorSettings::onFGSettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::fg()); }
 
     void CMultiSimulatorSettings::emitSettingsChanged(const CSimulatorInfo &simInfo)
     {
@@ -421,10 +388,7 @@ namespace swift::misc::simulation::settings
         m_technicalLogLevel = static_cast<int>(severity);
     }
 
-    void CSimulatorMessagesSettings::disableTechnicalMessages()
-    {
-        m_technicalLogLevel = -1;
-    }
+    void CSimulatorMessagesSettings::disableTechnicalMessages() { m_technicalLogLevel = -1; }
 
     bool CSimulatorMessagesSettings::isRelayErrorsMessages() const
     {
@@ -444,10 +408,7 @@ namespace swift::misc::simulation::settings
         return (m_technicalLogLevel <= CStatusMessage::SeverityInfo);
     }
 
-    bool CSimulatorMessagesSettings::isRelayTechnicalMessages() const
-    {
-        return (m_technicalLogLevel >= 0);
-    }
+    bool CSimulatorMessagesSettings::isRelayTechnicalMessages() const { return (m_technicalLogLevel >= 0); }
 
     void CSimulatorMessagesSettings::setRelayTextMessages(CSimulatorMessagesSettings::TextMessageType messageType)
     {
@@ -488,7 +449,9 @@ namespace swift::misc::simulation::settings
         return (s >= m_technicalLogLevel);
     }
 
-    bool CSimulatorMessagesSettings::relayThisTextMessage(const network::CTextMessage &msg, const swift::misc::simulation::CSimulatedAircraft &aircraft) const
+    bool
+    CSimulatorMessagesSettings::relayThisTextMessage(const network::CTextMessage &msg,
+                                                     const swift::misc::simulation::CSimulatedAircraft &aircraft) const
     {
         if (msg.isEmpty()) { return false; }
         if (!this->isRelayGloballyEnabled()) { return false; }
@@ -496,7 +459,10 @@ namespace swift::misc::simulation::settings
 
         const TextMessageType mt = static_cast<TextMessageType>(m_messageType);
         if (msg.isPrivateMessage() && mt.testFlag(TextMessagePrivate)) { return true; }
-        if (msg.isSupervisorMessage() && (mt.testFlag(TextMessagePrivate) || mt.testFlag(TextMessageSupervisor))) { return true; }
+        if (msg.isSupervisorMessage() && (mt.testFlag(TextMessagePrivate) || mt.testFlag(TextMessageSupervisor)))
+        {
+            return true;
+        }
         if (msg.isSendToUnicom() && mt.testFlag(TextMessagesUnicom)) { return true; }
 
         if (msg.isRadioMessage())
@@ -524,13 +490,11 @@ namespace swift::misc::simulation::settings
         Q_UNUSED(i18n)
         static const QString s("Enabled %1, text messages: %2, severity: %3");
         QString severity;
-        if (this->isRelayTechnicalMessages())
-        {
-            severity = QStringLiteral("No tech. msgs");
-        }
+        if (this->isRelayTechnicalMessages()) { severity = QStringLiteral("No tech. msgs"); }
         else
         {
-            severity = CStatusMessage::severityToString(static_cast<CStatusMessage::StatusSeverity>(m_technicalLogLevel));
+            severity =
+                CStatusMessage::severityToString(static_cast<CStatusMessage::StatusSeverity>(m_technicalLogLevel));
         }
         return s.arg(boolToOnOff(m_relayGloballyEnabled)).arg(m_messageType).arg(severity);
     }
@@ -558,8 +522,12 @@ namespace swift::misc::simulation::settings
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexTechnicalLogSeverity: this->setTechnicalLogSeverity(static_cast<CStatusMessage::StatusSeverity>(variant.toInt())); break;
-        case IndexRelayTextMessage: this->setRelayTextMessages(static_cast<CSimulatorMessagesSettings::TextMessageType>(variant.toInt())); break;
+        case IndexTechnicalLogSeverity:
+            this->setTechnicalLogSeverity(static_cast<CStatusMessage::StatusSeverity>(variant.toInt()));
+            break;
+        case IndexRelayTextMessage:
+            this->setRelayTextMessages(static_cast<CSimulatorMessagesSettings::TextMessageType>(variant.toInt()));
+            break;
         case IndexRelayGloballyEnabled: this->setRelayGloballyEnabled(variant.toBool()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
@@ -574,7 +542,8 @@ namespace swift::misc::simulation::settings
     {
         static const QString empty;
         if (!m_genericSettings.hasSimulatorDirectory()) { return empty; }
-        if (m_genericSettings.getSimulatorDirectory() == CSpecializedSimulatorSettings::defaultSimulatorDirectory(m_simulator))
+        if (m_genericSettings.getSimulatorDirectory() ==
+            CSpecializedSimulatorSettings::defaultSimulatorDirectory(m_simulator))
         {
             return empty;
         }
@@ -590,9 +559,8 @@ namespace swift::misc::simulation::settings
 
     QStringList CSpecializedSimulatorSettings::getModelDirectoriesOrDefault() const
     {
-        return m_genericSettings.hasModelDirectories() ?
-                   m_genericSettings.getModelDirectories() :
-                   this->getModelDirectoriesFromSimulatorDirectoryOrDefault();
+        return m_genericSettings.hasModelDirectories() ? m_genericSettings.getModelDirectories() :
+                                                         this->getModelDirectoriesFromSimulatorDirectoryOrDefault();
     }
 
     QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoy() const
@@ -605,12 +573,14 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::FG: dirs = QStringList(CFlightgearUtil::modelDirectoriesFromSimDir(s)); break;
         case CSimulatorInfo::FS9: dirs = QStringList({ CFsDirectories::fs9AircraftDirFromSimDir(s) }); break;
         case CSimulatorInfo::FSX:
-            dirs = CFsDirectories::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(CFsDirectories::fsxSimObjectsDirFromSimDir(s));
+            dirs = CFsDirectories::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(
+                CFsDirectories::fsxSimObjectsDirFromSimDir(s));
             break;
         case CSimulatorInfo::P3D:
         {
             const QString versionHint = CFsDirectories::guessP3DVersion(s);
-            dirs = CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(CFsDirectories::p3dSimObjectsDirFromSimDir(s), versionHint);
+            dirs = CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(
+                CFsDirectories::p3dSimObjectsDirFromSimDir(s), versionHint);
         }
         break;
         case CSimulatorInfo::XPLANE: dirs = QStringList({ CXPlaneUtil::modelDirectoriesFromSimDir(s) }); break;
@@ -624,7 +594,10 @@ namespace swift::misc::simulation::settings
 
     QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoryOrDefault() const
     {
-        if (!m_genericSettings.hasSimulatorDirectory()) { return CSpecializedSimulatorSettings::defaultModelDirectories(m_simulator); }
+        if (!m_genericSettings.hasSimulatorDirectory())
+        {
+            return CSpecializedSimulatorSettings::defaultModelDirectories(m_simulator);
+        }
         return this->getModelDirectoriesFromSimulatorDirectoy();
     }
 
@@ -658,7 +631,8 @@ namespace swift::misc::simulation::settings
     {
         static const QStringList empty;
         if (!m_genericSettings.hasModelExcludeDirectoryPatterns()) { return empty; }
-        if (m_genericSettings.getModelExcludeDirectoryPatterns() == CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(m_simulator))
+        if (m_genericSettings.getModelExcludeDirectoryPatterns() ==
+            CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(m_simulator))
         {
             return empty;
         }
@@ -713,9 +687,7 @@ namespace swift::misc::simulation::settings
         {
             return CXPlaneUtil::xplaneModelDirectories();
         }
-        default:
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            break;
+        default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
         return e;
     }
@@ -732,14 +704,13 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::P3D: return CFsDirectories::p3dDir();
         case CSimulatorInfo::MSFS: return CFsDirectories::msfsDir();
         case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir();
-        default:
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            break;
+        default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
         return empty;
     }
 
-    const QStringList &CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator)
+    const QStringList &
+    CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         static const QStringList empty;
@@ -751,23 +722,22 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::P3D: return CFsDirectories::p3dSimObjectsExcludeDirectoryPatterns();
         case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelExcludeDirectoryPatterns();
         case CSimulatorInfo::MSFS: return CFsDirectories::msfs20SimObjectsExcludeDirectoryPatterns();
-        default:
-            Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            break;
+        default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
         return empty;
     }
 
     QString CXPlaneSimulatorSettings::getPluginDirOrDefault() const
     {
-        return CFileUtils::appendFilePathsAndFixUnc(this->getSimulatorDirectoryOrDefault(), CXPlaneUtil::xplanePluginPathName());
+        return CFileUtils::appendFilePathsAndFixUnc(this->getSimulatorDirectoryOrDefault(),
+                                                    CXPlaneUtil::xplanePluginPathName());
     }
 
     QString CFsxP3DSettings::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n)
-        return u"SimulatedObject: " % boolToYesNo(m_useSimulatedObjectAdding) %
-               u" SB offsets: " % boolToYesNo(m_useSbOffsets);
+        return u"SimulatedObject: " % boolToYesNo(m_useSimulatedObjectAdding) % u" SB offsets: " %
+               boolToYesNo(m_useSbOffsets);
     }
 
     QVariant CFsxP3DSettings::propertyByIndex(CPropertyIndexRef index) const
@@ -789,14 +759,16 @@ namespace swift::misc::simulation::settings
         return m_simFsx.get();
     }
 
-    CStatusMessage CMultiSimulatorDetailsSettings::setSettings(const CFsxP3DSettings &settings, const CSimulatorInfo &simulator)
+    CStatusMessage CMultiSimulatorDetailsSettings::setSettings(const CFsxP3DSettings &settings,
+                                                               const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isFsxP3DFamily(), Q_FUNC_INFO, "Only for FSX/P3D");
         if (simulator == CSimulatorInfo::p3d()) { return m_simP3D.set(settings); }
         return m_simFsx.set(settings);
     }
 
-    CStatusMessage CMultiSimulatorDetailsSettings::setAndSaveSettings(const CFsxP3DSettings &settings, const CSimulatorInfo &simulator)
+    CStatusMessage CMultiSimulatorDetailsSettings::setAndSaveSettings(const CFsxP3DSettings &settings,
+                                                                      const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isFsxP3DFamily(), Q_FUNC_INFO, "Only for FSX/P3D");
         if (simulator == CSimulatorInfo::p3d()) { return m_simP3D.setAndSave(settings); }
@@ -805,7 +777,9 @@ namespace swift::misc::simulation::settings
 
     bool TSimulatorXP::isValid(const CSimulatorSettings &value, QString &reason)
     {
-        const QString simDir = value.hasSimulatorDirectory() ? value.getSimulatorDirectory() : CSpecializedSimulatorSettings::defaultSimulatorDirectory(CSimulatorInfo::XPLANE);
+        const QString simDir = value.hasSimulatorDirectory() ?
+                                   value.getSimulatorDirectory() :
+                                   CSpecializedSimulatorSettings::defaultSimulatorDirectory(CSimulatorInfo::XPLANE);
         const CStatusMessageList msgs = CXPlaneUtil::validateModelDirectories(simDir, value.getModelDirectories());
         if (msgs.isSuccess()) { return true; }
         reason = msgs.getErrorMessages().toSingleMessage().toQString(true);

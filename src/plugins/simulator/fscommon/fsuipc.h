@@ -52,30 +52,30 @@ namespace swift::simplugin::fscommon
         //! \param situation      update situation data
         //! \param aircraftParts  update parts
         //! \return read
-        bool read(swift::misc::simulation::CSimulatedAircraft &aircraft, bool cockpit, bool situation, bool aircraftParts);
+        bool read(swift::misc::simulation::CSimulatedAircraft &aircraft, bool cockpit, bool situation,
+                  bool aircraftParts);
 
         //! Error messages
         static const QStringList &errorMessages()
         {
-            static const QStringList errors(
-                {
-                    "Okay",
-                    "Attempt to Open when already Open",
-                    "Cannot link to FSUIPC or WideClient",
-                    "Failed to Register common message with Windows",
-                    "Failed to create Atom for mapping filename",
-                    "Failed to create a file mapping object",
-                    "Failed to open a view to the file map",
-                    "Incorrect version of FSUIPC, or not FSUIPC",
-                    "Sim is not version requested",
-                    "Call cannot execute, link not Open",
-                    "Call cannot execute: no requests accumulated",
-                    "IPC timed out all retries",
-                    "IPC sendmessage failed all retries",
-                    "IPC request contains bad data",
-                    "Maybe running on WideClient, but FS not running on Server, or wrong FSUIPC",
-                    "Read or Write request cannot be added, memory for Process is full",
-                });
+            static const QStringList errors({
+                "Okay",
+                "Attempt to Open when already Open",
+                "Cannot link to FSUIPC or WideClient",
+                "Failed to Register common message with Windows",
+                "Failed to create Atom for mapping filename",
+                "Failed to create a file mapping object",
+                "Failed to open a view to the file map",
+                "Incorrect version of FSUIPC, or not FSUIPC",
+                "Sim is not version requested",
+                "Call cannot execute, link not Open",
+                "Call cannot execute: no requests accumulated",
+                "IPC timed out all retries",
+                "IPC sendmessage failed all retries",
+                "IPC request contains bad data",
+                "Maybe running on WideClient, but FS not running on Server, or wrong FSUIPC",
+                "Read or Write request cannot be added, memory for Process is full",
+            });
             return errors;
         }
 

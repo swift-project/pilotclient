@@ -36,22 +36,15 @@ namespace XSwiftBus
 
     CMenu::Data::~Data()
     {
-        if (!isMainMenu)
-        {
-            XPLMDestroyMenu(id);
-        }
+        if (!isMainMenu) { XPLMDestroyMenu(id); }
     }
 
-    CMenu CMenu::mainMenu()
-    {
-        return { XPLMFindPluginsMenu(), true, nullptr };
-    }
+    CMenu CMenu::mainMenu() { return { XPLMFindPluginsMenu(), true, nullptr }; }
 
     CMenuItem CMenu::item(const std::string &name, std::function<void()> callback)
     {
         assert(!name.empty());
-        m_data->items->emplace_back(
-            CMenuItem { m_data->id, 0, false, [callback](bool) { callback(); } });
+        m_data->items->emplace_back(CMenuItem { m_data->id, 0, false, [callback](bool) { callback(); } });
         auto &menuItem = m_data->items->back();
         menuItem.setIndex(XPLMAppendMenuItem(m_data->id, name.c_str(), &menuItem, false));
         return menuItem;
@@ -60,8 +53,7 @@ namespace XSwiftBus
     CMenuItem CMenu::checkableItem(const std::string &name, bool checked, std::function<void(bool)> callback)
     {
         assert(!name.empty());
-        m_data->items->emplace_back(
-            CMenuItem { m_data->id, 0, true, callback });
+        m_data->items->emplace_back(CMenuItem { m_data->id, 0, true, callback });
         auto &menuItem = m_data->items->back();
         menuItem.setIndex(XPLMAppendMenuItem(m_data->id, name.c_str(), &menuItem, false));
         menuItem.setChecked(checked);
@@ -70,9 +62,8 @@ namespace XSwiftBus
 
     void CMenu::removeItem(const CMenuItem &item)
     {
-        auto it = std::find_if(m_data->items->begin(), m_data->items->end(), [=](const auto &i) {
-            return i.m_data->index == item.m_data->index;
-        });
+        auto it = std::find_if(m_data->items->begin(), m_data->items->end(),
+                               [=](const auto &i) { return i.m_data->index == item.m_data->index; });
 
         XPLMRemoveMenuItem(m_data->id, it->m_data->index);
         it = m_data->items->erase(it);
@@ -85,10 +76,7 @@ namespace XSwiftBus
         }
     }
 
-    void CMenu::sep()
-    {
-        XPLMAppendMenuSeparator(m_data->id);
-    }
+    void CMenu::sep() { XPLMAppendMenuSeparator(m_data->id); }
 
     CMenu CMenu::subMenu(const std::string &name)
     {
@@ -96,7 +84,9 @@ namespace XSwiftBus
         // auto items = std::make_unique<ItemList>();
         auto items = std::make_unique<ItemList>();
         auto itemsVoidPtr = static_cast<void *>(&*items);
-        return { XPLMCreateMenu(name.c_str(), m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), nullptr, false), handler, itemsVoidPtr), false, std::move(items) };
+        return { XPLMCreateMenu(name.c_str(), m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), nullptr, false),
+                                handler, itemsVoidPtr),
+                 false, std::move(items) };
     }
 
     // cppcheck-suppress constParameter
@@ -111,8 +101,7 @@ namespace XSwiftBus
 
     CMenuItem::CMenuItem(XPLMMenuID parent, int item, bool checkable, std::function<void(bool)> callback)
         : m_data(std::make_shared<Data>(parent, item, checkable, callback))
-    {
-    }
+    {}
 
     bool CMenuItem::getChecked() const
     {
@@ -126,10 +115,7 @@ namespace XSwiftBus
         XPLMCheckMenuItem(m_data->parent, m_data->index, checked ? xplm_Menu_Checked : xplm_Menu_Unchecked);
     }
 
-    void CMenuItem::setEnabled(bool enabled)
-    {
-        XPLMEnableMenuItem(m_data->parent, m_data->index, enabled);
-    }
+    void CMenuItem::setEnabled(bool enabled) { XPLMEnableMenuItem(m_data->parent, m_data->index, enabled); }
 
 } // namespace XSwiftBus
 

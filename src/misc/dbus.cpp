@@ -17,15 +17,12 @@ void preventQtDBusDllUnload()
     if (qVersion() != QByteArray("5.8.0")) { return; }
 
     static HMODULE dbusDll;
-    GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
-                          GET_MODULE_HANDLE_EX_FLAG_PIN,
-                      reinterpret_cast<LPCTSTR>(&QDBusConnection::staticMetaObject),
-                      &dbusDll);
+    GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_PIN,
+                      reinterpret_cast<LPCTSTR>(&QDBusConnection::staticMetaObject), &dbusDll);
     Q_ASSERT(dbusDll);
 }
 #else
-void preventQtDBusDllUnload()
-{}
+void preventQtDBusDllUnload() {}
 #endif
 
 QDBusArgument &operator<<(QDBusArgument &arg, const std::string &s)

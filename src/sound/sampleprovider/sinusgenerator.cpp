@@ -11,8 +11,8 @@ using namespace swift::misc;
 
 namespace swift::sound::sample_provider
 {
-    CSinusGenerator::CSinusGenerator(double frequencyHz, QObject *parent) : ISampleProvider(parent),
-                                                                            m_frequencyHz(frequencyHz)
+    CSinusGenerator::CSinusGenerator(double frequencyHz, QObject *parent)
+        : ISampleProvider(parent), m_frequencyHz(frequencyHz)
     {
         const QString on = QStringLiteral("%1 frequency: %2Hz").arg(classNameShort(this)).arg(frequencyHz);
         this->setObjectName(on);
@@ -33,8 +33,5 @@ namespace swift::sound::sample_provider
         return static_cast<int>(count);
     }
 
-    void CSinusGenerator::setFrequency(double frequencyHz)
-    {
-        m_frequencyHz = frequencyHz;
-    }
+    void CSinusGenerator::setFrequency(double frequencyHz) { m_frequencyHz = frequencyHz; }
 } // namespace swift::sound::sample_provider

@@ -163,8 +163,8 @@ namespace swift::misc::simulation::settings
         CFsxP3DSettings() {}
 
         //! Constructor
-        CFsxP3DSettings(bool simulatedObject, bool sbOffsets) : m_useSimulatedObjectAdding(simulatedObject),
-                                                                m_useSbOffsets(sbOffsets)
+        CFsxP3DSettings(bool simulatedObject, bool sbOffsets)
+            : m_useSimulatedObjectAdding(simulatedObject), m_useSbOffsets(sbOffsets)
         {}
 
         //! Use simulated object adding
@@ -206,10 +206,14 @@ namespace swift::misc::simulation::settings
         const CSimulatorSettings &getGenericSettings() const { return m_genericSettings; }
 
         //! Ctor
-        CSpecializedSimulatorSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator) : m_genericSettings(settings), m_simulator(simulator) {}
+        CSpecializedSimulatorSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator)
+            : m_genericSettings(settings), m_simulator(simulator)
+        {}
 
         //! Ctor
-        CSpecializedSimulatorSettings(const QString &simulatorDir, const CSimulatorInfo &simulator) : m_genericSettings(CSimulatorSettings(simulatorDir)), m_simulator(simulator) {}
+        CSpecializedSimulatorSettings(const QString &simulatorDir, const CSimulatorInfo &simulator)
+            : m_genericSettings(CSimulatorSettings(simulatorDir)), m_simulator(simulator)
+        {}
 
         //! The generic settings
         const CSimulatorSettings &getSimulatorSettings() const { return m_genericSettings; }
@@ -254,7 +258,10 @@ namespace swift::misc::simulation::settings
         void clearModelDirectories() { m_genericSettings.clearModelDirectories(); }
 
         //! \copydoc CSimulatorSettings::addModelDirectory
-        bool addModelDirectory(const QString &modelDirectory) { return m_genericSettings.addModelDirectory(modelDirectory); }
+        bool addModelDirectory(const QString &modelDirectory)
+        {
+            return m_genericSettings.addModelDirectory(modelDirectory);
+        }
 
         //! \copydoc CSimulatorSettings::setSimulatorDirectory
         void setSimulatorDirectory(const QString &simDir) { m_genericSettings.setSimulatorDirectory(simDir); }
@@ -278,11 +285,13 @@ namespace swift::misc::simulation::settings
     {
     public:
         //! Constructor
-        CXPlaneSimulatorSettings(const CSimulatorSettings &settings) : CSpecializedSimulatorSettings(settings, CSimulatorInfo(CSimulatorInfo::XPLANE))
+        CXPlaneSimulatorSettings(const CSimulatorSettings &settings)
+            : CSpecializedSimulatorSettings(settings, CSimulatorInfo(CSimulatorInfo::XPLANE))
         {}
 
         //! Constructor
-        CXPlaneSimulatorSettings(const CSpecializedSimulatorSettings &settings) : CXPlaneSimulatorSettings(settings.getGenericSettings())
+        CXPlaneSimulatorSettings(const CSpecializedSimulatorSettings &settings)
+            : CXPlaneSimulatorSettings(settings.getGenericSettings())
         {}
 
         //! Plugin directory or default plugin dir
@@ -489,7 +498,8 @@ namespace swift::misc::simulation::settings
         CStatusMessage setAndSaveSettings(const CSimulatorSettings &settings, const CSimulatorInfo &simulator);
 
         //! Set settings per simulator
-        CStatusMessage setAndSaveSettings(const CSpecializedSimulatorSettings &settings, const CSimulatorInfo &simulator);
+        CStatusMessage setAndSaveSettings(const CSpecializedSimulatorSettings &settings,
+                                          const CSimulatorInfo &simulator);
 
         //! Set settings per simulator
         CStatusMessage saveSettings(const CSimulatorInfo &simulator);
@@ -526,10 +536,15 @@ namespace swift::misc::simulation::settings
         void settingsChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
     private:
-        CSetting<TSimulatorFsx> m_simSettingsFsx { this, &CMultiSimulatorSettings::onFsxSettingsChanged }; //!< FSX settings
-        CSetting<TSimulatorFs9> m_simSettingsFs9 { this, &CMultiSimulatorSettings::onFs9SettingsChanged }; //!< FS9 settings
-        CSetting<TSimulatorP3D> m_simSettingsP3D { this, &CMultiSimulatorSettings::onP3DSettingsChanged }; //!< P3D settings
-        CSetting<TSimulatorMsfs> m_simSettingsMsfs { this, &CMultiSimulatorSettings::onMsfsSettingsChanged }; //!< MSFS settings
+        CSetting<TSimulatorFsx> m_simSettingsFsx { this,
+                                                   &CMultiSimulatorSettings::onFsxSettingsChanged }; //!< FSX settings
+        CSetting<TSimulatorFs9> m_simSettingsFs9 { this,
+                                                   &CMultiSimulatorSettings::onFs9SettingsChanged }; //!< FS9 settings
+        CSetting<TSimulatorP3D> m_simSettingsP3D { this,
+                                                   &CMultiSimulatorSettings::onP3DSettingsChanged }; //!< P3D settings
+        CSetting<TSimulatorMsfs> m_simSettingsMsfs {
+            this, &CMultiSimulatorSettings::onMsfsSettingsChanged
+        }; //!< MSFS settings
         CSetting<TSimulatorXP> m_simSettingsXP { this, &CMultiSimulatorSettings::onXPSettingsChanged }; //!< XP settings
         CSetting<TSimulatorFG> m_simSettingsFG { this, &CMultiSimulatorSettings::onFGSettingsChanged }; //!< FG settings
 

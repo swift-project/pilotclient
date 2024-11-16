@@ -106,8 +106,8 @@ namespace swift::gui::components
         //! Models published
         void onPublishedModels(const swift::misc::simulation::CAircraftModelList &modelsPublished,
                                const swift::misc::simulation::CAircraftModelList &modelsSkipped,
-                               const swift::misc::CStatusMessageList &messages,
-                               bool requestSuccessful, bool directWrite);
+                               const swift::misc::CStatusMessageList &messages, bool requestSuccessful,
+                               bool directWrite);
 
         //! Web data have been read
         void onWebDataRead();

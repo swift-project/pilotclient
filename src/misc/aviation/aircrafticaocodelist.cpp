@@ -13,22 +13,25 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftIcaoCode, CAircraft
 
 namespace swift::misc::aviation
 {
-    CAircraftIcaoCodeList::CAircraftIcaoCodeList()
+    CAircraftIcaoCodeList::CAircraftIcaoCodeList() {}
+
+    CAircraftIcaoCodeList::CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other)
+        : CSequence<CAircraftIcaoCode>(other)
     {}
 
-    CAircraftIcaoCodeList::CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other) : CSequence<CAircraftIcaoCode>(other)
-    {}
-
-    CAircraftIcaoCodeList::CAircraftIcaoCodeList(std::initializer_list<CAircraftIcaoCode> il) : CSequence<CAircraftIcaoCode>(il)
+    CAircraftIcaoCodeList::CAircraftIcaoCodeList(std::initializer_list<CAircraftIcaoCode> il)
+        : CSequence<CAircraftIcaoCode>(il)
     {}
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignator(const QString &designator, int fuzzySearch) const
     {
         if (!fuzzySearch && !CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCodeList(); }
-        if (fuzzySearch && designator.length() < CAircraftIcaoCode::DesignatorMinLength) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode &code) {
-            return code.matchesDesignator(designator, fuzzySearch);
-        });
+        if (fuzzySearch && designator.length() < CAircraftIcaoCode::DesignatorMinLength)
+        {
+            return CAircraftIcaoCodeList();
+        }
+        return this->findBy(
+            [&](const CAircraftIcaoCode &code) { return code.matchesDesignator(designator, fuzzySearch); });
     }
 
     CAircraftIcaoCode CAircraftIcaoCodeList::findBestFuzzyMatchOrDefault(const QString &designator, int cutoff) const
@@ -49,32 +52,25 @@ namespace swift::misc::aviation
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByValidDesignator() const
     {
-        return this->findBy([](const CAircraftIcaoCode &code) {
-            return code.hasValidDesignator();
-        });
+        return this->findBy([](const CAircraftIcaoCode &code) { return code.hasValidDesignator(); });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByInvalidDesignator() const
     {
-        return this->findBy([](const CAircraftIcaoCode &code) {
-            return !code.hasValidDesignator();
-        });
+        return this->findBy([](const CAircraftIcaoCode &code) { return !code.hasValidDesignator(); });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignatorOrIataCode(const QString &icaoOrIata) const
     {
         if (icaoOrIata.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode &code) {
-            return code.matchesDesignatorOrIata(icaoOrIata);
-        });
+        return this->findBy([&](const CAircraftIcaoCode &code) { return code.matchesDesignatorOrIata(icaoOrIata); });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByDesignatorIataOrFamily(const QString &icaoIataOrFamily) const
     {
         if (icaoIataOrFamily.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode &code) {
-            return code.matchesDesignatorIataOrFamily(icaoIataOrFamily);
-        });
+        return this->findBy(
+            [&](const CAircraftIcaoCode &code) { return code.matchesDesignatorIataOrFamily(icaoIataOrFamily); });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findEndingWith(const QString &icaoEnding) const
@@ -85,14 +81,8 @@ namespace swift::misc::aviation
         CAircraftIcaoCodeList icaosFamily;
         for (const CAircraftIcaoCode &icao : *this)
         {
-            if (icao.getDesignator().endsWith(ends))
-            {
-                icaosDesignator.push_back(icao);
-            }
-            else if (icao.getFamily().endsWith(ends))
-            {
-                icaosFamily.push_back(icao);
-            }
+            if (icao.getDesignator().endsWith(ends)) { icaosDesignator.push_back(icao); }
+            else if (icao.getFamily().endsWith(ends)) { icaosFamily.push_back(icao); }
         }
         return icaosDesignator.isEmpty() ? icaosFamily : icaosDesignator;
     }
@@ -100,17 +90,13 @@ namespace swift::misc::aviation
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByIataCode(const QString &iata, int fuzzySearch) const
     {
         if (iata.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode &code) {
-            return code.matchesIataCode(iata, fuzzySearch);
-        });
+        return this->findBy([&](const CAircraftIcaoCode &code) { return code.matchesIataCode(iata, fuzzySearch); });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByFamily(const QString &family, int fuzzySearch) const
     {
         if (family.isEmpty()) { return CAircraftIcaoCodeList(); }
-        return this->findBy([&](const CAircraftIcaoCode &code) {
-            return code.matchesFamily(family, fuzzySearch);
-        });
+        return this->findBy([&](const CAircraftIcaoCode &code) { return code.matchesFamily(family, fuzzySearch); });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByManufacturer(const QString &manufacturer) const
@@ -131,9 +117,7 @@ namespace swift::misc::aviation
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findMatchingByAnyDescription(const QString &description) const
     {
-        return this->findBy([&](const CAircraftIcaoCode &code) {
-            return code.matchesAnyDescription(description);
-        });
+        return this->findBy([&](const CAircraftIcaoCode &code) { return code.matchesAnyDescription(description); });
     }
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findWithIataCode(bool removeWhenSameAsDesignator) const
@@ -154,9 +138,7 @@ namespace swift::misc::aviation
 
     CAircraftIcaoCodeList CAircraftIcaoCodeList::findByMilitaryFlag(bool military) const
     {
-        return this->findBy([&](const CAircraftIcaoCode &code) {
-            return (code.isMilitary() == military);
-        });
+        return this->findBy([&](const CAircraftIcaoCode &code) { return (code.isMilitary() == military); });
     }
 
     CAircraftIcaoCode CAircraftIcaoCodeList::findFirstByDesignatorAndRank(const QString &designator) const
@@ -175,10 +157,7 @@ namespace swift::misc::aviation
         return this->contains(&CAircraftIcaoCode::getDesignator, designator);
     }
 
-    void CAircraftIcaoCodeList::sortByRank()
-    {
-        this->sortBy(&CAircraftIcaoCode::getRank);
-    }
+    void CAircraftIcaoCodeList::sortByRank() { this->sortBy(&CAircraftIcaoCode::getRank); }
 
     void CAircraftIcaoCodeList::sortByDesignatorAndRank()
     {
@@ -187,7 +166,8 @@ namespace swift::misc::aviation
 
     void CAircraftIcaoCodeList::sortByDesignatorManufacturerAndRank()
     {
-        this->sortBy(&CAircraftIcaoCode::getDesignator, &CAircraftIcaoCode::getManufacturer, &CAircraftIcaoCode::getRank);
+        this->sortBy(&CAircraftIcaoCode::getDesignator, &CAircraftIcaoCode::getManufacturer,
+                     &CAircraftIcaoCode::getRank);
     }
 
     void CAircraftIcaoCodeList::removeInvalidCombinedCodes()
@@ -195,12 +175,10 @@ namespace swift::misc::aviation
         this->removeIf([](const CAircraftIcaoCode &icao) { return !icao.hasValidCombinedType(); });
     }
 
-    void CAircraftIcaoCodeList::removeDuplicates()
-    {
-        this->removeIf(&CAircraftIcaoCode::isDbDuplicate, true);
-    }
+    void CAircraftIcaoCodeList::removeDuplicates() { this->removeIf(&CAircraftIcaoCode::isDbDuplicate, true); }
 
-    QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily, bool withCategory, bool sort) const
+    QStringList CAircraftIcaoCodeList::toCompleterStrings(bool withIataCodes, bool withFamily, bool withCategory,
+                                                          bool sort) const
     {
         QStringList c;
         CAircraftIcaoCodeList icaos(*this);
@@ -215,10 +193,7 @@ namespace swift::misc::aviation
         if (withFamily)
         {
             const CAircraftIcaoCodeList icaosFamily = icaos.findWithFamily(true);
-            for (const CAircraftIcaoCode &icao : icaosFamily)
-            {
-                c.append(icao.getCombinedFamilyStringWithKey());
-            }
+            for (const CAircraftIcaoCode &icao : icaosFamily) { c.append(icao.getCombinedFamilyStringWithKey()); }
         }
 
         if (withIataCodes)
@@ -298,13 +273,15 @@ namespace swift::misc::aviation
     {
         const QMap<QString, int> counts(countManufacturers());
         if (counts.isEmpty()) return { {}, 0 };
-        const auto pair = *std::max_element(counts.keyValueBegin(), counts.keyValueEnd(), [](const auto &a, const auto &b) {
-            return a.second < b.second;
-        });
+        const auto pair = *std::max_element(counts.keyValueBegin(), counts.keyValueEnd(),
+                                            [](const auto &a, const auto &b) { return a.second < b.second; });
         return { pair.first, pair.second };
     }
 
-    CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array, const CAircraftCategoryList &categories, bool ignoreIncompleteAndDuplicates, CAircraftIcaoCodeList *inconsistent)
+    CAircraftIcaoCodeList CAircraftIcaoCodeList::fromDatabaseJson(const QJsonArray &array,
+                                                                  const CAircraftCategoryList &categories,
+                                                                  bool ignoreIncompleteAndDuplicates,
+                                                                  CAircraftIcaoCodeList *inconsistent)
     {
         CAircraftIcaoCodeList codes;
         for (const QJsonValue &value : array)
@@ -314,10 +291,7 @@ namespace swift::misc::aviation
             if (!categories.isEmpty() && catId >= 0)
             {
                 const CAircraftCategory category = categories.findByKey(catId);
-                if (!category.isNull())
-                {
-                    icao.setCategory(category);
-                }
+                if (!category.isNull()) { icao.setCategory(category); }
             }
 
             if (!icao.hasSpecialDesignator() && !icao.hasCompleteData())
@@ -356,8 +330,7 @@ namespace swift::misc::aviation
         const QString designator(icaoPattern.getDesignator());
         if (designator.isEmpty()) { return CAircraftIcaoCode(); }
         CAircraftIcaoCodeList codes;
-        do
-        {
+        do {
             codes = this->findByDesignator(designator);
             if (!codes.isEmpty()) break;
 
@@ -366,7 +339,8 @@ namespace swift::misc::aviation
             if (!codes.isEmpty()) break;
 
             // search fuzzy and restrict length
-            const CAircraftIcaoCode bestMatch = this->findBestFuzzyMatchOrDefault(designator.length() < 5 ? designator : designator.left(5), 70);
+            const CAircraftIcaoCode bestMatch =
+                this->findBestFuzzyMatchOrDefault(designator.length() < 5 ? designator : designator.left(5), 70);
             if (bestMatch.hasValidDesignator()) { return bestMatch; }
 
             // still empty, try to find by family
@@ -383,7 +357,8 @@ namespace swift::misc::aviation
 
         // further reduce by manufacturer
         codes.sortByRank();
-        if (icaoPattern.hasManufacturer() && codes.contains(&CAircraftIcaoCode::getManufacturer, icaoPattern.getManufacturer()))
+        if (icaoPattern.hasManufacturer() &&
+            codes.contains(&CAircraftIcaoCode::getManufacturer, icaoPattern.getManufacturer()))
         {
             const QString m(icaoPattern.getManufacturer());
             codes = codes.findByManufacturer(m);
@@ -403,7 +378,8 @@ namespace swift::misc::aviation
         }
 
         // lucky punch on description?
-        if (icaoPattern.hasModelDescription() && codes.contains(&CAircraftIcaoCode::getModelDescription, icaoPattern.getModelDescription()))
+        if (icaoPattern.hasModelDescription() &&
+            codes.contains(&CAircraftIcaoCode::getModelDescription, icaoPattern.getModelDescription()))
         {
             // do not affect codes here, it might return no results
             const QString d(icaoPattern.getModelDescription());

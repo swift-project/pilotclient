@@ -25,14 +25,15 @@ using namespace swift::gui::components;
 
 namespace swift::gui::editors
 {
-    CModelMappingModifyForm::CModelMappingModifyForm(QWidget *parent) : CFormDbUser(parent),
-                                                                        ui(new Ui::CModelMappingModifyForm)
+    CModelMappingModifyForm::CModelMappingModifyForm(QWidget *parent)
+        : CFormDbUser(parent), ui(new Ui::CModelMappingModifyForm)
     {
         ui->setupUi(this);
         ui->le_Parts->setPlaceholderText("Parts " + CAircraftModel::supportedParts());
         this->userChanged();
 
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(true, 0, CAircraftModel::supportedParts().size(), ui->le_Parts);
+        CUpperCaseValidator *ucv =
+            new CUpperCaseValidator(true, 0, CAircraftModel::supportedParts().size(), ui->le_Parts);
         ucv->setAllowedCharacters(CAircraftModel::supportedParts());
         ui->le_Parts->setValidator(ucv);
 
@@ -40,7 +41,8 @@ namespace swift::gui::editors
         // connect(ui->le_Description, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::returnPressed);
         // connect(ui->le_Name, &QLineEdit::returnPressed, this, &CModelMappingModifyForm::returnPressed);
         // connect(ui->selector_ModeSelector, &CModelModeSelector::changed, this, &CModelMappingModifyForm::changed);
-        // connect(ui->selector_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMappingModifyForm::changed);
+        // connect(ui->selector_SimulatorSelector, &CSimulatorSelector::changed, this,
+        // &CModelMappingModifyForm::changed);
 
         connect(ui->le_CG, &QLineEdit::editingFinished, this, &CModelMappingModifyForm::onCGEdited);
     }
@@ -54,10 +56,7 @@ namespace swift::gui::editors
     {
         CPropertyIndexVariantMap vm;
 
-        if (ui->cb_Name->isChecked())
-        {
-            vm.addValue(CAircraftModel::IndexName, ui->le_Name->text().trimmed());
-        }
+        if (ui->cb_Name->isChecked()) { vm.addValue(CAircraftModel::IndexName, ui->le_Name->text().trimmed()); }
 
         if (ui->cb_Description->isChecked())
         {
@@ -88,10 +87,7 @@ namespace swift::gui::editors
         {
             const QString cgv = ui->le_CG->text().trimmed();
             CLength cg = CLength::null();
-            if (!cgv.isEmpty())
-            {
-                cg.parseFromString(cgv, CPqString::SeparatorBestGuess);
-            }
+            if (!cgv.isEmpty()) { cg.parseFromString(cgv, CPqString::SeparatorBestGuess); }
             vm.addValue(CAircraftModel::IndexCG, cg);
         }
 
@@ -121,10 +117,7 @@ namespace swift::gui::editors
             ui->selector_ModeSelector->setValue(CAircraftModel::Include);
             ui->selector_ModeSelector->setReadOnly(false);
         }
-        else
-        {
-            ui->selector_ModeSelector->setReadOnly(true);
-        }
+        else { ui->selector_ModeSelector->setReadOnly(true); }
 
         CFormDbUser::userChanged();
     }

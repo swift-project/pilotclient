@@ -15,8 +15,8 @@ using namespace swift::misc;
 
 namespace swift::gui::components
 {
-    CCockpitInfoAreaComponent::CCockpitInfoAreaComponent(QWidget *parent) : CInfoArea(parent),
-                                                                            ui(new Ui::CCockpitInfoAreaComponent)
+    CCockpitInfoAreaComponent::CCockpitInfoAreaComponent(QWidget *parent)
+        : CInfoArea(parent), ui(new Ui::CCockpitInfoAreaComponent)
     {
         ui->setupUi(this);
         this->initInfoArea();
@@ -24,8 +24,7 @@ namespace swift::gui::components
         this->toggleTabBarLocked(true);
     }
 
-    CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent()
-    {}
+    CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent() {}
 
     QSize CCockpitInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {

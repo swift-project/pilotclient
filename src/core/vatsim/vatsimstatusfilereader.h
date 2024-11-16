@@ -45,7 +45,8 @@ namespace swift::core::vatsim
         void statusFileRead(int bytes);
 
         //! Data have been read
-        void dataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int bytes);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entity,
+                      swift::misc::network::CEntityFlags::ReadState state, int bytes);
 
     private:
         //! Read / re-read data file

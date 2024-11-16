@@ -58,7 +58,10 @@ namespace swift::core::db
             bool hasTimestamp() const { return m_lastModified.isValid(); }
 
             //! Is response newer?
-            bool isNewer(const QDateTime &ts) const { return m_lastModified.toMSecsSinceEpoch() > ts.toMSecsSinceEpoch(); }
+            bool isNewer(const QDateTime &ts) const
+            {
+                return m_lastModified.toMSecsSinceEpoch() > ts.toMSecsSinceEpoch();
+            }
 
             //! Is response newer?
             bool isNewer(qint64 mSecsSinceEpoch) const { return m_lastModified.toMSecsSinceEpoch() > mSecsSinceEpoch; }
@@ -76,7 +79,10 @@ namespace swift::core::db
             void setContentLengthHeader(qulonglong size) { m_contentLengthHeader = size; }
 
             //! Error message?
-            bool hasErrorMessage() const { return m_message.getSeverity() == swift::misc::CStatusMessage::SeverityError; }
+            bool hasErrorMessage() const
+            {
+                return m_message.getSeverity() == swift::misc::CStatusMessage::SeverityError;
+            }
 
             //! Warning or error message?
             bool hasWarningOrAboveMessage() const { return m_message.isWarningOrAbove(); }
@@ -168,11 +174,14 @@ namespace swift::core::db
 
         //! Start loading from DB in own thread
         //! \remark bypass caches/config
-        swift::misc::network::CEntityFlags::Entity triggerLoadingDirectlyFromDb(swift::misc::network::CEntityFlags::Entity entities, const QDateTime &newerThan);
+        swift::misc::network::CEntityFlags::Entity
+        triggerLoadingDirectlyFromDb(swift::misc::network::CEntityFlags::Entity entities, const QDateTime &newerThan);
 
         //! Start loading from shared files in own thread
         //! \remark bypass caches/config
-        swift::misc::network::CEntityFlags::Entity triggerLoadingDirectlyFromSharedFiles(swift::misc::network::CEntityFlags::Entity entities, bool checkCacheTsUpfront);
+        swift::misc::network::CEntityFlags::Entity
+        triggerLoadingDirectlyFromSharedFiles(swift::misc::network::CEntityFlags::Entity entities,
+                                              bool checkCacheTsUpfront);
 
         //! Has received Ok response from server at least once?
         //! \threadsafe
@@ -194,7 +203,8 @@ namespace swift::core::db
         QString getSupportedEntitiesAsString() const;
 
         //! Mask by supported entities
-        swift::misc::network::CEntityFlags::Entity maskBySupportedEntities(swift::misc::network::CEntityFlags::Entity entities) const;
+        swift::misc::network::CEntityFlags::Entity
+        maskBySupportedEntities(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Is any of the given entities supported here by this reader
         bool supportsAnyOfEntities(swift::misc::network::CEntityFlags::Entity entities) const;
@@ -203,7 +213,8 @@ namespace swift::core::db
         virtual QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const = 0;
 
         //! Has entity a valid and newer timestamp
-        bool hasCacheTimestampNewerThan(swift::misc::network::CEntityFlags::Entity entity, const QDateTime &threshold) const;
+        bool hasCacheTimestampNewerThan(swift::misc::network::CEntityFlags::Entity entity,
+                                        const QDateTime &threshold) const;
 
         //! Cache`s number of entities
         //! \remark this only works if the cache is admitted, DB caches are read deferred
@@ -215,7 +226,8 @@ namespace swift::core::db
 
         //! Entities already having data in cache (based on timestamp assumption)
         //! \remark unlike getEntitiesWithCacheCount() this even works when the cache is not yet admitted
-        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const = 0;
+        virtual swift::misc::network::CEntityFlags::Entity
+        getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const = 0;
 
         //! DB info objects available?
         bool hasDbInfoObjects() const;
@@ -235,7 +247,8 @@ namespace swift::core::db
 
         //! Obtain latest object timestamp from shared info objects
         //! \sa swift::core::db::CInfoDataReader
-        QDateTime getLatestEntityTimestampFromSharedInfoObjects(swift::misc::network::CEntityFlags::Entity entity) const;
+        QDateTime
+        getLatestEntityTimestampFromSharedInfoObjects(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Header timestamp (last-modified) for shared file
         //! \deprecated use getLatestEntityTimestampFromSharedInfoObjects
@@ -249,10 +262,12 @@ namespace swift::core::db
         bool isSharedInfoObjectNewerThanCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Those entities where the timestamp of the header is newer than the cache timestamp
-        swift::misc::network::CEntityFlags::Entity getEntitesWithNewerHeaderTimestamp(swift::misc::network::CEntityFlags::Entity entities) const;
+        swift::misc::network::CEntityFlags::Entity
+        getEntitesWithNewerHeaderTimestamp(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Those entities where the timestamp of a shared info object is newer than the cache timestamp
-        swift::misc::network::CEntityFlags::Entity getEntitesWithNewerSharedInfoObject(swift::misc::network::CEntityFlags::Entity entities) const;
+        swift::misc::network::CEntityFlags::Entity
+        getEntitesWithNewerSharedInfoObject(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Status message (error message)
         const QString &getStatusMessage() const;
@@ -266,20 +281,26 @@ namespace swift::core::db
 
         //! Init from local resource file
         //! \remark normally used after installation for a 1st time init
-        swift::misc::CStatusMessageList initFromLocalResourceFiles(swift::misc::network::CEntityFlags::Entity entities, bool inBackground);
+        swift::misc::CStatusMessageList initFromLocalResourceFiles(swift::misc::network::CEntityFlags::Entity entities,
+                                                                   bool inBackground);
 
         //! Data read from local data
-        virtual swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
+        virtual swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir,
+                                                                  swift::misc::network::CEntityFlags::Entity whatToRead,
+                                                                  bool overrideNewer) = 0;
 
         //! Data read from local data
-        virtual bool readFromJsonFilesInBackground(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead, bool overrideNewer) = 0;
+        virtual bool readFromJsonFilesInBackground(const QString &dir,
+                                                   swift::misc::network::CEntityFlags::Entity whatToRead,
+                                                   bool overrideNewer) = 0;
 
         //! Log categories
         static const QStringList &getLogCategories();
 
         //! Transform JSON data to response struct data
         //! \private used also for samples, that`s why it is declared public
-        static void stringToDatastoreResponse(const QString &jsonContent, CDatabaseReader::JsonDatastoreResponse &datastoreResponse);
+        static void stringToDatastoreResponse(const QString &jsonContent,
+                                              CDatabaseReader::JsonDatastoreResponse &datastoreResponse);
 
     signals:
         //! DB have been read
@@ -287,17 +308,20 @@ namespace swift::core::db
 
         //! Combined read signal
         //! \remark normally in success case state for a single case, skipped cases can be reported for 1..n enities
-        void dataRead(swift::misc::network::CEntityFlags::Entity entities, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entities,
+                      swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Header of shared file read
-        void sharedFileHeaderRead(swift::misc::network::CEntityFlags::Entity entity, const QString &fileName, bool success);
+        void sharedFileHeaderRead(swift::misc::network::CEntityFlags::Entity entity, const QString &fileName,
+                                  bool success);
 
         //! Database reader messages
         //! \remark used with splash screen
         void databaseReaderMessages(const swift::misc::CStatusMessageList &messages);
 
         //! Download progress for an entity
-        void entityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        void entityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress,
+                                    qint64 current, qint64 max, const QUrl &url);
 
     protected:
         CDatabaseReaderConfigList m_config; //!< DB reder configuration
@@ -305,8 +329,10 @@ namespace swift::core::db
         bool m_1stReplyReceived = false; //!< Successful connection? Does not mean data / authorizations are correct
         mutable QReadWriteLock m_statusLock; //!< Lock
         QNetworkReply::NetworkError m_1stReplyStatus = QNetworkReply::UnknownServerError; //!< Successful connection?
-        QMap<swift::misc::network::CEntityFlags::Entity, HeaderResponse> m_sharedFileResponses; //!< file responses of the shared files
-        swift::misc::CStatusMessage::StatusSeverity m_severityNoWorkingUrl = swift::misc::CStatusMessage::SeverityWarning; //!< severity of message if there is no working URL
+        QMap<swift::misc::network::CEntityFlags::Entity, HeaderResponse>
+            m_sharedFileResponses; //!< file responses of the shared files
+        swift::misc::CStatusMessage::StatusSeverity m_severityNoWorkingUrl =
+            swift::misc::CStatusMessage::SeverityWarning; //!< severity of message if there is no working URL
 
         //! Constructor
         CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name);
@@ -326,10 +352,13 @@ namespace swift::core::db
         CDatabaseReaderConfig getConfigForEntity(swift::misc::network::CEntityFlags::Entity entity) const;
 
         //! Split into single entity and send dataRead signal
-        swift::misc::network::CEntityFlags::Entity emitReadSignalPerSingleCachedEntity(swift::misc::network::CEntityFlags::Entity cachedEntities, bool onlyIfHasData);
+        swift::misc::network::CEntityFlags::Entity
+        emitReadSignalPerSingleCachedEntity(swift::misc::network::CEntityFlags::Entity cachedEntities,
+                                            bool onlyIfHasData);
 
         //! Emit signal and log when data have been read
-        void emitAndLogDataRead(swift::misc::network::CEntityFlags::Entity entity, int number, const JsonDatastoreResponse &res);
+        void emitAndLogDataRead(swift::misc::network::CEntityFlags::Entity entity, int number,
+                                const JsonDatastoreResponse &res);
 
         //! Get the service URL, individual for each reader
         virtual swift::misc::network::CUrl getDbServiceBaseUrl() const = 0;
@@ -344,7 +373,8 @@ namespace swift::core::db
         static const swift::misc::network::CUrl &getDbUrl();
 
         //! File name for given mode, either php service or shared file name
-        static QString fileNameForMode(swift::misc::network::CEntityFlags::Entity entity, swift::misc::db::CDbFlags::DataRetrievalModeFlag mode);
+        static QString fileNameForMode(swift::misc::network::CEntityFlags::Entity entity,
+                                       swift::misc::db::CDbFlags::DataRetrievalModeFlag mode);
 
         //! Name of latest timestamp
         static const QString &parameterLatestTimestamp();
@@ -377,12 +407,15 @@ namespace swift::core::db
         virtual void cacheHasChanged(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Has URL been changed? Means we load from a different server
-        static bool isChangedUrl(const swift::misc::network::CUrl &oldUrl, const swift::misc::network::CUrl &currentUrl);
+        static bool isChangedUrl(const swift::misc::network::CUrl &oldUrl,
+                                 const swift::misc::network::CUrl &currentUrl);
         //! @}
 
         //! Start reading in own thread (without config/caching)
         //! \remarks can handle DB or shared file reads
-        void startReadFromBackendInBackgroundThread(swift::misc::network::CEntityFlags::Entity entities, swift::misc::db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan = QDateTime());
+        void startReadFromBackendInBackgroundThread(swift::misc::network::CEntityFlags::Entity entities,
+                                                    swift::misc::db::CDbFlags::DataRetrievalModeFlag mode,
+                                                    const QDateTime &newerThan = QDateTime());
 
         //! Received a reply of a header for a shared file
         void receivedSharedFileHeader(QNetworkReply *nwReplyPtr);
@@ -409,17 +442,21 @@ namespace swift::core::db
 
         //! Override cache from file
         //! \threadsafe
-        bool overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo, swift::misc::network::CEntityFlags::Entity entity, swift::misc::CStatusMessageList &msgs) const;
+        bool overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo,
+                                   swift::misc::network::CEntityFlags::Entity entity,
+                                   swift::misc::CStatusMessageList &msgs) const;
 
         //! Parsing info message
-        void logParseMessage(const QString &entity, int size, int msElapsed, const JsonDatastoreResponse &response) const;
+        void logParseMessage(const QString &entity, int size, int msElapsed,
+                             const JsonDatastoreResponse &response) const;
 
         //! Network request progress
         virtual void networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url) override;
 
     private:
         //! Read / re-read data file
-        virtual void read(swift::misc::network::CEntityFlags::Entity entities, swift::misc::db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) = 0;
+        virtual void read(swift::misc::network::CEntityFlags::Entity entities,
+                          swift::misc::db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) = 0;
     };
 } // namespace swift::core::db
 

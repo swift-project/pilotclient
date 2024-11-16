@@ -34,8 +34,10 @@ namespace swift::core::application
             for (const auto &actionHotkey : value)
             {
                 if (actionHotkey.getApplicableMachine().getMachineName().isEmpty() ||
-                    actionHotkey.getAction().isEmpty() ||
-                    actionHotkey.getCombination().isEmpty()) { return false; }
+                    actionHotkey.getAction().isEmpty() || actionHotkey.getCombination().isEmpty())
+                {
+                    return false;
+                }
             }
             return true;
         }
@@ -58,7 +60,8 @@ namespace swift::core::application
         static const QStringList &defaultValue()
         {
             // All default simulators
-            static const QStringList enabledSimulators(swift::misc::simulation::CSimulatorPluginInfo::guessDefaultPlugins());
+            static const QStringList enabledSimulators(
+                swift::misc::simulation::CSimulatorPluginInfo::guessDefaultPlugins());
             return enabledSimulators;
         }
 

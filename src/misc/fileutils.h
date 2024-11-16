@@ -97,11 +97,14 @@ namespace swift::misc
         static QString normalizeFilePathToQtStandard(const QString &filePath);
 
         //! Make directory paths relative to root directory
-        //! \remark unlike QDir::relativePath here reltive paths are only created when a directory is a subdir of rootDirectory
-        static QStringList makeDirectoriesRelative(const QStringList &directories, const QString &rootDirectory, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+        //! \remark unlike QDir::relativePath here reltive paths are only created when a directory is a subdir of
+        //! rootDirectory
+        static QStringList makeDirectoriesRelative(const QStringList &directories, const QString &rootDirectory,
+                                                   Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
         //! Same directories, order in list does not matter and lists are cleaned up
-        static bool sameDirectories(const QStringList &dirs1, const QStringList &dirs2, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+        static bool sameDirectories(const QStringList &dirs1, const QStringList &dirs2,
+                                    Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
         //! Case sensitivity for current OS
         static Qt::CaseSensitivity osFileNameCaseSensitivity();
@@ -110,43 +113,61 @@ namespace swift::misc
         static bool isFileNameCaseSensitive();
 
         //! Is directory path matching the exclude path?
-        static bool matchesExcludeDirectory(const QString &directoryPath, const QString &excludePattern, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+        static bool matchesExcludeDirectory(const QString &directoryPath, const QString &excludePattern,
+                                            Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
         //! Directory to be excluded?
-        static bool isExcludedDirectory(const QDir &directory, const QStringList &excludeDirectories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+        static bool isExcludedDirectory(const QDir &directory, const QStringList &excludeDirectories,
+                                        Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
         //! Directory to be excluded?
-        static bool isExcludedDirectory(const QFileInfo &fileInfo, const QStringList &excludeDirectories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+        static bool isExcludedDirectory(const QFileInfo &fileInfo, const QStringList &excludeDirectories,
+                                        Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
         //! Directory to be excluded?
-        static bool isExcludedDirectory(const QString &directoryPath, const QStringList &excludeDirectories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+        static bool isExcludedDirectory(const QString &directoryPath, const QStringList &excludeDirectories,
+                                        Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
         //! Removes sub directories in list: A/B A/B/C B B/D -> A/B B returned
-        static QStringList removeSubDirectories(const QStringList &directories, Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
+        static QStringList removeSubDirectories(const QStringList &directories,
+                                                Qt::CaseSensitivity cs = osFileNameCaseSensitivity());
 
         //! Find first existing file or directory (means exists on file system)
         static QString findFirstExisting(const QStringList &filesOrDirectory);
 
         //! Returns path to first file in dir which matches the optional wildcard and predicate, or empty string.
-        static QString findFirstFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {}, std::function<bool(const QFileInfo &)> predicate = {});
+        static QString findFirstFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {},
+                                     const QStringList &excludeDirectories = {},
+                                     std::function<bool(const QFileInfo &)> predicate = {});
 
         //! True if there exists a file in dir which matches the optional wildcard and predicate.
-        static bool containsFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {}, std::function<bool(const QFileInfo &)> predicate = {});
+        static bool containsFile(const QDir &dir, bool recursive, const QStringList &nameFilters = {},
+                                 const QStringList &excludeDirectories = {},
+                                 std::function<bool(const QFileInfo &)> predicate = {});
 
-        //! Returns path to first file in dir newer than the given time, optionally matching a wildcard, or empty string.
-        static QString findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
+        //! Returns path to first file in dir newer than the given time, optionally matching a wildcard, or empty
+        //! string.
+        static QString findFirstNewerThan(const QDateTime &time, const QDir &dir, bool recursive,
+                                          const QStringList &nameFilters = {},
+                                          const QStringList &excludeDirectories = {});
 
         //! True if there exists a file in dir newer than the given time, optionally matching a wildcard.
-        static bool containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
+        static bool containsFileNewerThan(const QDateTime &time, const QDir &dir, bool recursive,
+                                          const QStringList &nameFilters = {},
+                                          const QStringList &excludeDirectories = {});
 
         //! Returns list of all files in dir, optionally matching a wildcard and predicate.
-        static QFileInfoList enumerateFiles(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {}, std::function<bool(const QFileInfo &)> predicate = {});
+        static QFileInfoList enumerateFiles(const QDir &dir, bool recursive, const QStringList &nameFilters = {},
+                                            const QStringList &excludeDirectories = {},
+                                            std::function<bool(const QFileInfo &)> predicate = {});
 
         //! Returns path to the last modifed file in dir, optionally matching a wildcard, or empty string.
-        static QFileInfo findLastModified(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
+        static QFileInfo findLastModified(const QDir &dir, bool recursive, const QStringList &nameFilters = {},
+                                          const QStringList &excludeDirectories = {});
 
         //! Returns path to the last created file in dir, optionally matching a wildcard, or empty string.
-        static QFileInfo findLastCreated(const QDir &dir, bool recursive, const QStringList &nameFilters = {}, const QStringList &excludeDirectories = {});
+        static QFileInfo findLastCreated(const QDir &dir, bool recursive, const QStringList &nameFilters = {},
+                                         const QStringList &excludeDirectories = {});
 
         //! Get all swift executables
         static const QStringList &getSwiftExecutables();
@@ -161,7 +182,8 @@ namespace swift::misc
         static QString lockFileError(const QLockFile &lockFile);
 
         //! UNC file paths on Qt start with "/", but UNC file paths only work when they start with "//"
-        //! \remark On Windows starting with "/" means an UNC path, on UNIX it varies, see http://unix.stackexchange.com/a/12291/19428
+        //! \remark On Windows starting with "/" means an UNC path, on UNIX it varies, see
+        //! http://unix.stackexchange.com/a/12291/19428
         static QString fixWindowsUncPath(const QString &filePath);
 
         //! Fix UNC file paths

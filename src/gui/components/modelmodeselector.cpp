@@ -11,8 +11,7 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CModelModeSelector::CModelModeSelector(QWidget *parent) : QFrame(parent),
-                                                              ui(new Ui::CModelModeSelector)
+    CModelModeSelector::CModelModeSelector(QWidget *parent) : QFrame(parent), ui(new Ui::CModelModeSelector)
     {
         ui->setupUi(this);
         connect(ui->rb_Include, &QRadioButton::released, this, &CModelModeSelector::changed);
@@ -25,35 +24,17 @@ namespace swift::gui::components
 
     swift::misc::simulation::CAircraftModel::ModelMode CModelModeSelector::getMode() const
     {
-        if (ui->rb_Include->isChecked())
-        {
-            return CAircraftModel::Include;
-        }
-        else
-        {
-            return CAircraftModel::Exclude;
-        }
+        if (ui->rb_Include->isChecked()) { return CAircraftModel::Include; }
+        else { return CAircraftModel::Exclude; }
     }
 
     void CModelModeSelector::setValue(CAircraftModel::ModelMode mode)
     {
-        if (mode == CAircraftModel::Include)
-        {
-            ui->rb_Include->setChecked(true);
-        }
-        else
-        {
-            ui->rb_Exclude->setChecked(true);
-        }
+        if (mode == CAircraftModel::Include) { ui->rb_Include->setChecked(true); }
+        else { ui->rb_Exclude->setChecked(true); }
     }
 
-    void CModelModeSelector::setValue(const CAircraftModel &model)
-    {
-        this->setValue(model.getModelMode());
-    }
+    void CModelModeSelector::setValue(const CAircraftModel &model) { this->setValue(model.getModelMode()); }
 
-    void CModelModeSelector::setReadOnly(bool readOnly)
-    {
-        this->setEnabled(!readOnly);
-    }
+    void CModelModeSelector::setReadOnly(bool readOnly) { this->setEnabled(!readOnly); }
 } // namespace swift::gui::components

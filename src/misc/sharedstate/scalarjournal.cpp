@@ -23,8 +23,5 @@ namespace swift::misc::shared_state
         return m_value;
     }
 
-    void CGenericScalarJournal::handleEvent(const CVariant &param)
-    {
-        m_value = param;
-    }
+    void CGenericScalarJournal::handleEvent(const CVariant &param) { m_value = param; }
 } // namespace swift::misc::shared_state

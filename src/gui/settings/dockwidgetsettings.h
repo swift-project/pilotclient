@@ -21,8 +21,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CDockWidgetSettings)
 namespace swift::gui::settings
 {
     //! Settings for dockwidget
-    class SWIFT_GUI_EXPORT CDockWidgetSettings :
-        public swift::misc::CValueObject<CDockWidgetSettings>
+    class SWIFT_GUI_EXPORT CDockWidgetSettings : public swift::misc::CValueObject<CDockWidgetSettings>
     {
     public:
         //! Properties by index
@@ -116,7 +115,10 @@ namespace swift::gui::settings
     struct TDockWidget : public swift::misc::TSettingTrait<CDockWidgetSettings>
     {
         //! \copydoc swift::misc::TSettingTrait::key
-        static const char *key() { return "guidockwidget/%Application%/%OwnerName%"; } // Key in data cache https://dev.vatsim-germany.org/issues/776
+        static const char *key()
+        {
+            return "guidockwidget/%Application%/%OwnerName%";
+        } // Key in data cache https://dev.vatsim-germany.org/issues/776
 
         //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()

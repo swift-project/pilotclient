@@ -33,9 +33,8 @@ using namespace swift::misc::simulation::xplane;
 
 namespace swift::gui::components
 {
-    CInstallXSwiftBusComponent::CInstallXSwiftBusComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                              CLoadIndicatorEnabled(this),
-                                                                              ui(new Ui::CInstallXSwiftBusComponent)
+    CInstallXSwiftBusComponent::CInstallXSwiftBusComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), CLoadIndicatorEnabled(this), ui(new Ui::CInstallXSwiftBusComponent)
     {
         ui->setupUi(this);
 
@@ -43,9 +42,12 @@ namespace swift::gui::components
         ui->le_DownloadDir->setText(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
         ui->cb_DownloadFile->setEnabled(false);
 
-        connect(ui->tb_DialogInstallDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::selectPluginDirectory);
-        connect(ui->tb_DialogDownloadDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::selectDownloadDirectory);
-        connect(ui->pb_Download, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::triggerDownloadingOfXSwiftBusFile);
+        connect(ui->tb_DialogInstallDir, &QPushButton::pressed, this,
+                &CInstallXSwiftBusComponent::selectPluginDirectory);
+        connect(ui->tb_DialogDownloadDir, &QPushButton::pressed, this,
+                &CInstallXSwiftBusComponent::selectDownloadDirectory);
+        connect(ui->pb_Download, &QPushButton::pressed, this,
+                &CInstallXSwiftBusComponent::triggerDownloadingOfXSwiftBusFile);
         connect(ui->pb_OpenDownloadDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::openDownloadDir);
         connect(ui->pb_OpenInstallDir, &QPushButton::pressed, this, &CInstallXSwiftBusComponent::openInstallDir);
 
@@ -53,8 +55,7 @@ namespace swift::gui::components
         this->updatesChanged();
     }
 
-    CInstallXSwiftBusComponent::~CInstallXSwiftBusComponent()
-    {}
+    CInstallXSwiftBusComponent::~CInstallXSwiftBusComponent() {}
 
     void CInstallXSwiftBusComponent::setDefaultDownloadName(const QString &defaultDownload)
     {
@@ -65,13 +66,15 @@ namespace swift::gui::components
     void CInstallXSwiftBusComponent::selectPluginDirectory()
     {
         QString xPlanePluginDir = CFileUtils::fixWindowsUncPath(ui->le_XSwiftBusPluginDir->text().trimmed());
-        xPlanePluginDir = QFileDialog::getExistingDirectory(parentWidget(),
-                                                            tr("Choose your X-Plane plugin directory"), xPlanePluginDir, m_fileDialogOptions);
+        xPlanePluginDir = QFileDialog::getExistingDirectory(parentWidget(), tr("Choose your X-Plane plugin directory"),
+                                                            xPlanePluginDir, m_fileDialogOptions);
 
         if (xPlanePluginDir.isEmpty()) { return; } // canceled
         if (!QDir(xPlanePluginDir).exists())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid X-Plane plugin directory") << xPlanePluginDir;
+            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation())
+                                           .warning(u"'%1' is not a valid X-Plane plugin directory")
+                                       << xPlanePluginDir;
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -81,13 +84,15 @@ namespace swift::gui::components
     void CInstallXSwiftBusComponent::selectDownloadDirectory()
     {
         QString downloadDir = CFileUtils::fixWindowsUncPath(ui->le_DownloadDir->text().trimmed());
-        downloadDir = QFileDialog::getExistingDirectory(parentWidget(),
-                                                        tr("Choose your X-Plane plugin directory"), downloadDir, m_fileDialogOptions);
+        downloadDir = QFileDialog::getExistingDirectory(parentWidget(), tr("Choose your X-Plane plugin directory"),
+                                                        downloadDir, m_fileDialogOptions);
 
         if (downloadDir.isEmpty()) { return; } // canceled
         if (!QDir(downloadDir).exists())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid download directory") << downloadDir;
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid download directory")
+                << downloadDir;
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -103,7 +108,9 @@ namespace swift::gui::components
 
         if (!downloadFile.exists())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Cannot read downloaded file '%1'") << downloadFileName;
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"Cannot read downloaded file '%1'")
+                << downloadFileName;
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -111,7 +118,8 @@ namespace swift::gui::components
         const QString xSwiftBusDirectory = this->xSwiftBusDir();
         if (xSwiftBusDirectory.isEmpty())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"No directory to install to'");
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"No directory to install to'");
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -119,7 +127,9 @@ namespace swift::gui::components
         const QDir installDir(xSwiftBusDirectory);
         if (!installDir.exists())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Directory '%1' does not exist") << xSwiftBusDirectory;
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"Directory '%1' does not exist")
+                << xSwiftBusDirectory;
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -132,7 +142,8 @@ namespace swift::gui::components
                 const bool removed = destFile.remove();
                 if (!removed)
                 {
-                    const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Cannot remove '%1'") << destFileName;
+                    const CStatusMessage msg =
+                        CStatusMessage(this, CLogCategories::validation()).error(u"Cannot remove '%1'") << destFileName;
                     this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
                     return;
                 }
@@ -142,7 +153,9 @@ namespace swift::gui::components
         const bool copied = QFile::copy(downloadFileName, destFileName);
         if (!copied)
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Cannot copy '%1' to '%2'") << downloadFileName << destFileName;
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"Cannot copy '%1' to '%2'")
+                << downloadFileName << destFileName;
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -151,7 +164,9 @@ namespace swift::gui::components
         const QFileInfo destFile(destFileName);
         if (!destFile.exists())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"xswiftbus file '%1' does not exist") << destFileName;
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"xswiftbus file '%1' does not exist")
+                << destFileName;
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -161,7 +176,9 @@ namespace swift::gui::components
         if (CCompressUtils::zip7Uncompress(destFile.absoluteFilePath(), xSwiftBusDirectory, &stdOutAndError))
         {
             // capture values by copy!
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).info(u"Uncompressed xswiftbus in '%1'") << xSwiftBusDirectory;
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).info(u"Uncompressed xswiftbus in '%1'")
+                << xSwiftBusDirectory;
             this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [=] {
                 if (!myself) { return; }
                 QFile downloadFile(downloadFileName);
@@ -173,20 +190,20 @@ namespace swift::gui::components
         }
         else
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).warning(u"Unzip failed: stdout '%1' stderr '%2'") << safeAt(stdOutAndError, 0) << safeAt(stdOutAndError, 1);
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).warning(u"Unzip failed: stdout '%1' stderr '%2'")
+                << safeAt(stdOutAndError, 0) << safeAt(stdOutAndError, 1);
             this->showOverlayMessage(msg);
         }
 
         //! fixme Ref T253, once we have a zip library we will directly unzip
-        const QMessageBox::StandardButton reply = QMessageBox::question(this,
-                                                                        "Install XSwiftXBus",
-                                                                        "You need to manually unzip xswiftbus into the plugins directory.\nIt needs to look like 'plugin/xswiftbus'.\n\nOpen the archive?",
-                                                                        QMessageBox::Yes | QMessageBox::No);
+        const QMessageBox::StandardButton reply =
+            QMessageBox::question(this, "Install XSwiftXBus",
+                                  "You need to manually unzip xswiftbus into the plugins directory.\nIt needs to look "
+                                  "like 'plugin/xswiftbus'.\n\nOpen the archive?",
+                                  QMessageBox::Yes | QMessageBox::No);
 
-        if (reply == QMessageBox::Yes)
-        {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(destFile.absoluteFilePath()));
-        }
+        if (reply == QMessageBox::Yes) { QDesktopServices::openUrl(QUrl::fromLocalFile(destFile.absoluteFilePath())); }
     }
 
     void CInstallXSwiftBusComponent::triggerDownloadingOfXSwiftBusFile()
@@ -195,21 +212,21 @@ namespace swift::gui::components
         const CRemoteFile rf = this->getRemoteFileSelected();
         if (!rf.getBaseName().contains(CBuildConfig::getVersionString()))
         {
-            const QMessageBox::StandardButton reply = QMessageBox::question(this,
-                                                                            "Download xswiftbus",
-                                                                            QStringLiteral(
-                                                                                u"The xswiftbus versions seems to be for a different version\n"
-                                                                                u"Your version is '%1'. Use this version.\n\n"
-                                                                                u"If not available, you can try the version next to your version number.\n\n"
-                                                                                u"Continue with this version?")
-                                                                                .arg(CBuildConfig::getVersionString()),
-                                                                            QMessageBox::Yes | QMessageBox::No);
+            const QMessageBox::StandardButton reply = QMessageBox::question(
+                this, "Download xswiftbus",
+                QStringLiteral(u"The xswiftbus versions seems to be for a different version\n"
+                               u"Your version is '%1'. Use this version.\n\n"
+                               u"If not available, you can try the version next to your version number.\n\n"
+                               u"Continue with this version?")
+                    .arg(CBuildConfig::getVersionString()),
+                QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) { return; }
         }
 
         if (!this->existsDownloadDir())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Invalid download directory");
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"Invalid download directory");
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -217,7 +234,9 @@ namespace swift::gui::components
         const CUrl download = rf.getSmartUrl();
         if (download.isEmpty())
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"No download URL for file name '%1'") << rf.getBaseNameAndSize();
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"No download URL for file name '%1'")
+                << rf.getBaseNameAndSize();
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
             return;
         }
@@ -226,10 +245,9 @@ namespace swift::gui::components
         const QFile saveFile(saveAsFile);
         if (saveFile.exists())
         {
-            const QMessageBox::StandardButton reply = QMessageBox::question(this,
-                                                                            "The file already exists",
-                                                                            "Do you want to use the existing '" + saveAsFile + "'?",
-                                                                            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+            const QMessageBox::StandardButton reply = QMessageBox::question(
+                this, "The file already exists", "Do you want to use the existing '" + saveAsFile + "'?",
+                QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
             if (reply == QMessageBox::Cancel) { return; }
             if (reply == QMessageBox::Yes)
             {
@@ -243,7 +261,8 @@ namespace swift::gui::components
             }
         }
 
-        const QNetworkReply *r = sGui->downloadFromNetwork(download, saveAsFile, { this, &CInstallXSwiftBusComponent::downloadedXSwiftBusFile });
+        const QNetworkReply *r = sGui->downloadFromNetwork(
+            download, saveAsFile, { this, &CInstallXSwiftBusComponent::downloadedXSwiftBusFile });
         if (r)
         {
             CLogMessage(this).info(u"Triggered downloading of xswiftbus file from '%1'") << download.getHost();
@@ -251,7 +270,9 @@ namespace swift::gui::components
         }
         else
         {
-            const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation()).error(u"Starting download for '%1' failed") << download.getFullUrl();
+            const CStatusMessage msg =
+                CStatusMessage(this, CLogCategories::validation()).error(u"Starting download for '%1' failed")
+                << download.getFullUrl();
             this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
         }
     }
@@ -318,7 +339,8 @@ namespace swift::gui::components
     {
         const CUpdateInfo updateInfo = m_updates.get();
         if (updateInfo.getArtifactsXSwiftBus().isEmpty()) { return; }
-        const CArtifactList artifacts = updateInfo.getArtifactsXSwiftBusLatestVersionFirst().findWithUnrestrictedDistributions();
+        const CArtifactList artifacts =
+            updateInfo.getArtifactsXSwiftBusLatestVersionFirst().findWithUnrestrictedDistributions();
         if (artifacts.isEmpty()) { return; }
 
         const CRemoteFileList remoteFiles = artifacts.asRemoteFiles();
@@ -332,7 +354,8 @@ namespace swift::gui::components
             QString current = xSwiftBusFiles.front(); // default latest first
             if (m_defaultDownloadName.isEmpty())
             {
-                const CRemoteFile rf = remoteFiles.findFirstContainingNameOrDefault(CBuildConfig::getVersionString(), Qt::CaseInsensitive);
+                const CRemoteFile rf =
+                    remoteFiles.findFirstContainingNameOrDefault(CBuildConfig::getVersionString(), Qt::CaseInsensitive);
                 if (rf.hasName()) { current = rf.getBaseNameAndSize(); }
             }
             else
@@ -341,10 +364,8 @@ namespace swift::gui::components
                 if (rf.hasName()) { current = rf.getBaseNameAndSize(); }
             }
 
-            ui->cb_DownloadFile->setCurrentText(
-                current.isEmpty() ?
-                    remoteFiles.frontOrDefault().getBaseNameAndSize() :
-                    current); // latest version
+            ui->cb_DownloadFile->setCurrentText(current.isEmpty() ? remoteFiles.frontOrDefault().getBaseNameAndSize() :
+                                                                    current); // latest version
         }
         ui->cb_DownloadFile->setEnabled(!remoteFiles.isEmpty());
     }
@@ -363,8 +384,5 @@ namespace swift::gui::components
         QDesktopServices::openUrl(QUrl::fromLocalFile(file));
     }
 
-    bool CInstallXSwiftBusWizardPage::validatePage()
-    {
-        return true;
-    }
+    bool CInstallXSwiftBusWizardPage::validatePage() { return true; }
 } // namespace swift::gui::components

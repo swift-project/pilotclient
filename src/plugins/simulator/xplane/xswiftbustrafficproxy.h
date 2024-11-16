@@ -57,12 +57,16 @@ namespace swift::simplugin::xplane
         void push_back(const swift::misc::aviation::CAircraftSituation &situation)
         {
             this->callsigns.push_back(situation.getCallsign().asString());
-            this->latitudesDeg.push_back(situation.latitude().value(swift::misc::physical_quantities::CAngleUnit::deg()));
-            this->longitudesDeg.push_back(situation.longitude().value(swift::misc::physical_quantities::CAngleUnit::deg()));
-            this->altitudesFt.push_back(situation.getAltitude().value(swift::misc::physical_quantities::CLengthUnit::ft()));
+            this->latitudesDeg.push_back(
+                situation.latitude().value(swift::misc::physical_quantities::CAngleUnit::deg()));
+            this->longitudesDeg.push_back(
+                situation.longitude().value(swift::misc::physical_quantities::CAngleUnit::deg()));
+            this->altitudesFt.push_back(
+                situation.getAltitude().value(swift::misc::physical_quantities::CLengthUnit::ft()));
             this->pitchesDeg.push_back(situation.getPitch().value(swift::misc::physical_quantities::CAngleUnit::deg()));
             this->rollsDeg.push_back(situation.getBank().value(swift::misc::physical_quantities::CAngleUnit::deg()));
-            this->headingsDeg.push_back(situation.getHeading().value(swift::misc::physical_quantities::CAngleUnit::deg()));
+            this->headingsDeg.push_back(
+                situation.getHeading().value(swift::misc::physical_quantities::CAngleUnit::deg()));
             this->onGrounds.push_back(situation.isOnGround());
         }
 
@@ -83,7 +87,8 @@ namespace swift::simplugin::xplane
         bool isEmpty() const { return callsigns.isEmpty(); }
 
         //! Push back the latest parts
-        void push_back(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts)
+        void push_back(const swift::misc::aviation::CCallsign &callsign,
+                       const swift::misc::aviation::CAircraftParts &parts)
         {
             this->callsigns.push_back(callsign.asString());
             this->gears.push_back(parts.isFixedGearDown() ? 1 : 0);
@@ -151,10 +156,13 @@ namespace swift::simplugin::xplane
 
     public:
         //! Elevation callback
-        using ElevationCallback = std::function<void(const swift::misc::geo::CElevationPlane &, const swift::misc::aviation::CCallsign &, bool)>;
+        using ElevationCallback = std::function<void(const swift::misc::geo::CElevationPlane &,
+                                                     const swift::misc::aviation::CCallsign &, bool)>;
 
         //! Remote aircrafts data callback
-        using RemoteAircraftDataCallback = std::function<void(const QStringList &, const QDoubleList &, const QDoubleList &, const QDoubleList &, const QBoolList &, const QDoubleList &)>;
+        using RemoteAircraftDataCallback =
+            std::function<void(const QStringList &, const QDoubleList &, const QDoubleList &, const QDoubleList &,
+                               const QBoolList &, const QDoubleList &)>;
 
         //! Service name
         static const QString &InterfaceName()
@@ -213,7 +221,8 @@ namespace swift::simplugin::xplane
         void setMaxDrawDistance(double nauticalMiles);
 
         //! \copydoc XSwiftBus::CTraffic::addPlane
-        void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
+        void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao,
+                      const QString &airlineIcao, const QString &livery);
 
         //! \copydoc XSwiftBus::CTraffic::removePlane
         void removePlane(const QString &callsign);
@@ -237,8 +246,8 @@ namespace swift::simplugin::xplane
         void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;
 
         //! \copydoc XSwiftBus::CTraffic::getElevationAtPosition
-        void getElevationAtPosition(const swift::misc::aviation::CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
-                                    const ElevationCallback &setter) const;
+        void getElevationAtPosition(const swift::misc::aviation::CCallsign &callsign, double latitudeDeg,
+                                    double longitudeDeg, double altitudeMeters, const ElevationCallback &setter) const;
 
         //! \copydoc XSwiftBus::CTraffic::setFollowedAircraft
         void setFollowedAircraft(const QString &callsign);

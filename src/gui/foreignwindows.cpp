@@ -84,7 +84,9 @@ namespace swift::gui
         if (isVisible) { child->hide(); }
 
         QWindow *childWindow = child->windowHandle();
-        Q_ASSERT_X(childWindow, Q_FUNC_INFO, "Native resources for child widget have not yet been allocated. Did you call QWidget::show() before?");
+        Q_ASSERT_X(
+            childWindow, Q_FUNC_INFO,
+            "Native resources for child widget have not yet been allocated. Did you call QWidget::show() before?");
 
         childWindow->setTransientParent(simulatorWindow);
 

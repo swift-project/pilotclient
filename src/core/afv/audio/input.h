@@ -82,10 +82,7 @@ namespace swift::core::afv::audio
         CInput(int sampleRate, QObject *parent = nullptr);
 
         //! Dtor
-        virtual ~CInput() override
-        {
-            this->stop();
-        }
+        virtual ~CInput() override { this->stop(); }
 
         //! @{
         //! Number of encoded bytes

@@ -16,27 +16,21 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CArtifact)
 
 namespace swift::misc::db
 {
-    CArtifact::CArtifact()
-    {}
+    CArtifact::CArtifact() {}
 
-    CArtifact::CArtifact(
-        const QString &name, const QString &version, const QString &md5,
-        CArtifact::ArtifactType type, int size, bool existing, const CPlatform &platform) : m_name(name.trimmed()),
-                                                                                            m_md5(md5), m_type(static_cast<int>(type)), m_size(size), m_existing(existing),
-                                                                                            m_platform(platform)
+    CArtifact::CArtifact(const QString &name, const QString &version, const QString &md5, CArtifact::ArtifactType type,
+                         int size, bool existing, const CPlatform &platform)
+        : m_name(name.trimmed()), m_md5(md5), m_type(static_cast<int>(type)), m_size(size), m_existing(existing),
+          m_platform(platform)
     {
         this->setVersion(trimVersionString(version));
-        if (!name.isEmpty() && version.isEmpty())
-        {
-            m_version = versionNumberFromFilename(name);
-        }
+        if (!name.isEmpty() && version.isEmpty()) { m_version = versionNumberFromFilename(name); }
     }
 
     bool CArtifact::matchesName(const QString &name, Qt::CaseSensitivity cs) const
     {
-        const bool m = (cs == Qt::CaseInsensitive) ?
-                           caseInsensitiveStringCompare(this->getName(), name) :
-                           name == this->getName();
+        const bool m =
+            (cs == Qt::CaseInsensitive) ? caseInsensitiveStringCompare(this->getName(), name) : name == this->getName();
         if (m) { return true; }
         return name.startsWith(this->getName(), cs);
     }
@@ -47,15 +41,9 @@ namespace swift::misc::db
         return CFileUtils::humanReadableFileSize(m_size);
     }
 
-    bool CArtifact::matchesAnyPlatform(const CPlatform &platform) const
-    {
-        return m_platform.matchesAny(platform);
-    }
+    bool CArtifact::matchesAnyPlatform(const CPlatform &platform) const { return m_platform.matchesAny(platform); }
 
-    bool CArtifact::hasUnrestrictedDistribution() const
-    {
-        return m_distributions.containsUnrestricted();
-    }
+    bool CArtifact::hasUnrestrictedDistribution() const { return m_distributions.containsUnrestricted(); }
 
     bool CArtifact::isWithDistribution(const CDistribution &distribution, bool acceptMoreStableDistributions) const
     {
@@ -88,31 +76,23 @@ namespace swift::misc::db
         return this->getQVersion() > CBuildConfig::getVersion();
     }
 
-    QString CArtifact::convertToQString(bool i18n) const
-    {
-        return this->convertToQString(", ", i18n);
-    }
+    QString CArtifact::convertToQString(bool i18n) const { return this->convertToQString(", ", i18n); }
 
     QString CArtifact::convertToQString(const QString &separator, bool i18n) const
     {
         Q_UNUSED(i18n);
-        return u"name: " %
-               this->getName() %
-               separator %
-               u"size: " %
-               this->getFileSizeHumanReadable() %
-               separator %
-               u"OS: " %
-               this->getPlatform().toQString(i18n) %
-               separator %
-               u"timestamp: " %
+        return u"name: " % this->getName() % separator % u"size: " % this->getFileSizeHumanReadable() % separator %
+               u"OS: " % this->getPlatform().toQString(i18n) % separator % u"timestamp: " %
                this->getFormattedUtcTimestampYmdhms();
     }
 
     QVariant CArtifact::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -176,7 +156,8 @@ namespace swift::misc::db
             const QJsonObject distJson = json.value("distributions").toObject();
             if (!distJson.isEmpty() && distJson.contains("distributionArray"))
             {
-                const CDistributionList distributions = CDistributionList::fromDatabaseJson(distJson.value("distributionArray").toArray());
+                const CDistributionList distributions =
+                    CDistributionList::fromDatabaseJson(distJson.value("distributionArray").toArray());
                 artifact.setDistributions(distributions);
             }
         }

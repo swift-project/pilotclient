@@ -20,13 +20,15 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirport)
 
 namespace swift::misc::aviation
 {
-    CAirport::CAirport(const QString &icao) : m_icao(icao)
+    CAirport::CAirport(const QString &icao) : m_icao(icao) {}
+
+    CAirport::CAirport(const CAirportIcaoCode &icao, const swift::misc::geo::CCoordinateGeodetic &position)
+        : m_icao(icao), m_position(position)
     {}
 
-    CAirport::CAirport(const CAirportIcaoCode &icao, const swift::misc::geo::CCoordinateGeodetic &position) : m_icao(icao), m_position(position)
-    {}
-
-    CAirport::CAirport(const CAirportIcaoCode &icao, const swift::misc::geo::CCoordinateGeodetic &position, const QString &descriptiveName) : m_descriptiveName(descriptiveName), m_icao(icao), m_position(position)
+    CAirport::CAirport(const CAirportIcaoCode &icao, const swift::misc::geo::CCoordinateGeodetic &position,
+                       const QString &descriptiveName)
+        : m_descriptiveName(descriptiveName), m_icao(icao), m_position(position)
     {}
 
     QString CAirport::getLocationPlusOptionalName() const
@@ -55,10 +57,7 @@ namespace swift::misc::aviation
         if (m_descriptiveName.isEmpty()) { m_descriptiveName = airport.getDescriptiveName(); }
     }
 
-    bool CAirport::isNull() const
-    {
-        return (m_icao.isEmpty() && m_descriptiveName.isEmpty());
-    }
+    bool CAirport::isNull() const { return (m_icao.isEmpty() && m_descriptiveName.isEmpty()); }
 
     QString CAirport::convertToQString(bool i18n) const
     {
@@ -78,10 +77,9 @@ namespace swift::misc::aviation
         CAirport airport(json.value(prefix + "icao").toString());
         airport.setDescriptiveName(json.value(prefix + "name").toString());
         airport.setLocation(json.value(prefix + "location").toString());
-        const CCoordinateGeodetic pos(
-            json.value(prefix + "latitude").toDouble(),
-            json.value(prefix + "longitude").toDouble(),
-            json.value(prefix + "altitude").toDouble());
+        const CCoordinateGeodetic pos(json.value(prefix + "latitude").toDouble(),
+                                      json.value(prefix + "longitude").toDouble(),
+                                      json.value(prefix + "altitude").toDouble());
         airport.setPosition(pos);
         airport.setOperating(json.value(prefix + "operating").toString() == QStringLiteral("Y"));
 
@@ -121,43 +119,34 @@ namespace swift::misc::aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexIcao:
-            m_icao.setPropertyByIndex(index.copyFrontRemoved(), variant);
-            break;
-        case IndexLocation:
-            this->setLocation(variant.toString());
-            break;
-        case IndexDescriptiveName:
-            this->setDescriptiveName(variant.toString());
-            break;
-        case IndexPosition:
-            m_position.setPropertyByIndex(index.copyFrontRemoved(), variant);
-            break;
-        case IndexOperating:
-            this->setOperating(variant.toBool());
-            break;
+        case IndexIcao: m_icao.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexLocation: this->setLocation(variant.toString()); break;
+        case IndexDescriptiveName: this->setDescriptiveName(variant.toString()); break;
+        case IndexPosition: m_position.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
+        case IndexOperating: this->setOperating(variant.toBool()); break;
         default:
             if (ICoordinateWithRelativePosition::canHandleIndex(index))
             {
                 ICoordinateWithRelativePosition::setPropertyByIndex(index, variant);
             }
-            else
-            {
-                CValueObject::setPropertyByIndex(index, variant);
-            }
+            else { CValueObject::setPropertyByIndex(index, variant); }
             break;
         }
     }
 
     int CAirport::comparePropertyByIndex(CPropertyIndexRef index, const CAirport &compareValue) const
     {
-        if (index.isMyself()) { return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao()); }
+        if (index.isMyself())
+        {
+            return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIcao: return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());
         case IndexLocation: return m_location.compare(compareValue.getLocation(), Qt::CaseInsensitive);
-        case IndexDescriptiveName: return m_descriptiveName.compare(compareValue.getDescriptiveName(), Qt::CaseInsensitive);
+        case IndexDescriptiveName:
+            return m_descriptiveName.compare(compareValue.getDescriptiveName(), Qt::CaseInsensitive);
         default:
             if (ICoordinateWithRelativePosition::canHandleIndex(index))
             {

@@ -7,8 +7,5 @@
 
 namespace swift::misc::shared_state
 {
-    QFuture<CVariant> CActiveMutator::handleRequest(const CVariant &param) const
-    {
-        return m_requestHandler(param);
-    }
+    QFuture<CVariant> CActiveMutator::handleRequest(const CVariant &param) const { return m_requestHandler(param); }
 } // namespace swift::misc::shared_state

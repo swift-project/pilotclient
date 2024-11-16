@@ -13,17 +13,14 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CDbInfo)
 
 namespace swift::misc::db
 {
-    CDbInfo::CDbInfo(int key, const QString &tableName, int entries) : IDatastoreObjectWithIntegerKey(key),
-                                                                       m_tableName(tableName.trimmed().toLower()), m_entries(entries)
+    CDbInfo::CDbInfo(int key, const QString &tableName, int entries)
+        : IDatastoreObjectWithIntegerKey(key), m_tableName(tableName.trimmed().toLower()), m_entries(entries)
     {
         this->setEntity(this->getEntity());
         Q_ASSERT_X(tableName.isEmpty() || m_entity != CEntityFlags::NoEntity, Q_FUNC_INFO, "Wrong entity");
     }
 
-    bool CDbInfo::isValid() const
-    {
-        return m_entity != CEntityFlags::NoEntity && !m_tableName.isEmpty();
-    }
+    bool CDbInfo::isValid() const { return m_entity != CEntityFlags::NoEntity && !m_tableName.isEmpty(); }
 
     CEntityFlags::Entity CDbInfo::getEntity() const
     {
@@ -44,10 +41,7 @@ namespace swift::misc::db
         return CDbInfo::entityToServiceName(entity);
     }
 
-    void CDbInfo::setEntity(CEntityFlags::Entity entity)
-    {
-        m_entity = entity;
-    }
+    void CDbInfo::setEntity(CEntityFlags::Entity entity) { m_entity = entity; }
 
     bool CDbInfo::matchesEntity(CEntityFlags::Entity entity) const
     {
@@ -100,10 +94,7 @@ namespace swift::misc::db
             {
                 IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
             }
-            else
-            {
-                CValueObject::setPropertyByIndex(index, variant);
-            }
+            else { CValueObject::setPropertyByIndex(index, variant); }
             break;
         }
     }
@@ -111,15 +102,17 @@ namespace swift::misc::db
     int CDbInfo::comparePropertyByIndex(CPropertyIndexRef index, const CDbInfo &compareValue) const
     {
         if (index.isMyself()) { return getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTableName: return this->getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive);
         case IndexEntries: return Compare::compare(this->getEntries(), compareValue.getEntries());
         case IndexEntity: return Compare::compare(this->getEntity(), compareValue.getEntity());
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison possible");
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison possible");
         }
         return 0;
     }
@@ -141,7 +134,9 @@ namespace swift::misc::db
 
     const QStringList &CDbInfo::sharedFileNames()
     {
-        static const QStringList names({ "aircrafticao.json", "airlineicao.json", "airports.json", "countries.json", "distributors.json", "liveries.json", "models.json", "aircraftcategories.json" });
+        static const QStringList names({ "aircrafticao.json", "airlineicao.json", "airports.json", "countries.json",
+                                         "distributors.json", "liveries.json", "models.json",
+                                         "aircraftcategories.json" });
         return names;
     }
 
@@ -153,7 +148,9 @@ namespace swift::misc::db
 
     const QStringList &CDbInfo::serviceNames()
     {
-        static const QStringList names({ "jsonaircrafticao.php", "jsonairlineicao.php", "jsonairport.php", "jsoncountry.php", "jsondistributor.php", "jsonlivery.php", "jsonaircraftmodel.php", "jsonaircraftcategory.php" });
+        static const QStringList names({ "jsonaircrafticao.php", "jsonairlineicao.php", "jsonairport.php",
+                                         "jsoncountry.php", "jsondistributor.php", "jsonlivery.php",
+                                         "jsonaircraftmodel.php", "jsonaircraftcategory.php" });
         return names;
     }
 

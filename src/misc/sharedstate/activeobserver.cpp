@@ -18,9 +18,10 @@ namespace swift::misc::shared_state
     {
         CPromise<CVariant> promise;
         emit requestPosted(param, promise);
-        doAfter(promise.future(), this, [callback = std::move(callback), weakRef = weakRef()](const QFuture<CVariant> &reply) {
-            const auto lock = weakRef.lock();
-            if (lock) { callback(reply.result()); }
-        });
+        doAfter(promise.future(), this,
+                [callback = std::move(callback), weakRef = weakRef()](const QFuture<CVariant> &reply) {
+                    const auto lock = weakRef.lock();
+                    if (lock) { callback(reply.result()); }
+                });
     }
 } // namespace swift::misc::shared_state

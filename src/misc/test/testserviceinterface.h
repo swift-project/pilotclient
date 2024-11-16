@@ -64,7 +64,8 @@ namespace swift::misc::test
 
     public:
         //! Constructor
-        ITestServiceInterface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = nullptr);
+        ITestServiceInterface(const QString &service, const QString &path, const QDBusConnection &connection,
+                              QObject *parent = nullptr);
 
         //! Destructor
         virtual ~ITestServiceInterface();
@@ -80,7 +81,8 @@ namespace swift::misc::test
             return asyncCallWithArgumentList(QLatin1String("getAtcStation"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::simulation::fscommon::CAircraftCfgEntriesList> getAircraftCfgEntriesList(int number)
+        QDBusPendingReply<swift::misc::simulation::fscommon::CAircraftCfgEntriesList>
+        getAircraftCfgEntriesList(int number)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(number);
@@ -107,14 +109,16 @@ namespace swift::misc::test
             return asyncCallWithArgumentList(QLatin1String("getSpeed"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAltitude> pingAltitude(const swift::misc::aviation::CAltitude &altitude)
+        QDBusPendingReply<swift::misc::aviation::CAltitude>
+        pingAltitude(const swift::misc::aviation::CAltitude &altitude)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(altitude);
             return asyncCallWithArgumentList(QLatin1String("pingAltitude"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAircraftSituation> pingSituation(const swift::misc::aviation::CAircraftSituation &situation)
+        QDBusPendingReply<swift::misc::aviation::CAircraftSituation>
+        pingSituation(const swift::misc::aviation::CAircraftSituation &situation)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(situation);
@@ -128,105 +132,120 @@ namespace swift::misc::test
             return asyncCallWithArgumentList(QLatin1String("pingUser"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CTransponder> pingTransponder(const swift::misc::aviation::CTransponder &transponder)
+        QDBusPendingReply<swift::misc::aviation::CTransponder>
+        pingTransponder(const swift::misc::aviation::CTransponder &transponder)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(transponder);
             return asyncCallWithArgumentList(QLatin1String("pingTransponder"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAtcStation> pingAtcStation(const swift::misc::aviation::CAtcStation &station)
+        QDBusPendingReply<swift::misc::aviation::CAtcStation>
+        pingAtcStation(const swift::misc::aviation::CAtcStation &station)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(station);
             return asyncCallWithArgumentList(QLatin1String("pingAtcStation"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAircraftIcaoCode> pingAircraftIcaoData(const swift::misc::aviation::CAircraftIcaoCode &icaoData)
+        QDBusPendingReply<swift::misc::aviation::CAircraftIcaoCode>
+        pingAircraftIcaoData(const swift::misc::aviation::CAircraftIcaoCode &icaoData)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(icaoData);
             return asyncCallWithArgumentList(QLatin1String("pingAircraftIcaoData"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAircraftLights> pingAircraftLights(const swift::misc::aviation::CAircraftLights &lights)
+        QDBusPendingReply<swift::misc::aviation::CAircraftLights>
+        pingAircraftLights(const swift::misc::aviation::CAircraftLights &lights)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(lights);
             return asyncCallWithArgumentList(QLatin1String("pingAircraftLights"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAircraftParts> pingAircraftParts(const swift::misc::aviation::CAircraftParts &parts)
+        QDBusPendingReply<swift::misc::aviation::CAircraftParts>
+        pingAircraftParts(const swift::misc::aviation::CAircraftParts &parts)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(parts);
             return asyncCallWithArgumentList(QLatin1String("pingAircraftParts"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAircraftEngine> pingAircraftEngine(const swift::misc::aviation::CAircraftEngine &engine)
+        QDBusPendingReply<swift::misc::aviation::CAircraftEngine>
+        pingAircraftEngine(const swift::misc::aviation::CAircraftEngine &engine)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(engine);
             return asyncCallWithArgumentList(QLatin1String("pingAircraftEngine"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::simulation::CAircraftModel> pingAircraftModel(const swift::misc::simulation::CAircraftModel &model)
+        QDBusPendingReply<swift::misc::simulation::CAircraftModel>
+        pingAircraftModel(const swift::misc::simulation::CAircraftModel &model)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(model);
             return asyncCallWithArgumentList(QLatin1String("pingAircraftModel"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::simulation::CAircraftModelList> pingAircraftModelList(const swift::misc::simulation::CAircraftModelList &model)
+        QDBusPendingReply<swift::misc::simulation::CAircraftModelList>
+        pingAircraftModelList(const swift::misc::simulation::CAircraftModelList &model)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(model);
             return asyncCallWithArgumentList(QLatin1String("pingAircraftModelList"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::simulation::CSimulatedAircraft> pingSimulatedAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft)
+        QDBusPendingReply<swift::misc::simulation::CSimulatedAircraft>
+        pingSimulatedAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(aircraft);
             return asyncCallWithArgumentList(QLatin1String("pingSimulatedAircraft"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::simulation::CSimulatorPluginInfo> pingPluginInfo(const swift::misc::simulation::CSimulatorPluginInfo &info)
+        QDBusPendingReply<swift::misc::simulation::CSimulatorPluginInfo>
+        pingPluginInfo(const swift::misc::simulation::CSimulatorPluginInfo &info)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(info);
             return asyncCallWithArgumentList(QLatin1String("pingPluginInfo"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAtcStationList> pingAtcStationList(const swift::misc::aviation::CAtcStationList &atcStationList)
+        QDBusPendingReply<swift::misc::aviation::CAtcStationList>
+        pingAtcStationList(const swift::misc::aviation::CAtcStationList &atcStationList)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(atcStationList);
             return asyncCallWithArgumentList(QLatin1String("pingAtcStationList"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::physical_quantities::CSpeed> pingSpeed(const swift::misc::physical_quantities::CSpeed &speed)
+        QDBusPendingReply<swift::misc::physical_quantities::CSpeed>
+        pingSpeed(const swift::misc::physical_quantities::CSpeed &speed)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(speed);
             return asyncCallWithArgumentList(QLatin1String("pingSpeed"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::simulation::CSimulatedAircraftList> pingAircraftList(const swift::misc::simulation::CSimulatedAircraftList &aircraftList)
+        QDBusPendingReply<swift::misc::simulation::CSimulatedAircraftList>
+        pingAircraftList(const swift::misc::simulation::CSimulatedAircraftList &aircraftList)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(aircraftList);
             return asyncCallWithArgumentList(QLatin1String("pingAircraftList"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAirportList> pingAirportList(const swift::misc::aviation::CAirportList &airportList)
+        QDBusPendingReply<swift::misc::aviation::CAirportList>
+        pingAirportList(const swift::misc::aviation::CAirportList &airportList)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(airportList);
             return asyncCallWithArgumentList(QLatin1String("pingAirportList"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::network::CClientList> pingClientList(const swift::misc::network::CClientList &clientList)
+        QDBusPendingReply<swift::misc::network::CClientList>
+        pingClientList(const swift::misc::network::CClientList &clientList)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(clientList);
@@ -254,7 +273,8 @@ namespace swift::misc::test
             return asyncCallWithArgumentList(QLatin1String("pingPropertyIndex"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::CPropertyIndexVariantMap> pingIndexVariantMap(const swift::misc::CPropertyIndexVariantMap &indexVariantMap)
+        QDBusPendingReply<swift::misc::CPropertyIndexVariantMap>
+        pingIndexVariantMap(const swift::misc::CPropertyIndexVariantMap &indexVariantMap)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(indexVariantMap);
@@ -268,7 +288,8 @@ namespace swift::misc::test
             return asyncCallWithArgumentList(QLatin1String("pingFlightPlan"), argumentList);
         }
 
-        QDBusPendingReply<swift::misc::aviation::CAltitude> receiveAltitude(const swift::misc::aviation::CAltitude &altitude)
+        QDBusPendingReply<swift::misc::aviation::CAltitude>
+        receiveAltitude(const swift::misc::aviation::CAltitude &altitude)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(altitude);
@@ -384,14 +405,14 @@ namespace swift::misc::test
 
         //! Compare objects and output info
         template <class ValueObject>
-        static bool pingCompare(const ValueObject &in, const ValueObject &out, QTextStream &ts, bool verbose, int &errors)
+        static bool pingCompare(const ValueObject &in, const ValueObject &out, QTextStream &ts, bool verbose,
+                                int &errors)
         {
             const bool equal = (in == out && extraCompare(in, out));
             if (!equal)
             {
                 errors++;
-                if (verbose) { ts << "I: " << in.toQString() << Qt::endl
-                                  << "O: " << out.toQString() << Qt::endl; }
+                if (verbose) { ts << "I: " << in.toQString() << Qt::endl << "O: " << out.toQString() << Qt::endl; }
             }
             return equal;
         }
@@ -404,7 +425,8 @@ namespace swift::misc::test
             return true;
         }
 
-        static bool extraCompare(const swift::misc::aviation::CFlightPlan &in, const swift::misc::aviation::CFlightPlan &out)
+        static bool extraCompare(const swift::misc::aviation::CFlightPlan &in,
+                                 const swift::misc::aviation::CFlightPlan &out)
         {
             // flight plan: check units are preserved
             if (in.getEnrouteTime().getUnit() != out.getEnrouteTime().getUnit()) { return false; }

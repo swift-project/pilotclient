@@ -15,13 +15,13 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::editors
 {
-    CPbhsForm::CPbhsForm(QWidget *parent) : CForm(parent),
-                                            ui(new Ui::CPbhsForm)
+    CPbhsForm::CPbhsForm(QWidget *parent) : CForm(parent), ui(new Ui::CPbhsForm)
     {
         ui->setupUi(this);
 
         ui->le_Bank->setValidator(new QDoubleValidator(-180.0 + CAngleUnit::deg().getEpsilon(), 180.0, 3, ui->le_Bank));
-        ui->le_Pitch->setValidator(new QDoubleValidator(-180.0 + CAngleUnit::deg().getEpsilon(), 180.0, 3, ui->le_Pitch));
+        ui->le_Pitch->setValidator(
+            new QDoubleValidator(-180.0 + CAngleUnit::deg().getEpsilon(), 180.0, 3, ui->le_Pitch));
 
         connect(ui->hs_Bank, &QSlider::valueChanged, this, &CPbhsForm::bankSliderChanged);
         connect(ui->hs_Pitch, &QSlider::valueChanged, this, &CPbhsForm::pitchSliderChanged);
@@ -35,13 +35,9 @@ namespace swift::gui::editors
         connect(ui->pb_SetOwnAircraft, &QPushButton::released, this, &CPbhsForm::changeValues);
     }
 
-    CPbhsForm::~CPbhsForm()
-    {}
+    CPbhsForm::~CPbhsForm() {}
 
-    CAngle CPbhsForm::getBankAngle() const
-    {
-        return CAngle(getBankAngleDegrees(), CAngleUnit::deg());
-    }
+    CAngle CPbhsForm::getBankAngle() const { return CAngle(getBankAngleDegrees(), CAngleUnit::deg()); }
 
     void CPbhsForm::setBankAngle(const CAngle &angle)
     {
@@ -59,10 +55,7 @@ namespace swift::gui::editors
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
-    CAngle CPbhsForm::getPitchAngle() const
-    {
-        return CAngle(getPitchAngleDegrees(), CAngleUnit::deg());
-    }
+    CAngle CPbhsForm::getPitchAngle() const { return CAngle(getPitchAngleDegrees(), CAngleUnit::deg()); }
 
     void CPbhsForm::setPitchAngle(const CAngle &angle)
     {
@@ -80,15 +73,9 @@ namespace swift::gui::editors
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
-    CAngle CPbhsForm::getHeadingAngle() const
-    {
-        return CAngle(getHeadingAngleDegrees(), CAngleUnit::deg());
-    }
+    CAngle CPbhsForm::getHeadingAngle() const { return CAngle(getHeadingAngleDegrees(), CAngleUnit::deg()); }
 
-    CHeading CPbhsForm::getHeading() const
-    {
-        return CHeading(this->getHeadingAngle(), CHeading::True);
-    }
+    CHeading CPbhsForm::getHeading() const { return CHeading(this->getHeadingAngle(), CHeading::True); }
 
     void CPbhsForm::setHeadingAngle(const CAngle &angle)
     {
@@ -138,10 +125,7 @@ namespace swift::gui::editors
         ui->hs_Pitch->setEnabled(!readOnly);
     }
 
-    void CPbhsForm::showSetButton(bool visible)
-    {
-        ui->pb_SetOwnAircraft->setVisible(visible);
-    }
+    void CPbhsForm::showSetButton(bool visible) { ui->pb_SetOwnAircraft->setVisible(visible); }
 
     void CPbhsForm::bankSliderChanged(int value)
     {

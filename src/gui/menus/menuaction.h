@@ -432,37 +432,48 @@ namespace swift::gui::menus
         CMenuActions addActions(const QList<QAction *> &actions, const QString &path);
 
         //! Convenience function if method is also kept elsewhere
-        CMenuAction addAction(QAction *action, const QString &text, const QString &path, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(QAction *action, const QString &text, const QString &path,
+                              const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Convenience function if method is also kept elsewhere
-        CMenuAction addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner,
+                              const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Convenience function if method is also kept elsewhere
-        CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path,
+                              const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Convenience function if method is also kept elsewhere
-        CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path, QObject *actionOwner, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path,
+                              QObject *actionOwner, const swift::misc::CSlot<void()> &slot,
+                              const QKeySequence &shortcut = 0);
 
         //! Add action which still needs to be connected
-        CMenuAction addAction(const QString &text, const QString &path, QObject *actionOwner, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QString &text, const QString &path, QObject *actionOwner,
+                              const QKeySequence &shortcut = 0);
 
         //! Add action which still needs to be connected
-        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner,
+                              const QKeySequence &shortcut = 0);
 
         //! Add action
-        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, QObject *actionOwner,
+                              const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Add action without slot
         CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path);
 
         //! Add action
-        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QIcon &actionIcon, const QString &text, const QString &path,
+                              const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Add menu action
-        CMenuAction addAction(const QString &text, const QString &path, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QString &text, const QString &path, const swift::misc::CSlot<void()> &slot,
+                              const QKeySequence &shortcut = 0);
 
         //! Add menu action
-        CMenuAction addAction(const QString &text, const QString &path, QObject *actionOwner, const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
+        CMenuAction addAction(const QString &text, const QString &path, QObject *actionOwner,
+                              const swift::misc::CSlot<void()> &slot, const QKeySequence &shortcut = 0);
 
         //! Insert the sorted actions to the menu
         void toQMenu(QMenu &menu, bool separateGroups) const;
@@ -533,7 +544,8 @@ namespace swift::gui::menus
         static int pathDepth(const QString &path);
 
         //! find current menu for given action
-        static QMenu *currentMenuForAction(QMenu &menu, const CMenuAction &menuAction, const QList<CMenuAction> &menus, QMap<QString, QMenu *> &subMenus, const QString &key, int pd);
+        static QMenu *currentMenuForAction(QMenu &menu, const CMenuAction &menuAction, const QList<CMenuAction> &menus,
+                                           QMap<QString, QMenu *> &subMenus, const QString &key, int pd);
 
         //! Get parent path (one level up) for path
         static QString parentPath(const QString &cuurentPath);

@@ -45,46 +45,53 @@ namespace swift::misc
         //! Return a copy containing only those elements matching some particular key/value pair(s).
         //! \param k0 A pointer to a member function of T.
         //! \param v0 A value to compare against the value returned by k0.
-        //! \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
+        //! \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it
+        //! against }.
         template <class K0, class V0, class... KeysValues>
         inline auto findBy(K0 k0, V0 v0, KeysValues... keysValues) const;
 
-        //! Return a reference to the first element for which a given predicate returns true. Undefined if there is none.
+        //! Return a reference to the first element for which a given predicate returns true. Undefined if there is
+        //! none.
         template <class Predicate>
         const auto &findFirstBy(Predicate p) const
         {
             return findBy(p).front();
         }
 
-        //! Return a reference to the first element matching some particular key/value pair(s). Undefined if there is none.
+        //! Return a reference to the first element matching some particular key/value pair(s). Undefined if there is
+        //! none.
         template <class K, class V>
         const auto &findFirstBy(K key, V value) const
         {
             return findBy(key, value).front();
         }
 
-        //! Return a copy of the first element for which a given predicate returns true, or a default value if there is none.
+        //! Return a copy of the first element for which a given predicate returns true, or a default value if there is
+        //! none.
         template <class Predicate, class Value>
         auto findFirstByOrDefault(Predicate p, const Value &def) const
         {
             return findBy(p).frontOrDefault(def);
         }
 
-        //! Return a copy of the first element for which a given predicate returns true, or a default value if there is none.
+        //! Return a copy of the first element for which a given predicate returns true, or a default value if there is
+        //! none.
         template <class Predicate>
         auto findFirstByOrDefault(Predicate p) const
         {
             return findBy(p).frontOrDefault();
         }
 
-        //! Return a copy of the first element matching some particular key/value pair(s), or a default value if there is none.
+        //! Return a copy of the first element matching some particular key/value pair(s), or a default value if there
+        //! is none.
         template <class K, class V, class Value>
         auto findFirstByOrDefault(K key, V value, const Value &def) const
         {
             return findBy(key, value).frontOrDefault(def);
         }
 
-        //! Return a copy of the first element matching some particular key/value pair(s), or a default value if there is none.
+        //! Return a copy of the first element matching some particular key/value pair(s), or a default value if there
+        //! is none.
         template <class T, class K, class V>
         auto findFirstByOrDefault(K T::*key, V value) const
         {
@@ -98,7 +105,8 @@ namespace swift::misc
             return std::any_of(derived().cbegin(), derived().cend(), p);
         }
 
-        //! Return true if there is an element equal to given object. Uses the most efficient implementation available in the derived container.
+        //! Return true if there is an element equal to given object. Uses the most efficient implementation available
+        //! in the derived container.
         template <class T>
         bool contains(const T &object) const
         {
@@ -108,7 +116,8 @@ namespace swift::misc
         //! Return a copy containing only those elements matching some particular key/value pair(s).
         //! \param k0 A pointer to a member function of T.
         //! \param v0 A value to compare against the value returned by k0.
-        //! \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
+        //! \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it
+        //! against }.
         template <class K0, class V0, class... KeysValues>
         bool contains(K0 k0, V0 v0, KeysValues... keysValues) const
         {
@@ -171,7 +180,8 @@ namespace swift::misc
      * A range is a conceptual container which does not contain any elements of its own,
      * but is constructed from a begin iterator and an end iterator of another container.
      *
-     * By using iterator wrappers, it is possible to use CRange to iterate over the results of predicate methods without copying elements.
+     * By using iterator wrappers, it is possible to use CRange to iterate over the results of predicate methods without
+     * copying elements.
      *
      * \warning Remember that the iterators in the range refer to elements in the original container,
      *          so take care that the original container remains valid and does not invalidate its iterators
@@ -217,7 +227,8 @@ namespace swift::misc
         //! Create a range from reverse iterators.
         CRange<const_reverse_iterator> reverse() const
         {
-            static_assert(std::is_same_v<decltype(*rbegin()), decltype(*begin())>, "see https://dev.swift-project.org/T700");
+            static_assert(std::is_same_v<decltype(*rbegin()), decltype(*begin())>,
+                          "see https://dev.swift-project.org/T700");
             return { rbegin(), rend() };
         }
 
@@ -268,10 +279,7 @@ namespace swift::misc
         }
 
         //! Returns the element at the beginning of the range, or a default value if the range is empty.
-        value_type frontOrDefault(value_type def) const
-        {
-            return empty() ? def : *begin();
-        }
+        value_type frontOrDefault(value_type def) const { return empty() ? def : *begin(); }
 
     private:
         I m_begin;

@@ -14,16 +14,12 @@ namespace swift::misc::network
 {
     CRemoteFileList::CRemoteFileList() {}
 
-    CRemoteFileList::CRemoteFileList(const CSequence<CRemoteFile> &other) : CSequence<CRemoteFile>(other)
-    {}
+    CRemoteFileList::CRemoteFileList(const CSequence<CRemoteFile> &other) : CSequence<CRemoteFile>(other) {}
 
     QStringList CRemoteFileList::getNames(bool sorted) const
     {
         QStringList fileNames;
-        for (const CRemoteFile &rf : *this)
-        {
-            fileNames.append(rf.getName());
-        }
+        for (const CRemoteFile &rf : *this) { fileNames.append(rf.getName()); }
         if (sorted) { fileNames.sort(); }
         return fileNames;
     }
@@ -31,10 +27,7 @@ namespace swift::misc::network
     QStringList CRemoteFileList::getBaseNamesPlusSize(bool sorted) const
     {
         QStringList fileNames;
-        for (const CRemoteFile &rf : *this)
-        {
-            fileNames.append(rf.getBaseNameAndSize());
-        }
+        for (const CRemoteFile &rf : *this) { fileNames.append(rf.getBaseNameAndSize()); }
         if (sorted) { fileNames.sort(); }
         return fileNames;
     }
@@ -70,10 +63,7 @@ namespace swift::misc::network
         CRemoteFileList files;
         for (const CRemoteFile &rf : *this)
         {
-            if (CFileUtils::isExecutableFile(rf.getName()))
-            {
-                files.push_back(rf);
-            }
+            if (CFileUtils::isExecutableFile(rf.getName())) { files.push_back(rf); }
         }
         return files;
     }
@@ -81,10 +71,7 @@ namespace swift::misc::network
     qint64 CRemoteFileList::getTotalFileSize() const
     {
         qint64 s = 0;
-        for (const CRemoteFile &rf : *this)
-        {
-            s += rf.getSize();
-        }
+        for (const CRemoteFile &rf : *this) { s += rf.getSize(); }
         return s;
     }
 
@@ -96,10 +83,7 @@ namespace swift::misc::network
     CRemoteFileList CRemoteFileList::fromDatabaseJson(const QJsonArray &array)
     {
         CRemoteFileList roles;
-        for (const QJsonValue &value : array)
-        {
-            roles.push_back(CRemoteFile::fromDatabaseJson(value.toObject()));
-        }
+        for (const QJsonValue &value : array) { roles.push_back(CRemoteFile::fromDatabaseJson(value.toObject())); }
         return roles;
     }
 

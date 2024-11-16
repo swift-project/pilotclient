@@ -19,22 +19,21 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::components
 {
-    CAirportSmallCompleter::CAirportSmallCompleter(QWidget *parent) : QFrame(parent),
-                                                                      ui(new Ui::CAirportSmallCompleter)
+    CAirportSmallCompleter::CAirportSmallCompleter(QWidget *parent) : QFrame(parent), ui(new Ui::CAirportSmallCompleter)
     {
         ui->setupUi(this);
         ui->le_Icao->setValidator(new CUpperCaseValidator(ui->le_Icao));
         this->setFocusProxy(ui->le_Icao);
 
-        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CAirportSmallCompleter::onAirportsChanged);
+        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this,
+                &CAirportSmallCompleter::onAirportsChanged);
         connect(ui->le_Icao, &QLineEdit::editingFinished, this, &CAirportSmallCompleter::onIcaoChanged);
         connect(ui->le_Icao, &QLineEdit::editingFinished, this, &CAirportSmallCompleter::editingFinished);
         connect(ui->pb_Dialog, &QPushButton::clicked, this, &CAirportSmallCompleter::showAirportsDialog);
         this->onAirportsChanged();
     }
 
-    CAirportSmallCompleter::~CAirportSmallCompleter()
-    {}
+    CAirportSmallCompleter::~CAirportSmallCompleter() {}
 
     void CAirportSmallCompleter::setAirport(const CAirport &airport)
     {
@@ -55,10 +54,7 @@ namespace swift::gui::components
                 return;
             }
         }
-        if (ui->le_Icao->text() != airportCode.asString())
-        {
-            ui->le_Icao->setText(airportCode.asString());
-        }
+        if (ui->le_Icao->text() != airportCode.asString()) { ui->le_Icao->setText(airportCode.asString()); }
     }
 
     CAirportIcaoCode CAirportSmallCompleter::getAirportIcaoCode() const
@@ -67,15 +63,9 @@ namespace swift::gui::components
         return CAirportIcaoCode(this->getIcaoText());
     }
 
-    QString CAirportSmallCompleter::getIcaoText() const
-    {
-        return ui->le_Icao->text().trimmed().toUpper();
-    }
+    QString CAirportSmallCompleter::getIcaoText() const { return ui->le_Icao->text().trimmed().toUpper(); }
 
-    bool CAirportSmallCompleter::isEmpty() const
-    {
-        return ui->le_Icao->text().isEmpty();
-    }
+    bool CAirportSmallCompleter::isEmpty() const { return ui->le_Icao->text().isEmpty(); }
 
     void CAirportSmallCompleter::setReadOnly(bool readOnly)
     {
@@ -92,20 +82,14 @@ namespace swift::gui::components
     void CAirportSmallCompleter::clearIfInvalidCode(bool strictValidation)
     {
         const CAirportIcaoCode icao = this->getAirportIcaoCode();
-        if (!icao.hasValidIcaoCode(strictValidation))
-        {
-            this->clear();
-        }
+        if (!icao.hasValidIcaoCode(strictValidation)) { this->clear(); }
     }
 
     void CAirportSmallCompleter::onIcaoChanged()
     {
         if (!sGui || !sGui->hasWebDataServices()) { return; }
         const CAirport airport = sGui->getWebDataServices()->getAirportForIcaoDesignator(this->getIcaoText());
-        if (!airport.isNull())
-        {
-            this->setAirport(airport);
-        }
+        if (!airport.isNull()) { this->setAirport(airport); }
     }
 
     void CAirportSmallCompleter::onAirportsChanged()

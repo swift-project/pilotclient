@@ -79,14 +79,10 @@ namespace swift::misc
             QString help; //!< help text
 
             //! Constructor
-            CommandHtmlHelp(const QString &command, const QString &help) : command(command), help(help)
-            {}
+            CommandHtmlHelp(const QString &command, const QString &help) : command(command), help(help) {}
 
             //! Compare by command
-            static bool less(const CommandHtmlHelp &a, const CommandHtmlHelp &b)
-            {
-                return a.command < b.command;
-            }
+            static bool less(const CommandHtmlHelp &a, const CommandHtmlHelp &b) { return a.command < b.command; }
         };
 
         //! Register a command

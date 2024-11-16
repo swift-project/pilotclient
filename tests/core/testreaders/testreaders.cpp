@@ -93,7 +93,8 @@ namespace swiftcoretest
         for (int i = 0; i < 60; i++)
         {
             CApplication::processEventsFor(500); // process events and sleep
-            if (this->m_icaoReader->getAircraftIcaoCodesCount() > 0 && this->m_icaoReader->getAirlineIcaoCodesCount() > 0)
+            if (this->m_icaoReader->getAircraftIcaoCodesCount() > 0 &&
+                this->m_icaoReader->getAirlineIcaoCodesCount() > 0)
             {
                 break;
             }
@@ -116,14 +117,8 @@ namespace swiftcoretest
         const int airlineValidSize = airlineIcaosValid.size();
         const int airlineSize = airlineIcaos.size();
 
-        if (!aircraftIcaosInvalid.isEmpty())
-        {
-            qDebug() << aircraftIcaosInvalid.toQString();
-        }
-        if (!airlineIcaosInvalid.isEmpty())
-        {
-            qDebug() << airlineIcaosInvalid.toQString();
-        }
+        if (!aircraftIcaosInvalid.isEmpty()) { qDebug() << aircraftIcaosInvalid.toQString(); }
+        if (!airlineIcaosInvalid.isEmpty()) { qDebug() << airlineIcaosInvalid.toQString(); }
 
         QVERIFY2(aircraftValidSize == aircraftSize, "All aircraft ICAOs must be valid");
         QVERIFY2(airlineValidSize == airlineSize, "Some airline ICAOs must be valid");
@@ -185,7 +180,9 @@ namespace swiftcoretest
         QVERIFY2(heathrow[0].isOperating(), "Wrong airport data");
 
         auto airports = m_airportReader->getAirports();
-        airports.sortByRange(CCoordinateGeodetic(CLatitude(51.5085300, CAngleUnit::deg()), CLongitude(-0.1257400, CAngleUnit::deg()), CAltitude()), true);
+        airports.sortByRange(CCoordinateGeodetic(CLatitude(51.5085300, CAngleUnit::deg()),
+                                                 CLongitude(-0.1257400, CAngleUnit::deg()), CAltitude()),
+                             true);
         QVERIFY2(airports[0].getIcao() == CAirportIcaoCode("EGLW"), "Wrong airport data");
 
         CApplication::processEventsFor(2500); // make sure events are processed

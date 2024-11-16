@@ -13,8 +13,7 @@ namespace swift::misc
 {
     CIdentifierList::CIdentifierList() {}
 
-    CIdentifierList::CIdentifierList(const CSequence<CIdentifier> &other) : CSequence<CIdentifier>(other)
-    {}
+    CIdentifierList::CIdentifierList(const CSequence<CIdentifier> &other) : CSequence<CIdentifier>(other) {}
 
     bool CIdentifierList::containsAnyNotIn(const CIdentifierList &other) const
     {
@@ -26,9 +25,8 @@ namespace swift::misc
         CIdentifierList il;
         for (const CIdentifier &identifier : *this)
         {
-            bool contained = il.containsBy([=](const CIdentifier &ident) {
-                return identifier.hasSameMachineName(ident);
-            });
+            bool contained =
+                il.containsBy([=](const CIdentifier &ident) { return identifier.hasSameMachineName(ident); });
             if (!contained) { il.push_back(identifier); }
         }
         return il;

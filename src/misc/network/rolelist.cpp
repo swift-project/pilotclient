@@ -18,10 +18,7 @@ namespace swift::misc::network
         return this->contains(&CRole::getName, roleName.trimmed().toUpper());
     }
 
-    bool CRoleList::hasRole(const CRole &role) const
-    {
-        return hasRole(role.getName());
-    }
+    bool CRoleList::hasRole(const CRole &role) const { return hasRole(role.getName()); }
 
     bool CRoleList::hasAnyRole(const QStringList &roles) const
     {
@@ -32,27 +29,20 @@ namespace swift::misc::network
         return false;
     }
 
-    CRoleList::CRoleList(const CSequence<CRole> &other) : CSequence<CRole>(other)
-    {}
+    CRoleList::CRoleList(const CSequence<CRole> &other) : CSequence<CRole>(other) {}
 
     QString CRoleList::namesAsString(const QString &separator) const
     {
         QStringList rolesString;
         rolesString.reserve(size());
-        for (const CRole &role : (*this))
-        {
-            rolesString.append(role.getName());
-        }
+        for (const CRole &role : (*this)) { rolesString.append(role.getName()); }
         return rolesString.join(separator);
     }
 
     CRoleList CRoleList::fromDatabaseJson(const QJsonArray &array)
     {
         CRoleList roles;
-        for (const QJsonValue &value : array)
-        {
-            roles.push_back(CRole::fromDatabaseJson(value.toObject()));
-        }
+        for (const QJsonValue &value : array) { roles.push_back(CRole::fromDatabaseJson(value.toObject())); }
         return roles;
     }
 

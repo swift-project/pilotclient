@@ -23,10 +23,7 @@ namespace swift::misc
 
     public:
         //! Sort ascending
-        void sortAscendingByOrder()
-        {
-            this->container().sort(predicates::MemberLess(&OBJ::getOrder));
-        }
+        void sortAscendingByOrder() { this->container().sort(predicates::MemberLess(&OBJ::getOrder)); }
 
         //! Sort descending
         void sortDescendingByOrder()
@@ -39,10 +36,7 @@ namespace swift::misc
         void resetOrder(int offset = 0)
         {
             int c = offset;
-            for (OBJ &obj : container())
-            {
-                obj.setOrder(c++);
-            }
+            for (OBJ &obj : container()) { obj.setOrder(c++); }
         }
 
         //! All order values set or missing some?
@@ -121,20 +115,14 @@ namespace swift::misc
         void freezeOrder()
         {
             int c = 0;
-            for (OBJ &obj : container())
-            {
-                obj.setOrder(c++);
-            }
+            for (OBJ &obj : container()) { obj.setOrder(c++); }
         }
 
         //! Current reverse order of list will be new order values
         void freezeOrderReverse()
         {
             int c = this->container().size() - 1;
-            for (OBJ &obj : container())
-            {
-                obj.setOrder(c--);
-            }
+            for (OBJ &obj : container()) { obj.setOrder(c--); }
         }
 
         //! Object with min.order or default
@@ -145,10 +133,7 @@ namespace swift::misc
             for (const OBJ &obj : container())
             {
                 if (!obj.hasValidOrder()) { continue; }
-                if (obj.getOrder() < min.getOrder())
-                {
-                    min = obj;
-                }
+                if (obj.getOrder() < min.getOrder()) { min = obj; }
             }
             return min;
         }
@@ -161,10 +146,7 @@ namespace swift::misc
             for (const OBJ &obj : container())
             {
                 if (!obj.hasValidOrder()) { continue; }
-                if (obj.getOrder() > max.getOrder())
-                {
-                    max = obj;
-                }
+                if (obj.getOrder() > max.getOrder()) { max = obj; }
             }
             return max;
         }
@@ -174,16 +156,10 @@ namespace swift::misc
         IOrderableList() = default;
 
         //! Container
-        const CONTAINER &container() const
-        {
-            return static_cast<const CONTAINER &>(*this);
-        }
+        const CONTAINER &container() const { return static_cast<const CONTAINER &>(*this); }
 
         //! Container
-        CONTAINER &container()
-        {
-            return static_cast<CONTAINER &>(*this);
-        }
+        CONTAINER &container() { return static_cast<CONTAINER &>(*this); }
     };
 } // namespace swift::misc
 

@@ -22,9 +22,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftParts)
 namespace swift::misc::aviation
 {
     //! Value object encapsulating information of aircraft's parts
-    class SWIFT_MISC_EXPORT CAircraftParts :
-        public CValueObject<CAircraftParts>,
-        public ITimestampWithOffsetBased
+    class SWIFT_MISC_EXPORT CAircraftParts : public CValueObject<CAircraftParts>, public ITimestampWithOffsetBased
     {
     public:
         //! Properties by index

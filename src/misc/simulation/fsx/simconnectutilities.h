@@ -54,7 +54,8 @@ namespace swift::misc::simulation::fsx
         static bool hasUserSimConnectCfgFile();
 
         //! The simconnect.cfg as settings (or nullptr settings if no such file)
-        static QSharedPointer<QSettings> simConnectFileAsSettings(const QString &fileName = getSwiftLocalSimConnectCfgFilename());
+        static QSharedPointer<QSettings>
+        simConnectFileAsSettings(const QString &fileName = getSwiftLocalSimConnectCfgFilename());
 
         //! IP address from settings (of simconnect.cfg), "" if not available
         static QString ipAddress(const QSettings *simConnectSettings);

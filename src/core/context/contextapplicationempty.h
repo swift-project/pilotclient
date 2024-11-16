@@ -29,7 +29,8 @@ namespace swift::core
 
         public slots:
             //! \copydoc IContextApplication::changeSettings
-            virtual void changeSettings(const swift::misc::CValueCachePacket &settings, const swift::misc::CIdentifier &origin) override
+            virtual void changeSettings(const swift::misc::CValueCachePacket &settings,
+                                        const swift::misc::CIdentifier &origin) override
             {
                 Q_UNUSED(settings);
                 Q_UNUSED(origin);
@@ -58,10 +59,7 @@ namespace swift::core
             }
 
             //! \copydoc IContextApplication::synchronizeLocalSettings
-            virtual void synchronizeLocalSettings() override
-            {
-                logEmptyContextWarning(Q_FUNC_INFO);
-            }
+            virtual void synchronizeLocalSettings() override { logEmptyContextWarning(Q_FUNC_INFO); }
 
             //! \copydoc IContextApplication::saveSettings
             virtual swift::misc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override
@@ -87,7 +85,8 @@ namespace swift::core
             }
 
             //! \copydoc IContextApplication::registerHotkeyActions
-            virtual void registerHotkeyActions(const QStringList &actions, const swift::misc::CIdentifier &origin) override
+            virtual void registerHotkeyActions(const QStringList &actions,
+                                               const swift::misc::CIdentifier &origin) override
             {
                 Q_UNUSED(actions);
                 Q_UNUSED(origin);
@@ -95,7 +94,8 @@ namespace swift::core
             }
 
             //! \copydoc IContextApplication::callHotkeyActionRemotely
-            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const swift::misc::CIdentifier &origin) override
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument,
+                                                  const swift::misc::CIdentifier &origin) override
             {
                 Q_UNUSED(action);
                 Q_UNUSED(argument);

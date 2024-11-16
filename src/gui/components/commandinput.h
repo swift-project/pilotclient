@@ -30,9 +30,7 @@ namespace swift::misc
 namespace swift::gui::components
 {
     //! Specialized line edit for command inputs
-    class SWIFT_GUI_EXPORT CCommandInput :
-        public CLineEditHistory,
-        public swift::misc::CIdentifiable
+    class SWIFT_GUI_EXPORT CCommandInput : public CLineEditHistory, public swift::misc::CIdentifiable
     {
         Q_OBJECT
 

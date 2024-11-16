@@ -39,8 +39,12 @@ namespace swift::gui::components
         void initValues();
 
         QScopedPointer<Ui::CSettingsVatsimReadersComponent> ui;
-        swift::misc::CSetting<swift::core::vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
-        swift::misc::CSetting<swift::core::vatsim::TVatsimMetars> m_settingsMetars { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
+        swift::misc::CSetting<swift::core::vatsim::TVatsimDataFile> m_settingsDataFile {
+            this, &CSettingsVatsimReadersComponent::onSettingsChanged
+        };
+        swift::misc::CSetting<swift::core::vatsim::TVatsimMetars> m_settingsMetars {
+            this, &CSettingsVatsimReadersComponent::onSettingsChanged
+        };
     };
 } // namespace swift::gui::components
 

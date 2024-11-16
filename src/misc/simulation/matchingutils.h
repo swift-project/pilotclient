@@ -20,10 +20,9 @@ namespace swift::misc::simulation
     public:
         //! Specialized log for matching / reverse lookup
         //! \threadsafe
-        static void addLogDetailsToList(
-            CStatusMessageList *log, const CSimulatedAircraft &remoteAircraft,
-            const QString &message, const QStringList &extraCategories = {},
-            CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
+        static void addLogDetailsToList(CStatusMessageList *log, const CSimulatedAircraft &remoteAircraft,
+                                        const QString &message, const QStringList &extraCategories = {},
+                                        CStatusMessage::StatusSeverity s = CStatusMessage::SeverityInfo);
 
     private:
         //! Default categories

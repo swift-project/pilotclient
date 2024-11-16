@@ -16,7 +16,8 @@ namespace swift::core::fsd
     {
     public:
         //! Constructor
-        ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType, const QStringList &responseData);
+        ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType,
+                       const QStringList &responseData);
 
         //! Unknow query?
         bool isUnknownQuery() const { return m_queryType == ClientQueryType::Unknown; }
@@ -43,17 +44,12 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const ClientResponse &lhs, const ClientResponse &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.m_queryType == rhs.m_queryType &&
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.m_queryType == rhs.m_queryType &&
                lhs.m_responseData == rhs.m_responseData;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const ClientResponse &lhs, const ClientResponse &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const ClientResponse &lhs, const ClientResponse &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

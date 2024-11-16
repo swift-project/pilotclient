@@ -12,13 +12,9 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CWindLayer, CWindLayerList)
 
 namespace swift::misc::weather
 {
-    CWindLayerList::CWindLayerList(const CSequence<CWindLayer> &other) : CSequence<CWindLayer>(other)
-    {}
+    CWindLayerList::CWindLayerList(const CSequence<CWindLayer> &other) : CSequence<CWindLayer>(other) {}
 
-    bool CWindLayerList::containsLevel(const CAltitude &level) const
-    {
-        return contains(&CWindLayer::getLevel, level);
-    }
+    bool CWindLayerList::containsLevel(const CAltitude &level) const { return contains(&CWindLayer::getLevel, level); }
 
     CWindLayer CWindLayerList::findByLevel(const CAltitude &level) const
     {

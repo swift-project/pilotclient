@@ -18,8 +18,7 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::components
 {
-    CAltitudeDialog::CAltitudeDialog(QWidget *parent) : QDialog(parent),
-                                                        ui(new Ui::CAltitudeDialog)
+    CAltitudeDialog::CAltitudeDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CAltitudeDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -55,7 +54,8 @@ namespace swift::gui::components
 
         connect(ui->rb_VFR, &QRadioButton::toggled, this, &CAltitudeDialog::onVFRSelected);
         connect(ui->rb_StringOnly, &QRadioButton::toggled, this, &CAltitudeDialog::onStringOnlySelected);
-        connect(ui->cb_SimplifiedVATSIMFormat, &QCheckBox::toggled, this, &CAltitudeDialog::onSimplifiedVATSIMFormatChanged);
+        connect(ui->cb_SimplifiedVATSIMFormat, &QCheckBox::toggled, this,
+                &CAltitudeDialog::onSimplifiedVATSIMFormatChanged);
 
         connect(ui->le_AltitudeAFt, &QLineEdit::textEdited, this, &CAltitudeDialog::onTextEdit);
         connect(ui->le_AltitudeConvertedFt, &QLineEdit::textEdited, this, &CAltitudeDialog::onTextEdit);
@@ -66,8 +66,7 @@ namespace swift::gui::components
         connect(ui->le_Sm, &QLineEdit::textEdited, this, &CAltitudeDialog::onTextEdit);
     }
 
-    CAltitudeDialog::~CAltitudeDialog()
-    {}
+    CAltitudeDialog::~CAltitudeDialog() {}
 
     CAltitudeDialog::Mode CAltitudeDialog::getMode() const
     {
@@ -83,51 +82,26 @@ namespace swift::gui::components
         return Unknown;
     }
 
-    void CAltitudeDialog::setVatsim(bool vatsim)
-    {
-        ui->cb_SimplifiedVATSIMFormat->setChecked(vatsim);
-    }
+    void CAltitudeDialog::setVatsim(bool vatsim) { ui->cb_SimplifiedVATSIMFormat->setChecked(vatsim); }
 
-    bool CAltitudeDialog::isStringOnly() const
-    {
-        return ui->rb_StringOnly->isChecked();
-    }
+    bool CAltitudeDialog::isStringOnly() const { return ui->rb_StringOnly->isChecked(); }
 
     void CAltitudeDialog::onEditFinished()
     {
         const Mode mode = this->getMode();
         switch (mode)
         {
-        case VFR:
-            m_altitudeStr = QStringLiteral("VFR");
-            break;
-        case FlightFlevelInFeet:
-            m_altitudeStr = u"FL" % ui->le_FLft->text();
-            break;
-        case MetricLevelInTensOfMeters:
-            m_altitudeStr = u'S' % ui->le_Sm->text();
-            break;
-        case AltitudeInHundredsOfFeet:
-            m_altitudeStr = u'A' % ui->le_AltitudeAFt->text();
-            break;
-        case AltitudeInTensOfMeters:
-            m_altitudeStr = u'M' % ui->le_AltitudeMm->text();
-            break;
-        case AltitudeInFeet:
-            m_altitudeStr = ui->le_AltitudeFt->text() % u"ft";
-            break;
-        case AltitudeInMeters:
-            m_altitudeStr = ui->le_AltitudeM->text() % u"m";
-            break;
-        case AltitudeInMetersConvertedToFeet:
-            m_altitudeStr = ui->le_AltitudeConvertedFt->text() % u"m";
-            break;
-        case StringOnly:
-            m_altitudeStr = ui->le_String->text();
-            return;
+        case VFR: m_altitudeStr = QStringLiteral("VFR"); break;
+        case FlightFlevelInFeet: m_altitudeStr = u"FL" % ui->le_FLft->text(); break;
+        case MetricLevelInTensOfMeters: m_altitudeStr = u'S' % ui->le_Sm->text(); break;
+        case AltitudeInHundredsOfFeet: m_altitudeStr = u'A' % ui->le_AltitudeAFt->text(); break;
+        case AltitudeInTensOfMeters: m_altitudeStr = u'M' % ui->le_AltitudeMm->text(); break;
+        case AltitudeInFeet: m_altitudeStr = ui->le_AltitudeFt->text() % u"ft"; break;
+        case AltitudeInMeters: m_altitudeStr = ui->le_AltitudeM->text() % u"m"; break;
+        case AltitudeInMetersConvertedToFeet: m_altitudeStr = ui->le_AltitudeConvertedFt->text() % u"m"; break;
+        case StringOnly: m_altitudeStr = ui->le_String->text(); return;
         case Unknown:
-        default:
-            return;
+        default: return;
         }
 
         CStatusMessageList msgs;
@@ -142,16 +116,12 @@ namespace swift::gui::components
             if (mode == AltitudeInMetersConvertedToFeet)
             {
                 const int ft = CAltitude::findAltitudeForMetricAltitude(m_altitude.valueInteger(CLengthUnit::m()));
-                m_altitude = ft < 0 ?
-                                 m_altitude.roundedToNearest100ft(true) :
-                                 m_altitude = CAltitude(ft, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+                m_altitude = ft < 0 ? m_altitude.roundedToNearest100ft(true) :
+                                      m_altitude = CAltitude(ft, CAltitude::MeanSeaLevel, CLengthUnit::ft());
                 m_altitudeStr = m_altitude.valueRoundedWithUnit(0);
             }
 
-            if (ui->cb_SimplifiedVATSIMFormat->isChecked())
-            {
-                m_altitudeStr = m_altitude.asFpVatsimAltitudeString();
-            }
+            if (ui->cb_SimplifiedVATSIMFormat->isChecked()) { m_altitudeStr = m_altitude.asFpVatsimAltitudeString(); }
 
             ui->le_String->setText(m_altitudeStr);
         }

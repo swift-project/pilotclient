@@ -53,7 +53,8 @@ namespace swift::gui::components
         ~CSettingsComponent() override;
 
         //! Settings for given simulator
-        swift::misc::simulation::settings::CSpecializedSimulatorSettings getSimulatorSettings(const swift::misc::simulation::CSimulatorInfo &simulator) const;
+        swift::misc::simulation::settings::CSpecializedSimulatorSettings
+        getSimulatorSettings(const swift::misc::simulation::CSimulatorInfo &simulator) const;
 
         //! Set the tab
         void setTab(SettingTab tab);

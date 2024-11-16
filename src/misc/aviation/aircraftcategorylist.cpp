@@ -13,23 +13,18 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftCategory, CAircraft
 
 namespace swift::misc::aviation
 {
-    CAircraftCategoryList::CAircraftCategoryList()
-    {}
+    CAircraftCategoryList::CAircraftCategoryList() {}
 
-    CAircraftCategoryList::CAircraftCategoryList(const CSequence<CAircraftCategory> &other) : CSequence<CAircraftCategory>(other)
+    CAircraftCategoryList::CAircraftCategoryList(const CSequence<CAircraftCategory> &other)
+        : CSequence<CAircraftCategory>(other)
     {}
 
     CAircraftCategoryList CAircraftCategoryList::findByName(const QString &name, Qt::CaseSensitivity cs) const
     {
-        return this->findBy([&](const CAircraftCategory &category) {
-            return category.matchesName(name, cs);
-        });
+        return this->findBy([&](const CAircraftCategory &category) { return category.matchesName(name, cs); });
     }
 
-    void CAircraftCategoryList::sortByPath()
-    {
-        this->sortBy(&CAircraftCategory::getPath);
-    }
+    void CAircraftCategoryList::sortByPath() { this->sortBy(&CAircraftCategory::getPath); }
 
     void CAircraftCategoryList::sortByLevel()
     {
@@ -42,10 +37,7 @@ namespace swift::misc::aviation
     QSet<QString> CAircraftCategoryList::getLevelStrings() const
     {
         CSetBuilder<QString> levels;
-        for (const CAircraftCategory &category : *this)
-        {
-            levels.insert(category.getLevelString());
-        }
+        for (const CAircraftCategory &category : *this) { levels.insert(category.getLevelString()); }
         return levels;
     }
 
@@ -59,10 +51,7 @@ namespace swift::misc::aviation
     QList<int> CAircraftCategoryList::getFirstLevels() const
     {
         CSetBuilder<int> levels;
-        for (const CAircraftCategory &category : *this)
-        {
-            levels.insert(category.getFirstLevel());
-        }
+        for (const CAircraftCategory &category : *this) { levels.insert(category.getFirstLevel()); }
         QList<int> ll = levels;
         ll.removeOne(0);
         return ll;
@@ -71,10 +60,7 @@ namespace swift::misc::aviation
     QList<int> CAircraftCategoryList::getSecondLevels() const
     {
         CSetBuilder<int> levels;
-        for (const CAircraftCategory &category : *this)
-        {
-            levels.insert(category.getSecondLevel());
-        }
+        for (const CAircraftCategory &category : *this) { levels.insert(category.getSecondLevel()); }
         QList<int> ll = levels;
         ll.removeOne(0);
         return ll;
@@ -89,22 +75,13 @@ namespace swift::misc::aviation
             const int fl = category.getFirstLevel();
             if (highestLevels.contains(fl))
             {
-                if (highestLevels[fl].isHigherLevel(category))
-                {
-                    highestLevels[fl] = category;
-                }
+                if (highestLevels[fl].isHigherLevel(category)) { highestLevels[fl] = category; }
             }
-            else
-            {
-                highestLevels[fl] = category;
-            }
+            else { highestLevels[fl] = category; }
         }
 
         CAircraftCategoryList topLevels;
-        for (const CAircraftCategory &category : highestLevels.values())
-        {
-            topLevels.push_back(category);
-        }
+        for (const CAircraftCategory &category : highestLevels.values()) { topLevels.push_back(category); }
         return topLevels;
     }
 
@@ -113,10 +90,7 @@ namespace swift::misc::aviation
         CAircraftCategoryList categories;
         for (const CAircraftCategory &category : *this)
         {
-            if (category.getFirstLevel() == level)
-            {
-                categories.push_back(category);
-            }
+            if (category.getFirstLevel() == level) { categories.push_back(category); }
         }
         return categories;
     }
@@ -129,10 +103,7 @@ namespace swift::misc::aviation
         for (const CAircraftCategory &category : *this)
         {
             if (noRootNode && ls == category.getDepth()) { continue; } // ignore root nodes
-            if (category.matchesLevel(level))
-            {
-                categories.push_back(category);
-            }
+            if (category.matchesLevel(level)) { categories.push_back(category); }
         }
         return categories;
     }
@@ -156,10 +127,7 @@ namespace swift::misc::aviation
     {
         QList<int> levels = category.getLevel();
         CAircraftCategoryList categories;
-        if (levels.size() < 2)
-        {
-            categories = this->findFirstLevels();
-        }
+        if (levels.size() < 2) { categories = this->findFirstLevels(); }
         else
         {
             levels.removeLast();

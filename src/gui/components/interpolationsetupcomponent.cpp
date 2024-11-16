@@ -21,26 +21,33 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CInterpolationSetupComponent::CInterpolationSetupComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                                  ui(new Ui::CInterpolationSetupComponent)
+    CInterpolationSetupComponent::CInterpolationSetupComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CInterpolationSetupComponent)
     {
         ui->setupUi(this);
         ui->cb_IgnoreGlobal->setChecked(true);
         ui->tvp_InterpolationSetup->menuAddItems(CInterpolationSetupView::MenuRemoveSelectedRows);
 
-        connect(ui->pb_RenderingSetup, &QPushButton::clicked, this, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget);
+        connect(ui->pb_RenderingSetup, &QPushButton::clicked, this,
+                &CInterpolationSetupComponent::requestRenderingRestrictionsWidget);
         connect(ui->pb_Save, &QPushButton::clicked, this, &CInterpolationSetupComponent::saveSetup);
         connect(ui->pb_DeleteOrReset, &QPushButton::clicked, this, &CInterpolationSetupComponent::removeOrResetSetup);
-        connect(ui->pb_Reload, &QPushButton::clicked, this, &CInterpolationSetupComponent::reloadSetup, Qt::QueuedConnection);
-        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::doubleClicked, this, &CInterpolationSetupComponent::onRowDoubleClicked);
-        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelChanged, this, &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
-        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelDataChanged, this, &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
-        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::objectsDeleted, this, &CInterpolationSetupComponent::onObjectsDeleted, Qt::QueuedConnection);
+        connect(ui->pb_Reload, &QPushButton::clicked, this, &CInterpolationSetupComponent::reloadSetup,
+                Qt::QueuedConnection);
+        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::doubleClicked, this,
+                &CInterpolationSetupComponent::onRowDoubleClicked);
+        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelChanged, this,
+                &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
+        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::modelDataChanged, this,
+                &CInterpolationSetupComponent::onModelChanged, Qt::QueuedConnection);
+        connect(ui->tvp_InterpolationSetup, &CInterpolationSetupView::objectsDeleted, this,
+                &CInterpolationSetupComponent::onObjectsDeleted, Qt::QueuedConnection);
         connect(ui->rb_Callsign, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
         connect(ui->rb_Global, &QRadioButton::released, this, &CInterpolationSetupComponent::onModeChanged);
         if (sGui && sGui->getIContextSimulator())
         {
-            connect(sGui->getIContextSimulator(), &IContextSimulator::interpolationAndRenderingSetupChanged, this, &CInterpolationSetupComponent::onSetupChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::interpolationAndRenderingSetupChanged, this,
+                    &CInterpolationSetupComponent::onSetupChanged, Qt::QueuedConnection);
         }
 
         ui->rb_Global->setChecked(true);
@@ -59,12 +66,12 @@ namespace swift::gui::components
         });
     }
 
-    CInterpolationSetupComponent::~CInterpolationSetupComponent()
-    {}
+    CInterpolationSetupComponent::~CInterpolationSetupComponent() {}
 
     CInterpolationSetupComponent::Mode CInterpolationSetupComponent::getSetupMode() const
     {
-        return ui->rb_Callsign->isChecked() ? CInterpolationSetupComponent::SetupPerCallsign : CInterpolationSetupComponent::SetupGlobal;
+        return ui->rb_Callsign->isChecked() ? CInterpolationSetupComponent::SetupPerCallsign :
+                                              CInterpolationSetupComponent::SetupGlobal;
     }
 
     void CInterpolationSetupComponent::onRowDoubleClicked(const QModelIndex &index)
@@ -81,14 +88,8 @@ namespace swift::gui::components
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
         bool enableCallsign = false;
-        if (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal)
-        {
-            this->setUiValuesFromGlobal();
-        }
-        else
-        {
-            enableCallsign = true;
-        }
+        if (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal) { this->setUiValuesFromGlobal(); }
+        else { enableCallsign = true; }
         this->displaySetupsPerCallsign();
         ui->comp_CallsignCompleter->setReadOnly(!enableCallsign);
         ui->pb_DeleteOrReset->setText(enableCallsign ? "delete" : "reset");
@@ -112,14 +113,16 @@ namespace swift::gui::components
         if (!this->checkPrerequisites(!global, overlay)) { return; }
         if (global)
         {
-            CInterpolationAndRenderingSetupGlobal gs = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
+            CInterpolationAndRenderingSetupGlobal gs =
+                sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
             ui->form_InterpolationSetup->setValue(gs);
         }
         else
         {
             const CCallsign cs = ui->comp_CallsignCompleter->getCallsign(false);
             if (!cs.isValid()) { return; }
-            const CInterpolationAndRenderingSetupPerCallsign setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupPerCallsignOrDefault(cs);
+            const CInterpolationAndRenderingSetupPerCallsign setup =
+                sGui->getIContextSimulator()->getInterpolationAndRenderingSetupPerCallsignOrDefault(cs);
             ui->form_InterpolationSetup->setValue(setup);
         }
     }
@@ -129,7 +132,8 @@ namespace swift::gui::components
         const bool global = (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal);
         if (!this->checkPrerequisites(!global, true)) { return; }
         CInterpolationAndRenderingSetupPerCallsign setup = ui->form_InterpolationSetup->getValue();
-        CInterpolationAndRenderingSetupGlobal gs = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
+        CInterpolationAndRenderingSetupGlobal gs =
+            sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
         if (global)
         {
             gs.setBaseValues(setup);
@@ -202,14 +206,16 @@ namespace swift::gui::components
     void CInterpolationSetupComponent::setUiValuesFromGlobal()
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
-        const CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
+        const CInterpolationAndRenderingSetupGlobal setup =
+            sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
         ui->form_InterpolationSetup->setValue(setup);
     }
 
     void CInterpolationSetupComponent::displaySetupsPerCallsign()
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
-        const CInterpolationSetupList setups = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupsPerCallsign();
+        const CInterpolationSetupList setups =
+            sGui->getIContextSimulator()->getInterpolationAndRenderingSetupsPerCallsign();
         ui->tvp_InterpolationSetup->updateContainerMaybeAsync(setups);
     }
 

@@ -21,7 +21,8 @@ namespace swift::misc::aviation
         //! ICAO wake turbulence categories
         enum WakeTurbulenceCategory
         {
-            UNKNOWN, //!< required when converting from FAA equipment codes and for some database entries where the correct WTC is not available
+            UNKNOWN, //!< required when converting from FAA equipment codes and for some database entries where the
+                     //!< correct WTC is not available
             LIGHT, //!< light
             MEDIUM, //!< medium
             HEAVY, //!< heavy

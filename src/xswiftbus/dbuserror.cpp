@@ -6,8 +6,6 @@
 namespace XSwiftBus
 {
 
-    CDBusError::CDBusError(const DBusError *error)
-        : m_name(error->name), m_message(error->message)
-    {}
+    CDBusError::CDBusError(const DBusError *error) : m_name(error->name), m_message(error->message) {}
 
 } // namespace XSwiftBus

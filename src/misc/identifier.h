@@ -22,7 +22,8 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CIdentifier)
 namespace swift::misc
 {
     /*!
-     * Value object encapsulating information identifying a component of a modular distributed swift process (core, GUI, audio)
+     * Value object encapsulating information identifying a component of a modular distributed swift process (core, GUI,
+     * audio)
      */
     class SWIFT_MISC_EXPORT CIdentifier : public CValueObject<CIdentifier>
     {
@@ -42,7 +43,8 @@ namespace swift::misc
         };
 
         //! Constructor.
-        //! \private use CIdentifier::anonymous() if you need an identifier without name and CIdentifier::null() for an empty identifier
+        //! \private use CIdentifier::anonymous() if you need an identifier without name and CIdentifier::null() for an
+        //! empty identifier
         CIdentifier() : CIdentifier("") {}
 
         //! Constructor.
@@ -84,7 +86,8 @@ namespace swift::misc
         void setName(const QString &name) { m_name = name; }
 
         //! Set name or append name
-        //! \remark append makes sense if an object name changes after some time (like for UI components when the whole UI is setup)
+        //! \remark append makes sense if an object name changes after some time (like for UI components when the whole
+        //! UI is setup)
         void appendName(const QString &name);
 
         //! Reflect changes of QObject::

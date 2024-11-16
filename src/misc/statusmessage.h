@@ -107,7 +107,10 @@ namespace swift::misc
         }
 
         //! Compare two strings.
-        friend int compare(const CStrongStringView &a, const CStrongStringView &b) { return a.m_view.compare(b.m_view); }
+        friend int compare(const CStrongStringView &a, const CStrongStringView &b)
+        {
+            return a.m_view.compare(b.m_view);
+        }
 
         //! Hash value.
         friend size_t qHash(const CStrongStringView &obj, uint seed = 0) { return ::qHash(obj.m_view, seed); }
@@ -165,10 +168,16 @@ namespace swift::misc
         explicit CMessageBase(const CLogCategoryList &categories) : m_categories(categories) {}
 
         //! Construct a message with some specific categories.
-        CMessageBase(const CLogCategoryList &categories, const CLogCategory &extra) : CMessageBase(categories) { this->addIfNotExisting(extra); }
+        CMessageBase(const CLogCategoryList &categories, const CLogCategory &extra) : CMessageBase(categories)
+        {
+            this->addIfNotExisting(extra);
+        }
 
         //! Construct a message with some specific categories.
-        CMessageBase(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories) { this->addIfNotExisting(extra); }
+        CMessageBase(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories)
+        {
+            this->addIfNotExisting(extra);
+        }
 
         //! Set the severity and format string.
         template <size_t N>
@@ -350,16 +359,10 @@ namespace swift::misc
         //! Add categories if not already existing
         void addIfNotExisting(const CLogCategoryList &categories)
         {
-            if (this->m_categories.isEmpty())
-            {
-                this->m_categories.push_back(categories);
-            }
+            if (this->m_categories.isEmpty()) { this->m_categories.push_back(categories); }
             else
             {
-                for (const CLogCategory &cat : categories)
-                {
-                    this->addIfNotExisting(cat);
-                }
+                for (const CLogCategory &cat : categories) { this->addIfNotExisting(cat); }
             }
         }
 
@@ -442,7 +445,8 @@ namespace swift::misc
         {}
         CStatusMessage(const QString &message);
         template <size_t N>
-        CStatusMessage(StatusSeverity severity, const char16_t (&message)[N]) : CStatusMessage(severity, QStringView(message))
+        CStatusMessage(StatusSeverity severity, const char16_t (&message)[N])
+            : CStatusMessage(severity, QStringView(message))
         {}
         CStatusMessage(StatusSeverity severity, const QString &message);
         //! @}
@@ -450,9 +454,12 @@ namespace swift::misc
         //! @{
         //! Constructor, also a validation messsage can be directly created
         template <size_t N>
-        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char16_t (&message)[N], bool validation = false) : CStatusMessage(categories, severity, QStringView(message), validation)
+        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char16_t (&message)[N],
+                       bool validation = false)
+            : CStatusMessage(categories, severity, QStringView(message), validation)
         {}
-        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool validation = false);
+        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message,
+                       bool validation = false);
         //! @}
 
         //! @{
@@ -460,7 +467,8 @@ namespace swift::misc
         //! Explicit so as to avoid ambiguities with functions overloaded on QString and CStatusMessage.
         explicit CStatusMessage(const char *message) = delete;
         explicit CStatusMessage(StatusSeverity severity, const char *message) = delete;
-        explicit CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char *message, bool validation = false) = delete;
+        explicit CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const char *message,
+                                bool validation = false) = delete;
         //! @}
 
         //! Construct from a Qt logging triple
@@ -487,13 +495,19 @@ namespace swift::misc
         bool clampSeverity(StatusSeverity severity);
 
         //! Info or debug, no warning or error
-        bool isSeverityInfoOrLess() const { return this->m_severity == SeverityInfo || this->m_severity == SeverityDebug; }
+        bool isSeverityInfoOrLess() const
+        {
+            return this->m_severity == SeverityInfo || this->m_severity == SeverityDebug;
+        }
 
         //! Is this message's severity higher or equal
         bool isSeverityHigherOrEqual(CStatusMessage::StatusSeverity severity) const;
 
         //! Warning or above
-        bool isWarningOrAbove() const { return this->m_severity == SeverityWarning || this->m_severity == SeverityError; }
+        bool isWarningOrAbove() const
+        {
+            return this->m_severity == SeverityWarning || this->m_severity == SeverityError;
+        }
 
         //! Operation considered successful
         bool isSuccess() const;
@@ -518,7 +532,8 @@ namespace swift::misc
         bool isFromClass(const T *pointer = nullptr) const
         {
             CLogCategoryList classCategories(pointer);
-            return std::all_of(classCategories.begin(), classCategories.end(), [this](const CLogCategory &cat) { return m_categories.contains(cat); });
+            return std::all_of(classCategories.begin(), classCategories.end(),
+                               [this](const CLogCategory &cat) { return m_categories.contains(cat); });
         }
 
         //! Mark the message as having been handled by the given object
@@ -594,7 +609,8 @@ namespace swift::misc
         static CStatusMessage fromDatabaseJson(const QJsonObject &json);
 
         //! Object from JSON exception message
-        static CStatusMessage fromJsonException(const CJsonException &ex, const CLogCategoryList &categories, const QString &prefix);
+        static CStatusMessage fromJsonException(const CJsonException &ex, const CLogCategoryList &categories,
+                                                const QString &prefix);
 
         //! \copydoc swift::misc::CValueObject::registerMetadata
         static void registerMetadata();
@@ -602,12 +618,14 @@ namespace swift::misc
     private:
         CStatusMessage(QStringView message);
         CStatusMessage(StatusSeverity severity, QStringView message);
-        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, QStringView message, bool validation);
+        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, QStringView message,
+                       bool validation);
 
         mutable QVector<quintptr> m_handledByObjects;
         mutable QReadWriteLock m_lock; //!< lock (because of mutable member)
 
-        //! \fixme KB 2019-01 order and timestamp "disabled" for Ref T184 token bucket. Would it be better to enable those and use a special comparison function for that (e.g. "equalMessageAndSeverity")?
+        //! \fixme KB 2019-01 order and timestamp "disabled" for Ref T184 token bucket. Would it be better to enable
+        //! those and use a special comparison function for that (e.g. "equalMessageAndSeverity")?
         SWIFT_METACLASS(
             CStatusMessage,
             SWIFT_METAMEMBER(categories),
@@ -620,7 +638,9 @@ namespace swift::misc
 
     // CContainerBase methods implemented out-of-line to avoid circular include
     template <class Derived>
-    CStatusMessage CContainerBase<Derived>::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessage CContainerBase<Derived>::convertFromJsonNoThrow(const QJsonObject &json,
+                                                                   const CLogCategoryList &categories,
+                                                                   const QString &prefix)
     {
         try
         {
@@ -635,7 +655,9 @@ namespace swift::misc
 
     //! Call convertFromJson, catch any CJsonException that is thrown and return it as CStatusMessage.
     template <class Derived>
-    CStatusMessage CContainerBase<Derived>::convertFromJsonNoThrow(const QString &jsonString, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessage CContainerBase<Derived>::convertFromJsonNoThrow(const QString &jsonString,
+                                                                   const CLogCategoryList &categories,
+                                                                   const QString &prefix)
     {
         try
         {

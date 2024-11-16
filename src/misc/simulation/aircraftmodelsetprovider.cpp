@@ -6,8 +6,7 @@
 namespace swift::misc::simulation
 {
     // pin vtables to this file
-    void CAircraftModelSetAware::anchor()
-    {}
+    void CAircraftModelSetAware::anchor() {}
 
     CAircraftModelList CAircraftModelSetAware::getModelSet() const
     {

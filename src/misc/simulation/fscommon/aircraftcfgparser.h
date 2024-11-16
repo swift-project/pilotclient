@@ -48,7 +48,8 @@ namespace swift::misc
             //! @}
 
             //! Parse a single file
-            static CAircraftCfgEntriesList performParsingOfSingleFile(const QString &fileName, bool &ok, CStatusMessageList &msgs);
+            static CAircraftCfgEntriesList performParsingOfSingleFile(const QString &fileName, bool &ok,
+                                                                      CStatusMessageList &msgs);
 
             //! Create an parser object for given simulator
             static CAircraftCfgParser *createModelLoader(const CSimulatorInfo &simInfo, QObject *parent = nullptr);
@@ -56,7 +57,8 @@ namespace swift::misc
         protected:
             //! \name Interface functions
             //! @{
-            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) override;
+            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                              const QStringList &modelDirectories) override;
             //! @}
 
         private:
@@ -70,15 +72,14 @@ namespace swift::misc
 
             //! Perform the parsing for all directories
             //! \threadsafe
-            CAircraftCfgEntriesList performParsing(
-                const QStringList &directories, const QStringList &excludeDirectories,
-                swift::misc::CStatusMessageList &messages);
+            CAircraftCfgEntriesList performParsing(const QStringList &directories,
+                                                   const QStringList &excludeDirectories,
+                                                   swift::misc::CStatusMessageList &messages);
 
             //! Perform the parsing for one directory
             //! \threadsafe
-            CAircraftCfgEntriesList performParsing(
-                const QString &directory, const QStringList &excludeDirectories,
-                swift::misc::CStatusMessageList &messages);
+            CAircraftCfgEntriesList performParsing(const QString &directory, const QStringList &excludeDirectories,
+                                                   swift::misc::CStatusMessageList &messages);
 
             //! Fix the content read
             static QString fixedStringContent(const QVariant &qv);

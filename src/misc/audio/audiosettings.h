@@ -48,16 +48,31 @@ namespace swift::misc::audio
         void setNotificationFlag(CNotificationSounds::NotificationFlag notification, bool value);
 
         //! Get notification
-        CNotificationSounds::Notification getNotification() const { return static_cast<CNotificationSounds::Notification>(m_notification); }
+        CNotificationSounds::Notification getNotification() const
+        {
+            return static_cast<CNotificationSounds::Notification>(m_notification);
+        }
 
         //! Set notification
-        void setNotification(CNotificationSounds::Notification notification) { m_notification = static_cast<int>(notification); }
+        void setNotification(CNotificationSounds::Notification notification)
+        {
+            m_notification = static_cast<int>(notification);
+        }
 
         //! @{
         //! Simplified functions
-        bool textMessagePrivate() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate); }
-        bool textMessageSupervisor() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor); }
-        bool textCallsignMentioned() const { return this->isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned); }
+        bool textMessagePrivate() const
+        {
+            return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate);
+        }
+        bool textMessageSupervisor() const
+        {
+            return this->isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor);
+        }
+        bool textCallsignMentioned() const
+        {
+            return this->isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned);
+        }
         bool pttClickDown() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyDown); }
         bool pttClickUp() const { return this->isNotificationFlagSet(CNotificationSounds::PTTClickKeyUp); }
 
@@ -120,7 +135,9 @@ namespace swift::misc::audio
 
     private:
         QString m_notificationSoundDir;
-        int m_notification = static_cast<int>(CNotificationSounds::DefaultNotifications); //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
+        int m_notification = static_cast<int>(
+            CNotificationSounds::DefaultNotifications); //!< play notification for notification x, a little trick to use
+                                                        //!< a string here (streamable, hashable, ..)
         int m_notificationVolume = 90; //!< 0-90
         int m_outVolume = 40; //!< 0-100, AFV
         int m_outVolumeCom1 = 100; //!< 0-100, AFV

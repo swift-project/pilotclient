@@ -99,12 +99,13 @@ namespace swift::simplugin::flightgear
         SWIFT_NO_RELAY void asyncMethodError(QDBusError error);
 
         //! Own aircraft model changed
-        void aircraftModelChanged(
-            const QString &path, const QString &filename, const QString &livery,
-            const QString &icao, const QString &modelString, const QString &name, const QString &description);
+        void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
+                                  const QString &icao, const QString &modelString, const QString &name,
+                                  const QString &description);
 
         //! Airports in range are updated
-        void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats, const QList<double> &lons, const QList<double> &alts);
+        void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats,
+                                    const QList<double> &lons, const QList<double> &alts);
 
     public slots:
         //! Get Flightgear version number
@@ -342,7 +343,8 @@ namespace swift::simplugin::flightgear
         //! @}
 
         //! @{
-        //! Get the ratio how much the speedbrakes surfaces are extended (0.0 is fully retracted, and 1.0 is fully extended)
+        //! Get the ratio how much the speedbrakes surfaces are extended (0.0 is fully retracted, and 1.0 is fully
+        //! extended)
         double getSpeedBrakeRatio() const;
         void getSpeedBrakeRatioAsync(double *o_speedBrakeRatio);
         //! @}

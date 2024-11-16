@@ -35,8 +35,8 @@ using namespace swift::misc::network;
 
 namespace swift::gui::components
 {
-    CDbAircraftIcaoSelectorComponent::CDbAircraftIcaoSelectorComponent(QWidget *parent) : QFrame(parent),
-                                                                                          ui(new Ui::CDbAircraftIcaoSelectorComponent)
+    CDbAircraftIcaoSelectorComponent::CDbAircraftIcaoSelectorComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CDbAircraftIcaoSelectorComponent)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->le_Aircraft);
@@ -47,13 +47,14 @@ namespace swift::gui::components
         connect(ui->le_Aircraft, &QLineEdit::editingFinished, this, &CDbAircraftIcaoSelectorComponent::onDataChanged);
         if (sApp && sApp->hasWebDataServices())
         {
-            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoSelectorComponent::onCodesRead, Qt::QueuedConnection);
-            this->onCodesRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getAircraftIcaoCodesCount());
+            connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this,
+                    &CDbAircraftIcaoSelectorComponent::onCodesRead, Qt::QueuedConnection);
+            this->onCodesRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished,
+                              sApp->getWebDataServices()->getAircraftIcaoCodesCount());
         }
     }
 
-    CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent()
-    {}
+    CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent() {}
 
     bool CDbAircraftIcaoSelectorComponent::setAircraftIcao(const CAircraftIcaoCode &icao)
     {
@@ -64,7 +65,8 @@ namespace swift::gui::components
             setIcao = sGui->getWebDataServices()->smartAircraftIcaoSelector(icao);
         }
 
-        const QString icaoStr(m_display == DisplayIcaoAndId ? setIcao.getDesignatorDbKey() : setIcao.getCombinedIcaoStringWithKey());
+        const QString icaoStr(m_display == DisplayIcaoAndId ? setIcao.getDesignatorDbKey() :
+                                                              setIcao.getCombinedIcaoStringWithKey());
         ui->le_Aircraft->setText(icaoStr);
         ui->lbl_Description->setText(setIcao.getManufacturer());
         if (setIcao == m_currentIcao) { return false; }
@@ -102,10 +104,7 @@ namespace swift::gui::components
         return icao;
     }
 
-    void CDbAircraftIcaoSelectorComponent::setReadOnly(bool readOnly)
-    {
-        ui->le_Aircraft->setReadOnly(readOnly);
-    }
+    void CDbAircraftIcaoSelectorComponent::setReadOnly(bool readOnly) { ui->le_Aircraft->setReadOnly(readOnly); }
 
     QString CDbAircraftIcaoSelectorComponent::getRawDesignator() const
     {
@@ -123,10 +122,7 @@ namespace swift::gui::components
         return icao.isLoadedFromDb() || icao.hasCompleteData();
     }
 
-    void CDbAircraftIcaoSelectorComponent::clear()
-    {
-        ui->le_Aircraft->clear();
-    }
+    void CDbAircraftIcaoSelectorComponent::clear() { ui->le_Aircraft->clear(); }
 
     void CDbAircraftIcaoSelectorComponent::dragEnterEvent(QDragEnterEvent *event)
     {
@@ -182,7 +178,8 @@ namespace swift::gui::components
         return m_completerStrings;
     }
 
-    void CDbAircraftIcaoSelectorComponent::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
+    void CDbAircraftIcaoSelectorComponent::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState,
+                                                       int count)
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
         if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
@@ -196,16 +193,14 @@ namespace swift::gui::components
                 const int w5chars = c->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
                 c->popup()->setMinimumWidth(w5chars * 10);
 
-                connect(c, qOverload<const QString &>(&QCompleter::activated), this, &CDbAircraftIcaoSelectorComponent::onCompleterActivated);
+                connect(c, qOverload<const QString &>(&QCompleter::activated), this,
+                        &CDbAircraftIcaoSelectorComponent::onCompleterActivated);
 
                 ui->le_Aircraft->setCompleter(c);
                 m_completerIcaoDescription.reset(c); // deletes any old completer
                 this->setReadOnly(false);
             }
-            else
-            {
-                m_completerIcaoDescription.reset(nullptr);
-            }
+            else { m_completerIcaoDescription.reset(nullptr); }
         }
     }
 

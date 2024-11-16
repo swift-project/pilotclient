@@ -27,7 +27,9 @@ namespace swift::misc
         {
             return [vs...](const auto &object) {
                 bool equal = true;
-                tupleForEachPair(std::make_tuple(vs...), [&](auto member, const auto &value) { equal = equal && std::invoke(member, object) == value; });
+                tupleForEachPair(std::make_tuple(vs...), [&](auto member, const auto &value) {
+                    equal = equal && std::invoke(member, object) == value;
+                });
                 return equal;
             };
         }
@@ -55,7 +57,8 @@ namespace swift::misc
         }
 
         /*!
-         * Returns a predicate that returns true if the isValid() method of the value returned from one of its member functions returns true.
+         * Returns a predicate that returns true if the isValid() method of the value returned from one of its member
+         * functions returns true.
          */
         template <class T>
         auto MemberValid(T memberFunc)
@@ -64,13 +67,16 @@ namespace swift::misc
         }
 
         /*!
-         * Returns a predicate that returns true if the value returned by its argument's member function can be found in a captured container.
-         * \warning The container is captured by reference, so be careful that it remains valid for the lifetime of the predicate.
+         * Returns a predicate that returns true if the value returned by its argument's member function can be found in
+         * a captured container. \warning The container is captured by reference, so be careful that it remains valid
+         * for the lifetime of the predicate.
          */
         template <class T, class C>
         auto MemberIsAnyOf(T memberFunc, const C &container)
         {
-            return [memberFunc, &container](const auto &object) { return container.contains(std::invoke(memberFunc, object)); };
+            return [memberFunc, &container](const auto &object) {
+                return container.contains(std::invoke(memberFunc, object));
+            };
         }
 
         /*!
@@ -83,14 +89,14 @@ namespace swift::misc
         }
 
         /*!
-         * Returns a predicate that returns true if its arguments compare equal to each other, considering only the captured members.
+         * Returns a predicate that returns true if its arguments compare equal to each other, considering only the
+         * captured members.
          */
         template <class... Ts>
         auto EqualsByMembers(Ts... vs)
         {
-            return [vs...](const auto &a, const auto &b) {
-                return ((std::invoke(vs, a) == std::invoke(vs, b)) && ...);
-            };
+            return
+                [vs...](const auto &a, const auto &b) { return ((std::invoke(vs, a) == std::invoke(vs, b)) && ...); };
         }
 
     } // namespace predicates

@@ -51,11 +51,14 @@ namespace swift::misc::audio
         if (notification.testFlag(NotificationError)) n << flagToString(NotificationError);
         if (notification.testFlag(NotificationLogin)) n << flagToString(NotificationLogin);
         if (notification.testFlag(NotificationLogoff)) n << flagToString(NotificationLogoff);
-        if (notification.testFlag(NotificationTextMessageFrequency)) n << flagToString(NotificationTextMessageFrequency);
+        if (notification.testFlag(NotificationTextMessageFrequency))
+            n << flagToString(NotificationTextMessageFrequency);
         if (notification.testFlag(NotificationTextMessagePrivate)) n << flagToString(NotificationTextMessagePrivate);
-        if (notification.testFlag(NotificationTextMessageSupervisor)) n << flagToString(NotificationTextMessageSupervisor);
+        if (notification.testFlag(NotificationTextMessageSupervisor))
+            n << flagToString(NotificationTextMessageSupervisor);
         if (notification.testFlag(NotificationTextMessageUnicom)) n << flagToString(NotificationTextMessageUnicom);
-        if (notification.testFlag(NotificationTextCallsignMentioned)) n << flagToString(NotificationTextCallsignMentioned);
+        if (notification.testFlag(NotificationTextCallsignMentioned))
+            n << flagToString(NotificationTextCallsignMentioned);
 
         if (notification.testFlag(PTTClickKeyUp)) n << flagToString(PTTClickKeyUp);
         if (notification.testFlag(PTTClickKeyDown)) n << flagToString(PTTClickKeyDown);

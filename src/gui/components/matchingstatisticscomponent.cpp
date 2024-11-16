@@ -14,17 +14,18 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    CMatchingStatisticsComponent::CMatchingStatisticsComponent(QWidget *parent) : QFrame(parent),
-                                                                                  ui(new Ui::CMatchingStatisticsComponent)
+    CMatchingStatisticsComponent::CMatchingStatisticsComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CMatchingStatisticsComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_Generate, &QPushButton::clicked, this, &CMatchingStatisticsComponent::onGenerateClicked);
-        connect(ui->tvp_MatchingStatistics, &CMatchingStatisticsView::requestNewBackendData, this, &CMatchingStatisticsComponent::onGenerateClicked);
-        connect(ui->tvp_MatchingStatistics, &CMatchingStatisticsView::requestUpdate, this, &CMatchingStatisticsComponent::onGenerateClicked);
+        connect(ui->tvp_MatchingStatistics, &CMatchingStatisticsView::requestNewBackendData, this,
+                &CMatchingStatisticsComponent::onGenerateClicked);
+        connect(ui->tvp_MatchingStatistics, &CMatchingStatisticsView::requestUpdate, this,
+                &CMatchingStatisticsComponent::onGenerateClicked);
     }
 
-    CMatchingStatisticsComponent::~CMatchingStatisticsComponent()
-    {}
+    CMatchingStatisticsComponent::~CMatchingStatisticsComponent() {}
 
     void CMatchingStatisticsComponent::onGenerateClicked()
     {

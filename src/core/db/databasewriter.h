@@ -34,10 +34,12 @@ namespace swift::core::db
         CDatabaseWriter(const swift::misc::network::CUrl &baseUrl, QObject *parent);
 
         //! Write model to DB
-        swift::misc::CStatusMessageList asyncPublishModel(const swift::misc::simulation::CAircraftModel &model, const QString &extraInfo);
+        swift::misc::CStatusMessageList asyncPublishModel(const swift::misc::simulation::CAircraftModel &model,
+                                                          const QString &extraInfo);
 
         //! Write models to DB
-        swift::misc::CStatusMessageList asyncPublishModels(const swift::misc::simulation::CAircraftModelList &models, const QString &extraInfo);
+        swift::misc::CStatusMessageList asyncPublishModels(const swift::misc::simulation::CAircraftModelList &models,
+                                                           const QString &extraInfo);
 
         //! Write auto publis data
         swift::misc::CStatusMessageList asyncAutoPublish(const swift::misc::simulation::CAutoPublishData &data);
@@ -61,11 +63,11 @@ namespace swift::core::db
         //! Published models, the response to \sa asyncPublishModels
         void publishedModels(const swift::misc::simulation::CAircraftModelList &modelsPublished,
                              const swift::misc::simulation::CAircraftModelList &modelsSkipped,
-                             const swift::misc::CStatusMessageList &messages,
-                             bool sendingSuccessful, bool directWrite);
+                             const swift::misc::CStatusMessageList &messages, bool sendingSuccessful, bool directWrite);
 
         //! Published models, simplified version of publishedModels
-        void publishedModelsSimplified(const swift::misc::simulation::CAircraftModelList &modelsPublished, bool directWrite);
+        void publishedModelsSimplified(const swift::misc::simulation::CAircraftModelList &modelsPublished,
+                                       bool directWrite);
 
         //! Auto publishing completed
         void autoPublished(bool success, const QString &url, const swift::misc::CStatusMessageList &msgs);

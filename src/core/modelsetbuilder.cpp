@@ -23,7 +23,10 @@ namespace swift::core
         // void
     }
 
-    CAircraftModelList CModelSetBuilder::buildModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &models, const CAircraftModelList &currentSet, Builder options, const CDistributorList &distributors) const
+    CAircraftModelList CModelSetBuilder::buildModelSet(const CSimulatorInfo &simulator,
+                                                       const CAircraftModelList &models,
+                                                       const CAircraftModelList &currentSet, Builder options,
+                                                       const CDistributorList &distributors) const
     {
         if (models.isEmpty()) { return CAircraftModelList(); }
         CAircraftModelList modelSet;
@@ -34,16 +37,10 @@ namespace swift::core
         {
             modelSet = models.findByDistributors(distributors);
         }
-        else
-        {
-            modelSet = models;
-        }
+        else { modelSet = models; }
 
         // Only DB data?
-        if (options.testFlag(OnlyDbData))
-        {
-            modelSet.removeObjectsWithoutDbKey();
-        }
+        if (options.testFlag(OnlyDbData)) { modelSet.removeObjectsWithoutDbKey(); }
         else if (options.testFlag(OnlyDbIcaoCodes))
         {
             Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web data services");
@@ -80,10 +77,7 @@ namespace swift::core
         }
 
         // DB consolidation
-        if (options.testFlag(ConsolidateWithDb))
-        {
-            CDatabaseUtils::consolidateModelsWithDbData(modelSet, true);
-        }
+        if (options.testFlag(ConsolidateWithDb)) { CDatabaseUtils::consolidateModelsWithDbData(modelSet, true); }
 
         // result
         return modelSet;

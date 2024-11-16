@@ -7,20 +7,14 @@
 
 namespace swift::simplugin::fs9
 {
-    CHostNode::CHostNode()
-    {
-    }
+    CHostNode::CHostNode() {}
 
-    CHostNode::CHostNode(const CHostNode &other)
-        : m_appDesc(other.m_appDesc), m_sessionName(other.m_sessionName)
+    CHostNode::CHostNode(const CHostNode &other) : m_appDesc(other.m_appDesc), m_sessionName(other.m_sessionName)
     {
         other.m_hostAddress->Duplicate(&m_hostAddress);
     }
 
-    CHostNode::~CHostNode()
-    {
-        SafeRelease(m_hostAddress);
-    }
+    CHostNode::~CHostNode() { SafeRelease(m_hostAddress); }
 
     CHostNode &CHostNode::operator=(const CHostNode &other)
     {

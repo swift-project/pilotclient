@@ -50,16 +50,10 @@ namespace swift::core::context
         }
 
         //! Local or remote object?
-        bool isLocalObject() const
-        {
-            return isUsingImplementingObject() || m_mode == CCoreFacadeConfig::NotUsed;
-        }
+        bool isLocalObject() const { return isUsingImplementingObject() || m_mode == CCoreFacadeConfig::NotUsed; }
 
         //! Empty object?
-        bool isEmptyObject() const
-        {
-            return m_mode == CCoreFacadeConfig::NotUsed;
-        }
+        bool isEmptyObject() const { return m_mode == CCoreFacadeConfig::NotUsed; }
 
         //! Runtime
         CCoreFacade *getRuntime()
@@ -146,12 +140,15 @@ namespace swift::core::context
         }
 
         //! Relay signals from this class
-        void relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath, const QString &interfaceName);
+        void relayBaseClassSignals(const QString &serviceName, QDBusConnection &connection, const QString &objectPath,
+                                   const QString &interfaceName);
 
         //! Empty context called
         void logEmptyContextWarning(const QString &functionName) const
         {
-            swift::misc::CLogMessage(this, swift::misc::CLogCategories::contextSlot()).warning(u"Empty context called, details: %1") << functionName;
+            swift::misc::CLogMessage(this, swift::misc::CLogCategories::contextSlot())
+                    .warning(u"Empty context called, details: %1")
+                << functionName;
         }
 
         //! Called when shutdown is about to be called

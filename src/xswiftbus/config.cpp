@@ -18,8 +18,7 @@ using namespace swift::misc::simulation::xplane::qtfreeutils;
 
 namespace XSwiftBus
 {
-    CConfig::CConfig()
-    {}
+    CConfig::CConfig() {}
 
     CConfig::~CConfig() {}
 
@@ -162,14 +161,8 @@ namespace XSwiftBus
 
     bool CConfig::parseDebug(const std::string &value)
     {
-        if (stringCompareCaseInsensitive(value, "on"))
-        {
-            m_debug = true;
-        }
-        else
-        {
-            m_debug = false;
-        }
+        if (stringCompareCaseInsensitive(value, "on")) { m_debug = true; }
+        else { m_debug = false; }
         return true;
     }
 

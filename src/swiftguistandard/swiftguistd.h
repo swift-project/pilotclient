@@ -118,13 +118,17 @@ protected:
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
-    QScopedPointer<swift::gui::components::CNavigatorDialog> m_navigator { new swift::gui::components::CNavigatorDialog() }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
+    QScopedPointer<swift::gui::components::CNavigatorDialog> m_navigator {
+        new swift::gui::components::CNavigatorDialog()
+    }; //!< navigator dialog bar, if I pass the parent, the dialog is always centered over the parent
     QScopedPointer<swift::gui::components::CDbLoadDataDialog> m_dbLoadDialog; //!< load DB data, lazy init UI component
     QScopedPointer<swift::gui::components::CAutoPublishDialog> m_autoPublishDialog; //!< auto publish dialog
     QScopedPointer<swift::gui::components::CModelBrowserDialog> m_modelBrower; //!< model browser
-    QScopedPointer<swift::gui::components::CAircraftModelSetValidationDialog> m_validationDialog; //!< aircraft model validation dialog
+    QScopedPointer<swift::gui::components::CAircraftModelSetValidationDialog>
+        m_validationDialog; //!< aircraft model validation dialog
     swift::misc::CData<swift::misc::simulation::data::TLastAutoPublish> m_lastAutoPublish { this };
-    swift::core::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(), swift::misc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
+    swift::core::CActionBind m_actionPtt { swift::misc::input::pttHotkeyAction(),
+                                           swift::misc::CIcons::StandardIconRadio16, this, &SwiftGuiStd::onPttChanged };
     swift::core::CActionBindings m_menuHotkeyHandlers;
     swift::gui::CManagedStatusBar m_statusBar;
     swift::misc::CLogHistoryReplica m_logHistoryForLogButtons { this };
@@ -174,7 +178,9 @@ private:
     //! \param wgsLatitude  WGS latitude
     //! \param wgsLongitude WGS longitude
     //! \param altitude
-    void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const swift::misc::aviation::CAltitude &altitude, const swift::misc::aviation::CAltitude &pressureAltitude);
+    void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude,
+                         const swift::misc::aviation::CAltitude &altitude,
+                         const swift::misc::aviation::CAltitude &pressureAltitude);
 
     //! Is given main page selected?
     //! \param mainPage index to be checked
@@ -209,7 +215,8 @@ private:
     //! Connection status changed
     //! \param from old status
     //! \param to   new status
-    void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+    void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                   const swift::misc::network::CConnectionStatus &to);
 
     //
     // GUI related functions
@@ -296,7 +303,10 @@ private:
     void verifyPrerequisites();
 
     //! Model set haas been verfied
-    void onValidatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator, const swift::misc::simulation::CAircraftModelList &valid, const swift::misc::simulation::CAircraftModelList &invalid, bool stopped, const swift::misc::CStatusMessageList &msgs);
+    void onValidatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator,
+                             const swift::misc::simulation::CAircraftModelList &valid,
+                             const swift::misc::simulation::CAircraftModelList &invalid, bool stopped,
+                             const swift::misc::CStatusMessageList &msgs);
 
     //! Display validation dialog
     void displayValidationDialog();

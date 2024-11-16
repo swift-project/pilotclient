@@ -9,20 +9,15 @@ namespace swift::misc::network
 {
     CRawFsdMessageList::CRawFsdMessageList() {}
 
-    CRawFsdMessageList::CRawFsdMessageList(const CSequence &other) : CSequence<CRawFsdMessage>(other)
-    {}
+    CRawFsdMessageList::CRawFsdMessageList(const CSequence &other) : CSequence<CRawFsdMessage>(other) {}
 
     CRawFsdMessageList CRawFsdMessageList::findByPacketType(const QString &type) const
     {
-        return this->findBy([&](const CRawFsdMessage &rawFsdMessage) {
-            return rawFsdMessage.isPacketType(type);
-        });
+        return this->findBy([&](const CRawFsdMessage &rawFsdMessage) { return rawFsdMessage.isPacketType(type); });
     }
 
     CRawFsdMessageList CRawFsdMessageList::findByContainsString(const QString &str) const
     {
-        return this->findBy([&](const CRawFsdMessage &rawFsdMessage) {
-            return rawFsdMessage.containsString(str);
-        });
+        return this->findBy([&](const CRawFsdMessage &rawFsdMessage) { return rawFsdMessage.containsString(str); });
     }
 } // namespace swift::misc::network

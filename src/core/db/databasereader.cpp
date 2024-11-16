@@ -38,7 +38,8 @@ using namespace swift::core::db;
 
 namespace swift::core::db
 {
-    CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name) : CThreadedReader(owner, name), m_config(config)
+    CDatabaseReader::CDatabaseReader(QObject *owner, const CDatabaseReaderConfigList &config, const QString &name)
+        : CThreadedReader(owner, name), m_config(config)
     {}
 
     void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
@@ -47,13 +48,16 @@ namespace swift::core::db
 
         // we accept cached data
         Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");
-        const bool hasDbInfoObjects = this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not available (DB down) or b) only caches are used
+        const bool hasDbInfoObjects =
+            this->hasDbInfoObjects(); // no info objects is not necessarily an error, but indicates a) either data not
+                                      // available (DB down) or b) only caches are used
         // const bool hasSharedInfoObjects = this->hasSharedInfoObjects();
         CEntityFlags::Entity allEntities = entities;
         CEntityFlags::Entity cachedEntities = CEntityFlags::NoEntity;
         CEntityFlags::Entity dbEntities = CEntityFlags::NoEntity;
         CEntityFlags::Entity sharedEntities = CEntityFlags::NoEntity;
-        CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(allEntities); // CEntityFlags::InfoObjectEntity will be ignored
+        CEntityFlags::Entity currentEntity =
+            CEntityFlags::iterateDbEntities(allEntities); // CEntityFlags::InfoObjectEntity will be ignored
         while (currentEntity)
         {
             const CDatabaseReaderConfig config(this->getConfigForEntity(currentEntity));
@@ -63,9 +67,11 @@ namespace swift::core::db
             const CDbFlags::DataRetrievalMode rm = config.getRetrievalMode(); // DB reading, cache, shared
             Q_ASSERT_X(!rm.testFlag(CDbFlags::Unspecified), Q_FUNC_INFO, "Missing retrieval mode");
             const QString rmString = CDbFlags::flagToString(rm);
-            const CDbFlags::DataRetrievalModeFlag rmDbOrSharedFlag = CDbFlags::modeToModeFlag(rm & CDbFlags::DbReadingOrShared);
+            const CDbFlags::DataRetrievalModeFlag rmDbOrSharedFlag =
+                CDbFlags::modeToModeFlag(rm & CDbFlags::DbReadingOrShared);
             const QString rmDbOrSharedFlagString = CDbFlags::flagToString(rmDbOrSharedFlag);
-            const bool rmDbReadingOrShared = (rmDbOrSharedFlag == CDbFlags::DbReading || rmDbOrSharedFlag == CDbFlags::Shared);
+            const bool rmDbReadingOrShared =
+                (rmDbOrSharedFlag == CDbFlags::DbReading || rmDbOrSharedFlag == CDbFlags::Shared);
             const int currentEntityCount = this->getCacheCount(currentEntity);
 
             if (rm.testFlag(CDbFlags::Ignore) || rm.testFlag(CDbFlags::Canceled))
@@ -88,13 +94,16 @@ namespace swift::core::db
                     const QDateTime cacheTs(this->getCacheTimestamp(currentEntity));
                     const QDateTime latestEntityTs(this->getLatestEntityTimestampFromDbInfoObjects(currentEntity));
                     const qint64 cacheTimestamp = cacheTs.isValid() ? cacheTs.toMSecsSinceEpoch() : -1;
-                    const qint64 latestEntityTimestamp = latestEntityTs.isValid() ? latestEntityTs.toMSecsSinceEpoch() : -1;
+                    const qint64 latestEntityTimestamp =
+                        latestEntityTs.isValid() ? latestEntityTs.toMSecsSinceEpoch() : -1;
                     Q_ASSERT_X(latestEntityTimestamp >= 0, Q_FUNC_INFO, "Missing timestamp");
-                    if (!changedUrl && cacheTimestamp >= latestEntityTimestamp && cacheTimestamp >= 0 && latestEntityTimestamp >= 0)
+                    if (!changedUrl && cacheTimestamp >= latestEntityTimestamp && cacheTimestamp >= 0 &&
+                        latestEntityTimestamp >= 0)
                     {
                         this->admitCaches(currentEntity);
                         cachedEntities |= currentEntity; // read from cache
-                        CLogMessage(this).info(u"Using cache for '%1' (%2, %3)") << currentEntityName << cacheTs.toString() << cacheTimestamp;
+                        CLogMessage(this).info(u"Using cache for '%1' (%2, %3)")
+                            << currentEntityName << cacheTs.toString() << cacheTimestamp;
                     }
                     else
                     {
@@ -104,23 +113,35 @@ namespace swift::core::db
 
                         if (changedUrl)
                         {
-                            CLogMessage(this).info(u"Data location for '%1' changed ('%2'->'%3'), will override cache for reading '%4'")
-                                << currentEntityName << oldUrlInfo.toQString()
-                                << newUrlInfo.toQString() << rmDbOrSharedFlagString;
+                            CLogMessage(this).info(
+                                u"Data location for '%1' changed ('%2'->'%3'), will override cache for reading '%4'")
+                                << currentEntityName << oldUrlInfo.toQString() << newUrlInfo.toQString()
+                                << rmDbOrSharedFlagString;
                         }
                         else
                         {
-                            CLogMessage(this).info(u"Cache for '%1' outdated, latest entity (%2, %3), reading '%4'") << currentEntityName << latestEntityTs.toString() << latestEntityTimestamp << rmDbOrSharedFlagString;
+                            CLogMessage(this).info(u"Cache for '%1' outdated, latest entity (%2, %3), reading '%4'")
+                                << currentEntityName << latestEntityTs.toString() << latestEntityTimestamp
+                                << rmDbOrSharedFlagString;
                         }
                     }
                 }
                 else
                 {
-                    if (!rmDbReadingOrShared) { CLogMessage(this).info(u"No DB or shared reading for '%1', read mode is: '%2'") << currentEntityName << rmString; }
-                    if (!hasDbInfoObjects) { CLogMessage(this).info(u"No DB info objects for '%1', read mode is: '%2'") << currentEntityName << rmString; }
+                    if (!rmDbReadingOrShared)
+                    {
+                        CLogMessage(this).info(u"No DB or shared reading for '%1', read mode is: '%2'")
+                            << currentEntityName << rmString;
+                    }
+                    if (!hasDbInfoObjects)
+                    {
+                        CLogMessage(this).info(u"No DB info objects for '%1', read mode is: '%2'")
+                            << currentEntityName << rmString;
+                    }
                     if (currentEntityCount > 0)
                     {
-                        CLogMessage(this).info(u"Cache for '%1' already read, %2 entries") << currentEntityName << currentEntityCount;
+                        CLogMessage(this).info(u"Cache for '%1' already read, %2 entries")
+                            << currentEntityName << currentEntityCount;
                     }
                     else
                     {
@@ -129,12 +150,14 @@ namespace swift::core::db
                         if (!rmDbReadingOrShared)
                         {
                             // intentionally we do not want to read from DB/shared
-                            CLogMessage(this).info(u"Triggered reading cache for '%1', read mode: %2") << currentEntityName << rmString;
+                            CLogMessage(this).info(u"Triggered reading cache for '%1', read mode: %2")
+                                << currentEntityName << rmString;
                         }
                         else
                         {
                             // we want to read from DB/shared, but have no info object
-                            CLogMessage(this).info(u"No info object for '%1', triggered reading cache, read mode: %2") << currentEntityName << rmString;
+                            CLogMessage(this).info(u"No info object for '%1', triggered reading cache, read mode: %2")
+                                << currentEntityName << rmString;
                         }
                     }
                     cachedEntities |= currentEntity; // read from cache
@@ -166,18 +189,21 @@ namespace swift::core::db
         // Real read from shared
         if (sharedEntities != CEntityFlags::NoEntity)
         {
-            CLogMessage(this).info(u"Start reading shared entities: %1") << CEntityFlags::entitiesToString(sharedEntities);
+            CLogMessage(this).info(u"Start reading shared entities: %1")
+                << CEntityFlags::entitiesToString(sharedEntities);
             this->startReadFromBackendInBackgroundThread(dbEntities, CDbFlags::Shared, newerThan);
         }
     }
 
-    CEntityFlags::Entity CDatabaseReader::triggerLoadingDirectlyFromDb(CEntityFlags::Entity entities, const QDateTime &newerThan)
+    CEntityFlags::Entity CDatabaseReader::triggerLoadingDirectlyFromDb(CEntityFlags::Entity entities,
+                                                                       const QDateTime &newerThan)
     {
         this->startReadFromBackendInBackgroundThread(entities, CDbFlags::DbReading, newerThan);
         return entities;
     }
 
-    CEntityFlags::Entity CDatabaseReader::triggerLoadingDirectlyFromSharedFiles(CEntityFlags::Entity entities, bool checkCacheTsUpfront)
+    CEntityFlags::Entity CDatabaseReader::triggerLoadingDirectlyFromSharedFiles(CEntityFlags::Entity entities,
+                                                                                bool checkCacheTsUpfront)
     {
         if (entities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
         if (checkCacheTsUpfront)
@@ -186,10 +212,11 @@ namespace swift::core::db
             if (newerHeaderEntities != entities)
             {
                 const CEntityFlags::Entity validInCacheEntities = (entities ^ newerHeaderEntities) & entities;
-                CLogMessage(this).info(u"Reduced '%1' to '%2' before triggering load of shared files (still in cache)") << CEntityFlags::entitiesToString(entities) << CEntityFlags::entitiesToString(newerHeaderEntities);
+                CLogMessage(this).info(u"Reduced '%1' to '%2' before triggering load of shared files (still in cache)")
+                    << CEntityFlags::entitiesToString(entities) << CEntityFlags::entitiesToString(newerHeaderEntities);
 
-                // In case we have difference entities we treat them as they were loaded, they result from still being in the cache
-                // Using timer to first finish this function, then the resulting signal
+                // In case we have difference entities we treat them as they were loaded, they result from still being
+                // in the cache Using timer to first finish this function, then the resulting signal
                 if (validInCacheEntities != CEntityFlags::NoEntity)
                 {
                     QPointer<CDatabaseReader> myself(this);
@@ -207,7 +234,9 @@ namespace swift::core::db
         return entities;
     }
 
-    void CDatabaseReader::startReadFromBackendInBackgroundThread(CEntityFlags::Entity entities, CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan)
+    void CDatabaseReader::startReadFromBackendInBackgroundThread(CEntityFlags::Entity entities,
+                                                                 CDbFlags::DataRetrievalModeFlag mode,
+                                                                 const QDateTime &newerThan)
     {
         Q_ASSERT_X(mode == CDbFlags::DbReading || mode == CDbFlags::Shared, Q_FUNC_INFO, "Wrong mode");
 
@@ -222,7 +251,8 @@ namespace swift::core::db
         });
     }
 
-    CDatabaseReader::JsonDatastoreResponse CDatabaseReader::transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const
+    CDatabaseReader::JsonDatastoreResponse
+    CDatabaseReader::transformReplyIntoDatastoreResponse(QNetworkReply *nwReply) const
     {
         Q_ASSERT_X(nwReply, Q_FUNC_INFO, "missing reply");
         JsonDatastoreResponse datastoreResponse;
@@ -234,12 +264,10 @@ namespace swift::core::db
             datastoreResponse.setStringSize(dataFileData.size());
             if (dataFileData.isEmpty())
             {
-                datastoreResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"Empty response, no data"));
+                datastoreResponse.setMessage(
+                    CStatusMessage(this, CStatusMessage::SeverityError, u"Empty response, no data"));
             }
-            else
-            {
-                CDatabaseReader::stringToDatastoreResponse(dataFileData, datastoreResponse);
-            }
+            else { CDatabaseReader::stringToDatastoreResponse(dataFileData, datastoreResponse); }
         }
         return datastoreResponse;
     }
@@ -252,14 +280,16 @@ namespace swift::core::db
         return headerResponse;
     }
 
-    bool CDatabaseReader::setHeaderInfoPart(CDatabaseReader::HeaderResponse &headerResponse, QNetworkReply *nwReply) const
+    bool CDatabaseReader::setHeaderInfoPart(CDatabaseReader::HeaderResponse &headerResponse,
+                                            QNetworkReply *nwReply) const
     {
         Q_ASSERT_X(nwReply, Q_FUNC_INFO, "Missing reply");
         this->threadAssertCheck();
         if (!this->doWorkCheck())
         {
             nwReply->abort();
-            headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError, u"Terminated data parsing process"));
+            headerResponse.setMessage(
+                CStatusMessage(this, CStatusMessage::SeverityError, u"Terminated data parsing process"));
             return false; // stop, terminate straight away, ending thread
         }
 
@@ -275,20 +305,18 @@ namespace swift::core::db
             const QString error(nwReply->errorString());
             const QString url(nwReply->url().toString());
             nwReply->abort();
-            headerResponse.setMessage(CStatusMessage(this, CStatusMessage::SeverityError,
-                                                     u"Reading data failed: '" % error % u"' " % url));
+            headerResponse.setMessage(
+                CStatusMessage(this, CStatusMessage::SeverityError, u"Reading data failed: '" % error % u"' " % url));
             return false;
         }
     }
 
-    CDatabaseReader::JsonDatastoreResponse CDatabaseReader::setStatusAndTransformReplyIntoDatastoreResponse(QNetworkReply *nwReply)
+    CDatabaseReader::JsonDatastoreResponse
+    CDatabaseReader::setStatusAndTransformReplyIntoDatastoreResponse(QNetworkReply *nwReply)
     {
         this->setReplyStatus(nwReply);
         const CDatabaseReader::JsonDatastoreResponse dsr = this->transformReplyIntoDatastoreResponse(nwReply);
-        if (dsr.isSharedFile())
-        {
-            this->receivedSharedFileHeaderNonClosing(nwReply);
-        }
+        if (dsr.isSharedFile()) { this->receivedSharedFileHeaderNonClosing(nwReply); }
         else
         {
             if (dsr.isLoadedFromDb())
@@ -316,15 +344,9 @@ namespace swift::core::db
         return sApp->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
     }
 
-    bool CDatabaseReader::hasDbInfoObjects() const
-    {
-        return !getDbInfoObjects().isEmpty();
-    }
+    bool CDatabaseReader::hasDbInfoObjects() const { return !getDbInfoObjects().isEmpty(); }
 
-    bool CDatabaseReader::hasSharedInfoObjects() const
-    {
-        return !getSharedInfoObjects().isEmpty();
-    }
+    bool CDatabaseReader::hasSharedInfoObjects() const { return !getSharedInfoObjects().isEmpty(); }
 
     bool CDatabaseReader::hasSharedFileHeader(const CEntityFlags::Entity entity) const
     {
@@ -406,10 +428,7 @@ namespace swift::core::db
         CEntityFlags::Entity newerEntities = CEntityFlags::NoEntity;
         while (currentEntity != CEntityFlags::NoEntity)
         {
-            if (this->isSharedHeaderNewerThanCacheTimestamp(currentEntity))
-            {
-                newerEntities |= currentEntity;
-            }
+            if (this->isSharedHeaderNewerThanCacheTimestamp(currentEntity)) { newerEntities |= currentEntity; }
             currentEntity = CEntityFlags::iterateDbEntities(entities);
         }
         return newerEntities;
@@ -422,10 +441,7 @@ namespace swift::core::db
         CEntityFlags::Entity newerEntities = CEntityFlags::NoEntity;
         while (currentEntity != CEntityFlags::NoEntity)
         {
-            if (this->isSharedInfoObjectNewerThanCacheTimestamp(currentEntity))
-            {
-                newerEntities |= currentEntity;
-            }
+            if (this->isSharedInfoObjectNewerThanCacheTimestamp(currentEntity)) { newerEntities |= currentEntity; }
             currentEntity = CEntityFlags::iterateDbEntities(entities);
         }
         return newerEntities;
@@ -436,7 +452,8 @@ namespace swift::core::db
         return m_config.findFirstOrDefaultForEntity(entity);
     }
 
-    CEntityFlags::Entity CDatabaseReader::emitReadSignalPerSingleCachedEntity(CEntityFlags::Entity cachedEntities, bool onlyIfHasData)
+    CEntityFlags::Entity CDatabaseReader::emitReadSignalPerSingleCachedEntity(CEntityFlags::Entity cachedEntities,
+                                                                              bool onlyIfHasData)
     {
         if (cachedEntities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
         CEntityFlags::Entity emitted = CEntityFlags::NoEntity;
@@ -459,13 +476,18 @@ namespace swift::core::db
     {
         // never emit when lock is held, deadlock
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Expect single entity");
-        CLogMessage(this).info(u"Read %1 entities of '%2' from '%3' (%4)") << number << CEntityFlags::entitiesToString(entity) << res.getUrlString() << res.getLoadTimeStringWithStartedHint();
-        emit this->dataRead(entity, res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished, number, res.getUrl());
+        CLogMessage(this).info(u"Read %1 entities of '%2' from '%3' (%4)")
+            << number << CEntityFlags::entitiesToString(entity) << res.getUrlString()
+            << res.getLoadTimeStringWithStartedHint();
+        emit this->dataRead(entity,
+                            res.isRestricted() ? CEntityFlags::ReadFinishedRestricted : CEntityFlags::ReadFinished,
+                            number, res.getUrl());
     }
 
     void CDatabaseReader::logNoWorkingUrl(CEntityFlags::Entity entity)
     {
-        const CStatusMessage msg = CStatusMessage(this, m_severityNoWorkingUrl, u"No working URL for '%1'") << CEntityFlags::entitiesToString(entity);
+        const CStatusMessage msg = CStatusMessage(this, m_severityNoWorkingUrl, u"No working URL for '%1'")
+                                   << CEntityFlags::entitiesToString(entity);
         CLogMessage::preformatted(msg);
     }
 
@@ -474,14 +496,10 @@ namespace swift::core::db
         if (!sApp || sApp->isShuttingDown()) { return CUrl(); }
         switch (mode)
         {
-        case CDbFlags::DbReading:
-            return this->getDbServiceBaseUrl().withAppendedPath("/service");
+        case CDbFlags::DbReading: return this->getDbServiceBaseUrl().withAppendedPath("/service");
         case CDbFlags::SharedInfoOnly:
-        case CDbFlags::Shared:
-            return sApp->getGlobalSetup().getSharedDbDataDirectoryUrl();
-        default:
-            qFatal("Wrong mode");
-            break;
+        case CDbFlags::Shared: return sApp->getGlobalSetup().getSharedDbDataDirectoryUrl();
+        default: qFatal("Wrong mode"); break;
         }
         return CUrl();
     }
@@ -515,7 +533,8 @@ namespace swift::core::db
         const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(fileName);
         m_sharedFileResponses[entity] = headerResponse;
 
-        CLogMessage(this).info(u"Received header for shared file of '%1' from '%2'") << fileName << headerResponse.getUrl().toQString();
+        CLogMessage(this).info(u"Received header for shared file of '%1' from '%2'")
+            << fileName << headerResponse.getUrl().toQString();
         emit this->sharedFileHeaderRead(entity, fileName, !headerResponse.hasWarningOrAboveMessage());
     }
 
@@ -560,10 +579,7 @@ namespace swift::core::db
         return ts > threshold;
     }
 
-    const QString &CDatabaseReader::getStatusMessage() const
-    {
-        return m_statusMessage;
-    }
+    const QString &CDatabaseReader::getStatusMessage() const { return m_statusMessage; }
 
     CStatusMessageList CDatabaseReader::initFromLocalResourceFiles(bool inBackground)
     {
@@ -578,10 +594,12 @@ namespace swift::core::db
 
         if (inBackground || !CThreadUtils::isInThisThread(this))
         {
-            const bool s = this->readFromJsonFilesInBackground(CSwiftDirectories::staticDbFilesDirectory(), entities, overrideNewerOnly);
-            return s ?
-                       CStatusMessage(this).info(u"Started reading in background from '%1' of entities: '%2'") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::entitiesToString(entities) :
-                       CStatusMessage(this).error(u"Starting reading in background from '%1' of entities: '%2' failed") << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::entitiesToString(entities);
+            const bool s = this->readFromJsonFilesInBackground(CSwiftDirectories::staticDbFilesDirectory(), entities,
+                                                               overrideNewerOnly);
+            return s ? CStatusMessage(this).info(u"Started reading in background from '%1' of entities: '%2'")
+                           << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::entitiesToString(entities) :
+                       CStatusMessage(this).error(u"Starting reading in background from '%1' of entities: '%2' failed")
+                           << CSwiftDirectories::staticDbFilesDirectory() << CEntityFlags::entitiesToString(entities);
         }
         else
         {
@@ -608,7 +626,8 @@ namespace swift::core::db
         }
     }
 
-    bool CDatabaseReader::overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo, CEntityFlags::Entity entity, CStatusMessageList &msgs) const
+    bool CDatabaseReader::overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo,
+                                                CEntityFlags::Entity entity, CStatusMessageList &msgs) const
     {
         if (!fileInfo.birthTime().isValid()) { return false; }
         if (!overrideNewerOnly) { return true; }
@@ -619,21 +638,23 @@ namespace swift::core::db
         const qint64 cacheTs = cacheDateTime.toUTC().toMSecsSinceEpoch();
         if (fileTs > cacheTs)
         {
-            msgs.push_back(CStatusMessage(this).info(u"File '%1' is newer than cache (%2)") << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
+            msgs.push_back(CStatusMessage(this).info(u"File '%1' is newer than cache (%2)")
+                           << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
             return true;
         }
         else
         {
-            msgs.push_back(CStatusMessage(this).info(u"File '%1' is not newer than cache (%2)") << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
+            msgs.push_back(CStatusMessage(this).info(u"File '%1' is not newer than cache (%2)")
+                           << fileInfo.absoluteFilePath() << cacheDateTime.toUTC().toString());
             return false;
         }
     }
 
-    void CDatabaseReader::logParseMessage(const QString &entity, int size, int msElapsed, const CDatabaseReader::JsonDatastoreResponse &response) const
+    void CDatabaseReader::logParseMessage(const QString &entity, int size, int msElapsed,
+                                          const CDatabaseReader::JsonDatastoreResponse &response) const
     {
         CLogMessage(this).info(u"Parsed %1 %2 in %3ms, thread %4 | '%5'")
-            << size << entity << msElapsed
-            << CThreadUtils::currentThreadInfo() << response.toQString();
+            << size << entity << msElapsed << CThreadUtils::currentThreadInfo() << response.toQString();
     }
 
     void CDatabaseReader::networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url)
@@ -643,7 +664,8 @@ namespace swift::core::db
         const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(fileName);
         if (CEntityFlags::isSingleEntity(entity))
         {
-            emit this->entityDownloadProgress(entity, logId, m_networkReplyProgress, m_networkReplyCurrent, m_networkReplyNax, url);
+            emit this->entityDownloadProgress(entity, logId, m_networkReplyProgress, m_networkReplyCurrent,
+                                              m_networkReplyNax, url);
         }
     }
 
@@ -655,8 +677,7 @@ namespace swift::core::db
         case CDbFlags::Shared: return CDbInfo::entityToSharedName(entity);
         case CDbFlags::SharedInfoOnly: return CDbInfo::sharedInfoFileName();
         default:
-        case CDbFlags::DbReading:
-            return CDbInfo::entityToServiceName(entity);
+        case CDbFlags::DbReading: return CDbInfo::entityToServiceName(entity);
         }
     }
 
@@ -668,9 +689,9 @@ namespace swift::core::db
 
     const QStringList &CDatabaseReader::getLogCategories()
     {
-        static const QStringList cats = CThreadedReader::getLogCategories() + QStringList {
-            CLogCategories::swiftDbWebservice(), CLogCategories::webservice()
-        };
+        static const QStringList cats =
+            CThreadedReader::getLogCategories() +
+            QStringList { CLogCategories::swiftDbWebservice(), CLogCategories::webservice() };
         return cats;
     }
 
@@ -698,15 +719,17 @@ namespace swift::core::db
         this->emitReadSignalPerSingleCachedEntity(entities, false);
     }
 
-    void CDatabaseReader::stringToDatastoreResponse(const QString &jsonContent, JsonDatastoreResponse &datastoreResponse)
+    void CDatabaseReader::stringToDatastoreResponse(const QString &jsonContent,
+                                                    JsonDatastoreResponse &datastoreResponse)
     {
         const int status = datastoreResponse.getHttpStatusCode();
         if (jsonContent.isEmpty())
         {
             static const QString errorMsg = "Empty JSON string, status: %1, URL: '%2', load time: %3";
-            datastoreResponse.setMessage(CStatusMessage(static_cast<CDatabaseReader *>(nullptr),
-                                                        CStatusMessage::SeverityError,
-                                                        errorMsg.arg(status).arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
+            datastoreResponse.setMessage(
+                CStatusMessage(static_cast<CDatabaseReader *>(nullptr), CStatusMessage::SeverityError,
+                               errorMsg.arg(status).arg(datastoreResponse.getUrlString(),
+                                                        datastoreResponse.getLoadTimeStringWithStartedHint())));
             return;
         }
 
@@ -717,16 +740,17 @@ namespace swift::core::db
             {
                 static const QString errorMsg = "Looks like PHP errror, status %1, URL: '%2', msg: %3";
                 const QString phpErrorMessage = CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(jsonContent);
-                datastoreResponse.setMessage(CStatusMessage(static_cast<CDatabaseReader *>(nullptr),
-                                                            CStatusMessage::SeverityError,
-                                                            errorMsg.arg(status).arg(datastoreResponse.getUrlString(), phpErrorMessage)));
+                datastoreResponse.setMessage(
+                    CStatusMessage(static_cast<CDatabaseReader *>(nullptr), CStatusMessage::SeverityError,
+                                   errorMsg.arg(status).arg(datastoreResponse.getUrlString(), phpErrorMessage)));
             }
             else
             {
                 static const QString errorMsg = "Empty JSON document, URL: '%1', load time: %2";
-                datastoreResponse.setMessage(CStatusMessage(static_cast<CDatabaseReader *>(nullptr),
-                                                            CStatusMessage::SeverityError,
-                                                            errorMsg.arg(datastoreResponse.getUrlString(), datastoreResponse.getLoadTimeStringWithStartedHint())));
+                datastoreResponse.setMessage(
+                    CStatusMessage(static_cast<CDatabaseReader *>(nullptr), CStatusMessage::SeverityError,
+                                   errorMsg.arg(datastoreResponse.getUrlString(),
+                                                datastoreResponse.getLoadTimeStringWithStartedHint())));
             }
             return;
         }
@@ -742,7 +766,8 @@ namespace swift::core::db
             const QJsonObject responseObject(jsonResponse.object());
             datastoreResponse.setJsonArray(responseObject["data"].toArray());
             const QString ts(responseObject["latest"].toString());
-            datastoreResponse.setLastModifiedTimestamp(ts.isEmpty() ? QDateTime::currentDateTimeUtc() : CDatastoreUtility::parseTimestamp(ts));
+            datastoreResponse.setLastModifiedTimestamp(ts.isEmpty() ? QDateTime::currentDateTimeUtc() :
+                                                                      CDatastoreUtility::parseTimestamp(ts));
             datastoreResponse.setRestricted(responseObject["restricted"].toBool());
         }
     }
@@ -761,7 +786,10 @@ namespace swift::core::db
     QString CDatabaseReader::JsonDatastoreResponse::toQString() const
     {
         static const QString s("DB: %1 | restricted: %2 | array: %3 | string size: %4 | content: %5");
-        return s.arg(boolToYesNo(this->isLoadedFromDb()), boolToYesNo(this->isRestricted())).arg(this->getArraySize()).arg(m_stringSize).arg(this->getContentLengthHeader());
+        return s.arg(boolToYesNo(this->isLoadedFromDb()), boolToYesNo(this->isRestricted()))
+            .arg(this->getArraySize())
+            .arg(m_stringSize)
+            .arg(this->getContentLengthHeader());
     }
 
     bool CDatabaseReader::HeaderResponse::isSharedFile() const

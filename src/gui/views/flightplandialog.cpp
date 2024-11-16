@@ -15,18 +15,17 @@ using namespace swift::gui::components;
 
 namespace swift::gui::views
 {
-    CFlightPlanDialog::CFlightPlanDialog(QWidget *parent) : QDialog(parent),
-                                                            ui(new Ui::CFlightPlanDialog)
+    CFlightPlanDialog::CFlightPlanDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CFlightPlanDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
         connect(ui->pb_LoadFlightPlan, &QPushButton::clicked, this, &CFlightPlanDialog::loadFp);
-        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEnteredDigest, this, &CFlightPlanDialog::loadFp);
+        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEnteredDigest, this,
+                &CFlightPlanDialog::loadFp);
     }
 
-    CFlightPlanDialog::~CFlightPlanDialog()
-    {}
+    CFlightPlanDialog::~CFlightPlanDialog() {}
 
     void CFlightPlanDialog::showFlightPlan(const CCallsign &callsign)
     {

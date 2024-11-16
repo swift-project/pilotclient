@@ -20,19 +20,13 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CLiveryFilter(
-            int id,
-            const QString &combinedCode,
-            const QString &descriptiom,
-            const QString &airlineDesignator,
-            const swift::misc::CRgbColor &fuselageColor,
-            const swift::misc::CRgbColor &tailColor,
-            double maxColorDistance,
-            bool colorLiveries,
-            bool airlineLiveries);
+        CLiveryFilter(int id, const QString &combinedCode, const QString &descriptiom, const QString &airlineDesignator,
+                      const swift::misc::CRgbColor &fuselageColor, const swift::misc::CRgbColor &tailColor,
+                      double maxColorDistance, bool colorLiveries, bool airlineLiveries);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::aviation::CLiveryList filter(const swift::misc::aviation::CLiveryList &inContainer) const override;
+        virtual swift::misc::aviation::CLiveryList
+        filter(const swift::misc::aviation::CLiveryList &inContainer) const override;
 
     private:
         int m_id = -1;

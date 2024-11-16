@@ -26,9 +26,7 @@ namespace swift::gui::components
     /*!
      * Download a file
      */
-    class SWIFT_GUI_EXPORT CDownloadComponent :
-        public COverlayMessagesFrame,
-        public CLoadIndicatorEnabled
+    class SWIFT_GUI_EXPORT CDownloadComponent : public COverlayMessagesFrame, public CLoadIndicatorEnabled
     {
         Q_OBJECT
 
@@ -86,7 +84,8 @@ namespace swift::gui::components
     private:
         static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
         QScopedPointer<Ui::CDownloadComponent> ui;
-        const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly | QFileDialog::DontResolveSymlinks };
+        const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly |
+                                                         QFileDialog::DontResolveSymlinks };
         swift::misc::network::CRemoteFile m_fileInProgress; //!< file currently downloading
         swift::misc::network::CRemoteFileList m_remoteFiles; //!< files for download
         swift::misc::network::CRemoteFileList m_waitingForDownload; //!< files currently waiting for download

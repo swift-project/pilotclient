@@ -18,10 +18,7 @@ namespace swift::misc
         return QThread::currentThread() == toBeTested->thread();
     }
 
-    bool CThreadUtils::thisIsMainThread()
-    {
-        return qApp && QThread::currentThread() == qApp->thread();
-    }
+    bool CThreadUtils::thisIsMainThread() { return qApp && QThread::currentThread() == qApp->thread(); }
 
     QString CThreadUtils::currentThreadInfo()
     {

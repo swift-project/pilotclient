@@ -32,14 +32,15 @@ namespace swift::sample
     int CSamplesChangeObject::samples()
     {
         // ATC station
-        const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
+        const CCoordinateGeodetic geoPos =
+            CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         const CAtcStation station1(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
-                                   CFrequency(118.7, CFrequencyUnit::MHz()),
-                                   geoPos, CLength(50, CLengthUnit::km()), false);
+                                   CFrequency(118.7, CFrequencyUnit::MHz()), geoPos, CLength(50, CLengthUnit::km()),
+                                   false);
         const CAtcStation station2(station1);
         const CAtcStation station3(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
-                                   CFrequency(120.7, CFrequencyUnit::MHz()),
-                                   geoPos, CLength(100, CLengthUnit::km()), false);
+                                   CFrequency(120.7, CFrequencyUnit::MHz()), geoPos, CLength(100, CLengthUnit::km()),
+                                   false);
 
         Q_ASSERT_X(station1 == station2, Q_FUNC_INFO, "Unequal stations");
 
@@ -57,9 +58,8 @@ namespace swift::sample
         // put Jane in the tower
         CPropertyIndexVariantMap newController;
         newController.addValue(CAtcStation::IndexController, CVariant::fromValue(CUser("112233", "Jane Doe")));
-        atcList.applyIf(
-            swift::misc::predicates::MemberEqual(&CAtcStation::getCallsign, CCallsign("eddm_twr")),
-            newController);
+        atcList.applyIf(swift::misc::predicates::MemberEqual(&CAtcStation::getCallsign, CCallsign("eddm_twr")),
+                        newController);
         qDebug() << "-- after update via predicates";
         qDebug() << atcList.toQString();
 

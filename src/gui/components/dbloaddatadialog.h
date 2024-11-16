@@ -50,10 +50,12 @@ namespace swift::gui::components
         void onButtonClicked(QAbstractButton *button);
 
         //! Data are/have been read
-        void onDataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void onDataRead(swift::misc::network::CEntityFlags::Entity entity,
+                        swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Download progress
-        void onEntityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        void onEntityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress,
+                                      qint64 current, qint64 max, const QUrl &url);
 
         //! Dialog rejected
         void onRejected();

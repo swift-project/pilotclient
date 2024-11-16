@@ -68,10 +68,7 @@ namespace MiscTest
         void offsetTimestampList();
     };
 
-    void CTestContainers::initTestCase()
-    {
-        swift::misc::registerMetadata();
-    }
+    void CTestContainers::initTestCase() { swift::misc::registerMetadata(); }
 
     void CTestContainers::collectionBasics()
     {
@@ -178,29 +175,17 @@ namespace MiscTest
             QString name;
             int age;
         };
-        CSequence<Person> list {
-            { "Alice", 33 },
-            { "Bob", 32 },
-            { "Cathy", 32 },
-            { "Dave", 31 },
-            { "Emily", 31 }
-        };
-        CSequence<Person> sorted {
-            { "Dave", 31 },
-            { "Emily", 31 },
-            { "Bob", 32 },
-            { "Cathy", 32 },
-            { "Alice", 33 }
-        };
+        CSequence<Person> list { { "Alice", 33 }, { "Bob", 32 }, { "Cathy", 32 }, { "Dave", 31 }, { "Emily", 31 } };
+        CSequence<Person> sorted { { "Dave", 31 }, { "Emily", 31 }, { "Bob", 32 }, { "Cathy", 32 }, { "Alice", 33 } };
         QVERIFY2(list.sortedBy(&Person::getAge, &Person::getName) == sorted, "sort by multiple members");
     }
 
     void CTestContainers::removeTests()
     {
         const CSequence<int> base { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        const CSequence<CSequence<int>> subsets {
-            {}, { 1 }, { 9 }, { 5 }, { 1, 9 }, { 1, 5 }, { 5, 9 }, { 1, 2 }, { 8, 9 }, { 4, 5, 6 }, { 1, 5, 9 }, { 3, 7 }, { 3, 5, 7 }, base
-        };
+        const CSequence<CSequence<int>> subsets { {},          { 1 },    { 9 },       { 5 },    { 1, 9 },
+                                                  { 1, 5 },    { 5, 9 }, { 1, 2 },    { 8, 9 }, { 4, 5, 6 },
+                                                  { 1, 5, 9 }, { 3, 7 }, { 3, 5, 7 }, base };
         for (const auto &subset : subsets)
         {
             auto copy1 = base, copy2 = base;
@@ -363,7 +348,8 @@ namespace MiscTest
     void CTestContainers::offsetTimestampList()
     {
         CAircraftSituationList situations;
-        static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
+        static const CCoordinateGeodetic geoPos =
+            CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", { 1487, CLengthUnit::ft() });
         qint64 ts = 1000000;
         int no = 10;
         const int max = 6;

@@ -34,7 +34,8 @@ namespace swift::core::afv::crypto
 
         //! Serialize a DTO
         template <typename T>
-        static QByteArray serialize(const QString &channelTag, CryptoDtoMode mode, const QByteArray &transmitKey, uint sequenceToBeSent, T dto)
+        static QByteArray serialize(const QString &channelTag, CryptoDtoMode mode, const QByteArray &transmitKey,
+                                    uint sequenceToBeSent, T dto)
         {
             Q_ASSERT_X(transmitKey.size() == crypto_aead_chacha20poly1305_IETF_KEYBYTES, Q_FUNC_INFO, "");
             const CryptoDtoHeaderDto header = { channelTag.toStdString(), sequenceToBeSent, mode };
@@ -81,14 +82,15 @@ namespace swift::core::afv::crypto
 
                 unsigned long long clen;
                 QByteArray aeadPayload;
-                aeadPayload.fill(0, static_cast<int>(aePayloadBuffer.size() + crypto_aead_chacha20poly1305_IETF_ABYTES));
-                int result = crypto_aead_chacha20poly1305_ietf_encrypt(reinterpret_cast<unsigned char *>(aeadPayload.data()),
-                                                                       &clen,
-                                                                       reinterpret_cast<const unsigned char *>(aePayloadBuffer.buffer().constData()), aePayloadBuffer.size(),
-                                                                       reinterpret_cast<const unsigned char *>(adPayloadBuffer.buffer().constData()), adPayloadBuffer.size(),
-                                                                       nullptr,
-                                                                       reinterpret_cast<const unsigned char *>(nonce.constData()),
-                                                                       reinterpret_cast<const unsigned char *>(transmitKey.constData()));
+                aeadPayload.fill(0,
+                                 static_cast<int>(aePayloadBuffer.size() + crypto_aead_chacha20poly1305_IETF_ABYTES));
+                int result = crypto_aead_chacha20poly1305_ietf_encrypt(
+                    reinterpret_cast<unsigned char *>(aeadPayload.data()), &clen,
+                    reinterpret_cast<const unsigned char *>(aePayloadBuffer.buffer().constData()),
+                    aePayloadBuffer.size(),
+                    reinterpret_cast<const unsigned char *>(adPayloadBuffer.buffer().constData()),
+                    adPayloadBuffer.size(), nullptr, reinterpret_cast<const unsigned char *>(nonce.constData()),
+                    reinterpret_cast<const unsigned char *>(transmitKey.constData()));
                 if (result != 0) { return {}; }
 
                 QBuffer packetBuffer;
@@ -126,7 +128,8 @@ namespace swift::core::afv::crypto
                 if (!m_verified) return {};
                 if (m_dtoNameBuffer == T::getDtoName() || m_dtoNameBuffer == T::getShortDtoName())
                 {
-                    msgpack::object_handle oh2 = msgpack::unpack(m_dataBuffer.data(), static_cast<std::size_t>(m_dataBuffer.size()));
+                    msgpack::object_handle oh2 =
+                        msgpack::unpack(m_dataBuffer.data(), static_cast<std::size_t>(m_dataBuffer.size()));
                     msgpack::object obj = oh2.get();
                     T dto = obj.as<T>();
                     return dto;

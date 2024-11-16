@@ -57,8 +57,9 @@ namespace XSwiftBus
         //! \param left  Number of "virtual pixels" between screen left edge and box left edge.
         //! \param right Number of "virtual pixels" between screen right edge and box right edge.
         //! \param top   Number of "virtual pixels" between screen top edge and box top edge.
-        CMessageBox(int left, int right, int top) : CDrawable(xplm_Phase_Window, true),
-                                                    m_boxLeft(left), m_boxRight(right), m_boxTop(top) {}
+        CMessageBox(int left, int right, int top)
+            : CDrawable(xplm_Phase_Window, true), m_boxLeft(left), m_boxRight(right), m_boxTop(top)
+        {}
 
         //! Set messages to draw in message box, from a pair of iterators.
         template <typename Iterator>

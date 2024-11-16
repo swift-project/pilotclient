@@ -15,19 +15,21 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    CInterpolationComponent::CInterpolationComponent(QWidget *parent) : QFrame(parent),
-                                                                        ui(new Ui::CInterpolationComponent)
+    CInterpolationComponent::CInterpolationComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CInterpolationComponent)
     {
         ui->setupUi(this);
         ui->tw_InterpolationSetup->setCurrentIndex(0);
 
-        connect(ui->comp_InterpolationSetup, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget, this, &CInterpolationComponent::requestRenderingRestrictionsWidget);
-        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validChangedCallsignEntered, this, &CInterpolationComponent::displayInterpolationMessages);
-        connect(ui->pb_ReloadInterpolationMessages, &QPushButton::released, this, &CInterpolationComponent::displayInterpolationMessages);
+        connect(ui->comp_InterpolationSetup, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget, this,
+                &CInterpolationComponent::requestRenderingRestrictionsWidget);
+        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validChangedCallsignEntered, this,
+                &CInterpolationComponent::displayInterpolationMessages);
+        connect(ui->pb_ReloadInterpolationMessages, &QPushButton::released, this,
+                &CInterpolationComponent::displayInterpolationMessages);
     }
 
-    CInterpolationComponent::~CInterpolationComponent()
-    {}
+    CInterpolationComponent::~CInterpolationComponent() {}
 
     void CInterpolationComponent::displayInterpolationMessages()
     {

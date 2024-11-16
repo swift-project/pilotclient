@@ -76,8 +76,7 @@ namespace swift::core
     /*!
      * Encapsulates reading data from web sources
      */
-    class SWIFT_CORE_EXPORT CWebDataServices :
-        public QObject
+    class SWIFT_CORE_EXPORT CWebDataServices : public QObject
     {
         Q_OBJECT
 
@@ -86,7 +85,8 @@ namespace swift::core
         static const QStringList &getLogCategories();
 
         //! Constructor, only allowed from swift::core::CApplication
-        CWebDataServices(CWebReaderFlags::WebReader readerFlags, const swift::core::db::CDatabaseReaderConfigList &dbReaderConfig, QObject *parent = nullptr);
+        CWebDataServices(CWebReaderFlags::WebReader readerFlags,
+                         const swift::core::db::CDatabaseReaderConfigList &dbReaderConfig, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CWebDataServices() override;
@@ -130,11 +130,13 @@ namespace swift::core
 
         //! ATC stations by callsign
         //! \threadsafe
-        swift::misc::aviation::CAtcStationList getAtcStationsForCallsign(const swift::misc::aviation::CCallsign &callsign) const;
+        swift::misc::aviation::CAtcStationList
+        getAtcStationsForCallsign(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Voice capabilities for given callsign
         //! \threadsafe
-        swift::misc::network::CVoiceCapabilities getVoiceCapabilityForCallsign(const swift::misc::aviation::CCallsign &callsign) const;
+        swift::misc::network::CVoiceCapabilities
+        getVoiceCapabilityForCallsign(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Update with web data
         //! \threadsafe
@@ -154,7 +156,8 @@ namespace swift::core
 
         //! Use distributor object to select the best complete distributor from DB
         //! \threadsafe
-        swift::misc::simulation::CDistributor smartDistributorSelector(const swift::misc::simulation::CDistributor &distributor) const;
+        swift::misc::simulation::CDistributor
+        smartDistributorSelector(const swift::misc::simulation::CDistributor &distributor) const;
 
         //! Use distributor object to select the best complete distributor from DB
         //! \threadsafe
@@ -162,7 +165,9 @@ namespace swift::core
 
         //! Best match specified by distributor / model
         //! \threadsafe
-        swift::misc::simulation::CDistributor smartDistributorSelector(const swift::misc::simulation::CDistributor &distributor, const swift::misc::simulation::CAircraftModel &model) const;
+        swift::misc::simulation::CDistributor
+        smartDistributorSelector(const swift::misc::simulation::CDistributor &distributor,
+                                 const swift::misc::simulation::CAircraftModel &model) const;
 
         //! Liveries
         //! \threadsafe
@@ -182,7 +187,8 @@ namespace swift::core
 
         //! Standard livery for airline code
         //! \threadsafe
-        swift::misc::aviation::CLivery getStdLiveryForAirlineCode(const swift::misc::aviation::CAirlineIcaoCode &icao) const;
+        swift::misc::aviation::CLivery
+        getStdLiveryForAirlineCode(const swift::misc::aviation::CAirlineIcaoCode &icao) const;
 
         //! Livery for id
         //! \threadsafe
@@ -210,11 +216,15 @@ namespace swift::core
 
         //! Model completer string
         //! \threadsafe
-        QStringList getModelCompleterStrings(bool sorted = true, const swift::misc::simulation::CSimulatorInfo &simulator = { swift::misc::simulation::CSimulatorInfo::All }) const;
+        QStringList getModelCompleterStrings(bool sorted = true,
+                                             const swift::misc::simulation::CSimulatorInfo &simulator = {
+                                                 swift::misc::simulation::CSimulatorInfo::All }) const;
 
         //! Models for combined code and aircraft designator
         //! \threadsafe
-        swift::misc::simulation::CAircraftModelList getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const;
+        swift::misc::simulation::CAircraftModelList
+        getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator,
+                                                            const QString &combinedCode) const;
 
         //! Model for model string if any
         //! \threadsafe
@@ -250,7 +260,8 @@ namespace swift::core
 
         //! Aircraft ICAO codes for airline
         //! \threadsafe
-        swift::misc::aviation::CAircraftIcaoCodeList getAircraftIcaoCodesForAirline(const swift::misc::aviation::CAirlineIcaoCode &airline) const;
+        swift::misc::aviation::CAircraftIcaoCodeList
+        getAircraftIcaoCodesForAirline(const swift::misc::aviation::CAirlineIcaoCode &airline) const;
 
         //! Aircraft categories
         //! \threadsafe
@@ -274,7 +285,8 @@ namespace swift::core
 
         //! Use an ICAO object to select the best complete ICAO object from DB for it
         //! \threadsafe
-        swift::misc::aviation::CAircraftIcaoCode smartAircraftIcaoSelector(const swift::misc::aviation::CAircraftIcaoCode &icao) const;
+        swift::misc::aviation::CAircraftIcaoCode
+        smartAircraftIcaoSelector(const swift::misc::aviation::CAircraftIcaoCode &icao) const;
 
         //! Airline ICAO codes
         //! \threadsafe
@@ -286,11 +298,13 @@ namespace swift::core
 
         //! ICAO code if unique, otherwise default
         //! \threadsafe
-        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
+        swift::misc::aviation::CAirlineIcaoCode
+        getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const;
 
         //! ICAO code if unique, otherwise default
         //! \threadsafe
-        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const;
+        swift::misc::aviation::CAirlineIcaoCode
+        getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const;
 
         //! Airline names
         //! \threadsafe
@@ -318,11 +332,14 @@ namespace swift::core
 
         //! Smart airline selector
         //! \threadsafe
-        swift::misc::aviation::CAirlineIcaoCode smartAirlineIcaoSelector(const swift::misc::aviation::CAirlineIcaoCode &code, const swift::misc::aviation::CCallsign &callsign = swift::misc::aviation::CCallsign()) const;
+        swift::misc::aviation::CAirlineIcaoCode smartAirlineIcaoSelector(
+            const swift::misc::aviation::CAirlineIcaoCode &code,
+            const swift::misc::aviation::CCallsign &callsign = swift::misc::aviation::CCallsign()) const;
 
         //! ICAO code for callsign (e.g. DLH123 -> DLH)
         //! \threadsafe
-        swift::misc::aviation::CAirlineIcaoCode findBestMatchByCallsign(const swift::misc::aviation::CCallsign &callsign) const;
+        swift::misc::aviation::CAirlineIcaoCode
+        findBestMatchByCallsign(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Countries
         //! \threadsafe
@@ -366,17 +383,18 @@ namespace swift::core
 
         //! Validate for publishing
         //! \remark More detailed check than swift::misc::simulation::CAircraftModelList::validateForPublishing
-        swift::misc::CStatusMessageList validateForPublishing(
-            const swift::misc::simulation::CAircraftModelList &modelsToBePublished,
-            bool ignoreEqual,
-            swift::misc::simulation::CAircraftModelList &validModels,
-            swift::misc::simulation::CAircraftModelList &invalidModels) const;
+        swift::misc::CStatusMessageList
+        validateForPublishing(const swift::misc::simulation::CAircraftModelList &modelsToBePublished, bool ignoreEqual,
+                              swift::misc::simulation::CAircraftModelList &validModels,
+                              swift::misc::simulation::CAircraftModelList &invalidModels) const;
 
         //! \copydoc swift::misc::simulation::CAircraftModel::isEqualForPublishing
-        bool isDbModelEqualForPublishing(const swift::misc::simulation::CAircraftModel &modelToBeChecked, swift::misc::CStatusMessageList *details = nullptr) const;
+        bool isDbModelEqualForPublishing(const swift::misc::simulation::CAircraftModel &modelToBeChecked,
+                                         swift::misc::CStatusMessageList *details = nullptr) const;
 
         //! Publish models to database
-        swift::misc::CStatusMessageList asyncPublishModels(const swift::misc::simulation::CAircraftModelList &modelsToBePublished) const;
+        swift::misc::CStatusMessageList
+        asyncPublishModels(const swift::misc::simulation::CAircraftModelList &modelsToBePublished) const;
 
         //! Auto publish to database
         swift::misc::CStatusMessageList asyncAutoPublish(const swift::misc::simulation::CAutoPublishData &data) const;
@@ -389,13 +407,18 @@ namespace swift::core
 
         //! Trigger read of new data
         //! \note requires info objects loaded upfront and uses the full cache logic
-        swift::misc::network::CEntityFlags::Entity triggerRead(swift::misc::network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
+        swift::misc::network::CEntityFlags::Entity triggerRead(swift::misc::network::CEntityFlags::Entity whatToRead,
+                                                               const QDateTime &newerThan = QDateTime());
 
         //! Trigger reload from DB, loads the DB data and bypasses the caches checks and info objects
-        swift::misc::network::CEntityFlags::Entity triggerLoadingDirectlyFromDb(swift::misc::network::CEntityFlags::Entity whatToRead, const QDateTime &newerThan = QDateTime());
+        swift::misc::network::CEntityFlags::Entity
+        triggerLoadingDirectlyFromDb(swift::misc::network::CEntityFlags::Entity whatToRead,
+                                     const QDateTime &newerThan = QDateTime());
 
         //! Trigger reload from shared files, loads the data and bypasses caches
-        swift::misc::network::CEntityFlags::Entity triggerLoadingDirectlyFromSharedFiles(swift::misc::network::CEntityFlags::Entity whatToRead, bool checkCacheTsUpfront);
+        swift::misc::network::CEntityFlags::Entity
+        triggerLoadingDirectlyFromSharedFiles(swift::misc::network::CEntityFlags::Entity whatToRead,
+                                              bool checkCacheTsUpfront);
 
         //! Corresponding cache timestamp if applicable
         //! \threadsafe
@@ -417,17 +440,22 @@ namespace swift::core
 
         //! Entities with newer shared file (from DB Info object)
         //! \threadsafe
-        swift::misc::network::CEntityFlags::Entity getEntitiesWithNewerSharedFile(swift::misc::network::CEntityFlags::Entity entities) const;
+        swift::misc::network::CEntityFlags::Entity
+        getEntitiesWithNewerSharedFile(swift::misc::network::CEntityFlags::Entity entities) const;
 
         //! Empty entities in cache
         //! \remark can also be empty because cache is not yet synchronized
         //! \threadsafe
-        swift::misc::network::CEntityFlags::Entity getEmptyEntities(swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::AllDbEntities) const;
+        swift::misc::network::CEntityFlags::Entity
+        getEmptyEntities(swift::misc::network::CEntityFlags::Entity entities =
+                             swift::misc::network::CEntityFlags::AllDbEntities) const;
 
         //! Synchronized entities either empty or with newer shared file
         //! \remark will synchronize entities
         //! \threadsafe
-        swift::misc::network::CEntityFlags::Entity getSynchronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData = true, swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::AllDbEntities);
+        swift::misc::network::CEntityFlags::Entity getSynchronizedEntitiesWithNewerSharedFileOrEmpty(
+            bool syncData = true,
+            swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::AllDbEntities);
 
         //! Cache count for entity
         //! \threadsafe
@@ -439,7 +467,8 @@ namespace swift::core
 
         //! Count for 1-n entities from DB entity objects
         //! \threadsafe
-        int getDbInfoObjectsCount(swift::misc::network::CEntityFlags::Entity entities, bool stopIfNotFound = true) const;
+        int getDbInfoObjectsCount(swift::misc::network::CEntityFlags::Entity entities,
+                                  bool stopIfNotFound = true) const;
 
         //! Count for entity from shared entity objects
         //! \threadsafe
@@ -484,14 +513,17 @@ namespace swift::core
 
         //! Init caches from local DB files per given entities
         //! \remark the shared files coming with the installer
-        swift::misc::CStatusMessageList initDbCachesFromLocalResourceFiles(swift::misc::network::CEntityFlags::Entity entities, bool inBackground);
+        swift::misc::CStatusMessageList
+        initDbCachesFromLocalResourceFiles(swift::misc::network::CEntityFlags::Entity entities, bool inBackground);
 
     signals:
         //! Combined read signal
-        void dataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entity,
+                      swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Download progress for an entity
-        void entityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+        void entityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress,
+                                    qint64 current, qint64 max, const QUrl &url);
 
         //! Database reader messages
         //! \remark used with splash screen
@@ -538,7 +570,8 @@ namespace swift::core
 
         //! First read (allows to immediately read in background)
         //! \remark ensures info objects (if and only if needed) are read upfront
-        void readInBackground(swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::AllEntities);
+        void readInBackground(
+            swift::misc::network::CEntityFlags::Entity entities = swift::misc::network::CEntityFlags::AllEntities);
 
     private:
         //! Received METAR data
@@ -557,7 +590,8 @@ namespace swift::core
         void startVatsimServerFileReader();
 
         //! Read finished from reader
-        void readFromSwiftReader(swift::misc::network::CEntityFlags::Entity entities, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void readFromSwiftReader(swift::misc::network::CEntityFlags::Entity entities,
+                                 swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
         //! Init the readers
         void initReaders(CWebReaderFlags::WebReader readersNeeded, swift::misc::network::CEntityFlags::Entity entities);
@@ -578,7 +612,8 @@ namespace swift::core
         bool signalEntitiesAlreadyRead(swift::misc::network::CEntityFlags::Entity entities);
 
         //! Info object count from shared/DB info objects
-        int getInfoObjectCount(swift::misc::network::CEntityFlags::Entity entity, swift::core::db::CInfoDataReader *reader) const;
+        int getInfoObjectCount(swift::misc::network::CEntityFlags::Entity entity,
+                               swift::core::db::CInfoDataReader *reader) const;
 
         //! Entities from DB with cached data (i.e. count > 0)
         //! \remark requires the caches already read
@@ -586,7 +621,8 @@ namespace swift::core
 
         //! Entities from DB with cache timestamp newer than given threshold
         //! \remark unlike getDbEntitiesWithCachedData() this does not need the caches already being read
-        swift::misc::network::CEntityFlags::Entity getDbEntitiesWithTimestampNewerThan(const QDateTime &threshold) const;
+        swift::misc::network::CEntityFlags::Entity
+        getDbEntitiesWithTimestampNewerThan(const QDateTime &threshold) const;
 
         //! Wait for DB info objects to be read
         bool waitForDbInfoObjectsThenRead(swift::misc::network::CEntityFlags::Entity entities);
@@ -597,10 +633,13 @@ namespace swift::core
 
         //! Wait for info objects to be read
         //! \return true means info objects available
-        bool waitForInfoObjectsThenRead(swift::misc::network::CEntityFlags::Entity entities, const QString &info, swift::core::db::CInfoDataReader *infoReader, QDateTime &timeOut);
+        bool waitForInfoObjectsThenRead(swift::misc::network::CEntityFlags::Entity entities, const QString &info,
+                                        swift::core::db::CInfoDataReader *infoReader, QDateTime &timeOut);
 
-        swift::misc::network::CEntityFlags::Entity m_entitiesPeriodicallyRead = swift::misc::network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
-        swift::misc::network::CEntityFlags::Entity m_swiftDbEntitiesRead = swift::misc::network::CEntityFlags::NoEntity; //!< entities read
+        swift::misc::network::CEntityFlags::Entity m_entitiesPeriodicallyRead =
+            swift::misc::network::CEntityFlags::NoEntity; //!< entities permanently updated by timers
+        swift::misc::network::CEntityFlags::Entity m_swiftDbEntitiesRead =
+            swift::misc::network::CEntityFlags::NoEntity; //!< entities read
         swift::core::db::CDatabaseReaderConfigList m_dbReaderConfig; //!< how to read DB data
         std::atomic_bool m_shuttingDown { false }; //!< shutting down?
         QDateTime m_dbInfoObjectTimeout; //!< started reading DB info objects

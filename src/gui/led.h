@@ -68,7 +68,8 @@ namespace swift::gui
         CLedWidget(QWidget *parent = nullptr);
 
         //! Constructor
-        CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName = "on", const QString &offName = "off", int targetWidth = -1, QWidget *parent = nullptr);
+        CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName = "on",
+                   const QString &offName = "off", int targetWidth = -1, QWidget *parent = nullptr);
 
         //! Destructor
         virtual ~CLedWidget() override;
@@ -144,10 +145,13 @@ namespace swift::gui
         void setTriStateValues(LedColor color, const QString &tooltip);
 
         //! New values dual state
-        void setValues(LedColor onColor, LedColor offColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, int width = -1);
+        void setValues(LedColor onColor, LedColor offColor, LedShape shape, const QString &toolTipOn,
+                       const QString &toolTipOff, int width = -1);
 
         //! New values tri-state
-        void setValues(LedColor onColor, LedColor offColor, LedColor triStateColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, const QString &toolTipTriState, int width = -1);
+        void setValues(LedColor onColor, LedColor offColor, LedColor triStateColor, LedShape shape,
+                       const QString &toolTipOn, const QString &toolTipOff, const QString &toolTipTriState,
+                       int width = -1);
 
         //! Render as pixmap, so it can be used with TableViews
         QPixmap asPixmap() const;

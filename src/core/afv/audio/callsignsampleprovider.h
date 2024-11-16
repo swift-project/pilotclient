@@ -33,7 +33,9 @@ namespace swift::core::afv::audio
 
     public:
         //! Ctor
-        CCallsignSampleProvider(const QAudioFormat &audioFormat, const swift::core::afv::audio::CReceiverSampleProvider *receiver, QObject *parent = nullptr);
+        CCallsignSampleProvider(const QAudioFormat &audioFormat,
+                                const swift::core::afv::audio::CReceiverSampleProvider *receiver,
+                                QObject *parent = nullptr);
 
         //! Read samples
         int readSamples(QVector<float> &samples, qint64 count) override;

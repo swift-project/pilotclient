@@ -20,8 +20,8 @@ using namespace swift::sound::sample_provider;
 
 namespace swift::core::afv::audio
 {
-    CAudioOutputBuffer::CAudioOutputBuffer(ISampleProvider *sampleProvider, QObject *parent) : QIODevice(parent),
-                                                                                               m_sampleProvider(sampleProvider)
+    CAudioOutputBuffer::CAudioOutputBuffer(ISampleProvider *sampleProvider, QObject *parent)
+        : QIODevice(parent), m_sampleProvider(sampleProvider)
     {
         Q_ASSERT_X(sampleProvider, Q_FUNC_INFO, "need sample provide");
         const QString on = QStringLiteral("%1 for %2").arg(classNameShort(this), sampleProvider->objectName());
@@ -71,10 +71,7 @@ namespace swift::core::afv::audio
             m_maxSampleOutput = 0;
         }
 
-        if (channelCount == 2)
-        {
-            buffer = convertFromMonoToStereo(buffer);
-        }
+        if (channelCount == 2) { buffer = convertFromMonoToStereo(buffer); }
 
         memcpy(data, buffer.constData(), static_cast<size_t>(maxlen));
         return maxlen;
@@ -87,10 +84,7 @@ namespace swift::core::afv::audio
         return -1;
     }
 
-    COutput::COutput(QObject *parent) : QObject(parent)
-    {
-        this->setObjectName(classNameShort(this));
-    }
+    COutput::COutput(QObject *parent) : QObject(parent) { this->setObjectName(classNameShort(this)); }
 
     void COutput::start(const CAudioDeviceInfo &outputDevice, ISampleProvider *sampleProvider)
     {

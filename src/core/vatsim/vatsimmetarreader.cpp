@@ -56,10 +56,7 @@ namespace swift::core::vatsim
         return m_metars.getMetarForAirport(icao);
     }
 
-    void CVatsimMetarReader::doWorkImpl()
-    {
-        this->read();
-    }
+    void CVatsimMetarReader::doWorkImpl() { this->read(); }
 
     void CVatsimMetarReader::read()
     {
@@ -117,17 +114,12 @@ namespace swift::core::vatsim
                 // some check for obvious errors
                 if (line.contains("<html")) { continue; }
                 const CMetar metar = m_metarDecoder.decode(line);
-                if (metar != CMetar())
-                {
-                    metars.push_back(metar);
-                }
-                else
-                {
-                    invalidLines++;
-                }
+                if (metar != CMetar()) { metars.push_back(metar); }
+                else { invalidLines++; }
             }
 
-            CLogMessage(this).info(u"METARs: %1 Metars (invalid %2) from '%3'") << metars.size() << invalidLines << metarUrl;
+            CLogMessage(this).info(u"METARs: %1 Metars (invalid %2) from '%3'")
+                << metars.size() << invalidLines << metarUrl;
             {
                 QWriteLocker l(&m_lock);
                 m_metars = metars;

@@ -19,18 +19,16 @@ namespace swift::misc::network
 {
     QString CClient::convertToQString(bool i18n) const
     {
-        return m_user.toQString(i18n) %
-               QStringLiteral(" capabilites: ") % this->getCapabilitiesAsString() %
+        return m_user.toQString(i18n) % QStringLiteral(" capabilites: ") % this->getCapabilitiesAsString() %
                QStringLiteral(" model: ") % m_modelString %
                (m_server.isEmpty() ? QString() : QStringLiteral("server: ") % m_server);
     }
 
-    CClient::CClient(const aviation::CCallsign &callsign, const QString &modelString) : m_user(CUser(callsign)), m_modelString(modelString.trimmed()) {}
+    CClient::CClient(const aviation::CCallsign &callsign, const QString &modelString)
+        : m_user(CUser(callsign)), m_modelString(modelString.trimmed())
+    {}
 
-    bool CClient::isValid() const
-    {
-        return m_user.hasCallsign();
-    }
+    bool CClient::isValid() const { return m_user.hasCallsign(); }
 
     void CClient::addCapability(CClient::Capability capability)
     {
@@ -46,10 +44,7 @@ namespace swift::misc::network
         this->setCapabilities(cap);
     }
 
-    void CClient::setCapabilities(const Capabilities &capabilities)
-    {
-        m_capabilities = capabilities;
-    }
+    void CClient::setCapabilities(const Capabilities &capabilities) { m_capabilities = capabilities; }
 
     QString CClient::getCapabilitiesAsString() const
     {
@@ -66,25 +61,13 @@ namespace swift::misc::network
         return sl.join(", ");
     }
 
-    bool CClient::hasCapability(Capability capability) const
-    {
-        return this->getCapabilities().testFlag(capability);
-    }
+    bool CClient::hasCapability(Capability capability) const { return this->getCapabilities().testFlag(capability); }
 
-    bool CClient::hasAircraftPartsCapability() const
-    {
-        return this->hasCapability(FsdWithAircraftConfig);
-    }
+    bool CClient::hasAircraftPartsCapability() const { return this->hasCapability(FsdWithAircraftConfig); }
 
-    bool CClient::hasGndFlagCapability() const
-    {
-        return this->hasCapability(FsdWithGroundFlag);
-    }
+    bool CClient::hasGndFlagCapability() const { return this->hasCapability(FsdWithGroundFlag); }
 
-    bool CClient::setUserCallsign(const aviation::CCallsign &callsign)
-    {
-        return m_user.setCallsign(callsign);
-    }
+    bool CClient::setUserCallsign(const aviation::CCallsign &callsign) { return m_user.setCallsign(callsign); }
 
     void CClient::setQueriedModelString(const QString &modelString)
     {

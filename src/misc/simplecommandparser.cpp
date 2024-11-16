@@ -62,15 +62,9 @@ namespace swift::misc
         return m_originalLine.mid(fi).trimmed();
     }
 
-    int CSimpleCommandParser::countParts() const
-    {
-        return m_splitParts.count();
-    }
+    int CSimpleCommandParser::countParts() const { return m_splitParts.count(); }
 
-    bool CSimpleCommandParser::hasPart(int index) const
-    {
-        return index >= 0 && index < this->countParts();
-    }
+    bool CSimpleCommandParser::hasPart(int index) const { return index >= 0 && index < this->countParts(); }
 
     int CSimpleCommandParser::countPartsWithoutCommand() const
     {
@@ -162,8 +156,8 @@ namespace swift::misc
 
         static const QString cmdCol(QString().fill('-', 20));
         static const QString textCol(QString().fill('-', 40));
-        rows += u"<tr>" % rowHeader.arg("command", "synopsis", "command", "synopsis") % u"</tr>\n" %
-                u"<tr>" % rowHeader.arg(cmdCol, textCol, cmdCol, textCol) % u"</tr>\n";
+        rows += u"<tr>" % rowHeader.arg("command", "synopsis", "command", "synopsis") % u"</tr>\n" % u"<tr>" %
+                rowHeader.arg(cmdCol, textCol, cmdCol, textCol) % u"</tr>\n";
 
         for (int i = 0; i < cmds.size(); i++)
         {
@@ -175,10 +169,7 @@ namespace swift::misc
                 help = cmds[i];
                 rows += row.arg(help.command, help.help);
             }
-            else
-            {
-                rows += row.arg("", "");
-            }
+            else { rows += row.arg("", ""); }
             rows += "</tr>\n";
         }
         return html.arg(rows);
@@ -195,10 +186,7 @@ namespace swift::misc
         return removeLeadingDot(command.trimmed().toLower());
     }
 
-    bool CSimpleCommandParser::isCommand(const QString &candidate)
-    {
-        return candidate.startsWith('.');
-    }
+    bool CSimpleCommandParser::isCommand(const QString &candidate) { return candidate.startsWith('.'); }
 
     bool CSimpleCommandParser::matchesCommand(const QString &checkCommand, const QString &alias1, const QString &alias2)
     {
@@ -223,9 +211,6 @@ namespace swift::misc
 
     void CSimpleCommandParser::setCheckedCommandList(const QStringList &commands)
     {
-        for (const QString &c : commands)
-        {
-            m_knownCommands.append(formatCommand(c));
-        }
+        for (const QString &c : commands) { m_knownCommands.append(formatCommand(c)); }
     }
 } // namespace swift::misc

@@ -24,10 +24,7 @@ namespace swift::gui
         return updated;
     }
 
-    void CSharedStringListCompleter::clearData()
-    {
-        this->updateData(QStringList(), 0);
-    }
+    void CSharedStringListCompleter::clearData() { this->updateData(QStringList(), 0); }
 
     bool CSharedStringListCompleter::wasUpdatedWithinTime(int checkTimeMs) const
     {

@@ -31,9 +31,9 @@ namespace swift::gui::components
 
     public:
         //! Constructor
-        explicit CInterpolationLogDisplayDialog(
-            swift::core::ISimulator *simulator, swift::core::CAirspaceMonitor *airspaceMonitor,
-            QWidget *parent = nullptr);
+        explicit CInterpolationLogDisplayDialog(swift::core::ISimulator *simulator,
+                                                swift::core::CAirspaceMonitor *airspaceMonitor,
+                                                QWidget *parent = nullptr);
 
         //! Destructor
         virtual ~CInterpolationLogDisplayDialog() override;

@@ -44,8 +44,7 @@ namespace swift::misc
         CTestValueObject() {}
 
         //! Constructor.
-        CTestValueObject(const QString &name, const QString &description)
-            : m_name(name), m_description(description) {}
+        CTestValueObject(const QString &name, const QString &description) : m_name(name), m_description(description) {}
 
         //! Get name
         const QString &getName() const { return m_name; }
@@ -66,12 +65,9 @@ namespace swift::misc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDescription:
-                return CVariant::fromValue(this->m_description);
-            case IndexName:
-                return CVariant::fromValue(this->m_name);
-            default:
-                return CValueObject::propertyByIndex(index);
+            case IndexDescription: return CVariant::fromValue(this->m_description);
+            case IndexName: return CVariant::fromValue(this->m_name);
+            default: return CValueObject::propertyByIndex(index);
             }
         }
 
@@ -86,15 +82,9 @@ namespace swift::misc
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexDescription:
-                this->setDescription(variant.value<QString>());
-                break;
-            case IndexName:
-                this->setName(variant.value<QString>());
-                break;
-            default:
-                CValueObject::setPropertyByIndex(index, variant);
-                break;
+            case IndexDescription: this->setDescription(variant.value<QString>()); break;
+            case IndexName: this->setName(variant.value<QString>()); break;
+            default: CValueObject::setPropertyByIndex(index, variant); break;
             }
         }
 
@@ -148,7 +138,8 @@ Q_DECLARE_METATYPE(swift::misc::CNotHashable)
 using CValueObjectDictionary = swift::misc::CDictionary<swift::misc::CTestValueObject, swift::misc::CTestValueObject>;
 
 //! Test value object dictionary using unordered container
-using CValueObjectHashDictionary = swift::misc::CDictionary<swift::misc::CTestValueObject, swift::misc::CTestValueObject, QHash>;
+using CValueObjectHashDictionary =
+    swift::misc::CDictionary<swift::misc::CTestValueObject, swift::misc::CTestValueObject, QHash>;
 
 //! Test value object dictionary using ordered container with not hashable key
 using CNotHashableDictionary = swift::misc::CDictionary<swift::misc::CNotHashable, QString>;

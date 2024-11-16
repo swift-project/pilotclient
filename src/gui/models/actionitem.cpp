@@ -9,24 +9,22 @@ using namespace swift::misc;
 
 namespace swift::gui::models
 {
-    CActionItem::CActionItem(const QString &action, const QString &name, CActionItem *parentItem) : m_action(action), m_actionName(name), m_parentItem(parentItem)
+    CActionItem::CActionItem(const QString &action, const QString &name, CActionItem *parentItem)
+        : m_action(action), m_actionName(name), m_parentItem(parentItem)
     {}
 
-    CActionItem::CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem) : m_action(action), m_actionName(name), m_icon(icon), m_parentItem(parentItem)
+    CActionItem::CActionItem(const QString &action, const QString &name, const QPixmap &icon, CActionItem *parentItem)
+        : m_action(action), m_actionName(name), m_icon(icon), m_parentItem(parentItem)
     {}
 
-    CActionItem::CActionItem(const QString &action, const QString &name, CIcons::IconIndex icon, CActionItem *parentItem) : m_action(action), m_actionName(name), m_icon(CIcons::pixmapByIndex(icon)), m_parentItem(parentItem)
+    CActionItem::CActionItem(const QString &action, const QString &name, CIcons::IconIndex icon,
+                             CActionItem *parentItem)
+        : m_action(action), m_actionName(name), m_icon(CIcons::pixmapByIndex(icon)), m_parentItem(parentItem)
     {}
 
-    CActionItem::~CActionItem()
-    {
-        qDeleteAll(m_childItems);
-    }
+    CActionItem::~CActionItem() { qDeleteAll(m_childItems); }
 
-    void CActionItem::appendChild(CActionItem *item)
-    {
-        m_childItems.append(item);
-    }
+    void CActionItem::appendChild(CActionItem *item) { m_childItems.append(item); }
 
     CActionItem *CActionItem::findChildByName(const QString &name) const
     {
@@ -37,40 +35,19 @@ namespace swift::gui::models
         return nullptr;
     }
 
-    CActionItem *CActionItem::getChildByRow(int row) const
-    {
-        return m_childItems.value(row);
-    }
+    CActionItem *CActionItem::getChildByRow(int row) const { return m_childItems.value(row); }
 
-    int CActionItem::getChildCount() const
-    {
-        return m_childItems.count();
-    }
+    int CActionItem::getChildCount() const { return m_childItems.count(); }
 
-    bool CActionItem::hasChildren() const
-    {
-        return getChildCount() > 0;
-    }
+    bool CActionItem::hasChildren() const { return getChildCount() > 0; }
 
-    int CActionItem::getColumnCount() const
-    {
-        return 1;
-    }
+    int CActionItem::getColumnCount() const { return 1; }
 
-    QString CActionItem::getAction() const
-    {
-        return m_action;
-    }
+    QString CActionItem::getAction() const { return m_action; }
 
-    QString CActionItem::getActionName() const
-    {
-        return m_actionName;
-    }
+    QString CActionItem::getActionName() const { return m_actionName; }
 
-    CActionItem *CActionItem::getParentItem() const
-    {
-        return m_parentItem;
-    }
+    CActionItem *CActionItem::getParentItem() const { return m_parentItem; }
 
     int CActionItem::getRow() const
     {

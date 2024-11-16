@@ -80,7 +80,8 @@ namespace XSwiftBus
         //! @}
 
         //! Creates a DBus message containing a DBus signal
-        static CDBusMessage createSignal(const std::string &path, const std::string &interfaceName, const std::string &signalName);
+        static CDBusMessage createSignal(const std::string &path, const std::string &interfaceName,
+                                         const std::string &signalName);
 
         //! Creates a DBus message containing a DBus reply
         static CDBusMessage createReply(const std::string &destination, dbus_uint32_t serial);

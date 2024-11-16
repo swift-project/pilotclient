@@ -10,10 +10,7 @@
 
 namespace swift::misc
 {
-    void displayAllUserMetatypesTypes(QTextStream &out)
-    {
-        out << getAllUserMetatypesTypes();
-    }
+    void displayAllUserMetatypesTypes(QTextStream &out) { out << getAllUserMetatypesTypes(); }
 
     QString getAllUserMetatypesTypes(const QString &separator)
     {
@@ -29,7 +26,15 @@ namespace swift::misc
                 continue;
             }
             QMetaType metaType(mt);
-            meta = meta.append("type: ").append(QString::number(mt)).append(" name: ").append(QMetaType::typeName(mt)).append(" | ").append(QString::number(QMetaType::sizeOf(mt))).append(" / ").append(QString::number(swift::misc::heapSizeOf(metaType))).append(separator);
+            meta = meta.append("type: ")
+                       .append(QString::number(mt))
+                       .append(" name: ")
+                       .append(QMetaType::typeName(mt))
+                       .append(" | ")
+                       .append(QString::number(QMetaType::sizeOf(mt)))
+                       .append(" / ")
+                       .append(QString::number(swift::misc::heapSizeOf(metaType)))
+                       .append(separator);
         }
         return meta;
     }
@@ -47,10 +52,7 @@ namespace swift::misc
         if (fn.contains("::"))
         {
             const int index = fn.lastIndexOf("::");
-            if (fn.length() > index + 3)
-            {
-                return fn.mid(index + 2);
-            }
+            if (fn.length() > index + 3) { return fn.mid(index + 2); }
         }
         return fn;
     }
@@ -60,7 +62,8 @@ namespace swift::misc
 
     size_t heapSizeOf(const QMetaType &metaType)
     {
-        metaType.destroy(metaType.create()); // ignore one-off allocations of a class being instantiated for the first time
+        metaType.destroy(
+            metaType.create()); // ignore one-off allocations of a class being instantiated for the first time
         _CrtMemState oldState, newState, diff;
         oldState.lTotalCount = newState.lTotalCount = diff.lTotalCount = 0; // avoid compiler warning
         diff.lSizes[_NORMAL_BLOCK] = 0;

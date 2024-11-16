@@ -15,36 +15,22 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CNavigatorSettings)
 
 namespace swift::gui::settings
 {
-    CNavigatorSettings::CNavigatorSettings()
-    {}
+    CNavigatorSettings::CNavigatorSettings() {}
 
-    void CNavigatorSettings::reset()
-    {}
+    void CNavigatorSettings::reset() {}
 
     void CNavigatorSettings::setMargins(const QMargins &margins)
     {
         this->m_margins = CGuiUtility::marginsToString(margins);
     }
 
-    QMargins CNavigatorSettings::getMargins() const
-    {
-        return CGuiUtility::stringToMargins(this->m_margins);
-    }
+    QMargins CNavigatorSettings::getMargins() const { return CGuiUtility::stringToMargins(this->m_margins); }
 
-    QByteArray CNavigatorSettings::getGeometry() const
-    {
-        return QByteArray::fromHex(this->m_geometry.toLatin1());
-    }
+    QByteArray CNavigatorSettings::getGeometry() const { return QByteArray::fromHex(this->m_geometry.toLatin1()); }
 
-    void CNavigatorSettings::setGeometry(const QByteArray &ba)
-    {
-        this->m_geometry = ba.toHex();
-    }
+    void CNavigatorSettings::setGeometry(const QByteArray &ba) { this->m_geometry = ba.toHex(); }
 
-    QString CNavigatorSettings::convertToQString(bool i18n) const
-    {
-        return convertToQString(", ", i18n);
-    }
+    QString CNavigatorSettings::convertToQString(bool i18n) const { return convertToQString(", ", i18n); }
 
     QString CNavigatorSettings::convertToQString(const QString &separator, bool i18n) const
     {
@@ -66,14 +52,10 @@ namespace swift::gui::settings
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexMargins:
-            return QVariant::fromValue(this->m_margins);
-        case IndexFrameless:
-            return QVariant::fromValue(this->isFramless());
-        case IndexColumns:
-            return QVariant::fromValue(this->m_columns);
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexMargins: return QVariant::fromValue(this->m_margins);
+        case IndexFrameless: return QVariant::fromValue(this->isFramless());
+        case IndexColumns: return QVariant::fromValue(this->m_columns);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -88,18 +70,10 @@ namespace swift::gui::settings
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexMargins:
-            this->m_margins = variant.toString();
-            break;
-        case IndexColumns:
-            this->m_columns = variant.toInt();
-            break;
-        case IndexFrameless:
-            this->m_frameless = variant.toBool();
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexMargins: this->m_margins = variant.toString(); break;
+        case IndexColumns: this->m_columns = variant.toInt(); break;
+        case IndexFrameless: this->m_frameless = variant.toBool(); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::gui::settings

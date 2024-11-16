@@ -7,8 +7,7 @@
 
 namespace swift::gui::components
 {
-    CTransponderCodeSpinBox::CTransponderCodeSpinBox(QWidget *parent) : QSpinBox(parent)
-    {}
+    CTransponderCodeSpinBox::CTransponderCodeSpinBox(QWidget *parent) : QSpinBox(parent) {}
 
     QString CTransponderCodeSpinBox::textFromValue(int value) const
     {

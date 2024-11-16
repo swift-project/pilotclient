@@ -27,9 +27,7 @@ namespace swift::gui::components
     /*!
      * Dialog to create new model set
      */
-    class CDbOwnModelSetFormDialog :
-        public QDialog,
-        public CDbMappingComponentAware
+    class CDbOwnModelSetFormDialog : public QDialog, public CDbMappingComponentAware
     {
         Q_OBJECT
 
@@ -80,7 +78,9 @@ namespace swift::gui::components
         void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Build the set
-        swift::misc::simulation::CAircraftModelList buildSet(const swift::misc::simulation::CSimulatorInfo &simulator, const swift::misc::simulation::CAircraftModelList &currentSet = {});
+        swift::misc::simulation::CAircraftModelList
+        buildSet(const swift::misc::simulation::CSimulatorInfo &simulator,
+                 const swift::misc::simulation::CAircraftModelList &currentSet = {});
     };
 } // namespace swift::gui::components
 

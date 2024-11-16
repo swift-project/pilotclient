@@ -18,8 +18,8 @@
 
 namespace swift::gui::components
 {
-    CSettingsTextMessageStyle::CSettingsTextMessageStyle(QWidget *parent) : QFrame(parent),
-                                                                            ui(new Ui::CSettingsTextMessageStyle)
+    CSettingsTextMessageStyle::CSettingsTextMessageStyle(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsTextMessageStyle)
     {
         ui->setupUi(this);
 
@@ -32,11 +32,11 @@ namespace swift::gui::components
 
         //        QShortcut *sc = new QShortcut(CShortcut::keyFontMinus(), this);
         //        sc->setContext(Qt::WidgetWithChildrenShortcut);
-        //        QObject::connect(sc, &QShortcut::activatedAmbiguously, this, &CSettingsTextMessageStyle::fontSizePlus);
+        //        QObject::connect(sc, &QShortcut::activatedAmbiguously, this,
+        //        &CSettingsTextMessageStyle::fontSizePlus);
     }
 
-    CSettingsTextMessageStyle::~CSettingsTextMessageStyle()
-    {}
+    CSettingsTextMessageStyle::~CSettingsTextMessageStyle() {}
 
     QStringList CSettingsTextMessageStyle::getFamilySizeStyle() const
     {
@@ -85,7 +85,8 @@ namespace swift::gui::components
         if (familySizeStlye.size() != 3) { return false; }
         static const QString f("font-family: \"%1\"; font-size: %2; font-style: %3");
 
-        const QString tableStyle = u"table { " % f.arg(familySizeStlye.at(0), familySizeStlye.at(1), familySizeStlye.at(2)) % u" }";
+        const QString tableStyle =
+            u"table { " % f.arg(familySizeStlye.at(0), familySizeStlye.at(1), familySizeStlye.at(2)) % u" }";
         this->replaceTableStyle(tableStyle);
         return true;
     }
@@ -100,18 +101,12 @@ namespace swift::gui::components
 
     void CSettingsTextMessageStyle::fontSizeMinus()
     {
-        if (this->changeFontSize(false))
-        {
-            emit this->changed();
-        }
+        if (this->changeFontSize(false)) { emit this->changed(); }
     }
 
     void CSettingsTextMessageStyle::fontSizePlus()
     {
-        if (this->changeFontSize(true))
-        {
-            emit this->changed();
-        }
+        if (this->changeFontSize(true)) { emit this->changed(); }
     }
 
     bool CSettingsTextMessageStyle::changeFontSize(bool increase)

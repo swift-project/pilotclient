@@ -47,7 +47,8 @@ namespace swift::gui::filters
         virtual ~CAirlineIcaoFilterBar() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::aviation::CAirlineIcaoCodeList>> createModelFilter() const override;
+        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::aviation::CAirlineIcaoCodeList>>
+        createModelFilter() const override;
 
         //! Filter default values by ICAO code
         void filter(const swift::misc::aviation::CAirlineIcaoCode &icao);

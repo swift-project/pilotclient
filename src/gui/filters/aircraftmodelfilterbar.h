@@ -47,7 +47,8 @@ namespace swift::gui::filters
         void displayCount(bool show);
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<models::IModelFilter<swift::misc::simulation::CAircraftModelList>> createModelFilter() const override;
+        virtual std::unique_ptr<models::IModelFilter<swift::misc::simulation::CAircraftModelList>>
+        createModelFilter() const override;
 
         //! \copydoc CFilterWidget::onRowCountChanged
         virtual void onRowCountChanged(int count, bool withFilter) override;

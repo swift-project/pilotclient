@@ -43,8 +43,7 @@ namespace swift::core::afv::model
 
     inline bool operator==(const CSampleAtcStation &lhs, const CSampleAtcStation &rhs)
     {
-        return lhs.callsign() == rhs.callsign() &&
-               qFuzzyCompare(lhs.latitude(), rhs.latitude()) &&
+        return lhs.callsign() == rhs.callsign() && qFuzzyCompare(lhs.latitude(), rhs.latitude()) &&
                qFuzzyCompare(lhs.longitude(), rhs.longitude());
     }
 

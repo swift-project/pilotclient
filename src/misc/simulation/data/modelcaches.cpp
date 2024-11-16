@@ -13,12 +13,14 @@ using namespace swift::misc;
 
 namespace swift::misc::simulation::data
 {
-    void IMultiSimulatorModelCaches::setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+    void IMultiSimulatorModelCaches::setModelsForSimulator(const CAircraftModelList &models,
+                                                           const CSimulatorInfo &simulator)
     {
         this->setCachedModels(models, simulator);
     }
 
-    int IMultiSimulatorModelCaches::updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
+    int IMultiSimulatorModelCaches::updateModelsForSimulator(const CAircraftModelList &models,
+                                                             const CSimulatorInfo &simulator)
     {
         if (models.isEmpty()) { return 0; }
         CAircraftModelList allModels(this->getSynchronizedCachedModels(simulator));
@@ -31,7 +33,11 @@ namespace swift::misc::simulation::data
     QString IMultiSimulatorModelCaches::getInfoString() const
     {
         static const QString is("FSX: %1 P3D: %2 FS9: %3 XP: %4 FG: %5");
-        return is.arg(this->getCachedModelsCount(CSimulatorInfo::FSX)).arg(this->getCachedModelsCount(CSimulatorInfo::P3D)).arg(this->getCachedModelsCount(CSimulatorInfo::FS9)).arg(this->getCachedModelsCount(CSimulatorInfo::XPLANE)).arg(this->getCachedModelsCount(CSimulatorInfo::FG));
+        return is.arg(this->getCachedModelsCount(CSimulatorInfo::FSX))
+            .arg(this->getCachedModelsCount(CSimulatorInfo::P3D))
+            .arg(this->getCachedModelsCount(CSimulatorInfo::FS9))
+            .arg(this->getCachedModelsCount(CSimulatorInfo::XPLANE))
+            .arg(this->getCachedModelsCount(CSimulatorInfo::FG));
     }
 
     QString IMultiSimulatorModelCaches::getInfoStringFsFamily() const
@@ -46,7 +52,8 @@ namespace swift::misc::simulation::data
     QString IMultiSimulatorModelCaches::getCacheCountAndTimestamp(const CSimulatorInfo &simulator) const
     {
         static const QString s("%1 models, ts: %2");
-        return s.arg(this->getCachedModelsCount(simulator)).arg(this->getCacheTimestamp(simulator).toString("yyyy-MM-dd HH:mm:ss"));
+        return s.arg(this->getCachedModelsCount(simulator))
+            .arg(this->getCacheTimestamp(simulator).toString("yyyy-MM-dd HH:mm:ss"));
     }
 
     void IMultiSimulatorModelCaches::gracefulShutdown()
@@ -65,9 +72,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: m_syncXPlane = synchronized; break;
         case CSimulatorInfo::FG: m_syncFG = synchronized; break;
         case CSimulatorInfo::MSFS: m_syncMsfs = synchronized; break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
     }
 
@@ -81,7 +86,8 @@ namespace swift::misc::simulation::data
         return this->getCachedModels(simulator).size();
     }
 
-    bool IMultiSimulatorModelCaches::hasOtherVersionFile(const CApplicationInfo &info, const CSimulatorInfo &simulator) const
+    bool IMultiSimulatorModelCaches::hasOtherVersionFile(const CApplicationInfo &info,
+                                                         const CSimulatorInfo &simulator) const
     {
         const QString fn = this->getFilename(simulator);
         return CCacheSettingsUtils::hasOtherVersionCacheFile(info, fn);
@@ -101,15 +107,14 @@ namespace swift::misc::simulation::data
 
     QStringList IMultiSimulatorModelCaches::getAllFilenames() const
     {
-        return QStringList(
-            {
-                this->getFilename(CSimulatorInfo::FS9),
-                this->getFilename(CSimulatorInfo::FSX),
-                this->getFilename(CSimulatorInfo::P3D),
-                this->getFilename(CSimulatorInfo::XPLANE),
-                this->getFilename(CSimulatorInfo::FG),
-                this->getFilename(CSimulatorInfo::MSFS),
-            });
+        return QStringList({
+            this->getFilename(CSimulatorInfo::FS9),
+            this->getFilename(CSimulatorInfo::FSX),
+            this->getFilename(CSimulatorInfo::P3D),
+            this->getFilename(CSimulatorInfo::XPLANE),
+            this->getFilename(CSimulatorInfo::FG),
+            this->getFilename(CSimulatorInfo::MSFS),
+        });
     }
 
     CSimulatorInfo IMultiSimulatorModelCaches::getSimulatorForFilename(const QString &filename) const
@@ -152,10 +157,7 @@ namespace swift::misc::simulation::data
         for (const CSimulatorInfo &simInfo : CSimulatorInfo::allSimulators().asSingleSimulatorSet())
         {
             const QDateTime ts = this->getCacheTimestamp(simInfo);
-            if (ts.isValid() && ts > outdated)
-            {
-                withInitializedCache.add(simInfo);
-            }
+            if (ts.isValid() && ts > outdated) { withInitializedCache.add(simInfo); }
         }
         return withInitializedCache;
     }
@@ -165,10 +167,7 @@ namespace swift::misc::simulation::data
         CSimulatorInfo withModels;
         for (const CSimulatorInfo &simInfo : CSimulatorInfo::allSimulators().asSingleSimulatorSet())
         {
-            if (this->getCachedModelsCount(simInfo) > 0)
-            {
-                withModels.add(simInfo);
-            }
+            if (this->getCachedModelsCount(simInfo) > 0) { withModels.add(simInfo); }
         }
         return withModels;
     }
@@ -208,9 +207,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.get();
         case CSimulatorInfo::FG: return m_modelCacheFG.get();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.get();
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            return CAircraftModelList();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return CAircraftModelList();
         }
     }
 
@@ -229,9 +226,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(setModels); break;
         case CSimulatorInfo::FG: msg = m_modelCacheFG.set(setModels); break;
         case CSimulatorInfo::MSFS: msg = m_modelCacheMsfs.set(setModels); break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            return CStatusMessage();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return CStatusMessage();
         }
         this->emitCacheChanged(simulator); // set
         return msg;
@@ -254,9 +249,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_syncXPlane;
         case CSimulatorInfo::FG: return m_syncFG;
         case CSimulatorInfo::MSFS: return m_syncMsfs;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
         return false;
     }
@@ -288,16 +281,17 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getAvailableTimestamp();
         case CSimulatorInfo::FG: return m_modelCacheFG.getAvailableTimestamp();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getAvailableTimestamp();
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            return QDateTime();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return QDateTime();
         }
     }
 
     CStatusMessage CModelCaches::setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-        if (!ts.isValid()) { return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString(); }
+        if (!ts.isValid())
+        {
+            return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString();
+        }
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FS9: return m_modelCacheFs9.set(m_modelCacheFs9.get(), ts.toMSecsSinceEpoch());
@@ -306,22 +300,14 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::FG: return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.set(m_modelCacheMsfs.get(), ts.toMSecsSinceEpoch());
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
         return CStatusMessage();
     }
 
-    void CModelCaches::synchronizeCache(const CSimulatorInfo &simulator)
-    {
-        this->synchronizeCacheImpl(simulator);
-    }
+    void CModelCaches::synchronizeCache(const CSimulatorInfo &simulator) { this->synchronizeCacheImpl(simulator); }
 
-    void CModelCaches::admitCache(const CSimulatorInfo &simulator)
-    {
-        this->admitCacheImpl(simulator);
-    }
+    void CModelCaches::admitCache(const CSimulatorInfo &simulator) { this->admitCacheImpl(simulator); }
 
     QString CModelCaches::getFilename(const CSimulatorInfo &simulator) const
     {
@@ -334,9 +320,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getFilename();
         case CSimulatorInfo::FG: return m_modelCacheFG.getFilename();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getFilename();
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
         return {};
     }
@@ -352,9 +336,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.isSaved();
         case CSimulatorInfo::FG: return m_modelCacheFG.isSaved();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.isSaved();
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
         return false;
     }
@@ -372,9 +354,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize(); break;
         case CSimulatorInfo::FG: m_modelCacheFG.synchronize(); break;
         case CSimulatorInfo::MSFS: m_modelCacheMsfs.synchronize(); break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
         this->markCacheAsAlreadySynchronized(simulator, true);
         this->emitCacheChanged(simulator); // sync
@@ -393,9 +373,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: m_modelCacheXP.admit(); break;
         case CSimulatorInfo::FG: m_modelCacheFG.admit(); break;
         case CSimulatorInfo::MSFS: m_modelCacheMsfs.admit(); break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
         return true;
     }
@@ -436,9 +414,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.get();
         case CSimulatorInfo::FG: return m_modelCacheFG.get();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.get();
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            return CAircraftModelList();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return CAircraftModelList();
         }
     }
 
@@ -456,14 +432,8 @@ namespace swift::misc::simulation::data
             if (removed > 0) { CLogMessage(this).info(u"Removed %1 flyable models from XPlane model set!"); }
         }
 
-        if (orderedModels.needsOrder())
-        {
-            orderedModels.resetOrder();
-        }
-        else
-        {
-            orderedModels.sortAscendingByOrder();
-        }
+        if (orderedModels.needsOrder()) { orderedModels.resetOrder(); }
+        else { orderedModels.sortAscendingByOrder(); }
 
         CStatusMessage msg;
         switch (simulator.getSimulator())
@@ -474,9 +444,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(orderedModels); break;
         case CSimulatorInfo::FG: msg = m_modelCacheFG.set(orderedModels); break;
         case CSimulatorInfo::MSFS: msg = m_modelCacheMsfs.set(orderedModels); break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator");
-            return CStatusMessage();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return CStatusMessage();
         }
         this->emitCacheChanged(simulator); // set
         return msg;
@@ -493,16 +461,17 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getAvailableTimestamp();
         case CSimulatorInfo::FG: return m_modelCacheFG.getAvailableTimestamp();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getAvailableTimestamp();
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            return QDateTime();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); return QDateTime();
         }
     }
 
     CStatusMessage CModelSetCaches::setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-        if (!ts.isValid()) { return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString(); }
+        if (!ts.isValid())
+        {
+            return CStatusMessage(this).error(u"Invalid timestamp for '%1'") << simulator.toQString();
+        }
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FS9: return m_modelCacheFs9.set(m_modelCacheFs9.get(), ts.toMSecsSinceEpoch());
@@ -511,22 +480,14 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::FG: return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.set(m_modelCacheMsfs.get(), ts.toMSecsSinceEpoch());
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
         return CStatusMessage();
     }
 
-    void CModelSetCaches::synchronizeCache(const CSimulatorInfo &simulator)
-    {
-        this->synchronizeCacheImpl(simulator);
-    }
+    void CModelSetCaches::synchronizeCache(const CSimulatorInfo &simulator) { this->synchronizeCacheImpl(simulator); }
 
-    void CModelSetCaches::admitCache(const CSimulatorInfo &simulator)
-    {
-        this->admitCacheImpl(simulator);
-    }
+    void CModelSetCaches::admitCache(const CSimulatorInfo &simulator) { this->admitCacheImpl(simulator); }
 
     QString CModelSetCaches::getFilename(const CSimulatorInfo &simulator) const
     {
@@ -539,9 +500,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getFilename();
         case CSimulatorInfo::FG: return m_modelCacheFG.getFilename();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getFilename();
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
         return {};
     }
@@ -557,9 +516,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.isSaved();
         case CSimulatorInfo::FG: return m_modelCacheFG.isSaved();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.isSaved();
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
         return false;
     }
@@ -577,9 +534,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize(); break;
         case CSimulatorInfo::FG: m_modelCacheFG.synchronize(); break;
         case CSimulatorInfo::MSFS: m_modelCacheMsfs.synchronize(); break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
         this->markCacheAsAlreadySynchronized(simulator, true);
         this->emitCacheChanged(simulator); // sync
@@ -598,9 +553,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: m_modelCacheXP.admit(); break;
         case CSimulatorInfo::FG: m_modelCacheFG.admit(); break;
         case CSimulatorInfo::MSFS: m_modelCacheMsfs.admit(); break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
         return true;
     }

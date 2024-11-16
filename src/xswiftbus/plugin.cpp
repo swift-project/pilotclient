@@ -14,10 +14,7 @@
 
 namespace
 {
-    inline std::string xswiftbusServiceName()
-    {
-        return std::string("org.swift-project.xswiftbus");
-    }
+    inline std::string xswiftbusServiceName() { return std::string("org.swift-project.xswiftbus"); }
 } // namespace
 
 namespace XSwiftBus
@@ -25,28 +22,26 @@ namespace XSwiftBus
     CPlugin::CPlugin()
         : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("xswiftbus"))
     {
-        m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels", [this] {
-            m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels());
-        });
-        m_enableDisableXPlaneAtisMenuItem = m_menu.item("Enable/Disable X-Plane ATIS", [this] {
-            m_atisEnabled.set(m_atisEnabled.get() ? 0 : 1);
-        });
+        m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels",
+                                               [this] { m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels()); });
+        m_enableDisableXPlaneAtisMenuItem =
+            m_menu.item("Enable/Disable X-Plane ATIS", [this] { m_atisEnabled.set(m_atisEnabled.get() ? 0 : 1); });
         m_messageWindowSubMenu = m_menu.subMenu("Message Window");
-        m_toggleMessageWindowMenuItem = m_messageWindowSubMenu.item("Show/Hide", [this] {
-            m_service->toggleMessageBoxVisibility();
-        });
-        m_popupMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Pop up Window on new Message", true, [this](bool checked) {
-            m_popupMessageWindowMenuItem.setChecked(!checked);
-            m_service->setPopupMessageWindow(!checked);
-        });
-        m_disappearMessageWindowMenuItem = m_messageWindowSubMenu.checkableItem("Hide Message Window automatically", true, [this](bool checked) {
-            m_disappearMessageWindowMenuItem.setChecked(!checked);
-            m_service->setDisappearMessageWindow(!checked);
-        });
+        m_toggleMessageWindowMenuItem =
+            m_messageWindowSubMenu.item("Show/Hide", [this] { m_service->toggleMessageBoxVisibility(); });
+        m_popupMessageWindowMenuItem =
+            m_messageWindowSubMenu.checkableItem("Pop up Window on new Message", true, [this](bool checked) {
+                m_popupMessageWindowMenuItem.setChecked(!checked);
+                m_service->setPopupMessageWindow(!checked);
+            });
+        m_disappearMessageWindowMenuItem =
+            m_messageWindowSubMenu.checkableItem("Hide Message Window automatically", true, [this](bool checked) {
+                m_disappearMessageWindowMenuItem.setChecked(!checked);
+                m_service->setDisappearMessageWindow(!checked);
+            });
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
-        m_planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item("Own Aircraft", [this] {
-            m_traffic->setFollowedAircraft(CTraffic::ownAircraftString());
-        });
+        m_planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item(
+            "Own Aircraft", [this] { m_traffic->setFollowedAircraft(CTraffic::ownAircraftString()); });
 
         /*m_dbusThread = std::thread([this]()
         {
@@ -77,7 +72,8 @@ namespace XSwiftBus
     void CPlugin::readConfig()
     {
         initXPlanePath();
-        const std::string configFilePath = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "xswiftbus.conf";
+        const std::string configFilePath =
+            g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "xswiftbus.conf";
         m_pluginConfig.setFilePath(configFilePath);
         m_pluginConfig.parse();
         m_pluginConfig.print();
@@ -99,7 +95,8 @@ namespace XSwiftBus
             m_dbusP2PServer = std::make_unique<CDBusServer>();
 
             // FIXME: make listen address configurable
-            std::string listenAddress = "tcp:host=" + m_pluginConfig.getDBusAddress() + ",port=" + std::to_string(m_pluginConfig.getDBusPort());
+            std::string listenAddress =
+                "tcp:host=" + m_pluginConfig.getDBusAddress() + ",port=" + std::to_string(m_pluginConfig.getDBusPort());
             if (!m_dbusP2PServer->listen(listenAddress))
             {
                 m_service->addTextMessage("xswiftbus startup failed!", 255, 0, 0);
@@ -162,10 +159,7 @@ namespace XSwiftBus
 
     void CPlugin::onSceneryLoaded()
     {
-        if (m_service)
-        {
-            m_service->onSceneryLoaded();
-        }
+        if (m_service) { m_service->onSceneryLoaded(); }
     }
 
     float CPlugin::startServerDeferred(float, float, int, void *refcon)

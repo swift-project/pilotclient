@@ -52,7 +52,8 @@ namespace swift::gui
         bool updateFont(const QString &qss);
 
         //! Update the fonts
-        bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColorString);
+        bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle,
+                        const QString &fontWeight, const QString &fontColorString);
 
         //! Reset font
         bool resetFont();
@@ -141,10 +142,12 @@ namespace swift::gui
 
         //! Use style sheets in derived widgets
         //! \sa QWidget::paintEvent
-        static bool useStyleSheetInDerivedWidget(QWidget *derivedWidget, QStyle::PrimitiveElement element = QStyle::PE_Widget);
+        static bool useStyleSheetInDerivedWidget(QWidget *derivedWidget,
+                                                 QStyle::PrimitiveElement element = QStyle::PE_Widget);
 
         //! Stylesheet string for a checkbox displayed as 2 icons
-        static QString styleForIconCheckBox(const QString &checkedIcon, const QString &uncheckedIcon, const QString &width = "16px", const QString &height = "16px");
+        static QString styleForIconCheckBox(const QString &checkedIcon, const QString &uncheckedIcon,
+                                            const QString &width = "16px", const QString &height = "16px");
 
         //! Concatenate 2 styles
         static QString concatStyles(const QString &style1, const QString &style2);

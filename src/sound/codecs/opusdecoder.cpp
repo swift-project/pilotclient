@@ -11,10 +11,7 @@ namespace swift::sound::codecs
         m_opusDecoder = opus_decoder_create(sampleRate, channels, &error);
     }
 
-    COpusDecoder::~COpusDecoder()
-    {
-        opus_decoder_destroy(m_opusDecoder);
-    }
+    COpusDecoder::~COpusDecoder() { opus_decoder_destroy(m_opusDecoder); }
 
     int COpusDecoder::frameCount(int bufferSize)
     {
@@ -31,7 +28,8 @@ namespace swift::sound::codecs
 
         if (!opusData.isEmpty())
         {
-            *decodedLength = opus_decode(m_opusDecoder, reinterpret_cast<const unsigned char *>(opusData.data()), dataLength, decoded.data(), count, 0);
+            *decodedLength = opus_decode(m_opusDecoder, reinterpret_cast<const unsigned char *>(opusData.data()),
+                                         dataLength, decoded.data(), count, 0);
         }
         decoded.resize(*decodedLength);
         return decoded;

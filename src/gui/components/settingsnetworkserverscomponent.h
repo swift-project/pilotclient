@@ -42,7 +42,9 @@ namespace swift::gui::components
         void alterTrafficServer();
 
         QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
-        swift::misc::CSetting<swift::misc::network::settings::TTrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::reloadSettings };
+        swift::misc::CSetting<swift::misc::network::settings::TTrafficServers> m_trafficNetworkServers {
+            this, &CSettingsNetworkServersComponent::reloadSettings
+        };
     };
 } // namespace swift::gui::components
 

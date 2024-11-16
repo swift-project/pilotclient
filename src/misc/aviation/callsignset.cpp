@@ -30,21 +30,14 @@ namespace swift::misc::aviation
         this->push_back(callsign);
     }
 
-    CCallsignSet::CCallsignSet(const CCollection<CCallsign> &other) : CCollection<CCallsign>(other)
-    {}
+    CCallsignSet::CCallsignSet(const CCollection<CCallsign> &other) : CCollection<CCallsign>(other) {}
 
-    bool CCallsignSet::containsCallsign(const QString &callsign) const
-    {
-        return this->contains(CCallsign(callsign));
-    }
+    bool CCallsignSet::containsCallsign(const QString &callsign) const { return this->contains(CCallsign(callsign)); }
 
     QStringList CCallsignSet::getCallsignStrings(bool sorted) const
     {
         QStringList callsigns;
-        for (const CCallsign &cs : *this)
-        {
-            callsigns.push_back(cs.asString());
-        }
+        for (const CCallsign &cs : *this) { callsigns.push_back(cs.asString()); }
         if (sorted) { callsigns.sort(); }
         return callsigns;
     }

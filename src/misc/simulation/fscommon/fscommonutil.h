@@ -38,24 +38,44 @@ namespace swift::misc::simulation::fscommon
 
         //! Validate aircraft.cfg entries (sometimes also sim.cfg)
         //! \remark only for FSX/P3D/FS9/MSFS models
-        static CStatusMessageList validateAircraftConfigFiles(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped);
+        static CStatusMessageList validateAircraftConfigFiles(const CAircraftModelList &models,
+                                                              CAircraftModelList &validModels,
+                                                              CAircraftModelList &invalidModels,
+                                                              bool ignoreEmptyFileNames, int stopAtFailedFiles,
+                                                              std::atomic_bool &wasStopped);
 
         //! Validate if known SimObjects path are used
         //! \remark only for P3D
-        static CStatusMessageList validateP3DSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
+        static CStatusMessageList validateP3DSimObjectsPath(const CAircraftModelList &models,
+                                                            CAircraftModelList &validModels,
+                                                            CAircraftModelList &invalidModels,
+                                                            bool ignoreEmptyFileNames, int stopAtFailedFiles,
+                                                            std::atomic_bool &wasStopped, const QString &simulatorDir);
 
         //! Validate if known SimObjects path are used
         //! \remark only for FSX
-        static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
+        static CStatusMessageList validateFSXSimObjectsPath(const CAircraftModelList &models,
+                                                            CAircraftModelList &validModels,
+                                                            CAircraftModelList &invalidModels,
+                                                            bool ignoreEmptyFileNames, int stopAtFailedFiles,
+                                                            std::atomic_bool &wasStopped, const QString &simulatorDir);
 
         //! Validate if known SimObjects path are used
         //! \remark only for MSFS
-        static CStatusMessageList validateMSFSSimObjectsPath(const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
+        static CStatusMessageList validateMSFSSimObjectsPath(const CAircraftModelList &models,
+                                                             CAircraftModelList &validModels,
+                                                             CAircraftModelList &invalidModels,
+                                                             bool ignoreEmptyFileNames, int stopAtFailedFiles,
+                                                             std::atomic_bool &wasStopped, const QString &simulatorDir);
 
     private:
         //! Validate if known SimObjects path are used
         //! \remark only for P3D/FSX
-        static CStatusMessageList validateSimObjectsPath(const QSet<QString> &simObjectDirs, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped);
+        static CStatusMessageList validateSimObjectsPath(const QSet<QString> &simObjectDirs,
+                                                         const CAircraftModelList &models,
+                                                         CAircraftModelList &validModels,
+                                                         CAircraftModelList &invalidModels, bool ignoreEmptyFileNames,
+                                                         int stopAtFailedFiles, std::atomic_bool &stopped);
     };
 } // namespace swift::misc::simulation::fscommon
 

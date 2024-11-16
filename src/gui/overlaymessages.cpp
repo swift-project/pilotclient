@@ -46,19 +46,23 @@ using namespace swift::gui::components;
 
 namespace swift::gui
 {
-    COverlayMessages::COverlayMessages(int w, int h, QWidget *parent) : QFrame(parent),
-                                                                        ui(new Ui::COverlayMessages)
+    COverlayMessages::COverlayMessages(int w, int h, QWidget *parent) : QFrame(parent), ui(new Ui::COverlayMessages)
     {
         this->init(w, h);
         this->showKillButton(false);
 
-        if (sGui) { connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::onStyleSheetsChanged, Qt::QueuedConnection); }
+        if (sGui)
+        {
+            connect(sGui, &CGuiApplication::styleSheetsChanged, this, &COverlayMessages::onStyleSheetsChanged,
+                    Qt::QueuedConnection);
+        }
         connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::onOkClicked);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::onCancelClicked);
         connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::onKillClicked);
 
         ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAlways);
-        ui->tvp_StatusMessages->setForceColumnsToMaxSize(false); // problems with multiline entries, with T138 we need multiline messages
+        ui->tvp_StatusMessages->setForceColumnsToMaxSize(
+            false); // problems with multiline entries, with T138 we need multiline messages
         ui->tvp_StatusMessages->menuAddItems(CStatusMessageView::MenuSave);
         ui->fr_Confirmation->setVisible(false);
 
@@ -73,8 +77,7 @@ namespace swift::gui
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
 
-    COverlayMessages::~COverlayMessages()
-    {}
+    COverlayMessages::~COverlayMessages() {}
 
     void COverlayMessages::init(int w, int h)
     {
@@ -130,10 +133,7 @@ namespace swift::gui
         }
     }
 
-    bool COverlayMessages::useSmall() const
-    {
-        return (m_forceSmall || this->width() < 400 || this->height() < 300);
-    }
+    bool COverlayMessages::useSmall() const { return (m_forceSmall || this->width() < 400 || this->height() < 300); }
 
     void COverlayMessages::showKill(bool show)
     {
@@ -150,7 +150,8 @@ namespace swift::gui
         return s.popup(textMessage, ownAircraft);
     }
 
-    void COverlayMessages::showOverlayMessages(const CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
+    void COverlayMessages::showOverlayMessages(const CStatusMessageList &messages, bool appendOldMessages,
+                                               int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
@@ -180,32 +181,22 @@ namespace swift::gui
         this->display(timeOutMs);
     }
 
-    void COverlayMessages::showOverlayMessagesOrSingleMessage(const CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
+    void COverlayMessages::showOverlayMessagesOrSingleMessage(const CStatusMessageList &messages,
+                                                              bool appendOldMessages, int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
-        if (messages.size() > 1)
-        {
-            this->showOverlayMessages(messages, appendOldMessages, timeOutMs);
-        }
-        else
-        {
-            this->showOverlayMessage(messages.front(), timeOutMs);
-        }
+        if (messages.size() > 1) { this->showOverlayMessages(messages, appendOldMessages, timeOutMs); }
+        else { this->showOverlayMessage(messages.front(), timeOutMs); }
     }
 
-    void COverlayMessages::showOverlayMessagesOrHTMLMessage(const CStatusMessageList &messages, bool appendOldMessages, int timeOutMs)
+    void COverlayMessages::showOverlayMessagesOrHTMLMessage(const CStatusMessageList &messages, bool appendOldMessages,
+                                                            int timeOutMs)
     {
         if (messages.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
-        if (messages.size() > 1)
-        {
-            this->showOverlayMessages(messages, appendOldMessages, timeOutMs);
-        }
-        else
-        {
-            this->showHTMLMessage(messages.front(), timeOutMs);
-        }
+        if (messages.size() > 1) { this->showOverlayMessages(messages, appendOldMessages, timeOutMs); }
+        else { this->showHTMLMessage(messages.front(), timeOutMs); }
     }
 
     void COverlayMessages::sortOverlayMessages(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
@@ -267,10 +258,7 @@ namespace swift::gui
         const bool activatedText = ui->comp_OverlayTextMessage->isActivated();
         if (activatedText)
         {
-            if (textMessage.isPrivateMessage())
-            {
-                this->showOverlayInlineTextMessage(textMessage.getSenderCallsign());
-            }
+            if (textMessage.isPrivateMessage()) { this->showOverlayInlineTextMessage(textMessage.getSenderCallsign()); }
             else
             {
                 this->showOverlayInlineTextMessage(TextMessagesAll);
@@ -341,11 +329,7 @@ namespace swift::gui
             static const QPixmap e;
             ui->lbl_Image->setPixmap(e);
         }
-        else
-        {
-            ui->lbl_Image->setPixmap(
-                image.scaled(sizeAvailable, Qt::KeepAspectRatio, Qt::FastTransformation));
-        }
+        else { ui->lbl_Image->setPixmap(image.scaled(sizeAvailable, Qt::KeepAspectRatio, Qt::FastTransformation)); }
         this->display(timeOutMs);
     }
 
@@ -363,18 +347,9 @@ namespace swift::gui
         {
             this->showOverlayTextMessage(variant.value<CTextMessage>(), timeOutMs);
         }
-        else if (variant.canConvert<QPixmap>())
-        {
-            this->showOverlayImage(variant.value<QPixmap>(), timeOutMs);
-        }
-        else if (variant.canConvert<CPixmap>())
-        {
-            this->showOverlayImage(variant.value<CPixmap>(), timeOutMs);
-        }
-        else
-        {
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported type");
-        }
+        else if (variant.canConvert<QPixmap>()) { this->showOverlayImage(variant.value<QPixmap>(), timeOutMs); }
+        else if (variant.canConvert<CPixmap>()) { this->showOverlayImage(variant.value<CPixmap>(), timeOutMs); }
+        else { Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported type"); }
     }
 
     void COverlayMessages::showHTMLMessage(const CStatusMessage &message, int timeOutMs)
@@ -407,7 +382,8 @@ namespace swift::gui
         this->display(timeOutMs);
     }
 
-    void COverlayMessages::showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url, int timeOutMs)
+    void COverlayMessages::showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url,
+                                                int timeOutMs)
     {
         if (progress >= 0 && max >= 0)
         {
@@ -433,14 +409,8 @@ namespace swift::gui
         ui->lbl_ProgressBar->setText(message);
         this->setModeToProgressBar();
 
-        if (p >= 100)
-        {
-            this->close();
-        }
-        else
-        {
-            this->display(timeOutMs);
-        }
+        if (p >= 100) { this->close(); }
+        else { this->display(timeOutMs); }
     }
 
     void COverlayMessages::showKillButton(bool killButton)
@@ -503,10 +473,7 @@ namespace swift::gui
         ui->comp_OverlayTextMessage->activate(activate, activate);
     }
 
-    bool COverlayMessages::isTextMessagesActivated() const
-    {
-        return ui->comp_OverlayTextMessage->isActivated();
-    }
+    bool COverlayMessages::isTextMessagesActivated() const { return ui->comp_OverlayTextMessage->isActivated(); }
 
     void COverlayMessages::setModeToImage()
     {
@@ -517,10 +484,7 @@ namespace swift::gui
 
     void COverlayMessages::setConfirmationMessage(const QString &message)
     {
-        if (message.isEmpty())
-        {
-            ui->fr_Confirmation->setVisible(false);
-        }
+        if (message.isEmpty()) { ui->fr_Confirmation->setVisible(false); }
         else
         {
             ui->fr_Confirmation->setVisible(true);
@@ -528,7 +492,11 @@ namespace swift::gui
         }
     }
 
-    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages, bool appendOldMessages, const QString &confirmationMessage, std::function<void()> okLambda, QMessageBox::StandardButton defaultButton, int timeOutMs)
+    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages,
+                                                               bool appendOldMessages,
+                                                               const QString &confirmationMessage,
+                                                               std::function<void()> okLambda,
+                                                               QMessageBox::StandardButton defaultButton, int timeOutMs)
     {
         if (this->hasPendingConfirmation())
         {
@@ -536,7 +504,8 @@ namespace swift::gui
             QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
-                this->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda, defaultButton, timeOutMs);
+                this->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda,
+                                                          defaultButton, timeOutMs);
             });
             return;
         }
@@ -547,10 +516,7 @@ namespace swift::gui
         m_okLambda = okLambda;
     }
 
-    void COverlayMessages::clearOverlayMessages()
-    {
-        ui->tvp_StatusMessages->clear();
-    }
+    void COverlayMessages::clearOverlayMessages() { ui->tvp_StatusMessages->clear(); }
 
     void COverlayMessages::setDefaultConfirmationButton(int button)
     {
@@ -572,15 +538,11 @@ namespace swift::gui
             ui->pb_Cancel->setFocus();
             m_lastConfirmation = QMessageBox::Cancel;
             break;
-        default:
-            break;
+        default: break;
         }
     }
 
-    bool COverlayMessages::hasPendingConfirmation() const
-    {
-        return m_awaitingConfirmation;
-    }
+    bool COverlayMessages::hasPendingConfirmation() const { return m_awaitingConfirmation; }
 
     void COverlayMessages::setReducedInfo(bool reduced)
     {
@@ -604,10 +566,7 @@ namespace swift::gui
             this->close();
             event->accept();
         }
-        else
-        {
-            QFrame::keyPressEvent(event);
-        }
+        else { QFrame::keyPressEvent(event); }
     }
 
     void COverlayMessages::close()
@@ -615,14 +574,8 @@ namespace swift::gui
         this->hide();
         this->setEnabled(false);
         ui->fr_Confirmation->setVisible(false);
-        if (m_awaitingConfirmation)
-        {
-            emit this->confirmationCompleted();
-        }
-        else
-        {
-            m_lastConfirmation = QMessageBox::Cancel;
-        }
+        if (m_awaitingConfirmation) { emit this->confirmationCompleted(); }
+        else { m_lastConfirmation = QMessageBox::Cancel; }
         m_awaitingConfirmation = false;
         m_okLambda = nullptr;
 
@@ -644,13 +597,7 @@ namespace swift::gui
         this->show();
         this->raise();
         this->setEnabled(true);
-        if (timeOutMs > 250)
-        {
-            m_autoCloseTimer.start(timeOutMs);
-        }
-        else
-        {
-            m_autoCloseTimer.stop();
-        }
+        if (timeOutMs > 250) { m_autoCloseTimer.start(timeOutMs); }
+        else { m_autoCloseTimer.stop(); }
     }
 } // namespace swift::gui

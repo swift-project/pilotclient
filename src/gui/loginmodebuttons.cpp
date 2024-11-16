@@ -19,25 +19,21 @@ using namespace swift::misc::network;
 
 namespace swift::gui
 {
-    CLoginModeButtons::CLoginModeButtons(QWidget *parent) : QFrame(parent),
-                                                            ui(new Ui::CLoginModeButtons)
+    CLoginModeButtons::CLoginModeButtons(QWidget *parent) : QFrame(parent), ui(new Ui::CLoginModeButtons)
     {
         ui->setupUi(this);
         ui->lbl_NoSimulator->setVisible(false);
         this->configureLoginModes();
-        connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CLoginModeButtons::configureLoginModes, Qt::QueuedConnection);
+        connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this,
+                &CLoginModeButtons::configureLoginModes, Qt::QueuedConnection);
     }
 
-    CLoginModeButtons::~CLoginModeButtons()
-    {}
+    CLoginModeButtons::~CLoginModeButtons() {}
 
     CLoginMode swift::gui::CLoginModeButtons::getLoginMode() const
     {
         CLoginMode mode = CLoginMode::Pilot;
-        if (ui->rb_LoginObserver->isChecked())
-        {
-            mode.setLoginMode(CLoginMode::Observer);
-        }
+        if (ui->rb_LoginObserver->isChecked()) { mode.setLoginMode(CLoginMode::Observer); }
         return mode;
     }
 
@@ -45,13 +41,9 @@ namespace swift::gui
     {
         switch (mode.getLoginMode())
         {
-        case CLoginMode::Observer:
-            ui->rb_LoginObserver->setChecked(true);
-            break;
+        case CLoginMode::Observer: ui->rb_LoginObserver->setChecked(true); break;
         default:
-        case CLoginMode::Pilot:
-            ui->rb_LoginNormal->setChecked(true);
-            break;
+        case CLoginMode::Pilot: ui->rb_LoginNormal->setChecked(true); break;
         }
     }
 
@@ -73,7 +65,8 @@ namespace swift::gui
             Q_ASSERT_X(false, Q_FUNC_INFO, "No context or sGUI");
         }
 
-        if (!sGui->getIContextSimulator() || (!sGui->isDeveloperFlagSet() && !sGui->getIContextSimulator()->isSimulatorSimulating()))
+        if (!sGui->getIContextSimulator() ||
+            (!sGui->isDeveloperFlagSet() && !sGui->getIContextSimulator()->isSimulatorSimulating()))
         {
             // Disable pilot login modes, only observer
             ui->rb_LoginNormal->setEnabled(false);

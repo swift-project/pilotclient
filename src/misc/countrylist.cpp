@@ -13,8 +13,7 @@ namespace swift::misc
 {
     CCountryList::CCountryList() {}
 
-    CCountryList::CCountryList(const CSequence<CCountry> &other) : CSequence<CCountry>(other)
-    {}
+    CCountryList::CCountryList(const CSequence<CCountry> &other) : CSequence<CCountry>(other) {}
 
     CCountry CCountryList::findByIsoCode(const QString &isoCode) const
     {
@@ -30,9 +29,8 @@ namespace swift::misc
         thread_local const QRegularExpression reg("^[a-z]+", QRegularExpression::CaseInsensitiveOption);
         const QRegularExpressionMatch match = reg.match(candidate);
         const QString cn(match.hasMatch() ? match.captured(0) : candidate);
-        const CCountryList countries = this->findBy([&](const CCountry &country) {
-            return country.matchesCountryName(cn);
-        });
+        const CCountryList countries =
+            this->findBy([&](const CCountry &country) { return country.matchesCountryName(cn); });
 
         if (countries.isEmpty()) { return this->findFirstByAlias(cn); }
         if (countries.size() < 2) { return countries.frontOrDefault(); }

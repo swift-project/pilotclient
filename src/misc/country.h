@@ -23,9 +23,7 @@ namespace swift::misc
     /*!
      * Color
      */
-    class SWIFT_MISC_EXPORT CCountry :
-        public CValueObject<CCountry>,
-        public db::IDatastoreObjectWithStringKey
+    class SWIFT_MISC_EXPORT CCountry : public CValueObject<CCountry>, public db::IDatastoreObjectWithStringKey
     {
     public:
         //! Properties by index

@@ -8,13 +8,9 @@ namespace swift::misc
     CIdentifiable::CIdentifiable(QObject *object) : m_identifier(object->objectName())
     {
         // if the object name changes we update our originator
-        m_connection = QObject::connect(object, &QObject::objectNameChanged, [this, object]() {
-            m_identifier = CIdentifier(object->objectName());
-        });
+        m_connection = QObject::connect(object, &QObject::objectNameChanged,
+                                        [this, object]() { m_identifier = CIdentifier(object->objectName()); });
     }
 
-    CIdentifiable::~CIdentifiable()
-    {
-        QObject::disconnect(m_connection);
-    }
+    CIdentifiable::~CIdentifiable() { QObject::disconnect(m_connection); }
 } // namespace swift::misc

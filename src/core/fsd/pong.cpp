@@ -7,12 +7,10 @@
 
 namespace swift::core::fsd
 {
-    Pong::Pong() : MessageBase()
-    {}
+    Pong::Pong() : MessageBase() {}
 
     Pong::Pong(const QString &sender, const QString &receiver, const QString &timestamp)
-        : MessageBase(sender, receiver),
-          m_timestamp(timestamp)
+        : MessageBase(sender, receiver), m_timestamp(timestamp)
     {}
 
     QStringList Pong::toTokens() const

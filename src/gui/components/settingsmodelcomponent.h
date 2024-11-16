@@ -43,9 +43,14 @@ namespace swift::gui::components
 
     private:
         QScopedPointer<Ui::CSettingsModelComponent> ui;
-        swift::misc::CSetting<settings::TBackgroundConsolidation> m_consolidationSetting { this, &CSettingsModelComponent::cacheChanged }; //!< consolidation time
-        swift::misc::CSetting<swift::misc::simulation::settings::TModel> m_modelSettings { this, &CSettingsModelComponent::cacheChanged }; //!< model setting
-        const swift::core::db::CBackgroundDataUpdater *m_updater = nullptr; //!< externally (i.e. other component) provided existing updater
+        swift::misc::CSetting<settings::TBackgroundConsolidation> m_consolidationSetting {
+            this, &CSettingsModelComponent::cacheChanged
+        }; //!< consolidation time
+        swift::misc::CSetting<swift::misc::simulation::settings::TModel> m_modelSettings {
+            this, &CSettingsModelComponent::cacheChanged
+        }; //!< model setting
+        const swift::core::db::CBackgroundDataUpdater *m_updater =
+            nullptr; //!< externally (i.e. other component) provided existing updater
 
         //! Consolidation time entered
         void consolidationEntered();

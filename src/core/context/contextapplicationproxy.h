@@ -45,7 +45,8 @@ namespace swift::core
 
         public slots:
             //! \copydoc swift::core::context::IContextApplication::changeSettings
-            virtual void changeSettings(const swift::misc::CValueCachePacket &settings, const swift::misc::CIdentifier &origin) override;
+            virtual void changeSettings(const swift::misc::CValueCachePacket &settings,
+                                        const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc swift::core::context::IContextApplication::getAllSettings
             virtual swift::misc::CValueCachePacket getAllSettings() const override;
@@ -69,10 +70,12 @@ namespace swift::core
             virtual swift::misc::CStatusMessage loadSettings() override;
 
             //! \copydoc swift::core::context::IContextApplication::registerHotkeyActions
-            virtual void registerHotkeyActions(const QStringList &actions, const swift::misc::CIdentifier &origin) override;
+            virtual void registerHotkeyActions(const QStringList &actions,
+                                               const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc swift::core::context::IContextApplication::callHotkeyActionRemotely
-            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const swift::misc::CIdentifier &origin) override;
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument,
+                                                  const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc swift::core::context::IContextApplication::registerApplication
             virtual swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) override;
@@ -93,10 +96,13 @@ namespace swift::core
 
         protected:
             //! Constructor
-            CContextApplicationProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr) {}
+            CContextApplicationProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+                : IContextApplication(mode, runtime), m_dBusInterface(nullptr)
+            {}
 
             //! DBus version constructor
-            CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
+            CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection,
+                                     CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
         private:
             swift::misc::CGenericDBusInterface *m_dBusInterface = nullptr; //!< interface
@@ -109,7 +115,8 @@ namespace swift::core
             //! Ping/heartbeat identifiers
             void reRegisterApplications();
 
-            void processRemoteHotkeyActionCall(const QString &action, bool argument, const swift::misc::CIdentifier &origin);
+            void processRemoteHotkeyActionCall(const QString &action, bool argument,
+                                               const swift::misc::CIdentifier &origin);
         };
     } // namespace context
 } // namespace swift::core

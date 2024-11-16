@@ -59,50 +59,63 @@ using namespace swift::core::vatsim;
 
 namespace swift::core
 {
-    CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider, IAircraftModelSetProvider *modelSetProvider, CFSDClient *fsdClient, QObject *parent)
-        : CRemoteAircraftProvider(parent),
-          COwnAircraftAware(ownAircraftProvider),
-          CAircraftModelSetAware(modelSetProvider),
-          m_fsdClient(fsdClient),
+    CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider,
+                                       IAircraftModelSetProvider *modelSetProvider, CFSDClient *fsdClient,
+                                       QObject *parent)
+        : CRemoteAircraftProvider(parent), COwnAircraftAware(ownAircraftProvider),
+          CAircraftModelSetAware(modelSetProvider), m_fsdClient(fsdClient),
           m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, m_fsdClient, this))
     {
         this->setObjectName("CAirspaceMonitor");
-        this->enableReverseLookupMessages(sApp->isDeveloperFlagSet() || CBuildConfig::isLocalDeveloperDebugBuild() ? RevLogEnabled : RevLogEnabledSimplified);
+        this->enableReverseLookupMessages(sApp->isDeveloperFlagSet() || CBuildConfig::isLocalDeveloperDebugBuild() ?
+                                              RevLogEnabled :
+                                              RevLogEnabledSimplified);
 
         // FSD runs in its own thread!
         connect(m_fsdClient, &CFSDClient::atcDataUpdateReceived, this, &CAirspaceMonitor::onAtcPositionUpdate);
         connect(m_fsdClient, &CFSDClient::atisReplyReceived, this, &CAirspaceMonitor::onAtisReceived);
-        connect(m_fsdClient, &CFSDClient::atisLogoffTimeReplyReceived, this, &CAirspaceMonitor::onAtisLogoffTimeReceived);
+        connect(m_fsdClient, &CFSDClient::atisLogoffTimeReplyReceived, this,
+                &CAirspaceMonitor::onAtisLogoffTimeReceived);
         connect(m_fsdClient, &CFSDClient::flightPlanReceived, this, &CAirspaceMonitor::onFlightPlanReceived);
         connect(m_fsdClient, &CFSDClient::realNameResponseReceived, this, &CAirspaceMonitor::onRealNameReplyReceived);
         connect(m_fsdClient, &CFSDClient::planeInformationReceived, this, &CAirspaceMonitor::onIcaoCodesReceived);
         connect(m_fsdClient, &CFSDClient::deletePilotReceived, this, &CAirspaceMonitor::onPilotDisconnected);
         connect(m_fsdClient, &CFSDClient::deleteAtcReceived, this, &CAirspaceMonitor::onAtcControllerDisconnected);
         connect(m_fsdClient, &CFSDClient::pilotDataUpdateReceived, this, &CAirspaceMonitor::onAircraftUpdateReceived);
-        connect(m_fsdClient, &CFSDClient::interimPilotDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftInterimUpdateReceived);
-        connect(m_fsdClient, &CFSDClient::visualPilotDataUpdateReceived, this, &CAirspaceMonitor::onAircraftVisualUpdateReceived);
-        connect(m_fsdClient, &CFSDClient::euroscopeSimDataUpdatedReceived, this, &CAirspaceMonitor::onAircraftSimDataUpdateReceived);
+        connect(m_fsdClient, &CFSDClient::interimPilotDataUpdatedReceived, this,
+                &CAirspaceMonitor::onAircraftInterimUpdateReceived);
+        connect(m_fsdClient, &CFSDClient::visualPilotDataUpdateReceived, this,
+                &CAirspaceMonitor::onAircraftVisualUpdateReceived);
+        connect(m_fsdClient, &CFSDClient::euroscopeSimDataUpdatedReceived, this,
+                &CAirspaceMonitor::onAircraftSimDataUpdateReceived);
         connect(m_fsdClient, &CFSDClient::com1FrequencyResponseReceived, this, &CAirspaceMonitor::onFrequencyReceived);
-        connect(m_fsdClient, &CFSDClient::capabilityResponseReceived, this, &CAirspaceMonitor::onCapabilitiesReplyReceived);
-        connect(m_fsdClient, &CFSDClient::planeInformationFsinnReceived, this, &CAirspaceMonitor::onCustomFSInnPacketReceived);
+        connect(m_fsdClient, &CFSDClient::capabilityResponseReceived, this,
+                &CAirspaceMonitor::onCapabilitiesReplyReceived);
+        connect(m_fsdClient, &CFSDClient::planeInformationFsinnReceived, this,
+                &CAirspaceMonitor::onCustomFSInnPacketReceived);
         connect(m_fsdClient, &CFSDClient::serverResponseReceived, this, &CAirspaceMonitor::onServerReplyReceived);
         connect(m_fsdClient, &CFSDClient::aircraftConfigReceived, this, &CAirspaceMonitor::onAircraftConfigReceived);
         connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CAirspaceMonitor::onConnectionStatusChanged);
-        connect(m_fsdClient, &CFSDClient::revbAircraftConfigReceived, this, &CAirspaceMonitor::onRevBAircraftConfigReceived);
+        connect(m_fsdClient, &CFSDClient::revbAircraftConfigReceived, this,
+                &CAirspaceMonitor::onRevBAircraftConfigReceived);
 
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing data reader");
 
         if (this->supportsVatsimDataFile())
         {
-            connect(sApp->getWebDataServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataFileRead, this, &CAirspaceMonitor::onReceivedVatsimDataFile);
+            connect(sApp->getWebDataServices()->getVatsimDataFileReader(), &CVatsimDataFileReader::dataFileRead, this,
+                    &CAirspaceMonitor::onReceivedVatsimDataFile);
         }
 
         // Force snapshot in the main event loop
-        connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this, &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::airspaceAircraftSnapshot, this,
+                &CAirspaceMonitor::airspaceAircraftSnapshot, Qt::QueuedConnection);
 
         // Analyzer
-        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected, Qt::QueuedConnection);
-        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::onAtcControllerDisconnected, Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAircraft, this, &CAirspaceMonitor::onPilotDisconnected,
+                Qt::QueuedConnection);
+        connect(m_analyzer, &CAirspaceAnalyzer::timeoutAtc, this, &CAirspaceMonitor::onAtcControllerDisconnected,
+                Qt::QueuedConnection);
 
         // timers
         connect(&m_fastProcessTimer, &QTimer::timeout, this, &CAirspaceMonitor::fastProcessing);
@@ -125,14 +138,8 @@ namespace swift::core
                 if (!myself) { return; }
                 if (m_fsdClient)
                 {
-                    if (enableFastPositonUpdates)
-                    {
-                        m_fsdClient->addInterimPositionReceiver(callsign);
-                    }
-                    else
-                    {
-                        m_fsdClient->removeInterimPositionReceiver(callsign);
-                    }
+                    if (enableFastPositonUpdates) { m_fsdClient->addInterimPositionReceiver(callsign); }
+                    else { m_fsdClient->removeInterimPositionReceiver(callsign); }
                 }
             });
         }
@@ -169,14 +176,15 @@ namespace swift::core
             // with this little trick we try to make an asynchronous signal / slot based approach
             // a synchronous return value
             CEventLoop eventLoop(this);
-            eventLoop.stopWhen(m_fsdClient, &CFSDClient::flightPlanReceived, [=](const auto &cs, const auto &) { return cs == callsign; });
+            eventLoop.stopWhen(m_fsdClient, &CFSDClient::flightPlanReceived,
+                               [=](const auto &cs, const auto &) { return cs == callsign; });
             if (eventLoop.exec(1500))
             {
-                if (!myself || !sApp || sApp->isShuttingDown()) { return CFlightPlan(); } // cppcheck-suppress knownConditionTrueFalse
-                if (m_flightPlanCache.contains(callsign))
+                if (!myself || !sApp || sApp->isShuttingDown()) // cppcheck-suppress knownConditionTrueFalse
                 {
-                    plan = m_flightPlanCache[callsign];
+                    return CFlightPlan();
                 }
+                if (m_flightPlanCache.contains(callsign)) { plan = m_flightPlanCache[callsign]; }
             }
         }
         return plan;
@@ -190,7 +198,10 @@ namespace swift::core
         if (m_flightPlanCache.contains(callsign)) { return m_flightPlanCache[callsign].getFlightPlanRemarks(); }
 
         // remarks only
-        if (this->supportsVatsimDataFile()) { return sApp->getWebDataServices()->getVatsimDataFileReader()->getFlightPlanRemarksForCallsign(callsign); }
+        if (this->supportsVatsimDataFile())
+        {
+            return sApp->getWebDataServices()->getVatsimDataFileReader()->getFlightPlanRemarksForCallsign(callsign);
+        }
 
         // unsupported
         return CFlightPlanRemarks();
@@ -269,10 +280,7 @@ namespace swift::core
                 const CUser user(callsign);
                 users.push_back(user);
             }
-            else
-            {
-                users.push_back(usersByCallsign[0]);
-            }
+            else { users.push_back(usersByCallsign[0]); }
         }
         return users;
     }
@@ -293,10 +301,7 @@ namespace swift::core
         {
             // staggered version
             const CCallsign cs(aircraft.getCallsign());
-            if (!m_queryPilot.contains(cs))
-            {
-                m_queryPilot.enqueue(aircraft.getCallsign());
-            }
+            if (!m_queryPilot.contains(cs)) { m_queryPilot.enqueue(aircraft.getCallsign()); }
         }
     }
 
@@ -310,10 +315,7 @@ namespace swift::core
 
             // changed to staggered version
             // m_network->sendAtisQuery(cs); // for each online station
-            if (!m_queryAtis.contains(cs))
-            {
-                m_queryAtis.enqueue(cs);
-            }
+            if (!m_queryAtis.contains(cs)) { m_queryAtis.enqueue(cs); }
         }
     }
 
@@ -331,11 +333,10 @@ namespace swift::core
         emit this->changedAtcStationsOnline();
     }
 
-    void CAirspaceMonitor::testAddAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool incremental)
+    void CAirspaceMonitor::testAddAircraftParts(const CCallsign &callsign, const CAircraftParts &parts,
+                                                bool incremental)
     {
-        this->onAircraftConfigReceived(callsign,
-                                       incremental ? parts.toIncrementalJson() : parts.toFullJson(),
-                                       5000);
+        this->onAircraftConfigReceived(callsign, incremental ? parts.toIncrementalJson() : parts.toFullJson(), 5000);
     }
 
     const QString &CAirspaceMonitor::enumFlagToString(CAirspaceMonitor::MatchingReadinessFlag r)
@@ -460,14 +461,16 @@ namespace swift::core
         if (callsign.hasSuffix())
         {
             // very likely and ATC callsign
-            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CAtcStation::IndexController, CUser::IndexRealName }, rn);
+            const CPropertyIndexVariantMap vm =
+                CPropertyIndexVariantMap({ CAtcStation::IndexController, CUser::IndexRealName }, rn);
             const int c1 = this->updateOnlineStation(callsign, vm, false, true);
             wasAtc = c1 > 0;
         }
 
         if (!wasAtc)
         {
-            const CPropertyIndexVariantMap vm = CPropertyIndexVariantMap({ CSimulatedAircraft::IndexPilot, CUser::IndexRealName }, rn);
+            const CPropertyIndexVariantMap vm =
+                CPropertyIndexVariantMap({ CSimulatedAircraft::IndexPilot, CUser::IndexRealName }, rn);
             this->updateAircraftInRange(callsign, vm);
         }
 
@@ -487,7 +490,10 @@ namespace swift::core
         this->updateOrAddClient(callsign, vm, false);
 
         // for aircraft parts
-        if (clientCaps.testFlag(CClient::FsdWithAircraftConfig)) { m_fsdClient->sendClientQueryAircraftConfig(callsign); }
+        if (clientCaps.testFlag(CClient::FsdWithAircraftConfig))
+        {
+            m_fsdClient->sendClientQueryAircraftConfig(callsign);
+        }
     }
 
     void CAirspaceMonitor::onServerReplyReceived(const CCallsign &callsign, const QString &server)
@@ -538,7 +544,8 @@ namespace swift::core
         for (auto client = clients.begin(); client != clients.end(); ++client)
         {
             if (client->hasSpecifiedVoiceCapabilities()) { continue; } // we already have voice caps
-            const CVoiceCapabilities vc = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(client->getCallsign());
+            const CVoiceCapabilities vc =
+                sApp->getWebDataServices()->getVoiceCapabilityForCallsign(client->getCallsign());
             if (vc.isUnknown()) { continue; }
             changed = true;
             client->setVoiceCapabilities(vc);
@@ -547,7 +554,8 @@ namespace swift::core
         this->setClients(clients);
     }
 
-    CAirspaceMonitor::Readiness &CAirspaceMonitor::addMatchingReadinessFlag(const CCallsign &callsign, CAirspaceMonitor::MatchingReadinessFlag mrf)
+    CAirspaceMonitor::Readiness &CAirspaceMonitor::addMatchingReadinessFlag(const CCallsign &callsign,
+                                                                            CAirspaceMonitor::MatchingReadinessFlag mrf)
     {
         Readiness &readiness = m_readiness[callsign].addFlag(mrf);
         return readiness;
@@ -569,26 +577,33 @@ namespace swift::core
         const CSimulatedAircraft remoteAircraft = this->getAircraftInRangeForCallsign(callsign);
         const bool validRemoteCs = remoteAircraft.hasValidCallsign();
         const bool minSituations = this->remoteAircraftSituationsCount(callsign) > 1;
-        const bool complete = validRemoteCs &&
-                              minSituations && (readiness.receivedAll() ||
-                                                // disable, because it can be model string is unknown in FsInn data
-                                                // (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData) || // here we know we have all data
-                                                (remoteAircraft.hasModelString()) // we cannot expect more info
-                                               );
+        const bool complete = validRemoteCs && minSituations &&
+                              (readiness.receivedAll() ||
+                               // disable, because it can be model string is unknown in FsInn data
+                               // (remoteAircraft.getModel().getModelType() == CAircraftModel::TypeFSInnData) || // here
+                               // we know we have all data
+                               (remoteAircraft.hasModelString()) // we cannot expect more info
+                              );
 
         const ReverseLookupLogging revLogEnabled = this->whatToReverseLog();
         if (rf != Verified && validRemoteCs && ageMs <= MMMaxAgeMs && !complete)
         {
             static const QString ws("Wait for further data, '%1' age: %2ms ts: %3");
             static const QString format("hh:mm:ss.zzz");
-            if (!revLogEnabled.testFlag(RevLogSimplifiedInfo)) { this->addReverseLookupMessage(callsign, ws.arg(readiness.toQString()).arg(ageMs).arg(QDateTime::currentDateTimeUtc().toString(format))); }
+            if (!revLogEnabled.testFlag(RevLogSimplifiedInfo))
+            {
+                this->addReverseLookupMessage(
+                    callsign,
+                    ws.arg(readiness.toQString()).arg(ageMs).arg(QDateTime::currentDateTimeUtc().toString(format)));
+            }
 
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(MMCheckAgainMs, this, [=]() {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 if (!this->isAircraftInRange(callsign))
                 {
-                    const CStatusMessage m = CCallsign::logMessage(callsign, "No longer in range", CAirspaceMonitor::getLogCategories());
+                    const CStatusMessage m =
+                        CCallsign::logMessage(callsign, "No longer in range", CAirspaceMonitor::getLogCategories());
                     this->addReverseLookupMessage(callsign, m);
                     return;
                 }
@@ -610,10 +625,14 @@ namespace swift::core
         // some checks for special conditions, e.g. logout -> empty list, but still signals pending
         if (validRemoteCs)
         {
-            static const QString readyForMatching("Ready (%1) for matching callsign '%2' with model type '%3', ICAO: '%4' '%5'");
+            static const QString readyForMatching(
+                "Ready (%1) for matching callsign '%2' with model type '%3', ICAO: '%4' '%5'");
 
             readiness.setFlag(ReadyForMatchingSent); // stored in readiness as reference
-            const QString readyMsg = readyForMatching.arg(readiness.toQString(), callsign.toQString(), remoteAircraft.getModel().getModelTypeAsString(), remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(), remoteAircraft.getAirlineIcaoCode().getDesignatorDbKey());
+            const QString readyMsg = readyForMatching.arg(readiness.toQString(), callsign.toQString(),
+                                                          remoteAircraft.getModel().getModelTypeAsString(),
+                                                          remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(),
+                                                          remoteAircraft.getAirlineIcaoCode().getDesignatorDbKey());
             const CStatusMessage m = CCallsign::logMessage(callsign, readyMsg, getLogCategories());
             this->addReverseLookupMessage(callsign, m);
 
@@ -621,7 +640,9 @@ namespace swift::core
         }
         else
         {
-            const CStatusMessage m = CCallsign::logMessage(callsign, "Ignoring this aircraft, not found in range list, disconnected, or no callsign", CAirspaceMonitor::getLogCategories(), CStatusMessage::SeverityWarning);
+            const CStatusMessage m = CCallsign::logMessage(
+                callsign, "Ignoring this aircraft, not found in range list, disconnected, or no callsign",
+                CAirspaceMonitor::getLogCategories(), CStatusMessage::SeverityWarning);
             this->addReverseLookupMessage(callsign, m);
             m_readiness.remove(callsign);
         }
@@ -636,7 +657,9 @@ namespace swift::core
         if (readiness.wasMatchingSent()) { return; }
         if (readiness.wasVerified())
         {
-            CLogMessage(this).warning(u"Verfied ICAO data of '%1' again, using it as it is! Most likely incomplete data from the other client") << callsign;
+            CLogMessage(this).warning(u"Verfied ICAO data of '%1' again, using it as it is! Most likely incomplete "
+                                      u"data from the other client")
+                << callsign;
             this->sendReadyForModelMatching(callsign, Verified);
             return;
         }
@@ -665,7 +688,9 @@ namespace swift::core
         this->sendReadyForModelMatching(callsign, Verified);
     }
 
-    void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const CFrequency &frequency, const CCoordinateGeodetic &position, const swift::misc::physical_quantities::CLength &range)
+    void CAirspaceMonitor::onAtcPositionUpdate(const CCallsign &callsign, const CFrequency &frequency,
+                                               const CCoordinateGeodetic &position,
+                                               const swift::misc::physical_quantities::CLength &range)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "wrong thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
@@ -761,7 +786,9 @@ namespace swift::core
         }
     }
 
-    void CAirspaceMonitor::onCustomFSInnPacketReceived(const CCallsign &callsign, const QString &airlineIcaoDesignator, const QString &aircraftIcaoDesignator, const QString &combinedAircraftType, const QString &modelString)
+    void CAirspaceMonitor::onCustomFSInnPacketReceived(const CCallsign &callsign, const QString &airlineIcaoDesignator,
+                                                       const QString &aircraftIcaoDesignator,
+                                                       const QString &combinedAircraftType, const QString &modelString)
     {
         // it can happen this is called before any queries
         // ES sends FsInn packets for callsigns such as ACCGER1, which are hard to distinguish
@@ -792,10 +819,13 @@ namespace swift::core
 
             const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
             CStatusMessageList reverseLookupMessages;
-            CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
+            CStatusMessageList *pReverseLookupMessages =
+                reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
 
-            CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
-                                           QStringLiteral("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'").arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
+            CCallsign::addLogDetailsToList(
+                pReverseLookupMessages, callsign,
+                QStringLiteral("FsInn data from network: aircraft '%1', airline '%2', model '%3', combined '%4'")
+                    .arg(aircraftIcaoDesignator, airlineIcaoDesignator, modelString, combinedAircraftType));
 
             QString usedModelString = modelString;
 
@@ -803,46 +833,58 @@ namespace swift::core
             if (!modelString.isEmpty() && !setup.isReverseLookupModelString())
             {
                 usedModelString.clear();
-                CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
-                                               QStringLiteral("FsInn modelstring '%1' ignored because of setuo").arg(modelString));
+                CCallsign::addLogDetailsToList(
+                    pReverseLookupMessages, callsign,
+                    QStringLiteral("FsInn modelstring '%1' ignored because of setuo").arg(modelString));
             }
             else if (!CAircraftMatcher::isKnownModelString(modelString, callsign, pReverseLookupMessages))
             {
                 // from the T701 test, do NOT use if model string is unknown
                 // this can overrride "swift livery strings", FsInn here only is useful with a known model string
                 usedModelString.clear();
-                CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
-                                               QStringLiteral("FsInn modelstring ignored, as modelstring '%1' is not known").arg(modelString));
+                CCallsign::addLogDetailsToList(
+                    pReverseLookupMessages, callsign,
+                    QStringLiteral("FsInn modelstring ignored, as modelstring '%1' is not known").arg(modelString));
             }
 
             // if model string is empty, FsInn data are pointless
             // in order not to override swift livery string data, we ignore those
             if (!usedModelString.isEmpty())
             {
-                this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, QString(), usedModelString, CAircraftModel::TypeFSInnData, pReverseLookupMessages);
+                this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, QString(),
+                                                 usedModelString, CAircraftModel::TypeFSInnData,
+                                                 pReverseLookupMessages);
                 this->addReverseLookupMessages(callsign, reverseLookupMessages);
             }
             this->sendReadyForModelMatching(callsign, ReceivedFsInnPacket); // from FSInn
         }
     }
 
-    void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &livery)
+    void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator,
+                                               const QString &airlineIcaoDesignator, const QString &livery)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "not in main thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
-        if (CBuildConfig::isLocalDeveloperDebugBuild()) { SWIFT_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign"); }
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            SWIFT_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
+        }
         if (!callsign.isValid()) { return; }
         if (!this->isAircraftInRange(callsign)) { return; } // FSD overload issue, do not do anything if unknown
 
         const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
         CStatusMessageList reverseLookupMessages;
-        CStatusMessageList *pReverseLookupMessages = reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
+        CStatusMessageList *pReverseLookupMessages =
+            reverseLookupEnabled.testFlag(RevLogEnabled) ? &reverseLookupMessages : nullptr;
         CCallsign::addLogDetailsToList(pReverseLookupMessages, callsign,
-                                       QStringLiteral("Data from network: aircraft '%1', airline '%2', livery '%3'").arg(aircraftIcaoDesignator, airlineIcaoDesignator, livery),
+                                       QStringLiteral("Data from network: aircraft '%1', airline '%2', livery '%3'")
+                                           .arg(aircraftIcaoDesignator, airlineIcaoDesignator, livery),
                                        CAirspaceMonitor::getLogCategories());
 
         const CClient client = this->getClientOrDefaultForCallsign(callsign);
-        this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, client.getQueriedModelString(), CAircraftModel::TypeQueriedFromNetwork, pReverseLookupMessages);
+        this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery,
+                                         client.getQueriedModelString(), CAircraftModel::TypeQueriedFromNetwork,
+                                         pReverseLookupMessages);
         this->addReverseLookupMessages(callsign, reverseLookupMessages);
         this->sendReadyForModelMatching(callsign, ReceivedIcaoCodes); // ICAO codes received
 
@@ -850,12 +892,14 @@ namespace swift::core
     }
 
     CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(
-        const CCallsign &callsign, const QString &aircraftIcaoString,
-        const QString &airlineIcaoString, const QString &liveryString, const QString &modelString,
-        CAircraftModel::ModelType type, CStatusMessageList *log, bool runMatchinScript)
+        const CCallsign &callsign, const QString &aircraftIcaoString, const QString &airlineIcaoString,
+        const QString &liveryString, const QString &modelString, CAircraftModel::ModelType type,
+        CStatusMessageList *log, bool runMatchinScript)
     {
         const int modelSetCount = this->getModelSetCount();
-        CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup (with FP data), model set count: %1").arg(modelSetCount), CAirspaceMonitor::getLogCategories());
+        CCallsign::addLogDetailsToList(
+            log, callsign, QStringLiteral("Reverse lookup (with FP data), model set count: %1").arg(modelSetCount),
+            CAirspaceMonitor::getLogCategories());
 
         const DBTripleIds ids = CAircraftModel::parseNetworkLiveryString(liveryString);
         const bool hasAnyId = ids.hasAnyId();
@@ -864,12 +908,12 @@ namespace swift::core
         CAircraftModel lookupModel; // result
         const CAircraftModelList modelSet = this->getModelSet();
         const CAircraftMatcherSetup setup = m_matchingSettings.get();
-        do
-        {
+        do {
             // directly check model string
             if (!modelString.isEmpty())
             {
-                lookupModel = CAircraftMatcher::reverseLookupModelStringInDB(modelString, callsign, setup.isReverseLookupModelString(), log);
+                lookupModel = CAircraftMatcher::reverseLookupModelStringInDB(modelString, callsign,
+                                                                             setup.isReverseLookupModelString(), log);
                 if (lookupModel.hasValidDbKey()) { break; } // found by model string
             }
 
@@ -879,7 +923,8 @@ namespace swift::core
 
             if (!setup.isReverseLookupSwiftLiveryIds())
             {
-                CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Reverse lookup of livery string '%1' disabled").arg(liveryString));
+                CCallsign::addLogDetailsToList(
+                    log, callsign, QStringLiteral("Reverse lookup of livery string '%1' disabled").arg(liveryString));
             }
             else if (hasAnyId)
             {
@@ -894,10 +939,15 @@ namespace swift::core
 
                 if (aircraftIcao.hasValidDbKey() && livery.hasValidDbKey())
                 {
-                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using DB livery %1 and aircraft ICAO %2 to create model").arg(livery.getDbKeyAsString(), aircraftIcao.getDbKeyAsString()), CAirspaceMonitor::getLogCategories());
+                    CCallsign::addLogDetailsToList(
+                        log, callsign,
+                        QStringLiteral("Using DB livery %1 and aircraft ICAO %2 to create model")
+                            .arg(livery.getDbKeyAsString(), aircraftIcao.getDbKeyAsString()),
+                        CAirspaceMonitor::getLogCategories());
 
                     // we have a valid livery from DB + valid aircraft ICAO from DB
-                    lookupModel = CAircraftModel(modelString, type, "By DB livery and aircraft ICAO", aircraftIcao, livery);
+                    lookupModel =
+                        CAircraftModel(modelString, type, "By DB livery and aircraft ICAO", aircraftIcao, livery);
                     break;
                 }
             }
@@ -906,12 +956,17 @@ namespace swift::core
             if (!aircraftIcao.hasValidDbKey())
             {
                 aircraftIcao = CAircraftIcaoCode(aircraftIcaoString);
-                const bool knownAircraftIcao = CAircraftMatcher::isKnownAircraftDesignator(aircraftIcaoString, callsign, log);
+                const bool knownAircraftIcao =
+                    CAircraftMatcher::isKnownAircraftDesignator(aircraftIcaoString, callsign, log);
                 if (airlineIcao.isLoadedFromDb() && !knownAircraftIcao)
                 {
                     // we have no valid aircraft ICAO, so we do a fuzzy search among those
-                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Fuzzy search among airline aircraft because '%1' is not known ICAO designator").arg(aircraftIcaoString));
-                    const CAircraftIcaoCode foundIcao = CAircraftMatcher::searchAmongAirlineAircraft(aircraftIcaoString, airlineIcao, callsign, log);
+                    CCallsign::addLogDetailsToList(
+                        log, callsign,
+                        QStringLiteral("Fuzzy search among airline aircraft because '%1' is not known ICAO designator")
+                            .arg(aircraftIcaoString));
+                    const CAircraftIcaoCode foundIcao =
+                        CAircraftMatcher::searchAmongAirlineAircraft(aircraftIcaoString, airlineIcao, callsign, log);
                     if (foundIcao.isLoadedFromDb()) { aircraftIcao = foundIcao; }
                 }
             }
@@ -930,23 +985,42 @@ namespace swift::core
 
                 if (fpRemarks.isEmpty())
                 {
-                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("No flight plan remarks, skipping FP resolution"));
+                    CCallsign::addLogDetailsToList(log, callsign,
+                                                   QStringLiteral("No flight plan remarks, skipping FP resolution"));
                 }
                 else
                 {
-                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("FP remarks: '%1'").arg(fpRemarks.getRemarks()));
-                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
+                    CCallsign::addLogDetailsToList(log, callsign,
+                                                   QStringLiteral("FP remarks: '%1'").arg(fpRemarks.getRemarks()));
+                    CCallsign::addLogDetailsToList(
+                        log, callsign, QStringLiteral("FP rem.parsed: '%1'").arg(fpRemarks.toQString(true)));
 
                     // FP data if any
-                    telephonyFromFp = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(), callsign, log);
-                    airlineNameFromFp = CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
+                    telephonyFromFp = CAircraftMatcher::reverseLookupTelephonyDesignator(fpRemarks.getRadioTelephony(),
+                                                                                         callsign, log);
+                    airlineNameFromFp =
+                        CAircraftMatcher::reverseLookupAirlineName(fpRemarks.getFlightOperator(), callsign, log);
                     airlineIcaoFromFp = fpRemarks.getAirlineIcao().getDesignator();
 
                     // turn into names as in DB
                     airlineNameLookup = CAircraftMatcher::reverseLookupAirlineName(airlineNameFromFp);
                     telephonyLookup = CAircraftMatcher::reverseLookupTelephonyDesignator(telephonyFromFp);
-                    if (!airlineNameLookup.isEmpty()) { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved airline name '%1' found by FP name '%2'").arg(airlineNameLookup, airlineNameFromFp), CAirspaceMonitor::getLogCategories()); }
-                    if (!telephonyLookup.isEmpty()) { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Using resolved telephony designator '%1' found by FP telephoy '%2'").arg(telephonyLookup, telephonyFromFp), CAirspaceMonitor::getLogCategories()); }
+                    if (!airlineNameLookup.isEmpty())
+                    {
+                        CCallsign::addLogDetailsToList(
+                            log, callsign,
+                            QStringLiteral("Using resolved airline name '%1' found by FP name '%2'")
+                                .arg(airlineNameLookup, airlineNameFromFp),
+                            CAirspaceMonitor::getLogCategories());
+                    }
+                    if (!telephonyLookup.isEmpty())
+                    {
+                        CCallsign::addLogDetailsToList(
+                            log, callsign,
+                            QStringLiteral("Using resolved telephony designator '%1' found by FP telephoy '%2'")
+                                .arg(telephonyLookup, telephonyFromFp),
+                            CAirspaceMonitor::getLogCategories());
+                    }
                 }
 
                 // This code is needed WITH and WITHOUT FP data
@@ -954,12 +1028,18 @@ namespace swift::core
                 // INFO: CModelMatcherComponent::reverseLookup() contains the simulated lookup
                 // changed with T701: resolve first against model set, then all DB data
                 // if an airline is ambiguous most likely the one in the set is the best choice
-                airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignatorModelsFirst(callsign, airlineIcaoString, airlineIcaoFromFp, true, airlineNameFromFp, telephonyFromFp, modelSet, log);
+                airlineIcao = CAircraftMatcher::failoverValidAirlineIcaoDesignatorModelsFirst(
+                    callsign, airlineIcaoString, airlineIcaoFromFp, true, airlineNameFromFp, telephonyFromFp, modelSet,
+                    log);
 
                 // not found, create a search patterm
                 if (!airlineIcao.isLoadedFromDb())
                 {
-                    if (!airlineIcao.hasValidDesignator()) { airlineIcao.setDesignator(airlineIcaoString.isEmpty() ? callsign.getAirlinePrefix() : airlineIcaoString); }
+                    if (!airlineIcao.hasValidDesignator())
+                    {
+                        airlineIcao.setDesignator(airlineIcaoString.isEmpty() ? callsign.getAirlinePrefix() :
+                                                                                airlineIcaoString);
+                    }
                     if (!airlineNameLookup.isEmpty()) { airlineIcao.setName(airlineNameLookup); }
                     if (!telephonyLookup.isEmpty()) { airlineIcao.setTelephonyDesignator(telephonyLookup); }
 
@@ -968,11 +1048,16 @@ namespace swift::core
                 }
             }
 
-            CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Used aircraft ICAO: '%1'").arg(aircraftIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
-            CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)), CAirspaceMonitor::getLogCategories());
+            CCallsign::addLogDetailsToList(log, callsign,
+                                           QStringLiteral("Used aircraft ICAO: '%1'").arg(aircraftIcao.toQString(true)),
+                                           CAirspaceMonitor::getLogCategories());
+            CCallsign::addLogDetailsToList(log, callsign,
+                                           QStringLiteral("Used airline ICAO: '%1'").arg(airlineIcao.toQString(true)),
+                                           CAirspaceMonitor::getLogCategories());
 
             // matching script is used below
-            lookupModel = CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString, modelString, setup, modelSet, type, log);
+            lookupModel = CAircraftMatcher::reverseLookupModel(callsign, aircraftIcao, airlineIcao, liveryString,
+                                                               modelString, setup, modelSet, type, log);
         }
         while (false);
 
@@ -982,27 +1067,29 @@ namespace swift::core
         // script
         if (runMatchinScript && setup.doRunMsReverseLookupScript())
         {
-            const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(lookupModel, setup, modelSet, log);
+            const MatchingScriptReturnValues rv =
+                CAircraftMatcher::reverseLookupScript(lookupModel, setup, modelSet, log);
             if (rv.runScriptAndModified())
             {
                 if (rv.runScriptAndRerun())
                 {
-                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: Re-run reverseLookupModelWithFlightplanData"), CAirspaceMonitor::getLogCategories());
-                    return CAirspaceMonitor::reverseLookupModelWithFlightplanData(callsign,
-                                                                                  rv.model.getAircraftIcaoCodeDesignator(), rv.model.getAirlineIcaoCodeVDesignator(), rv.model.getLivery().getCombinedCode(),
-                                                                                  modelString, type, log, false);
+                    CCallsign::addLogDetailsToList(
+                        log, callsign, QStringLiteral("Matching script: Re-run reverseLookupModelWithFlightplanData"),
+                        CAirspaceMonitor::getLogCategories());
+                    return CAirspaceMonitor::reverseLookupModelWithFlightplanData(
+                        callsign, rv.model.getAircraftIcaoCodeDesignator(), rv.model.getAirlineIcaoCodeVDesignator(),
+                        rv.model.getLivery().getCombinedCode(), modelString, type, log, false);
                 }
                 else
                 {
                     lookupModel = rv.model;
-                    CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("Matching script: Using model from matching script"), CAirspaceMonitor::getLogCategories());
+                    CCallsign::addLogDetailsToList(log, callsign,
+                                                   QStringLiteral("Matching script: Using model from matching script"),
+                                                   CAirspaceMonitor::getLogCategories());
                 }
             }
         }
-        else
-        {
-            CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("No reverse lookup script used"));
-        }
+        else { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("No reverse lookup script used")); }
 
         // done
         lookupModel.setCallsign(callsign); // set again just in case modified by script
@@ -1018,7 +1105,8 @@ namespace swift::core
 
         CSimulatedAircraft newAircraft(aircraft);
         newAircraft.setRendered(false); // reset rendering
-        newAircraft.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition()); // distance from myself
+        newAircraft.calculcateAndUpdateRelativeDistanceAndBearing(
+            this->getOwnAircraftPosition()); // distance from myself
 
         if (this->getConnectedServer().getEcosystem() == CEcosystem::vatsim())
         {
@@ -1038,7 +1126,8 @@ namespace swift::core
             {
                 // most likely I could take the CG at this time from aircraft
                 // to make sure it is really the DB value I query again
-                const CAircraftModel model = sApp->getWebDataServices()->getModelForModelString(aircraft.getModelString());
+                const CAircraftModel model =
+                    sApp->getWebDataServices()->getModelForModelString(aircraft.getModelString());
                 const CLength cg = model.hasValidDbKey() ? model.getCG() : CLength::null();
                 this->rememberCGFromDB(cg, aircraft.getModelString());
                 this->rememberCGFromDB(cg, aircraft.getCallsign());
@@ -1047,7 +1136,8 @@ namespace swift::core
         return added;
     }
 
-    void CAirspaceMonitor::asyncReInitializeAllAircraft(const CSimulatedAircraftList &aircraft, bool readyForModelMatching)
+    void CAirspaceMonitor::asyncReInitializeAllAircraft(const CSimulatedAircraftList &aircraft,
+                                                        bool readyForModelMatching)
     {
         if (aircraft.isEmpty()) { return; }
         if (!sApp || sApp->isShuttingDown()) { return; }
@@ -1069,13 +1159,11 @@ namespace swift::core
         }
     }
 
-    int CAirspaceMonitor::updateOnlineStation(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues, bool sendSignal)
+    int CAirspaceMonitor::updateOnlineStation(const CCallsign &callsign, const CPropertyIndexVariantMap &vm,
+                                              bool skipEqualValues, bool sendSignal)
     {
         const int c = m_atcStationsOnline.applyIfCallsign(callsign, vm, skipEqualValues);
-        if (c > 0 && sendSignal)
-        {
-            emit this->changedAtcStationsOnline();
-        }
+        if (c > 0 && sendSignal) { emit this->changedAtcStationsOnline(); }
         return c;
     }
 
@@ -1083,7 +1171,8 @@ namespace swift::core
     {
         if (situation.isNull()) { return false; }
         if (m_maxDistanceNM < 0) { return true; }
-        const int distanceNM = this->getOwnAircraft().calculateGreatCircleDistance(situation).valueInteger(CLengthUnit::NM());
+        const int distanceNM =
+            this->getOwnAircraft().calculateGreatCircleDistance(situation).valueInteger(CLengthUnit::NM());
         if (distanceNM > m_maxDistanceNMHysteresis)
         {
             this->removeAircraft(situation.getCallsign());
@@ -1097,7 +1186,8 @@ namespace swift::core
         if (!m_tempFsInnPackets.contains(callsign)) { return false; }
         const FsInnPacket packet = m_tempFsInnPackets[callsign];
         m_tempFsInnPackets.remove(callsign);
-        this->onCustomFSInnPacketReceived(callsign, packet.airlineIcaoDesignator, packet.aircraftIcaoDesignator, packet.combinedCode, packet.modelString);
+        this->onCustomFSInnPacketReceived(callsign, packet.airlineIcaoDesignator, packet.aircraftIcaoDesignator,
+                                          packet.combinedCode, packet.modelString);
         return true;
     }
 
@@ -1111,10 +1201,11 @@ namespace swift::core
             // only if we do not have a DB model yet
             if (!aircraft.getModel().hasValidDbKey())
             {
-                CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao, livery, modelString, modelType, log);
+                CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao,
+                                                                                  livery, modelString, modelType, log);
                 model.updateMissingParts(aircraft.getModel());
-                // Use anonymous as originator here, since the remote aircraft provider is ourselves and the call to updateAircraftModel() would
-                // return without doing anything.
+                // Use anonymous as originator here, since the remote aircraft provider is ourselves and the call to
+                // updateAircraftModel() would return without doing anything.
                 this->updateAircraftModel(callsign, model, CIdentifier::null());
                 this->updateAircraftNetworkModel(callsign, model, CIdentifier::null());
             }
@@ -1122,24 +1213,29 @@ namespace swift::core
         else
         {
             /* FSD overload issue, do NOT to add new aircraft other than from positions
-            const CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao, livery, modelString, modelType, log);
-            const CSimulatedAircraft initAircraft(model);
+            const CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao,
+            livery, modelString, modelType, log); const CSimulatedAircraft initAircraft(model);
             this->addNewAircraftInRange(initAircraft);
             */
         }
         return aircraft;
     }
 
-    bool CAirspaceMonitor::extrapolateElevation(CAircraftSituationList &situations, const CAircraftSituationChange &change)
+    bool CAirspaceMonitor::extrapolateElevation(CAircraftSituationList &situations,
+                                                const CAircraftSituationChange &change)
     {
         if (situations.size() < 3) { return false; }
-        // Q_ASSERT_X(situations.m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst, Q_FUNC_INFO, "Need latest first");
+        // Q_ASSERT_X(situations.m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst,
+        // Q_FUNC_INFO, "Need latest first");
         const CAircraftSituation old = situations[1];
         const CAircraftSituation older = situations[2];
         return extrapolateElevation(situations.front(), old, older, change);
     }
 
-    bool CAirspaceMonitor::extrapolateElevation(CAircraftSituation &situationToBeUpdated, const CAircraftSituation &oldSituation, const CAircraftSituation &olderSituation, const CAircraftSituationChange &oldChange)
+    bool CAirspaceMonitor::extrapolateElevation(CAircraftSituation &situationToBeUpdated,
+                                                const CAircraftSituation &oldSituation,
+                                                const CAircraftSituation &olderSituation,
+                                                const CAircraftSituationChange &oldChange)
     {
         if (situationToBeUpdated.hasGroundElevation()) { return false; }
 
@@ -1153,14 +1249,17 @@ namespace swift::core
         if (oldSituation.isNull() || olderSituation.isNull()) { return false; }
 
         if (oldChange.isNull()) { return false; }
-        if (oldChange.isConstOnGround() && oldChange.hasAltitudeDevWithinAllowedRange() && oldChange.hasElevationDevWithinAllowedRange())
+        if (oldChange.isConstOnGround() && oldChange.hasAltitudeDevWithinAllowedRange() &&
+            oldChange.hasElevationDevWithinAllowedRange())
         {
             // we have almost const altitudes and elevations
-            const double deltaAltFt = qAbs(situationToBeUpdated.getAltitude().value(CLengthUnit::ft()) - olderSituation.getAltitude().value(CLengthUnit::ft()));
+            const double deltaAltFt = qAbs(situationToBeUpdated.getAltitude().value(CLengthUnit::ft()) -
+                                           olderSituation.getAltitude().value(CLengthUnit::ft()));
             if (deltaAltFt <= CAircraftSituation::allowedAltitudeDeviation().value(CLengthUnit::ft()))
             {
                 // the current alt is also not much different
-                situationToBeUpdated.setGroundElevation(oldSituation.getGroundElevation(), CAircraftSituation::Extrapolated);
+                situationToBeUpdated.setGroundElevation(oldSituation.getGroundElevation(),
+                                                        CAircraftSituation::Extrapolated);
                 return true;
             }
         }
@@ -1168,7 +1267,8 @@ namespace swift::core
         return false;
     }
 
-    void CAirspaceMonitor::onAircraftUpdateReceived(const CAircraftSituation &situation, const CTransponder &transponder)
+    void CAirspaceMonitor::onAircraftUpdateReceived(const CAircraftSituation &situation,
+                                                    const CTransponder &transponder)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Called in different thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
@@ -1256,10 +1356,9 @@ namespace swift::core
         if (samePosition) { return; } // nothing to update
 
         // update aircraft
-        this->updateAircraftInRangeDistanceBearing(
-            callsign, interimSituation,
-            this->calculateDistanceToOwnAircraft(interimSituation),
-            this->calculateBearingToOwnAircraft(interimSituation));
+        this->updateAircraftInRangeDistanceBearing(callsign, interimSituation,
+                                                   this->calculateDistanceToOwnAircraft(interimSituation),
+                                                   this->calculateBearingToOwnAircraft(interimSituation));
     }
 
     void CAirspaceMonitor::onAircraftVisualUpdateReceived(const swift::misc::aviation::CAircraftSituation &situation)
@@ -1302,13 +1401,14 @@ namespace swift::core
         if (samePosition) { return; } // nothing to update
 
         // update aircraft
-        this->updateAircraftInRangeDistanceBearing(
-            callsign, visualSituation,
-            this->calculateDistanceToOwnAircraft(visualSituation),
-            this->calculateBearingToOwnAircraft(visualSituation));
+        this->updateAircraftInRangeDistanceBearing(callsign, visualSituation,
+                                                   this->calculateDistanceToOwnAircraft(visualSituation),
+                                                   this->calculateBearingToOwnAircraft(visualSituation));
     }
 
-    void CAirspaceMonitor::onAircraftSimDataUpdateReceived(const CAircraftSituation &situation, const CAircraftParts &parts, qint64 currentOffsetMs, const QString &aircraftIcao, const QString &airlineIcao)
+    void CAirspaceMonitor::onAircraftSimDataUpdateReceived(const CAircraftSituation &situation,
+                                                           const CAircraftParts &parts, qint64 currentOffsetMs,
+                                                           const QString &aircraftIcao, const QString &airlineIcao)
     {
         onAircraftUpdateReceived(situation, CTransponder(2000, CTransponder::ModeC));
 
@@ -1319,7 +1419,8 @@ namespace swift::core
             onIcaoCodesReceived(situation.getCallsign(), aircraftIcao, airlineIcao, airlineIcao);
         }
 
-        //! \fixme Converting CAircraftParts to JSON then converting JSON right back to CAircraftParts, should just directly use CAircraftParts without conversion.
+        //! \fixme Converting CAircraftParts to JSON then converting JSON right back to CAircraftParts, should just
+        //! directly use CAircraftParts without conversion.
         onAircraftConfigReceived(situation.getCallsign(), parts.toFullJson(), currentOffsetMs);
     }
 
@@ -1334,10 +1435,7 @@ namespace swift::core
             this->setMaxRange(maxRange);
         }
 
-        if (newStatus.isDisconnected())
-        {
-            this->clear();
-        }
+        if (newStatus.isDisconnected()) { this->clear(); }
     }
 
     void CAirspaceMonitor::onPilotDisconnected(const CCallsign &callsign)
@@ -1356,11 +1454,13 @@ namespace swift::core
         Q_ASSERT(CThreadUtils::isInThisThread(this));
 
         // update
-        const CPropertyIndexVariantMap vm({ CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, CVariant::from(frequency));
+        const CPropertyIndexVariantMap vm({ CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency },
+                                          CVariant::from(frequency));
         this->updateAircraftInRange(callsign, vm);
     }
 
-    void CAirspaceMonitor::onRevBAircraftConfigReceived(const CCallsign &callsign, const QString &config, qint64 currentOffsetMs)
+    void CAirspaceMonitor::onRevBAircraftConfigReceived(const CCallsign &callsign, const QString &config,
+                                                        qint64 currentOffsetMs)
     {
 
         Q_ASSERT(CThreadUtils::isInThisThread(this));
@@ -1382,8 +1482,10 @@ namespace swift::core
         bool engine3Running = (pp & 256u);
         bool engine4Running = (pp & 512u);
 
-        // CLogMessage(this).info(u"taxiLight %1 landLight %2 beaconLight %3 strobeLight %4 gear %5") << taxiLight << landLight << beaconLight << strobeLight << gear;
-        // CLogMessage(this).info(u"engine1Running %1 engine2Running %2 engine3Running %3 engine4Running %4") << engine1Running << engine2Running << engine3Running << engine4Running;
+        // CLogMessage(this).info(u"taxiLight %1 landLight %2 beaconLight %3 strobeLight %4 gear %5") << taxiLight <<
+        // landLight << beaconLight << strobeLight << gear; CLogMessage(this).info(u"engine1Running %1 engine2Running %2
+        // engine3Running %3 engine4Running %4") << engine1Running << engine2Running << engine3Running <<
+        // engine4Running;
 
         CAircraftParts aircraftparts;
         aircraftparts.setGearDown(gear);
@@ -1420,7 +1522,8 @@ namespace swift::core
         this->setOtherClient(client);
     }
 
-    void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject, qint64 currentOffsetMs)
+    void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject,
+                                                    qint64 currentOffsetMs)
     {
         Q_ASSERT(CThreadUtils::isInThisThread(this));
         SWIFT_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
@@ -1437,17 +1540,18 @@ namespace swift::core
         this->setOtherClient(client);
     }
 
-    CAircraftSituation CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation, bool allowTestOffset)
+    CAircraftSituation CAirspaceMonitor::storeAircraftSituation(const CAircraftSituation &situation,
+                                                                bool allowTestOffset)
     {
         const CCallsign callsign(situation.getCallsign());
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
         if (callsign.isEmpty()) { return situation; }
 
-        CAircraftSituation correctedSituation(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) : situation);
+        CAircraftSituation correctedSituation(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) :
+                                                                situation);
         bool needToRequestElevation = false;
         bool canLikelySkipNearGround = correctedSituation.canLikelySkipNearGroundInterpolation();
-        do
-        {
+        do {
             // Check if we can bail out and ignore all elevation handling
             //
             // rational:
@@ -1483,7 +1587,8 @@ namespace swift::core
             }
 
             // fetch from cache or request
-            const CAircraftSituationChange changesBeforeStoring = this->remoteAircraftSituationChanges(callsign).frontOrDefault();
+            const CAircraftSituationChange changesBeforeStoring =
+                this->remoteAircraftSituationChanges(callsign).frontOrDefault();
 
             if (!changesBeforeStoring.isNull())
             {
@@ -1495,7 +1600,8 @@ namespace swift::core
             // actually distance of 200k/h 100ms is just 6.1 meters
             const CLength dpt = correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius());
             const CAircraftSituationList situationsBeforeStoring = this->remoteAircraftSituations(callsign);
-            const CAircraftSituation situationWithElvBeforeStoring = situationsBeforeStoring.findClosestElevationWithinRange(correctedSituation, dpt);
+            const CAircraftSituation situationWithElvBeforeStoring =
+                situationsBeforeStoring.findClosestElevationWithinRange(correctedSituation, dpt);
             if (situationWithElvBeforeStoring.transferGroundElevationFromMe(correctedSituation, dpt))
             {
                 // from nearby situations of own aircraft, data was transferred above
@@ -1504,7 +1610,8 @@ namespace swift::core
             else
             {
                 // from cache
-                const CLength distance(correctedSituation.getDistancePerTime250ms(CElevationPlane::singlePointRadius())); // distance per ms
+                const CLength distance(correctedSituation.getDistancePerTime250ms(
+                    CElevationPlane::singlePointRadius())); // distance per ms
                 const CElevationPlane ep = this->findClosestElevationWithinRange(correctedSituation, distance);
                 needToRequestElevation = ep.isNull();
                 Q_ASSERT_X(needToRequestElevation || !ep.getRadius().isNull(), Q_FUNC_INFO, "null radius");
@@ -1531,10 +1638,12 @@ namespace swift::core
                 bool couldNotExtrapolate = false;
                 int fromWhere = -1; // debugging
 
-                CElevationPlane averagePlane = this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::minorAirportRadius(), 2, 3);
+                CElevationPlane averagePlane =
+                    this->averageElevationOfOnGroundAircraft(situation, CElevationPlane::minorAirportRadius(), 2, 3);
                 if (averagePlane.isNull())
                 {
-                    averagePlane = this->averageElevationOfNonMovingAircraft(situation, CElevationPlane::minorAirportRadius(), 2, 3);
+                    averagePlane = this->averageElevationOfNonMovingAircraft(
+                        situation, CElevationPlane::minorAirportRadius(), 2, 3);
                     fromNonMoving = true;
                 }
 
@@ -1551,7 +1660,9 @@ namespace swift::core
                     // values before updating (i.e. "storing") so the new situation is not yet considered
                     if (situationsBeforeStoring.size() > 1)
                     {
-                        const bool extrapolated = extrapolateElevation(correctedSituation, situationsBeforeStoring[0], situationsBeforeStoring[1], changesBeforeStoring);
+                        const bool extrapolated =
+                            extrapolateElevation(correctedSituation, situationsBeforeStoring[0],
+                                                 situationsBeforeStoring[1], changesBeforeStoring);
                         triedExtrapolation = true;
                         couldNotExtrapolate = !extrapolated;
                         fromWhere = 20;
@@ -1577,7 +1688,8 @@ namespace swift::core
                     // sanity check on the situation
                     if (CBuildConfig::isLocalDeveloperDebugBuild())
                     {
-                        SWIFT_VERIFY_X(!correctedSituation.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicious elevation");
+                        SWIFT_VERIFY_X(!correctedSituation.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO,
+                                       "Suspicious elevation");
                     }
                 }
             } // gnd. elevation
@@ -1601,18 +1713,24 @@ namespace swift::core
         }
 
         // CG from provider
-        const CLength cg = this->getSimulatorOrDbCG(callsign, this->getCGFromDB(callsign)); // always x-check against simulator to override guessed values and reflect changed CGs
+        const CLength cg = this->getSimulatorOrDbCG(
+            callsign,
+            this->getCGFromDB(
+                callsign)); // always x-check against simulator to override guessed values and reflect changed CGs
         if (!cg.isNull()) { correctedSituation.setCG(cg); }
 
         // store corrected situation
-        correctedSituation = CRemoteAircraftProvider::storeAircraftSituation(correctedSituation, false); // we already added offset if any
+        correctedSituation = CRemoteAircraftProvider::storeAircraftSituation(correctedSituation,
+                                                                             false); // we already added offset if any
 
         // check if we need want to request
         if (needToRequestElevation && !canLikelySkipNearGround)
         {
             // we have not requested so far, but we are NEAR ground
             // we expect at least not transferred cache or we are moving and have no provider elevation yet
-            if (correctedSituation.isOtherElevationInfoBetter(CAircraftSituation::FromCache, false) || (correctedSituation.isMoving() && correctedSituation.isOtherElevationInfoBetter(CAircraftSituation::FromProvider, false)))
+            if (correctedSituation.isOtherElevationInfoBetter(CAircraftSituation::FromCache, false) ||
+                (correctedSituation.isMoving() &&
+                 correctedSituation.isOtherElevationInfoBetter(CAircraftSituation::FromProvider, false)))
             {
                 needToRequestElevation = this->requestElevation(correctedSituation);
             }
@@ -1677,10 +1795,7 @@ namespace swift::core
         // we only query ICAO if we have none yet
         // it happens sometimes with some FSD servers (e.g our testserver) a first query is skipped
         // Important: this is only a workaround and must not replace a sendInitialPilotQueries
-        if (!this->getAircraftInRangeForCallsign(cs).hasAircraftDesignator())
-        {
-            m_fsdClient->sendPlaneInfoRequest(cs);
-        }
+        if (!this->getAircraftInRangeForCallsign(cs).hasAircraftDesignator()) { m_fsdClient->sendPlaneInfoRequest(cs); }
         return true;
     }
 
@@ -1709,7 +1824,8 @@ namespace swift::core
 
     bool CAirspaceMonitor::supportsVatsimDataFile() const
     {
-        const bool dataFile = sApp && sApp->getWebDataServices() && sApp->getWebDataServices()->getVatsimDataFileReader();
+        const bool dataFile =
+            sApp && sApp->getWebDataServices() && sApp->getWebDataServices()->getVatsimDataFileReader();
         return dataFile && this->getConnectedServer().getEcosystem().isSystem(CEcosystem::VATSIM);
     }
 
@@ -1738,7 +1854,12 @@ namespace swift::core
         return ownCallsign.isMaybeCopilotCallsign(callsign);
     }
 
-    CAirspaceMonitor::FsInnPacket::FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &combinedCode, const QString &modelString) : aircraftIcaoDesignator(aircraftIcaoDesignator.trimmed().toUpper()), airlineIcaoDesignator(airlineIcaoDesignator.trimmed().toUpper()), combinedCode(combinedCode.trimmed().toUpper()), modelString(modelString.trimmed())
+    CAirspaceMonitor::FsInnPacket::FsInnPacket(const QString &aircraftIcaoDesignator,
+                                               const QString &airlineIcaoDesignator, const QString &combinedCode,
+                                               const QString &modelString)
+        : aircraftIcaoDesignator(aircraftIcaoDesignator.trimmed().toUpper()),
+          airlineIcaoDesignator(airlineIcaoDesignator.trimmed().toUpper()),
+          combinedCode(combinedCode.trimmed().toUpper()), modelString(modelString.trimmed())
     {}
 
 } // namespace swift::core

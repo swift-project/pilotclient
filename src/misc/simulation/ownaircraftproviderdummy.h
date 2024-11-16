@@ -35,9 +35,7 @@ namespace swift::misc
     namespace simulation
     {
         //! For testing
-        class SWIFT_MISC_EXPORT COwnAircraftProviderDummy :
-            public QObject,
-            public IOwnAircraftProvider
+        class SWIFT_MISC_EXPORT COwnAircraftProviderDummy : public QObject, public IOwnAircraftProvider
         {
             Q_OBJECT
 
@@ -73,17 +71,24 @@ namespace swift::misc
             virtual swift::misc::simulation::CAircraftModel getOwnAircraftModel() const override;
 
             //! \copydoc IOwnAircraftProvider::getDistanceToOwnAircraft
-            virtual swift::misc::physical_quantities::CLength getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const override;
+            virtual swift::misc::physical_quantities::CLength
+            getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const override;
 
         public slots:
             //! \copydoc IOwnAircraftProvider::updateCockpit
-            virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2, const swift::misc::aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1,
+                                       const swift::misc::aviation::CComSystem &com2,
+                                       const swift::misc::aviation::CTransponder &transponder,
+                                       const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IOwnAircraftProvider::updateActiveComFrequency
-            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                                  swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                                  const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IOwnAircraftProvider::updateSelcal
-            virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                      const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IOwnAircraftProvider::updateOwnCallsign
             virtual bool updateOwnCallsign(const swift::misc::aviation::CCallsign &callsign) override;
@@ -92,7 +97,8 @@ namespace swift::misc
             virtual bool updateOwnModel(const swift::misc::simulation::CAircraftModel &model) override;
 
             //! \copydoc IOwnAircraftProvider::updateOwnIcaoCodes
-            virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode, const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
+            virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                            const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
             //! \copydoc IOwnAircraftProvider::updateOwnSituation
             virtual bool updateOwnSituation(const swift::misc::aviation::CAircraftSituation &situation) override;

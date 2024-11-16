@@ -23,8 +23,10 @@ namespace swift::sound
     SWIFT_SOUND_EXPORT QVector<qint16> convertFromStereoToMono(const QVector<qint16> &stereo);
     SWIFT_SOUND_EXPORT QVector<float> convertFromShortToFloat(const QVector<qint16> &input);
 
-    SWIFT_SOUND_EXPORT QAudioDevice getLowestLatencyDevice(const swift::misc::audio::CAudioDeviceInfo &device, QAudioFormat &format);
-    SWIFT_SOUND_EXPORT QAudioDevice getHighestCompatibleOutputDevice(const swift::misc::audio::CAudioDeviceInfo &device, QAudioFormat &format);
+    SWIFT_SOUND_EXPORT QAudioDevice getLowestLatencyDevice(const swift::misc::audio::CAudioDeviceInfo &device,
+                                                           QAudioFormat &format);
+    SWIFT_SOUND_EXPORT QAudioDevice getHighestCompatibleOutputDevice(const swift::misc::audio::CAudioDeviceInfo &device,
+                                                                     QAudioFormat &format);
 
     SWIFT_SOUND_EXPORT QString toQString(const QAudioFormat &format);
     SWIFT_SOUND_EXPORT const QString &toQString(QSysInfo::Endian e);

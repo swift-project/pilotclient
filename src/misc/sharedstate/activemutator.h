@@ -27,8 +27,10 @@ namespace swift::misc::shared_state
         friend QSharedPointer<CActiveMutator>;
 
         template <typename T, typename F>
-        CActiveMutator(T *parent, F requestHandler) : CPassiveMutator(parent),
-                                                      m_requestHandler([=](const CVariant &param) { return private_ns::invokeMethod(parent, requestHandler, param); })
+        CActiveMutator(T *parent, F requestHandler)
+            : CPassiveMutator(parent), m_requestHandler([=](const CVariant &param) {
+                  return private_ns::invokeMethod(parent, requestHandler, param);
+              })
         {}
 
     public:
@@ -43,7 +45,10 @@ namespace swift::misc::shared_state
         QFuture<CVariant> handleRequest(const CVariant &param) const;
 
         //! Get a QWeakPointer pointing to this object.
-        QWeakPointer<const CActiveMutator> weakRef() const { return qSharedPointerCast<const CActiveMutator>(CPassiveMutator::weakRef()); }
+        QWeakPointer<const CActiveMutator> weakRef() const
+        {
+            return qSharedPointerCast<const CActiveMutator>(CPassiveMutator::weakRef());
+        }
 
     private:
         const std::function<QFuture<CVariant>(const CVariant &)> m_requestHandler;

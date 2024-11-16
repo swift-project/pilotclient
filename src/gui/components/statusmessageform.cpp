@@ -16,14 +16,12 @@ using namespace swift::misc;
 
 namespace swift::gui::components
 {
-    CStatusMessageForm::CStatusMessageForm(QWidget *parent) : QFrame(parent),
-                                                              ui(new Ui::CStatusMessageForm)
+    CStatusMessageForm::CStatusMessageForm(QWidget *parent) : QFrame(parent), ui(new Ui::CStatusMessageForm)
     {
         ui->setupUi(this);
     }
 
-    CStatusMessageForm::~CStatusMessageForm()
-    {}
+    CStatusMessageForm::~CStatusMessageForm() {}
 
     void CStatusMessageForm::setVariant(const CVariant &messageVariant)
     {
@@ -57,10 +55,7 @@ namespace swift::gui::components
         ui->le_Severity->clear();
     }
 
-    void CStatusMessageForm::toggleVisibility()
-    {
-        this->setVisible(!isVisible());
-    }
+    void CStatusMessageForm::toggleVisibility() { this->setVisible(!isVisible()); }
 
     void CStatusMessageForm::setReducedInfo(bool reduced)
     {

@@ -35,7 +35,8 @@ namespace swift::gui::editors
         virtual ~CCockpitComForm() override;
 
         //! COM frequencies displayed
-        void setFrequencies(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2);
+        void setFrequencies(const swift::misc::aviation::CComSystem &com1,
+                            const swift::misc::aviation::CComSystem &com2);
 
         //! Set the XPDR values
         void setTransponder(const swift::misc::aviation::CTransponder &transponder);

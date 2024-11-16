@@ -29,20 +29,24 @@ namespace swift::misc::aviation
         CNavSystem() = default;
 
         //! Constructor
-        CNavSystem(const QString &name, const swift::misc::physical_quantities::CFrequency &activeFrequency, const swift::misc::physical_quantities::CFrequency &standbyFrequency) : CModulator(name, activeFrequency, standbyFrequency)
+        CNavSystem(const QString &name, const swift::misc::physical_quantities::CFrequency &activeFrequency,
+                   const swift::misc::physical_quantities::CFrequency &standbyFrequency)
+            : CModulator(name, activeFrequency, standbyFrequency)
         {}
 
         //! Set active frequency
         void setFrequencyActiveMHz(double frequencyMHz)
         {
-            const swift::misc::physical_quantities::CFrequency f(math::CMathUtils::round(frequencyMHz, 3), swift::misc::physical_quantities::CFrequencyUnit::MHz());
+            const swift::misc::physical_quantities::CFrequency f(
+                math::CMathUtils::round(frequencyMHz, 3), swift::misc::physical_quantities::CFrequencyUnit::MHz());
             this->setFrequencyActive(f);
         }
 
         //! Set standby frequency
         void setFrequencyStandbyMHz(double frequencyMHz)
         {
-            const swift::misc::physical_quantities::CFrequency f(math::CMathUtils::round(frequencyMHz, 3), swift::misc::physical_quantities::CFrequencyUnit::MHz());
+            const swift::misc::physical_quantities::CFrequency f(
+                math::CMathUtils::round(frequencyMHz, 3), swift::misc::physical_quantities::CFrequencyUnit::MHz());
             this->setFrequencyStandby(f);
         }
 
@@ -69,27 +73,41 @@ namespace swift::misc::aviation
         //! NAV1 unit
         static CNavSystem getNav1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
         {
-            return CNavSystem(CModulator::NameNav1(), swift::misc::physical_quantities::CFrequency(activeFrequencyMHz, swift::misc::physical_quantities::CFrequencyUnit::MHz()), swift::misc::physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, swift::misc::physical_quantities::CFrequencyUnit::MHz()));
+            return CNavSystem(CModulator::NameNav1(),
+                              swift::misc::physical_quantities::CFrequency(
+                                  activeFrequencyMHz, swift::misc::physical_quantities::CFrequencyUnit::MHz()),
+                              swift::misc::physical_quantities::CFrequency(
+                                  standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz,
+                                  swift::misc::physical_quantities::CFrequencyUnit::MHz()));
         }
 
         //! NAV1 unit
         static CNavSystem getNav1System(const swift::misc::physical_quantities::CFrequency &activeFrequency,
-                                        const swift::misc::physical_quantities::CFrequency &standbyFrequency = { 0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit() })
+                                        const swift::misc::physical_quantities::CFrequency &standbyFrequency = {
+                                            0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit() })
         {
-            return CNavSystem(CModulator::NameNav1(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
+            return CNavSystem(CModulator::NameNav1(), activeFrequency,
+                              standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
         }
 
         //! NAV2 unit
         static CNavSystem getNav2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
         {
-            return CNavSystem(CModulator::NameNav2(), swift::misc::physical_quantities::CFrequency(activeFrequencyMHz, swift::misc::physical_quantities::CFrequencyUnit::MHz()), swift::misc::physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, swift::misc::physical_quantities::CFrequencyUnit::MHz()));
+            return CNavSystem(CModulator::NameNav2(),
+                              swift::misc::physical_quantities::CFrequency(
+                                  activeFrequencyMHz, swift::misc::physical_quantities::CFrequencyUnit::MHz()),
+                              swift::misc::physical_quantities::CFrequency(
+                                  standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz,
+                                  swift::misc::physical_quantities::CFrequencyUnit::MHz()));
         }
 
         //! NAV2 unit
         static CNavSystem getNav2System(const swift::misc::physical_quantities::CFrequency &activeFrequency,
-                                        const swift::misc::physical_quantities::CFrequency &standbyFrequency = { 0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit() })
+                                        const swift::misc::physical_quantities::CFrequency &standbyFrequency = {
+                                            0, swift::misc::physical_quantities::CFrequencyUnit::nullUnit() })
         {
-            return CNavSystem(CModulator::NameNav2(), activeFrequency, standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
+            return CNavSystem(CModulator::NameNav2(), activeFrequency,
+                              standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
         }
 
     private:

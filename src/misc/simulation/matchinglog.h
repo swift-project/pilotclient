@@ -24,7 +24,8 @@ namespace swift::misc::simulation
         MatchingLogScoring = 1 << 3,
         MatchingLogCombinedDefaultType = 1 << 4,
         MatchingLogSimplified = MatchingLogIntro,
-        MatchingLogAll = MatchingLogModelstring | MatchingLogStepwiseReduce | MatchingLogScoring | MatchingLogCombinedDefaultType
+        MatchingLogAll =
+            MatchingLogModelstring | MatchingLogStepwiseReduce | MatchingLogScoring | MatchingLogCombinedDefaultType
     };
     Q_DECLARE_FLAGS(MatchingLog, MatchingLogFlag)
 

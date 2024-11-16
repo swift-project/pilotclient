@@ -36,10 +36,7 @@ namespace swift::misc::simulation::fscommon
         if (standardDirectory) { this->addDirectory(CVPilotRulesReader::standardMappingsDirectory()); }
     }
 
-    CVPilotRulesReader::~CVPilotRulesReader()
-    {
-        gracefulShutdown();
-    }
+    CVPilotRulesReader::~CVPilotRulesReader() { gracefulShutdown(); }
 
     QStringList CVPilotRulesReader::getFiles() const
     {
@@ -66,10 +63,7 @@ namespace swift::misc::simulation::fscommon
         if (!dir.exists()) { return; }
         QStringList nameFilters({ "*.vmr" });
         QFileInfoList entries = dir.entryInfoList(nameFilters, QDir::Files | QDir::Readable);
-        for (const QFileInfo &file : entries)
-        {
-            this->addFilename(file.absoluteFilePath());
-        }
+        for (const QFileInfo &file : entries) { this->addFilename(file.absoluteFilePath()); }
     }
 
     int CVPilotRulesReader::countFilesLoaded() const
@@ -84,10 +78,7 @@ namespace swift::misc::simulation::fscommon
         return m_rules;
     }
 
-    int CVPilotRulesReader::getModelsCount() const
-    {
-        return this->m_cachedVPilotModels.getThreadLocal().size();
-    }
+    int CVPilotRulesReader::getModelsCount() const { return this->m_cachedVPilotModels.getThreadLocal().size(); }
 
     CAircraftModelList CVPilotRulesReader::getAsModels()
     {
@@ -103,10 +94,7 @@ namespace swift::misc::simulation::fscommon
         return vPilotModels;
     }
 
-    CAircraftModelList CVPilotRulesReader::getAsModelsFromCache() const
-    {
-        return this->m_cachedVPilotModels.get();
-    }
+    CAircraftModelList CVPilotRulesReader::getAsModelsFromCache() const { return this->m_cachedVPilotModels.get(); }
 
     int CVPilotRulesReader::countRulesLoaded() const
     {
@@ -174,9 +162,8 @@ namespace swift::misc::simulation::fscommon
             if (m_asyncLoadInProgress || m_shutdown) { return nullptr; }
             m_asyncLoadInProgress = true;
         }
-        swift::misc::CWorker *worker = swift::misc::CWorker::fromTask(this, "CVPilotRulesReader", [this, convertToModels]() {
-            this->read(convertToModels);
-        });
+        swift::misc::CWorker *worker = swift::misc::CWorker::fromTask(
+            this, "CVPilotRulesReader", [this, convertToModels]() { this->read(convertToModels); });
         worker->then(this, &CVPilotRulesReader::ps_readInBackgroundFinished);
         return worker;
     }
@@ -201,10 +188,7 @@ namespace swift::misc::simulation::fscommon
                 QWriteLocker l(&m_lockData);
                 m = this->m_cachedVPilotModels.set(models);
             }
-            if (m.isFailure())
-            {
-                CLogMessage::preformatted(m);
-            }
+            if (m.isFailure()) { CLogMessage::preformatted(m); }
         }
         else
         {
@@ -229,10 +213,7 @@ namespace swift::misc::simulation::fscommon
 
         const QDomNamedNodeMap attributes = mmRuleSet.at(0).attributes();
         QString folder = attributes.namedItem("Folder").nodeValue().trimmed();
-        if (folder.isEmpty())
-        {
-            folder = QFileInfo(fileName).fileName().replace(".vmr", "");
-        }
+        if (folder.isEmpty()) { folder = QFileInfo(fileName).fileName().replace(".vmr", ""); }
 
         // "2/1/2014 12:00:00 AM", "5/26/2014 2:00:00 PM"
         const QString updated = attributes.namedItem("UpdatedOn").nodeValue();

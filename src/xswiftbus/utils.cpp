@@ -62,31 +62,17 @@ namespace XSwiftBus
 #if defined(XSWIFTBUS_ENABLE_TRACE_LOG)
         switch (type)
         {
-        case DebugMsg:
-            ss << "Debug";
-            break;
-        case InfoMsg:
-            ss << "Info";
-            break;
-        case WarningMsg:
-            ss << "Warning";
-            break;
-        case ErrorMsg:
-            ss << "Error";
-            break;
+        case DebugMsg: ss << "Debug"; break;
+        case InfoMsg: ss << "Info"; break;
+        case WarningMsg: ss << "Warning"; break;
+        case ErrorMsg: ss << "Error"; break;
         }
         ss << ' ';
 
         std::string seperator = "/\\";
         std::size_t sepPos = filePath.find_last_of(seperator);
-        if (sepPos != std::string::npos)
-        {
-            ss << filePath.substr(sepPos + 1, filePath.size() - 1);
-        }
-        else
-        {
-            ss << filePath;
-        }
+        if (sepPos != std::string::npos) { ss << filePath.substr(sepPos + 1, filePath.size() - 1); }
+        else { ss << filePath; }
         ss << ' ';
 
         ss << line;
@@ -131,8 +117,7 @@ namespace XSwiftBus
         CFSmartPtr<CFStringRef> outStr(CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle));
         if (outStr == nullptr) return -1;
 
-        if (!CFStringGetCString(outStr, result, resultLen, kCFStringEncodingMacRoman))
-            return -1;
+        if (!CFStringGetCString(outStr, result, resultLen, kCFStringEncodingMacRoman)) return -1;
 
         if (is_dir) strcat(result, "/");
 

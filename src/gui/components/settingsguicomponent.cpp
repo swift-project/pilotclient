@@ -21,9 +21,8 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CSettingsGuiComponent::CSettingsGuiComponent(QWidget *parent) : QFrame(parent),
-                                                                    swift::gui::CSingleApplicationUi(this),
-                                                                    ui(new Ui::CSettingsGuiComponent)
+    CSettingsGuiComponent::CSettingsGuiComponent(QWidget *parent)
+        : QFrame(parent), swift::gui::CSingleApplicationUi(this), ui(new Ui::CSettingsGuiComponent)
     {
         ui->setupUi(this);
 
@@ -32,19 +31,20 @@ namespace swift::gui::components
 
         // Widget style
         connect(ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsGuiComponent::changedWindowsOpacity);
-        connect(ui->cb_SettingsGuiWidgetStyle, qOverload<int>(&QComboBox::currentIndexChanged), this, &CSettingsGuiComponent::widgetStyleChanged, Qt::QueuedConnection);
+        connect(ui->cb_SettingsGuiWidgetStyle, qOverload<int>(&QComboBox::currentIndexChanged), this,
+                &CSettingsGuiComponent::widgetStyleChanged, Qt::QueuedConnection);
 
         ui->comp_SettingsFonts->setStyleSheetDefaultColor();
 
         // selection
-        connect(ui->rb_PreferExtendedSelection, &QRadioButton::released, this, &CSettingsGuiComponent::selectionChanged);
+        connect(ui->rb_PreferExtendedSelection, &QRadioButton::released, this,
+                &CSettingsGuiComponent::selectionChanged);
         connect(ui->rb_PreferMultiSelection, &QRadioButton::released, this, &CSettingsGuiComponent::selectionChanged);
 
         this->guiSettingsChanged();
     }
 
-    CSettingsGuiComponent::~CSettingsGuiComponent()
-    {}
+    CSettingsGuiComponent::~CSettingsGuiComponent() {}
 
     void CSettingsGuiComponent::hideOpacity(bool hide)
     {
@@ -60,16 +60,11 @@ namespace swift::gui::components
     void CSettingsGuiComponent::selectionChanged()
     {
         QAbstractItemView::SelectionMode sm = QAbstractItemView::NoSelection;
-        if (ui->rb_PreferExtendedSelection->isChecked())
-        {
-            sm = QAbstractItemView::ExtendedSelection;
-        }
-        else if (ui->rb_PreferMultiSelection->isChecked())
-        {
-            sm = QAbstractItemView::MultiSelection;
-        }
+        if (ui->rb_PreferExtendedSelection->isChecked()) { sm = QAbstractItemView::ExtendedSelection; }
+        else if (ui->rb_PreferMultiSelection->isChecked()) { sm = QAbstractItemView::MultiSelection; }
         if (sm == m_guiSettings.get().getPreferredSelection()) { return; }
-        const CStatusMessage m = m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexPreferredSelection, CVariant::fromValue(sm));
+        const CStatusMessage m =
+            m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexPreferredSelection, CVariant::fromValue(sm));
         CLogMessage::preformatted(m);
     }
 
@@ -99,13 +94,13 @@ namespace swift::gui::components
         /** because of crash (chnage style crashes UI) we require restart
         const int ret = QMessageBox::information(this,
                         tr("Change style?"),
-                        tr("Changing style is slow.\nThe GUI will hang for some seconds.\nDo you want to save your changes?"),
-                        QMessageBox::Ok | QMessageBox::Cancel);
+                        tr("Changing style is slow.\nThe GUI will hang for some seconds.\nDo you want to save your
+        changes?"), QMessageBox::Ok | QMessageBox::Cancel);
 
         **/
-        const int ret = QMessageBox::information(this,
-                                                 tr("Change style?"),
-                                                 tr("Changing style requires a restart.\nChanges will be visible a the next start.\nDo you want to save your changes?"),
+        const int ret = QMessageBox::information(this, tr("Change style?"),
+                                                 tr("Changing style requires a restart.\nChanges will be visible a the "
+                                                    "next start.\nDo you want to save your changes?"),
                                                  QMessageBox::Ok | QMessageBox::Cancel);
 
         if (ret != QMessageBox::Ok)

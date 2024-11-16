@@ -20,12 +20,16 @@ using namespace swift::core::afv::clients;
 
 namespace swift::core::context
 {
-    CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : CContextAudioBase(mode, runtime), m_dBusInterface(nullptr)
+    CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection,
+                                           CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+        : CContextAudioBase(mode, runtime), m_dBusInterface(nullptr)
     {
-        m_dBusInterface = new CGenericDBusInterface(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(), connection, this);
+        m_dBusInterface = new CGenericDBusInterface(serviceName, IContextAudio::ObjectPath(),
+                                                    IContextAudio::InterfaceName(), connection, this);
         this->relaySignals(serviceName, connection);
 
-        connect(this, &CContextAudioProxy::changedLocalAudioDevices, this, &CContextAudioProxy::onChangedLocalDevices, Qt::QueuedConnection);
+        connect(this, &CContextAudioProxy::changedLocalAudioDevices, this, &CContextAudioProxy::onChangedLocalDevices,
+                Qt::QueuedConnection);
     }
 
     void CContextAudioProxy::unitTestRelaySignals()
@@ -70,13 +74,15 @@ namespace swift::core::context
 
     CAudioDeviceInfoList CContextAudioProxy::getRegisteredDevices() const
     {
-        return m_dBusInterface->callDBusRet<swift::misc::audio::CAudioDeviceInfoList>(QLatin1String("getRegisteredDevices"));
+        return m_dBusInterface->callDBusRet<swift::misc::audio::CAudioDeviceInfoList>(
+            QLatin1String("getRegisteredDevices"));
     }
 
     void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
-        bool s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                    "voiceClientFailure", this, SIGNAL(voiceClientFailure(swift::misc::CStatusMessage)));
+        bool s =
+            connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                               "voiceClientFailure", this, SIGNAL(voiceClientFailure(swift::misc::CStatusMessage)));
         Q_ASSERT(s);
 
         /**
@@ -87,10 +93,12 @@ namespace swift::core::context
                                 "changedOutputMute", this, SIGNAL(changedOutputMute(bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                "changedLocalAudioDevices", this, SIGNAL(changedLocalAudioDevices(swift::misc::audio::CAudioDeviceInfoList)));
+                                "changedLocalAudioDevices", this,
+        SIGNAL(changedLocalAudioDevices(swift::misc::audio::CAudioDeviceInfoList)));
         **/
 
-        this->relayBaseClassSignals(serviceName, connection, IContextAudio::ObjectPath(), IContextAudio::InterfaceName());
+        this->relayBaseClassSignals(serviceName, connection, IContextAudio::ObjectPath(),
+                                    IContextAudio::InterfaceName());
     }
 
 } // namespace swift::core::context

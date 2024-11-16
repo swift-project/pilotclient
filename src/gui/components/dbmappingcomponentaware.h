@@ -49,6 +49,7 @@ namespace swift::gui::components
     };
 } // namespace swift::gui::components
 
-Q_DECLARE_INTERFACE(swift::gui::components::CDbMappingComponentAware, "org.swift-project.swiftgui.components.dbmappingcomponentaware")
+Q_DECLARE_INTERFACE(swift::gui::components::CDbMappingComponentAware,
+                    "org.swift-project.swiftgui.components.dbmappingcomponentaware")
 
 #endif // guard

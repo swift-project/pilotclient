@@ -19,8 +19,8 @@ namespace swift::core::fsd
     {
     public:
         //! Constructor
-        AddAtc(const QString &callsign, const QString &realName, const QString &cid,
-               const QString &password, AtcRating rating, int protocolRevision);
+        AddAtc(const QString &callsign, const QString &realName, const QString &cid, const QString &password,
+               AtcRating rating, int protocolRevision);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -59,20 +59,13 @@ namespace swift::core::fsd
     //! Equal operator
     inline bool operator==(const AddAtc &lhs, const AddAtc &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.cid() == rhs.cid() &&
-               lhs.password() == rhs.password() &&
-               lhs.rating() == rhs.rating() &&
-               lhs.protocolRevision() == rhs.protocolRevision() &&
-               lhs.realName() == rhs.realName();
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.cid() == rhs.cid() &&
+               lhs.password() == rhs.password() && lhs.rating() == rhs.rating() &&
+               lhs.protocolRevision() == rhs.protocolRevision() && lhs.realName() == rhs.realName();
     }
 
     //! Not equal operator
-    inline bool operator!=(const AddAtc &lhs, const AddAtc &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const AddAtc &lhs, const AddAtc &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

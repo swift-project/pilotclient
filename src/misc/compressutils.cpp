@@ -46,10 +46,7 @@ namespace swift::misc
         if (!CCompressUtils::hasZip7(stdOutAndError)) { return false; }
 
         const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
-        const QString d =
-            directory.isEmpty() ? directory :
-            win                 ? CFileUtils::toWindowsLocalPath(directory) :
-                                  directory;
+        const QString d = directory.isEmpty() ? directory : win ? CFileUtils::toWindowsLocalPath(directory) : directory;
         const QString f = win ? CFileUtils::toWindowsLocalPath(file) : file;
 
         // 7za.exe x -o"P:\Temp\XPlane" c:\Users\Foo\Downloads\xswiftbus-allos-0.8.4.802111947.7z
@@ -69,10 +66,7 @@ namespace swift::misc
     bool CCompressUtils::hasZip7(QStringList *stdOutAndError)
     {
         // just display info
-        if (CBuildConfig::isRunningOnLinuxPlatform())
-        {
-            return CCompressUtils::whichZip7(stdOutAndError);
-        }
+        if (CBuildConfig::isRunningOnLinuxPlatform()) { return CCompressUtils::whichZip7(stdOutAndError); }
 
         QStringList args;
         args << "i";

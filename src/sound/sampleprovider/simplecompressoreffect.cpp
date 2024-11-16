@@ -7,8 +7,8 @@
 
 namespace swift::sound::sample_provider
 {
-    CSimpleCompressorEffect::CSimpleCompressorEffect(ISampleProvider *source, QObject *parent) : ISampleProvider(parent),
-                                                                                                 m_sourceStream(source)
+    CSimpleCompressorEffect::CSimpleCompressorEffect(ISampleProvider *source, QObject *parent)
+        : ISampleProvider(parent), m_sourceStream(source)
     {
 
         this->setObjectName("CSimpleCompressorEffect");
@@ -36,24 +36,15 @@ namespace swift::sound::sample_provider
                 double in2 = (m_channels == 1) ? 0 : samples.at(sample + 1);
                 m_simpleCompressor.process(in1, in2);
                 samples[sample] = static_cast<float>(in1);
-                if (m_channels > 1)
-                {
-                    samples[sample + 1] = static_cast<float>(in2);
-                }
+                if (m_channels > 1) { samples[sample + 1] = static_cast<float>(in2); }
             }
         }
         return samplesRead;
     }
 
-    void CSimpleCompressorEffect::setEnabled(bool enabled)
-    {
-        m_enabled = enabled;
-    }
+    void CSimpleCompressorEffect::setEnabled(bool enabled) { m_enabled = enabled; }
 
-    void CSimpleCompressorEffect::setMakeUpGain(double gain)
-    {
-        m_simpleCompressor.setMakeUpGain(gain);
-    }
+    void CSimpleCompressorEffect::setMakeUpGain(double gain) { m_simpleCompressor.setMakeUpGain(gain); }
 
     void CSimpleCompressorEffect::setChannels(int channels)
     {

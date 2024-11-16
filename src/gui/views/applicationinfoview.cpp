@@ -22,7 +22,8 @@ namespace swift::gui::views
 
     int CApplicationInfoView::otherSwiftVersionsFromDataDirectories(bool reinitOtherVersions)
     {
-        const CApplicationInfoList others = CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reinitOtherVersions);
+        const CApplicationInfoList others =
+            CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reinitOtherVersions);
         m_acceptRowSelection = (!others.isEmpty());
 
         this->updateContainer(others);
@@ -40,7 +41,8 @@ namespace swift::gui::views
     void CApplicationInfoView::deleteSelectedDataDirectories()
     {
         if (!this->hasSelection()) { return; }
-        const QMessageBox::StandardButton reply = QMessageBox::question(this, "Delete?", "Delete selected data directories?", QMessageBox::Yes | QMessageBox::No);
+        const QMessageBox::StandardButton reply = QMessageBox::question(
+            this, "Delete?", "Delete selected data directories?", QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) { return; }
 
         QStringList deletedDirectories;
@@ -49,10 +51,7 @@ namespace swift::gui::views
             const QString d = CFileUtils::fixWindowsUncPath(info.getApplicationDataDirectory());
             QDir dir(d);
             if (!dir.exists()) { continue; }
-            if (dir.removeRecursively())
-            {
-                deletedDirectories << d;
-            }
+            if (dir.removeRecursively()) { deletedDirectories << d; }
         }
         if (deletedDirectories.isEmpty()) { return; }
         this->otherSwiftVersionsFromDataDirectories(true);
@@ -63,7 +62,9 @@ namespace swift::gui::views
         if (!this->view()) { return; }
         if (!this->view()->isEmpty())
         {
-            m_menuActionDeleteDirectory = menuActions.addAction(m_menuActionDeleteDirectory, CIcons::delete16(), "Delete data directories", CMenuAction::pathNone(), this, { this->view(), &CApplicationInfoView::deleteSelectedDataDirectories });
+            m_menuActionDeleteDirectory = menuActions.addAction(
+                m_menuActionDeleteDirectory, CIcons::delete16(), "Delete data directories", CMenuAction::pathNone(),
+                this, { this->view(), &CApplicationInfoView::deleteSelectedDataDirectories });
         }
         this->nestedCustomMenu(menuActions);
     }

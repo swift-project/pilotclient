@@ -109,16 +109,13 @@ namespace SwiftFsdTest
         const CServer &localTestServer();
     };
 
-    void CTestFSDClient::initTestCase()
-    {
-        swift::misc::registerMetadata();
-    }
+    void CTestFSDClient::initTestCase() { swift::misc::registerMetadata(); }
 
     const CServer &CTestFSDClient::localTestServer()
     {
         static const CServer dvp("Testserver", "Client project testserver", "localhost", 6809,
-                                 CUser("1234567", "Test User", "", "123456"),
-                                 CFsdSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+                                 CUser("1234567", "Test User", "", "123456"), CFsdSetup(),
+                                 CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
         return dvp;
     }
 
@@ -131,23 +128,27 @@ namespace SwiftFsdTest
         livery.setCombinedCode("BER");
         CAirlineIcaoCode airline("BER");
         livery.setAirlineIcaoCode(airline);
-        CAircraftModel model("Cessna SP1 Paint2", CAircraftModel::TypeOwnSimulatorModel, CAircraftIcaoCode("B737"), livery);
+        CAircraftModel model("Cessna SP1 Paint2", CAircraftModel::TypeOwnSimulatorModel, CAircraftIcaoCode("B737"),
+                             livery);
 
         model.setSimulator(CSimulatorInfo::xplane());
         QString modelDescription("[CSL]");
         model.setDescription(modelDescription);
         COwnAircraftProviderDummy::instance()->updateOwnModel(model);
-        // COwnAircraftProviderDummy::instance()->updateOwnIcaoCodes(CAircraftIcaoCode("B737"), CAirlineIcaoCode("BER"));
+        // COwnAircraftProviderDummy::instance()->updateOwnIcaoCodes(CAircraftIcaoCode("B737"),
+        // CAirlineIcaoCode("BER"));
 
         CFrequency frequency(123.000, CFrequencyUnit::MHz());
         COwnAircraftProviderDummy::instance()->updateActiveComFrequency(frequency, CComSystem::Com1, {});
 
-        m_client = new CFSDClient(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(), CRemoteAircraftProviderDummy::instance(), this);
+        m_client = new CFSDClient(CClientProviderDummy::instance(), COwnAircraftProviderDummy::instance(),
+                                  CRemoteAircraftProviderDummy::instance(), this);
         m_client->setUnitTestMode(true);
         m_client->setCallsign("ABCD");
         m_client->setClientName("Test Client");
         m_client->setVersion(0, 8);
-        m_client->setClientCapabilities(Capabilities::AtcInfo | Capabilities::AircraftInfo | Capabilities::AircraftConfig);
+        m_client->setClientCapabilities(Capabilities::AtcInfo | Capabilities::AircraftInfo |
+                                        Capabilities::AircraftConfig);
         m_client->setLoginMode(swift::misc::network::CLoginMode::Pilot);
         m_client->setServer(server);
         m_client->setPilotRating(PilotRating::Student);
@@ -159,14 +160,9 @@ namespace SwiftFsdTest
 #endif
     }
 
-    void CTestFSDClient::cleanup()
-    {
-        delete m_client;
-    }
+    void CTestFSDClient::cleanup() { delete m_client; }
 
-    void CTestFSDClient::testConstructor()
-    {
-    }
+    void CTestFSDClient::testConstructor() {}
 
     void CTestFSDClient::testDeleteAtc()
     {
@@ -212,7 +208,8 @@ namespace SwiftFsdTest
         const CFrequency frequency(124050, CFrequencyUnit::kHz());
         const QString text("BER721, Descend F140 when ready");
 
-        COwnAircraftProviderDummy::instance()->updateActiveComFrequency(CFrequency(124050, CFrequencyUnit::kHz()), CComSystem::Com1, CIdentifier::anonymous());
+        COwnAircraftProviderDummy::instance()->updateActiveComFrequency(CFrequency(124050, CFrequencyUnit::kHz()),
+                                                                        CComSystem::Com1, CIdentifier::anonymous());
 
         QSignalSpy spy(m_client, &CFSDClient::textMessagesReceived);
         m_client->sendFsdMessage("#TMEDMM_CTR:@24050:BER721, Descend F140 when ready\r\n");
@@ -305,7 +302,8 @@ namespace SwiftFsdTest
         QCOMPARE(situation.getPosition().latitude(), CLatitude(48.353855, CAngleUnit::deg()));
         QCOMPARE(situation.getPosition().longitude(), CLongitude(11.786155, CAngleUnit::deg()));
         QCOMPARE(situation.getAltitude(), CAltitude(110, CLengthUnit::ft()));
-        QCOMPARE(situation.getPressureAltitude(), CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
+        QCOMPARE(situation.getPressureAltitude(),
+                 CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
         QCOMPARE(situation.getGroundSpeed(), CSpeed(0.0, CSpeedUnit::kts()));
         // TODO
         //        QVERIFY(qAbs(arguments.at(9).toDouble()) < 1.0);
@@ -346,10 +344,7 @@ namespace SwiftFsdTest
         QVERIFY(ok);
     }
 
-    void CTestFSDClient::testClientResponseEmptyType()
-    {
-        m_client->sendFsdMessage("$CRDLH123:BER721::Jon Doe\r\n");
-    }
+    void CTestFSDClient::testClientResponseEmptyType() { m_client->sendFsdMessage("$CRDLH123:BER721::Jon Doe\r\n"); }
 
     void CTestFSDClient::testClientResponseRealName1()
     {
@@ -402,7 +397,8 @@ namespace SwiftFsdTest
     void CTestFSDClient::testPlaneInfoRequestFsinn()
     {
         QSignalSpy spy(m_client, &CFSDClient::planeInformationFsinnReceived);
-        m_client->sendFsdMessage("#SBLHA449:DLH53M:FSIPIR:1::A320:10.05523:0.49785:1320.00000:2.AB13B127.5611C1A2::A320-200 Airbus Leipzig Air CFM\r\n");
+        m_client->sendFsdMessage("#SBLHA449:DLH53M:FSIPIR:1::A320:10.05523:0.49785:1320.00000:2.AB13B127.5611C1A2::"
+                                 "A320-200 Airbus Leipzig Air CFM\r\n");
 
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
@@ -418,7 +414,8 @@ namespace SwiftFsdTest
     void CTestFSDClient::testPlaneInformationFsinn()
     {
         QSignalSpy spy(m_client, &CFSDClient::planeInformationFsinnReceived);
-        m_client->sendFsdMessage("#SBLHA449:AUA89SY:FSIPI:1::A320:10.05523:0.49785:1320.00000:2.AB13B127.5611C1A2::A320-200 Airbus Leipzig Air CFM\r\n");
+        m_client->sendFsdMessage("#SBLHA449:AUA89SY:FSIPI:1::A320:10.05523:0.49785:1320.00000:2.AB13B127.5611C1A2::"
+                                 "A320-200 Airbus Leipzig Air CFM\r\n");
 
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
@@ -492,7 +489,8 @@ namespace SwiftFsdTest
         CAircraftSituation situation;
         situation.setPosition(ownPosition);
         situation.setAltitude(CAltitude(110, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-        situation.setPressureAltitude(CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
+        situation.setPressureAltitude(
+            CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
         situation.setGroundSpeed(gs);
         situation.setPitch(pitch);
         situation.setBank(bank);
@@ -524,7 +522,8 @@ namespace SwiftFsdTest
         CAircraftSituation situation;
         situation.setPosition(ownPosition);
         situation.setAltitude(CAltitude(110, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-        situation.setPressureAltitude(CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
+        situation.setPressureAltitude(
+            CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
         situation.setGroundSpeed(gs);
         situation.setPitch(pitch);
         situation.setBank(bank);
@@ -557,7 +556,8 @@ namespace SwiftFsdTest
         CAircraftSituation situation;
         situation.setPosition(ownPosition);
         situation.setAltitude(CAltitude(110, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-        situation.setPressureAltitude(CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
+        situation.setPressureAltitude(
+            CAltitude(111, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::ft()));
         situation.setGroundSpeed(gs);
         situation.setPitch(pitch);
         situation.setBank(bank);
@@ -733,18 +733,18 @@ namespace SwiftFsdTest
         takeoffTimeActual.setTimeSpec(Qt::UTC);
         CAltitude flightLevel(35000, CAltitude::FlightLevel, CLengthUnit::ft());
         CFlightPlanAircraftInfo info("H/B744/L");
-        CFlightPlan fp({}, info, "EGLL", "KORD", "NONE",
-                       takeoffTimePlanned, takeoffTimeActual,
-                       CTime(8.25, CTimeUnit::h()), CTime(9.5, CTimeUnit::h()),
-                       flightLevel, CSpeed(420, CSpeedUnit::kts()), CFlightPlan::VFR,
-                       "EGLL.KORD", "Unit Test");
+        CFlightPlan fp({}, info, "EGLL", "KORD", "NONE", takeoffTimePlanned, takeoffTimeActual,
+                       CTime(8.25, CTimeUnit::h()), CTime(9.5, CTimeUnit::h()), flightLevel,
+                       CSpeed(420, CSpeedUnit::kts()), CFlightPlan::VFR, "EGLL.KORD", "Unit Test");
         m_client->sendFlightPlan(fp);
 
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$FPABCD:SERVER:V:H/B744/L:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:UNIT TEST:EGLL.KORD");
+        QCOMPARE(
+            fsdMessage.getRawMessage(),
+            "FSD Sent=>$FPABCD:SERVER:V:H/B744/L:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:UNIT TEST:EGLL.KORD");
     }
 
     void CTestFSDClient::testSendFlightPlanIcao()
@@ -760,18 +760,19 @@ namespace SwiftFsdTest
         takeoffTimeActual.setTimeSpec(Qt::UTC);
         CAltitude flightLevel(35000, CAltitude::FlightLevel, CLengthUnit::ft());
         CFlightPlanAircraftInfo info("B748/H-SDE3FGHIM1M2RWXY/LB1");
-        CFlightPlan fp({}, info, "EGLL", "KORD", "NONE",
-                       takeoffTimePlanned, takeoffTimeActual,
-                       CTime(8.25, CTimeUnit::h()), CTime(9.5, CTimeUnit::h()),
-                       flightLevel, CSpeed(420, CSpeedUnit::kts()), CFlightPlan::VFR,
-                       "EGLL.KORD", "Unit Test");
+        CFlightPlan fp({}, info, "EGLL", "KORD", "NONE", takeoffTimePlanned, takeoffTimeActual,
+                       CTime(8.25, CTimeUnit::h()), CTime(9.5, CTimeUnit::h()), flightLevel,
+                       CSpeed(420, CSpeedUnit::kts()), CFlightPlan::VFR, "EGLL.KORD", "Unit Test");
         m_client->sendFlightPlan(fp);
 
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
         CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
-        QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$FPABCD:SERVER:V:B748/H-SDE3FGHIM1M2RWXY/LB1:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:UNIT TEST:EGLL.KORD");
+        QCOMPARE(
+            fsdMessage.getRawMessage(),
+            "FSD Sent=>$FPABCD:SERVER:V:B748/H-SDE3FGHIM1M2RWXY/LB1:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:UNIT "
+            "TEST:EGLL.KORD");
     }
 
     void CTestFSDClient::testSendPlaneInfoRequest()
@@ -945,8 +946,9 @@ namespace SwiftFsdTest
     //        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
     //        QList<QVariant> arguments = spy.takeAt(0);
     //        QCOMPARE(arguments.size(), 2);
-    //        QCOMPARE(CConnectionStatus::Disconnected, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
-    //        QCOMPARE(CConnectionStatus::Connecting, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
+    //        QCOMPARE(CConnectionStatus::Disconnected,
+    //        arguments.at(0).value<CConnectionStatus>().getConnectionStatus()); QCOMPARE(CConnectionStatus::Connecting,
+    //        arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
     //
     //        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
     //        arguments = arguments = spy.takeAt(0);
@@ -966,13 +968,16 @@ namespace SwiftFsdTest
     //        arguments = spy.takeAt(0);
     //        QCOMPARE(arguments.size(), 2);
     //        QCOMPARE(CConnectionStatus::Connected, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
-    //        QCOMPARE(CConnectionStatus::Disconnecting, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
+    //        QCOMPARE(CConnectionStatus::Disconnecting,
+    //        arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
     //
     //        if (spy.isEmpty()) { QVERIFY(spy.wait()); }
     //        arguments = spy.takeAt(0);
     //        QCOMPARE(arguments.size(), 2);
-    //        QCOMPARE(CConnectionStatus::Disconnecting, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
-    //        QCOMPARE(CConnectionStatus::Disconnected, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
+    //        QCOMPARE(CConnectionStatus::Disconnecting,
+    //        arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
+    //        QCOMPARE(CConnectionStatus::Disconnected,
+    //        arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
     //    }
 } // namespace SwiftFsdTest
 

@@ -72,16 +72,19 @@ namespace swift::gui::components
         void updateCallsignsFromContext();
         void onEditingFinished();
         void onChangedAircraftInRange();
-        void onChangedConnectionStatus(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+        void onChangedConnectionStatus(const swift::misc::network::CConnectionStatus &from,
+                                       const swift::misc::network::CConnectionStatus &to);
         bool isValidKnownCallsign(const QString &callsignString) const;
 
         //! Shared completer data
         static CSharedStringListCompleter *completer();
 
         QScopedPointer<Ui::CCallsignCompleter> ui;
-        swift::misc::CDigestSignal m_dsAircraftsInRangeChanged { this, &CCallsignCompleter::onChangedAircraftInRange, 5000, 5 };
+        swift::misc::CDigestSignal m_dsAircraftsInRangeChanged { this, &CCallsignCompleter::onChangedAircraftInRange,
+                                                                 5000, 5 };
         swift::misc::CDigestSignal m_dsEditingFinished { this, &CCallsignCompleter::editingFinishedDigest, 500, 3 };
-        swift::misc::CDigestSignal m_dsValidCallsignEntered { this, &CCallsignCompleter::validCallsignEnteredDigest, 500, 3 };
+        swift::misc::CDigestSignal m_dsValidCallsignEntered { this, &CCallsignCompleter::validCallsignEnteredDigest,
+                                                              500, 3 };
         QString m_lastValue;
 
         bool m_addOwnCallsign = false;

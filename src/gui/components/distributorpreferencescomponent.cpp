@@ -37,29 +37,34 @@ using namespace swift::gui::models;
 
 namespace swift::gui::components
 {
-    CDistributorPreferencesComponent::CDistributorPreferencesComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                                          ui(new Ui::CDistributorPreferencesComponent)
+    CDistributorPreferencesComponent::CDistributorPreferencesComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CDistributorPreferencesComponent)
     {
         ui->setupUi(this);
         ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
         ui->comp_SimulatorSelector->setRememberSelectionAndSetToLastSelection();
 
         connect(ui->pb_All, &QPushButton::pressed, this, &CDistributorPreferencesComponent::loadAllDistributors);
-        connect(ui->pb_AllForSimulator, &QPushButton::pressed, this, &CDistributorPreferencesComponent::loadDistributorsForSimulator);
-        connect(ui->pb_AllInSet, &QPushButton::pressed, this, &CDistributorPreferencesComponent::loadDistributorsFromSet);
+        connect(ui->pb_AllForSimulator, &QPushButton::pressed, this,
+                &CDistributorPreferencesComponent::loadDistributorsForSimulator);
+        connect(ui->pb_AllInSet, &QPushButton::pressed, this,
+                &CDistributorPreferencesComponent::loadDistributorsFromSet);
         connect(ui->pb_Save, &QPushButton::pressed, this, &CDistributorPreferencesComponent::save);
-        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CDistributorPreferencesComponent::onSimulatorChanged);
+        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this,
+                &CDistributorPreferencesComponent::onSimulatorChanged);
 
         ui->tvp_Distributors->setDistributorMode(CDistributorListModel::NormalWithOrder);
-        ui->tvp_Distributors->menuRemoveItems(CDistributorView::MenuBackend | CDistributorView::MenuDisplayAutomaticallyAndRefresh | CDistributorView::MenuLoadAndSave);
-        ui->tvp_Distributors->menuAddItems(CDistributorView::MenuClear | CDistributorView::MenuOrderable | CDistributorView::MenuRemoveSelectedRows);
+        ui->tvp_Distributors->menuRemoveItems(CDistributorView::MenuBackend |
+                                              CDistributorView::MenuDisplayAutomaticallyAndRefresh |
+                                              CDistributorView::MenuLoadAndSave);
+        ui->tvp_Distributors->menuAddItems(CDistributorView::MenuClear | CDistributorView::MenuOrderable |
+                                           CDistributorView::MenuRemoveSelectedRows);
         ui->tvp_Distributors->initAsOrderable();
 
         this->triggerDeferredSimulatorChange();
     }
 
-    CDistributorPreferencesComponent::~CDistributorPreferencesComponent()
-    {}
+    CDistributorPreferencesComponent::~CDistributorPreferencesComponent() {}
 
     void CDistributorPreferencesComponent::onPreferencesChanged()
     {
@@ -88,7 +93,8 @@ namespace swift::gui::components
         const CDistributorList distributors(sGui->getWebDataServices()->getDistributors().matchesSimulator(sim));
         if (distributors.isEmpty())
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"No distributors, or no distributors matching %1") << sim.toQString();
+            const CStatusMessage m = CStatusMessage(this).error(u"No distributors, or no distributors matching %1")
+                                     << sim.toQString();
             this->showOverlayMessage(m);
             return;
         }
@@ -98,7 +104,8 @@ namespace swift::gui::components
     void CDistributorPreferencesComponent::loadDistributorsFromSet()
     {
         const CSimulatorInfo sim(ui->comp_SimulatorSelector->getValue());
-        const CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(sim);
+        const CAircraftModelList models =
+            CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(sim);
         if (models.isEmpty())
         {
             const CStatusMessage m = CStatusMessage(this).error(u"No data in model set %1") << sim.toQString();
@@ -123,14 +130,8 @@ namespace swift::gui::components
         preferences.setDistributors(distributors, simulator);
         const CStatusMessage m = m_distributorPreferences.setAndSave(preferences);
         CLogMessage::preformatted(m);
-        if (m.isSuccess())
-        {
-            this->showOverlayHTMLMessage("Saved settings", 5000);
-        }
-        else
-        {
-            this->showOverlayMessage(m);
-        }
+        if (m.isSuccess()) { this->showOverlayHTMLMessage("Saved settings", 5000); }
+        else { this->showOverlayMessage(m); }
     }
 
     void CDistributorPreferencesComponent::onSimulatorChanged(const CSimulatorInfo &simulator)
@@ -153,10 +154,7 @@ namespace swift::gui::components
 
     void CDistributorPreferencesComponent::updateContainerMaybeAsync(const CDistributorList &models, bool sortByOrder)
     {
-        if (sortByOrder)
-        {
-            ui->tvp_Distributors->setSorting(CDistributor::IndexOrder, Qt::AscendingOrder);
-        }
+        if (sortByOrder) { ui->tvp_Distributors->setSorting(CDistributor::IndexOrder, Qt::AscendingOrder); }
         ui->tvp_Distributors->updateContainerMaybeAsync(models);
     }
 } // namespace swift::gui::components

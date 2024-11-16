@@ -19,19 +19,24 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CModelMatcherLogEnable::CModelMatcherLogEnable(QWidget *parent) : QFrame(parent),
-                                                                      ui(new Ui::CModelMatcherLogEnable)
+    CModelMatcherLogEnable::CModelMatcherLogEnable(QWidget *parent) : QFrame(parent), ui(new Ui::CModelMatcherLogEnable)
     {
         ui->setupUi(this);
-        connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
-        connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
-        connect(ui->cb_LogDetailed, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged, Qt::QueuedConnection);
+        connect(ui->cb_LogReverseLookup, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged,
+                Qt::QueuedConnection);
+        connect(ui->cb_LogMatchingMessages, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged,
+                Qt::QueuedConnection);
+        connect(ui->cb_LogDetailed, &QCheckBox::toggled, this, &CModelMatcherLogEnable::enabledCheckboxChanged,
+                Qt::QueuedConnection);
 
         if (this->hasContexts())
         {
-            connect(sGui->getIContextSimulator(), &IContextSimulator::changedLogOrDebugSettings, this, &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this, &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CModelMatcherLogEnable::connectionStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::changedLogOrDebugSettings, this,
+                    &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::changedLogOrDebugSettings, this,
+                    &CModelMatcherLogEnable::valuesChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
+                    &CModelMatcherLogEnable::connectionStatusChanged, Qt::QueuedConnection);
         }
 
         QPointer<CModelMatcherLogEnable> myself(this);
@@ -41,18 +46,11 @@ namespace swift::gui::components
         });
     }
 
-    CModelMatcherLogEnable::~CModelMatcherLogEnable()
-    {}
+    CModelMatcherLogEnable::~CModelMatcherLogEnable() {}
 
-    bool CModelMatcherLogEnable::isReverseLookupLogEnabled() const
-    {
-        return ui->cb_LogReverseLookup->isChecked();
-    }
+    bool CModelMatcherLogEnable::isReverseLookupLogEnabled() const { return ui->cb_LogReverseLookup->isChecked(); }
 
-    bool CModelMatcherLogEnable::isMatchingLogEnabled() const
-    {
-        return ui->cb_LogMatchingMessages->isChecked();
-    }
+    bool CModelMatcherLogEnable::isMatchingLogEnabled() const { return ui->cb_LogMatchingMessages->isChecked(); }
 
     void CModelMatcherLogEnable::enabledCheckboxChanged(bool enabled)
     {
@@ -61,7 +59,8 @@ namespace swift::gui::components
 
         const bool detailed = (sender == ui->cb_LogDetailed) ? enabled : ui->cb_LogDetailed->isChecked();
         const bool reverse = (sender == ui->cb_LogReverseLookup) ? enabled : ui->cb_LogReverseLookup->isChecked();
-        const bool matching = (sender == ui->cb_LogMatchingMessages) ? enabled : ui->cb_LogMatchingMessages->isChecked();
+        const bool matching =
+            (sender == ui->cb_LogMatchingMessages) ? enabled : ui->cb_LogMatchingMessages->isChecked();
         const bool simplified = !detailed;
 
         if (sender == ui->cb_LogReverseLookup || sender == ui->cb_LogDetailed)
@@ -90,11 +89,17 @@ namespace swift::gui::components
             // avoid signal roundtrips
             const ReverseLookupLogging revLog = sGui->getIContextNetwork()->isReverseLookupMessagesEnabled();
             const bool revLogEnabled = revLog.testFlag(RevLogEnabled);
-            if (revLogEnabled != ui->cb_LogReverseLookup->isChecked()) { ui->cb_LogReverseLookup->setChecked(revLogEnabled); }
+            if (revLogEnabled != ui->cb_LogReverseLookup->isChecked())
+            {
+                ui->cb_LogReverseLookup->setChecked(revLogEnabled);
+            }
 
             const MatchingLog matchingLog = sGui->getIContextSimulator()->isMatchingMessagesEnabled();
             const bool matchingLogEnabled = matchingLog > 0;
-            if (matchingLogEnabled != ui->cb_LogMatchingMessages->isChecked()) { ui->cb_LogMatchingMessages->setChecked(matchingLogEnabled); }
+            if (matchingLogEnabled != ui->cb_LogMatchingMessages->isChecked())
+            {
+                ui->cb_LogMatchingMessages->setChecked(matchingLogEnabled);
+            }
 
             const bool simplified = revLog.testFlag(RevLogSimplifiedInfo) || matchingLog == MatchingLogSimplified;
             const bool detailed = !simplified;
@@ -108,17 +113,11 @@ namespace swift::gui::components
         return sGui->getIContextSimulator() && sGui->getIContextNetwork();
     }
 
-    void CModelMatcherLogEnable::valuesChanged()
-    {
-        this->initGui();
-    }
+    void CModelMatcherLogEnable::valuesChanged() { this->initGui(); }
 
     void CModelMatcherLogEnable::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from);
-        if (to.isConnected() || to.isDisconnected())
-        {
-            this->initGui();
-        }
+        if (to.isConnected() || to.isDisconnected()) { this->initGui(); }
     }
 } // namespace swift::gui::components

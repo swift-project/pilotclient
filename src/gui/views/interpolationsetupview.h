@@ -16,7 +16,8 @@ class QWidget;
 namespace swift::gui::views
 {
     //! Distributors
-    class SWIFT_GUI_EXPORT CInterpolationSetupView : public CViewWithCallsignObjects<models::CInterpolationSetupListModel>
+    class SWIFT_GUI_EXPORT CInterpolationSetupView :
+        public CViewWithCallsignObjects<models::CInterpolationSetupListModel>
     {
         Q_OBJECT
 

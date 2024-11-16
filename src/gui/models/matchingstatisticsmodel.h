@@ -15,7 +15,8 @@ class QObject;
 namespace swift::gui::models
 {
     //! Matching statistics entry
-    class SWIFT_GUI_EXPORT CMatchingStatisticsModel : public CListModelBase<swift::misc::simulation::CMatchingStatistics, true>
+    class SWIFT_GUI_EXPORT CMatchingStatisticsModel :
+        public CListModelBase<swift::misc::simulation::CMatchingStatistics, true>
     {
         Q_OBJECT
 

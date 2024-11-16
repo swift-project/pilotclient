@@ -16,18 +16,12 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CApplicationInfo)
 
 namespace swift::misc
 {
-    CApplicationInfo::CApplicationInfo(Application app) : m_app(app),
-                                                          m_wordSize(CBuildConfig::buildWordSize()),
-                                                          m_exePath(QCoreApplication::applicationDirPath()),
-                                                          m_version(CBuildConfig::getVersionString()),
-                                                          m_compileInfo(CBuildConfig::compiledWithInfoShort()),
-                                                          m_platform(CBuildConfig::getPlatformString()),
-                                                          m_process(CProcessInfo::currentProcess())
+    CApplicationInfo::CApplicationInfo(Application app)
+        : m_app(app), m_wordSize(CBuildConfig::buildWordSize()), m_exePath(QCoreApplication::applicationDirPath()),
+          m_version(CBuildConfig::getVersionString()), m_compileInfo(CBuildConfig::compiledWithInfoShort()),
+          m_platform(CBuildConfig::getPlatformString()), m_process(CProcessInfo::currentProcess())
     {
-        if (app == CApplicationInfo::Unknown)
-        {
-            m_app = guessApplication();
-        }
+        if (app == CApplicationInfo::Unknown) { m_app = guessApplication(); }
     }
 
     const QString &CApplicationInfo::getApplicationAsString() const
@@ -72,21 +66,18 @@ namespace swift::misc
         return a == CApplicationInfo::UnitTest;
     }
 
-    bool CApplicationInfo::isNull() const
-    {
-        return this->getApplication() == Unknown && m_exePath.isNull();
-    }
+    bool CApplicationInfo::isNull() const { return this->getApplication() == Unknown && m_exePath.isNull(); }
 
     QString CApplicationInfo::asOtherSwiftVersionString(const QString &separator) const
     {
-        return u"Version; " % this->getVersionString() % u" os: " % this->getPlatform() % separator %
-               u"exe.path: " % this->getExecutablePath() % separator %
-               u"app.data: " % this->getApplicationDataDirectory();
+        return u"Version; " % this->getVersionString() % u" os: " % this->getPlatform() % separator % u"exe.path: " %
+               this->getExecutablePath() % separator % u"app.data: " % this->getApplicationDataDirectory();
     }
 
     QString CApplicationInfo::convertToQString(bool i18n) const
     {
-        return QStringLiteral("{ %1, %2, %3, %4 }").arg(this->getApplicationAsString(), m_exePath, m_version, m_process.convertToQString(i18n));
+        return QStringLiteral("{ %1, %2, %3, %4 }")
+            .arg(this->getApplicationAsString(), m_exePath, m_version, m_process.convertToQString(i18n));
     }
 
     CIcons::IconIndex CApplicationInfo::toIcon() const
@@ -154,17 +145,19 @@ namespace swift::misc
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexApplicationDataPath: return this->getApplicationDataDirectory().compare(compareValue.getApplicationDataDirectory());
+        case IndexApplicationDataPath:
+            return this->getApplicationDataDirectory().compare(compareValue.getApplicationDataDirectory());
         case IndexCompileInfo: return this->getCompileInfo().compare(compareValue.getCompileInfo());
         case IndexExecutablePath: return this->getExecutablePath().compare(compareValue.getExecutablePath());
-        case IndexExecutablePathExisting: return Compare::compare(this->isExecutablePathExisting(), compareValue.isExecutablePathExisting());
+        case IndexExecutablePathExisting:
+            return Compare::compare(this->isExecutablePathExisting(), compareValue.isExecutablePathExisting());
         case IndexPlatformInfo: return this->getPlatform().compare(compareValue.getPlatform());
-        case IndexProcessInfo: return this->getProcessInfo().processName().compare(compareValue.getProcessInfo().processName());
+        case IndexProcessInfo:
+            return this->getProcessInfo().processName().compare(compareValue.getProcessInfo().processName());
         case IndexVersionString: return this->getVersionString().compare(compareValue.getVersionString());
         case IndexWordSize: return Compare::compare(this->getWordSize(), compareValue.getWordSize());
         case IndexApplication:
-        case IndexApplicationAsString:
-            return Compare::compare(m_app, compareValue.m_app);
+        case IndexApplicationAsString: return Compare::compare(m_app, compareValue.m_app);
         default: return CValueObject::comparePropertyByIndex(index.copyFrontRemoved(), compareValue);
         }
     }

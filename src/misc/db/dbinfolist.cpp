@@ -11,8 +11,7 @@ namespace swift::misc::db
 {
     CDbInfoList::CDbInfoList() {}
 
-    CDbInfoList::CDbInfoList(const CSequence<CDbInfo> &other) : CSequence<CDbInfo>(other)
-    {}
+    CDbInfoList::CDbInfoList(const CSequence<CDbInfo> &other) : CSequence<CDbInfo>(other) {}
 
     CDbInfo CDbInfoList::findFirstByEntityOrDefault(CEntityFlags::Entity entity) const
     {

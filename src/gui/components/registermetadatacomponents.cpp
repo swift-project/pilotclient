@@ -9,8 +9,5 @@
 
 namespace swift::gui::components
 {
-    void registerMetadata()
-    {
-        qRegisterMetaType<TextMessageTab>();
-    }
+    void registerMetadata() { qRegisterMetaType<TextMessageTab>(); }
 } // namespace swift::gui::components

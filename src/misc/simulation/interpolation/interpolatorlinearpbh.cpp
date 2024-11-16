@@ -13,13 +13,15 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::misc::simulation
 {
-    CInterpolatorLinearPbh::CInterpolatorLinearPbh(double simulationTimeFraction, const aviation::CAircraftSituation &start, const aviation::CAircraftSituation &end) : m_simulationTimeFraction(simulationTimeFraction),
-                                                                                                                                                                        m_startSituation(start),
-                                                                                                                                                                        m_endSituation(end)
+    CInterpolatorLinearPbh::CInterpolatorLinearPbh(double simulationTimeFraction,
+                                                   const aviation::CAircraftSituation &start,
+                                                   const aviation::CAircraftSituation &end)
+        : m_simulationTimeFraction(simulationTimeFraction), m_startSituation(start), m_endSituation(end)
     {
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            SWIFT_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO, "Time fraction needs to be within [0;1]");
+            SWIFT_VERIFY_X(isValidTimeFraction(m_simulationTimeFraction), Q_FUNC_INFO,
+                           "Time fraction needs to be within [0;1]");
         }
     }
 
@@ -54,9 +56,11 @@ namespace swift::misc::simulation
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            SWIFT_VERIFY_X(headingStart.getReferenceNorth() == headingEnd.getReferenceNorth(), Q_FUNC_INFO, "Need same reference");
+            SWIFT_VERIFY_X(headingStart.getReferenceNorth() == headingEnd.getReferenceNorth(), Q_FUNC_INFO,
+                           "Need same reference");
         }
-        return CHeading(interpolateAngle(headingStart, headingEnd, m_simulationTimeFraction), headingEnd.getReferenceNorth());
+        return CHeading(interpolateAngle(headingStart, headingEnd, m_simulationTimeFraction),
+                        headingEnd.getReferenceNorth());
     }
 
     CAngle CInterpolatorLinearPbh::getPitch() const
@@ -73,7 +77,8 @@ namespace swift::misc::simulation
 
     CSpeed CInterpolatorLinearPbh::getGroundSpeed() const
     {
-        return (m_endSituation.getGroundSpeed() - m_startSituation.getGroundSpeed()) * m_simulationTimeFraction + m_startSituation.getGroundSpeed();
+        return (m_endSituation.getGroundSpeed() - m_startSituation.getGroundSpeed()) * m_simulationTimeFraction +
+               m_startSituation.getGroundSpeed();
     }
 
     void CInterpolatorLinearPbh::setTimeFraction(double tf)

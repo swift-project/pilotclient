@@ -20,18 +20,18 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::views
 {
-    CAircraftModelStatisticsDialog::CAircraftModelStatisticsDialog(QWidget *parent) : QDialog(parent),
-                                                                                      ui(new Ui::CAircraftModelStatisticsDialog)
+    CAircraftModelStatisticsDialog::CAircraftModelStatisticsDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CAircraftModelStatisticsDialog)
     {
         ui->setupUi(this);
         ui->tw_ModelStatistics->setCurrentIndex(0);
         this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-        connect(ui->pb_GenerateMatrix, &QPushButton::released, this, &CAircraftModelStatisticsDialog::displayHTMLMatrix);
+        connect(ui->pb_GenerateMatrix, &QPushButton::released, this,
+                &CAircraftModelStatisticsDialog::displayHTMLMatrix);
     }
 
-    CAircraftModelStatisticsDialog::~CAircraftModelStatisticsDialog()
-    {}
+    CAircraftModelStatisticsDialog::~CAircraftModelStatisticsDialog() {}
 
     void CAircraftModelStatisticsDialog::analyzeModels(const CAircraftModelList &models)
     {
@@ -41,7 +41,8 @@ namespace swift::gui::views
 
     void CAircraftModelStatisticsDialog::displayHTMLMatrix()
     {
-        const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(m_models, CGuiApplication::getTemporaryDirectory());
+        const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(
+            m_models, CGuiApplication::getTemporaryDirectory());
         if (file.isEmpty()) { return; }
         QDesktopServices::openUrl(QUrl::fromLocalFile(file));
     }

@@ -7,10 +7,14 @@ using namespace swift::misc::aviation;
 
 namespace swift::misc::simulation
 {
-    CInterpolationAndRenderingSetupPerCallsign IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
+    CInterpolationAndRenderingSetupPerCallsign
+    IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
     {
         QReadLocker l(&m_lockSetup);
-        if (!m_setupsPerCallsign.contains(callsign)) { return CInterpolationAndRenderingSetupPerCallsign(callsign, m_globalSetup); }
+        if (!m_setupsPerCallsign.contains(callsign))
+        {
+            return CInterpolationAndRenderingSetupPerCallsign(callsign, m_globalSetup);
+        }
         return m_setupsPerCallsign.value(callsign);
     }
 
@@ -26,7 +30,8 @@ namespace swift::misc::simulation
         return !m_setupsPerCallsign.isEmpty();
     }
 
-    bool IInterpolationSetupProvider::setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
+    bool IInterpolationSetupProvider::setInterpolationSetupsPerCallsign(const CInterpolationSetupList &setups,
+                                                                        bool ignoreSameAsGlobal)
     {
         const CInterpolationAndRenderingSetupGlobal gs = this->getInterpolationSetupGlobal();
         SetupsPerCallsign setupsPerCs;
@@ -97,7 +102,8 @@ namespace swift::misc::simulation
         return true;
     }
 
-    bool IInterpolationSetupProvider::setInterpolationSetupPerCallsign(const CInterpolationAndRenderingSetupPerCallsign &setup, const CCallsign &callsign, bool removeGlobalSetup)
+    bool IInterpolationSetupProvider::setInterpolationSetupPerCallsign(
+        const CInterpolationAndRenderingSetupPerCallsign &setup, const CCallsign &callsign, bool removeGlobalSetup)
     {
         if (removeGlobalSetup)
         {
@@ -189,10 +195,10 @@ namespace swift::misc::simulation
     }
 
     // pin vtables to this file
-    void CInterpolationSetupAware::anchor()
-    {}
+    void CInterpolationSetupAware::anchor() {}
 
-    CInterpolationAndRenderingSetupPerCallsign CInterpolationSetupAware::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
+    CInterpolationAndRenderingSetupPerCallsign
+    CInterpolationSetupAware::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
     {
         if (!this->hasProvider()) { return CInterpolationAndRenderingSetupPerCallsign(); }
         return this->provider()->getInterpolationSetupPerCallsignOrDefault(callsign);

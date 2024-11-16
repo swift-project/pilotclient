@@ -26,15 +26,18 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CRemoteAircraftSelector::CRemoteAircraftSelector(QWidget *parent) : QFrame(parent),
-                                                                        ui(new Ui::CRemoteAircraftSelector)
+    CRemoteAircraftSelector::CRemoteAircraftSelector(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CRemoteAircraftSelector)
     {
         ui->setupUi(this);
-        bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this, &CRemoteAircraftSelector::onRemovedAircraft, Qt::QueuedConnection);
+        bool s = connect(sGui->getIContextNetwork(), &IContextNetwork::removedAircraft, this,
+                         &CRemoteAircraftSelector::onRemovedAircraft, Qt::QueuedConnection);
         Q_ASSERT(s);
-        s = connect(sGui->getIContextNetwork(), &IContextNetwork::addedAircraft, this, &CRemoteAircraftSelector::onAddedAircraft, Qt::QueuedConnection);
+        s = connect(sGui->getIContextNetwork(), &IContextNetwork::addedAircraft, this,
+                    &CRemoteAircraftSelector::onAddedAircraft, Qt::QueuedConnection);
         Q_ASSERT(s);
-        s = connect(ui->cb_RemoteAircraftSelector, &QComboBox::currentTextChanged, this, &CRemoteAircraftSelector::comboBoxChanged);
+        s = connect(ui->cb_RemoteAircraftSelector, &QComboBox::currentTextChanged, this,
+                    &CRemoteAircraftSelector::comboBoxChanged);
         Q_UNUSED(s);
     }
 
@@ -48,10 +51,7 @@ namespace swift::gui::components
         return m_aircraft[index].getCallsign();
     }
 
-    void CRemoteAircraftSelector::indicatePartsEnabled(bool indicate)
-    {
-        m_showPartsEnabled = indicate;
-    }
+    void CRemoteAircraftSelector::indicatePartsEnabled(bool indicate) { m_showPartsEnabled = indicate; }
 
     void CRemoteAircraftSelector::showEvent(QShowEvent *event)
     {
@@ -101,20 +101,12 @@ namespace swift::gui::components
             QString i(aircraft.getCallsign().toQString());
             if (aircraft.hasAircraftDesignator())
             {
-                i += u" (" %
-                     aircraft.getAircraftIcaoCode().toQString(false) %
-                     u')';
+                i += u" (" % aircraft.getAircraftIcaoCode().toQString(false) % u')';
             }
-            if (aircraft.hasRealName())
-            {
-                i += u" - " % aircraft.getPilotRealName();
-            }
+            if (aircraft.hasRealName()) { i += u" - " % aircraft.getPilotRealName(); }
             if (m_showPartsEnabled)
             {
-                if (aircraft.isPartsSynchronized())
-                {
-                    i += QStringLiteral(" [parts]");
-                }
+                if (aircraft.isPartsSynchronized()) { i += QStringLiteral(" [parts]"); }
             }
             items.append(i);
         }

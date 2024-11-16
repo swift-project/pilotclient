@@ -17,7 +17,8 @@ namespace swift::misc::weather
         qRegisterMetaType<Descriptor>();
     }
 
-    CPresentWeather::CPresentWeather(Intensity intensity, Descriptor descriptor, int weatherPhenomena) : m_intensity(intensity), m_descriptor(descriptor), m_weatherPhenomena(weatherPhenomena)
+    CPresentWeather::CPresentWeather(Intensity intensity, Descriptor descriptor, int weatherPhenomena)
+        : m_intensity(intensity), m_descriptor(descriptor), m_weatherPhenomena(weatherPhenomena)
     {}
 
     QVariant CPresentWeather::propertyByIndex(swift::misc::CPropertyIndexRef index) const
@@ -26,14 +27,10 @@ namespace swift::misc::weather
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexIntensity:
-            return QVariant::fromValue(m_intensity);
-        case IndexDescriptor:
-            return QVariant::fromValue(m_descriptor);
-        case IndexWeatherPhenomena:
-            return QVariant::fromValue(m_weatherPhenomena);
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexIntensity: return QVariant::fromValue(m_intensity);
+        case IndexDescriptor: return QVariant::fromValue(m_descriptor);
+        case IndexWeatherPhenomena: return QVariant::fromValue(m_weatherPhenomena);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -47,18 +44,10 @@ namespace swift::misc::weather
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexIntensity:
-            setIntensity(variant.value<Intensity>());
-            break;
-        case IndexDescriptor:
-            setDescriptor(variant.value<Descriptor>());
-            break;
-        case IndexWeatherPhenomena:
-            setWeatherPhenomena(variant.toInt());
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexIntensity: setIntensity(variant.value<Intensity>()); break;
+        case IndexDescriptor: setDescriptor(variant.value<Descriptor>()); break;
+        case IndexWeatherPhenomena: setWeatherPhenomena(variant.toInt()); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
@@ -72,41 +61,34 @@ namespace swift::misc::weather
         };
 
         static const QHash<Descriptor, QString> descriptorHash = {
-            { None, "" },
-            { Shallow, "shallow" },
-            { Patches, "patches" },
-            { Partial, "partial" },
-            { Drifting, "drifting" },
-            { Blowing, "blowing" },
-            { Showers, "showers" },
-            { Thunderstorm, "thunderstorm" },
-            { Freezing, "freezing" },
+            { None, "" },           { Shallow, "shallow" },           { Patches, "patches" },
+            { Partial, "partial" }, { Drifting, "drifting" },         { Blowing, "blowing" },
+            { Showers, "showers" }, { Thunderstorm, "thunderstorm" }, { Freezing, "freezing" },
         };
 
-        static const QHash<WeatherPhenomenon, QString> weatherPhenomenaHash = {
-            { Drizzle, "drizzle" },
-            { Rain, "rain" },
-            { Snow, "snow" },
-            { SnowGrains, "snow srains" },
-            { IceCrystals, "ice crystals" },
-            { IcePellets, "ice pellets" },
-            { Hail, "hail" },
-            { SnowPellets, "snow pellets" },
-            { Unknown, "unknown" },
-            { Mist, "mist" },
-            { Fog, "fog" },
-            { Smoke, "smoke" },
-            { VolcanicAsh, "volcanic ash" },
-            { Dust, "dust" },
-            { Sand, "sand" },
-            { Haze, "haze" },
-            { DustSandWhirls, "dustSand whirls" },
-            { Squalls, "squalls" },
-            { TornadoOrWaterspout, "tornado or waterspout" },
-            { FunnelCloud, "funnel cloud" },
-            { Sandstorm, "sandstorm" },
-            { Duststorm, "duststorm" }
-        };
+        static const QHash<WeatherPhenomenon, QString> weatherPhenomenaHash = { { Drizzle, "drizzle" },
+                                                                                { Rain, "rain" },
+                                                                                { Snow, "snow" },
+                                                                                { SnowGrains, "snow srains" },
+                                                                                { IceCrystals, "ice crystals" },
+                                                                                { IcePellets, "ice pellets" },
+                                                                                { Hail, "hail" },
+                                                                                { SnowPellets, "snow pellets" },
+                                                                                { Unknown, "unknown" },
+                                                                                { Mist, "mist" },
+                                                                                { Fog, "fog" },
+                                                                                { Smoke, "smoke" },
+                                                                                { VolcanicAsh, "volcanic ash" },
+                                                                                { Dust, "dust" },
+                                                                                { Sand, "sand" },
+                                                                                { Haze, "haze" },
+                                                                                { DustSandWhirls, "dustSand whirls" },
+                                                                                { Squalls, "squalls" },
+                                                                                { TornadoOrWaterspout,
+                                                                                  "tornado or waterspout" },
+                                                                                { FunnelCloud, "funnel cloud" },
+                                                                                { Sandstorm, "sandstorm" },
+                                                                                { Duststorm, "duststorm" } };
 
         QString weatherPhenomenaAsString;
         for (const WeatherPhenomenon &wp : makeKeysRange(weatherPhenomenaHash))

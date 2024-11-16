@@ -44,7 +44,8 @@ namespace swift::sound
         void onPlayingChanged();
 
         //! Update an effect
-        void updateEffect(swift::misc::audio::CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name);
+        void updateEffect(swift::misc::audio::CNotificationSounds::NotificationFlag f, const QString &directory,
+                          const QString &name);
     };
 } // namespace swift::sound
 

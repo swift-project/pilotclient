@@ -15,8 +15,8 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CCountry)
 
 namespace swift::misc
 {
-    CCountry::CCountry(const QString &iso, const QString &name) : IDatastoreObjectWithStringKey(iso.trimmed().toUpper()),
-                                                                  m_name(name.trimmed())
+    CCountry::CCountry(const QString &iso, const QString &name)
+        : IDatastoreObjectWithStringKey(iso.trimmed().toUpper()), m_name(name.trimmed())
     {
         this->setSimplifiedNameIfNotSame();
     }
@@ -46,25 +46,13 @@ namespace swift::misc
         m_iso3 = (code.length() == 3) ? code : "";
     }
 
-    bool CCountry::hasIsoCode() const
-    {
-        return m_dbKey.length() == 2;
-    }
+    bool CCountry::hasIsoCode() const { return m_dbKey.length() == 2; }
 
-    bool CCountry::hasIso3Code() const
-    {
-        return m_iso3.length() == 3;
-    }
+    bool CCountry::hasIso3Code() const { return m_iso3.length() == 3; }
 
-    void CCountry::setAlias1(const QString &alias)
-    {
-        m_alias1 = alias.trimmed().toUpper();
-    }
+    void CCountry::setAlias1(const QString &alias) { m_alias1 = alias.trimmed().toUpper(); }
 
-    void CCountry::setAlias2(const QString &alias)
-    {
-        m_alias2 = alias.trimmed().toUpper();
-    }
+    void CCountry::setAlias2(const QString &alias) { m_alias2 = alias.trimmed().toUpper(); }
 
     QString CCountry::getCombinedStringIsoName() const
     {
@@ -107,10 +95,7 @@ namespace swift::misc
         return caseInsensitiveStringCompare(alias, m_alias1) || caseInsensitiveStringCompare(alias, m_alias2);
     }
 
-    bool CCountry::isValid() const
-    {
-        return m_dbKey.length() == 2 && !m_name.isEmpty();
-    }
+    bool CCountry::isValid() const { return m_dbKey.length() == 2 && !m_name.isEmpty(); }
 
     QString CCountry::convertToQString(bool i18n) const
     {
@@ -165,7 +150,10 @@ namespace swift::misc
     int CCountry::comparePropertyByIndex(CPropertyIndexRef index, const CCountry &compareValue) const
     {
         if (index.isMyself()) { return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive); }
-        if (IDatastoreObjectWithStringKey::canHandleIndex(index)) { return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue); }
+        if (IDatastoreObjectWithStringKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -202,10 +190,7 @@ namespace swift::misc
         return country;
     }
 
-    bool CCountry::isValidIsoCode(const QString &isoCode)
-    {
-        return isoCode.length() == 2;
-    }
+    bool CCountry::isValidIsoCode(const QString &isoCode) { return isoCode.length() == 2; }
 
     void CCountry::setSimplifiedNameIfNotSame()
     {

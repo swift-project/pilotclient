@@ -12,18 +12,22 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::geo, CCoordinateGeodetic, CCoordinateG
 
 namespace swift::misc::geo
 {
-    CCoordinateGeodeticList::CCoordinateGeodeticList()
+    CCoordinateGeodeticList::CCoordinateGeodeticList() {}
+
+    CCoordinateGeodeticList::CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other)
+        : CSequence<CCoordinateGeodetic>(other)
     {}
 
-    CCoordinateGeodeticList::CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other) : CSequence<CCoordinateGeodetic>(other)
-    {}
-
-    CElevationPlane CCoordinateGeodeticList::averageGeodeticHeight(const CCoordinateGeodetic &reference, const CLength &range, const CLength &maxDeviation, int minValues, int sufficentValues) const
+    CElevationPlane CCoordinateGeodeticList::averageGeodeticHeight(const CCoordinateGeodetic &reference,
+                                                                   const CLength &range, const CLength &maxDeviation,
+                                                                   int minValues, int sufficentValues) const
     {
         if (this->size() < minValues) { return CElevationPlane::null(); } // no chance to succeed
 
         QList<double> valuesInFt;
-        const CCoordinateGeodeticList sorted = this->findWithGeodeticMSLHeight().findWithinRange(reference, range).sortedByEuclideanDistanceSquared(reference);
+        const CCoordinateGeodeticList sorted = this->findWithGeodeticMSLHeight()
+                                                   .findWithinRange(reference, range)
+                                                   .sortedByEuclideanDistanceSquared(reference);
         if (sorted.size() < minValues) { return CElevationPlane::null(); }
 
         // we know all values have MSL and are within range

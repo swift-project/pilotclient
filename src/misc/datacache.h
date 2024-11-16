@@ -130,7 +130,8 @@ namespace swift::misc
         //! During update, returns true if the on-disk timestamp of this key is newer than in-memory.
         bool isNewerValueAvailable(const QString &key, qint64 timestamp);
 
-        //! Return a future which will be made ready when the value is loaded. Future is invalid if value is not loading.
+        //! Return a future which will be made ready when the value is loaded. Future is invalid if value is not
+        //! loading.
         std::future<void> promiseLoadedValue(const QString &key, qint64 currentTimestamp);
 
         //! Returns (by move) the container of promises to load values.
@@ -217,11 +218,13 @@ namespace swift::misc
         //! \param defer Whether to defer applying the changes. Used when called by saveToStore.
         //! \param pinsOnly Only load pinned values.
         //! \return Usually ignored, but can be held in order to retain the revision file lock.
-        CDataCacheRevision::LockGuard loadFromStore(const swift::misc::CValueCachePacket &baseline, bool defer = false, bool pinsOnly = false);
+        CDataCacheRevision::LockGuard loadFromStore(const swift::misc::CValueCachePacket &baseline, bool defer = false,
+                                                    bool pinsOnly = false);
 
     signals:
         //! Signal back to the cache when values have been loaded.
-        void valuesLoadedFromStore(const swift::misc::CValueCachePacket &values, const swift::misc::CIdentifier &originator);
+        void valuesLoadedFromStore(const swift::misc::CValueCachePacket &values,
+                                   const swift::misc::CIdentifier &originator);
 
     private:
         const QString &persistentStore() const;
@@ -315,14 +318,19 @@ namespace swift::misc
         //! Constructor.
         //! \param owner Will be the parent of the internal QObject used to access the value.
         template <typename T>
-        CData(T *owner) : CData::CCached(CDataCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
+        CData(T *owner)
+            : CData::CCached(CDataCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid,
+                             Trait::defaultValue(), owner)
         {
             if (!this->isInitialized())
             {
                 this->onOwnerNameChanged([this, owner] { private_ns::reconstruct(this, owner); });
                 return;
             }
-            if (Trait::timeToLive() >= 0) { CDataCache::instance()->setTimeToLive(this->getKey(), Trait::timeToLive()); }
+            if (Trait::timeToLive() >= 0)
+            {
+                CDataCache::instance()->setTimeToLive(this->getKey(), Trait::timeToLive());
+            }
             if (Trait::isPinned()) { CDataCache::instance()->pinValue(this->getKey()); }
             if (Trait::isDeferred()) { CDataCache::instance()->deferValue(this->getKey()); }
             if (Trait::isSession()) { CDataCache::instance()->sessionValue(this->getKey()); }
@@ -360,15 +368,25 @@ namespace swift::misc
         QString getFilename() const { return CDataCache::filenameForKey(this->getKey()); }
 
         //! True if the current timestamp is older than the TTL (time to live).
-        bool isStale() const { return Trait::timeToLive() >= 0 && this->getTimestamp() + Trait::timeToLive() > QDateTime::currentMSecsSinceEpoch(); }
+        bool isStale() const
+        {
+            return Trait::timeToLive() >= 0 &&
+                   this->getTimestamp() + Trait::timeToLive() > QDateTime::currentMSecsSinceEpoch();
+        }
 
         //! Don't change the value, but write a new timestamp, to extend the life of the value.
-        void renewTimestamp(qint64 timestamp) { return CDataCache::instance()->renewTimestamp(this->getKey(), timestamp); }
+        void renewTimestamp(qint64 timestamp)
+        {
+            return CDataCache::instance()->renewTimestamp(this->getKey(), timestamp);
+        }
 
         //! Get the timestamp of the value, or of the deferred value that is available to be loaded.
         QDateTime getAvailableTimestamp() const
         {
-            if (Trait::isDeferred()) { return QDateTime::fromMSecsSinceEpoch(CDataCache::instance()->getTimestampOnDisk(this->getKey())); }
+            if (Trait::isDeferred())
+            {
+                return QDateTime::fromMSecsSinceEpoch(CDataCache::instance()->getTimestampOnDisk(this->getKey()));
+            }
             return this->getTimestamp();
         }
 
@@ -378,7 +396,8 @@ namespace swift::misc
             if (Trait::isDeferred()) { CDataCache::instance()->admitValue(this->getKey(), true); }
         }
 
-        //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if any.
+        //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if
+        //! any.
         void synchronize()
         {
             auto *queue = this->m_page->template findChild<private_ns::CDataPageQueue *>();
@@ -386,7 +405,8 @@ namespace swift::misc
             this->admit();
             const QString key(this->getKey());
             CDataCache::instance()->synchronize(key);
-            CDataCache::instance()->synchronize(key); // if load was in progress when admit() was called, synchronize with the next load
+            CDataCache::instance()->synchronize(
+                key); // if load was in progress when admit() was called, synchronize with the next load
 
             // run in page thread
             //! \todo KB 2018-01 is this OK or should it go to CValuePage::setValuesFromCache?
@@ -404,7 +424,8 @@ namespace swift::misc
         //! @{
         //! Data cache doesn't support setAndSave (because set() already causes save anyway).
         CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
-        CStatusMessage setAndSaveProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setAndSaveProperty(CPropertyIndexRef index, const CVariant &value,
+                                          qint64 timestamp = 0) = delete;
         //! @}
 
         //! Data cache doesn't support save (because currently set value is saved already).

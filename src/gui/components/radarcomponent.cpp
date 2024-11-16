@@ -23,22 +23,16 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    CRadarComponent::CRadarComponent(QWidget *parent) : QFrame(parent),
-                                                        ui(new Ui::CRadarComponent), m_tagFont(QApplication::font())
+    CRadarComponent::CRadarComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CRadarComponent), m_tagFont(QApplication::font())
     {
         ui->setupUi(this);
 
         ui->gv_RadarView->setScene(&m_scene);
 
         ui->cb_RadarRange->addItem(QString::number(0.5) % u" nm", 0.5);
-        for (int r = 1; r <= 9; ++r)
-        {
-            ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r);
-        }
-        for (int r = 10; r <= 90; r += 10)
-        {
-            ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r);
-        }
+        for (int r = 1; r <= 9; ++r) { ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r); }
+        for (int r = 10; r <= 90; r += 10) { ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r); }
 
         ui->cb_RadarRange->setCurrentText(QString::number(m_rangeNM) % u" nm");
         ui->sb_FontSize->setRange(1, 100);
@@ -49,7 +43,8 @@ namespace swift::gui::components
         connect(&m_updateTimer, &QTimer::timeout, this, &CRadarComponent::refreshTargets);
         connect(&m_headingTimer, &QTimer::timeout, this, &CRadarComponent::rotateView);
 
-        connect(ui->cb_RadarRange, qOverload<int>(&QComboBox::currentIndexChanged), this, &CRadarComponent::changeRangeFromUserSelection);
+        connect(ui->cb_RadarRange, qOverload<int>(&QComboBox::currentIndexChanged), this,
+                &CRadarComponent::changeRangeFromUserSelection);
         connect(ui->sb_FontSize, qOverload<int>(&QSpinBox::valueChanged), this, &CRadarComponent::updateFont);
         connect(ui->cb_Callsign, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
         connect(ui->cb_Heading, &QCheckBox::toggled, this, &CRadarComponent::refreshTargets);
@@ -63,13 +58,13 @@ namespace swift::gui::components
         m_headingTimer.start(50);
     }
 
-    CRadarComponent::~CRadarComponent()
-    {}
+    CRadarComponent::~CRadarComponent() {}
 
     bool CRadarComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
         CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
-        const bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CRadarComponent::onInfoAreaTabBarChanged);
+        const bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this,
+                               &CRadarComponent::onInfoAreaTabBarChanged);
         Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
         Q_ASSERT_X(parentDockableWidget, Q_FUNC_INFO, "missing parent");
         return c && parentDockableWidget;
@@ -109,7 +104,8 @@ namespace swift::gui::components
         // Macro graticule, drawn as full line at every 10 nm
         for (int range = 10; range <= 100; range += 10)
         {
-            QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(-range, -range, 2.0 * range, 2.0 * range, &m_macroGraticule);
+            QGraphicsEllipseItem *circle =
+                new QGraphicsEllipseItem(-range, -range, 2.0 * range, 2.0 * range, &m_macroGraticule);
             circle->setPen(pen);
         }
         pen = QPen(Qt::gray, 1, Qt::DashLine);
@@ -118,7 +114,8 @@ namespace swift::gui::components
         // Micro graticule, drawn as dash line at every 2.5 nm
         for (qreal range = 1; range <= 3; ++range)
         {
-            QGraphicsEllipseItem *circle = new QGraphicsEllipseItem(-range * 2.5, -range * 2.5, 5.0 * range, 5.0 * range, &m_microGraticule);
+            QGraphicsEllipseItem *circle =
+                new QGraphicsEllipseItem(-range * 2.5, -range * 2.5, 5.0 * range, 5.0 * range, &m_microGraticule);
             circle->setPen(pen);
         }
     }
@@ -164,10 +161,7 @@ namespace swift::gui::components
 
                     QGraphicsTextItem *tag = new QGraphicsTextItem(&m_radarTargets);
                     QString tagText;
-                    if (ui->cb_Callsign->isChecked())
-                    {
-                        tagText += sa.getCallsignAsString() % u"\n";
-                    }
+                    if (ui->cb_Callsign->isChecked()) { tagText += sa.getCallsignAsString() % u"\n"; }
                     if (ui->cb_Altitude->isChecked())
                     {
                         int flightLeveL = sa.getAltitude().valueInteger(CLengthUnit::ft()) / 100;
@@ -190,7 +184,8 @@ namespace swift::gui::components
                         const double headingRad = sa.getHeading().value(CAngleUnit::rad());
                         QPen pen(Qt::green, 1);
                         pen.setCosmetic(true);
-                        QGraphicsLineItem *li = new QGraphicsLineItem(QLineF({ 0.0, 0.0 }, polarPoint(5.0, headingRad)), &m_radarTargets);
+                        QGraphicsLineItem *li =
+                            new QGraphicsLineItem(QLineF({ 0.0, 0.0 }, polarPoint(5.0, headingRad)), &m_radarTargets);
                         li->setPos(position);
                         li->setPen(pen);
                     }
@@ -208,7 +203,8 @@ namespace swift::gui::components
                 int headingDegree = 0;
                 if (!ui->cb_LockNorth->isChecked())
                 {
-                    headingDegree = sGui->getIContextOwnAircraft()->getOwnAircraftSituation().getHeading().valueInteger(CAngleUnit::deg());
+                    headingDegree = sGui->getIContextOwnAircraft()->getOwnAircraftSituation().getHeading().valueInteger(
+                        CAngleUnit::deg());
                 }
 
                 if (m_rotatenAngle != headingDegree)
@@ -239,15 +235,9 @@ namespace swift::gui::components
     {
         qreal direction = zoomIn ? 1.0 : -1.0;
         double factor = 10.0;
-        if (m_rangeNM < 10.0 || (qFuzzyCompare(m_rangeNM, 10.0) && zoomIn))
-        {
-            factor = 1.0;
-        }
+        if (m_rangeNM < 10.0 || (qFuzzyCompare(m_rangeNM, 10.0) && zoomIn)) { factor = 1.0; }
 
-        if (m_rangeNM < 1.0 || (qFuzzyCompare(m_rangeNM, 1.0) && zoomIn))
-        {
-            factor = 0.5;
-        }
+        if (m_rangeNM < 1.0 || (qFuzzyCompare(m_rangeNM, 1.0) && zoomIn)) { factor = 0.5; }
 
         m_rangeNM = m_rangeNM - direction * factor;
         m_rangeNM = qMin(90.0, qMax(0.5, m_rangeNM));

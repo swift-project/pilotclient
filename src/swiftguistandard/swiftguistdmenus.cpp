@@ -58,8 +58,7 @@ void SwiftGuiStd::onMenuClicked()
     }
     else if (sender == ui->menu_TestLocationsEDDF)
     {
-        this->setTestPosition("N 50° 2′ 0", "E 8° 34′ 14",
-                              CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()),
+        this->setTestPosition("N 50° 2′ 0", "E 8° 34′ 14", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()),
                               CAltitude(100, CAltitude::MeanSeaLevel, CAltitude::PressureAltitude, CLengthUnit::m()));
     }
     else if (sender == ui->menu_TestLocationsLOWW)
@@ -73,20 +72,15 @@ void SwiftGuiStd::onMenuClicked()
         this->setMainPageToInfoArea();
         ui->comp_MainInfoArea->selectSettingsTab(swift::gui::components::CSettingsComponent::SettingTabGui);
     }
-    else if (sender == ui->menu_InternalsPage)
-    {
-        ui->sw_MainMiddle->setCurrentIndex(MainPageInternals);
-    }
-    else if (sender == ui->menu_AutoPublish)
-    {
-        this->autoPublishDialog();
-    }
+    else if (sender == ui->menu_InternalsPage) { ui->sw_MainMiddle->setCurrentIndex(MainPageInternals); }
+    else if (sender == ui->menu_AutoPublish) { this->autoPublishDialog(); }
     else if (sender == ui->menu_ToggleIncognito)
     {
         if (sGui)
         {
             sGui->toggleIncognito();
-            this->displayInOverlayWindow(QStringLiteral("Incognito mode is %1").arg(boolToOnOff(sGui->isIncognito())), 5000);
+            this->displayInOverlayWindow(QStringLiteral("Incognito mode is %1").arg(boolToOnOff(sGui->isIncognito())),
+                                         5000);
         }
     }
 }
@@ -101,26 +95,14 @@ void SwiftGuiStd::attachSimulatorWindow()
         return;
     }
     const bool a = CForeignWindows::setSimulatorAsParent(w, this);
-    if (a)
-    {
-        CLogMessage(this).info(u"Attached to simulator");
-    }
-    else
-    {
-        CLogMessage(this).warning(u"No simulator window found");
-    }
+    if (a) { CLogMessage(this).info(u"Attached to simulator"); }
+    else { CLogMessage(this).warning(u"No simulator window found"); }
 }
 
 void SwiftGuiStd::detachSimulatorWindow()
 {
-    if (CForeignWindows::unsetSimulatorAsParent(this))
-    {
-        CLogMessage(this).info(u"Detached simulator window");
-    }
-    else
-    {
-        CLogMessage(this).info(u"No simulator window to detach");
-    }
+    if (CForeignWindows::unsetSimulatorAsParent(this)) { CLogMessage(this).info(u"Detached simulator window"); }
+    else { CLogMessage(this).info(u"No simulator window to detach"); }
 }
 
 void SwiftGuiStd::initMenus()
@@ -146,11 +128,10 @@ void SwiftGuiStd::initMenus()
     {
         QAction *act = new QAction(CIcons::swift16(), "Copy xswiftbus dialog");
         ui->menu_File->insertAction(ui->menu_File->actions().at(5), act);
-        c = connect(
-            act, &QAction::triggered, this, [=] {
-                this->copyXSwiftBusDialog(false);
-            },
-            Qt::QueuedConnection);
+        // clang-format off
+        c = connect(act, &QAction::triggered, this,
+            [=] { this->copyXSwiftBusDialog(false); }, Qt::QueuedConnection);
+        // clang-format on
         Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
     }
 
@@ -165,7 +146,9 @@ void SwiftGuiStd::initMenus()
 
 void SwiftGuiStd::copyXSwiftBusDialog(bool checkFileTimestamp)
 {
-    const QString xPlaneRootDir = ui->comp_MainInfoArea->getSettingsComponent()->getSimulatorSettings(CSimulatorInfo::XPLANE).getSimulatorDirectoryOrDefault();
+    const QString xPlaneRootDir = ui->comp_MainInfoArea->getSettingsComponent()
+                                      ->getSimulatorSettings(CSimulatorInfo::XPLANE)
+                                      .getSimulatorDirectoryOrDefault();
     const bool xpDirExists = !xPlaneRootDir.isEmpty() && QDir().exists(xPlaneRootDir);
     if (!xpDirExists)
     {
@@ -180,10 +163,7 @@ void SwiftGuiStd::copyXSwiftBusDialog(bool checkFileTimestamp)
 
 int SwiftGuiStd::autoPublishDialog()
 {
-    if (!m_autoPublishDialog)
-    {
-        m_autoPublishDialog.reset(new CAutoPublishDialog(this));
-    }
+    if (!m_autoPublishDialog) { m_autoPublishDialog.reset(new CAutoPublishDialog(this)); }
     m_lastAutoPublish.set(QDateTime::currentMSecsSinceEpoch());
     return m_autoPublishDialog->readAndShow();
 }

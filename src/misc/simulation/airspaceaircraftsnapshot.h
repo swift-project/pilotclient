@@ -32,29 +32,43 @@ namespace swift::misc::simulation
         CAirspaceAircraftSnapshot();
 
         //! Constructor
-        CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft,
-                                  bool restricted = false,
-                                  bool renderingEnabled = true,
-                                  int maxAircraft = 100,
-                                  const swift::misc::physical_quantities::CLength &maxRenderedDistance = { 0, nullptr });
+        CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft, bool restricted = false,
+                                  bool renderingEnabled = true, int maxAircraft = 100,
+                                  const swift::misc::physical_quantities::CLength &maxRenderedDistance = { 0,
+                                                                                                           nullptr });
 
         //! Time when snapshot was taken
         const QDateTime getTimestamp() const { return QDateTime::fromMSecsSinceEpoch(m_timestampMsSinceEpoch); }
 
         //! Callsigns by distance
-        const swift::misc::aviation::CCallsignSet &getAircraftCallsignsByDistance() const { return m_aircraftCallsignsByDistance; }
+        const swift::misc::aviation::CCallsignSet &getAircraftCallsignsByDistance() const
+        {
+            return m_aircraftCallsignsByDistance;
+        }
 
         //! Callsigns by distance, only enabled aircraft
-        const swift::misc::aviation::CCallsignSet &getEnabledAircraftCallsignsByDistance() const { return m_enabledAircraftCallsignsByDistance; }
+        const swift::misc::aviation::CCallsignSet &getEnabledAircraftCallsignsByDistance() const
+        {
+            return m_enabledAircraftCallsignsByDistance;
+        }
 
         //! Callsigns by distance, only disabled aircraft
-        const swift::misc::aviation::CCallsignSet &getDisabledAircraftCallsignsByDistance() const { return m_disabledAircraftCallsignsByDistance; }
+        const swift::misc::aviation::CCallsignSet &getDisabledAircraftCallsignsByDistance() const
+        {
+            return m_disabledAircraftCallsignsByDistance;
+        }
 
         //! VTOL aircraft callsigns by distance, only enabled aircraft
-        const swift::misc::aviation::CCallsignSet &getVtolAircraftCallsignsByDistance() const { return m_vtolAircraftCallsignsByDistance; }
+        const swift::misc::aviation::CCallsignSet &getVtolAircraftCallsignsByDistance() const
+        {
+            return m_vtolAircraftCallsignsByDistance;
+        }
 
         //! VTOL aircraft callsigns by distance, only enabled aircraft
-        const swift::misc::aviation::CCallsignSet &getEnabledVtolAircraftCallsignsByDistance() const { return m_enabledVtolAircraftCallsignsByDistance; }
+        const swift::misc::aviation::CCallsignSet &getEnabledVtolAircraftCallsignsByDistance() const
+        {
+            return m_enabledVtolAircraftCallsignsByDistance;
+        }
 
         //! Valid snapshot?
         bool isValidSnapshot() const;

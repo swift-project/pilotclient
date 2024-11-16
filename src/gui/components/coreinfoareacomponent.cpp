@@ -13,36 +13,27 @@ using namespace swift::gui;
 
 namespace swift::gui::components
 {
-    CCoreInfoAreaComponent::CCoreInfoAreaComponent(QWidget *parent) : CInfoArea(parent),
-                                                                      ui(new Ui::CCoreInfoAreaComponent)
+    CCoreInfoAreaComponent::CCoreInfoAreaComponent(QWidget *parent)
+        : CInfoArea(parent), ui(new Ui::CCoreInfoAreaComponent)
     {
         ui->setupUi(this);
         initInfoArea();
         toggleTabBarLocked(true);
     }
 
-    CCoreInfoAreaComponent::~CCoreInfoAreaComponent()
-    {}
+    CCoreInfoAreaComponent::~CCoreInfoAreaComponent() {}
 
-    CLogComponent *CCoreInfoAreaComponent::getLogComponent()
-    {
-        return ui->comp_Log;
-    }
+    CLogComponent *CCoreInfoAreaComponent::getLogComponent() { return ui->comp_Log; }
 
-    CCoreStatusComponent *CCoreInfoAreaComponent::getStatusComponent()
-    {
-        return ui->comp_Status;
-    }
+    CCoreStatusComponent *CCoreInfoAreaComponent::getStatusComponent() { return ui->comp_Status; }
 
     QSize CCoreInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
         InfoArea area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
-        case InfoAreaLog:
-            return QSize(400, 300);
-        default:
-            return QSize(400, 300);
+        case InfoAreaLog: return QSize(400, 300);
+        default: return QSize(400, 300);
         }
     }
 
@@ -51,10 +42,8 @@ namespace swift::gui::components
         InfoArea area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
-        case InfoAreaLog:
-            return CIcons::appLog16();
-        default:
-            return CIcons::statusBar16();
+        case InfoAreaLog: return CIcons::appLog16();
+        default: return CIcons::statusBar16();
         }
     }
 } // namespace swift::gui::components

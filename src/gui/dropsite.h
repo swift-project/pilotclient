@@ -28,9 +28,7 @@ namespace swift::gui
      * Area where items can be dropped
      * \remark inspired by Qt example: http://doc.qt.io/qt-4.8/qt-draganddrop-dropsite-example.html
      */
-    class SWIFT_GUI_EXPORT CDropSite :
-        public QLabel,
-        public CDropBase
+    class SWIFT_GUI_EXPORT CDropSite : public QLabel, public CDropBase
     {
         Q_OBJECT
 

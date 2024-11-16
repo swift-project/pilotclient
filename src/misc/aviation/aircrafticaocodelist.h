@@ -118,7 +118,8 @@ namespace swift::misc::aviation
         void removeDuplicates();
 
         //! For selection completion
-        QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool withCategory = true, bool sort = true) const;
+        QStringList toCompleterStrings(bool withIataCodes = false, bool withFamily = false, bool withCategory = true,
+                                       bool sort = true) const;
 
         //! All ICAO codes, no duplicates
         QSet<QString> allDesignators(bool noUnspecified = true) const;
@@ -139,7 +140,9 @@ namespace swift::misc::aviation
         QPair<QString, int> maxCountManufacturer() const;
 
         //! From our database JSON format
-        static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, const CAircraftCategoryList &categories, bool ignoreIncompleteAndDuplicates = true, CAircraftIcaoCodeList *inconsistent = nullptr);
+        static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, const CAircraftCategoryList &categories,
+                                                      bool ignoreIncompleteAndDuplicates = true,
+                                                      CAircraftIcaoCodeList *inconsistent = nullptr);
     };
 } // namespace swift::misc::aviation
 

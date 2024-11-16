@@ -16,8 +16,7 @@ class QObject;
 namespace swift::gui::models
 {
     //! Airport list model
-    class SWIFT_GUI_EXPORT CAirportListModel :
-        public CListModelBase<swift::misc::aviation::CAirportList, true>
+    class SWIFT_GUI_EXPORT CAirportListModel : public CListModelBase<swift::misc::aviation::CAirportList, true>
     {
         Q_OBJECT
 

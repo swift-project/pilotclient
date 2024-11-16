@@ -137,7 +137,8 @@ namespace MiscTest
 
     void CTestFsdMessages::testAtcDataUpdate()
     {
-        const AtcDataUpdate message("ABCD", 128200, CFacilityType::APP, 145, AtcRating::Controller1, 48.11028, 8.56972, 100);
+        const AtcDataUpdate message("ABCD", 128200, CFacilityType::APP, 145, AtcRating::Controller1, 48.11028, 8.56972,
+                                    100);
         QCOMPARE(message.sender(), QString("ABCD"));
         QCOMPARE(message.receiver(), QString(""));
         QCOMPARE(message.m_frequencykHz, 128200);
@@ -152,7 +153,8 @@ namespace MiscTest
         QString str = message.toTokens().join(":");
         QCOMPARE(str, stringRef);
 
-        const AtcDataUpdate reference("ABCD", 128200, CFacilityType::APP, 145, AtcRating::Controller1, 48.11028, 8.56972, 100);
+        const AtcDataUpdate reference("ABCD", 128200, CFacilityType::APP, 145, AtcRating::Controller1, 48.11028,
+                                      8.56972, 100);
 
         QStringList tokens = QString("ABCD:28200:5:145:5:48.11028:8.56972:100").split(':');
         const AtcDataUpdate messageFromTokens = AtcDataUpdate::fromTokens(tokens);
@@ -195,7 +197,8 @@ namespace MiscTest
 
     void CTestFsdMessages::testClientIdentification()
     {
-        const ClientIdentification message("ABCD", 0xe410, "Client", 1, 5, "1234567", "1108540872", "29bbc8b1398eb38e0139");
+        const ClientIdentification message("ABCD", 0xe410, "Client", 1, 5, "1234567", "1108540872",
+                                           "29bbc8b1398eb38e0139");
         QCOMPARE(message.sender(), QString("ABCD"));
         QCOMPARE(message.receiver(), QString("SERVER"));
         QCOMPARE(0xe410, message.m_clientId);
@@ -210,9 +213,11 @@ namespace MiscTest
         QString str = message.toTokens().join(":");
         QCOMPARE(str, stringRef);
 
-        const ClientIdentification reference("ABCD", 0xe410, "Client", 1, 5, "1234567", "1108540872", "29bbc8b1398eb38e0139");
+        const ClientIdentification reference("ABCD", 0xe410, "Client", 1, 5, "1234567", "1108540872",
+                                             "29bbc8b1398eb38e0139");
 
-        const QStringList tokens = QString("ABCD:SERVER:e410:Client:1:5:1234567:1108540872:29bbc8b1398eb38e0139").split(':');
+        const QStringList tokens =
+            QString("ABCD:SERVER:e410:Client:1:5:1234567:1108540872:29bbc8b1398eb38e0139").split(':');
         const ClientIdentification messageFromTokens = ClientIdentification::fromTokens(tokens);
         QCOMPARE(messageFromTokens, message);
     }
@@ -297,7 +302,8 @@ namespace MiscTest
 
     void CTestFsdMessages::testEuroscopeSimData()
     {
-        const EuroscopeSimData message("ABCD", "A320", "DLH", 0, 43.1257800, -72.1584100, 12000, 180, 10, -10, 250, false, 0, 50, {});
+        const EuroscopeSimData message("ABCD", "A320", "DLH", 0, 43.1257800, -72.1584100, 12000, 180, 10, -10, 250,
+                                       false, 0, 50, {});
 
         QCOMPARE(message.sender(), QString("ABCD"));
         QCOMPARE(QString(""), message.receiver());
@@ -317,7 +323,8 @@ namespace MiscTest
         QString str = message.toTokens().join(":");
         QCOMPARE(str, stringRef);
 
-        QStringList tokens = QString(":ABCD:A320:DLH:0:43.1257800:-72.1584100:12000:180.00:10:-10:250:0:0:50:0:0.0:0").split(':');
+        QStringList tokens =
+            QString(":ABCD:A320:DLH:0:43.1257800:-72.1584100:12000:180.00:10:-10:250:0:0:50:0:0.0:0").split(':');
         auto messageFromTokens = EuroscopeSimData::fromTokens(tokens);
         QCOMPARE(QString("ABCD"), messageFromTokens.sender());
         QCOMPARE(QString(""), messageFromTokens.receiver());
@@ -336,8 +343,8 @@ namespace MiscTest
 
     void CTestFsdMessages::testFlightPlan()
     {
-        const FlightPlan message("ABCD", "SERVER", FlightType::VFR, "B744", 420, "EGLL", 1530, 1535, "FL350", "KORD", 8, 15,
-                                 9, 30, "NONE", "Unit Test", "EGLL.KORD");
+        const FlightPlan message("ABCD", "SERVER", FlightType::VFR, "B744", 420, "EGLL", 1530, 1535, "FL350", "KORD", 8,
+                                 15, 9, 30, "NONE", "Unit Test", "EGLL.KORD");
 
         QCOMPARE(message.sender(), QString("ABCD"));
         QCOMPARE(message.receiver(), QString("SERVER"));
@@ -361,14 +368,13 @@ namespace MiscTest
         QString str = message.toTokens().join(":");
         QCOMPARE(str, stringRef);
 
-        QStringList tokens = QString("ABCD:SERVER:V:B744:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:Unit Test:EGLL.KORD").split(':');
+        QStringList tokens =
+            QString("ABCD:SERVER:V:B744:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:Unit Test:EGLL.KORD").split(':');
         auto messageFromTokens = FlightPlan::fromTokens(tokens);
         QCOMPARE(messageFromTokens, message);
     }
 
-    void CTestFsdMessages::testFSDIdentification()
-    {
-    }
+    void CTestFsdMessages::testFSDIdentification() {}
 
     void CTestFsdMessages::testInterimPilotDataUpdate()
     {
@@ -457,8 +463,8 @@ namespace MiscTest
 
     void CTestFsdMessages::testPilotDataUpdate()
     {
-        const PilotDataUpdate message(CTransponder::ModeC, "ABCD", 7000, PilotRating::Student, 43.12578, -72.15841, 12000, 12008,
-                                      125, -2, 3, 280, true);
+        const PilotDataUpdate message(CTransponder::ModeC, "ABCD", 7000, PilotRating::Student, 43.12578, -72.15841,
+                                      12000, 12008, 125, -2, 3, 280, true);
 
         QCOMPARE(message.sender(), QString("ABCD"));
         QCOMPARE(QString(""), message.receiver());
@@ -499,7 +505,8 @@ namespace MiscTest
 
     void CTestFsdMessages::testVisualPilotDataUpdate()
     {
-        const VisualPilotDataUpdate message("ABCD", 43.1257891, -72.1584142, 12000.12, 1404.00, -2, 3, 280, -1.0001, 2.0001, 3.0001, -0.0349, 0.0524, 0.0175);
+        const VisualPilotDataUpdate message("ABCD", 43.1257891, -72.1584142, 12000.12, 1404.00, -2, 3, 280, -1.0001,
+                                            2.0001, 3.0001, -0.0349, 0.0524, 0.0175);
 
         QCOMPARE(QString("ABCD"), message.sender());
         QCOMPARE(43.1257891, message.m_latitude);
@@ -517,11 +524,14 @@ namespace MiscTest
         QCOMPARE(0.0175, message.m_headingRadPerSec);
         QCOMPARE(0.0, message.m_noseGearAngle);
 
-        QString stringRef("ABCD:43.1257891:-72.1584142:12000.12:1404.00:25132144:-1.0001:2.0001:3.0001:-0.0349:0.0175:0.0524:0.00");
+        QString stringRef(
+            "ABCD:43.1257891:-72.1584142:12000.12:1404.00:25132144:-1.0001:2.0001:3.0001:-0.0349:0.0175:0.0524:0.00");
         QString str = message.toTokens().join(":");
         QCOMPARE(str, stringRef);
 
-        QStringList tokens = QString("ABCD:43.1257891:-72.1584142:12000.12:1404.00:25132144:-1.0001:2.0001:3.0001:-0.0349:0.0175:0.0524:0.00").split(':');
+        QStringList tokens = QString("ABCD:43.1257891:-72.1584142:12000.12:1404.00:25132144:-1.0001:2.0001:3.0001:-0."
+                                     "0349:0.0175:0.0524:0.00")
+                                 .split(':');
         auto messageFromTokens = VisualPilotDataUpdate::fromTokens(tokens);
         QCOMPARE(QString("ABCD"), messageFromTokens.sender());
         QCOMPARE(43.1257891, messageFromTokens.m_latitude);
@@ -683,7 +693,8 @@ namespace MiscTest
 
     void CTestFsdMessages::testServerError()
     {
-        const ServerError message("SERVER", "ABCD", ServerErrorCode::NoWeatherProfile, "EGLL", "No such weather profile");
+        const ServerError message("SERVER", "ABCD", ServerErrorCode::NoWeatherProfile, "EGLL",
+                                  "No such weather profile");
         QCOMPARE(QString("SERVER"), message.sender());
         QCOMPARE(QString("ABCD"), message.receiver());
         QCOMPARE(ServerErrorCode::NoWeatherProfile, message.m_errorNumber);
@@ -699,9 +710,7 @@ namespace MiscTest
         QCOMPARE(messageFromTokens, message);
     }
 
-    void CTestFsdMessages::testTextMessage()
-    {
-    }
+    void CTestFsdMessages::testTextMessage() {}
 } // namespace MiscTest
 
 //! main

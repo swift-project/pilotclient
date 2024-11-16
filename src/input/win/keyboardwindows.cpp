@@ -125,8 +125,7 @@ namespace swift::input
 
     static CKeyboardWindows *g_keyboardWindows = nullptr;
 
-    CKeyboardWindows::CKeyboardWindows(QObject *parent) : IKeyboard(parent),
-                                                          m_keyboardHook(nullptr)
+    CKeyboardWindows::CKeyboardWindows(QObject *parent) : IKeyboard(parent), m_keyboardHook(nullptr)
     {
         connect(&m_pollTimer, &QTimer::timeout, this, &CKeyboardWindows::pollKeyboardState);
     }
@@ -140,10 +139,12 @@ namespace swift::input
     {
         if (useWindowsHook) // cppcheck-suppress knownConditionTrueFalse
         {
-            Q_ASSERT_X(g_keyboardWindows == nullptr, "CKeyboardWindows::init", "Windows supports only one keyboard instance. Cannot initialize a second one!");
+            Q_ASSERT_X(g_keyboardWindows == nullptr, "CKeyboardWindows::init",
+                       "Windows supports only one keyboard instance. Cannot initialize a second one!");
             g_keyboardWindows = this;
             HMODULE module;
-            GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, reinterpret_cast<LPCTSTR>(&CKeyboardWindows::keyboardProc), &module);
+            GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                              reinterpret_cast<LPCTSTR>(&CKeyboardWindows::keyboardProc), &module);
             m_keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, CKeyboardWindows::keyboardProc, module, 0);
         }
         {
@@ -168,10 +169,7 @@ namespace swift::input
             m_keyCombination.removeKeyboardKey(CKeyboardKey(key));
         }
 
-        if (oldCombination != m_keyCombination)
-        {
-            emit keyCombinationChanged(m_keyCombination);
-        }
+        if (oldCombination != m_keyCombination) { emit keyCombinationChanged(m_keyCombination); }
     }
 
     void CKeyboardWindows::pollKeyboardState()
@@ -198,10 +196,7 @@ namespace swift::input
             }
         }
 
-        if (oldCombination != m_keyCombination)
-        {
-            emit keyCombinationChanged(m_keyCombination);
-        }
+        if (oldCombination != m_keyCombination) { emit keyCombinationChanged(m_keyCombination); }
     }
 
     LRESULT CALLBACK CKeyboardWindows::keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)

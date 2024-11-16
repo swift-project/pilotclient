@@ -45,8 +45,7 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CInternalsComponent::CInternalsComponent(QWidget *parent) : QWidget(parent),
-                                                                ui(new Ui::CInternalsComponent)
+    CInternalsComponent::CInternalsComponent(QWidget *parent) : QWidget(parent), ui(new Ui::CInternalsComponent)
     {
         ui->setupUi(this);
         ui->tw_Internals->setCurrentIndex(0);
@@ -61,8 +60,10 @@ namespace swift::gui::components
         connect(ui->cb_DebugContextOwnAircraft, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
         connect(ui->cb_DebugContextSimulator, &QCheckBox::stateChanged, this, &CInternalsComponent::enableDebug);
 
-        connect(ui->pb_SendTextMessageDirectly, &QPushButton::released, this, &CInternalsComponent::sendTextMessage, Qt::QueuedConnection);
-        connect(ui->pb_SendTextMessageDeferred, &QPushButton::released, this, &CInternalsComponent::sendTextMessage, Qt::QueuedConnection);
+        connect(ui->pb_SendTextMessageDirectly, &QPushButton::released, this, &CInternalsComponent::sendTextMessage,
+                Qt::QueuedConnection);
+        connect(ui->pb_SendTextMessageDeferred, &QPushButton::released, this, &CInternalsComponent::sendTextMessage,
+                Qt::QueuedConnection);
 
         connect(ui->tb_LogStatusMessage, &QPushButton::released, this, &CInternalsComponent::logStatusMessage);
         connect(ui->le_StatusMessage, &QLineEdit::returnPressed, this, &CInternalsComponent::logStatusMessage);
@@ -73,13 +74,16 @@ namespace swift::gui::components
 
         connect(ui->pb_NetworkUpdateAndReset, &QPushButton::released, this, &CInternalsComponent::networkStatistics);
         connect(ui->pb_NetworkUpdate, &QPushButton::released, this, &CInternalsComponent::networkStatistics);
-        connect(ui->cb_NetworkStatistics, &QCheckBox::stateChanged, this, &CInternalsComponent::onNetworkStatisticsToggled);
+        connect(ui->cb_NetworkStatistics, &QCheckBox::stateChanged, this,
+                &CInternalsComponent::onNetworkStatisticsToggled);
 
         if (sGui && sGui->isSupportingCrashpad())
         {
             ui->cb_CrashDumpUpload->setChecked(CCrashHandler::instance()->isCrashDumpUploadEnabled());
-            connect(ui->pb_SimulateCrash, &QPushButton::released, this, &CInternalsComponent::simulateCrash, Qt::QueuedConnection);
-            connect(ui->pb_SimulateAssert, &QPushButton::released, this, &CInternalsComponent::simulateAssert, Qt::QueuedConnection);
+            connect(ui->pb_SimulateCrash, &QPushButton::released, this, &CInternalsComponent::simulateCrash,
+                    Qt::QueuedConnection);
+            connect(ui->pb_SimulateAssert, &QPushButton::released, this, &CInternalsComponent::simulateAssert,
+                    Qt::QueuedConnection);
             connect(ui->cb_CrashDumpUpload, &QCheckBox::toggled, this, &CInternalsComponent::onCrashDumpUploadToggled);
         }
         else
@@ -146,10 +150,7 @@ namespace swift::gui::components
             CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing8_33KHz);
             tm = CTextMessage(msgTxt, f, sender);
         }
-        else
-        {
-            tm = CTextMessage(msgTxt, sender, recipient);
-        }
+        else { tm = CTextMessage(msgTxt, sender, recipient); }
         tm.setCurrentUtcTime();
         sGui->getIContextNetwork()->testReceivedTextMessages(CTextMessageList({ tm }));
     }
@@ -170,18 +171,9 @@ namespace swift::gui::components
     {
         if (ui->le_StatusMessage->text().isEmpty()) { return; }
         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
-        if (ui->rb_StatusMessageError->isChecked())
-        {
-            s = CStatusMessage::SeverityError;
-        }
-        else if (ui->rb_StatusMessageWarning->isChecked())
-        {
-            s = CStatusMessage::SeverityWarning;
-        }
-        else if (ui->rb_StatusMessageInfo->isChecked())
-        {
-            s = CStatusMessage::SeverityInfo;
-        }
+        if (ui->rb_StatusMessageError->isChecked()) { s = CStatusMessage::SeverityError; }
+        else if (ui->rb_StatusMessageWarning->isChecked()) { s = CStatusMessage::SeverityWarning; }
+        else if (ui->rb_StatusMessageInfo->isChecked()) { s = CStatusMessage::SeverityInfo; }
         const CStatusMessage sm = CStatusMessage(this, s, ui->le_StatusMessage->text().trimmed());
         CLogMessage::preformatted(sm);
     }
@@ -190,14 +182,8 @@ namespace swift::gui::components
     {
         QString file;
         const QObject *sender = QObject::sender();
-        if (sender == ui->pb_LatestInterpolationLog)
-        {
-            file = CInterpolationLogger::getLatestLogFiles().first();
-        }
-        else if (sender == ui->pb_LatestPartsLog)
-        {
-            file = CInterpolationLogger::getLatestLogFiles().last();
-        }
+        if (sender == ui->pb_LatestInterpolationLog) { file = CInterpolationLogger::getLatestLogFiles().first(); }
+        else if (sender == ui->pb_LatestPartsLog) { file = CInterpolationLogger::getLatestLogFiles().last(); }
 
         if (file.isEmpty()) { return; }
         QDesktopServices::openUrl(QUrl::fromLocalFile(file));
@@ -219,7 +205,8 @@ namespace swift::gui::components
             return;
         }
 
-        const QMessageBox::StandardButton reply = QMessageBox::question(this, "crash simulation", "Really simulate crash?", QMessageBox::Yes | QMessageBox::No);
+        const QMessageBox::StandardButton reply = QMessageBox::question(
+            this, "crash simulation", "Really simulate crash?", QMessageBox::Yes | QMessageBox::No);
         if (!sGui || reply != QMessageBox::Yes) { return; }
         sGui->simulateCrash();
     }
@@ -232,7 +219,8 @@ namespace swift::gui::components
             return;
         }
 
-        const QMessageBox::StandardButton reply = QMessageBox::question(this, "ASSERT simulation", "Really create an ASSERT?", QMessageBox::Yes | QMessageBox::No);
+        const QMessageBox::StandardButton reply = QMessageBox::question(
+            this, "ASSERT simulation", "Really create an ASSERT?", QMessageBox::Yes | QMessageBox::No);
         if (!sGui || reply != QMessageBox::Yes) { return; }
         sGui->simulateAssert();
     }

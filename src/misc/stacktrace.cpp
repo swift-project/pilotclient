@@ -34,15 +34,9 @@ namespace swift::misc
 {
 
 #if defined(QT_DEBUG)
-    QStringList getStackTrace()
-    {
-        return getStackTraceAlways();
-    }
+    QStringList getStackTrace() { return getStackTraceAlways(); }
 #else
-    QStringList getStackTrace()
-    {
-        return { "No stack trace with release build" };
-    }
+    QStringList getStackTrace() { return { "No stack trace with release build" }; }
 #endif
 
 #if defined(Q_OS_WIN32)
@@ -111,16 +105,19 @@ namespace swift::misc
 
             auto *temp = demangled; // avoid leaking memory if __cxa_demangle returns nullptr
 
-            demangled = abi::__cxa_demangle(QByteArray(symbol, symbolEnd - symbol).constData(), demangled, &size, nullptr);
+            demangled =
+                abi::__cxa_demangle(QByteArray(symbol, symbolEnd - symbol).constData(), demangled, &size, nullptr);
 
             if (demangled)
             {
-                result.push_back(QLatin1String(demangled) % u' ' %
-                                 u'(' % QLatin1String(basename, basenameEnd - basename) % u' ' % QLatin1String(symbol, end - symbol) % u')');
+                result.push_back(QLatin1String(demangled) % u' ' % u'(' %
+                                 QLatin1String(basename, basenameEnd - basename) % u' ' %
+                                 QLatin1String(symbol, end - symbol) % u')');
             }
             else
             {
-                result.push_back(u'(' % QLatin1String(basename, basenameEnd - basename) % u' ' % QLatin1String(symbol, end - symbol) % u')');
+                result.push_back(u'(' % QLatin1String(basename, basenameEnd - basename) % u' ' %
+                                 QLatin1String(symbol, end - symbol) % u')');
                 demangled = temp;
             }
         }
@@ -130,10 +127,7 @@ namespace swift::misc
     }
 #else
     // cppcheck-suppress unusedFunction
-    QStringList getStackTraceAlways()
-    {
-        return { "No stack trace on this platform" };
-    }
+    QStringList getStackTraceAlways() { return { "No stack trace on this platform" }; }
 #endif
 
 } // namespace swift::misc

@@ -8,17 +8,12 @@
 
 namespace swift::core::fsd
 {
-    AddAtc::AddAtc() : MessageBase()
-    {}
+    AddAtc::AddAtc() : MessageBase() {}
 
     AddAtc::AddAtc(const QString &callsign, const QString &realName, const QString &cid, const QString &password,
                    AtcRating rating, int protocolRevision)
-        : MessageBase(callsign, "SERVER"),
-          m_cid(cid),
-          m_password(password),
-          m_rating(rating),
-          m_protocolRevision(protocolRevision),
-          m_realName(realName)
+        : MessageBase(callsign, "SERVER"), m_cid(cid), m_password(password), m_rating(rating),
+          m_protocolRevision(protocolRevision), m_realName(realName)
     {}
 
     QStringList AddAtc::toTokens() const

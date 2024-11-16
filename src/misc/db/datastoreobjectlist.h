@@ -20,13 +20,17 @@
 namespace swift::misc::db
 {
     //! List of objects read from database.
-    //! Such objects should implement \sa ITimestampBased and \sa IDatastoreObjectWithIntegerKey or \sa IDatastoreObjectWithStringKey
+    //! Such objects should implement \sa ITimestampBased and \sa IDatastoreObjectWithIntegerKey or \sa
+    //! IDatastoreObjectWithStringKey
     template <class OBJ, class CONTAINER, typename KEYTYPE>
     class IDatastoreObjectList : public ITimestampObjectList<OBJ, CONTAINER>
     {
-        static constexpr bool hasIntegerKey = std::is_base_of_v<IDatastoreObjectWithIntegerKey, OBJ> && std::is_same_v<int, KEYTYPE>;
-        static constexpr bool hasStringKey = std::is_base_of_v<IDatastoreObjectWithStringKey, OBJ> && std::is_base_of_v<QString, KEYTYPE>;
-        static_assert(hasIntegerKey || hasStringKey, "ObjectType needs to implement IDatastoreObjectWithXXXXKey and have appropriate KeyType");
+        static constexpr bool hasIntegerKey =
+            std::is_base_of_v<IDatastoreObjectWithIntegerKey, OBJ> && std::is_same_v<int, KEYTYPE>;
+        static constexpr bool hasStringKey =
+            std::is_base_of_v<IDatastoreObjectWithStringKey, OBJ> && std::is_base_of_v<QString, KEYTYPE>;
+        static_assert(hasIntegerKey || hasStringKey,
+                      "ObjectType needs to implement IDatastoreObjectWithXXXXKey and have appropriate KeyType");
 
     public:
         //! Object with key, notFound otherwise
@@ -76,23 +80,18 @@ namespace swift::misc::db
         OBJ maxKeyObject() const
         {
             if (this->container().isEmpty()) { return OBJ(); }
-            const OBJ max = *std::max_element(this->container().begin(), this->container().end(), [](const OBJ &obj1, const OBJ &obj2) {
-                bool v1 = obj1.hasValidDbKey();
-                bool v2 = obj2.hasValidDbKey();
-                if (v1 && v2)
-                {
-                    return obj1.getDbKey() < obj2.getDbKey();
-                }
-                return v2;
-            });
+            const OBJ max = *std::max_element(this->container().begin(), this->container().end(),
+                                              [](const OBJ &obj1, const OBJ &obj2) {
+                                                  bool v1 = obj1.hasValidDbKey();
+                                                  bool v2 = obj2.hasValidDbKey();
+                                                  if (v1 && v2) { return obj1.getDbKey() < obj2.getDbKey(); }
+                                                  return v2;
+                                              });
             return max;
         }
 
         //! Sort by timestamp
-        void sortByKey()
-        {
-            this->container().sort(swift::misc::predicates::MemberLess(&OBJ::getDbKey));
-        }
+        void sortByKey() { this->container().sort(swift::misc::predicates::MemberLess(&OBJ::getDbKey)); }
 
         //! All keys as set
         QSet<KEYTYPE> toDbKeySet() const
@@ -138,14 +137,8 @@ namespace swift::misc::db
             QString s;
             for (const QString &k : keys)
             {
-                if (s.isEmpty())
-                {
-                    s += k;
-                }
-                else
-                {
-                    s += separator + k;
-                }
+                if (s.isEmpty()) { s += k; }
+                else { s += separator + k; }
             }
             return s;
         }
@@ -243,10 +236,7 @@ namespace swift::misc::db
         }
 
         //! Number of entries with valid DB key
-        int countWithValidDbKey() const
-        {
-            return this->countWithValidDbKey(true);
-        }
+        int countWithValidDbKey() const { return this->countWithValidDbKey(true); }
 
         //! Any object without key?
         bool containsAnyObjectWithoutKey() const
@@ -285,7 +275,8 @@ namespace swift::misc::db
             {
                 const QJsonObject cacheObj = json::swiftDataObjectValue(jsonObject);
                 CONTAINER container;
-                private_ns::CValueObjectMetaInfoHelper::convertFromMemoizedJson(cacheObj, container, true, 0); // handles both, memoized or "normal" convertFromJson
+                private_ns::CValueObjectMetaInfoHelper::convertFromMemoizedJson(
+                    cacheObj, container, true, 0); // handles both, memoized or "normal" convertFromJson
                 return container;
             }
 
@@ -302,7 +293,8 @@ namespace swift::misc::db
             {
                 const QJsonObject valueObject = jsonObject.value("value").toObject();
                 CONTAINER container;
-                private_ns::CValueObjectMetaInfoHelper::convertFromMemoizedJson(valueObject, container, true, 0); // handles both, memoized or "normal" convertFromJson
+                private_ns::CValueObjectMetaInfoHelper::convertFromMemoizedJson(
+                    valueObject, container, true, 0); // handles both, memoized or "normal" convertFromJson
                 return container;
             }
 
@@ -336,10 +328,7 @@ namespace swift::misc::db
         static CONTAINER fromDatabaseJson(const QJsonArray &array)
         {
             CONTAINER container;
-            for (const QJsonValue &value : array)
-            {
-                container.push_back(OBJ::fromDatabaseJson(value.toObject()));
-            }
+            for (const QJsonValue &value : array) { container.push_back(OBJ::fromDatabaseJson(value.toObject())); }
             return container;
         }
 

@@ -38,34 +38,26 @@ using namespace swift::config;
 
 namespace swift::simplugin::fs9
 {
-    CSimulatorFs9::CSimulatorFs9(const CSimulatorPluginInfo &info,
-                                 const QSharedPointer<CFs9Host> &fs9Host,
+    CSimulatorFs9::CSimulatorFs9(const CSimulatorPluginInfo &info, const QSharedPointer<CFs9Host> &fs9Host,
                                  const QSharedPointer<CLobbyClient> &lobbyClient,
                                  IOwnAircraftProvider *ownAircraftProvider,
-                                 IRemoteAircraftProvider *remoteAircraftProvider,
-                                 IClientProvider *clientProvider,
-                                 QObject *parent) : CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent),
-                                                    m_fs9Host(fs9Host),
-                                                    m_lobbyClient(lobbyClient),
-                                                    m_fsuipc(new CFsuipc(this))
+                                 IRemoteAircraftProvider *remoteAircraftProvider, IClientProvider *clientProvider,
+                                 QObject *parent)
+        : CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent),
+          m_fs9Host(fs9Host), m_lobbyClient(lobbyClient), m_fsuipc(new CFsuipc(this))
     {
         // disabled CG/elevation parts
         this->setSimulationProviderEnabled(false, false);
 
-        //! \fixme KB 7/2017 change or remove comment when reviewed Could we just use: connect(lobbyClient.data(), &CLobbyClient::disconnected, this, &CSimulatorFs9::disconnectFrom);
-        connect(lobbyClient.data(), &CLobbyClient::disconnected, this, [=] {
-            this->emitSimulatorCombinedStatus();
-        });
+        //! \fixme KB 7/2017 change or remove comment when reviewed Could we just use: connect(lobbyClient.data(),
+        //! &CLobbyClient::disconnected, this, &CSimulatorFs9::disconnectFrom);
+        connect(lobbyClient.data(), &CLobbyClient::disconnected, this, [=] { this->emitSimulatorCombinedStatus(); });
 
-        this->setDefaultModel(
-            { "Boeing 737-400", CAircraftModel::TypeModelMatchingDefaultModel,
-              "B737-400 default model", CAircraftIcaoCode("B734", "L2J") });
+        this->setDefaultModel({ "Boeing 737-400", CAircraftModel::TypeModelMatchingDefaultModel,
+                                "B737-400 default model", CAircraftIcaoCode("B734", "L2J") });
     }
 
-    bool CSimulatorFs9::isConnected() const
-    {
-        return m_simConnected;
-    }
+    bool CSimulatorFs9::isConnected() const { return m_simConnected; }
 
     bool CSimulatorFs9::connectTo()
     {
@@ -73,7 +65,8 @@ namespace swift::simplugin::fs9
         if (!m_fs9Host->isConnected()) { return false; } // host not available, we quit
 
         Q_ASSERT_X(m_fsuipc, Q_FUNC_INFO, "No FSUIPC");
-        m_connectionHostMessages = connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::processFs9Message);
+        m_connectionHostMessages =
+            connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::processFs9Message);
 
         m_fsuipc->open();
 
@@ -111,7 +104,8 @@ namespace swift::simplugin::fs9
             this->physicallyRemoveRemoteAircraft(callsign);
         }
 
-        CFs9Client *client = new CFs9Client(newRemoteAircraft, CTime(25, CTimeUnit::ms()), &m_interpolationLogger, this);
+        CFs9Client *client =
+            new CFs9Client(newRemoteAircraft, CTime(25, CTimeUnit::ms()), &m_interpolationLogger, this);
         client->setHostAddress(m_fs9Host->getHostAddress());
         client->setPlayerUserId(m_fs9Host->getPlayerUserId());
         connect(client, &CFs9Client::statusChanged, this, &CSimulatorFs9::updateRenderStatus);
@@ -182,7 +176,8 @@ namespace swift::simplugin::fs9
         if (selcal != m_selcal)
         {
             //! KB 2018-11 that would need to go to updateOwnAircraftFromSimulator if the simulator ever supports SELCAL
-            //! KB 2018-11 as we would need to send the value to FS9/FSX (currently we only deal with it on FS9/FSX level)
+            //! KB 2018-11 as we would need to send the value to FS9/FSX (currently we only deal with it on FS9/FSX
+            //! level)
             m_selcal = selcal;
             changed = true;
         }
@@ -217,11 +212,13 @@ namespace swift::simplugin::fs9
         if (!m_hashFs9Clients.contains(callsign)) { return CStatusMessageList(); }
         const CFs9Client *client = m_hashFs9Clients[callsign].data();
         if (!client) { return CStatusMessageList(); }
-        const CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
+        const CInterpolationAndRenderingSetupPerCallsign setup =
+            this->getInterpolationSetupPerCallsignOrDefault(callsign);
         return client->getInterpolationMessages(setup.getInterpolatorMode());
     }
 
-    bool CSimulatorFs9::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation, const CAircraftParts &parts)
+    bool CSimulatorFs9::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation,
+                                                  const CAircraftParts &parts)
     {
         if (!m_hashFs9Clients.contains(callsign)) { return false; }
         CFs9Client *client = m_hashFs9Clients[callsign].data();
@@ -255,10 +252,7 @@ namespace swift::simplugin::fs9
         {
             CSimulatedAircraft fsuipcAircraft(getOwnAircraft());
             const bool ok = m_fsuipc->read(fsuipcAircraft, true, true, true);
-            if (ok)
-            {
-                updateOwnAircraftFromSimulator(fsuipcAircraft);
-            }
+            if (ok) { updateOwnAircraftFromSimulator(fsuipcAircraft); }
             else
             {
                 // FSUIPC read error means almost always that FS9 closed. Shutdown the driver.
@@ -276,7 +270,8 @@ namespace swift::simplugin::fs9
         if (old.unknown8 != newParam.unknown8) str += "unknown8 " + QString::number(newParam.unknown8) + "\n";
         if (old.unknown9 != newParam.unknown9) str += "unknown9 " + QString::number(newParam.unknown9) + "\n";
         if (old.flaps_left != newParam.flaps_left) str += "flaps_left " + QString::number(newParam.flaps_left) + "\n";
-        if (old.flaps_right != newParam.flaps_right) str += "flaps_right " + QString::number(newParam.flaps_right) + "\n";
+        if (old.flaps_right != newParam.flaps_right)
+            str += "flaps_right " + QString::number(newParam.flaps_right) + "\n";
         if (old.unknown12 != newParam.unknown12) str += "unknown12 " + QString::number(newParam.unknown12) + "\n";
         if (old.unknown13 != newParam.unknown13) str += "unknown13 " + QString::number(newParam.unknown13) + "\n";
         if (old.unknown14 != newParam.unknown14) str += "unknown14 " + QString::number(newParam.unknown14) + "\n";
@@ -285,7 +280,8 @@ namespace swift::simplugin::fs9
         if (old.unknown17 != newParam.unknown17) str += "unknown17 " + QString::number(newParam.unknown17) + "\n";
         if (old.unknown18 != newParam.unknown18) str += "unknown18 " + QString::number(newParam.unknown18) + "\n";
         if (old.unknown19 != newParam.unknown19) str += "unknown19 " + QString::number(newParam.unknown19) + "\n";
-        if (old.gear_center != newParam.gear_center) str += "gear_center " + QString::number(newParam.gear_center) + "\n";
+        if (old.gear_center != newParam.gear_center)
+            str += "gear_center " + QString::number(newParam.gear_center) + "\n";
         if (old.gear_left != newParam.gear_left) str += "gear_left " + QString::number(newParam.gear_left) + "\n";
         if (old.gear_right != newParam.gear_right) str += "gear_right " + QString::number(newParam.gear_right) + "\n";
         if (old.engine_1 != newParam.engine_1) str += "engine_1 " + QString::number(newParam.engine_1) + "\n";
@@ -355,10 +351,7 @@ namespace swift::simplugin::fs9
 
             this->updateCockpit(oldCom1, oldCom2, simDataOwnAircraft.getTransponder(), this->identifier());
         }
-        else
-        {
-            --m_skipCockpitUpdateCycles;
-        }
+        else { --m_skipCockpitUpdateCycles; }
 
         const CAircraftSituation aircraftSituation = simDataOwnAircraft.getSituation();
         this->updateOwnSituationAndGroundElevation(aircraftSituation);
@@ -381,10 +374,7 @@ namespace swift::simplugin::fs9
         const bool updated = updateAircraftRendered(remoteAircraft.getCallsign(), true);
         CSimulatedAircraft remoteAircraftCopy(remoteAircraft);
         remoteAircraftCopy.setRendered(true);
-        if (updated)
-        {
-            emit aircraftRenderingChanged(remoteAircraftCopy);
-        }
+        if (updated) { emit aircraftRenderingChanged(remoteAircraftCopy); }
         CLogMessage(this).info(u"FS9: Added aircraft '%1'") << remoteAircraft.getCallsignAsString();
     }
 
@@ -392,10 +382,7 @@ namespace swift::simplugin::fs9
     {
         // Stop all FS9 client tasks
         const QList<CCallsign> callsigns(m_hashFs9Clients.keys());
-        for (auto fs9Client : callsigns)
-        {
-            physicallyRemoveRemoteAircraft(fs9Client);
-        }
+        for (auto fs9Client : callsigns) { physicallyRemoveRemoteAircraft(fs9Client); }
     }
 
     void CSimulatorFs9::synchronizeTime()
@@ -420,11 +407,9 @@ namespace swift::simplugin::fs9
 
     CSimulatorFs9Listener::CSimulatorFs9Listener(const CSimulatorPluginInfo &info,
                                                  const QSharedPointer<CFs9Host> &fs9Host,
-                                                 const QSharedPointer<CLobbyClient> &lobbyClient) : ISimulatorListener(info),
-                                                                                                    m_timer(new QTimer(this)),
-                                                                                                    m_fs9Host(fs9Host),
-                                                                                                    m_lobbyClient(lobbyClient),
-                                                                                                    m_fsuipc(new CFsuipc(this))
+                                                 const QSharedPointer<CLobbyClient> &lobbyClient)
+        : ISimulatorListener(info), m_timer(new QTimer(this)), m_fs9Host(fs9Host), m_lobbyClient(lobbyClient),
+          m_fsuipc(new CFsuipc(this))
     {
         const int QueryInterval = 5 * 1000; // 5 seconds
         m_timer->setInterval(QueryInterval);
@@ -447,10 +432,7 @@ namespace swift::simplugin::fs9
         m_timer->start();
     }
 
-    void CSimulatorFs9Listener::stopImpl()
-    {
-        m_timer->stop();
-    }
+    void CSimulatorFs9Listener::stopImpl() { m_timer->stop(); }
 
     void CSimulatorFs9Listener::checkImpl()
     {
@@ -490,19 +472,12 @@ namespace swift::simplugin::fs9
         return m_isConnecting;
     }
 
-    static void cleanupFs9Host(CFs9Host *host)
-    {
-        delete host;
-    }
+    static void cleanupFs9Host(CFs9Host *host) { delete host; }
 
-    static void cleanupLobbyClient(CLobbyClient *lobbyClient)
-    {
-        delete lobbyClient;
-    }
+    static void cleanupLobbyClient(CLobbyClient *lobbyClient) { delete lobbyClient; }
 
-    CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent) : QObject(parent),
-                                                                  m_fs9Host(new CFs9Host, cleanupFs9Host),
-                                                                  m_lobbyClient(new CLobbyClient, cleanupLobbyClient)
+    CSimulatorFs9Factory::CSimulatorFs9Factory(QObject *parent)
+        : QObject(parent), m_fs9Host(new CFs9Host, cleanupFs9Host), m_lobbyClient(new CLobbyClient, cleanupLobbyClient)
     {
         registerMetadata();
 
@@ -510,15 +485,15 @@ namespace swift::simplugin::fs9
         connect(m_lobbyClient.data(), &CLobbyClient::disconnected, m_fs9Host.data(), &CFs9Host::reset);
     }
 
-    CSimulatorFs9Factory::~CSimulatorFs9Factory()
-    {}
+    CSimulatorFs9Factory::~CSimulatorFs9Factory() {}
 
     ISimulator *CSimulatorFs9Factory::create(const CSimulatorPluginInfo &info,
                                              IOwnAircraftProvider *ownAircraftProvider,
                                              IRemoteAircraftProvider *remoteAircraftProvider,
                                              IClientProvider *clientProvider)
     {
-        return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider, clientProvider, this);
+        return new CSimulatorFs9(info, m_fs9Host, m_lobbyClient, ownAircraftProvider, remoteAircraftProvider,
+                                 clientProvider, this);
     }
 
     ISimulatorListener *CSimulatorFs9Factory::createListener(const CSimulatorPluginInfo &info)

@@ -20,7 +20,8 @@ namespace swift::misc::aviation
 
     CAircraftVelocity::CAircraftVelocity() = default;
 
-    CAircraftVelocity::CAircraftVelocity(double x, double y, double z, CSpeedUnit xyzUnit, double pitch, double roll, double heading, CAngleUnit pbhAngleUnit, CTimeUnit pbhTimeUnit)
+    CAircraftVelocity::CAircraftVelocity(double x, double y, double z, CSpeedUnit xyzUnit, double pitch, double roll,
+                                         double heading, CAngleUnit pbhAngleUnit, CTimeUnit pbhTimeUnit)
     {
         setLinearVelocity(x, y, z, xyzUnit);
         setAngularVelocity(pitch, roll, heading, pbhAngleUnit, pbhTimeUnit);
@@ -33,27 +34,19 @@ namespace swift::misc::aviation
         m_z = c_xyzSpeedUnit.convertFrom(z, xyzUnit);
     }
 
-    void CAircraftVelocity::setAngularVelocity(double pitch, double roll, double heading, CAngleUnit pbhAngleUnit, CTimeUnit pbhTimeUnit)
+    void CAircraftVelocity::setAngularVelocity(double pitch, double roll, double heading, CAngleUnit pbhAngleUnit,
+                                               CTimeUnit pbhTimeUnit)
     {
         m_pitch = pbhTimeUnit.convertFrom(c_pbhAngleUnit.convertFrom(pitch, pbhAngleUnit), c_timeUnit);
         m_roll = pbhTimeUnit.convertFrom(c_pbhAngleUnit.convertFrom(roll, pbhAngleUnit), c_timeUnit);
         m_heading = pbhTimeUnit.convertFrom(c_pbhAngleUnit.convertFrom(heading, pbhAngleUnit), c_timeUnit);
     }
 
-    double CAircraftVelocity::getVelocityX(CSpeedUnit unit) const
-    {
-        return unit.convertFrom(m_x, c_xyzSpeedUnit);
-    }
+    double CAircraftVelocity::getVelocityX(CSpeedUnit unit) const { return unit.convertFrom(m_x, c_xyzSpeedUnit); }
 
-    double CAircraftVelocity::getVelocityY(CSpeedUnit unit) const
-    {
-        return unit.convertFrom(m_y, c_xyzSpeedUnit);
-    }
+    double CAircraftVelocity::getVelocityY(CSpeedUnit unit) const { return unit.convertFrom(m_y, c_xyzSpeedUnit); }
 
-    double CAircraftVelocity::getVelocityZ(CSpeedUnit unit) const
-    {
-        return unit.convertFrom(m_z, c_xyzSpeedUnit);
-    }
+    double CAircraftVelocity::getVelocityZ(CSpeedUnit unit) const { return unit.convertFrom(m_z, c_xyzSpeedUnit); }
 
     double CAircraftVelocity::getPitchVelocity(CAngleUnit angleUnit, CTimeUnit timeUnit) const
     {
@@ -72,8 +65,9 @@ namespace swift::misc::aviation
 
     QString CAircraftVelocity::convertToQString(bool i18n) const
     {
-        return u"Velocity: " % QStringLiteral("%1 %2 %3 ").arg(m_x).arg(m_y).arg(m_z) % c_xyzSpeedUnit.convertToQString(i18n) %
-               u" | Rotation: " % QStringLiteral("%1 %2 %3 ").arg(m_pitch).arg(m_roll).arg(m_heading) %
+        return u"Velocity: " % QStringLiteral("%1 %2 %3 ").arg(m_x).arg(m_y).arg(m_z) %
+               c_xyzSpeedUnit.convertToQString(i18n) % u" | Rotation: " %
+               QStringLiteral("%1 %2 %3 ").arg(m_pitch).arg(m_roll).arg(m_heading) %
                c_pbhAngleUnit.convertToQString(i18n) % u"/" % c_timeUnit.convertToQString(i18n);
     }
 

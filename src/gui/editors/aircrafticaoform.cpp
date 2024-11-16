@@ -32,8 +32,7 @@ using namespace swift::gui::components;
 
 namespace swift::gui::editors
 {
-    CAircraftIcaoForm::CAircraftIcaoForm(QWidget *parent) : CForm(parent),
-                                                            ui(new Ui::CAircraftIcaoForm)
+    CAircraftIcaoForm::CAircraftIcaoForm(QWidget *parent) : CForm(parent), ui(new Ui::CAircraftIcaoForm)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->le_Id);
@@ -41,7 +40,8 @@ namespace swift::gui::editors
         ui->le_Updated->setReadOnly(true);
         ui->le_Id->setValidator(new QIntValidator(0, 999999, ui->le_Id));
         ui->aircraft_Selector->displayWithIcaoDescription(false);
-        connect(ui->aircraft_Selector, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &CAircraftIcaoForm::setValue);
+        connect(ui->aircraft_Selector, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this,
+                &CAircraftIcaoForm::setValue);
 
         // Id
         connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAircraftIcaoForm::idEntered);
@@ -50,11 +50,11 @@ namespace swift::gui::editors
         connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAircraftIcaoForm::droppedCode);
         connect(ui->tb_Paste, &QToolButton::clicked, this, &CAircraftIcaoForm::pasted);
         ui->drop_DropData->setInfoText("<drop aircraft ICAO code>");
-        ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>() });
+        ui->drop_DropData->setAcceptedMetaTypeIds(
+            { qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>() });
     }
 
-    CAircraftIcaoForm::~CAircraftIcaoForm()
-    {}
+    CAircraftIcaoForm::~CAircraftIcaoForm() {}
 
     bool CAircraftIcaoForm::setValue(const swift::misc::aviation::CAircraftIcaoCode &icao)
     {
@@ -91,10 +91,7 @@ namespace swift::gui::editors
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CAircraftIcaoCodeList>()) { return; }
             const CAircraftIcaoCodeList icaos = jsonVariant.value<CAircraftIcaoCodeList>();
-            if (!icaos.isEmpty())
-            {
-                this->setValue(icaos.front());
-            }
+            if (!icaos.isEmpty()) { this->setValue(icaos.front()); }
         }
         catch (const CJsonException &ex)
         {
@@ -153,15 +150,9 @@ namespace swift::gui::editors
         return msgs;
     }
 
-    void CAircraftIcaoForm::allowDrop(bool allowDrop)
-    {
-        ui->drop_DropData->allowDrop(allowDrop);
-    }
+    void CAircraftIcaoForm::allowDrop(bool allowDrop) { ui->drop_DropData->allowDrop(allowDrop); }
 
-    bool CAircraftIcaoForm::isDropAllowed() const
-    {
-        return ui->drop_DropData->isDropAllowed();
-    }
+    bool CAircraftIcaoForm::isDropAllowed() const { return ui->drop_DropData->isDropAllowed(); }
 
     void CAircraftIcaoForm::setReadOnly(bool readOnly)
     {
@@ -195,33 +186,21 @@ namespace swift::gui::editors
         ui->drop_DropData->setVisible(true);
     }
 
-    void CAircraftIcaoForm::clear()
-    {
-        this->setValue(CAircraftIcaoCode());
-    }
+    void CAircraftIcaoForm::clear() { this->setValue(CAircraftIcaoCode()); }
 
-    void CAircraftIcaoForm::resetValue()
-    {
-        this->setValue(m_originalCode);
-    }
+    void CAircraftIcaoForm::resetValue() { this->setValue(m_originalCode); }
 
     void CAircraftIcaoForm::droppedCode(const swift::misc::CVariant &variantDropped)
     {
         CAircraftIcaoCode icao;
-        if (variantDropped.canConvert<CAircraftIcaoCode>())
-        {
-            icao = variantDropped.value<CAircraftIcaoCode>();
-        }
+        if (variantDropped.canConvert<CAircraftIcaoCode>()) { icao = variantDropped.value<CAircraftIcaoCode>(); }
         else if (variantDropped.canConvert<CAircraftIcaoCodeList>())
         {
             const CAircraftIcaoCodeList icaoList(variantDropped.value<CAircraftIcaoCodeList>());
             if (icaoList.isEmpty()) { return; }
             icao = icaoList.front();
         }
-        else
-        {
-            return;
-        }
+        else { return; }
         this->setValue(icao);
     }
 

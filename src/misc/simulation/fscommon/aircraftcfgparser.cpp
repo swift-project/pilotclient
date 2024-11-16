@@ -41,7 +41,8 @@ namespace swift::misc::simulation::fscommon
     // response for async. loading
     using LoaderResponse = std::tuple<CAircraftCfgEntriesList, CAircraftModelList, CStatusMessageList>;
 
-    CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo, QObject *parent) : IAircraftModelLoader(simInfo, parent)
+    CAircraftCfgParser::CAircraftCfgParser(const CSimulatorInfo &simInfo, QObject *parent)
+        : IAircraftModelLoader(simInfo, parent)
     {}
 
     CAircraftCfgParser *CAircraftCfgParser::createModelLoader(const CSimulatorInfo &simInfo, QObject *parent)
@@ -55,31 +56,37 @@ namespace swift::misc::simulation::fscommon
         if (m_parserWorker) { m_parserWorker->waitForFinished(); }
     }
 
-    void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories)
+    void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                                  const QStringList &modelDirectories)
     {
-        static const CStatusMessage statusLoadingOk(this, CStatusMessage::SeverityInfo, u"Aircraft config parser loaded data");
-        static const CStatusMessage statusLoadingError(this, CStatusMessage::SeverityError, u"Aircraft config parser did NOT load data");
+        static const CStatusMessage statusLoadingOk(this, CStatusMessage::SeverityInfo,
+                                                    u"Aircraft config parser loaded data");
+        static const CStatusMessage statusLoadingError(this, CStatusMessage::SeverityError,
+                                                       u"Aircraft config parser did NOT load data");
 
         const CSimulatorInfo simulator = this->getSimulator();
         const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
-        const QStringList excludedDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
+        const QStringList excludedDirectoryPatterns(
+            m_settings.getModelExcludeDirectoryPatternsOrDefault(simulator)); // copy
 
         if (mode.testFlag(LoadInBackground))
         {
             if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
             emit this->diskLoadingStarted(simulator, mode);
-            m_parserWorker = CWorker::fromTask(this, "CAircraftCfgParser::startLoadingFromDisk",
-                                               [this, modelDirs, excludedDirectoryPatterns, simulator, modelConsolidation]() {
-                                                   CStatusMessageList msgs;
-                                                   const CAircraftCfgEntriesList aircraftCfgEntriesList = this->performParsing(modelDirs, excludedDirectoryPatterns, msgs);
-                                                   CAircraftModelList models;
-                                                   if (msgs.isSuccess())
-                                                   {
-                                                       models = aircraftCfgEntriesList.toAircraftModelList(simulator, true, msgs);
-                                                       if (modelConsolidation) { modelConsolidation(models, true); }
-                                                   }
-                                                   return std::make_tuple(aircraftCfgEntriesList, models, msgs);
-                                               });
+            m_parserWorker =
+                CWorker::fromTask(this, "CAircraftCfgParser::startLoadingFromDisk",
+                                  [this, modelDirs, excludedDirectoryPatterns, simulator, modelConsolidation]() {
+                                      CStatusMessageList msgs;
+                                      const CAircraftCfgEntriesList aircraftCfgEntriesList =
+                                          this->performParsing(modelDirs, excludedDirectoryPatterns, msgs);
+                                      CAircraftModelList models;
+                                      if (msgs.isSuccess())
+                                      {
+                                          models = aircraftCfgEntriesList.toAircraftModelList(simulator, true, msgs);
+                                          if (modelConsolidation) { modelConsolidation(models, true); }
+                                      }
+                                      return std::make_tuple(aircraftCfgEntriesList, models, msgs);
+                                  });
             m_parserWorker->thenWithResult<LoaderResponse>(this, [this, simulator](const LoaderResponse &tuple) {
                 m_loadingMessages = std::get<2>(tuple);
                 if (m_loadingMessages.isSuccess())
@@ -87,10 +94,7 @@ namespace swift::misc::simulation::fscommon
                     m_parsedCfgEntriesList = std::get<0>(tuple);
                     const CAircraftModelList models(std::get<1>(tuple));
                     const bool hasData = !models.isEmpty();
-                    if (hasData)
-                    {
-                        this->setModelsForSimulator(models, this->getSimulator());
-                    }
+                    if (hasData) { this->setModelsForSimulator(models, this->getSimulator()); }
                     // currently I treat no data as error
                     m_loadingMessages.push_front(hasData ? statusLoadingOk : statusLoadingError);
                 }
@@ -108,21 +112,17 @@ namespace swift::misc::simulation::fscommon
             m_loadingMessages = msgs;
             m_loadingMessages.freezeOrder();
             const bool hasData = !models.isEmpty();
-            if (hasData)
-            {
-                this->setCachedModels(models, this->getSimulator());
-            }
+            if (hasData) { this->setCachedModels(models, this->getSimulator()); }
             // currently I treat no data as error
             emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator, ParsedData);
         }
     }
 
-    bool CAircraftCfgParser::isLoadingFinished() const
-    {
-        return !m_parserWorker || m_parserWorker->isFinished();
-    }
+    bool CAircraftCfgParser::isLoadingFinished() const { return !m_parserWorker || m_parserWorker->isFinished(); }
 
-    CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QStringList &directories, const QStringList &excludeDirectories, CStatusMessageList &messages)
+    CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QStringList &directories,
+                                                               const QStringList &excludeDirectories,
+                                                               CStatusMessageList &messages)
     {
         CAircraftCfgEntriesList entries;
         for (const QString &dir : directories)
@@ -132,7 +132,9 @@ namespace swift::misc::simulation::fscommon
         return entries;
     }
 
-    CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory, const QStringList &excludeDirectories, CStatusMessageList &messages)
+    CAircraftCfgEntriesList CAircraftCfgParser::performParsing(const QString &directory,
+                                                               const QStringList &excludeDirectories,
+                                                               CStatusMessageList &messages)
     {
         //
         // function has to be threadsafe
@@ -164,11 +166,13 @@ namespace swift::misc::simulation::fscommon
 
         // Dirs last is crucial, since I will break recursion on "aircraft.cfg" level
         // with T514 this behaviour has been changed
-        const QFileInfoList files = dir.entryInfoList(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDir::DirsLast);
+        const QFileInfoList files =
+            dir.entryInfoList(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot, QDir::DirsLast);
 
         // the sim.cfg/aircraft.cfg file should have an *.air file sibling
         // if not we assume these files can be ignored
-        const QDir dirForAir(directory, CFsDirectories::airFileFilter(), QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
+        const QDir dirForAir(directory, CFsDirectories::airFileFilter(), QDir::Name,
+                             QDir::Files | QDir::NoDotAndDotDot);
         const int airFilesCount = dirForAir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::DirsLast).size();
         const bool hasAirFiles = airFilesCount > 0;
 
@@ -188,10 +192,7 @@ namespace swift::misc::simulation::fscommon
                 if (dir == currentDir) { continue; } // do not recursively call same directory
 
                 const CAircraftCfgEntriesList subList(performParsing(nextDir, excludeDirectories, messages));
-                if (messages.isSuccess())
-                {
-                    result.push_back(subList);
-                }
+                if (messages.isSuccess()) { result.push_back(subList); }
                 else
                 {
                     const CStatusMessage m = CStatusMessage(this).warning(u"Parsing failed for '%1'") << nextDir;
@@ -210,7 +211,8 @@ namespace swift::misc::simulation::fscommon
                 const QString fileName = fileInfo.absoluteFilePath(); // full path and name
                 bool fileOk = false;
                 CStatusMessageList fileMsgs;
-                const CAircraftCfgEntriesList fileResults = CAircraftCfgParser::performParsingOfSingleFile(fileName, fileOk, fileMsgs);
+                const CAircraftCfgEntriesList fileResults =
+                    CAircraftCfgParser::performParsingOfSingleFile(fileName, fileOk, fileMsgs);
                 if (!fileOk)
                 {
                     const CStatusMessage m = CStatusMessage(this).warning(u"Parsing of '%1' failed") << fileName;
@@ -230,7 +232,8 @@ namespace swift::misc::simulation::fscommon
         return result;
     }
 
-    CAircraftCfgEntriesList CAircraftCfgParser::performParsingOfSingleFile(const QString &fileName, bool &ok, CStatusMessageList &msgs)
+    CAircraftCfgEntriesList CAircraftCfgParser::performParsingOfSingleFile(const QString &fileName, bool &ok,
+                                                                           CStatusMessageList &msgs)
     {
         // due to the filter we expect only "aircraft.cfg" files here
         // remark: in a 1st version I have used QSettings to parse to file as ini file
@@ -241,7 +244,9 @@ namespace swift::misc::simulation::fscommon
         QFile file(fnFixed); // includes path
         if (!file.open(QFile::ReadOnly | QFile::Text))
         {
-            const CStatusMessage m = CStatusMessage(static_cast<CAircraftCfgParser *>(nullptr)).warning(u"Unable to read file '%1'") << fnFixed;
+            const CStatusMessage m =
+                CStatusMessage(static_cast<CAircraftCfgParser *>(nullptr)).warning(u"Unable to read file '%1'")
+                << fnFixed;
             msgs.push_back(m);
             return CAircraftCfgEntriesList();
         }
@@ -273,10 +278,7 @@ namespace swift::misc::simulation::fscommon
                 if (lineFixed.startsWith(fltSection, Qt::CaseInsensitive))
                 {
                     CAircraftCfgEntries e(fileName, fltsimCounter);
-                    if (isRotorcraftPath)
-                    {
-                        e.setRotorcraft(true);
-                    }
+                    if (isRotorcraftPath) { e.setRotorcraft(true); }
                     tempEntries.append(e);
                     currentSection = Fltsim;
                     fltSection = fltSectionStr.arg(++fltsimCounter);
@@ -293,18 +295,12 @@ namespace swift::misc::simulation::fscommon
                 if (atcType.isEmpty() || atcModel.isEmpty())
                 {
                     const QString c = getFixedIniLineContent(lineFixed);
-                    if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive))
-                    {
-                        atcType = c;
-                    }
+                    if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive)) { atcType = c; }
                     /*else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive))
                     {
                         atcModel = c;
                     }*/
-                    else if (lineFixed.startsWith("icao_type_designator", Qt::CaseInsensitive))
-                    {
-                        atcModel = c;
-                    }
+                    else if (lineFixed.startsWith("icao_type_designator", Qt::CaseInsensitive)) { atcModel = c; }
                 }
             }
             break;
@@ -378,10 +374,7 @@ namespace swift::misc::simulation::fscommon
         // store all entries
         const QFileInfo fileInfo(fnFixed);
         QDateTime fileTimestamp(fileInfo.lastModified());
-        if (!fileTimestamp.isValid() || fileInfo.birthTime() > fileTimestamp)
-        {
-            fileTimestamp = fileInfo.birthTime();
-        }
+        if (!fileTimestamp.isValid() || fileInfo.birthTime() > fileTimestamp) { fileTimestamp = fileInfo.birthTime(); }
         Q_ASSERT_X(fileTimestamp.isValid(), Q_FUNC_INFO, "Missing file timestamp");
 
         CAircraftCfgEntriesList result;
@@ -389,7 +382,9 @@ namespace swift::misc::simulation::fscommon
         {
             if (e.getTitle().isEmpty())
             {
-                const CStatusMessage m = CStatusMessage(static_cast<CAircraftCfgParser *>(nullptr)).info(u"FS model in %1, index %2 has no title") << fileName << e.getIndex();
+                const CStatusMessage m = CStatusMessage(static_cast<CAircraftCfgParser *>(nullptr))
+                                             .info(u"FS model in %1, index %2 has no title")
+                                         << fileName << e.getIndex();
                 msgs.push_back(m);
                 continue;
             }
@@ -419,10 +414,7 @@ namespace swift::misc::simulation::fscommon
             const QStringList l = qv.toStringList();
             return l.join(",").trimmed();
         }
-        else if (static_cast<QMetaType::Type>(qv.type()) == QMetaType::QString)
-        {
-            return qv.toString().trimmed();
-        }
+        else if (static_cast<QMetaType::Type>(qv.type()) == QMetaType::QString) { return qv.toString().trimmed(); }
         Q_ASSERT(false);
         return {};
     }

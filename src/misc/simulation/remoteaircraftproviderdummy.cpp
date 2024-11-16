@@ -17,8 +17,7 @@ namespace swift::misc::simulation
         return dummy;
     }
 
-    CRemoteAircraftProviderDummy::CRemoteAircraftProviderDummy(QObject *parent) : CRemoteAircraftProvider(parent)
-    {}
+    CRemoteAircraftProviderDummy::CRemoteAircraftProviderDummy(QObject *parent) : CRemoteAircraftProvider(parent) {}
 
     void CRemoteAircraftProviderDummy::insertNewSituation(const CAircraftSituation &situation)
     {
@@ -27,18 +26,18 @@ namespace swift::misc::simulation
 
     void CRemoteAircraftProviderDummy::insertNewSituations(const CAircraftSituationList &situations)
     {
-        for (const CAircraftSituation &situation : situations)
-        {
-            this->storeAircraftSituation(situation);
-        }
+        for (const CAircraftSituation &situation : situations) { this->storeAircraftSituation(situation); }
     }
 
-    void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool removeOutdatedParts)
+    void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CCallsign &callsign, const CAircraftParts &parts,
+                                                              bool removeOutdatedParts)
     {
         this->storeAircraftParts(callsign, parts, removeOutdatedParts);
     }
 
-    void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CCallsign &callsign, const CAircraftPartsList &partsList, bool removeOutdatedParts)
+    void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CCallsign &callsign,
+                                                              const CAircraftPartsList &partsList,
+                                                              bool removeOutdatedParts)
     {
         for (const CAircraftParts &parts : partsList)
         {

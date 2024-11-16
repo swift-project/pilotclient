@@ -13,15 +13,9 @@
 
 namespace XSwiftBus
 {
-    CDBusServer::CDBusServer()
-    {
-        dbus_threads_init_default();
-    }
+    CDBusServer::CDBusServer() { dbus_threads_init_default(); }
 
-    CDBusServer::~CDBusServer()
-    {
-        close();
-    }
+    CDBusServer::~CDBusServer() { close(); }
 
     bool CDBusServer::listen(const std::string &address)
     {
@@ -38,10 +32,7 @@ namespace XSwiftBus
         return true;
     }
 
-    bool CDBusServer::isConnected() const
-    {
-        return m_server ? dbus_server_get_is_connected(m_server.get()) : false;
-    }
+    bool CDBusServer::isConnected() const { return m_server ? dbus_server_get_is_connected(m_server.get()) : false; }
 
     void CDBusServer::close()
     {
@@ -55,19 +46,13 @@ namespace XSwiftBus
 
         m_dispatcher = dispatcher;
 
-        dbus_server_set_watch_functions(
-            m_server.get(),
-            dispatcher->m_watchCallbacks.add,
-            dispatcher->m_watchCallbacks.remove,
-            dispatcher->m_watchCallbacks.toggled,
-            &dispatcher->m_watchCallbacks, nullptr);
+        dbus_server_set_watch_functions(m_server.get(), dispatcher->m_watchCallbacks.add,
+                                        dispatcher->m_watchCallbacks.remove, dispatcher->m_watchCallbacks.toggled,
+                                        &dispatcher->m_watchCallbacks, nullptr);
 
-        dbus_server_set_timeout_functions(
-            m_server.get(),
-            dispatcher->m_timeoutCallbacks.add,
-            dispatcher->m_timeoutCallbacks.remove,
-            dispatcher->m_timeoutCallbacks.toggled,
-            &dispatcher->m_timeoutCallbacks, nullptr);
+        dbus_server_set_timeout_functions(m_server.get(), dispatcher->m_timeoutCallbacks.add,
+                                          dispatcher->m_timeoutCallbacks.remove, dispatcher->m_timeoutCallbacks.toggled,
+                                          &dispatcher->m_timeoutCallbacks, nullptr);
     }
 
     void CDBusServer::onNewConnection(DBusServer *, DBusConnection *conn)

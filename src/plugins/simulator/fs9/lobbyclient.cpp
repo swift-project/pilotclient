@@ -25,8 +25,7 @@ using namespace swift::misc;
 namespace swift::simplugin::fs9
 {
     CLobbyClient::CLobbyClient(QObject *parent)
-        : QObject(parent),
-          m_callbackWrapper(this, &CLobbyClient::directPlayMessageHandler),
+        : QObject(parent), m_callbackWrapper(this, &CLobbyClient::directPlayMessageHandler),
           m_lobbyCallbackWrapper(this, &CLobbyClient::directPlayLobbyMessageHandler)
     {
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing global object");
@@ -58,9 +57,7 @@ namespace swift::simplugin::fs9
         HRESULT hr;
 
         // Create and init IDirectPlay8Peer
-        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Peer, nullptr,
-                                         CLSCTX_INPROC_SERVER,
-                                         IID_IDirectPlay8Peer,
+        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Peer, nullptr, CLSCTX_INPROC_SERVER, IID_IDirectPlay8Peer,
                                          (LPVOID *)&m_directPlayPeer)))
             return logDirectPlayError(hr);
 
@@ -68,17 +65,17 @@ namespace swift::simplugin::fs9
         const DWORD dwInitFlags = 0;
         // const DWORD dwInitFlags = DPNINITIALIZE_DISABLEPARAMVAL;
 
-        if (FAILED(hr = m_directPlayPeer->Initialize(&m_callbackWrapper, m_callbackWrapper.messageHandler, dwInitFlags)))
+        if (FAILED(hr =
+                       m_directPlayPeer->Initialize(&m_callbackWrapper, m_callbackWrapper.messageHandler, dwInitFlags)))
             return logDirectPlayError(hr);
 
         // Create and init IDirectPlay8LobbyClient
-        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8LobbyClient, nullptr,
-                                         CLSCTX_INPROC_SERVER,
-                                         IID_IDirectPlay8LobbyClient,
-                                         (LPVOID *)&m_dpLobbyClient)))
+        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8LobbyClient, nullptr, CLSCTX_INPROC_SERVER,
+                                         IID_IDirectPlay8LobbyClient, (LPVOID *)&m_dpLobbyClient)))
             return logDirectPlayError(hr);
 
-        if (FAILED(hr = m_dpLobbyClient->Initialize(&m_lobbyCallbackWrapper, m_lobbyCallbackWrapper.messageHandler, dwInitFlags)))
+        if (FAILED(hr = m_dpLobbyClient->Initialize(&m_lobbyCallbackWrapper, m_lobbyCallbackWrapper.messageHandler,
+                                                    dwInitFlags)))
             return logDirectPlayError(hr);
 
         return S_OK;
@@ -100,18 +97,13 @@ namespace swift::simplugin::fs9
 
             if (dwItems > 0)
             {
-                CLogMessage(this).debug() << "Found lobby application:" << QString::fromWCharArray(appInfo->pwszApplicationName);
+                CLogMessage(this).debug()
+                    << "Found lobby application:" << QString::fromWCharArray(appInfo->pwszApplicationName);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            else { return false; }
         }
-        else
-        {
-            return false;
-        }
+        else { return false; }
     }
 
     HRESULT CLobbyClient::connectFs9ToHost(const QString &address)
@@ -134,11 +126,7 @@ namespace swift::simplugin::fs9
             return S_FALSE;
         }
 
-        hr = m_dpLobbyClient->ConnectApplication(&dnConnectInfo,
-                                                 nullptr,
-                                                 &m_applicationHandle,
-                                                 INFINITE,
-                                                 0);
+        hr = m_dpLobbyClient->ConnectApplication(&dnConnectInfo, nullptr, &m_applicationHandle, INFINITE, 0);
         if (FAILED(hr)) { return hr; }
 
         CLogMessage(this).info(u"Lobby client '%1' connected!") << address;
@@ -146,7 +134,8 @@ namespace swift::simplugin::fs9
         return S_OK;
     }
 
-    HRESULT CLobbyClient::allocAndInitConnectSettings(const QString &address, GUID *pAppGuid, DPL_CONNECTION_SETTINGS **ppdplConnectSettings)
+    HRESULT CLobbyClient::allocAndInitConnectSettings(const QString &address, GUID *pAppGuid,
+                                                      DPL_CONNECTION_SETTINGS **ppdplConnectSettings)
     {
         HRESULT hr;
 
@@ -164,28 +153,19 @@ namespace swift::simplugin::fs9
         }
 
         // Set the SP to pHostAddress
-        if (FAILED(hr = pHostAddress->SetSP(pSPGuid.data())))
-        {
-            return logDirectPlayError(hr);
-        }
+        if (FAILED(hr = pHostAddress->SetSP(pSPGuid.data()))) { return logDirectPlayError(hr); }
 
         // Create a device address to specify which device we are using
-        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, NULL, CLSCTX_INPROC_SERVER,
-                                         IID_IDirectPlay8Address, reinterpret_cast<void **>(&pDeviceAddress))))
+        if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, NULL, CLSCTX_INPROC_SERVER, IID_IDirectPlay8Address,
+                                         reinterpret_cast<void **>(&pDeviceAddress))))
         {
             return logDirectPlayError(hr);
         }
 
         // Set the SP to pDeviceAddress
-        if (FAILED(hr = pDeviceAddress->SetSP(&CLSID_DP8SP_TCPIP)))
-        {
-            return logDirectPlayError(hr);
-        }
+        if (FAILED(hr = pDeviceAddress->SetSP(&CLSID_DP8SP_TCPIP))) { return logDirectPlayError(hr); }
 
-        if (FAILED(hr = pHostAddress->BuildFromURLA(address.toLocal8Bit().data())))
-        {
-            return logDirectPlayError(hr);
-        }
+        if (FAILED(hr = pHostAddress->BuildFromURLA(address.toLocal8Bit().data()))) { return logDirectPlayError(hr); }
 
         // Setup the DPL_CONNECTION_SETTINGS
         DPL_CONNECTION_SETTINGS *pSettings = new DPL_CONNECTION_SETTINGS;
@@ -249,10 +229,7 @@ namespace swift::simplugin::fs9
         SafeDelete(pSettings);
     }
 
-    HRESULT CLobbyClient::directPlayMessageHandler(DWORD /* messageId */, void * /* msgBuffer */)
-    {
-        return S_OK;
-    }
+    HRESULT CLobbyClient::directPlayMessageHandler(DWORD /* messageId */, void * /* msgBuffer */) { return S_OK; }
 
     HRESULT CLobbyClient::directPlayLobbyMessageHandler(DWORD messageId, void *msgBuffer)
     {
@@ -292,24 +269,12 @@ namespace swift::simplugin::fs9
             message.append(QString("%1: ").arg(pStatusMsg->hSender, 0, 16));
             switch (pStatusMsg->dwStatus)
             {
-            case DPLSESSION_CONNECTED:
-                message.append("Session connected");
-                break;
-            case DPLSESSION_COULDNOTCONNECT:
-                message.append("Session could not connect");
-                break;
-            case DPLSESSION_DISCONNECTED:
-                message.append("Session disconnected");
-                break;
-            case DPLSESSION_TERMINATED:
-                message.append("Session terminated");
-                break;
-            case DPLSESSION_HOSTMIGRATED:
-                message.append("Host migrated");
-                break;
-            case DPLSESSION_HOSTMIGRATEDHERE:
-                message.append("Host migrated to this client");
-                break;
+            case DPLSESSION_CONNECTED: message.append("Session connected"); break;
+            case DPLSESSION_COULDNOTCONNECT: message.append("Session could not connect"); break;
+            case DPLSESSION_DISCONNECTED: message.append("Session disconnected"); break;
+            case DPLSESSION_TERMINATED: message.append("Session terminated"); break;
+            case DPLSESSION_HOSTMIGRATED: message.append("Host migrated"); break;
+            case DPLSESSION_HOSTMIGRATEDHERE: message.append("Host migrated to this client"); break;
             default:
                 message.append(QStringLiteral("Unknown PDPL_MESSAGE_SESSION_STATUS: %1").arg(pStatusMsg->dwStatus));
                 break;

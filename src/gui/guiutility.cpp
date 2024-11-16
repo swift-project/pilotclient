@@ -70,10 +70,7 @@ namespace swift::gui
         QWidget *mainApplicationWidgetSearch()
         {
             CEnableForFramelessWindow *mw = CGuiUtility::mainFramelessEnabledWindow();
-            if (mw && mw->getWidget())
-            {
-                return mw->getWidget();
-            }
+            if (mw && mw->getWidget()) { return mw->getWidget(); }
 
             // second choice, try via QMainWindow
             const QWidgetList tlw = CGuiUtility::topLevelApplicationWidgetsWithName();
@@ -190,36 +187,34 @@ namespace swift::gui
         QString i = u"Number of screens: " % QString::number(QGuiApplication::screens().size()) % separator %
                     u"Primary screen: " % QGuiApplication::primaryScreen()->name() % separator %
                     u"QT_AUTO_SCREEN_SCALE_FACTOR: " % qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR") % separator %
-                    u"QT_SCALE_FACTOR: " % qgetenv("QT_SCALE_FACTOR") % separator %
-                    u"QT_ENABLE_HIGHDPI_SCALING: " % qgetenv("QT_ENABLE_HIGHDPI_SCALING") % separator %
-                    u"QT_SCALE_FACTOR_ROUNDING_POLICY: " % qgetenv("QT_SCALE_FACTOR_ROUNDING_POLICY") % separator %
-                    u"QT_SCREEN_SCALE_FACTORS: " % qgetenv("QT_SCREEN_SCALE_FACTORS") % separator %
-                    u"OS screen res." % QString::number(ps.width()) % u"/" % QString::number(ps.height()) % separator;
+                    u"QT_SCALE_FACTOR: " % qgetenv("QT_SCALE_FACTOR") % separator % u"QT_ENABLE_HIGHDPI_SCALING: " %
+                    qgetenv("QT_ENABLE_HIGHDPI_SCALING") % separator % u"QT_SCALE_FACTOR_ROUNDING_POLICY: " %
+                    qgetenv("QT_SCALE_FACTOR_ROUNDING_POLICY") % separator % u"QT_SCREEN_SCALE_FACTORS: " %
+                    qgetenv("QT_SCREEN_SCALE_FACTORS") % separator % u"OS screen res." % QString::number(ps.width()) %
+                    u"/" % QString::number(ps.height()) % separator;
 
         for (const QScreen *screen : QGuiApplication::screens())
         {
-            i += separator %
-                 u"Information for screen: " % screen->name() % separator %
-                 u"Available geometry: " % rectAsString(screen->availableGeometry()) % separator %
-                 u"Available size: " % sizeAsString(screen->availableSize()) % separator %
-                 u"Available virtual geometry: " % rectAsString(screen->availableVirtualGeometry()) % separator %
-                 u"Available virtual size: " % sizeAsString(screen->availableVirtualSize()) % separator %
-                 u"Device ratio: " % QString::number(screen->devicePixelRatio()) % separator %
-                 u"Depth: " % QString::number(screen->depth()) % u"bits" % separator %
-                 u"Geometry: " % rectAsString(screen->geometry()) % separator %
-                 u"Logical DPI: " % QString::number(screen->logicalDotsPerInch()) % separator %
-                 u"Logical DPI X: " % QString::number(screen->logicalDotsPerInchX()) % separator %
-                 u"Logical DPI Y: " % QString::number(screen->logicalDotsPerInchY()) % separator %
-                 u"Orientation: " % orientationAsString(screen->orientation()) % separator %
-                 u"Physical DPI: " % QString::number(screen->physicalDotsPerInch()) % separator %
-                 u"Physical DPI X: " % QString::number(screen->physicalDotsPerInchX()) % separator %
-                 u"Physical DPI Y: " % QString::number(screen->physicalDotsPerInchY()) % separator %
-                 u"Physical size: " % sizeAsString(screen->physicalSize()) % u"mm" % separator %
-                 u"Primary orientation: " % orientationAsString(screen->primaryOrientation()) % separator %
-                 u"Refresh rate: " % QString::number(screen->refreshRate()) % u"Hz" %
-                 u"Size: " % sizeAsString(screen->size()) % separator %
-                 u"Virtual geometry: " % rectAsString(screen->virtualGeometry()) % separator %
-                 u"Virtual size: " % sizeAsString(screen->virtualSize());
+            i += separator % u"Information for screen: " % screen->name() % separator % u"Available geometry: " %
+                 rectAsString(screen->availableGeometry()) % separator % u"Available size: " %
+                 sizeAsString(screen->availableSize()) % separator % u"Available virtual geometry: " %
+                 rectAsString(screen->availableVirtualGeometry()) % separator % u"Available virtual size: " %
+                 sizeAsString(screen->availableVirtualSize()) % separator % u"Device ratio: " %
+                 QString::number(screen->devicePixelRatio()) % separator % u"Depth: " %
+                 QString::number(screen->depth()) % u"bits" % separator % u"Geometry: " %
+                 rectAsString(screen->geometry()) % separator % u"Logical DPI: " %
+                 QString::number(screen->logicalDotsPerInch()) % separator % u"Logical DPI X: " %
+                 QString::number(screen->logicalDotsPerInchX()) % separator % u"Logical DPI Y: " %
+                 QString::number(screen->logicalDotsPerInchY()) % separator % u"Orientation: " %
+                 orientationAsString(screen->orientation()) % separator % u"Physical DPI: " %
+                 QString::number(screen->physicalDotsPerInch()) % separator % u"Physical DPI X: " %
+                 QString::number(screen->physicalDotsPerInchX()) % separator % u"Physical DPI Y: " %
+                 QString::number(screen->physicalDotsPerInchY()) % separator % u"Physical size: " %
+                 sizeAsString(screen->physicalSize()) % u"mm" % separator % u"Primary orientation: " %
+                 orientationAsString(screen->primaryOrientation()) % separator % u"Refresh rate: " %
+                 QString::number(screen->refreshRate()) % u"Hz" % u"Size: " % sizeAsString(screen->size()) % separator %
+                 u"Virtual geometry: " % rectAsString(screen->virtualGeometry()) % separator % u"Virtual size: " %
+                 sizeAsString(screen->virtualSize());
         }
         return i;
     }
@@ -248,12 +243,20 @@ namespace swift::gui
 
     QString CGuiUtility::rectAsString(const QRect &rect)
     {
-        return QStringLiteral("x: %1 y: %2 w: %3 h: %4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
+        return QStringLiteral("x: %1 y: %2 w: %3 h: %4")
+            .arg(rect.x())
+            .arg(rect.y())
+            .arg(rect.width())
+            .arg(rect.height());
     }
 
     QString CGuiUtility::rectAsString(const QRectF &rect)
     {
-        return QStringLiteral("x: %1 y: %2 w: %3 h: %4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
+        return QStringLiteral("x: %1 y: %2 w: %3 h: %4")
+            .arg(rect.x())
+            .arg(rect.y())
+            .arg(rect.width())
+            .arg(rect.height());
     }
 
     QString CGuiUtility::sizeAsString(const QSize &size)
@@ -291,7 +294,8 @@ namespace swift::gui
         return t == c;
     }
 
-    bool CGuiUtility::setComboBoxValueByStartingString(QComboBox *box, const QString &candidate, const QString &unspecified)
+    bool CGuiUtility::setComboBoxValueByStartingString(QComboBox *box, const QString &candidate,
+                                                       const QString &unspecified)
     {
         if (!box) { return false; }
         if (!candidate.isEmpty())
@@ -321,7 +325,8 @@ namespace swift::gui
         return false;
     }
 
-    bool CGuiUtility::setComboBoxValueByContainingString(QComboBox *box, const QString &candidate, const QString &unspecified)
+    bool CGuiUtility::setComboBoxValueByContainingString(QComboBox *box, const QString &candidate,
+                                                         const QString &unspecified)
     {
         if (!box) { return false; }
         if (!candidate.isEmpty())
@@ -448,7 +453,8 @@ namespace swift::gui
         SWIFT_VERIFY_X(checkBox, Q_FUNC_INFO, "no checkbox");
         if (!checkBox) { return; }
 
-        static const QString background("background: rgb(40,40,40)"); //! \fixme hardcoded stylesheet setting, should come from stylesheet
+        static const QString background(
+            "background: rgb(40,40,40)"); //! \fixme hardcoded stylesheet setting, should come from stylesheet
         if (readOnly)
         {
             checkBox->setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -460,7 +466,8 @@ namespace swift::gui
         }
         else
         {
-            checkBox->setAttribute(Qt::WA_TransparentForMouseEvents, defaultBox.testAttribute(Qt::WA_TransparentForMouseEvents));
+            checkBox->setAttribute(Qt::WA_TransparentForMouseEvents,
+                                   defaultBox.testAttribute(Qt::WA_TransparentForMouseEvents));
             checkBox->setFocusPolicy(defaultBox.focusPolicy());
             checkBox->setStyleSheet("");
         }
@@ -470,17 +477,17 @@ namespace swift::gui
     {
         if (!parent) { return; }
         QList<QCheckBox *> allCheckBoxes = parent->findChildren<QCheckBox *>();
-        for (QCheckBox *cb : allCheckBoxes)
-        {
-            CGuiUtility::checkBoxReadOnly(cb, readOnly);
-        }
+        for (QCheckBox *cb : allCheckBoxes) { CGuiUtility::checkBoxReadOnly(cb, readOnly); }
     }
 
     void CGuiUtility::tempUnhidePassword(QLineEdit *lineEdit, int unhideMs)
     {
         if (!lineEdit) { return; }
         if (lineEdit->text().isEmpty()) { return; }
-        if (lineEdit->echoMode() != QLineEdit::Password && lineEdit->echoMode() != QLineEdit::PasswordEchoOnEdit) { return; }
+        if (lineEdit->echoMode() != QLineEdit::Password && lineEdit->echoMode() != QLineEdit::PasswordEchoOnEdit)
+        {
+            return;
+        }
         const QLineEdit::EchoMode mode = lineEdit->echoMode();
         lineEdit->setEchoMode(QLineEdit::Normal);
         QPointer<QLineEdit> qpLineEdit(lineEdit);
@@ -531,17 +538,11 @@ namespace swift::gui
         {
             QLayout *sublayout { nullptr };
             QWidget *widget { nullptr };
-            if ((sublayout = item->layout()))
-            {
-                deleteLayout(sublayout, deleteWidgets);
-            }
+            if ((sublayout = item->layout())) { deleteLayout(sublayout, deleteWidgets); }
             else if ((widget = item->widget()))
             {
                 widget->hide();
-                if (deleteWidgets)
-                {
-                    delete widget;
-                }
+                if (deleteWidgets) { delete widget; }
             }
             else { delete item; }
         }
@@ -560,8 +561,7 @@ namespace swift::gui
     QTabWidget *CGuiUtility::parentTabWidget(QWidget *widget, int maxLevels)
     {
         int level = 0;
-        do
-        {
+        do {
             widget = widget->parentWidget();
             if (!widget) { return nullptr; }
             QTabWidget *tw = qobject_cast<QTabWidget *>(widget);
@@ -612,7 +612,11 @@ namespace swift::gui
 
     QString CGuiUtility::marginsToString(const QMargins &margins)
     {
-        return QStringLiteral("%1:%2:%3:%4").arg(margins.left()).arg(margins.top()).arg(margins.right()).arg(margins.bottom());
+        return QStringLiteral("%1:%2:%3:%4")
+            .arg(margins.left())
+            .arg(margins.top())
+            .arg(margins.right())
+            .arg(margins.bottom());
     }
 
     QMargins CGuiUtility::stringToMargins(const QString &str)
@@ -691,7 +695,8 @@ namespace swift::gui
         window->setWindowFlag(Qt::WindowCloseButtonHint, false);
     }
 
-    QGraphicsOpacityEffect *CGuiUtility::fadeInWidget(int durationMs, QWidget *widget, double startValue, double endValue)
+    QGraphicsOpacityEffect *CGuiUtility::fadeInWidget(int durationMs, QWidget *widget, double startValue,
+                                                      double endValue)
     {
         // http://stackoverflow.com/questions/19087822/how-to-make-qt-widgets-fade-in-or-fade-out#
         Q_ASSERT(widget);
@@ -706,7 +711,8 @@ namespace swift::gui
         return effect;
     }
 
-    QGraphicsOpacityEffect *CGuiUtility::fadeOutWidget(int durationMs, QWidget *widget, double startValue, double endValue)
+    QGraphicsOpacityEffect *CGuiUtility::fadeOutWidget(int durationMs, QWidget *widget, double startValue,
+                                                       double endValue)
     {
         Q_ASSERT(widget);
         QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(widget);
@@ -727,10 +733,7 @@ namespace swift::gui
         return QApplication::fontMetrics();
     }
 
-    QFontMetricsF CGuiUtility::currentFontMetricsF()
-    {
-        return QFontMetricsF(CGuiUtility::currentFontMetrics());
-    }
+    QFontMetricsF CGuiUtility::currentFontMetricsF() { return QFontMetricsF(CGuiUtility::currentFontMetrics()); }
 
     QFont CGuiUtility::currentFont()
     {
@@ -791,10 +794,7 @@ namespace swift::gui
             const QRect hostRect = host->geometry();
             widget->move(hostRect.center() - widget->rect().center());
         }
-        else
-        {
-            CGuiUtility::centerWidget(widget);
-        }
+        else { CGuiUtility::centerWidget(widget); }
     }
 
     QString CGuiUtility::metricsInfo()
@@ -813,7 +813,13 @@ namespace swift::gui
             desktop = QStringLiteral("Desktop w%1 w%2").arg(sd.width()).arg(sd.height());
             ratio = QStringLiteral("ratio: %1").arg(mainWidget->devicePixelRatioF());
         }
-        return s.arg(desktop).arg(CGuiUtility::isUsingHighDpiScreenSupport() ? "hi DPI" : "-").arg(ratio).arg(s80.width()).arg(s80.height()).arg(s43.width()).arg(s43.height());
+        return s.arg(desktop)
+            .arg(CGuiUtility::isUsingHighDpiScreenSupport() ? "hi DPI" : "-")
+            .arg(ratio)
+            .arg(s80.width())
+            .arg(s80.height())
+            .arg(s43.width())
+            .arg(s43.height());
     }
 
     bool CGuiUtility::isUsingHighDpiScreenSupport()
@@ -901,7 +907,8 @@ namespace swift::gui
         label->setText(clippedText);
     }
 
-    void CGuiUtility::setElidedText(QLabel *label, const QString &shortText, const QString &longText, Qt::TextElideMode mode)
+    void CGuiUtility::setElidedText(QLabel *label, const QString &shortText, const QString &longText,
+                                    Qt::TextElideMode mode)
     {
         if (!label) { return; }
         if (shortText.isEmpty())
@@ -965,14 +972,8 @@ namespace swift::gui
         for (const QWidget *w : widgets)
         {
             if (!w) { continue; }
-            if (!w->windowTitle().isEmpty())
-            {
-                titles.push_back(w->windowTitle());
-            }
-            else
-            {
-                titles.push_back(QStringLiteral("name: ") % w->objectName());
-            }
+            if (!w->windowTitle().isEmpty()) { titles.push_back(w->windowTitle()); }
+            else { titles.push_back(QStringLiteral("name: ") % w->objectName()); }
         }
         return titles;
     }
@@ -997,10 +998,7 @@ namespace swift::gui
             for (QDockWidget *w : children)
             {
                 if (!w) { continue; }
-                if (!floatingOnly || w->isFloating())
-                {
-                    docks.push_back(w);
-                }
+                if (!floatingOnly || w->isFloating()) { docks.push_back(w); }
             }
         }
         return docks;
@@ -1015,10 +1013,7 @@ namespace swift::gui
             for (QDockWidget *w : children)
             {
                 if (!w) { continue; }
-                if (!floatingOnly || w->isFloating())
-                {
-                    docks.push_back(w);
-                }
+                if (!floatingOnly || w->isFloating()) { docks.push_back(w); }
             }
         }
         return docks;

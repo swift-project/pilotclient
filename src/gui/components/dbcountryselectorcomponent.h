@@ -32,9 +32,7 @@ namespace swift::gui::components
     /*!
      * Country selector
      */
-    class SWIFT_GUI_EXPORT CDbCountrySelectorComponent :
-        public QFrame,
-        public swift::gui::CDropBase
+    class SWIFT_GUI_EXPORT CDbCountrySelectorComponent : public QFrame, public swift::gui::CDropBase
     {
         Q_OBJECT
 
@@ -82,7 +80,8 @@ namespace swift::gui::components
 
     private:
         //! Countries have been read
-        void onCountriesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
+        void onCountriesRead(swift::misc::network::CEntityFlags::Entity entity,
+                             swift::misc::network::CEntityFlags::ReadState readState, int count);
 
         //! Data have been changed
         void onDataChanged();

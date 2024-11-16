@@ -19,8 +19,8 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::filters
 {
-    CDistributorFilterBar::CDistributorFilterBar(QWidget *parent) : CFilterWidget(parent),
-                                                                    ui(new Ui::CDistributorFilterBar)
+    CDistributorFilterBar::CDistributorFilterBar(QWidget *parent)
+        : CFilterWidget(parent), ui(new Ui::CDistributorFilterBar)
     {
         ui->setupUi(this);
         ui->comp_Simulator->setMode(CSimulatorSelector::CheckBoxes);
@@ -41,8 +41,7 @@ namespace swift::gui::filters
         });
     }
 
-    CDistributorFilterBar::~CDistributorFilterBar()
-    {}
+    CDistributorFilterBar::~CDistributorFilterBar() {}
 
     std::unique_ptr<swift::gui::models::IModelFilter<CDistributorList>> CDistributorFilterBar::createModelFilter() const
     {
@@ -59,13 +58,11 @@ namespace swift::gui::filters
         ui->filter_Buttons->onRowCountChanged(count, withFilter);
     }
 
-    void CDistributorFilterBar::clearForm()
-    {
-        ui->comp_Simulator->clear();
-    }
+    void CDistributorFilterBar::clearForm() { ui->comp_Simulator->clear(); }
 
     void CDistributorFilterBar::connectTriggerFilterSignals()
     {
-        connect(ui->comp_Simulator, &CSimulatorSelector::changed, this, &CFilterWidget::triggerFilter, Qt::QueuedConnection);
+        connect(ui->comp_Simulator, &CSimulatorSelector::changed, this, &CFilterWidget::triggerFilter,
+                Qt::QueuedConnection);
     }
 } // namespace swift::gui::filters

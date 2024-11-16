@@ -46,7 +46,8 @@ namespace swift::gui::filters
         void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<models::IModelFilter<swift::misc::simulation::CDistributorList>> createModelFilter() const override;
+        virtual std::unique_ptr<models::IModelFilter<swift::misc::simulation::CDistributorList>>
+        createModelFilter() const override;
 
         //! \copydoc CFilterWidget::onRowCountChanged
         virtual void onRowCountChanged(int count, bool withFilter) override;

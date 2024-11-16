@@ -38,8 +38,7 @@ namespace swift::misc::simulation
 {
     CAircraftModelList::CAircraftModelList() {}
 
-    CAircraftModelList::CAircraftModelList(const CSequence<CAircraftModel> &other) : CSequence<CAircraftModel>(other)
-    {}
+    CAircraftModelList::CAircraftModelList(const CSequence<CAircraftModel> &other) : CSequence<CAircraftModel>(other) {}
 
     bool CAircraftModelList::containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
     {
@@ -50,7 +49,8 @@ namespace swift::misc::simulation
         return false;
     }
 
-    bool CAircraftModelList::containsModelStringOrDbKey(const CAircraftModel &model, Qt::CaseSensitivity sensitivity) const
+    bool CAircraftModelList::containsModelStringOrDbKey(const CAircraftModel &model,
+                                                        Qt::CaseSensitivity sensitivity) const
     {
         for (const CAircraftModel &m : (*this))
         {
@@ -69,9 +69,8 @@ namespace swift::misc::simulation
     {
         if (combinedType.isEmpty()) { return false; }
         const QString ct(combinedType.toUpper().trimmed());
-        return this->containsBy([&](const CAircraftModel &model) {
-            return model.getAircraftIcaoCode().getCombinedType() == ct;
-        });
+        return this->containsBy(
+            [&](const CAircraftModel &model) { return model.getAircraftIcaoCode().getCombinedType() == ct; });
     }
 
     bool CAircraftModelList::containsModelsWithAircraftIcaoDesignator(const QString &aircraftDesignator) const
@@ -79,9 +78,11 @@ namespace swift::misc::simulation
         return this->contains(&CAircraftModel::getAircraftIcaoCodeDesignator, aircraftDesignator);
     }
 
-    bool CAircraftModelList::containsModelsWithAircraftAndAirlineIcaoDesignator(const QString &aircraftDesignator, const QString &airlineDesignator) const
+    bool CAircraftModelList::containsModelsWithAircraftAndAirlineIcaoDesignator(const QString &aircraftDesignator,
+                                                                                const QString &airlineDesignator) const
     {
-        return this->contains(&CAircraftModel::getAircraftIcaoCodeDesignator, aircraftDesignator, &CAircraftModel::getAirlineIcaoCodeDesignator, airlineDesignator);
+        return this->contains(&CAircraftModel::getAircraftIcaoCodeDesignator, aircraftDesignator,
+                              &CAircraftModel::getAirlineIcaoCodeDesignator, airlineDesignator);
     }
 
     bool CAircraftModelList::containsAirlineLivery(const CAirlineIcaoCode &airline) const
@@ -90,60 +91,55 @@ namespace swift::misc::simulation
         return this->contains(&CAircraftModel::getAirlineIcaoCode, airline);
     }
 
-    CAircraftModelList CAircraftModelList::findByModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
+    CAircraftModelList CAircraftModelList::findByModelString(const QString &modelString,
+                                                             Qt::CaseSensitivity sensitivity) const
     {
-        return this->findBy([&](const CAircraftModel &model) {
-            return model.matchesModelString(modelString, sensitivity);
-        });
+        return this->findBy(
+            [&](const CAircraftModel &model) { return model.matchesModelString(modelString, sensitivity); });
     }
 
     CAircraftModelList CAircraftModelList::findEmptyModelStrings() const
     {
-        return this->findBy([&](const CAircraftModel &model) {
-            return !model.hasModelString();
-        });
+        return this->findBy([&](const CAircraftModel &model) { return !model.hasModelString(); });
     }
 
-    CAircraftModel CAircraftModelList::findFirstByModelStringOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity) const
+    CAircraftModel CAircraftModelList::findFirstByModelStringOrDefault(const QString &modelString,
+                                                                       Qt::CaseSensitivity sensitivity) const
     {
         if (modelString.isEmpty()) { return CAircraftModel(); }
-        return this->findFirstByOrDefault([&](const CAircraftModel &model) {
-            return model.matchesModelString(modelString, sensitivity);
-        });
+        return this->findFirstByOrDefault(
+            [&](const CAircraftModel &model) { return model.matchesModelString(modelString, sensitivity); });
     }
 
-    CAircraftModel CAircraftModelList::findFirstByModelStringAliasOrDefault(const QString &modelString, Qt::CaseSensitivity sensitivity) const
+    CAircraftModel CAircraftModelList::findFirstByModelStringAliasOrDefault(const QString &modelString,
+                                                                            Qt::CaseSensitivity sensitivity) const
     {
         if (modelString.isEmpty()) { return CAircraftModel(); }
-        return this->findFirstByOrDefault([&](const CAircraftModel &model) {
-            return model.matchesModelStringOrAlias(modelString, sensitivity);
-        });
+        return this->findFirstByOrDefault(
+            [&](const CAircraftModel &model) { return model.matchesModelStringOrAlias(modelString, sensitivity); });
     }
 
     CAircraftModel CAircraftModelList::findFirstByCallsignOrDefault(const CCallsign &callsign) const
     {
         if (callsign.isEmpty()) { return CAircraftModel(); }
-        return this->findFirstByOrDefault([&](const CAircraftModel &model) {
-            return model.getCallsign() == callsign;
-        });
+        return this->findFirstByOrDefault([&](const CAircraftModel &model) { return model.getCallsign() == callsign; });
     }
 
-    CAircraftModelList CAircraftModelList::findByIcaoDesignators(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode) const
+    CAircraftModelList CAircraftModelList::findByIcaoDesignators(const CAircraftIcaoCode &aircraftIcaoCode,
+                                                                 const CAirlineIcaoCode &airlineIcaoCode) const
     {
         const QString aircraft(aircraftIcaoCode.getDesignator());
         const QString airline(airlineIcaoCode.getDesignator());
 
         if (airline.isEmpty())
         {
-            return this->findBy([&](const CAircraftModel &model) {
-                return model.getAircraftIcaoCode().getDesignator() == aircraft;
-            });
+            return this->findBy(
+                [&](const CAircraftModel &model) { return model.getAircraftIcaoCode().getDesignator() == aircraft; });
         }
         if (aircraft.isEmpty())
         {
-            return this->findBy([&](const CAircraftModel &model) {
-                return model.getAirlineIcaoCode().getDesignator() == airline;
-            });
+            return this->findBy(
+                [&](const CAircraftModel &model) { return model.getAirlineIcaoCode().getDesignator() == airline; });
         }
         return this->findBy([&](const CAircraftModel &model) {
             return model.getAirlineIcaoCode().getDesignator() == airline &&
@@ -151,12 +147,16 @@ namespace swift::misc::simulation
         });
     }
 
-    CAircraftModelList CAircraftModelList::findByAircraftAndAirline(const CAircraftIcaoCode &aircraftIcaoCode, const CAirlineIcaoCode &airlineIcaoCode) const
+    CAircraftModelList CAircraftModelList::findByAircraftAndAirline(const CAircraftIcaoCode &aircraftIcaoCode,
+                                                                    const CAirlineIcaoCode &airlineIcaoCode) const
     {
-        return this->findBy(&CAircraftModel::getAircraftIcaoCode, aircraftIcaoCode, &CAircraftModel::getAirlineIcaoCode, airlineIcaoCode);
+        return this->findBy(&CAircraftModel::getAircraftIcaoCode, aircraftIcaoCode, &CAircraftModel::getAirlineIcaoCode,
+                            airlineIcaoCode);
     }
 
-    CAircraftModelList CAircraftModelList::findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const
+    CAircraftModelList
+    CAircraftModelList::findByAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator,
+                                                                      const QString &combinedCode) const
     {
         if (aircraftDesignator.isEmpty()) { return CAircraftModelList(); }
         return this->findBy([&](const CAircraftModel &model) {
@@ -165,7 +165,8 @@ namespace swift::misc::simulation
         });
     }
 
-    CAircraftModelList CAircraftModelList::findByAircraftAndLivery(const CAircraftIcaoCode &aircraftIcaoCode, const CLivery &livery) const
+    CAircraftModelList CAircraftModelList::findByAircraftAndLivery(const CAircraftIcaoCode &aircraftIcaoCode,
+                                                                   const CLivery &livery) const
     {
         return this->findBy(&CAircraftModel::getAircraftIcaoCode, aircraftIcaoCode, &CAircraftModel::getLivery, livery);
     }
@@ -174,12 +175,12 @@ namespace swift::misc::simulation
     {
         const int id = airline.getGroupId();
         if (id < 0) return {};
-        return this->findBy([&](const CAircraftModel &model) {
-            return model.getAirlineIcaoCode().getGroupId() == id;
-        });
+        return this->findBy([&](const CAircraftModel &model) { return model.getAirlineIcaoCode().getGroupId() == id; });
     }
 
-    CAircraftModelList CAircraftModelList::findByAirlineNameAndTelephonyDesignator(const QString &name, const QString &telephony, bool onlyIfExistInModel) const
+    CAircraftModelList CAircraftModelList::findByAirlineNameAndTelephonyDesignator(const QString &name,
+                                                                                   const QString &telephony,
+                                                                                   bool onlyIfExistInModel) const
     {
         return this->findBy([&](const CAircraftModel &model) {
             if (!model.hasAirlineDesignator() || !model.hasValidDbKey()) { return false; }
@@ -218,47 +219,37 @@ namespace swift::misc::simulation
 
     CAircraftModelList CAircraftModelList::findWithFileName() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return model.hasFileName();
-        });
+        return this->findBy([](const CAircraftModel &model) { return model.hasFileName(); });
     }
 
     CAircraftModelList CAircraftModelList::findByDistributor(const CDistributor &distributor) const
     {
-        return this->findBy([&](const CAircraftModel &model) {
-            return model.getDistributor() == distributor;
-        });
+        return this->findBy([&](const CAircraftModel &model) { return model.getDistributor() == distributor; });
     }
 
     CAircraftModelList CAircraftModelList::findWithAircraftDesignator() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return model.hasAircraftDesignator();
-        });
+        return this->findBy([](const CAircraftModel &model) { return model.hasAircraftDesignator(); });
     }
 
     CAircraftModelList CAircraftModelList::findWithAircraftDesignator(const QSet<QString> &designators) const
     {
         if (designators.isEmpty()) { return CAircraftModelList(); }
-        return this->findBy([&](const CAircraftModel &model) {
-            return designators.contains(model.getAircraftIcaoCodeDesignator());
-        });
+        return this->findBy(
+            [&](const CAircraftModel &model) { return designators.contains(model.getAircraftIcaoCodeDesignator()); });
     }
 
     CAircraftModelList CAircraftModelList::findWithKnownAircraftDesignator() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return model.hasKnownAircraftDesignator();
-        });
+        return this->findBy([](const CAircraftModel &model) { return model.hasKnownAircraftDesignator(); });
     }
 
     CAircraftModelList CAircraftModelList::findByManufacturer(const QString &manufacturer) const
     {
         if (manufacturer.isEmpty()) { return CAircraftModelList(); }
         const QString m(manufacturer.toUpper().trimmed());
-        return this->findBy([&](const CAircraftModel &model) {
-            return model.getAircraftIcaoCode().getManufacturer() == m;
-        });
+        return this->findBy(
+            [&](const CAircraftModel &model) { return model.getAircraftIcaoCode().getManufacturer() == m; });
     }
 
     CAircraftModelList CAircraftModelList::findByFamily(const QString &family) const
@@ -294,7 +285,8 @@ namespace swift::misc::simulation
         });
     }
 
-    CAircraftModelList CAircraftModelList::findByDesignatorsOrFamilyWithColorLivery(const QStringList &designators) const
+    CAircraftModelList
+    CAircraftModelList::findByDesignatorsOrFamilyWithColorLivery(const QStringList &designators) const
     {
         return this->findBy([&](const CAircraftModel &model) {
             if (!model.getLivery().isColorLivery()) { return false; }
@@ -314,11 +306,13 @@ namespace swift::misc::simulation
         });
     }
 
-    CAircraftModelList CAircraftModelList::findByCombinedTypeAndWtc(const QString &combinedType, const QString &wtc) const
+    CAircraftModelList CAircraftModelList::findByCombinedTypeAndWtc(const QString &combinedType,
+                                                                    const QString &wtc) const
     {
         const CAircraftModelList ml = this->findByCombinedType(combinedType);
         if (ml.isEmpty()) { return ml; }
-        const CWakeTurbulenceCategory wtcUc = wtc.isEmpty() ? CWakeTurbulenceCategory() : CWakeTurbulenceCategory(wtc.toUpper().trimmed().at(0));
+        const CWakeTurbulenceCategory wtcUc =
+            wtc.isEmpty() ? CWakeTurbulenceCategory() : CWakeTurbulenceCategory(wtc.toUpper().trimmed().at(0));
         return this->findBy([&](const CAircraftModel &model) {
             const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
             return icao.getWtc() == wtcUc;
@@ -330,7 +324,8 @@ namespace swift::misc::simulation
         return this->findByCombinedType(combinedType).findColorLiveries();
     }
 
-    CAircraftModelList CAircraftModelList::findByCombinedTypeAndWtcWithColorLivery(const QString &combinedType, const QString &wtc) const
+    CAircraftModelList CAircraftModelList::findByCombinedTypeAndWtcWithColorLivery(const QString &combinedType,
+                                                                                   const QString &wtc) const
     {
         return this->findByCombinedTypeAndWtc(combinedType, wtc).findColorLiveries();
     }
@@ -340,7 +335,8 @@ namespace swift::misc::simulation
         return this->findByCombinedAndManufacturer(icao.getCombinedType(), icao.getManufacturer());
     }
 
-    CAircraftModelList CAircraftModelList::findByCombinedAndManufacturer(const QString &combinedType, const QString &manufacturer) const
+    CAircraftModelList CAircraftModelList::findByCombinedAndManufacturer(const QString &combinedType,
+                                                                         const QString &manufacturer) const
     {
         if (manufacturer.isEmpty()) { return this->findByCombinedType(combinedType); }
         if (combinedType.isEmpty()) { return this->findByManufacturer(manufacturer); }
@@ -349,7 +345,8 @@ namespace swift::misc::simulation
         });
     }
 
-    CAircraftModelList CAircraftModelList::findClosestColorDistance(const CRgbColor &fuselage, const CRgbColor &tail) const
+    CAircraftModelList CAircraftModelList::findClosestColorDistance(const CRgbColor &fuselage,
+                                                                    const CRgbColor &tail) const
     {
         double distance = 2.0;
         CAircraftModelList models;
@@ -358,10 +355,7 @@ namespace swift::misc::simulation
             const CLivery &l = m.getLivery();
             if (!l.hasColorTail() || !l.hasColorFuselage()) { continue; }
             const double d = l.getColorDistance(fuselage, tail);
-            if (qFuzzyCompare(d, distance))
-            {
-                models.push_back(m);
-            }
+            if (qFuzzyCompare(d, distance)) { models.push_back(m); }
             else if (distance > d)
             {
                 models.clear();
@@ -379,30 +373,22 @@ namespace swift::misc::simulation
 
     CAircraftModelList CAircraftModelList::findColorLiveries() const
     {
-        return this->findBy([=](const CAircraftModel &model) {
-            return model.getLivery().isColorLivery();
-        });
+        return this->findBy([=](const CAircraftModel &model) { return model.getLivery().isColorLivery(); });
     }
 
     CAircraftModelList CAircraftModelList::findByMilitaryFlag(bool military) const
     {
-        return this->findBy([=](const CAircraftModel &model) {
-            return (model.isMilitary() == military);
-        });
+        return this->findBy([=](const CAircraftModel &model) { return (model.isMilitary() == military); });
     }
 
     CAircraftModelList CAircraftModelList::findByVtolFlag(bool vtol) const
     {
-        return this->findBy([=](const CAircraftModel &model) {
-            return (model.isVtol() == vtol);
-        });
+        return this->findBy([=](const CAircraftModel &model) { return (model.isVtol() == vtol); });
     }
 
     CAircraftModelList CAircraftModelList::findByModelMode(CAircraftModel::ModelMode mode) const
     {
-        return this->findBy([=](const CAircraftModel &model) {
-            return (model.getModelMode() == mode);
-        });
+        return this->findBy([=](const CAircraftModel &model) { return (model.getModelMode() == mode); });
     }
 
     CAircraftModelList CAircraftModelList::findByCategoryFirstLevel(int firstLevel) const
@@ -431,30 +417,24 @@ namespace swift::misc::simulation
 
     CAircraftModelList CAircraftModelList::findFsFamilyModels() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return model.getSimulator().isMicrosoftOrPrepare3DSimulator();
-        });
+        return this->findBy(
+            [](const CAircraftModel &model) { return model.getSimulator().isMicrosoftOrPrepare3DSimulator(); });
     }
 
     CAircraftModelList CAircraftModelList::findNonFsFamilyModels() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return !model.getSimulator().isMicrosoftOrPrepare3DSimulator();
-        });
+        return this->findBy(
+            [](const CAircraftModel &model) { return !model.getSimulator().isMicrosoftOrPrepare3DSimulator(); });
     }
 
     CAircraftModelList CAircraftModelList::findWithValidDbKey() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return model.hasValidDbKey();
-        });
+        return this->findBy([](const CAircraftModel &model) { return model.hasValidDbKey(); });
     }
 
     CAircraftModelList CAircraftModelList::findWithoutValidDbKey() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return !model.hasValidDbKey();
-        });
+        return this->findBy([](const CAircraftModel &model) { return !model.hasValidDbKey(); });
     }
 
     CAircraftModelList CAircraftModelList::findWithoutValidDbKey(int maxElements) const
@@ -467,32 +447,28 @@ namespace swift::misc::simulation
     CAircraftModelList CAircraftModelList::findNonDbModelsForAirline(const QString &airline) const
     {
         const CAircraftModelList noDb = this->findWithoutValidDbKey();
-        return noDb.findBy([&](const CAircraftModel &model) {
-            return model.getAirlineIcaoCode().matchesDesignator(airline);
-        });
+        return noDb.findBy(
+            [&](const CAircraftModel &model) { return model.getAirlineIcaoCode().matchesDesignator(airline); });
     }
 
     CAircraftModelList CAircraftModelList::findNonDbModelsForAircraft(const QString &airline) const
     {
         const CAircraftModelList noDb = this->findWithoutValidDbKey();
-        return noDb.findBy([&](const CAircraftModel &model) {
-            return model.getAircraftIcaoCode().matchesDesignator(airline);
-        });
+        return noDb.findBy(
+            [&](const CAircraftModel &model) { return model.getAircraftIcaoCode().matchesDesignator(airline); });
     }
 
     CAircraftModelList CAircraftModelList::findNonDbModelsForModelString(const QString &modelString) const
     {
         const CAircraftModelList noDb = this->findWithoutValidDbKey();
-        return noDb.findBy([&](const CAircraftModel &model) {
-            return model.matchesModelString(modelString, Qt::CaseInsensitive);
-        });
+        return noDb.findBy(
+            [&](const CAircraftModel &model) { return model.matchesModelString(modelString, Qt::CaseInsensitive); });
     }
 
     CAircraftModelList CAircraftModelList::findAllIncludedModels() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return model.getModelMode() == CAircraftModel::Include;
-        });
+        return this->findBy(
+            [](const CAircraftModel &model) { return model.getModelMode() == CAircraftModel::Include; });
     }
 
     CAircraftModelList CAircraftModelList::findAllIncludedModels(int maxElements) const
@@ -504,9 +480,8 @@ namespace swift::misc::simulation
 
     CAircraftModelList CAircraftModelList::findAllExcludedModels() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return model.getModelMode() == CAircraftModel::Exclude;
-        });
+        return this->findBy(
+            [](const CAircraftModel &model) { return model.getModelMode() == CAircraftModel::Exclude; });
     }
 
     CAircraftModelList CAircraftModelList::findAllExcludedModels(int maxElements) const
@@ -522,10 +497,7 @@ namespace swift::misc::simulation
         CAircraftModelList duplicates;
         for (const auto [string, count] : makePairsRange(modelStrings))
         {
-            if (count > 1)
-            {
-                duplicates.push_back(this->findByModelString(string, Qt::CaseInsensitive));
-            }
+            if (count > 1) { duplicates.push_back(this->findByModelString(string, Qt::CaseInsensitive)); }
         }
         return duplicates;
     }
@@ -535,14 +507,8 @@ namespace swift::misc::simulation
         QMap<QString, int> modelStrings;
         for (const CAircraftModel &model : *this)
         {
-            if (modelStrings.contains(model.getModelString()))
-            {
-                modelStrings[model.getModelModeAsString()]++;
-            }
-            else
-            {
-                modelStrings[model.getModelModeAsString()] = 1;
-            }
+            if (modelStrings.contains(model.getModelString())) { modelStrings[model.getModelModeAsString()]++; }
+            else { modelStrings[model.getModelModeAsString()] = 1; }
         }
         return modelStrings;
     }
@@ -553,14 +519,8 @@ namespace swift::misc::simulation
         for (const CAircraftModel &model : *this)
         {
             if (!model.hasDistributor()) { continue; }
-            if (distributors.contains(model.getDistributor()))
-            {
-                distributors[model.getDistributor()]++;
-            }
-            else
-            {
-                distributors[model.getDistributor()] = 1;
-            }
+            if (distributors.contains(model.getDistributor())) { distributors[model.getDistributor()]++; }
+            else { distributors[model.getDistributor()] = 1; }
         }
         return distributors;
     }
@@ -571,14 +531,8 @@ namespace swift::misc::simulation
         for (const CAircraftModel &model : *this)
         {
             if (!model.hasAircraftDesignator()) { continue; }
-            if (icaos.contains(model.getAircraftIcaoCode()))
-            {
-                icaos[model.getAircraftIcaoCode()]++;
-            }
-            else
-            {
-                icaos[model.getAircraftIcaoCode()] = 1;
-            }
+            if (icaos.contains(model.getAircraftIcaoCode())) { icaos[model.getAircraftIcaoCode()]++; }
+            else { icaos[model.getAircraftIcaoCode()] = 1; }
         }
         return icaos;
     }
@@ -589,14 +543,8 @@ namespace swift::misc::simulation
         for (const CAircraftModel &model : *this)
         {
             if (!model.hasAirlineDesignator()) { continue; }
-            if (icaos.contains(model.getAirlineIcaoCode()))
-            {
-                icaos[model.getAirlineIcaoCode()]++;
-            }
-            else
-            {
-                icaos[model.getAirlineIcaoCode()] = 1;
-            }
+            if (icaos.contains(model.getAirlineIcaoCode())) { icaos[model.getAirlineIcaoCode()]++; }
+            else { icaos[model.getAirlineIcaoCode()] = 1; }
         }
         return icaos;
     }
@@ -627,16 +575,12 @@ namespace swift::misc::simulation
 
     CAircraftModelList CAircraftModelList::findModelsWithoutExistingFile() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return !model.hasExistingCorrespondingFile();
-        });
+        return this->findBy([](const CAircraftModel &model) { return !model.hasExistingCorrespondingFile(); });
     }
 
     CAircraftModelList CAircraftModelList::findModelsWithExistingFile() const
     {
-        return this->findBy([](const CAircraftModel &model) {
-            return model.hasExistingCorrespondingFile();
-        });
+        return this->findBy([](const CAircraftModel &model) { return model.hasExistingCorrespondingFile(); });
     }
 
     QString CAircraftModelList::designatorToFamily(const CAircraftIcaoCode &aircraftIcaoCode) const
@@ -646,47 +590,34 @@ namespace swift::misc::simulation
         {
             const CAircraftIcaoCode icao(model.getAircraftIcaoCode());
             if (!icao.hasFamily()) continue;
-            if (icao.matchesDesignator(aircraftIcaoCode.getDesignator()))
-            {
-                return icao.getFamily();
-            }
+            if (icao.matchesDesignator(aircraftIcaoCode.getDesignator())) { return icao.getFamily(); }
         }
         return QString();
     }
 
     CAircraftModelList CAircraftModelList::matchesSimulator(const CSimulatorInfo &simulator) const
     {
-        return this->findBy([&](const CAircraftModel &model) {
-            return model.matchesSimulator(simulator);
-        });
+        return this->findBy([&](const CAircraftModel &model) { return model.matchesSimulator(simulator); });
     }
 
     bool CAircraftModelList::containsMatchingSimulator(const CSimulatorInfo &simulators) const
     {
-        return this->containsBy([&](const CAircraftModel &model) {
-            return model.matchesSimulator(simulators);
-        });
+        return this->containsBy([&](const CAircraftModel &model) { return model.matchesSimulator(simulators); });
     }
 
     bool CAircraftModelList::containsNotMatchingSimulator(const CSimulatorInfo &simulators) const
     {
-        return this->containsBy([&](const CAircraftModel &model) {
-            return !model.matchesSimulator(simulators);
-        });
+        return this->containsBy([&](const CAircraftModel &model) { return !model.matchesSimulator(simulators); });
     }
 
     bool CAircraftModelList::containsMilitary() const
     {
-        return this->containsBy([&](const CAircraftModel &model) {
-            return model.isMilitary();
-        });
+        return this->containsBy([&](const CAircraftModel &model) { return model.isMilitary(); });
     }
 
     bool CAircraftModelList::containsCivilian() const
     {
-        return this->containsBy([&](const CAircraftModel &model) {
-            return model.isCivilian();
-        });
+        return this->containsBy([&](const CAircraftModel &model) { return model.isCivilian(); });
     }
 
     bool CAircraftModelList::containsCivilianAndMilitary() const
@@ -696,16 +627,12 @@ namespace swift::misc::simulation
 
     bool CAircraftModelList::containsVtol() const
     {
-        return this->containsBy([&](const CAircraftModel &model) {
-            return model.isVtol();
-        });
+        return this->containsBy([&](const CAircraftModel &model) { return model.isVtol(); });
     }
 
     bool CAircraftModelList::containsCategory() const
     {
-        return this->containsBy([&](const CAircraftModel &model) {
-            return model.hasCategory();
-        });
+        return this->containsBy([&](const CAircraftModel &model) { return model.hasCategory(); });
     }
 
     bool CAircraftModelList::containsCategory(int firstLevel) const
@@ -719,9 +646,7 @@ namespace swift::misc::simulation
     CAircraftModelList CAircraftModelList::findByDistributors(const CDistributorList &distributors) const
     {
         if (distributors.isEmpty()) { return CAircraftModelList(); }
-        return this->findBy([&](const CAircraftModel &model) {
-            return model.matchesAnyDbDistributor(distributors);
-        });
+        return this->findBy([&](const CAircraftModel &model) { return model.matchesAnyDbDistributor(distributors); });
     }
 
     int CAircraftModelList::setSimulatorInfo(const CSimulatorInfo &info)
@@ -824,7 +749,8 @@ namespace swift::misc::simulation
     {
         if (modelString.isEmpty()) { return false; }
         if (this->isEmpty()) { return false; }
-        const int r = this->removeIf([&](const CAircraftModel &model) { return model.matchesModelString(modelString, sensitivity); });
+        const int r = this->removeIf(
+            [&](const CAircraftModel &model) { return model.matchesModelString(modelString, sensitivity); });
         return r > 0;
     }
 
@@ -850,10 +776,7 @@ namespace swift::misc::simulation
         CAircraftModelList models;
         for (const CAircraftModel &model : *this)
         {
-            if (model.matchesSimulator(needToMatch))
-            {
-                models.push_back(model);
-            }
+            if (model.matchesSimulator(needToMatch)) { models.push_back(model); }
         }
         const int diff = models.size() - oldSize;
         if (diff > 0) { *this = models; }
@@ -892,10 +815,7 @@ namespace swift::misc::simulation
         return diff;
     }
 
-    int CAircraftModelList::removeXPlaneFlyablePlanes()
-    {
-        return this->removeIfExcluded();
-    }
+    int CAircraftModelList::removeXPlaneFlyablePlanes() { return this->removeIfExcluded(); }
 
     int CAircraftModelList::removeByDistributor(const CDistributor &distributor)
     {
@@ -907,9 +827,11 @@ namespace swift::misc::simulation
         return this->removeIf(&CAircraftModel::getAircraftIcaoCode, aircraftIcao, &CAircraftModel::getLivery, livery);
     }
 
-    int CAircraftModelList::removeByAircraftAndAirline(const CAircraftIcaoCode &aircraftIcao, const CAirlineIcaoCode &airline)
+    int CAircraftModelList::removeByAircraftAndAirline(const CAircraftIcaoCode &aircraftIcao,
+                                                       const CAirlineIcaoCode &airline)
     {
-        return this->removeIf(&CAircraftModel::getAircraftIcaoCode, aircraftIcao, &CAircraftModel::getAirlineIcaoCode, airline);
+        return this->removeIf(&CAircraftModel::getAircraftIcaoCode, aircraftIcao, &CAircraftModel::getAirlineIcaoCode,
+                              airline);
     }
 
     int CAircraftModelList::removeIfNotFsFamily()
@@ -922,7 +844,8 @@ namespace swift::misc::simulation
         return delta;
     }
 
-    CAircraftModelList CAircraftModelList::removeIfFileButNotInSet(const QString &fileName, const QSet<QString> &modelStrings)
+    CAircraftModelList CAircraftModelList::removeIfFileButNotInSet(const QString &fileName,
+                                                                   const QSet<QString> &modelStrings)
     {
         CAircraftModelList removed;
         for (const CAircraftModel &model : *this)
@@ -936,7 +859,8 @@ namespace swift::misc::simulation
         return removed;
     }
 
-    bool CAircraftModelList::replaceOrAddModelWithString(const CAircraftModel &addOrReplaceModel, Qt::CaseSensitivity sensitivity)
+    bool CAircraftModelList::replaceOrAddModelWithString(const CAircraftModel &addOrReplaceModel,
+                                                         Qt::CaseSensitivity sensitivity)
     {
         bool r = false;
         if (!this->isEmpty()) { r = this->removeModelWithString(addOrReplaceModel.getModelString(), sensitivity); }
@@ -944,7 +868,8 @@ namespace swift::misc::simulation
         return r;
     }
 
-    int CAircraftModelList::replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList, Qt::CaseSensitivity sensitivity)
+    int CAircraftModelList::replaceOrAddModelsWithString(const CAircraftModelList &addOrReplaceList,
+                                                         Qt::CaseSensitivity sensitivity)
     {
         if (addOrReplaceList.isEmpty()) { return 0; }
         if (this->isEmpty())
@@ -961,21 +886,22 @@ namespace swift::misc::simulation
         return this->size() - removed;
     }
 
-    CAircraftModelList CAircraftModelList::findModelsStartingWith(const QString &modelString, Qt::CaseSensitivity sensitivity) const
+    CAircraftModelList CAircraftModelList::findModelsStartingWith(const QString &modelString,
+                                                                  Qt::CaseSensitivity sensitivity) const
     {
-        return this->findBy([&](const CAircraftModel &model) {
-            return model.getModelString().startsWith(modelString, sensitivity);
-        });
+        return this->findBy(
+            [&](const CAircraftModel &model) { return model.getModelString().startsWith(modelString, sensitivity); });
     }
 
-    CAircraftModelList CAircraftModelList::findByModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const
+    CAircraftModelList CAircraftModelList::findByModelStrings(const QStringList &modelStrings,
+                                                              Qt::CaseSensitivity sensitivity) const
     {
-        return this->findBy([&](const CAircraftModel &model) {
-            return modelStrings.contains(model.getModelString(), sensitivity);
-        });
+        return this->findBy(
+            [&](const CAircraftModel &model) { return modelStrings.contains(model.getModelString(), sensitivity); });
     }
 
-    CAircraftModelList CAircraftModelList::findByNotInModelStrings(const QStringList &modelStrings, Qt::CaseSensitivity sensitivity) const
+    CAircraftModelList CAircraftModelList::findByNotInModelStrings(const QStringList &modelStrings,
+                                                                   Qt::CaseSensitivity sensitivity) const
     {
         return this->findBy([&](const CAircraftModel &model) {
             const bool c = modelStrings.contains(model.getModelString(), sensitivity);
@@ -1009,10 +935,7 @@ namespace swift::misc::simulation
     CCountPerSimulator CAircraftModelList::countPerSimulator() const
     {
         CCountPerSimulator count;
-        for (const CAircraftModel &model : *this)
-        {
-            count.increaseSimulatorCounts(model.getSimulator());
-        }
+        for (const CAircraftModel &model : *this) { count.increaseSimulatorCounts(model.getSimulator()); }
         return count;
     }
 
@@ -1021,18 +944,12 @@ namespace swift::misc::simulation
         if (this->isEmpty()) { return CSimulatorInfo(); } // not known
         const CCountPerSimulator counts(this->countPerSimulator());
         const int simulatorsRepresented = counts.simulatorsRepresented();
-        if (simulatorsRepresented < 1)
-        {
-            return CSimulatorInfo();
-        }
+        if (simulatorsRepresented < 1) { return CSimulatorInfo(); }
         const QMultiMap<int, CSimulatorInfo> cps(counts.countPerSimulator());
         CSimulatorInfo maxSim = cps.last();
         const int count = cps.lastKey(); // how many elements
         const QList<CSimulatorInfo> infoWithMaxValues = cps.values(count); // all with the same counts
-        for (const CSimulatorInfo &info : infoWithMaxValues)
-        {
-            maxSim.addSimulator(info);
-        }
+        for (const CSimulatorInfo &info : infoWithMaxValues) { maxSim.addSimulator(info); }
         return maxSim;
     }
 
@@ -1096,15 +1013,9 @@ namespace swift::misc::simulation
         return count;
     }
 
-    int CAircraftModelList::countDifferentAirlines() const
-    {
-        return this->getAirlineVDesignators().size();
-    }
+    int CAircraftModelList::countDifferentAirlines() const { return this->getAirlineVDesignators().size(); }
 
-    int CAircraftModelList::countCombinedTypes() const
-    {
-        return this->getCombinedTypes().size();
-    }
+    int CAircraftModelList::countCombinedTypes() const { return this->getCombinedTypes().size(); }
 
     int CAircraftModelList::countAliases() const
     {
@@ -1118,22 +1029,13 @@ namespace swift::misc::simulation
 
     void CAircraftModelList::sortByFileName()
     {
-        if (CFileUtils::isFileNameCaseSensitive())
-        {
-            this->sortBy(&CAircraftModel::getFileName);
-        }
-        else
-        {
-            this->sortBy(&CAircraftModel::getFileNameLowerCase);
-        }
+        if (CFileUtils::isFileNameCaseSensitive()) { this->sortBy(&CAircraftModel::getFileName); }
+        else { this->sortBy(&CAircraftModel::getFileNameLowerCase); }
     }
 
     void CAircraftModelList::updateDistributor(const CDistributor &distributor)
     {
-        for (CAircraftModel &model : *this)
-        {
-            model.setDistributor(distributor);
-        }
+        for (CAircraftModel &model : *this) { model.setDistributor(distributor); }
     }
 
     CDistributorList CAircraftModelList::getDistributors(bool onlyDbDistributors) const
@@ -1249,10 +1151,7 @@ namespace swift::misc::simulation
         CAirlineIcaoCodeList icaos;
         for (const CAircraftModel &model : *this)
         {
-            if (model.getAirlineIcaoCode().getGroupId() == groupId)
-            {
-                icaos.push_back(model.getAirlineIcaoCode());
-            }
+            if (model.getAirlineIcaoCode().getGroupId() == groupId) { icaos.push_back(model.getAirlineIcaoCode()); }
         }
         return icaos;
     }
@@ -1299,10 +1198,7 @@ namespace swift::misc::simulation
         {
             if (!model.hasFileName()) { continue; }
             const QString fn = (cs ? model.getFileName() : model.getFileNameLowerCase());
-            if (CFileUtils::isWindowsUncPath(fn))
-            {
-                files.insert(fn);
-            }
+            if (CFileUtils::isWindowsUncPath(fn)) { files.insert(fn); }
         }
         return files;
     }
@@ -1318,13 +1214,14 @@ namespace swift::misc::simulation
         CSetBuilder<QString> str;
         for (const CAircraftModel &model : *this)
         {
-            const QString s = (model.hasAircraftDesignator() ?
-                                   (withDbId ? model.getAircraftIcaoCode().getDesignatorDbKey() : model.getAircraftIcaoCodeDesignator()) :
-                                   "no aircraft") %
-                              u"/" %
-                              (model.hasAircraftDesignator() ?
-                                   (withDbId ? model.getAirlineIcaoCode().getDesignatorDbKey() : model.getAirlineIcaoCodeVDesignator()) :
-                                   "no airline");
+            const QString s =
+                (model.hasAircraftDesignator() ? (withDbId ? model.getAircraftIcaoCode().getDesignatorDbKey() :
+                                                             model.getAircraftIcaoCodeDesignator()) :
+                                                 "no aircraft") %
+                u"/" %
+                (model.hasAircraftDesignator() ? (withDbId ? model.getAirlineIcaoCode().getDesignatorDbKey() :
+                                                             model.getAirlineIcaoCodeVDesignator()) :
+                                                 "no airline");
             str.insert(s);
         }
         return str;
@@ -1338,18 +1235,12 @@ namespace swift::misc::simulation
 
     void CAircraftModelList::updateAircraftIcao(const CAircraftIcaoCode &icao)
     {
-        for (CAircraftModel &model : *this)
-        {
-            model.setAircraftIcaoCode(icao);
-        }
+        for (CAircraftModel &model : *this) { model.setAircraftIcaoCode(icao); }
     }
 
     void CAircraftModelList::updateLivery(const CLivery &livery)
     {
-        for (CAircraftModel &model : *this)
-        {
-            model.setLivery(livery);
-        }
+        for (CAircraftModel &model : *this) { model.setLivery(livery); }
     }
 
     int CAircraftModelList::updateDistributorOrder(const CDistributorList &distributors)
@@ -1365,19 +1256,22 @@ namespace swift::misc::simulation
 
     void CAircraftModelList::normalizeFileNamesForDb()
     {
-        for (CAircraftModel &model : *this)
-        {
-            model.normalizeFileNameForDb();
-        }
+        for (CAircraftModel &model : *this) { model.normalizeFileNameForDb(); }
     }
 
-    ScoredModels CAircraftModelList::scoreFull(const CAircraftModel &remoteModel, bool preferColorLiveries, bool ignoreZeroScores, CStatusMessageList *log) const
+    ScoredModels CAircraftModelList::scoreFull(const CAircraftModel &remoteModel, bool preferColorLiveries,
+                                               bool ignoreZeroScores, CStatusMessageList *log) const
     {
         ScoredModels scoreMap;
 
         // normally prefer colors if there is no airline
-        CCallsign::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'").arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(), boolToYesNo(ignoreZeroScores)));
-        CCallsign::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- Start scoring in list with %1 models").arg(this->size()));
+        CCallsign::addLogDetailsToList(
+            log, remoteModel.getCallsign(),
+            QStringLiteral("Prefer color liveries: '%1', airline: '%2', ignore zero scores: '%3'")
+                .arg(boolToYesNo(preferColorLiveries), remoteModel.getAirlineIcaoCodeDesignator(),
+                     boolToYesNo(ignoreZeroScores)));
+        CCallsign::addLogDetailsToList(log, remoteModel.getCallsign(),
+                                       QStringLiteral("--- Start scoring in list with %1 models").arg(this->size()));
         CCallsign::addLogDetailsToList(log, remoteModel.getCallsign(), this->coverageSummaryForModel(remoteModel));
 
         int c = 1;
@@ -1387,9 +1281,12 @@ namespace swift::misc::simulation
             const int score = model.calculateScore(remoteModel, preferColorLiveries, log ? &subMsgs : nullptr);
             if (ignoreZeroScores && score < 1) { continue; }
 
-            CCallsign::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- Calculating #%1 '%2'---").arg(c).arg(model.getModelStringAndDbKey()));
+            CCallsign::addLogDetailsToList(
+                log, remoteModel.getCallsign(),
+                QStringLiteral("--- Calculating #%1 '%2'---").arg(c).arg(model.getModelStringAndDbKey()));
             if (log) { log->push_back(subMsgs); }
-            CCallsign::addLogDetailsToList(log, remoteModel.getCallsign(), QStringLiteral("--- End calculating #%1 ---").arg(c));
+            CCallsign::addLogDetailsToList(log, remoteModel.getCallsign(),
+                                           QStringLiteral("--- End calculating #%1 ---").arg(c));
             c++;
             scoreMap.insert(score, model);
         }
@@ -1402,10 +1299,7 @@ namespace swift::misc::simulation
         QStringList c;
         for (const CAircraftModel &model : *this)
         {
-            if (model.getSimulator().matchesAny(simulator))
-            {
-                c.append(model.getModelString());
-            }
+            if (model.getSimulator().matchesAny(simulator)) { c.append(model.getModelString()); }
         }
         if (sorted) { c.sort(); }
         return c;
@@ -1418,7 +1312,8 @@ namespace swift::misc::simulation
         return this->validateForPublishing(validModels, invalidModels);
     }
 
-    CStatusMessageList CAircraftModelList::validateForPublishing(CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
+    CStatusMessageList CAircraftModelList::validateForPublishing(CAircraftModelList &validModels,
+                                                                 CAircraftModelList &invalidModels) const
     {
         if (this->isEmpty()) { return CStatusMessageList(); }
         CStatusMessageList msgs;
@@ -1444,17 +1339,16 @@ namespace swift::misc::simulation
                 CAircraftModelList::addAsValidOrInvalidModel(model, true, validModels, invalidModels);
                 continue;
             }
-            if (model.hasModelString())
-            {
-                singleMsg.prependMessage(model.getModelString() % u": ");
-            }
+            if (model.hasModelString()) { singleMsg.prependMessage(model.getModelString() % u": "); }
             msgs.push_back(singleMsg);
             CAircraftModelList::addAsValidOrInvalidModel(model, false, validModels, invalidModels);
         }
         return msgs;
     }
 
-    CStatusMessageList CAircraftModelList::validateDistributors(const CDistributorList &distributors, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
+    CStatusMessageList CAircraftModelList::validateDistributors(const CDistributorList &distributors,
+                                                                CAircraftModelList &validModels,
+                                                                CAircraftModelList &invalidModels) const
     {
         CStatusMessageList msgs;
         CDistributorList distributorsFromDb(distributors);
@@ -1475,14 +1369,19 @@ namespace swift::misc::simulation
             CAircraftModelList::addAsValidOrInvalidModel(model, valid, validModels, invalidModels);
             if (!valid)
             {
-                const CStatusMessage msg = CStatusMessage(this).validationError(u"No valid distributor for '%1', was '%2'") << model.getModelString() << model.getDistributor().getDbKey();
+                const CStatusMessage msg =
+                    CStatusMessage(this).validationError(u"No valid distributor for '%1', was '%2'")
+                    << model.getModelString() << model.getDistributor().getDbKey();
                 msgs.push_back(msg);
             }
         }
         return msgs;
     }
 
-    CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simRootDirectory, bool alreadySortedByFn) const
+    CStatusMessageList CAircraftModelList::validateFiles(CAircraftModelList &validModels,
+                                                         CAircraftModelList &invalidModels, bool ignoreEmptyFileNames,
+                                                         int stopAtFailedFiles, std::atomic_bool &wasStopped,
+                                                         const QString &simRootDirectory, bool alreadySortedByFn) const
     {
         wasStopped = false;
 
@@ -1504,15 +1403,13 @@ namespace swift::misc::simulation
 
         const bool caseSensitive = CFileUtils::isFileNameCaseSensitive();
         const QString simRootDir = CFileUtils::normalizeFilePathToQtStandard(
-            CFileUtils::stripLeadingSlashOrDriveLetter(
-                caseSensitive ? simRootDirectory : simRootDirectory.toLower()));
+            CFileUtils::stripLeadingSlashOrDriveLetter(caseSensitive ? simRootDirectory : simRootDirectory.toLower()));
 
         for (const CAircraftModel &model : std::as_const(sorted))
         {
             if (wasStopped) { break; } // allow breaking from external
             bool ok = false;
-            do
-            {
+            do {
                 if (!model.hasModelString())
                 {
                     msgs.push_back(CStatusMessage(this).validationError(u"No model string"));
@@ -1522,14 +1419,16 @@ namespace swift::misc::simulation
                 if (!model.hasFileName())
                 {
                     if (ignoreEmptyFileNames) { continue; }
-                    msgs.push_back(CStatusMessage(this).validationError(u"'%1', no file name") << model.getModelStringAndDbKey());
+                    msgs.push_back(CStatusMessage(this).validationError(u"'%1', no file name")
+                                   << model.getModelStringAndDbKey());
                     break;
                 }
 
                 const QString fn(caseSensitive ? model.getFileName() : model.getFileNameLowerCase());
                 if (failedFiles.contains(fn))
                 {
-                    msgs.push_back(CStatusMessage(this).validationError(u"'%1', known failed file '%2' skipped") << model.getModelStringAndDbKey() << model.getFileName());
+                    msgs.push_back(CStatusMessage(this).validationError(u"'%1', known failed file '%2' skipped")
+                                   << model.getModelStringAndDbKey() << model.getFileName());
                     break;
                 }
 
@@ -1538,7 +1437,9 @@ namespace swift::misc::simulation
                     if (!simRootDirectory.isEmpty() && !fn.contains(simRootDir))
                     {
                         // check if in root directory
-                        msgs.push_back(CStatusMessage(this).validationError(u"'%1', not in root directory '%2', '%3' skipped") << model.getModelStringAndDbKey() << simRootDir << model.getFileName());
+                        msgs.push_back(
+                            CStatusMessage(this).validationError(u"'%1', not in root directory '%2', '%3' skipped")
+                            << model.getModelStringAndDbKey() << simRootDir << model.getFileName());
                         failedFiles.insert(fn);
                         failedFilesCount++;
                         break;
@@ -1547,14 +1448,16 @@ namespace swift::misc::simulation
                     {
                         ok = true;
                         workingFiles.insert(fn);
-                        // msgs.push_back(CStatusMessage(this).validationInfo(u"'%1', file '%2' existing") << model.getModelStringAndDbKey() << model.getFileName());
+                        // msgs.push_back(CStatusMessage(this).validationInfo(u"'%1', file '%2' existing") <<
+                        // model.getModelStringAndDbKey() << model.getFileName());
                         break;
                     }
                 }
 
                 failedFiles.insert(fn);
                 failedFilesCount++;
-                msgs.push_back(CStatusMessage(this).validationError(u"'%1', file '%2' not existing") << model.getModelStringAndDbKey() << model.getFileName());
+                msgs.push_back(CStatusMessage(this).validationError(u"'%1', file '%2' not existing")
+                               << model.getModelStringAndDbKey() << model.getFileName());
             }
             while (false);
 
@@ -1562,14 +1465,23 @@ namespace swift::misc::simulation
             if (stopAtFailedFiles > 0 && failedFilesCount >= stopAtFailedFiles)
             {
                 wasStopped = true;
-                msgs.push_back(CStatusMessage(this).validationWarning(u"Stopping after %1 failed files") << failedFilesCount);
+                msgs.push_back(CStatusMessage(this).validationWarning(u"Stopping after %1 failed files")
+                               << failedFilesCount);
                 break;
             }
         }
 
         // Summary
-        if (!validModels.isEmpty()) { msgs.push_back(CStatusMessage(this).validationInfo(u"File validation, valid models: %1") << validModels.size()); }
-        if (!invalidModels.isEmpty()) { msgs.push_back(CStatusMessage(this).validationWarning(u"File validation, invalid models: %1") << invalidModels.size()); }
+        if (!validModels.isEmpty())
+        {
+            msgs.push_back(CStatusMessage(this).validationInfo(u"File validation, valid models: %1")
+                           << validModels.size());
+        }
+        if (!invalidModels.isEmpty())
+        {
+            msgs.push_back(CStatusMessage(this).validationWarning(u"File validation, invalid models: %1")
+                           << invalidModels.size());
+        }
 
         // done
         return msgs;
@@ -1585,12 +1497,14 @@ namespace swift::misc::simulation
         const QSet<QString> uncMachines = CFileUtils::windowsUncMachines(uncFiles);
         if (uncMachines.isEmpty())
         {
-            msgs.push_back(CStatusMessage(this).validationInfo(u"Found NO UNC machines for %1 files, odd...?") << uncFiles.size());
+            msgs.push_back(CStatusMessage(this).validationInfo(u"Found NO UNC machines for %1 files, odd...?")
+                           << uncFiles.size());
         }
         else
         {
             const QString machines = joinStringSet(uncMachines, ", ");
-            msgs.push_back(CStatusMessage(this).validationInfo(u"Found %1 UNC files on machines: %2") << uncFiles.size() << machines);
+            msgs.push_back(CStatusMessage(this).validationInfo(u"Found %1 UNC files on machines: %2")
+                           << uncFiles.size() << machines);
         }
 
         for (const QString &m : uncMachines)
@@ -1598,7 +1512,8 @@ namespace swift::misc::simulation
             const bool ping = canPing(m);
             if (!ping)
             {
-                msgs.push_back(CStatusMessage(this).validationError(u"Cannot ping UNC machine(s): %1. UNC files: %2") << m << uncFiles.size());
+                msgs.push_back(CStatusMessage(this).validationError(u"Cannot ping UNC machine(s): %1. UNC files: %2")
+                               << m << uncFiles.size());
             }
         }
         return msgs;
@@ -1608,10 +1523,7 @@ namespace swift::misc::simulation
     {
         CAircraftModel::MemoHelper::CMemoizer helper;
         QJsonArray array;
-        for (auto it = cbegin(); it != cend(); ++it)
-        {
-            array << it->toMemoizedJson(helper);
-        }
+        for (auto it = cbegin(); it != cend(); ++it) { array << it->toMemoizedJson(helper); }
         QJsonObject json;
         json.insert("containerbase", array);
         json.insert("aircraftIcaos", helper.getTable<CAircraftIcaoCode>().toJson());
@@ -1701,9 +1613,7 @@ namespace swift::misc::simulation
         QString html;
         for (const CAircraftModel &model : *this)
         {
-            html += html.isEmpty() ?
-                        model.asHtmlSummary(" ") :
-                        u"<br>" % model.asHtmlSummary(" ");
+            html += html.isEmpty() ? model.asHtmlSummary(" ") : u"<br>" % model.asHtmlSummary(" ");
         }
         return html;
     }
@@ -1714,28 +1624,30 @@ namespace swift::misc::simulation
 
         const int dbEntries = this->countWithValidDbKey();
         const double dbRatio = CMathUtils::round(static_cast<double>(100 * dbEntries) / this->size(), 1);
-        return u"Entries: " % QString::number(this->size()) %
-               u" | valid DB keys: " % QString::number(dbEntries) %
-               u" (" % QString::number(dbRatio) % u"%)" % separator %
-               u"color liveries: " % QString::number(this->countModelsWithColorLivery()) %
-               u" | airline liveries: " % QString::number(this->countModelsWithAirlineLivery()) % separator %
-               u"VTOL: " % QString::number(this->countVtolAircraft()) %
-               u" | military: " % QString::number(this->countMilitaryAircraft()) %
-               u" | civilian: " % QString::number(this->countCivilianAircraft()) % separator %
-               u"Different airlines: " % QString::number(this->countDifferentAirlines()) % separator %
-               u"Combined types: '" % this->getCombinedTypesAsString() % u'\'' % separator %
+        return u"Entries: " % QString::number(this->size()) % u" | valid DB keys: " % QString::number(dbEntries) %
+               u" (" % QString::number(dbRatio) % u"%)" % separator % u"color liveries: " %
+               QString::number(this->countModelsWithColorLivery()) % u" | airline liveries: " %
+               QString::number(this->countModelsWithAirlineLivery()) % separator % u"VTOL: " %
+               QString::number(this->countVtolAircraft()) % u" | military: " %
+               QString::number(this->countMilitaryAircraft()) % u" | civilian: " %
+               QString::number(this->countCivilianAircraft()) % separator % u"Different airlines: " %
+               QString::number(this->countDifferentAirlines()) % separator % u"Combined types: '" %
+               this->getCombinedTypesAsString() % u'\'' % separator %
                (this->size() <= 25 ?
                     (u"Aircraft/airlines: " % this->getAicraftAndAirlineDesignatorsAsString(true) % separator) :
                     QString()) %
                u"Simulators: " % this->countPerSimulator().toQString();
     }
 
-    QString CAircraftModelList::coverageSummaryForModel(const CAircraftModel &checkModel, const QString &separator) const
+    QString CAircraftModelList::coverageSummaryForModel(const CAircraftModel &checkModel,
+                                                        const QString &separator) const
     {
-        const bool combinedCodeForModel = this->containsCombinedType(checkModel.getAircraftIcaoCode().getCombinedType());
-        const bool airlineForModel = checkModel.hasAirlineDesignator() && this->containsAirlineLivery(checkModel.getAirlineIcaoCode());
-        return coverageSummary(separator) % separator %
-               u"Data for input model, has combined: " % boolToYesNo(combinedCodeForModel) %
+        const bool combinedCodeForModel =
+            this->containsCombinedType(checkModel.getAircraftIcaoCode().getCombinedType());
+        const bool airlineForModel =
+            checkModel.hasAirlineDesignator() && this->containsAirlineLivery(checkModel.getAirlineIcaoCode());
+        return coverageSummary(separator) % separator % u"Data for input model, has combined: " %
+               boolToYesNo(combinedCodeForModel) %
                (checkModel.hasAirlineDesignator() ?
                     u" airline '" % checkModel.getAirlineIcaoCodeDesignator() % u"': " % boolToYesNo(airlineForModel) :
                     QString());
@@ -1751,28 +1663,20 @@ namespace swift::misc::simulation
             const CAircraftIcaoCodeList icaos = this->getAircraftIcaoCodesFromDb();
             QStringList designators(icaos.allDesignators().values());
             designators.sort();
-            stats += sep % sep %
-                     u"Aircraft ICAOs from DB: " % sep %
-                     designators.join(", ");
+            stats += sep % sep % u"Aircraft ICAOs from DB: " % sep % designators.join(", ");
         }
 
         if (airlineStats)
         {
             const CAirlineIcaoCodeList icaos = this->getAirlineIcaoCodesFromDb();
             const QStringList designators = icaos.toIcaoDesignatorCompleterStrings();
-            stats += sep % sep %
-                     u"Airline ICAOs from DB: " % sep %
-                     designators.join(", ");
+            stats += sep % sep % u"Airline ICAOs from DB: " % sep % designators.join(", ");
         }
 
         if (notOnlyDb)
         {
             const CAircraftModelList dbModels = this->findObjectsWithDbKey();
-            stats += sep %
-                     sep %
-                     u"DB objects:<br>---------" %
-                     sep %
-                     dbModels.htmlStatistics(false, false);
+            stats += sep % sep % u"DB objects:<br>---------" % sep % dbModels.htmlStatistics(false, false);
         }
         return stats;
     }
@@ -1782,24 +1686,30 @@ namespace swift::misc::simulation
         if (this->isEmpty()) { return CStatusMessage(this).info(u"No models"); }
         const QString json = this->toJsonString();
         const bool s = CFileUtils::writeStringToFile(json, invalidModelFileAndPath());
-        if (!s) { return CStatusMessage(this).error(u"Unable to save %1 entries to '%2'") << this->size() << invalidModelFileAndPath(); }
+        if (!s)
+        {
+            return CStatusMessage(this).error(u"Unable to save %1 entries to '%2'")
+                   << this->size() << invalidModelFileAndPath();
+        }
         return CStatusMessage(this).info(u"Saved %1 entries to '%2'") << this->size() << invalidModelFileAndPath();
     }
 
     CStatusMessage CAircraftModelList::loadInvalidModels()
     {
         const QString json = CFileUtils::readFileToString(invalidModelFileAndPath());
-        if (json.isEmpty()) { return CStatusMessage(this).error(u"Unable to read from '%1'") << invalidModelFileAndPath(); }
+        if (json.isEmpty())
+        {
+            return CStatusMessage(this).error(u"Unable to read from '%1'") << invalidModelFileAndPath();
+        }
         *this = CAircraftModelList::fromJson(json, true);
         return CStatusMessage(this).info(u"Loaded %1 entries from '%2'") << this->size() << invalidModelFileAndPath();
     }
 
-    CAircraftModelList CAircraftModelList::fromDatabaseJsonCaching(
-        const QJsonArray &array,
-        const CAircraftIcaoCodeList &icaos,
-        const CAircraftCategoryList &categories,
-        const CLiveryList &liveries,
-        const CDistributorList &distributors)
+    CAircraftModelList CAircraftModelList::fromDatabaseJsonCaching(const QJsonArray &array,
+                                                                   const CAircraftIcaoCodeList &icaos,
+                                                                   const CAircraftCategoryList &categories,
+                                                                   const CLiveryList &liveries,
+                                                                   const CDistributorList &distributors)
     {
         AircraftIcaoIdMap aircraftIcaosMap = icaos.toDbKeyValueMap();
         LiveryIdMap liveriesMap = liveries.toDbKeyValueMap();
@@ -1809,14 +1719,16 @@ namespace swift::misc::simulation
         CAircraftModelList models;
         for (const QJsonValue &value : array)
         {
-            models.push_back(CAircraftModel::fromDatabaseJsonCaching(value.toObject(), aircraftIcaosMap, categoriesMap, liveriesMap, distributorsMap));
+            models.push_back(CAircraftModel::fromDatabaseJsonCaching(value.toObject(), aircraftIcaosMap, categoriesMap,
+                                                                     liveriesMap, distributorsMap));
         }
         return models;
     }
 
     const QString &CAircraftModelList::invalidModelFileAndPath()
     {
-        static const QString f = CFileUtils::appendFilePathsAndFixUnc(CSwiftDirectories::logDirectory(), "invalidmodels.json");
+        static const QString f =
+            CFileUtils::appendFilePathsAndFixUnc(CSwiftDirectories::logDirectory(), "invalidmodels.json");
         return f;
     }
 
@@ -1826,7 +1738,9 @@ namespace swift::misc::simulation
         return fi.exists();
     }
 
-    void CAircraftModelList::addAsValidOrInvalidModel(const CAircraftModel &model, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels)
+    void CAircraftModelList::addAsValidOrInvalidModel(const CAircraftModel &model, bool valid,
+                                                      CAircraftModelList &validModels,
+                                                      CAircraftModelList &invalidModels)
     {
         if (valid)
         {
@@ -1840,7 +1754,9 @@ namespace swift::misc::simulation
         }
     }
 
-    void CAircraftModelList::addAsValidOrInvalidModels(const CAircraftModelList &models, bool valid, CAircraftModelList &validModels, CAircraftModelList &invalidModels)
+    void CAircraftModelList::addAsValidOrInvalidModels(const CAircraftModelList &models, bool valid,
+                                                       CAircraftModelList &validModels,
+                                                       CAircraftModelList &invalidModels)
     {
         for (const CAircraftModel &model : models)
         {

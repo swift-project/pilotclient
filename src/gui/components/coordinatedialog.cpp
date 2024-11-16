@@ -13,8 +13,7 @@ using namespace swift::gui::editors;
 
 namespace swift::gui::components
 {
-    CCoordinateDialog::CCoordinateDialog(QWidget *parent) : QDialog(parent),
-                                                            ui(new Ui::CCoordinateDialog)
+    CCoordinateDialog::CCoordinateDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CCoordinateDialog)
     {
         ui->setupUi(this);
         ui->editor_Coordinate->showSetButton(false);
@@ -23,33 +22,20 @@ namespace swift::gui::components
         connect(this, &QDialog::accepted, this, &CCoordinateDialog::changedCoordinate);
     }
 
-    CCoordinateDialog::~CCoordinateDialog()
-    {}
+    CCoordinateDialog::~CCoordinateDialog() {}
 
-    CCoordinateGeodetic CCoordinateDialog::getCoordinate() const
-    {
-        return ui->editor_Coordinate->getCoordinate();
-    }
+    CCoordinateGeodetic CCoordinateDialog::getCoordinate() const { return ui->editor_Coordinate->getCoordinate(); }
 
     void CCoordinateDialog::setCoordinate(const ICoordinateGeodetic &coordinate)
     {
         ui->editor_Coordinate->setCoordinate(coordinate);
     }
 
-    void CCoordinateDialog::setReadOnly(bool readonly)
-    {
-        ui->editor_Coordinate->setReadOnly(readonly);
-    }
+    void CCoordinateDialog::setReadOnly(bool readonly) { ui->editor_Coordinate->setReadOnly(readonly); }
 
-    void CCoordinateDialog::setSelectOnly()
-    {
-        ui->editor_Coordinate->setSelectOnly();
-    }
+    void CCoordinateDialog::setSelectOnly() { ui->editor_Coordinate->setSelectOnly(); }
 
-    void CCoordinateDialog::showElevation(bool show)
-    {
-        ui->editor_Coordinate->showElevation(show);
-    }
+    void CCoordinateDialog::showElevation(bool show) { ui->editor_Coordinate->showElevation(show); }
 
     CStatusMessageList CCoordinateDialog::validate(bool nested) const
     {

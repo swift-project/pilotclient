@@ -97,28 +97,18 @@ namespace MiscTest
         swift::misc::CCached<int> m_value2; //!< Second cached value.
     };
 
-    void CTestValueCache::initTestCase()
-    {
-        swift::misc::registerMetadata();
-    }
+    void CTestValueCache::initTestCase() { swift::misc::registerMetadata(); }
 
     void CTestValueCache::insertAndGet()
     {
-        CVariantMap testData {
-            { "value1", CVariant::from(1) },
-            { "value2", CVariant::from(2) },
-            { "value3", CVariant::from(3) }
-        };
-        CVariantMap testData2 {
-            { "value2", CVariant::from(42) },
-            { "value4", CVariant::from(4) }
-        };
-        CVariantMap testDataCombined {
-            { "value1", CVariant::from(1) },
-            { "value2", CVariant::from(42) },
-            { "value3", CVariant::from(3) },
-            { "value4", CVariant::from(4) }
-        };
+        CVariantMap testData { { "value1", CVariant::from(1) },
+                               { "value2", CVariant::from(2) },
+                               { "value3", CVariant::from(3) } };
+        CVariantMap testData2 { { "value2", CVariant::from(42) }, { "value4", CVariant::from(4) } };
+        CVariantMap testDataCombined { { "value1", CVariant::from(1) },
+                                       { "value2", CVariant::from(42) },
+                                       { "value3", CVariant::from(3) },
+                                       { "value4", CVariant::from(4) } };
 
         CValueCache cache(1);
         QVERIFY(cache.getAllValues() == CVariantMap());
@@ -142,10 +132,7 @@ namespace MiscTest
     template <typename F>
     void singleShotAndWait(QObject *object, F task)
     {
-        if (object->thread() == QThread::currentThread())
-        {
-            task();
-        }
+        if (object->thread() == QThread::currentThread()) { task(); }
         else
         {
             QTimer::singleShot(0, object, task);
@@ -204,12 +191,16 @@ namespace MiscTest
         CValueCache thisCache(1);
         CValueCache otherCache(1);
         connect(&thisCache, &CValueCache::valuesChangedByLocal, &thisCache, [&](const CValueCachePacket &values) {
-            QMetaObject::invokeMethod(&thisCache, [=, &thisCache] { thisCache.changeValuesFromRemote(values, thisProcess); });
-            QMetaObject::invokeMethod(&otherCache, [=, &otherCache] { otherCache.changeValuesFromRemote(values, otherProcess); });
+            QMetaObject::invokeMethod(&thisCache,
+                                      [=, &thisCache] { thisCache.changeValuesFromRemote(values, thisProcess); });
+            QMetaObject::invokeMethod(&otherCache,
+                                      [=, &otherCache] { otherCache.changeValuesFromRemote(values, otherProcess); });
         });
         connect(&otherCache, &CValueCache::valuesChangedByLocal, &thisCache, [&](const CValueCachePacket &values) {
-            QMetaObject::invokeMethod(&thisCache, [=, &thisCache] { thisCache.changeValuesFromRemote(values, otherProcess); });
-            QMetaObject::invokeMethod(&otherCache, [=, &otherCache] { otherCache.changeValuesFromRemote(values, thisProcess); });
+            QMetaObject::invokeMethod(&thisCache,
+                                      [=, &thisCache] { thisCache.changeValuesFromRemote(values, otherProcess); });
+            QMetaObject::invokeMethod(&otherCache,
+                                      [=, &otherCache] { otherCache.changeValuesFromRemote(values, thisProcess); });
         });
 
         for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
@@ -252,16 +243,12 @@ namespace MiscTest
 
     void CTestValueCache::json()
     {
-        QJsonObject testJson {
-            { "value1", CVariant::from(1).toJson() },
-            { "value2", CVariant::from(2).toJson() },
-            { "value3", CVariant::from(3).toJson() }
-        };
-        CVariantMap testData {
-            { "value1", CVariant::from(1) },
-            { "value2", CVariant::from(2) },
-            { "value3", CVariant::from(3) }
-        };
+        QJsonObject testJson { { "value1", CVariant::from(1).toJson() },
+                               { "value2", CVariant::from(2).toJson() },
+                               { "value3", CVariant::from(3).toJson() } };
+        CVariantMap testData { { "value1", CVariant::from(1) },
+                               { "value2", CVariant::from(2) },
+                               { "value3", CVariant::from(3) } };
 
         CValueCache cache(1);
         cache.loadFromJson(testJson);
@@ -273,13 +260,11 @@ namespace MiscTest
     {
         CSimulatedAircraftList aircraft({ CSimulatedAircraft("BAW001", {}, {}) });
         CAtcStationList atcStations({ CAtcStation("EGLL_TWR") });
-        const CVariantMap testData {
-            { "namespace1/value1", CVariant::from(1) },
-            { "namespace1/value2", CVariant::from(2) },
-            { "namespace1/value3", CVariant::from(3) },
-            { "namespace2/aircraft", CVariant::from(aircraft) },
-            { "namespace2/atcstations", CVariant::from(atcStations) }
-        };
+        const CVariantMap testData { { "namespace1/value1", CVariant::from(1) },
+                                     { "namespace1/value2", CVariant::from(2) },
+                                     { "namespace1/value3", CVariant::from(3) },
+                                     { "namespace2/aircraft", CVariant::from(aircraft) },
+                                     { "namespace2/atcstations", CVariant::from(atcStations) } };
         CValueCache cache(1);
         cache.insertValues({ testData, QDateTime::currentMSecsSinceEpoch() });
 
@@ -302,22 +287,16 @@ namespace MiscTest
     }
 
     //! Is value between 0 - 100?
-    bool validator(int value, QString &)
-    {
-        return value >= 0 && value <= 100;
-    }
+    bool validator(int value, QString &) { return value >= 0 && value <= 100; }
 
-    CValueCacheUser::CValueCacheUser(CValueCache *cache) : m_value1(cache, "value1", "", validator, 0, this),
-                                                           m_value2(cache, "value2", "", validator, 0, this)
+    CValueCacheUser::CValueCacheUser(CValueCache *cache)
+        : m_value1(cache, "value1", "", validator, 0, this), m_value2(cache, "value2", "", validator, 0, this)
     {
         m_value1.setNotifySlot(&CValueCacheUser::ps_valueChanged);
         m_value2.setNotifySlot(&CValueCacheUser::ps_valueChanged);
     }
 
-    void CValueCacheUser::ps_valueChanged()
-    {
-        m_slotFired.set_value();
-    }
+    void CValueCacheUser::ps_valueChanged() { m_slotFired.set_value(); }
 
     bool CValueCacheUser::slotFired()
     {

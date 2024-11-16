@@ -45,10 +45,7 @@ namespace swift::gui::views
         for (const ObjectType &obj : CViewBase<T>::containerOrFilteredContainer())
         {
             r++;
-            if (callsigns.contains(obj.getCallsign()))
-            {
-                rows.insert(r);
-            }
+            if (callsigns.contains(obj.getCallsign())) { rows.insert(r); }
         }
         this->selectRows(rows);
     }
@@ -77,10 +74,7 @@ namespace swift::gui::views
 
         ContainerType newObjects(this->container());
         int delta = newObjects.removeByCallsigns(callsigns);
-        if (delta > 0)
-        {
-            this->updateContainerMaybeAsync(newObjects);
-        }
+        if (delta > 0) { this->updateContainerMaybeAsync(newObjects); }
         return delta;
     }
 
@@ -108,10 +102,7 @@ namespace swift::gui::views
     template <class T>
     void CViewWithCallsignObjects<T>::selectObjects(const ContainerType &selectedObjects)
     {
-        if (!selectedObjects.isEmpty())
-        {
-            this->selectCallsigns(selectedObjects.getCallsigns());
-        }
+        if (!selectedObjects.isEmpty()) { this->selectCallsigns(selectedObjects.getCallsigns()); }
     }
 
     template class CViewWithCallsignObjects<swift::gui::models::CAtcStationListModel>;

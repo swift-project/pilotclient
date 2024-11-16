@@ -49,16 +49,15 @@ namespace swift::core
         return cats;
     }
 
-    ISimulator::~ISimulator()
-    {
-        this->safeKillTimer();
-    }
+    ISimulator::~ISimulator() { this->safeKillTimer(); }
 
     ISimulator::SimulatorStatus ISimulator::getSimulatorStatus() const
     {
         if (!this->isConnected()) { return ISimulator::Disconnected; }
         const SimulatorStatus status =
-            Connected | (this->isSimulating() ? ISimulator::Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0)) | (this->isPaused() ? ISimulator::Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
+            Connected |
+            (this->isSimulating() ? ISimulator::Simulating : static_cast<ISimulator::SimulatorStatusFlag>(0)) |
+            (this->isPaused() ? ISimulator::Paused : static_cast<ISimulator::SimulatorStatusFlag>(0));
         return status;
     }
 
@@ -81,7 +80,8 @@ namespace swift::core
         if (!this->validateModelOfAircraft(remoteAircraft))
         {
             const CCallsign cs = remoteAircraft.getCallsign();
-            CLogMessage(this).warning(u"Invalid aircraft detected, which will be disabled: '%1' '%2'") << cs << remoteAircraft.getModelString();
+            CLogMessage(this).warning(u"Invalid aircraft detected, which will be disabled: '%1' '%2'")
+                << cs << remoteAircraft.getModelString();
             this->updateAircraftEnabled(cs, false);
             this->updateAircraftRendered(cs, false);
             return false;
@@ -89,7 +89,13 @@ namespace swift::core
 
         // no invalid model should ever reach this place here
         const bool renderingRestricted = this->getInterpolationSetupGlobal().isRenderingRestricted();
-        if (this->showDebugLogMessage()) { this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("Restricted: %1 cs: '%2' enabled: %3").arg(boolToYesNo(renderingRestricted), remoteAircraft.getCallsignAsString(), boolToYesNo(remoteAircraft.isEnabled()))); }
+        if (this->showDebugLogMessage())
+        {
+            this->debugLogMessage(Q_FUNC_INFO,
+                                  QStringLiteral("Restricted: %1 cs: '%2' enabled: %3")
+                                      .arg(boolToYesNo(renderingRestricted), remoteAircraft.getCallsignAsString(),
+                                           boolToYesNo(remoteAircraft.isEnabled())));
+        }
         if (!remoteAircraft.isEnabled()) { return false; }
 
         // if not restricted, directly change
@@ -109,15 +115,9 @@ namespace swift::core
         return false;
     }
 
-    void ISimulator::recalculateAllAircraft()
-    {
-        this->setUpdateAllRemoteAircraft();
-    }
+    void ISimulator::recalculateAllAircraft() { this->setUpdateAllRemoteAircraft(); }
 
-    void ISimulator::setFlightNetworkConnected(bool connected)
-    {
-        m_networkConnected = connected;
-    }
+    void ISimulator::setFlightNetworkConnected(bool connected) { m_networkConnected = connected; }
 
     void ISimulator::clearAllRemoteAircraftData()
     {
@@ -165,10 +165,7 @@ namespace swift::core
                 this->callPhysicallyAddRemoteAircraft(aircraft); // enable/disable
             }
         }
-        else
-        {
-            this->callPhysicallyRemoveRemoteAircraft(callsign);
-        }
+        else { this->callPhysicallyRemoveRemoteAircraft(callsign); }
     }
 
     void ISimulator::clearData(const CCallsign &callsign)
@@ -189,7 +186,8 @@ namespace swift::core
         return true;
     }
 
-    bool ISimulator::addLoopbackSituation(const CCallsign &callsign, const CElevationPlane &elevationPlane, const CLength &cg)
+    bool ISimulator::addLoopbackSituation(const CCallsign &callsign, const CElevationPlane &elevationPlane,
+                                          const CLength &cg)
     {
         if (!this->isLogCallsign(callsign)) { return false; }
         CAircraftSituation situation(callsign, elevationPlane);
@@ -226,10 +224,7 @@ namespace swift::core
         this->resetLastSentValues();
     }
 
-    void ISimulator::resetUpdateAllRemoteAircraft()
-    {
-        m_updateAllRemoteAircraftUntil = -1;
-    }
+    void ISimulator::resetUpdateAllRemoteAircraft() { m_updateAllRemoteAircraftUntil = -1; }
 
     void ISimulator::safeKillTimer()
     {
@@ -239,7 +234,8 @@ namespace swift::core
         m_timerId = -1;
     }
 
-    CInterpolationAndRenderingSetupPerCallsign ISimulator::getInterpolationSetupConsolidated(const CCallsign &callsign, bool forceFullUpdate) const
+    CInterpolationAndRenderingSetupPerCallsign ISimulator::getInterpolationSetupConsolidated(const CCallsign &callsign,
+                                                                                             bool forceFullUpdate) const
     {
         CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
         const CClient client = this->getClientOrDefaultForCallsign(callsign);
@@ -255,7 +251,8 @@ namespace swift::core
         return false;
     }
 
-    void ISimulator::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign, bool isWater)
+    void ISimulator::callbackReceivedRequestedElevation(const CElevationPlane &plane, const CCallsign &callsign,
+                                                        bool isWater)
     {
         if (this->isShuttingDown()) { return; }
         if (plane.isNull()) { return; } // this happens if requested for a coordinate where scenery is not available
@@ -263,11 +260,13 @@ namespace swift::core
         // Update in remote aircraft for given callsign
         // this will trigger also a position update, new interpolant etc.
         bool updatedForOnGroundPosition = false;
-        const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(callsign, plane, CAircraftSituation::FromProvider, &updatedForOnGroundPosition);
+        const int updated = CRemoteAircraftAware::updateAircraftGroundElevation(
+            callsign, plane, CAircraftSituation::FromProvider, &updatedForOnGroundPosition);
 
         // update in simulator and cache
         const bool likelyOnGroundElevation = updated > 0 && updatedForOnGroundPosition;
-        ISimulationEnvironmentProvider::rememberGroundElevation(callsign, likelyOnGroundElevation, plane); // in simulator
+        ISimulationEnvironmentProvider::rememberGroundElevation(callsign, likelyOnGroundElevation,
+                                                                plane); // in simulator
 
         // signal we have received the elevation
         // used by log display
@@ -360,10 +359,7 @@ namespace swift::core
                     const QUrl dirUrl = QUrl::fromLocalFile(dir.absolutePath());
                     QDesktopServices::openUrl(dirUrl); // show dir in browser
                 }
-                else
-                {
-                    CLogMessage(this).warning(u"No interpolation log directory");
-                }
+                else { CLogMessage(this).warning(u"No interpolation log directory"); }
                 return true;
             }
 
@@ -388,7 +384,9 @@ namespace swift::core
             {
                 const CCallsign cs(parser.part(2));
                 const bool changed = this->setInterpolationMode(part1, cs);
-                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode for '%1'") : QStringLiteral("Unchanged interpolation mode for '%1'")) << cs.asString();
+                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode for '%1'") :
+                                                 QStringLiteral("Unchanged interpolation mode for '%1'"))
+                    << cs.asString();
                 return true;
             }
             else
@@ -396,7 +394,8 @@ namespace swift::core
                 CInterpolationAndRenderingSetupGlobal setup = this->getInterpolationSetupGlobal();
                 const bool changed = setup.setInterpolatorMode(part1);
                 if (changed) { this->setInterpolationSetupGlobal(setup); }
-                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode globally") : QStringLiteral("Unchanged interpolation mode"));
+                CLogMessage(this).info(changed ? QStringLiteral("Changed interpolation mode globally") :
+                                                 QStringLiteral("Unchanged interpolation mode"));
                 return true;
             }
         } // spline/linear
@@ -447,10 +446,7 @@ namespace swift::core
             if (parser.hasPart(3) && (part2.startsWith("rm") || part2.startsWith("remove")))
             {
                 const QString cs = parser.part(3).toUpper();
-                if (CCallsign::isValidAircraftCallsign(cs))
-                {
-                    this->logicallyRemoveRemoteAircraft(cs);
-                }
+                if (CCallsign::isValidAircraftCallsign(cs)) { this->logicallyRemoveRemoteAircraft(cs); }
             }
 
             return false;
@@ -498,7 +494,8 @@ namespace swift::core
                         if (!callsigns.isEmpty())
                         {
                             this->insertCGOverridden(cg, callsigns);
-                            CLogMessage(this).info(u"Setting CG for '%1': %2") << callsigns.getCallsignsAsString(true) << cg.valueRoundedWithUnit();
+                            CLogMessage(this).info(u"Setting CG for '%1': %2")
+                                << callsigns.getCallsignsAsString(true) << cg.valueRoundedWithUnit();
                         }
                         return true;
 
@@ -518,17 +515,21 @@ namespace swift::core
         CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
         CSimpleCommandParser::registerCommand({ ".drv unload", "unload driver" });
         CSimpleCommandParser::registerCommand({ ".drv cg length clear|modelstr.", "override CG" });
-        CSimpleCommandParser::registerCommand({ ".drv limit number/secs.", "limit updates to number per second (0..off)" });
+        CSimpleCommandParser::registerCommand(
+            { ".drv limit number/secs.", "limit updates to number per second (0..off)" });
         CSimpleCommandParser::registerCommand({ ".drv logint callsign", "log interpolator for callsign" });
         CSimpleCommandParser::registerCommand({ ".drv logint off", "no log information for interpolator" });
         CSimpleCommandParser::registerCommand({ ".drv logint write", "write interpolator log to file" });
         CSimpleCommandParser::registerCommand({ ".drv logint clear", "clear current log" });
         CSimpleCommandParser::registerCommand({ ".drv logint max number", "max. number of entries logged" });
         CSimpleCommandParser::registerCommand({ ".drv pos callsign", "show position for callsign" });
-        CSimpleCommandParser::registerCommand({ ".drv spline|linear callsign", "set spline/linear interpolator for one/all callsign(s)" });
-        CSimpleCommandParser::registerCommand({ ".drv aircraft readd callsign", "add again (re-add) a given callsign" });
+        CSimpleCommandParser::registerCommand(
+            { ".drv spline|linear callsign", "set spline/linear interpolator for one/all callsign(s)" });
+        CSimpleCommandParser::registerCommand(
+            { ".drv aircraft readd callsign", "add again (re-add) a given callsign" });
         CSimpleCommandParser::registerCommand({ ".drv aircraft readd all", "add again (re-add) all aircraft" });
-        CSimpleCommandParser::registerCommand({ ".drv aircraft rm callsign", "remove a given callsign from simulator" });
+        CSimpleCommandParser::registerCommand(
+            { ".drv aircraft rm callsign", "remove a given callsign from simulator" });
 
         if (CBuildConfig::isCompiledWithFsuipcSupport())
         {
@@ -604,17 +605,12 @@ namespace swift::core
         return cs;
     }
 
-    ISimulator::ISimulator(const CSimulatorPluginInfo &pluginInfo,
-                           IOwnAircraftProvider *ownAircraftProvider,
-                           IRemoteAircraftProvider *remoteAircraftProvider,
-                           IClientProvider *clientProvider,
-                           QObject *parent) : QObject(parent),
-                                              COwnAircraftAware(ownAircraftProvider),
-                                              CRemoteAircraftAware(remoteAircraftProvider),
-                                              CClientAware(clientProvider),
-                                              ISimulationEnvironmentProvider(pluginInfo),
-                                              IInterpolationSetupProvider(),
-                                              CIdentifiable(this)
+    ISimulator::ISimulator(const CSimulatorPluginInfo &pluginInfo, IOwnAircraftProvider *ownAircraftProvider,
+                           IRemoteAircraftProvider *remoteAircraftProvider, IClientProvider *clientProvider,
+                           QObject *parent)
+        : QObject(parent), COwnAircraftAware(ownAircraftProvider), CRemoteAircraftAware(remoteAircraftProvider),
+          CClientAware(clientProvider), ISimulationEnvironmentProvider(pluginInfo), IInterpolationSetupProvider(),
+          CIdentifiable(this)
     {
         this->setObjectName("Simulator: " + pluginInfo.getIdentifier());
         m_interpolationLogger.setObjectName("Logger: " + pluginInfo.getIdentifier());
@@ -625,17 +621,23 @@ namespace swift::core
         m_remoteAircraftProviderConnections.append(
             CRemoteAircraftAware::provider()->connectRemoteAircraftProviderSignals(
                 this, // receiver must match object in bind
-                nullptr,
-                nullptr,
-                [](const aviation::CCallsign &) { /* currently not used, the calls are handled by context call logicallyRemoveRemoteAircraft*/ },
-                [this](const CAirspaceAircraftSnapshot &snapshot) { this->rapOnRecalculatedRenderedAircraft(snapshot); }));
+                nullptr, nullptr,
+                [](const aviation::CCallsign &) {
+                    /* currently not used, the calls are handled by context call logicallyRemoveRemoteAircraft*/
+                },
+                [this](const CAirspaceAircraftSnapshot &snapshot) {
+                    this->rapOnRecalculatedRenderedAircraft(snapshot);
+                }));
 
         // swift data
         if (sApp && sApp->hasWebDataServices())
         {
-            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &ISimulator::onSwiftDbAllDataRead, Qt::QueuedConnection);
-            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &ISimulator::onSwiftDbAirportsRead, Qt::QueuedConnection);
-            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, &ISimulator::onSwiftDbModelMatchingEntitiesRead, Qt::QueuedConnection);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this,
+                    &ISimulator::onSwiftDbAllDataRead, Qt::QueuedConnection);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this,
+                    &ISimulator::onSwiftDbAirportsRead, Qt::QueuedConnection);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this,
+                    &ISimulator::onSwiftDbModelMatchingEntitiesRead, Qt::QueuedConnection);
         }
         connect(sApp, &CApplication::aboutToShutdown, this, &ISimulator::unload, Qt::QueuedConnection);
 
@@ -643,7 +645,8 @@ namespace swift::core
         if (pluginInfo.isEmulatedPlugin() && !pluginInfo.getSimulatorInfo().isSingleSimulator())
         {
             // emulated driver with NO info yet
-            CLogMessage(this).info(u"Plugin '%1' with no simulator info yet, hope it will be set later") << pluginInfo.getIdentifier();
+            CLogMessage(this).info(u"Plugin '%1' with no simulator info yet, hope it will be set later")
+                << pluginInfo.getIdentifier();
         }
         else
         {
@@ -659,9 +662,9 @@ namespace swift::core
         connect(this, &ISimulator::ownAircraftModelChanged, this, &ISimulator::onOwnModelChanged, Qt::QueuedConnection);
 
         // info
-        CLogMessage(this).info(u"Initialized simulator driver: '%1'") << (this->getSimulatorInfo().isUnspecified() ?
-                                                                              this->getSimulatorPluginInfo().toQString() :
-                                                                              this->getSimulatorInfo().toQString());
+        CLogMessage(this).info(u"Initialized simulator driver: '%1'")
+            << (this->getSimulatorInfo().isUnspecified() ? this->getSimulatorPluginInfo().toQString() :
+                                                           this->getSimulatorInfo().toQString());
     }
 
     void ISimulator::onRecalculatedRenderedAircraft(const CAirspaceAircraftSnapshot &snapshot)
@@ -673,7 +676,8 @@ namespace swift::core
         if (!snapshot.isRestricted() && !snapshot.isRestrictionChanged()) { return; }
 
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Needs to run in object thread");
-        Q_ASSERT_X(snapshot.generatingThreadName() != QThread::currentThread()->objectName(), Q_FUNC_INFO, "Expect snapshot from background thread");
+        Q_ASSERT_X(snapshot.generatingThreadName() != QThread::currentThread()->objectName(), Q_FUNC_INFO,
+                   "Expect snapshot from background thread");
 
         // restricted snapshot values?
         bool changed = false;
@@ -681,7 +685,8 @@ namespace swift::core
         {
             // make sure not to add aircraft again which are no longer in range
             const CCallsignSet callsignsInRange = this->getAircraftInRangeCallsigns();
-            const CCallsignSet callsignsEnabledAndStillInRange = snapshot.getEnabledAircraftCallsignsByDistance().intersection(callsignsInRange);
+            const CCallsignSet callsignsEnabledAndStillInRange =
+                snapshot.getEnabledAircraftCallsignsByDistance().intersection(callsignsInRange);
             const CCallsignSet callsignsInSimulator(this->physicallyRenderedAircraft()); // state in simulator
             const CCallsignSet callsignsToBeRemoved(callsignsInSimulator.difference(callsignsEnabledAndStillInRange));
             const CCallsignSet callsignsToBeAdded(callsignsEnabledAndStillInRange.difference(callsignsInSimulator));
@@ -693,7 +698,8 @@ namespace swift::core
 
             if (!callsignsToBeAdded.isEmpty())
             {
-                CSimulatedAircraftList aircraftToBeAdded(this->getAircraftInRange().findByCallsigns(callsignsToBeAdded)); // thread safe copy
+                CSimulatedAircraftList aircraftToBeAdded(
+                    this->getAircraftInRange().findByCallsigns(callsignsToBeAdded)); // thread safe copy
                 for (const CSimulatedAircraft &aircraft : aircraftToBeAdded)
                 {
                     Q_ASSERT_X(aircraft.isEnabled(), Q_FUNC_INFO, "Disabled aircraft detected as to be added");
@@ -711,10 +717,7 @@ namespace swift::core
         }
 
         // we have handled snapshot
-        if (changed)
-        {
-            emit this->airspaceSnapshotHandled();
-        }
+        if (changed) { emit this->airspaceSnapshotHandled(); }
     }
 
     bool ISimulator::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
@@ -791,13 +794,17 @@ namespace swift::core
         m_simulatorInternals.setSimulatorInstallationDirectory(s.getSimulatorDirectoryOrDefault());
     }
 
-    void ISimulator::rememberElevationAndSimulatorCG(const CCallsign &callsign, const CAircraftModel &model, bool likelyOnGroundElevation, const CElevationPlane &elevation, const CLength &simulatorCG)
+    void ISimulator::rememberElevationAndSimulatorCG(const CCallsign &callsign, const CAircraftModel &model,
+                                                     bool likelyOnGroundElevation, const CElevationPlane &elevation,
+                                                     const CLength &simulatorCG)
     {
         if (callsign.isEmpty()) { return; }
         if (elevation.hasMSLGeodeticHeight())
         {
             const int aircraftCount = this->getAircraftInRangeCount();
-            this->setMaxElevationsRemembered(aircraftCount * 3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
+            this->setMaxElevationsRemembered(
+                aircraftCount *
+                3); // at least 3 elevations per aircraft, even better as not all are requesting elevations
             this->rememberGroundElevation(callsign, likelyOnGroundElevation, elevation);
         }
 
@@ -809,7 +816,8 @@ namespace swift::core
         if (!cgOvr.isNull() && !this->hasSameSimulatorCG(cgOvr, callsign))
         {
             // the value did change
-            const CSimulatorSettings::CGSource source = this->getSimulatorSettings().getSimulatorSettings().getCGSource();
+            const CSimulatorSettings::CGSource source =
+                this->getSimulatorSettings().getSimulatorSettings().getCGSource();
             if (source != CSimulatorSettings::CGFromDBOnly)
             {
                 this->insertCG(cgOvr, modelString, callsign); // per model string and CG
@@ -817,7 +825,8 @@ namespace swift::core
 
             // here we know we have a valid model and CG did change
             const CSimulatorInfo sim = this->getSimulatorInfo();
-            m_autoPublishing.insert(modelString, simulatorCG); // still using simulator CG here, not the overridden value
+            m_autoPublishing.insert(modelString,
+                                    simulatorCG); // still using simulator CG here, not the overridden value
 
             // if simulator did change, add as well
             if (!model.getSimulator().matchesAll(sim))
@@ -844,7 +853,8 @@ namespace swift::core
                     this->setUpdateAllRemoteAircraft(); // force an update of every remote aircraft
                 }
 
-                emit this->simulatorStatusChanged(newStatus); // only place where we should emit the signal, use emitSimulatorCombinedStatus to emit
+                emit this->simulatorStatusChanged(
+                    newStatus); // only place where we should emit the signal, use emitSimulatorCombinedStatus to emit
             });
         }
     }
@@ -864,7 +874,10 @@ namespace swift::core
         const bool r = setup.isRenderingRestricted();
         const bool e = setup.isRenderingEnabled();
 
-        if (!this->isShuttingDown()) { CCrashHandler::instance()->crashAndLogAppendInfo(u"Rendering setup: " % setup.toQString(true)); }
+        if (!this->isShuttingDown())
+        {
+            CCrashHandler::instance()->crashAndLogAppendInfo(u"Rendering setup: " % setup.toQString(true));
+        }
         emit this->renderRestrictionsChanged(r, e, setup.getMaxRenderedAircraft(), setup.getMaxRenderedDistance());
         return true;
     }
@@ -884,14 +897,18 @@ namespace swift::core
         if (airports.isEmpty()) { return airports; }
         const CCoordinateGeodetic ownPosition = this->getOwnAircraftPosition();
         CAirportList airportsInRange = airports.findClosest(maxAirportsInRange(), ownPosition);
-        if (recalculateDistance) { airportsInRange.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition()); }
+        if (recalculateDistance)
+        {
+            airportsInRange.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition());
+        }
         return airportsInRange;
     }
 
     CAircraftModel ISimulator::reverseLookupModel(const CAircraftModel &model)
     {
         bool modified = false;
-        const CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
+        const CAircraftModel reverseModel =
+            CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
         return reverseModel;
     }
 
@@ -917,8 +934,7 @@ namespace swift::core
         }
 
         int tokens = qRound(0.1 * numberPerSecond); // 100ms
-        do
-        {
+        do {
             if (tokens >= 3)
             {
                 m_limitUpdateAircraftBucket.setInterval(100);
@@ -1001,10 +1017,7 @@ namespace swift::core
             if (this->isShuttingDown()) { return; }
             if (!this->isAircraftInRange(callsign)) { return; }
             const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
-            if (aircraft.isEnabled() && aircraft.hasModelString())
-            {
-                this->logicallyAddRemoteAircraft(aircraft);
-            }
+            if (aircraft.isEnabled() && aircraft.hasModelString()) { this->logicallyAddRemoteAircraft(aircraft); }
         });
         return true;
     }
@@ -1012,9 +1025,8 @@ namespace swift::core
     bool ISimulator::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
     {
         if (this->isShuttingDown()) { return false; }
-        return aircraft.isEnabled() ?
-                   this->physicallyAddRemoteAircraft(aircraft) :
-                   this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
+        return aircraft.isEnabled() ? this->physicallyAddRemoteAircraft(aircraft) :
+                                      this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
     }
 
     bool ISimulator::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
@@ -1030,10 +1042,7 @@ namespace swift::core
         const QPointer<ISimulator> myself(this);
         QTimer::singleShot(1000, this, [=] {
             if (!myself) { return; }
-            if (this->isAircraftInRange(callsign))
-            {
-                this->changeRemoteAircraftEnabled(aircraft);
-            }
+            if (this->isAircraftInRange(callsign)) { this->changeRemoteAircraftEnabled(aircraft); }
         });
         return true;
     }
@@ -1042,11 +1051,16 @@ namespace swift::core
     {
         CStatusMessageList msgs;
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
-        if (!m_addAgainAircraftWhenRemoved.isEmpty()) { msgs.push_back(CStatusMessage(this).error(u"m_addAgainAircraftWhenRemoved not empty: '%1'") << m_addAgainAircraftWhenRemoved.getCallsignStrings(true).join(", ")); }
+        if (!m_addAgainAircraftWhenRemoved.isEmpty())
+        {
+            msgs.push_back(CStatusMessage(this).error(u"m_addAgainAircraftWhenRemoved not empty: '%1'")
+                           << m_addAgainAircraftWhenRemoved.getCallsignStrings(true).join(", "));
+        }
         return msgs;
     }
 
-    QString ISimulator::getInvalidSituationLogMessage(const CCallsign &callsign, const CInterpolationStatus &status, const QString &details) const
+    QString ISimulator::getInvalidSituationLogMessage(const CCallsign &callsign, const CInterpolationStatus &status,
+                                                      const QString &details) const
     {
         static const QString msg("Interpolation ('%1'): '%2'");
         const QString m = msg.arg(callsign.asString(), status.toQString());
@@ -1063,14 +1077,18 @@ namespace swift::core
         m_statsCurrentUpdateTimeMs = dt;
         m_statsUpdateAircraftTimeTotalMs += dt;
         m_statsUpdateAircraftRuns++;
-        m_statsUpdateAircraftTimeAvgMs = static_cast<double>(m_statsUpdateAircraftTimeTotalMs) / static_cast<double>(m_statsUpdateAircraftRuns);
+        m_statsUpdateAircraftTimeAvgMs =
+            static_cast<double>(m_statsUpdateAircraftTimeTotalMs) / static_cast<double>(m_statsUpdateAircraftRuns);
         m_updateRemoteAircraftInProgress = false;
         m_statsLastUpdateAircraftRequestedMs = startTime;
 
         if (!this->isUpdateAllRemoteAircraft(startTime)) { this->resetUpdateAllRemoteAircraft(); }
 
         if (m_statsMaxUpdateTimeMs < dt) { m_statsMaxUpdateTimeMs = dt; }
-        if (m_statsLastUpdateAircraftRequestedMs > 0) { m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequestedMs; }
+        if (m_statsLastUpdateAircraftRequestedMs > 0)
+        {
+            m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequestedMs;
+        }
         if (limited) { m_statsUpdateAircraftLimited++; }
     }
 
@@ -1098,14 +1116,18 @@ namespace swift::core
                 {
                     // calculate elevation
                     const CLength cg = ownAircraft.getModel().getCG();
-                    elevation = (cg.isNull() || situation.getAltitude().isNull()) ? CAltitude::null() : (situation.getAltitude().withOffset(cg * -1.0));
+                    elevation = (cg.isNull() || situation.getAltitude().isNull()) ?
+                                    CAltitude::null() :
+                                    (situation.getAltitude().withOffset(cg * -1.0));
                 }
 
                 // own ground elevations
                 if (elevation.hasMeanSeaLevelValue())
                 {
                     const CCallsign cs = situation.hasCallsign() ? situation.getCallsign() : ownAircraft.getCallsign();
-                    const CLength radius = settings.getRecordedGndRadius().isNull() ? CElevationPlane::singlePointRadius() : settings.getRecordedGndRadius();
+                    const CLength radius = settings.getRecordedGndRadius().isNull() ?
+                                               CElevationPlane::singlePointRadius() :
+                                               settings.getRecordedGndRadius();
                     const CElevationPlane ep(situation, radius);
                     const bool remembered = this->rememberGroundElevation(cs, situation.isOnGround(), ep, radius);
 
@@ -1153,7 +1175,9 @@ namespace swift::core
 
     void ISimulator::logAddingAircraftModel(const CSimulatedAircraft &aircraft) const
     {
-        CLogMessage(this).info(u"Adding '%1' '%2' to '%3'") << aircraft.getCallsign() << aircraft.getModel().getModelStringAndDbKey() << this->getSimulatorInfo().toQString(true);
+        CLogMessage(this).info(u"Adding '%1' '%2' to '%3'")
+            << aircraft.getCallsign() << aircraft.getModel().getModelStringAndDbKey()
+            << this->getSimulatorInfo().toQString(true);
     }
 
     QString ISimulator::latestLoggedDataFormatted(const CCallsign &cs) const
@@ -1165,9 +1189,8 @@ namespace swift::core
         QString dm;
         if (s.tsCurrent > 0)
         {
-            dm = u"Setup: " % s.usedSetup.toQString(true) %
-                 u"\n\n" %
-                 u"Situation: " % s.toQString(false, true, true, true, true, sep);
+            dm = u"Setup: " % s.usedSetup.toQString(true) % u"\n\n" % u"Situation: " %
+                 s.toQString(false, true, true, true, true, sep);
         }
         if (p.tsCurrent > 0) { dm += (dm.isEmpty() ? u"Parts: " : u"\n\nParts: ") % p.toQString(sep); }
         return dm;
@@ -1213,10 +1236,7 @@ namespace swift::core
         }
 
         const QString dm = this->latestLoggedDataFormatted(cs);
-        if (!dm.isEmpty())
-        {
-            this->displayStatusMessage(CStatusMessage(this).info(dm));
-        }
+        if (!dm.isEmpty()) { this->displayStatusMessage(CStatusMessage(this).info(dm)); }
 
         const int t = CMathUtils::randomInteger(4500, 5500); // makes sure not always using the same time difference
         const QPointer<ISimulator> myself(this);
@@ -1245,17 +1265,13 @@ namespace swift::core
             {
                 const CAircraftModel newModel = swift::core::ISimulator::reverseLookupModel(model);
                 const bool updated = this->updateOwnModel(newModel); // update in provider (normally the context)
-                if (updated)
-                {
-                    emit this->ownAircraftModelChanged(this->getOwnAircraftModel());
-                }
+                if (updated) { emit this->ownAircraftModelChanged(this->getOwnAircraftModel()); }
             }
             else
             {
                 // we wait for the data
-                connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this, [=] {
-                    this->reverseLookupAndUpdateOwnAircraftModel(model);
-                });
+                connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this,
+                        [=] { this->reverseLookupAndUpdateOwnAircraftModel(model); });
             }
         }
     }
@@ -1265,27 +1281,23 @@ namespace swift::core
         this->setObjectName("ISimulatorListener:" + info.toQString());
 
         // stop listener after it reports simulator ready
-        bool s = connect(this, &ISimulatorListener::simulatorStarted, this, &ISimulatorListener::stop, Qt::QueuedConnection);
+        bool s =
+            connect(this, &ISimulatorListener::simulatorStarted, this, &ISimulatorListener::stop, Qt::QueuedConnection);
         Q_ASSERT_X(s, Q_FUNC_INFO, "connect failed");
 
         if (sApp)
         {
-            s = connect(sApp, &CApplication::aboutToShutdown, this, &ISimulatorListener::onAboutToShutdown, Qt::QueuedConnection);
+            s = connect(sApp, &CApplication::aboutToShutdown, this, &ISimulatorListener::onAboutToShutdown,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(s, Q_FUNC_INFO, "connect failed");
         }
 
         Q_UNUSED(s)
     }
 
-    QString ISimulatorListener::backendInfo() const
-    {
-        return m_info.toQString();
-    }
+    QString ISimulatorListener::backendInfo() const { return m_info.toQString(); }
 
-    bool ISimulatorListener::isShuttingDown() const
-    {
-        return (!sApp || sApp->isShuttingDown() || m_aboutToShutdown);
-    }
+    bool ISimulatorListener::isShuttingDown() const { return (!sApp || sApp->isShuttingDown() || m_aboutToShutdown); }
 
     void ISimulatorListener::onAboutToShutdown()
     {
@@ -1301,7 +1313,9 @@ namespace swift::core
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
-            QTimer::singleShot(0, this, [=] { if (myself) { this->start(); } });
+            QTimer::singleShot(0, this, [=] {
+                if (myself) { this->start(); }
+            });
             return;
         }
 
@@ -1316,7 +1330,9 @@ namespace swift::core
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
-            QTimer::singleShot(0, this, [=] { if (myself) { this->stop(); } });
+            QTimer::singleShot(0, this, [=] {
+                if (myself) { this->stop(); }
+            });
             return;
         }
 
@@ -1331,7 +1347,9 @@ namespace swift::core
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
-            QTimer::singleShot(0, this, [=] { if (myself) { this->check(); } });
+            QTimer::singleShot(0, this, [=] {
+                if (myself) { this->check(); }
+            });
             return;
         }
 

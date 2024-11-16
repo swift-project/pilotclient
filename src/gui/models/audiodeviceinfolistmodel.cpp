@@ -14,12 +14,15 @@ using namespace swift::misc::audio;
 
 namespace swift::gui::models
 {
-    CAudioDeviceInfoListModel::CAudioDeviceInfoListModel(QObject *parent) : CListModelBase("AudioDeviceInfoListModel", parent)
+    CAudioDeviceInfoListModel::CAudioDeviceInfoListModel(QObject *parent)
+        : CListModelBase("AudioDeviceInfoListModel", parent)
     {
         m_columns.addColumn(CColumn::standardString("type", CAudioDeviceInfo::IndexDeviceTypeAsString));
         m_columns.addColumn(CColumn::standardString("name", CAudioDeviceInfo::IndexName));
-        m_columns.addColumn(CColumn::standardString("machine", { CAudioDeviceInfo::IndexIdentifier, CIdentifier::IndexMachineName }));
-        m_columns.addColumn(CColumn::standardString("process", { CAudioDeviceInfo::IndexIdentifier, CIdentifier::IndexProcessName }));
+        m_columns.addColumn(
+            CColumn::standardString("machine", { CAudioDeviceInfo::IndexIdentifier, CIdentifier::IndexMachineName }));
+        m_columns.addColumn(
+            CColumn::standardString("process", { CAudioDeviceInfo::IndexIdentifier, CIdentifier::IndexProcessName }));
 
         // default sort order
         this->setSortColumnByPropertyIndex(CAudioDeviceInfo::IndexName);

@@ -11,7 +11,8 @@ namespace swift::misc
 {
     CNameVariantPairList::CNameVariantPairList() {}
 
-    CNameVariantPairList::CNameVariantPairList(const CSequence<CNameVariantPair> &other) : CSequence<CNameVariantPair>(other)
+    CNameVariantPairList::CNameVariantPairList(const CSequence<CNameVariantPair> &other)
+        : CSequence<CNameVariantPair>(other)
     {}
 
     bool CNameVariantPairList::containsName(const QString &name) const
@@ -67,10 +68,7 @@ namespace swift::misc
     {
         for (int i = 0; i < this->size(); i++)
         {
-            if ((*this)[i].getName() == name)
-            {
-                return i;
-            }
+            if ((*this)[i].getName() == name) { return i; }
         }
         return -1;
     }

@@ -79,7 +79,8 @@ namespace swift::misc
             int setRendered(const aviation::CCallsign &callsign, bool rendered, bool onlyFirst = true);
 
             //! Set center of gravity
-            int setCG(const aviation::CCallsign &callsign, const physical_quantities::CLength &cg, bool onlyFirst = true);
+            int setCG(const aviation::CCallsign &callsign, const physical_quantities::CLength &cg,
+                      bool onlyFirst = true);
 
             //! Mark given callsign as enabled
             int setEnabled(const aviation::CCallsign &callsign, bool enabled, bool onlyFirst);
@@ -88,16 +89,20 @@ namespace swift::misc
             int setFastPositionUpdates(const aviation::CCallsign &callsign, bool fastPositions, bool onlyFirst = true);
 
             //! Set model
-            int setAircraftModel(const aviation::CCallsign &callsign, const CAircraftModel &model, bool onlyFirst = true);
+            int setAircraftModel(const aviation::CCallsign &callsign, const CAircraftModel &model,
+                                 bool onlyFirst = true);
 
             //! Set aircraft parts and mark as synchronized
-            int setAircraftPartsSynchronized(const aviation::CCallsign &callsign, const aviation::CAircraftParts &parts, bool onlyFirst = true);
+            int setAircraftPartsSynchronized(const aviation::CCallsign &callsign, const aviation::CAircraftParts &parts,
+                                             bool onlyFirst = true);
 
             //! Set aircraft situation
-            int setAircraftSituation(const aviation::CCallsign &callsign, const aviation::CAircraftSituation &situation, bool onlyFirst = true);
+            int setAircraftSituation(const aviation::CCallsign &callsign, const aviation::CAircraftSituation &situation,
+                                     bool onlyFirst = true);
 
             //! Set ground elevation
-            int setGroundElevationChecked(const aviation::CCallsign &callsign, const geo::CElevationPlane &elevation, aviation::CAircraftSituation::GndElevationInfo info, bool onlyFirst = true);
+            int setGroundElevationChecked(const aviation::CCallsign &callsign, const geo::CElevationPlane &elevation,
+                                          aviation::CAircraftSituation::GndElevationInfo info, bool onlyFirst = true);
 
             //! Enabled?
             bool isEnabled(const aviation::CCallsign &callsign) const;

@@ -42,7 +42,9 @@ namespace swift::gui::components
         void copy();
 
         //! Read data file
-        bool readDataFile(const QString &modelFile, swift::misc::simulation::CAircraftModelList &models, const swift::misc::CApplicationInfo &otherVersion, const swift::misc::simulation::CSimulatorInfo &sim);
+        bool readDataFile(const QString &modelFile, swift::misc::simulation::CAircraftModelList &models,
+                          const swift::misc::CApplicationInfo &otherVersion,
+                          const swift::misc::simulation::CSimulatorInfo &sim);
 
         //! Confirm override
         bool confirmOverride(const QString &msg);

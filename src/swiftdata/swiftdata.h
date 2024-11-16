@@ -34,10 +34,7 @@ namespace swift::gui::components
 /*!
  * swift data entry control (aka mapping tool)
  */
-class CSwiftData :
-    public QMainWindow,
-    public swift::misc::CIdentifiable,
-    public swift::gui::IMainWindowAccess
+class CSwiftData : public QMainWindow, public swift::misc::CIdentifiable, public swift::gui::IMainWindowAccess
 {
     Q_OBJECT
     Q_INTERFACES(swift::gui::IMainWindowAccess)
@@ -87,7 +84,9 @@ private:
     QScopedPointer<Ui::CSwiftData> ui;
     swift::gui::CManagedStatusBar m_statusBar;
     swift::core::db::CBackgroundDataUpdater *m_updater = nullptr; //!< consolidate with DB data
-    swift::misc::CSettingReadOnly<swift::gui::settings::TBackgroundConsolidation> m_consolidationSettings { this, &CSwiftData::consolidationSettingChanged }; //!< consolidation time
+    swift::misc::CSettingReadOnly<swift::gui::settings::TBackgroundConsolidation> m_consolidationSettings {
+        this, &CSwiftData::consolidationSettingChanged
+    }; //!< consolidation time
     swift::misc::CLogHistoryReplica m_logHistory { this };
 
     // auto update

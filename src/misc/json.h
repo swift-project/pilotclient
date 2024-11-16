@@ -68,13 +68,15 @@ SWIFT_MISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, QByteArray &value
 //! \remarks needs to be in global namespace
 //! \ingroup JSON
 template <class ENUM>
-std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject> &operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value)
+std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject> &operator<<(QJsonObject &json,
+                                                                std::pair<QString, const ENUM &> value)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
 }
 template <class ENUM>
-std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject> &operator<<(QJsonObject &json, std::pair<swift::misc::CExplicitLatin1String, const ENUM &> value)
+std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject> &
+operator<<(QJsonObject &json, std::pair<swift::misc::CExplicitLatin1String, const ENUM &> value)
 {
     json[value.first] = QJsonValue(static_cast<int>(value.second));
     return json;
@@ -185,19 +187,32 @@ SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QSt
 SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QDateTime &> &value);
 SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QPixmap &> &value);
 SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, const QByteArray &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const int &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const qint16 &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const qlonglong &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const uint &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const qulonglong &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const QString &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const std::string &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const QStringList &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const double &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const bool &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const QDateTime &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const QPixmap &> &value);
-SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const QByteArray &> &value);
+SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json,
+                                          const std::pair<swift::misc::CExplicitLatin1String, const int &> &value);
+SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json,
+                                          const std::pair<swift::misc::CExplicitLatin1String, const qint16 &> &value);
+SWIFT_MISC_EXPORT QJsonObject &
+operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const qlonglong &> &value);
+SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json,
+                                          const std::pair<swift::misc::CExplicitLatin1String, const uint &> &value);
+SWIFT_MISC_EXPORT QJsonObject &
+operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const qulonglong &> &value);
+SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json,
+                                          const std::pair<swift::misc::CExplicitLatin1String, const QString &> &value);
+SWIFT_MISC_EXPORT QJsonObject &
+operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const std::string &> &value);
+SWIFT_MISC_EXPORT QJsonObject &
+operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const QStringList &> &value);
+SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json,
+                                          const std::pair<swift::misc::CExplicitLatin1String, const double &> &value);
+SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json,
+                                          const std::pair<swift::misc::CExplicitLatin1String, const bool &> &value);
+SWIFT_MISC_EXPORT QJsonObject &
+operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const QDateTime &> &value);
+SWIFT_MISC_EXPORT QJsonObject &operator<<(QJsonObject &json,
+                                          const std::pair<swift::misc::CExplicitLatin1String, const QPixmap &> &value);
+SWIFT_MISC_EXPORT QJsonObject &
+operator<<(QJsonObject &json, const std::pair<swift::misc::CExplicitLatin1String, const QByteArray &> &value);
 //! @}
 
 //! @{
@@ -219,7 +234,8 @@ namespace swift::misc::json
 
     //! JSON Object from string
     //! \ingroup JSON
-    SWIFT_MISC_EXPORT QString stringFromJsonObject(const QJsonObject &jsonObject, QJsonDocument::JsonFormat format = QJsonDocument::Indented);
+    SWIFT_MISC_EXPORT QString stringFromJsonObject(const QJsonObject &jsonObject,
+                                                   QJsonDocument::JsonFormat format = QJsonDocument::Indented);
 
     //! JSON Array from string
     //! \ingroup JSON
@@ -247,10 +263,12 @@ namespace swift::misc::json
     SWIFT_MISC_EXPORT QStringList arrayToQStringList(const QJsonArray &array);
 
     //! Creates an incremental json object from two existing objects
-    SWIFT_MISC_EXPORT QJsonObject getIncrementalObject(const QJsonObject &previousObject, const QJsonObject &currentObject);
+    SWIFT_MISC_EXPORT QJsonObject getIncrementalObject(const QJsonObject &previousObject,
+                                                       const QJsonObject &currentObject);
 
     //! Merges an incremental json object into an existing one
-    SWIFT_MISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject, const QJsonObject &incrementalObject);
+    SWIFT_MISC_EXPORT QJsonObject applyIncrementalObject(const QJsonObject &previousObject,
+                                                         const QJsonObject &incrementalObject);
 
     //! Looks like swift JSON?
     //! \remark Quick check if the string could be a valid JSON string

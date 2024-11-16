@@ -11,17 +11,16 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CDbOwnModelsDialog::CDbOwnModelsDialog(QWidget *parent) : QDialog(parent),
-                                                              ui(new Ui::CDbOwnModelsDialog)
+    CDbOwnModelsDialog::CDbOwnModelsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CDbOwnModelsDialog)
     {
         ui->setupUi(this);
         ui->comp_OwnModels->setSimulatorSelectorMode(CSimulatorSelector::ComboBox);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        connect(ui->comp_OwnModels, &CDbOwnModelsComponent::successfullyLoadedModels, this, &CDbOwnModelsDialog::successfullyLoadedModels);
+        connect(ui->comp_OwnModels, &CDbOwnModelsComponent::successfullyLoadedModels, this,
+                &CDbOwnModelsDialog::successfullyLoadedModels);
     }
 
-    CDbOwnModelsDialog::~CDbOwnModelsDialog()
-    {}
+    CDbOwnModelsDialog::~CDbOwnModelsDialog() {}
 
     void CDbOwnModelsDialog::setSimulator(const CSimulatorInfo &simulator)
     {
@@ -33,13 +32,7 @@ namespace swift::gui::components
         return ui->comp_OwnModels->requestModelsInBackground(simulator, onlyIfNotEmpty);
     }
 
-    int CDbOwnModelsDialog::getOwnModelsCount() const
-    {
-        return ui->comp_OwnModels->getOwnModelsCount();
-    }
+    int CDbOwnModelsDialog::getOwnModelsCount() const { return ui->comp_OwnModels->getOwnModelsCount(); }
 
-    const CDbOwnModelsComponent *CDbOwnModelsDialog::modelsComponent() const
-    {
-        return ui->comp_OwnModels;
-    }
+    const CDbOwnModelsComponent *CDbOwnModelsDialog::modelsComponent() const { return ui->comp_OwnModels; }
 } // namespace swift::gui::components

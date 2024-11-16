@@ -22,9 +22,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CInformationMessage)
 namespace swift::misc::aviation
 {
     //! Value object encapsulating information message (ATIS, METAR, TAF)
-    class SWIFT_MISC_EXPORT CInformationMessage :
-        public CValueObject<CInformationMessage>,
-        public ITimestampBased
+    class SWIFT_MISC_EXPORT CInformationMessage : public CValueObject<CInformationMessage>, public ITimestampBased
     {
     public:
         //! Type
@@ -44,16 +42,13 @@ namespace swift::misc::aviation
         };
 
         //! Default constructor.
-        CInformationMessage() : m_type(CInformationMessage::Unspecified)
-        {}
+        CInformationMessage() : m_type(CInformationMessage::Unspecified) {}
 
         //! Information message of type
         explicit CInformationMessage(InformationType type) : m_type(type) {}
 
         //! Information message of type
-        CInformationMessage(InformationType type, const QString &message)
-            : m_type(type), m_message(message)
-        {}
+        CInformationMessage(InformationType type, const QString &message) : m_type(type), m_message(message) {}
 
         //! Get message.
         const QString &getMessage() const { return m_message; }
@@ -85,10 +80,7 @@ namespace swift::misc::aviation
         void setType(InformationType type) { m_type = type; }
 
         //! Received before n ms
-        qint64 timeDiffReceivedMs() const
-        {
-            return this->getTimeDifferenceToNowMs();
-        }
+        qint64 timeDiffReceivedMs() const { return this->getTimeDifferenceToNowMs(); }
 
         //! Is empty?
         bool isEmpty() const { return m_message.isEmpty(); }

@@ -55,7 +55,8 @@ namespace swift::gui
             void setAircraftMode(models::CSimulatedAircraftListModel::AircraftMode mode);
 
             //! Configure the menu
-            void configureMenu(bool menuRecalculate, bool menuHighlightAndFollow, bool menuEnableAircraft, bool menuFastPositionUpdates, bool menuGndFlag, bool menuFlightPlan);
+            void configureMenu(bool menuRecalculate, bool menuHighlightAndFollow, bool menuEnableAircraft,
+                               bool menuFastPositionUpdates, bool menuGndFlag, bool menuFlightPlan);
 
             //! Configure fast position updates menu
             void configureMenuFastPositionUpdates(bool menuFastPositionUpdates);
@@ -115,7 +116,8 @@ namespace swift::gui
             void reEnableAllUnrenderedAircraft();
 
             //! Enable or disable aircraft
-            void enableOrDisableAircraft(const swift::misc::simulation::CSimulatedAircraftList &aircraft, bool newEnabled);
+            void enableOrDisableAircraft(const swift::misc::simulation::CSimulatedAircraftList &aircraft,
+                                         bool newEnabled);
 
             //! Follow aircraft in simulator
             void followAircraftInSimulator(const swift::misc::simulation::CSimulatedAircraft &aircraft);
@@ -124,7 +126,8 @@ namespace swift::gui
             void enableParts(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool enabled);
 
             //! Set pitch
-            void setPitchOnGround(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::physical_quantities::CAngle &pitch);
+            void setPitchOnGround(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                  const swift::misc::physical_quantities::CAngle &pitch);
 
             //! Aircraft supporting parts?
             bool isSupportingAircraftParts(const swift::misc::aviation::CCallsign &cs) const;

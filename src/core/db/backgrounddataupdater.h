@@ -61,7 +61,9 @@ namespace swift::core::db
         //! Sync the model cache, normally model set or simulator models cache
         //! \param modelSetFlag true means model set, false means model cach
         //! \param dbModelsConsidered if no DB models are passed all DB models are used
-        void syncModelOrModelSetCacheWithDbData(bool modelSetFlag, const swift::misc::simulation::CAircraftModelList &dbModelsConsidered = {});
+        void
+        syncModelOrModelSetCacheWithDbData(bool modelSetFlag,
+                                           const swift::misc::simulation::CAircraftModelList &dbModelsConsidered = {});
 
         //! Sync DB entity
         void syncDbEntity(swift::misc::network::CEntityFlags::Entity entity);

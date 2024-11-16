@@ -9,28 +9,22 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CActionHotkey)
 
 namespace swift::misc::input
 {
-    CActionHotkey::CActionHotkey(const QString &action) : m_action(action)
-    {}
+    CActionHotkey::CActionHotkey(const QString &action) : m_action(action) {}
 
-    CActionHotkey::CActionHotkey(const CIdentifier &identifier, const CHotkeyCombination &combination, const QString &action) : m_identifier(identifier), m_combination(combination), m_action(action)
+    CActionHotkey::CActionHotkey(const CIdentifier &identifier, const CHotkeyCombination &combination,
+                                 const QString &action)
+        : m_identifier(identifier), m_combination(combination), m_action(action)
     {}
 
     QString CActionHotkey::convertToQString(bool /* i18n */) const
     {
-        const QString s =
-            m_identifier.getMachineName() %
-            u' ' %
-            m_combination.asStringWithDeviceNames() %
-            // m_combination.toQString() %
-            u' ' %
-            m_action;
+        const QString s = m_identifier.getMachineName() % u' ' % m_combination.asStringWithDeviceNames() %
+                          // m_combination.toQString() %
+                          u' ' % m_action;
         return s;
     }
 
-    void CActionHotkey::setCombination(const CHotkeyCombination &combination)
-    {
-        m_combination = combination;
-    }
+    void CActionHotkey::setCombination(const CHotkeyCombination &combination) { m_combination = combination; }
 
     bool CActionHotkey::isForSameMachineId(const CActionHotkey &key) const
     {
@@ -47,10 +41,7 @@ namespace swift::misc::input
         return this->isForSameMachineId(key) || this->isForSameMachineName(key);
     }
 
-    void CActionHotkey::updateToCurrentMachine()
-    {
-        m_identifier.updateToCurrentMachine();
-    }
+    void CActionHotkey::updateToCurrentMachine() { m_identifier.updateToCurrentMachine(); }
 
     void CActionHotkey::setObject(const CActionHotkey &obj)
     {
@@ -90,15 +81,9 @@ namespace swift::misc::input
             break;
         }
         case IndexCombination:
-        case IndexCombinationAsString:
-            m_combination = variant.value<CHotkeyCombination>();
-            break;
-        case IndexObject:
-            this->setObject(variant.value<CActionHotkey>());
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexCombinationAsString: m_combination = variant.value<CHotkeyCombination>(); break;
+        case IndexObject: this->setObject(variant.value<CActionHotkey>()); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::misc::input

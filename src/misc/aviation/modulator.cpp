@@ -121,8 +121,7 @@ namespace swift::misc::aviation
         case IndexEnabledReceive: return QVariant::fromValue(this->isReceiveEnabled());
         case IndexTransmitVolume: return QVariant::fromValue(this->getVolumeTransmit());
         case IndexReceiveVolume: return QVariant::fromValue(this->getVolumeReceive());
-        default:
-            return CValueObject<CModulator<AVIO>>::propertyByIndex(index);
+        default: return CValueObject<CModulator<AVIO>>::propertyByIndex(index);
         }
     }
 
@@ -143,21 +142,24 @@ namespace swift::misc::aviation
         case IndexEnabledReceive: this->setReceiveEnabled(variant.toBool()); break;
         case IndexTransmitVolume: this->setVolumeTransmit(variant.toInt()); break;
         case IndexReceiveVolume: this->setVolumeReceive(variant.toInt()); break;
-        default:
-            CValueObject<CModulator<AVIO>>::setPropertyByIndex(index, variant);
-            break;
+        default: CValueObject<CModulator<AVIO>>::setPropertyByIndex(index, variant); break;
         }
     }
 
     template <class AVIO>
     int CModulator<AVIO>::comparePropertyByIndex(CPropertyIndexRef index, const AVIO &compareValue) const
     {
-        if (index.isMyself()) { return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive); }
+        if (index.isMyself())
+        {
+            return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexActiveFrequency: return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive);
-        case IndexStandbyFrequency: return m_frequencyStandby.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyStandby);
+        case IndexActiveFrequency:
+            return m_frequencyActive.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyActive);
+        case IndexStandbyFrequency:
+            return m_frequencyStandby.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.m_frequencyStandby);
         case IndexEnabledTransmit: return Compare::compare(this->isTransmitEnabled(), compareValue.isTransmitEnabled());
         case IndexEnabledReceive: return Compare::compare(this->isReceiveEnabled(), compareValue.isReceiveEnabled());
         case IndexTransmitVolume: return Compare::compare(this->getVolumeTransmit(), compareValue.getVolumeTransmit());
@@ -175,7 +177,10 @@ namespace swift::misc::aviation
     }
 
     template <class AVIO>
-    CModulator<AVIO>::CModulator(const QString &name, const swift::misc::physical_quantities::CFrequency &activeFrequency, const swift::misc::physical_quantities::CFrequency &standbyFrequency) : m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency)
+    CModulator<AVIO>::CModulator(const QString &name,
+                                 const swift::misc::physical_quantities::CFrequency &activeFrequency,
+                                 const swift::misc::physical_quantities::CFrequency &standbyFrequency)
+        : m_name(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency)
     {
         static_assert(!std::is_polymorphic_v<AVIO>, "Must not use virtual functions for value classes");
     }
@@ -192,13 +197,15 @@ namespace swift::misc::aviation
     template <class AVIO>
     void CModulator<AVIO>::setFrequencyActiveKHz(double frequencyKHz)
     {
-        m_frequencyActive = swift::misc::physical_quantities::CFrequency(frequencyKHz, swift::misc::physical_quantities::CFrequencyUnit::kHz());
+        m_frequencyActive = swift::misc::physical_quantities::CFrequency(
+            frequencyKHz, swift::misc::physical_quantities::CFrequencyUnit::kHz());
     }
 
     template <class AVIO>
     void CModulator<AVIO>::setFrequencyStandbyKHz(double frequencyKHz)
     {
-        m_frequencyStandby = swift::misc::physical_quantities::CFrequency(frequencyKHz, swift::misc::physical_quantities::CFrequencyUnit::kHz());
+        m_frequencyStandby = swift::misc::physical_quantities::CFrequency(
+            frequencyKHz, swift::misc::physical_quantities::CFrequencyUnit::kHz());
     }
 
     template <class AVIO>

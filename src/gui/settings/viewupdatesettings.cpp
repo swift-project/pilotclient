@@ -16,8 +16,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CViewUpdateSettings)
 
 namespace swift::gui::settings
 {
-    CViewUpdateSettings::CViewUpdateSettings()
-    {}
+    CViewUpdateSettings::CViewUpdateSettings() {}
 
     void CViewUpdateSettings::reset()
     {
@@ -31,9 +30,7 @@ namespace swift::gui::settings
     {
         // too fast updates cause CPU overload
         static const CTime min(5.0, CTimeUnit::s());
-        return this->m_updateAircraft >= min &&
-               this->m_updateAtc >= min &&
-               this->m_updateRendering >= min &&
+        return this->m_updateAircraft >= min && this->m_updateAtc >= min && this->m_updateRendering >= min &&
                this->m_updateUser >= min;
     }
 
@@ -41,7 +38,10 @@ namespace swift::gui::settings
     {
         Q_UNUSED(i18n);
         const QString s("Atc: %1 Aircraft: %2 User: %3 Rendering %4");
-        return s.arg(m_updateAtc.valueRounded(CTimeUnit::s(), 2)).arg(m_updateAircraft.valueRounded(CTimeUnit::s(), 2)).arg(m_updateUser.valueRounded(CTimeUnit::s(), 2)).arg(m_updateRendering.valueRounded(CTimeUnit::s(), 2));
+        return s.arg(m_updateAtc.valueRounded(CTimeUnit::s(), 2))
+            .arg(m_updateAircraft.valueRounded(CTimeUnit::s(), 2))
+            .arg(m_updateUser.valueRounded(CTimeUnit::s(), 2))
+            .arg(m_updateRendering.valueRounded(CTimeUnit::s(), 2));
     }
 
     QVariant CViewUpdateSettings::propertyByIndex(CPropertyIndexRef index) const
@@ -50,16 +50,11 @@ namespace swift::gui::settings
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexAircraft:
-            return QVariant::fromValue(this->m_updateAircraft);
-        case IndexAtc:
-            return QVariant::fromValue(this->m_updateAtc);
-        case IndexRendering:
-            return QVariant::fromValue(this->m_updateRendering);
-        case IndexUser:
-            return QVariant::fromValue(this->m_updateUser);
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexAircraft: return QVariant::fromValue(this->m_updateAircraft);
+        case IndexAtc: return QVariant::fromValue(this->m_updateAtc);
+        case IndexRendering: return QVariant::fromValue(this->m_updateRendering);
+        case IndexUser: return QVariant::fromValue(this->m_updateUser);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -74,21 +69,11 @@ namespace swift::gui::settings
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexAircraft:
-            this->m_updateAircraft = variant.value<CTime>();
-            break;
-        case IndexAtc:
-            this->m_updateAtc = variant.value<CTime>();
-            break;
-        case IndexRendering:
-            this->m_updateRendering = variant.value<CTime>();
-            break;
-        case IndexUser:
-            this->m_updateUser = variant.value<CTime>();
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexAircraft: this->m_updateAircraft = variant.value<CTime>(); break;
+        case IndexAtc: this->m_updateAtc = variant.value<CTime>(); break;
+        case IndexRendering: this->m_updateRendering = variant.value<CTime>(); break;
+        case IndexUser: this->m_updateUser = variant.value<CTime>(); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::gui::settings

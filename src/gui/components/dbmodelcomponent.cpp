@@ -28,9 +28,8 @@ using namespace swift::gui::models;
 
 namespace swift::gui::components
 {
-    CDbModelComponent::CDbModelComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                            CDbMappingComponentAware(parent),
-                                                            ui(new Ui::CDbModelComponent)
+    CDbModelComponent::CDbModelComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), CDbMappingComponentAware(parent), ui(new Ui::CDbModelComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
@@ -48,10 +47,13 @@ namespace swift::gui::components
 
         connect(ui->tvp_AircraftModel, &CAircraftModelView::requestNewBackendData, this, &CDbModelComponent::onReload);
         connect(ui->tvp_AircraftModel, &CAircraftModelView::requestStash, this, &CDbModelComponent::requestStash);
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDbModelComponent::onStyleSheetChanged, Qt::QueuedConnection);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDbModelComponent::onStyleSheetChanged,
+                Qt::QueuedConnection);
         connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbModelComponent::onModelsRead);
-        connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbModelComponent::onEntityDownloadProgress, Qt::QueuedConnection);
-        this->onModelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished, sApp->getWebDataServices()->getModelsCount(), {});
+        connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this,
+                &CDbModelComponent::onEntityDownloadProgress, Qt::QueuedConnection);
+        this->onModelsRead(CEntityFlags::ModelEntity, CEntityFlags::ReadFinished,
+                           sApp->getWebDataServices()->getModelsCount(), {});
     }
 
     CDbModelComponent::~CDbModelComponent()
@@ -59,10 +61,7 @@ namespace swift::gui::components
         // void
     }
 
-    bool CDbModelComponent::hasModels() const
-    {
-        return !ui->tvp_AircraftModel->isEmpty();
-    }
+    bool CDbModelComponent::hasModels() const { return !ui->tvp_AircraftModel->isEmpty(); }
 
     void CDbModelComponent::requestUpdatedData()
     {
@@ -77,7 +76,8 @@ namespace swift::gui::components
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity, ts);
     }
 
-    void CDbModelComponent::onModelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
+    void CDbModelComponent::onModelsRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count,
+                                         const QUrl &url)
     {
         Q_UNUSED(count)
         Q_UNUSED(url)
@@ -87,12 +87,15 @@ namespace swift::gui::components
 
         if (CEntityFlags::isFinishedReadState(readState))
         {
-            this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)), 2000);
+            this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)),
+                                         2000);
             ui->tvp_AircraftModel->updateContainerMaybeAsync(sGui->getWebDataServices()->getModels());
         }
         else
         {
-            this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::entitiesToString(entity) % u" " % CEntityFlags::stateToString(readState), 10000);
+            this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::entitiesToString(entity) % u" " %
+                                             CEntityFlags::stateToString(readState),
+                                         10000);
         }
     }
 
@@ -107,7 +110,8 @@ namespace swift::gui::components
         // code goes here
     }
 
-    void CDbModelComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
+    void CDbModelComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress,
+                                                     qint64 current, qint64 max, const QUrl &url)
     {
         if (!entity.testFlag(CEntityFlags::ModelEntity)) { return; }
         this->showDownloadProgress(progress, current, max, url, 5000);

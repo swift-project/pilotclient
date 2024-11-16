@@ -19,7 +19,8 @@ namespace swift::core::fsd
     {
     public:
         //! Constructor
-        AddPilot(const QString &callsign, const QString &cid, const QString &password, PilotRating rating, int protocolRevision, SimType simType, const QString &realName);
+        AddPilot(const QString &callsign, const QString &cid, const QString &password, PilotRating rating,
+                 int protocolRevision, SimType simType, const QString &realName);
 
         //! Get user cid
         const QString &cid() const { return m_cid; }
@@ -62,21 +63,14 @@ namespace swift::core::fsd
     //! AddPilot equal operator
     inline bool operator==(const AddPilot &lhs, const AddPilot &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.cid() == rhs.cid() &&
-               lhs.password() == rhs.password() &&
-               lhs.rating() == rhs.rating() &&
-               lhs.protocolVersion() == rhs.protocolVersion() &&
-               lhs.simType() == rhs.simType() &&
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.cid() == rhs.cid() &&
+               lhs.password() == rhs.password() && lhs.rating() == rhs.rating() &&
+               lhs.protocolVersion() == rhs.protocolVersion() && lhs.simType() == rhs.simType() &&
                lhs.realName() == rhs.realName();
     }
 
     //! AddPilot not equal operator
-    inline bool operator!=(const AddPilot &lhs, const AddPilot &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const AddPilot &lhs, const AddPilot &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

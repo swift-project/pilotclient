@@ -9,8 +9,7 @@ namespace swift::misc::network
 {
     CUrlLogList::CUrlLogList() {}
 
-    CUrlLogList::CUrlLogList(const CSequence &other) : CSequence<CUrlLog>(other)
-    {}
+    CUrlLogList::CUrlLogList(const CSequence &other) : CSequence<CUrlLog>(other) {}
 
     int CUrlLogList::addPendingUrl(const CUrl &url, int maxNumber)
     {
@@ -23,17 +22,11 @@ namespace swift::misc::network
     int CUrlLogList::addPendingUrl(const CUrl &url, QNetworkReply *nwReply, int maxNumber)
     {
         const int id = this->addPendingUrl(url, maxNumber);
-        if (nwReply)
-        {
-            nwReply->setProperty(CUrlLog::propertyNameId(), QVariant::fromValue(id));
-        }
+        if (nwReply) { nwReply->setProperty(CUrlLog::propertyNameId(), QVariant::fromValue(id)); }
         return id;
     }
 
-    CUrlLogList CUrlLogList::findPending() const
-    {
-        return this->findBy(&CUrlLog::isPending, true);
-    }
+    CUrlLogList CUrlLogList::findPending() const { return this->findBy(&CUrlLog::isPending, true); }
 
     CUrlLogList CUrlLogList::findOutdatedPending(int outdatedOffsetMs) const
     {
@@ -70,10 +63,7 @@ namespace swift::misc::network
         return this->findErrors().size();
     }
 
-    CUrlLog CUrlLogList::findByIdOrDefault(int id) const
-    {
-        return this->findFirstByOrDefault(&CUrlLog::getId, id);
-    }
+    CUrlLog CUrlLogList::findByIdOrDefault(int id) const { return this->findFirstByOrDefault(&CUrlLog::getId, id); }
 
     bool CUrlLogList::markAsReceived(int id, bool success)
     {
@@ -97,10 +87,7 @@ namespace swift::misc::network
         return (ok && id >= 0) ? this->markAsReceived(id, success) : false;
     }
 
-    bool CUrlLogList::containsId(int id) const
-    {
-        return this->contains(&CUrlLog::getId, id);
-    }
+    bool CUrlLogList::containsId(int id) const { return this->contains(&CUrlLog::getId, id); }
 
     qint64 CUrlLogList::getMaxResponseTime() const
     {
@@ -143,6 +130,11 @@ namespace swift::misc::network
     {
         static const QString s("Entries: %1, pending: %2, errors: %3, min: %4ms avg: %5ms max: %6ms");
         if (this->isEmpty()) return QStringLiteral("No data");
-        return s.arg(this->size()).arg(this->sizePending()).arg(this->sizeErrors()).arg(this->getMinResponseTime()).arg(this->getAverageResponseTime()).arg(this->getMaxResponseTime());
+        return s.arg(this->size())
+            .arg(this->sizePending())
+            .arg(this->sizeErrors())
+            .arg(this->getMinResponseTime())
+            .arg(this->getAverageResponseTime())
+            .arg(this->getMaxResponseTime());
     }
 } // namespace swift::misc::network

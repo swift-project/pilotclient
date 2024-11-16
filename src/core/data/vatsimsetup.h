@@ -62,7 +62,8 @@ namespace swift::core::data
         void setMetarFileUrl(const swift::misc::network::CUrl &url) { m_metarFileUrl = url; }
 
         //! Set all URLs and indicate if something has changed
-        bool setUrls(const swift::misc::network::CUrl &dataFileUrl, const swift::misc::network::CUrl &serverFileUrl, const swift::misc::network::CUrl &metarFileUrl);
+        bool setUrls(const swift::misc::network::CUrl &dataFileUrl, const swift::misc::network::CUrl &serverFileUrl,
+                     const swift::misc::network::CUrl &metarFileUrl);
 
         //! FSD servers
         const swift::misc::network::CServerList &getFsdServers() const { return m_fsdServers; }
@@ -77,7 +78,8 @@ namespace swift::core::data
         void setVoiceServers(const swift::misc::network::CServerList &servers) { m_voiceServers = servers; }
 
         //! Set servers
-        bool setServers(const swift::misc::network::CServerList &fsdServers, const swift::misc::network::CServerList &voiceServers);
+        bool setServers(const swift::misc::network::CServerList &fsdServers,
+                        const swift::misc::network::CServerList &voiceServers);
 
         //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;

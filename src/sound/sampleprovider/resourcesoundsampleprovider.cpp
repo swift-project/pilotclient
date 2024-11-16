@@ -11,8 +11,8 @@ using namespace swift::misc;
 
 namespace swift::sound::sample_provider
 {
-    CResourceSoundSampleProvider::CResourceSoundSampleProvider(const CResourceSound &resourceSound, QObject *parent) : ISampleProvider(parent),
-                                                                                                                       m_resourceSound(resourceSound)
+    CResourceSoundSampleProvider::CResourceSoundSampleProvider(const CResourceSound &resourceSound, QObject *parent)
+        : ISampleProvider(parent), m_resourceSound(resourceSound)
     {
         const QString on = QStringLiteral("%1 %2").arg(classNameShort(this), resourceSound.getFileName());
         this->setObjectName(on);
@@ -39,16 +39,10 @@ namespace swift::sound::sample_provider
 
         if (!qFuzzyCompare(m_gain, 1.0))
         {
-            for (int i = 0; i < samplesToCopy; i++)
-            {
-                m_tempBuffer[i] = static_cast<float>(m_gain * m_tempBuffer[i]);
-            }
+            for (int i = 0; i < samplesToCopy; i++) { m_tempBuffer[i] = static_cast<float>(m_gain * m_tempBuffer[i]); }
         }
 
-        for (int i = 0; i < samplesToCopy; i++)
-        {
-            samples[i] = m_tempBuffer.at(i);
-        }
+        for (int i = 0; i < samplesToCopy; i++) { samples[i] = m_tempBuffer.at(i); }
 
         m_position += samplesToCopy;
 

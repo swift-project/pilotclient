@@ -35,7 +35,8 @@ namespace swift::gui::components
         this->setAcceptDrops(true);
         this->setAcceptedMetaTypeIds({ qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>() });
 
-        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoSelectorBase::onCodesRead, Qt::QueuedConnection);
+        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAirlineIcaoSelectorBase::onCodesRead,
+                Qt::QueuedConnection);
 
         // when we already have data, init completers. This can not be done directly in the
         // constructor due to virtual functions
@@ -51,20 +52,13 @@ namespace swift::gui::components
         }
     }
 
-    CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase()
-    {}
+    CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase() {}
 
     bool CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
     {
         if (icao == m_currentIcao) { return false; }
-        if (icao.isLoadedFromDb())
-        {
-            m_currentIcao = icao;
-        }
-        else
-        {
-            m_currentIcao = sGui->getWebDataServices()->smartAirlineIcaoSelector(icao);
-        }
+        if (icao.isLoadedFromDb()) { m_currentIcao = icao; }
+        else { m_currentIcao = sGui->getWebDataServices()->smartAirlineIcaoSelector(icao); }
         emit changedAirlineIcao(m_currentIcao);
         return true;
     }
@@ -123,7 +117,8 @@ namespace swift::gui::components
         }
     }
 
-    void CDbAirlineIcaoSelectorBase::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
+    void CDbAirlineIcaoSelectorBase::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState,
+                                                 int count, const QUrl &url)
     {
         Q_UNUSED(url)
 
@@ -134,13 +129,11 @@ namespace swift::gui::components
             {
                 QCompleter *c = this->createCompleter();
                 Q_ASSERT_X(c, Q_FUNC_INFO, "missing converter");
-                connect(c, qOverload<const QString &>(&QCompleter::activated), this, &CDbAirlineIcaoSelectorBase::onCompleterActivated);
+                connect(c, qOverload<const QString &>(&QCompleter::activated), this,
+                        &CDbAirlineIcaoSelectorBase::onCompleterActivated);
                 m_completer.reset(c); // deletes any old completer
             }
-            else
-            {
-                m_completer.reset(nullptr);
-            }
+            else { m_completer.reset(nullptr); }
         }
     }
 

@@ -47,8 +47,8 @@ using namespace swift::core::db;
 
 namespace swift::core::context
 {
-    CContextOwnAircraft::CContextOwnAircraft(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextOwnAircraft(mode, runtime),
-                                                                                                          CIdentifiable(this)
+    CContextOwnAircraft::CContextOwnAircraft(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+        : IContextOwnAircraft(mode, runtime), CIdentifiable(this)
     {
         Q_ASSERT(this->getRuntime());
 
@@ -62,7 +62,8 @@ namespace swift::core::context
 
         if (sApp && sApp->getWebDataServices())
         {
-            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CContextOwnAircraft::allSwiftWebDataRead);
+            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this,
+                    &CContextOwnAircraft::allSwiftWebDataRead);
         }
 
         // Init own aircraft
@@ -157,10 +158,7 @@ namespace swift::core::context
         }
 
         // override empty values
-        if (!ownAircraft.hasValidCallsign())
-        {
-            ownAircraft.setCallsign(CCallsign("SWIFT"));
-        }
+        if (!ownAircraft.hasValidCallsign()) { ownAircraft.setCallsign(CCallsign("SWIFT")); }
 
         // update object
         {
@@ -202,10 +200,7 @@ namespace swift::core::context
         else
         {
             const bool to = situations.isTakingOff(true);
-            if (to)
-            {
-                emit this->isTakingOff();
-            }
+            if (to) { emit this->isTakingOff(); }
             else
             {
                 const bool td = situations.isTouchingDown(true);
@@ -217,7 +212,8 @@ namespace swift::core::context
     CAircraftModel CContextOwnAircraft::reverseLookupModel(const CAircraftModel &model)
     {
         bool modified = false;
-        const CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
+        const CAircraftModel reverseModel =
+            CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
         return reverseModel;
     }
 
@@ -247,7 +243,8 @@ namespace swift::core::context
         // there is intentionally no equal check
         m_ownAircraft.setSituation(situation);
 
-        if (m_situationHistory.isEmpty() || qAbs(situation.getTimeDifferenceMs(m_situationHistory.front())) > MinHistoryDeltaMs)
+        if (m_situationHistory.isEmpty() ||
+            qAbs(situation.getTimeDifferenceMs(m_situationHistory.front())) > MinHistoryDeltaMs)
         {
             m_situationHistory.push_frontKeepLatestAdjustedFirst(situation, true);
             if (m_situationHistory.size() > MaxHistoryElements) { m_situationHistory.pop_back(); }
@@ -273,9 +270,14 @@ namespace swift::core::context
         return true;
     }
 
-    bool CContextOwnAircraft::updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::aviation::CAltitude &altitude, const CAltitude &pressureAltitude)
+    bool CContextOwnAircraft::updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position,
+                                                const swift::misc::aviation::CAltitude &altitude,
+                                                const CAltitude &pressureAltitude)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << position << altitude; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << position << altitude;
+        }
         QWriteLocker l(&m_lockAircraft);
         bool changed = (m_ownAircraft.getPosition() != position);
         if (changed) { m_ownAircraft.setPosition(position); }
@@ -294,38 +296,41 @@ namespace swift::core::context
         return changed;
     }
 
-    bool CContextOwnAircraft::updateCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder, const CIdentifier &originator)
+    bool CContextOwnAircraft::updateCockpit(const CComSystem &com1, const CComSystem &com2,
+                                            const CTransponder &transponder, const CIdentifier &originator)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder;
+        }
         bool changed;
         {
             QWriteLocker l(&m_lockAircraft);
             changed = m_ownAircraft.hasChangedCockpitData(com1, com2, transponder);
             if (changed) { m_ownAircraft.setCockpit(com1, com2, transponder); }
         }
-        if (changed)
-        {
-            emit this->changedAircraftCockpit(m_ownAircraft, originator);
-        }
+        if (changed) { emit this->changedAircraftCockpit(m_ownAircraft, originator); }
         return changed;
     }
 
-    bool CContextOwnAircraft::updateTransponderMode(const CTransponder::TransponderMode &transponderMode, const CIdentifier &originator)
+    bool CContextOwnAircraft::updateTransponderMode(const CTransponder::TransponderMode &transponderMode,
+                                                    const CIdentifier &originator)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << transponderMode; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << transponderMode;
+        }
         bool changed;
         {
             QWriteLocker l(&m_lockAircraft);
             changed = m_ownAircraft.setTransponderMode(transponderMode);
         }
-        if (changed)
-        {
-            emit this->changedAircraftCockpit(m_ownAircraft, originator);
-        }
+        if (changed) { emit this->changedAircraftCockpit(m_ownAircraft, originator); }
         return changed;
     }
 
-    bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, CComSystem::ComUnit unit, const CIdentifier &originator)
+    bool CContextOwnAircraft::updateActiveComFrequency(const CFrequency &frequency, CComSystem::ComUnit unit,
+                                                       const CIdentifier &originator)
     {
         if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return false; }
         if (!CComSystem::isValidComFrequency(frequency)) { return false; }
@@ -337,14 +342,8 @@ namespace swift::core::context
             com2 = m_ownAircraft.getCom2System();
             xpdr = m_ownAircraft.getTransponder();
         }
-        if (unit == CComSystem::Com1)
-        {
-            com1.setFrequencyActive(frequency);
-        }
-        else
-        {
-            com2.setFrequencyActive(frequency);
-        }
+        if (unit == CComSystem::Com1) { com1.setFrequencyActive(frequency); }
+        else { com2.setFrequencyActive(frequency); }
 
         const bool changed = this->updateCockpit(com1, com2, xpdr, originator);
         return changed;
@@ -392,7 +391,8 @@ namespace swift::core::context
         return true;
     }
 
-    bool CContextOwnAircraft::updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode, const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode)
+    bool CContextOwnAircraft::updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                                 const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode)
     {
         {
             QWriteLocker l(&m_lockAircraft);
@@ -456,11 +456,10 @@ namespace swift::core::context
     {
         Q_UNUSED(originator)
         if (commandLine.isEmpty()) { return false; }
-        CSimpleCommandParser parser(
-            { ".x", ".xpdr", // transponder
-              ".com1", ".com2", // com1, com2 frequencies
-              ".c1", ".c2", // com1, com2 frequencies
-              ".selcal" });
+        CSimpleCommandParser parser({ ".x", ".xpdr", // transponder
+                                      ".com1", ".com2", // com1, com2 frequencies
+                                      ".c1", ".c2", // com1, com2 frequencies
+                                      ".selcal" });
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
 
@@ -473,7 +472,8 @@ namespace swift::core::context
             {
                 transponder.setTransponderCode(xprCode);
                 // todo RW: replace originator
-                this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), transponder, CIdentifier("commandline"));
+                this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), transponder,
+                                    CIdentifier("commandline"));
                 return true;
             }
             else
@@ -481,7 +481,8 @@ namespace swift::core::context
                 CTransponder::TransponderMode mode = CTransponder::modeFromString(parser.part(1));
                 transponder.setTransponderMode(mode);
                 // todo RW: replace originator
-                this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), transponder, CIdentifier("commandline"));
+                this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), transponder,
+                                    CIdentifier("commandline"));
                 return true;
             }
         }
@@ -492,18 +493,9 @@ namespace swift::core::context
             {
                 CComSystem com1 = myAircraft.getCom1System();
                 CComSystem com2 = myAircraft.getCom2System();
-                if (parser.commandEndsWith("1"))
-                {
-                    com1.setFrequencyActive(frequency);
-                }
-                else if (parser.commandEndsWith("2"))
-                {
-                    com2.setFrequencyActive(frequency);
-                }
-                else
-                {
-                    return false;
-                }
+                if (parser.commandEndsWith("1")) { com1.setFrequencyActive(frequency); }
+                else if (parser.commandEndsWith("2")) { com2.setFrequencyActive(frequency); }
+                else { return false; }
                 this->updateCockpit(com1, com2, myAircraft.getTransponder(), identifier());
                 return true;
             }

@@ -18,12 +18,14 @@ using namespace swift::misc;
 
 namespace swift::gui::models
 {
-    CApplicationInfoListModel::CApplicationInfoListModel(QObject *parent) : CListModelBase("ModelApplicationInfoListModel", parent)
+    CApplicationInfoListModel::CApplicationInfoListModel(QObject *parent)
+        : CListModelBase("ModelApplicationInfoListModel", parent)
     {
         m_columns.addColumn(CColumn::standardString("version", CApplicationInfo::IndexVersionString));
         m_columns.addColumn(CColumn::standardString("OS", CApplicationInfo::IndexPlatformInfo));
         m_columns.addColumn(CColumn::standardString("exe.path", CApplicationInfo::IndexExecutablePath));
-        m_columns.addColumn(CColumn("e.?", "existing?", CApplicationInfo::IndexExecutablePathExisting, new CBoolIconFormatter("directory existing", "directory not existing")));
+        m_columns.addColumn(CColumn("e.?", "existing?", CApplicationInfo::IndexExecutablePathExisting,
+                                    new CBoolIconFormatter("directory existing", "directory not existing")));
         m_columns.addColumn(CColumn::standardString("data.path", CApplicationInfo::IndexApplicationDataPath));
         m_columns.setWidthPercentages({ 20, 15, 30, 5, 30 });
 

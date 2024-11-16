@@ -37,8 +37,9 @@ namespace swift::misc::simulation
 
     //! Base class for interpolating (calculate positions inbetween updates).
     //! One instance is responsible for one aircraft
-    //! This class provides the high level functions for interpolation (called from the simulator plugin), logging functionality, as well as the logic to interpolate aircraft parts.
-    //! Information for the position interpolation (basically aircraft updates from FSD) are provided from this class.
+    //! This class provides the high level functions for interpolation (called from the simulator plugin), logging
+    //! functionality, as well as the logic to interpolate aircraft parts. Information for the position interpolation
+    //! (basically aircraft updates from FSD) are provided from this class.
     class SWIFT_MISC_EXPORT CInterpolator :
         protected CSimulationEnvironmentAware,
         protected CInterpolationSetupAware,
@@ -56,7 +57,9 @@ namespace swift::misc::simulation
         //! \param setup interpolation setup
         //! \param aircraftNumber number used to spread the computational load of part interpolation
         //! \return interpolation result
-        CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber);
+        CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch,
+                                              const CInterpolationAndRenderingSetupPerCallsign &setup,
+                                              uint32_t aircraftNumber);
 
         //! Attach an observer to read the interpolator's state for debugging
         //! \remark parts logging has a \c bool \c log flag
@@ -90,8 +93,8 @@ namespace swift::misc::simulation
 
     protected:
         //! Constructor
-        CInterpolator(const aviation::CCallsign &callsign,
-                      ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteProvider,
+        CInterpolator(const aviation::CCallsign &callsign, ISimulationEnvironmentProvider *simEnvProvider,
+                      IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteProvider,
                       CInterpolationLogger *logger);
 
         //! Center of gravity
@@ -106,24 +109,32 @@ namespace swift::misc::simulation
         // values for current interpolation step
         qint64 m_currentTimeMsSinceEpoch = -1; //!< current time
         qint64 m_lastInvalidLogTs = -1; //!< last invalid situation timestamp
-        aviation::CAircraftSituationList m_currentSituations; //!< current situations obtained by remoteAircraftSituationsAndChange
-        aviation::CAircraftSituationChange m_pastSituationsChange; //!< situations change of provider (i.e. network) situations
+        aviation::CAircraftSituationList
+            m_currentSituations; //!< current situations obtained by remoteAircraftSituationsAndChange
+        aviation::CAircraftSituationChange
+            m_pastSituationsChange; //!< situations change of provider (i.e. network) situations
         CInterpolationAndRenderingSetupPerCallsign m_currentSetup; //!< used setup
         CInterpolationStatus m_currentInterpolationStatus; //!< this step's situation status
         CPartsStatus m_currentPartsStatus; //!< this step's parts status
-        CPartsStatus m_lastPartsStatus; //!< status for last parts, used when last parts are re-used because of m_partsToSituationInterpolationRatio
-        int m_partsToSituationInterpolationRatio = 2; //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
+        CPartsStatus m_lastPartsStatus; //!< status for last parts, used when last parts are re-used because of
+                                        //!< m_partsToSituationInterpolationRatio
+        int m_partsToSituationInterpolationRatio =
+            2; //!< ratio between parts and situation interpolation, 1..always, 2..every 2nd situation
         int m_partsToSituationGuessingRatio = 5; //!< ratio between parts guessing and situation interpolation
         int m_invalidSituations = 0; //!< mainly when there are no new situations
         CStatusMessageList m_interpolationMessages; //!< interpolation messages
 
         aviation::CAircraftSituation m_lastSituation { aviation::CAircraftSituation::null() }; //!< latest interpolation
         aviation::CAircraftParts m_lastParts { aviation::CAircraftParts::null() }; //!< latest parts
-        physical_quantities::CLength m_currentSceneryOffset { physical_quantities::CLength::null() }; //!< calculated scenery offset if any
+        physical_quantities::CLength m_currentSceneryOffset {
+            physical_quantities::CLength::null()
+        }; //!< calculated scenery offset if any
 
         qint64 m_situationsLastModified { -1 }; //!< when situations were last modified
         qint64 m_situationsLastModifiedUsed { -1 }; //!< interpolant based on situations last updated
-        int m_interpolatedSituationsCounter { 0 }; //!< counter for each interpolated situations: used for statistics, every n-th interpolation ....
+        int m_interpolatedSituationsCounter {
+            0
+        }; //!< counter for each interpolated situations: used for statistics, every n-th interpolation ....
 
     private:
         CInterpolationLogger *m_logger = nullptr; //!< optional interpolation logger
@@ -133,11 +144,14 @@ namespace swift::misc::simulation
         //! Inits all data members for this current interpolation step
         //! \param currentTimeSinceEpoch milliseconds since epoch for which the situation should be interpolated
         //! \param setup interpolation setup
-        //! \param aircraftNumber passing the aircraft number allows to equally distribute among the steps and not to do it always together for all aircraft
-        bool initIniterpolationStepData(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
+        //! \param aircraftNumber passing the aircraft number allows to equally distribute among the steps and not to do
+        //! it always together for all aircraft
+        bool initIniterpolationStepData(qint64 currentTimeSinceEpoch,
+                                        const CInterpolationAndRenderingSetupPerCallsign &setup, int aircraftNumber);
 
         //! Init the interpolated situation
-        aviation::CAircraftSituation initInterpolatedSituation(const aviation::CAircraftSituation &oldSituation, const aviation::CAircraftSituation &newSituation) const;
+        aviation::CAircraftSituation initInterpolatedSituation(const aviation::CAircraftSituation &oldSituation,
+                                                               const aviation::CAircraftSituation &newSituation) const;
 
         //! Current interpolated situation
         aviation::CAircraftSituation getInterpolatedSituation();
@@ -149,14 +163,17 @@ namespace swift::misc::simulation
         aviation::CAircraftParts getInterpolatedOrGuessedParts(int aircraftNumber);
 
         //! Guessed parts
-        static aviation::CAircraftParts guessParts(const aviation::CAircraftSituation &situation, const aviation::CAircraftSituationChange &change, const simulation::CAircraftModel &model);
+        static aviation::CAircraftParts guessParts(const aviation::CAircraftSituation &situation,
+                                                   const aviation::CAircraftSituationChange &change,
+                                                   const simulation::CAircraftModel &model);
 
         //! Log parts
         void logParts(const aviation::CAircraftParts &parts, int partsNo, bool empty) const;
 
         //! Get situations and calculate change, also correct altitudes if applicable
         //! \remark calculates offset (scenery) and situations change
-        aviation::CAircraftSituationList remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup);
+        aviation::CAircraftSituationList
+        remoteAircraftSituationsAndChange(const CInterpolationAndRenderingSetupPerCallsign &setup);
 
         //! Center of gravity, fetched from provider in case needed
         physical_quantities::CLength getAndFetchModelCG(const physical_quantities::CLength &dbCG);
@@ -166,7 +183,10 @@ namespace swift::misc::simulation
         //! \remark situationToPreset position is unknown
         //! \remark situationToPreset needs to be between oldSituation and newSituation
         //! \sa CAircraftSituation::transferGroundElevation
-        static bool presetGroundElevation(aviation::CAircraftSituation &situationToPreset, const aviation::CAircraftSituation &oldSituation, const aviation::CAircraftSituation &newSituation, const aviation::CAircraftSituationChange &change);
+        static bool presetGroundElevation(aviation::CAircraftSituation &situationToPreset,
+                                          const aviation::CAircraftSituation &oldSituation,
+                                          const aviation::CAircraftSituation &newSituation,
+                                          const aviation::CAircraftSituationChange &change);
 
         //! Deferred init
         void deferredInit();

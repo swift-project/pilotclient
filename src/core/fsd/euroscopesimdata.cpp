@@ -14,23 +14,15 @@ namespace swift::core::fsd
 {
     EuroscopeSimData::EuroscopeSimData() = default;
 
-    EuroscopeSimData::EuroscopeSimData(const QString &sender, const QString &model, const QString &livery, quint64 timestamp,
-                                       double latitude, double longitude, double altitude, double heading, int bank, int pitch,
-                                       int groundSpeed, bool onGround, double gearPercent, double thrustPercent, const swift::misc::aviation::CAircraftLights &lights) : MessageBase(sender, {}),
-                                                                                                                                                                         m_model(model),
-                                                                                                                                                                         m_livery(livery),
-                                                                                                                                                                         m_timestamp(timestamp),
-                                                                                                                                                                         m_latitude(latitude),
-                                                                                                                                                                         m_longitude(longitude),
-                                                                                                                                                                         m_altitude(altitude),
-                                                                                                                                                                         m_heading(heading),
-                                                                                                                                                                         m_bank(bank),
-                                                                                                                                                                         m_pitch(pitch),
-                                                                                                                                                                         m_groundSpeed(groundSpeed),
-                                                                                                                                                                         m_onGround(onGround),
-                                                                                                                                                                         m_gearPercent(gearPercent),
-                                                                                                                                                                         m_thrustPercent(thrustPercent),
-                                                                                                                                                                         m_lights(lights)
+    EuroscopeSimData::EuroscopeSimData(const QString &sender, const QString &model, const QString &livery,
+                                       quint64 timestamp, double latitude, double longitude, double altitude,
+                                       double heading, int bank, int pitch, int groundSpeed, bool onGround,
+                                       double gearPercent, double thrustPercent,
+                                       const swift::misc::aviation::CAircraftLights &lights)
+        : MessageBase(sender, {}), m_model(model), m_livery(livery), m_timestamp(timestamp), m_latitude(latitude),
+          m_longitude(longitude), m_altitude(altitude), m_heading(heading), m_bank(bank), m_pitch(pitch),
+          m_groundSpeed(groundSpeed), m_onGround(onGround), m_gearPercent(gearPercent), m_thrustPercent(thrustPercent),
+          m_lights(lights)
     {}
 
     QStringList EuroscopeSimData::toTokens() const
@@ -84,7 +76,8 @@ namespace swift::core::fsd
 
         // token[0,15,16] are not used
         return EuroscopeSimData(tokens[1], tokens[2], tokens[3], tokens[4].toULongLong(), tokens[5].toDouble(),
-                                tokens[6].toDouble(), tokens[7].toDouble(), tokens[8].toDouble(), tokens[9].toInt(), tokens[10].toInt(),
-                                tokens[11].toInt(), tokens[12].toInt(), tokens[13].toDouble(), tokens[14].toDouble(), fromFlags(tokens[17].toInt()));
+                                tokens[6].toDouble(), tokens[7].toDouble(), tokens[8].toDouble(), tokens[9].toInt(),
+                                tokens[10].toInt(), tokens[11].toInt(), tokens[12].toInt(), tokens[13].toDouble(),
+                                tokens[14].toDouble(), fromFlags(tokens[17].toInt()));
     }
 } // namespace swift::core::fsd

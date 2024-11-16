@@ -27,7 +27,8 @@ int main(int argc, char *argv[])
     CGuiApplication a(CApplicationInfo::swiftMappingTool(), CApplicationInfo::MappingTool, CIcons::swiftDatabase48());
     if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
     a.splashScreen(CIcons::swiftDatabase256());
-    a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders, CDatabaseReaderConfigList::forMappingTool());
+    a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders,
+                                  CDatabaseReaderConfigList::forMappingTool());
     a.startCoreFacadeWithoutContexts();
     if (!a.start())
     {

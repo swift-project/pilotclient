@@ -11,8 +11,7 @@
 
 namespace swift::gui::components
 {
-    CMarginsInput::CMarginsInput(QWidget *parent) : QFrame(parent),
-                                                    ui(new Ui::CMarginsInput)
+    CMarginsInput::CMarginsInput(QWidget *parent) : QFrame(parent), ui(new Ui::CMarginsInput)
     {
         ui->setupUi(this);
         connect(ui->pb_Ok, &QPushButton::clicked, this, &CMarginsInput::confirmed);
@@ -29,8 +28,7 @@ namespace swift::gui::components
         this->setMargins(QMargins());
     }
 
-    CMarginsInput::~CMarginsInput()
-    {}
+    CMarginsInput::~CMarginsInput() {}
 
     void CMarginsInput::setMargins(const QMargins &margins)
     {

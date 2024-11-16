@@ -32,8 +32,7 @@ namespace swift::core::vatsim
 {
     //! Read VATSIM server file
     //! \sa https://data.vatsim.net/v3/vatsim-servers.json
-    class SWIFT_CORE_EXPORT CVatsimServerFileReader :
-        public CThreadedReader
+    class SWIFT_CORE_EXPORT CVatsimServerFileReader : public CThreadedReader
     {
         Q_OBJECT
 
@@ -53,7 +52,8 @@ namespace swift::core::vatsim
         void dataFileRead(int bytes);
 
         //! Data have been read
-        void dataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
+        void dataRead(swift::misc::network::CEntityFlags::Entity entity,
+                      swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
     protected:
         //! \name swift::core::CThreadedReader overrides

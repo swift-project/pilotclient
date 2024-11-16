@@ -104,7 +104,9 @@ namespace swift::gui::components
         QScopedPointer<Ui::CSettingsSimulatorComponent> ui; //!< UI
         bool m_pluginLoaded = false; //!< plugin loaded?
         swift::core::CPluginManagerSimulator *m_plugins = nullptr;
-        swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged };
+        swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_enabledSimulators {
+            this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged
+        };
     };
 } // namespace swift::gui::components
 

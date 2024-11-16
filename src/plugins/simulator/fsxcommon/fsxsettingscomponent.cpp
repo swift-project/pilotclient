@@ -23,22 +23,26 @@ using namespace swift::config;
 
 namespace swift::simplugin::fsxcommon
 {
-    CFsxSettingsComponent::CFsxSettingsComponent(QWidget *parent) : QFrame(parent),
-                                                                    ui(new Ui::CFsxSettingsComponent)
+    CFsxSettingsComponent::CFsxSettingsComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CFsxSettingsComponent)
     {
         ui->setupUi(this);
         ui->cb_TraceSimConnectCalls->setChecked(false);
 
-        connect(ui->cb_AddingAsSimulatedObject, &QCheckBox::released, this, &CFsxSettingsComponent::onSimulatedObjectChanged);
-        connect(ui->cb_TraceSimConnectCalls, &QCheckBox::released, this, &CFsxSettingsComponent::onSimConnectTraceChanged);
-        connect(ui->cb_EnableTerrainProbe, &QCheckBox::released, this, &CFsxSettingsComponent::onEnableTerrainProbeChanged);
+        connect(ui->cb_AddingAsSimulatedObject, &QCheckBox::released, this,
+                &CFsxSettingsComponent::onSimulatedObjectChanged);
+        connect(ui->cb_TraceSimConnectCalls, &QCheckBox::released, this,
+                &CFsxSettingsComponent::onSimConnectTraceChanged);
+        connect(ui->cb_EnableTerrainProbe, &QCheckBox::released, this,
+                &CFsxSettingsComponent::onEnableTerrainProbeChanged);
         connect(ui->cb_SBOffsets, &QCheckBox::released, this, &CFsxSettingsComponent::onSBOffsetsChanged);
         connect(ui->pb_Refresh, &QPushButton::released, this, &CFsxSettingsComponent::refresh);
 
         if (sGui && sGui->getIContextSimulator())
         {
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CFsxSettingsComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CFsxSettingsComponent::onSimulatorPluginChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this,
+                    &CFsxSettingsComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this,
+                    &CFsxSettingsComponent::onSimulatorPluginChanged, Qt::QueuedConnection);
         }
 
         QPointer<CFsxSettingsComponent> myself(this);
@@ -48,8 +52,7 @@ namespace swift::simplugin::fsxcommon
         });
     }
 
-    CFsxSettingsComponent::~CFsxSettingsComponent()
-    {}
+    CFsxSettingsComponent::~CFsxSettingsComponent() {}
 
     CSimulatorInfo CFsxSettingsComponent::getSimulator() const
     {
@@ -71,7 +74,8 @@ namespace swift::simplugin::fsxcommon
 
         ui->lbl_NoLocalSimulator->setVisible(!localSim);
         ui->cb_TraceSimConnectCalls->setEnabled(localSim);
-        ui->cb_EnableTerrainProbe->setEnabled(CBuildConfig::isRunningOnWindowsNtPlatform() && (CBuildConfig::buildWordSize() == 32) && localSim);
+        ui->cb_EnableTerrainProbe->setEnabled(CBuildConfig::isRunningOnWindowsNtPlatform() &&
+                                              (CBuildConfig::buildWordSize() == 32) && localSim);
         ui->cb_SBOffsets->setEnabled(localSim);
     }
 

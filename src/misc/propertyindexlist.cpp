@@ -9,8 +9,7 @@ namespace swift::misc
 {
     CPropertyIndexList::CPropertyIndexList() {}
 
-    CPropertyIndexList::CPropertyIndexList(const CSequence<CPropertyIndex> &other) : CSequence<CPropertyIndex>(other)
-    {}
+    CPropertyIndexList::CPropertyIndexList(const CSequence<CPropertyIndex> &other) : CSequence<CPropertyIndex>(other) {}
 
     CPropertyIndexList CPropertyIndexList::copyFrontRemoved() const
     {

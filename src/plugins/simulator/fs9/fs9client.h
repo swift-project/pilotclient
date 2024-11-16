@@ -38,8 +38,7 @@ namespace swift::simplugin::fs9
         //! Constructor
         CFs9Client(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft,
                    const swift::misc::physical_quantities::CTime &updateInterval,
-                   swift::misc::simulation::CInterpolationLogger *logger,
-                   swift::core::ISimulator *simulator);
+                   swift::misc::simulation::CInterpolationLogger *logger, swift::core::ISimulator *simulator);
 
         //! Destructor
         virtual ~CFs9Client() override;
@@ -57,7 +56,8 @@ namespace swift::simplugin::fs9
         //! @}
 
         //! \copydoc swift::misc::simulation::CInterpolator::getInterpolationMessages
-        swift::misc::CStatusMessageList getInterpolationMessages(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        swift::misc::CStatusMessageList getInterpolationMessages(
+            swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! Send a situation (position)
         void sendMultiplayerPosition(const swift::misc::aviation::CAircraftSituation &situation);
@@ -70,7 +70,8 @@ namespace swift::simplugin::fs9
 
     signals:
         //! Client status changed
-        void statusChanged(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft, swift::simplugin::fs9::CFs9Client::ClientStatus);
+        void statusChanged(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft,
+                           swift::simplugin::fs9::CFs9Client::ClientStatus);
 
     protected:
         //! \copydoc QObject::timerEvent

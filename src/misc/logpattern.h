@@ -90,7 +90,8 @@ namespace swift::misc
         //! Returns a CLogPattern which will match the same messages as this one, but only with some given severities.
         CLogPattern withSeverities(const QSet<CStatusMessage::StatusSeverity> &severities) const;
 
-        //! Returns a CLogPattern which will match the same messages, but only with a severity at or above the given severity.
+        //! Returns a CLogPattern which will match the same messages, but only with a severity at or above the given
+        //! severity.
         CLogPattern withSeverityAtOrAbove(CStatusMessage::StatusSeverity minimumSeverity) const;
 
         //! Returns true if the given message matches this pattern.
@@ -104,9 +105,10 @@ namespace swift::misc
 
         //! Returns true if this pattern is a proper subset of the other pattern.
         //! \see     https://en.wikipedia.org/wiki/Proper_subset
-        //! \details Pattern A is a proper subset of pattern B iff pattern B would match every category which pattern A matches,
-        //!          plus at least one other category. This induces a partial ordering which can be used as the comparator in a
-        //!          topological sorting algorithm, to sort patterns by their generality.
+        //! \details Pattern A is a proper subset of pattern B iff pattern B would match every category which pattern A
+        //! matches,
+        //!          plus at least one other category. This induces a partial ordering which can be used as the
+        //!          comparator in a topological sorting algorithm, to sort patterns by their generality.
         bool isProperSubsetOf(const CLogPattern &other) const;
 
         //! \copydoc swift::misc::mixin::String::toQString()

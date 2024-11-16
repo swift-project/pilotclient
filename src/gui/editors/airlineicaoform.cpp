@@ -29,8 +29,7 @@ using namespace swift::gui::components;
 
 namespace swift::gui::editors
 {
-    CAirlineIcaoForm::CAirlineIcaoForm(QWidget *parent) : CForm(parent),
-                                                          ui(new Ui::CAirlineIcaoForm)
+    CAirlineIcaoForm::CAirlineIcaoForm(QWidget *parent) : CForm(parent), ui(new Ui::CAirlineIcaoForm)
     {
         ui->setupUi(this);
         ui->le_Updated->setReadOnly(true);
@@ -38,8 +37,10 @@ namespace swift::gui::editors
         ui->lai_Id->set(CIcons::appAirlineIcao16(), "Id:");
 
         ui->selector_AirlineDesignator->displayWithIcaoDescription(false);
-        connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue, Qt::QueuedConnection);
-        connect(ui->selector_AirlineDesignator, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &CAirlineIcaoForm::setValue, Qt::QueuedConnection);
+        connect(ui->selector_AirlineName, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this,
+                &CAirlineIcaoForm::setValue, Qt::QueuedConnection);
+        connect(ui->selector_AirlineDesignator, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this,
+                &CAirlineIcaoForm::setValue, Qt::QueuedConnection);
 
         // Id
         connect(ui->le_Id, &QLineEdit::returnPressed, this, &CAirlineIcaoForm::onIdEntered);
@@ -48,11 +49,11 @@ namespace swift::gui::editors
         connect(ui->tb_Paste, &QToolButton::clicked, this, &CAirlineIcaoForm::pasted);
         connect(ui->drop_DropData, &CDropSite::droppedValueObject, this, &CAirlineIcaoForm::onDroppedCode);
         ui->drop_DropData->setInfoText("<drop airline ICAO code>");
-        ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>() });
+        ui->drop_DropData->setAcceptedMetaTypeIds(
+            { qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>() });
     }
 
-    CAirlineIcaoForm::~CAirlineIcaoForm()
-    {}
+    CAirlineIcaoForm::~CAirlineIcaoForm() {}
 
     void CAirlineIcaoForm::setValue(const CAirlineIcaoCode &icao)
     {
@@ -69,10 +70,7 @@ namespace swift::gui::editors
         ui->country_Selector->setCountry(icao.getCountry());
 
         const QPixmap pm = CIcon(icao.toIcon());
-        if (pm.width() < 125)
-        {
-            ui->lbl_AirlineIcon->setPixmap(pm);
-        }
+        if (pm.width() < 125) { ui->lbl_AirlineIcon->setPixmap(pm); }
         else
         {
             ui->lbl_AirlineIcon->setTextFormat(Qt::RichText);
@@ -82,10 +80,7 @@ namespace swift::gui::editors
         // sometimes artefacts when icon is displayed
         this->repaint();
 
-        if (m_currentCode.hasCompleteData())
-        {
-            emit this->airlineChanged(m_currentCode);
-        }
+        if (m_currentCode.hasCompleteData()) { emit this->airlineChanged(m_currentCode); }
     }
 
     CAirlineIcaoCode CAirlineIcaoForm::getValue() const
@@ -96,10 +91,7 @@ namespace swift::gui::editors
         {
             bool ok;
             const int dbKey = id.toInt(&ok);
-            if (ok)
-            {
-                code = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey);
-            }
+            if (ok) { code = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey); }
         }
 
         if (code.hasValidDbKey()) { return code; }
@@ -127,15 +119,9 @@ namespace swift::gui::editors
         return msgs;
     }
 
-    void CAirlineIcaoForm::allowDrop(bool allowDrop)
-    {
-        ui->drop_DropData->allowDrop(allowDrop);
-    }
+    void CAirlineIcaoForm::allowDrop(bool allowDrop) { ui->drop_DropData->allowDrop(allowDrop); }
 
-    bool CAirlineIcaoForm::isDropAllowed() const
-    {
-        return ui->drop_DropData->isDropAllowed();
-    }
+    bool CAirlineIcaoForm::isDropAllowed() const { return ui->drop_DropData->isDropAllowed(); }
 
     void CAirlineIcaoForm::setReadOnly(bool readOnly)
     {
@@ -163,15 +149,9 @@ namespace swift::gui::editors
         ui->tb_Paste->setVisible(true);
     }
 
-    void CAirlineIcaoForm::clear()
-    {
-        this->setValue(CAirlineIcaoCode());
-    }
+    void CAirlineIcaoForm::clear() { this->setValue(CAirlineIcaoCode()); }
 
-    void CAirlineIcaoForm::resetValue()
-    {
-        this->setValue(m_currentCode);
-    }
+    void CAirlineIcaoForm::resetValue() { this->setValue(m_currentCode); }
 
     void CAirlineIcaoForm::jsonPasted(const QString &json)
     {
@@ -182,10 +162,7 @@ namespace swift::gui::editors
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CAirlineIcaoCodeList>()) { return; }
             const CAirlineIcaoCodeList icaos = jsonVariant.value<CAirlineIcaoCodeList>();
-            if (!icaos.isEmpty())
-            {
-                this->setValue(icaos.front());
-            }
+            if (!icaos.isEmpty()) { this->setValue(icaos.front()); }
         }
         catch (const CJsonException &ex)
         {
@@ -196,20 +173,14 @@ namespace swift::gui::editors
     void CAirlineIcaoForm::onDroppedCode(const swift::misc::CVariant &variantDropped)
     {
         CAirlineIcaoCode icao;
-        if (variantDropped.canConvert<CAirlineIcaoCode>())
-        {
-            icao = variantDropped.value<CAirlineIcaoCode>();
-        }
+        if (variantDropped.canConvert<CAirlineIcaoCode>()) { icao = variantDropped.value<CAirlineIcaoCode>(); }
         else if (variantDropped.canConvert<CAirlineIcaoCodeList>())
         {
             const CAirlineIcaoCodeList icaoList(variantDropped.value<CAirlineIcaoCodeList>());
             if (icaoList.isEmpty()) { return; }
             icao = icaoList.front();
         }
-        else
-        {
-            return;
-        }
+        else { return; }
         this->setValue(icao);
     }
 
@@ -228,8 +199,5 @@ namespace swift::gui::editors
         this->setValue(icao);
     }
 
-    void CAirlineIcaoForm::emitAirlineChangedDigest()
-    {
-        emit this->airlineChangedDigest(m_currentCode);
-    }
+    void CAirlineIcaoForm::emitAirlineChangedDigest() { emit this->airlineChangedDigest(m_currentCode); }
 } // namespace swift::gui::editors

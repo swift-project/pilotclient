@@ -15,9 +15,11 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::models
 {
-    CAircraftCategoryListModel::CAircraftCategoryListModel(QObject *parent) : CListModelDbObjects("AircraftCategoryListModel", parent)
+    CAircraftCategoryListModel::CAircraftCategoryListModel(QObject *parent)
+        : CListModelDbObjects("AircraftCategoryListModel", parent)
     {
-        m_columns.addColumn(CColumn::standardString("id", CAircraftCategory::IndexDbIntegerKey, CDefaultFormatter::alignRightVCenter()));
+        m_columns.addColumn(CColumn::standardString("id", CAircraftCategory::IndexDbIntegerKey,
+                                                    CDefaultFormatter::alignRightVCenter()));
         m_columns.addColumn(CColumn::standardString("level", CAircraftCategory::IndexLevelString));
         m_columns.addColumn(CColumn::standardString("path", CAircraftCategory::IndexPath));
         m_columns.addColumn(CColumn::standardString("name", CAircraftCategory::IndexName));

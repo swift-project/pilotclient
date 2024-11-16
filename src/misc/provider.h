@@ -62,7 +62,8 @@ namespace swift::misc
             IProvider *iProvider = dynamic_cast<IProvider *>(provider);
             if (iProvider && iProvider->asQObject())
             {
-                QMetaObject::Connection con = QObject::connect(iProvider->asQObject(), &QObject::destroyed, [=](QObject *obj) { this->onProviderDestroyed(obj); });
+                QMetaObject::Connection con = QObject::connect(iProvider->asQObject(), &QObject::destroyed,
+                                                               [=](QObject *obj) { this->onProviderDestroyed(obj); });
                 m_lastProviderConnections.append(con);
             }
         }

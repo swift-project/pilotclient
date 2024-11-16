@@ -24,11 +24,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CUser)
 
 namespace swift::misc::network
 {
-    CUser::CUser(const CCallsign &callsign)
-        : m_callsign(callsign)
-    {
-        this->deriveHomeBaseFromCallsign();
-    }
+    CUser::CUser(const CCallsign &callsign) : m_callsign(callsign) { this->deriveHomeBaseFromCallsign(); }
 
     CUser::CUser(const QString &id, const QString &realname, const CCallsign &callsign)
         : m_id(CObfuscation::decode(id)), m_realname(CObfuscation::decode(realname)), m_callsign(callsign)
@@ -37,8 +33,10 @@ namespace swift::misc::network
         this->setRealName(m_realname); // extracts homebase if this is included in real name
     }
 
-    CUser::CUser(const QString &id, const QString &realname, const QString &email, const QString &password, const CCallsign &callsign)
-        : m_id(CObfuscation::decode(id)), m_realname(CObfuscation::decode(realname)), m_email(CObfuscation::decode(email)), m_password(CObfuscation::decode(password)), m_callsign(callsign)
+    CUser::CUser(const QString &id, const QString &realname, const QString &email, const QString &password,
+                 const CCallsign &callsign)
+        : m_id(CObfuscation::decode(id)), m_realname(CObfuscation::decode(realname)),
+          m_email(CObfuscation::decode(email)), m_password(CObfuscation::decode(password)), m_callsign(callsign)
     {
         this->deriveHomeBaseFromCallsign();
         this->setRealName(m_realname); // extracts homebase
@@ -74,14 +72,8 @@ namespace swift::misc::network
         Q_UNUSED(i18n)
         if (m_realname.isEmpty()) return QStringLiteral("<no realname>");
         QString s = m_realname;
-        if (this->hasId())
-        {
-            s += u" (" % m_id % u')';
-        }
-        if (this->hasCallsign())
-        {
-            s += u' ' % this->getCallsign().getStringAsSet();
-        }
+        if (this->hasId()) { s += u" (" % m_id % u')'; }
+        if (this->hasCallsign()) { s += u' ' % this->getCallsign().getStringAsSet(); }
         return s;
     }
 
@@ -98,10 +90,7 @@ namespace swift::misc::network
                 {
                     // copilot
                 }
-                else
-                {
-                    m_homebase = m_callsign.getIcaoCode();
-                }
+                else { m_homebase = m_callsign.getIcaoCode(); }
             }
         }
     }
@@ -118,7 +107,8 @@ namespace swift::misc::network
         if (!this->hasHomeBase())
         {
             // only apply stripping if home base is not explicitly given
-            // try to strip homebase: I understand the limitations, but we will have more correct hits as failures I assume
+            // try to strip homebase: I understand the limitations, but we will have more correct hits as failures I
+            // assume
             thread_local QRegularExpression tsRegex("(-\\s*|\\s)([A-Z]{4})$");
             const QRegularExpressionMatch match = tsRegex.match(rn);
             if (match.hasMatch())
@@ -134,23 +124,23 @@ namespace swift::misc::network
         m_realname = beautifyRealName(rn);
     }
 
-    bool CUser::hasValidHomeBase() const
-    {
-        return m_homebase.hasValidIcaoCode(false);
-    }
+    bool CUser::hasValidHomeBase() const { return m_homebase.hasValidIcaoCode(false); }
 
-    bool CUser::hasValidOrEmptyHomeBase() const
-    {
-        return m_homebase.isEmpty() || this->hasValidHomeBase();
-    }
+    bool CUser::hasValidOrEmptyHomeBase() const { return m_homebase.isEmpty() || this->hasValidHomeBase(); }
 
     CStatusMessageList CUser::validate() const
     {
         CStatusMessageList msgs;
         // callsign optional
         if (!this->hasId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid id")); }
-        if (!this->hasRealName()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid real name")); }
-        if (!this->hasCredentials()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid credentials")); }
+        if (!this->hasRealName())
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid real name"));
+        }
+        if (!this->hasCredentials())
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid credentials"));
+        }
         return msgs;
     }
 
@@ -204,7 +194,11 @@ namespace swift::misc::network
     {
         QString newRealName(realName.simplified().trimmed());
         if (newRealName.isEmpty()) { return newRealName; }
-        if (is09OnlyString(newRealName)) { return newRealName; } // new VATSIM COD, allowing id as name, see https://discordapp.com/channels/539048679160676382/539846348275449887/599969308247851018
+        if (is09OnlyString(newRealName))
+        {
+            return newRealName;
+        } // new VATSIM COD, allowing id as name, see
+          // https://discordapp.com/channels/539048679160676382/539846348275449887/599969308247851018
 
         int uc = 0;
         int lc = 0;
@@ -232,10 +226,7 @@ namespace swift::misc::network
         bool upperNextChar = true;
         while (i != newRealName.end())
         {
-            if (i->isSpace() || *i == '-')
-            {
-                upperNextChar = true;
-            }
+            if (i->isSpace() || *i == '-') { upperNextChar = true; }
             else if (upperNextChar)
             {
                 const QChar u(i->toUpper());
@@ -298,8 +289,10 @@ namespace swift::misc::network
         case IndexId7Digit: return this->get7DigitId().compare(compareValue.get7DigitId(), Qt::CaseInsensitive);
         case IndexIdInteger: return swift::misc::Compare::compare(getIntegerId(), compareValue.getIntegerId());
         case IndexRealName: return m_realname.compare(compareValue.getRealName(), Qt::CaseInsensitive);
-        case IndexHomebase: return m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomeBase());
-        case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+        case IndexHomebase:
+            return m_homebase.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getHomeBase());
+        case IndexCallsign:
+            return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
         case IndexPassword: break;
         default: return CValueObject::comparePropertyByIndex(index, compareValue);
         }
@@ -307,18 +300,9 @@ namespace swift::misc::network
         return 0;
     }
 
-    void CUser::setPassword(const QString &pw)
-    {
-        m_password = CObfuscation::decode(pw);
-    }
+    void CUser::setPassword(const QString &pw) { m_password = CObfuscation::decode(pw); }
 
-    void CUser::setEmail(const QString &email)
-    {
-        m_email = CObfuscation::decode(email);
-    }
+    void CUser::setEmail(const QString &email) { m_email = CObfuscation::decode(email); }
 
-    void CUser::setId(const QString &id)
-    {
-        m_id = CObfuscation::decode(id);
-    }
+    void CUser::setId(const QString &id) { m_id = CObfuscation::decode(id); }
 } // namespace swift::misc::network

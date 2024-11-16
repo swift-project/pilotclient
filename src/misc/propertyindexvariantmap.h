@@ -147,7 +147,8 @@ namespace swift::misc
     namespace mixin
     {
         template <class Derived>
-        CPropertyIndexList Index<Derived>::apply(const swift::misc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
+        CPropertyIndexList Index<Derived>::apply(const swift::misc::CPropertyIndexVariantMap &indexMap,
+                                                 bool skipEqualValues)
         {
             if (indexMap.isEmpty()) return {};
 

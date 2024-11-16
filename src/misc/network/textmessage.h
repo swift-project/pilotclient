@@ -27,9 +27,7 @@ namespace swift::misc::network
     /*!
      * Value object encapsulating information of a text message
      */
-    class SWIFT_MISC_EXPORT CTextMessage :
-        public CValueObject<CTextMessage>,
-        public ITimestampBased
+    class SWIFT_MISC_EXPORT CTextMessage : public CValueObject<CTextMessage>, public ITimestampBased
     {
     public:
         //! Properties by index
@@ -45,10 +43,12 @@ namespace swift::misc::network
         CTextMessage() {}
 
         //! Constructor, radio message
-        CTextMessage(const QString &message, const physical_quantities::CFrequency &frequency, const aviation::CCallsign &senderCallsign = {});
+        CTextMessage(const QString &message, const physical_quantities::CFrequency &frequency,
+                     const aviation::CCallsign &senderCallsign = {});
 
         //! Constructor, private message
-        CTextMessage(const QString &message, const aviation::CCallsign &senderCallsign, const aviation::CCallsign &recipientCallsign = {});
+        CTextMessage(const QString &message, const aviation::CCallsign &senderCallsign,
+                     const aviation::CCallsign &recipientCallsign = {});
 
         //! Get callsign (from)
         const aviation::CCallsign &getSenderCallsign() const { return m_senderCallsign; }

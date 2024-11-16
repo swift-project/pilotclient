@@ -27,12 +27,14 @@ namespace swift::misc::simulation
 {
     CSimulatedAircraftList::CSimulatedAircraftList() {}
 
-    CSimulatedAircraftList::CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other) : CSequence<CSimulatedAircraft>(other)
+    CSimulatedAircraftList::CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other)
+        : CSequence<CSimulatedAircraft>(other)
     {}
 
     CUserList CSimulatedAircraftList::getPilots() const
     {
-        return this->findBy(predicates::MemberValid(&CSimulatedAircraft::getPilot)).transform(predicates::MemberTransform(&CSimulatedAircraft::getPilot));
+        return this->findBy(predicates::MemberValid(&CSimulatedAircraft::getPilot))
+            .transform(predicates::MemberTransform(&CSimulatedAircraft::getPilot));
     }
 
     CAircraftModelList CSimulatedAircraftList::getModels() const
@@ -69,7 +71,11 @@ namespace swift::misc::simulation
     bool CSimulatedAircraftList::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUpdated) const
     {
         if (this->isEmpty()) return false;
-        if (aircraftToBeUpdated.hasRealName() && aircraftToBeUpdated.hasId() && aircraftToBeUpdated.hasAircraftAndAirlineDesignator()) { return false; }
+        if (aircraftToBeUpdated.hasRealName() && aircraftToBeUpdated.hasId() &&
+            aircraftToBeUpdated.hasAircraftAndAirlineDesignator())
+        {
+            return false;
+        }
 
         CSimulatedAircraft currentDataFileAircraft = this->findFirstByCallsign(aircraftToBeUpdated.getCallsign());
         if (currentDataFileAircraft.getCallsign().isEmpty()) return false;
@@ -160,7 +166,8 @@ namespace swift::misc::simulation
         return c;
     }
 
-    int CSimulatedAircraftList::setAircraftPartsSynchronized(const CCallsign &callsign, const CAircraftParts &parts, bool onlyFirst)
+    int CSimulatedAircraftList::setAircraftPartsSynchronized(const CCallsign &callsign, const CAircraftParts &parts,
+                                                             bool onlyFirst)
     {
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
@@ -174,7 +181,8 @@ namespace swift::misc::simulation
         return c;
     }
 
-    int CSimulatedAircraftList::setAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation, bool onlyFirst)
+    int CSimulatedAircraftList::setAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation,
+                                                     bool onlyFirst)
     {
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
@@ -186,7 +194,8 @@ namespace swift::misc::simulation
         return c;
     }
 
-    int CSimulatedAircraftList::setGroundElevationChecked(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info, bool onlyFirst)
+    int CSimulatedAircraftList::setGroundElevationChecked(const CCallsign &callsign, const CElevationPlane &elevation,
+                                                          CAircraftSituation::GndElevationInfo info, bool onlyFirst)
     {
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
@@ -266,7 +275,10 @@ namespace swift::misc::simulation
     void CSimulatedAircraftList::sortByDistanceToReferencePositionRenderedCallsign()
     {
         this->sort([&](const CSimulatedAircraft &a, const CSimulatedAircraft &b) {
-            if (a.getRelativeDistance() != b.getRelativeDistance()) { return a.getRelativeDistance() < b.getRelativeDistance(); }
+            if (a.getRelativeDistance() != b.getRelativeDistance())
+            {
+                return a.getRelativeDistance() < b.getRelativeDistance();
+            }
             if (a.isRendered() != b.isRendered()) { return a.isRendered(); } // get the rendered first
             return a.getCallsignAsString() < b.getCallsignAsString();
         });

@@ -11,7 +11,8 @@
 
 namespace swift::misc::shared_state::dbus
 {
-    CDuplexProxy::CDuplexProxy(const QDBusConnection &connection, const QString &service, QObject *parent) : IDuplex(parent)
+    CDuplexProxy::CDuplexProxy(const QDBusConnection &connection, const QString &service, QObject *parent)
+        : IDuplex(parent)
     {
         const QString path = CIdentifier::anonymous().toDBusObjectPath(SWIFT_MISC_DUPLEX_PATH_ROOT);
         m_interface = new CGenericDBusInterface(service, path, SWIFT_MISC_DUPLEX_INTERFACE, connection, this);
@@ -28,10 +29,7 @@ namespace swift::misc::shared_state::dbus
         m_interface->callDBus(QLatin1String("setSubscription"), channel, filters);
     }
 
-    void CDuplexProxy::requestPeerSubscriptions()
-    {
-        m_interface->callDBus(QLatin1String("requestPeerSubscriptions"));
-    }
+    void CDuplexProxy::requestPeerSubscriptions() { m_interface->callDBus(QLatin1String("requestPeerSubscriptions")); }
 
     void CDuplexProxy::submitRequest(const QString &channel, const CVariant &param, quint32 token)
     {
@@ -43,13 +41,7 @@ namespace swift::misc::shared_state::dbus
         m_interface->callDBus(QLatin1String("reply"), param, token);
     }
 
-    void CDuplexProxy::advertise(const QString &channel)
-    {
-        m_interface->callDBus(QLatin1String("advertise"), channel);
-    }
+    void CDuplexProxy::advertise(const QString &channel) { m_interface->callDBus(QLatin1String("advertise"), channel); }
 
-    void CDuplexProxy::withdraw(const QString &channel)
-    {
-        m_interface->callDBus(QLatin1String("withdraw"), channel);
-    }
+    void CDuplexProxy::withdraw(const QString &channel) { m_interface->callDBus(QLatin1String("withdraw"), channel); }
 } // namespace swift::misc::shared_state::dbus

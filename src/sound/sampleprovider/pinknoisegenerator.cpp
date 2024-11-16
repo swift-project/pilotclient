@@ -23,7 +23,8 @@ namespace swift::sound::sample_provider
             m_pinkNoiseBuffer[3] = 0.86650 * m_pinkNoiseBuffer[3] + white * 0.3104856;
             m_pinkNoiseBuffer[4] = 0.55000 * m_pinkNoiseBuffer[4] + white * 0.5329522;
             m_pinkNoiseBuffer[5] = -0.7616 * m_pinkNoiseBuffer[5] - white * 0.0168980;
-            double pink = m_pinkNoiseBuffer[0] + m_pinkNoiseBuffer[1] + m_pinkNoiseBuffer[2] + m_pinkNoiseBuffer[3] + m_pinkNoiseBuffer[4] + m_pinkNoiseBuffer[5] + m_pinkNoiseBuffer[6] + white * 0.5362;
+            double pink = m_pinkNoiseBuffer[0] + m_pinkNoiseBuffer[1] + m_pinkNoiseBuffer[2] + m_pinkNoiseBuffer[3] +
+                          m_pinkNoiseBuffer[4] + m_pinkNoiseBuffer[5] + m_pinkNoiseBuffer[6] + white * 0.5362;
             m_pinkNoiseBuffer[6] = white * 0.115926;
             const float sampleValue = static_cast<float>(m_gain * (pink / 5));
             samples[sampleCount] = sampleValue;

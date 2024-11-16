@@ -31,19 +31,14 @@ using namespace swift::misc::network;
 
 namespace swift::misc::test
 {
-    CTestService::CTestService(QObject *parent) : QObject(parent)
-    {}
+    CTestService::CTestService(QObject *parent) : QObject(parent) {}
 
-    CTestService::CTestService(bool verbose, QObject *parent) : QObject(parent), m_verbose(verbose)
-    {}
+    CTestService::CTestService(bool verbose, QObject *parent) : QObject(parent), m_verbose(verbose) {}
 
     bool CTestService::canRegisterTestService(QDBusConnection &connection)
     {
         const bool r = connection.registerService(CTestService::InterfaceName());
-        if (r)
-        {
-            connection.unregisterService(CTestService::InterfaceName());
-        }
+        if (r) { connection.unregisterService(CTestService::InterfaceName()); }
         return r;
     }
 
@@ -61,7 +56,9 @@ namespace swift::misc::test
 
     CTestService *CTestService::registerTestService(QDBusConnection &connection, bool verbose, QObject *parent)
     {
-        CTestService *pTestService = new CTestService(verbose, parent); // just a QObject with signals / slots and  Q_CLASSINFO("D-Bus Interface", some service name)
+        CTestService *pTestService = new CTestService(
+            verbose,
+            parent); // just a QObject with signals / slots and  Q_CLASSINFO("D-Bus Interface", some service name)
         if (!connection.registerService(CTestService::InterfaceName()))
         {
             QDBusError error = connection.lastError();
@@ -71,7 +68,9 @@ namespace swift::misc::test
             qFatal("Could not register service!");
         }
 
-        if (!connection.registerObject(CTestService::ObjectPath(), pTestService, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAdaptors))
+        if (!connection.registerObject(CTestService::ObjectPath(), pTestService,
+                                       QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals |
+                                           QDBusConnection::ExportAdaptors))
         {
             qFatal("Could not register service object!");
         }
@@ -80,15 +79,12 @@ namespace swift::misc::test
         if (pTestService) { out() << "Service registered" << Qt::endl; }
 
         QString service; // service not needed
-        if (connection.connect(service, CTestService::ObjectPath(), CTestService::InterfaceName(),
-                               "sendStringMessage", pTestService, SLOT(receiveStringMessage(const QString &))))
+        if (connection.connect(service, CTestService::ObjectPath(), CTestService::InterfaceName(), "sendStringMessage",
+                               pTestService, SLOT(receiveStringMessage(const QString &))))
         {
             out() << "Connected object with DBus 'sendStringMessage'" << Qt::endl;
         }
-        else
-        {
-            qFatal("Cannot connect service with DBus");
-        }
+        else { qFatal("Cannot connect service with DBus"); }
         return pTestService;
     }
 
@@ -146,7 +142,8 @@ namespace swift::misc::test
 
     void CTestService::receiveTransponder(const CTransponder &transponder) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received transponder: " << transponder << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " Received transponder: " << transponder << Qt::endl;
     }
 
     void CTestService::receiveTrack(const CTrack &track) const
@@ -175,7 +172,8 @@ namespace swift::misc::test
 
     void CTestService::receiveAtcStationList(const CAtcStationList &atcStationList) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " Received ATC list: " << atcStationList << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " Received ATC list: " << atcStationList << Qt::endl;
     }
 
     void CTestService::receiveValueMap(const swift::misc::CPropertyIndexVariantMap &valueMap) const
@@ -202,37 +200,43 @@ namespace swift::misc::test
 
     CAircraftParts CTestService::pingAircraftParts(const CAircraftParts &aircraftParts) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft parts: " << aircraftParts << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " ping aircraft parts: " << aircraftParts << Qt::endl;
         return aircraftParts;
     }
 
     CAircraftEngine CTestService::pingAircraftEngine(const CAircraftEngine &aircraftEngine) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft engine: " << aircraftEngine << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " ping aircraft engine: " << aircraftEngine << Qt::endl;
         return aircraftEngine;
     }
 
     CAircraftModel CTestService::pingAircraftModel(const CAircraftModel &aircraftModel) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft model: " << aircraftModel << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " ping aircraft model: " << aircraftModel << Qt::endl;
         return aircraftModel;
     }
 
     CAircraftModelList CTestService::pingAircraftModelList(const CAircraftModelList &aircraftModels) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft modellist: " << aircraftModels << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " ping aircraft modellist: " << aircraftModels << Qt::endl;
         return aircraftModels;
     }
 
     CAircraftLights CTestService::pingAircraftLights(const CAircraftLights &aircraftLights) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping aircraft lights: " << aircraftLights << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " ping aircraft lights: " << aircraftLights << Qt::endl;
         return aircraftLights;
     }
 
     CSimulatedAircraft CTestService::pingSimulatedAircraft(const CSimulatedAircraft &aircraft) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping simulated aircraft: " << aircraft << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " ping simulated aircraft: " << aircraft << Qt::endl;
         return aircraft;
     }
 
@@ -250,7 +254,8 @@ namespace swift::misc::test
 
     CPropertyIndexVariantMap CTestService::pingIndexVariantMap(const CPropertyIndexVariantMap &indexVariantMap) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " ping properties: " << indexVariantMap << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " ping properties: " << indexVariantMap << Qt::endl;
         return indexVariantMap;
     }
 
@@ -316,11 +321,14 @@ namespace swift::misc::test
 
     swift::misc::CVariant CTestService::pingCVariant(const CVariant &variant) const
     {
-        if (m_verbose) out() << "Pid: " << CTestService::getPid() << " client sent back as CVariant: " << variant.toQString() << Qt::endl;
+        if (m_verbose)
+            out() << "Pid: " << CTestService::getPid() << " client sent back as CVariant: " << variant.toQString()
+                  << Qt::endl;
         return variant;
     }
 
-    swift::misc::aviation::CFlightPlan CTestService::pingFlightPlan(const swift::misc::aviation::CFlightPlan &flightPlan) const
+    swift::misc::aviation::CFlightPlan
+    CTestService::pingFlightPlan(const swift::misc::aviation::CFlightPlan &flightPlan) const
     {
         if (m_verbose) out() << "Pid: " << CTestService::getPid() << " info: " << flightPlan << Qt::endl;
         return flightPlan;
@@ -343,10 +351,7 @@ namespace swift::misc::test
         if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getObjectPaths" << Qt::endl;
         QList<QDBusObjectPath> paths;
         paths.reserve(n);
-        for (int i = 0; i < n; i++)
-        {
-            paths.append(QDBusObjectPath(ObjectPath()));
-        }
+        for (int i = 0; i < n; i++) { paths.append(QDBusObjectPath(ObjectPath())); }
         return paths;
     }
 } // namespace swift::misc::test

@@ -7,7 +7,8 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CPresentWeather, CPresentWeat
 
 namespace swift::misc::weather
 {
-    CPresentWeatherList::CPresentWeatherList(const CSequence<CPresentWeather> &other) : CSequence<CPresentWeather>(other)
+    CPresentWeatherList::CPresentWeatherList(const CSequence<CPresentWeather> &other)
+        : CSequence<CPresentWeather>(other)
     {}
 
 } // namespace swift::misc::weather

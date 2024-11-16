@@ -67,7 +67,8 @@ namespace swift::misc::physical_quantities
     }
 
     template <class MU, class PQ>
-    CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, MU unit) : m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
+    CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, MU unit)
+        : m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
     {
         Q_ASSERT_X(!std::isnan(value), Q_FUNC_INFO, "nan value");
         Q_ASSERT_X(!std::isinf(value), Q_FUNC_INFO, "infinity");
@@ -172,10 +173,7 @@ namespace swift::misc::physical_quantities
     {
         argument >> m_value;
         m_unit = UnitClass::defaultUnit();
-        if (std::isnan(m_value))
-        {
-            this->setNull();
-        }
+        if (std::isnan(m_value)) { this->setNull(); }
     }
 
     template <class MU, class PQ>
@@ -204,10 +202,7 @@ namespace swift::misc::physical_quantities
     {
         stream >> m_value;
         m_unit = UnitClass::defaultUnit();
-        if (std::isnan(m_value))
-        {
-            this->setNull();
-        }
+        if (std::isnan(m_value)) { this->setNull(); }
     }
 
     template <class MU, class PQ>
@@ -265,10 +260,7 @@ namespace swift::misc::physical_quantities
     {
         // NULL check: https://discordapp.com/channels/539048679160676382/539925070550794240/593151683698229258
         if (m_unit == newUnit || this->isNull()) { return *derived(); }
-        if (newUnit.isNull())
-        {
-            this->setNull();
-        }
+        if (newUnit.isNull()) { this->setNull(); }
         else
         {
             m_value = newUnit.convertFrom(m_value, m_unit);
@@ -309,10 +301,7 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     void CPhysicalQuantity<MU, PQ>::setCurrentUnitValue(double value)
     {
-        if (!this->isNull())
-        {
-            m_value = value;
-        }
+        if (!this->isNull()) { m_value = value; }
     }
 
     template <class MU, class PQ>
@@ -322,7 +311,8 @@ namespace swift::misc::physical_quantities
     }
 
     template <class MU, class PQ>
-    QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits, bool withGroupSeparator, bool i18n) const
+    QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits, bool withGroupSeparator,
+                                                            bool i18n) const
     {
         Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
         if (this->isNull()) { return this->convertToQString(i18n); }
@@ -460,17 +450,15 @@ namespace swift::misc::physical_quantities
     }
 
     template <class MU, class PQ>
-    void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value, CPqString::SeparatorMode mode, const MU &defaultUnitIfMissing)
+    void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value, CPqString::SeparatorMode mode,
+                                                    const MU &defaultUnitIfMissing)
     {
         if (is09OrSeparatorOnlyString(value))
         {
             const QString v = value + defaultUnitIfMissing.getSymbol();
             this->parseFromString(v, mode);
         }
-        else
-        {
-            this->parseFromString(value, mode);
-        }
+        else { this->parseFromString(value, mode); }
     }
 
     template <class MU, class PQ>
@@ -480,13 +468,11 @@ namespace swift::misc::physical_quantities
     }
 
     template <class MU, class PQ>
-    PQ CPhysicalQuantity<MU, PQ>::parsedFromString(const QString &value, CPqString::SeparatorMode mode, const MU &defaultUnitIfMissing)
+    PQ CPhysicalQuantity<MU, PQ>::parsedFromString(const QString &value, CPqString::SeparatorMode mode,
+                                                   const MU &defaultUnitIfMissing)
     {
         QString v = value;
-        if (is09OrSeparatorOnlyString(value))
-        {
-            v = value + defaultUnitIfMissing.getSymbol();
-        }
+        if (is09OrSeparatorOnlyString(value)) { v = value + defaultUnitIfMissing.getSymbol(); }
 
         // no idea why I cannot call pq.parseFromString(v, mode, defaultUnitIfMissing);
         PQ pq;
@@ -531,22 +517,14 @@ namespace swift::misc::physical_quantities
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexValue:
-            m_value = variant.toDouble();
-            break;
-        case IndexUnit:
-            m_unit = variant.value<MU>();
-            break;
+        case IndexValue: m_value = variant.toDouble(); break;
+        case IndexUnit: m_unit = variant.value<MU>(); break;
         case IndexValueRounded0DigitsWithUnit:
         case IndexValueRounded1DigitsWithUnit:
         case IndexValueRounded2DigitsWithUnit:
         case IndexValueRounded3DigitsWithUnit:
-        case IndexValueRounded6DigitsWithUnit:
-            this->parseFromString(variant.toString());
-            break;
-        default:
-            mixin::Index<PQ>::setPropertyByIndex(index, variant);
-            break;
+        case IndexValueRounded6DigitsWithUnit: this->parseFromString(variant.toString()); break;
+        default: mixin::Index<PQ>::setPropertyByIndex(index, variant); break;
         }
     }
 

@@ -18,44 +18,36 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CSettingsMatchingComponent::CSettingsMatchingComponent(QWidget *parent) : QFrame(parent),
-                                                                              ui(new Ui::CSettingsMatchingComponent)
+    CSettingsMatchingComponent::CSettingsMatchingComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsMatchingComponent)
     {
         ui->setupUi(this);
         connect(ui->pb_Save, &QPushButton::released, this, &CSettingsMatchingComponent::onSavePressed);
         connect(ui->pb_Reload, &QPushButton::released, this, &CSettingsMatchingComponent::onReloadPressed);
-        connect(ui->pb_MatchingAgain, &QPushButton::released, this, &CSettingsMatchingComponent::onMatchingsAgainPressed);
+        connect(ui->pb_MatchingAgain, &QPushButton::released, this,
+                &CSettingsMatchingComponent::onMatchingsAgainPressed);
 
         // also used in mapping tool, must also work without contexts
         IContextSimulator *simContext = simulatorContext();
         if (simContext)
         {
-            connect(simContext, &IContextSimulator::matchingSetupChanged, this, &CSettingsMatchingComponent::onSetupChanged, Qt::QueuedConnection);
+            connect(simContext, &IContextSimulator::matchingSetupChanged, this,
+                    &CSettingsMatchingComponent::onSetupChanged, Qt::QueuedConnection);
             this->deferredReload(5000);
         }
-        else
-        {
-            this->showButtons(false);
-        }
+        else { this->showButtons(false); }
     }
 
-    CSettingsMatchingComponent::~CSettingsMatchingComponent()
-    {}
+    CSettingsMatchingComponent::~CSettingsMatchingComponent() {}
 
-    CAircraftMatcherSetup CSettingsMatchingComponent::getMatchingSetup() const
-    {
-        return ui->form_Matching->value();
-    }
+    CAircraftMatcherSetup CSettingsMatchingComponent::getMatchingSetup() const { return ui->form_Matching->value(); }
 
     void CSettingsMatchingComponent::setMatchingSetup(const CAircraftMatcherSetup &setup)
     {
         ui->form_Matching->setValue(setup);
     }
 
-    void CSettingsMatchingComponent::showButtons(bool show)
-    {
-        ui->fr_Buttons->setVisible(show);
-    }
+    void CSettingsMatchingComponent::showButtons(bool show) { ui->fr_Buttons->setVisible(show); }
 
     void CSettingsMatchingComponent::onSavePressed() const
     {
@@ -65,10 +57,7 @@ namespace swift::gui::components
         simContext->setMatchingSetup(setup);
     }
 
-    void CSettingsMatchingComponent::onReloadPressed()
-    {
-        this->deferredReload(0);
-    }
+    void CSettingsMatchingComponent::onReloadPressed() { this->deferredReload(0); }
 
     void CSettingsMatchingComponent::onMatchingsAgainPressed()
     {

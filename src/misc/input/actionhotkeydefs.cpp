@@ -11,20 +11,11 @@ namespace swift::misc::input
         return s;
     }
 
-    CIcons::IconIndex pttHotkeyIcon()
-    {
-        return CIcons::StandardIconRadio16;
-    }
+    CIcons::IconIndex pttHotkeyIcon() { return CIcons::StandardIconRadio16; }
 
-    CIcons::IconIndex audioVolumeDecreaseHotkeyIcon()
-    {
-        return CIcons::StandardIconVolumeLow16;
-    }
+    CIcons::IconIndex audioVolumeDecreaseHotkeyIcon() { return CIcons::StandardIconVolumeLow16; }
 
-    CIcons::IconIndex audioVolumeIncreaseHotkeyIcon()
-    {
-        return CIcons::StandardIconVolumeHigh16;
-    }
+    CIcons::IconIndex audioVolumeIncreaseHotkeyIcon() { return CIcons::StandardIconVolumeHigh16; }
 
     const QString &audioVolumeDecreaseHotkeyAction()
     {
@@ -62,15 +53,9 @@ namespace swift::misc::input
         return s;
     }
 
-    CIcons::IconIndex toggleXPDRStateHotkeyIcon()
-    {
-        return CIcons::StandardIconRadio16;
-    }
+    CIcons::IconIndex toggleXPDRStateHotkeyIcon() { return CIcons::StandardIconRadio16; }
 
-    CIcons::IconIndex toggleXPDRIdentHotkeyIcon()
-    {
-        return CIcons::StandardIconRadio16;
-    }
+    CIcons::IconIndex toggleXPDRIdentHotkeyIcon() { return CIcons::StandardIconRadio16; }
 
     const QString &toggleXPDRStateHotkeyAction()
     {
@@ -90,10 +75,7 @@ namespace swift::misc::input
         return s;
     }
 
-    CIcons::IconIndex radarZoomInHotkeyIcon()
-    {
-        return CIcons::StandardIconZoomIn16;
-    }
+    CIcons::IconIndex radarZoomInHotkeyIcon() { return CIcons::StandardIconZoomIn16; }
 
     const QString &radarZoomOutHotkeyAction()
     {
@@ -101,9 +83,6 @@ namespace swift::misc::input
         return s;
     }
 
-    CIcons::IconIndex radarZoomOutHotkeyIcon()
-    {
-        return CIcons::StandardIconZoomOut16;
-    }
+    CIcons::IconIndex radarZoomOutHotkeyIcon() { return CIcons::StandardIconZoomOut16; }
 
 } // namespace swift::misc::input

@@ -51,7 +51,8 @@ namespace swift::gui::components
         void valuesChanged();
 
         //! Connection status has been changed
-        void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+        void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                     const swift::misc::network::CConnectionStatus &to);
     };
 } // namespace swift::gui::components
 

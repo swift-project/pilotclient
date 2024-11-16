@@ -15,8 +15,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CDockWidgetSettings)
 
 namespace swift::gui::settings
 {
-    CDockWidgetSettings::CDockWidgetSettings()
-    {}
+    CDockWidgetSettings::CDockWidgetSettings() {}
 
     void CDockWidgetSettings::resetMarginsToDefault()
     {
@@ -59,25 +58,13 @@ namespace swift::gui::settings
         m_dockedMargins = CGuiUtility::marginsToString(margins);
     }
 
-    QMargins CDockWidgetSettings::getMarginsWhenDocked() const
-    {
-        return CGuiUtility::stringToMargins(m_dockedMargins);
-    }
+    QMargins CDockWidgetSettings::getMarginsWhenDocked() const { return CGuiUtility::stringToMargins(m_dockedMargins); }
 
-    QByteArray CDockWidgetSettings::getGeometry() const
-    {
-        return QByteArray::fromHex(m_geometry.toLatin1());
-    }
+    QByteArray CDockWidgetSettings::getGeometry() const { return QByteArray::fromHex(m_geometry.toLatin1()); }
 
-    void CDockWidgetSettings::setGeometry(const QByteArray &ba)
-    {
-        m_geometry = ba.toHex();
-    }
+    void CDockWidgetSettings::setGeometry(const QByteArray &ba) { m_geometry = ba.toHex(); }
 
-    QString CDockWidgetSettings::convertToQString(bool i18n) const
-    {
-        return convertToQString(", ", i18n);
-    }
+    QString CDockWidgetSettings::convertToQString(bool i18n) const { return convertToQString(", ", i18n); }
 
     QString CDockWidgetSettings::convertToQString(const QString &separator, bool i18n) const
     {
@@ -105,18 +92,12 @@ namespace swift::gui::settings
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexFloatingMargins:
-            return QVariant::fromValue(m_floatingMargins);
-        case IndexFloatingFramelessMargins:
-            return QVariant::fromValue(m_floatingFramelessMargins);
-        case IndexDockedMargins:
-            return QVariant::fromValue(m_dockedMargins);
-        case IndexFrameless:
-            return QVariant::fromValue(m_floating);
-        case IndexFloating:
-            return QVariant::fromValue(m_floating);
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexFloatingMargins: return QVariant::fromValue(m_floatingMargins);
+        case IndexFloatingFramelessMargins: return QVariant::fromValue(m_floatingFramelessMargins);
+        case IndexDockedMargins: return QVariant::fromValue(m_dockedMargins);
+        case IndexFrameless: return QVariant::fromValue(m_floating);
+        case IndexFloating: return QVariant::fromValue(m_floating);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -131,24 +112,12 @@ namespace swift::gui::settings
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexFloatingMargins:
-            m_floatingMargins = variant.toString();
-            break;
-        case IndexFloatingFramelessMargins:
-            m_floatingFramelessMargins = variant.toString();
-            break;
-        case IndexDockedMargins:
-            m_dockedMargins = variant.toString();
-            break;
-        case IndexFloating:
-            m_floating = variant.toBool();
-            break;
-        case IndexFrameless:
-            m_frameless = variant.toBool();
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexFloatingMargins: m_floatingMargins = variant.toString(); break;
+        case IndexFloatingFramelessMargins: m_floatingFramelessMargins = variant.toString(); break;
+        case IndexDockedMargins: m_dockedMargins = variant.toString(); break;
+        case IndexFloating: m_floating = variant.toBool(); break;
+        case IndexFrameless: m_frameless = variant.toBool(); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::gui::settings

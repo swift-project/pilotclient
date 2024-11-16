@@ -32,10 +32,12 @@ namespace swift::gui::components
         virtual ~CCockpitComTransmissionComponent() override;
 
         //! Update given COM system
-        void updateComSystem(swift::misc::aviation::CComSystem &comSystem, swift::misc::aviation::CComSystem::ComUnit comUnit) const;
+        void updateComSystem(swift::misc::aviation::CComSystem &comSystem,
+                             swift::misc::aviation::CComSystem::ComUnit comUnit) const;
 
         //! Set values of given COM system
-        void setComSystem(const swift::misc::aviation::CComSystem &comSystem, swift::misc::aviation::CComSystem::ComUnit comUnit);
+        void setComSystem(const swift::misc::aviation::CComSystem &comSystem,
+                          swift::misc::aviation::CComSystem::ComUnit comUnit);
 
         //! Set botb systems
         void setComSystems(const swift::misc::simulation::CSimulatedAircraft &aircraft);

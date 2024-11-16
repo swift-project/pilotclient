@@ -34,9 +34,7 @@ namespace swift::gui::components
     /*!
      * Navigator dialog
      */
-    class SWIFT_GUI_EXPORT CNavigatorDialog :
-        public QDialog,
-        public CEnableForFramelessWindow
+    class SWIFT_GUI_EXPORT CNavigatorDialog : public QDialog, public CEnableForFramelessWindow
     {
         Q_OBJECT
 
@@ -146,7 +144,8 @@ namespace swift::gui::components
         QWidgetAction *m_marginMenuAction = nullptr; //!< menu widget(!) action for margin widget
         CMarginsInput *m_input = nullptr; //!< margins widget
         QTimer m_watchdog; //!< navigator watchdog
-        swift::misc::CSetting<swift::gui::settings::TNavigator> m_settings { this, &CNavigatorDialog::onSettingsChanged };
+        swift::misc::CSetting<swift::gui::settings::TNavigator> m_settings { this,
+                                                                             &CNavigatorDialog::onSettingsChanged };
     };
 } // namespace swift::gui::components
 

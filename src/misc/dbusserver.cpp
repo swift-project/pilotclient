@@ -32,7 +32,8 @@ namespace swift::misc
 
         static const QString desc("Mode: %1 Address: '%2' Service: '%3'");
         m_serverMode = CDBusServer::modeOfAddress(address);
-        this->setObjectName(desc.arg(CDBusServer::modeToString(m_serverMode), address, service.isEmpty() ? "-" : service));
+        this->setObjectName(
+            desc.arg(CDBusServer::modeToString(m_serverMode), address, service.isEmpty() ? "-" : service));
         switch (m_serverMode)
         {
         case SERVERMODE_SESSIONBUS:
@@ -43,7 +44,8 @@ namespace swift::misc
             {
                 // registration fails can either mean something wrong with DBus or service already exists
                 CLogMessage(this).warning(u"DBus registration: %1") << connection.lastError().message();
-                CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe --session --address=tcp:host=192.168.0.133,port=45000");
+                CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe "
+                                          u"--session --address=tcp:host=192.168.0.133,port=45000");
             }
         }
         break;
@@ -55,7 +57,8 @@ namespace swift::misc
             {
                 // registration fails can either mean something wrong with DBus or service already exists
                 CLogMessage(this).warning(u"DBus registration: %1") << connection.lastError().message();
-                CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe --system --address=tcp:host=192.168.0.133,port=45000");
+                CLogMessage(this).warning(u"Cannot register DBus service, check server running: dbus-daemon.exe "
+                                          u"--system --address=tcp:host=192.168.0.133,port=45000");
             }
         }
         break;
@@ -64,7 +67,10 @@ namespace swift::misc
         {
             QString dbusAddress = isQtDBusAddress(address) ? address : "tcp:host=127.0.0.1,port=45000";
             dbusAddress = dbusAddress.toLower().trimmed().replace(' ', "");
-            if (!dbusAddress.contains("bind=")) { dbusAddress = dbusAddress.append(",bind=*"); } // bind to all network interfaces
+            if (!dbusAddress.contains("bind="))
+            {
+                dbusAddress = dbusAddress.append(",bind=*");
+            } // bind to all network interfaces
 
             m_busServer.reset(new QDBusServer(dbusAddress, this));
             m_busServer->setObjectName("QDBusServer: " + this->objectName());
@@ -75,11 +81,9 @@ namespace swift::misc
             {
                 CLogMessage(this).info(u"DBus P2P Server listening on address: '%1'") << m_busServer->address();
             }
-            else
-            {
-                CLogMessage(this).warning(u"DBus P2P connection failed: %1") << lastQDBusServerError().message();
-            }
-            connect(m_busServer.data(), &QDBusServer::newConnection, this, &CDBusServer::registerObjectsWithP2PConnection);
+            else { CLogMessage(this).warning(u"DBus P2P connection failed: %1") << lastQDBusServerError().message(); }
+            connect(m_busServer.data(), &QDBusServer::newConnection, this,
+                    &CDBusServer::registerObjectsWithP2PConnection);
         }
         break;
         }
@@ -109,10 +113,7 @@ namespace swift::misc
         return cats;
     }
 
-    bool CDBusServer::isP2PAddress(const QString &address)
-    {
-        return modeOfAddress(address) == SERVERMODE_P2P;
-    }
+    bool CDBusServer::isP2PAddress(const QString &address) { return modeOfAddress(address) == SERVERMODE_P2P; }
 
     bool CDBusServer::isP2PConnection(const QDBusConnection &connection)
     {
@@ -210,11 +211,13 @@ namespace swift::misc
             const bool ok = connection.registerObject(key, i.value(), registerOptions());
             if (ok)
             {
-                CLogMessage(this).info(u"Adding '%1' to the new connection '%2'") << key << this->getDBusInterfaceFromClassInfo(i.value());
+                CLogMessage(this).info(u"Adding '%1' to the new connection '%2'")
+                    << key << this->getDBusInterfaceFromClassInfo(i.value());
             }
             else
             {
-                CLogMessage(this).info(u"Adding '%1' failed, connection '%2', error '%3'") << key << this->getDBusInterfaceFromClassInfo(i.value()) << connection.lastError().message();
+                CLogMessage(this).info(u"Adding '%1' failed, connection '%2', error '%3'")
+                    << key << this->getDBusInterfaceFromClassInfo(i.value()) << connection.lastError().message();
                 success = false;
             }
         }
@@ -235,11 +238,13 @@ namespace swift::misc
             QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SessionBus, coreServiceName());
             if (connection.registerObject(path, object, registerOptions()))
             {
-                CLogMessage(this).info(u"Adding '%1' '%2' to session DBus") << path << getDBusInterfaceFromClassInfo(object);
+                CLogMessage(this).info(u"Adding '%1' '%2' to session DBus")
+                    << path << getDBusInterfaceFromClassInfo(object);
             }
             else
             {
-                CLogMessage(this).error(u"Error adding '%1' '%2' to session DBus: '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
+                CLogMessage(this).error(u"Error adding '%1' '%2' to session DBus: '%3'")
+                    << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
             }
         }
         break;
@@ -248,11 +253,13 @@ namespace swift::misc
             QDBusConnection connection = QDBusConnection::connectToBus(QDBusConnection::SystemBus, coreServiceName());
             if (connection.registerObject(path, object, registerOptions()))
             {
-                CLogMessage(this).info(u"Adding '%1' '%2' to system DBus") << path << getDBusInterfaceFromClassInfo(object);
+                CLogMessage(this).info(u"Adding '%1' '%2' to system DBus")
+                    << path << getDBusInterfaceFromClassInfo(object);
             }
             else
             {
-                CLogMessage(this).error(u"Error adding '%1' '%2' to system DBus: '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
+                CLogMessage(this).error(u"Error adding '%1' '%2' to system DBus: '%3'")
+                    << path << getDBusInterfaceFromClassInfo(object) << connection.lastError().message();
             }
         }
         break;
@@ -262,17 +269,19 @@ namespace swift::misc
             {
                 if (connection.registerObject(path, object, registerOptions()))
                 {
-                    CLogMessage(this).info(u"Adding '%1' '%2' to P2P DBus '%3'") << path << getDBusInterfaceFromClassInfo(object) << connection.name();
+                    CLogMessage(this).info(u"Adding '%1' '%2' to P2P DBus '%3'")
+                        << path << getDBusInterfaceFromClassInfo(object) << connection.name();
                 }
                 else
                 {
-                    CLogMessage(this).error(u"Error adding '%1' '%2' to P2P DBus '%3': '%4'") << path << getDBusInterfaceFromClassInfo(object) << connection.name() << connection.lastError().message();
+                    CLogMessage(this).error(u"Error adding '%1' '%2' to P2P DBus '%3': '%4'")
+                        << path << getDBusInterfaceFromClassInfo(object) << connection.name()
+                        << connection.lastError().message();
                 }
             }
         }
         break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong server mode");
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong server mode");
         }
     }
 
@@ -282,15 +291,9 @@ namespace swift::misc
         return m_busServer->lastError();
     }
 
-    const QDBusServer *CDBusServer::qDBusServer() const
-    {
-        return m_busServer.data();
-    }
+    const QDBusServer *CDBusServer::qDBusServer() const { return m_busServer.data(); }
 
-    bool CDBusServer::hasQDBusServer() const
-    {
-        return !m_busServer.isNull();
-    }
+    bool CDBusServer::hasQDBusServer() const { return !m_busServer.isNull(); }
 
     void CDBusServer::removeAllObjects()
     {
@@ -298,17 +301,10 @@ namespace swift::misc
         {
             switch (m_serverMode)
             {
-            case SERVERMODE_SESSIONBUS:
-                QDBusConnection::sessionBus().unregisterObject(path);
-                break;
-            case SERVERMODE_SYSTEMBUS:
-                QDBusConnection::systemBus().unregisterObject(path);
-                break;
+            case SERVERMODE_SESSIONBUS: QDBusConnection::sessionBus().unregisterObject(path); break;
+            case SERVERMODE_SYSTEMBUS: QDBusConnection::systemBus().unregisterObject(path); break;
             case SERVERMODE_P2P:
-                for (QDBusConnection connection : std::as_const(m_connections))
-                {
-                    connection.unregisterObject(path);
-                }
+                for (QDBusConnection connection : std::as_const(m_connections)) { connection.unregisterObject(path); }
                 break;
             }
         }
@@ -356,14 +352,8 @@ namespace swift::misc
     void CDBusServer::disconnectFromDBus(const QDBusConnection &connection, const QString &dBusAddress)
     {
         if (CDBusServer::isQtDefaultConnection(connection)) return; // do not touch the default connections
-        if (CDBusServer::isP2PAddress(dBusAddress))
-        {
-            QDBusConnection::disconnectFromPeer(connection.name());
-        }
-        else
-        {
-            QDBusConnection::disconnectFromBus(connection.name());
-        }
+        if (CDBusServer::isP2PAddress(dBusAddress)) { QDBusConnection::disconnectFromPeer(connection.name()); }
+        else { QDBusConnection::disconnectFromBus(connection.name()); }
     }
 
     QString CDBusServer::p2pAddress(const QString &host, const QString &port)
@@ -399,10 +389,7 @@ namespace swift::misc
                 h = parts.at(0).trimmed();
                 p = parts.at(1).trimmed();
             }
-            else
-            {
-                p = "45000";
-            }
+            else { p = "45000"; }
         }
 
         // todo: Replace assert with input validation

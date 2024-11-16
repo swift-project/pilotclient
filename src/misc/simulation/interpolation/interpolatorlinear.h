@@ -31,9 +31,11 @@ namespace swift::misc
 
         public:
             //! Constructor
-            CInterpolatorLinear(const aviation::CCallsign &callsign,
-                                ISimulationEnvironmentProvider *simEnvProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *remoteAircraftProvider,
-                                CInterpolationLogger *logger = nullptr) : CInterpolator(callsign, simEnvProvider, setupProvider, remoteAircraftProvider, logger) {}
+            CInterpolatorLinear(const aviation::CCallsign &callsign, ISimulationEnvironmentProvider *simEnvProvider,
+                                IInterpolationSetupProvider *setupProvider,
+                                IRemoteAircraftProvider *remoteAircraftProvider, CInterpolationLogger *logger = nullptr)
+                : CInterpolator(callsign, simEnvProvider, setupProvider, remoteAircraftProvider, logger)
+            {}
 
             //! Linear function that performs the actual interpolation
             class SWIFT_MISC_EXPORT CInterpolant : public IInterpolant
@@ -44,11 +46,14 @@ namespace swift::misc
                 CInterpolant() = default;
                 CInterpolant(const aviation::CAircraftSituation &startSituation);
                 CInterpolant(const aviation::CAircraftSituation &startSituation, const CInterpolatorLinearPbh &pbh);
-                CInterpolant(const aviation::CAircraftSituation &startSituation, const aviation::CAircraftSituation &endSituation, double timeFraction, qint64 interpolatedTime);
+                CInterpolant(const aviation::CAircraftSituation &startSituation,
+                             const aviation::CAircraftSituation &endSituation, double timeFraction,
+                             qint64 interpolatedTime);
                 //! @}
 
                 //! \copydoc swift::misc::simulation::IInterpolant::interpolatePositionAndAltitude
-                std::tuple<geo::CCoordinateGeodetic, aviation::CAltitude> interpolatePositionAndAltitude() const override;
+                std::tuple<geo::CCoordinateGeodetic, aviation::CAltitude>
+                interpolatePositionAndAltitude() const override;
 
                 //! \copydoc swift::misc::simulation::IInterpolant::interpolateGroundFactor
                 aviation::COnGroundInfo interpolateGroundFactor() const override;

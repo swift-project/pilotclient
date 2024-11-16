@@ -27,9 +27,7 @@ namespace swift::gui::components
     /*!
      * Modify model fields as dialog
      */
-    class SWIFT_GUI_EXPORT CDbModelMappingModifyDialog :
-        public QDialog,
-        public CDbMappingComponentAware
+    class SWIFT_GUI_EXPORT CDbModelMappingModifyDialog : public QDialog, public CDbMappingComponentAware
     {
         Q_OBJECT
 

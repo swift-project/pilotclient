@@ -9,23 +9,30 @@ using namespace swift::misc::aviation;
 
 namespace swift::misc::simulation
 {
-    CInterpolatorMulti::CInterpolatorMulti(const CCallsign &callsign, ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3, CInterpolationLogger *logger) : m_spline(callsign, p1, p2, p3, logger),
-                                                                                                                                                                                                        m_linear(callsign, p1, p2, p3, logger)
+    CInterpolatorMulti::CInterpolatorMulti(const CCallsign &callsign, ISimulationEnvironmentProvider *p1,
+                                           IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                                           CInterpolationLogger *logger)
+        : m_spline(callsign, p1, p2, p3, logger), m_linear(callsign, p1, p2, p3, logger)
     {}
 
-    CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoch, const CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber)
+    CInterpolationResult CInterpolatorMulti::getInterpolation(qint64 currentTimeSinceEpoch,
+                                                              const CInterpolationAndRenderingSetupPerCallsign &setup,
+                                                              uint32_t aircraftNumber)
     {
         switch (setup.getInterpolatorMode())
         {
-        case CInterpolationAndRenderingSetupBase::Linear: return m_linear.getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
-        case CInterpolationAndRenderingSetupBase::Spline: return m_spline.getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
+        case CInterpolationAndRenderingSetupBase::Linear:
+            return m_linear.getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
+        case CInterpolationAndRenderingSetupBase::Spline:
+            return m_spline.getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
         default: break;
         }
 
         return CInterpolationResult();
     }
 
-    const CAircraftSituation &CInterpolatorMulti::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
+    const CAircraftSituation &
+    CInterpolatorMulti::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
     {
         switch (mode)
         {
@@ -48,7 +55,8 @@ namespace swift::misc::simulation
         m_spline.initCorrespondingModel(model);
     }
 
-    const CStatusMessageList &CInterpolatorMulti::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
+    const CStatusMessageList &
+    CInterpolatorMulti::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
     {
         switch (mode)
         {
@@ -71,10 +79,12 @@ namespace swift::misc::simulation
         return ("Illegal mode");
     }
 
-    CInterpolatorMultiWrapper::CInterpolatorMultiWrapper()
-    {}
+    CInterpolatorMultiWrapper::CInterpolatorMultiWrapper() {}
 
-    CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const aviation::CCallsign &callsign, ISimulationEnvironmentProvider *p1, IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3, CInterpolationLogger *logger)
+    CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const aviation::CCallsign &callsign,
+                                                         ISimulationEnvironmentProvider *p1,
+                                                         IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,
+                                                         CInterpolationLogger *logger)
     {
         m_interpolator.reset(new CInterpolatorMulti(callsign, p1, p2, p3));
         m_interpolator->attachLogger(logger);

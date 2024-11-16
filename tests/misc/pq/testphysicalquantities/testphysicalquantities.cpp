@@ -146,8 +146,10 @@ namespace MiscTest
     {
         CSpeed s1(100, CSpeedUnit::km_h());
         CSpeed s2(1000, CSpeedUnit::ft_min());
-        QVERIFY2(CMathUtils::epsilonEqual(s1.valueRounded(CSpeedUnit::NM_h(), 0), 54), qPrintable(QStringLiteral("100km/h is not %1 NM/h").arg(s1.valueRounded(CSpeedUnit::NM_h(), 0))));
-        QVERIFY2(CMathUtils::epsilonEqual(s2.valueRounded(CSpeedUnit::m_s(), 1), 5.1), qPrintable(QStringLiteral("1000ft/min is not %1 m/s").arg(s2.valueRounded(CSpeedUnit::m_s(), 1))));
+        QVERIFY2(CMathUtils::epsilonEqual(s1.valueRounded(CSpeedUnit::NM_h(), 0), 54),
+                 qPrintable(QStringLiteral("100km/h is not %1 NM/h").arg(s1.valueRounded(CSpeedUnit::NM_h(), 0))));
+        QVERIFY2(CMathUtils::epsilonEqual(s2.valueRounded(CSpeedUnit::m_s(), 1), 5.1),
+                 qPrintable(QStringLiteral("1000ft/min is not %1 m/s").arg(s2.valueRounded(CSpeedUnit::m_s(), 1))));
     }
 
     void CTestPhysicalQuantities::frequencyTests()
@@ -168,7 +170,8 @@ namespace MiscTest
         CAngle a4(35.436, CAngleUnit::sexagesimalDegMin()); // 35.72666
         CAngle a5(-60.3015, CAngleUnit::sexagesimalDeg()); // negative angles = west longitude or south latitude
         a2.switchUnit(CAngleUnit::deg());
-        QVERIFY2(CMathUtils::epsilonEqual(a1.piFactor(), 1.00), qPrintable(QStringLiteral("Pi should be 1PI, not %1").arg(a1.piFactor())));
+        QVERIFY2(CMathUtils::epsilonEqual(a1.piFactor(), 1.00),
+                 qPrintable(QStringLiteral("Pi should be 1PI, not %1").arg(a1.piFactor())));
         QVERIFY2(CMathUtils::epsilonEqual(a3.valueRounded(CAngleUnit::deg()), 35.73), "Expecting 35.73");
         QVERIFY2(CMathUtils::epsilonEqual(a4.valueRounded(CAngleUnit::deg()), 35.73), "Expecting 35.73");
         QVERIFY2(CMathUtils::epsilonEqual(a5.valueRounded(CAngleUnit::deg(), 4), -60.5042), "Expecting -60.5042");
@@ -177,11 +180,15 @@ namespace MiscTest
         CAngle a6(48.07063588, CAngleUnit::sexagesimalDeg());
         CAngle a7(a6);
         a7.switchUnit(CAngleUnit::rad());
-        QVERIFY2(CMathUtils::epsilonEqual(a6.value(CAngleUnit::sexagesimalDeg()), a7.value(CAngleUnit::sexagesimalDeg())), "Conversion via radians yields same answer");
+        QVERIFY2(
+            CMathUtils::epsilonEqual(a6.value(CAngleUnit::sexagesimalDeg()), a7.value(CAngleUnit::sexagesimalDeg())),
+            "Conversion via radians yields same answer");
         CAngle a8(48.07063588, CAngleUnit::sexagesimalDegMin());
         CAngle a9(a8);
         a9.switchUnit(CAngleUnit::rad());
-        QVERIFY2(CMathUtils::epsilonEqual(a8.value(CAngleUnit::sexagesimalDegMin()), a9.value(CAngleUnit::sexagesimalDegMin())), "Conversion via radians yields same answer");
+        QVERIFY2(CMathUtils::epsilonEqual(a8.value(CAngleUnit::sexagesimalDegMin()),
+                                          a9.value(CAngleUnit::sexagesimalDegMin())),
+                 "Conversion via radians yields same answer");
     }
 
     void CTestPhysicalQuantities::massTests()
@@ -221,10 +228,18 @@ namespace MiscTest
         CTemperature t2(1, CTemperatureUnit::F()); // 1F
         CTemperature t3(220.15, CTemperatureUnit::F());
         CTemperature t4(10, CTemperatureUnit::F());
-        QVERIFY2(CMathUtils::epsilonEqual(t1.valueRounded(CTemperatureUnit::K()), 273.15), qPrintable(QStringLiteral("0C shall be 273.15K, not %1 K").arg(t1.valueRounded(CTemperatureUnit::K()))));
-        QVERIFY2(CMathUtils::epsilonEqual(t2.valueRounded(CTemperatureUnit::C()), -17.22), qPrintable(QStringLiteral("1F shall be -17.22C, not %1 C").arg(t2.valueRounded(CTemperatureUnit::C()))));
-        QVERIFY2(CMathUtils::epsilonEqual(t3.valueRounded(CTemperatureUnit::C()), 104.53), qPrintable(QStringLiteral("220.15F shall be 104.53C, not %1 C").arg(t3.valueRounded(CTemperatureUnit::C()))));
-        QVERIFY2(CMathUtils::epsilonEqual(t4.valueRounded(CTemperatureUnit::K()), 260.93), qPrintable(QStringLiteral("10F shall be 260.93K, not %1 K").arg(t4.valueRounded(CTemperatureUnit::K()))));
+        QVERIFY2(
+            CMathUtils::epsilonEqual(t1.valueRounded(CTemperatureUnit::K()), 273.15),
+            qPrintable(QStringLiteral("0C shall be 273.15K, not %1 K").arg(t1.valueRounded(CTemperatureUnit::K()))));
+        QVERIFY2(
+            CMathUtils::epsilonEqual(t2.valueRounded(CTemperatureUnit::C()), -17.22),
+            qPrintable(QStringLiteral("1F shall be -17.22C, not %1 C").arg(t2.valueRounded(CTemperatureUnit::C()))));
+        QVERIFY2(CMathUtils::epsilonEqual(t3.valueRounded(CTemperatureUnit::C()), 104.53),
+                 qPrintable(
+                     QStringLiteral("220.15F shall be 104.53C, not %1 C").arg(t3.valueRounded(CTemperatureUnit::C()))));
+        QVERIFY2(
+            CMathUtils::epsilonEqual(t4.valueRounded(CTemperatureUnit::K()), 260.93),
+            qPrintable(QStringLiteral("10F shall be 260.93K, not %1 K").arg(t4.valueRounded(CTemperatureUnit::K()))));
     }
 
     void CTestPhysicalQuantities::timeTests()

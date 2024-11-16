@@ -13,10 +13,7 @@ namespace swift::misc
 
     QJsonObject &CVariantMap::mergeToJson(QJsonObject &json) const
     {
-        for (auto it = cbegin(); it != cend(); ++it)
-        {
-            json.insert(it.key(), it.value().toJson());
-        }
+        for (auto it = cbegin(); it != cend(); ++it) { json.insert(it.key(), it.value().toJson()); }
         return json;
     }
 
@@ -58,10 +55,7 @@ namespace swift::misc
 
     QJsonObject &CVariantMap::mergeToMemoizedJson(QJsonObject &json) const
     {
-        for (auto it = cbegin(); it != cend(); ++it)
-        {
-            json.insert(it.key(), it.value().toMemoizedJson());
-        }
+        for (auto it = cbegin(); it != cend(); ++it) { json.insert(it.key(), it.value().toMemoizedJson()); }
         return json;
     }
 
@@ -101,7 +95,8 @@ namespace swift::misc
         }
     }
 
-    CStatusMessageList CVariantMap::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessageList CVariantMap::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                                           const QString &prefix)
     {
         CStatusMessageList messages;
         clear();
@@ -118,7 +113,8 @@ namespace swift::misc
         return messages;
     }
 
-    CStatusMessageList CVariantMap::convertFromJsonNoThrow(const QJsonObject &json, const QStringList &keys, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessageList CVariantMap::convertFromJsonNoThrow(const QJsonObject &json, const QStringList &keys,
+                                                           const CLogCategoryList &categories, const QString &prefix)
     {
         CStatusMessageList messages;
         clear();
@@ -136,7 +132,9 @@ namespace swift::misc
         return messages;
     }
 
-    CStatusMessageList CVariantMap::convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessageList CVariantMap::convertFromMemoizedJsonNoThrow(const QJsonObject &json,
+                                                                   const CLogCategoryList &categories,
+                                                                   const QString &prefix)
     {
         CStatusMessageList messages;
         clear();
@@ -153,7 +151,9 @@ namespace swift::misc
         return messages;
     }
 
-    CStatusMessageList CVariantMap::convertFromMemoizedJsonNoThrow(const QJsonObject &json, const QStringList &keys, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessageList CVariantMap::convertFromMemoizedJsonNoThrow(const QJsonObject &json, const QStringList &keys,
+                                                                   const CLogCategoryList &categories,
+                                                                   const QString &prefix)
     {
         CStatusMessageList messages;
         clear();

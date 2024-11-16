@@ -14,9 +14,7 @@
 #include <QObject>
 
 namespace SwiftGuiTest
-{
-
-} // namespace SwiftGuiTest
+{} // namespace SwiftGuiTest
 
 //! \endcond
 

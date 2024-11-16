@@ -95,7 +95,8 @@ namespace swift::core
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getDistanceToOwnAircraft
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::physical_quantities::CLength getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const override;
+            virtual swift::misc::physical_quantities::CLength
+            getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnModel
             //! \ingroup ownaircraftprovider
@@ -121,7 +122,8 @@ namespace swift::core
             //! Changed aircraft model
             //! \private Use ISimulatorContext::ownAircraftModelChanged
             //! \remark used for cross context updates
-            void ps_changedModel(const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &identifier);
+            void ps_changedModel(const swift::misc::simulation::CAircraftModel &model,
+                                 const swift::misc::CIdentifier &identifier);
 
         public slots:
             //! \copydoc IContextOwnAircraft::getOwnAircraft()
@@ -130,7 +132,8 @@ namespace swift::core
 
             //! \copydoc IContextOwnAircraft::getOwnComSystem
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::aviation::CComSystem getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const override;
+            virtual swift::misc::aviation::CComSystem
+            getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const override;
 
             //! \copydoc IContextOwnAircraft::getOwnTransponder()
             //! \ingroup ownaircraftprovider
@@ -146,22 +149,33 @@ namespace swift::core
 
             //! \copydoc IContextOwnAircraft::updateOwnIcaoCodes
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode, const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
+            virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                            const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
             //! \copydoc IContextOwnAircraft::updateOwnPosition
-            virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position, const swift::misc::aviation::CAltitude &altitude, const swift::misc::aviation::CAltitude &pressureAltitude) override;
+            virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position,
+                                           const swift::misc::aviation::CAltitude &altitude,
+                                           const swift::misc::aviation::CAltitude &pressureAltitude) override;
 
             //! \copydoc IContextOwnAircraft::updateCockpit
-            virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2, const swift::misc::aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1,
+                                       const swift::misc::aviation::CComSystem &com2,
+                                       const swift::misc::aviation::CTransponder &transponder,
+                                       const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateTransponderMode
-            virtual bool updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode, const swift::misc::CIdentifier &originator) override;
+            virtual bool
+            updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode,
+                                  const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateSelcal
-            virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                      const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateActiveComFrequency
-            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit comUnit, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                                  swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                                  const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateOwnAircraftPilot
             virtual bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override;
@@ -180,12 +194,16 @@ namespace swift::core
             //! .selcal      code       set SELCAL code         swift::core::context::CContextOwnAircraft
             //! </pre>
             //! \copydoc IContextOwnAircraft::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine,
+                                          const swift::misc::CIdentifier &originator) override;
 
             //! Register help
             static void registerHelp()
             {
-                if (swift::misc::CSimpleCommandParser::registered("swift::core::context::CContextOwnAircraft")) { return; }
+                if (swift::misc::CSimpleCommandParser::registered("swift::core::context::CContextOwnAircraft"))
+                {
+                    return;
+                }
                 swift::misc::CSimpleCommandParser::registerCommand({ ".x", "alias: .xpdr" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".x code|mode", "set XPDR code or mode" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".selcal code", "set SELCAL code" });
@@ -205,8 +223,12 @@ namespace swift::core
             swift::misc::simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
             mutable QReadWriteLock m_lockAircraft; //!< lock aircraft
 
-            CActionBind m_actionToggleXpdr { swift::misc::input::toggleXPDRStateHotkeyAction(), swift::misc::input::toggleXPDRStateHotkeyIcon(), this, &CContextOwnAircraft::actionToggleTransponder };
-            CActionBind m_actionIdent { swift::misc::input::toggleXPDRIdentHotkeyAction(), swift::misc::input::toggleXPDRIdentHotkeyIcon(), this, &CContextOwnAircraft::actionIdent };
+            CActionBind m_actionToggleXpdr { swift::misc::input::toggleXPDRStateHotkeyAction(),
+                                             swift::misc::input::toggleXPDRStateHotkeyIcon(), this,
+                                             &CContextOwnAircraft::actionToggleTransponder };
+            CActionBind m_actionIdent { swift::misc::input::toggleXPDRIdentHotkeyAction(),
+                                        swift::misc::input::toggleXPDRIdentHotkeyIcon(), this,
+                                        &CContextOwnAircraft::actionIdent };
 
             static constexpr qint64 MinHistoryDeltaMs = 1000;
             static constexpr int MaxHistoryElements = 20;
@@ -214,11 +236,14 @@ namespace swift::core
             std::atomic_bool m_history { true }; //!< enable history
             swift::misc::aviation::CAircraftSituationList m_situationHistory; //!< history, latest situation first
 
-            swift::misc::CSetting<swift::misc::network::settings::TCurrentTrafficServer> m_currentNetworkServer { this };
+            swift::misc::CSetting<swift::misc::network::settings::TCurrentTrafficServer> m_currentNetworkServer {
+                this
+            };
 
             //! Simulator model has been changed
             //! \ingroup crosscontextfunction
-            void xCtxChangedSimulatorModel(const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &identifier);
+            void xCtxChangedSimulatorModel(const swift::misc::simulation::CAircraftModel &model,
+                                           const swift::misc::CIdentifier &identifier);
 
             //! Simulator status changed
             //! \ingroup crosscontextfunction
@@ -240,10 +265,12 @@ namespace swift::core
             void evaluateUpdateHistory();
 
             //! Update own model and emit signal with identifier
-            bool updateOwnModel(const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &identifier);
+            bool updateOwnModel(const swift::misc::simulation::CAircraftModel &model,
+                                const swift::misc::CIdentifier &identifier);
 
             //! Reverse lookup of the model against DB data
-            static swift::misc::simulation::CAircraftModel reverseLookupModel(const swift::misc::simulation::CAircraftModel &model);
+            static swift::misc::simulation::CAircraftModel
+            reverseLookupModel(const swift::misc::simulation::CAircraftModel &model);
         };
     } // namespace context
 } // namespace swift::core

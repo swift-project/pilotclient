@@ -20,8 +20,7 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    CDbCountryComponent::CDbCountryComponent(QWidget *parent) : QFrame(parent),
-                                                                ui(new Ui::CDbCountryComponent)
+    CDbCountryComponent::CDbCountryComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CDbCountryComponent)
     {
         ui->setupUi(this);
         this->setViewWithIndicator(ui->tvp_Countries);
@@ -32,14 +31,16 @@ namespace swift::gui::components
         ui->tvp_Countries->setFilterWidget(ui->filter_CountryComponent);
         ui->tvp_Countries->allowDragDrop(true, false);
 
-        connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::onCountriesRead, Qt::QueuedConnection);
-        this->onCountriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getCountriesCount(), {});
+        connect(sApp->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbCountryComponent::onCountriesRead,
+                Qt::QueuedConnection);
+        this->onCountriesRead(CEntityFlags::CountryEntity, CEntityFlags::ReadFinished,
+                              sGui->getWebDataServices()->getCountriesCount(), {});
     }
 
-    CDbCountryComponent::~CDbCountryComponent()
-    {}
+    CDbCountryComponent::~CDbCountryComponent() {}
 
-    void CDbCountryComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count, const QUrl &url)
+    void CDbCountryComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count,
+                                              const QUrl &url)
     {
         Q_UNUSED(count)
         Q_UNUSED(url)

@@ -57,7 +57,11 @@ namespace swift::gui::components
         void resetUnsavedChanges() { m_unsavedChanges = false; }
 
         //! Settings for given simulator
-        swift::misc::simulation::settings::CSpecializedSimulatorSettings getSimulatorSettings(const swift::misc::simulation::CSimulatorInfo &simulator) const { return m_settings.getSpecializedSettings(simulator); }
+        swift::misc::simulation::settings::CSpecializedSimulatorSettings
+        getSimulatorSettings(const swift::misc::simulation::CSimulatorInfo &simulator) const
+        {
+            return m_settings.getSpecializedSettings(simulator);
+        }
 
     private:
         bool m_unsavedChanges = false;
@@ -120,7 +124,8 @@ namespace swift::gui::components
         void displayModelDirectories(const QStringList &dirs);
 
         //! Current settings
-        swift::misc::simulation::settings::CSpecializedSimulatorSettings getSettings(const swift::misc::simulation::CSimulatorInfo &simulator) const;
+        swift::misc::simulation::settings::CSpecializedSimulatorSettings
+        getSettings(const swift::misc::simulation::CSimulatorInfo &simulator) const;
 
         //! Display simulator`s settings
         void displaySettings(const swift::misc::simulation::CSimulatorInfo &simulator);

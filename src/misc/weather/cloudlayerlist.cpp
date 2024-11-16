@@ -12,13 +12,9 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::weather, CCloudLayer, CCloudLayerList)
 
 namespace swift::misc::weather
 {
-    CCloudLayerList::CCloudLayerList(const CSequence<CCloudLayer> &other) : CSequence<CCloudLayer>(other)
-    {}
+    CCloudLayerList::CCloudLayerList(const CSequence<CCloudLayer> &other) : CSequence<CCloudLayer>(other) {}
 
-    bool CCloudLayerList::containsBase(const CAltitude &base) const
-    {
-        return contains(&CCloudLayer::getBase, base);
-    }
+    bool CCloudLayerList::containsBase(const CAltitude &base) const { return contains(&CCloudLayer::getBase, base); }
 
     CCloudLayer CCloudLayerList::findByBase(const CAltitude &base) const
     {

@@ -17,22 +17,21 @@ using namespace swift::core;
 
 namespace swift::gui::components
 {
-    CCountrySelector::CCountrySelector(QWidget *parent) : QFrame(parent),
-                                                          ui(new Ui::CCountrySelector)
+    CCountrySelector::CCountrySelector(QWidget *parent) : QFrame(parent), ui(new Ui::CCountrySelector)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         ui->setupUi(this);
         ui->le_Iso->setValidator(new CUpperCaseValidator(ui->le_Iso));
 
-        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this, &CCountrySelector::onCountriesLoaded);
+        connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this,
+                &CCountrySelector::onCountriesLoaded);
         connect(ui->cb_Country, &QComboBox::currentTextChanged, this, &CCountrySelector::onCountryNameChanged);
         connect(ui->le_Iso, &QLineEdit::editingFinished, this, &CCountrySelector::onIsoChanged);
 
         this->onCountriesLoaded();
     }
 
-    CCountrySelector::~CCountrySelector()
-    {}
+    CCountrySelector::~CCountrySelector() {}
 
     void CCountrySelector::setCountry(const CCountry &country)
     {

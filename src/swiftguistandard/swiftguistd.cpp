@@ -74,10 +74,9 @@ using namespace swift::misc::simulation;
 using namespace swift::config;
 
 // Constructor
-SwiftGuiStd::SwiftGuiStd(swift::gui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
-                                                                                                          CIdentifiable(this),
-                                                                                                          CEnableForFramelessWindow(windowMode, true, "framelessMainWindow", this),
-                                                                                                          ui(new Ui::SwiftGuiStd)
+SwiftGuiStd::SwiftGuiStd(swift::gui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent)
+    : QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)), CIdentifiable(this),
+      CEnableForFramelessWindow(windowMode, true, "framelessMainWindow", this), ui(new Ui::SwiftGuiStd)
 {
     // GUI
     Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
@@ -87,8 +86,7 @@ SwiftGuiStd::SwiftGuiStd(swift::gui::CEnableForFramelessWindow::WindowMode windo
     this->init();
 }
 
-SwiftGuiStd::~SwiftGuiStd()
-{}
+SwiftGuiStd::~SwiftGuiStd() {}
 
 void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
 {
@@ -139,10 +137,7 @@ void SwiftGuiStd::performGracefulShutdown()
     if (!sGui || !myself) { return; } // killed in meantime?
 
     // tell context GUI is going down
-    if (sGui->getIContextApplication())
-    {
-        sGui->getIContextApplication()->unregisterApplication(identifier());
-    }
+    if (sGui->getIContextApplication()) { sGui->getIContextApplication()->unregisterApplication(identifier()); }
 
     // allow some other parts to react
     if (sGui) { sGui->processEventsToRefreshGui(); }
@@ -187,7 +182,8 @@ void SwiftGuiStd::changeEvent(QEvent *event)
 
 QAction *SwiftGuiStd::getWindowMinimizeAction(QObject *parent)
 {
-    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarMinButton), Qt::white, QSize(16, 16)));
+    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarMinButton),
+                                                    Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Window minimized", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::showMinimized);
     return a;
@@ -195,7 +191,8 @@ QAction *SwiftGuiStd::getWindowMinimizeAction(QObject *parent)
 
 QAction *SwiftGuiStd::getWindowNormalAction(QObject *parent)
 {
-    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarNormalButton), Qt::white, QSize(16, 16)));
+    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarNormalButton),
+                                                    Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Window normal", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::showNormal);
     return a;
@@ -203,7 +200,8 @@ QAction *SwiftGuiStd::getWindowNormalAction(QObject *parent)
 
 QAction *SwiftGuiStd::getToggleWindowVisibilityAction(QObject *parent)
 {
-    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarShadeButton), Qt::white, QSize(16, 16)));
+    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarShadeButton),
+                                                    Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Toogle main window visibility", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::toggleWindowVisibility);
     return a;
@@ -211,16 +209,14 @@ QAction *SwiftGuiStd::getToggleWindowVisibilityAction(QObject *parent)
 
 QAction *SwiftGuiStd::getToggleStayOnTopAction(QObject *parent)
 {
-    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarUnshadeButton), Qt::white, QSize(16, 16)));
+    const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarUnshadeButton),
+                                                    Qt::white, QSize(16, 16)));
     QAction *a = new QAction(i, "Toogle main window on top", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::toggleWindowStayOnTop);
     return a;
 }
 
-void SwiftGuiStd::setMainPage(SwiftGuiStd::MainPageIndex mainPage)
-{
-    ui->sw_MainMiddle->setCurrentIndex(mainPage);
-}
+void SwiftGuiStd::setMainPage(SwiftGuiStd::MainPageIndex mainPage) { ui->sw_MainMiddle->setCurrentIndex(mainPage); }
 
 void SwiftGuiStd::setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoArea)
 {
@@ -257,9 +253,8 @@ void SwiftGuiStd::onKickedFromNetwork(const QString &kickMessage)
 {
     this->updateGuiStatusInformation();
 
-    const QString msgText = kickMessage.isEmpty() ?
-                                QStringLiteral("You have been kicked from the network") :
-                                QStringLiteral("You have been kicked: '%1'").arg(kickMessage);
+    const QString msgText = kickMessage.isEmpty() ? QStringLiteral("You have been kicked from the network") :
+                                                    QStringLiteral("You have been kicked: '%1'").arg(kickMessage);
     CLogMessage(this).error(msgText);
     // this->displayInOverlayWindow(CStatusMessage(this, CStatusMessage::SeverityError, msgText));
 }
@@ -296,24 +291,13 @@ void SwiftGuiStd::setContextAvailability()
         // ping to check if core is still alive
         m_coreAvailable = this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(identifier()));
     }
-    else
-    {
-        m_coreAvailable = false;
-    }
+    else { m_coreAvailable = false; }
     if (isShuttingDown) { return; }
-    if (m_coreAvailable && m_coreFailures > 0)
-    {
-        m_coreFailures--;
-    }
-    else if (!m_coreAvailable && m_coreFailures < MaxCoreFailures)
-    {
-        m_coreFailures++;
-    }
-    else if (!m_coreAvailable && !m_displayingDBusReconnect)
-    {
-        this->displayDBusReconnectDialog();
-    }
-    m_contextNetworkAvailable = m_coreAvailable && sGui->getIContextNetwork() && !sGui->getIContextNetwork()->isEmptyObject();
+    if (m_coreAvailable && m_coreFailures > 0) { m_coreFailures--; }
+    else if (!m_coreAvailable && m_coreFailures < MaxCoreFailures) { m_coreFailures++; }
+    else if (!m_coreAvailable && !m_displayingDBusReconnect) { this->displayDBusReconnectDialog(); }
+    m_contextNetworkAvailable =
+        m_coreAvailable && sGui->getIContextNetwork() && !sGui->getIContextNetwork()->isEmptyObject();
     m_contextAudioAvailable = m_coreAvailable && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
 
     // react to a change in core's availability
@@ -337,7 +321,8 @@ void SwiftGuiStd::updateGuiStatusInformation()
         const QString now = QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
         const bool dBus = sGui->getCoreFacadeConfig().requiresDBusConnection();
         ui->comp_InfoBarStatus->setDBusStatus(dBus && m_coreAvailable);
-        ui->comp_InfoBarStatus->setDBusTooltip(dBus ? dBusTimestamp.arg(now, sGui->getCoreFacadeConfig().getDBusAddress()) : local);
+        ui->comp_InfoBarStatus->setDBusTooltip(
+            dBus ? dBusTimestamp.arg(now, sGui->getCoreFacadeConfig().getDBusAddress()) : local);
     }
     else
     {
@@ -371,10 +356,7 @@ void SwiftGuiStd::toggleWindowVisibility()
     this->show();
 }
 
-void SwiftGuiStd::onStyleSheetsChanged()
-{
-    this->initStyleSheet();
-}
+void SwiftGuiStd::onStyleSheetsChanged() { this->initStyleSheet(); }
 
 void SwiftGuiStd::onToggledWindowsOnTop(bool onTop)
 {
@@ -406,10 +388,7 @@ void SwiftGuiStd::onAudioClientFailure(const CStatusMessage &msg)
     ui->fr_CentralFrameInside->showOverlayHTMLMessage(msg);
 }
 
-void SwiftGuiStd::focusInMainEntryField()
-{
-    ui->comp_MainKeypadArea->focusInEntryField();
-}
+void SwiftGuiStd::focusInMainEntryField() { ui->comp_MainKeypadArea->focusInEntryField(); }
 
 void SwiftGuiStd::focusInTextMessageEntryField()
 {
@@ -419,21 +398,12 @@ void SwiftGuiStd::focusInTextMessageEntryField()
         ui->comp_MainInfoArea->getTextMessageComponent()->activateWindow();
         ui->comp_MainInfoArea->getTextMessageComponent()->focusTextEntry();
     }
-    else
-    {
-        this->focusInMainEntryField();
-    }
+    else { this->focusInMainEntryField(); }
 }
 
-void SwiftGuiStd::showMinimized()
-{
-    this->showMinimizedModeChecked();
-}
+void SwiftGuiStd::showMinimized() { this->showMinimizedModeChecked(); }
 
-void SwiftGuiStd::showNormal()
-{
-    this->showNormalModeChecked();
-}
+void SwiftGuiStd::showNormal() { this->showNormalModeChecked(); }
 
 void SwiftGuiStd::onNavigatorClosed()
 {
@@ -450,10 +420,7 @@ void SwiftGuiStd::verifyPrerequisites()
     {
         msgs.push_back(CStatusMessage(this).error(u"No simulator context"));
     }
-    else
-    {
-        msgs.push_back(sGui->getIContextSimulator()->verifyPrerequisites());
-    }
+    else { msgs.push_back(sGui->getIContextSimulator()->verifyPrerequisites()); }
 
 #if defined(Q_OS_MACOS)
     if (!swift::input::CMacOSInputUtils::hasAccess())
@@ -461,7 +428,8 @@ void SwiftGuiStd::verifyPrerequisites()
         // A log message about missing permissions is already emitted when initializing the keyboard.
         // But this happens way before initializing the GUI. Hence do the check here again to show an error message
         // to the user
-        msgs.push_back(CLogMessage(this).error(u"Cannot access the keyboard. Is \"Input Monitoring\" for swift enabled?"));
+        msgs.push_back(
+            CLogMessage(this).error(u"Cannot access the keyboard. Is \"Input Monitoring\" for swift enabled?"));
     }
 #endif
 
@@ -474,7 +442,8 @@ void SwiftGuiStd::verifyPrerequisites()
     this->copyXSwiftBusDialog(true);
 }
 
-void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid, const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
+void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid,
+                                      const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
 {
     // will NOT be called if no errors and setting is "only on errors"
     if (!sGui || sGui->isShuttingDown()) { return; }
@@ -482,7 +451,10 @@ void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAi
     {
         // avoid too many "deadlocking" dialogs, display warning instead
         if (invalid.isEmpty()) { return; }
-        const CStatusMessage m = CLogMessage(this).validationWarning(u"Model set validation has found %1 invalid models for '%2', check the model validation") << invalid.size() << simulator.toQString(true);
+        const CStatusMessage m =
+            CLogMessage(this).validationWarning(
+                u"Model set validation has found %1 invalid models for '%2', check the model validation")
+            << invalid.size() << simulator.toQString(true);
         this->displayInOverlayWindow(m, 5000);
         return;
     }
@@ -494,10 +466,7 @@ void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAi
 void SwiftGuiStd::displayValidationDialog()
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
-    if (!m_validationDialog)
-    {
-        m_validationDialog.reset(new CAircraftModelSetValidationDialog(this));
-    }
+    if (!m_validationDialog) { m_validationDialog.reset(new CAircraftModelSetValidationDialog(this)); }
     m_validationDialog->show();
 }
 
@@ -506,7 +475,8 @@ void SwiftGuiStd::checkDbDataLoaded()
     if (!sGui || sGui->isShuttingDown()) { return; }
     Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
     Q_ASSERT_X(CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Wrong thread, needs to run in main thread");
-    const CEntityFlags::Entity loadEntities = sGui->getWebDataServices()->getSynchronizedEntitiesWithNewerSharedFileOrEmpty(!m_dbDataLoading);
+    const CEntityFlags::Entity loadEntities =
+        sGui->getWebDataServices()->getSynchronizedEntitiesWithNewerSharedFileOrEmpty(!m_dbDataLoading);
     if (loadEntities == CEntityFlags::NoEntity)
     {
         m_dbDataLoading = false;
@@ -525,10 +495,7 @@ void SwiftGuiStd::playNotifcationSound(CNotificationSounds::NotificationFlag not
     sGui->getCContextAudioBase()->playNotification(notification, true);
 }
 
-void SwiftGuiStd::displayLog()
-{
-    ui->comp_MainInfoArea->displayLog();
-}
+void SwiftGuiStd::displayLog() { ui->comp_MainInfoArea->displayLog(); }
 
 void SwiftGuiStd::displayNetworkSettings()
 {
@@ -544,8 +511,7 @@ void SwiftGuiStd::onPttChanged(bool enabled)
 
     // based on user request still play with AFV
     sGui->getCContextAudioBase()->playNotification(
-        enabled ? CNotificationSounds::PTTClickKeyDown : CNotificationSounds::PTTClickKeyUp,
-        true);
+        enabled ? CNotificationSounds::PTTClickKeyDown : CNotificationSounds::PTTClickKeyUp, true);
 }
 
 void SwiftGuiStd::displayDBusReconnectDialog()
@@ -606,11 +572,10 @@ bool SwiftGuiStd::triggerAutoPublishDialog()
     bool showAutoPublish = lastDialogTs < 0 || (QDateTime::currentMSecsSinceEpoch() - lastDialogTs) > deltaT;
     if (!showAutoPublish) { return false; }
 
-    const QMessageBox::StandardButton reply = QMessageBox::question(
-        this,
-        QStringLiteral("Upload data?"),
-        QStringLiteral("Do you want to help improving swift by uploading anonymized data?"),
-        QMessageBox::Yes | QMessageBox::No);
+    const QMessageBox::StandardButton reply =
+        QMessageBox::question(this, QStringLiteral("Upload data?"),
+                              QStringLiteral("Do you want to help improving swift by uploading anonymized data?"),
+                              QMessageBox::Yes | QMessageBox::No);
 
     if (reply != QMessageBox::Yes)
     {
@@ -624,20 +589,14 @@ bool SwiftGuiStd::triggerAutoPublishDialog()
 
 bool SwiftGuiStd::startModelBrowser()
 {
-    if (!m_modelBrower)
-    {
-        m_modelBrower.reset(new CModelBrowserDialog(this));
-    }
+    if (!m_modelBrower) { m_modelBrower.reset(new CModelBrowserDialog(this)); }
     m_modelBrower->exec();
     return true;
 }
 
 bool SwiftGuiStd::startAFVMap()
 {
-    if (sGui && !sGui->isShuttingDown())
-    {
-        sGui->openUrl(sGui->getGlobalSetup().getAfvMapUrl());
-    }
+    if (sGui && !sGui->isShuttingDown()) { sGui->openUrl(sGui->getGlobalSetup().getAfvMapUrl()); }
 
     return true;
 }

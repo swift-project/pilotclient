@@ -38,7 +38,8 @@ namespace MiscTest
     void CTestStringUtils::testRemove()
     {
         QString s = "loUwP PeERr69";
-        QVERIFY2(removeChars(s, [](QChar c) { return !c.isUpper(); }) == "UPPER", "Test removing characters by predicate");
+        QVERIFY2(removeChars(s, [](QChar c) { return !c.isUpper(); }) == "UPPER",
+                 "Test removing characters by predicate");
     }
 
     void CTestStringUtils::testContains()
@@ -54,7 +55,8 @@ namespace MiscTest
         QString s = "string with a numb3r";
         QVERIFY2(indexOfChar(s, [](QChar c) { return c.isNumber(); }) == 18, "Test index of character by predicate");
         s = "string without a number";
-        QVERIFY2(indexOfChar(s, [](QChar c) { return c.isNumber(); }) == -1, "Test not index of character by predicate");
+        QVERIFY2(indexOfChar(s, [](QChar c) { return c.isNumber(); }) == -1,
+                 "Test not index of character by predicate");
     }
 
     void CTestStringUtils::testSplit()
@@ -69,29 +71,20 @@ namespace MiscTest
 
     void CTestStringUtils::testTimestampParsing()
     {
-        const QStringList dts(
-            { "2018-01-01 11:11:11",
-              "2012-05-09 03:04:05.777",
-              "2012-05-09 00:00:00.000",
-              "2015-12-31 03:04:05",
-              "1999-12-31 23:59:59.999",
-              "1975-01-01 14:13:17",
-              "1982-05-09 03:01:05.123",
-              "2000-05-02 00:04:00.000",
-              "2002-12-31 03:34:33",
-              "1992-11-01 21:59:29.999" });
+        const QStringList dts({ "2018-01-01 11:11:11", "2012-05-09 03:04:05.777", "2012-05-09 00:00:00.000",
+                                "2015-12-31 03:04:05", "1999-12-31 23:59:59.999", "1975-01-01 14:13:17",
+                                "1982-05-09 03:01:05.123", "2000-05-02 00:04:00.000", "2002-12-31 03:34:33",
+                                "1992-11-01 21:59:29.999" });
 
         const int size = QString("yyyyMMddHHmmss").size();
         for (const QString &dt : dts)
         {
             const QString c = removeDateTimeSeparators(dt);
             const QDateTime dt1 = parseDateTimeStringOptimized(c);
-            const QDateTime dt2 = (c.length() == size) ?
-                                      fromStringUtc(c, "yyyyMMddHHmmss") :
-                                      fromStringUtc(c, "yyyyMMddHHmmsszzz");
-            QDateTime dt3 = (c.length() == size) ?
-                                QDateTime::fromString(c, "yyyyMMddHHmmss") :
-                                QDateTime::fromString(c, "yyyyMMddHHmmsszzz");
+            const QDateTime dt2 =
+                (c.length() == size) ? fromStringUtc(c, "yyyyMMddHHmmss") : fromStringUtc(c, "yyyyMMddHHmmsszzz");
+            QDateTime dt3 = (c.length() == size) ? QDateTime::fromString(c, "yyyyMMddHHmmss") :
+                                                   QDateTime::fromString(c, "yyyyMMddHHmmsszzz");
             dt3.setOffsetFromUtc(0);
 
             const qint64 ms1 = dt1.toMSecsSinceEpoch();
@@ -124,9 +117,8 @@ namespace MiscTest
             for (const QString &dt : dts)
             {
                 const QString c = removeDateTimeSeparators(dt);
-                const QDateTime dateTime = (c.length() == size) ?
-                                               fromStringUtc(c, "yyyyMMddHHmmss") :
-                                               fromStringUtc(c, "yyyyMMddHHmmsszzz");
+                const QDateTime dateTime =
+                    (c.length() == size) ? fromStringUtc(c, "yyyyMMddHHmmss") : fromStringUtc(c, "yyyyMMddHHmmsszzz");
                 Q_UNUSED(dateTime); // avoid optimizing out of call
             }
         }

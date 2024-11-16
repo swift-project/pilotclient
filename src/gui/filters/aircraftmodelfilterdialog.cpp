@@ -15,8 +15,8 @@ using namespace swift::misc::network;
 
 namespace swift::gui::filters
 {
-    CAircraftModelFilterDialog::CAircraftModelFilterDialog(QWidget *parent) : CFilterDialog(parent),
-                                                                              ui(new Ui::CAircraftModelFilterDialog)
+    CAircraftModelFilterDialog::CAircraftModelFilterDialog(QWidget *parent)
+        : CFilterDialog(parent), ui(new Ui::CAircraftModelFilterDialog)
     {
         ui->setupUi(this);
         this->setWindowTitle("Filter models");
@@ -25,8 +25,7 @@ namespace swift::gui::filters
         connect(ui->filter_Models, &CAircraftModelFilterBar::rejectDialog, this, &CAircraftModelFilterDialog::reject);
     }
 
-    CAircraftModelFilterDialog::~CAircraftModelFilterDialog()
-    {}
+    CAircraftModelFilterDialog::~CAircraftModelFilterDialog() {}
 
     std::unique_ptr<IModelFilter<CAircraftModelList>> CAircraftModelFilterDialog::createModelFilter() const
     {

@@ -10,18 +10,13 @@
 namespace swift::gui
 {
 
-    CShowHideBar::CShowHideBar(QWidget *parent) : QFrame(parent),
-                                                  ui(new Ui::CShowHideBar)
+    CShowHideBar::CShowHideBar(QWidget *parent) : QFrame(parent), ui(new Ui::CShowHideBar)
     {
         ui->setupUi(this);
         connect(ui->pb_ShowHidePushButton, &QPushButton::clicked, this, &CShowHideBar::toggleShowHide);
     }
 
-    CShowHideBar::~CShowHideBar()
-    {}
+    CShowHideBar::~CShowHideBar() {}
 
-    bool CShowHideBar::isShown() const
-    {
-        return ui->pb_ShowHidePushButton->isChecked();
-    }
+    bool CShowHideBar::isShown() const { return ui->pb_ShowHidePushButton->isChecked(); }
 } // namespace swift::gui

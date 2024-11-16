@@ -41,10 +41,8 @@ using namespace swift::gui::models;
 
 namespace swift::gui::components
 {
-    CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, const CIdentifierList &identifiers, QWidget *parent) : QDialog(parent),
-                                                                                                                           ui(new Ui::CHotkeyDialog),
-                                                                                                                           m_actionHotkey(actionHotkey),
-                                                                                                                           m_actionModel(this)
+    CHotkeyDialog::CHotkeyDialog(const CActionHotkey &actionHotkey, const CIdentifierList &identifiers, QWidget *parent)
+        : QDialog(parent), ui(new Ui::CHotkeyDialog), m_actionHotkey(actionHotkey), m_actionModel(this)
     {
         setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
@@ -61,10 +59,7 @@ namespace swift::gui::components
             ui->pb_SelectedHotkey->setText(combination.toQString());
             ui->pb_SelectedHotkey->setToolTip(combination.asStringWithDeviceNames());
         }
-        else
-        {
-            ui->pb_SelectedHotkey->setToolTip("Press to select an new combination...");
-        }
+        else { ui->pb_SelectedHotkey->setToolTip("Press to select an new combination..."); }
 
         // get all remote identifiers in case there is no key for a remote machine yet
         CIdentifierList registeredApplications;
@@ -85,7 +80,10 @@ namespace swift::gui::components
         for (const CIdentifier &app : machineIdentifiersUnique)
         {
             ui->cb_Identifier->addItem(app.getMachineName(), QVariant::fromValue(app));
-            if (m_actionHotkey.getApplicableMachine().hasSameMachineName(app)) { index = ui->cb_Identifier->count() - 1; }
+            if (m_actionHotkey.getApplicableMachine().hasSameMachineName(app))
+            {
+                index = ui->cb_Identifier->count() - 1;
+            }
         }
 
         if (index < 0 && ui->cb_Identifier->count() > 0)
@@ -93,33 +91,34 @@ namespace swift::gui::components
             // if nothing was found
             ui->cb_Identifier->setCurrentIndex(0);
         }
-        else if (index != ui->cb_Identifier->currentIndex())
-        {
-            ui->cb_Identifier->setCurrentIndex(index);
-        }
+        else if (index != ui->cb_Identifier->currentIndex()) { ui->cb_Identifier->setCurrentIndex(index); }
 
         connect(ui->pb_AdvancedMode, &QPushButton::clicked, this, &CHotkeyDialog::advancedModeChanged);
         connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::captureHotkey);
         connect(ui->pb_Accept, &QPushButton::clicked, this, &CHotkeyDialog::accept);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &CHotkeyDialog::reject);
-        connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this, &CHotkeyDialog::changeSelectedAction);
-        connect(ui->cb_Identifier, qOverload<int>(&QComboBox::currentIndexChanged), this, &CHotkeyDialog::changeApplicableMachine);
+        connect(ui->tv_Actions->selectionModel(), &QItemSelectionModel::selectionChanged, this,
+                &CHotkeyDialog::changeSelectedAction);
+        connect(ui->cb_Identifier, qOverload<int>(&QComboBox::currentIndexChanged), this,
+                &CHotkeyDialog::changeApplicableMachine);
 
         if (sGui && sGui->getInputManager())
         {
-            connect(sGui->getInputManager(), &swift::core::CInputManager::combinationSelectionChanged, this, &CHotkeyDialog::combinationSelectionChanged);
-            connect(sGui->getInputManager(), &swift::core::CInputManager::combinationSelectionFinished, this, &CHotkeyDialog::combinationSelectionFinished);
+            connect(sGui->getInputManager(), &swift::core::CInputManager::combinationSelectionChanged, this,
+                    &CHotkeyDialog::combinationSelectionChanged);
+            connect(sGui->getInputManager(), &swift::core::CInputManager::combinationSelectionFinished, this,
+                    &CHotkeyDialog::combinationSelectionFinished);
         }
 
         initStyleSheet();
     }
 
-    CHotkeyDialog::~CHotkeyDialog()
-    {}
+    CHotkeyDialog::~CHotkeyDialog() {}
 
     CKeySelectionBox::CKeySelectionBox(QWidget *parent) : CHorizontalComboBox(parent)
     {
-        connect(this, qOverload<int>(&CKeySelectionBox::currentIndexChanged), this, &CKeySelectionBox::updateSelectedIndex);
+        connect(this, qOverload<int>(&CKeySelectionBox::currentIndexChanged), this,
+                &CKeySelectionBox::updateSelectedIndex);
     }
 
     void CKeySelectionBox::setSelectedIndex(int index)
@@ -138,12 +137,12 @@ namespace swift::gui::components
     {
         if (!sGui) { return; }
         const QString s = sGui->getStyleSheetUtility().styles(
-            { CStyleSheetUtility::fileNameFonts(),
-              CStyleSheetUtility::fileNameStandardWidget() });
+            { CStyleSheetUtility::fileNameFonts(), CStyleSheetUtility::fileNameStandardWidget() });
         this->setStyleSheet(s);
     }
 
-    CActionHotkey CHotkeyDialog::getActionHotkey(const CActionHotkey &initial, const CIdentifierList &identifiers, QWidget *parent)
+    CActionHotkey CHotkeyDialog::getActionHotkey(const CActionHotkey &initial, const CIdentifierList &identifiers,
+                                                 QWidget *parent)
     {
         CHotkeyDialog editDialog(initial, identifiers, parent);
         editDialog.setWindowModality(Qt::WindowModal);
@@ -196,7 +195,8 @@ namespace swift::gui::components
         m_actionHotkey.setAction(index.data(CActionModel::ActionRole).toString());
     }
 
-    CKeySelectionBox *CHotkeyDialog::addSelectionBox(const CKeyboardKeyList &allSupportedKeys, const CKeyboardKey &keyboardKey)
+    CKeySelectionBox *CHotkeyDialog::addSelectionBox(const CKeyboardKeyList &allSupportedKeys,
+                                                     const CKeyboardKey &keyboardKey)
     {
         int currentIndex = 0;
         const int width = qRound(1.5 * this->width());
@@ -207,10 +207,7 @@ namespace swift::gui::components
         for (const CKeyboardKey &supportedKey : allSupportedKeys)
         {
             ksb->addItem(supportedKey.toQString(), QVariant::fromValue(supportedKey));
-            if (select && supportedKey == keyboardKey)
-            {
-                currentIndex = ksb->count() - 1;
-            }
+            if (select && supportedKey == keyboardKey) { currentIndex = ksb->count() - 1; }
         }
 
         ksb->setSelectedIndex(currentIndex);
@@ -225,7 +222,8 @@ namespace swift::gui::components
         return ksb;
     }
 
-    CKeySelectionBox *CHotkeyDialog::addSelectionBox(const CJoystickButtonList &allAvailableButtons, const CJoystickButton &joystickButton)
+    CKeySelectionBox *CHotkeyDialog::addSelectionBox(const CJoystickButtonList &allAvailableButtons,
+                                                     const CJoystickButton &joystickButton)
     {
         int currentIndex = -1;
         const int width = qRound(1.5 * this->width());
@@ -244,7 +242,8 @@ namespace swift::gui::components
 
         ksb->setSelectedIndex(currentIndex);
         ksb->setPopupWidth(qMin(width, 600));
-        ksb->addItem(noKeyButton(), QVariant::fromValue(CJoystickButton())); // at back (easier to find it is there twice)
+        ksb->addItem(noKeyButton(),
+                     QVariant::fromValue(CJoystickButton())); // at back (easier to find it is there twice)
 
         ui->qf_Advanced->layout()->addWidget(ksb);
         const int position = ui->qf_Advanced->layout()->count() - 1;
@@ -327,10 +326,7 @@ namespace swift::gui::components
         }
 
         // add one box more so we can add keys/buttons
-        if (c < 2)
-        {
-            this->addSelectionBox(allSupportedKeys);
-        }
+        if (c < 2) { this->addSelectionBox(allSupportedKeys); }
     }
 
     void CHotkeyDialog::clearAdvancedFrame()
@@ -361,7 +357,8 @@ namespace swift::gui::components
             m_actionHotkey.setCombination(combination);
         }
 
-        if (ksb->itemData(oldIndex).canConvert<CJoystickButton>() && ksb->itemData(newIndex).canConvert<CJoystickButton>())
+        if (ksb->itemData(oldIndex).canConvert<CJoystickButton>() &&
+            ksb->itemData(newIndex).canConvert<CJoystickButton>())
         {
             CJoystickButton oldButton = ksb->itemData(oldIndex).value<CJoystickButton>();
             CJoystickButton newButton = ksb->itemData(newIndex).value<CJoystickButton>();
@@ -385,7 +382,8 @@ namespace swift::gui::components
         for (const QString &token : tokens)
         {
             const QModelIndex startIndex = m_actionModel.index(0, 0, parentIndex);
-            const QModelIndexList indexList = m_actionModel.match(startIndex, Qt::DisplayRole, QVariant::fromValue(token));
+            const QModelIndexList indexList =
+                m_actionModel.match(startIndex, Qt::DisplayRole, QVariant::fromValue(token));
             if (indexList.isEmpty()) { return; }
             parentIndex = indexList.first();
             ui->tv_Actions->expand(parentIndex);

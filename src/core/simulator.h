@@ -87,7 +87,10 @@ namespace swift::core
         virtual bool isTimeSynchronized() const = 0;
 
         //! Get the simulator current internal state
-        virtual const swift::misc::simulation::CSimulatorInternals &getSimulatorInternals() const { return m_simulatorInternals; }
+        virtual const swift::misc::simulation::CSimulatorInternals &getSimulatorInternals() const
+        {
+            return m_simulatorInternals;
+        }
 
         //! Connect to simulator
         virtual bool connectTo() = 0;
@@ -111,10 +114,7 @@ namespace swift::core
 
         //! Public version to remove all aircraft
         //! \sa physicallyRemoveAllRemoteAircraft
-        int removeAllRemoteAircraft()
-        {
-            return this->physicallyRemoveAllRemoteAircraft();
-        }
+        int removeAllRemoteAircraft() { return this->physicallyRemoveAllRemoteAircraft(); }
 
         //! Change remote aircraft per property
         virtual bool changeRemoteAircraftModel(const swift::misc::simulation::CSimulatedAircraft &aircraft);
@@ -123,10 +123,12 @@ namespace swift::core
         virtual bool changeRemoteAircraftEnabled(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Update own aircraft cockpit (usually from context)
-        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator) = 0;
+        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                               const swift::misc::CIdentifier &originator) = 0;
 
         //! Update own aircraft cockpit (usually from context)
-        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) = 0;
+        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                              const swift::misc::CIdentifier &originator) = 0;
 
         //! Display a status message in the simulator
         virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const = 0;
@@ -167,7 +169,10 @@ namespace swift::core
         bool isFlightNetworkConnected() const { return m_networkConnected; }
 
         //! Settings for current simulator
-        swift::misc::simulation::settings::CSpecializedSimulatorSettings getSimulatorSettings() const { return m_multiSettings.getSpecializedSettings(this->getSimulatorInfo()); }
+        swift::misc::simulation::settings::CSpecializedSimulatorSettings getSimulatorSettings() const
+        {
+            return m_multiSettings.getSpecializedSettings(this->getSimulatorInfo());
+        }
 
         //! Driver will be unloaded
         virtual void unload();
@@ -200,7 +205,9 @@ namespace swift::core
         double getMinutesLate() const { return m_minutesLate; }
 
         //! Send situation/parts for testing
-        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) = 0;
+        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::aviation::CAircraftSituation &situation,
+                                               const swift::misc::aviation::CAircraftParts &parts) = 0;
 
         //! Enable pseudo elevations (testing)
         void setTestEnablePseudoElevation(bool enable) { m_enablePseudoElevation = enable; }
@@ -220,27 +227,34 @@ namespace swift::core
         virtual bool isShuttingDownOrDisconnected() const { return (this->isShuttingDown() || !this->isConnected()); }
 
         //! Shutting down, disconnected, or no remote aircraft
-        virtual bool isShuttingDownDisconnectedOrNoAircraft() const { return (this->isShuttingDownOrDisconnected() || this->getAircraftInRangeCount() < 1); }
+        virtual bool isShuttingDownDisconnectedOrNoAircraft() const
+        {
+            return (this->isShuttingDownOrDisconnected() || this->getAircraftInRangeCount() < 1);
+        }
 
         //! Shutting down, disconnected, or no remote aircraft
         virtual bool isShuttingDownDisconnectedOrNoAircraft(bool isProbe) const
         {
-            return isProbe ?
-                       this->isShuttingDownOrDisconnected() :
-                       (this->isShuttingDownOrDisconnected() || this->getAircraftInRangeCount() < 1);
+            return isProbe ? this->isShuttingDownOrDisconnected() :
+                             (this->isShuttingDownOrDisconnected() || this->getAircraftInRangeCount() < 1);
         }
 
         //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation
         //! \remark needs to be overridden if the concrete driver supports such an option
         //! \sa ISimulator::callbackReceivedRequestedElevation
-        bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &callsign) override;
+        bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
+                              const swift::misc::aviation::CCallsign &callsign) override;
 
         //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation
-        bool requestElevation(const swift::misc::aviation::CAircraftSituation &situation) { return this->requestElevation(situation, situation.getCallsign()); }
+        bool requestElevation(const swift::misc::aviation::CAircraftSituation &situation)
+        {
+            return this->requestElevation(situation, situation.getCallsign());
+        }
 
         //! A requested elevation has been received
         //! \remark public for testing purposes
-        virtual void callbackReceivedRequestedElevation(const swift::misc::geo::CElevationPlane &plane, const swift::misc::aviation::CCallsign &callsign, bool isWater);
+        virtual void callbackReceivedRequestedElevation(const swift::misc::geo::CElevationPlane &plane,
+                                                        const swift::misc::aviation::CCallsign &callsign, bool isWater);
 
         //! Allows to print out simulator specific statistics
         virtual QString getStatisticsSimulatorSpecific() const { return {}; }
@@ -268,20 +282,25 @@ namespace swift::core
         //! .drv aircraft readd callsign      re-add (add again) aircraft             swift::core::ISimulator
         //! .drv aircraft readd all           re-add all aircraft                     swift::core::ISimulator
         //! .drv aircraft rm callsign         remove aircraft                         swift::core::ISimulator
-        //! .drv fsuipc   on|off              enable/disable FSUIPC (if applicable)   swift::simplugin::fscommon::CSimulatorFsCommon
+        //! .drv fsuipc   on|off              enable/disable FSUIPC (if applicable)
+        //! swift::simplugin::fscommon::CSimulatorFsCommon
         //! </pre>
-        //! Parse command line for simulator drivers, derived classes can add specific parsing by overriding ISimulator::parseDetails
+        //! Parse command line for simulator drivers, derived classes can add specific parsing by overriding
+        //! ISimulator::parseDetails
         virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator);
 
         //! Consolidate setup with other data like from swift::misc::simulation::IRemoteAircraftProvider
         //! \threadsafe
-        swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationSetupConsolidated(const swift::misc::aviation::CCallsign &callsign, bool forceFullUpdate) const;
+        swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign
+        getInterpolationSetupConsolidated(const swift::misc::aviation::CCallsign &callsign, bool forceFullUpdate) const;
 
         //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
-        bool setInterpolationSetupGlobal(const swift::misc::simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
+        bool setInterpolationSetupGlobal(
+            const swift::misc::simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
 
         //! Interpolation messages for callsign
-        virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
+        virtual swift::misc::CStatusMessageList
+        getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
 
         //! Get the data for auto publishing
         const swift::misc::simulation::CAutoPublishData &getPublishData() const { return m_autoPublishing; }
@@ -311,10 +330,14 @@ namespace swift::core
         qint64 getStatisticsAircraftUpdatedRequestedDeltaMs() const { return m_statsUpdateAircraftRequestedDeltaMs; }
 
         //! The traced loopback situations
-        swift::misc::aviation::CAircraftSituationList getLoopbackSituations(const swift::misc::aviation::CCallsign &callsign) const;
+        swift::misc::aviation::CAircraftSituationList
+        getLoopbackSituations(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Access to logger
-        const swift::misc::simulation::CInterpolationLogger &interpolationLogger() const { return m_interpolationLogger; }
+        const swift::misc::simulation::CInterpolationLogger &interpolationLogger() const
+        {
+            return m_interpolationLogger;
+        }
 
         //! The latest logged data formatted
         //! \remark public only for log. displays
@@ -343,13 +366,15 @@ namespace swift::core
 
     signals:
         //! Simulator combined status
-        void simulatorStatusChanged(swift::core::ISimulator::SimulatorStatus status); // use emitSimulatorCombinedStatus to emit
+        void simulatorStatusChanged(
+            swift::core::ISimulator::SimulatorStatus status); // use emitSimulatorCombinedStatus to emit
 
         //! Emitted when own aircraft model has changed
         void ownAircraftModelChanged(const swift::misc::simulation::CAircraftModel &model);
 
         //! Render restrictions have been changed
-        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const swift::misc::physical_quantities::CLength &maxRenderedDistance);
+        void renderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft,
+                                       const swift::misc::physical_quantities::CLength &maxRenderedDistance);
 
         //! Interpolation or rendering setup changed
         void interpolationAndRenderingSetupChanged();
@@ -358,7 +383,9 @@ namespace swift::core
         void aircraftRenderingChanged(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
         //! Adding the remote model failed
-        void physicallyAddingRemoteModelFailed(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft, bool disabled, bool requestFailover, const swift::misc::CStatusMessage &message);
+        void physicallyAddingRemoteModelFailed(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft,
+                                               bool disabled, bool requestFailover,
+                                               const swift::misc::CStatusMessage &message);
 
         //! An airspace snapshot was handled
         void airspaceSnapshotHandled();
@@ -370,7 +397,8 @@ namespace swift::core
         void requestedElevation(const swift::misc::aviation::CCallsign &callsign);
 
         //! A requested elevation has been received
-        void receivedRequestedElevation(const swift::misc::geo::CElevationPlane &plane, const swift::misc::aviation::CCallsign &callsign);
+        void receivedRequestedElevation(const swift::misc::geo::CElevationPlane &plane,
+                                        const swift::misc::aviation::CCallsign &callsign);
 
         //! Auto publish data written for simulator
         void autoPublishDataWritten(const swift::misc::simulation::CSimulatorInfo &simulator);
@@ -383,8 +411,7 @@ namespace swift::core
         ISimulator(const swift::misc::simulation::CSimulatorPluginInfo &pluginInfo,
                    swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                    swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                   swift::misc::network::IClientProvider *clientProvider,
-                   QObject *parent = nullptr);
+                   swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! @{
         //! When swift DB data are read
@@ -425,17 +452,21 @@ namespace swift::core
         virtual void clearAllRemoteAircraftData();
 
         //! Remove all remote aircraft and their data via ISimulator::clearAllRemoteAircraftData
-        //! \remark each driver is supposed to override that, implement the "physically removing part" (simulator specific) and the call the base class
-        //! \sa ISimulator::clearAllRemoteAircraftData
+        //! \remark each driver is supposed to override that, implement the "physically removing part" (simulator
+        //! specific) and the call the base class \sa ISimulator::clearAllRemoteAircraftData
         virtual int physicallyRemoveAllRemoteAircraft();
 
         //! Set elevation and CG in the providers and for auto publishing
         //! \sa ISimulator::updateOwnSituationAndGroundElevation
-        void rememberElevationAndSimulatorCG(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CAircraftModel &model, bool likelyOnGroundElevation, const swift::misc::geo::CElevationPlane &elevation, const swift::misc::physical_quantities::CLength &simulatorCG);
+        void rememberElevationAndSimulatorCG(const swift::misc::aviation::CCallsign &callsign,
+                                             const swift::misc::simulation::CAircraftModel &model,
+                                             bool likelyOnGroundElevation,
+                                             const swift::misc::geo::CElevationPlane &elevation,
+                                             const swift::misc::physical_quantities::CLength &simulatorCG);
 
         //! Emit the combined status
-        //! \param oldStatus optionally one can capture and provide the old status for comparison. In case of equal status values no signal will be sent
-        //! \sa simulatorStatusChanged;
+        //! \param oldStatus optionally one can capture and provide the old status for comparison. In case of equal
+        //! status values no signal will be sent \sa simulatorStatusChanged;
         void emitSimulatorCombinedStatus(SimulatorStatus oldStatus = Unspecified);
 
         //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::emitInterpolationSetupChanged
@@ -462,7 +493,9 @@ namespace swift::core
         bool addLoopbackSituation(const swift::misc::aviation::CAircraftSituation &situation);
 
         //! Add a loopback situation if logging is enabled
-        bool addLoopbackSituation(const swift::misc::aviation::CCallsign &callsign, const swift::misc::geo::CElevationPlane &elevationPlane, const swift::misc::physical_quantities::CLength &cg);
+        bool addLoopbackSituation(const swift::misc::aviation::CCallsign &callsign,
+                                  const swift::misc::geo::CElevationPlane &elevationPlane,
+                                  const swift::misc::physical_quantities::CLength &cg);
 
         //! Full reset of state
         //! \remark reset as it was unloaded without unloading
@@ -485,13 +518,15 @@ namespace swift::core
         bool isEqualLastSent(const swift::misc::aviation::CAircraftSituation &compare) const;
 
         //! Equal to last sent situation
-        bool isEqualLastSent(const swift::misc::aviation::CAircraftParts &compare, const swift::misc::aviation::CCallsign &callsign) const;
+        bool isEqualLastSent(const swift::misc::aviation::CAircraftParts &compare,
+                             const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Remember as last sent
         void rememberLastSent(const swift::misc::aviation::CAircraftSituation &sent);
 
         //! Remember as last sent
-        void rememberLastSent(const swift::misc::aviation::CAircraftParts &sent, const swift::misc::aviation::CCallsign &callsign);
+        void rememberLastSent(const swift::misc::aviation::CAircraftParts &sent,
+                              const swift::misc::aviation::CCallsign &callsign);
 
         //! Last sent situations
         swift::misc::aviation::CAircraftSituationList getLastSentCanLikelySkipNearGroundInterpolation() const;
@@ -512,7 +547,9 @@ namespace swift::core
         void reverseLookupAndUpdateOwnAircraftModel(const QString &modelString);
 
         //! Info about invalid situation
-        QString getInvalidSituationLogMessage(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CInterpolationStatus &status, const QString &details = {}) const;
+        QString getInvalidSituationLogMessage(const swift::misc::aviation::CCallsign &callsign,
+                                              const swift::misc::simulation::CInterpolationStatus &status,
+                                              const QString &details = {}) const;
 
         //! Update stats and flags
         void finishUpdateRemoteAircraftAndSetStatistics(qint64 startTime, bool limited = false);
@@ -536,7 +573,8 @@ namespace swift::core
         bool isAircraftInRangeOrTestMode(const swift::misc::aviation::CCallsign &callsign) const;
 
         //! Lookup against DB data
-        static swift::misc::simulation::CAircraftModel reverseLookupModel(const swift::misc::simulation::CAircraftModel &model);
+        static swift::misc::simulation::CAircraftModel
+        reverseLookupModel(const swift::misc::simulation::CAircraftModel &model);
 
         bool m_updateRemoteAircraftInProgress = false; //!< currently updating remote aircraft
         bool m_enablePseudoElevation = false; //!< return faked elevations (testing)
@@ -548,7 +586,8 @@ namespace swift::core
         double m_simTimeRatio = 1.0; //!< ratio of simulation time to real time, due to low FPS (X-Plane)
         double m_trackMilesShort = 0.0; //!< difference between real and reported groundspeed, multiplied by time
         double m_minutesLate = 0.0; //!< difference between real and reported groundspeed, integrated over time
-        qint64 m_updateAllRemoteAircraftUntil = 0; //!< force an update of all remote aircraft, used when own aircraft is moved, paused to make sure all remote aircraft are updated
+        qint64 m_updateAllRemoteAircraftUntil = 0; //!< force an update of all remote aircraft, used when own aircraft
+                                                   //!< is moved, paused to make sure all remote aircraft are updated
         qint64 m_statsUpdateAircraftTimeTotalMs = 0; //!< statistics total update time
         qint64 m_statsCurrentUpdateTimeMs = 0; //!< statistics current update time
         qint64 m_statsMaxUpdateTimeMs = 0; //!< statistics max.update time
@@ -556,15 +595,19 @@ namespace swift::core
         qint64 m_statsLastUpdateAircraftRequestedMs = 0; //!< when was the last aircraft update requested
         qint64 m_statsUpdateAircraftRequestedDeltaMs = 0; //!< delta time between 2 aircraft updates
 
-        swift::misc::aviation::CAltitude m_pseudoElevation { swift::misc::aviation::CAltitude::null() }; //!< pseudo elevation for testing purposes
+        swift::misc::aviation::CAltitude m_pseudoElevation {
+            swift::misc::aviation::CAltitude::null()
+        }; //!< pseudo elevation for testing purposes
         swift::misc::simulation::CSimulatorInternals m_simulatorInternals; //!< setup read from the sim
         swift::misc::simulation::CInterpolationLogger m_interpolationLogger; //!< log.interpolation
         swift::misc::simulation::CAutoPublishData m_autoPublishing; //!< for the DB
-        swift::misc::aviation::CAircraftSituationPerCallsign m_lastSentSituations; //!< last situations sent to simulator
+        swift::misc::aviation::CAircraftSituationPerCallsign
+            m_lastSentSituations; //!< last situations sent to simulator
         swift::misc::aviation::CAircraftPartsPerCallsign m_lastSentParts; //!< last parts sent to simulator
 
         // some optional functionality which can be used by the simulators as needed
-        swift::misc::simulation::CSimulatedAircraftList m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
+        swift::misc::simulation::CSimulatedAircraftList
+            m_addAgainAircraftWhenRemoved; //!< add this model again when removed, normally used to change model
 
         // loopback situations, situations which are received from simulator for remote aircraft
         swift::misc::aviation::CAircraftSituationListPerCallsign m_loopbackSituations; //!< traced loopback situations
@@ -574,7 +617,9 @@ namespace swift::core
         bool m_limitUpdateAircraft = false; //!< limit the update frequency by using swift::misc::CTokenBucket
 
         // general settings
-        swift::misc::simulation::settings::CMultiSimulatorSettings m_multiSettings { this }; //!< simulator settings for all simulators
+        swift::misc::simulation::settings::CMultiSimulatorSettings m_multiSettings {
+            this
+        }; //!< simulator settings for all simulators
 
     private:
         // remote aircraft provider ("rap") bound
@@ -585,7 +630,8 @@ namespace swift::core
         void callPhysicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &remoteCallsign);
 
         //! Display a logged situation in simulator
-        void displayLoggedSituationInSimulator(const swift::misc::aviation::CCallsign &cs, bool stopLogging, int times = 40);
+        void displayLoggedSituationInSimulator(const swift::misc::aviation::CCallsign &cs, bool stopLogging,
+                                               int times = 40);
 
         // statistics values of how often those functions are called
         // those are the added counters, overflow will not be an issue here (discussed in T171 review)
@@ -679,15 +725,13 @@ namespace swift::core
         //! Create a new instance of a driver
         //! \param info                      metadata about simulator
         //! \param ownAircraftProvider       in memory access to own aircraft data
-        //! \param remoteAircraftProvider    in memory access to rendered aircraft data such as situation history and aircraft itself
-        //! \param clientProvider            in memory access to client data
-        //! \return driver instance
+        //! \param remoteAircraftProvider    in memory access to rendered aircraft data such as situation history and
+        //! aircraft itself \param clientProvider            in memory access to client data \return driver instance
         //!
-        virtual ISimulator *create(
-            const swift::misc::simulation::CSimulatorPluginInfo &info,
-            swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-            swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            swift::misc::network::IClientProvider *clientProvider) = 0;
+        virtual ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
+                                   swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                   swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                   swift::misc::network::IClientProvider *clientProvider) = 0;
 
         //! Simulator listener instance
         virtual ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) = 0;

@@ -24,8 +24,7 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CModelBrowserComponent::CModelBrowserComponent(QWidget *parent) : QFrame(parent),
-                                                                      ui(new Ui::CModelBrowserComponent)
+    CModelBrowserComponent::CModelBrowserComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CModelBrowserComponent)
     {
         ui->setupUi(this);
         ui->tw_Tab->setCurrentIndex(0);
@@ -35,14 +34,20 @@ namespace swift::gui::components
         const CLength relDistance(40.0, CLengthUnit::m());
         ui->editor_RelativePosition->setDistance(relDistance);
 
-        connect(ui->pb_SetRelativePosition, &QPushButton::released, this, &CModelBrowserComponent::onSetRelativePosition, Qt::QueuedConnection);
-        connect(ui->pb_LoadModelSet, &QPushButton::released, this, &CModelBrowserComponent::loadModelSet, Qt::QueuedConnection);
+        connect(ui->pb_SetRelativePosition, &QPushButton::released, this,
+                &CModelBrowserComponent::onSetRelativePosition, Qt::QueuedConnection);
+        connect(ui->pb_LoadModelSet, &QPushButton::released, this, &CModelBrowserComponent::loadModelSet,
+                Qt::QueuedConnection);
         connect(ui->pb_Display, &QPushButton::released, this, &CModelBrowserComponent::display, Qt::QueuedConnection);
         connect(ui->pb_Remove, &QPushButton::released, this, &CModelBrowserComponent::remove, Qt::QueuedConnection);
-        connect(ui->editor_Coordinate, &CCoordinateForm::changedCoordinate, this, &CModelBrowserComponent::onSetAbsolutePosition, Qt::QueuedConnection);
-        connect(ui->editor_Pbh, &CPbhsForm::changeValues, this, &CModelBrowserComponent::onSetPBH, Qt::QueuedConnection);
-        connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this, &CModelBrowserComponent::onSetParts, Qt::QueuedConnection);
-        connect(ui->tvp_AircraftModels, &CAircraftModelView::objectDoubleClicked, this, &CModelBrowserComponent::onModelDblClicked, Qt::QueuedConnection);
+        connect(ui->editor_Coordinate, &CCoordinateForm::changedCoordinate, this,
+                &CModelBrowserComponent::onSetAbsolutePosition, Qt::QueuedConnection);
+        connect(ui->editor_Pbh, &CPbhsForm::changeValues, this, &CModelBrowserComponent::onSetPBH,
+                Qt::QueuedConnection);
+        connect(ui->editor_AircraftParts, &CAircraftPartsForm::changeAircraftParts, this,
+                &CModelBrowserComponent::onSetParts, Qt::QueuedConnection);
+        connect(ui->tvp_AircraftModels, &CAircraftModelView::objectDoubleClicked, this,
+                &CModelBrowserComponent::onModelDblClicked, Qt::QueuedConnection);
 
         connect(ui->cb_OverrideCG, &QCheckBox::clicked, this, &CModelBrowserComponent::onCGChecked);
         connect(ui->cb_UseCG, &QCheckBox::clicked, this, &CModelBrowserComponent::onCGChecked);
@@ -56,10 +61,7 @@ namespace swift::gui::components
         // void
     }
 
-    void CModelBrowserComponent::close()
-    {
-        this->remove();
-    }
+    void CModelBrowserComponent::close() { this->remove(); }
 
     void CModelBrowserComponent::onSetRelativePosition()
     {
@@ -101,14 +103,8 @@ namespace swift::gui::components
         CAircraftParts parts = CAircraftParts::null();
         if (setParts || ui->cb_UseParts->isChecked()) { parts = this->getParts(); }
 
-        if (setPbh || ui->cb_UsePBH->isChecked())
-        {
-            ui->editor_Pbh->updateSituation(m_situation);
-        }
-        else
-        {
-            m_situation.setZeroPBHandGs();
-        }
+        if (setPbh || ui->cb_UsePBH->isChecked()) { ui->editor_Pbh->updateSituation(m_situation); }
+        else { m_situation.setZeroPBHandGs(); }
 
         sGui->getISimulator()->testSendSituationAndParts(ISimulator::getTestCallsign(), m_situation, parts);
     }
@@ -138,16 +134,10 @@ namespace swift::gui::components
             cg.parseFromString(ui->le_CG->text(), CPqString::SeparatorBestGuess);
             if (!cg.isNull()) { model.setCG(cg); }
         }
-        else
-        {
-            ui->le_CG->setText(model.getCG().valueRoundedWithUnit(CLengthUnit::ft(), 1));
-        }
+        else { ui->le_CG->setText(model.getCG().valueRoundedWithUnit(CLengthUnit::ft(), 1)); }
 
         m_situation.setZeroPBHandGs();
-        if (ui->cb_UsePBH->isChecked())
-        {
-            ui->editor_Pbh->updateSituation(m_situation);
-        }
+        if (ui->cb_UsePBH->isChecked()) { ui->editor_Pbh->updateSituation(m_situation); }
 
         if (ui->cb_UseParts->isChecked())
         {

@@ -92,52 +92,80 @@ namespace swift::core
             virtual ~CContextNetwork() override;
 
             // remoteaircraftprovider
-            virtual swift::misc::aviation::CAircraftSituationList remoteAircraftSituations(const swift::misc::aviation::CCallsign &callsign) const override;
-            virtual swift::misc::aviation::CAircraftSituation remoteAircraftSituation(const swift::misc::aviation::CCallsign &callsign, int index) const override;
-            virtual swift::misc::MillisecondsMinMaxMean remoteAircraftSituationsTimestampDifferenceMinMaxMean(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CAircraftSituationList
+            remoteAircraftSituations(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CAircraftSituation
+            remoteAircraftSituation(const swift::misc::aviation::CCallsign &callsign, int index) const override;
+            virtual swift::misc::MillisecondsMinMaxMean remoteAircraftSituationsTimestampDifferenceMinMaxMean(
+                const swift::misc::aviation::CCallsign &callsign) const override;
             virtual swift::misc::aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
             virtual swift::misc::aviation::CAircraftSituationList latestOnGroundProviderElevations() const override;
             virtual int remoteAircraftSituationsCount(const swift::misc::aviation::CCallsign &callsign) const override;
-            virtual swift::misc::aviation::CAircraftPartsList remoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CAircraftPartsList
+            remoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const override;
             virtual int remoteAircraftPartsCount(const swift::misc::aviation::CCallsign &callsign) const override;
             virtual swift::misc::aviation::CCallsignSet remoteAircraftSupportingParts() const override;
-            virtual swift::misc::aviation::CAircraftSituationChangeList remoteAircraftSituationChanges(const swift::misc::aviation::CCallsign &callsign) const override;
-            virtual int remoteAircraftSituationChangesCount(const swift::misc::aviation::CCallsign &callsign) const override;
-            virtual bool updateAircraftRendered(const swift::misc::aviation::CCallsign &callsign, bool rendered) override;
-            virtual int updateMultipleAircraftRendered(const swift::misc::aviation::CCallsignSet &callsigns, bool rendered) override;
-            virtual int updateMultipleAircraftEnabled(const swift::misc::aviation::CCallsignSet &callsigns, bool enabled) override;
-            virtual int updateAircraftGroundElevation(const swift::misc::aviation::CCallsign &callsign, const swift::misc::geo::CElevationPlane &elevation, swift::misc::aviation::CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition) override;
+            virtual swift::misc::aviation::CAircraftSituationChangeList
+            remoteAircraftSituationChanges(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual int
+            remoteAircraftSituationChangesCount(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual bool updateAircraftRendered(const swift::misc::aviation::CCallsign &callsign,
+                                                bool rendered) override;
+            virtual int updateMultipleAircraftRendered(const swift::misc::aviation::CCallsignSet &callsigns,
+                                                       bool rendered) override;
+            virtual int updateMultipleAircraftEnabled(const swift::misc::aviation::CCallsignSet &callsigns,
+                                                      bool enabled) override;
+            virtual int updateAircraftGroundElevation(const swift::misc::aviation::CCallsign &callsign,
+                                                      const swift::misc::geo::CElevationPlane &elevation,
+                                                      swift::misc::aviation::CAircraftSituation::GndElevationInfo info,
+                                                      bool *setForOnGroundPosition) override;
             virtual void updateMarkAllAsNotRendered() override;
-            virtual swift::misc::physical_quantities::CLength getCGFromDB(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::physical_quantities::CLength
+            getCGFromDB(const swift::misc::aviation::CCallsign &callsign) const override;
             virtual swift::misc::physical_quantities::CLength getCGFromDB(const QString &modelString) const override;
-            virtual void rememberCGFromDB(const swift::misc::physical_quantities::CLength &cgFromDB, const swift::misc::aviation::CCallsign &callsign) override;
-            virtual void rememberCGFromDB(const swift::misc::physical_quantities::CLength &cgFromDB, const QString &modelString) override;
-            virtual swift::misc::simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
-            virtual swift::misc::geo::CElevationPlane averageElevationOfNonMovingAircraft(const swift::misc::aviation::CAircraftSituation &reference, const swift::misc::physical_quantities::CLength &range, int minValues = 1, int sufficientValues = 2) const override;
+            virtual void rememberCGFromDB(const swift::misc::physical_quantities::CLength &cgFromDB,
+                                          const swift::misc::aviation::CCallsign &callsign) override;
+            virtual void rememberCGFromDB(const swift::misc::physical_quantities::CLength &cgFromDB,
+                                          const QString &modelString) override;
+            virtual swift::misc::simulation::CAirspaceAircraftSnapshot
+            getLatestAirspaceAircraftSnapshot() const override;
+            virtual swift::misc::geo::CElevationPlane
+            averageElevationOfNonMovingAircraft(const swift::misc::aviation::CAircraftSituation &reference,
+                                                const swift::misc::physical_quantities::CLength &range,
+                                                int minValues = 1, int sufficientValues = 2) const override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::connectRemoteAircraftProviderSignals
             virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
                 QObject *receiver,
                 std::function<void(const swift::misc::aviation::CAircraftSituation &)> addedSituationSlot,
-                std::function<void(const swift::misc::aviation::CCallsign &, const swift::misc::aviation::CAircraftParts &)> addedPartsSlot,
+                std::function<void(const swift::misc::aviation::CCallsign &,
+                                   const swift::misc::aviation::CAircraftParts &)>
+                    addedPartsSlot,
                 std::function<void(const swift::misc::aviation::CCallsign &)> removedAircraftSlot,
-                std::function<void(const swift::misc::simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot) override;
+                std::function<void(const swift::misc::simulation::CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
+                override;
 
             // clientprovider
             virtual void setClients(const swift::misc::network::CClientList &clients) override;
             virtual void clearClients() override;
-            virtual swift::misc::network::CClient getClientOrDefaultForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::network::CClient
+            getClientOrDefaultForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
             virtual bool hasClientInfo(const swift::misc::aviation::CCallsign &callsign) const override;
             virtual bool addNewClient(const swift::misc::network::CClient &client) override;
-            virtual int updateOrAddClient(const swift::misc::aviation::CCallsign &callsign, const swift::misc::CPropertyIndexVariantMap &vm, bool skipEqualValues = true) override;
+            virtual int updateOrAddClient(const swift::misc::aviation::CCallsign &callsign,
+                                          const swift::misc::CPropertyIndexVariantMap &vm,
+                                          bool skipEqualValues = true) override;
             virtual int removeClient(const swift::misc::aviation::CCallsign &callsign) override;
-            virtual bool autoAdjustCientGndCapability(const swift::misc::aviation::CAircraftSituation &situation) override;
+            virtual bool
+            autoAdjustCientGndCapability(const swift::misc::aviation::CAircraftSituation &situation) override;
             virtual bool addClientGndCapability(const swift::misc::aviation::CCallsign &callsign) override;
-            virtual bool setClientGndCapability(const swift::misc::aviation::CCallsign &callsign, bool supportGndFlag) override;
+            virtual bool setClientGndCapability(const swift::misc::aviation::CCallsign &callsign,
+                                                bool supportGndFlag) override;
             virtual void markAsSwiftClient(const swift::misc::aviation::CCallsign &callsign) override;
 
             //! \copydoc IContextNetwork::connectRawFsdMessageSignal
-            virtual QMetaObject::Connection connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
+            virtual QMetaObject::Connection
+            connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) override;
 
             //! Gracefully shut down, e.g. for thread safety
             void gracefulShutdown();
@@ -159,38 +187,50 @@ namespace swift::core
 
             // emit signal when changed
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::updateAircraftEnabled
-            virtual bool updateAircraftEnabled(const swift::misc::aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual bool updateAircraftEnabled(const swift::misc::aviation::CCallsign &callsign,
+                                               bool enabledForRendering) override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::updateAircraftModel
-            virtual bool updateAircraftModel(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateAircraftModel(const swift::misc::aviation::CCallsign &callsign,
+                                             const swift::misc::simulation::CAircraftModel &model,
+                                             const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::updateAircraftNetworkModel
-            virtual bool updateAircraftNetworkModel(const swift::misc::aviation::CCallsign &callsign, const swift::misc::simulation::CAircraftModel &model, const swift::misc::CIdentifier &originator) override;
+            virtual bool updateAircraftNetworkModel(const swift::misc::aviation::CCallsign &callsign,
+                                                    const swift::misc::simulation::CAircraftModel &model,
+                                                    const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::updateFastPositionEnabled
-            virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
+            virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign,
+                                                   bool enableFastPositonUpdates) override;
 
             //! \copydoc swift::core::context::IContextNetwork::updateAircraftSupportingGndFLag
-            virtual bool updateAircraftSupportingGndFLag(const swift::misc::aviation::CCallsign &callsign, bool supportGndFlag) override;
+            virtual bool updateAircraftSupportingGndFLag(const swift::misc::aviation::CCallsign &callsign,
+                                                         bool supportGndFlag) override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::enableReverseLookupMessages
             virtual void enableReverseLookupMessages(swift::misc::simulation::ReverseLookupLogging enable) override;
 
             // plain vanilla passing to airspace monitor
             //! \copydoc swift::core::context::IContextNetwork::setAircraftEnabledFlag
-            virtual bool setAircraftEnabledFlag(const swift::misc::aviation::CCallsign &callsign, bool enabledForRendering) override;
+            virtual bool setAircraftEnabledFlag(const swift::misc::aviation::CCallsign &callsign,
+                                                bool enabledForRendering) override;
 
             //! \copydoc swift::core::context::IContextNetwork::reInitializeAllAircraft
             virtual int reInitializeAllAircraft() override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::updateCG
-            virtual bool updateCG(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CLength &cg) override;
+            virtual bool updateCG(const swift::misc::aviation::CCallsign &callsign,
+                                  const swift::misc::physical_quantities::CLength &cg) override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::updateCGForModel
-            virtual swift::misc::aviation::CCallsignSet updateCGForModel(const QString &modelString, const swift::misc::physical_quantities::CLength &cg) override;
+            virtual swift::misc::aviation::CCallsignSet
+            updateCGForModel(const QString &modelString, const swift::misc::physical_quantities::CLength &cg) override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::updateCGAndModelString
-            virtual bool updateCGAndModelString(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CLength &cg, const QString &modelString) override;
+            virtual bool updateCGAndModelString(const swift::misc::aviation::CCallsign &callsign,
+                                                const swift::misc::physical_quantities::CLength &cg,
+                                                const QString &modelString) override;
 
             //! \copydoc swift::core::context::IContextNetwork::getAircraftInRange
             virtual swift::misc::simulation::CSimulatedAircraftList getAircraftInRange() const override;
@@ -208,22 +248,27 @@ namespace swift::core
             virtual bool isVtolAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getAircraftInRangeForCallsign
-            virtual swift::misc::simulation::CSimulatedAircraft getAircraftInRangeForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::simulation::CSimulatedAircraft
+            getAircraftInRangeForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::getAircraftInRangeModelForCallsign
-            virtual swift::misc::simulation::CAircraftModel getAircraftInRangeModelForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::simulation::CAircraftModel
+            getAircraftInRangeModelForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getReverseLookupMessages
-            virtual swift::misc::CStatusMessageList getReverseLookupMessages(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::CStatusMessageList
+            getReverseLookupMessages(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::isReverseLookupMessagesEnabled
             virtual swift::misc::simulation::ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getAircraftPartsHistory
-            virtual swift::misc::CStatusMessageList getAircraftPartsHistory(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::CStatusMessageList
+            getAircraftPartsHistory(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getRemoteAircraftParts
-            virtual swift::misc::aviation::CAircraftPartsList getRemoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CAircraftPartsList
+            getRemoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::misc::simulation::IRemoteAircraftProvider::getRemoteAircraftSupportingPartsCount
             virtual int getRemoteAircraftSupportingPartsCount() const override;
@@ -232,7 +277,8 @@ namespace swift::core
             virtual bool isAircraftPartsHistoryEnabled() const override;
 
             //! \copydoc swift::core::context::IContextNetwork::isRemoteAircraftSupportingParts
-            virtual bool isRemoteAircraftSupportingParts(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual bool
+            isRemoteAircraftSupportingParts(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::enableAircraftPartsHistory
             virtual void enableAircraftPartsHistory(bool enabled) override;
@@ -256,7 +302,9 @@ namespace swift::core
             virtual bool setNetworkStatisticsEnable(bool enabled) override;
 
             //! \copydoc swift::core::context::IContextNetwork::testAddAltitudeOffset
-            virtual bool testAddAltitudeOffset(const swift::misc::aviation::CCallsign &callsign, const swift::misc::physical_quantities::CLength &offset = swift::misc::physical_quantities::CLength::null()) override;
+            virtual bool testAddAltitudeOffset(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::physical_quantities::CLength &offset =
+                                                   swift::misc::physical_quantities::CLength::null()) override;
 
             //! \copydoc swift::core::context::IContextNetwork::getNetworkPresetValues
             virtual QStringList getNetworkPresetValues() const override;
@@ -268,7 +316,8 @@ namespace swift::core
             virtual swift::misc::network::CClientList getClients() const override;
 
             //! \copydoc swift::misc::network::IClientProvider::getClientsForCallsigns
-            virtual swift::misc::network::CClientList getClientsForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
+            virtual swift::misc::network::CClientList
+            getClientsForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
 
             //! \copydoc swift::misc::network::IClientProvider::setOtherClient
             virtual bool setOtherClient(const swift::misc::network::CClient &client) override;
@@ -289,7 +338,8 @@ namespace swift::core
             //! .wallop message                        send wallop message
             //! </pre>
             //! \copydoc IContextNetwork::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine,
+                                          const swift::misc::CIdentifier &originator) override;
 
             //! Register help
             static void registerHelp()
@@ -298,9 +348,12 @@ namespace swift::core
                 swift::misc::CSimpleCommandParser::registerCommand({ ".m", "alias: .msg, .chat" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".m message text", "send text message" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".m callsign message text", "send text message" });
-                swift::misc::CSimpleCommandParser::registerCommand({ ".altos callsign|? offsetvalue", "set altitude offset value (testing), ?=all" });
-                swift::misc::CSimpleCommandParser::registerCommand({ ".addtimeos offsetvalue", "add (delta) time offset (testing), e.g. 50ms" });
-                swift::misc::CSimpleCommandParser::registerCommand({ ".watchdog on|off", "enable/disable network watchdog (testing)" });
+                swift::misc::CSimpleCommandParser::registerCommand(
+                    { ".altos callsign|? offsetvalue", "set altitude offset value (testing), ?=all" });
+                swift::misc::CSimpleCommandParser::registerCommand(
+                    { ".addtimeos offsetvalue", "add (delta) time offset (testing), e.g. 50ms" });
+                swift::misc::CSimpleCommandParser::registerCommand(
+                    { ".watchdog on|off", "enable/disable network watchdog (testing)" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".wallop message", "send a wallop message" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".reinit", "re-initialize all aircraft" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".enable", "alias: .unignore" });
@@ -310,22 +363,29 @@ namespace swift::core
             }
 
             //! \copydoc swift::core::context::IContextNetwork::getAtcStationsOnline
-            virtual swift::misc::aviation::CAtcStationList getAtcStationsOnline(bool recalculateDistance) const override;
+            virtual swift::misc::aviation::CAtcStationList
+            getAtcStationsOnline(bool recalculateDistance) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getClosestAtcStationsOnline
             virtual swift::misc::aviation::CAtcStationList getClosestAtcStationsOnline(int number) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getOnlineStationForCallsign
-            virtual swift::misc::aviation::CAtcStation getOnlineStationForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CAtcStation
+            getOnlineStationForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getOnlineStationsForFrequency
-            virtual swift::misc::aviation::CAtcStationList getOnlineStationsForFrequency(const swift::misc::physical_quantities::CFrequency &frequency) const override;
+            virtual swift::misc::aviation::CAtcStationList
+            getOnlineStationsForFrequency(const swift::misc::physical_quantities::CFrequency &frequency) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::isOnlineStation
             virtual bool isOnlineStation(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::connectToNetwork
-            virtual swift::misc::CStatusMessage connectToNetwork(const swift::misc::network::CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const swift::misc::aviation::CCallsign &partnerCallsign, swift::misc::network::CLoginMode mode) override;
+            virtual swift::misc::CStatusMessage
+            connectToNetwork(const swift::misc::network::CServer &server, const QString &extraLiveryString,
+                             bool sendLivery, const QString &extraModelString, bool sendModelString,
+                             const swift::misc::aviation::CCallsign &partnerCallsign,
+                             swift::misc::network::CLoginMode mode) override;
 
             //! \copydoc swift::core::context::IContextNetwork::getConnectedServer
             virtual swift::misc::network::CServer getConnectedServer() const override;
@@ -346,19 +406,23 @@ namespace swift::core
             virtual void sendFlightPlan(const swift::misc::aviation::CFlightPlan &flightPlan) override;
 
             //! \copydoc swift::core::context::IContextNetwork::loadFlightPlanFromNetwork
-            virtual swift::misc::aviation::CFlightPlan loadFlightPlanFromNetwork(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::aviation::CFlightPlan
+            loadFlightPlanFromNetwork(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getMetarForAirport
-            swift::misc::weather::CMetar getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &airportIcaoCode) const override;
+            swift::misc::weather::CMetar
+            getMetarForAirport(const swift::misc::aviation::CAirportIcaoCode &airportIcaoCode) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getUsers
             virtual swift::misc::network::CUserList getUsers() const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getUsersForCallsigns
-            virtual swift::misc::network::CUserList getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
+            virtual swift::misc::network::CUserList
+            getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getUserForCallsign
-            virtual swift::misc::network::CUser getUserForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::network::CUser
+            getUserForCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextNetwork::getVatsimFsdServers
             virtual swift::misc::network::CServerList getVatsimFsdServers() const override;
@@ -382,10 +446,13 @@ namespace swift::core
             virtual void testCreateDummyOnlineAtcStations(int number) override;
 
             //! \copydoc swift::core::context::IContextNetwork::testAddAircraftParts
-            virtual void testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts, bool incremental) override;
+            virtual void testAddAircraftParts(const swift::misc::aviation::CCallsign &callsign,
+                                              const swift::misc::aviation::CAircraftParts &parts,
+                                              bool incremental) override;
 
             //! \copydoc swift::core::context::IContextNetwork::testReceivedAtisMessage
-            virtual void testReceivedAtisMessage(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CInformationMessage &msg) override;
+            virtual void testReceivedAtisMessage(const swift::misc::aviation::CCallsign &callsign,
+                                                 const swift::misc::aviation::CInformationMessage &msg) override;
 
             //! \copydoc swift::core::context::IContextNetwork::testReceivedTextMessages
             virtual void testReceivedTextMessages(const swift::misc::network::CTextMessageList &textMessages) override;
@@ -407,15 +474,20 @@ namespace swift::core
             swift::misc::network::CLoginMode m_currentMode = swift::misc::network::CLoginMode::Pilot; //!< current modeM
             CAirspaceMonitor *m_airspace = nullptr;
             fsd::CFSDClient *m_fsdClient = nullptr;
-            QTimer *m_requestAircraftDataTimer = nullptr; //!< general updates such as frequencies, see requestAircraftDataUpdates()
+            QTimer *m_requestAircraftDataTimer =
+                nullptr; //!< general updates such as frequencies, see requestAircraftDataUpdates()
             QTimer *m_requestAtisTimer = nullptr; //!< general updates such as ATIS
             QTimer *m_staggeredMatchingTimer = nullptr; //!< staggered update
             int m_simulatorConnected = 0; //!< how often a simulator has been connected
             swift::misc::simulation::CSimulatorInfo m_lastConnectedSim; //!< last connected sim.
 
             // Digest signals, only sending after some time
-            swift::misc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 1000, 4 };
-            swift::misc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 1000, 4 };
+            swift::misc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline,
+                                                                      &IContextNetwork::changedAtcStationsOnlineDigest,
+                                                                      1000, 4 };
+            swift::misc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftInRange,
+                                                                     &IContextNetwork::changedAircraftInRangeDigest,
+                                                                     1000, 4 };
 
             QQueue<swift::misc::simulation::CSimulatedAircraft> m_readyForModelMatching; //!< ready for matching
 
@@ -423,7 +495,8 @@ namespace swift::core
             swift::misc::simulation::CSimulatedAircraft ownAircraft() const;
 
             //! Check if a callsign is a valid partner callsign
-            bool isValidPartnerCallsign(const swift::misc::aviation::CCallsign &ownCallsign, const swift::misc::aviation::CCallsign &partnerCallsign);
+            bool isValidPartnerCallsign(const swift::misc::aviation::CCallsign &ownCallsign,
+                                        const swift::misc::aviation::CCallsign &partnerCallsign);
 
             //! Update METAR collection
             void updateMetars(const swift::misc::weather::CMetarList &metars);
@@ -438,7 +511,8 @@ namespace swift::core
             void onChangedAtisReceived(const swift::misc::aviation::CCallsign &callsign);
 
             //! Connection status changed
-            void onFsdConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+            void onFsdConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                              const swift::misc::network::CConnectionStatus &to);
 
             //! Ready for matching
             void onReadyForModelMatching(const swift::misc::simulation::CSimulatedAircraft &aircraft);
@@ -447,12 +521,16 @@ namespace swift::core
             void emitReadyForMatching();
 
             //! Relay to partner callsign
-            void createRelayMessageToPartnerCallsign(const swift::misc::network::CTextMessage &textMessage, const swift::misc::aviation::CCallsign &partnerCallsign, swift::misc::network::CTextMessageList &relayedMessages);
+            void createRelayMessageToPartnerCallsign(const swift::misc::network::CTextMessage &textMessage,
+                                                     const swift::misc::aviation::CCallsign &partnerCallsign,
+                                                     swift::misc::network::CTextMessageList &relayedMessages);
 
             //! Render restrictions have been changed, used with analyzer
             //! \sa CAirspaceAnalyzer
             //! \ingroup crosscontextfunction
-            void xCtxSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const swift::misc::physical_quantities::CLength &maxRenderedDistance);
+            void xCtxSimulatorRenderRestrictionsChanged(
+                bool restricted, bool enabled, int maxAircraft,
+                const swift::misc::physical_quantities::CLength &maxRenderedDistance);
 
             //! Status of simulator changed
             //! \ingroup crosscontextfunction

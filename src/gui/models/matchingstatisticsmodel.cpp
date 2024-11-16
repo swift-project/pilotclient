@@ -11,7 +11,8 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::models
 {
-    CMatchingStatisticsModel::CMatchingStatisticsModel(MatchingStatisticsMode mode, QObject *parent) : CListModelBase("MatchingStatisticsModel", parent)
+    CMatchingStatisticsModel::CMatchingStatisticsModel(MatchingStatisticsMode mode, QObject *parent)
+        : CListModelBase("MatchingStatisticsModel", parent)
     {
         this->setMode(mode);
 
@@ -42,8 +43,7 @@ namespace swift::gui::models
             m_columns.addColumn(CColumn::standardInteger("#", "count", CMatchingStatisticsEntry::IndexCount));
             m_columns.addColumn(CColumn::standardString("description", CMatchingStatisticsEntry::IndexDescription));
             break;
-        default:
-            break;
+        default: break;
         }
         this->setSortColumnByPropertyIndex(CMatchingStatisticsEntry::IndexAircraftDesignator);
     }

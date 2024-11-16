@@ -100,10 +100,7 @@ namespace swift::gui::views
         return c;
     }
 
-    void CViewBaseNonTemplate::resizeToContents()
-    {
-        this->performModeBasedResizeToContent();
-    }
+    void CViewBaseNonTemplate::resizeToContents() { this->performModeBasedResizeToContent(); }
 
     void CViewBaseNonTemplate::setFilterWidgetImpl(QWidget *filterWidget)
     {
@@ -131,7 +128,8 @@ namespace swift::gui::views
         this->setFilterWidgetImpl(filterDialog);
         if (filterDialog)
         {
-            const bool s = connect(filterDialog, &CFilterDialog::finished, this, &CViewBaseNonTemplate::filterDialogFinished);
+            const bool s =
+                connect(filterDialog, &CFilterDialog::finished, this, &CViewBaseNonTemplate::filterDialogFinished);
             Q_ASSERT_X(s, Q_FUNC_INFO, "filter dialog connect");
             Q_UNUSED(s);
         }
@@ -143,18 +141,17 @@ namespace swift::gui::views
         this->setFilterWidgetImpl(filterWidget);
         if (filterWidget)
         {
-            bool s = connect(filterWidget, &CFilterWidget::changeFilter, this, &CViewBaseNonTemplate::filterWidgetChangedFilter, Qt::QueuedConnection);
+            bool s = connect(filterWidget, &CFilterWidget::changeFilter, this,
+                             &CViewBaseNonTemplate::filterWidgetChangedFilter, Qt::QueuedConnection);
             Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect changeFilter");
-            s = connect(this, &CViewBaseNonTemplate::modelDataChanged, filterWidget, &CFilterWidget::onRowCountChanged, Qt::QueuedConnection);
+            s = connect(this, &CViewBaseNonTemplate::modelDataChanged, filterWidget, &CFilterWidget::onRowCountChanged,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(s, Q_FUNC_INFO, "filter connect modelDataChanged");
             Q_UNUSED(s);
         }
     }
 
-    void CViewBaseNonTemplate::enableLoadIndicator(bool enable)
-    {
-        m_enabledLoadIndicator = enable;
-    }
+    void CViewBaseNonTemplate::enableLoadIndicator(bool enable) { m_enabledLoadIndicator = enable; }
 
     bool CViewBaseNonTemplate::isShowingLoadIndicator() const
     {
@@ -167,14 +164,12 @@ namespace swift::gui::views
         QTableView::setSelectionModel(model);
         if (this->selectionModel())
         {
-            connect(this->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &CViewBaseNonTemplate::onRowSelected);
+            connect(this->selectionModel(), &QItemSelectionModel::currentRowChanged, this,
+                    &CViewBaseNonTemplate::onRowSelected);
         }
     }
 
-    QWidget *CViewBaseNonTemplate::mainApplicationWindowWidget() const
-    {
-        return CGuiUtility::mainApplicationWidget();
-    }
+    QWidget *CViewBaseNonTemplate::mainApplicationWindowWidget() const { return CGuiUtility::mainApplicationWidget(); }
 
     CStatusMessage CViewBaseNonTemplate::showFileLoadDialog(const QString &directory)
     {
@@ -223,31 +218,38 @@ namespace swift::gui::views
         {
             static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestUpdate);
             if (!this->isSignalConnected(requestSignal)) break;
-            ma.addAction(CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::triggerReload });
+            ma.addAction(CIcons::refresh16(), "Update", CMenuAction::pathViewUpdates(),
+                         { this, &CViewBaseNonTemplate::triggerReload });
             break;
         }
         case MenuBackend:
         {
-            static const QMetaMethod requestSignal = QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestNewBackendData);
+            static const QMetaMethod requestSignal =
+                QMetaMethod::fromSignal(&CViewBaseNonTemplate::requestNewBackendData);
             if (!this->isSignalConnected(requestSignal)) break;
-            ma.addAction(CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::triggerReloadFromBackend });
+            ma.addAction(CIcons::refresh16(), "Reload from backend", CMenuAction::pathViewUpdates(),
+                         { this, &CViewBaseNonTemplate::triggerReloadFromBackend });
             break;
         }
         case MenuDisplayAutomatically:
         {
-            QAction *a = ma.addAction(CIcons::appMappings16(), "Automatically display (when loaded)", CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::toggleAutoDisplay });
+            QAction *a =
+                ma.addAction(CIcons::appMappings16(), "Automatically display (when loaded)",
+                             CMenuAction::pathViewUpdates(), { this, &CViewBaseNonTemplate::toggleAutoDisplay });
             a->setCheckable(true);
             a->setChecked(this->displayAutomatically());
             break;
         }
         case MenuRemoveSelectedRows:
         {
-            ma.addAction(CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::removeSelectedRowsChecked }, CShortcut::keyDelete());
+            ma.addAction(CIcons::delete16(), "Remove selected rows", CMenuAction::pathViewAddRemove(),
+                         { this, &CViewBaseNonTemplate::removeSelectedRowsChecked }, CShortcut::keyDelete());
             break;
         }
         case MenuClear:
         {
-            ma.addAction(CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(), { this, &CViewBaseNonTemplate::clear });
+            ma.addAction(CIcons::delete16(), "Clear", CMenuAction::pathViewAddRemove(),
+                         { this, &CViewBaseNonTemplate::clear });
             break;
         }
         case MenuFilter:
@@ -255,27 +257,38 @@ namespace swift::gui::views
             if (m_filterWidget)
             {
                 const bool dialog = qobject_cast<QDialog *>(m_filterWidget);
-                if (dialog) ma.addAction(CIcons::filter16(), "Show filter " + CShortcut::toParenthesisString(CShortcut::keyDisplayFilter()), CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::displayFilterDialog }, CShortcut::keyDisplayFilter());
-                ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::removeFilter });
+                if (dialog)
+                    ma.addAction(CIcons::filter16(),
+                                 "Show filter " + CShortcut::toParenthesisString(CShortcut::keyDisplayFilter()),
+                                 CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::displayFilterDialog },
+                                 CShortcut::keyDisplayFilter());
+                ma.addAction(CIcons::filter16(), "Remove Filter", CMenuAction::pathViewFilter(),
+                             { this, &CViewBaseNonTemplate::removeFilter });
             }
             break;
         }
         case MenuMaterializeFilter:
         {
-            ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(), { this, &CViewBaseNonTemplate::materializeFilter });
+            ma.addAction(CIcons::tableRelationship16(), "Materialize filtered data", CMenuAction::pathViewFilter(),
+                         { this, &CViewBaseNonTemplate::materializeFilter });
             break;
         }
         case MenuLoad:
         {
-            ma.addAction(CIcons::disk16(), "Load from file ", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::loadJsonAction });
+            ma.addAction(CIcons::disk16(), "Load from file ", CMenuAction::pathViewLoadSave(),
+                         { this, &CViewBaseNonTemplate::loadJsonAction });
             break;
         }
         case MenuSave:
         {
-            ma.addAction(CIcons::disk16(), "Save data in file " + CShortcut::toParenthesisString(CShortcut::keySaveViews()), CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction }, CShortcut::keySaveViews());
+            ma.addAction(CIcons::disk16(),
+                         "Save data in file " + CShortcut::toParenthesisString(CShortcut::keySaveViews()),
+                         CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveJsonAction },
+                         CShortcut::keySaveViews());
             if (this->hasSelection())
             {
-                ma.addAction(CIcons::disk16(), "Save selected data in file", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::saveSelectedJsonAction });
+                ma.addAction(CIcons::disk16(), "Save selected data in file", CMenuAction::pathViewLoadSave(),
+                             { this, &CViewBaseNonTemplate::saveSelectedJsonAction });
                 break;
             }
             break;
@@ -283,23 +296,25 @@ namespace swift::gui::views
         case MenuCut:
         {
             if (!QApplication::clipboard()) break;
-            ma.addAction(CIcons::cut16(), "Cut", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::cut }, QKeySequence(QKeySequence::Paste));
+            ma.addAction(CIcons::cut16(), "Cut", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::cut },
+                         QKeySequence(QKeySequence::Paste));
             break;
         }
         case MenuPaste:
         {
             if (!QApplication::clipboard()) break;
-            ma.addAction(CIcons::paste16(), "Paste", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::paste }, QKeySequence(QKeySequence::Paste));
+            ma.addAction(CIcons::paste16(), "Paste", CMenuAction::pathViewCutPaste(),
+                         { this, &CViewBaseNonTemplate::paste }, QKeySequence(QKeySequence::Paste));
             break;
         }
         case MenuCopy:
         {
             if (!QApplication::clipboard()) break;
-            ma.addAction(CIcons::copy16(), "Copy", CMenuAction::pathViewCutPaste(), { this, &CViewBaseNonTemplate::copy }, QKeySequence(QKeySequence::Copy));
+            ma.addAction(CIcons::copy16(), "Copy", CMenuAction::pathViewCutPaste(),
+                         { this, &CViewBaseNonTemplate::copy }, QKeySequence(QKeySequence::Copy));
             break;
         }
-        default:
-            break;
+        default: break;
         }
         m_menuFlagActions.insert(menu, ma);
         return ma;
@@ -338,10 +353,7 @@ namespace swift::gui::views
 
     components::CTextEditDialog *CViewBaseNonTemplate::textEditDialog()
     {
-        if (!m_textEditDialog)
-        {
-            m_textEditDialog = new CTextEditDialog(this);
-        }
+        if (!m_textEditDialog) { m_textEditDialog = new CTextEditDialog(this); }
         return m_textEditDialog;
     }
 
@@ -356,7 +368,8 @@ namespace swift::gui::views
         if (m_showingLoadIndicator)
         {
             // just in case, if this ever will be dangling
-            menuActions.addAction(CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr, { this, &CViewBaseNonTemplate::hideLoadIndicatorForced });
+            menuActions.addAction(CIcons::preloader16(), "Hide load indicator", CMenuAction::pathViewUpdates(), nullptr,
+                                  { this, &CViewBaseNonTemplate::hideLoadIndicatorForced });
         }
 
         if (m_menus.testFlag(MenuClear)) { menuActions.addActions(this->initMenuActions(MenuClear)); }
@@ -368,10 +381,7 @@ namespace swift::gui::views
         }
         if (m_menus.testFlag(MenuRemoveSelectedRows))
         {
-            if (this->hasSelection())
-            {
-                menuActions.addActions(this->initMenuActions(MenuRemoveSelectedRows));
-            }
+            if (this->hasSelection()) { menuActions.addActions(this->initMenuActions(MenuRemoveSelectedRows)); }
         }
 
         if (m_menus.testFlag(MenuCopy)) { menuActions.addActions(this->initMenuActions(MenuCopy)); }
@@ -395,27 +405,34 @@ namespace swift::gui::views
         const SelectionMode sm = this->selectionMode();
         if (sm == MultiSelection || sm == ExtendedSelection)
         {
-            menuActions.addAction("Select all", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::selectAll }, CShortcut::keySelectAll());
+            menuActions.addAction("Select all", CMenuAction::pathViewSelection(), nullptr,
+                                  { this, &CViewBaseNonTemplate::selectAll }, CShortcut::keySelectAll());
         }
         if (sm != NoSelection)
         {
-            menuActions.addAction("Clear selection " + CShortcut::toParenthesisString(CShortcut::keyClearSelection()), CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::clearSelection }, CShortcut::keyClearSelection());
+            menuActions.addAction("Clear selection " + CShortcut::toParenthesisString(CShortcut::keyClearSelection()),
+                                  CMenuAction::pathViewSelection(), nullptr,
+                                  { this, &CViewBaseNonTemplate::clearSelection }, CShortcut::keyClearSelection());
         }
-        if ((m_originalSelectionMode == MultiSelection || m_originalSelectionMode == ExtendedSelection) && m_menus.testFlag(MenuToggleSelectionMode))
+        if ((m_originalSelectionMode == MultiSelection || m_originalSelectionMode == ExtendedSelection) &&
+            m_menus.testFlag(MenuToggleSelectionMode))
         {
             if (sm != MultiSelection)
             {
-                menuActions.addAction("Switch to multi selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::setMultiSelection });
+                menuActions.addAction("Switch to multi selection", CMenuAction::pathViewSelection(), nullptr,
+                                      { this, &CViewBaseNonTemplate::setMultiSelection });
             }
 
             if (sm != ExtendedSelection)
             {
-                menuActions.addAction("Switch to extended selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::setExtendedSelection });
+                menuActions.addAction("Switch to extended selection", CMenuAction::pathViewSelection(), nullptr,
+                                      { this, &CViewBaseNonTemplate::setExtendedSelection });
             }
 
             if (sm != SingleSelection)
             {
-                menuActions.addAction("Switch to single selection", CMenuAction::pathViewSelection(), nullptr, { this, &CViewBaseNonTemplate::setSingleSelection });
+                menuActions.addAction("Switch to single selection", CMenuAction::pathViewSelection(), nullptr,
+                                      { this, &CViewBaseNonTemplate::setSingleSelection });
             }
         }
 
@@ -424,7 +441,9 @@ namespace swift::gui::views
         if (m_menus.testFlag(MenuSave) && !isEmpty()) { menuActions.addActions(this->initMenuActions(MenuSave)); }
 
         // resizing
-        menuActions.addAction(CIcons::resize16(), "&Resize " + CShortcut::toParenthesisString(CShortcut::keyResizeView()), CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::presizeOrFullResizeToContents });
+        menuActions.addAction(
+            CIcons::resize16(), "&Resize " + CShortcut::toParenthesisString(CShortcut::keyResizeView()),
+            CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::presizeOrFullResizeToContents });
 
         // resize to content might decrease performance,
         // so I only allow changing to "content resizing" if size matches
@@ -435,35 +454,45 @@ namespace swift::gui::views
         // when not set to auto, then lets set how we want to resize rows
         // for auto this is too slow
         // const bool ww = this->wordWrap();
-        QAction *resizeRowsAction = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows to content", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::resizeRowsToContents });
-        resizeRowsAction->setEnabled(true); // as changing from word wraap to none word wrap can leave to high columns, we always enable this
+        QAction *resizeRowsAction =
+            menuActions.addAction(CIcons::resizeVertical16(), "Resize rows to content", CMenuAction::pathViewResize(),
+                                  nullptr, { this, &CViewBaseNonTemplate::resizeRowsToContents });
+        resizeRowsAction->setEnabled(
+            true); // as changing from word wraap to none word wrap can leave to high columns, we always enable this
 
         /**
-        QAction *a1 = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows to content (auto), can be slow", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToContent });
+        QAction *a1 = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows to content (auto), can be slow",
+        CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToContent });
         a1->setEnabled(ww && m_rowResizeMode == Interactive && enabled && !autoResize);
-        QAction *a2 = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows interactively", CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
+        QAction *a2 = menuActions.addAction(CIcons::resizeVertical16(), "Resize rows interactively",
+        CMenuAction::pathViewResize(), nullptr, { this, &CViewBaseNonTemplate::rowsResizeModeToInteractive });
         a2->setEnabled(ww && m_rowResizeMode == Content && !autoResize);
         **/
 
         // export actions, display in text edit
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            menuActions.addAction(CIcons::tableSheet16(), "Display as JSON", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::displayJsonPopup });
+            menuActions.addAction(CIcons::tableSheet16(), "Display as JSON", CMenuAction::pathViewLoadSave(),
+                                  { this, &CViewBaseNonTemplate::displayJsonPopup });
             if (this->hasSelection())
             {
-                menuActions.addAction(CIcons::tableSheet16(), "Display selected as JSON", CMenuAction::pathViewLoadSave(), { this, &CViewBaseNonTemplate::displaySelectedJsonPopup });
+                menuActions.addAction(CIcons::tableSheet16(), "Display selected as JSON",
+                                      CMenuAction::pathViewLoadSave(),
+                                      { this, &CViewBaseNonTemplate::displaySelectedJsonPopup });
                 ;
             }
         }
 
-        QAction *actionInteractiveResize = menuActions.addAction(CIcons::viewTile(), "Resize (auto)", CMenuAction::pathViewResize(), nullptr);
+        QAction *actionInteractiveResize =
+            menuActions.addAction(CIcons::viewTile(), "Resize (auto)", CMenuAction::pathViewResize(), nullptr);
         actionInteractiveResize->setObjectName(this->objectName().append("ActionResizing"));
         actionInteractiveResize->setCheckable(true);
         actionInteractiveResize->setChecked(autoResize);
         actionInteractiveResize->setEnabled(enabled);
         connect(actionInteractiveResize, &QAction::toggled, this, &CViewBaseNonTemplate::toggleResizeMode);
 
-        QAction *actionWordWrap = menuActions.addAction(CIcons::viewMultiColumn(), "Word wrap (multiline)", CMenuAction::pathViewResize(), nullptr);
+        QAction *actionWordWrap = menuActions.addAction(CIcons::viewMultiColumn(), "Word wrap (multiline)",
+                                                        CMenuAction::pathViewResize(), nullptr);
         actionWordWrap->setObjectName(this->objectName().append("ActionResizing"));
         actionWordWrap->setCheckable(true);
         actionWordWrap->setChecked(this->wordWrap());
@@ -488,16 +517,14 @@ namespace swift::gui::views
         return h;
     }
 
-    bool CViewBaseNonTemplate::hasSelection() const
-    {
-        return this->selectionModel()->hasSelection();
-    }
+    bool CViewBaseNonTemplate::hasSelection() const { return this->selectionModel()->hasSelection(); }
 
     QModelIndexList CViewBaseNonTemplate::selectedRows() const
     {
         // make sure this is ordered by row and wee keep the same order as in unselectedRows
         // if we'd know for sure the indexes are always sorted we can remove the sorting here
-        // Qt docu selectedIndexes: Returns a list of all selected model item indexes. The list contains no duplicates, and is not sorted.
+        // Qt docu selectedIndexes: Returns a list of all selected model item indexes. The list contains no duplicates,
+        // and is not sorted.
         QModelIndexList indexes = this->selectionModel()->selectedRows();
         std::sort(indexes.begin(), indexes.end());
         return indexes;
@@ -525,10 +552,7 @@ namespace swift::gui::views
         this->clearSelection();
         QItemSelection selectedItems;
         const int columns = this->model()->columnCount() - 1;
-        for (int r : rows)
-        {
-            selectedItems.select(this->model()->index(r, 0), this->model()->index(r, columns));
-        }
+        for (int r : rows) { selectedItems.select(this->model()->index(r, 0), this->model()->index(r, columns)); }
         this->selectionModel()->select(selectedItems, QItemSelectionModel::Select);
         return selectedItems.size();
     }
@@ -539,20 +563,11 @@ namespace swift::gui::views
         return this->selectedRows().count();
     }
 
-    int CViewBaseNonTemplate::unselectedRowCount() const
-    {
-        return this->rowCount() - this->selectedRowCount();
-    }
+    int CViewBaseNonTemplate::unselectedRowCount() const { return this->rowCount() - this->selectedRowCount(); }
 
-    bool CViewBaseNonTemplate::hasSingleSelectedRow() const
-    {
-        return this->selectedRowCount() == 1;
-    }
+    bool CViewBaseNonTemplate::hasSingleSelectedRow() const { return this->selectedRowCount() == 1; }
 
-    bool CViewBaseNonTemplate::hasMultipleSelectedRows() const
-    {
-        return this->selectedRowCount() > 1;
-    }
+    bool CViewBaseNonTemplate::hasMultipleSelectedRows() const { return this->selectedRowCount() > 1; }
 
     bool CViewBaseNonTemplate::allowsMultipleSelectedRows() const
     {
@@ -577,9 +592,7 @@ namespace swift::gui::views
         {
         case Interactive: this->rowsResizeModeToInteractive(); break;
         case Content: this->rowsResizeModeToContent(); break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "wrong resize mode");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong resize mode"); break;
         }
 
         // call this deferred, otherwise the values are overridden with any values
@@ -596,7 +609,8 @@ namespace swift::gui::views
         // some logic to find a useful default name
         if (load)
         {
-            return CFileUtils::appendFilePaths(this->getRememberedLastJsonDirectory(), CFileUtils::jsonWildcardAppendix());
+            return CFileUtils::appendFilePaths(this->getRememberedLastJsonDirectory(),
+                                               CFileUtils::jsonWildcardAppendix());
         }
 
         // Save file path
@@ -605,34 +619,19 @@ namespace swift::gui::views
         if (name.isEmpty())
         {
             // create a name
-            if (this->getDockWidgetInfoArea())
-            {
-                name = this->getDockWidgetInfoArea()->windowTitle();
-            }
-            else
-            {
-                name = this->metaObject()->className();
-            }
+            if (this->getDockWidgetInfoArea()) { name = this->getDockWidgetInfoArea()->windowTitle(); }
+            else { name = this->metaObject()->className(); }
         }
-        if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive))
-        {
-            name += CFileUtils::jsonAppendix();
-        }
+        if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive)) { name += CFileUtils::jsonAppendix(); }
         return CFileUtils::appendFilePaths(dir, name);
     }
 
-    void CViewBaseNonTemplate::menuRemoveItems(Menu menusToRemove)
-    {
-        m_menus &= (~menusToRemove);
-    }
+    void CViewBaseNonTemplate::menuRemoveItems(Menu menusToRemove) { m_menus &= (~menusToRemove); }
 
     void CViewBaseNonTemplate::menuAddItems(Menu menusToAdd)
     {
         m_menus |= menusToAdd;
-        if (menusToAdd.testFlag(MenuRemoveSelectedRows))
-        {
-            m_enableDeleteSelectedRows = true;
-        }
+        if (menusToAdd.testFlag(MenuRemoveSelectedRows)) { m_enableDeleteSelectedRows = true; }
     }
 
     void CViewBaseNonTemplate::displayFilterDialog()
@@ -646,10 +645,7 @@ namespace swift::gui::views
     {
         if (!m_menus.testFlag(MenuLoad)) { return; }
         const CStatusMessage m = this->loadJson();
-        if (!m.isEmpty())
-        {
-            CLogMessage::preformatted(m);
-        }
+        if (!m.isEmpty()) { CLogMessage::preformatted(m); }
     }
 
     void CViewBaseNonTemplate::saveJsonAction()
@@ -657,10 +653,7 @@ namespace swift::gui::views
         if (this->isEmpty()) { return; }
         if (!m_menus.testFlag(MenuSave)) { return; }
         const CStatusMessage m = this->saveJson(false);
-        if (!m.isEmpty())
-        {
-            CLogMessage::preformatted(m);
-        }
+        if (!m.isEmpty()) { CLogMessage::preformatted(m); }
     }
 
     void CViewBaseNonTemplate::saveSelectedJsonAction()
@@ -668,10 +661,7 @@ namespace swift::gui::views
         if (this->isEmpty()) { return; }
         if (!m_menus.testFlag(MenuSave)) { return; }
         const CStatusMessage m = this->saveJson(true);
-        if (!m.isEmpty())
-        {
-            CLogMessage::preformatted(m);
-        }
+        if (!m.isEmpty()) { CLogMessage::preformatted(m); }
     }
 
     void CViewBaseNonTemplate::triggerReload()
@@ -686,10 +676,7 @@ namespace swift::gui::views
         emit this->requestNewBackendData();
     }
 
-    void CViewBaseNonTemplate::onModelChanged()
-    {
-        this->updateSortIndicator();
-    }
+    void CViewBaseNonTemplate::onModelChanged() { this->updateSortIndicator(); }
 
     void CViewBaseNonTemplate::rowsResizeModeToInteractive()
     {
@@ -705,10 +692,7 @@ namespace swift::gui::views
     void CViewBaseNonTemplate::showVerticalHeader()
     {
         QHeaderView *verticalHeader = this->verticalHeader();
-        verticalHeader->setVisible(
-            this->wordWrap() &&
-            m_resizeMode != ResizingAuto &&
-            m_rowResizeMode == Interactive);
+        verticalHeader->setVisible(this->wordWrap() && m_resizeMode != ResizingAuto && m_rowResizeMode == Interactive);
         verticalHeader->setFixedWidth(16);
     }
 
@@ -723,14 +707,8 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::rowsResizeModeBasedOnThreshold(int elements)
     {
-        if (elements > ResizeRowsToContentThreshold)
-        {
-            this->rowsResizeModeToInteractive();
-        }
-        else
-        {
-            this->rowsResizeModeToContent();
-        }
+        if (elements > ResizeRowsToContentThreshold) { this->rowsResizeModeToInteractive(); }
+        else { this->rowsResizeModeToContent(); }
     }
 
     int CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, int timeoutMs, bool processEvents)
@@ -757,7 +735,8 @@ namespace swift::gui::views
             connect(m_loadIndicator, &CLoadIndicator::timedOut, this, &CViewBaseNonTemplate::onLoadIndicatorTimedOut);
         }
         this->centerLoadIndicator();
-        return m_loadIndicator->startAnimation(timeoutMs > 0 ? timeoutMs : m_loadIndicatorTimeoutMsDefault, processEvents);
+        return m_loadIndicator->startAnimation(timeoutMs > 0 ? timeoutMs : m_loadIndicatorTimeoutMsDefault,
+                                               processEvents);
     }
 
     int CViewBaseNonTemplate::showLoadIndicatorWithTimeout(int timeoutMs, bool processEvents)
@@ -866,10 +845,7 @@ namespace swift::gui::views
         menu.exec(globalPos);
     }
 
-    void CViewBaseNonTemplate::onLoadIndicatorTimedOut()
-    {
-        m_showingLoadIndicator = false;
-    }
+    void CViewBaseNonTemplate::onLoadIndicatorTimedOut() { m_showingLoadIndicator = false; }
 
     void CViewBaseNonTemplate::toggleResizeMode(bool checked)
     {
@@ -879,10 +855,7 @@ namespace swift::gui::views
             // make sure not use this one here
             this->rowsResizeModeToInteractive();
         }
-        else
-        {
-            this->showVerticalHeader();
-        }
+        else { this->showVerticalHeader(); }
     }
 
     void CViewBaseNonTemplate::toggleWordWrap(bool checked)
@@ -904,25 +877,16 @@ namespace swift::gui::views
         m_displayAutomatically = a->isChecked();
     }
 
-    void CViewBaseNonTemplate::setSingleSelection()
-    {
-        this->setSelectionMode(SingleSelection);
-    }
+    void CViewBaseNonTemplate::setSingleSelection() { this->setSelectionMode(SingleSelection); }
 
     void CViewBaseNonTemplate::setExtendedSelection()
     {
-        if (this->allowsMultipleSelectedRows())
-        {
-            this->setSelectionMode(ExtendedSelection);
-        }
+        if (this->allowsMultipleSelectedRows()) { this->setSelectionMode(ExtendedSelection); }
     }
 
     void CViewBaseNonTemplate::setMultiSelection()
     {
-        if (this->allowsMultipleSelectedRows())
-        {
-            this->setSelectionMode(MultiSelection);
-        }
+        if (this->allowsMultipleSelectedRows()) { this->setSelectionMode(MultiSelection); }
     }
 
     void CViewBaseNonTemplate::removeSelectedRowsChecked()

@@ -27,7 +27,9 @@ namespace swift::misc::simulation::flightgear
         static QString flightgearRootDir;
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
-            QSettings flightgearRegistry("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlightGear_is1", QSettings::NativeFormat);
+            QSettings flightgearRegistry(
+                "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlightGear_is1",
+                QSettings::NativeFormat);
             flightgearRootDir = flightgearRegistry.value("InstallLocation").toString().trimmed();
         }
         return flightgearRootDir;
@@ -44,7 +46,8 @@ namespace swift::misc::simulation::flightgear
         QStringList dirs;
         if (CBuildConfig::isRunningOnWindowsNtPlatform() && !simulatorDir.isEmpty())
         {
-            QString terraSyncFolder = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Flightgear/Aircraft";
+            QString terraSyncFolder =
+                QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Flightgear/Aircraft";
             if (QDir(terraSyncFolder).exists()) { dirs.append(terraSyncFolder); }
             QString fgdataAIFolder = simulatorDir + "data/AI/Aircraft";
             if (QDir(fgdataAIFolder).exists()) { dirs.append(fgdataAIFolder); }
@@ -54,7 +57,8 @@ namespace swift::misc::simulation::flightgear
 
     const QStringList &CFlightgearUtil::flightgearModelDirectories()
     {
-        static const QStringList dirs = flightgearRootDir().isEmpty() ? QStringList() : modelDirectoriesFromSimDir(flightgearRootDir());
+        static const QStringList dirs =
+            flightgearRootDir().isEmpty() ? QStringList() : modelDirectoriesFromSimDir(flightgearRootDir());
         return dirs;
     }
 

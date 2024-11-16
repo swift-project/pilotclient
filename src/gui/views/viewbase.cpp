@@ -31,10 +31,7 @@ namespace swift::gui::views
     CViewBase<T>::CViewBase(QWidget *parent, ModelClass *model) : CViewBaseNonTemplate(parent), m_model(model)
     {
         this->setSortingEnabled(true);
-        if (model)
-        {
-            this->standardInit(model);
-        }
+        if (model) { this->standardInit(model); }
     }
 
     template <class T>
@@ -51,11 +48,13 @@ namespace swift::gui::views
         // we have data
         this->showLoadIndicator(container.size());
         const bool reallyResize = resize && isResizeConditionMet(container.size()); // do we really perform resizing
-        bool presize = (m_resizeMode == PresizeSubset) &&
-                       this->isEmpty() && // only when no data yet
+        bool presize = (m_resizeMode == PresizeSubset) && this->isEmpty() && // only when no data yet
                        !reallyResize; // not when we resize later
-        presize = presize || (this->isEmpty() && resize && !reallyResize); // we presize if we wanted to resize but actually do not because of condition
-        const bool presizeThresholdReached = presize && container.size() > ResizeSubsetThreshold; // only when size making sense
+        presize =
+            presize || (this->isEmpty() && resize &&
+                        !reallyResize); // we presize if we wanted to resize but actually do not because of condition
+        const bool presizeThresholdReached =
+            presize && container.size() > ResizeSubsetThreshold; // only when size making sense
 
         // when we will not resize, we might presize
         if (presizeThresholdReached)
@@ -117,19 +116,13 @@ namespace swift::gui::views
     template <class T>
     void CViewBase<T>::updateContainerMaybeAsync(const ContainerType &container, bool sort, bool resize)
     {
-        if (container.isEmpty())
-        {
-            this->clear();
-        }
+        if (container.isEmpty()) { this->clear(); }
         else if (container.size() > ASyncRowsCountThreshold && sort)
         {
             // larger container with sorting
             this->updateContainerAsync(container, sort, resize);
         }
-        else
-        {
-            this->updateContainer(container, sort, resize);
-        }
+        else { this->updateContainer(container, sort, resize); }
     }
 
     template <class T>
@@ -249,10 +242,7 @@ namespace swift::gui::views
         if (!this->hasSelection()) { return ContainerType(); }
         ContainerType c;
         const QModelIndexList indexes = this->selectedRows();
-        for (const QModelIndex &i : indexes)
-        {
-            c.push_back(this->at(i));
-        }
+        for (const QModelIndex &i : indexes) { c.push_back(this->at(i)); }
         return c;
     }
 
@@ -262,24 +252,15 @@ namespace swift::gui::views
         if (!this->hasSelection()) { return this->containerOrFilteredContainer(); }
         ContainerType c;
         const QModelIndexList indexes = this->unselectedRows();
-        for (const QModelIndex &i : indexes)
-        {
-            c.push_back(this->at(i));
-        }
+        for (const QModelIndex &i : indexes) { c.push_back(this->at(i)); }
         return c;
     }
 
     template <class T>
     typename CViewBase<T>::ObjectType CViewBase<T>::firstSelectedOrDefaultObject() const
     {
-        if (this->hasSelection())
-        {
-            return this->selectedObjects().front();
-        }
-        if (this->rowCount() < 2)
-        {
-            return this->containerOrFilteredContainer().frontOrDefault();
-        }
+        if (this->hasSelection()) { return this->selectedObjects().front(); }
+        if (this->rowCount() < 2) { return this->containerOrFilteredContainer().frontOrDefault(); }
 
         // too many, not selected
         return ObjectType();
@@ -305,22 +286,13 @@ namespace swift::gui::views
             ObjectType obj(this->at(i));
 
             // update all properties in map
-            for (const CPropertyIndex &pi : propertyIndexes)
-            {
-                obj.setPropertyByIndex(pi, vm.value(pi));
-            }
+            for (const CPropertyIndex &pi : propertyIndexes) { obj.setPropertyByIndex(pi, vm.value(pi)); }
 
             // and update container
-            if (this->derivedModel()->setInContainer(i, obj))
-            {
-                c++;
-            }
+            if (this->derivedModel()->setInContainer(i, obj)) { c++; }
         }
 
-        if (c > 0)
-        {
-            this->derivedModel()->emitDataChanged(firstUpdatedRow, lastUpdatedRow);
-        }
+        if (c > 0) { this->derivedModel()->emitDataChanged(firstUpdatedRow, lastUpdatedRow); }
         return c;
     }
 
@@ -381,10 +353,7 @@ namespace swift::gui::views
                 m_model->update(containerBackup, false);
             }
         }
-        else
-        {
-            this->fullResizeToContents();
-        }
+        else { this->fullResizeToContents(); }
     }
 
     template <class T>
@@ -464,7 +433,8 @@ namespace swift::gui::views
     template <class T>
     void CViewBase<T>::dropEvent(QDropEvent *event)
     {
-        if (m_model && m_model->isJsonFileDropAllowed() && CGuiUtility::isMimeRepresentingReadableJsonFile(event->mimeData()))
+        if (m_model && m_model->isJsonFileDropAllowed() &&
+            CGuiUtility::isMimeRepresentingReadableJsonFile(event->mimeData()))
         {
             const QFileInfo fi = CGuiUtility::representedMimeFile(event->mimeData());
             const CStatusMessage msgs = this->loadJsonFile(fi.absoluteFilePath());
@@ -594,9 +564,7 @@ namespace swift::gui::views
         if (m_model->hasValidSortColumn())
         {
             Q_ASSERT(this->horizontalHeader());
-            this->horizontalHeader()->setSortIndicator(
-                m_model->getSortColumn(),
-                m_model->getSortOrder());
+            this->horizontalHeader()->setSortIndicator(m_model->getSortColumn(), m_model->getSortOrder());
         }
     }
 
@@ -607,10 +575,7 @@ namespace swift::gui::views
         if (model)
         {
             if (model == m_model) { return; }
-            if (m_model)
-            {
-                m_model->disconnect();
-            }
+            if (m_model) { m_model->disconnect(); }
 
             m_model = model;
             m_model->setSelectionModel(this); // set myself as selection model
@@ -644,10 +609,7 @@ namespace swift::gui::views
     {
         // small set or large set? This only performs real resizing, no presizing
         // remark, see also presizeOrFullResizeToContents
-        if (this->isResizeConditionMet())
-        {
-            this->fullResizeToContents();
-        }
+        if (this->isResizeConditionMet()) { this->fullResizeToContents(); }
         else
         {
             m_resizeCount++; // skipped resize
@@ -722,7 +684,8 @@ namespace swift::gui::views
         // Clear highlighting
         if (this->derivedModel()->hasHighlightedRows())
         {
-            menuActions.addAction(CIcons::refresh16(), "Clear highlighting", CMenuAction::pathViewClearHighlighting(), nullptr, { this, &CViewBaseNonTemplate::clearHighlighting });
+            menuActions.addAction(CIcons::refresh16(), "Clear highlighting", CMenuAction::pathViewClearHighlighting(),
+                                  nullptr, { this, &CViewBaseNonTemplate::clearHighlighting });
         }
     }
 
@@ -730,8 +693,7 @@ namespace swift::gui::views
     CStatusMessage CViewBase<T>::loadJsonFile(const QString &fileName)
     {
         CStatusMessage m;
-        do
-        {
+        do {
             if (fileName.isEmpty())
             {
                 m = CStatusMessage(this).error(u"Load canceled, no file name");
@@ -817,20 +779,18 @@ namespace swift::gui::views
     template <class T>
     CStatusMessage CViewBase<T>::loadJson(const QString &directory)
     {
-        const QString fileName = QFileDialog::getOpenFileName(nullptr,
-                                                              tr("Load data file"),
-                                                              directory.isEmpty() ? this->getFileDialogFileName(true) : directory,
-                                                              tr("swift (*.json *.txt)"));
+        const QString fileName = QFileDialog::getOpenFileName(
+            nullptr, tr("Load data file"), directory.isEmpty() ? this->getFileDialogFileName(true) : directory,
+            tr("swift (*.json *.txt)"));
         return this->loadJsonFile(fileName);
     }
 
     template <class T>
     CStatusMessage CViewBase<T>::saveJson(bool selectedOnly, const QString &directory)
     {
-        const QString fileName = QFileDialog::getSaveFileName(nullptr,
-                                                              tr("Save data file"),
-                                                              directory.isEmpty() ? this->getFileDialogFileName(false) : directory,
-                                                              tr("swift (*.json *.txt)"));
+        const QString fileName = QFileDialog::getSaveFileName(
+            nullptr, tr("Save data file"), directory.isEmpty() ? this->getFileDialogFileName(false) : directory,
+            tr("swift (*.json *.txt)"));
         if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, u"Save canceled", true); }
         const QString json(this->toJsonString(QJsonDocument::Indented, selectedOnly)); // save as CVariant JSON
 
@@ -873,10 +833,7 @@ namespace swift::gui::views
         {
             ContainerType objects;
             objects.convertFromJson(json);
-            if (!objects.isEmpty())
-            {
-                this->insert(objects);
-            }
+            if (!objects.isEmpty()) { this->insert(objects); }
         }
         catch (const CJsonException &ex)
         {
@@ -896,25 +853,17 @@ namespace swift::gui::views
     {
         if (enabled)
         {
-            if (!m_filterWidget)
-            {
-                this->removeFilter();
-            }
+            if (!m_filterWidget) { this->removeFilter(); }
             else
             {
                 // takes the filter and triggers the filtering
-                IModelFilterProvider<ContainerType> *provider = dynamic_cast<IModelFilterProvider<ContainerType> *>(m_filterWidget);
+                IModelFilterProvider<ContainerType> *provider =
+                    dynamic_cast<IModelFilterProvider<ContainerType> *>(m_filterWidget);
                 Q_ASSERT_X(provider, Q_FUNC_INFO, "Filter widget does not provide interface");
                 if (!provider) { return false; }
                 std::unique_ptr<IModelFilter<ContainerType>> f(provider->createModelFilter());
-                if (f->isValid())
-                {
-                    this->takeFilterOwnership(f);
-                }
-                else
-                {
-                    this->removeFilter();
-                }
+                if (f->isValid()) { this->takeFilterOwnership(f); }
+                else { this->removeFilter(); }
             }
         }
         else

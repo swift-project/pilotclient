@@ -7,14 +7,14 @@
 
 namespace swift::gui::components
 {
-    CInfoBarWebReadersStatusSmallComponent::CInfoBarWebReadersStatusSmallComponent(QWidget *parent) : CInfoBarWebReadersStatusBase(parent),
-                                                                                                      ui(new Ui::CInfoBarWebReadersStatusSmallComponent)
+    CInfoBarWebReadersStatusSmallComponent::CInfoBarWebReadersStatusSmallComponent(QWidget *parent)
+        : CInfoBarWebReadersStatusBase(parent), ui(new Ui::CInfoBarWebReadersStatusSmallComponent)
     {
         ui->setupUi(this);
-        this->setLeds(ui->led_DataReady, nullptr, ui->led_IcaoAircraft, ui->led_IcaoAirline, ui->led_Countries, ui->led_Distributors, ui->led_Liveries, ui->led_Models);
+        this->setLeds(ui->led_DataReady, nullptr, ui->led_IcaoAircraft, ui->led_IcaoAirline, ui->led_Countries,
+                      ui->led_Distributors, ui->led_Liveries, ui->led_Models);
         this->init();
     }
 
-    CInfoBarWebReadersStatusSmallComponent::~CInfoBarWebReadersStatusSmallComponent()
-    {}
+    CInfoBarWebReadersStatusSmallComponent::~CInfoBarWebReadersStatusSmallComponent() {}
 } // namespace swift::gui::components

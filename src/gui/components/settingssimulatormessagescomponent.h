@@ -40,7 +40,9 @@ namespace swift::gui::components
 
     private:
         QScopedPointer<Ui::CSettingsSimulatorMessagesComponent> ui;
-        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorMessages> m_settings { this }; //!< settings for messages
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorMessages> m_settings {
+            this
+        }; //!< settings for messages
     };
 } // namespace swift::gui::components
 #endif // guard

@@ -65,7 +65,8 @@ namespace swift::gui
             void onCacheChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Web data have been read
-            void onWebDataRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
+            void onWebDataRead(swift::misc::network::CEntityFlags::Entity entity,
+                               swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
             //! Display settings dialog
             void displaySettingsDialog();
@@ -96,13 +97,19 @@ namespace swift::gui
             swift::misc::simulation::CAircraftModel defaultModel() const;
 
             //! Run matching script
-            static swift::misc::simulation::MatchingScriptReturnValues matchingScript(const swift::misc::simulation::CAircraftModel &inModel, const swift::misc::simulation::CAircraftMatcherSetup &setup, const swift::misc::simulation::CAircraftModelList &modelSet, swift::misc::CStatusMessageList &msgs);
+            static swift::misc::simulation::MatchingScriptReturnValues
+            matchingScript(const swift::misc::simulation::CAircraftModel &inModel,
+                           const swift::misc::simulation::CAircraftMatcherSetup &setup,
+                           const swift::misc::simulation::CAircraftModelList &modelSet,
+                           swift::misc::CStatusMessageList &msgs);
 
             QScopedPointer<Ui::CModelMatcherComponent> ui;
             QPointer<views::CAircraftModelView> m_workbenchView; //!< an external workbenc
             CSettingsMatchingDialog *m_settingsDialog = nullptr; //!< matching settings as dialog
             swift::core::CAircraftMatcher m_matcher { this }; //!< used matcher
-            swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModelMatching> m_matchingSettings { this }; //!< settings
+            swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModelMatching> m_matchingSettings {
+                this
+            }; //!< settings
         };
     } // namespace components
 } // namespace swift::gui

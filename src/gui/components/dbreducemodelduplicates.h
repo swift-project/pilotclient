@@ -21,9 +21,7 @@ namespace Ui
 namespace swift::gui::components
 {
     //! Reduce modelss
-    class CDbReduceModelDuplicates :
-        public QDialog,
-        public swift::core::IProgressIndicator
+    class CDbReduceModelDuplicates : public QDialog, public swift::core::IProgressIndicator
     {
         Q_OBJECT
 
@@ -35,7 +33,8 @@ namespace swift::gui::components
         virtual ~CDbReduceModelDuplicates() override;
 
         //! Set the models
-        void setModels(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator);
+        void setModels(const swift::misc::simulation::CAircraftModelList &models,
+                       const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Process models
         void process();
@@ -61,7 +60,8 @@ namespace swift::gui::components
         swift::misc::simulation::CSimulatorInfo m_simulator;
         swift::misc::simulation::CAircraftModelList m_models;
         swift::misc::simulation::CAircraftModelList m_removeCandidates;
-        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences { this }; //!< distributor preferences
+        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TDistributorListPreferences>
+            m_distributorPreferences { this }; //!< distributor preferences
     };
 } // namespace swift::gui::components
 

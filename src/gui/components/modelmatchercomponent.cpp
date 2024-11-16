@@ -48,8 +48,7 @@ using namespace swift::core;
 
 namespace swift::gui::components
 {
-    CModelMatcherComponent::CModelMatcherComponent(QWidget *parent) : QFrame(parent),
-                                                                      ui(new Ui::CModelMatcherComponent)
+    CModelMatcherComponent::CModelMatcherComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CModelMatcherComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "Missing web services");
@@ -68,8 +67,10 @@ namespace swift::gui::components
         ui->le_Manufacturer->setValidator(validator);
         ui->le_Callsign->setValidator(validator);
 
-        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CModelMatcherComponent::onSimulatorChanged);
-        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRead, Qt::QueuedConnection);
+        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this,
+                &CModelMatcherComponent::onSimulatorChanged);
+        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CModelMatcherComponent::onWebDataRead,
+                Qt::QueuedConnection);
 
         connect(ui->pb_ModelMatching, &QPushButton::pressed, this, &CModelMatcherComponent::testModelMatching);
         connect(ui->pb_ReverseLookup, &QPushButton::pressed, this, &CModelMatcherComponent::reverseLookup);
@@ -84,8 +85,7 @@ namespace swift::gui::components
         ui->cb_UseWorkbench->setVisible(false);
     }
 
-    CModelMatcherComponent::~CModelMatcherComponent()
-    {}
+    CModelMatcherComponent::~CModelMatcherComponent() {}
 
     void CModelMatcherComponent::tabIndexChanged(int index)
     {
@@ -131,7 +131,8 @@ namespace swift::gui::components
         }
         else
         {
-            const CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+            const CAircraftModelList models =
+                CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
             m_matcher.setModelSet(models, simulator, true);
         }
         this->redisplay();
@@ -162,12 +163,14 @@ namespace swift::gui::components
             const QString liveryString(ui->comp_LiverySelector->getRawCombinedCode());
             const CAircraftModelList modelSet = m_matcher.getModelSet();
             const CAircraftMatcherSetup setup = m_matcher.getSetup();
-            const CAircraftModel reverseModel = CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), liveryString, setup, modelSet, &msgs);
+            const CAircraftModel reverseModel =
+                CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), liveryString, setup, modelSet, &msgs);
             remoteAircraft.setModel(reverseModel); // current model
         }
 
         CStatusMessageList matchingMsgs;
-        const CAircraftModel matched = m_matcher.getClosestMatch(remoteAircraft, MatchingLogAll, &matchingMsgs, true); // test model matching
+        const CAircraftModel matched =
+            m_matcher.getClosestMatch(remoteAircraft, MatchingLogAll, &matchingMsgs, true); // test model matching
         msgs.push_back(matchingMsgs);
 
         ui->te_Results->setText(matched.toQString(true));
@@ -188,12 +191,14 @@ namespace swift::gui::components
         const CAircraftMatcherSetup setup = m_matcher.getSetup();
         const CSimulatedAircraft remoteAircraft(createAircraft());
         const QString livery(ui->comp_LiverySelector->getRawCombinedCode());
-        const CAircraftModel matched = CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), livery, setup, modelSet, &msgs);
+        const CAircraftModel matched =
+            CAircraftMatcher::reverseLookupModelMs(remoteAircraft.getModel(), livery, setup, modelSet, &msgs);
         ui->te_Results->setText(matched.toQString(true));
         ui->tvp_ResultMessages->updateContainer(msgs);
     }
 
-    void CModelMatcherComponent::onWebDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number, const QUrl &url)
+    void CModelMatcherComponent::onWebDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number,
+                                               const QUrl &url)
     {
         Q_UNUSED(url)
 
@@ -210,10 +215,7 @@ namespace swift::gui::components
         if (!m_settingsDialog) { m_settingsDialog = new CSettingsMatchingDialog(this); }
         m_settingsDialog->setMatchingSetup(m_matcher.getSetup());
         const QDialog::DialogCode r = static_cast<QDialog::DialogCode>(m_settingsDialog->exec());
-        if (r == QDialog::Accepted)
-        {
-            m_matcher.setSetup(m_settingsDialog->getMatchingSetup());
-        }
+        if (r == QDialog::Accepted) { m_matcher.setSetup(m_settingsDialog->getMatchingSetup()); }
     }
 
     void CModelMatcherComponent::redisplay()
@@ -225,19 +227,14 @@ namespace swift::gui::components
     CAircraftModelList CModelMatcherComponent::getModelSetModels() const
     {
         const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
-        const CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+        const CAircraftModelList models =
+            CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
         return models;
     }
 
-    int CModelMatcherComponent::getMatcherModelsCount() const
-    {
-        return m_matcher.getModelSetCount();
-    }
+    int CModelMatcherComponent::getMatcherModelsCount() const { return m_matcher.getModelSetCount(); }
 
-    bool CModelMatcherComponent::useWorkbench() const
-    {
-        return ui->cb_UseWorkbench->isChecked() && m_workbenchView;
-    }
+    bool CModelMatcherComponent::useWorkbench() const { return ui->cb_UseWorkbench->isChecked() && m_workbenchView; }
 
     CSimulatedAircraft CModelMatcherComponent::createAircraft() const
     {
@@ -268,32 +265,38 @@ namespace swift::gui::components
     CAircraftModel CModelMatcherComponent::defaultModel() const
     {
         // can somehow dynamilcally determine the models
-        const CAircraftIcaoCode icaoAircraft("B737", "L2J", "FooBar", "Dummy", CWakeTurbulenceCategory::MEDIUM, false, false, false, 1);
+        const CAircraftIcaoCode icaoAircraft("B737", "L2J", "FooBar", "Dummy", CWakeTurbulenceCategory::MEDIUM, false,
+                                             false, false, 1);
         const CAirlineIcaoCode icaoAirline("Foo", "FooBar airlines", { "DE", "Germany" }, "FOO", true, true);
-        const CLivery livery(CLivery::getStandardCode(icaoAirline), icaoAirline, "Standard Foo airlines", "red", "blue", false);
-        CAircraftModel model("default model", CAircraftModel::TypeOwnSimulatorModel, "dummy model", icaoAircraft, livery);
+        const CLivery livery(CLivery::getStandardCode(icaoAirline), icaoAirline, "Standard Foo airlines", "red", "blue",
+                             false);
+        CAircraftModel model("default model", CAircraftModel::TypeOwnSimulatorModel, "dummy model", icaoAircraft,
+                             livery);
         if (model.getCallsign().isEmpty()) { model.setCallsign("SWIFT"); }
         return model;
     }
 
-    MatchingScriptReturnValues CModelMatcherComponent::matchingScript(const CAircraftModel &inModel, const CAircraftMatcherSetup &setup, const CAircraftModelList &modelSet, CStatusMessageList &msgs)
+    MatchingScriptReturnValues CModelMatcherComponent::matchingScript(const CAircraftModel &inModel,
+                                                                      const CAircraftMatcherSetup &setup,
+                                                                      const CAircraftModelList &modelSet,
+                                                                      CStatusMessageList &msgs)
     {
         // Script
         if (setup.doRunMsReverseLookupScript())
         {
-            const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(inModel, setup, modelSet, &msgs);
-            if (rv.runScriptAndModified())
-            {
-                return rv;
-            }
+            const MatchingScriptReturnValues rv =
+                CAircraftMatcher::reverseLookupScript(inModel, setup, modelSet, &msgs);
+            if (rv.runScriptAndModified()) { return rv; }
             else
             {
-                CCallsign::addLogDetailsToList(&msgs, inModel.getCallsign(), QStringLiteral("Matching script, no modification"));
+                CCallsign::addLogDetailsToList(&msgs, inModel.getCallsign(),
+                                               QStringLiteral("Matching script, no modification"));
             }
         }
         else
         {
-            CCallsign::addLogDetailsToList(&msgs, inModel.getCallsign(), QStringLiteral("No reverse lookup script used"));
+            CCallsign::addLogDetailsToList(&msgs, inModel.getCallsign(),
+                                           QStringLiteral("No reverse lookup script used"));
         }
 
         return inModel;

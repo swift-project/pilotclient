@@ -14,8 +14,7 @@ namespace swift::misc::simulation
 {
     CDistributorList::CDistributorList() {}
 
-    CDistributorList::CDistributorList(const CSequence<CDistributor> &other) : CSequence<CDistributor>(other)
-    {}
+    CDistributorList::CDistributorList(const CSequence<CDistributor> &other) : CSequence<CDistributor>(other) {}
 
     CDistributor CDistributorList::findByKeyOrAlias(const QString &keyOrAlias) const
     {
@@ -35,7 +34,10 @@ namespace swift::misc::simulation
         if (model.getDescription().contains("WOA", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("WOAI"); }
         if (model.getDescription().contains("IVAO", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("IVAO"); }
         if (model.getModelString().startsWith("PAI ", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("PAI"); }
-        if (model.getDescription().startsWith("Project AI ", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("PAI"); }
+        if (model.getDescription().startsWith("Project AI ", Qt::CaseInsensitive))
+        {
+            return this->findByKeyOrAlias("PAI");
+        }
 
         return CDistributor();
     }
@@ -61,7 +63,8 @@ namespace swift::misc::simulation
         return CDistributor();
     }
 
-    CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributorPattern, const CAircraftModel &model) const
+    CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributorPattern,
+                                                            const CAircraftModel &model) const
     {
         const CDistributor d = this->smartDistributorSelector(distributorPattern);
         // key is not necessarily a DB key, so use complete data, happens when key is set from raw data
@@ -86,14 +89,8 @@ namespace swift::misc::simulation
         {
             if (!d.hasValidDbKey()) { continue; }
             sl.append(d.getDbKey());
-            if (d.hasAlias1())
-            {
-                sl.append(d.getAlias1());
-            }
-            if (d.hasAlias2())
-            {
-                sl.append(d.getAlias2());
-            }
+            if (d.hasAlias1()) { sl.append(d.getAlias1()); }
+            if (d.hasAlias2()) { sl.append(d.getAlias2()); }
         }
         if (sort) { sl.sort(); }
         return sl;
@@ -105,10 +102,7 @@ namespace swift::misc::simulation
         CDistributorList distributors;
         for (const CDistributor &distributor : (*this))
         {
-            if (distributor.matchesSimulator(simulator))
-            {
-                distributors.push_back(distributor);
-            }
+            if (distributor.matchesSimulator(simulator)) { distributors.push_back(distributor); }
         }
         return distributors;
     }
@@ -118,13 +112,7 @@ namespace swift::misc::simulation
         return matchesSimulator(CSimulatorInfo::AllFsFamily);
     }
 
-    bool CDistributorList::isCompletelyFromDb() const
-    {
-        return !this->contains(&CDistributor::isLoadedFromDb, false);
-    }
+    bool CDistributorList::isCompletelyFromDb() const { return !this->contains(&CDistributor::isLoadedFromDb, false); }
 
-    int CDistributorList::removeIfNotLoadedFromDb()
-    {
-        return this->removeIf(&CDistributor::isLoadedFromDb, false);
-    }
+    int CDistributorList::removeIfNotLoadedFromDb() { return this->removeIf(&CDistributor::isLoadedFromDb, false); }
 } // namespace swift::misc::simulation

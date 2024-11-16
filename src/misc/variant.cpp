@@ -41,17 +41,15 @@ namespace swift::misc
 
     bool CVariant::canConvert(int typeId) const
     {
-        if (m_v.canConvert(typeId))
-        {
-            return true;
-        }
+        if (m_v.canConvert(typeId)) { return true; }
         if (typeId == qMetaTypeId_CVariantList)
         {
             return m_v.canConvert<QVector<CVariant>>() || m_v.canConvert<QVariantList>();
         }
         if (userType() == qMetaTypeId_CVariantList)
         {
-            return QVariant::fromValue(QVector<CVariant>()).canConvert(typeId) || QVariant(QMetaType(typeId), nullptr).canConvert<QVariantList>();
+            return QVariant::fromValue(QVector<CVariant>()).canConvert(typeId) ||
+                   QVariant(QMetaType(typeId), nullptr).canConvert<QVariantList>();
         }
         return false;
     }
@@ -89,18 +87,12 @@ namespace swift::misc
         return m_v.convert(typeId);
     }
 
-    bool CVariant::isVariantList() const
-    {
-        return userType() == qMetaTypeId_CVariantList;
-    }
+    bool CVariant::isVariantList() const { return userType() == qMetaTypeId_CVariantList; }
 
     QString CVariant::convertToQString(bool i18n) const
     {
         auto *meta = getValueObjectMetaInfo();
-        if (meta)
-        {
-            return meta->toQString(data(), i18n);
-        }
+        if (meta) { return meta->toQString(data(), i18n); }
         return m_v.toString();
     }
 
@@ -119,10 +111,8 @@ namespace swift::misc
         case QMetaType::Long:
         case QMetaType::ULong:
         case QMetaType::LongLong:
-        case QMetaType::ULongLong:
-            return true;
-        default:
-            return false;
+        case QMetaType::ULongLong: return true;
+        default: return false;
         }
     }
 
@@ -158,7 +148,8 @@ namespace swift::misc
                 }
                 else
                 {
-                    CLogMessage(&a).warning(u"Comparing two CVariants containing unrelated value objects: %1 (%2) and %3 (%4)")
+                    CLogMessage(&a).warning(
+                        u"Comparing two CVariants containing unrelated value objects: %1 (%2) and %3 (%4)")
                         << a.typeName() << a.userType() << b.typeName() << b.userType();
                     return 0;
                 }
@@ -200,17 +191,12 @@ namespace swift::misc
             try
             {
                 auto *meta = getValueObjectMetaInfo();
-                if (meta)
-                {
-                    json.insert("value", meta->toJson(data()));
-                }
-                else if (m_v.canConvert<QString>())
-                {
-                    json.insert("value", m_v.toString());
-                }
+                if (meta) { json.insert("value", meta->toJson(data())); }
+                else if (m_v.canConvert<QString>()) { json.insert("value", m_v.toString()); }
                 else
                 {
-                    CLogMessage(this).warning(u"Unsupported CVariant type for toJson: %1 (%2)") << typeName() << userType();
+                    CLogMessage(this).warning(u"Unsupported CVariant type for toJson: %1 (%2)")
+                        << typeName() << userType();
                 }
             }
             catch (const private_ns::CVariantException &ex)
@@ -272,18 +258,13 @@ namespace swift::misc
                     // this will call convertFromJson if there is no MemoizedJson
                     meta->convertFromMemoizedJson(value.toObject(), data(), true);
                 }
-                else if (QMetaType::hasRegisteredConverterFunction(QMetaType(qMetaTypeId<QString>()), QMetaType(typeId)))
+                else if (QMetaType::hasRegisteredConverterFunction(QMetaType(qMetaTypeId<QString>()),
+                                                                   QMetaType(typeId)))
                 {
                     m_v.setValue(value.toString());
-                    if (!m_v.convert(typeId))
-                    {
-                        throw CJsonException("Failed to convert from JSON string");
-                    }
+                    if (!m_v.convert(typeId)) { throw CJsonException("Failed to convert from JSON string"); }
                 }
-                else
-                {
-                    throw CJsonException("Type not supported by convertFromJson");
-                }
+                else { throw CJsonException("Type not supported by convertFromJson"); }
             }
             catch (const private_ns::CVariantException &ex)
             {
@@ -292,7 +273,8 @@ namespace swift::misc
         }
     }
 
-    CStatusMessage CVariant::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessage CVariant::convertFromJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                                    const QString &prefix)
     {
         try
         {
@@ -323,10 +305,7 @@ namespace swift::misc
                 return {};
             }
         }
-        else
-        {
-            return toJson();
-        }
+        else { return toJson(); }
     }
 
     void CVariant::convertFromMemoizedJson(const QJsonObject &json, bool allowFallbackToJson)
@@ -358,13 +337,11 @@ namespace swift::misc
                 throw CJsonException(ex.what());
             }
         }
-        else
-        {
-            convertFromJson(json);
-        }
+        else { convertFromJson(json); }
     }
 
-    CStatusMessage CVariant::convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessage CVariant::convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
+                                                            const QString &prefix)
     {
         try
         {
@@ -395,17 +372,12 @@ namespace swift::misc
             try
             {
                 auto *meta = getValueObjectMetaInfo();
-                if (meta)
-                {
-                    return meta->getValueHash(data());
-                }
-                else if (m_v.canConvert<QString>())
-                {
-                    return qHash(m_v.toString());
-                }
+                if (meta) { return meta->getValueHash(data()); }
+                else if (m_v.canConvert<QString>()) { return qHash(m_v.toString()); }
                 else
                 {
-                    CLogMessage(this).warning(u"Unsupported CVariant type for getValueHash: %1 (%2)") << typeName() << userType();
+                    CLogMessage(this).warning(u"Unsupported CVariant type for getValueHash: %1 (%2)")
+                        << typeName() << userType();
                     return 0;
                 }
             }
@@ -419,14 +391,8 @@ namespace swift::misc
 
     void CVariant::marshallToDbus(QDBusArgument &arg) const
     {
-        if (isValid())
-        {
-            arg << QString(typeName()) << QDBusVariant(getQVariant());
-        }
-        else
-        {
-            arg << QString() << QDBusVariant(QVariant(0));
-        }
+        if (isValid()) { arg << QString(typeName()) << QDBusVariant(getQVariant()); }
+        else { arg << QString() << QDBusVariant(QVariant(0)); }
     }
 
     //! @{
@@ -444,25 +410,16 @@ namespace swift::misc
         QDBusVariant dbusVar;
         arg >> typeName >> dbusVar;
 
-        if (typeName.isEmpty())
-        {
-            *this = CVariant();
-        }
+        if (typeName.isEmpty()) { *this = CVariant(); }
         else
         {
             *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)), typeName);
         }
     }
 
-    void CVariant::marshalToDataStream(QDataStream &stream) const
-    {
-        stream << m_v;
-    }
+    void CVariant::marshalToDataStream(QDataStream &stream) const { stream << m_v; }
 
-    void CVariant::unmarshalFromDataStream(QDataStream &stream)
-    {
-        stream >> m_v;
-    }
+    void CVariant::unmarshalFromDataStream(QDataStream &stream) { stream >> m_v; }
 
     void CVariant::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
@@ -534,20 +491,11 @@ namespace swift::misc
         return CIcon(toIcon()).toPixmap();
     }
 
-    void CVariant::registerMetadata()
-    {
-        private_ns::MetaTypeHelper<CVariant>::maybeRegisterMetaType();
-    }
+    void CVariant::registerMetadata() { private_ns::MetaTypeHelper<CVariant>::maybeRegisterMetaType(); }
 
-    int CVariant::getMetaTypeId() const
-    {
-        return private_ns::MetaTypeHelper<CVariant>::maybeGetMetaTypeId();
-    }
+    int CVariant::getMetaTypeId() const { return private_ns::MetaTypeHelper<CVariant>::maybeGetMetaTypeId(); }
 
-    QString CVariant::getClassName() const
-    {
-        return QMetaType::typeName(getMetaTypeId());
-    }
+    QString CVariant::getClassName() const { return QMetaType::typeName(getMetaTypeId()); }
 
     bool CVariant::isA(int metaTypeId) const
     {

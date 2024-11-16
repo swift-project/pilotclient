@@ -18,18 +18,17 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::core::db, CDatabaseReaderConfig, CDatabaseRe
 
 namespace swift::core::db
 {
-    CDatabaseReaderConfig::CDatabaseReaderConfig(CEntityFlags::Entity entities, CDbFlags::DataRetrievalMode retrievalFlags, const CTime &cacheLifetime) : m_entities(entities), m_retrievalMode(retrievalFlags), m_cacheLifetime(cacheLifetime)
+    CDatabaseReaderConfig::CDatabaseReaderConfig(CEntityFlags::Entity entities,
+                                                 CDbFlags::DataRetrievalMode retrievalFlags, const CTime &cacheLifetime)
+        : m_entities(entities), m_retrievalMode(retrievalFlags), m_cacheLifetime(cacheLifetime)
     {
         // void
     }
 
     QString CDatabaseReaderConfig::convertToQString(bool i18n) const
     {
-        return CDbFlags::flagToString(this->getRetrievalMode()) %
-               u' ' %
-               CEntityFlags::entitiesToString(this->getEntities()) %
-               u' ' %
-               m_cacheLifetime.toQString(i18n);
+        return CDbFlags::flagToString(this->getRetrievalMode()) % u' ' %
+               CEntityFlags::entitiesToString(this->getEntities()) % u' ' % m_cacheLifetime.toQString(i18n);
     }
 
     CEntityFlags::Entity CDatabaseReaderConfig::getEntities() const
@@ -57,10 +56,7 @@ namespace swift::core::db
         m_retrievalMode = static_cast<int>(m);
     }
 
-    void CDatabaseReaderConfig::setCacheLifetime(const CTime &time)
-    {
-        m_cacheLifetime = time;
-    }
+    void CDatabaseReaderConfig::setCacheLifetime(const CTime &time) { m_cacheLifetime = time; }
 
     bool CDatabaseReaderConfig::possiblyReadsFromSwiftDb() const
     {
@@ -73,7 +69,8 @@ namespace swift::core::db
     {
         if (!this->isValid()) { return false; }
         if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
-        return (this->getRetrievalMode().testFlag(CDbFlags::Shared) || this->getRetrievalMode().testFlag(CDbFlags::SharedInfoOnly));
+        return (this->getRetrievalMode().testFlag(CDbFlags::Shared) ||
+                this->getRetrievalMode().testFlag(CDbFlags::SharedInfoOnly));
     }
 
     bool CDatabaseReaderConfig::possiblyWritesToSwiftDb() const
@@ -86,18 +83,19 @@ namespace swift::core::db
     bool CDatabaseReaderConfig::possiblyReadsFromCache() const
     {
         if (!this->isValid()) { return false; }
-        return (this->getRetrievalMode().testFlag(CDbFlags::Cached) || this->getRetrievalMode().testFlag(CDbFlags::CacheThenDb) || this->getRetrievalMode().testFlag(CDbFlags::CacheThenShared));
+        return (this->getRetrievalMode().testFlag(CDbFlags::Cached) ||
+                this->getRetrievalMode().testFlag(CDbFlags::CacheThenDb) ||
+                this->getRetrievalMode().testFlag(CDbFlags::CacheThenShared));
     }
 
-    bool CDatabaseReaderConfig::isValid() const
-    {
-        return m_entities != CEntityFlags::NoEntity;
-    }
+    bool CDatabaseReaderConfig::isValid() const { return m_entities != CEntityFlags::NoEntity; }
 
-    CDatabaseReaderConfigList::CDatabaseReaderConfigList(const CSequence<CDatabaseReaderConfig> &other) : CSequence<CDatabaseReaderConfig>(other)
+    CDatabaseReaderConfigList::CDatabaseReaderConfigList(const CSequence<CDatabaseReaderConfig> &other)
+        : CSequence<CDatabaseReaderConfig>(other)
     {}
 
-    CDatabaseReaderConfig CDatabaseReaderConfigList::findFirstOrDefaultForEntity(const CEntityFlags::Entity entities) const
+    CDatabaseReaderConfig
+    CDatabaseReaderConfigList::findFirstOrDefaultForEntity(const CEntityFlags::Entity entities) const
     {
         const bool single = CEntityFlags::isSingleEntity(entities);
         const CEntityFlags::EntityFlag testFlag = CEntityFlags::entityToEntityFlag(entities); // cannot cast directly
@@ -117,18 +115,12 @@ namespace swift::core::db
 
     void CDatabaseReaderConfigList::markAsDbDown()
     {
-        for (CDatabaseReaderConfig &config : *this)
-        {
-            config.markAsDbDown();
-        }
+        for (CDatabaseReaderConfig &config : *this) { config.markAsDbDown(); }
     }
 
     void CDatabaseReaderConfigList::setCacheLifetimes(const CTime &time)
     {
-        for (CDatabaseReaderConfig &config : *this)
-        {
-            config.setCacheLifetime(time);
-        }
+        for (CDatabaseReaderConfig &config : *this) { config.setCacheLifetime(time); }
     }
 
     bool CDatabaseReaderConfigList::possiblyReadsFromSwiftDb() const
@@ -169,7 +161,8 @@ namespace swift::core::db
         return false;
     }
 
-    bool CDatabaseReaderConfigList::needsSharedInfoObjectsIfCachesEmpty(CEntityFlags::Entity entities, CEntityFlags::Entity cachedEntities) const
+    bool CDatabaseReaderConfigList::needsSharedInfoObjectsIfCachesEmpty(CEntityFlags::Entity entities,
+                                                                        CEntityFlags::Entity cachedEntities) const
     {
         for (const CDatabaseReaderConfig &config : *this)
         {
@@ -205,7 +198,8 @@ namespace swift::core::db
         CDatabaseReaderConfigList l;
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore, cacheLifetime)); // not needed in mapping tool
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore,
+                                          cacheLifetime)); // not needed in mapping tool
         l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
@@ -226,7 +220,8 @@ namespace swift::core::db
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlagsWriting, cacheLifetime)); // for wizard
+        l.push_back(
+            CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlagsWriting, cacheLifetime)); // for wizard
         l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::CountryEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftCategoryEntity, retrievalFlags, cacheLifetime));
@@ -240,7 +235,8 @@ namespace swift::core::db
         CDatabaseReaderConfigList l;
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftIcaoEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AirlineIcaoEntity, retrievalFlags, cacheLifetime));
-        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore, cacheLifetime)); // not needed in mapping tool
+        l.push_back(CDatabaseReaderConfig(CEntityFlags::AirportEntity, CDbFlags::Ignore,
+                                          cacheLifetime)); // not needed in mapping tool
         l.push_back(CDatabaseReaderConfig(CEntityFlags::DistributorEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::ModelEntity, retrievalFlags, cacheLifetime));
         l.push_back(CDatabaseReaderConfig(CEntityFlags::LiveryEntity, retrievalFlags, cacheLifetime));

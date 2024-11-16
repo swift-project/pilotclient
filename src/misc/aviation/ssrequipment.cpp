@@ -9,19 +9,13 @@ namespace swift::misc::aviation
 {
     CSsrEquipment::CSsrEquipment(SSrEquipment equipment) : m_equipment(equipment)
     {
-        if (m_equipment == SSrEquipment())
-        {
-            m_equipment = None;
-        }
+        if (m_equipment == SSrEquipment()) { m_equipment = None; }
     }
 
     CSsrEquipment::CSsrEquipment(QString equipment)
     {
 
-        if (equipment.isEmpty())
-        {
-            return;
-        }
+        if (equipment.isEmpty()) { return; }
 
         m_equipment = {}; // Clear default flag
 
@@ -196,7 +190,8 @@ namespace swift::misc::aviation
     QStringList CSsrEquipment::allEquipmentLetters()
     {
         // In order as they appear in the final string
-        static const QStringList r({ "N", "A", "C", "E", "H", "I", "L", "X", "P", "S", "B1", "B2", "U1", "U2", "V1", "V2", "D1", "G1" });
+        static const QStringList r(
+            { "N", "A", "C", "E", "H", "I", "L", "X", "P", "S", "B1", "B2", "U1", "U2", "V1", "V2", "D1", "G1" });
         return r;
     }
 

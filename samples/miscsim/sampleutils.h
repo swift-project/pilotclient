@@ -18,7 +18,8 @@ namespace swift::misc
     {
     public:
         //! Select directory among given ones
-        static QString selectDirectory(const QStringList &directoryOptions, QTextStream &streamOut, QTextStream &streamIn);
+        static QString selectDirectory(const QStringList &directoryOptions, QTextStream &streamOut,
+                                       QTextStream &streamIn);
 
     private:
         CSampleUtils() = delete;

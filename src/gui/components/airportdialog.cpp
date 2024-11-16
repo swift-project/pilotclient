@@ -9,28 +9,17 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::components
 {
-    CAirportDialog::CAirportDialog(QWidget *parent) : QDialog(parent),
-                                                      ui(new Ui::CAirportDialog)
+    CAirportDialog::CAirportDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CAirportDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CAirportDialog::~CAirportDialog()
-    {}
+    CAirportDialog::~CAirportDialog() {}
 
-    void CAirportDialog::setAirport(const CAirport &airport)
-    {
-        ui->comp_AirportCompleter->setAirport(airport);
-    }
+    void CAirportDialog::setAirport(const CAirport &airport) { ui->comp_AirportCompleter->setAirport(airport); }
 
-    CAirport CAirportDialog::getAirport() const
-    {
-        return ui->comp_AirportCompleter->getAirport();
-    }
+    CAirport CAirportDialog::getAirport() const { return ui->comp_AirportCompleter->getAirport(); }
 
-    void CAirportDialog::clear()
-    {
-        ui->comp_AirportCompleter->clear();
-    }
+    void CAirportDialog::clear() { ui->comp_AirportCompleter->clear(); }
 } // namespace swift::gui::components

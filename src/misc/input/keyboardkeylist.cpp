@@ -11,8 +11,7 @@ namespace swift::misc::input
 {
     CKeyboardKeyList::CKeyboardKeyList() {}
 
-    CKeyboardKeyList::CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass) : CSequence<CKeyboardKey>(baseClass)
-    {}
+    CKeyboardKeyList::CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass) : CSequence<CKeyboardKey>(baseClass) {}
 
     QStringList CKeyboardKeyList::getKeyStrings() const
     {

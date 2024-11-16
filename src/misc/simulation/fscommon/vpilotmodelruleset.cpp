@@ -17,7 +17,8 @@ SWIFT_DEFINE_COLLECTION_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRu
 
 namespace swift::misc::simulation::fscommon
 {
-    CVPilotModelRuleSet::CVPilotModelRuleSet(const CCollection<CVPilotModelRule> &other) : CCollection<CVPilotModelRule>(other)
+    CVPilotModelRuleSet::CVPilotModelRuleSet(const CCollection<CVPilotModelRule> &other)
+        : CCollection<CVPilotModelRule>(other)
     {}
 
     CVPilotModelRuleSet CVPilotModelRuleSet::findByModelName(const QString &modelName) const
@@ -33,19 +34,15 @@ namespace swift::misc::simulation::fscommon
     CVPilotModelRuleSet CVPilotModelRuleSet::findModelsStartingWith(const QString &modelName) const
     {
         QString mn(modelName.trimmed().toUpper());
-        return this->findBy([=](const CVPilotModelRule &rule) {
-            return rule.getModelName().startsWith(mn, Qt::CaseInsensitive);
-        });
+        return this->findBy(
+            [=](const CVPilotModelRule &rule) { return rule.getModelName().startsWith(mn, Qt::CaseInsensitive); });
     }
 
     QStringList CVPilotModelRuleSet::toUpper(const QStringList &stringList)
     {
         QStringList upper;
         upper.reserve(stringList.size());
-        for (const QString &s : stringList)
-        {
-            upper.append(s.toUpper());
-        }
+        for (const QString &s : stringList) { upper.append(s.toUpper()); }
         return upper;
     }
 
@@ -53,10 +50,7 @@ namespace swift::misc::simulation::fscommon
     {
         QStringList ms;
         ms.reserve(size());
-        for (const CVPilotModelRule &rule : (*this))
-        {
-            ms.append(rule.getModelName());
-        }
+        for (const CVPilotModelRule &rule : (*this)) { ms.append(rule.getModelName()); }
         ms.sort(Qt::CaseInsensitive);
         return ms;
     }
@@ -103,10 +97,7 @@ namespace swift::misc::simulation::fscommon
         QSet<QString> removeSet(knownModels.begin(), knownModels.end());
         removeSet.subtract(QSet<QString>(keep.begin(), keep.end()));
         int c = 0;
-        for (const QString &model : removeSet)
-        {
-            c += this->removeIf(&CVPilotModelRule::getModelName, model);
-        }
+        for (const QString &model : removeSet) { c += this->removeIf(&CVPilotModelRule::getModelName, model); }
         return c;
     }
 

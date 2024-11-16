@@ -64,10 +64,12 @@ namespace MiscTest
         static swift::misc::aviation::CAircraftSituationList testSituations();
 
         //! Set descending altitudes
-        static swift::misc::aviation::CAircraftSituationList testSetDescendingAltitudes(const swift::misc::aviation::CAircraftSituationList &situations);
+        static swift::misc::aviation::CAircraftSituationList
+        testSetDescendingAltitudes(const swift::misc::aviation::CAircraftSituationList &situations);
 
         //! Set descending altitudes
-        static swift::misc::aviation::CAircraftSituationList testSetRotateUpPitch(const swift::misc::aviation::CAircraftSituationList &situations);
+        static swift::misc::aviation::CAircraftSituationList
+        testSetRotateUpPitch(const swift::misc::aviation::CAircraftSituationList &situations);
 
         //! CG
         static const swift::misc::physical_quantities::CLength &cg();
@@ -291,19 +293,20 @@ namespace MiscTest
         }
 #endif
 
-        //! \FIXME KB 2019-03, as discussed on Discord: temp workaround to NOT break the Jenkins build (until we know why this sometimes fails)
+        //! \FIXME KB 2019-03, as discussed on Discord: temp workaround to NOT break the Jenkins build (until we know
+        //! why this sometimes fails)
         const bool ok = hint <= noHint;
-        if (ok || CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            QVERIFY2(ok, "Expected hinted sort being faster");
-        }
+        if (ok || CBuildConfig::isLocalDeveloperDebugBuild()) { QVERIFY2(ok, "Expected hinted sort being faster"); }
     }
 
     CAircraftSituationList CTestAircraftSituation::testSituations()
     {
-        // "Kugaaruk Airport","Pelly Bay","Canada","YBB","CYBB",68.534401,-89.808098,56,-7,"A","America/Edmonton","airport","OurAirports"
-        // "Baie Comeau Airport","Baie Comeau","Canada","YBC","CYBC",49.13249969482422,-68.20439910888672,71,-5,"A","America/Toronto","airport","OurAirports"
-        // "CFB Bagotville","Bagotville","Canada","YBG","CYBG",48.33060073852539,-70.99639892578125,522,-5,"A","America/Toronto","airport","OurAirports"
+        // "Kugaaruk Airport","Pelly
+        // Bay","Canada","YBB","CYBB",68.534401,-89.808098,56,-7,"A","America/Edmonton","airport","OurAirports" "Baie
+        // Comeau Airport","Baie
+        // Comeau","Canada","YBC","CYBC",49.13249969482422,-68.20439910888672,71,-5,"A","America/Toronto","airport","OurAirports"
+        // "CFB
+        // Bagotville","Bagotville","Canada","YBG","CYBG",48.33060073852539,-70.99639892578125,522,-5,"A","America/Toronto","airport","OurAirports"
 
         CAircraftSituationList situations;
         const qint64 ts = QDateTime::currentSecsSinceEpoch();

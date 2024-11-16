@@ -90,7 +90,10 @@ namespace swift::core::afv::connection
 
     private:
         //! Time since authentication
-        qint64 timeSinceAuthenticationSecs() const { return m_authenticatedDateTimeUtc.secsTo(QDateTime::currentDateTimeUtc()); }
+        qint64 timeSinceAuthenticationSecs() const
+        {
+            return m_authenticatedDateTimeUtc.secsTo(QDateTime::currentDateTimeUtc());
+        }
 
         //! Is the voice server alive?
         bool voiceServerAlive() const;

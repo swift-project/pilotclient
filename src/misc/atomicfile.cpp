@@ -116,7 +116,9 @@ namespace swift::misc
     QString CAtomicFile::randomSuffix()
     {
         constexpr auto max = 2176782335;
-        return QStringLiteral("%1").arg(std::uniform_int_distribution<std::decay_t<decltype(max)>>(0, max)(private_ns::defaultRandomGenerator()), 6, 36, QChar('0'));
+        return QStringLiteral("%1").arg(
+            std::uniform_int_distribution<std::decay_t<decltype(max)>>(0, max)(private_ns::defaultRandomGenerator()), 6,
+            36, QChar('0'));
     }
 
 #if defined(Q_OS_POSIX)
@@ -129,23 +131,31 @@ namespace swift::misc
             char s[1024] {};
             auto x = strerror_r(errno, s, sizeof(s));
             setErrorString(QString::fromLocal8Bit(s));
-            static_assert(std::is_same_v<decltype(x), int>, "Non-standard signature of POSIX function strerror_r, check documentation.");
+            static_assert(std::is_same_v<decltype(x), int>,
+                          "Non-standard signature of POSIX function strerror_r, check documentation.");
         }
     }
 #elif defined(Q_OS_WIN32)
     void CAtomicFile::replaceOriginal()
     {
         auto encode = [](const QString &s) {
-            const auto prefix = "\\\\?\\"; // support long paths: https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247.aspx#maxpath
+            const auto prefix =
+                "\\\\?\\"; // support long paths:
+                           // https://msdn.microsoft.com/en-us/library/windows/desktop/aa365247.aspx#maxpath
             return (prefix + QDir::toNativeSeparators(QDir::cleanPath(QFileInfo(s).absoluteFilePath()))).toStdWString();
         };
         auto replace = exists(m_originalFilename);
-        auto result = replace ? ReplaceFile(encode(m_originalFilename).c_str(), encode(fileName()).c_str(), nullptr, REPLACEFILE_IGNORE_MERGE_ERRORS, nullptr, nullptr) : MoveFileEx(encode(fileName()).c_str(), encode(m_originalFilename).c_str(), MOVEFILE_WRITE_THROUGH);
+        auto result = replace ? ReplaceFile(encode(m_originalFilename).c_str(), encode(fileName()).c_str(), nullptr,
+                                            REPLACEFILE_IGNORE_MERGE_ERRORS, nullptr, nullptr) :
+                                MoveFileEx(encode(fileName()).c_str(), encode(m_originalFilename).c_str(),
+                                           MOVEFILE_WRITE_THROUGH);
         if (!result)
         {
             wchar_t *s = nullptr;
-            FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, GetLastError(), 0, reinterpret_cast<LPWSTR>(&s), 0, nullptr);
-            const QString windowsError = (replace ? u"ReplaceFile: " : u"MoveFileEx: ") % QString::fromWCharArray(s).simplified();
+            FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, GetLastError(), 0,
+                          reinterpret_cast<LPWSTR>(&s), 0, nullptr);
+            const QString windowsError =
+                (replace ? u"ReplaceFile: " : u"MoveFileEx: ") % QString::fromWCharArray(s).simplified();
             LocalFree(reinterpret_cast<HLOCAL>(s));
 
             // fall back to non-atomic remove-and-rename

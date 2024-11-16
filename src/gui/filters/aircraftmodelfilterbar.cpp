@@ -28,8 +28,8 @@ using namespace swift::gui::components;
 
 namespace swift::gui::filters
 {
-    CAircraftModelFilterBar::CAircraftModelFilterBar(QWidget *parent) : CFilterWidget(parent),
-                                                                        ui(new Ui::CAircraftModelFilterBar)
+    CAircraftModelFilterBar::CAircraftModelFilterBar(QWidget *parent)
+        : CFilterWidget(parent), ui(new Ui::CAircraftModelFilterBar)
     {
         ui->setupUi(this);
 
@@ -60,53 +60,26 @@ namespace swift::gui::filters
         });
     }
 
-    CAircraftModelFilterBar::~CAircraftModelFilterBar()
-    {}
+    CAircraftModelFilterBar::~CAircraftModelFilterBar() {}
 
-    void CAircraftModelFilterBar::displayCount(bool show)
-    {
-        ui->filter_Buttons->displayCount(show);
-    }
+    void CAircraftModelFilterBar::displayCount(bool show) { ui->filter_Buttons->displayCount(show); }
 
     std::unique_ptr<IModelFilter<CAircraftModelList>> CAircraftModelFilterBar::createModelFilter() const
     {
         CAircraftModel::ModelModeFilter mf = CAircraftModel::All;
-        if (ui->cbt_IncludeExclude->checkState() == Qt::Checked)
-        {
-            mf = CAircraftModel::Include;
-        }
-        else if (ui->cbt_IncludeExclude->checkState() == Qt::Unchecked)
-        {
-            mf = CAircraftModel::Exclude;
-        }
+        if (ui->cbt_IncludeExclude->checkState() == Qt::Checked) { mf = CAircraftModel::Include; }
+        else if (ui->cbt_IncludeExclude->checkState() == Qt::Unchecked) { mf = CAircraftModel::Exclude; }
 
         DbKeyStateFilter dbf = swift::misc::db::All;
-        if (ui->cbt_Db->checkState() == Qt::Checked)
-        {
-            dbf = swift::misc::db::Valid;
-        }
-        else if (ui->cbt_Db->checkState() == Qt::Unchecked)
-        {
-            dbf = swift::misc::db::Invalid;
-        }
+        if (ui->cbt_Db->checkState() == Qt::Checked) { dbf = swift::misc::db::Valid; }
+        else if (ui->cbt_Db->checkState() == Qt::Unchecked) { dbf = swift::misc::db::Invalid; }
 
         return std::make_unique<CAircraftModelFilter>(
-            convertDbId(ui->le_Id->text()),
-            ui->le_ModelString->text(),
-            ui->le_ModelDescription->text(),
-            mf,
-            dbf,
-            ui->cbt_Military->checkState(),
-            ui->cbt_ColorLiveries->checkState(),
-            ui->le_AircraftIcao->text(),
-            ui->le_AircraftManufacturer->text(),
-            ui->le_AirlineIcao->text(),
-            ui->le_AirlineName->text(),
-            ui->le_LiveryCode->text(),
-            ui->le_FileName->text(),
-            ui->comp_CombinedType->getCombinedType(),
-            ui->comp_SimulatorSelector->getValue(),
-            ui->comp_DistributorSelector->getDistributor());
+            convertDbId(ui->le_Id->text()), ui->le_ModelString->text(), ui->le_ModelDescription->text(), mf, dbf,
+            ui->cbt_Military->checkState(), ui->cbt_ColorLiveries->checkState(), ui->le_AircraftIcao->text(),
+            ui->le_AircraftManufacturer->text(), ui->le_AirlineIcao->text(), ui->le_AirlineName->text(),
+            ui->le_LiveryCode->text(), ui->le_FileName->text(), ui->comp_CombinedType->getCombinedType(),
+            ui->comp_SimulatorSelector->getValue(), ui->comp_DistributorSelector->getDistributor());
     }
 
     void CAircraftModelFilterBar::onRowCountChanged(int count, bool withFilter)
@@ -174,8 +147,11 @@ namespace swift::gui::filters
         connect(ui->cbt_Military, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
         connect(ui->cbt_ColorLiveries, &QCheckBox::clicked, this, &CAircraftModelFilterBar::onCheckBoxChanged);
 
-        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this, &CAircraftModelFilterBar::onSimulatorSelectionChanged);
-        connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::onDistributorChanged);
-        connect(ui->comp_CombinedType, &CAircraftCombinedTypeSelector::changedCombinedType, this, &CAircraftModelFilterBar::onCombinedTypeChanged);
+        connect(ui->comp_SimulatorSelector, &CSimulatorSelector::changed, this,
+                &CAircraftModelFilterBar::onSimulatorSelectionChanged);
+        connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this,
+                &CAircraftModelFilterBar::onDistributorChanged);
+        connect(ui->comp_CombinedType, &CAircraftCombinedTypeSelector::changedCombinedType, this,
+                &CAircraftModelFilterBar::onCombinedTypeChanged);
     }
 } // namespace swift::gui::filters

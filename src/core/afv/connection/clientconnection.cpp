@@ -14,23 +14,26 @@ using namespace swift::core::afv::crypto;
 
 namespace swift::core::afv::connection
 {
-    CClientConnection::CClientConnection(const QString &apiServer, QObject *parent) : QObject(parent),
-                                                                                      m_udpSocket(new QUdpSocket(this)),
-                                                                                      m_voiceServerTimer(new QTimer(this)),
-                                                                                      m_apiServerConnection(new CApiServerConnection(apiServer, this))
+    CClientConnection::CClientConnection(const QString &apiServer, QObject *parent)
+        : QObject(parent), m_udpSocket(new QUdpSocket(this)), m_voiceServerTimer(new QTimer(this)),
+          m_apiServerConnection(new CApiServerConnection(apiServer, this))
     {
         CLogMessage(this).debug(u"ClientConnection instantiated");
 
-        // connect(&m_apiServerConnection, &ApiServerConnection::authenticationFinished, this, &ClientConnection::apiConnectionFinished);
-        // connect(&m_apiServerConnection, &ApiServerConnection::addCallsignFinished,    this, &ClientConnection::addCallsignFinished);
-        // connect(&m_apiServerConnection, &ApiServerConnection::removeCallsignFinished, this, &ClientConnection::removeCallsignFinished);
+        // connect(&m_apiServerConnection, &ApiServerConnection::authenticationFinished, this,
+        // &ClientConnection::apiConnectionFinished); connect(&m_apiServerConnection,
+        // &ApiServerConnection::addCallsignFinished,    this, &ClientConnection::addCallsignFinished);
+        // connect(&m_apiServerConnection, &ApiServerConnection::removeCallsignFinished, this,
+        // &ClientConnection::removeCallsignFinished);
 
-        connect(m_voiceServerTimer, &QTimer::timeout, this, &CClientConnection::voiceServerHeartbeat); // sends heartbeat to server
+        connect(m_voiceServerTimer, &QTimer::timeout, this,
+                &CClientConnection::voiceServerHeartbeat); // sends heartbeat to server
         connect(m_udpSocket, &QUdpSocket::readyRead, this, &CClientConnection::readPendingDatagrams);
         connect(m_udpSocket, &QAbstractSocket::errorOccurred, this, &CClientConnection::handleSocketError);
     }
 
-    void CClientConnection::connectTo(const QString &userName, const QString &password, const QString &callsign, const QString &client, ConnectionCallback callback)
+    void CClientConnection::connectTo(const QString &userName, const QString &password, const QString &callsign,
+                                      const QString &client, ConnectionCallback callback)
     {
         if (m_connection.isConnected())
         {
@@ -42,35 +45,34 @@ namespace swift::core::afv::connection
         m_connection.setCallsign(callsign);
 
         QPointer<CClientConnection> myself(this);
-        m_apiServerConnection->connectTo(userName, password, client, m_networkVersion,
-                                         { // callback called when connected
-                                           this, [=](bool authenticated) {
-                                               // callback when connection has been established
-                                               if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
+        m_apiServerConnection->connectTo(
+            userName, password, client, m_networkVersion,
+            { // callback called when connected
+              this, [=](bool authenticated) {
+                  // callback when connection has been established
+                  if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
 
-                                               if (authenticated)
-                                               {
-                                                   const QString cs = m_connection.getCallsign();
-                                                   m_connection.setTokens(m_apiServerConnection->addCallsign(cs));
-                                                   m_connection.setTsAuthenticatedToNow();
-                                                   m_connection.createCryptoChannels();
-                                                   m_connection.setTsHeartbeatToNow();
-                                                   this->connectToVoiceServer();
-                                                   // taskServerConnectionCheck.Start();
+                  if (authenticated)
+                  {
+                      const QString cs = m_connection.getCallsign();
+                      m_connection.setTokens(m_apiServerConnection->addCallsign(cs));
+                      m_connection.setTsAuthenticatedToNow();
+                      m_connection.createCryptoChannels();
+                      m_connection.setTsHeartbeatToNow();
+                      this->connectToVoiceServer();
+                      // taskServerConnectionCheck.Start();
 
-                                                   CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2") << cs << boolToYesNo(m_udpSocket->isOpen());
-                                               }
-                                               else
-                                               {
-                                                   m_connection.reset();
-                                               }
+                      CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2")
+                          << cs << boolToYesNo(m_udpSocket->isOpen());
+                  }
+                  else { m_connection.reset(); }
 
-                                               // Make sure crypto channels etc. are created
-                                               m_connection.setConnected(authenticated);
+                  // Make sure crypto channels etc. are created
+                  m_connection.setConnected(authenticated);
 
-                                               // callback of the calling parent
-                                               if (callback) { callback(authenticated); }
-                                           } });
+                  // callback of the calling parent
+                  if (callback) { callback(authenticated); }
+              } });
     }
 
     void CClientConnection::disconnectFrom(const QString &reason)
@@ -154,7 +156,8 @@ namespace swift::core::afv::connection
             return;
         }
 
-        CryptoDtoSerializer::Deserializer deserializer = CryptoDtoSerializer::deserialize(*m_connection.m_voiceCryptoChannel, messageDdata, loopback);
+        CryptoDtoSerializer::Deserializer deserializer =
+            CryptoDtoSerializer::deserialize(*m_connection.m_voiceCryptoChannel, messageDdata, loopback);
 
         if (deserializer.m_dtoNameBuffer == AudioRxOnTransceiversDto::getShortDtoName())
         {
@@ -168,11 +171,15 @@ namespace swift::core::afv::connection
         else if (deserializer.m_dtoNameBuffer == HeartbeatAckDto::getShortDtoName())
         {
             m_connection.setTsHeartbeatToNow();
-            if (CBuildConfig::isLocalDeveloperDebugBuild()) { CLogMessage(this).debug(u"Received voice server heartbeat"); }
+            if (CBuildConfig::isLocalDeveloperDebugBuild())
+            {
+                CLogMessage(this).debug(u"Received voice server heartbeat");
+            }
         }
         else
         {
-            CLogMessage(this).warning(u"Received unknown data: %1 %2") << QString(deserializer.m_dtoNameBuffer) << deserializer.m_dataLength;
+            CLogMessage(this).warning(u"Received unknown data: %1 %2")
+                << QString(deserializer.m_dtoNameBuffer) << deserializer.m_dataLength;
         }
     }
 
@@ -191,10 +198,15 @@ namespace swift::core::afv::connection
         }
 
         const QUrl voiceServerUrl("udp://" + m_connection.getTokens().VoiceServer.addressIpV4);
-        if (CBuildConfig::isLocalDeveloperDebugBuild()) { CLogMessage(this).debug(u"Sending voice server heartbeat to '%1'") << voiceServerUrl.host(); }
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            CLogMessage(this).debug(u"Sending voice server heartbeat to '%1'") << voiceServerUrl.host();
+        }
         HeartbeatDto keepAlive;
         keepAlive.callsign = m_connection.getCallsign().toStdString();
-        const QByteArray dataBytes = CryptoDtoSerializer::serialize(*m_connection.m_voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, keepAlive);
-        m_udpSocket->writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
+        const QByteArray dataBytes = CryptoDtoSerializer::serialize(*m_connection.m_voiceCryptoChannel,
+                                                                    CryptoDtoMode::AEAD_ChaCha20Poly1305, keepAlive);
+        m_udpSocket->writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()),
+                                   static_cast<quint16>(voiceServerUrl.port()));
     }
 } // namespace swift::core::afv::connection

@@ -73,7 +73,8 @@ namespace swift::misc::simulation
                 a[i][i - 1] = 1.0 / (x[i] - x[i - 1]);
                 a[i][i] = 2.0 / (x[i] - x[i - 1]) + 2.0 / (x[i + 1] - x[i]);
                 a[i][i + 1] = 1.0 / (x[i + 1] - x[i]);
-                b[i] = 3.0 * (y[i] - y[i - 1]) / ((x[i] - x[i - 1]) * (x[i] - x[i - 1])) + 3.0 * (y[i + 1] - y[i]) / ((x[i + 1] - x[i]) * (x[i + 1] - x[i]));
+                b[i] = 3.0 * (y[i] - y[i - 1]) / ((x[i] - x[i - 1]) * (x[i] - x[i - 1])) +
+                       3.0 * (y[i + 1] - y[i]) / ((x[i + 1] - x[i]) * (x[i + 1] - x[i]));
             }
             // *INDENT-ON*
 
@@ -141,14 +142,13 @@ namespace swift::misc::simulation
         // with https://dev.swift-project.org/T668#15841 avoid 2 very close positions
         // currently done by time, maybe we can also choose distance
         const qint64 osNotTooClose = qRound64(0.8 * os);
-        const CAircraftSituation older = m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted - osNotTooClose);
-        if (!older.isNull())
-        {
-            m_s[0] = older;
-        }
+        const CAircraftSituation older =
+            m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted - osNotTooClose);
+        if (!older.isNull()) { m_s[0] = older; }
         else
         {
-            const CAircraftSituation closeOlder = m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
+            const CAircraftSituation closeOlder =
+                m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
             if (!closeOlder.isNull()) { m_s[0] = closeOlder; }
         }
         const qint64 latestAdjusted = m_s[2].getAdjustedMSecsSinceEpoch();
@@ -160,7 +160,8 @@ namespace swift::misc::simulation
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            const bool verified = verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
+            const bool verified =
+                verifyInterpolationSituations(m_s[0], m_s[1], m_s[2]); // oldest -> latest, only verify order
             if (!verified)
             {
                 static const QString vm("Unverified situations, m0-2 (oldest latest) %1 %2 %3");
@@ -173,8 +174,7 @@ namespace swift::misc::simulation
     }
 
     // pin vtables to this file
-    void CInterpolatorSpline::anchor()
-    {}
+    void CInterpolatorSpline::anchor() {}
 
     const IInterpolant &CInterpolatorSpline::getInterpolant(SituationLog &log)
     {
@@ -195,12 +195,16 @@ namespace swift::misc::simulation
                 return m_interpolant;
             }
 
-            const std::array<std::array<double, 3>, 3> normals { { m_s[0].getPosition().normalVectorDouble(), m_s[1].getPosition().normalVectorDouble(), m_s[2].getPosition().normalVectorDouble() } };
+            const std::array<std::array<double, 3>, 3> normals { { m_s[0].getPosition().normalVectorDouble(),
+                                                                   m_s[1].getPosition().normalVectorDouble(),
+                                                                   m_s[2].getPosition().normalVectorDouble() } };
             PosArray pa;
             pa.x = { { normals[0][0], normals[1][0], normals[2][0] } }; // oldest -> latest
             pa.y = { { normals[0][1], normals[1][1], normals[2][1] } };
             pa.z = { { normals[0][2], normals[1][2], normals[2][2] } }; // latest
-            pa.t = { { static_cast<double>(m_s[0].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[1].getAdjustedMSecsSinceEpoch()), static_cast<double>(m_s[2].getAdjustedMSecsSinceEpoch()) } };
+            pa.t = { { static_cast<double>(m_s[0].getAdjustedMSecsSinceEpoch()),
+                       static_cast<double>(m_s[1].getAdjustedMSecsSinceEpoch()),
+                       static_cast<double>(m_s[2].getAdjustedMSecsSinceEpoch()) } };
 
             pa.dx = getDerivatives(pa.t, pa.x);
             pa.dy = getDerivatives(pa.t, pa.y);
@@ -219,7 +223,8 @@ namespace swift::misc::simulation
             const double a1 = m_s[1].getCorrectedAltitude(cg).value(altUnit);
             const double a2 = m_s[2].getCorrectedAltitude(cg).value(altUnit); // latest
             pa.a = { { a0, a1, a2 } };
-            pa.gnd = { { m_s[0].getOnGroundInfo().getGroundFactor(), m_s[1].getOnGroundInfo().getGroundFactor(), m_s[2].getOnGroundInfo().getGroundFactor() } };
+            pa.gnd = { { m_s[0].getOnGroundInfo().getGroundFactor(), m_s[1].getOnGroundInfo().getGroundFactor(),
+                         m_s[2].getOnGroundInfo().getGroundFactor() } };
             pa.da = getDerivatives(pa.t, pa.a);
             pa.dgnd = getDerivatives(pa.t, pa.gnd);
 
@@ -285,7 +290,8 @@ namespace swift::misc::simulation
             if (s.hasGroundElevation()) { continue; } // do not override existing values
             if (canSkip && s.canLikelySkipNearGroundInterpolation()) { continue; }
 
-            const CElevationPlane plane = this->findClosestElevationWithinRange(s, CElevationPlane::singlePointRadius());
+            const CElevationPlane plane =
+                this->findClosestElevationWithinRange(s, CElevationPlane::singlePointRadius());
             const bool u = s.setGroundElevationChecked(plane, CAircraftSituation::FromCache);
             updated |= u;
         }
@@ -310,12 +316,15 @@ namespace swift::misc::simulation
         return false;
     }
 
-    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa, const CLengthUnit &altitudeUnit, const CInterpolatorLinearPbh &pbh) : m_pa(pa), m_altitudeUnit(altitudeUnit)
+    CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa,
+                                                    const CLengthUnit &altitudeUnit, const CInterpolatorLinearPbh &pbh)
+        : m_pa(pa), m_altitudeUnit(altitudeUnit)
     {
         m_pbh = pbh;
     }
 
-    std::tuple<geo::CCoordinateGeodetic, aviation::CAltitude> CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude() const
+    std::tuple<geo::CCoordinateGeodetic, aviation::CAltitude>
+    CInterpolatorSpline::CInterpolant::interpolatePositionAndAltitude() const
     {
         const double t1 = m_pa.t[1];
         const double t2 = m_pa.t[2]; // latest (adjusted)
@@ -323,17 +332,23 @@ namespace swift::misc::simulation
         bool valid = (t1 < t2) && (m_currentTimeMsSinceEpoc >= t1) && (m_currentTimeMsSinceEpoc < t2);
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            Q_ASSERT_X(t1 < t2, Q_FUNC_INFO, "Expect sorted times, latest first"); // that means a bug in our code init the values
+            Q_ASSERT_X(t1 < t2, Q_FUNC_INFO,
+                       "Expect sorted times, latest first"); // that means a bug in our code init the values
             SWIFT_VERIFY_X(m_currentTimeMsSinceEpoc >= t1, Q_FUNC_INFO, "invalid timestamp t1");
-            SWIFT_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO, "invalid timestamp t2"); // t1==t2 results in div/0
+            SWIFT_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO,
+                           "invalid timestamp t2"); // t1==t2 results in div/0
         }
         if (!valid) { return { {}, {} }; }
 
-        const double newX = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.x[1], m_pa.x[2], m_pa.dx[1], m_pa.dx[2]);
-        const double newY = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
-        const double newZ = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.z[1], m_pa.z[2], m_pa.dz[1], m_pa.dz[2]);
+        const double newX =
+            evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.x[1], m_pa.x[2], m_pa.dx[1], m_pa.dx[2]);
+        const double newY =
+            evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.y[1], m_pa.y[2], m_pa.dy[1], m_pa.dy[2]);
+        const double newZ =
+            evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.z[1], m_pa.z[2], m_pa.dz[1], m_pa.dz[2]);
 
-        valid = CAircraftSituation::isValidVector(m_pa.x) && CAircraftSituation::isValidVector(m_pa.y) && CAircraftSituation::isValidVector(m_pa.z);
+        valid = CAircraftSituation::isValidVector(m_pa.x) && CAircraftSituation::isValidVector(m_pa.y) &&
+                CAircraftSituation::isValidVector(m_pa.z);
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
             SWIFT_VERIFY_X(CAircraftSituation::isValidVector(m_pa.x), Q_FUNC_INFO, "invalid X"); // all x values
@@ -349,11 +364,13 @@ namespace swift::misc::simulation
         if (!valid && CBuildConfig::isLocalDeveloperDebugBuild())
         {
             SWIFT_VERIFY_X(valid, Q_FUNC_INFO, "invalid vector");
-            CLogMessage(this).warning(u"Invalid vector v: %2 %3 %4") << normalVector[0] << normalVector[1] << normalVector[2];
+            CLogMessage(this).warning(u"Invalid vector v: %2 %3 %4")
+                << normalVector[0] << normalVector[1] << normalVector[2];
         }
         if (!valid) { return { {}, {} }; }
 
-        const double newA = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.a[1], m_pa.a[2], m_pa.da[1], m_pa.da[2]);
+        const double newA =
+            evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.a[1], m_pa.a[2], m_pa.da[1], m_pa.da[2]);
         const CAltitude alt(newA, m_altitudeUnit);
 
         return { currentPosition, alt };
@@ -379,12 +396,14 @@ namespace swift::misc::simulation
         }
         else
         {
-            const double newGnd = evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
+            const double newGnd =
+                evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, gnd1, gnd2, m_pa.dgnd[1], m_pa.dgnd[2]);
             return COnGroundInfo(newGnd);
         }
     }
 
-    void CInterpolatorSpline::CInterpolant::setTimes(qint64 currentTimeMs, double timeFraction, qint64 interpolatedTimeMs)
+    void CInterpolatorSpline::CInterpolant::setTimes(qint64 currentTimeMs, double timeFraction,
+                                                     qint64 interpolatedTimeMs)
     {
         m_currentTimeMsSinceEpoc = currentTimeMs;
         m_interpolatedTime = interpolatedTimeMs;
@@ -419,7 +438,10 @@ namespace swift::misc::simulation
         return pa;
     }
 
-    bool CInterpolatorSpline::verifyInterpolationSituations(const CAircraftSituation &oldest, const CAircraftSituation &newer, const CAircraftSituation &latest, const CInterpolationAndRenderingSetupPerCallsign &setup)
+    bool CInterpolatorSpline::verifyInterpolationSituations(const CAircraftSituation &oldest,
+                                                            const CAircraftSituation &newer,
+                                                            const CAircraftSituation &latest,
+                                                            const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
         CAircraftSituationList situations;

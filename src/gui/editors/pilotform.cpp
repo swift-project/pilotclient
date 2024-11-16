@@ -24,8 +24,7 @@ using namespace swift::gui::components;
 
 namespace swift::gui::editors
 {
-    CPilotForm::CPilotForm(QWidget *parent) : CForm(parent),
-                                              ui(new Ui::CPilotForm)
+    CPilotForm::CPilotForm(QWidget *parent) : CForm(parent), ui(new Ui::CPilotForm)
     {
         ui->setupUi(this);
         ui->lblp_HomeAirport->setToolTips("ok", "wrong");
@@ -40,8 +39,7 @@ namespace swift::gui::editors
         connect(ui->le_RealName, &QLineEdit::editingFinished, this, &CPilotForm::doValidation);
     }
 
-    CPilotForm::~CPilotForm()
-    {}
+    CPilotForm::~CPilotForm() {}
 
     void CPilotForm::setVatsimValidation(bool vatsim)
     {
@@ -52,7 +50,8 @@ namespace swift::gui::editors
 
     CUser CPilotForm::getUser() const
     {
-        CUser user = CUser(ui->le_Id->text().trimmed(), CUser::beautifyRealName(ui->le_RealName->text()), "", ui->le_Password->text());
+        CUser user = CUser(ui->le_Id->text().trimmed(), CUser::beautifyRealName(ui->le_RealName->text()), "",
+                           ui->le_Password->text());
         user.setHomeBase(ui->comp_HomeAirport->getAirportIcaoCode());
         return user;
     }
@@ -65,10 +64,7 @@ namespace swift::gui::editors
             ui->le_Id->setText(user.getId());
             ui->le_Password->setText(user.getPassword());
             ui->le_RealName->setText(user.getRealName());
-            if (user.hasHomeBase())
-            {
-                ui->comp_HomeAirport->setAirportIcaoCode(user.getHomeBase());
-            }
+            if (user.hasHomeBase()) { ui->comp_HomeAirport->setAirportIcaoCode(user.getHomeBase()); }
         }
         else if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
@@ -118,7 +114,9 @@ namespace swift::gui::editors
         if (!validId) { msgs.push_back(CStatusMessage(this).validationError(u"Invalid id")); }
 
         // check against user and if the data entry contains a valid code (or is empty)
-        const bool validHomeAirport = user.hasValidOrEmptyHomeBase() && (ui->comp_HomeAirport->isEmpty() || ui->comp_HomeAirport->getAirportIcaoCode().hasValidIcaoCode(false));
+        const bool validHomeAirport =
+            user.hasValidOrEmptyHomeBase() &&
+            (ui->comp_HomeAirport->isEmpty() || ui->comp_HomeAirport->getAirportIcaoCode().hasValidIcaoCode(false));
         ui->lblp_HomeAirport->setTicked(validHomeAirport);
         if (!validHomeAirport) { msgs.push_back(CStatusMessage(this).validationError(u"Wromg home airport")); }
 
@@ -133,10 +131,7 @@ namespace swift::gui::editors
         return msgs;
     }
 
-    void CPilotForm::unhidePassword()
-    {
-        CGuiUtility::tempUnhidePassword(ui->le_Password);
-    }
+    void CPilotForm::unhidePassword() { CGuiUtility::tempUnhidePassword(ui->le_Password); }
 
     void CPilotForm::doValidation()
     {

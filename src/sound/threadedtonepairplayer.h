@@ -30,7 +30,8 @@ namespace swift::sound
 
     public:
         //! Constructor
-        CThreadedTonePairPlayer(QObject *owner, const QString &name, const swift::misc::audio::CAudioDeviceInfo &device);
+        CThreadedTonePairPlayer(QObject *owner, const QString &name,
+                                const swift::misc::audio::CAudioDeviceInfo &device);
 
         //! Destructor
         virtual ~CThreadedTonePairPlayer() override = default;

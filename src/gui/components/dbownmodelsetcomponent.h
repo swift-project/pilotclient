@@ -81,10 +81,12 @@ namespace swift::gui
             views::CAircraftModelView *view() const;
 
             //! Add to model set
-            swift::misc::CStatusMessage addToModelSet(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator);
+            swift::misc::CStatusMessage addToModelSet(const swift::misc::simulation::CAircraftModelList &models,
+                                                      const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Add to model set
-            swift::misc::CStatusMessage addToModelSet(const swift::misc::simulation::CAircraftModel &model, const swift::misc::simulation::CSimulatorInfo &simulator);
+            swift::misc::CStatusMessage addToModelSet(const swift::misc::simulation::CAircraftModel &model,
+                                                      const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Current model set for simulator CDbOwnModelSetComponent::getModelSetSimulator
             //! \remark this the set from the container, which can be different from cache while updating
@@ -95,7 +97,10 @@ namespace swift::gui
             int getModelSetCountFromView() const;
 
             //! Cached models for current simulator
-            swift::misc::simulation::CAircraftModelList getModelSet() const { return this->getCachedModels(m_simulator); }
+            swift::misc::simulation::CAircraftModelList getModelSet() const
+            {
+                return this->getCachedModels(m_simulator);
+            }
 
             //! Cached models count for current simulator
             int getModelSetCount() const { return this->getCachedModelsCount(m_simulator); }
@@ -120,19 +125,30 @@ namespace swift::gui
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const swift::misc::simulation::CAircraftModelList &models) override { this->setModelSet(models, this->getModelSetSimulator()); }
-            virtual int updateModels(const swift::misc::simulation::CAircraftModelList &models) override { return this->replaceOrAddModelSet(models, this->getModelSetSimulator()); }
-            virtual swift::misc::simulation::CSimulatorInfo getSelectedSimulator() const override { return this->getModelSetSimulator(); }
+            virtual void setModels(const swift::misc::simulation::CAircraftModelList &models) override
+            {
+                this->setModelSet(models, this->getModelSetSimulator());
+            }
+            virtual int updateModels(const swift::misc::simulation::CAircraftModelList &models) override
+            {
+                return this->replaceOrAddModelSet(models, this->getModelSetSimulator());
+            }
+            virtual swift::misc::simulation::CSimulatorInfo getSelectedSimulator() const override
+            {
+                return this->getModelSetSimulator();
+            }
             //! @}
 
             //! Enable buttons
             void enableButtons(bool firstSet, bool newSet);
 
             //! Set the model set for a given simulator
-            void setModelSet(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator);
+            void setModelSet(const swift::misc::simulation::CAircraftModelList &models,
+                             const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Replace or add models provided for a given simulator
-            int replaceOrAddModelSet(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator);
+            int replaceOrAddModelSet(const swift::misc::simulation::CAircraftModelList &models,
+                                     const swift::misc::simulation::CSimulatorInfo &simulator);
 
         private:
             //! Tab has been changed
@@ -194,9 +210,16 @@ namespace swift::gui
             QScopedPointer<views::CAircraftModelStatisticsDialog> m_modelStatisticsDialog;
 
             swift::misc::simulation::CSimulatorInfo m_simulator; //!< currently set simulator
-            swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences { this, &CDbOwnModelSetComponent::distributorPreferencesChanged }; //!< distributor preferences
-            swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModel> m_modelSettings { this }; //!< settings for models
-            swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories
+            swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TDistributorListPreferences>
+                m_distributorPreferences {
+                    this, &CDbOwnModelSetComponent::distributorPreferencesChanged
+                }; //!< distributor preferences
+            swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModel> m_modelSettings {
+                this
+            }; //!< settings for models
+            swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings {
+                this
+            }; //!< for directories
 
             // -------------------------- custom menus -----------------------------------
 
@@ -207,7 +230,8 @@ namespace swift::gui
             {
             public:
                 //! Constructor
-                CLoadModelSetMenu(CDbOwnModelSetComponent *ownModelSetComponent) : menus::IMenuDelegate(ownModelSetComponent)
+                CLoadModelSetMenu(CDbOwnModelSetComponent *ownModelSetComponent)
+                    : menus::IMenuDelegate(ownModelSetComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu

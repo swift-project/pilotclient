@@ -27,8 +27,8 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::components
 {
-    CAudioNotificationComponent::CAudioNotificationComponent(QWidget *parent) : QFrame(parent),
-                                                                                ui(new Ui::CAudioNotificationComponent)
+    CAudioNotificationComponent::CAudioNotificationComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CAudioNotificationComponent)
     {
         ui->setupUi(this);
 
@@ -48,40 +48,53 @@ namespace swift::gui::components
         this->reloadSettings();
 
         // checkboxes for notifications
-        bool c = connect(ui->cb_SetupAudioPTTClickDown, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        bool c = connect(ui->cb_SetupAudioPTTClickDown, &QCheckBox::toggled, this,
+                         &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioPTTClickUp, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAudioPTTClickUp, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioNotificationTextMessageFrequency, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAudioNotificationTextMessageFrequency, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioNotificationTextMessagePrivate, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAudioNotificationTextMessagePrivate, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioNotificationTextMessageSupervisor, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAudioNotificationTextMessageSupervisor, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioNotificationTextMessageUnicom, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAudioNotificationTextMessageUnicom, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioNotificationTextCallsignMentioned, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAudioNotificationTextCallsignMentioned, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAfvBlocked, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAfvBlocked, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAfvClicked, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAfvClicked, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioNotificationLogin, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAudioNotificationLogin, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->cb_SetupAudioNotificationLogoff, &QCheckBox::toggled, this, &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
+        c = connect(ui->cb_SetupAudioNotificationLogoff, &QCheckBox::toggled, this,
+                    &CAudioNotificationComponent::onNotificationsToggled, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->pb_SoundReset, &QPushButton::released, this, &CAudioNotificationComponent::resetNotificationSoundsDir, Qt::QueuedConnection);
+        c = connect(ui->pb_SoundReset, &QPushButton::released, this,
+                    &CAudioNotificationComponent::resetNotificationSoundsDir, Qt::QueuedConnection);
         Q_ASSERT(c);
-        c = connect(ui->pb_SoundDir, &QPushButton::released, this, &CAudioNotificationComponent::selectNotificationSoundsDir, Qt::QueuedConnection);
+        c = connect(ui->pb_SoundDir, &QPushButton::released, this,
+                    &CAudioNotificationComponent::selectNotificationSoundsDir, Qt::QueuedConnection);
         Q_ASSERT(c);
 
         // volumes
-        c = connect(ui->sb_NotificationValueVolume, qOverload<int>(&QSpinBox::valueChanged), this, &CAudioNotificationComponent::onNotificationVolumeChanged);
+        c = connect(ui->sb_NotificationValueVolume, qOverload<int>(&QSpinBox::valueChanged), this,
+                    &CAudioNotificationComponent::onNotificationVolumeChanged);
         Q_ASSERT(c);
     }
 
-    CAudioNotificationComponent::~CAudioNotificationComponent()
-    {}
+    CAudioNotificationComponent::~CAudioNotificationComponent() {}
 
     void CAudioNotificationComponent::reloadSettings()
     {
@@ -90,17 +103,24 @@ namespace swift::gui::components
         ui->cb_SetupAudioPTTClickDown->setChecked(as.isNotificationFlagSet(CNotificationSounds::PTTClickKeyDown));
         ui->cb_SetupAudioPTTClickUp->setChecked(as.isNotificationFlagSet(CNotificationSounds::PTTClickKeyUp));
 
-        ui->cb_SetupAudioNotificationTextMessageFrequency->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageFrequency));
-        ui->cb_SetupAudioNotificationTextMessagePrivate->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate));
-        ui->cb_SetupAudioNotificationTextMessageSupervisor->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor));
-        ui->cb_SetupAudioNotificationTextMessageUnicom->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageUnicom));
-        ui->cb_SetupAudioNotificationTextCallsignMentioned->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned));
+        ui->cb_SetupAudioNotificationTextMessageFrequency->setChecked(
+            as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageFrequency));
+        ui->cb_SetupAudioNotificationTextMessagePrivate->setChecked(
+            as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessagePrivate));
+        ui->cb_SetupAudioNotificationTextMessageSupervisor->setChecked(
+            as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageSupervisor));
+        ui->cb_SetupAudioNotificationTextMessageUnicom->setChecked(
+            as.isNotificationFlagSet(CNotificationSounds::NotificationTextMessageUnicom));
+        ui->cb_SetupAudioNotificationTextCallsignMentioned->setChecked(
+            as.isNotificationFlagSet(CNotificationSounds::NotificationTextCallsignMentioned));
 
         ui->cb_SetupAfvBlocked->setChecked(as.isNotificationFlagSet(CNotificationSounds::AFVBlocked));
         ui->cb_SetupAfvClicked->setChecked(as.isNotificationFlagSet(CNotificationSounds::AFVClicked));
 
-        ui->cb_SetupAudioNotificationLogin->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationLogin));
-        ui->cb_SetupAudioNotificationLogoff->setChecked(as.isNotificationFlagSet(CNotificationSounds::NotificationLogoff));
+        ui->cb_SetupAudioNotificationLogin->setChecked(
+            as.isNotificationFlagSet(CNotificationSounds::NotificationLogin));
+        ui->cb_SetupAudioNotificationLogoff->setChecked(
+            as.isNotificationFlagSet(CNotificationSounds::NotificationLogoff));
 
         ui->le_SoundDir->setText(as.getNotificationSoundDirectory());
         ui->sb_NotificationValueVolume->setValue(as.getNotificationVolume());
@@ -122,11 +142,26 @@ namespace swift::gui::components
         if (cb == ui->cb_SetupAudioPTTClickDown) { return CNotificationSounds::PTTClickKeyDown; }
         if (cb == ui->cb_SetupAudioPTTClickUp) { return CNotificationSounds::PTTClickKeyUp; }
 
-        if (cb == ui->cb_SetupAudioNotificationTextCallsignMentioned) { return CNotificationSounds::NotificationTextCallsignMentioned; }
-        if (cb == ui->cb_SetupAudioNotificationTextMessageFrequency) { return CNotificationSounds::NotificationTextMessageFrequency; }
-        if (cb == ui->cb_SetupAudioNotificationTextMessagePrivate) { return CNotificationSounds::NotificationTextMessagePrivate; }
-        if (cb == ui->cb_SetupAudioNotificationTextMessageSupervisor) { return CNotificationSounds::NotificationTextMessageSupervisor; }
-        if (cb == ui->cb_SetupAudioNotificationTextMessageUnicom) { return CNotificationSounds::NotificationTextMessageUnicom; }
+        if (cb == ui->cb_SetupAudioNotificationTextCallsignMentioned)
+        {
+            return CNotificationSounds::NotificationTextCallsignMentioned;
+        }
+        if (cb == ui->cb_SetupAudioNotificationTextMessageFrequency)
+        {
+            return CNotificationSounds::NotificationTextMessageFrequency;
+        }
+        if (cb == ui->cb_SetupAudioNotificationTextMessagePrivate)
+        {
+            return CNotificationSounds::NotificationTextMessagePrivate;
+        }
+        if (cb == ui->cb_SetupAudioNotificationTextMessageSupervisor)
+        {
+            return CNotificationSounds::NotificationTextMessageSupervisor;
+        }
+        if (cb == ui->cb_SetupAudioNotificationTextMessageUnicom)
+        {
+            return CNotificationSounds::NotificationTextMessageUnicom;
+        }
 
         if (cb == ui->cb_SetupAfvBlocked) { return CNotificationSounds::AFVBlocked; }
         if (cb == ui->cb_SetupAfvClicked) { return CNotificationSounds::AFVClicked; }
@@ -145,17 +180,23 @@ namespace swift::gui::components
         as.setNotificationFlag(CNotificationSounds::PTTClickKeyDown, ui->cb_SetupAudioPTTClickDown->isChecked());
         as.setNotificationFlag(CNotificationSounds::PTTClickKeyUp, ui->cb_SetupAudioPTTClickUp->isChecked());
 
-        as.setNotificationFlag(CNotificationSounds::NotificationTextMessageFrequency, ui->cb_SetupAudioNotificationTextMessageFrequency->isChecked());
-        as.setNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate, ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked());
-        as.setNotificationFlag(CNotificationSounds::NotificationTextMessageSupervisor, ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked());
-        as.setNotificationFlag(CNotificationSounds::NotificationTextMessageUnicom, ui->cb_SetupAudioNotificationTextMessageUnicom->isChecked());
-        as.setNotificationFlag(CNotificationSounds::NotificationTextCallsignMentioned, ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked());
+        as.setNotificationFlag(CNotificationSounds::NotificationTextMessageFrequency,
+                               ui->cb_SetupAudioNotificationTextMessageFrequency->isChecked());
+        as.setNotificationFlag(CNotificationSounds::NotificationTextMessagePrivate,
+                               ui->cb_SetupAudioNotificationTextMessagePrivate->isChecked());
+        as.setNotificationFlag(CNotificationSounds::NotificationTextMessageSupervisor,
+                               ui->cb_SetupAudioNotificationTextMessageSupervisor->isChecked());
+        as.setNotificationFlag(CNotificationSounds::NotificationTextMessageUnicom,
+                               ui->cb_SetupAudioNotificationTextMessageUnicom->isChecked());
+        as.setNotificationFlag(CNotificationSounds::NotificationTextCallsignMentioned,
+                               ui->cb_SetupAudioNotificationTextCallsignMentioned->isChecked());
 
         as.setNotificationFlag(CNotificationSounds::AFVBlocked, ui->cb_SetupAfvBlocked->isChecked());
         as.setNotificationFlag(CNotificationSounds::AFVClicked, ui->cb_SetupAfvClicked->isChecked());
 
         as.setNotificationFlag(CNotificationSounds::NotificationLogin, ui->cb_SetupAudioNotificationLogin->isChecked());
-        as.setNotificationFlag(CNotificationSounds::NotificationLogoff, ui->cb_SetupAudioNotificationLogoff->isChecked());
+        as.setNotificationFlag(CNotificationSounds::NotificationLogoff,
+                               ui->cb_SetupAudioNotificationLogoff->isChecked());
 
         const CStatusMessage msg = m_audioSettings.set(as);
         CLogMessage(this).preformatted(msg);
@@ -171,7 +212,9 @@ namespace swift::gui::components
     void CAudioNotificationComponent::selectNotificationSoundsDir()
     {
         CSettings s = m_audioSettings.get();
-        const QString dir = QFileDialog::getExistingDirectory(this, QStringLiteral("Open directory"), s.getNotificationSoundDirectory(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+        const QString dir =
+            QFileDialog::getExistingDirectory(this, QStringLiteral("Open directory"), s.getNotificationSoundDirectory(),
+                                              QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
         const QDir d(dir);
         if (d.exists())
         {

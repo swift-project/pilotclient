@@ -27,8 +27,8 @@ namespace swift::misc::simulation
         CSimulatorPluginInfo() = default;
 
         //! Constructor (used with unit tests)
-        CSimulatorPluginInfo(const QString &identifier, const QString &name,
-                             const QString &simulator, const QString &description, bool valid);
+        CSimulatorPluginInfo(const QString &identifier, const QString &name, const QString &simulator,
+                             const QString &description, bool valid);
 
         //! \copydoc swift::misc::CValueObject::convertFromJson
         void convertFromJson(const QJsonObject &json);

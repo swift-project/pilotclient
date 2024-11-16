@@ -34,9 +34,8 @@ namespace swift::gui::components
         return cats;
     }
 
-    CInterpolationLogDisplay::CInterpolationLogDisplay(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                          CIdentifiable(this),
-                                                                          ui(new Ui::CInterpolationLogDisplay)
+    CInterpolationLogDisplay::CInterpolationLogDisplay(QWidget *parent)
+        : COverlayMessagesFrame(parent), CIdentifiable(this), ui(new Ui::CInterpolationLogDisplay)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 
@@ -65,29 +64,38 @@ namespace swift::gui::components
         ui->le_ElvHistoryCount->setText(QString::number(elvHistoryCount));
 
         connect(&m_updateTimer, &QTimer::timeout, this, &CInterpolationLogDisplay::updateLog);
-        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::editingFinishedDigest, this, &CInterpolationLogDisplay::onCallsignEntered);
+        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::editingFinishedDigest, this,
+                &CInterpolationLogDisplay::onCallsignEntered);
         connect(ui->hs_UpdateTime, &QSlider::valueChanged, this, &CInterpolationLogDisplay::onSliderChanged);
         connect(ui->pb_StartStop, &QPushButton::released, this, &CInterpolationLogDisplay::toggleStartStop);
         connect(ui->pb_ResetLastSent, &QPushButton::released, this, &CInterpolationLogDisplay::resetLastSentValues);
         connect(ui->pb_ResetStats, &QPushButton::released, this, &CInterpolationLogDisplay::resetStatistics);
         connect(ui->pb_ShowLogInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::logPosCommand);
         connect(ui->pb_FollowInSimulator, &QPushButton::released, this, &CInterpolationLogDisplay::followInSimulator);
-        connect(ui->pb_RequestElevation1, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
-        connect(ui->pb_RequestElevation2, &QPushButton::released, this, &CInterpolationLogDisplay::requestElevationClicked);
-        connect(ui->pb_GetLastInterpolation, &QPushButton::released, this, &CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation);
+        connect(ui->pb_RequestElevation1, &QPushButton::released, this,
+                &CInterpolationLogDisplay::requestElevationClicked);
+        connect(ui->pb_RequestElevation2, &QPushButton::released, this,
+                &CInterpolationLogDisplay::requestElevationClicked);
+        connect(ui->pb_GetLastInterpolation, &QPushButton::released, this,
+                &CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation);
         connect(ui->pb_InjectElevation, &QPushButton::released, this, &CInterpolationLogDisplay::onInjectElevation);
         connect(ui->pb_ElvClear, &QPushButton::released, this, &CInterpolationLogDisplay::clearElevationResults);
-        connect(ui->pb_RecalcAllAircraft, &QPushButton::released, this, &CInterpolationLogDisplay::requestRecalculateAll);
+        connect(ui->pb_RecalcAllAircraft, &QPushButton::released, this,
+                &CInterpolationLogDisplay::requestRecalculateAll);
         connect(ui->pb_ClearLog, &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
         connect(ui->pb_ClearLog2, &QPushButton::released, this, &CInterpolationLogDisplay::clearLogCommand);
         connect(ui->pb_WriteLogToFile, &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
         connect(ui->pb_WriteLogToFile2, &QPushButton::released, this, &CInterpolationLogDisplay::writeLogCommand);
         connect(ui->le_InjectElevation, &QLineEdit::returnPressed, this, &CInterpolationLogDisplay::onInjectElevation);
-        connect(ui->le_ElvHistoryCount, &QLineEdit::editingFinished, this, &CInterpolationLogDisplay::onElevationHistoryCountFinished);
+        connect(ui->le_ElvHistoryCount, &QLineEdit::editingFinished, this,
+                &CInterpolationLogDisplay::onElevationHistoryCountFinished);
         connect(ui->cb_ElvAllowPseudo, &QCheckBox::toggled, this, &CInterpolationLogDisplay::onPseudoElevationToggled);
-        connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this, &CInterpolationLogDisplay::requestElevation);
-        connect(ui->editor_ElevationCoordinate, &CCoordinateForm::changedCoordinate, this, &CInterpolationLogDisplay::requestElevationAtPosition);
-        connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown, Qt::QueuedConnection);
+        connect(ui->tvp_InboundAircraftSituations, &CAircraftSituationView::requestElevation, this,
+                &CInterpolationLogDisplay::requestElevation);
+        connect(ui->editor_ElevationCoordinate, &CCoordinateForm::changedCoordinate, this,
+                &CInterpolationLogDisplay::requestElevationAtPosition);
+        connect(sGui, &CGuiApplication::aboutToShutdown, this, &CInterpolationLogDisplay::onAboutToShutdown,
+                Qt::QueuedConnection);
     }
 
     CInterpolationLogDisplay::~CInterpolationLogDisplay()
@@ -105,10 +113,13 @@ namespace swift::gui::components
         }
         m_simulator = simulator;
         if (!simulator) { return; }
-        connect(m_simulator, &ISimulator::receivedRequestedElevation, this, &CInterpolationLogDisplay::onElevationReceived, Qt::QueuedConnection);
-        connect(m_simulator, &ISimulator::requestedElevation, this, &CInterpolationLogDisplay::onElevationRequested, Qt::QueuedConnection);
+        connect(m_simulator, &ISimulator::receivedRequestedElevation, this,
+                &CInterpolationLogDisplay::onElevationReceived, Qt::QueuedConnection);
+        connect(m_simulator, &ISimulator::requestedElevation, this, &CInterpolationLogDisplay::onElevationRequested,
+                Qt::QueuedConnection);
         connect(m_simulator, &ISimulator::destroyed, this, &CInterpolationLogDisplay::onSimulatorUnloaded);
-        connect(m_simulator, &ISimulator::simulatorStatusChanged, this, &CInterpolationLogDisplay::onSimulatorStatusChanged);
+        connect(m_simulator, &ISimulator::simulatorStatusChanged, this,
+                &CInterpolationLogDisplay::onSimulatorStatusChanged);
     }
 
     void CInterpolationLogDisplay::setAirspaceMonitor(CAirspaceMonitor *airspaceMonitor)
@@ -121,8 +132,10 @@ namespace swift::gui::components
         }
         m_airspaceMonitor = airspaceMonitor;
 
-        connect(m_airspaceMonitor, &CAirspaceMonitor::addedAircraftSituation, this, &CInterpolationLogDisplay::onSituationAdded, Qt::QueuedConnection);
-        connect(m_airspaceMonitor, &CAirspaceMonitor::addedAircraftParts, this, &CInterpolationLogDisplay::onPartsAdded, Qt::QueuedConnection);
+        connect(m_airspaceMonitor, &CAirspaceMonitor::addedAircraftSituation, this,
+                &CInterpolationLogDisplay::onSituationAdded, Qt::QueuedConnection);
+        connect(m_airspaceMonitor, &CAirspaceMonitor::addedAircraftParts, this, &CInterpolationLogDisplay::onPartsAdded,
+                Qt::QueuedConnection);
     }
 
     void CInterpolationLogDisplay::updateLog()
@@ -145,15 +158,19 @@ namespace swift::gui::components
         }
         else if (ui->tw_LogTabs->currentWidget() == ui->tb_DataFlow && m_airspaceMonitor)
         {
-            ui->le_CG->setText(m_airspaceMonitor->getSimulatorCG(m_callsign).valueRoundedWithUnit(CLengthUnit::ft(), 1));
+            ui->le_CG->setText(
+                m_airspaceMonitor->getSimulatorCG(m_callsign).valueRoundedWithUnit(CLengthUnit::ft(), 1));
             ui->le_CG->home(false);
             ui->le_Parts->setText(boolToYesNo(m_airspaceMonitor->isRemoteAircraftSupportingParts(m_callsign)));
 
             static const QString msTimeStr("%1ms");
             static const QString updateTimes("%1ms avg: %2ms max: %3ms");
-            const QString avgUpdateTimeRounded = QString::number(m_simulator->getStatisticsAverageUpdateTimeMs(), 'f', 2);
+            const QString avgUpdateTimeRounded =
+                QString::number(m_simulator->getStatisticsAverageUpdateTimeMs(), 'f', 2);
 
-            ui->le_UpdateTimes->setText(updateTimes.arg(m_simulator->getStatisticsCurrentUpdateTimeMs()).arg(avgUpdateTimeRounded).arg(m_simulator->getStatisticsMaxUpdateTimeMs()));
+            ui->le_UpdateTimes->setText(updateTimes.arg(m_simulator->getStatisticsCurrentUpdateTimeMs())
+                                            .arg(avgUpdateTimeRounded)
+                                            .arg(m_simulator->getStatisticsMaxUpdateTimeMs()));
             ui->le_UpdateTimes->home(false);
             ui->le_UpdateCount->setText(QString::number(m_simulator->getStatisticsUpdateRuns()));
             ui->le_UpdateReqTime->setText(msTimeStr.arg(m_simulator->getStatisticsAircraftUpdatedRequestedDeltaMs()));
@@ -168,10 +185,7 @@ namespace swift::gui::components
             this->displayElevationRequestReceive();
             this->displayLastInterpolation(sLog);
         }
-        else if (ui->tw_LogTabs->currentWidget() == ui->tb_Loopback)
-        {
-            this->displayLoopback();
-        }
+        else if (ui->tw_LogTabs->currentWidget() == ui->tb_Loopback) { this->displayLoopback(); }
     }
 
     void CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation()
@@ -188,8 +202,10 @@ namespace swift::gui::components
         ui->te_LastInterpolatedSituation->setText(sLog.situationCurrent.toQString(true));
         ui->te_SituationChange->setText(sLog.change.toQString(true));
 
-        ui->le_SceneryOffset->setText(sLog.change.getGuessedSceneryDeviation().valueRoundedWithUnit(CLengthUnit::ft(), 1));
-        ui->le_SceneryOffsetCG->setText(sLog.change.getGuessedSceneryDeviationCG().valueRoundedWithUnit(CLengthUnit::ft(), 1));
+        ui->le_SceneryOffset->setText(
+            sLog.change.getGuessedSceneryDeviation().valueRoundedWithUnit(CLengthUnit::ft(), 1));
+        ui->le_SceneryOffsetCG->setText(
+            sLog.change.getGuessedSceneryDeviationCG().valueRoundedWithUnit(CLengthUnit::ft(), 1));
 
         const PartsLog pLog = m_simulator->interpolationLogger().getLastPartsLog();
         ui->te_LastInterpolatedParts->setText(pLog.parts.toQString(true));
@@ -240,10 +256,7 @@ namespace swift::gui::components
         m_callsign = cs;
         m_simulator->setLogInterpolation(true, cs);
         ui->comp_Parts->setCallsign(cs);
-        if (!this->start())
-        {
-            this->initPartsView();
-        }
+        if (!this->start()) { this->initPartsView(); }
         CLogMessage(this).info(u"Starting logging (log.display) of '%1'") << m_callsign;
     }
 
@@ -258,10 +271,7 @@ namespace swift::gui::components
             CLength l;
             const QString v = ui->le_ElevationTestValue->text();
             l.parseFromString(v);
-            if (!l.isNull())
-            {
-                elvTest = CAltitude(l, CAltitude::MeanSeaLevel);
-            }
+            if (!l.isNull()) { elvTest = CAltitude(l, CAltitude::MeanSeaLevel); }
         }
         m_simulator->setTestElevation(elvTest);
     }
@@ -270,10 +280,7 @@ namespace swift::gui::components
     {
         const bool running = m_updateTimer.isActive();
         m_callsign.clear(); // force update of data and log. start/stop
-        if (running)
-        {
-            this->stop();
-        }
+        if (running) { this->stop(); }
         else
         {
             // treat like a callsign was entered
@@ -366,18 +373,15 @@ namespace swift::gui::components
         m_elvReceived++;
         if (m_elvHistoryCount > 0)
         {
-            const QString history = callsign.asString() %
-                                    QStringLiteral(": ") % QTime::currentTime().toString("hh:mm:ss.zzz") %
-                                    QStringLiteral(" ") % elevationPlane.toQString(true);
+            const QString history = callsign.asString() % QStringLiteral(": ") %
+                                    QTime::currentTime().toString("hh:mm:ss.zzz") % QStringLiteral(" ") %
+                                    elevationPlane.toQString(true);
             m_elvHistoryModel->insertRow(0);
             const QModelIndex index = m_elvHistoryModel->index(0, 0);
             m_elvHistoryModel->setData(index, history);
 
             const int c = m_elvHistoryModel->rowCount();
-            if (m_elvHistoryCount < c)
-            {
-                m_elvHistoryModel->removeRows(m_elvHistoryCount, c - m_elvHistoryCount);
-            }
+            if (m_elvHistoryCount < c) { m_elvHistoryModel->removeRows(m_elvHistoryCount, c - m_elvHistoryCount); }
         }
 
         // not for a real plane, but to get elevation at any position for testing
@@ -470,10 +474,7 @@ namespace swift::gui::components
     void CInterpolationLogDisplay::clearElevationResults()
     {
         ui->pte_ElevationAtPosition->clear();
-        if (m_elvHistoryModel)
-        {
-            m_elvHistoryModel->removeRows(0, m_elvHistoryModel->rowCount());
-        }
+        if (m_elvHistoryModel) { m_elvHistoryModel->removeRows(0, m_elvHistoryModel->rowCount()); }
     }
 
     void CInterpolationLogDisplay::logPosCommand()
@@ -504,8 +505,7 @@ namespace swift::gui::components
     bool CInterpolationLogDisplay::checkLogPrerequisites()
     {
         CStatusMessage m;
-        do
-        {
+        do {
             if (!this->isVisible()) { return false; } // silently return
             if (!sGui || sGui->isShuttingDown()) { break; } // stop and return
             if (m_callsign.isEmpty())
@@ -515,10 +515,12 @@ namespace swift::gui::components
                 break;
             }
 
-            const bool canUpdateLog = m_airspaceMonitor && m_simulator && m_simulator->isConnected() && !m_simulator->isShuttingDown();
+            const bool canUpdateLog =
+                m_airspaceMonitor && m_simulator && m_simulator->isConnected() && !m_simulator->isShuttingDown();
             if (!canUpdateLog)
             {
-                static const CStatusMessage ms = CStatusMessage(this).validationError(u"No airspace monitor or simulator or shutting down");
+                static const CStatusMessage ms =
+                    CStatusMessage(this).validationError(u"No airspace monitor or simulator or shutting down");
                 m = ms;
                 break;
             }
@@ -554,7 +556,11 @@ namespace swift::gui::components
         static const QString info("req. %1, %2/rec. %3, %4 | found/missed: '%5' | times: %6");
         const QString foundMissed = m_airspaceMonitor->getElevationsFoundMissedInfo();
         const QString reqTimes = m_airspaceMonitor->getElevationRequestTimesInfo();
-        const QString reqRec = info.arg(m_elvRequestedLoggedCs).arg(m_elvRequested).arg(m_elvReceivedLoggedCs).arg(m_elvReceived).arg(foundMissed, reqTimes);
+        const QString reqRec = info.arg(m_elvRequestedLoggedCs)
+                                   .arg(m_elvRequested)
+                                   .arg(m_elvReceivedLoggedCs)
+                                   .arg(m_elvReceived)
+                                   .arg(foundMissed, reqTimes);
 
         ui->le_ElevationReqRec->setText(reqRec);
         ui->le_ElevationReqRec->setToolTip(reqRec);

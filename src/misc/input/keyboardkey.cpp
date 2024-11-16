@@ -14,33 +14,22 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CKeyboardKey)
 
 namespace swift::misc::input
 {
-    CKeyboardKey::CKeyboardKey() : m_keyCode(Key_Unknown)
-    {}
+    CKeyboardKey::CKeyboardKey() : m_keyCode(Key_Unknown) {}
 
-    CKeyboardKey::CKeyboardKey(KeyCode keyCode) : m_keyCode(keyCode)
-    {}
+    CKeyboardKey::CKeyboardKey(KeyCode keyCode) : m_keyCode(keyCode) {}
 
-    QString CKeyboardKey::convertToQString(bool /* i18n */) const
-    {
-        return this->getKeyAsString();
-    }
+    QString CKeyboardKey::convertToQString(bool /* i18n */) const { return this->getKeyAsString(); }
 
-    void CKeyboardKey::setKeyObject(CKeyboardKey key)
-    {
-        m_keyCode = key.m_keyCode;
-    }
+    void CKeyboardKey::setKeyObject(CKeyboardKey key) { m_keyCode = key.m_keyCode; }
 
     QString CKeyboardKey::getKeyAsString() const
     {
         if (m_keyCode == Key_Unknown) return QString();
 
         static const QHash<KeyCode, QString> keyStrings = {
-            { Key_ShiftLeft, QStringLiteral("ShiftLeft") },
-            { Key_ShiftRight, QStringLiteral("ShiftRight") },
-            { Key_ControlLeft, QStringLiteral("CtrlLeft") },
-            { Key_ControlRight, QStringLiteral("CtrlRight") },
-            { Key_AltLeft, QStringLiteral("AltLeft") },
-            { Key_AltRight, QStringLiteral("AltRight") }
+            { Key_ShiftLeft, QStringLiteral("ShiftLeft") },  { Key_ShiftRight, QStringLiteral("ShiftRight") },
+            { Key_ControlLeft, QStringLiteral("CtrlLeft") }, { Key_ControlRight, QStringLiteral("CtrlRight") },
+            { Key_AltLeft, QStringLiteral("AltLeft") },      { Key_AltRight, QStringLiteral("AltRight") }
         };
 
         if (isModifier()) { return keyStrings.value(m_keyCode); }
@@ -116,12 +105,7 @@ namespace swift::misc::input
     const QList<KeyCode> &CKeyboardKey::allModifiers()
     {
         static const QList<KeyCode> allModifiers = {
-            Key_ShiftLeft,
-            Key_ShiftRight,
-            Key_ControlLeft,
-            Key_ControlRight,
-            Key_AltLeft,
-            Key_AltRight,
+            Key_ShiftLeft, Key_ShiftRight, Key_ControlLeft, Key_ControlRight, Key_AltLeft, Key_AltRight,
         };
         return allModifiers;
     }
@@ -153,15 +137,9 @@ namespace swift::misc::input
         switch (i)
         {
         case IndexKey:
-        case IndexKeyAsString:
-            qFatal("Not implemented");
-            break;
-        case IndexKeyObject:
-            this->setKeyObject(variant.value<CKeyboardKey>());
-            break;
-        default:
-            Q_ASSERT_X(false, "CKeyboardKey", "index unknown (setter)");
-            break;
+        case IndexKeyAsString: qFatal("Not implemented"); break;
+        case IndexKeyObject: this->setKeyObject(variant.value<CKeyboardKey>()); break;
+        default: Q_ASSERT_X(false, "CKeyboardKey", "index unknown (setter)"); break;
         }
     }
 } // namespace swift::misc::input

@@ -14,16 +14,13 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CDistribution)
 
 namespace swift::misc::db
 {
-    CDistribution::CDistribution()
+    CDistribution::CDistribution() {}
+
+    CDistribution::CDistribution(const QString &channel, int stability, bool restricted)
+        : m_channel(channel.trimmed().toUpper()), m_stability(stability), m_restricted(restricted)
     {}
 
-    CDistribution::CDistribution(const QString &channel, int stability, bool restricted) : m_channel(channel.trimmed().toUpper()), m_stability(stability), m_restricted(restricted)
-    {}
-
-    void CDistribution::setChannel(const QString &channel)
-    {
-        m_channel = channel.trimmed().toUpper();
-    }
+    void CDistribution::setChannel(const QString &channel) { m_channel = channel.trimmed().toUpper(); }
 
     void CDistribution::setDownloadUrl(const CUrl &url)
     {
@@ -31,10 +28,7 @@ namespace swift::misc::db
         m_downloadUrl = url;
     }
 
-    bool CDistribution::hasDownloadUrl() const
-    {
-        return !m_downloadUrl.isEmpty();
-    }
+    bool CDistribution::hasDownloadUrl() const { return !m_downloadUrl.isEmpty(); }
 
     CIcons::IconIndex CDistribution::getRestrictionIcon() const
     {
@@ -52,32 +46,23 @@ namespace swift::misc::db
         return m_stability > otherDistribution.m_stability;
     }
 
-    QString CDistribution::convertToQString(bool i18n) const
-    {
-        return convertToQString(", ", i18n);
-    }
+    QString CDistribution::convertToQString(bool i18n) const { return convertToQString(", ", i18n); }
 
     QString CDistribution::convertToQString(const QString &separator, bool i18n) const
     {
-        return u"channel: " %
-               this->getChannel() %
-               separator %
-               u"download URL: " %
-               getDownloadUrl().toQString(i18n) %
-               separator %
-               u"timestamp: " %
-               this->getFormattedUtcTimestampYmdhms();
+        return u"channel: " % this->getChannel() % separator % u"download URL: " % getDownloadUrl().toQString(i18n) %
+               separator % u"timestamp: " % this->getFormattedUtcTimestampYmdhms();
     }
 
-    CIcons::IconIndex CDistribution::toIcon() const
-    {
-        return this->getRestrictionIcon();
-    }
+    CIcons::IconIndex CDistribution::toIcon() const { return this->getRestrictionIcon(); }
 
     QVariant CDistribution::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
+        }
 
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)

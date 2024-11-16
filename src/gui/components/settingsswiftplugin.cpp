@@ -13,8 +13,7 @@ using namespace swift::misc::simulation::settings;
 
 namespace swift::gui::components
 {
-    CSettingsSwiftPlugin::CSettingsSwiftPlugin(QWidget *parent) : QFrame(parent),
-                                                                  ui(new Ui::CSettingsSwiftPlugin)
+    CSettingsSwiftPlugin::CSettingsSwiftPlugin(QWidget *parent) : QFrame(parent), ui(new Ui::CSettingsSwiftPlugin)
     {
         ui->setupUi(this);
         ui->comp_EmulatedSimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
@@ -23,8 +22,7 @@ namespace swift::gui::components
         connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsSwiftPlugin::save);
     }
 
-    CSettingsSwiftPlugin::~CSettingsSwiftPlugin()
-    {}
+    CSettingsSwiftPlugin::~CSettingsSwiftPlugin() {}
 
     swift::misc::simulation::settings::CSwiftPluginSettings CSettingsSwiftPlugin::getPluginSettings() const
     {
@@ -50,10 +48,7 @@ namespace swift::gui::components
     CSwiftPluginSettings CSettingsSwiftPlugin::getSettings() const
     {
         CAircraftModel model = ui->lep_OwnModel->getAircraftModel();
-        if (!model.hasModelString())
-        {
-            model.setModelString(ui->lep_OwnModel->text());
-        }
+        if (!model.hasModelString()) { model.setModelString(ui->lep_OwnModel->text()); }
 
         CSwiftPluginSettings settings;
         settings.setEmulatedSimulator(ui->comp_EmulatedSimulatorSelector->getValue());

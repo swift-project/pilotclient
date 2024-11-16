@@ -21,19 +21,17 @@ namespace swift::simplugin::fs9
         //! Return tuple of member variables
         auto getTuple()
         {
-            return std::tie(application_time, packet_index,
-                            unknown8, unknown9, flaps_left, flaps_right, unknown12, unknown13, unknown14, unknown15,
-                            unknown16, unknown17, unknown18, unknown19, gear_center, gear_left, gear_right,
-                            engine_1, engine_2, unknown25, unknown26, unknown27);
+            return std::tie(application_time, packet_index, unknown8, unknown9, flaps_left, flaps_right, unknown12,
+                            unknown13, unknown14, unknown15, unknown16, unknown17, unknown18, unknown19, gear_center,
+                            gear_left, gear_right, engine_1, engine_2, unknown25, unknown26, unknown27);
         }
 
         //! Return const tuple of member variables
         auto getTuple() const
         {
-            return std::tie(application_time, packet_index,
-                            unknown8, unknown9, flaps_left, flaps_right, unknown12, unknown13, unknown14, unknown15,
-                            unknown16, unknown17, unknown18, unknown19, gear_center, gear_left, gear_right,
-                            engine_1, engine_2, unknown25, unknown26, unknown27);
+            return std::tie(application_time, packet_index, unknown8, unknown9, flaps_left, flaps_right, unknown12,
+                            unknown13, unknown14, unknown15, unknown16, unknown17, unknown18, unknown19, gear_center,
+                            gear_left, gear_right, engine_1, engine_2, unknown25, unknown26, unknown27);
         }
 
         //! Struct size
@@ -44,10 +42,7 @@ namespace swift::simplugin::fs9
     struct MPChangePlayerPlane : public MULTIPLAYER_PACKET_CHANGE_PLAYER_PLANE
     {
         //! Return tuple of member variables
-        std::tuple<CFs9Sdk::EngineType &, QString &> getTuple()
-        {
-            return std::tie(engine, aircraft_name);
-        }
+        std::tuple<CFs9Sdk::EngineType &, QString &> getTuple() { return std::tie(engine, aircraft_name); }
 
         //! Return const tuple of member variables
         std::tuple<const CFs9Sdk::EngineType &, const QString &> getTuple() const
@@ -63,16 +58,10 @@ namespace swift::simplugin::fs9
     struct MPChatText : public MULTIPLAYER_PACKET_CHAT_TEXT
     {
         //! Return tuple of member variables
-        std::tuple<QString &> getTuple()
-        {
-            return std::tie(chat_data);
-        }
+        std::tuple<QString &> getTuple() { return std::tie(chat_data); }
 
         //! Return const tuple of member variables
-        std::tuple<const QString &> getTuple() const
-        {
-            return std::tie(chat_data);
-        }
+        std::tuple<const QString &> getTuple() const { return std::tie(chat_data); }
 
         //! Struct size
         qint32 size() const { return chat_data.size() + 1; }
@@ -84,19 +73,15 @@ namespace swift::simplugin::fs9
         //! Return tuple of member variables
         auto getTuple()
         {
-            return std::tie(application_time, packet_index,
-                            reserved[0], reserved[1], reserved[2], reserved[3],
-                            pbh, lat_i, lon_hi, alt_i,
-                            lat_f, lon_lo, alt_f);
+            return std::tie(application_time, packet_index, reserved[0], reserved[1], reserved[2], reserved[3], pbh,
+                            lat_i, lon_hi, alt_i, lat_f, lon_lo, alt_f);
         }
 
         //! Return const tuple of member variables
         auto getTuple() const
         {
-            return std::tie(application_time, packet_index,
-                            reserved[0], reserved[1], reserved[2], reserved[3],
-                            pbh, lat_i, lon_hi, alt_i,
-                            lat_f, lon_lo, alt_f);
+            return std::tie(application_time, packet_index, reserved[0], reserved[1], reserved[2], reserved[3], pbh,
+                            lat_i, lon_hi, alt_i, lat_f, lon_lo, alt_f);
         }
 
         //! Struct size
@@ -109,19 +94,17 @@ namespace swift::simplugin::fs9
         //! Return tuple of member variables
         auto getTuple()
         {
-            return std::tie(packet_index, application_time, lat_velocity,
-                            lon_velocity, alt_velocity, ground_velocity,
-                            reserved[0], reserved[1], reserved[2], reserved[3],
-                            pbh, lat_i, lon_hi, alt_i, lat_f, lon_lo, alt_f);
+            return std::tie(packet_index, application_time, lat_velocity, lon_velocity, alt_velocity, ground_velocity,
+                            reserved[0], reserved[1], reserved[2], reserved[3], pbh, lat_i, lon_hi, alt_i, lat_f,
+                            lon_lo, alt_f);
         }
 
         //! Return const tuple of member variables
         auto getTuple() const
         {
-            return std::tie(packet_index, application_time, lat_velocity,
-                            lon_velocity, alt_velocity, ground_velocity,
-                            reserved[0], reserved[1], reserved[2], reserved[3],
-                            pbh, lat_i, lon_hi, alt_i, lat_f, lon_lo, alt_f);
+            return std::tie(packet_index, application_time, lat_velocity, lon_velocity, alt_velocity, ground_velocity,
+                            reserved[0], reserved[1], reserved[2], reserved[3], pbh, lat_i, lon_hi, alt_i, lat_f,
+                            lon_lo, alt_f);
         }
 
         //! Struct size

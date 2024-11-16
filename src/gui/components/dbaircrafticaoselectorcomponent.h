@@ -31,9 +31,7 @@ namespace swift::gui::components
     /*!
      * Aircraft ICAO selector
      */
-    class SWIFT_GUI_EXPORT CDbAircraftIcaoSelectorComponent :
-        public QFrame,
-        public CDropBase
+    class SWIFT_GUI_EXPORT CDbAircraftIcaoSelectorComponent : public QFrame, public CDropBase
     {
         Q_OBJECT
 
@@ -99,7 +97,8 @@ namespace swift::gui::components
 
     private:
         //! Distributors have been read
-        void onCodesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
+        void onCodesRead(swift::misc::network::CEntityFlags::Entity entity,
+                         swift::misc::network::CEntityFlags::ReadState readState, int count);
 
         //! Data have been changed
         void onCompleterActivated(const QString &icaoString);

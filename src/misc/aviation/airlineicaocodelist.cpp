@@ -20,29 +20,26 @@ namespace swift::misc::aviation
         return cats;
     }
 
-    CAirlineIcaoCodeList::CAirlineIcaoCodeList()
+    CAirlineIcaoCodeList::CAirlineIcaoCodeList() {}
+
+    CAirlineIcaoCodeList::CAirlineIcaoCodeList(const CSequence<CAirlineIcaoCode> &other)
+        : CSequence<CAirlineIcaoCode>(other)
     {}
 
-    CAirlineIcaoCodeList::CAirlineIcaoCodeList(const CSequence<CAirlineIcaoCode> &other) : CSequence<CAirlineIcaoCode>(other)
-    {}
-
-    CAirlineIcaoCodeList::CAirlineIcaoCodeList(std::initializer_list<CAirlineIcaoCode> il) : CSequence<CAirlineIcaoCode>(il)
+    CAirlineIcaoCodeList::CAirlineIcaoCodeList(std::initializer_list<CAirlineIcaoCode> il)
+        : CSequence<CAirlineIcaoCode>(il)
     {}
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignator(const QString &designator) const
     {
         if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.matchesDesignator(designator);
-        });
+        return this->findBy([&](const CAirlineIcaoCode &code) { return code.matchesDesignator(designator); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByIataCode(const QString &iata) const
     {
         if (!CAirlineIcaoCode::isValidIataCode(iata)) { return CAirlineIcaoCodeList(); }
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.matchesIataCode(iata);
-        });
+        return this->findBy([&](const CAirlineIcaoCode &code) { return code.matchesIataCode(iata); });
     }
 
     CAirlineIcaoCode CAirlineIcaoCodeList::findByUniqueIataCodeOrDefault(const QString &iata) const
@@ -54,92 +51,75 @@ namespace swift::misc::aviation
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignatorOrIataCode(const QString &designatorOrIata) const
     {
         if (designatorOrIata.isEmpty()) { return CAirlineIcaoCodeList(); }
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.matchesDesignatorOrIataCode(designatorOrIata);
-        });
+        return this->findBy(
+            [&](const CAirlineIcaoCode &code) { return code.matchesDesignatorOrIataCode(designatorOrIata); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByVDesignator(const QString &designator) const
     {
         if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.matchesVDesignator(designator);
-        });
+        return this->findBy([&](const CAirlineIcaoCode &code) { return code.matchesVDesignator(designator); });
     }
 
-    CAirlineIcaoCode CAirlineIcaoCodeList::findByUniqueVDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const
+    CAirlineIcaoCode CAirlineIcaoCodeList::findByUniqueVDesignatorOrDefault(const QString &designator,
+                                                                            bool preferOperatingAirlines) const
     {
         CAirlineIcaoCodeList codes = this->findByVDesignator(designator);
-        if (codes.size() > 1 && preferOperatingAirlines)
-        {
-            codes.removeIf(&CAirlineIcaoCode::isOperating, false);
-        }
+        if (codes.size() > 1 && preferOperatingAirlines) { codes.removeIf(&CAirlineIcaoCode::isOperating, false); }
         return codes.size() == 1 ? codes.front() : CAirlineIcaoCode();
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByVDesignatorOrIataCode(const QString &designatorOrIata) const
     {
         if (designatorOrIata.isEmpty()) { return CAirlineIcaoCodeList(); }
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.matchesVDesignatorOrIataCode(designatorOrIata);
-        });
+        return this->findBy(
+            [&](const CAirlineIcaoCode &code) { return code.matchesVDesignatorOrIataCode(designatorOrIata); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByCountryIsoCode(const QString &isoCode) const
     {
         if (isoCode.length() != 2) { return CAirlineIcaoCodeList(); }
         const QString iso(isoCode.toUpper());
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.getCountry().getIsoCode() == iso;
-        });
+        return this->findBy([&](const CAirlineIcaoCode &code) { return code.getCountry().getIsoCode() == iso; });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findBySimplifiedNameContaining(const QString &containedString) const
     {
         if (containedString.isEmpty()) { return CAirlineIcaoCodeList(); }
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.isContainedInSimplifiedName(containedString);
-        });
+        return this->findBy(
+            [&](const CAirlineIcaoCode &code) { return code.isContainedInSimplifiedName(containedString); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByTelephonyDesignator(const QString &candidate) const
     {
         if (candidate.isEmpty()) { return CAirlineIcaoCodeList(); }
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.matchesTelephonyDesignator(candidate);
-        });
+        return this->findBy([&](const CAirlineIcaoCode &code) { return code.matchesTelephonyDesignator(candidate); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByNamesOrTelephonyDesignator(const QString &candidate) const
     {
         if (candidate.isEmpty()) { return CAirlineIcaoCodeList(); }
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.matchesNamesOrTelephonyDesignator(candidate);
-        });
+        return this->findBy(
+            [&](const CAirlineIcaoCode &code) { return code.matchesNamesOrTelephonyDesignator(candidate); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByMilitary(bool military) const
     {
-        return this->findBy([&](const CAirlineIcaoCode &code) {
-            return code.isMilitary() == military;
-        });
+        return this->findBy([&](const CAirlineIcaoCode &code) { return code.isMilitary() == military; });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByValidDesignator() const
     {
-        return this->findBy([](const CAirlineIcaoCode &code) {
-            return code.hasValidDesignator();
-        });
+        return this->findBy([](const CAirlineIcaoCode &code) { return code.hasValidDesignator(); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByInvalidDesignator() const
     {
-        return this->findBy([](const CAirlineIcaoCode &code) {
-            return !code.hasValidDesignator();
-        });
+        return this->findBy([](const CAirlineIcaoCode &code) { return !code.hasValidDesignator(); });
     }
 
-    CAirlineIcaoCode CAirlineIcaoCodeList::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
+    CAirlineIcaoCode CAirlineIcaoCodeList::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern,
+                                                                    const CCallsign &callsign) const
     {
         if (icaoPattern.hasValidDbKey()) { return icaoPattern; }
         const CAirlineIcaoCode patternUsed = icaoPattern.thisOrCallsignCode(callsign);
@@ -159,10 +139,7 @@ namespace swift::misc::aviation
                 codesFound = this->findByDesignator(patternUsed.getDesignator());
             }
         }
-        else
-        {
-            codesFound = this->findByIataCode(patternUsed.getIataCode());
-        }
+        else { codesFound = this->findByIataCode(patternUsed.getIataCode()); }
 
         if (codesFound.size() == 1) { return codesFound.front(); }
         if (codesFound.isEmpty())
@@ -176,63 +153,105 @@ namespace swift::misc::aviation
         {
             // further reduce
             bool reduced = false;
-            codesFound = codesFound.ifPossibleReduceNameTelephonyCountry(callsign, patternUsed.getName(), patternUsed.getTelephonyDesignator(), patternUsed.getCountryIso(), reduced, QString(), nullptr);
+            codesFound = codesFound.ifPossibleReduceNameTelephonyCountry(
+                callsign, patternUsed.getName(), patternUsed.getTelephonyDesignator(), patternUsed.getCountryIso(),
+                reduced, QString(), nullptr);
         }
 
         return codesFound.frontOrDefault();
     }
 
-    CAirlineIcaoCodeList CAirlineIcaoCodeList::ifPossibleReduceNameTelephonyCountry(const CCallsign &cs, const QString &airlineName, const QString &telephony, const QString &countryIso, bool &reduced, const QString &loginfo, CStatusMessageList *log) const
+    CAirlineIcaoCodeList CAirlineIcaoCodeList::ifPossibleReduceNameTelephonyCountry(
+        const CCallsign &cs, const QString &airlineName, const QString &telephony, const QString &countryIso,
+        bool &reduced, const QString &loginfo, CStatusMessageList *log) const
     {
         reduced = false;
         if (this->isEmpty())
         {
-            if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % u" Empty input list, cannot reduce", getLogCategories()); }
+            if (log)
+            {
+                CCallsign::addLogDetailsToList(log, cs, loginfo % u" Empty input list, cannot reduce",
+                                               getLogCategories());
+            }
             return *this;
         }
 
         if (telephony.isEmpty() && airlineName.isEmpty() && countryIso.isEmpty())
         {
-            if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % u" No name/telephony/country, cannot reduce " % QString::number(this->size()) % u" entries", getLogCategories()); }
+            if (log)
+            {
+                CCallsign::addLogDetailsToList(log, cs,
+                                               loginfo % u" No name/telephony/country, cannot reduce " %
+                                                   QString::number(this->size()) % u" entries",
+                                               getLogCategories());
+            }
             return *this;
         }
 
-        CAirlineIcaoCodeList step1Data = airlineName.isEmpty() ? *this : this->findByNamesOrTelephonyDesignator(airlineName);
+        CAirlineIcaoCodeList step1Data =
+            airlineName.isEmpty() ? *this : this->findByNamesOrTelephonyDesignator(airlineName);
         if (step1Data.isEmpty() || step1Data.size() == this->size())
         {
-            if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" cannot reduce by '%1'").arg(airlineName), getLogCategories()); }
+            if (log)
+            {
+                CCallsign::addLogDetailsToList(
+                    log, cs, loginfo % QStringLiteral(" cannot reduce by '%1'").arg(airlineName), getLogCategories());
+            }
             step1Data = *this;
         }
         else
         {
             reduced = true;
-            if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" reduced by '%1'").arg(airlineName), getLogCategories()); }
+            if (log)
+            {
+                CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" reduced by '%1'").arg(airlineName),
+                                               getLogCategories());
+            }
         }
         if (step1Data.size() == 1) { return step1Data; }
 
-        CAirlineIcaoCodeList step2Data = telephony.isEmpty() ? step1Data : step1Data.findByNamesOrTelephonyDesignator(telephony);
+        CAirlineIcaoCodeList step2Data =
+            telephony.isEmpty() ? step1Data : step1Data.findByNamesOrTelephonyDesignator(telephony);
         if (step2Data.isEmpty() || step2Data.size() == this->size())
         {
-            if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" cannot reduce by name '%1'").arg(telephony), getLogCategories()); }
+            if (log)
+            {
+                CCallsign::addLogDetailsToList(log, cs,
+                                               loginfo % QStringLiteral(" cannot reduce by name '%1'").arg(telephony),
+                                               getLogCategories());
+            }
             step2Data = step1Data;
         }
         else
         {
             reduced = true;
-            if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" reduced by telephony '%1'").arg(telephony), getLogCategories()); }
+            if (log)
+            {
+                CCallsign::addLogDetailsToList(
+                    log, cs, loginfo % QStringLiteral(" reduced by telephony '%1'").arg(telephony), getLogCategories());
+            }
         }
         if (step2Data.size() == 1) { return step2Data; }
 
         CAirlineIcaoCodeList step3Data = countryIso.isEmpty() ? step2Data : step2Data.findByCountryIsoCode(countryIso);
         if (step3Data.isEmpty() || step3Data.size() == this->size())
         {
-            if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" cannot reduce by country '%1'").arg(countryIso), getLogCategories()); }
+            if (log)
+            {
+                CCallsign::addLogDetailsToList(
+                    log, cs, loginfo % QStringLiteral(" cannot reduce by country '%1'").arg(countryIso),
+                    getLogCategories());
+            }
             step3Data = step2Data;
         }
         else
         {
             reduced = true;
-            if (log) { CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" reduced by '%1'").arg(countryIso), getLogCategories()); }
+            if (log)
+            {
+                CCallsign::addLogDetailsToList(log, cs, loginfo % QStringLiteral(" reduced by '%1'").arg(countryIso),
+                                               getLogCategories());
+            }
         }
         return step3Data;
     }
@@ -246,7 +265,8 @@ namespace swift::misc::aviation
         return found;
     }
 
-    CAirlineIcaoCodeList CAirlineIcaoCodeList::ifPossibleReduceByTelephonyDesignator(const QString &telephonyDesignator) const
+    CAirlineIcaoCodeList
+    CAirlineIcaoCodeList::ifPossibleReduceByTelephonyDesignator(const QString &telephonyDesignator) const
     {
         if (telephonyDesignator.isEmpty()) { return *this; }
         if (this->isEmpty()) { return *this; }
@@ -266,7 +286,8 @@ namespace swift::misc::aviation
         return airlineCode;
     }
 
-    CAirlineIcaoCodeList CAirlineIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete, CAirlineIcaoCodeList *inconsistent)
+    CAirlineIcaoCodeList CAirlineIcaoCodeList::fromDatabaseJson(const QJsonArray &array, bool ignoreIncomplete,
+                                                                CAirlineIcaoCodeList *inconsistent)
     {
         CAirlineIcaoCodeList codes;
         for (const QJsonValue &value : array)

@@ -22,16 +22,16 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CModelMatcherLogComponent::CModelMatcherLogComponent(QWidget *parent) : QFrame(parent),
-                                                                            ui(new Ui::CModelMatcherLogComponent)
+    CModelMatcherLogComponent::CModelMatcherLogComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CModelMatcherLogComponent)
     {
         ui->setupUi(this);
         m_text.setDefaultStyleSheet(CStatusMessageList::htmlStyleSheet());
-        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEnteredDigest, this, &CModelMatcherLogComponent::callsignEntered);
+        connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validCallsignEnteredDigest, this,
+                &CModelMatcherLogComponent::callsignEntered);
     }
 
-    CModelMatcherLogComponent::~CModelMatcherLogComponent()
-    {}
+    CModelMatcherLogComponent::~CModelMatcherLogComponent() {}
 
     bool CModelMatcherLogComponent::hasContexts() const
     {
@@ -40,7 +40,8 @@ namespace swift::gui::components
 
     bool CModelMatcherLogComponent::enabledMessages() const
     {
-        return this->hasContexts() && (ui->comp_EnableLog->isMatchingLogEnabled() || ui->comp_EnableLog->isReverseLookupLogEnabled());
+        return this->hasContexts() &&
+               (ui->comp_EnableLog->isMatchingLogEnabled() || ui->comp_EnableLog->isReverseLookupLogEnabled());
     }
 
     void CModelMatcherLogComponent::callsignEntered()

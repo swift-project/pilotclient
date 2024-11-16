@@ -53,7 +53,8 @@ namespace swift::gui::menus
         }
 
         //! Does the previous (menu) item contain string?
-        bool previousMenuItemContains(const QString &str, const QMenu &menu, Qt::CaseSensitivity cs = Qt::CaseSensitive) const
+        bool previousMenuItemContains(const QString &str, const QMenu &menu,
+                                      Qt::CaseSensitivity cs = Qt::CaseSensitive) const
         {
             if (menu.isEmpty() || str.isEmpty()) { return false; }
             const QString t(menu.actions().last()->text());

@@ -7,14 +7,13 @@
 
 namespace swift::gui::components
 {
-    CInstallXSwiftBusDialog::CInstallXSwiftBusDialog(QWidget *parent) : QDialog(parent),
-                                                                        ui(new Ui::CInstallXSwiftBusDialog)
+    CInstallXSwiftBusDialog::CInstallXSwiftBusDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CInstallXSwiftBusDialog)
     {
         ui->setupUi(this);
     }
 
-    CInstallXSwiftBusDialog::~CInstallXSwiftBusDialog()
-    {}
+    CInstallXSwiftBusDialog::~CInstallXSwiftBusDialog() {}
 
     void CInstallXSwiftBusDialog::setDefaultDownloadName(const QString &defaultName)
     {

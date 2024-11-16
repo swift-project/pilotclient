@@ -25,7 +25,8 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInternals)
 namespace swift::misc::simulation
 {
     //! Simulator internals for flight simulators.
-    //! Those are obtained from a running simulator and represent information about the simulator (like a small registry)
+    //! Those are obtained from a running simulator and represent information about the simulator (like a small
+    //! registry)
     class SWIFT_MISC_EXPORT CSimulatorInternals : public CValueObject<CSimulatorInternals>
     {
     public:

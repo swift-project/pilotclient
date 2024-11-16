@@ -55,7 +55,8 @@ namespace swift::misc::simulation
         CDistributor smartDistributorSelector(const CDistributor &distributorPattern) const;
 
         //! Best match by given pattern
-        CDistributor smartDistributorSelector(const CDistributor &distributorPattern, const CAircraftModel &model) const;
+        CDistributor smartDistributorSelector(const CDistributor &distributorPattern,
+                                              const CAircraftModel &model) const;
 
         //! At least is matching key or alias
         bool matchesAnyKeyOrAlias(const QString &keyOrAlias) const;

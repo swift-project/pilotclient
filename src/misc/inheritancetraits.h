@@ -48,7 +48,8 @@ namespace swift::misc
     };
 
     /*!
-     * If T has a member typedef base_type which has a member propertyByIndex, this trait will obtain it, otherwise void.
+     * If T has a member typedef base_type which has a member propertyByIndex, this trait will obtain it, otherwise
+     * void.
      */
     template <typename T, typename = std::void_t<>>
     struct TIndexBaseOf
@@ -57,7 +58,8 @@ namespace swift::misc
     };
     //! \cond
     template <typename T>
-    struct TIndexBaseOf<T, std::void_t<decltype(std::declval<typename T::base_type>().propertyByIndex(std::declval<CPropertyIndexRef>()))>>
+    struct TIndexBaseOf<T, std::void_t<decltype(std::declval<typename T::base_type>().propertyByIndex(
+                               std::declval<CPropertyIndexRef>()))>>
     {
         using type = typename T::base_type; //!< T::base_type
     };

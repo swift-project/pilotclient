@@ -23,13 +23,11 @@ namespace swift::misc
 
         QString arg(QStringView format, const QStringList &args)
         {
-            if (format.isEmpty())
-            {
-                return args.join(u' ');
-            }
+            if (format.isEmpty()) { return args.join(u' '); }
 
             QString &temp = t_tempBuffer.localData();
-            temp.resize(0); // unlike clear(), resize(0) doesn't release the capacity if there are no implicitly shared copies
+            temp.resize(
+                0); // unlike clear(), resize(0) doesn't release the capacity if there are no implicitly shared copies
 
             quint64 unusedArgs = (1ULL << std::min(qsizetype(63), args.size())) - 1;
             for (auto it = format.begin();;)
@@ -76,25 +74,26 @@ namespace swift::misc
         }
     } // namespace private_ns
 
-    CStatusMessage::CStatusMessage(const CLogCategory &category) : CMessageBase(category), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    CStatusMessage::CStatusMessage(const CLogCategory &category)
+        : CMessageBase(category), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
     {}
 
-    CStatusMessage::CStatusMessage(const CLogCategoryList &categories) : CMessageBase(categories), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories)
+        : CMessageBase(categories), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
     {}
 
-    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, const CLogCategory &extra) : CMessageBase(categories, extra), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, const CLogCategory &extra)
+        : CMessageBase(categories, extra), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
     {}
 
-    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, const CLogCategoryList &extra) : CMessageBase(categories, extra), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, const CLogCategoryList &extra)
+        : CMessageBase(categories, extra), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
     {}
 
-    CStatusMessage::CStatusMessage() : ITimestampBased(QDateTime::currentMSecsSinceEpoch())
-    {}
+    CStatusMessage::CStatusMessage() : ITimestampBased(QDateTime::currentMSecsSinceEpoch()) {}
 
-    CStatusMessage::CStatusMessage(const CStatusMessage &other) : CValueObject(other),
-                                                                  CMessageBase(other),
-                                                                  ITimestampBased(other),
-                                                                  IOrderable(other)
+    CStatusMessage::CStatusMessage(const CStatusMessage &other)
+        : CValueObject(other), CMessageBase(other), ITimestampBased(other), IOrderable(other)
     {
         QReadLocker lock(&other.m_lock);
         m_handledByObjects = other.m_handledByObjects;
@@ -128,36 +127,30 @@ namespace swift::misc
         m_message = message.trimmed();
     }
 
-    CStatusMessage::CStatusMessage(StatusSeverity severity, QStringView message)
-        : CStatusMessage(message)
+    CStatusMessage::CStatusMessage(StatusSeverity severity, QStringView message) : CStatusMessage(message)
     {
         m_severity = severity;
     }
 
-    CStatusMessage::CStatusMessage(StatusSeverity severity, const QString &message)
-        : CStatusMessage(message)
+    CStatusMessage::CStatusMessage(StatusSeverity severity, const QString &message) : CStatusMessage(message)
     {
         m_severity = severity;
     }
 
-    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, QStringView message, bool validation)
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, QStringView message,
+                                   bool validation)
         : CStatusMessage(severity, message)
     {
         m_categories = categories;
-        if (validation)
-        {
-            this->addValidationCategory();
-        }
+        if (validation) { this->addValidationCategory(); }
     }
 
-    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message, bool validation)
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message,
+                                   bool validation)
         : CStatusMessage(severity, message)
     {
         m_categories = categories;
-        if (validation)
-        {
-            this->addValidationCategory();
-        }
+        if (validation) { this->addValidationCategory(); }
     }
 
     CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
@@ -172,9 +165,7 @@ namespace swift::misc
         case QtInfoMsg: m_severity = SeverityInfo; break;
         case QtWarningMsg: m_severity = SeverityWarning; break;
         case QtCriticalMsg:
-        case QtFatalMsg:
-            m_severity = SeverityError;
-            break;
+        case QtFatalMsg: m_severity = SeverityError; break;
         }
     }
 
@@ -193,10 +184,7 @@ namespace swift::misc
         }
     }
 
-    QString CStatusMessage::getCategoriesAsString() const
-    {
-        return m_categories.toQString();
-    }
+    QString CStatusMessage::getCategoriesAsString() const { return m_categories.toQString(); }
 
     bool CStatusMessage::clampSeverity(CStatusMessage::StatusSeverity severity)
     {
@@ -210,15 +198,9 @@ namespace swift::misc
         return this->getSeverity() >= severity;
     }
 
-    bool CStatusMessage::isSuccess() const
-    {
-        return !this->isFailure();
-    }
+    bool CStatusMessage::isSuccess() const { return !this->isFailure(); }
 
-    bool CStatusMessage::isFailure() const
-    {
-        return this->getSeverity() == SeverityError;
-    }
+    bool CStatusMessage::isFailure() const { return this->getSeverity() == SeverityError; }
 
     QString CStatusMessage::getMessageNoLineBreaks() const
     {
@@ -253,17 +235,13 @@ namespace swift::misc
 
     QString CStatusMessage::convertToQString(bool /** i18n */) const
     {
-        return u"Category: " %
-               m_categories.toQString() %
+        return u"Category: " % m_categories.toQString() %
 
-               u" Severity: " %
-               severityToString(m_severity) %
+               u" Severity: " % severityToString(m_severity) %
 
-               u" when: " %
-               this->getFormattedUtcTimestampYmdhms() %
+               u" when: " % this->getFormattedUtcTimestampYmdhms() %
 
-               u' ' %
-               this->getMessage();
+               u' ' % this->getMessage();
     }
 
     const CIcon &CStatusMessage::convertToIcon(const CStatusMessage &statusMessage)
@@ -312,7 +290,8 @@ namespace swift::misc
         return m;
     }
 
-    CStatusMessage CStatusMessage::fromJsonException(const CJsonException &ex, const CLogCategoryList &categories, const QString &prefix)
+    CStatusMessage CStatusMessage::fromJsonException(const CJsonException &ex, const CLogCategoryList &categories,
+                                                     const QString &prefix)
     {
         return CStatusMessage(categories).validationError(ex.toString(prefix));
     }
@@ -333,7 +312,10 @@ namespace swift::misc
         // hard check
         if (severityString.compare(severityToString(SeverityDebug), Qt::CaseInsensitive) == 0) { return SeverityDebug; }
         if (severityString.compare(severityToString(SeverityInfo), Qt::CaseInsensitive) == 0) { return SeverityInfo; }
-        if (severityString.compare(severityToString(SeverityWarning), Qt::CaseInsensitive) == 0) { return SeverityWarning; }
+        if (severityString.compare(severityToString(SeverityWarning), Qt::CaseInsensitive) == 0)
+        {
+            return SeverityWarning;
+        }
         if (severityString.compare(severityToString(SeverityError), Qt::CaseInsensitive) == 0) { return SeverityError; }
 
         // not found yet, lenient checks
@@ -399,19 +381,14 @@ namespace swift::misc
         return ret.join("|");
     }
 
-    const QString &CStatusMessage::getSeverityAsString() const
-    {
-        return severityToString(m_severity);
-    }
+    const QString &CStatusMessage::getSeverityAsString() const { return severityToString(m_severity); }
 
-    const CIcon &CStatusMessage::getSeverityAsIcon() const
-    {
-        return convertToIcon(m_severity);
-    }
+    const CIcon &CStatusMessage::getSeverityAsIcon() const { return convertToIcon(m_severity); }
 
     const QStringList &CStatusMessage::allSeverityStrings()
     {
-        static const QStringList all { severityToString(SeverityDebug), severityToString(SeverityInfo), severityToString(SeverityWarning), severityToString(SeverityError) };
+        static const QStringList all { severityToString(SeverityDebug), severityToString(SeverityInfo),
+                                       severityToString(SeverityWarning), severityToString(SeverityError) };
         return all;
     }
 
@@ -466,7 +443,10 @@ namespace swift::misc
     int CStatusMessage::comparePropertyByIndex(CPropertyIndexRef index, const CStatusMessage &compareValue) const
     {
         if (index.isMyself()) { return Compare::compare(this->getSeverity(), compareValue.getSeverity()); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::comparePropertyByIndex(index, compareValue);
+        }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -476,7 +456,8 @@ namespace swift::misc
         case IndexSeverityAsString:
         case IndexSeverityAsIcon:
         case IndexSeverity: return Compare::compare(this->getSeverity(), compareValue.getSeverity());
-        case IndexCategoriesAsString: return this->getCategoriesAsString().compare(compareValue.getCategoriesAsString());
+        case IndexCategoriesAsString:
+            return this->getCategoriesAsString().compare(compareValue.getCategoriesAsString());
         default: break;
         }
         return CValueObject::comparePropertyByIndex(index, compareValue);

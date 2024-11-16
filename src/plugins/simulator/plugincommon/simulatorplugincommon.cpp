@@ -16,20 +16,16 @@ using namespace swift::misc::simulation;
 
 namespace swift::simplugin::common
 {
-    CSimulatorPluginCommon::CSimulatorPluginCommon(
-        const CSimulatorPluginInfo &info,
-        IOwnAircraftProvider *ownAircraftProvider,
-        IRemoteAircraftProvider *renderedAircraftProvider,
-        IClientProvider *clientProvider,
-        QObject *parent) : ISimulator(info, ownAircraftProvider, renderedAircraftProvider, clientProvider, parent)
+    CSimulatorPluginCommon::CSimulatorPluginCommon(const CSimulatorPluginInfo &info,
+                                                   IOwnAircraftProvider *ownAircraftProvider,
+                                                   IRemoteAircraftProvider *renderedAircraftProvider,
+                                                   IClientProvider *clientProvider, QObject *parent)
+        : ISimulator(info, ownAircraftProvider, renderedAircraftProvider, clientProvider, parent)
     {
         CSimulatorPluginCommon::registerHelp();
     }
 
-    CSimulatorPluginCommon::~CSimulatorPluginCommon()
-    {
-        this->deleteInterpolationDisplay();
-    }
+    CSimulatorPluginCommon::~CSimulatorPluginCommon() { this->deleteInterpolationDisplay(); }
 
     void CSimulatorPluginCommon::deleteInterpolationDisplay()
     {

@@ -39,7 +39,8 @@ namespace swift::gui
         if (m_viewWithIndicator) { m_viewWithIndicator->hideLoadIndicator(); }
     }
 
-    CEnableForViewBasedIndicator::CEnableForViewBasedIndicator(swift::gui::views::CViewBaseNonTemplate *viewWithIndicator)
+    CEnableForViewBasedIndicator::CEnableForViewBasedIndicator(
+        swift::gui::views::CViewBaseNonTemplate *viewWithIndicator)
         : m_viewWithIndicator(viewWithIndicator)
     {
         // void

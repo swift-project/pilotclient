@@ -13,7 +13,9 @@ namespace swift::misc
 {
     CIcon::CIcon(CIcons::IconIndex index) : CIcon(iconByIndex(index)) {}
 
-    CIcon::CIcon(CIcons::IconIndex index, const QString &descriptiveText) : m_index(index), m_descriptiveText(descriptiveText) {}
+    CIcon::CIcon(CIcons::IconIndex index, const QString &descriptiveText)
+        : m_index(index), m_descriptiveText(descriptiveText)
+    {}
 
     // CIcon::CIcon(const QPixmap &pixmap, const QString &descriptiveText) :
     //     m_index(CIcons::IconIsGenerated), m_descriptiveText(descriptiveText), m_pixmap(pixmap)
@@ -27,30 +29,15 @@ namespace swift::misc
     //     m_fileResourcePath = fullPath;
     // }
 
-    CIcons::IconIndex CIcon::getIndex() const
-    {
-        return m_index;
-    }
+    CIcons::IconIndex CIcon::getIndex() const { return m_index; }
 
-    bool CIcon::isIndexBased() const
-    {
-        return m_index < CIcons::IconIsGenerated;
-    }
+    bool CIcon::isIndexBased() const { return m_index < CIcons::IconIsGenerated; }
 
-    bool CIcon::isGenerated() const
-    {
-        return this->getIndex() == CIcons::IconIsGenerated;
-    }
+    bool CIcon::isGenerated() const { return this->getIndex() == CIcons::IconIsGenerated; }
 
-    bool CIcon::isFileBased() const
-    {
-        return this->getIndex() == CIcons::IconIsFile;
-    }
+    bool CIcon::isFileBased() const { return this->getIndex() == CIcons::IconIsFile; }
 
-    bool CIcon::isSet() const
-    {
-        return (m_index != CIcons::NotSet);
-    }
+    bool CIcon::isSet() const { return (m_index != CIcons::NotSet); }
 
     QPixmap CIcon::toPixmap() const
     {
@@ -60,16 +47,10 @@ namespace swift::misc
             if (this->isFileBased()) { return m_pixmap; }
             return CIcons::pixmapByIndex(this->getIndex(), m_rotateDegrees);
         }
-        else
-        {
-            return CIcons::pixmapByIndex(this->getIndex());
-        }
+        else { return CIcons::pixmapByIndex(this->getIndex()); }
     }
 
-    QIcon CIcon::toQIcon() const
-    {
-        return QIcon(toPixmap());
-    }
+    QIcon CIcon::toQIcon() const { return QIcon(toPixmap()); }
 
     QString CIcon::convertToQString(bool i18n) const
     {
@@ -78,10 +59,7 @@ namespace swift::misc
         return s;
     }
 
-    const CIcon &CIcon::iconByIndex(CIcons::IconIndex index)
-    {
-        return iconByIndex(static_cast<int>(index));
-    }
+    const CIcon &CIcon::iconByIndex(CIcons::IconIndex index) { return iconByIndex(static_cast<int>(index)); }
 
     const CIcon &CIcon::iconByIndex(int index)
     {
@@ -273,12 +251,6 @@ namespace swift::misc
     }
 
     // CIcons methods defined here to circumvent cyclic dependency
-    QVariant CIcons::toVariant(IconIndex icon)
-    {
-        return QVariant::fromValue(CIcon(icon));
-    }
-    QVariant CIcons::toVariantPixmap(IconIndex icon)
-    {
-        return QVariant::fromValue(CIcon(icon).toPixmap());
-    }
+    QVariant CIcons::toVariant(IconIndex icon) { return QVariant::fromValue(CIcon(icon)); }
+    QVariant CIcons::toVariantPixmap(IconIndex icon) { return QVariant::fromValue(CIcon(icon).toPixmap()); }
 } // namespace swift::misc

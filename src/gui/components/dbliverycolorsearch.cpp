@@ -14,15 +14,13 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::components
 {
-    CDbLiveryColorSearch::CDbLiveryColorSearch(QWidget *parent) : QFrame(parent),
-                                                                  ui(new Ui::CDbLiveryColorSearch)
+    CDbLiveryColorSearch::CDbLiveryColorSearch(QWidget *parent) : QFrame(parent), ui(new Ui::CDbLiveryColorSearch)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->comp_FuselageSelector);
     }
 
-    CDbLiveryColorSearch::~CDbLiveryColorSearch()
-    {}
+    CDbLiveryColorSearch::~CDbLiveryColorSearch() {}
 
     CLivery CDbLiveryColorSearch::getLivery() const
     {

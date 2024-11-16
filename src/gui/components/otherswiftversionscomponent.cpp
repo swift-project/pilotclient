@@ -17,8 +17,8 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    COtherSwiftVersionsComponent::COtherSwiftVersionsComponent(QWidget *parent) : QFrame(parent),
-                                                                                  ui(new Ui::COtherSwiftVersionsComponent)
+    COtherSwiftVersionsComponent::COtherSwiftVersionsComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::COtherSwiftVersionsComponent)
     {
         ui->setupUi(this);
 
@@ -30,17 +30,15 @@ namespace swift::gui::components
         ui->le_ThisVersion->home(false);
 
         connect(ui->tb_DataDir, &QToolButton::clicked, this, &COtherSwiftVersionsComponent::openDataDirectory);
-        connect(ui->tvp_ApplicationInfo, &CApplicationInfoView::objectSelected, this, &COtherSwiftVersionsComponent::onObjectSelected);
-        connect(ui->tvp_ApplicationInfo, &CApplicationInfoView::requestUpdate, this, &COtherSwiftVersionsComponent::reloadOtherVersions);
+        connect(ui->tvp_ApplicationInfo, &CApplicationInfoView::objectSelected, this,
+                &COtherSwiftVersionsComponent::onObjectSelected);
+        connect(ui->tvp_ApplicationInfo, &CApplicationInfoView::requestUpdate, this,
+                &COtherSwiftVersionsComponent::reloadOtherVersions);
     }
 
-    COtherSwiftVersionsComponent::~COtherSwiftVersionsComponent()
-    {}
+    COtherSwiftVersionsComponent::~COtherSwiftVersionsComponent() {}
 
-    bool COtherSwiftVersionsComponent::hasSelection() const
-    {
-        return (ui->tvp_ApplicationInfo->hasSelection());
-    }
+    bool COtherSwiftVersionsComponent::hasSelection() const { return (ui->tvp_ApplicationInfo->hasSelection()); }
 
     CApplicationInfo COtherSwiftVersionsComponent::selectedOtherVersion() const
     {
@@ -50,10 +48,7 @@ namespace swift::gui::components
 
     void COtherSwiftVersionsComponent::reloadOtherVersionsDeferred(int deferMs)
     {
-        if (deferMs <= 0)
-        {
-            ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDiretoriesAndResize(true);
-        }
+        if (deferMs <= 0) { ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDiretoriesAndResize(true); }
         else
         {
             QPointer<COtherSwiftVersionsComponent> myself(this);

@@ -20,10 +20,7 @@ using namespace swift::misc::input;
 
 namespace
 {
-    inline QString inputDevicesDir()
-    {
-        return QStringLiteral("/dev/input/");
-    }
+    inline QString inputDevicesDir() { return QStringLiteral("/dev/input/"); }
 } // namespace
 
 namespace swift::input
@@ -74,8 +71,7 @@ namespace swift::input
         }
     }
 
-    CJoystickLinux::CJoystickLinux(QObject *parent) : IJoystick(parent),
-                                                      m_inputWatcher(new QFileSystemWatcher(this))
+    CJoystickLinux::CJoystickLinux(QObject *parent) : IJoystick(parent), m_inputWatcher(new QFileSystemWatcher(this))
     {
         m_inputWatcher->addPath(inputDevicesDir());
         connect(m_inputWatcher, &QFileSystemWatcher::directoryChanged, this, &CJoystickLinux::reloadDevices);
@@ -99,10 +95,7 @@ namespace swift::input
                 it = m_joystickDevices.erase(it);
                 joystickDevice->deleteLater();
             }
-            else
-            {
-                ++it;
-            }
+            else { ++it; }
         }
     }
 
@@ -117,7 +110,8 @@ namespace swift::input
         }
         else
         {
-            swift::misc::CLogMessage(this).error(u"Failed to open joystick device %1: %2") << fd->fileName() << fd->errorString();
+            swift::misc::CLogMessage(this).error(u"Failed to open joystick device %1: %2")
+                << fd->fileName() << fd->errorString();
             fd->close();
             fd->deleteLater();
         }
@@ -126,19 +120,10 @@ namespace swift::input
     void CJoystickLinux::joystickButtonChanged(const QString &name, int index, bool isPressed)
     {
         swift::misc::input::CHotkeyCombination oldCombination(m_buttonCombination);
-        if (isPressed)
-        {
-            m_buttonCombination.addJoystickButton({ name, index });
-        }
-        else
-        {
-            m_buttonCombination.removeJoystickButton({ name, index });
-        }
+        if (isPressed) { m_buttonCombination.addJoystickButton({ name, index }); }
+        else { m_buttonCombination.removeJoystickButton({ name, index }); }
 
-        if (oldCombination != m_buttonCombination)
-        {
-            emit buttonCombinationChanged(m_buttonCombination);
-        }
+        if (oldCombination != m_buttonCombination) { emit buttonCombinationChanged(m_buttonCombination); }
     }
 
     void CJoystickLinux::reloadDevices(QString path)
@@ -149,13 +134,9 @@ namespace swift::input
         for (const auto &entry : dir.entryInfoList())
         {
             QString f = entry.absoluteFilePath();
-            auto it = std::find_if(m_joystickDevices.begin(), m_joystickDevices.end(), [path](const CJoystickDevice *device) {
-                return device->getPath() == path;
-            });
-            if (it == m_joystickDevices.end())
-            {
-                addJoystickDevice(f);
-            }
+            auto it = std::find_if(m_joystickDevices.begin(), m_joystickDevices.end(),
+                                   [path](const CJoystickDevice *device) { return device->getPath() == path; });
+            if (it == m_joystickDevices.end()) { addJoystickDevice(f); }
         }
     }
 

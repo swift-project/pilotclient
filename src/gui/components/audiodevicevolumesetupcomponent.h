@@ -43,18 +43,26 @@ namespace swift::gui::components
 
         //! @{
         //! Get input and output volume values
-        int getInValue(int from = swift::misc::audio::CSettings::InMin, int to = swift::misc::audio::CSettings::InMax) const;
-        int getOutValue(int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax) const;
-        int getOutValueCom1(int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax) const;
-        int getOutValueCom2(int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax) const;
+        int getInValue(int from = swift::misc::audio::CSettings::InMin,
+                       int to = swift::misc::audio::CSettings::InMax) const;
+        int getOutValue(int from = swift::misc::audio::CSettings::OutMin,
+                        int to = swift::misc::audio::CSettings::OutMax) const;
+        int getOutValueCom1(int from = swift::misc::audio::CSettings::OutMin,
+                            int to = swift::misc::audio::CSettings::OutMax) const;
+        int getOutValueCom2(int from = swift::misc::audio::CSettings::OutMin,
+                            int to = swift::misc::audio::CSettings::OutMax) const;
         //! @}
 
         //! @{
         //! Set input and output volume values
-        void setInValue(int value, int from = swift::misc::audio::CSettings::InMin, int to = swift::misc::audio::CSettings::InMax);
-        void setOutValue(int value, int from = swift::misc::audio::CSettings::InMin, int to = swift::misc::audio::CSettings::InMax);
-        void setOutValueCom1(int value, int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax);
-        void setOutValueCom2(int value, int from = swift::misc::audio::CSettings::OutMin, int to = swift::misc::audio::CSettings::OutMax);
+        void setInValue(int value, int from = swift::misc::audio::CSettings::InMin,
+                        int to = swift::misc::audio::CSettings::InMax);
+        void setOutValue(int value, int from = swift::misc::audio::CSettings::InMin,
+                         int to = swift::misc::audio::CSettings::InMax);
+        void setOutValueCom1(int value, int from = swift::misc::audio::CSettings::OutMin,
+                             int to = swift::misc::audio::CSettings::OutMax);
+        void setOutValueCom2(int value, int from = swift::misc::audio::CSettings::OutMin,
+                             int to = swift::misc::audio::CSettings::OutMax);
         //! @}
 
         //! @{
@@ -81,7 +89,8 @@ namespace swift::gui::components
         void onAudioDeviceSelected(int index);
 
         //! Current audio devices changed
-        void onAudioStarted(const swift::misc::audio::CAudioDeviceInfo &input, const swift::misc::audio::CAudioDeviceInfo &output);
+        void onAudioStarted(const swift::misc::audio::CAudioDeviceInfo &input,
+                            const swift::misc::audio::CAudioDeviceInfo &output);
 
         //! Audio has been stopped
         void onAudioStopped();
@@ -127,7 +136,8 @@ namespace swift::gui::components
         void setRxTxCheckboxes(bool rx1, bool tx1, bool rx2, bool tx2);
 
         // TODO: Move TransceiverReceivingCallsignsChangedArgs to Misc
-        void onReceivingCallsignsChanged(const swift::misc::aviation::CCallsignSet &com1Callsigns, const swift::misc::aviation::CCallsignSet &com2Callsigns);
+        void onReceivingCallsignsChanged(const swift::misc::aviation::CCallsignSet &com1Callsigns,
+                                         const swift::misc::aviation::CCallsignSet &com2Callsigns);
         void onUpdatedClientWithCockpitData();
 
         swift::misc::audio::CAudioDeviceInfo getSelectedInputDevice() const;
@@ -152,8 +162,11 @@ namespace swift::gui::components
         swift::misc::CConnectionGuard m_afvConnections;
         QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
         swift::misc::audio::CAudioDeviceInfoList m_cbDevices; //!< devices to be displayed in the checkbox
-        swift::misc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000, 10 };
-        swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &CAudioDeviceVolumeSetupComponent::reloadSettings };
+        swift::misc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000,
+                                                           10 };
+        swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings {
+            this, &CAudioDeviceVolumeSetupComponent::reloadSettings
+        };
 
     private slots:
         void simulatorSettingsChanged();

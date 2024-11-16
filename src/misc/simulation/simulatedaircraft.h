@@ -94,10 +94,12 @@ namespace swift::misc
             explicit CSimulatedAircraft(const CAircraftModel &model);
 
             //! Constructor.
-            CSimulatedAircraft(const aviation::CCallsign &callsign, const network::CUser &user, const aviation::CAircraftSituation &situation);
+            CSimulatedAircraft(const aviation::CCallsign &callsign, const network::CUser &user,
+                               const aviation::CAircraftSituation &situation);
 
             //! Constructor.
-            CSimulatedAircraft(const aviation::CCallsign &callsign, const CAircraftModel &model, const network::CUser &user, const aviation::CAircraftSituation &situation);
+            CSimulatedAircraft(const aviation::CCallsign &callsign, const CAircraftModel &model,
+                               const network::CUser &user, const aviation::CAircraftSituation &situation);
 
             //! Get callsign.
             const aviation::CCallsign &getCallsign() const { return m_callsign; }
@@ -139,11 +141,16 @@ namespace swift::misc
             const QString &getAircraftIcaoCombinedType() const;
 
             //! Set aicraft ICAO code
-            bool setAircraftIcaoCode(const aviation::CAircraftIcaoCode &aircraftIcaoCode) { return m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode); }
+            bool setAircraftIcaoCode(const aviation::CAircraftIcaoCode &aircraftIcaoCode)
+            {
+                return m_models[CurrentModel].setAircraftIcaoCode(aircraftIcaoCode);
+            }
 
             //! Set ICAO info
-            //! \note to be compatible with old version I still allow to set airline here, but I should actually set a livery
-            bool setIcaoCodes(const aviation::CAircraftIcaoCode &aircraftIcaoCode, const aviation::CAirlineIcaoCode &airlineIcaoCode);
+            //! \note to be compatible with old version I still allow to set airline here, but I should actually set a
+            //! livery
+            bool setIcaoCodes(const aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                              const aviation::CAirlineIcaoCode &airlineIcaoCode);
 
             //! Get livery
             const aviation::CLivery &getLivery() const { return m_models[CurrentModel].getLivery(); }
@@ -173,7 +180,10 @@ namespace swift::misc
             bool hasAircraftAndAirlineDesignator() const;
 
             //! Valid callsign?
-            bool hasValidCallsign() const { return aviation::CCallsign::isValidAircraftCallsign(this->getCallsign().asString()); }
+            bool hasValidCallsign() const
+            {
+                return aviation::CCallsign::isValidAircraftCallsign(this->getCallsign().asString());
+            }
 
             //! Callsign not empty, no further checks
             bool hasCallsign() const { return !getCallsign().isEmpty(); }
@@ -212,16 +222,27 @@ namespace swift::misc
             virtual QVector3D normalVector() const override { return m_situation.normalVector(); }
 
             //! \copydoc swift::misc::geo::ICoordinateGeodetic::normalVectorDouble
-            virtual std::array<double, 3> normalVectorDouble() const override { return m_situation.normalVectorDouble(); }
+            virtual std::array<double, 3> normalVectorDouble() const override
+            {
+                return m_situation.normalVectorDouble();
+            }
 
             //! \copydoc swift::misc::aviation::CAircraftSituation::getGroundElevation
             const aviation::CAltitude &getGroundElevation() const { return m_situation.getGroundElevation(); }
 
             //! \copydoc swift::misc::aviation::CAircraftSituation::setGroundElevation
-            void setGroundElevation(const geo::CElevationPlane &elevation, aviation::CAircraftSituation::GndElevationInfo info) { m_situation.setGroundElevation(elevation, info); }
+            void setGroundElevation(const geo::CElevationPlane &elevation,
+                                    aviation::CAircraftSituation::GndElevationInfo info)
+            {
+                m_situation.setGroundElevation(elevation, info);
+            }
 
             //! \copydoc swift::misc::aviation::CAircraftSituation::setGroundElevation
-            void setGroundElevationChecked(const geo::CElevationPlane &elevation, aviation::CAircraftSituation::GndElevationInfo info) { m_situation.setGroundElevationChecked(elevation, info); }
+            void setGroundElevationChecked(const geo::CElevationPlane &elevation,
+                                           aviation::CAircraftSituation::GndElevationInfo info)
+            {
+                m_situation.setGroundElevationChecked(elevation, info);
+            }
 
             //! \copydoc swift::misc::aviation::CAircraftSituation::getHeading
             const aviation::CHeading &getHeading() const { return m_situation.getHeading(); }
@@ -257,7 +278,8 @@ namespace swift::misc
             bool setCom2ActiveFrequency(const physical_quantities::CFrequency &frequency);
 
             //! Set COM frequency
-            bool setComActiveFrequency(const physical_quantities::CFrequency &frequency, aviation::CComSystem::ComUnit unit);
+            bool setComActiveFrequency(const physical_quantities::CFrequency &frequency,
+                                       aviation::CComSystem::ComUnit unit);
 
             //! Given SELCAL selected?
             bool isSelcalSelected(const aviation::CSelcal &selcal) const { return m_selcal == selcal; }
@@ -272,21 +294,26 @@ namespace swift::misc
             void setCockpit(const CSimulatedAircraft &aircraft);
 
             //! Cockpit data
-            void setCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2, const aviation::CTransponder &transponder);
+            void setCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2,
+                            const aviation::CTransponder &transponder);
 
             //! Cockpit data
-            void setCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2, int transponderCode, aviation::CTransponder::TransponderMode mode);
+            void setCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2, int transponderCode,
+                            aviation::CTransponder::TransponderMode mode);
 
             //! Own SELCAL code
             void setSelcal(const aviation::CSelcal &selcal) { m_selcal = selcal; }
 
             //! Changed cockpit data?
-            bool hasChangedCockpitData(const aviation::CComSystem &com1, const aviation::CComSystem &com2, const aviation::CTransponder &transponder) const;
+            bool hasChangedCockpitData(const aviation::CComSystem &com1, const aviation::CComSystem &com2,
+                                       const aviation::CTransponder &transponder) const;
 
             //! Identical COM system?
-            bool hasSameComData(const aviation::CComSystem &com1, const aviation::CComSystem &com2, const aviation::CTransponder &transponder);
+            bool hasSameComData(const aviation::CComSystem &com1, const aviation::CComSystem &com2,
+                                const aviation::CTransponder &transponder);
 
-            //! Is comFrequency selected in COM1 or COM2 as active frequency (with 5 kHz spacing for .x20/.x25 and .x70/.x75)
+            //! Is comFrequency selected in COM1 or COM2 as active frequency (with 5 kHz spacing for .x20/.x25 and
+            //! .x70/.x75)
             bool hasComActiveFrequency(const physical_quantities::CFrequency &comFrequency) const;
 
             //! Get transponder
@@ -308,7 +335,10 @@ namespace swift::misc
             qint32 getTransponderCode() const { return m_transponder.getTransponderCode(); }
 
             //! Get transponder mode
-            aviation::CTransponder::TransponderMode getTransponderMode() const { return m_transponder.getTransponderMode(); }
+            aviation::CTransponder::TransponderMode getTransponderMode() const
+            {
+                return m_transponder.getTransponderMode();
+            }
 
             //! Is valid for login?
             bool isValidForLogin() const;
@@ -443,7 +473,8 @@ namespace swift::misc
             bool isSupportingGndFlag() const { return m_supportsGndFlag; }
 
             //! Indicate gnd.flag is supported
-            //! \remark normally automatically set from swift::misc::aviation::CAircraftSituation::hasInboundGroundDetails
+            //! \remark normally automatically set from
+            //! swift::misc::aviation::CAircraftSituation::hasInboundGroundDetails
             void setSupportingGndFlag(bool supports) { m_supportsGndFlag = supports; }
 
             //! \copydoc swift::misc::mixin::Index::propertyByIndex
@@ -469,7 +500,9 @@ namespace swift::misc
             aviation::CTransponder m_transponder;
             aviation::CAircraftParts m_parts;
             aviation::CSelcal m_selcal;
-            CAircraftModelList m_models = { { CAircraftModel(), CAircraftModel() } }; //!< Shorter DBus signature: current model, and model received from network
+            CAircraftModelList m_models = {
+                { CAircraftModel(), CAircraftModel() }
+            }; //!< Shorter DBus signature: current model, and model received from network
             bool m_enabled = true; //!< to be displayed in simulator
             bool m_rendered = false; //!< really shown in simulator
             bool m_partsSynchronized = false; //!< synchronize parts

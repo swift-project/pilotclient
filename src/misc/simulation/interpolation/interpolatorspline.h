@@ -21,9 +21,11 @@ namespace swift::misc::simulation
 
     public:
         //! Constructor
-        CInterpolatorSpline(const aviation::CCallsign &callsign,
-                            ISimulationEnvironmentProvider *envProvider, IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *aircraftProvider,
-                            CInterpolationLogger *logger = nullptr) : CInterpolator(callsign, envProvider, setupProvider, aircraftProvider, logger) {}
+        CInterpolatorSpline(const aviation::CCallsign &callsign, ISimulationEnvironmentProvider *envProvider,
+                            IInterpolationSetupProvider *setupProvider, IRemoteAircraftProvider *aircraftProvider,
+                            CInterpolationLogger *logger = nullptr)
+            : CInterpolator(callsign, envProvider, setupProvider, aircraftProvider, logger)
+        {}
 
         //! Position arrays for interpolation
         struct SWIFT_MISC_EXPORT PosArray
@@ -61,7 +63,8 @@ namespace swift::misc::simulation
             CInterpolant() : m_pa(PosArray::zeroPosArray()) {}
 
             //! Constructor
-            CInterpolant(const PosArray &pa, const physical_quantities::CLengthUnit &altitudeUnit, const CInterpolatorLinearPbh &pbh);
+            CInterpolant(const PosArray &pa, const physical_quantities::CLengthUnit &altitudeUnit,
+                         const CInterpolatorLinearPbh &pbh);
 
             //! \copydoc swift::misc::simulation::IInterpolant::interpolatePositionAndAltitude
             std::tuple<geo::CCoordinateGeodetic, aviation::CAltitude> interpolatePositionAndAltitude() const override;
@@ -102,8 +105,11 @@ namespace swift::misc::simulation
         bool fillSituationsArray();
 
         //! Verify gnd flag, times, ... true means "OK"
-        static bool verifyInterpolationSituations(const aviation::CAircraftSituation &oldest, const aviation::CAircraftSituation &newer, const aviation::CAircraftSituation &latest,
-                                                  const CInterpolationAndRenderingSetupPerCallsign &setup = CInterpolationAndRenderingSetupPerCallsign::null());
+        static bool verifyInterpolationSituations(const aviation::CAircraftSituation &oldest,
+                                                  const aviation::CAircraftSituation &newer,
+                                                  const aviation::CAircraftSituation &latest,
+                                                  const CInterpolationAndRenderingSetupPerCallsign &setup =
+                                                      CInterpolationAndRenderingSetupPerCallsign::null());
 
         qint64 m_prevSampleAdjustedTime = 0; //!< previous sample time + offset
         qint64 m_nextSampleAdjustedTime = 0; //!< previous sample time + offset

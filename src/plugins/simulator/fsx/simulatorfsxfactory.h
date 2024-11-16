@@ -15,9 +15,7 @@
 namespace swift::simplugin::fsx
 {
     //! Factory implementation to create CSimulatorFsx instances
-    class CSimulatorFsxFactory :
-        public QObject,
-        public swift::core::ISimulatorFactory
+    class CSimulatorFsxFactory : public QObject, public swift::core::ISimulatorFactory
     {
         Q_OBJECT
         Q_PLUGIN_METADATA(IID "org.swift-project.swift_core.simulatorinterface" FILE "simulatorfsx.json")
@@ -25,13 +23,15 @@ namespace swift::simplugin::fsx
 
     public:
         //! \copydoc swift::core::ISimulatorFactory::create
-        virtual swift::core::ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
-                                                swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-                                                swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                                                swift::misc::network::IClientProvider *clientProvider) override;
+        virtual swift::core::ISimulator *
+        create(const swift::misc::simulation::CSimulatorPluginInfo &info,
+               swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+               swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+               swift::misc::network::IClientProvider *clientProvider) override;
 
         //! \copydoc swift::core::ISimulatorFactory::createListener
-        virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override;
+        virtual swift::core::ISimulatorListener *
+        createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override;
     };
 } // namespace swift::simplugin::fsx
 

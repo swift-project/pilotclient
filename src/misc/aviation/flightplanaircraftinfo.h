@@ -27,8 +27,8 @@ namespace swift::misc::aviation
         CFlightPlanAircraftInfo(const CAircraftIcaoCode &aircraftIcao, const CComNavEquipment &comNavEquipment,
                                 const CSsrEquipment &ssrEquipment, const CWakeTurbulenceCategory &wtc);
 
-        //! Create aircraft info from a string that contains the 4 parts of an ICAO equipment code (AIRCRAFT_ICAO/WTC-EQUIPMENT/SSR).
-        //! Passing FAA equipment codes like "H/B772/F" is supported as well
+        //! Create aircraft info from a string that contains the 4 parts of an ICAO equipment code
+        //! (AIRCRAFT_ICAO/WTC-EQUIPMENT/SSR). Passing FAA equipment codes like "H/B772/F" is supported as well
         explicit CFlightPlanAircraftInfo(QString equipmentCodeAndAircraft);
 
         //! Full string in ICAO format: "AIRCRAFT_ICAO/WTC-EQUIPMENT/SSR"
@@ -62,11 +62,13 @@ namespace swift::misc::aviation
         CAircraftIcaoCode m_aircraftIcao; //!< Aircraft ICAO code
         CComNavEquipment m_comNavEquipment; //!< COM & NAV equipment (flight plan field 10a)
         CSsrEquipment m_ssrEquipment; //!< secondary surveillance radar equipment (flight plan field 10b)
-        CWakeTurbulenceCategory m_wtc; //!< wake turbulence category. This information is also part of m_aircraftIcao, but is not always filled.
+        CWakeTurbulenceCategory m_wtc; //!< wake turbulence category. This information is also part of m_aircraftIcao,
+                                       //!< but is not always filled.
 
         void parseIcaoEquipmentCode(const QString &equipment); //!< Initialize members from ICAO format equipment codes
         void parseFaaEquipmentCode(const QString &equipment); //!< Initialize members from FAA format equipment codes
-        void parseUnknownEquipmentCode(const QString &equipment); //!< Initialize members from unknown format equipment strings (best guesses)
+        void parseUnknownEquipmentCode(
+            const QString &equipment); //!< Initialize members from unknown format equipment strings (best guesses)
 
         SWIFT_METACLASS(
             CFlightPlanAircraftInfo,

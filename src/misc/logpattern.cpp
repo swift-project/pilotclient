@@ -89,20 +89,14 @@ namespace swift::misc
         return it == allHumanReadablePatterns().end() ? empty : *it;
     }
 
-    CLogPattern::CLogPattern(Strategy strategy, const QSet<QString> &strings)
-        : m_strategy(strategy), m_strings(strings)
+    CLogPattern::CLogPattern(Strategy strategy, const QSet<QString> &strings) : m_strategy(strategy), m_strings(strings)
     {
-        static const decltype(m_severities) s {
-            CStatusMessage::SeverityDebug,
-            CStatusMessage::SeverityInfo,
-            CStatusMessage::SeverityWarning,
-            CStatusMessage::SeverityError
-        };
+        static const decltype(m_severities) s { CStatusMessage::SeverityDebug, CStatusMessage::SeverityInfo,
+                                                CStatusMessage::SeverityWarning, CStatusMessage::SeverityError };
         m_severities = s;
     }
 
-    CLogPattern::CLogPattern() : CLogPattern(Everything, {})
-    {}
+    CLogPattern::CLogPattern() : CLogPattern(Everything, {}) {}
 
     CLogPattern CLogPattern::exactMatch(const CLogCategory &category)
     {
@@ -125,25 +119,13 @@ namespace swift::misc
         return { AnyOf, QSet<QString>(strList.begin(), strList.end()) };
     }
 
-    CLogPattern CLogPattern::startsWith(const QString &prefix)
-    {
-        return { StartsWith, { prefix } };
-    }
+    CLogPattern CLogPattern::startsWith(const QString &prefix) { return { StartsWith, { prefix } }; }
 
-    CLogPattern CLogPattern::endsWith(const QString &suffix)
-    {
-        return { EndsWith, { suffix } };
-    }
+    CLogPattern CLogPattern::endsWith(const QString &suffix) { return { EndsWith, { suffix } }; }
 
-    CLogPattern CLogPattern::contains(const QString &substring)
-    {
-        return { Contains, { substring } };
-    }
+    CLogPattern CLogPattern::contains(const QString &substring) { return { Contains, { substring } }; }
 
-    CLogPattern CLogPattern::empty()
-    {
-        return { Nothing, {} };
-    }
+    CLogPattern CLogPattern::empty() { return { Nothing, {} }; }
 
     CLogPattern CLogPattern::withSeverity(CStatusMessage::StatusSeverity severity) const
     {
@@ -166,12 +148,8 @@ namespace swift::misc
         switch (minimumSeverity)
         {
         default:
-        case CStatusMessage::SeverityDebug:
-            result.m_severities.insert(CStatusMessage::SeverityDebug);
-            [[fallthrough]];
-        case CStatusMessage::SeverityInfo:
-            result.m_severities.insert(CStatusMessage::SeverityInfo);
-            [[fallthrough]];
+        case CStatusMessage::SeverityDebug: result.m_severities.insert(CStatusMessage::SeverityDebug); [[fallthrough]];
+        case CStatusMessage::SeverityInfo: result.m_severities.insert(CStatusMessage::SeverityInfo); [[fallthrough]];
         case CStatusMessage::SeverityWarning:
             result.m_severities.insert(CStatusMessage::SeverityWarning);
             [[fallthrough]];
@@ -204,21 +182,28 @@ namespace swift::misc
             return true;
         }
 
-        if (!m_severities.contains(message.getSeverity()))
-        {
-            return false;
-        }
+        if (!m_severities.contains(message.getSeverity())) { return false; }
 
         switch (m_strategy)
         {
         default:
         case Everything: return true;
         case ExactMatch: return message.getCategories().contains(getString());
-        case AnyOf: return std::any_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return message.getCategories().contains(s); });
-        case AllOf: return std::all_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return message.getCategories().contains(s); });
-        case StartsWith: return message.getCategories().containsBy([this](const CLogCategory &cat) { return cat.startsWith(getPrefix()); });
-        case EndsWith: return message.getCategories().containsBy([this](const CLogCategory &cat) { return cat.endsWith(getSuffix()); });
-        case Contains: return message.getCategories().containsBy([this](const CLogCategory &cat) { return cat.contains(getSubstring()); });
+        case AnyOf:
+            return std::any_of(m_strings.begin(), m_strings.end(),
+                               [&](const QString &s) { return message.getCategories().contains(s); });
+        case AllOf:
+            return std::all_of(m_strings.begin(), m_strings.end(),
+                               [&](const QString &s) { return message.getCategories().contains(s); });
+        case StartsWith:
+            return message.getCategories().containsBy(
+                [this](const CLogCategory &cat) { return cat.startsWith(getPrefix()); });
+        case EndsWith:
+            return message.getCategories().containsBy(
+                [this](const CLogCategory &cat) { return cat.endsWith(getSuffix()); });
+        case Contains:
+            return message.getCategories().containsBy(
+                [this](const CLogCategory &cat) { return cat.contains(getSubstring()); });
         case Nothing: return message.getCategories().isEmpty();
         }
     }
@@ -268,10 +253,7 @@ namespace swift::misc
         //  Co   1  0  0  0  0  0  ?  0   (Contains)
         //  No   1  0  0  0  0  0  0  0   (Nothing)
 
-        if (m_strategy != Everything && other.m_strategy == Everything)
-        {
-            return true;
-        }
+        if (m_strategy != Everything && other.m_strategy == Everything) { return true; }
         switch (m_strategy)
         {
         case ExactMatch:
@@ -288,9 +270,15 @@ namespace swift::misc
             switch (other.m_strategy)
             {
             case AnyOf: return other.m_strings.contains(m_strings) && other.m_strings.size() > m_strings.size();
-            case StartsWith: return std::all_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.startsWith(other.getPrefix()); });
-            case EndsWith: return std::all_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.endsWith(other.getSuffix()); });
-            case Contains: return std::all_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.contains(other.getSubstring()); });
+            case StartsWith:
+                return std::all_of(m_strings.begin(), m_strings.end(),
+                                   [&](const QString &s) { return s.startsWith(other.getPrefix()); });
+            case EndsWith:
+                return std::all_of(m_strings.begin(), m_strings.end(),
+                                   [&](const QString &s) { return s.endsWith(other.getSuffix()); });
+            case Contains:
+                return std::all_of(m_strings.begin(), m_strings.end(),
+                                   [&](const QString &s) { return s.contains(other.getSubstring()); });
             default:;
             }
             break;
@@ -300,16 +288,23 @@ namespace swift::misc
             case ExactMatch: return m_strings.contains(other.getString());
             case AnyOf: return !(m_strings & other.m_strings).isEmpty();
             case AllOf: return m_strings.contains(other.m_strings) && m_strings.size() > other.m_strings.size();
-            case StartsWith: return std::any_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.startsWith(other.getPrefix()); });
-            case EndsWith: return std::any_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.endsWith(other.getSuffix()); });
-            case Contains: return std::any_of(m_strings.begin(), m_strings.end(), [&](const QString &s) { return s.contains(other.getSubstring()); });
+            case StartsWith:
+                return std::any_of(m_strings.begin(), m_strings.end(),
+                                   [&](const QString &s) { return s.startsWith(other.getPrefix()); });
+            case EndsWith:
+                return std::any_of(m_strings.begin(), m_strings.end(),
+                                   [&](const QString &s) { return s.endsWith(other.getSuffix()); });
+            case Contains:
+                return std::any_of(m_strings.begin(), m_strings.end(),
+                                   [&](const QString &s) { return s.contains(other.getSubstring()); });
             default:;
             }
             break;
         case StartsWith:
             switch (other.m_strategy)
             {
-            case StartsWith: return getPrefix().startsWith(other.getPrefix()) && getPrefix().size() > other.getPrefix().size();
+            case StartsWith:
+                return getPrefix().startsWith(other.getPrefix()) && getPrefix().size() > other.getPrefix().size();
             case Contains: return getPrefix().contains(other.getSubstring());
             default:;
             }
@@ -317,7 +312,8 @@ namespace swift::misc
         case EndsWith:
             switch (other.m_strategy)
             {
-            case EndsWith: return getSuffix().endsWith(other.getSuffix()) && getSuffix().size() > other.getSuffix().size();
+            case EndsWith:
+                return getSuffix().endsWith(other.getSuffix()) && getSuffix().size() > other.getSuffix().size();
             case Contains: return getSuffix().contains(other.getSubstring());
             default:;
             }
@@ -325,7 +321,9 @@ namespace swift::misc
         case Contains:
             switch (other.m_strategy)
             {
-            case Contains: return getSubstring().contains(other.getSubstring()) && getSubstring().size() > other.getSubstring().size();
+            case Contains:
+                return getSubstring().contains(other.getSubstring()) &&
+                       getSubstring().size() > other.getSubstring().size();
             default:;
             }
             break;

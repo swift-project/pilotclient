@@ -35,8 +35,7 @@ namespace swift::misc
         return &crashHandler;
     }
 
-    CCrashHandler::~CCrashHandler()
-    {}
+    CCrashHandler::~CCrashHandler() {}
 
 #ifdef SWIFT_USE_CRASHPAD
     //! Convert to file path
@@ -53,7 +52,8 @@ namespace swift::misc
     void CCrashHandler::init()
     {
 #ifdef SWIFT_USE_CRASHPAD
-        static const QString crashpadHandler(CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
+        static const QString crashpadHandler(
+            CBuildConfig::isRunningOnWindowsNtPlatform() ? "swift_crashpad_handler.exe" : "swift_crashpad_handler");
         static const QString handler = CFileUtils::appendFilePaths(CSwiftDirectories::binDirectory(), crashpadHandler);
         const QString database = CSwiftDirectories::crashpadDatabaseDirectory();
         const QString metrics = CSwiftDirectories::crashpadMetricsDirectory();
@@ -73,35 +73,30 @@ namespace swift::misc
         annotations["qtversion"] = QT_VERSION_STR;
 
         // add our logfile
-        const QString logAttachment = QStringLiteral("--attachment=attachment_%1=%2").arg(CFileLogger::getLogFileName(), CFileLogger::getLogFilePath());
+        const QString logAttachment = QStringLiteral("--attachment=attachment_%1=%2")
+                                          .arg(CFileLogger::getLogFileName(), CFileLogger::getLogFilePath());
 
         std::vector<std::string> arguments;
         arguments.push_back(logAttachment.toStdString());
 
         // and the simplified crash info if any
         const QString crashInfoFileName("swiftcrashinfo.txt");
-        const QString crashInfoFilePath(CFileUtils::appendFilePaths(CFileUtils::stripFileFromPath(CFileLogger::getLogFilePath()), crashInfoFileName));
+        const QString crashInfoFilePath(CFileUtils::appendFilePaths(
+            CFileUtils::stripFileFromPath(CFileLogger::getLogFilePath()), crashInfoFileName));
         m_crashAndLogInfo.setLogPathAndFileName(crashInfoFilePath);
-        const QString crashAttachment = QStringLiteral("--attachment=attachment_%1=%2").arg(crashInfoFileName, crashInfoFilePath);
+        const QString crashAttachment =
+            QStringLiteral("--attachment=attachment_%1=%2").arg(crashInfoFileName, crashInfoFilePath);
         arguments.push_back(crashAttachment.toStdString());
 
         // for testing purposes
-        if (CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            arguments.push_back("--no-rate-limit");
-        }
+        if (CBuildConfig::isLocalDeveloperDebugBuild()) { arguments.push_back("--no-rate-limit"); }
 
         QDir().mkpath(database);
 
         m_crashReportDatabase = CrashReportDatabase::Initialize(qstringToFilePath(database));
         m_crashpadClient = std::make_unique<CrashpadClient>();
-        m_crashpadClient->StartHandler(qstringToFilePath(handler),
-                                       qstringToFilePath(database),
-                                       qstringToFilePath(metrics),
-                                       serverUrl,
-                                       annotations,
-                                       arguments,
-                                       false, true);
+        m_crashpadClient->StartHandler(qstringToFilePath(handler), qstringToFilePath(database),
+                                       qstringToFilePath(metrics), serverUrl, annotations, arguments, false, true);
 
         this->crashAndLogAppendInfo(u"Init crash info at " % QDateTime::currentDateTimeUtc().toString());
 #endif
@@ -110,10 +105,7 @@ namespace swift::misc
     void CCrashHandler::setUploadsEnabled(bool enable)
     {
 #ifdef SWIFT_USE_CRASHPAD
-        if (!m_crashReportDatabase)
-        {
-            return;
-        }
+        if (!m_crashReportDatabase) { return; }
         crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
         settings->SetUploadsEnabled(enable);
 #else
@@ -124,10 +116,7 @@ namespace swift::misc
     bool CCrashHandler::isCrashDumpUploadEnabled() const
     {
 #ifdef SWIFT_USE_CRASHPAD
-        if (!m_crashReportDatabase)
-        {
-            return false;
-        }
+        if (!m_crashReportDatabase) { return false; }
         crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
         bool enabled = false;
         bool ok = settings->GetUploadsEnabled(&enabled);
@@ -137,10 +126,7 @@ namespace swift::misc
 #endif
     }
 
-    void CCrashHandler::triggerCrashInfoWrite()
-    {
-        m_crashAndLogInfo.triggerWritingFile();
-    }
+    void CCrashHandler::triggerCrashInfoWrite() { m_crashAndLogInfo.triggerWritingFile(); }
 
     void CCrashHandler::setCrashInfo(const CCrashInfo &info)
     {
@@ -198,6 +184,5 @@ namespace swift::misc
 #endif
     }
 
-    CCrashHandler::CCrashHandler(QObject *parent) : QObject(parent)
-    {}
+    CCrashHandler::CCrashHandler(QObject *parent) : QObject(parent) {}
 } // namespace swift::misc

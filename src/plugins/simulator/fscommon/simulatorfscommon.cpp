@@ -20,12 +20,10 @@ using namespace swift::simplugin::common;
 
 namespace swift::simplugin::fscommon
 {
-    CSimulatorFsCommon::CSimulatorFsCommon(
-        const CSimulatorPluginInfo &info,
-        IOwnAircraftProvider *ownAircraftProvider,
-        IRemoteAircraftProvider *renderedAircraftProvider,
-        IClientProvider *clientProvider,
-        QObject *parent) : CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, clientProvider, parent)
+    CSimulatorFsCommon::CSimulatorFsCommon(const CSimulatorPluginInfo &info, IOwnAircraftProvider *ownAircraftProvider,
+                                           IRemoteAircraftProvider *renderedAircraftProvider,
+                                           IClientProvider *clientProvider, QObject *parent)
+        : CSimulatorPluginCommon(info, ownAircraftProvider, renderedAircraftProvider, clientProvider, parent)
     {
         CSimulatorFsCommon::registerHelp();
     }
@@ -61,10 +59,7 @@ namespace swift::simplugin::fscommon
         return r;
     }
 
-    CTime CSimulatorFsCommon::getTimeSynchronizationOffset() const
-    {
-        return m_syncTimeOffset;
-    }
+    CTime CSimulatorFsCommon::getTimeSynchronizationOffset() const { return m_syncTimeOffset; }
 
     bool CSimulatorFsCommon::setTimeSynchronization(bool enable, const physical_quantities::CTime &offset)
     {
@@ -78,7 +73,10 @@ namespace swift::simplugin::fscommon
         if (!m_airportsInRangeFromSimulator.isEmpty())
         {
             CAirportList airports = m_airportsInRangeFromSimulator;
-            if (recalculateDistance) { airports.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition()); }
+            if (recalculateDistance)
+            {
+                airports.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition());
+            }
             return airports;
         }
         return ISimulator::getAirportsInRange(recalculateDistance);
@@ -87,10 +85,7 @@ namespace swift::simplugin::fscommon
     void CSimulatorFsCommon::onSwiftDbAirportsRead()
     {
         const CAirportList webServiceAirports = this->getWebServiceAirports();
-        if (!webServiceAirports.isEmpty())
-        {
-            m_airportsInRangeFromSimulator.updateMissingParts(webServiceAirports);
-        }
+        if (!webServiceAirports.isEmpty()) { m_airportsInRangeFromSimulator.updateMissingParts(webServiceAirports); }
         ISimulator::onSwiftDbAirportsRead();
     }
 } // namespace swift::simplugin::fscommon

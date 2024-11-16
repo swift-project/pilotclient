@@ -7,8 +7,7 @@
 
 namespace swift::gui::components
 {
-    CSettingsFontDialog::CSettingsFontDialog(QWidget *parent) : QDialog(parent),
-                                                                ui(new Ui::CSettingsFontDialog)
+    CSettingsFontDialog::CSettingsFontDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CSettingsFontDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -18,28 +17,15 @@ namespace swift::gui::components
         connect(ui->comp_FontSettings, &CSettingsFontComponent::reject, this, &CSettingsFontDialog::reject);
     }
 
-    CSettingsFontDialog::~CSettingsFontDialog()
-    {}
+    CSettingsFontDialog::~CSettingsFontDialog() {}
 
-    const QString &CSettingsFontDialog::getQss() const
-    {
-        return ui->comp_FontSettings->getQss();
-    }
+    const QString &CSettingsFontDialog::getQss() const { return ui->comp_FontSettings->getQss(); }
 
-    void CSettingsFontDialog::setFont(const QFont &font)
-    {
-        ui->comp_FontSettings->setFont(font);
-    }
+    void CSettingsFontDialog::setFont(const QFont &font) { ui->comp_FontSettings->setFont(font); }
 
-    QFont CSettingsFontDialog::getFont() const
-    {
-        return ui->comp_FontSettings->getFont();
-    }
+    QFont CSettingsFontDialog::getFont() const { return ui->comp_FontSettings->getFont(); }
 
-    QStringList CSettingsFontDialog::getFamilySizeStyle() const
-    {
-        return ui->comp_FontSettings->getFamilySizeStyle();
-    }
+    QStringList CSettingsFontDialog::getFamilySizeStyle() const { return ui->comp_FontSettings->getFamilySizeStyle(); }
 
     void CSettingsFontDialog::setWithColorSelection(bool withColor)
     {

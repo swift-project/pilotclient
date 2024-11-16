@@ -77,7 +77,8 @@ namespace swift::misc::network
         return true;
     }
 
-    int CClientProvider::updateOrAddClient(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
+    int CClientProvider::updateOrAddClient(const CCallsign &callsign, const CPropertyIndexVariantMap &vm,
+                                           bool skipEqualValues)
     {
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
         if (callsign.isEmpty()) { return 0; }
@@ -108,7 +109,10 @@ namespace swift::misc::network
     {
         if (situation.getCallsign().isEmpty()) { return false; } // no callsign
         if (!situation.isOnGround()) { return false; } // nothing to adjust
-        if (situation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::InFromNetwork) { return false; } // not from network
+        if (situation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::InFromNetwork)
+        {
+            return false;
+        } // not from network
         return this->addClientGndCapability(situation.getCallsign());
     }
 
@@ -127,14 +131,8 @@ namespace swift::misc::network
         // need to change?
         if (!client.isValid()) { return false; } // no client
         if (client.hasGndFlagCapability() == supportGndFlag) { return true; } // already set, but set
-        if (supportGndFlag)
-        {
-            client.addCapability(CClient::FsdWithGroundFlag);
-        }
-        else
-        {
-            client.removeCapability(CClient::FsdWithGroundFlag);
-        }
+        if (supportGndFlag) { client.addCapability(CClient::FsdWithGroundFlag); }
+        else { client.removeCapability(CClient::FsdWithGroundFlag); }
         QWriteLocker l(&m_lockClient);
         m_clients[callsign] = client;
         return true;
@@ -149,8 +147,7 @@ namespace swift::misc::network
     }
 
     // Pin the vtable to this file
-    void CClientAware::anchor()
-    {}
+    void CClientAware::anchor() {}
 
     CClientList CClientAware::getClients() const
     {
@@ -176,7 +173,8 @@ namespace swift::misc::network
         return false;
     }
 
-    int CClientAware::updateOrAddClient(const CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
+    int CClientAware::updateOrAddClient(const CCallsign &callsign, const CPropertyIndexVariantMap &vm,
+                                        bool skipEqualValues)
     {
         if (this->provider()) { return this->provider()->updateOrAddClient(callsign, vm, skipEqualValues); }
         return 0;

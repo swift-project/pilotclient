@@ -27,9 +27,7 @@ namespace swift::misc::db
         case Shared: return "Shared data";
         case SharedInfoOnly: return "Shared info only";
         case Cached: return "Cached data";
-        default:
-            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong flags");
-            return "wrong flags";
+        default: SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong flags"); return "wrong flags";
         }
     }
 

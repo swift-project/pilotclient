@@ -14,8 +14,7 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::audio, CAudioDeviceInfo, CAudioDeviceI
 
 namespace swift::misc::audio
 {
-    CAudioDeviceInfoList::CAudioDeviceInfoList(const CSequence &other) : CSequence(other)
-    {}
+    CAudioDeviceInfoList::CAudioDeviceInfoList(const CSequence &other) : CSequence(other) {}
 
     CAudioDeviceInfoList CAudioDeviceInfoList::getOutputDevices() const
     {
@@ -32,7 +31,8 @@ namespace swift::misc::audio
         return this->findByNameOrDefault(name, CAudioDeviceInfo(), strict);
     }
 
-    CAudioDeviceInfo CAudioDeviceInfoList::findByNameOrDefault(const QString &name, const CAudioDeviceInfo &defaultDevice, bool strict) const
+    CAudioDeviceInfo CAudioDeviceInfoList::findByNameOrDefault(const QString &name,
+                                                               const CAudioDeviceInfo &defaultDevice, bool strict) const
     {
         if (name.isEmpty()) { return defaultDevice; }
         for (const CAudioDeviceInfo &d : *this)
@@ -57,10 +57,7 @@ namespace swift::misc::audio
         CAudioDeviceInfoList devices;
         for (const CAudioDeviceInfo &d : *this)
         {
-            if (stringCompare(hostName, d.getMachineName(), Qt::CaseInsensitive))
-            {
-                devices.push_back(d);
-            }
+            if (stringCompare(hostName, d.getMachineName(), Qt::CaseInsensitive)) { devices.push_back(d); }
         }
         return devices;
     }
@@ -83,28 +80,19 @@ namespace swift::misc::audio
 
     void CAudioDeviceInfoList::registerDevices(const CAudioDeviceInfoList &devices)
     {
-        for (const CAudioDeviceInfo &device : devices)
-        {
-            this->registerDevice(device);
-        }
+        for (const CAudioDeviceInfo &device : devices) { this->registerDevice(device); }
     }
 
     void CAudioDeviceInfoList::unRegisterDevice(const CAudioDeviceInfo &device)
     {
         if (!device.isValid()) { return; }
         const CAudioDeviceInfo registeredDevice = this->findRegisteredDeviceOrDefault(device);
-        if (registeredDevice.isValid())
-        {
-            this->remove(registeredDevice);
-        }
+        if (registeredDevice.isValid()) { this->remove(registeredDevice); }
     }
 
     void CAudioDeviceInfoList::unRegisterDevices(const CAudioDeviceInfoList &devices)
     {
-        for (const CAudioDeviceInfo &device : devices)
-        {
-            this->unRegisterDevice(device);
-        }
+        for (const CAudioDeviceInfo &device : devices) { this->unRegisterDevice(device); }
     }
 
     void CAudioDeviceInfoList::unRegisterDevices(const CIdentifier &identifier)
@@ -119,18 +107,14 @@ namespace swift::misc::audio
 
     int CAudioDeviceInfoList::count(CAudioDeviceInfo::DeviceType type) const
     {
-        return static_cast<int>(std::count_if(this->begin(), this->end(), [type](const CAudioDeviceInfo &device) {
-            return device.getType() == type;
-        }));
+        return static_cast<int>(std::count_if(
+            this->begin(), this->end(), [type](const CAudioDeviceInfo &device) { return device.getType() == type; }));
     }
 
     QStringList CAudioDeviceInfoList::getDeviceNames() const
     {
         QStringList names;
-        for (const CAudioDeviceInfo &d : *this)
-        {
-            names << d.getName();
-        }
+        for (const CAudioDeviceInfo &d : *this) { names << d.getName(); }
         return names;
     }
 
@@ -206,15 +190,9 @@ namespace swift::misc::audio
         return devices;
     }
 
-    QAudioDevice CAudioDeviceInfoList::defaultQtInputDevice()
-    {
-        return QMediaDevices::defaultAudioInput();
-    }
+    QAudioDevice CAudioDeviceInfoList::defaultQtInputDevice() { return QMediaDevices::defaultAudioInput(); }
 
-    QAudioDevice CAudioDeviceInfoList::defaultQtOutputDevice()
-    {
-        return QMediaDevices::defaultAudioOutput();
-    }
+    QAudioDevice CAudioDeviceInfoList::defaultQtOutputDevice() { return QMediaDevices::defaultAudioOutput(); }
 
     CAudioDeviceInfo CAudioDeviceInfoList::defaultInputDevice()
     {

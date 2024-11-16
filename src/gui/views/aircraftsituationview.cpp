@@ -26,7 +26,8 @@ namespace swift::gui::views
     {
         if (m_withMenuRequestElevation && this->hasSingleSelectedRow())
         {
-            menuActions.addAction(CIcons::geoPosition16(), "Request elevation", CMenuAction::pathClientSimulation(), { this, &CAircraftSituationView::emitRequestElevationForSituation });
+            menuActions.addAction(CIcons::geoPosition16(), "Request elevation", CMenuAction::pathClientSimulation(),
+                                  { this, &CAircraftSituationView::emitRequestElevationForSituation });
         }
     }
 

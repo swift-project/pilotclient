@@ -37,7 +37,9 @@ namespace swift::misc
 
     public:
         //! Constructor
-        CGenericDBusInterface(const QString &serviceName, const QString &path, const QString &interfaceName, const QDBusConnection &connection, QObject *parent = nullptr) : QDBusAbstractInterface(serviceName, path, interfaceName.toUtf8().constData(), connection, parent)
+        CGenericDBusInterface(const QString &serviceName, const QString &path, const QString &interfaceName,
+                              const QDBusConnection &connection, QObject *parent = nullptr)
+            : QDBusAbstractInterface(serviceName, path, interfaceName.toUtf8().constData(), connection, parent)
         {}
 
         //! For each signal in parent, attempt to connect to it an interface signal of the same name.
@@ -46,7 +48,10 @@ namespace swift::misc
         {
             const QMetaObject *metaObject = this->parent()->metaObject();
             const QMetaObject *superMetaObject = metaObject;
-            while (strcmp(superMetaObject->superClass()->className(), "QObject") != 0) { superMetaObject = superMetaObject->superClass(); }
+            while (strcmp(superMetaObject->superClass()->className(), "QObject") != 0)
+            {
+                superMetaObject = superMetaObject->superClass();
+            }
 
             for (int i = superMetaObject->methodOffset(), count = metaObject->methodCount(); i < count; ++i)
             {
@@ -54,12 +59,11 @@ namespace swift::misc
                 if (method.methodType() != QMetaMethod::Signal) { continue; }
                 if (method.tag() && strcmp(method.tag(), "SWIFT_NO_RELAY") == 0) { continue; }
 
-                const QByteArray signature = method.methodSignature().prepend("2"); // the reason for this "2" can be found in the definition of SIGNAL() macro
-                const bool c = this->connection().connect(this->service(), this->path(), this->interface(), method.name(), this->parent(), signature);
-                if (!c)
-                {
-                    CLogMessage(this).error(u"Cannot connect signal: %1") << QString(signature);
-                }
+                const QByteArray signature = method.methodSignature().prepend(
+                    "2"); // the reason for this "2" can be found in the definition of SIGNAL() macro
+                const bool c = this->connection().connect(this->service(), this->path(), this->interface(),
+                                                          method.name(), this->parent(), signature);
+                if (!c) { CLogMessage(this).error(u"Cannot connect signal: %1") << QString(signature); }
             }
         }
 
@@ -80,7 +84,8 @@ namespace swift::misc
             pr.waitForFinished();
             if (pr.isError())
             {
-                CLogMessage(this).debug(u"CGenericDBusInterface::callDBusRet(%1) returned: %2") << method << pr.error().message();
+                CLogMessage(this).debug(u"CGenericDBusInterface::callDBusRet(%1) returned: %2")
+                    << method << pr.error().message();
             }
             return pr;
         }
@@ -103,7 +108,8 @@ namespace swift::misc
         {
             auto sharedPromise = QSharedPointer<CPromise<Ret>>::create();
             this->callDBusAsync(
-                method, [=](auto pcw) { sharedPromise->setResult(QDBusPendingReply<Ret>(*pcw)); }, std::forward<Args>(args)...);
+                method, [=](auto pcw) { sharedPromise->setResult(QDBusPendingReply<Ret>(*pcw)); },
+                std::forward<Args>(args)...);
             return sharedPromise->future();
         }
 
@@ -112,10 +118,7 @@ namespace swift::misc
         void cancelAllPendingAsyncCalls()
         {
             auto watchers = this->findChildren<QDBusPendingCallWatcher *>(QString(), Qt::FindDirectChildrenOnly);
-            for (auto w : watchers)
-            {
-                delete w;
-            }
+            for (auto w : watchers) { delete w; }
         }
     };
 } // namespace swift::misc

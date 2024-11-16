@@ -23,8 +23,8 @@ namespace swift::gui::components
         return cats;
     }
 
-    CSettingsXSwiftBusComponent::CSettingsXSwiftBusComponent(QWidget *parent) : QFrame(parent),
-                                                                                ui(new Ui::CSettingsXSwiftBusComponent)
+    CSettingsXSwiftBusComponent::CSettingsXSwiftBusComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsXSwiftBusComponent)
     {
         ui->setupUi(this);
 
@@ -36,8 +36,7 @@ namespace swift::gui::components
         ui->comp_DBusServer->set(dBusAddress);
     }
 
-    CSettingsXSwiftBusComponent::~CSettingsXSwiftBusComponent()
-    {}
+    CSettingsXSwiftBusComponent::~CSettingsXSwiftBusComponent() {}
 
     void CSettingsXSwiftBusComponent::resetServer()
     {

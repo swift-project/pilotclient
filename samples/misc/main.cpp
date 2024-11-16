@@ -37,8 +37,7 @@ int main(int argc, char *argv[])
     QTextStream qtout(stdout);
     QTextStream qtin(stdin);
 
-    do
-    {
+    do {
         qtout << Qt::endl;
         qtout << "1 .. JSON" << Qt::endl;
         qtout << "2 .. Change object" << Qt::endl;

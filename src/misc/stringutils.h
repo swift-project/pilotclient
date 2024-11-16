@@ -88,7 +88,8 @@ namespace swift::misc
     }
 
     //! nth index of ch
-    SWIFT_MISC_EXPORT int nthIndexOf(const QString &string, QChar ch, int nth = 1, Qt::CaseSensitivity cs = Qt::CaseInsensitive);
+    SWIFT_MISC_EXPORT int nthIndexOf(const QString &string, QChar ch, int nth = 1,
+                                     Qt::CaseSensitivity cs = Qt::CaseInsensitive);
 
     //! Split a string into multiple strings, using a predicate function to identify the split points.
     //! \warning The returned refs are only valid during the lifetime of the original string.
@@ -130,7 +131,8 @@ namespace swift::misc
     SWIFT_MISC_EXPORT QStringList splitLines(const QString &s);
 
     //! Extended percent encoding supporting UTF-16
-    SWIFT_MISC_EXPORT QByteArray utfToPercentEncoding(const QString &s, const QByteArray &allow = {}, char percent = '%');
+    SWIFT_MISC_EXPORT QByteArray utfToPercentEncoding(const QString &s, const QByteArray &allow = {},
+                                                      char percent = '%');
 
     //! Reverse utfFromPercentEncoding
     SWIFT_MISC_EXPORT QString utfFromPercentEncoding(const QByteArray &ba, char percent = '%');
@@ -145,8 +147,7 @@ namespace swift::misc
         while (i.hasNext())
         {
             i.next();
-            s.append(
-                kv.arg(i.key()).arg(i.value()));
+            s.append(kv.arg(i.key()).arg(i.value()));
         }
         return s.trimmed();
     }
@@ -245,7 +246,8 @@ namespace swift::misc
 
     //! Fuzzy compare for short strings (like ICAO designators)
     //! \return int 0..100 (100 is perfect match)
-    SWIFT_MISC_EXPORT int fuzzyShortStringComparision(const QString &str1, const QString &str2, Qt::CaseSensitivity cs = Qt::CaseSensitive);
+    SWIFT_MISC_EXPORT int fuzzyShortStringComparision(const QString &str1, const QString &str2,
+                                                      Qt::CaseSensitivity cs = Qt::CaseSensitive);
 
     //! Int to hex value
     SWIFT_MISC_EXPORT QString intToHex(int value, int digits = 2);
@@ -290,7 +292,8 @@ namespace swift::misc
 
     //! Same as QDateTime::fromString but QDateTime will be set to UTC
     //! \remark potentially slow, so only to be used when format is unknown
-    SWIFT_MISC_EXPORT QDateTime fromStringUtc(const QString &dateTimeString, const QLocale &locale, QLocale::FormatType format);
+    SWIFT_MISC_EXPORT QDateTime fromStringUtc(const QString &dateTimeString, const QLocale &locale,
+                                              QLocale::FormatType format);
 
     //! Parse multiple date time formats
     //! \remark potentially slow, so only to be used when format is unknown
@@ -315,7 +318,8 @@ namespace swift::misc
     SWIFT_MISC_EXPORT bool containsAny(const QString &testString, const QStringList &any, Qt::CaseSensitivity cs);
 
     //! Parse a fraction like 2/3
-    SWIFT_MISC_EXPORT double parseFraction(const QString &fraction, double failDefault = std::numeric_limits<double>::quiet_NaN());
+    SWIFT_MISC_EXPORT double parseFraction(const QString &fraction,
+                                           double failDefault = std::numeric_limits<double>::quiet_NaN());
 
     //! Remove leading 0, trailing 0, " ", and "." from a number
     SWIFT_MISC_EXPORT QString cleanNumber(const QString &number);

@@ -11,8 +11,7 @@ namespace swift::misc::db
 {
     CDistributionList::CDistributionList() {}
 
-    CDistributionList::CDistributionList(const CSequence<CDistribution> &other) : CSequence<CDistribution>(other)
-    {}
+    CDistributionList::CDistributionList(const CSequence<CDistribution> &other) : CSequence<CDistribution>(other) {}
 
     QStringList CDistributionList::getChannels() const
     {
@@ -36,13 +35,11 @@ namespace swift::misc::db
 
     bool CDistributionList::containsEqualOrMoreStable(CDistribution &distribution) const
     {
-        return containsBy([&distribution](const CDistribution &dist) { return dist.isStabilitySameOrBetter(distribution); });
+        return containsBy(
+            [&distribution](const CDistribution &dist) { return dist.isStabilitySameOrBetter(distribution); });
     }
 
-    bool CDistributionList::containsUnrestricted() const
-    {
-        return this->contains(&CDistribution::isRestricted, false);
-    }
+    bool CDistributionList::containsUnrestricted() const { return this->contains(&CDistribution::isRestricted, false); }
 
     bool CDistributionList::containsChannel(const QString &channel) const
     {

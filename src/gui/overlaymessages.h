@@ -92,31 +92,34 @@ namespace swift::gui
         void setConfirmationMessage(const QString &message);
 
         //! Show multiple messages with confirmation bar
-        void showOverlayMessagesWithConfirmation(
-            const swift::misc::CStatusMessageList &messages,
-            bool appendOldMessages,
-            const QString &confirmationMessage,
-            std::function<void()> okLambda,
-            QMessageBox::StandardButton defaultButton = QMessageBox::Cancel,
-            int timeOutMs = -1);
+        void showOverlayMessagesWithConfirmation(const swift::misc::CStatusMessageList &messages,
+                                                 bool appendOldMessages, const QString &confirmationMessage,
+                                                 std::function<void()> okLambda,
+                                                 QMessageBox::StandardButton defaultButton = QMessageBox::Cancel,
+                                                 int timeOutMs = -1);
 
         //! Clear the overlay messages
         void clearOverlayMessages();
 
         //! Show multiple messages
-        void showOverlayMessages(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
+        void showOverlayMessages(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false,
+                                 int timeOutMs = -1);
 
         //! Show multiple messages or a single message
-        void showOverlayMessagesOrSingleMessage(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
+        void showOverlayMessagesOrSingleMessage(const swift::misc::CStatusMessageList &messages,
+                                                bool appendOldMessages = false, int timeOutMs = -1);
 
         //! Show multiple messages or a single message (HTML)
-        void showOverlayMessagesOrHTMLMessage(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false, int timeOutMs = -1);
+        void showOverlayMessagesOrHTMLMessage(const swift::misc::CStatusMessageList &messages,
+                                              bool appendOldMessages = false, int timeOutMs = -1);
 
         //! Sort of overlay messages
-        void sortOverlayMessages(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+        void sortOverlayMessages(const swift::misc::CPropertyIndex &propertyIndex,
+                                 Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Set sorting of overlay messages
-        void setOverlayMessagesSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder);
+        void setOverlayMessagesSorting(const swift::misc::CPropertyIndex &propertyIndex,
+                                       Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Show single message
         void showOverlayMessage(const swift::misc::CStatusMessage &message, int timeOutMs = -1);

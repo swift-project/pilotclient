@@ -82,7 +82,10 @@ namespace swift::misc::input
         void setObject(const CActionHotkey &obj);
 
         //! Is hotkey valid?
-        bool isValid() const { return !m_identifier.getMachineName().isEmpty() && !m_combination.isEmpty() && !m_action.isEmpty(); }
+        bool isValid() const
+        {
+            return !m_identifier.getMachineName().isEmpty() && !m_combination.isEmpty() && !m_action.isEmpty();
+        }
 
         //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
         void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);

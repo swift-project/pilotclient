@@ -40,7 +40,8 @@ namespace swift::misc
 
         public:
             //! Construct a new hub.
-            static IHub *create(bool proxy, CDBusServer *server, const QDBusConnection &connection, const QString &service, QObject *parent = nullptr);
+            static IHub *create(bool proxy, CDBusServer *server, const QDBusConnection &connection,
+                                const QString &service, QObject *parent = nullptr);
 
             //! Is connected?
             virtual bool isConnected() const = 0;

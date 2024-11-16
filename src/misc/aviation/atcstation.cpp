@@ -25,38 +25,25 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAtcStation)
 
 namespace swift::misc::aviation
 {
-    CAtcStation::CAtcStation()
-    {}
+    CAtcStation::CAtcStation() {}
 
-    CAtcStation::CAtcStation(const QString &callsign) : m_callsign(callsign)
-    {
-        m_callsign.setTypeHint(CCallsign::Atc);
-    }
+    CAtcStation::CAtcStation(const QString &callsign) : m_callsign(callsign) { m_callsign.setTypeHint(CCallsign::Atc); }
 
     CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency,
                              const CCoordinateGeodetic &pos, const CLength &range, bool isOnline,
-                             const QDateTime &logoffTimeUtc,
-                             const CInformationMessage &atis, const CInformationMessage &metar) : m_callsign(callsign), m_controller(controller), m_frequency(frequency), m_position(pos),
-                                                                                                  m_range(range), m_isOnline(isOnline), m_logoffTimeUtc(logoffTimeUtc),
-                                                                                                  m_atis(atis), m_metar(metar)
+                             const QDateTime &logoffTimeUtc, const CInformationMessage &atis,
+                             const CInformationMessage &metar)
+        : m_callsign(callsign), m_controller(controller), m_frequency(frequency), m_position(pos), m_range(range),
+          m_isOnline(isOnline), m_logoffTimeUtc(logoffTimeUtc), m_atis(atis), m_metar(metar)
     {
         // sync callsigns
         m_callsign.setTypeHint(CCallsign::Atc);
-        if (!m_controller.hasCallsign() && !callsign.isEmpty())
-        {
-            m_controller.setCallsign(m_callsign);
-        }
+        if (!m_controller.hasCallsign() && !callsign.isEmpty()) { m_controller.setCallsign(m_callsign); }
     }
 
-    bool CAtcStation::hasLogoffTimeUtc() const
-    {
-        return !m_logoffTimeUtc.isNull();
-    }
+    bool CAtcStation::hasLogoffTimeUtc() const { return !m_logoffTimeUtc.isNull(); }
 
-    bool CAtcStation::hasMetar() const
-    {
-        return m_metar.hasMessage();
-    }
+    bool CAtcStation::hasMetar() const { return m_metar.hasMessage(); }
 
     QString CAtcStation::getCallsignAsStringCrossCoupled() const
     {
@@ -64,15 +51,9 @@ namespace swift::misc::aviation
         return QStringLiteral("*") % this->getCallsignAsString();
     }
 
-    QString CAtcStation::getCallsignSuffix() const
-    {
-        return m_callsign.getSuffix();
-    }
+    QString CAtcStation::getCallsignSuffix() const { return m_callsign.getSuffix(); }
 
-    int CAtcStation::getSuffixSortOrder() const
-    {
-        return m_callsign.getSuffixSortOrder();
-    }
+    int CAtcStation::getSuffixSortOrder() const { return m_callsign.getSuffixSortOrder(); }
 
     void CAtcStation::setCallsign(const CCallsign &callsign)
     {
@@ -101,29 +82,23 @@ namespace swift::misc::aviation
         static const QString fromUtcI18n(QCoreApplication::translate("Aviation", "from(UTC)"));
         static const QString untilUtcI18n(QCoreApplication::translate("Aviation", "until(UTC)"));
 
-        const QString s = (i18n ? atcI18n : QStringLiteral("ATC station")) %
-                          u' ' % m_callsign.toQString(i18n) %
-                          u' ' % m_position.toQString(i18n) %
-                          u" online: " % boolToYesNo(m_isOnline) %
+        const QString s = (i18n ? atcI18n : QStringLiteral("ATC station")) % u' ' % m_callsign.toQString(i18n) % u' ' %
+                          m_position.toQString(i18n) % u" online: " % boolToYesNo(m_isOnline) %
 
                           // controller
-                          (m_controller.isNull() ? QString() :
-                                                   u' ' % m_controller.toQString(i18n)) %
+                          (m_controller.isNull() ? QString() : u' ' % m_controller.toQString(i18n)) %
 
                           // frequency
                           u' ' % m_frequency.valueRoundedWithUnit(3, i18n) %
 
                           // ATIS
-                          (!this->hasAtis() ? QString() :
-                                              u' ' % m_atis.toQString(i18n)) %
+                          (!this->hasAtis() ? QString() : u' ' % m_atis.toQString(i18n)) %
 
                           // METAR
-                          (!this->hasMetar() ? QString() :
-                                               u' ' % m_metar.toQString(i18n)) %
+                          (!this->hasMetar() ? QString() : u' ' % m_metar.toQString(i18n)) %
 
                           // range
-                          u' ' % (i18n ? rangeI18n : QStringLiteral("range")) %
-                          u' ' % m_range.toQString(i18n) %
+                          u' ' % (i18n ? rangeI18n : QStringLiteral("range")) % u' ' % m_range.toQString(i18n) %
 
                           // distance / bearing
                           u' ' % ICoordinateWithRelativePosition::convertToQString(i18n);
@@ -191,30 +166,15 @@ namespace swift::misc::aviation
         return false;
     }
 
-    CLatitude CAtcStation::latitude() const
-    {
-        return this->getPosition().latitude();
-    }
+    CLatitude CAtcStation::latitude() const { return this->getPosition().latitude(); }
 
-    CLongitude CAtcStation::longitude() const
-    {
-        return this->getPosition().longitude();
-    }
+    CLongitude CAtcStation::longitude() const { return this->getPosition().longitude(); }
 
-    const CAltitude &CAtcStation::geodeticHeight() const
-    {
-        return m_position.geodeticHeight();
-    }
+    const CAltitude &CAtcStation::geodeticHeight() const { return m_position.geodeticHeight(); }
 
-    QVector3D CAtcStation::normalVector() const
-    {
-        return m_position.normalVector();
-    }
+    QVector3D CAtcStation::normalVector() const { return m_position.normalVector(); }
 
-    std::array<double, 3> CAtcStation::normalVectorDouble() const
-    {
-        return m_position.normalVectorDouble();
-    }
+    std::array<double, 3> CAtcStation::normalVectorDouble() const { return m_position.normalVectorDouble(); }
 
     QVariant CAtcStation::propertyByIndex(CPropertyIndexRef index) const
     {
@@ -277,17 +237,17 @@ namespace swift::misc::aviation
             {
                 ICoordinateWithRelativePosition::setPropertyByIndex(index, variant);
             }
-            else
-            {
-                CValueObject::setPropertyByIndex(index, variant);
-            }
+            else { CValueObject::setPropertyByIndex(index, variant); }
             break;
         }
     }
 
     int CAtcStation::comparePropertyByIndex(CPropertyIndexRef index, const CAtcStation &compareValue) const
     {
-        if (index.isMyself()) { return this->getCallsign().comparePropertyByIndex(CPropertyIndexRef::empty(), compareValue.getCallsign()); }
+        if (index.isMyself())
+        {
+            return this->getCallsign().comparePropertyByIndex(CPropertyIndexRef::empty(), compareValue.getCallsign());
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -295,18 +255,25 @@ namespace swift::misc::aviation
         case IndexCallsignString:
         case IndexCallsignStringCrossCopuled:
             return m_callsign.comparePropertyByIndex(CPropertyIndexRef::empty(), compareValue.getCallsign());
-        case IndexCallsign: return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
-        case IndexController: return m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
-        case IndexFrequency: return m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());
+        case IndexCallsign:
+            return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
+        case IndexController:
+            return m_controller.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getController());
+        case IndexFrequency:
+            return m_frequency.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getFrequency());
         case IndexIsOnline: return Compare::compare(this->isOnline(), compareValue.isOnline());
-        case IndexLatitude: return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
-        case IndexLongitude: return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
-        case IndexPosition: return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
+        case IndexLatitude:
+            return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
+        case IndexLongitude:
+            return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
+        case IndexPosition:
+            return m_position.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getPosition());
         case IndexRange: return m_range.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRange());
         case IndexIsInRange: return Compare::compare(this->isInRange(), compareValue.isInRange());
         case IndexAtis: return m_atis.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getAtis());
         case IndexMetar: return m_metar.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getMetar());
-        case IndexIsAfvCrossCoupled: return Compare::compare(this->isAfvCrossCoupled(), compareValue.isAfvCrossCoupled());
+        case IndexIsAfvCrossCoupled:
+            return Compare::compare(this->isAfvCrossCoupled(), compareValue.isAfvCrossCoupled());
         default:
             if (ICoordinateWithRelativePosition::canHandleIndex(index))
             {

@@ -38,10 +38,7 @@ namespace swift::misc::geo
         QString convertToQString(bool i18n = false) const
         {
             QString s(CEarthAngle::convertToQString(i18n));
-            if (!this->isZeroEpsilonConsidered())
-            {
-                s.append(this->isNegativeWithEpsilonConsidered() ? " S" : " N");
-            }
+            if (!this->isZeroEpsilonConsidered()) { s.append(this->isNegativeWithEpsilonConsidered() ? " S" : " N"); }
             return s;
         }
 

@@ -28,7 +28,8 @@ namespace swift::gui
         this->setTextFormat(Qt::RichText);
         this->setInfoText("drop data here");
         this->onStyleSheetsChanged();
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDropSite::onStyleSheetsChanged, Qt::QueuedConnection);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDropSite::onStyleSheetsChanged,
+                Qt::QueuedConnection);
     }
 
     void CDropSite::setInfoText(const QString &dropSiteText)
@@ -75,10 +76,7 @@ namespace swift::gui
     {
         if (!event || !acceptDrop(event->mimeData())) { return; }
         CVariant valueVariant(toCVariant(event->mimeData()));
-        if (valueVariant.isValid())
-        {
-            emit droppedValueObject(valueVariant);
-        }
+        if (valueVariant.isValid()) { emit droppedValueObject(valueVariant); }
         this->resetText();
     }
 

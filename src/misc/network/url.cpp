@@ -16,22 +16,14 @@ namespace swift::misc::network
 {
     CUrl::CUrl(const QString &fullUrl)
     {
-        if (!fullUrl.isEmpty())
-        {
-            setFullUrl(fullUrl);
-        }
+        if (!fullUrl.isEmpty()) { setFullUrl(fullUrl); }
     }
 
-    CUrl::CUrl(const char *url) : CUrl(QString(url))
-    {}
+    CUrl::CUrl(const char *url) : CUrl(QString(url)) {}
 
-    CUrl::CUrl(const QUrl &url)
-    {
-        this->setQUrl(url);
-    }
+    CUrl::CUrl(const QUrl &url) { this->setQUrl(url); }
 
-    CUrl::CUrl(const QString &address, int port) : CUrl("", address, port, "")
-    {}
+    CUrl::CUrl(const QString &address, int port) : CUrl("", address, port, "") {}
 
     CUrl::CUrl(const QString &scheme, const QString &address, int port, const QString &path)
         : m_host(address.trimmed()), m_port(port), m_path(path.trimmed())
@@ -39,15 +31,9 @@ namespace swift::misc::network
         this->setScheme(scheme);
     }
 
-    void CUrl::setScheme(const QString &protocol)
-    {
-        m_scheme = protocol.trimmed().toLower().replace("://", "");
-    }
+    void CUrl::setScheme(const QString &protocol) { m_scheme = protocol.trimmed().toLower().replace("://", ""); }
 
-    void CUrl::setPath(const QString &path)
-    {
-        m_path = path.simplified();
-    }
+    void CUrl::setPath(const QString &path) { m_path = path.simplified(); }
 
     QString CUrl::appendPath(const QString &pathToAppend)
     {
@@ -63,20 +49,11 @@ namespace swift::misc::network
         return protocolToDefaultPort(this->getScheme());
     }
 
-    bool CUrl::hasPort() const
-    {
-        return m_port >= 0;
-    }
+    bool CUrl::hasPort() const { return m_port >= 0; }
 
-    bool CUrl::isEmpty() const
-    {
-        return m_host.isEmpty();
-    }
+    bool CUrl::isEmpty() const { return m_host.isEmpty(); }
 
-    bool CUrl::hasDefaultPort() const
-    {
-        return isDefaultPort(m_scheme, m_port);
-    }
+    bool CUrl::hasDefaultPort() const { return isDefaultPort(m_scheme, m_port); }
 
     void CUrl::setQuery(const QString &query)
     {
@@ -84,10 +61,7 @@ namespace swift::misc::network
         m_query = q;
     }
 
-    bool CUrl::hasQuery() const
-    {
-        return !m_query.isEmpty();
-    }
+    bool CUrl::hasQuery() const { return !m_query.isEmpty(); }
 
     void CUrl::appendQuery(const QString &queryToAppend)
     {
@@ -103,15 +77,9 @@ namespace swift::misc::network
         this->appendQuery(key + "=" + value);
     }
 
-    bool CUrl::hasFragment() const
-    {
-        return !m_fragment.isEmpty();
-    }
+    bool CUrl::hasFragment() const { return !m_fragment.isEmpty(); }
 
-    void CUrl::setFragment(const QString &fragment)
-    {
-        m_fragment = fragment;
-    }
+    void CUrl::setFragment(const QString &fragment) { m_fragment = fragment; }
 
     QString CUrl::getFullUrl(bool withQuery) const
     {
@@ -126,20 +94,11 @@ namespace swift::misc::network
         return qn;
     }
 
-    void CUrl::setFullUrl(const QString &fullUrl)
-    {
-        setQUrl(QUrl(fullUrl));
-    }
+    void CUrl::setFullUrl(const QString &fullUrl) { setQUrl(QUrl(fullUrl)); }
 
-    QString CUrl::getFileName() const
-    {
-        return toQUrl().fileName();
-    }
+    QString CUrl::getFileName() const { return toQUrl().fileName(); }
 
-    QUrl CUrl::toQUrl() const
-    {
-        return QUrl(getFullUrl());
-    }
+    QUrl CUrl::toQUrl() const { return QUrl(getFullUrl()); }
 
     void CUrl::setQUrl(const QUrl &url)
     {
@@ -151,10 +110,7 @@ namespace swift::misc::network
         this->setFragment(url.fragment());
     }
 
-    QNetworkRequest CUrl::toNetworkRequest() const
-    {
-        return CNetworkUtils::getSwiftNetworkRequest(*this);
-    }
+    QNetworkRequest CUrl::toNetworkRequest() const { return CNetworkUtils::getSwiftNetworkRequest(*this); }
 
     CUrl CUrl::withAppendedPath(const QString &path) const
     {
@@ -174,10 +130,7 @@ namespace swift::misc::network
         return url;
     }
 
-    bool CUrl::pathEndsWith(const QString &ending, Qt::CaseSensitivity cs) const
-    {
-        return m_path.endsWith(ending, cs);
-    }
+    bool CUrl::pathEndsWith(const QString &ending, Qt::CaseSensitivity cs) const { return m_path.endsWith(ending, cs); }
 
     bool CUrl::isFile() const
     {
@@ -192,15 +145,9 @@ namespace swift::misc::network
         return f.endsWith(suffix, Qt::CaseInsensitive);
     }
 
-    bool CUrl::isExecutableFile() const
-    {
-        return CFileUtils::isExecutableFile(this->getFileName());
-    }
+    bool CUrl::isExecutableFile() const { return CFileUtils::isExecutableFile(this->getFileName()); }
 
-    bool CUrl::isSwiftInstaller() const
-    {
-        return CFileUtils::isSwiftInstaller(this->getFileName());
-    }
+    bool CUrl::isSwiftInstaller() const { return CFileUtils::isSwiftInstaller(this->getFileName()); }
 
     QString CUrl::getFileSuffix() const
     {
@@ -271,22 +218,13 @@ namespace swift::misc::network
         return port == p;
     }
 
-    CUrl CUrl::fromLocalFile(const QString &localFile)
-    {
-        return QUrl::fromLocalFile(localFile);
-    }
+    CUrl CUrl::fromLocalFile(const QString &localFile) { return QUrl::fromLocalFile(localFile); }
 
     QString CUrl::stripQueryString(const QString &query)
     {
         QString q(query.trimmed());
-        if (q.startsWith("?") || q.startsWith("&"))
-        {
-            q = q.mid(1);
-        }
-        if (q.endsWith("?") || q.endsWith("&"))
-        {
-            q = q.left(q.size() - 1);
-        }
+        if (q.startsWith("?") || q.startsWith("&")) { q = q.mid(1); }
+        if (q.endsWith("?") || q.endsWith("&")) { q = q.left(q.size() - 1); }
         return q;
     }
 

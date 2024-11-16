@@ -65,10 +65,11 @@ namespace swift::misc::aviation
 
         //! ATC station constructor
         CAtcStation(const CCallsign &callsign, const network::CUser &controller,
-                    const physical_quantities::CFrequency &frequency,
-                    const geo::CCoordinateGeodetic &pos, const physical_quantities::CLength &range,
-                    bool isOnline = false, const QDateTime &logoffTimeUtc = QDateTime(),
-                    const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
+                    const physical_quantities::CFrequency &frequency, const geo::CCoordinateGeodetic &pos,
+                    const physical_quantities::CLength &range, bool isOnline = false,
+                    const QDateTime &logoffTimeUtc = QDateTime(),
+                    const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS),
+                    const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
         //! Has expected logoff time?
         bool hasLogoffTimeUtc() const;

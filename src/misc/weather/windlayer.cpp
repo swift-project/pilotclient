@@ -14,7 +14,9 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CWindLayer)
 namespace swift::misc::weather
 {
 
-    CWindLayer::CWindLayer(const CAltitude &level, const CAngle &direction, const CSpeed &speed, const CSpeed &gustSpeed) : m_level(level), m_directionMain(direction), m_speed(speed), m_gustSpeed(gustSpeed)
+    CWindLayer::CWindLayer(const CAltitude &level, const CAngle &direction, const CSpeed &speed,
+                           const CSpeed &gustSpeed)
+        : m_level(level), m_directionMain(direction), m_speed(speed), m_gustSpeed(gustSpeed)
     {}
 
     QVariant CWindLayer::propertyByIndex(swift::misc::CPropertyIndexRef index) const
@@ -23,18 +25,12 @@ namespace swift::misc::weather
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexLevel:
-            return QVariant::fromValue(m_level);
-        case IndexDirection:
-            return QVariant::fromValue(m_directionMain);
-        case IndexDirectionVariable:
-            return QVariant::fromValue(m_directionVariable);
-        case IndexSpeed:
-            return QVariant::fromValue(m_speed);
-        case IndexGustSpeed:
-            return QVariant::fromValue(m_gustSpeed);
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexLevel: return QVariant::fromValue(m_level);
+        case IndexDirection: return QVariant::fromValue(m_directionMain);
+        case IndexDirectionVariable: return QVariant::fromValue(m_directionVariable);
+        case IndexSpeed: return QVariant::fromValue(m_speed);
+        case IndexGustSpeed: return QVariant::fromValue(m_gustSpeed);
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -48,24 +44,12 @@ namespace swift::misc::weather
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexLevel:
-            setLevel(variant.value<CAltitude>());
-            break;
-        case IndexDirection:
-            setDirection(variant.value<CAngle>());
-            break;
-        case IndexDirectionVariable:
-            setDirectionVariable(variant.toBool());
-            break;
-        case IndexSpeed:
-            setSpeed(variant.value<CSpeed>());
-            break;
-        case IndexGustSpeed:
-            setGustSpeed(variant.value<CSpeed>());
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexLevel: setLevel(variant.value<CAltitude>()); break;
+        case IndexDirection: setDirection(variant.value<CAngle>()); break;
+        case IndexDirectionVariable: setDirectionVariable(variant.toBool()); break;
+        case IndexSpeed: setSpeed(variant.value<CSpeed>()); break;
+        case IndexGustSpeed: setGustSpeed(variant.value<CSpeed>()); break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 
@@ -79,7 +63,8 @@ namespace swift::misc::weather
 
         if (m_directionFrom != CAngle() && m_directionTo != CAngle())
         {
-            windAsString += QStringLiteral("variable between %1 and %2 ").arg(m_directionFrom.toQString(), m_directionTo.toQString());
+            windAsString += QStringLiteral("variable between %1 and %2 ")
+                                .arg(m_directionFrom.toQString(), m_directionTo.toQString());
         }
 
         windAsString += QStringLiteral("at %2").arg(m_speed.toQString());

@@ -103,10 +103,12 @@ namespace swift::gui
         static bool lenientTitleComparison(const QString &title, const QString &comparison);
 
         //! Find best match in comboBox
-        static bool setComboBoxValueByStartingString(QComboBox *box, const QString &candidate, const QString &unspecified = QString());
+        static bool setComboBoxValueByStartingString(QComboBox *box, const QString &candidate,
+                                                     const QString &unspecified = QString());
 
         //! Find best match in comboBox
-        static bool setComboBoxValueByContainingString(QComboBox *box, const QString &candidate, const QString &unspecified = QString());
+        static bool setComboBoxValueByContainingString(QComboBox *box, const QString &candidate,
+                                                       const QString &unspecified = QString());
 
         //! Mime data with swift type
         static bool hasSwiftVariantMimeType(const QMimeData *mime);
@@ -175,10 +177,7 @@ namespace swift::gui
         {
             if (!parent) { return; }
             QList<WIDGET *> children = parent->findChildren<WIDGET *>();
-            for (WIDGET *w : children)
-            {
-                w->setEnabled(enabled);
-            }
+            for (WIDGET *w : children) { w->setEnabled(enabled); }
         }
 
         //! Toggle window flags / stay on top
@@ -221,10 +220,12 @@ namespace swift::gui
         static void disableMinMaxCloseButtons(QWidget *window);
 
         //! Fade in a widget
-        static QGraphicsOpacityEffect *fadeInWidget(int durationMs, QWidget *widget, double startValue = 0.0, double endValue = 1.0);
+        static QGraphicsOpacityEffect *fadeInWidget(int durationMs, QWidget *widget, double startValue = 0.0,
+                                                    double endValue = 1.0);
 
         //! Fade out a widget
-        static QGraphicsOpacityEffect *fadeOutWidget(int durationMs, QWidget *widget, double startValue = 1.0, double endValue = 0.0);
+        static QGraphicsOpacityEffect *fadeOutWidget(int durationMs, QWidget *widget, double startValue = 1.0,
+                                                     double endValue = 0.0);
 
         //! Main window font metrics or default metrics
         static QFontMetrics currentFontMetrics();
@@ -278,7 +279,8 @@ namespace swift::gui
         static void setElidedText(QLabel *label, const QString &text, Qt::TextElideMode mode = Qt::ElideMiddle);
 
         //! Set elided text
-        static void setElidedText(QLabel *label, const QString &shortText, const QString &longText, Qt::TextElideMode mode = Qt::ElideMiddle);
+        static void setElidedText(QLabel *label, const QString &shortText, const QString &longText,
+                                  Qt::TextElideMode mode = Qt::ElideMiddle);
 
         //! Set button widths for a wizard
         static void setWizardButtonWidths(QWizard *wizard);

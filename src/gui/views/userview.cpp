@@ -33,7 +33,8 @@ namespace swift::gui::views
             if (user.hasCallsign())
             {
                 menuActions.addMenuCom();
-                menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(), { this, &CUserView::requestTextMessage });
+                menuActions.addAction(CIcons::appTextMessages16(), "Show text messages", CMenuAction::pathClientCom(),
+                                      { this, &CUserView::requestTextMessage });
             }
         }
     }

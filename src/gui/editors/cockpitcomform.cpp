@@ -24,8 +24,7 @@ using namespace swift::gui::components;
 
 namespace swift::gui::editors
 {
-    CCockpitComForm::CCockpitComForm(QWidget *parent) : CForm(parent),
-                                                        ui(new Ui::CCockpitComForm)
+    CCockpitComForm::CCockpitComForm(QWidget *parent) : CForm(parent), ui(new Ui::CCockpitComForm)
     {
         ui->setupUi(this);
         this->alignUiElementsHeight();
@@ -33,22 +32,32 @@ namespace swift::gui::editors
         // SELCAL pairs in cockpit
         ui->frp_ComPanelSelcalSelector->clear();
         connect(ui->tb_ComPanelSelcalTest, &QPushButton::clicked, this, &CCockpitComForm::testSelcal);
-        connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onSelcalChanged);
+        connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this,
+                &CCockpitComForm::onSelcalChanged);
 
         // XPDR
-        connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComForm::transponderModeChanged);
-        connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this, &CCockpitComForm::transponderStateIdentEnded);
+        connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this,
+                &CCockpitComForm::transponderModeChanged);
+        connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this,
+                &CCockpitComForm::transponderStateIdentEnded);
 
         // COM GUI events
         connect(ui->tb_ComPanelCom1Toggle, &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
         connect(ui->tb_ComPanelCom2Toggle, &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->ds_ComPanelCom1Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->ds_ComPanelCom2Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->ds_ComPanelCom1Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->ds_ComPanelCom2Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->sbp_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
-        connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this, &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->ds_ComPanelCom1Active, &QDoubleSpinBox::editingFinished, this,
+                &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->ds_ComPanelCom2Active, &QDoubleSpinBox::editingFinished, this,
+                &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->ds_ComPanelCom1Standby, &QDoubleSpinBox::editingFinished, this,
+                &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->ds_ComPanelCom2Standby, &QDoubleSpinBox::editingFinished, this,
+                &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->sbp_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this,
+                &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this,
+                &CCockpitComForm::onGuiChangedCockpitValues);
+        connect(ui->frp_ComPanelSelcalSelector, &CSelcalCodeSelector::valueChanged, this,
+                &CCockpitComForm::onGuiChangedCockpitValues);
         connect(ui->tb_RequestTextMessageCom1, &QToolButton::released, this, &CCockpitComForm::requestCom1TextMessage);
         connect(ui->tb_RequestTextMessageCom2, &QToolButton::released, this, &CCockpitComForm::requestCom2TextMessage);
 
@@ -58,8 +67,7 @@ namespace swift::gui::editors
         this->initLeds();
     }
 
-    CCockpitComForm::~CCockpitComForm()
-    {}
+    CCockpitComForm::~CCockpitComForm() {}
 
     void CCockpitComForm::setReadOnly(bool readonly)
     {
@@ -73,10 +81,7 @@ namespace swift::gui::editors
         this->forceStyleSheetUpdate();
     }
 
-    void CCockpitComForm::setSelectOnly()
-    {
-        this->setReadOnly(true);
-    }
+    void CCockpitComForm::setSelectOnly() { this->setReadOnly(true); }
 
     CStatusMessageList CCockpitComForm::validate(bool nested) const
     {
@@ -99,27 +104,25 @@ namespace swift::gui::editors
         this->updateIntegratedFlagFromSimulatorContext();
     }
 
-    CSelcal CCockpitComForm::getSelcal() const
-    {
-        return ui->frp_ComPanelSelcalSelector->getSelcal();
-    }
+    CSelcal CCockpitComForm::getSelcal() const { return ui->frp_ComPanelSelcalSelector->getSelcal(); }
 
-    void CCockpitComForm::setSelcal(const CSelcal &selcal)
-    {
-        ui->frp_ComPanelSelcalSelector->setSelcal(selcal);
-    }
+    void CCockpitComForm::setSelcal(const CSelcal &selcal) { ui->frp_ComPanelSelcalSelector->setSelcal(selcal); }
 
     void CCockpitComForm::initLeds()
     {
         const CLedWidget::LedShape shape = CLedWidget::Rounded;
 
-        ui->led_ComPanelCom1R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 receive (sim)", "COM1 not receiving", 14);
-        ui->led_ComPanelCom1T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 transmit (sim)", "COM1 not transmitting", 14);
+        ui->led_ComPanelCom1R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 receive (sim)",
+                                         "COM1 not receiving", 14);
+        ui->led_ComPanelCom1T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM1 transmit (sim)",
+                                         "COM1 not transmitting", 14);
         ui->led_ComPanelCom1R->setTriStateValues(CLedWidget::Blue, "receive not synced");
         ui->led_ComPanelCom1T->setTriStateValues(CLedWidget::Blue, "transmit not synced");
 
-        ui->led_ComPanelCom2R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 receive (sim)", "COM2 not receiving", 14);
-        ui->led_ComPanelCom2T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 transmit (sim)", "COM2 not transmitting", 14);
+        ui->led_ComPanelCom2R->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 receive (sim)",
+                                         "COM2 not receiving", 14);
+        ui->led_ComPanelCom2T->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "COM2 transmit (sim)",
+                                         "COM2 not transmitting", 14);
         ui->led_ComPanelCom2R->setTriStateValues(CLedWidget::Blue, "receive not synced");
         ui->led_ComPanelCom2T->setTriStateValues(CLedWidget::Blue, "transmit not synced");
     }
@@ -135,10 +138,7 @@ namespace swift::gui::editors
         // Transponder
         //
         const QString transponderCode = QString::number(ui->sbp_ComPanelTransponder->value());
-        if (CTransponder::isValidTransponderCode(transponderCode))
-        {
-            transponder.setTransponderCode(transponderCode);
-        }
+        if (CTransponder::isValidTransponderCode(transponderCode)) { transponder.setTransponderCode(transponderCode); }
         else
         {
             CLogMessage(this).validationWarning(u"Wrong transponder code, reset");
@@ -164,16 +164,10 @@ namespace swift::gui::editors
     void CCockpitComForm::setFrequencies(const CComSystem &com1, const CComSystem &com2)
     {
         double freq = com1.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
-        if (!isFrequenceEqual(freq, ui->ds_ComPanelCom1Active->value()))
-        {
-            ui->ds_ComPanelCom1Active->setValue(freq);
-        }
+        if (!isFrequenceEqual(freq, ui->ds_ComPanelCom1Active->value())) { ui->ds_ComPanelCom1Active->setValue(freq); }
 
         freq = com2.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
-        if (!isFrequenceEqual(freq, ui->ds_ComPanelCom2Active->value()))
-        {
-            ui->ds_ComPanelCom2Active->setValue(freq);
-        }
+        if (!isFrequenceEqual(freq, ui->ds_ComPanelCom2Active->value())) { ui->ds_ComPanelCom2Active->setValue(freq); }
 
         freq = com1.getFrequencyStandby().valueRounded(CFrequencyUnit::MHz(), 3);
         if (!isFrequenceEqual(freq, ui->ds_ComPanelCom1Standby->value()))
@@ -188,16 +182,14 @@ namespace swift::gui::editors
         }
 
         this->updateIntegratedFlagFromSimulatorContext();
-        this->updateActiveCOMUnitLEDs(m_integratedWithSim, com1.isTransmitEnabled(), com1.isReceiveEnabled(), com2.isTransmitEnabled(), com2.isReceiveEnabled());
+        this->updateActiveCOMUnitLEDs(m_integratedWithSim, com1.isTransmitEnabled(), com1.isReceiveEnabled(),
+                                      com2.isTransmitEnabled(), com2.isReceiveEnabled());
     }
 
     void CCockpitComForm::setTransponder(const CTransponder &transponder)
     {
         const int tc = transponder.getTransponderCode();
-        if (tc != ui->sbp_ComPanelTransponder->value())
-        {
-            ui->sbp_ComPanelTransponder->setValue(tc);
-        }
+        if (tc != ui->sbp_ComPanelTransponder->value()) { ui->sbp_ComPanelTransponder->setValue(tc); }
 
         if (transponder.getTransponderMode() != ui->cbp_ComPanelTransponderMode->getSelectedTransponderMode())
         {
@@ -253,7 +245,8 @@ namespace swift::gui::editors
         }
     }
 
-    void CCockpitComForm::updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1T, bool com1R, bool com2T, bool com2R)
+    void CCockpitComForm::updateActiveCOMUnitLEDs(bool integratedWithSim, bool com1T, bool com1R, bool com2T,
+                                                  bool com2R)
     {
         if (!integratedWithSim)
         {
@@ -282,8 +275,5 @@ namespace swift::gui::editors
         m_integratedWithSim = integrated;
     }
 
-    bool CCockpitComForm::isFrequenceEqual(double f1, double f2)
-    {
-        return CMathUtils::epsilonEqual(f1, f2);
-    }
+    bool CCockpitComForm::isFrequenceEqual(double f1, double f2) { return CMathUtils::epsilonEqual(f1, f2); }
 } // namespace swift::gui::editors

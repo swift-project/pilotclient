@@ -55,7 +55,8 @@ namespace swift::gui::components
         void onClicked();
 
         //! Changed cockpit data
-        void onChangedAircraftCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
+        void onChangedAircraftCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                      const swift::misc::CIdentifier &originator);
     };
 } // namespace swift::gui::components
 

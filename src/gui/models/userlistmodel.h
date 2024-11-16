@@ -15,8 +15,7 @@ namespace swift::gui::models
     /*!
      * User list model
      */
-    class SWIFT_GUI_EXPORT CUserListModel :
-        public CListModelBase<swift::misc::network::CUserList, true>
+    class SWIFT_GUI_EXPORT CUserListModel : public CListModelBase<swift::misc::network::CUserList, true>
     {
         Q_OBJECT
 

@@ -19,7 +19,8 @@ using namespace swift::misc::simulation;
 
 namespace swift::core::context
 {
-    IContextOwnAircraft *IContextOwnAircraft::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &connection)
+    IContextOwnAircraft *IContextOwnAircraft::create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode,
+                                                     CDBusServer *server, QDBusConnection &connection)
     {
         switch (mode)
         {
@@ -29,18 +30,15 @@ namespace swift::core::context
         case CCoreFacadeConfig::Remote:
             return new CContextOwnAircraftProxy(CDBusServer::coreServiceName(connection), connection, mode, parent);
         case CCoreFacadeConfig::NotUsed:
-        default:
-            return new CContextOwnAircraftEmpty(parent);
+        default: return new CContextOwnAircraftEmpty(parent);
         }
     }
 
     const CAircraftSituation &IContextOwnAircraft::getDefaultSituation()
     {
         static const CAircraftSituation situation(
-            CCoordinateGeodetic(
-                CLatitude::fromWgs84("N 049° 18' 17"),
-                CLongitude::fromWgs84("E 008° 27' 05"),
-                CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())));
+            CCoordinateGeodetic(CLatitude::fromWgs84("N 049° 18' 17"), CLongitude::fromWgs84("E 008° 27' 05"),
+                                CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())));
         return situation;
     }
 

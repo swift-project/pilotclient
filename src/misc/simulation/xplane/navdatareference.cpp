@@ -14,20 +14,19 @@ namespace swift::misc::simulation::xplane
 {
     CNavDataReference::CNavDataReference() = default;
 
-    CNavDataReference::CNavDataReference(int id, const geo::CLatitude &latitude, const geo::CLongitude &longitude) : m_id(id),
-                                                                                                                     m_position(latitude, longitude, {})
+    CNavDataReference::CNavDataReference(int id, const geo::CLatitude &latitude, const geo::CLongitude &longitude)
+        : m_id(id), m_position(latitude, longitude, {})
     {}
 
-    CNavDataReference::CNavDataReference(int id, float latitudeDegrees, float longitudeDegrees) : m_id(id),
-                                                                                                  m_position(latitudeDegrees, longitudeDegrees, 0)
+    CNavDataReference::CNavDataReference(int id, float latitudeDegrees, float longitudeDegrees)
+        : m_id(id), m_position(latitudeDegrees, longitudeDegrees, 0)
     {}
 
     QVariant CNavDataReference::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        return ICoordinateGeodetic::canHandleIndex(index) ?
-                   ICoordinateGeodetic::propertyByIndex(index) :
-                   CValueObject::propertyByIndex(index);
+        return ICoordinateGeodetic::canHandleIndex(index) ? ICoordinateGeodetic::propertyByIndex(index) :
+                                                            CValueObject::propertyByIndex(index);
     }
 
     void CNavDataReference::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
@@ -47,6 +46,7 @@ namespace swift::misc::simulation::xplane
 
     CNavDataReferenceList::CNavDataReferenceList() = default;
 
-    CNavDataReferenceList::CNavDataReferenceList(const CSequence<CNavDataReference> &other) : CSequence<CNavDataReference>(other)
+    CNavDataReferenceList::CNavDataReferenceList(const CSequence<CNavDataReference> &other)
+        : CSequence<CNavDataReference>(other)
     {}
 } // namespace swift::misc::simulation::xplane

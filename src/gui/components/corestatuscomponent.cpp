@@ -9,8 +9,7 @@ class QWidget;
 
 namespace swift::gui::components
 {
-    CCoreStatusComponent::CCoreStatusComponent(QWidget *parent) : QFrame(parent),
-                                                                  ui(new Ui::CCoreStatusComponent)
+    CCoreStatusComponent::CCoreStatusComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CCoreStatusComponent)
     {
         ui->setupUi(this);
     }

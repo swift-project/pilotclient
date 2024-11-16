@@ -16,7 +16,8 @@ namespace swift::misc
 {
     CApplicationInfoList::CApplicationInfoList() {}
 
-    CApplicationInfoList::CApplicationInfoList(const CSequence<CApplicationInfo> &other) : CSequence<CApplicationInfo>(other)
+    CApplicationInfoList::CApplicationInfoList(const CSequence<CApplicationInfo> &other)
+        : CSequence<CApplicationInfo>(other)
     {}
 
     bool CApplicationInfoList::containsApplication(CApplicationInfo::Application application) const
@@ -33,24 +34,18 @@ namespace swift::misc
     {
         QStringList names;
         names.reserve(size());
-        for (const CApplicationInfo &info : *this)
-        {
-            names.append(info.getProcessInfo().processName());
-        }
+        for (const CApplicationInfo &info : *this) { names.append(info.getProcessInfo().processName()); }
         return names;
     }
 
     int CApplicationInfoList::otherSwiftVersionsFromDataDirectories(bool reinit)
     {
         this->clear();
-        const QMap<QString, CApplicationInfo> otherVersions = reinit ?
-                                                                  currentApplicationDataDirectoryMapWithoutCurrentVersion() :
-                                                                  applicationDataDirectoryMapWithoutCurrentVersion();
+        const QMap<QString, CApplicationInfo> otherVersions =
+            reinit ? currentApplicationDataDirectoryMapWithoutCurrentVersion() :
+                     applicationDataDirectoryMapWithoutCurrentVersion();
 
-        for (const CApplicationInfo &info : otherVersions)
-        {
-            this->push_back(info);
-        }
+        for (const CApplicationInfo &info : otherVersions) { this->push_back(info); }
         return this->size();
     }
 
@@ -63,7 +58,8 @@ namespace swift::misc
 
     const QMap<QString, CApplicationInfo> &CApplicationInfoList::applicationDataDirectoryMapWithoutCurrentVersion()
     {
-        static const QMap<QString, CApplicationInfo> directories = currentApplicationDataDirectoryMapWithoutCurrentVersion();
+        static const QMap<QString, CApplicationInfo> directories =
+            currentApplicationDataDirectoryMapWithoutCurrentVersion();
         return directories;
     }
 
@@ -73,7 +69,10 @@ namespace swift::misc
         for (const QFileInfo &info : CSwiftDirectories::currentApplicationDataDirectories())
         {
             // check for myself (the running swift)
-            if (caseInsensitiveStringCompare(info.filePath(), CSwiftDirectories::normalizedApplicationDataDirectory())) { continue; }
+            if (caseInsensitiveStringCompare(info.filePath(), CSwiftDirectories::normalizedApplicationDataDirectory()))
+            {
+                continue;
+            }
 
             // the application info will be written by each swift application started
             // so the application type will always contain that application
@@ -86,10 +85,7 @@ namespace swift::misc
                 const QString exeDir = CDirectoryUtils::decodeNormalizedDirectory(info.filePath());
                 appInfo.setExecutablePath(exeDir);
             }
-            else
-            {
-                appInfo = CApplicationInfo::fromJson(appInfoJson);
-            }
+            else { appInfo = CApplicationInfo::fromJson(appInfoJson); }
             appInfo.setApplicationDataDirectory(info.filePath());
             directories.insert(info.filePath(), appInfo);
         }

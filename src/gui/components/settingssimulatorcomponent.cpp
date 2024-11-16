@@ -46,9 +46,8 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CSettingsSimulatorComponent::CSettingsSimulatorComponent(QWidget *parent) : QFrame(parent),
-                                                                                ui(new Ui::CSettingsSimulatorComponent),
-                                                                                m_plugins(new CPluginManagerSimulator(this))
+    CSettingsSimulatorComponent::CSettingsSimulatorComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsSimulatorComponent), m_plugins(new CPluginManagerSimulator(this))
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         Q_ASSERT_X(sGui->getIContextSimulator(), Q_FUNC_INFO, "Missing context");
@@ -56,31 +55,47 @@ namespace swift::gui::components
         m_plugins->collectPlugins();
         ui->setupUi(this);
         const CLedWidget::LedShape shape = CLedWidget::Circle;
-        ui->led_RestrictedRendering->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Limited", "Unlimited", 14);
-        ui->led_RenderingEnabled->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Rendering enabled", "No aircraft will be rendered", 14);
+        ui->led_RestrictedRendering->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Limited", "Unlimited",
+                                               14);
+        ui->led_RenderingEnabled->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Rendering enabled",
+                                            "No aircraft will be rendered", 14);
 
         ui->le_MaxAircraft->setValidator(new QIntValidator(ui->le_MaxAircraft));
         ui->le_MaxDistance->setValidator(new QIntValidator(ui->le_MaxDistance));
 
         // connects
-        connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged, this, &CSettingsSimulatorComponent::pluginStateChanged);
-        connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this, &CSettingsSimulatorComponent::showPluginConfig);
+        connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginStateChanged, this,
+                &CSettingsSimulatorComponent::pluginStateChanged);
+        connect(ui->pluginSelector_EnabledSimulators, &CPluginSelector::pluginConfigRequested, this,
+                &CSettingsSimulatorComponent::showPluginConfig);
 
         connect(ui->pb_Reload, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onReload, Qt::QueuedConnection);
-        connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft, Qt::QueuedConnection);
-        connect(ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync, Qt::QueuedConnection);
-        connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance, Qt::QueuedConnection);
-        connect(ui->pb_ApplyComSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyComSync, Qt::QueuedConnection);
-        connect(ui->pb_ApplyCGSource, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyCGSource, Qt::QueuedConnection);
-        connect(ui->pb_ApplyRecordOwnAircraftGnd, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyRecordGnd, Qt::QueuedConnection);
+        connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this,
+                &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft, Qt::QueuedConnection);
+        connect(ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync,
+                Qt::QueuedConnection);
+        connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this,
+                &CSettingsSimulatorComponent::onApplyMaxRenderedDistance, Qt::QueuedConnection);
+        connect(ui->pb_ApplyComSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyComSync,
+                Qt::QueuedConnection);
+        connect(ui->pb_ApplyCGSource, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyCGSource,
+                Qt::QueuedConnection);
+        connect(ui->pb_ApplyRecordOwnAircraftGnd, &QCheckBox::pressed, this,
+                &CSettingsSimulatorComponent::onApplyRecordGnd, Qt::QueuedConnection);
 
-        connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::clearRestricedRendering);
-        connect(ui->pb_DisableRendering, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyDisableRendering);
+        connect(ui->pb_ClearRestrictedRendering, &QCheckBox::pressed, this,
+                &CSettingsSimulatorComponent::clearRestricedRendering);
+        connect(ui->pb_DisableRendering, &QCheckBox::pressed, this,
+                &CSettingsSimulatorComponent::onApplyDisableRendering);
         connect(ui->pb_Check, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::checkSimulatorPlugins);
-        connect(ui->le_MaxAircraft, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
-        connect(ui->le_MaxDistance, &QLineEdit::editingFinished, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
-        connect(ui->le_MaxAircraft, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
-        connect(ui->le_MaxDistance, &QLineEdit::returnPressed, this, &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
+        connect(ui->le_MaxAircraft, &QLineEdit::editingFinished, this,
+                &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
+        connect(ui->le_MaxDistance, &QLineEdit::editingFinished, this,
+                &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
+        connect(ui->le_MaxAircraft, &QLineEdit::returnPressed, this,
+                &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft);
+        connect(ui->le_MaxDistance, &QLineEdit::returnPressed, this,
+                &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
 
         // list all available simulators
         const CSimulatorPluginInfoList plugins = CSettingsSimulatorComponent::getAvailablePlugins();
@@ -100,18 +115,20 @@ namespace swift::gui::components
         if (sGui && sGui->getIContextSimulator())
         {
             this->simulatorPluginChanged(sGui->getIContextSimulator()->getSimulatorPluginInfo());
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this, &CSettingsSimulatorComponent::simulatorPluginChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorSettingsChanged, this, &CSettingsSimulatorComponent::onReload, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorPluginChanged, this,
+                    &CSettingsSimulatorComponent::simulatorPluginChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorSettingsChanged, this,
+                    &CSettingsSimulatorComponent::onReload, Qt::QueuedConnection);
         }
     }
 
-    CSettingsSimulatorComponent::~CSettingsSimulatorComponent()
-    {}
+    CSettingsSimulatorComponent::~CSettingsSimulatorComponent() {}
 
     void CSettingsSimulatorComponent::setGuiValues()
     {
         if (!sGui || !sGui->getIContextSimulator() || sGui->isShuttingDown()) { return; }
-        const CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
+        const CInterpolationAndRenderingSetupGlobal setup =
+            sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
 
         // time sync
         ui->cb_TimeSync->setEnabled(m_pluginLoaded);
@@ -160,7 +177,8 @@ namespace swift::gui::components
             ui->comp_CGSourceSelector->setValue(settings);
 
             // record
-            ui->le_RecordOwnGndPositionsRadius->setText(settings.getRecordedGndRadius().valueRoundedWithUnit(CLengthUnit::m(), 1, false, true));
+            ui->le_RecordOwnGndPositionsRadius->setText(
+                settings.getRecordedGndRadius().valueRoundedWithUnit(CLengthUnit::m(), 1, false, true));
             ui->cb_RecordOwnGndPositions->setChecked(settings.isRecordOwnAircraftGnd());
 
             // rendering
@@ -168,13 +186,11 @@ namespace swift::gui::components
             ui->le_MaxAircraft->setText(setup.isMaxAircraftRestricted() ? QString::number(maxAircraft) : "");
 
             const CLength maxDistance(setup.getMaxRenderedDistance());
-            ui->le_MaxDistance->setText(setup.isMaxDistanceRestricted() ? QString::number(maxDistance.valueInteger(CLengthUnit::NM())) : "");
+            ui->le_MaxDistance->setText(
+                setup.isMaxDistanceRestricted() ? QString::number(maxDistance.valueInteger(CLengthUnit::NM())) : "");
             ui->led_RenderingEnabled->setOn(setup.isRenderingEnabled());
         }
-        else
-        {
-            ui->led_RenderingEnabled->setOn(false);
-        }
+        else { ui->led_RenderingEnabled->setOn(false); }
     }
 
     CSimulatorPluginInfoList CSettingsSimulatorComponent::getAvailablePlugins()
@@ -202,15 +218,9 @@ namespace swift::gui::components
             {
                 e << selected.getIdentifier(); // add enabled plugin
             }
-            else
-            {
-                e.removeAll(selected.getIdentifier());
-            }
+            else { e.removeAll(selected.getIdentifier()); }
             const CStatusMessage msg = m_enabledSimulators.set(e); // change setting
-            if (msg.isWarningOrAbove())
-            {
-                CLogMessage::preformatted(msg);
-            }
+            if (msg.isWarningOrAbove()) { CLogMessage::preformatted(msg); }
         }
 
         // changing of GUI state will be done via received signal
@@ -221,8 +231,10 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
 
         // get initial aircraft to render
-        CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
-        const int noRequested = ui->le_MaxAircraft->text().isEmpty() ? setup.InfiniteAircraft() : ui->le_MaxAircraft->text().toInt();
+        CInterpolationAndRenderingSetupGlobal setup =
+            sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
+        const int noRequested =
+            ui->le_MaxAircraft->text().isEmpty() ? setup.InfiniteAircraft() : ui->le_MaxAircraft->text().toInt();
         const int oldValue = setup.getMaxRenderedAircraft();
         if (oldValue == noRequested) { return; }
 
@@ -233,10 +245,7 @@ namespace swift::gui::components
         // re-read real value
         setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
         const int noRendered = setup.getMaxRenderedAircraft();
-        if (noRequested == noRendered)
-        {
-            CLogMessage(this).info(u"Max.rendered aircraft: %1") << noRendered;
-        }
+        if (noRequested == noRendered) { CLogMessage(this).info(u"Max.rendered aircraft: %1") << noRendered; }
         else
         {
             CLogMessage(this).info(u"Max.rendered aircraft: %1, requested: %2") << noRendered << noRequested;
@@ -250,7 +259,8 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
 
         // get initial aircraft to render
-        CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
+        CInterpolationAndRenderingSetupGlobal setup =
+            sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
         CLength newDistance(0, nullptr);
         if (!ui->le_MaxDistance->text().isEmpty())
         {
@@ -270,7 +280,8 @@ namespace swift::gui::components
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
 
-        CInterpolationAndRenderingSetupGlobal setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
+        CInterpolationAndRenderingSetupGlobal setup =
+            sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
         setup.disableRendering();
         sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
         this->setGuiValues();
@@ -283,18 +294,9 @@ namespace swift::gui::components
         const bool timeSync = ui->cb_TimeSync->isChecked();
         const QString os = ui->le_TimeSyncOffset->text();
         CTime ost(0, CTimeUnit::hrmin());
-        if (!os.isEmpty())
-        {
-            ost.parseFromString(os);
-        }
-        if (ost.isNull())
-        {
-            CLogMessage().validationWarning(u"Invalid offset time");
-        }
-        else
-        {
-            sGui->getIContextSimulator()->setTimeSynchronization(timeSync, ost);
-        }
+        if (!os.isEmpty()) { ost.parseFromString(os); }
+        if (ost.isNull()) { CLogMessage().validationWarning(u"Invalid offset time"); }
+        else { sGui->getIContextSimulator()->setTimeSynchronization(timeSync, ost); }
     }
 
     CSimulatorSettings CSettingsSimulatorComponent::getSimulatorSettings(bool &ok)
@@ -356,10 +358,7 @@ namespace swift::gui::components
         this->setSimulatorSettings(settings);
     }
 
-    void CSettingsSimulatorComponent::onReload()
-    {
-        this->setGuiValues();
-    }
+    void CSettingsSimulatorComponent::onReload() { this->setGuiValues(); }
 
     void CSettingsSimulatorComponent::onEnabledSimulatorsChanged()
     {
@@ -419,7 +418,8 @@ namespace swift::gui::components
         const auto enabledSimulators = m_enabledSimulators.getThreadLocal();
         for (const auto &p : plugins)
         {
-            ui->pluginSelector_EnabledSimulators->setEnabled(p.getIdentifier(), enabledSimulators.contains(p.getIdentifier()));
+            ui->pluginSelector_EnabledSimulators->setEnabled(p.getIdentifier(),
+                                                             enabledSimulators.contains(p.getIdentifier()));
         }
     }
 

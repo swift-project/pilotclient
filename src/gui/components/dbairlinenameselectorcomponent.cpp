@@ -23,12 +23,13 @@ using namespace swift::misc::db;
 
 namespace swift::gui::components
 {
-    CDbAirlineNameSelectorComponent::CDbAirlineNameSelectorComponent(QWidget *parent) : CDbAirlineIcaoSelectorBase(parent),
-                                                                                        ui(new Ui::CDbAirlineNameSelectorComponent)
+    CDbAirlineNameSelectorComponent::CDbAirlineNameSelectorComponent(QWidget *parent)
+        : CDbAirlineIcaoSelectorBase(parent), ui(new Ui::CDbAirlineNameSelectorComponent)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->le_AirlineName);
-        connect(ui->le_AirlineName, &QLineEdit::editingFinished, this, &CDbAirlineNameSelectorComponent::ps_dataChanged);
+        connect(ui->le_AirlineName, &QLineEdit::editingFinished, this,
+                &CDbAirlineNameSelectorComponent::ps_dataChanged);
     }
 
     CDbAirlineNameSelectorComponent::~CDbAirlineNameSelectorComponent()
@@ -44,19 +45,14 @@ namespace swift::gui::components
         return true;
     }
 
-    void CDbAirlineNameSelectorComponent::clear()
-    {
-        ui->le_AirlineName->clear();
-    }
+    void CDbAirlineNameSelectorComponent::clear() { ui->le_AirlineName->clear(); }
 
-    void CDbAirlineNameSelectorComponent::setReadOnly(bool readOnly)
-    {
-        ui->le_AirlineName->setReadOnly(readOnly);
-    }
+    void CDbAirlineNameSelectorComponent::setReadOnly(bool readOnly) { ui->le_AirlineName->setReadOnly(readOnly); }
 
     QCompleter *CDbAirlineNameSelectorComponent::createCompleter()
     {
-        QCompleter *c = new QCompleter(sGui->getWebDataServices()->getAirlineIcaoCodes().toNameCompleterStrings(), this);
+        QCompleter *c =
+            new QCompleter(sGui->getWebDataServices()->getAirlineIcaoCodes().toNameCompleterStrings(), this);
         c->setCaseSensitivity(Qt::CaseInsensitive);
         c->setCompletionMode(QCompleter::PopupCompletion);
         c->setMaxVisibleItems(10);

@@ -18,7 +18,8 @@ namespace swift::gui
     public:
         //! Display a dialog to copy the latest xswiftbus files
         //! \remark normally only displayed in a local environment
-        static int displayDialogAndCopyBuildFiles(const QString &xplaneRootDir, bool checkLatestFile = true, QWidget *parent = nullptr);
+        static int displayDialogAndCopyBuildFiles(const QString &xplaneRootDir, bool checkLatestFile = true,
+                                                  QWidget *parent = nullptr);
     };
 } // namespace swift::gui
 #endif

@@ -45,7 +45,9 @@ namespace swift::gui::components
         swift::misc::simulation::settings::CSwiftPluginSettings getSettings() const;
 
         QScopedPointer<Ui::CSettingsSwiftPlugin> ui;
-        swift::misc::CSetting<swift::misc::simulation::settings::TSwiftPlugin> m_settings { this, &CSettingsSwiftPlugin::onSettingsChanged };
+        swift::misc::CSetting<swift::misc::simulation::settings::TSwiftPlugin> m_settings {
+            this, &CSettingsSwiftPlugin::onSettingsChanged
+        };
     };
 } // namespace swift::gui::components
 

@@ -10,26 +10,17 @@ namespace swift::core::fsd
 {
     FlightPlan::FlightPlan() {}
 
-    FlightPlan::FlightPlan(const QString &sender, const QString &receiver, FlightType flightType, const QString &aircraftIcaoType,
-                           int trueCruisingSpeed, const QString &depAirport, int estimatedDepTime, int actualDepTime, const QString &cruiseAlt,
-                           const QString &destAirport, int hoursEnroute, int minutesEnroute, int fuelAvailHours, int fuelAvailMinutes,
-                           const QString &altAirport, const QString &remarks, const QString &route)
-        : MessageBase(sender, receiver),
-          m_flightType(flightType),
-          m_aircraftIcaoType(aircraftIcaoType),
-          m_trueCruisingSpeed(trueCruisingSpeed),
-          m_depAirport(depAirport),
-          m_estimatedDepTime(estimatedDepTime),
-          m_actualDepTime(actualDepTime),
-          m_cruiseAlt(cruiseAlt),
-          m_destAirport(destAirport),
-          m_hoursEnroute(hoursEnroute),
-          m_minutesEnroute(minutesEnroute),
-          m_fuelAvailHours(fuelAvailHours),
-          m_fuelAvailMinutes(fuelAvailMinutes),
-          m_altAirport(altAirport),
-          m_remarks(remarks),
-          m_route(route)
+    FlightPlan::FlightPlan(const QString &sender, const QString &receiver, FlightType flightType,
+                           const QString &aircraftIcaoType, int trueCruisingSpeed, const QString &depAirport,
+                           int estimatedDepTime, int actualDepTime, const QString &cruiseAlt,
+                           const QString &destAirport, int hoursEnroute, int minutesEnroute, int fuelAvailHours,
+                           int fuelAvailMinutes, const QString &altAirport, const QString &remarks,
+                           const QString &route)
+        : MessageBase(sender, receiver), m_flightType(flightType), m_aircraftIcaoType(aircraftIcaoType),
+          m_trueCruisingSpeed(trueCruisingSpeed), m_depAirport(depAirport), m_estimatedDepTime(estimatedDepTime),
+          m_actualDepTime(actualDepTime), m_cruiseAlt(cruiseAlt), m_destAirport(destAirport),
+          m_hoursEnroute(hoursEnroute), m_minutesEnroute(minutesEnroute), m_fuelAvailHours(fuelAvailHours),
+          m_fuelAvailMinutes(fuelAvailMinutes), m_altAirport(altAirport), m_remarks(remarks), m_route(route)
     {}
 
     QStringList FlightPlan::toTokens() const
@@ -64,8 +55,9 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<FlightPlan *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
-        return FlightPlan(tokens[0], tokens[1], fromQString<FlightType>(tokens[2]), tokens[3], tokens[4].toInt(), tokens[5],
-                          tokens[6].toInt(), tokens[7].toInt(), tokens[8], tokens[9], tokens[10].toInt(), tokens[11].toInt(), tokens[12].toInt(),
-                          tokens[13].toInt(), tokens[14], tokens[15], tokens[16]);
+        return FlightPlan(tokens[0], tokens[1], fromQString<FlightType>(tokens[2]), tokens[3], tokens[4].toInt(),
+                          tokens[5], tokens[6].toInt(), tokens[7].toInt(), tokens[8], tokens[9], tokens[10].toInt(),
+                          tokens[11].toInt(), tokens[12].toInt(), tokens[13].toInt(), tokens[14], tokens[15],
+                          tokens[16]);
     }
 } // namespace swift::core::fsd

@@ -134,7 +134,10 @@ namespace XSwiftBus
 
         //! Get aircraft pressure altitude in feet in standard atmosphere in X-Plane 12.
         //! NaN in earlier versions of X-Plane.
-        double getPressureAltitudeFt() const { return m_pressureAlt.isValid() ? m_pressureAlt.get() : std::numeric_limits<double>::quiet_NaN(); }
+        double getPressureAltitudeFt() const
+        {
+            return m_pressureAlt.isValid() ? m_pressureAlt.get() : std::numeric_limits<double>::quiet_NaN();
+        }
 
         //! Get aircraft height in meters
         double getHeightAglM() const { return m_agl.get(); }
@@ -178,7 +181,10 @@ namespace XSwiftBus
         bool getAllWheelsOnGround() const { return m_onGroundAll.get(); }
 
         //! Get elevation of ground under the plane in meters
-        double getGroundElevation() const { return m_terrainProbe.getElevation(m_latitude.get(), m_longitude.get(), m_elevation.get())[0]; }
+        double getGroundElevation() const
+        {
+            return m_terrainProbe.getElevation(m_latitude.get(), m_longitude.get(), m_elevation.get())[0];
+        }
 
         //! @{
         //! COM Selection 6/7
@@ -296,7 +302,8 @@ namespace XSwiftBus
             return list;
         }
 
-        //! Get the ratio how much the speedbrakes surfaces are extended (0.0 is fully retracted, and 1.0 is fully extended)
+        //! Get the ratio how much the speedbrakes surfaces are extended (0.0 is fully retracted, and 1.0 is fully
+        //! extended)
         double getSpeedBrakeRatio() const { return m_speedBrakeRatio.get(); }
 
         //! \copydoc XSwiftBus::CMessageBoxControl::toggle
@@ -328,8 +335,9 @@ namespace XSwiftBus
                                       const std::string &icao, const std::string &modelString, const std::string &name,
                                       const std::string &description);
 
-        void emitAirportsInRangeUpdated(const std::vector<std::string> &icaoCodes, const std::vector<std::string> &names,
-                                        const std::vector<double> &lats, const std::vector<double> &lons, const std::vector<double> &alts);
+        void emitAirportsInRangeUpdated(const std::vector<std::string> &icaoCodes,
+                                        const std::vector<std::string> &names, const std::vector<double> &lats,
+                                        const std::vector<double> &lons, const std::vector<double> &alts);
 
         void emitSceneryLoaded();
 
@@ -379,7 +387,8 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel::failures::onground_all> m_onGroundAll;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_frequency_hz_833> m_com1Active;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_standby_frequency_hz_833> m_com1Standby;
-        DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_com_selection> m_comAudioSelection; // 6==COM1, 7==COM2
+        DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_com_selection>
+            m_comAudioSelection; // 6==COM1, 7==COM2
         DataRef<xplane::data::sim::cockpit2::radios::actuators::com1_power> m_com1Power;
         DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_volume_com1> m_com1Volume; // 0..1
         DataRef<xplane::data::sim::cockpit2::radios::actuators::audio_selection_com1> m_com1Listening;

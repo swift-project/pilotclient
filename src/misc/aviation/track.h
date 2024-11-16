@@ -66,10 +66,14 @@ namespace swift::misc::aviation
         CTrack() : CAngle(0, swift::misc::physical_quantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
         //! \brief Constructor
-        CTrack(double value, ReferenceNorth north, const swift::misc::physical_quantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
+        CTrack(double value, ReferenceNorth north, const swift::misc::physical_quantities::CAngleUnit &unit)
+            : CAngle(value, unit), m_north(north)
+        {}
 
         //! \brief Constructor by CAngle
-        CTrack(const swift::misc::physical_quantities::CAngle &track, ReferenceNorth north) : CAngle(track), m_north(north) {}
+        CTrack(const swift::misc::physical_quantities::CAngle &track, ReferenceNorth north)
+            : CAngle(track), m_north(north)
+        {}
 
         //! \brief Magnetic Track?
         bool isMagneticTrack() const

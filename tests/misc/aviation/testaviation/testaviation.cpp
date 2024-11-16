@@ -111,8 +111,10 @@ namespace MiscTest
         QVERIFY2(c1 != c2, "COM system shall not be equal");
         c1 = c2;
         QVERIFY2(c1 == c2, "COM system shall be equal");
-        QVERIFY2(CNavSystem::isValidCivilNavigationFrequency(CFrequency(110.0, CFrequencyUnit::MHz())), "Expect valid nav frequency");
-        QVERIFY2(!CNavSystem::isValidCivilNavigationFrequency(CFrequency(200.0, CFrequencyUnit::MHz())), "Expect invalid nav frequency");
+        QVERIFY2(CNavSystem::isValidCivilNavigationFrequency(CFrequency(110.0, CFrequencyUnit::MHz())),
+                 "Expect valid nav frequency");
+        QVERIFY2(!CNavSystem::isValidCivilNavigationFrequency(CFrequency(200.0, CFrequencyUnit::MHz())),
+                 "Expect invalid nav frequency");
     }
 
     void CTestAviation::sameAviationFrequency()
@@ -137,7 +139,8 @@ namespace MiscTest
         }
 
         {
-            // Ending with 20/70 is treated the same as 25/75 (correct value) as old radios only had 2 digits available after the decimal point
+            // Ending with 20/70 is treated the same as 25/75 (correct value) as old radios only had 2 digits available
+            // after the decimal point
             CFrequency freq1(118.325, CFrequencyUnit::MHz());
             CFrequency freq2(118.320, CFrequencyUnit::MHz());
             CFrequency freq3(132.770, CFrequencyUnit::MHz());
@@ -313,17 +316,15 @@ namespace MiscTest
         const CUser user2(user1);
         QVERIFY2(user1 == user2, "information shall be equal");
 
-        const CServer server1 = CServer("Testserver", "Client project testserver", "localhost", 6809,
-                                        CUser("111111", "My Name", "", "123"),
-                                        CFsdSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+        const CServer server1 =
+            CServer("Testserver", "Client project testserver", "localhost", 6809, CUser("111111", "My Name", "", "123"),
+                    CFsdSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
         const CServer server2(server1);
         QVERIFY2(server1 == server2, "server shall be equal");
 
-        const CAircraftSituation situation1(
-            CCoordinateGeodetic(
-                CLatitude::fromWgs84("N 049° 18' 17"),
-                CLongitude::fromWgs84("E 008° 27' 05"),
-                CAltitude(312, CLengthUnit::ft())));
+        const CAircraftSituation situation1(CCoordinateGeodetic(CLatitude::fromWgs84("N 049° 18' 17"),
+                                                                CLongitude::fromWgs84("E 008° 27' 05"),
+                                                                CAltitude(312, CLengthUnit::ft())));
         const CAircraftSituation situation2(situation1);
         QVERIFY2(situation1 == situation2, "situations shall be equal");
 
@@ -339,9 +340,12 @@ namespace MiscTest
         const CCallsign call2("edds_n_app", CCallsign::Atc);
         QVERIFY2(call1 == call2, "Callsigns shall be equal");
 
-        const CAtcStation atc1(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
-        const CAtcStation atc2(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), CInformationMessage(CInformationMessage::ATIS, "foo"));
-        const CAtcStation atc3(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(), CInformationMessage(CInformationMessage::ATIS, "bar"));
+        const CAtcStation atc1(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(),
+                               CInformationMessage(CInformationMessage::ATIS, "foo"));
+        const CAtcStation atc2(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(),
+                               CInformationMessage(CInformationMessage::ATIS, "foo"));
+        const CAtcStation atc3(c1, user1, f1, situation1.getPosition(), CLength(), false, QDateTime(),
+                               CInformationMessage(CInformationMessage::ATIS, "bar"));
         QVERIFY2(atc1 == atc2, "ATC stations shall be equal");
         QVERIFY2(atc1 != atc3, "ATC stations shall not be equal");
     }

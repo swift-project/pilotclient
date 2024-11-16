@@ -9,15 +9,13 @@ using namespace swift::misc::simulation::settings;
 
 namespace swift::gui::components
 {
-    CCGSourceSelector::CCGSourceSelector(QWidget *parent) : QFrame(parent),
-                                                            ui(new Ui::CCGSourceSelector)
+    CCGSourceSelector::CCGSourceSelector(QWidget *parent) : QFrame(parent), ui(new Ui::CCGSourceSelector)
     {
         ui->setupUi(this);
         this->initComboBox();
     }
 
-    CCGSourceSelector::~CCGSourceSelector()
-    {}
+    CCGSourceSelector::~CCGSourceSelector() {}
 
     CSimulatorSettings::CGSource CCGSourceSelector::getValue() const
     {
@@ -25,10 +23,7 @@ namespace swift::gui::components
         return static_cast<CSimulatorSettings::CGSource>(d);
     }
 
-    void CCGSourceSelector::setValue(const CSimulatorSettings &settings)
-    {
-        this->setValue(settings.getCGSource());
-    }
+    void CCGSourceSelector::setValue(const CSimulatorSettings &settings) { this->setValue(settings.getCGSource()); }
 
     void CCGSourceSelector::setValue(CSimulatorSettings::CGSource source)
     {
@@ -38,10 +33,14 @@ namespace swift::gui::components
     void CCGSourceSelector::initComboBox()
     {
         ui->cb_CGSourceSelector->clear();
-        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromSimulatorFirst), CSimulatorSettings::CGFromSimulatorFirst);
-        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromDBFirst), CSimulatorSettings::CGFromDBFirst);
-        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromSimulatorOnly), CSimulatorSettings::CGFromSimulatorOnly);
-        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromDBOnly), CSimulatorSettings::CGFromDBOnly);
+        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromSimulatorFirst),
+                                         CSimulatorSettings::CGFromSimulatorFirst);
+        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromDBFirst),
+                                         CSimulatorSettings::CGFromDBFirst);
+        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromSimulatorOnly),
+                                         CSimulatorSettings::CGFromSimulatorOnly);
+        ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromDBOnly),
+                                         CSimulatorSettings::CGFromDBOnly);
         this->setValue(CSimulatorSettings::CGFromSimulatorFirst);
     }
 } // namespace swift::gui::components

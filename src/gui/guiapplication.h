@@ -55,9 +55,7 @@ namespace swift::gui
      *  - splash screen support
      *
      */
-    class SWIFT_GUI_EXPORT CGuiApplication :
-        public swift::core::CApplication,
-        public IMainWindowAccess
+    class SWIFT_GUI_EXPORT CGuiApplication : public swift::core::CApplication, public IMainWindowAccess
     {
         Q_OBJECT
         Q_INTERFACES(swift::gui::IMainWindowAccess)
@@ -76,7 +74,10 @@ namespace swift::gui
         static bool removeAllWindowsSwiftRegistryEntries();
 
         //! Constructor
-        explicit CGuiApplication(const QString &applicationName = executable(), swift::misc::CApplicationInfo::Application application = swift::misc::CApplicationInfo::Unknown, const QPixmap &icon = swift::misc::CIcons::swift64());
+        explicit CGuiApplication(
+            const QString &applicationName = executable(),
+            swift::misc::CApplicationInfo::Application application = swift::misc::CApplicationInfo::Unknown,
+            const QPixmap &icon = swift::misc::CIcons::swift64());
 
         //! Destructor
         ~CGuiApplication() override;
@@ -110,7 +111,8 @@ namespace swift::gui
         void addWindowFlags(Qt::WindowFlags flags);
 
         //! Set window title
-        QString setExtraWindowTitle(const QString &extraInfo, QWidget *mainWindowWidget = mainApplicationWidget()) const;
+        QString setExtraWindowTitle(const QString &extraInfo,
+                                    QWidget *mainWindowWidget = mainApplicationWidget()) const;
 
         //! @{
         //! print messages generated during parsing / cmd handling
@@ -184,7 +186,8 @@ namespace swift::gui
         bool openStandardCrashDumpDirectory();
 
         //! Update the fonts
-        bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
+        bool updateFont(const QString &fontFamily, const QString &fontSize, const QString &fontStyle,
+                        const QString &fontWeight, const QString &fontColor);
 
         //! Update the fonts
         bool updateFont(const QString &qss);
@@ -332,9 +335,12 @@ namespace swift::gui
         bool m_normalizeMinimize = true; //!< for normalize/minimize toggle
         QScopedPointer<CSplashScreen> m_splashScreen; //!< splash screen
         components::CUpdateInfoDialog *m_updateDialog = nullptr; //!< software installation dialog
-        components::CApplicationCloseDialog *m_closeDialog = nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
+        components::CApplicationCloseDialog *m_closeDialog =
+            nullptr; //!< close dialog (no QScopedPointer because I need to set parent)
         swift::misc::CSettingReadOnly<settings::TGeneralGui> m_guiSettings { this, &CGuiApplication::settingsChanged };
-        swift::misc::CSettingReadOnly<settings::TUpdateNotificationSettings> m_updateSetting { this }; //!< update notification settings
+        swift::misc::CSettingReadOnly<settings::TUpdateNotificationSettings> m_updateSetting {
+            this
+        }; //!< update notification settings
 
         //! Reload widget style from settings
         void settingsChanged();

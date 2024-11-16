@@ -30,12 +30,15 @@ namespace swift::misc::simulation::flightgear
 
     protected:
         //! \copydoc IAircraftModelLoader::startLoadingFromDisk
-        virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation, const QStringList &modelDirectories) override;
+        virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                          const QStringList &modelDirectories) override;
 
     private:
         QString getModelString(const QString &filePath, bool ai);
-        simulation::CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
-        simulation::CAircraftModelList parseAIAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
+        simulation::CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory,
+                                                             const QStringList &excludeDirectories);
+        simulation::CAircraftModelList parseAIAirplanes(const QString &rootDirectory,
+                                                        const QStringList &excludeDirectories);
         void addUniqueModel(const CAircraftModel &model, CAircraftModelList &models);
         QPointer<CWorker> m_parserWorker;
         CAircraftModelList performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories);

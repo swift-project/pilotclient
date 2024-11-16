@@ -23,19 +23,22 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CAircraftPartsComponent::CAircraftPartsComponent(QWidget *parent) : QFrame(parent),
-                                                                        ui(new Ui::CAircraftPartsComponent)
+    CAircraftPartsComponent::CAircraftPartsComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CAircraftPartsComponent)
     {
         ui->setupUi(this);
 
         ui->editor_AircraftParts->showSetButton(false);
         connect(ui->pb_SendAircraftPartsGui, &QPushButton::released, this, &CAircraftPartsComponent::sendAircraftParts);
-        connect(ui->pb_SendAircraftPartsJson, &QPushButton::released, this, &CAircraftPartsComponent::sendAircraftParts);
+        connect(ui->pb_SendAircraftPartsJson, &QPushButton::released, this,
+                &CAircraftPartsComponent::sendAircraftParts);
         connect(ui->pb_CurrentParts, &QPushButton::released, this, &CAircraftPartsComponent::setCurrentParts);
         connect(ui->pb_OwnParts, &QPushButton::released, this, &CAircraftPartsComponent::displayOwnParts);
-        connect(ui->pb_RequestFromNetwork, &QPushButton::released, this, &CAircraftPartsComponent::requestPartsFromNetwork);
+        connect(ui->pb_RequestFromNetwork, &QPushButton::released, this,
+                &CAircraftPartsComponent::requestPartsFromNetwork);
         connect(ui->pb_DisplayLog, &QPushButton::released, this, &CAircraftPartsComponent::displayLogInSimulator);
-        connect(ui->comp_RemoteAircraftCompleter, &CCallsignCompleter::validCallsignEnteredDigest, this, &CAircraftPartsComponent::onCallsignChanged);
+        connect(ui->comp_RemoteAircraftCompleter, &CCallsignCompleter::validCallsignEnteredDigest, this,
+                &CAircraftPartsComponent::onCallsignChanged);
 
         ui->comp_RemoteAircraftCompleter->addOwnCallsign(true);
     }
@@ -78,7 +81,8 @@ namespace swift::gui::components
         if (!client.hasAircraftPartsCapability())
         {
             static const QString question("'%1' does not support parts, enable parts for it?");
-            const QMessageBox::StandardButton reply = QMessageBox::question(this, "No parts supported", question.arg(callsign.asString()), QMessageBox::Yes | QMessageBox::No);
+            const QMessageBox::StandardButton reply = QMessageBox::question(
+                this, "No parts supported", question.arg(callsign.asString()), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) { return; }
             client.addCapability(CClient::FsdWithAircraftConfig);
             const bool enabled = sGui->getIContextNetwork()->setOtherClient(client);
@@ -86,7 +90,8 @@ namespace swift::gui::components
         }
 
         const bool json = (QObject::sender() == ui->pb_SendAircraftPartsJson);
-        const CAircraftParts parts = json ? ui->editor_AircraftParts->getAircraftPartsFromJson() : ui->editor_AircraftParts->getAircraftPartsFromGui();
+        const CAircraftParts parts = json ? ui->editor_AircraftParts->getAircraftPartsFromJson() :
+                                            ui->editor_AircraftParts->getAircraftPartsFromGui();
         ui->editor_AircraftParts->setAircraftParts(parts); // display in UI as GUI and JSON
 
         ui->tb_History->setToolTip("");

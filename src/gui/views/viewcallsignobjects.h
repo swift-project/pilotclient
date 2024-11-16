@@ -28,8 +28,7 @@ namespace swift::gui
     {
         //! Base class for views with DB objects
         template <class T>
-        class CViewWithCallsignObjects :
-            public CViewBase<T>
+        class CViewWithCallsignObjects : public CViewBase<T>
         {
         public:
             //! Model type

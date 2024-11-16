@@ -19,9 +19,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CArtifact)
 namespace swift::misc::db
 {
     //! Artifacts ("our software" products)
-    class SWIFT_MISC_EXPORT CArtifact :
-        public CValueObject<CArtifact>,
-        public IDatastoreObjectWithIntegerKey
+    class SWIFT_MISC_EXPORT CArtifact : public CValueObject<CArtifact>, public IDatastoreObjectWithIntegerKey
     {
     public:
         //! Properties by index
@@ -51,8 +49,8 @@ namespace swift::misc::db
         CArtifact();
 
         //! Constructor
-        CArtifact(const QString &name, const QString &version, const QString &md5,
-                  ArtifactType type, int size, bool existing, const CPlatform &platform);
+        CArtifact(const QString &name, const QString &version, const QString &md5, ArtifactType type, int size,
+                  bool existing, const CPlatform &platform);
 
         //! Having name?
         bool hasName() const { return !m_name.isEmpty(); }

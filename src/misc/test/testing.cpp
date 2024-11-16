@@ -33,10 +33,7 @@ namespace swift::misc::test
     CAtcStationList CTesting::createAtcStations(int number, bool byPropertyIndex)
     {
         CAtcStationList atcs;
-        for (int i = 0; i < number; i++)
-        {
-            atcs.push_back(createStation(i, byPropertyIndex));
-        }
+        for (int i = 0; i < number; i++) { atcs.push_back(createStation(i, byPropertyIndex)); }
         return atcs;
     }
 
@@ -44,7 +41,8 @@ namespace swift::misc::test
     {
         // from WGS is slow, so static const (only 1 time init)
         // https://dev.vatsim-germany.org/issues/322#note-2
-        static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CAltitude(index, CLengthUnit::ft()));
+        static const CCoordinateGeodetic geoPos =
+            CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CAltitude(index, CLengthUnit::ft()));
         const QString cs = QStringLiteral("%1MI-SNO_TWR").arg(index);
         const QString usr = QStringLiteral("Joe %1").arg(index);
         const QString id = QStringLiteral("00000%1").arg(index).right(6);
@@ -59,19 +57,20 @@ namespace swift::misc::test
         {
             station.setPropertyByIndex(CAtcStation::IndexCallsign, CVariant::from(CCallsign(cs)));
             station.setPropertyByIndex(CAtcStation::IndexController, CVariant::from(user));
-            station.setPropertyByIndex(CAtcStation::IndexFrequency, CVariant::from(CFrequency(f, CFrequencyUnit::MHz())));
+            station.setPropertyByIndex(CAtcStation::IndexFrequency,
+                                       CVariant::from(CFrequency(f, CFrequencyUnit::MHz())));
             station.setPropertyByIndex(CAtcStation::IndexRange, CVariant::from(CLength(50, CLengthUnit::km())));
             station.setPropertyByIndex(CAtcStation::IndexPosition, CVariant::from(geoPos));
             station.setPropertyByIndex(CAtcStation::IndexIsOnline, CVariant::from(false));
-            station.setPropertyByIndex(CAtcStation::IndexRelativeDistance, CVariant::from(CLength(index + 1, CLengthUnit::NM())));
+            station.setPropertyByIndex(CAtcStation::IndexRelativeDistance,
+                                       CVariant::from(CLength(index + 1, CLengthUnit::NM())));
             station.setPropertyByIndex(CAtcStation::IndexAtis, CVariant::from(atis));
             station.setPropertyByIndex(CAtcStation::IndexMetar, CVariant::from(metar));
         }
         else
         {
-            station = CAtcStation(CCallsign(cs, CCallsign::Atc), user,
-                                  CFrequency(f, CFrequencyUnit::MHz()),
-                                  geoPos, CLength(50, CLengthUnit::km()), false);
+            station = CAtcStation(CCallsign(cs, CCallsign::Atc), user, CFrequency(f, CFrequencyUnit::MHz()), geoPos,
+                                  CLength(50, CLengthUnit::km()), false);
             station.setRelativeDistance(CLength(index + 1, CLengthUnit::NM()));
             station.setAtis(atis);
             station.setMetar(metar);

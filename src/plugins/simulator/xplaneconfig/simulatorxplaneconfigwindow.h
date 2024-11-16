@@ -51,7 +51,9 @@ namespace swift::simplugin::xplane
         static int marginToInt(const QString &text, int defaultValue);
 
         QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
-        swift::misc::CSetting<swift::misc::simulation::settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneConfigWindow::onSettingsChanged };
+        swift::misc::CSetting<swift::misc::simulation::settings::TXSwiftBusSettings> m_xSwiftBusServerSettings {
+            this, &CSimulatorXPlaneConfigWindow::onSettingsChanged
+        };
     };
 } // namespace swift::simplugin::xplane
 

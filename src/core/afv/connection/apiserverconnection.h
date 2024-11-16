@@ -51,7 +51,8 @@ namespace swift::core::afv::connection
 
         //! Connect to network
         //! \remark ASYNC, calling callback when done
-        void connectTo(const QString &username, const QString &password, const QString &client, const QUuid &networkVersion, ConnectionCallback callback);
+        void connectTo(const QString &username, const QString &password, const QString &client,
+                       const QUuid &networkVersion, ConnectionCallback callback);
 
         //! Add callsign to network
         PostCallsignResponseDto addCallsign(const QString &callsign);

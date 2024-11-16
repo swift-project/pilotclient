@@ -71,7 +71,9 @@ namespace swift::misc
         //! Constructor.
         //! \param owner Will be the parent of the internal QObject used to access the value.
         template <typename T>
-        CSetting(T *owner) : CSetting::CCached(CSettingsCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid, Trait::defaultValue(), owner)
+        CSetting(T *owner)
+            : CSetting::CCached(CSettingsCache::instance(), Trait::key(), Trait::humanReadable(), Trait::isValid,
+                                Trait::defaultValue(), owner)
         {
             if (!this->isInitialized())
             {
@@ -119,7 +121,8 @@ namespace swift::misc
         CStatusMessage setAndSave(const typename Trait::type &value, qint64 timestamp = 0) = delete;
         CStatusMessage save() = delete;
         CStatusMessage setProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) = delete;
-        CStatusMessage setAndSaveProperty(CPropertyIndexRef index, const CVariant &value, qint64 timestamp = 0) = delete;
+        CStatusMessage setAndSaveProperty(CPropertyIndexRef index, const CVariant &value,
+                                          qint64 timestamp = 0) = delete;
         CStatusMessage setDefault() = delete;
         //! @}
     };

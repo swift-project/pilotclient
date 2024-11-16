@@ -32,20 +32,20 @@ using namespace swift::misc::audio;
 
 namespace swift::gui::components
 {
-    CSettingsNetworkServersComponent::CSettingsNetworkServersComponent(QWidget *parent) : QFrame(parent),
-                                                                                          ui(new Ui::CSettingsNetworkServersComponent)
+    CSettingsNetworkServersComponent::CSettingsNetworkServersComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CSettingsNetworkServersComponent)
     {
         ui->setupUi(this);
 
         // Settings server
-        connect(ui->pb_RemoveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::alterTrafficServer);
+        connect(ui->pb_RemoveServer, &QPushButton::pressed, this,
+                &CSettingsNetworkServersComponent::alterTrafficServer);
         connect(ui->pb_SaveServer, &QPushButton::pressed, this, &CSettingsNetworkServersComponent::alterTrafficServer);
         connect(ui->tvp_Servers, &QTableView::clicked, this, &CSettingsNetworkServersComponent::serverSelected);
         this->reloadSettings();
     }
 
-    CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent()
-    {}
+    CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent() {}
 
     void CSettingsNetworkServersComponent::reloadSettings()
     {

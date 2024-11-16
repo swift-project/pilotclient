@@ -80,7 +80,8 @@ namespace swift::misc::aviation
         CModulator();
 
         //! Constructor
-        CModulator(const QString &name, const swift::misc::physical_quantities::CFrequency &activeFrequency, const swift::misc::physical_quantities::CFrequency &standbyFrequency);
+        CModulator(const QString &name, const swift::misc::physical_quantities::CFrequency &activeFrequency,
+                   const swift::misc::physical_quantities::CFrequency &standbyFrequency);
 
         //! Set active frequency
         void setFrequencyActive(const swift::misc::physical_quantities::CFrequency &frequency);
@@ -122,16 +123,10 @@ namespace swift::misc::aviation
         bool m_receiveEnabled = true; //!< is enabled, used e.g. for mute etc.
 
         //! Easy access to derived class (CRTP template parameter)
-        AVIO const *derived() const
-        {
-            return static_cast<AVIO const *>(this);
-        }
+        AVIO const *derived() const { return static_cast<AVIO const *>(this); }
 
         //! Easy access to derived class (CRTP template parameter)
-        AVIO *derived()
-        {
-            return static_cast<AVIO *>(this);
-        }
+        AVIO *derived() { return static_cast<AVIO *>(this); }
 
         SWIFT_METACLASS(
             CModulator,

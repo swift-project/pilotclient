@@ -13,21 +13,14 @@ using namespace swift::misc::physical_quantities;
 namespace swift::sound
 {
     CSelcalPlayer::CSelcalPlayer(const CAudioDeviceInfo &device, QObject *parent)
-        : QObject(parent),
-          m_threadedPlayer(new CThreadedTonePairPlayer(this, "CSelcalPlayer", device))
+        : QObject(parent), m_threadedPlayer(new CThreadedTonePairPlayer(this, "CSelcalPlayer", device))
     {
         m_threadedPlayer->start();
     }
 
-    CSelcalPlayer::~CSelcalPlayer()
-    {
-        this->gracefulShutdown();
-    }
+    CSelcalPlayer::~CSelcalPlayer() { this->gracefulShutdown(); }
 
-    void CSelcalPlayer::gracefulShutdown()
-    {
-        m_threadedPlayer->quitAndWait();
-    }
+    void CSelcalPlayer::gracefulShutdown() { m_threadedPlayer->quitAndWait(); }
 
     CTime CSelcalPlayer::play(int volume, const CSelcal &selcal)
     {

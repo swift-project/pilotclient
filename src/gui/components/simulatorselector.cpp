@@ -25,8 +25,7 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CSimulatorSelector::CSimulatorSelector(QWidget *parent) : QFrame(parent),
-                                                              ui(new Ui::CSimulatorSelector)
+    CSimulatorSelector::CSimulatorSelector(QWidget *parent) : QFrame(parent), ui(new Ui::CSimulatorSelector)
     {
         ui->setupUi(this);
 
@@ -50,8 +49,7 @@ namespace swift::gui::components
         connect(ui->cb_Simulators, &QComboBox::currentTextChanged, this, &CSimulatorSelector::comboBoxChanged);
     }
 
-    CSimulatorSelector::~CSimulatorSelector()
-    {}
+    CSimulatorSelector::~CSimulatorSelector() {}
 
     void CSimulatorSelector::setMode(CSimulatorSelector::Mode mode, bool forced)
     {
@@ -79,8 +77,12 @@ namespace swift::gui::components
         switch (m_mode)
         {
         default:
-        case CheckBoxes: return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked(), ui->cb_FG->isChecked(), ui->cb_MSFS->isChecked());
-        case RadioButtons: return CSimulatorInfo(ui->rb_FSX->isChecked(), ui->rb_FS9->isChecked(), ui->rb_XPlane->isChecked(), ui->rb_P3D->isChecked(), ui->rb_FG->isChecked(), ui->rb_MSFS->isChecked());
+        case CheckBoxes:
+            return CSimulatorInfo(ui->cb_FSX->isChecked(), ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(),
+                                  ui->cb_P3D->isChecked(), ui->cb_FG->isChecked(), ui->cb_MSFS->isChecked());
+        case RadioButtons:
+            return CSimulatorInfo(ui->rb_FSX->isChecked(), ui->rb_FS9->isChecked(), ui->rb_XPlane->isChecked(),
+                                  ui->rb_P3D->isChecked(), ui->rb_FG->isChecked(), ui->rb_MSFS->isChecked());
         case ComboBox: return CSimulatorInfo(ui->cb_Simulators->currentText());
         }
     }
@@ -136,9 +138,8 @@ namespace swift::gui::components
 
     void CSimulatorSelector::setToLastSelection()
     {
-        const CSimulatorInfo simulator = (m_mode == RadioButtons || m_mode == ComboBox) ?
-                                             m_currentSimulator.get() :
-                                             m_currentSimulators.get();
+        const CSimulatorInfo simulator =
+            (m_mode == RadioButtons || m_mode == ComboBox) ? m_currentSimulator.get() : m_currentSimulators.get();
         this->setValue(simulator);
     }
 
@@ -158,10 +159,7 @@ namespace swift::gui::components
             {
                 if (makeReadOnly) { this->setReadOnly(false); }
                 const CSimulatorInfo simulator = sGui->getIContextSimulator()->getModelSetLoaderSimulator();
-                if (simulator.isSingleSimulator())
-                {
-                    this->setValue(simulator);
-                }
+                if (simulator.isSingleSimulator()) { this->setValue(simulator); }
             }
         }
         else
@@ -236,10 +234,12 @@ namespace swift::gui::components
         {
         default:
         case CheckBoxes:
-            c = ui->cb_FSX->isChecked() || ui->cb_FS9->isChecked() || ui->cb_XPlane->isChecked() || ui->cb_P3D->isChecked() || ui->cb_FG->isChecked() || ui->cb_MSFS->isChecked();
+            c = ui->cb_FSX->isChecked() || ui->cb_FS9->isChecked() || ui->cb_XPlane->isChecked() ||
+                ui->cb_P3D->isChecked() || ui->cb_FG->isChecked() || ui->cb_MSFS->isChecked();
             break;
         case RadioButtons:
-            c = ui->rb_FSX->isChecked() || ui->rb_FS9->isChecked() || ui->rb_XPlane->isChecked() || ui->rb_P3D->isChecked() || ui->rb_FG->isChecked() || ui->rb_MSFS->isChecked();
+            c = ui->rb_FSX->isChecked() || ui->rb_FS9->isChecked() || ui->rb_XPlane->isChecked() ||
+                ui->rb_P3D->isChecked() || ui->rb_FG->isChecked() || ui->rb_MSFS->isChecked();
             break;
         case ComboBox:
             const int i = ui->cb_Simulators->currentIndex();
@@ -256,7 +256,8 @@ namespace swift::gui::components
         {
         default:
         case CheckBoxes:
-            c = ui->cb_FSX->isChecked() && ui->cb_FS9->isChecked() && ui->cb_XPlane->isChecked() && ui->cb_P3D->isChecked() && ui->cb_FG->isChecked() && ui->cb_MSFS->isChecked();
+            c = ui->cb_FSX->isChecked() && ui->cb_FS9->isChecked() && ui->cb_XPlane->isChecked() &&
+                ui->cb_P3D->isChecked() && ui->cb_FG->isChecked() && ui->cb_MSFS->isChecked();
             break;
         case RadioButtons:
             // actually this should never be true
@@ -289,16 +290,10 @@ namespace swift::gui::components
 
     void CSimulatorSelector::clear()
     {
-        if (m_mode == CheckBoxes)
-        {
-            this->uncheckAll();
-        }
+        if (m_mode == CheckBoxes) { this->uncheckAll(); }
     }
 
-    bool CSimulatorSelector::isSingleSelection() const
-    {
-        return m_mode == RadioButtons || m_mode == ComboBox;
-    }
+    bool CSimulatorSelector::isSingleSelection() const { return m_mode == RadioButtons || m_mode == ComboBox; }
 
     void CSimulatorSelector::setReadOnly(bool readOnly)
     {
@@ -318,7 +313,10 @@ namespace swift::gui::components
     void CSimulatorSelector::radioButtonChanged(bool checked)
     {
         if (m_mode != RadioButtons) { return; }
-        if (!checked) { return; } // only the checked ones are relevant, as the unchecked ones are accompanied with checked events
+        if (!checked)
+        {
+            return;
+        } // only the checked ones are relevant, as the unchecked ones are accompanied with checked events
         m_digestButtonsChanged.inputSignal();
     }
 

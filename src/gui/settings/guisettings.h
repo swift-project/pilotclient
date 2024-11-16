@@ -18,8 +18,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CGeneralGuiSettings)
 namespace swift::gui::settings
 {
     //! General GUI settings
-    class SWIFT_GUI_EXPORT CGeneralGuiSettings :
-        public swift::misc::CValueObject<CGeneralGuiSettings>
+    class SWIFT_GUI_EXPORT CGeneralGuiSettings : public swift::misc::CValueObject<CGeneralGuiSettings>
     {
     public:
         //! Properties by index
@@ -94,7 +93,10 @@ namespace swift::gui::settings
         }
 
         //! \copydoc swift::misc::TSettingTrait::isValid
-        static bool isValid(const int &valueInSeconds, QString &) { return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs()); }
+        static bool isValid(const int &valueInSeconds, QString &)
+        {
+            return valueInSeconds == -1 || (valueInSeconds >= minSecs() && valueInSeconds <= maxSecs());
+        }
 
         //! \copydoc swift::misc::TSettingTrait::defaultValue
         static const int &defaultValue()

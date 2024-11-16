@@ -20,15 +20,22 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgE
 
 namespace swift::misc::simulation::fscommon
 {
-    CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description) : m_index(index), m_fileName(fileName), m_title(title.trimmed()), m_atcType(atcType.trimmed()),
-                                                                                                                                                                                                                     m_atcModel(atcModel.trimmed()), m_atcParkingCode(atcParkingCode.trimmed()), m_description(description.trimmed())
+    CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index, const QString &title,
+                                             const QString &atcType, const QString &atcModel,
+                                             const QString &atcParkingCode, const QString &description)
+        : m_index(index), m_fileName(fileName), m_title(title.trimmed()), m_atcType(atcType.trimmed()),
+          m_atcModel(atcModel.trimmed()), m_atcParkingCode(atcParkingCode.trimmed()),
+          m_description(description.trimmed())
     {
         // void
     }
 
     QString CAircraftCfgEntries::convertToQString(bool) const
     {
-        return QStringLiteral("{%1, %2, %3, %4, %5, %6}").arg(m_fileName).arg(m_index).arg(m_title, m_atcModel, m_atcType, m_atcParkingCode);
+        return QStringLiteral("{%1, %2, %3, %4, %5, %6}")
+            .arg(m_fileName)
+            .arg(m_index)
+            .arg(m_title, m_atcModel, m_atcType, m_atcParkingCode);
     }
 
     CAircraftCfgEntries::CAircraftCfgEntries(const QString &fileName, int index) : m_index(index), m_fileName(fileName)
@@ -57,60 +64,30 @@ namespace swift::misc::simulation::fscommon
         return d;
     }
 
-    void CAircraftCfgEntries::setFileName(const QString &filePath)
-    {
-        m_fileName = filePath.trimmed();
-    }
+    void CAircraftCfgEntries::setFileName(const QString &filePath) { m_fileName = filePath.trimmed(); }
 
-    void CAircraftCfgEntries::setTitle(const QString &title)
-    {
-        m_title = title.trimmed();
-    }
+    void CAircraftCfgEntries::setTitle(const QString &title) { m_title = title.trimmed(); }
 
-    void CAircraftCfgEntries::setAtcModel(const QString &atcModel)
-    {
-        m_atcModel = atcModel.trimmed();
-    }
+    void CAircraftCfgEntries::setAtcModel(const QString &atcModel) { m_atcModel = atcModel.trimmed(); }
 
-    void CAircraftCfgEntries::setAtcType(const QString &atcType)
-    {
-        m_atcType = atcType.trimmed();
-    }
+    void CAircraftCfgEntries::setAtcType(const QString &atcType) { m_atcType = atcType.trimmed(); }
 
     void CAircraftCfgEntries::setAtcParkingCode(const QString &parkingCode)
     {
         m_atcParkingCode = parkingCode.trimmed();
     }
 
-    void CAircraftCfgEntries::setAtcAirline(const QString &airline)
-    {
-        m_atcAirline = airline.trimmed();
-    }
+    void CAircraftCfgEntries::setAtcAirline(const QString &airline) { m_atcAirline = airline.trimmed(); }
 
-    void CAircraftCfgEntries::setSimName(const QString &simName)
-    {
-        m_simName = simName.trimmed();
-    }
+    void CAircraftCfgEntries::setSimName(const QString &simName) { m_simName = simName.trimmed(); }
 
-    void CAircraftCfgEntries::setDescription(const QString &description)
-    {
-        m_description = description.trimmed();
-    }
+    void CAircraftCfgEntries::setDescription(const QString &description) { m_description = description.trimmed(); }
 
-    void CAircraftCfgEntries::setCreatedBy(const QString &createdBy)
-    {
-        m_createdBy = createdBy.trimmed();
-    }
+    void CAircraftCfgEntries::setCreatedBy(const QString &createdBy) { m_createdBy = createdBy.trimmed(); }
 
-    void CAircraftCfgEntries::setTexture(const QString &texture)
-    {
-        m_texture = texture.trimmed();
-    }
+    void CAircraftCfgEntries::setTexture(const QString &texture) { m_texture = texture.trimmed(); }
 
-    void CAircraftCfgEntries::setUiType(const QString &type)
-    {
-        m_uiType = type.trimmed();
-    }
+    void CAircraftCfgEntries::setUiType(const QString &type) { m_uiType = type.trimmed(); }
 
     CAircraftModel CAircraftCfgEntries::toAircraftModel() const
     {
@@ -125,10 +102,9 @@ namespace swift::misc::simulation::fscommon
         model.setIconFile(this->getThumbnailFileNameChecked());
 
         const QString designator(CAircraftIcaoCode::normalizeDesignator(this->getAtcModel()));
-        CAircraftIcaoCode aircraft(
-            CAircraftIcaoCode::isValidDesignator(designator) ?
-                designator :
-                CAircraftIcaoCode::getUnassignedDesignator());
+        CAircraftIcaoCode aircraft(CAircraftIcaoCode::isValidDesignator(designator) ?
+                                       designator :
+                                       CAircraftIcaoCode::getUnassignedDesignator());
         aircraft.setManufacturer(this->getUiManufacturer());
         model.setAircraftIcaoCode(aircraft);
 
@@ -139,10 +115,7 @@ namespace swift::misc::simulation::fscommon
         CAirlineIcaoCode airline;
         airline.setName(this->getAtcAirline()); // descriptive name like "BATAVIA"
         const QString airlineDesignator(this->getAtcParkingCode());
-        if (CAirlineIcaoCode::isValidAirlineDesignator(airlineDesignator))
-        {
-            airline.setDesignator(airlineDesignator);
-        }
+        if (CAirlineIcaoCode::isValidAirlineDesignator(airlineDesignator)) { airline.setDesignator(airlineDesignator); }
         livery.setAirlineIcaoCode(airline);
         model.setLivery(livery);
 
@@ -156,7 +129,8 @@ namespace swift::misc::simulation::fscommon
     {
         if (m_texture.isEmpty()) { return {}; }
         if (m_fileName.isEmpty()) { return {}; }
-        QString fn = QDir::cleanPath(this->getFileDirectory() + QDir::separator() + "texture." + m_texture + QDir::separator() + "thumbnail.jpg");
+        QString fn = QDir::cleanPath(this->getFileDirectory() + QDir::separator() + "texture." + m_texture +
+                                     QDir::separator() + "thumbnail.jpg");
         return fn;
     }
 
@@ -226,9 +200,7 @@ namespace swift::misc::simulation::fscommon
         case IndexSimulatorName: this->setSimName(variant.toString()); break;
         case IndexCreatedBy: this->setCreatedBy(variant.toString()); break;
         case IndexRotorcraft: this->setRotorcraft(variant.toBool()); break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::misc::simulation::fscommon

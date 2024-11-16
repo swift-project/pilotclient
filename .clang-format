@@ -34,7 +34,7 @@ BreakBeforeBraces: Custom
 BreakInheritanceList: AfterColon
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializers: BeforeColon
-ColumnLimit:     0 # Leave line length untouched
+ColumnLimit:     120
 Cpp11BracedListStyle: false
 FixNamespaceComments: true
 IncludeBlocks:   Regroup

@@ -9,9 +9,7 @@
 //! \ingroup testswiftcore
 
 namespace swiftcoretest
-{
-
-} // namespace swiftcoretest
+{} // namespace swiftcoretest
 
 //! \endcond
 

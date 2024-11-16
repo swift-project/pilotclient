@@ -28,7 +28,8 @@ namespace swift::misc::aviation
         }
 
         //! Apply for given callsign
-        int applyIfCallsign(const CCallsign &callsign, const CPropertyIndexVariantMap &variantMap, bool skipEqualValues = true)
+        int applyIfCallsign(const CCallsign &callsign, const CPropertyIndexVariantMap &variantMap,
+                            bool skipEqualValues = true)
         {
             return this->container().applyIf(&OBJ::getCallsign, callsign, variantMap, skipEqualValues);
         }
@@ -37,10 +38,7 @@ namespace swift::misc::aviation
         swift::misc::aviation::CCallsignSet getCallsigns() const
         {
             CCallsignSet cs;
-            for (const OBJ &obj : this->container())
-            {
-                cs.push_back(obj.getCallsign());
-            }
+            for (const OBJ &obj : this->container()) { cs.push_back(obj.getCallsign()); }
             return cs;
         }
 
@@ -93,9 +91,8 @@ namespace swift::misc::aviation
             CONTAINER r;
             if (suffix.isEmpty()) { return r; }
             const QString sfxUpper(suffix.trimmed().toUpper());
-            r = this->container().findBy([=](const OBJ &csObj) {
-                return (csObj.getCallsign().getSuffix() == sfxUpper);
-            });
+            r = this->container().findBy(
+                [=](const OBJ &csObj) { return (csObj.getCallsign().getSuffix() == sfxUpper); });
             return r;
         }
 
@@ -130,14 +127,8 @@ namespace swift::misc::aviation
             {
                 const QString s = csObj.getCallsign().getSuffix();
                 if (s.isEmpty()) { continue; }
-                if (r.contains(s))
-                {
-                    r[s] = r[s] + 1;
-                }
-                else
-                {
-                    r.insert(s, 1);
-                }
+                if (r.contains(s)) { r[s] = r[s] + 1; }
+                else { r.insert(s, 1); }
             }
             return r;
         }
@@ -176,10 +167,7 @@ namespace swift::misc::aviation
                     CONTAINER perCallsign({ csObj });
                     result.insert(cs, perCallsign);
                 }
-                else
-                {
-                    result[cs].push_back(csObj);
-                }
+                else { result[cs].push_back(csObj); }
             }
             return result;
         }
@@ -226,10 +214,7 @@ namespace swift::misc::aviation
             else
             {
                 c = 1;
-                if (changedValues.isEmpty())
-                {
-                    this->container().push_back(objectBeforeChanges);
-                }
+                if (changedValues.isEmpty()) { this->container().push_back(objectBeforeChanges); }
                 else
                 {
                     OBJ objectAdded(objectBeforeChanges);
@@ -241,19 +226,13 @@ namespace swift::misc::aviation
         }
 
         //! Sort by callsign
-        void sortByCallsign()
-        {
-            container().sortBy(&OBJ::getCallsign);
-        }
+        void sortByCallsign() { container().sortBy(&OBJ::getCallsign); }
 
         //! Turn into callsign map
         QMap<CCallsign, OBJ> asCallsignMap() const
         {
             QMap<CCallsign, OBJ> map;
-            for (const OBJ &obj : this->container())
-            {
-                map.insert(obj.getCallsign(), obj);
-            }
+            for (const OBJ &obj : this->container()) { map.insert(obj.getCallsign(), obj); }
             return map;
         }
 
@@ -279,20 +258,13 @@ namespace swift::misc::aviation
 
     protected:
         //! Constructor
-        ICallsignObjectList()
-        {}
+        ICallsignObjectList() {}
 
         //! Container
-        const CONTAINER &container() const
-        {
-            return static_cast<const CONTAINER &>(*this);
-        }
+        const CONTAINER &container() const { return static_cast<const CONTAINER &>(*this); }
 
         //! Container
-        CONTAINER &container()
-        {
-            return static_cast<CONTAINER &>(*this);
-        }
+        CONTAINER &container() { return static_cast<CONTAINER &>(*this); }
     };
 } // namespace swift::misc::aviation
 

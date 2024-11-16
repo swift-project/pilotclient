@@ -30,19 +30,16 @@ namespace swift::misc::aviation
     CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator)
         : m_designator(airlineDesignator.trimmed().toUpper())
     {
-        if (m_designator.length() == 4)
-        {
-            this->setDesignator(m_designator);
-        }
+        if (m_designator.length() == 4) { this->setDesignator(m_designator); }
     }
 
-    CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName, const CCountry &country, const QString &telephony, bool virtualAirline, bool operating)
-        : m_designator(airlineDesignator.trimmed().toUpper()), m_name(airlineName), m_telephonyDesignator(telephony), m_country(country), m_isVa(virtualAirline), m_isOperating(operating)
+    CAirlineIcaoCode::CAirlineIcaoCode(const QString &airlineDesignator, const QString &airlineName,
+                                       const CCountry &country, const QString &telephony, bool virtualAirline,
+                                       bool operating)
+        : m_designator(airlineDesignator.trimmed().toUpper()), m_name(airlineName), m_telephonyDesignator(telephony),
+          m_country(country), m_isVa(virtualAirline), m_isOperating(operating)
     {
-        if (m_designator.length() == 4)
-        {
-            this->setDesignator(m_designator);
-        }
+        if (m_designator.length() == 4) { this->setDesignator(m_designator); }
     }
 
     QString CAirlineIcaoCode::getVDesignator() const
@@ -53,9 +50,8 @@ namespace swift::misc::aviation
 
     QString CAirlineIcaoCode::getVDesignatorDbKey() const
     {
-        return this->isLoadedFromDb() ?
-                   this->getVDesignator() % this->getDbKeyAsStringInParentheses(" ") :
-                   this->getVDesignator();
+        return this->isLoadedFromDb() ? this->getVDesignator() % this->getDbKeyAsStringInParentheses(" ") :
+                                        this->getVDesignator();
     }
 
     void CAirlineIcaoCode::setDesignator(const QString &icaoDesignator)
@@ -78,30 +74,17 @@ namespace swift::misc::aviation
 
     QString CAirlineIcaoCode::getDesignatorNameCountry() const
     {
-        return this->getDesignator() %
-               (this->hasName() ? (u' ' % this->getName()) : QString()) %
+        return this->getDesignator() % (this->hasName() ? (u' ' % this->getName()) : QString()) %
                (this->hasValidCountry() ? (u' ' % this->getCountryIso()) : QString());
     }
 
-    QString CAirlineIcaoCode::getSimplifiedName() const
-    {
-        return simplifyNameForSearch(this->getName());
-    }
+    QString CAirlineIcaoCode::getSimplifiedName() const { return simplifyNameForSearch(this->getName()); }
 
-    bool CAirlineIcaoCode::hasValidCountry() const
-    {
-        return m_country.isValid();
-    }
+    bool CAirlineIcaoCode::hasValidCountry() const { return m_country.isValid(); }
 
-    bool CAirlineIcaoCode::hasValidDesignator() const
-    {
-        return isValidAirlineDesignator(m_designator);
-    }
+    bool CAirlineIcaoCode::hasValidDesignator() const { return isValidAirlineDesignator(m_designator); }
 
-    bool CAirlineIcaoCode::hasIataCode() const
-    {
-        return !m_iataCode.isEmpty();
-    }
+    bool CAirlineIcaoCode::hasIataCode() const { return !m_iataCode.isEmpty(); }
 
     bool CAirlineIcaoCode::matchesDesignator(const QString &designator) const
     {
@@ -142,22 +125,25 @@ namespace swift::misc::aviation
     bool CAirlineIcaoCode::matchesNamesOrTelephonyDesignator(const QString &candidate) const
     {
         const QString cand(candidate.toUpper().trimmed());
-        if (this->getName().contains(cand, Qt::CaseInsensitive) || this->getTelephonyDesignator().contains(cand, Qt::CaseInsensitive)) { return true; }
+        if (this->getName().contains(cand, Qt::CaseInsensitive) ||
+            this->getTelephonyDesignator().contains(cand, Qt::CaseInsensitive))
+        {
+            return true;
+        }
         return this->isContainedInSimplifiedName(candidate);
     }
 
     bool CAirlineIcaoCode::isContainedInSimplifiedName(const QString &candidate) const
     {
         if (candidate.isEmpty() || !this->hasName()) { return false; }
-        auto simplifiedName = makeRange(getName().begin(), getName().end()).findBy([](QChar c) { return c.isLetter(); });
-        auto it = std::search(simplifiedName.begin(), simplifiedName.end(), candidate.begin(), candidate.end(), [](QChar a, QChar b) { return a.toUpper() == b.toUpper(); });
+        auto simplifiedName =
+            makeRange(getName().begin(), getName().end()).findBy([](QChar c) { return c.isLetter(); });
+        auto it = std::search(simplifiedName.begin(), simplifiedName.end(), candidate.begin(), candidate.end(),
+                              [](QChar a, QChar b) { return a.toUpper() == b.toUpper(); });
         return it != simplifiedName.end();
     }
 
-    bool CAirlineIcaoCode::hasSimplifiedName() const
-    {
-        return this->hasName() && !this->getSimplifiedName().isEmpty();
-    }
+    bool CAirlineIcaoCode::hasSimplifiedName() const { return this->hasName() && !this->getSimplifiedName().isEmpty(); }
 
     bool CAirlineIcaoCode::hasCompleteData() const
     {
@@ -198,10 +184,8 @@ namespace swift::misc::aviation
     QString CAirlineIcaoCode::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        const QString s = this->getDesignatorDbKey() %
-                          (this->hasName() ? u' ' % m_name : QString()) %
-                          u" Op: " % boolToYesNo(this->isOperating()) %
-                          u" VA: " % boolToYesNo(this->isVirtualAirline()) %
+        const QString s = this->getDesignatorDbKey() % (this->hasName() ? u' ' % m_name : QString()) % u" Op: " %
+                          boolToYesNo(this->isOperating()) % u" VA: " % boolToYesNo(this->isVirtualAirline()) %
                           u" Mil: " % boolToYesNo(this->isMilitary());
         return s.trimmed();
     }
@@ -209,7 +193,10 @@ namespace swift::misc::aviation
     QVariant CAirlineIcaoCode::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -264,21 +251,28 @@ namespace swift::misc::aviation
     int CAirlineIcaoCode::comparePropertyByIndex(CPropertyIndexRef index, const CAirlineIcaoCode &compareValue) const
     {
         if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAirlineIconHTML:
         case IndexAirlineDesignator: return m_designator.compare(compareValue.getDesignator());
         case IndexIataCode: return m_iataCode.compare(compareValue.getIataCode());
-        case IndexAirlineCountry: return m_country.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCountry());
-        case IndexDesignatorNameCountry: return m_country.getName().compare(compareValue.getCountry().getName(), Qt::CaseInsensitive);
+        case IndexAirlineCountry:
+            return m_country.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCountry());
+        case IndexDesignatorNameCountry:
+            return m_country.getName().compare(compareValue.getCountry().getName(), Qt::CaseInsensitive);
         case IndexAirlineName: return m_name.compare(compareValue.getName(), Qt::CaseInsensitive);
-        case IndexTelephonyDesignator: return m_telephonyDesignator.compare(compareValue.getTelephonyDesignator(), Qt::CaseInsensitive);
+        case IndexTelephonyDesignator:
+            return m_telephonyDesignator.compare(compareValue.getTelephonyDesignator(), Qt::CaseInsensitive);
         case IndexIsVirtualAirline: return Compare::compare(this->isVirtualAirline(), compareValue.isVirtualAirline());
         case IndexIsOperating: return Compare::compare(this->isOperating(), compareValue.isOperating());
         case IndexIsMilitary: return Compare::compare(this->isMilitary(), compareValue.isMilitary());
-        case IndexGroupDesignator: return m_groupDesignator.compare(compareValue.getGroupDesignator(), Qt::CaseInsensitive);
+        case IndexGroupDesignator:
+            return m_groupDesignator.compare(compareValue.getGroupDesignator(), Qt::CaseInsensitive);
         case IndexGroupName: return m_groupName.compare(compareValue.getGroupName(), Qt::CaseInsensitive);
         case IndexGroupId: return Compare::compare(m_groupId, compareValue.getGroupId());
         default: break;
@@ -291,8 +285,14 @@ namespace swift::misc::aviation
     {
         static const CLogCategoryList cats(CLogCategoryList(this).withValidation());
         CStatusMessageList msgs;
-        if (!hasValidDesignator()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: missing designator")); }
-        if (!hasValidCountry()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: missing country")); }
+        if (!hasValidDesignator())
+        {
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: missing designator"));
+        }
+        if (!hasValidCountry())
+        {
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: missing country"));
+        }
         if (!hasName()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Airline: no name")); }
         return msgs;
     }
@@ -325,14 +325,20 @@ namespace swift::misc::aviation
         return removeChars(n, [](QChar c) { return !c.isLetterOrNumber(); });
     }
 
-    CStatusMessage CAirlineIcaoCode::logMessage(const CAirlineIcaoCode &icaoCode, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+    CStatusMessage CAirlineIcaoCode::logMessage(const CAirlineIcaoCode &icaoCode, const QString &message,
+                                                const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
     {
         static const CLogCategoryList cats({ CLogCategories::aviation() });
-        const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s, icaoCode.hasValidDesignator() ? icaoCode.getVDesignatorDbKey() + ": " + message.trimmed() : message.trimmed());
+        const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s,
+                               icaoCode.hasValidDesignator() ?
+                                   icaoCode.getVDesignatorDbKey() + ": " + message.trimmed() :
+                                   message.trimmed());
         return m;
     }
 
-    void CAirlineIcaoCode::addLogDetailsToList(CStatusMessageList *log, const CAirlineIcaoCode &icao, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+    void CAirlineIcaoCode::addLogDetailsToList(CStatusMessageList *log, const CAirlineIcaoCode &icao,
+                                               const QString &message, const QStringList &extraCategories,
+                                               CStatusMessage::StatusSeverity s)
     {
         if (!log) { return; }
         if (message.isEmpty()) { return; }
@@ -342,8 +348,7 @@ namespace swift::misc::aviation
     QString CAirlineIcaoCode::getCombinedStringWithKey() const
     {
         return (this->hasValidDesignator() ? this->getVDesignator() : QString()) %
-               (this->hasName() ? u' ' % m_name : QString()) %
-               this->getDbKeyAsStringInParentheses(" ");
+               (this->hasName() ? u' ' % m_name : QString()) % this->getDbKeyAsStringInParentheses(" ");
     }
 
     CAirlineIcaoCode CAirlineIcaoCode::thisOrCallsignCode(const CCallsign &callsign) const
@@ -373,9 +378,8 @@ namespace swift::misc::aviation
     QString CAirlineIcaoCode::getNameWithKey() const
     {
         if (!this->hasValidDbKey()) { return this->getName(); }
-        return this->hasName() ?
-                   QString(this->getName()).append(" ").append(this->getDbKeyAsStringInParentheses()) :
-                   this->getDbKeyAsStringInParentheses();
+        return this->hasName() ? QString(this->getName()).append(" ").append(this->getDbKeyAsStringInParentheses()) :
+                                 this->getDbKeyAsStringInParentheses();
     }
 
     void CAirlineIcaoCode::updateMissingParts(const CAirlineIcaoCode &otherIcaoCode)
@@ -401,10 +405,7 @@ namespace swift::misc::aviation
         }
     }
 
-    QString CAirlineIcaoCode::asHtmlSummary() const
-    {
-        return this->getCombinedStringWithKey();
-    }
+    QString CAirlineIcaoCode::asHtmlSummary() const { return this->getCombinedStringWithKey(); }
 
     int CAirlineIcaoCode::calculateScore(const CAirlineIcaoCode &otherCode, CStatusMessageList *log) const
     {
@@ -437,12 +438,14 @@ namespace swift::misc::aviation
         else if (this->hasTelephonyDesignator() && this->getTelephonyDesignator() == otherCode.getTelephonyDesignator())
         {
             score += 15;
-            addLogDetailsToList(log, *this, QStringLiteral("Same telephony '%1': %2").arg(this->getTelephonyDesignator()).arg(score));
+            addLogDetailsToList(
+                log, *this, QStringLiteral("Same telephony '%1': %2").arg(this->getTelephonyDesignator()).arg(score));
         }
         else if (this->hasSimplifiedName() && this->getSimplifiedName() == otherCode.getSimplifiedName())
         {
             score += 10;
-            addLogDetailsToList(log, *this, QStringLiteral("Same simplified name '%1': %2").arg(this->getSimplifiedName()).arg(score));
+            addLogDetailsToList(
+                log, *this, QStringLiteral("Same simplified name '%1': %2").arg(this->getSimplifiedName()).arg(score));
         }
         return score;
     }
@@ -484,10 +487,7 @@ namespace swift::misc::aviation
         const bool operating = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"operating").toString());
         const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"military").toString());
 
-        CAirlineIcaoCode code(
-            designator, name,
-            CCountry(countryIso, countryName),
-            telephony, va, operating);
+        CAirlineIcaoCode code(designator, name, CCountry(countryIso, countryName), telephony, va, operating);
         code.setIataCode(iata);
         code.setMilitary(military);
         code.setGroupDesignator(groupDesignator);

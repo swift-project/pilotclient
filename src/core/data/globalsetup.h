@@ -165,10 +165,13 @@ namespace swift::core::data
         QString m_mappingMinimumVersion; //!< minimum version
         swift::misc::network::CUrl m_dbRootDirectoryUrl; //!< Root directory of DB
         swift::misc::network::CUrl m_vatsimMetarsUrl; //!< METAR data
-        swift::misc::network::CUrl m_vatsimStatusFileUrl; //!< Status file, where to find the VATSIM files (METAR, data, ATIS, other status files)
-        swift::misc::network::CUrl m_vatsimDataFileUrl; //!< Overall VATSIM data file / merely for bootstrapping the first time
+        swift::misc::network::CUrl m_vatsimStatusFileUrl; //!< Status file, where to find the VATSIM files (METAR, data,
+                                                          //!< ATIS, other status files)
+        swift::misc::network::CUrl
+            m_vatsimDataFileUrl; //!< Overall VATSIM data file / merely for bootstrapping the first time
         swift::misc::network::CUrl m_vatsimServerFileUrl; //!< URL to list of VATSIM servers
-        swift::misc::network::CUrl m_vatsimFsdHttpUrl; //!< URL to HTTP FSD server (for load-balancing and automatic server selection)
+        swift::misc::network::CUrl
+            m_vatsimFsdHttpUrl; //!< URL to HTTP FSD server (for load-balancing and automatic server selection)
         swift::misc::network::CUrl m_sharedUrl; //!< where we can obtain shared info files such as bootstrap, ..
         swift::misc::network::CUrl m_onlineHelpUrl; //!< online help URL
         swift::misc::network::CServerList m_predefinedServers; //!< Predefined servers loaded from setup file
@@ -177,7 +180,8 @@ namespace swift::core::data
         swift::misc::network::CUrl m_afvApiServerUrl; //!< AFV API server URL
         swift::misc::network::CUrl m_afvMapUrl; //!< AFV map URL
         swift::misc::network::CUrl m_vatsimAuthUrl; //!< VATSIM Auth URL
-        bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing. Only works with CBuildConfig::isLocalDeveloperDebugBuild
+        bool m_dbDebugFlag = false; //!< can trigger DEBUG on the server, so you need to know what you are doing. Only
+                                    //!< works with CBuildConfig::isLocalDeveloperDebugBuild
 
         SWIFT_METACLASS(
             CGlobalSetup,

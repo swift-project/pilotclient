@@ -36,25 +36,39 @@ using namespace swift::misc::simulation;
 
 namespace swift::gui::components
 {
-    CAudioDeviceVolumeSetupComponent::CAudioDeviceVolumeSetupComponent(QWidget *parent) : QFrame(parent),
-                                                                                          ui(new Ui::CAudioDeviceVolumeSetupComponent)
+    CAudioDeviceVolumeSetupComponent::CAudioDeviceVolumeSetupComponent(QWidget *parent)
+        : QFrame(parent), ui(new Ui::CAudioDeviceVolumeSetupComponent)
     {
         ui->setupUi(this);
-        connect(ui->hs_VolumeIn, &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
-        connect(ui->hs_VolumeOut, &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
-        connect(ui->hs_VolumeOutCom1, &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
-        connect(ui->hs_VolumeOutCom2, &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
-        connect(ui->tb_RefreshInDevice, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices, Qt::QueuedConnection);
-        connect(ui->tb_RefreshOutDevice, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices, Qt::QueuedConnection);
-        connect(ui->tb_ResetInVolume, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeIn, Qt::QueuedConnection);
-        connect(ui->tb_ResetOutVolume, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeOut, Qt::QueuedConnection);
-        connect(ui->tb_ResetOutVolumeCom1, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeOutCom1, Qt::QueuedConnection);
-        connect(ui->tb_ResetOutVolumeCom2, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeOutCom2, Qt::QueuedConnection);
+        connect(ui->hs_VolumeIn, &QSlider::valueChanged, this,
+                &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+        connect(ui->hs_VolumeOut, &QSlider::valueChanged, this,
+                &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+        connect(ui->hs_VolumeOutCom1, &QSlider::valueChanged, this,
+                &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+        connect(ui->hs_VolumeOutCom2, &QSlider::valueChanged, this,
+                &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+        connect(ui->tb_RefreshInDevice, &QToolButton::released, this,
+                &CAudioDeviceVolumeSetupComponent::onReloadDevices, Qt::QueuedConnection);
+        connect(ui->tb_RefreshOutDevice, &QToolButton::released, this,
+                &CAudioDeviceVolumeSetupComponent::onReloadDevices, Qt::QueuedConnection);
+        connect(ui->tb_ResetInVolume, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeIn,
+                Qt::QueuedConnection);
+        connect(ui->tb_ResetOutVolume, &QToolButton::released, this,
+                &CAudioDeviceVolumeSetupComponent::onResetVolumeOut, Qt::QueuedConnection);
+        connect(ui->tb_ResetOutVolumeCom1, &QToolButton::released, this,
+                &CAudioDeviceVolumeSetupComponent::onResetVolumeOutCom1, Qt::QueuedConnection);
+        connect(ui->tb_ResetOutVolumeCom2, &QToolButton::released, this,
+                &CAudioDeviceVolumeSetupComponent::onResetVolumeOutCom2, Qt::QueuedConnection);
 
-        connect(ui->cb_1Tx, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
-        connect(ui->cb_2Tx, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
-        connect(ui->cb_1Rec, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
-        connect(ui->cb_2Rec, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
+        connect(ui->cb_1Tx, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged,
+                Qt::QueuedConnection);
+        connect(ui->cb_2Tx, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged,
+                Qt::QueuedConnection);
+        connect(ui->cb_1Rec, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged,
+                Qt::QueuedConnection);
+        connect(ui->cb_2Rec, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged,
+                Qt::QueuedConnection);
 
         ui->hs_VolumeIn->setMaximum(CSettings::InMax);
         ui->hs_VolumeIn->setMinimum(CSettings::InMin);
@@ -106,14 +120,17 @@ namespace swift::gui::components
         this->setEnabled(audio);
         this->reloadSettings();
 
-        bool c = connect(ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onLoopbackToggled);
+        bool c = connect(ui->cb_SetupAudioLoopback, &QCheckBox::toggled, this,
+                         &CAudioDeviceVolumeSetupComponent::onLoopbackToggled);
         Q_ASSERT(c);
-        c = connect(ui->cb_DisableAudioEffects, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onDisableAudioEffectsToggled);
+        c = connect(ui->cb_DisableAudioEffects, &QCheckBox::toggled, this,
+                    &CAudioDeviceVolumeSetupComponent::onDisableAudioEffectsToggled);
         Q_ASSERT(c);
 
         if (hasSimulator())
         {
-            c = connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorSettingsChanged, this, &CAudioDeviceVolumeSetupComponent::simulatorSettingsChanged);
+            c = connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorSettingsChanged, this,
+                        &CAudioDeviceVolumeSetupComponent::simulatorSettingsChanged);
             Q_ASSERT(c);
         }
 
@@ -126,17 +143,22 @@ namespace swift::gui::components
             ui->cb_SetupAudioLoopback->setChecked(sGui->getCContextAudioBase()->isAudioLoopbackEnabled());
 
             // the connects depend on initAudioDeviceLists
-            c = connect(ui->cb_SetupAudioInputDevice, qOverload<int>(&QComboBox::currentIndexChanged), this, &CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected, Qt::QueuedConnection);
+            c = connect(ui->cb_SetupAudioInputDevice, qOverload<int>(&QComboBox::currentIndexChanged), this,
+                        &CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected, Qt::QueuedConnection);
             Q_ASSERT(c);
-            c = connect(ui->cb_SetupAudioOutputDevice, qOverload<int>(&QComboBox::currentIndexChanged), this, &CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected, Qt::QueuedConnection);
+            c = connect(ui->cb_SetupAudioOutputDevice, qOverload<int>(&QComboBox::currentIndexChanged), this,
+                        &CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected, Qt::QueuedConnection);
             Q_ASSERT(c);
 
             // context
-            c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedLocalAudioDevices, this, &CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged, Qt::QueuedConnection);
+            c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::changedLocalAudioDevices, this,
+                        &CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged, Qt::QueuedConnection);
             Q_ASSERT(c);
-            c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStarted, Qt::QueuedConnection);
+            c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::startedAudio, this,
+                        &CAudioDeviceVolumeSetupComponent::onAudioStarted, Qt::QueuedConnection);
             Q_ASSERT(c);
-            c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::stoppedAudio, this, &CAudioDeviceVolumeSetupComponent::onAudioStopped, Qt::QueuedConnection);
+            c = connect(sGui->getCContextAudioBase(), &CContextAudioBase::stoppedAudio, this,
+                        &CAudioDeviceVolumeSetupComponent::onAudioStopped, Qt::QueuedConnection);
             Q_ASSERT(c);
 
             this->initWithAfvClient();
@@ -160,10 +182,12 @@ namespace swift::gui::components
         c = connect(afv, &CAfvClient::inputVolumePeakVU, this, &CAudioDeviceVolumeSetupComponent::onInputVU, ct);
         Q_ASSERT(c);
         m_afvConnections.append(c);
-        c = connect(afv, &CAfvClient::receivedCallsignsChanged, this, &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, ct);
+        c = connect(afv, &CAfvClient::receivedCallsignsChanged, this,
+                    &CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged, ct);
         Q_ASSERT(c);
         m_afvConnections.append(c);
-        c = connect(afv, &CAfvClient::updatedFromOwnAircraftCockpit, this, &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, ct);
+        c = connect(afv, &CAfvClient::updatedFromOwnAircraftCockpit, this,
+                    &CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData, ct);
         Q_ASSERT(c);
         m_afvConnections.append(c);
 
@@ -172,7 +196,8 @@ namespace swift::gui::components
 
         QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
         c = connect(
-            afv, &CAfvClient::connectionStatusChanged, this, [=](CAfvClient::ConnectionStatus status) {
+            afv, &CAfvClient::connectionStatusChanged, this,
+            [=](CAfvClient::ConnectionStatus status) {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 myself->setTransmitReceiveInUiFromVoiceClient();
                 Q_UNUSED(status)
@@ -184,8 +209,7 @@ namespace swift::gui::components
         this->setTransmitReceiveInUiFromVoiceClient();
     }
 
-    CAudioDeviceVolumeSetupComponent::~CAudioDeviceVolumeSetupComponent()
-    {}
+    CAudioDeviceVolumeSetupComponent::~CAudioDeviceVolumeSetupComponent() {}
 
     int CAudioDeviceVolumeSetupComponent::getInValue(int from, int to) const
     {
@@ -271,7 +295,8 @@ namespace swift::gui::components
         ui->le_Info->setToolTip(info);
     }
 
-    void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2, bool integrated)
+    void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2,
+                                                                  bool integrated)
     {
         this->setRxTxCheckboxes(rec1, tx1, rec2, tx2);
         this->setCheckBoxesReadOnly(integrated);
@@ -360,18 +385,13 @@ namespace swift::gui::components
         const bool changed = this->onAudioDevicesChanged(sGui->getCContextAudioBase()->getAudioDevicesPlusDefault());
         if (!changed) { return; }
         const CAudioDeviceInfoList currentDevices = sGui->getCContextAudioBase()->getCurrentAudioDevices();
-        this->onAudioStarted(currentDevices.getInputDevices().frontOrDefault(), currentDevices.getOutputDevices().frontOrDefault());
+        this->onAudioStarted(currentDevices.getInputDevices().frontOrDefault(),
+                             currentDevices.getOutputDevices().frontOrDefault());
     }
 
-    bool CAudioDeviceVolumeSetupComponent::hasAudio() const
-    {
-        return sGui && sGui->getCContextAudioBase();
-    }
+    bool CAudioDeviceVolumeSetupComponent::hasAudio() const { return sGui && sGui->getCContextAudioBase(); }
 
-    bool CAudioDeviceVolumeSetupComponent::hasSimulator() const
-    {
-        return sGui && sGui->getIContextSimulator();
-    }
+    bool CAudioDeviceVolumeSetupComponent::hasSimulator() const { return sGui && sGui->getIContextSimulator(); }
 
     void CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged(int v)
     {
@@ -386,8 +406,11 @@ namespace swift::gui::components
         const int o = this->getOutValue();
         const int o1 = this->getOutValueCom1();
         const int o2 = this->getOutValueCom2();
-        if (as.getInVolume() == i && o == as.getOutVolume() &&
-            as.getOutVolumeCom1() == o1 && as.getOutVolumeCom2() == o2) { return; }
+        if (as.getInVolume() == i && o == as.getOutVolume() && as.getOutVolumeCom1() == o1 &&
+            as.getOutVolumeCom2() == o2)
+        {
+            return;
+        }
         as.setInVolume(i);
         as.setOutVolume(o);
         as.setOutVolumeCom1(o1);
@@ -395,15 +418,9 @@ namespace swift::gui::components
         m_audioSettings.setAndSave(as);
     }
 
-    void CAudioDeviceVolumeSetupComponent::onOutputVU(double vu)
-    {
-        this->setOutLevel(vu);
-    }
+    void CAudioDeviceVolumeSetupComponent::onOutputVU(double vu) { this->setOutLevel(vu); }
 
-    void CAudioDeviceVolumeSetupComponent::onInputVU(double vu)
-    {
-        this->setInLevel(vu);
-    }
+    void CAudioDeviceVolumeSetupComponent::onInputVU(double vu) { this->setInLevel(vu); }
 
     void CAudioDeviceVolumeSetupComponent::onReloadDevices()
     {
@@ -487,11 +504,13 @@ namespace swift::gui::components
         if (ui->cb_2Rec->isChecked() != rx2) { ui->cb_2Rec->setChecked(rx2); }
     }
 
-    void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const CCallsignSet &com1Callsigns, const CCallsignSet &com2Callsigns)
+    void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const CCallsignSet &com1Callsigns,
+                                                                       const CCallsignSet &com2Callsigns)
     {
-        const QString info = (com1Callsigns.isEmpty() ? QString() : QStringLiteral("COM1: ") % com1Callsigns.getCallsignsAsString()) %
-                             (!com1Callsigns.isEmpty() && !com2Callsigns.isEmpty() ? QStringLiteral(" | ") : QString()) %
-                             (com2Callsigns.isEmpty() ? QString() : QStringLiteral("COM2: ") % com2Callsigns.getCallsignsAsString());
+        const QString info =
+            (com1Callsigns.isEmpty() ? QString() : QStringLiteral("COM1: ") % com1Callsigns.getCallsignsAsString()) %
+            (!com1Callsigns.isEmpty() && !com2Callsigns.isEmpty() ? QStringLiteral(" | ") : QString()) %
+            (com2Callsigns.isEmpty() ? QString() : QStringLiteral("COM2: ") % com2Callsigns.getCallsignsAsString());
 
         ui->led_Rx1->setOn(!com1Callsigns.isEmpty());
         ui->led_Rx2->setOn(!com2Callsigns.isEmpty());
@@ -530,10 +549,7 @@ namespace swift::gui::components
     void CAudioDeviceVolumeSetupComponent::onAudioStarted(const CAudioDeviceInfo &input, const CAudioDeviceInfo &output)
     {
         if (!afvClient()) { return; }
-        if (m_afvConnections.isEmpty() && m_init)
-        {
-            this->initWithAfvClient();
-        }
+        if (m_afvConnections.isEmpty() && m_init) { this->initWithAfvClient(); }
 
         ui->cb_SetupAudioInputDevice->setCurrentText(input.toQString(true));
         ui->cb_SetupAudioOutputDevice->setCurrentText(output.toQString(true));
@@ -543,10 +559,7 @@ namespace swift::gui::components
     void CAudioDeviceVolumeSetupComponent::onAudioStopped()
     {
         this->setAudioRunsWhere();
-        if (!afvClient())
-        {
-            m_afvConnections.disconnectAll();
-        }
+        if (!afvClient()) { m_afvConnections.disconnectAll(); }
     }
 
     bool CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged(const CAudioDeviceInfoList &devices)

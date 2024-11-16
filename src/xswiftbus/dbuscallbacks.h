@@ -16,8 +16,7 @@ namespace XSwiftBus
     {
     public:
         DBusAsyncCallbacks() = default;
-        DBusAsyncCallbacks(const std::function<dbus_bool_t(T *)> &add,
-                           const std::function<void(T *)> &remove,
+        DBusAsyncCallbacks(const std::function<dbus_bool_t(T *)> &add, const std::function<void(T *)> &remove,
                            const std::function<void(T *)> &toggled)
             : m_addHandler(add), m_removeHandler(remove), m_toggledHandler(toggled)
         {}

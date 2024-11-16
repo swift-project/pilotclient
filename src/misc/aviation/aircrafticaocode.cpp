@@ -26,65 +26,85 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftIcaoCode)
 
 namespace swift::misc::aviation
 {
-    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType) : m_designator(icao.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper())
+    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType)
+        : m_designator(icao.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper())
     {}
 
-    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer, const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank)
-        : m_designator(icao.trimmed().toUpper()),
-          m_combinedType(combinedType.trimmed().toUpper()),
-          m_manufacturer(manufacturer.trimmed()),
-          m_modelDescription(model.trimmed()), m_wtc(wtc), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
+    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &combinedType, const QString &manufacturer,
+                                         const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy,
+                                         bool military, int rank)
+        : m_designator(icao.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper()),
+          m_manufacturer(manufacturer.trimmed()), m_modelDescription(model.trimmed()), m_wtc(wtc),
+          m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
     {
         if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
     }
 
-    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType, const QString &manufacturer, const QString &model, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank)
-        : m_designator(icao.trimmed().toUpper()),
-          m_iataCode(iata.trimmed().toUpper()),
-          m_combinedType(combinedType.trimmed().toUpper()),
-          m_manufacturer(manufacturer.trimmed()),
-          m_modelDescription(model.trimmed()), m_wtc(wtc), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
+    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &combinedType,
+                                         const QString &manufacturer, const QString &model, CWakeTurbulenceCategory wtc,
+                                         bool realworld, bool legacy, bool military, int rank)
+        : m_designator(icao.trimmed().toUpper()), m_iataCode(iata.trimmed().toUpper()),
+          m_combinedType(combinedType.trimmed().toUpper()), m_manufacturer(manufacturer.trimmed()),
+          m_modelDescription(model.trimmed()), m_wtc(wtc), m_realWorld(realworld), m_legacy(legacy),
+          m_military(military), m_rank(rank)
     {
         if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
     }
 
-    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &family, const QString &combinedType, const QString &manufacturer,
-                                         const QString &model, const QString &modelIata, const QString &modelSwift, CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military, int rank)
-        : m_designator(icao.trimmed().toUpper()),
-          m_iataCode(iata.trimmed().toUpper()),
-          m_family(family.trimmed().toUpper()),
-          m_combinedType(combinedType.trimmed().toUpper()),
-          m_manufacturer(manufacturer.trimmed()),
-          m_modelDescription(model.trimmed()), m_modelIataDescription(modelIata.trimmed()), m_modelSwiftDescription(modelSwift.trimmed()),
-          m_wtc(wtc), m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
+    CAircraftIcaoCode::CAircraftIcaoCode(const QString &icao, const QString &iata, const QString &family,
+                                         const QString &combinedType, const QString &manufacturer, const QString &model,
+                                         const QString &modelIata, const QString &modelSwift,
+                                         CWakeTurbulenceCategory wtc, bool realworld, bool legacy, bool military,
+                                         int rank)
+        : m_designator(icao.trimmed().toUpper()), m_iataCode(iata.trimmed().toUpper()),
+          m_family(family.trimmed().toUpper()), m_combinedType(combinedType.trimmed().toUpper()),
+          m_manufacturer(manufacturer.trimmed()), m_modelDescription(model.trimmed()),
+          m_modelIataDescription(modelIata.trimmed()), m_modelSwiftDescription(modelSwift.trimmed()), m_wtc(wtc),
+          m_realWorld(realworld), m_legacy(legacy), m_military(military), m_rank(rank)
     {
         if (m_rank < 0 || m_rank >= 10) { m_rank = 10; }
     }
 
     QString CAircraftIcaoCode::getDesignatorDbKey() const
     {
-        return (this->isLoadedFromDb()) ?
-                   this->getDesignator() % u' ' % this->getDbKeyAsStringInParentheses() :
-                   this->getDesignator();
+        return (this->isLoadedFromDb()) ? this->getDesignator() % u' ' % this->getDbKeyAsStringInParentheses() :
+                                          this->getDesignator();
     }
 
     QString CAircraftIcaoCode::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
         return (this->hasCategory()) ?
-                   QStringLiteral("%1 %2 %3 cat: %4").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc().toQString(), this->getCategory().getDbKeyAsString()).trimmed() :
-                   QStringLiteral("%1 %2 %3").arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc().toQString()).trimmed();
+                   QStringLiteral("%1 %2 %3 cat: %4")
+                       .arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc().toQString(),
+                            this->getCategory().getDbKeyAsString())
+                       .trimmed() :
+                   QStringLiteral("%1 %2 %3")
+                       .arg(this->getDesignatorDbKey(), this->getCombinedType(), this->getWtc().toQString())
+                       .trimmed();
     }
 
     void CAircraftIcaoCode::updateMissingParts(const CAircraftIcaoCode &otherIcaoCode)
     {
-        if (!this->hasValidDesignator() && otherIcaoCode.hasValidDesignator()) { this->setDesignator(otherIcaoCode.getDesignator()); }
+        if (!this->hasValidDesignator() && otherIcaoCode.hasValidDesignator())
+        {
+            this->setDesignator(otherIcaoCode.getDesignator());
+        }
         if (!this->hasValidWtc() && otherIcaoCode.hasValidWtc()) { this->setWtc(otherIcaoCode.getWtc()); }
-        if (!this->hasValidCombinedType() && otherIcaoCode.hasValidCombinedType()) { this->setCombinedType(otherIcaoCode.getCombinedType()); }
+        if (!this->hasValidCombinedType() && otherIcaoCode.hasValidCombinedType())
+        {
+            this->setCombinedType(otherIcaoCode.getCombinedType());
+        }
         if (m_manufacturer.isEmpty()) { this->setManufacturer(otherIcaoCode.getManufacturer()); }
         if (m_modelDescription.isEmpty()) { this->setModelDescription(otherIcaoCode.getModelDescription()); }
-        if (m_modelIataDescription.isEmpty()) { this->setModelIataDescription(otherIcaoCode.getModelIataDescription()); }
-        if (m_modelSwiftDescription.isEmpty()) { this->setModelSwiftDescription(otherIcaoCode.getModelSwiftDescription()); }
+        if (m_modelIataDescription.isEmpty())
+        {
+            this->setModelIataDescription(otherIcaoCode.getModelIataDescription());
+        }
+        if (m_modelSwiftDescription.isEmpty())
+        {
+            this->setModelSwiftDescription(otherIcaoCode.getModelSwiftDescription());
+        }
         if (m_family.isEmpty()) { this->setFamily(otherIcaoCode.getFamily()); }
         if (!this->hasValidDbKey())
         {
@@ -105,18 +125,30 @@ namespace swift::misc::aviation
             if (this->getDesignator() == this->getUnassignedDesignator()) { return msg; } // DB ZZZZ
         }
 
-        if (!hasKnownDesignator()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: unknown designator")); }
-        if (!hasValidCombinedType()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: invalid combined type")); }
-        if (!hasValidWtc()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: wrong WTC")); }
-        if (!hasManufacturer()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: missing manufacturer")); }
-        if (!hasModelDescription()) { msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: no description")); }
+        if (!hasKnownDesignator())
+        {
+            msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: unknown designator"));
+        }
+        if (!hasValidCombinedType())
+        {
+            msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: invalid combined type"));
+        }
+        if (!hasValidWtc())
+        {
+            msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: wrong WTC"));
+        }
+        if (!hasManufacturer())
+        {
+            msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: missing manufacturer"));
+        }
+        if (!hasModelDescription())
+        {
+            msg.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"Aircraft ICAO: no description"));
+        }
         return msg;
     }
 
-    QString CAircraftIcaoCode::asHtmlSummary() const
-    {
-        return this->getCombinedIcaoStringWithKey();
-    }
+    QString CAircraftIcaoCode::asHtmlSummary() const { return this->getCombinedIcaoStringWithKey(); }
 
     int CAircraftIcaoCode::calculateScore(const CAircraftIcaoCode &otherCode, CStatusMessageList *log) const
     {
@@ -131,19 +163,13 @@ namespace swift::misc::aviation
         {
             // 0..65
             score += 50; // same designator
-            if (log)
-            {
-                addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score));
-            }
+            if (log) { addLogDetailsToList(log, *this, QStringLiteral("Same designator: %1").arg(score)); }
 
             int scoreOld = score;
             if (this->getRank() == 0) { score += 15; }
             else if (this->getRank() == 1) { score += 12; }
             else if (this->getRank() < 10) { score += (10 - this->getRank()); }
-            if (score > scoreOld)
-            {
-                addLogDetailsToList(log, *this, QStringLiteral("Added rank: %1").arg(score));
-            }
+            if (score > scoreOld) { addLogDetailsToList(log, *this, QStringLiteral("Added rank: %1").arg(score)); }
         }
         else
         {
@@ -165,10 +191,7 @@ namespace swift::misc::aviation
                 const int eMy = this->getEnginesCount();
                 const int eOther = otherCode.getEnginesCount();
 
-                if (eMy == eOther && eMy >= 0)
-                {
-                    score += 4;
-                }
+                if (eMy == eOther && eMy >= 0) { score += 4; }
                 else if (eMy > 0 && eOther > 0)
                 {
                     const int eDiff = qAbs(eMy - eOther);
@@ -180,24 +203,15 @@ namespace swift::misc::aviation
                 const QString tMy = this->getEngineType();
                 const QString tOther = this->getEngineType();
 
-                if (tMy == tOther)
-                {
-                    score += 4;
-                }
+                if (tMy == tOther) { score += 4; }
                 else if (!tMy.isEmpty() && !tOther.isEmpty())
                 {
                     if (isEPTEngineType(tMy[0]) && isEPTEngineType(tOther[0])) { score += 2; }
                 }
 
                 // aircraft type
-                if (this->getAircraftType() == otherCode.getAircraftType())
-                {
-                    score += 7;
-                }
-                else if (this->isVtol() && otherCode.isVtol())
-                {
-                    score += 4;
-                }
+                if (this->getAircraftType() == otherCode.getAircraftType()) { score += 7; }
+                else if (this->isVtol() && otherCode.isVtol()) { score += 4; }
                 addLogDetailsToList(log, *this, QStringLiteral("Added combined code parts: %1").arg(score));
             }
         }
@@ -208,11 +222,15 @@ namespace swift::misc::aviation
             if (this->matchesManufacturer(otherCode.getManufacturer()))
             {
                 score += 10;
-                addLogDetailsToList(log, *this, QStringLiteral("Matches manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
+                addLogDetailsToList(
+                    log, *this,
+                    QStringLiteral("Matches manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
             }
             else if (this->getManufacturer().contains(otherCode.getManufacturer(), Qt::CaseInsensitive))
             {
-                addLogDetailsToList(log, *this, QStringLiteral("Contains manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
+                addLogDetailsToList(
+                    log, *this,
+                    QStringLiteral("Contains manufacturer '%1': %2").arg(this->getManufacturer()).arg(score));
                 score += 5;
             }
         }
@@ -221,12 +239,16 @@ namespace swift::misc::aviation
         if (this->hasCategory() && otherCode.hasCategory() && this->getCategory() == otherCode.getCategory())
         {
             score += 8;
-            addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+            addLogDetailsToList(
+                log, *this,
+                QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
         }
         else if (this->isMilitary() == otherCode.isMilitary())
         {
             score += 8;
-            addLogDetailsToList(log, *this, QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
+            addLogDetailsToList(
+                log, *this,
+                QStringLiteral("Matches military flag '%1': %2").arg(boolToYesNo(this->isMilitary())).arg(score));
         }
         // 0..85
         return score;
@@ -243,8 +265,7 @@ namespace swift::misc::aviation
 
         const int engines = this->getEnginesCount();
         const QChar engineType = this->getEngineTypeChar().toUpper();
-        do
-        {
+        do {
             if (engines == 1)
             {
                 if (engineType == 'T')
@@ -310,15 +331,9 @@ namespace swift::misc::aviation
         return null;
     }
 
-    bool CAircraftIcaoCode::hasDesignator() const
-    {
-        return !m_designator.isEmpty();
-    }
+    bool CAircraftIcaoCode::hasDesignator() const { return !m_designator.isEmpty(); }
 
-    bool CAircraftIcaoCode::hasValidDesignator() const
-    {
-        return isValidDesignator(m_designator);
-    }
+    bool CAircraftIcaoCode::hasValidDesignator() const { return isValidDesignator(m_designator); }
 
     bool CAircraftIcaoCode::hasKnownDesignator() const
     {
@@ -341,10 +356,7 @@ namespace swift::misc::aviation
         return hasFamily() && hasDesignator() && m_designator == m_family;
     }
 
-    bool CAircraftIcaoCode::hasValidCombinedType() const
-    {
-        return isValidCombinedType(getCombinedType());
-    }
+    bool CAircraftIcaoCode::hasValidCombinedType() const { return isValidCombinedType(getCombinedType()); }
 
     QString CAircraftIcaoCode::getEngineType() const
     {
@@ -395,7 +407,10 @@ namespace swift::misc::aviation
     QString CAircraftIcaoCode::getCombinedModelDescription() const
     {
         // Shortcut for most cases
-        if (!this->hasModelIataDescription() && !this->hasModelSwiftDescription()) { return this->getModelDescription(); }
+        if (!this->hasModelIataDescription() && !this->hasModelSwiftDescription())
+        {
+            return this->getModelDescription();
+        }
 
         QStringList combined({ this->getModelDescription() });
         if (this->hasModelIataDescription()) { combined.append(this->getModelIataDescription()); }
@@ -446,10 +461,10 @@ namespace swift::misc::aviation
         return cet.length() == 1 && cet.at(0) == et;
     }
 
-    bool CAircraftIcaoCode::matchesCombinedTypeAndManufacturer(const QString &combinedType, const QString &manufacturer) const
+    bool CAircraftIcaoCode::matchesCombinedTypeAndManufacturer(const QString &combinedType,
+                                                               const QString &manufacturer) const
     {
-        return this->matchesCombinedType(combinedType) &&
-               this->matchesManufacturer(manufacturer);
+        return this->matchesCombinedType(combinedType) && this->matchesManufacturer(manufacturer);
     }
 
     QString CAircraftIcaoCode::getDesignatorManufacturer() const
@@ -458,15 +473,13 @@ namespace swift::misc::aviation
                (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString());
     }
 
-    bool CAircraftIcaoCode::hasManufacturer() const
-    {
-        return !m_manufacturer.isEmpty();
-    }
+    bool CAircraftIcaoCode::hasManufacturer() const { return !m_manufacturer.isEmpty(); }
 
     bool CAircraftIcaoCode::matchesManufacturer(const QString &manufacturer) const
     {
         if (manufacturer.isEmpty()) { return false; }
-        return (manufacturer.length() == m_manufacturer.length() && m_manufacturer.startsWith(manufacturer, Qt::CaseInsensitive));
+        return (manufacturer.length() == m_manufacturer.length() &&
+                m_manufacturer.startsWith(manufacturer, Qt::CaseInsensitive));
     }
 
     bool CAircraftIcaoCode::isVtol() const
@@ -474,11 +487,10 @@ namespace swift::misc::aviation
         // special designators
         if (m_designator.length() == 4)
         {
-            if (
-                m_designator == "BALL" ||
-                m_designator == "SHIP" ||
-                m_designator == "GYRO" ||
-                m_designator == "UHEL") { return true; }
+            if (m_designator == "BALL" || m_designator == "SHIP" || m_designator == "GYRO" || m_designator == "UHEL")
+            {
+                return true;
+            }
         }
 
         if (!m_combinedType.isEmpty())
@@ -509,30 +521,15 @@ namespace swift::misc::aviation
         m_realWorld = realWorld;
     }
 
-    void CAircraftIcaoCode::setMilitary(bool military)
-    {
-        m_military = military;
-    }
+    void CAircraftIcaoCode::setMilitary(bool military) { m_military = military; }
 
-    void CAircraftIcaoCode::setRealWorld(bool realWorld)
-    {
-        m_realWorld = realWorld;
-    }
+    void CAircraftIcaoCode::setRealWorld(bool realWorld) { m_realWorld = realWorld; }
 
-    void CAircraftIcaoCode::setLegacy(bool legacy)
-    {
-        m_legacy = legacy;
-    }
+    void CAircraftIcaoCode::setLegacy(bool legacy) { m_legacy = legacy; }
 
-    QString CAircraftIcaoCode::getRankString() const
-    {
-        return QString::number(getRank());
-    }
+    QString CAircraftIcaoCode::getRankString() const { return QString::number(getRank()); }
 
-    void CAircraftIcaoCode::setRank(int rank)
-    {
-        m_rank = (rank < 0 || rank >= 10) ? 10 : rank;
-    }
+    void CAircraftIcaoCode::setRank(int rank) { m_rank = (rank < 0 || rank >= 10) ? 10 : rank; }
 
     QString CAircraftIcaoCode::getCombinedIcaoStringWithKey() const
     {
@@ -555,8 +552,7 @@ namespace swift::misc::aviation
     QString CAircraftIcaoCode::getCombinedIataStringWithKey() const
     {
         if (!this->hasIataCode()) { return {}; }
-        return this->getIataCode() % u" [IATA" %
-               (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
+        return this->getIataCode() % u" [IATA" % (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
                (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
                (this->hasModelDescription() ? (u' ' % this->getModelDescription()) : QString()) %
                (this->getDbKeyAsStringInParentheses(" "));
@@ -565,17 +561,13 @@ namespace swift::misc::aviation
     QString CAircraftIcaoCode::getCombinedFamilyStringWithKey() const
     {
         if (!this->hasFamily()) { return {}; }
-        return this->getFamily() % u" [family" %
-               (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
+        return this->getFamily() % u" [family" % (this->hasDesignator() ? (u' ' % this->getDesignator()) : QString()) %
                (this->hasManufacturer() ? (u' ' % this->getManufacturer()) : QString()) %
                (this->hasModelDescription() ? (u' ' % this->getModelDescription()) : QString()) %
                (this->getDbKeyAsStringInParentheses(" "));
     }
 
-    bool CAircraftIcaoCode::hasCategory() const
-    {
-        return !m_category.isNull();
-    }
+    bool CAircraftIcaoCode::hasCategory() const { return !m_category.isNull(); }
 
     bool CAircraftIcaoCode::hasCompleteData() const
     {
@@ -648,15 +640,17 @@ namespace swift::misc::aviation
     bool CAircraftIcaoCode::matchesDesignatorIataOrFamily(const QString &icaoIataOrFamily) const
     {
         if (icaoIataOrFamily.isEmpty()) { return false; }
-        return matchesDesignator(icaoIataOrFamily) ||
-               matchesIataCode(icaoIataOrFamily) ||
+        return matchesDesignator(icaoIataOrFamily) || matchesIataCode(icaoIataOrFamily) ||
                matchesFamily(icaoIataOrFamily);
     }
 
     QVariant CAircraftIcaoCode::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -716,18 +710,26 @@ namespace swift::misc::aviation
     int CAircraftIcaoCode::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftIcaoCode &compareValue) const
     {
         if (index.isMyself()) { return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAircraftDesignator: return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive);
-        case IndexCategory: return m_category.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCategory());
+        case IndexCategory:
+            return m_category.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCategory());
         case IndexIataCode: return m_iataCode.compare(compareValue.getIataCode(), Qt::CaseInsensitive);
         case IndexFamily: return m_family.compare(compareValue.getFamily(), Qt::CaseInsensitive);
-        case IndexCombinedAircraftType: return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
-        case IndexModelDescription: return m_modelDescription.compare(compareValue.getModelDescription(), Qt::CaseInsensitive);
-        case IndexModelIataDescription: return m_modelIataDescription.compare(compareValue.getModelIataDescription(), Qt::CaseInsensitive);
-        case IndexModelSwiftDescription: return m_modelSwiftDescription.compare(compareValue.getModelSwiftDescription(), Qt::CaseInsensitive);
+        case IndexCombinedAircraftType:
+            return m_combinedType.compare(compareValue.getCombinedType(), Qt::CaseInsensitive);
+        case IndexModelDescription:
+            return m_modelDescription.compare(compareValue.getModelDescription(), Qt::CaseInsensitive);
+        case IndexModelIataDescription:
+            return m_modelIataDescription.compare(compareValue.getModelIataDescription(), Qt::CaseInsensitive);
+        case IndexModelSwiftDescription:
+            return m_modelSwiftDescription.compare(compareValue.getModelSwiftDescription(), Qt::CaseInsensitive);
         case IndexCombinedDescription:
         {
             // compare without generating new strings
@@ -749,7 +751,8 @@ namespace swift::misc::aviation
         case IndexIsVtol: return Compare::compare(isVtol(), compareValue.isVtol());
         case IndexIsRealworld: return Compare::compare(m_realWorld, compareValue.isRealWorld());
         case IndexRank: return Compare::compare(m_rank, compareValue.getRank());
-        case IndexDesignatorManufacturer: return getDesignatorManufacturer().compare(compareValue.getDesignatorManufacturer(), Qt::CaseInsensitive);
+        case IndexDesignatorManufacturer:
+            return getDesignatorManufacturer().compare(compareValue.getDesignatorManufacturer(), Qt::CaseInsensitive);
         default: return CValueObject::comparePropertyByIndex(index, *this);
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
@@ -817,10 +820,7 @@ namespace swift::misc::aviation
         };
 
         if (isValidCombinedType(combinedCode)) { return QStringList(); }
-        if (knownCodes.contains(combinedCode))
-        {
-            return knownCodes.values(combinedCode);
-        }
+        if (knownCodes.contains(combinedCode)) { return knownCodes.values(combinedCode); }
 
         // turn E to P engine
         if (combinedCode.endsWith("E")) { return QStringList({ QStringView { combinedCode }.left(2) % u'P' }); }
@@ -849,14 +849,19 @@ namespace swift::misc::aviation
         return e == 'P' || e == 'E' || e == 'T';
     }
 
-    CStatusMessage CAircraftIcaoCode::logMessage(const CAircraftIcaoCode &icaoCode, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+    CStatusMessage CAircraftIcaoCode::logMessage(const CAircraftIcaoCode &icaoCode, const QString &message,
+                                                 const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
     {
         static const CLogCategoryList cats({ CLogCategories::aviation() });
-        const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s, icaoCode.hasDesignator() ? icaoCode.getDesignatorDbKey() + ": " + message.trimmed() : message.trimmed());
+        const CStatusMessage m(cats.with(CLogCategoryList::fromQStringList(extraCategories)), s,
+                               icaoCode.hasDesignator() ? icaoCode.getDesignatorDbKey() + ": " + message.trimmed() :
+                                                          message.trimmed());
         return m;
     }
 
-    void CAircraftIcaoCode::addLogDetailsToList(CStatusMessageList *log, const CAircraftIcaoCode &icao, const QString &message, const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
+    void CAircraftIcaoCode::addLogDetailsToList(CStatusMessageList *log, const CAircraftIcaoCode &icao,
+                                                const QString &message, const QStringList &extraCategories,
+                                                CStatusMessage::StatusSeverity s)
     {
         if (!log) { return; }
         if (message.isEmpty()) { return; }
@@ -891,23 +896,23 @@ namespace swift::misc::aviation
             wtcString = wtcString.right(1);
         }
         Q_ASSERT_X(wtcString.length() < 2, Q_FUNC_INFO, "WTC too long");
-        const CWakeTurbulenceCategory wtc = wtcString.isEmpty() ? CWakeTurbulenceCategory() : CWakeTurbulenceCategory(wtcString.at(0));
+        const CWakeTurbulenceCategory wtc =
+            wtcString.isEmpty() ? CWakeTurbulenceCategory() : CWakeTurbulenceCategory(wtcString.at(0));
 
         const bool real = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"realworld").toString());
         const bool legacy = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"legacy").toString());
         const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"military").toString());
         const int rank(json.value(prefix % u"rank").toInt(10));
 
-        CAircraftIcaoCode code(
-            designator, iata, family, combined, manufacturer,
-            model, modelIata, modelSwift, wtc,
-            real, legacy, military, rank);
+        CAircraftIcaoCode code(designator, iata, family, combined, manufacturer, model, modelIata, modelSwift, wtc,
+                               real, legacy, military, rank);
         code.setKeyVersionTimestampFromDatabaseJson(json, prefix);
         if (categoryId >= 0) { code.setCategoryId(categoryId); }
         return code;
     }
 
-    QString CAircraftIcaoCode::createdCombinedString(const QString &type, const QString &engineCount, const QString &engine)
+    QString CAircraftIcaoCode::createdCombinedString(const QString &type, const QString &engineCount,
+                                                     const QString &engine)
     {
         Q_ASSERT_X(engineCount.length() < 2, Q_FUNC_INFO, "Wrong engine count");
         return (type.isEmpty() ? QStringLiteral("-") : type.trimmed().left(1).toUpper()) %

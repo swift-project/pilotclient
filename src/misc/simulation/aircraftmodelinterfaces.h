@@ -94,8 +94,11 @@ namespace swift::misc::simulation
 
 Q_DECLARE_INTERFACE(swift::misc::simulation::IModelsSetable, "org.swift-project.misc.simulation.imodelssetable")
 Q_DECLARE_INTERFACE(swift::misc::simulation::IModelsUpdatable, "org.swift-project.misc.simulation.imodelsupdateable")
-Q_DECLARE_INTERFACE(swift::misc::simulation::IModelsForSimulatorSetable, "org.swift-project.misc.simulation.IModelsForSimulatorSetable")
-Q_DECLARE_INTERFACE(swift::misc::simulation::IModelsForSimulatorUpdatable, "org.swift-project.misc.simulation.imodelspersimulatorupdatabale")
-Q_DECLARE_INTERFACE(swift::misc::simulation::ISimulatorSelectable, "org.swift-project.misc.simulation.isimulatorselectable")
+Q_DECLARE_INTERFACE(swift::misc::simulation::IModelsForSimulatorSetable,
+                    "org.swift-project.misc.simulation.IModelsForSimulatorSetable")
+Q_DECLARE_INTERFACE(swift::misc::simulation::IModelsForSimulatorUpdatable,
+                    "org.swift-project.misc.simulation.imodelspersimulatorupdatabale")
+Q_DECLARE_INTERFACE(swift::misc::simulation::ISimulatorSelectable,
+                    "org.swift-project.misc.simulation.isimulatorselectable")
 
 #endif // guard

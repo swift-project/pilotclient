@@ -49,7 +49,8 @@ namespace swift::misc
 
             //! Update by variant map
             //! \return number of values changed, with skipEqualValues equal values will not be changed
-            CPropertyIndexList apply(const CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false); // impl in propertyindexvariantmap.h
+            CPropertyIndexList apply(const CPropertyIndexVariantMap &indexMap,
+                                     bool skipEqualValues = false); // impl in propertyindexvariantmap.h
 
             //! Set property by index
             void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
@@ -147,25 +148,19 @@ namespace swift::misc
          * the derived class uses this macro to disambiguate the inherited members.
          */
         // *INDENT-OFF*
-#define SWIFT_MISC_DECLARE_USING_MIXIN_INDEX(DERIVED)                   \
-    using ::swift::misc::mixin::Index<DERIVED>::apply;                  \
-    using ::swift::misc::mixin::Index<DERIVED>::setPropertyByIndex;     \
-    using ::swift::misc::mixin::Index<DERIVED>::propertyByIndex;        \
-    using ::swift::misc::mixin::Index<DERIVED>::comparePropertyByIndex; \
+#define SWIFT_MISC_DECLARE_USING_MIXIN_INDEX(DERIVED)                                                                  \
+    using ::swift::misc::mixin::Index<DERIVED>::apply;                                                                 \
+    using ::swift::misc::mixin::Index<DERIVED>::setPropertyByIndex;                                                    \
+    using ::swift::misc::mixin::Index<DERIVED>::propertyByIndex;                                                       \
+    using ::swift::misc::mixin::Index<DERIVED>::comparePropertyByIndex;                                                \
     using ::swift::misc::mixin::Index<DERIVED>::equalsPropertyByIndex;
         // *INDENT-ON*
 
         template <class Derived>
         void Index<Derived>::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself())
-            {
-                myself<Derived>(variant);
-            }
-            else
-            {
-                baseSetPropertyByIndex(static_cast<TIndexBaseOfT<Derived> *>(derived()), variant, index);
-            }
+            if (index.isMyself()) { myself<Derived>(variant); }
+            else { baseSetPropertyByIndex(static_cast<TIndexBaseOfT<Derived> *>(derived()), variant, index); }
         }
 
         template <class Derived>
@@ -204,8 +199,7 @@ namespace swift::misc
             case IndexIcon:
             case IndexPixmap:
             case IndexString:
-            default:
-                break; // also covers
+            default: break; // also covers
             }
 
             // slow, only last resort

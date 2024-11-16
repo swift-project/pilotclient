@@ -5,12 +5,7 @@
 
 namespace swift::core::fsd
 {
-    MessageBase::MessageBase(const QString &sender)
-        : m_sender(sender)
-    {}
+    MessageBase::MessageBase(const QString &sender) : m_sender(sender) {}
 
-    MessageBase::MessageBase(const QString &sender, const QString &receiver)
-        : m_sender(sender),
-          m_receiver(receiver)
-    {}
+    MessageBase::MessageBase(const QString &sender, const QString &receiver) : m_sender(sender), m_receiver(receiver) {}
 } // namespace swift::core::fsd

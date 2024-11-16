@@ -21,13 +21,13 @@ using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::editors
 {
-    CSituationForm::CSituationForm(QWidget *parent) : CForm(parent),
-                                                      ui(new Ui::CSituationForm)
+    CSituationForm::CSituationForm(QWidget *parent) : CForm(parent), ui(new Ui::CSituationForm)
     {
         ui->setupUi(this);
 
         ui->le_Bank->setValidator(new QDoubleValidator(-180.0 + CAngleUnit::deg().getEpsilon(), 180.0, 3, ui->le_Bank));
-        ui->le_Pitch->setValidator(new QDoubleValidator(-180.0 + CAngleUnit::deg().getEpsilon(), 180.0, 3, ui->le_Pitch));
+        ui->le_Pitch->setValidator(
+            new QDoubleValidator(-180.0 + CAngleUnit::deg().getEpsilon(), 180.0, 3, ui->le_Pitch));
         ui->le_Pressure->setValidator(new QDoubleValidator(980.0, 1046.0, 2, ui->le_Pressure));
 
         connect(ui->hs_Bank, &QSlider::valueChanged, this, &CSituationForm::bankSliderChanged);
@@ -49,8 +49,7 @@ namespace swift::gui::editors
         connect(ui->comp_Coordinate, &CCoordinateForm::changedCoordinate, this, &CSituationForm::onCoordinateChanged);
     }
 
-    CSituationForm::~CSituationForm()
-    {}
+    CSituationForm::~CSituationForm() {}
 
     void CSituationForm::setSituation(const swift::misc::aviation::CAircraftSituation &situation)
     {
@@ -63,7 +62,8 @@ namespace swift::gui::editors
     CAircraftSituation CSituationForm::getSituation() const
     {
         const CCoordinateGeodetic position = ui->comp_Coordinate->getCoordinate();
-        const CAltitude pressureAltitude(position.geodeticHeight().toPressureAltitude(this->getBarometricPressureMsl()));
+        const CAltitude pressureAltitude(
+            position.geodeticHeight().toPressureAltitude(this->getBarometricPressureMsl()));
 
         CAircraftSituation s(position);
         s.setBank(this->getBankAngle());
@@ -78,10 +78,7 @@ namespace swift::gui::editors
         return s;
     }
 
-    CAngle CSituationForm::getBankAngle() const
-    {
-        return CAngle(getBankAngleDegrees(), CAngleUnit::deg());
-    }
+    CAngle CSituationForm::getBankAngle() const { return CAngle(getBankAngleDegrees(), CAngleUnit::deg()); }
 
     double CSituationForm::getBankAngleDegrees() const
     {
@@ -92,10 +89,7 @@ namespace swift::gui::editors
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
-    CAngle CSituationForm::getPitchAngle() const
-    {
-        return CAngle(getPitchAngleDegrees(), CAngleUnit::deg());
-    }
+    CAngle CSituationForm::getPitchAngle() const { return CAngle(getPitchAngleDegrees(), CAngleUnit::deg()); }
 
     double CSituationForm::getPitchAngleDegrees() const
     {
@@ -106,10 +100,7 @@ namespace swift::gui::editors
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
-    CAngle CSituationForm::getHeadingAngle() const
-    {
-        return CAngle(getHeadingAngleDegrees(), CAngleUnit::deg());
-    }
+    CAngle CSituationForm::getHeadingAngle() const { return CAngle(getHeadingAngleDegrees(), CAngleUnit::deg()); }
 
     double CSituationForm::getHeadingAngleDegrees() const
     {
@@ -157,30 +148,18 @@ namespace swift::gui::editors
         this->forceStyleSheetUpdate();
     }
 
-    void CSituationForm::setSelectOnly()
-    {
-        this->setReadOnly(true);
-    }
+    void CSituationForm::setSelectOnly() { this->setReadOnly(true); }
 
     CStatusMessageList CSituationForm::validate(bool nested) const
     {
         CStatusMessageList ml;
-        if (nested)
-        {
-            ml.push_back(ui->comp_Coordinate->validate(nested));
-        }
+        if (nested) { ml.push_back(ui->comp_Coordinate->validate(nested)); }
         return ml;
     }
 
-    void CSituationForm::showSetButton(bool visible)
-    {
-        ui->pb_SetOwnAircraft->setVisible(visible);
-    }
+    void CSituationForm::showSetButton(bool visible) { ui->pb_SetOwnAircraft->setVisible(visible); }
 
-    int clampAngle(int in)
-    {
-        return qBound(-179, in, 180);
-    }
+    int clampAngle(int in) { return qBound(-179, in, 180); }
 
     void CSituationForm::bankSliderChanged(int value)
     {
@@ -275,7 +254,8 @@ namespace swift::gui::editors
     void CSituationForm::resetPressure()
     {
         static const int v = CAltitude::standardISASeaLevelPressure().valueInteger(CPressureUnit::mbar());
-        static const QString vs(dotToLocaleDecimalPoint(QString::number(CAltitude::standardISASeaLevelPressure().valueRounded(CPressureUnit::mbar(), 2))));
+        static const QString vs(dotToLocaleDecimalPoint(
+            QString::number(CAltitude::standardISASeaLevelPressure().valueRounded(CPressureUnit::mbar(), 2))));
         ui->le_Pressure->setText(vs);
         ui->hs_Pressure->setValue(v);
     }
@@ -287,8 +267,5 @@ namespace swift::gui::editors
         this->setSituation(s);
     }
 
-    void CSituationForm::onCoordinateChanged()
-    {
-        emit this->changeAircraftSituation();
-    }
+    void CSituationForm::onCoordinateChanged() { emit this->changeAircraftSituation(); }
 } // namespace swift::gui::editors

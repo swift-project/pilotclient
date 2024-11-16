@@ -41,7 +41,8 @@ namespace swift::misc::shared_state
         void handleEvent(const CVariant &param);
         virtual void onGenericValueChanged(const CVariant &value) = 0;
 
-        QSharedPointer<CActiveObserver> m_observer = CActiveObserver::create(this, &CGenericScalarObserver::handleEvent);
+        QSharedPointer<CActiveObserver> m_observer =
+            CActiveObserver::create(this, &CGenericScalarObserver::handleEvent);
         mutable QMutex m_valueMutex;
         CVariant m_value;
     };

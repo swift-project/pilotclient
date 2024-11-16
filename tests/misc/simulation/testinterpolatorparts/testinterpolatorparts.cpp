@@ -35,10 +35,13 @@ namespace MiscTest
 
     private:
         //! Test parts
-        static swift::misc::aviation::CAircraftParts createTestParts(int number, qint64 ts, qint64 deltaT, bool onGround);
+        static swift::misc::aviation::CAircraftParts createTestParts(int number, qint64 ts, qint64 deltaT,
+                                                                     bool onGround);
 
         //! Test situation for testing
-        static swift::misc::aviation::CAircraftSituation createTestSituation(const swift::misc::aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset);
+        static swift::misc::aviation::CAircraftSituation
+        createTestSituation(const swift::misc::aviation::CCallsign &callsign, int number, qint64 ts, qint64 deltaT,
+                            qint64 offset);
     };
 
     void CTestInterpolatorParts::groundFlagInterpolation()
@@ -168,7 +171,8 @@ namespace MiscTest
         return p;
     }
 
-    CAircraftSituation CTestInterpolatorParts::createTestSituation(const CCallsign &callsign, int number, qint64 ts, qint64 deltaT, qint64 offset)
+    CAircraftSituation CTestInterpolatorParts::createTestSituation(const CCallsign &callsign, int number, qint64 ts,
+                                                                   qint64 deltaT, qint64 offset)
     {
         const CAltitude alt(number, CAltitude::MeanSeaLevel, CLengthUnit::m());
         const CLatitude lat(number, CAngleUnit::deg());

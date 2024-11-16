@@ -109,11 +109,19 @@ namespace swift::gui::components
         swift::misc::aviation::CComNavEquipment m_navComEquipment; //!< current NAV/COM equipment
         swift::misc::aviation::CSsrEquipment m_ssrEquipment; //!< current SSR equipment
         swift::misc::CIdentifier m_identifier { "FlightPlanComponent", this }; //!< Flightplan identifier
-        swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directories { this }; //!< the swift directories
+        swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directories {
+            this
+        }; //!< the swift directories
         swift::misc::CSetting<FlightPlanSettings::TRemarksHistory> m_remarksHistory { this }; //!< remarks history
-        swift::misc::CSetting<FlightPlanSettings::TRemarksHistoryAdditional> m_remarksHistoryAdditional { this }; //!< remarks history
-        swift::misc::CDataReadOnly<swift::misc::simulation::data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
-        swift::misc::CDataReadOnly<swift::misc::network::data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
+        swift::misc::CSetting<FlightPlanSettings::TRemarksHistoryAdditional> m_remarksHistoryAdditional {
+            this
+        }; //!< remarks history
+        swift::misc::CDataReadOnly<swift::misc::simulation::data::TLastModel> m_lastAircraftModel {
+            this
+        }; //!< recently used aircraft model
+        swift::misc::CDataReadOnly<swift::misc::network::data::TLastServer> m_lastServer {
+            this
+        }; //!< recently used server (VATSIM, other)
 
         struct WakeTurbulenceEntry
         {
@@ -290,7 +298,8 @@ namespace swift::gui::components
         //! Helper to get the QListWidget from a given NAV/COM or SSR menu
         static QListWidget *getMenuEquipmentList(QMenu *menu);
 
-        //! Helper to mark all options in \p enabledOptions as "selected" in the QListWidget, contained in the NAV/COM or SSR \p menu
+        //! Helper to mark all options in \p enabledOptions as "selected" in the QListWidget, contained in the NAV/COM
+        //! or SSR \p menu
         static void updateListSelection(QMenu *menu, const QStringList &enabledOptions);
 
         //! Consolidate the new remarks list, latest on front

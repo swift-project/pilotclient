@@ -31,7 +31,9 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CDefaultFormatter(int alignment = alignDefault(), bool i18n = true, const QList<int> &supportedRoles = { Qt::DisplayRole }) : m_supportedRoles(supportedRoles), m_alignment(alignment), m_useI18n(i18n)
+        CDefaultFormatter(int alignment = alignDefault(), bool i18n = true,
+                          const QList<int> &supportedRoles = { Qt::DisplayRole })
+            : m_supportedRoles(supportedRoles), m_alignment(alignment), m_useI18n(i18n)
         {}
 
         //! Virtual destructor
@@ -58,8 +60,9 @@ namespace swift::gui::models
         //! Used with Qt::ToolTipRole displaying a text.
         virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &value) const;
 
-        //! Value provided as CVariant, formatted as icon (Qt docu: "The data to be rendered as a decoration in the form of an icon").
-        //! Used with Qt::DecorationRole displaying an icon, method returns pixmap, icon, or color (see docu)
+        //! Value provided as CVariant, formatted as icon (Qt docu: "The data to be rendered as a decoration in the form
+        //! of an icon"). Used with Qt::DecorationRole displaying an icon, method returns pixmap, icon, or color (see
+        //! docu)
         virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const;
 
         //! Qt::Alignment (as CVariant)
@@ -74,7 +77,8 @@ namespace swift::gui::models
         //! Is given role supported by formatter
         bool supportsRole(int role) const;
 
-        //! Receives CVariant of column data, and returns CVariant wrapping string, pixmap, or other values depending on role
+        //! Receives CVariant of column data, and returns CVariant wrapping string, pixmap, or other values depending on
+        //! role
         virtual swift::misc::CVariant data(int role, const swift::misc::CVariant &inputData) const;
 
         //! Default value
@@ -129,7 +133,8 @@ namespace swift::gui::models
 
     protected:
         //! Standard conversion
-        virtual swift::misc::CVariant keepStandardTypesConvertToStringOtherwise(const swift::misc::CVariant &inputData) const;
+        virtual swift::misc::CVariant
+        keepStandardTypesConvertToStringOtherwise(const swift::misc::CVariant &inputData) const;
 
         //! Empty string CVariant
         static const swift::misc::CVariant &emptyStringVariant();
@@ -147,7 +152,9 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CPixmapFormatter(int alignment = alignDefault(), const QList<int> &supportedRoles = rolesDecorationAndToolTip()) : CDefaultFormatter(alignment, false, supportedRoles) {}
+        CPixmapFormatter(int alignment = alignDefault(), const QList<int> &supportedRoles = rolesDecorationAndToolTip())
+            : CDefaultFormatter(alignment, false, supportedRoles)
+        {}
 
         //! \copydoc CDefaultFormatter::displayRole
         virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
@@ -209,7 +216,10 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CDelegateFormatter(int alignment = alignCentered(), const QList<int> &supportedRoles = rolesDecorationAndToolTip()) : CDefaultFormatter(alignment, false, supportedRoles) {}
+        CDelegateFormatter(int alignment = alignCentered(),
+                           const QList<int> &supportedRoles = rolesDecorationAndToolTip())
+            : CDefaultFormatter(alignment, false, supportedRoles)
+        {}
 
         //! \copydoc CDefaultFormatter::flags
         virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
@@ -220,9 +230,12 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CBoolTextFormatter(int alignment = alignDefault(), const QString &trueName = "true", const QString &falseName = "false", const QList<int> &supportedRoles = roleDisplay()) : CDefaultFormatter(alignment, false, supportedRoles),
-                                                                                                                                                                                     m_trueNameVariant(swift::misc::CVariant::from(trueName)),
-                                                                                                                                                                                     m_falseNameVariant(swift::misc::CVariant::from(falseName)) {}
+        CBoolTextFormatter(int alignment = alignDefault(), const QString &trueName = "true",
+                           const QString &falseName = "false", const QList<int> &supportedRoles = roleDisplay())
+            : CDefaultFormatter(alignment, false, supportedRoles),
+              m_trueNameVariant(swift::misc::CVariant::from(trueName)),
+              m_falseNameVariant(swift::misc::CVariant::from(falseName))
+        {}
 
         //! \copydoc CDefaultFormatter::displayRole
         virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
@@ -280,10 +293,12 @@ namespace swift::gui::models
         CBoolIconFormatter(const QString &onName, const QString &offName, int alignment = alignCentered());
 
         //! Constructor
-        CBoolIconFormatter(const swift::misc::CIcon &onIcon, const swift::misc::CIcon &offIcon, const QString &onName, const QString &offName, int alignment = alignCentered());
+        CBoolIconFormatter(const swift::misc::CIcon &onIcon, const swift::misc::CIcon &offIcon, const QString &onName,
+                           const QString &offName, int alignment = alignCentered());
 
         //! Constructor
-        CBoolIconFormatter(swift::misc::CIcons::IconIndex onIcon, swift::misc::CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment = alignCentered());
+        CBoolIconFormatter(swift::misc::CIcons::IconIndex onIcon, swift::misc::CIcons::IconIndex offIcon,
+                           const QString &onName, const QString &offName, int alignment = alignCentered());
 
         //! \copydoc CDefaultFormatter::displayRole
         virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
@@ -304,7 +319,10 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CValueObjectFormatter(int alignment = alignDefault(), bool i18n = true, const QList<int> &supportedRoles = roleDisplay()) : CDefaultFormatter(alignment, i18n, supportedRoles) {}
+        CValueObjectFormatter(int alignment = alignDefault(), bool i18n = true,
+                              const QList<int> &supportedRoles = roleDisplay())
+            : CDefaultFormatter(alignment, i18n, supportedRoles)
+        {}
 
         //! \copydoc CDefaultFormatter::displayRole
         virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &valueObject) const override;
@@ -378,10 +396,15 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CAltitudeFormatter(bool flightlevel = false, int alignment = alignRightVCenter(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_flightLevel(flightlevel) {}
+        CAltitudeFormatter(bool flightlevel = false, int alignment = alignRightVCenter(), bool i18n = true)
+            : CDefaultFormatter(alignment, i18n), m_flightLevel(flightlevel)
+        {}
 
         //! Constructor
-        CAltitudeFormatter(const swift::misc::physical_quantities::CLengthUnit &unit, bool flightlevel = false, int alignment = alignRightVCenter(), bool i18n = true) : CDefaultFormatter(alignment, i18n), m_unit(unit), m_flightLevel(flightlevel) {}
+        CAltitudeFormatter(const swift::misc::physical_quantities::CLengthUnit &unit, bool flightlevel = false,
+                           int alignment = alignRightVCenter(), bool i18n = true)
+            : CDefaultFormatter(alignment, i18n), m_unit(unit), m_flightLevel(flightlevel)
+        {}
 
         //! Set the unit, normally ft/m
         void setUnit(const swift::misc::physical_quantities::CLengthUnit &unit);
@@ -417,7 +440,12 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, const QList<int> &supportedRoles = roleDisplay()) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
+        CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(),
+                                  bool withUnit = true, bool i18n = true,
+                                  const QList<int> &supportedRoles = roleDisplay())
+            : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits),
+              m_withUnit(withUnit)
+        {}
 
         //! \copydoc swift::gui::models::CDefaultFormatter::displayRole
         virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &physicalQuantity) const override
@@ -461,22 +489,32 @@ namespace swift::gui::models
     };
 
     //! COM frequencies
-    class CComFrequencyFormatter : public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CFrequencyUnit, swift::misc::physical_quantities::CFrequency>
+    class CComFrequencyFormatter :
+        public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CFrequencyUnit,
+                                         swift::misc::physical_quantities::CFrequency>
     {
     public:
         //! Constructor
-        CComFrequencyFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CFrequencyUnit::MHz(), 3, alignment, withUnit, i18n) {}
+        CComFrequencyFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true)
+            : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CFrequencyUnit::MHz(), 3, alignment, withUnit,
+                                        i18n)
+        {}
 
         //! \copydoc CDefaultFormatter::displayRole
         virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Angle in degrees
-    class CAngleDegreeFormatter : public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CAngleUnit, swift::misc::physical_quantities::CAngle>
+    class CAngleDegreeFormatter :
+        public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CAngleUnit,
+                                         swift::misc::physical_quantities::CAngle>
     {
     public:
         //! Constructor
-        CAngleDegreeFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CAngleUnit::deg(), 0, alignment, withUnit, i18n) {}
+        CAngleDegreeFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true)
+            : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CAngleUnit::deg(), 0, alignment, withUnit,
+                                        i18n)
+        {}
     };
 
     //! Latitude or Longitude formatter
@@ -488,22 +526,32 @@ namespace swift::gui::models
     };
 
     //! Airspace distance displayed in NM
-    class CAirspaceDistanceFormatter : public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CLengthUnit, swift::misc::physical_quantities::CLength>
+    class CAirspaceDistanceFormatter :
+        public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CLengthUnit,
+                                         swift::misc::physical_quantities::CLength>
     {
     public:
         //! Constructor
-        CAirspaceDistanceFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CLengthUnit::NM(), 1, alignment, withUnit, i18n) {}
+        CAirspaceDistanceFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true)
+            : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CLengthUnit::NM(), 1, alignment, withUnit,
+                                        i18n)
+        {}
 
         //! \copydoc CDefaultFormatter::displayRole
         virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Speed displayed in kts
-    class CSpeedKtsFormatter : public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CSpeedUnit, swift::misc::physical_quantities::CSpeed>
+    class CSpeedKtsFormatter :
+        public CPhysiqalQuantiyFormatter<swift::misc::physical_quantities::CSpeedUnit,
+                                         swift::misc::physical_quantities::CSpeed>
     {
     public:
         //! Constructor
-        CSpeedKtsFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CSpeedUnit::kts(), 0, alignment, withUnit, i18n) {}
+        CSpeedKtsFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true)
+            : CPhysiqalQuantiyFormatter(swift::misc::physical_quantities::CSpeedUnit::kts(), 0, alignment, withUnit,
+                                        i18n)
+        {}
 
         //! \copydoc CDefaultFormatter::displayRole
         virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;

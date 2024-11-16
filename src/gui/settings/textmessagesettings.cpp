@@ -14,8 +14,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CTextMessageSettings)
 
 namespace swift::gui::settings
 {
-    CTextMessageSettings::CTextMessageSettings()
-    {}
+    CTextMessageSettings::CTextMessageSettings() {}
 
     bool CTextMessageSettings::popupPrivateMessages() const
     {
@@ -70,7 +69,10 @@ namespace swift::gui::settings
     QString CTextMessageSettings::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        return QStringLiteral("Private: %1 supervisor: %2 frequency: %3 all: %4 focus: %5 latest 1st: %6").arg(boolToOnOff(this->getPopupPrivateMessages()), boolToOnOff(this->getPopupSupervisorMessages()), boolToOnOff(this->getPopupFrequencyMessages()), boolToOnOff(this->getPopupAllMessages()), boolToYesNo(this->focusOverlayWindow()), boolToYesNo(this->isLatestFirst()));
+        return QStringLiteral("Private: %1 supervisor: %2 frequency: %3 all: %4 focus: %5 latest 1st: %6")
+            .arg(boolToOnOff(this->getPopupPrivateMessages()), boolToOnOff(this->getPopupSupervisorMessages()),
+                 boolToOnOff(this->getPopupFrequencyMessages()), boolToOnOff(this->getPopupAllMessages()),
+                 boolToYesNo(this->focusOverlayWindow()), boolToYesNo(this->isLatestFirst()));
     }
 
     QVariant CTextMessageSettings::propertyByIndex(CPropertyIndexRef index) const

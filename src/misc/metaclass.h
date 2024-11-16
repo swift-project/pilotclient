@@ -50,15 +50,12 @@
  * \note A semicolon is needed at the end.
  * \ingroup MetaClass
  */
-#define SWIFT_METACLASS(CLASS, ...)                            \
-    friend struct swift::misc::private_ns::CMetaClassAccessor; \
-    struct MetaClass : public swift::misc::CMetaClass          \
-    {                                                          \
-        using Class = CLASS;                                   \
-        SWIFT_NO_EXPORT_CONSTEXPR static auto getMemberList()  \
-        {                                                      \
-            return makeMetaMemberList(__VA_ARGS__);            \
-        }                                                      \
+#define SWIFT_METACLASS(CLASS, ...)                                                                                    \
+    friend struct swift::misc::private_ns::CMetaClassAccessor;                                                         \
+    struct MetaClass : public swift::misc::CMetaClass                                                                  \
+    {                                                                                                                  \
+        using Class = CLASS;                                                                                           \
+        SWIFT_NO_EXPORT_CONSTEXPR static auto getMemberList() { return makeMetaMemberList(__VA_ARGS__); }              \
     }
 
 /*!
@@ -73,9 +70,7 @@
  * \see swift::misc::CMetaClass::makeMetaMember
  * \ingroup MetaClass
  */
-#define SWIFT_METAMEMBER(MEMBER, ...) \
-    makeMetaMember(                   \
-        &Class::m_##MEMBER, #MEMBER SWIFT_TRAILING_VA_ARGS(__VA_ARGS__))
+#define SWIFT_METAMEMBER(MEMBER, ...) makeMetaMember(&Class::m_##MEMBER, #MEMBER SWIFT_TRAILING_VA_ARGS(__VA_ARGS__))
 
 /*!
  * Same as SWIFT_METAMEMBER but the second parameter is a string literal
@@ -83,9 +78,8 @@
  *
  * \ingroup MetaClass
  */
-#define SWIFT_METAMEMBER_NAMED(MEMBER, NAME, ...) \
-    makeMetaMember(                               \
-        &Class::m_##MEMBER, NAME SWIFT_TRAILING_VA_ARGS(__VA_ARGS__))
+#define SWIFT_METAMEMBER_NAMED(MEMBER, NAME, ...)                                                                      \
+    makeMetaMember(&Class::m_##MEMBER, NAME SWIFT_TRAILING_VA_ARGS(__VA_ARGS__))
 // *INDENT-ON*
 
 //! std::string qHash
@@ -246,7 +240,8 @@ namespace swift::misc
         //! Return a CMetaMethod of type deduced from the type of the member.
         //! Usually not used directly, but via the macros.
         template <typename M, quint64 Flags = 0>
-        constexpr static CMetaMember<M, Flags> makeMetaMember(M ptrToMember, const char *name = nullptr, int index = 0, MetaFlags<Flags> flags = {})
+        constexpr static CMetaMember<M, Flags> makeMetaMember(M ptrToMember, const char *name = nullptr, int index = 0,
+                                                              MetaFlags<Flags> flags = {})
         {
             static_assert(std::is_member_object_pointer_v<M>, "M must be a pointer to member object");
             return { ptrToMember, name, index, flags };

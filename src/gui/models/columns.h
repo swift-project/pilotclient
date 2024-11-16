@@ -26,11 +26,14 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CColumn(const QString &headerName, const swift::misc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false) : CColumn(headerName, "", propertyIndex, formatter, editable)
+        CColumn(const QString &headerName, const swift::misc::CPropertyIndex &propertyIndex,
+                CDefaultFormatter *formatter, bool editable = false)
+            : CColumn(headerName, "", propertyIndex, formatter, editable)
         {}
 
         //! Constructor
-        CColumn(const QString &headerName, const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false);
+        CColumn(const QString &headerName, const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex,
+                CDefaultFormatter *formatter, bool editable = false);
 
         //! Constructor, icon with tool tip
         CColumn(const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex);
@@ -103,22 +106,32 @@ namespace swift::gui::models
         void setIncognito(bool incognito) { m_incognito = incognito; }
 
         //! Get a standard value object formatted column
-        static CColumn standardValueObject(const QString &headerName, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+        static CColumn standardValueObject(const QString &headerName, const swift::misc::CPropertyIndex &propertyIndex,
+                                           int alignment = CDefaultFormatter::alignDefault());
 
         //! Get a standard value object formatted column
-        static CColumn standardValueObject(const QString &headerName, const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+        static CColumn standardValueObject(const QString &headerName, const QString &toolTip,
+                                           const swift::misc::CPropertyIndex &propertyIndex,
+                                           int alignment = CDefaultFormatter::alignDefault());
 
         //! Get a standard string object formatted column
-        static CColumn standardString(const QString &headerName, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+        static CColumn standardString(const QString &headerName, const swift::misc::CPropertyIndex &propertyIndex,
+                                      int alignment = CDefaultFormatter::alignDefault());
 
         //! Get a standard string object formatted column
-        static CColumn standardString(const QString &headerName, const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+        static CColumn standardString(const QString &headerName, const QString &toolTip,
+                                      const swift::misc::CPropertyIndex &propertyIndex,
+                                      int alignment = CDefaultFormatter::alignDefault());
 
         //! Get a standard string object formatted column
-        static CColumn orderColumn(const swift::misc::CPropertyIndex &propertyIndex = swift::misc::CPropertyIndexRef::GlobalIndexIOrderable, int alignment = CDefaultFormatter::alignRightVCenter());
+        static CColumn orderColumn(
+            const swift::misc::CPropertyIndex &propertyIndex = swift::misc::CPropertyIndexRef::GlobalIndexIOrderable,
+            int alignment = CDefaultFormatter::alignRightVCenter());
 
         //! Get a standard integer value formatted column
-        static CColumn standardInteger(const QString &headerName, const QString &toolTip, const swift::misc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignRightVCenter());
+        static CColumn standardInteger(const QString &headerName, const QString &toolTip,
+                                       const swift::misc::CPropertyIndex &propertyIndex,
+                                       int alignment = CDefaultFormatter::alignRightVCenter());
 
         //! An empty column
         static CColumn emptyColumn();

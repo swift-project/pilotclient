@@ -45,7 +45,8 @@ namespace swift::misc::db
         CArtifact findFirstByMatchingPlatformOrDefault(const CPlatform &platform) const;
 
         //! FInd first by name
-        CArtifact findFirstByMatchingNameOrDefault(const QString &name, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
+        CArtifact findFirstByMatchingNameOrDefault(const QString &name,
+                                                   Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
 
         //! Find by platform
         CArtifactList findByMatchingPlatform(const CPlatform &platform) const;
@@ -57,13 +58,15 @@ namespace swift::misc::db
         CArtifactList findMatchingForCurrentPlatform() const;
 
         //! Find by distribution
-        CArtifactList findByDistribution(const CDistribution &distribution, bool findMoreStableDistribution = false) const;
+        CArtifactList findByDistribution(const CDistribution &distribution,
+                                         bool findMoreStableDistribution = false) const;
 
         //! Find artifacts with public (unrestricted) distributions
         CArtifactList findWithUnrestrictedDistributions() const;
 
         //! Find by distribution and platform
-        CArtifactList findByDistributionAndPlatform(const CDistribution &distribution, const CPlatform &platform, bool findMoreStableDistributions = false) const;
+        CArtifactList findByDistributionAndPlatform(const CDistribution &distribution, const CPlatform &platform,
+                                                    bool findMoreStableDistributions = false) const;
 
         //! Find by version
         CArtifact findFirstByVersionOrDefault(const QVersionNumber &version) const;

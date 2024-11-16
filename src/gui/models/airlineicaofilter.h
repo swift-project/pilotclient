@@ -19,11 +19,12 @@ namespace swift::gui::models
     {
     public:
         //! Constructor
-        CAirlineIcaoFilter(int id, const QString &vDesignator, const QString &name,
-                           const QString &countryIso, bool isReal, bool isVa);
+        CAirlineIcaoFilter(int id, const QString &vDesignator, const QString &name, const QString &countryIso,
+                           bool isReal, bool isVa);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::aviation::CAirlineIcaoCodeList filter(const swift::misc::aviation::CAirlineIcaoCodeList &inContainer) const override;
+        virtual swift::misc::aviation::CAirlineIcaoCodeList
+        filter(const swift::misc::aviation::CAirlineIcaoCodeList &inContainer) const override;
 
     private:
         int m_id = -1;

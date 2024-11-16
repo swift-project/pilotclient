@@ -23,9 +23,7 @@ namespace swift::gui
         connect(sApp, &CApplication::aboutToShutdown, this, &CGuiActionBindHandler::unbind);
     }
 
-    CGuiActionBindHandler::~CGuiActionBindHandler()
-    {
-    }
+    CGuiActionBindHandler::~CGuiActionBindHandler() {}
 
     CActionBindings CGuiActionBindHandler::bindMenu(QMenu *menu, const QString &path)
     {
@@ -37,17 +35,20 @@ namespace swift::gui
             if (action->text().isEmpty()) { continue; }
             if (action->isSeparator()) { continue; }
 
-            const QString pathNew = CGuiActionBindHandler::appendPath(path, action->text()).remove('&'); // remove E&xit key codes
-            if (action->menu())
-            {
-                CGuiActionBindHandler::bindMenu(action->menu(), pathNew);
-            }
+            const QString pathNew =
+                CGuiActionBindHandler::appendPath(path, action->text()).remove('&'); // remove E&xit key codes
+            if (action->menu()) { CGuiActionBindHandler::bindMenu(action->menu(), pathNew); }
 
             const bool hasIcon = !action->icon().isNull();
             CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(action);
             // MS 2019-10-08 [AFV integration] CActionBind constructor needs an icon index, not a QPixmap
-            // CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ? action->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
-            CActionBinding actionBinding(CActionBinding::create(pathNew, CIcons::StandardIconEmpty16, bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+            // CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ?
+            // action->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler,
+            // &CGuiActionBindHandler::boundFunction, [bindHandler]() {
+            // CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+            CActionBinding actionBinding(CActionBinding::create(
+                pathNew, CIcons::StandardIconEmpty16, bindHandler, &CGuiActionBindHandler::boundFunction,
+                [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
             Q_UNUSED(hasIcon)
             bindHandler->m_index = actionBinding->getIndex();
             boundActions.append(actionBinding); // takes ownership
@@ -58,14 +59,20 @@ namespace swift::gui
     CActionBinding CGuiActionBindHandler::bindButton(QAbstractButton *button, const QString &path, bool absoluteName)
     {
         Q_ASSERT(button);
-        const QString pathNew = absoluteName ?
-                                    path :
-                                    CGuiActionBindHandler::appendPath(path, button->text()).remove('&'); // remove E&xit key codes
+        const QString pathNew =
+            absoluteName ?
+                path :
+                CGuiActionBindHandler::appendPath(path, button->text()).remove('&'); // remove E&xit key codes
         CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(button);
         const bool hasIcon = !button->icon().isNull();
         // MS 2019-10-08 [AFV integration] CActionBind constructor needs an icon index, not a QPixmap
-        // CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ? button->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
-        CActionBinding actionBinding(CActionBinding::create(pathNew, CIcons::StandardIconEmpty16, bindHandler, &CGuiActionBindHandler::boundFunction, [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+        // CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ?
+        // button->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler,
+        // &CGuiActionBindHandler::boundFunction, [bindHandler]() {
+        // CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
+        CActionBinding actionBinding(CActionBinding::create(
+            pathNew, CIcons::StandardIconEmpty16, bindHandler, &CGuiActionBindHandler::boundFunction,
+            [bindHandler]() { CGuiActionBindHandler::actionBindWasDestroyed(bindHandler); }));
         Q_UNUSED(hasIcon)
         bindHandler->m_index = actionBinding->getIndex();
         return actionBinding;
@@ -81,9 +88,7 @@ namespace swift::gui
     void CGuiActionBindHandler::connectDestroy(QObject *object)
     {
         // if the action is destroyed from somewhere else I unbind myself
-        QObject::connect(object, &QObject::destroyed, [=] {
-            this->unbind();
-        });
+        QObject::connect(object, &QObject::destroyed, [=] { this->unbind(); });
     }
 
     void CGuiActionBindHandler::unbind()
@@ -103,22 +108,13 @@ namespace swift::gui
         m_action = nullptr;
     }
 
-    bool CGuiActionBindHandler::hasTarget() const
-    {
-        return (m_button || m_action) && m_index >= 0;
-    }
+    bool CGuiActionBindHandler::hasTarget() const { return (m_button || m_action) && m_index >= 0; }
 
     void CGuiActionBindHandler::boundFunction(bool enabled)
     {
         if (!enabled || !this->hasTarget()) { return; }
-        if (m_action)
-        {
-            m_action->trigger();
-        }
-        else if (m_button)
-        {
-            m_button->click();
-        }
+        if (m_action) { m_action->trigger(); }
+        else if (m_button) { m_button->click(); }
     }
 
     QString CGuiActionBindHandler::appendPath(const QString &path, const QString &name)

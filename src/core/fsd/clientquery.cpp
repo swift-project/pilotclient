@@ -8,13 +8,11 @@
 
 namespace swift::core::fsd
 {
-    ClientQuery::ClientQuery() : MessageBase()
-    {}
+    ClientQuery::ClientQuery() : MessageBase() {}
 
-    ClientQuery::ClientQuery(const QString &sender, const QString &clientToBeQueried, ClientQueryType queryType, const QStringList &queryData)
-        : MessageBase(sender, clientToBeQueried),
-          m_queryType(queryType),
-          m_queryData(queryData)
+    ClientQuery::ClientQuery(const QString &sender, const QString &clientToBeQueried, ClientQueryType queryType,
+                             const QStringList &queryData)
+        : MessageBase(sender, clientToBeQueried), m_queryType(queryType), m_queryData(queryData)
     {}
 
     QStringList ClientQuery::toTokens() const

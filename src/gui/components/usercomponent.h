@@ -25,9 +25,7 @@ namespace Ui
 namespace swift::gui::components
 {
     //! User componenet (users, clients)
-    class SWIFT_GUI_EXPORT CUserComponent :
-        public QTabWidget,
-        public CEnableForDockWidgetInfoArea
+    class SWIFT_GUI_EXPORT CUserComponent : public QTabWidget, public CEnableForDockWidgetInfoArea
     {
         Q_OBJECT
 
@@ -56,14 +54,17 @@ namespace swift::gui::components
         void onCountChanged(int count, bool withFilter);
 
         //! Connection status
-        void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+        void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                       const swift::misc::network::CConnectionStatus &to);
 
         //! Settings have been changed
         void onSettingsChanged();
 
         QScopedPointer<Ui::CUserComponent> ui;
         QTimer m_updateTimer;
-        swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settings { this, &CUserComponent::onSettingsChanged };
+        swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settings {
+            this, &CUserComponent::onSettingsChanged
+        };
     };
 } // namespace swift::gui::components
 #endif // guard

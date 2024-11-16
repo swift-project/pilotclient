@@ -27,9 +27,11 @@ namespace swift::misc
     namespace mixin
     {
         /*!
-         * CRTP class template which will generate marshalling operators for a derived class with its own marshalling implementation.
+         * CRTP class template which will generate marshalling operators for a derived class with its own marshalling
+         * implementation.
          *
-         * \tparam Derived Must implement public methods void marshallToDbus(QDBusArgument &arg) const and void unmarshallFromDbus(const QDBusArgument &arg).
+         * \tparam Derived Must implement public methods void marshallToDbus(QDBusArgument &arg) const and void
+         * unmarshallFromDbus(const QDBusArgument &arg).
          */
         template <class Derived, class...>
         class DBusOperators
@@ -58,7 +60,8 @@ namespace swift::misc
         {};
 
         /*!
-         * CRTP class template from which a derived class can inherit common methods dealing with marshalling instances by metaclass.
+         * CRTP class template from which a derived class can inherit common methods dealing with marshalling instances
+         * by metaclass.
          *
          * \see SWIFT_MISC_DECLARE_USING_MIXIN_DBUS
          */
@@ -175,8 +178,8 @@ namespace swift::misc
          * When a derived class and a base class both inherit from mixin::DBusByTuple,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-#define SWIFT_MISC_DECLARE_USING_MIXIN_DBUS(DERIVED, ...)                                                     \
-    using ::swift::misc::mixin::DBusByMetaClass<DERIVED SWIFT_TRAILING_VA_ARGS(__VA_ARGS__)>::marshallToDbus; \
+#define SWIFT_MISC_DECLARE_USING_MIXIN_DBUS(DERIVED, ...)                                                              \
+    using ::swift::misc::mixin::DBusByMetaClass<DERIVED SWIFT_TRAILING_VA_ARGS(__VA_ARGS__)>::marshallToDbus;          \
     using ::swift::misc::mixin::DBusByMetaClass<DERIVED SWIFT_TRAILING_VA_ARGS(__VA_ARGS__)>::unmarshallFromDbus;
         // *INDENT-ON*
 

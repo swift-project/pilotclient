@@ -13,15 +13,16 @@ namespace swift::core::fsd
 {
     //! This packet is used to query a client’s data.
     //!
-    //! Current uses include requests for flight-plans, INF responses, realname details, current server and current frequency.
-    //! All requests are sent directly to the client to be queried, currently, except the flight-plan request which is sent to
-    //! the server. Therefore, the only client which will return an error is SERVER.
-    //! Other clients will simply not reply if the code is unrecognised or request invalid.
+    //! Current uses include requests for flight-plans, INF responses, realname details, current server and current
+    //! frequency. All requests are sent directly to the client to be queried, currently, except the flight-plan request
+    //! which is sent to the server. Therefore, the only client which will return an error is SERVER. Other clients will
+    //! simply not reply if the code is unrecognised or request invalid.
     class SWIFT_CORE_EXPORT ClientQuery : public MessageBase
     {
     public:
         //! Constructor
-        ClientQuery(const QString &sender, const QString &clientToBeQueried, ClientQueryType queryType, const QStringList &queryData = {});
+        ClientQuery(const QString &sender, const QString &clientToBeQueried, ClientQueryType queryType,
+                    const QStringList &queryData = {});
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -45,17 +46,12 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const ClientQuery &lhs, const ClientQuery &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.m_queryType == rhs.m_queryType &&
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.m_queryType == rhs.m_queryType &&
                lhs.m_queryData == rhs.m_queryData;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const ClientQuery &lhs, const ClientQuery &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const ClientQuery &lhs, const ClientQuery &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

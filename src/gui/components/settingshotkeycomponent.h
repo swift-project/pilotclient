@@ -52,16 +52,21 @@ namespace swift::gui::components
         void removeEntry();
         void hotkeySlot(bool keyDown);
         void addHotkeyToSettings(const swift::misc::input::CActionHotkey &actionHotkey);
-        void updateHotkeyInSettings(const swift::misc::input::CActionHotkey &oldValue, const swift::misc::input::CActionHotkey &newValue);
+        void updateHotkeyInSettings(const swift::misc::input::CActionHotkey &oldValue,
+                                    const swift::misc::input::CActionHotkey &newValue);
         void removeHotkeyFromSettings(const swift::misc::input::CActionHotkey &actionHotkey);
-        bool checkAndConfirmConflicts(const swift::misc::input::CActionHotkey &actionHotkey, const swift::misc::input::CActionHotkeyList &ignore = {});
+        bool checkAndConfirmConflicts(const swift::misc::input::CActionHotkey &actionHotkey,
+                                      const swift::misc::input::CActionHotkeyList &ignore = {});
         swift::misc::CIdentifierList getAllIdentifiers() const;
         void resizeView();
 
         QScopedPointer<Ui::CSettingsHotkeyComponent> ui;
         models::CActionHotkeyListModel m_model; //!< hotkeys model
-        swift::misc::CSetting<swift::core::application::TActionHotkeys> m_actionHotkeys { this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings };
-        swift::core::CActionBind m_action { "/Test/Message", swift::misc::CIcons::StandardIconWrench16, this, &CSettingsHotkeyComponent::hotkeySlot };
+        swift::misc::CSetting<swift::core::application::TActionHotkeys> m_actionHotkeys {
+            this, &CSettingsHotkeyComponent::reloadHotkeysFromSettings
+        };
+        swift::core::CActionBind m_action { "/Test/Message", swift::misc::CIcons::StandardIconWrench16, this,
+                                            &CSettingsHotkeyComponent::hotkeySlot };
     };
 
     /*!

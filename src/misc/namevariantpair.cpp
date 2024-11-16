@@ -15,10 +15,7 @@ namespace swift::misc
 
     CIcons::IconIndex CNameVariantPair::toIcon() const { return m_icon.getIndex(); }
 
-    bool CNameVariantPair::hasIcon() const
-    {
-        return this->m_icon.isSet();
-    }
+    bool CNameVariantPair::hasIcon() const { return this->m_icon.isSet(); }
 
     QString CNameVariantPair::convertToQString(bool i18n) const
     {
@@ -33,12 +30,9 @@ namespace swift::misc
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexName:
-            return QVariant(this->m_name);
-        case IndexVariant:
-            return this->m_variant;
-        default:
-            return CValueObject::propertyByIndex(index);
+        case IndexName: return QVariant(this->m_name);
+        case IndexVariant: return this->m_variant;
+        default: return CValueObject::propertyByIndex(index);
         }
     }
 
@@ -60,25 +54,16 @@ namespace swift::misc
                 CIcons::IconIndex iconIndex = variant.value<CIcons::IconIndex>();
                 this->m_icon = CIcon::iconByIndex(iconIndex);
             }
-            else
-            {
-                this->m_icon = variant.value<swift::misc::CIcon>();
-            }
+            else { this->m_icon = variant.value<swift::misc::CIcon>(); }
             return;
         }
 
         // properties
         switch (i)
         {
-        case IndexName:
-            this->setName(variant.value<QString>());
-            break;
-        case IndexVariant:
-            this->m_variant = variant;
-            break;
-        default:
-            CValueObject::setPropertyByIndex(index, variant);
-            break;
+        case IndexName: this->setName(variant.value<QString>()); break;
+        case IndexVariant: this->m_variant = variant; break;
+        default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
 } // namespace swift::misc

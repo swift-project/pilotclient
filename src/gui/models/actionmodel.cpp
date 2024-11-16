@@ -17,20 +17,18 @@ using namespace swift::core;
 
 namespace swift::gui::models
 {
-    CActionModel::CActionModel(QObject *parent) : QAbstractItemModel(parent),
-                                                  m_rootItem(new CActionItem(QString(), QString()))
+    CActionModel::CActionModel(QObject *parent)
+        : QAbstractItemModel(parent), m_rootItem(new CActionItem(QString(), QString()))
     {
         setupModelData();
     }
 
-    CActionModel::~CActionModel()
-    {}
+    CActionModel::~CActionModel() {}
 
     int CActionModel::columnCount(const QModelIndex &parent) const
     {
-        return parent.isValid() ?
-                   static_cast<CActionItem *>(parent.internalPointer())->getColumnCount() :
-                   m_rootItem->getColumnCount();
+        return parent.isValid() ? static_cast<CActionItem *>(parent.internalPointer())->getColumnCount() :
+                                  m_rootItem->getColumnCount();
     }
 
     QVariant CActionModel::data(const QModelIndex &index, int role) const
@@ -60,14 +58,11 @@ namespace swift::gui::models
     {
         if (!hasIndex(row, column, parent)) { return QModelIndex(); }
 
-        const CActionItem *parentItem = parent.isValid() ?
-                                            static_cast<CActionItem *>(parent.internalPointer()) :
-                                            m_rootItem.data();
+        const CActionItem *parentItem =
+            parent.isValid() ? static_cast<CActionItem *>(parent.internalPointer()) : m_rootItem.data();
 
         CActionItem *childItem = parentItem->getChildByRow(row);
-        return childItem ?
-                   createIndex(row, column, childItem) :
-                   QModelIndex();
+        return childItem ? createIndex(row, column, childItem) : QModelIndex();
     }
 
     QModelIndex CActionModel::parent(const QModelIndex &index) const
@@ -85,9 +80,8 @@ namespace swift::gui::models
     int CActionModel::rowCount(const QModelIndex &parent) const
     {
         if (parent.column() > 0) { return 0; }
-        const CActionItem *parentItem = parent.isValid() ?
-                                            static_cast<CActionItem *>(parent.internalPointer()) :
-                                            m_rootItem.data();
+        const CActionItem *parentItem =
+            parent.isValid() ? static_cast<CActionItem *>(parent.internalPointer()) : m_rootItem.data();
         return parentItem->getChildCount();
     }
 
@@ -96,7 +90,8 @@ namespace swift::gui::models
         m_rootItem.reset(new CActionItem(QString(), QString()));
 
         Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
-        const QMap<QString, swift::misc::CIcons::IconIndex> availableActionsAndIcons = sApp->getInputManager()->allAvailableActionsAndIcons();
+        const QMap<QString, swift::misc::CIcons::IconIndex> availableActionsAndIcons =
+            sApp->getInputManager()->allAvailableActionsAndIcons();
         QStringList keys = availableActionsAndIcons.keys();
         keys.sort();
         for (const QString &actionPath : std::as_const(keys))
@@ -111,7 +106,8 @@ namespace swift::gui::models
                 if (child == nullptr)
                 {
                     const bool isAction = currentPath == actionPath; // action istelf, or just a node?
-                    const swift::misc::CIcons::IconIndex icon = isAction ? availableActionsAndIcons[actionPath] : CIcons::StandardIconEmpty16;
+                    const swift::misc::CIcons::IconIndex icon =
+                        isAction ? availableActionsAndIcons[actionPath] : CIcons::StandardIconEmpty16;
                     child = new CActionItem(isAction ? actionPath : "", token, icon, parentItem);
                     parentItem->appendChild(child);
                 }

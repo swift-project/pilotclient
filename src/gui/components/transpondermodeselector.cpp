@@ -14,7 +14,8 @@ namespace swift::gui::components
         QComboBox::insertItems(0, CTransponderModeSelector::modes());
         m_resetTimer.setObjectName(this->objectName().append(":m_resetTimer"));
         connect(&m_resetTimer, &QTimer::timeout, this, &CTransponderModeSelector::resetTransponderMode);
-        connect(this, &CTransponderModeSelector::currentTextChanged, this, &CTransponderModeSelector::setSelectedTransponderModeAsString);
+        connect(this, &CTransponderModeSelector::currentTextChanged, this,
+                &CTransponderModeSelector::setSelectedTransponderModeAsString);
         m_resetTimer.setInterval(5000);
     }
 
@@ -38,10 +39,9 @@ namespace swift::gui::components
 
     const QStringList &CTransponderModeSelector::modes()
     {
-        static const QStringList modes(
-            { CTransponderModeSelector::transponderStateStandby(),
-              CTransponderModeSelector::transponderModeC(),
-              CTransponderModeSelector::transponderStateIdent() });
+        static const QStringList modes({ CTransponderModeSelector::transponderStateStandby(),
+                                         CTransponderModeSelector::transponderModeC(),
+                                         CTransponderModeSelector::transponderStateIdent() });
         return modes;
     }
 
@@ -63,14 +63,8 @@ namespace swift::gui::components
         m_currentMode = mode;
         const QString m = CTransponder::modeAsString(mode);
         QComboBox::setCurrentText(m);
-        if (mode == CTransponder::StateIdent)
-        {
-            m_resetTimer.start();
-        }
-        else
-        {
-            m_resetTimer.stop();
-        }
+        if (mode == CTransponder::StateIdent) { m_resetTimer.start(); }
+        else { m_resetTimer.stop(); }
         emit this->transponderModeChanged(m_currentMode);
     }
 

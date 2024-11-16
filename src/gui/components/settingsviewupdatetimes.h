@@ -42,7 +42,9 @@ namespace swift::gui::components
 
     private:
         QScopedPointer<Ui::CSettingsViewUpdateTimes> ui;
-        swift::misc::CSetting<swift::gui::settings::TViewUpdateSettings> m_settings { this, &CSettingsViewUpdateTimes::ps_settingsChanged }; //!< settings changed
+        swift::misc::CSetting<swift::gui::settings::TViewUpdateSettings> m_settings {
+            this, &CSettingsViewUpdateTimes::ps_settingsChanged
+        }; //!< settings changed
     };
 } // namespace swift::gui::components
 

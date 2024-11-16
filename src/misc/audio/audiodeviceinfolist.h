@@ -45,7 +45,8 @@ namespace swift::misc::audio
         CAudioDeviceInfo findByName(const QString &name, bool strict = false) const;
 
         //! Find by name
-        CAudioDeviceInfo findByNameOrDefault(const QString &name, const CAudioDeviceInfo &defaultDevice, bool strict = false) const;
+        CAudioDeviceInfo findByNameOrDefault(const QString &name, const CAudioDeviceInfo &defaultDevice,
+                                             bool strict = false) const;
 
         //! Find by host name
         CAudioDeviceInfoList findByHostName(const QString &hostName) const;

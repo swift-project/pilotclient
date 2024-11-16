@@ -67,13 +67,16 @@ namespace swift::core
             virtual swift::misc::simulation::settings::CSimulatorSettings getSimulatorSettings() const override;
 
             //! \copydoc swift::core::context::IContextSimulator::setSimulatorSettings
-            virtual bool setSimulatorSettings(const swift::misc::simulation::settings::CSimulatorSettings &settings, const swift::misc::simulation::CSimulatorInfo &simulatorInfo) override;
+            virtual bool setSimulatorSettings(const swift::misc::simulation::settings::CSimulatorSettings &settings,
+                                              const swift::misc::simulation::CSimulatorInfo &simulatorInfo) override;
 
             //! \copydoc swift::core::context::IContextSimulator::startSimulatorPlugin
-            virtual bool startSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override;
+            virtual bool
+            startSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override;
 
             //! \copydoc swift::core::context::IContextSimulator::stopSimulatorPlugin
-            virtual void stopSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override;
+            virtual void
+            stopSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override;
 
             //! \copydoc swift::core::context::IContextSimulator::checkListeners
             virtual int checkListeners() override;
@@ -112,7 +115,8 @@ namespace swift::core
             virtual bool isKnownModelInSet(const QString &modelString) const override;
 
             //! \copydoc swift::core::context::IContextSimulator::getModelSetModelsStartingWith
-            virtual swift::misc::simulation::CAircraftModelList getModelSetModelsStartingWith(const QString &modelString) const override;
+            virtual swift::misc::simulation::CAircraftModelList
+            getModelSetModelsStartingWith(const QString &modelString) const override;
 
             //! \copydoc swift::core::context::IContextSimulator::getModelSetCount
             virtual int getModelSetCount() const override;
@@ -121,7 +125,8 @@ namespace swift::core
             virtual swift::misc::simulation::CSimulatorInternals getSimulatorInternals() const override;
 
             //! \copydoc swift::core::context::IContextSimulator::disableModelsForMatching
-            virtual void disableModelsForMatching(const swift::misc::simulation::CAircraftModelList &removedModels, bool incremental) override;
+            virtual void disableModelsForMatching(const swift::misc::simulation::CAircraftModelList &removedModels,
+                                                  bool incremental) override;
 
             //! \copydoc swift::core::context::IContextSimulator::getDisabledModelsForMatching
             virtual swift::misc::simulation::CAircraftModelList getDisabledModelsForMatching() const override;
@@ -136,28 +141,36 @@ namespace swift::core
             virtual void restoreDisabledModels() override;
 
             //! \copydoc swift::core::context::IContextSimulator::setTimeSynchronization
-            virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) override;
+            virtual bool setTimeSynchronization(bool enable,
+                                                const swift::misc::physical_quantities::CTime &offset) override;
 
             //! \copydoc swift::core::context::IContextSimulator::isTimeSynchronized
             virtual bool isTimeSynchronized() const override;
 
             //! \copydoc swift::core::context::IContextSimulator::getInterpolationAndRenderingSetupGlobal
-            virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal getInterpolationAndRenderingSetupGlobal() const override;
+            virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal
+            getInterpolationAndRenderingSetupGlobal() const override;
 
             //! \copydoc swift::core::context::IContextSimulator::setInterpolationAndRenderingSetupGlobal
-            virtual void setInterpolationAndRenderingSetupGlobal(const swift::misc::simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
+            virtual void setInterpolationAndRenderingSetupGlobal(
+                const swift::misc::simulation::CInterpolationAndRenderingSetupGlobal &setup) override;
 
             //! \copydoc swift::core::context::IContextSimulator::getInterpolationAndRenderingSetupsPerCallsign
-            virtual swift::misc::simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const override;
+            virtual swift::misc::simulation::CInterpolationSetupList
+            getInterpolationAndRenderingSetupsPerCallsign() const override;
 
             //! \copydoc swift::core::context::IContextSimulator::getInterpolationAndRenderingSetupPerCallsignOrDefault
-            virtual swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign getInterpolationAndRenderingSetupPerCallsignOrDefault(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign
+            getInterpolationAndRenderingSetupPerCallsignOrDefault(
+                const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextSimulator::setInterpolationAndRenderingSetupsPerCallsign
-            virtual bool setInterpolationAndRenderingSetupsPerCallsign(const swift::misc::simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) override;
+            virtual bool setInterpolationAndRenderingSetupsPerCallsign(
+                const swift::misc::simulation::CInterpolationSetupList &setups, bool ignoreSameAsGlobal) override;
 
             //! \copydoc swift::core::context::IContextSimulator::getInterpolationMessages
-            virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::CStatusMessageList
+            getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextSimulator::getTimeSynchronizationOffset
             virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override;
@@ -175,13 +188,17 @@ namespace swift::core
             virtual bool resetToModelMatchingAircraft(const swift::misc::aviation::CCallsign &callsign) override;
 
             //! \copydoc swift::core::context::IContextSimulator::requestElevationBySituation
-            virtual bool requestElevationBySituation(const swift::misc::aviation::CAircraftSituation &situation) override;
+            virtual bool
+            requestElevationBySituation(const swift::misc::aviation::CAircraftSituation &situation) override;
 
             //! \copydoc swift::core::context::IContextSimulator::findClosestElevationWithinRange
-            virtual swift::misc::geo::CElevationPlane findClosestElevationWithinRange(const swift::misc::geo::CCoordinateGeodetic &reference, const swift::misc::physical_quantities::CLength &range) const override;
+            virtual swift::misc::geo::CElevationPlane
+            findClosestElevationWithinRange(const swift::misc::geo::CCoordinateGeodetic &reference,
+                                            const swift::misc::physical_quantities::CLength &range) const override;
 
             //! \copydoc swift::core::context::IContextSimulator::getMatchingMessages
-            virtual swift::misc::CStatusMessageList getMatchingMessages(const swift::misc::aviation::CCallsign &callsign) const override;
+            virtual swift::misc::CStatusMessageList
+            getMatchingMessages(const swift::misc::aviation::CCallsign &callsign) const override;
 
             //! \copydoc swift::core::context::IContextSimulator::isMatchingMessagesEnabled
             virtual swift::misc::simulation::MatchingLog isMatchingMessagesEnabled() const override;
@@ -190,7 +207,8 @@ namespace swift::core
             virtual void enableMatchingMessages(swift::misc::simulation::MatchingLog enabled) override;
 
             //! \copydoc swift::core::context::IContextSimulator::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
+            virtual bool parseCommandLine(const QString &commandLine,
+                                          const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc swift::core::context::IContextSimulator::doMatchingsAgain
             virtual int doMatchingsAgain() override;
@@ -199,7 +217,8 @@ namespace swift::core
             virtual bool doMatchingAgain(const swift::misc::aviation::CCallsign &callsign) override;
 
             //! \copydoc swift::core::context::IContextSimulator::getCurrentMatchingStatistics
-            virtual swift::misc::simulation::CMatchingStatistics getCurrentMatchingStatistics(bool missingOnly) const override;
+            virtual swift::misc::simulation::CMatchingStatistics
+            getCurrentMatchingStatistics(bool missingOnly) const override;
 
             //! \copydoc swift::core::context::IContextSimulator::setMatchingSetup
             virtual void setMatchingSetup(const swift::misc::simulation::CAircraftMatcherSetup &setup) override;
@@ -208,10 +227,13 @@ namespace swift::core
             virtual swift::misc::simulation::CAircraftMatcherSetup getMatchingSetup() const override;
 
             //! \copydoc swift::core::context::IContextSimulator::testRemoteAircraft
-            virtual bool testRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool add) override;
+            virtual bool testRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                            bool add) override;
 
             //! \copydoc swift::core::context::IContextSimulator::testUpdateRemoteAircraft
-            virtual bool testUpdateRemoteAircraft(const swift::misc::aviation::CCallsign &cs, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) override;
+            virtual bool testUpdateRemoteAircraft(const swift::misc::aviation::CCallsign &cs,
+                                                  const swift::misc::aviation::CAircraftSituation &situation,
+                                                  const swift::misc::aviation::CAircraftParts &parts) override;
             //! @}
 
         private:
@@ -222,10 +244,13 @@ namespace swift::core
 
         protected:
             //! Constructor
-            CContextSimulatorProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextSimulator(mode, runtime) {}
+            CContextSimulatorProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+                : IContextSimulator(mode, runtime)
+            {}
 
             //! DBus version constructor
-            CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
+            CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection,
+                                   CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
         };
     } // namespace context
 } // namespace swift::core

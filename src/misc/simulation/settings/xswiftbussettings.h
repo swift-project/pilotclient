@@ -58,13 +58,19 @@ namespace swift::misc::simulation::settings
         QString getDBusServerAddressQt() const { return QString::fromStdString(this->getDBusServerAddress()); }
 
         //! \copydoc CXSwiftBusSettingsQtFree::setDBusServerAddress
-        void setDBusServerAddressQt(const QString &dBusAddress) { this->setDBusServerAddress(dBusAddress.toStdString()); }
+        void setDBusServerAddressQt(const QString &dBusAddress)
+        {
+            this->setDBusServerAddress(dBusAddress.toStdString());
+        }
 
         //! \copydoc CXSwiftBusSettingsQtFree::getNightTextureMode
         QString getNightTextureModeQt() const { return QString::fromStdString(this->getNightTextureMode()); }
 
         //! \copydoc CXSwiftBusSettingsQtFree::setNightTextureMode
-        void setNightTextureModeQt(const QString &nightTexture) { this->setNightTextureMode(nightTexture.toStdString()); }
+        void setNightTextureModeQt(const QString &nightTexture)
+        {
+            this->setNightTextureMode(nightTexture.toStdString());
+        }
 
         //! \copydoc CXSwiftBusSettingsQtFree::toXSwiftBusJsonString
         QString toXSwiftBusJsonStringQt() const { return QString::fromStdString(this->toXSwiftBusJsonString()); }

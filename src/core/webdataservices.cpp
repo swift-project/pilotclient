@@ -47,7 +47,9 @@ using namespace swift::misc::weather;
 
 namespace swift::core
 {
-    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers, const CDatabaseReaderConfigList &dbReaderConfig, QObject *parent) : QObject(parent), m_dbReaderConfig(dbReaderConfig)
+    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers,
+                                       const CDatabaseReaderConfigList &dbReaderConfig, QObject *parent)
+        : QObject(parent), m_dbReaderConfig(dbReaderConfig)
     {
         if (!sApp) { return; } // shutting down
 
@@ -56,7 +58,9 @@ namespace swift::core
         this->setObjectName("CWebDataServices");
 
         // SSL INFOs
-        CLogMessage(this).info(u"SSL supported: %1 Version: %2 (build version) %3 (library version)") << boolToYesNo(QSslSocket::supportsSsl()) << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+        CLogMessage(this).info(u"SSL supported: %1 Version: %2 (build version) %3 (library version)")
+            << boolToYesNo(QSslSocket::supportsSsl()) << QSslSocket::sslLibraryBuildVersionString()
+            << QSslSocket::sslLibraryVersionString();
 
         // check if I need info objects
         const bool readFromSwiftDb = dbReaderConfig.possiblyReadsFromSwiftDb(); // DB read access
@@ -77,10 +81,7 @@ namespace swift::core
         }
 
         this->initReaders(readers, entities); // reads info objects if required
-        if (writeToSwiftDb)
-        {
-            this->initWriters();
-        }
+        if (writeToSwiftDb) { this->initWriters(); }
 
         // make sure this is called in event queue, so pending tasks cam be performed
         entities &= ~CEntityFlags::DbInfoObjectEntity; // triggered in init readers
@@ -98,10 +99,7 @@ namespace swift::core
         this->readDeferredInBackground(remainingEntities, 1500);
     }
 
-    CWebDataServices::~CWebDataServices()
-    {
-        this->gracefulShutdown();
-    }
+    CWebDataServices::~CWebDataServices() { this->gracefulShutdown(); }
 
     CServerList CWebDataServices::getVatsimFsdServers() const
     {
@@ -156,15 +154,9 @@ namespace swift::core
         return CStatusMessageList();
     }
 
-    void CWebDataServices::triggerReadOfDbInfoObjects()
-    {
-        initDbInfoObjectReaderAndTriggerRead();
-    }
+    void CWebDataServices::triggerReadOfDbInfoObjects() { initDbInfoObjectReaderAndTriggerRead(); }
 
-    void CWebDataServices::triggerReadOfSharedInfoObjects()
-    {
-        initSharedInfoObjectReaderAndTriggerRead();
-    }
+    void CWebDataServices::triggerReadOfSharedInfoObjects() { initSharedInfoObjectReaderAndTriggerRead(); }
 
     bool CWebDataServices::hasSuccesfullyConnectedSwiftDb() const
     {
@@ -178,10 +170,7 @@ namespace swift::core
         return false;
     }
 
-    bool CWebDataServices::hasDbAircraftData() const
-    {
-        return this->hasDbIcaoData() && this->hasDbModelData();
-    }
+    bool CWebDataServices::hasDbAircraftData() const { return this->hasDbIcaoData() && this->hasDbModelData(); }
 
     bool CWebDataServices::hasDbModelData() const
     {
@@ -190,7 +179,8 @@ namespace swift::core
 
     bool CWebDataServices::hasDbIcaoData() const
     {
-        return (this->getAircraftIcaoCodesCount() > 0) && (this->getAirlineIcaoCodesCount() > 0) && (this->getCountriesCount() > 0);
+        return (this->getAircraftIcaoCodesCount() > 0) && (this->getAirlineIcaoCodesCount() > 0) &&
+               (this->getCountriesCount() > 0);
     }
 
     void CWebDataServices::admitDbCaches(CEntityFlags::Entity entities)
@@ -225,7 +215,8 @@ namespace swift::core
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
 
-        Q_ASSERT_X(!whatToRead.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront");
+        Q_ASSERT_X(!whatToRead.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO,
+                   "Info object must be read upfront");
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
         if (m_vatsimDataFileReader)
         {
@@ -257,7 +248,10 @@ namespace swift::core
 
         if (m_icaoDataReader)
         {
-            if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) || whatToRead.testFlag(CEntityFlags::AircraftCategoryEntity) || whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) || whatToRead.testFlag(CEntityFlags::CountryEntity))
+            if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) ||
+                whatToRead.testFlag(CEntityFlags::AircraftCategoryEntity) ||
+                whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) ||
+                whatToRead.testFlag(CEntityFlags::CountryEntity))
             {
                 CEntityFlags::Entity icaoEntities = whatToRead & CEntityFlags::AllIcaoCountriesCategory;
                 m_icaoDataReader->readInBackgroundThread(icaoEntities, newerThan);
@@ -267,7 +261,8 @@ namespace swift::core
 
         if (m_modelDataReader)
         {
-            if (whatToRead.testFlag(CEntityFlags::LiveryEntity) || whatToRead.testFlag(CEntityFlags::DistributorEntity) || whatToRead.testFlag(CEntityFlags::ModelEntity))
+            if (whatToRead.testFlag(CEntityFlags::LiveryEntity) ||
+                whatToRead.testFlag(CEntityFlags::DistributorEntity) || whatToRead.testFlag(CEntityFlags::ModelEntity))
             {
                 CEntityFlags::Entity modelEntities = whatToRead & CEntityFlags::DistributorLiveryModel;
                 m_modelDataReader->readInBackgroundThread(modelEntities, newerThan);
@@ -278,7 +273,8 @@ namespace swift::core
         return triggeredRead;
     }
 
-    CEntityFlags::Entity CWebDataServices::triggerLoadingDirectlyFromDb(CEntityFlags::Entity whatToRead, const QDateTime &newerThan)
+    CEntityFlags::Entity CWebDataServices::triggerLoadingDirectlyFromDb(CEntityFlags::Entity whatToRead,
+                                                                        const QDateTime &newerThan)
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
         if (!sApp || sApp->isShuttingDown()) { return CEntityFlags::NoEntity; }
@@ -323,7 +319,8 @@ namespace swift::core
         return triggeredRead;
     }
 
-    CEntityFlags::Entity CWebDataServices::triggerLoadingDirectlyFromSharedFiles(CEntityFlags::Entity whatToRead, bool checkCacheTsUpfront)
+    CEntityFlags::Entity CWebDataServices::triggerLoadingDirectlyFromSharedFiles(CEntityFlags::Entity whatToRead,
+                                                                                 bool checkCacheTsUpfront)
     {
         if (m_shuttingDown) { return CEntityFlags::NoEntity; }
         if (!sApp || sApp->isShuttingDown()) { return CEntityFlags::NoEntity; }
@@ -336,7 +333,8 @@ namespace swift::core
             if (m_icaoDataReader->supportsAnyOfEntities(whatToRead))
             {
                 CEntityFlags::Entity icaoEntities = m_icaoDataReader->maskBySupportedEntities(whatToRead);
-                triggeredRead |= m_icaoDataReader->triggerLoadingDirectlyFromSharedFiles(icaoEntities, checkCacheTsUpfront);
+                triggeredRead |=
+                    m_icaoDataReader->triggerLoadingDirectlyFromSharedFiles(icaoEntities, checkCacheTsUpfront);
             }
         }
 
@@ -345,7 +343,8 @@ namespace swift::core
             if (m_modelDataReader->supportsAnyOfEntities(whatToRead))
             {
                 CEntityFlags::Entity modelEntities = m_modelDataReader->maskBySupportedEntities(whatToRead);
-                triggeredRead |= m_modelDataReader->triggerLoadingDirectlyFromSharedFiles(modelEntities, checkCacheTsUpfront);
+                triggeredRead |=
+                    m_modelDataReader->triggerLoadingDirectlyFromSharedFiles(modelEntities, checkCacheTsUpfront);
             }
         }
 
@@ -354,7 +353,8 @@ namespace swift::core
             if (m_airportDataReader->supportsAnyOfEntities(whatToRead))
             {
                 CEntityFlags::Entity airportEntities = m_airportDataReader->maskBySupportedEntities(whatToRead);
-                triggeredRead |= m_airportDataReader->triggerLoadingDirectlyFromSharedFiles(airportEntities, checkCacheTsUpfront);
+                triggeredRead |=
+                    m_airportDataReader->triggerLoadingDirectlyFromSharedFiles(airportEntities, checkCacheTsUpfront);
             }
         }
 
@@ -395,10 +395,7 @@ namespace swift::core
         {
             const QDateTime ts = this->getCacheTimestamp(e);
             if (!ts.isValid()) { continue; }
-            if (!latest.isValid() || latest < ts)
-            {
-                latest = ts;
-            }
+            if (!latest.isValid() || latest < ts) { latest = ts; }
         }
         return latest;
     }
@@ -424,10 +421,12 @@ namespace swift::core
         return emptyEntities;
     }
 
-    CEntityFlags::Entity CWebDataServices::getSynchronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData, CEntityFlags::Entity entities)
+    CEntityFlags::Entity
+    CWebDataServices::getSynchronizedEntitiesWithNewerSharedFileOrEmpty(bool syncData, CEntityFlags::Entity entities)
     {
         CEntityFlags::Entity loadEntities = this->getEntitiesWithNewerSharedFile(entities);
-        const CEntityFlags::Entity checkForEmptyEntities = CEntityFlags::entityFlagToEntity(CEntityFlags::AllDbEntitiesNoInfoObjects) & ~loadEntities;
+        const CEntityFlags::Entity checkForEmptyEntities =
+            CEntityFlags::entityFlagToEntity(CEntityFlags::AllDbEntitiesNoInfoObjects) & ~loadEntities;
 
         // it can happen the timestamps are not newer, but the data are empty
         // - can happen if caches are copied and the TS does not represent the DB timestamp
@@ -488,13 +487,31 @@ namespace swift::core
     QString CWebDataServices::getDbReadersLog(const QString &separator) const
     {
         QStringList report;
-        if (m_dbInfoDataReader) { report << m_dbInfoDataReader->getName() + ": " + m_dbInfoDataReader->getReadLog().getSummary(); }
-        if (m_sharedInfoDataReader) { report << m_sharedInfoDataReader->getName() + ": " + m_sharedInfoDataReader->getReadLog().getSummary(); }
+        if (m_dbInfoDataReader)
+        {
+            report << m_dbInfoDataReader->getName() + ": " + m_dbInfoDataReader->getReadLog().getSummary();
+        }
+        if (m_sharedInfoDataReader)
+        {
+            report << m_sharedInfoDataReader->getName() + ": " + m_sharedInfoDataReader->getReadLog().getSummary();
+        }
 
-        if (m_airportDataReader) { report << m_airportDataReader->getName() + ": " + m_airportDataReader->getReadLog().getSummary(); }
-        if (m_icaoDataReader) { report << m_icaoDataReader->getName() + ": " + m_icaoDataReader->getReadLog().getSummary(); }
-        if (m_modelDataReader) { report << m_modelDataReader->getName() + ": " + m_modelDataReader->getReadLog().getSummary(); }
-        if (m_databaseWriter) { report << m_databaseWriter->getName() + ": " + m_databaseWriter->getWriteLog().getSummary(); }
+        if (m_airportDataReader)
+        {
+            report << m_airportDataReader->getName() + ": " + m_airportDataReader->getReadLog().getSummary();
+        }
+        if (m_icaoDataReader)
+        {
+            report << m_icaoDataReader->getName() + ": " + m_icaoDataReader->getReadLog().getSummary();
+        }
+        if (m_modelDataReader)
+        {
+            report << m_modelDataReader->getName() + ": " + m_modelDataReader->getReadLog().getSummary();
+        }
+        if (m_databaseWriter)
+        {
+            report << m_databaseWriter->getName() + ": " + m_databaseWriter->getWriteLog().getSummary();
+        }
         return report.join(separator);
     }
 
@@ -502,8 +519,14 @@ namespace swift::core
     {
         const QString db = this->getDbReadersLog(separator);
         QStringList report;
-        if (m_vatsimMetarReader) { report << m_vatsimMetarReader->getName() + ": " + m_vatsimMetarReader->getReadLog().getSummary(); }
-        if (m_vatsimStatusReader) { report << m_vatsimStatusReader->getName() + ": " + m_vatsimStatusReader->getReadLog().getSummary(); }
+        if (m_vatsimMetarReader)
+        {
+            report << m_vatsimMetarReader->getName() + ": " + m_vatsimMetarReader->getReadLog().getSummary();
+        }
+        if (m_vatsimStatusReader)
+        {
+            report << m_vatsimStatusReader->getName() + ": " + m_vatsimStatusReader->getReadLog().getSummary();
+        }
         if (report.isEmpty()) { return db; }
         return report.join(separator) + separator + db;
     }
@@ -532,7 +555,8 @@ namespace swift::core
         return CDistributor();
     }
 
-    CDistributor CWebDataServices::smartDistributorSelector(const CDistributor &distributor, const CAircraftModel &model) const
+    CDistributor CWebDataServices::smartDistributorSelector(const CDistributor &distributor,
+                                                            const CAircraftModel &model) const
     {
         if (m_modelDataReader) { return m_modelDataReader->smartDistributorSelector(distributor, model); }
         return CDistributor();
@@ -610,9 +634,15 @@ namespace swift::core
         return QStringList();
     }
 
-    CAircraftModelList CWebDataServices::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator, const QString &combinedCode) const
+    CAircraftModelList
+    CWebDataServices::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator,
+                                                                          const QString &combinedCode) const
     {
-        if (m_modelDataReader) { return m_modelDataReader->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftDesignator, combinedCode); }
+        if (m_modelDataReader)
+        {
+            return m_modelDataReader->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftDesignator,
+                                                                                          combinedCode);
+        }
         return CAircraftModelList();
     }
 
@@ -721,10 +751,16 @@ namespace swift::core
         return false;
     }
 
-    CAirlineIcaoCode CWebDataServices::getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator, bool preferOperatingAirlines) const
+    CAirlineIcaoCode
+    CWebDataServices::getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator,
+                                                                     bool preferOperatingAirlines) const
     {
         if (designator.isEmpty()) { return CAirlineIcaoCode(); }
-        if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodeForUniqueDesignatorOrDefault(designator, preferOperatingAirlines); }
+        if (m_icaoDataReader)
+        {
+            return m_icaoDataReader->getAirlineIcaoCodeForUniqueDesignatorOrDefault(designator,
+                                                                                    preferOperatingAirlines);
+        }
         return CAirlineIcaoCode();
     }
 
@@ -747,10 +783,7 @@ namespace swift::core
         if (!m_icaoDataReader) { return names; }
         for (const CAirlineIcaoCode &code : this->getAirlineIcaoCodes())
         {
-            if (code.hasName())
-            {
-                names.push_back(code.getName());
-            }
+            if (code.hasName()) { names.push_back(code.getName()); }
         }
         return names;
     }
@@ -761,15 +794,13 @@ namespace swift::core
         if (!m_icaoDataReader) { return designators; }
         for (const CAirlineIcaoCode &code : this->getAirlineIcaoCodes())
         {
-            if (code.hasTelephonyDesignator())
-            {
-                designators.push_back(code.getTelephonyDesignator());
-            }
+            if (code.hasTelephonyDesignator()) { designators.push_back(code.getTelephonyDesignator()); }
         }
         return designators;
     }
 
-    CAirlineIcaoCode CWebDataServices::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern, const CCallsign &callsign) const
+    CAirlineIcaoCode CWebDataServices::smartAirlineIcaoSelector(const CAirlineIcaoCode &icaoPattern,
+                                                                const CCallsign &callsign) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->smartAirlineIcaoSelector(icaoPattern, callsign); }
         return CAirlineIcaoCode();
@@ -848,9 +879,12 @@ namespace swift::core
         return CMetar();
     }
 
-    CStatusMessageList CWebDataServices::validateForPublishing(const CAircraftModelList &modelsToBePublished, bool ignoreEqual, CAircraftModelList &validModels, CAircraftModelList &invalidModels) const
+    CStatusMessageList CWebDataServices::validateForPublishing(const CAircraftModelList &modelsToBePublished,
+                                                               bool ignoreEqual, CAircraftModelList &validModels,
+                                                               CAircraftModelList &invalidModels) const
     {
-        CStatusMessageList msgs(modelsToBePublished.validateForPublishing(validModels, invalidModels)); // technical validation
+        CStatusMessageList msgs(
+            modelsToBePublished.validateForPublishing(validModels, invalidModels)); // technical validation
 
         // check against existing distributors
         const CDistributorList distributors(this->getDistributors());
@@ -858,7 +892,8 @@ namespace swift::core
         {
             // only further check the valid ones
             CAircraftModelList newValidModels;
-            const CStatusMessageList msgsDistributors(validModels.validateDistributors(distributors, newValidModels, invalidModels));
+            const CStatusMessageList msgsDistributors(
+                validModels.validateDistributors(distributors, newValidModels, invalidModels));
             validModels = newValidModels;
             msgs.push_back(msgsDistributors);
         }
@@ -878,22 +913,20 @@ namespace swift::core
                     continue;
                 }
                 if (ignoreEqual) { equalMessages.warningToError(); }
-                msgs.push_back(CStatusMessage(this, ignoreEqual ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning, u"Model: '%1', there is no change") << publishModel.getModelString());
-                if (ignoreEqual)
-                {
-                    invalidModels.push_back(publishModel);
-                }
-                else
-                {
-                    newValidModels.push_back(publishModel);
-                }
+                msgs.push_back(
+                    CStatusMessage(this, ignoreEqual ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning,
+                                   u"Model: '%1', there is no change")
+                    << publishModel.getModelString());
+                if (ignoreEqual) { invalidModels.push_back(publishModel); }
+                else { newValidModels.push_back(publishModel); }
             }
             validModels = newValidModels;
         }
         return msgs;
     }
 
-    bool CWebDataServices::isDbModelEqualForPublishing(const CAircraftModel &modelToBeChecked, CStatusMessageList *details) const
+    bool CWebDataServices::isDbModelEqualForPublishing(const CAircraftModel &modelToBeChecked,
+                                                       CStatusMessageList *details) const
     {
         const CAircraftModel compareDbModel = modelToBeChecked.isLoadedFromDb() ?
                                                   this->getModelForDbKey(modelToBeChecked.getDbKey()) :
@@ -1016,17 +1049,17 @@ namespace swift::core
         }
 
         // 1b. Read info objects if needed
-        if (needsSharedInfoObjects)
-        {
-            this->initSharedInfoObjectReaderAndTriggerRead();
-        }
+        if (needsSharedInfoObjects) { this->initSharedInfoObjectReaderAndTriggerRead(); }
 
         // 2. Status and server file, updating the VATSIM related caches
         // Read as soon as initReaders is done
-        if (readersNeeded.testFlag(CWebReaderFlags::VatsimStatusReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimDataReader) || readersNeeded.testFlag(CWebReaderFlags::VatsimMetarReader))
+        if (readersNeeded.testFlag(CWebReaderFlags::VatsimStatusReader) ||
+            readersNeeded.testFlag(CWebReaderFlags::VatsimDataReader) ||
+            readersNeeded.testFlag(CWebReaderFlags::VatsimMetarReader))
         {
             m_vatsimStatusReader = new CVatsimStatusFileReader(this);
-            c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::statusFileRead, this, &CWebDataServices::vatsimStatusFileRead, Qt::QueuedConnection);
+            c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::statusFileRead, this,
+                        &CWebDataServices::vatsimStatusFileRead, Qt::QueuedConnection);
             CLogMessage(this).info(u"Trigger read of VATSIM status file");
             m_vatsimStatusReader->start(QThread::LowPriority);
 
@@ -1047,9 +1080,11 @@ namespace swift::core
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
         {
             m_vatsimDataFileReader = new CVatsimDataFileReader(this);
-            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this, &CWebDataServices::vatsimDataFileRead, Qt::QueuedConnection);
+            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this,
+                        &CWebDataServices::vatsimDataFileRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
-            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
+            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
             m_entitiesPeriodicallyRead |= CEntityFlags::VatsimDataFile;
             m_vatsimDataFileReader->start(QThread::LowPriority);
@@ -1060,9 +1095,11 @@ namespace swift::core
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
         {
             m_vatsimMetarReader = new CVatsimMetarReader(this);
-            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars, Qt::QueuedConnection);
+            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
-            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
+            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
             m_entitiesPeriodicallyRead |= CEntityFlags::MetarEntity;
             m_vatsimMetarReader->start(QThread::LowPriority);
@@ -1073,13 +1110,17 @@ namespace swift::core
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
         {
             m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
-            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader, Qt::QueuedConnection);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
-            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
-            c = connect(m_icaoDataReader, &CIcaoDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, Qt::QueuedConnection);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_icaoDataReader, &CIcaoDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
+            c = connect(m_icaoDataReader, &CIcaoDataReader::entityDownloadProgress, this,
+                        &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_icaoDataReader->start(QThread::LowPriority);
         }
@@ -1088,13 +1129,17 @@ namespace swift::core
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
         {
             m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
-            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader, Qt::QueuedConnection);
+            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
+            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_modelDataReader, &CModelDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, Qt::QueuedConnection);
+            c = connect(m_modelDataReader, &CModelDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_modelDataReader, &CModelDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
+            c = connect(m_modelDataReader, &CModelDataReader::entityDownloadProgress, this,
+                        &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_modelDataReader->start(QThread::LowPriority);
         }
@@ -1103,22 +1148,30 @@ namespace swift::core
         if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
         {
             m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
-            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader, Qt::QueuedConnection);
+            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this,
+                        &CWebDataServices::readFromSwiftReader, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead, Qt::QueuedConnection);
+            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead,
+                        Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_airportDataReader, &CAirportDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead, Qt::QueuedConnection);
+            c = connect(m_airportDataReader, &CAirportDataReader::swiftDbDataRead, this,
+                        &CWebDataServices::swiftDbDataRead, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_airportDataReader, &CAirportDataReader::entityDownloadProgress, this, &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
+            c = connect(m_airportDataReader, &CAirportDataReader::entityDownloadProgress, this,
+                        &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
             m_airportDataReader->start(QThread::LowPriority);
         }
         Q_UNUSED(c) // signal connect flag
 
-        const QDateTime threshold = QDateTime::currentDateTimeUtc().addDays(-365); // country and airports are "semi static"
-        const CEntityFlags::Entity cachedDbEntities = this->getDbEntitiesWithCachedData(); // those caches are already read
-        const CEntityFlags::Entity validTsDbEntities = this->getDbEntitiesWithTimestampNewerThan(threshold); // those caches are not read, but have a timestamp
-        const bool needsSharedInfoObjectsWithoutCache = dbReaderConfig.needsSharedInfoObjectsIfCachesEmpty(dbEntities, cachedDbEntities | validTsDbEntities);
+        const QDateTime threshold =
+            QDateTime::currentDateTimeUtc().addDays(-365); // country and airports are "semi static"
+        const CEntityFlags::Entity cachedDbEntities =
+            this->getDbEntitiesWithCachedData(); // those caches are already read
+        const CEntityFlags::Entity validTsDbEntities =
+            this->getDbEntitiesWithTimestampNewerThan(threshold); // those caches are not read, but have a timestamp
+        const bool needsSharedInfoObjectsWithoutCache =
+            dbReaderConfig.needsSharedInfoObjectsIfCachesEmpty(dbEntities, cachedDbEntities | validTsDbEntities);
         if (m_sharedInfoDataReader && !needsSharedInfoObjectsWithoutCache)
         {
             // demote error message
@@ -1130,7 +1183,8 @@ namespace swift::core
     void CWebDataServices::startVatsimServerFileReader()
     {
         m_vatsimServerFileReader = new CVatsimServerFileReader(this);
-        connect(m_vatsimServerFileReader, &CVatsimServerFileReader::dataFileRead, this, &CWebDataServices::vatsimServerFileRead, Qt::QueuedConnection);
+        connect(m_vatsimServerFileReader, &CVatsimServerFileReader::dataFileRead, this,
+                &CWebDataServices::vatsimServerFileRead, Qt::QueuedConnection);
         CLogMessage(this).info(u"Trigger read of VATSIM server file");
         m_vatsimServerFileReader->start(QThread::LowPriority);
 
@@ -1162,13 +1216,15 @@ namespace swift::core
         {
             m_dbInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::DbReading);
             m_dbInfoDataReader->setObjectName(m_dbInfoDataReader->objectName() + " (DB)");
-            bool c = connect(m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
+            bool c =
+                connect(m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
 
             // relay signal
             c = connect(m_dbInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::dataRead);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
-            c = connect(m_dbInfoDataReader, &CInfoDataReader::databaseReaderMessages, this, &CWebDataServices::databaseReaderMessages);
+            c = connect(m_dbInfoDataReader, &CInfoDataReader::databaseReaderMessages, this,
+                        &CWebDataServices::databaseReaderMessages);
             Q_UNUSED(c)
 
             // start in own thread
@@ -1201,7 +1257,8 @@ namespace swift::core
         {
             m_sharedInfoDataReader = new CInfoDataReader(this, m_dbReaderConfig, CDbFlags::Shared);
             m_sharedInfoDataReader->setObjectName(m_sharedInfoDataReader->objectName() + " (shared)");
-            bool c = connect(m_sharedInfoDataReader, &CInfoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader);
+            bool c = connect(m_sharedInfoDataReader, &CInfoDataReader::dataRead, this,
+                             &CWebDataServices::readFromSwiftReader);
             Q_ASSERT_X(c, Q_FUNC_INFO, "Info reader connect failed");
 
             // relay signal
@@ -1288,10 +1345,7 @@ namespace swift::core
         CLogMessage(this).info(u"Read %1 METARs") << metars.size();
     }
 
-    void CWebDataServices::vatsimDataFileRead(int kB)
-    {
-        CLogMessage(this).info(u"Read VATSIM data file, %1 kB") << kB;
-    }
+    void CWebDataServices::vatsimDataFileRead(int kB) { CLogMessage(this).info(u"Read VATSIM data file, %1 kB") << kB; }
 
     void CWebDataServices::vatsimStatusFileRead(int bytes)
     {
@@ -1303,7 +1357,8 @@ namespace swift::core
         CLogMessage(this).info(u"Read VATSIM server file, %1 bytes") << bytes;
     }
 
-    void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number, const QUrl &url)
+    void CWebDataServices::readFromSwiftReader(CEntityFlags::Entity entities, CEntityFlags::ReadState state, int number,
+                                               const QUrl &url)
     {
         if (state == CEntityFlags::ReadStarted) { return; } // just started
 
@@ -1315,16 +1370,19 @@ namespace swift::core
             const CStatusMessage::StatusSeverity severity = CEntityFlags::flagToSeverity(state);
             if (severity == CStatusMessage::SeverityWarning)
             {
-                CLogMessage(this).warning(u"Read data '%1' entries: %2 state: %3%4") << entStr << number << CEntityFlags::stateToString(state) << from;
+                CLogMessage(this).warning(u"Read data '%1' entries: %2 state: %3%4")
+                    << entStr << number << CEntityFlags::stateToString(state) << from;
             }
             else
             {
-                CLogMessage(this).error(u"Read data '%1' entries: %2 state: %3%4") << entStr << number << CEntityFlags::stateToString(state) << from;
+                CLogMessage(this).error(u"Read data '%1' entries: %2 state: %3%4")
+                    << entStr << number << CEntityFlags::stateToString(state) << from;
             }
         }
         else
         {
-            CLogMessage(this).info(u"Read data '%1' entries: %2 state: %3%4") << entStr << number << CEntityFlags::stateToString(state) << from;
+            CLogMessage(this).info(u"Read data '%1' entries: %2 state: %3%4")
+                << entStr << number << CEntityFlags::stateToString(state) << from;
         }
 
         m_swiftDbEntitiesRead |= entities;
@@ -1338,17 +1396,34 @@ namespace swift::core
         if (CEntityFlags::isFinishedReadState(state))
         {
             // emit one time only
-            if (entities.testFlag(CEntityFlags::AirportEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirportEntity)) { emit swiftDbAirportsRead(); }
-            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity) && signalEntitiesAlreadyRead(CEntityFlags::AirlineIcaoEntity)) { emit swiftDbAirlineIcaoRead(); }
-            if (entities.testFlag(CEntityFlags::AircraftIcaoEntity) && signalEntitiesAlreadyRead(CEntityFlags::AircraftIcaoEntity)) { emit swiftDbAircraftIcaoRead(); }
-            if (entities.testFlag(CEntityFlags::ModelEntity) && signalEntitiesAlreadyRead(CEntityFlags::ModelEntity)) { emit swiftDbModelsRead(); }
+            if (entities.testFlag(CEntityFlags::AirportEntity) &&
+                signalEntitiesAlreadyRead(CEntityFlags::AirportEntity))
+            {
+                emit swiftDbAirportsRead();
+            }
+            if (entities.testFlag(CEntityFlags::AirlineIcaoEntity) &&
+                signalEntitiesAlreadyRead(CEntityFlags::AirlineIcaoEntity))
+            {
+                emit swiftDbAirlineIcaoRead();
+            }
+            if (entities.testFlag(CEntityFlags::AircraftIcaoEntity) &&
+                signalEntitiesAlreadyRead(CEntityFlags::AircraftIcaoEntity))
+            {
+                emit swiftDbAircraftIcaoRead();
+            }
+            if (entities.testFlag(CEntityFlags::ModelEntity) && signalEntitiesAlreadyRead(CEntityFlags::ModelEntity))
+            {
+                emit swiftDbModelsRead();
+            }
             if (entities.testFlag(CEntityFlags::SharedInfoObjectEntity)) { emit sharedInfoObjectsRead(); }
 
-            if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::AllIcaoEntities) && signalEntitiesAlreadyRead(CEntityFlags::AllIcaoEntities))
+            if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::AllIcaoEntities) &&
+                signalEntitiesAlreadyRead(CEntityFlags::AllIcaoEntities))
             {
                 emit this->swiftDbAllIcaoEntitiesRead();
             }
-            if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::ModelMatchingEntities) && signalEntitiesAlreadyRead(CEntityFlags::ModelMatchingEntities))
+            if (m_swiftDbEntitiesRead.testFlag(CEntityFlags::ModelMatchingEntities) &&
+                signalEntitiesAlreadyRead(CEntityFlags::ModelMatchingEntities))
             {
                 emit this->swiftDbModelMatchingEntitiesRead();
             }
@@ -1374,8 +1449,10 @@ namespace swift::core
         if (CEntityFlags::anySwiftDbEntity(entities))
         {
             // with info objects wait until info objects are loaded
-            Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Info object must be read upfront, do not pass as entity here");
-            const bool waitForDbInfoReader = m_dbInfoDataReader && !m_dbInfoDataReader->areAllInfoObjectsRead() && !m_dbInfoDataReader->isMarkedAsFailed();
+            Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO,
+                       "Info object must be read upfront, do not pass as entity here");
+            const bool waitForDbInfoReader = m_dbInfoDataReader && !m_dbInfoDataReader->areAllInfoObjectsRead() &&
+                                             !m_dbInfoDataReader->isMarkedAsFailed();
             if (waitForDbInfoReader)
             {
                 // do not read yet, will call this function again after some time
@@ -1383,7 +1460,8 @@ namespace swift::core
                 if (!this->waitForDbInfoObjectsThenRead(entities)) { return; }
             }
 
-            const bool waitForSharedInfoFile = m_dbReaderConfig.needsSharedInfoFile(entities) && !m_sharedInfoDataReader->areAllInfoObjectsRead();
+            const bool waitForSharedInfoFile =
+                m_dbReaderConfig.needsSharedInfoFile(entities) && !m_sharedInfoDataReader->areAllInfoObjectsRead();
             if (waitForSharedInfoFile)
             {
                 // do not read yet, will call this function again after some time
@@ -1408,7 +1486,8 @@ namespace swift::core
         if (!m_dbInfoObjectTimeout.isValid())
         {
             m_dbInfoObjectTimeout = QDateTime::currentDateTimeUtc().addMSecs(timeOutMs);
-            CLogMessage(this).info(u"Set DbInfoObjects timeout %1ms to %2") << timeOutMs << m_dbInfoObjectTimeout.toString("dd.MM.yyyy hh:mm:ss");
+            CLogMessage(this).info(u"Set DbInfoObjects timeout %1ms to %2")
+                << timeOutMs << m_dbInfoObjectTimeout.toString("dd.MM.yyyy hh:mm:ss");
         }
         const bool read = this->waitForInfoObjectsThenRead(entities, "DB", m_dbInfoDataReader, m_dbInfoObjectTimeout);
         return read;
@@ -1424,13 +1503,16 @@ namespace swift::core
         if (!m_sharedInfoObjectsTimeout.isValid())
         {
             m_sharedInfoObjectsTimeout = QDateTime::currentDateTimeUtc().addMSecs(timeOutMs);
-            CLogMessage(this).info(u"Set SharedInfoObjects timeout %1ms to %2") << timeOutMs << m_sharedInfoObjectsTimeout.toString("dd.MM.yyyy hh:mm:ss");
+            CLogMessage(this).info(u"Set SharedInfoObjects timeout %1ms to %2")
+                << timeOutMs << m_sharedInfoObjectsTimeout.toString("dd.MM.yyyy hh:mm:ss");
         }
-        const bool read = this->waitForInfoObjectsThenRead(entities, "shared", m_sharedInfoDataReader, m_sharedInfoObjectsTimeout);
+        const bool read =
+            this->waitForInfoObjectsThenRead(entities, "shared", m_sharedInfoDataReader, m_sharedInfoObjectsTimeout);
         return read;
     }
 
-    bool CWebDataServices::waitForInfoObjectsThenRead(CEntityFlags::Entity entities, const QString &info, CInfoDataReader *infoReader, QDateTime &timeOut)
+    bool CWebDataServices::waitForInfoObjectsThenRead(CEntityFlags::Entity entities, const QString &info,
+                                                      CInfoDataReader *infoReader, QDateTime &timeOut)
     {
         if (m_shuttingDown) { return false; }
 
@@ -1441,7 +1523,8 @@ namespace swift::core
         if (infoReader->areAllInfoObjectsRead())
         {
             // we have all data and carry on
-            CLogMessage(this).info(u"Info objects (%1) triggered for '%2' loaded from '%3'") << info << CEntityFlags::entitiesToString(entities) << infoReader->getInfoObjectsUrl().toQString();
+            CLogMessage(this).info(u"Info objects (%1) triggered for '%2' loaded from '%3'")
+                << info << CEntityFlags::entitiesToString(entities) << infoReader->getInfoObjectsUrl().toQString();
             timeOut = QDateTime(); // reset to null
             return true; // no need to wait any longer
         }
@@ -1450,10 +1533,11 @@ namespace swift::core
         if (timeOut.isValid() && QDateTime::currentDateTimeUtc() > timeOut)
         {
             const QString timeOutString = timeOut.toString();
-            const CStatusMessage m = CLogMessage(this).warning(u"Could not read '%1' info objects for '%2' from '%3', time out '%4'. Marking reader '%5' as failed and continue.")
-                                     << info << CEntityFlags::entitiesToString(entities)
-                                     << infoReader->getInfoObjectsUrl().toQString() << timeOutString
-                                     << infoReader->getName();
+            const CStatusMessage m =
+                CLogMessage(this).warning(u"Could not read '%1' info objects for '%2' from '%3', time out '%4'. "
+                                          u"Marking reader '%5' as failed and continue.")
+                << info << CEntityFlags::entitiesToString(entities) << infoReader->getInfoObjectsUrl().toQString()
+                << timeOutString << infoReader->getName();
             emit this->databaseReaderMessages(m);
 
             // continue here and read data without info objects
@@ -1469,7 +1553,9 @@ namespace swift::core
             {
                 // ok, this means we are parsing
                 this->readDeferredInBackground(entities, waitForInfoObjectsMs);
-                const CStatusMessage m = CLogMessage(this).info(u"Parsing objects (%1) for '%2' from '%3'") << info << CEntityFlags::entitiesToString(entities) << infoReader->getInfoObjectsUrl().toQString();
+                const CStatusMessage m = CLogMessage(this).info(u"Parsing objects (%1) for '%2' from '%3'")
+                                         << info << CEntityFlags::entitiesToString(entities)
+                                         << infoReader->getInfoObjectsUrl().toQString();
                 emit this->databaseReaderMessages(m);
                 return false; // wait
             }
@@ -1477,7 +1563,10 @@ namespace swift::core
             {
                 // we have a response, but a failure, means server is alive, but responded with error
                 // such an error (access, ...) normally will not go away
-                const CStatusMessage m = CLogMessage(this).error(u"Info objects (%1) loading for '%2' failed from '%3', '%4'") << info << CEntityFlags::entitiesToString(entities) << infoReader->getInfoObjectsUrl().toQString() << infoReader->getStatusMessage();
+                const CStatusMessage m =
+                    CLogMessage(this).error(u"Info objects (%1) loading for '%2' failed from '%3', '%4'")
+                    << info << CEntityFlags::entitiesToString(entities) << infoReader->getInfoObjectsUrl().toQString()
+                    << infoReader->getStatusMessage();
                 infoReader->setMarkedAsFailed(true);
                 emit this->databaseReaderMessages(m);
                 return true; // carry on, regardless of situation
@@ -1524,7 +1613,8 @@ namespace swift::core
         for (const auto &pair : fileContents)
         {
             CWorker::fromTask(this, Q_FUNC_INFO, [pair, directory] {
-                CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), pair.first), pair.second);
+                CFileUtils::writeStringToFile(CFileUtils::appendFilePaths(directory.absolutePath(), pair.first),
+                                              pair.second);
             });
         }
         return true;
@@ -1543,12 +1633,15 @@ namespace swift::core
             bool ib = inBackground || !CThreadUtils::isInThisThread(m_icaoDataReader);
             if (ib)
             {
-                CLogMessage(this).info(u"Reading from disk in background: %1") << m_icaoDataReader->getSupportedEntitiesAsString();
-                s1 = m_icaoDataReader->readFromJsonFilesInBackground(dir, m_icaoDataReader->getSupportedEntities(), overrideNewerOnly);
+                CLogMessage(this).info(u"Reading from disk in background: %1")
+                    << m_icaoDataReader->getSupportedEntitiesAsString();
+                s1 = m_icaoDataReader->readFromJsonFilesInBackground(dir, m_icaoDataReader->getSupportedEntities(),
+                                                                     overrideNewerOnly);
             }
             else
             {
-                const CStatusMessageList msgs = m_icaoDataReader->readFromJsonFiles(dir, m_icaoDataReader->getSupportedEntities(), overrideNewerOnly);
+                const CStatusMessageList msgs = m_icaoDataReader->readFromJsonFiles(
+                    dir, m_icaoDataReader->getSupportedEntities(), overrideNewerOnly);
                 CLogMessage::preformatted(msgs);
                 s1 = msgs.isSuccess();
             }
@@ -1561,12 +1654,15 @@ namespace swift::core
             bool ib = inBackground || !CThreadUtils::isInThisThread(m_modelDataReader);
             if (ib)
             {
-                CLogMessage(this).info(u"Reading from disk in background: %1") << m_modelDataReader->getSupportedEntitiesAsString();
-                s2 = m_modelDataReader->readFromJsonFilesInBackground(dir, m_modelDataReader->getSupportedEntities(), overrideNewerOnly);
+                CLogMessage(this).info(u"Reading from disk in background: %1")
+                    << m_modelDataReader->getSupportedEntitiesAsString();
+                s2 = m_modelDataReader->readFromJsonFilesInBackground(dir, m_modelDataReader->getSupportedEntities(),
+                                                                      overrideNewerOnly);
             }
             else
             {
-                const CStatusMessageList msgs = m_modelDataReader->readFromJsonFiles(dir, m_modelDataReader->getSupportedEntities(), overrideNewerOnly);
+                const CStatusMessageList msgs = m_modelDataReader->readFromJsonFiles(
+                    dir, m_modelDataReader->getSupportedEntities(), overrideNewerOnly);
                 CLogMessage::preformatted(msgs);
                 s2 = msgs.isSuccess();
             }
@@ -1579,12 +1675,15 @@ namespace swift::core
             bool ib = inBackground || !CThreadUtils::isInThisThread(m_airportDataReader);
             if (ib)
             {
-                CLogMessage(this).info(u"Reading from disk in background: %1") << m_airportDataReader->getSupportedEntitiesAsString();
-                s3 = m_airportDataReader->readFromJsonFilesInBackground(dir, m_airportDataReader->getSupportedEntities(), overrideNewerOnly);
+                CLogMessage(this).info(u"Reading from disk in background: %1")
+                    << m_airportDataReader->getSupportedEntitiesAsString();
+                s3 = m_airportDataReader->readFromJsonFilesInBackground(
+                    dir, m_airportDataReader->getSupportedEntities(), overrideNewerOnly);
             }
             else
             {
-                const CStatusMessageList msgs = m_airportDataReader->readFromJsonFiles(dir, m_airportDataReader->getSupportedEntities(), overrideNewerOnly);
+                const CStatusMessageList msgs = m_airportDataReader->readFromJsonFiles(
+                    dir, m_airportDataReader->getSupportedEntities(), overrideNewerOnly);
                 CLogMessage::preformatted(msgs);
                 s3 = msgs.isSuccess();
             }
@@ -1596,37 +1695,29 @@ namespace swift::core
     CStatusMessageList CWebDataServices::initDbCachesFromLocalResourceFiles(bool inBackground)
     {
         CStatusMessageList msgs;
-        msgs.push_back(
-            m_icaoDataReader ?
-                m_icaoDataReader->initFromLocalResourceFiles(inBackground) :
-                CStatusMessage(this).info(u"No ICAO reader"));
-        msgs.push_back(
-            m_modelDataReader ?
-                m_modelDataReader->initFromLocalResourceFiles(inBackground) :
-                CStatusMessage(this).info(u"No model reader"));
-        msgs.push_back(
-            m_airportDataReader ?
-                m_airportDataReader->initFromLocalResourceFiles(inBackground) :
-                CStatusMessage(this).info(u"No airport reader"));
+        msgs.push_back(m_icaoDataReader ? m_icaoDataReader->initFromLocalResourceFiles(inBackground) :
+                                          CStatusMessage(this).info(u"No ICAO reader"));
+        msgs.push_back(m_modelDataReader ? m_modelDataReader->initFromLocalResourceFiles(inBackground) :
+                                           CStatusMessage(this).info(u"No model reader"));
+        msgs.push_back(m_airportDataReader ? m_airportDataReader->initFromLocalResourceFiles(inBackground) :
+                                             CStatusMessage(this).info(u"No airport reader"));
         return msgs;
     }
 
     //! \cond PRIVATE
-    CStatusMessageList CWebDataServices::initDbCachesFromLocalResourceFiles(CEntityFlags::Entity entities, bool inBackground)
+    CStatusMessageList CWebDataServices::initDbCachesFromLocalResourceFiles(CEntityFlags::Entity entities,
+                                                                            bool inBackground)
     {
         CStatusMessageList msgs;
-        msgs.push_back(
-            m_icaoDataReader && m_icaoDataReader->supportsAnyOfEntities(entities) ?
-                m_icaoDataReader->initFromLocalResourceFiles(entities, inBackground) :
-                CStatusMessage(this).info(u"No ICAO reader or not supporting entities"));
-        msgs.push_back(
-            m_modelDataReader && m_modelDataReader->supportsAnyOfEntities(entities) ?
-                m_modelDataReader->initFromLocalResourceFiles(entities, inBackground) :
-                CStatusMessage(this).info(u"No model reader or not supporting entities"));
-        msgs.push_back(
-            m_airportDataReader && m_airportDataReader->supportsAnyOfEntities(entities) ?
-                m_airportDataReader->initFromLocalResourceFiles(entities, inBackground) :
-                CStatusMessage(this).info(u"No airport reader or not supporting entities"));
+        msgs.push_back(m_icaoDataReader && m_icaoDataReader->supportsAnyOfEntities(entities) ?
+                           m_icaoDataReader->initFromLocalResourceFiles(entities, inBackground) :
+                           CStatusMessage(this).info(u"No ICAO reader or not supporting entities"));
+        msgs.push_back(m_modelDataReader && m_modelDataReader->supportsAnyOfEntities(entities) ?
+                           m_modelDataReader->initFromLocalResourceFiles(entities, inBackground) :
+                           CStatusMessage(this).info(u"No model reader or not supporting entities"));
+        msgs.push_back(m_airportDataReader && m_airportDataReader->supportsAnyOfEntities(entities) ?
+                           m_airportDataReader->initFromLocalResourceFiles(entities, inBackground) :
+                           CStatusMessage(this).info(u"No airport reader or not supporting entities"));
         return msgs;
     }
     //! \endcond

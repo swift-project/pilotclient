@@ -25,9 +25,10 @@ namespace swift::core::application
         static const QStringList &defaultValue()
         {
             // guessing / preset-ing some default values
-            static const QStringList d = (sApp && !sApp->getUpdateInfo().isEmpty()) ?
-                                             sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
-                                             QStringList({ "STABLE", swift::misc::CPlatform::currentPlatform().getPlatformName() });
+            static const QStringList d =
+                (sApp && !sApp->getUpdateInfo().isEmpty()) ?
+                    sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
+                    QStringList({ "STABLE", swift::misc::CPlatform::currentPlatform().getPlatformName() });
             return d;
         }
 

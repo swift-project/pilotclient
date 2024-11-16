@@ -30,14 +30,14 @@ namespace swift::gui::components
         return cats;
     }
 
-    CDbOwnModelSetFormDialog::CDbOwnModelSetFormDialog(QWidget *parent) : QDialog(parent),
-                                                                          CDbMappingComponentAware(parent),
-                                                                          ui(new Ui::CDbOwnModelSetFormDialog)
+    CDbOwnModelSetFormDialog::CDbOwnModelSetFormDialog(QWidget *parent)
+        : QDialog(parent), CDbMappingComponentAware(parent), ui(new Ui::CDbOwnModelSetFormDialog)
     {
         ui->setupUi(this);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
         connect(ui->pb_Ok, &QPushButton::clicked, this, &CDbOwnModelSetFormDialog::buttonClicked);
-        connect(ui->form_OwnModelSet, &COwnModelSetForm::simulatorChanged, this, &CDbOwnModelSetFormDialog::simulatorChanged);
+        connect(ui->form_OwnModelSet, &COwnModelSetForm::simulatorChanged, this,
+                &CDbOwnModelSetFormDialog::simulatorChanged);
     }
 
     CDbOwnModelSetFormDialog::~CDbOwnModelSetFormDialog()
@@ -73,10 +73,7 @@ namespace swift::gui::components
     void CDbOwnModelSetFormDialog::buttonClicked()
     {
         const QObject *sender = QObject::sender();
-        if (sender == ui->pb_Cancel)
-        {
-            this->reject();
-        }
+        if (sender == ui->pb_Cancel) { this->reject(); }
         else if (sender == ui->pb_Ok)
         {
             m_modelSet = this->buildSet(m_simulatorInfo, m_modelSet);
@@ -105,7 +102,8 @@ namespace swift::gui::components
         const int c = this->getMappingComponent()->getOwnModelsCount();
         if (c < 1)
         {
-            const CStatusMessage m = CStatusMessage(this).error(u"No models for '%1'") << m_simulatorInfo.toQString(true);
+            const CStatusMessage m = CStatusMessage(this).error(u"No models for '%1'")
+                                     << m_simulatorInfo.toQString(true);
             ui->form_OwnModelSet->showOverlayMessage(m);
             return false;
         }
@@ -115,14 +113,13 @@ namespace swift::gui::components
     void CDbOwnModelSetFormDialog::setSimulator(const CSimulatorInfo &simulator)
     {
         // Ref T663, avoid ASSERT in some weird cases
-        if (simulator.isSingleSimulator())
-        {
-            m_simulatorInfo = simulator;
-        }
+        if (simulator.isSingleSimulator()) { m_simulatorInfo = simulator; }
         else
         {
-            const CSimulatorInfo resetSim = m_simulatorInfo.isSingleSimulator() ? m_simulatorInfo : CSimulatorInfo::guessDefaultSimulator();
-            const QString msg = QStringLiteral("Set invalid simulator, continue to use '%1'").arg(resetSim.toQString(true));
+            const CSimulatorInfo resetSim =
+                m_simulatorInfo.isSingleSimulator() ? m_simulatorInfo : CSimulatorInfo::guessDefaultSimulator();
+            const QString msg =
+                QStringLiteral("Set invalid simulator, continue to use '%1'").arg(resetSim.toQString(true));
             this->showMappingComponentOverlayHtmlMessage(msg);
             m_simulatorInfo = resetSim;
         }
@@ -130,7 +127,8 @@ namespace swift::gui::components
         this->setWindowTitle("Create model set for " + m_simulatorInfo.toQString(true));
     }
 
-    CAircraftModelList CDbOwnModelSetFormDialog::buildSet(const CSimulatorInfo &simulator, const CAircraftModelList &currentSet)
+    CAircraftModelList CDbOwnModelSetFormDialog::buildSet(const CSimulatorInfo &simulator,
+                                                          const CAircraftModelList &currentSet)
     {
         Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
         const bool givenDistributorsOnly = !ui->form_OwnModelSet->optionUseAllDistributors();
@@ -151,7 +149,8 @@ namespace swift::gui::components
         }
 
         const CModelSetBuilder builder(this);
-        CModelSetBuilder::Builder options = givenDistributorsOnly ? CModelSetBuilder::GivenDistributorsOnly : CModelSetBuilder::NoOptions;
+        CModelSetBuilder::Builder options =
+            givenDistributorsOnly ? CModelSetBuilder::GivenDistributorsOnly : CModelSetBuilder::NoOptions;
         if (dbDataOnly) { options |= CModelSetBuilder::OnlyDbData; }
         if (dbIcaoOnly) { options |= CModelSetBuilder::OnlyDbIcaoCodes; }
         if (incremnental) { options |= CModelSetBuilder::Incremental; }

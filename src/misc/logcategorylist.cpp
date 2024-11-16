@@ -19,10 +19,7 @@ namespace swift::misc
 {
     void CLogCategoryList::appendCategoriesFromMetaObject(const QMetaObject &metaObject, const QMetaObject &super)
     {
-        for (auto *meta = &metaObject; meta != &super; meta = meta->superClass())
-        {
-            push_back(meta->className());
-        }
+        for (auto *meta = &metaObject; meta != &super; meta = meta->superClass()) { push_back(meta->className()); }
     }
 
     QStringList CLogCategoryList::toQStringList() const
@@ -30,10 +27,7 @@ namespace swift::misc
         return transform([](const CLogCategory &cat) { return cat.toQString(); });
     }
 
-    QString CLogCategoryList::toQString(bool i18n) const
-    {
-        return convertToQString(i18n);
-    }
+    QString CLogCategoryList::toQString(bool i18n) const { return convertToQString(i18n); }
 
     QString CLogCategoryList::convertToQString(bool i18n) const
     {
@@ -43,7 +37,9 @@ namespace swift::misc
 
     CLogCategoryList CLogCategoryList::fromQStringList(const QStringList &stringList)
     {
-        return makeRange(Iterators::makeTransformIterator(stringList.begin(), [](const QString &str) { return CLogCategory { str }; }), stringList.end());
+        return makeRange(Iterators::makeTransformIterator(stringList.begin(),
+                                                          [](const QString &str) { return CLogCategory { str }; }),
+                         stringList.end());
     }
 
     CLogCategoryList CLogCategoryList::fromQString(const QString &string)

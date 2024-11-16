@@ -19,10 +19,7 @@ namespace swift::gui
         return this->getLastEnteredLine().trimmed().simplified();
     }
 
-    void CLineEditHistory::clearHistory()
-    {
-        m_history.clear();
-    }
+    void CLineEditHistory::clearHistory() { m_history.clear(); }
 
     void CLineEditHistory::keyPressEvent(QKeyEvent *event)
     {
@@ -32,10 +29,7 @@ namespace swift::gui
         if (key == Qt::Key_Up)
         {
             // move back in history
-            if (m_history.size() > m_position)
-            {
-                this->setText(m_history.at(m_position++));
-            }
+            if (m_history.size() > m_position) { this->setText(m_history.at(m_position++)); }
         }
         else if (key == Qt::Key_Down)
         {
@@ -46,10 +40,7 @@ namespace swift::gui
                 return;
             }
             if (m_position == m_history.size()) { --m_position; } // avoid need of 2xKeyDown at end
-            if (m_position > 0 && m_history.size() > --m_position)
-            {
-                this->setText(m_history.at(m_position));
-            }
+            if (m_position > 0 && m_history.size() > --m_position) { this->setText(m_history.at(m_position)); }
         }
         else if (key == Qt::Key_Return || key == Qt::Key_Enter) // normal and keypad enter
         {

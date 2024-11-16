@@ -22,14 +22,15 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftCategory)
 
 namespace swift::misc::aviation
 {
-    CAircraftCategory::CAircraftCategory(const QString &name, const QString &description, const QString &path, bool assignable) : m_name(name), m_description(description), m_path(path), m_assignable(assignable)
+    CAircraftCategory::CAircraftCategory(const QString &name, const QString &description, const QString &path,
+                                         bool assignable)
+        : m_name(name), m_description(description), m_path(path), m_assignable(assignable)
     {}
 
     QString CAircraftCategory::getNameDbKey() const
     {
-        return (this->isLoadedFromDb()) ?
-                   this->getName() % u' ' % this->getDbKeyAsStringInParentheses() :
-                   this->getName();
+        return (this->isLoadedFromDb()) ? this->getName() % u' ' % this->getDbKeyAsStringInParentheses() :
+                                          this->getName();
     }
 
     QString CAircraftCategory::convertToQString(bool i18n) const
@@ -38,15 +39,9 @@ namespace swift::misc::aviation
         return QStringLiteral("%1 %2").arg(this->getNameDbKey(), this->getDescription());
     }
 
-    CStatusMessageList CAircraftCategory::validate() const
-    {
-        return {};
-    }
+    CStatusMessageList CAircraftCategory::validate() const { return {}; }
 
-    bool CAircraftCategory::isNull() const
-    {
-        return m_name.isEmpty() && m_description.isEmpty();
-    }
+    bool CAircraftCategory::isNull() const { return m_name.isEmpty() && m_description.isEmpty(); }
 
     const CAircraftCategory &CAircraftCategory::null()
     {
@@ -54,10 +49,7 @@ namespace swift::misc::aviation
         return null;
     }
 
-    bool CAircraftCategory::hasName() const
-    {
-        return !m_name.isEmpty();
-    }
+    bool CAircraftCategory::hasName() const { return !m_name.isEmpty(); }
 
     bool CAircraftCategory::matchesName(const QString &name, Qt::CaseSensitivity cs) const
     {
@@ -71,10 +63,7 @@ namespace swift::misc::aviation
         m_l3 = l3;
     }
 
-    bool CAircraftCategory::isLevel(int l1, int l2, int l3) const
-    {
-        return l1 == m_l1 && l2 == m_l2 && l3 == m_l3;
-    }
+    bool CAircraftCategory::isLevel(int l1, int l2, int l3) const { return l1 == m_l1 && l2 == m_l2 && l3 == m_l3; }
 
     bool CAircraftCategory::isLevel(const QList<int> &level) const
     {
@@ -97,10 +86,7 @@ namespace swift::misc::aviation
         return l;
     }
 
-    bool CAircraftCategory::isFirstLevel() const
-    {
-        return (m_l3 == 0 && m_l2 == 0 && m_l1 > 0);
-    }
+    bool CAircraftCategory::isFirstLevel() const { return (m_l3 == 0 && m_l2 == 0 && m_l1 > 0); }
 
     int CAircraftCategory::getDepth() const
     {
@@ -152,7 +138,10 @@ namespace swift::misc::aviation
     QVariant CAircraftCategory::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::propertyByIndex(index); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -192,7 +181,10 @@ namespace swift::misc::aviation
     int CAircraftCategory::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftCategory &compareValue) const
     {
         if (index.isMyself()) { return m_path.compare(compareValue.getPath(), Qt::CaseInsensitive); }
-        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index)) { return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue); }
+        if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
+        {
+            return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

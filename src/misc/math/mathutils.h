@@ -35,7 +35,10 @@ namespace swift::misc::math
         //! Epsilon safe equal
         static bool epsilonEqual(float v1, float v2, float epsilon = 1E-06f);
         static bool epsilonEqual(double v1, double v2, double epsilon = 1E-06);
-        static bool epsilonEqualLimits(double v1, double v2) { return qAbs(v1 - v2) <= std::numeric_limits<double>::epsilon(); }
+        static bool epsilonEqualLimits(double v1, double v2)
+        {
+            return qAbs(v1 - v2) <= std::numeric_limits<double>::epsilon();
+        }
         //! @}
 
         //! @{

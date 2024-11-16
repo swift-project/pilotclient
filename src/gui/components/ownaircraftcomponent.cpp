@@ -29,8 +29,7 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    COwnAircraftComponent::COwnAircraftComponent(QWidget *parent) : QFrame(parent),
-                                                                    ui(new Ui::COwnAircraftComponent)
+    COwnAircraftComponent::COwnAircraftComponent(QWidget *parent) : QFrame(parent), ui(new Ui::COwnAircraftComponent)
     {
         ui->setupUi(this);
         ui->selector_AircraftIcao->displayWithIcaoDescription(false);
@@ -60,16 +59,21 @@ namespace swift::gui::components
         ui->comp_ModelStringCompleter->selectSource(CAircraftModelStringCompleter::ModelSet);
 
         connect(ui->le_Callsign, &QLineEdit::editingFinished, this, &COwnAircraftComponent::validate);
-        connect(ui->comp_ModelStringCompleter, &CAircraftModelStringCompleter::modelStringChanged, this, &COwnAircraftComponent::onModelStringSendChanged);
+        connect(ui->comp_ModelStringCompleter, &CAircraftModelStringCompleter::modelStringChanged, this,
+                &COwnAircraftComponent::onModelStringSendChanged);
         connect(ui->le_AircraftCombinedType, &QLineEdit::editingFinished, this, &COwnAircraftComponent::validate);
-        connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this, &COwnAircraftComponent::changedAircraftIcao, Qt::QueuedConnection);
-        connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this, &COwnAircraftComponent::changedAirlineIcao, Qt::QueuedConnection);
+        connect(ui->selector_AircraftIcao, &CDbAircraftIcaoSelectorComponent::changedAircraftIcao, this,
+                &COwnAircraftComponent::changedAircraftIcao, Qt::QueuedConnection);
+        connect(ui->selector_AirlineIcao, &CDbAirlineIcaoSelectorComponent::changedAirlineIcao, this,
+                &COwnAircraftComponent::changedAirlineIcao, Qt::QueuedConnection);
         connect(ui->pb_Clear, &QPushButton::clicked, this, &COwnAircraftComponent::clearLivery, Qt::QueuedConnection);
 
         if (sGui && sGui->getIContextSimulator())
         {
-            connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this, &COwnAircraftComponent::onSimulatorModelChanged, Qt::QueuedConnection);
-            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &COwnAircraftComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this,
+                    &COwnAircraftComponent::onSimulatorModelChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this,
+                    &COwnAircraftComponent::onSimulatorStatusChanged, Qt::QueuedConnection);
         }
 
         if (sGui && sGui->getIContextOwnAircraft())
@@ -78,19 +82,12 @@ namespace swift::gui::components
         }
     }
 
-    COwnAircraftComponent::~COwnAircraftComponent()
-    {}
+    COwnAircraftComponent::~COwnAircraftComponent() {}
 
     void COwnAircraftComponent::setUser(const CUser &user)
     {
-        if (user.hasCallsign())
-        {
-            ui->le_Callsign->setText(user.getCallsign().asString());
-        }
-        else if (CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            ui->le_Callsign->setText("SWIFT");
-        }
+        if (user.hasCallsign()) { ui->le_Callsign->setText(user.getCallsign().asString()); }
+        else if (CBuildConfig::isLocalDeveloperDebugBuild()) { ui->le_Callsign->setText("SWIFT"); }
         this->validate();
     }
 
@@ -111,7 +108,8 @@ namespace swift::gui::components
         const QString modelStr(reverseModel.hasModelString() ? reverseModel.getModelString() : "<unknown>");
         if (!reverseModel.hasModelString())
         {
-            CLogMessage(this).validationInfo(u"Invalid lookup for '%1' successful: %2") << modelStr << reverseModel.toQString();
+            CLogMessage(this).validationInfo(u"Invalid lookup for '%1' successful: %2")
+                << modelStr << reverseModel.toQString();
             CLogMessage(this).validationInfo(u"Hint: Are you using the emulated driver? Set a model if so!");
             return;
         }
@@ -158,13 +156,20 @@ namespace swift::gui::components
         if (!validCombinedType) { msgs.addValidationMessage("Invalid combined type", CStatusMessage::SeverityError); }
 
         // airline is optional, e.g. C172 has no airline
-        const bool validAirlineDesignator = values.ownAirlineIcao.hasValidDesignator() || values.ownAirlineIcao.getDesignator().isEmpty();
+        const bool validAirlineDesignator =
+            values.ownAirlineIcao.hasValidDesignator() || values.ownAirlineIcao.getDesignator().isEmpty();
         ui->lblp_AirlineIcao->setTicked(validAirlineDesignator);
-        if (!validAirlineDesignator) { msgs.addValidationMessage("Invalid airline designator", CStatusMessage::SeverityError); }
+        if (!validAirlineDesignator)
+        {
+            msgs.addValidationMessage("Invalid airline designator", CStatusMessage::SeverityError);
+        }
 
         const bool validAircraftDesignator = values.ownAircraftIcao.hasValidDesignator();
         ui->lblp_AircraftIcao->setTicked(validAircraftDesignator);
-        if (!validAircraftDesignator) { msgs.addValidationMessage("Invalid aircraft designator", CStatusMessage::SeverityError); }
+        if (!validAircraftDesignator)
+        {
+            msgs.addValidationMessage("Invalid aircraft designator", CStatusMessage::SeverityError);
+        }
 
         const bool validCallsign = CCallsign::isValidAircraftCallsign(values.ownCallsign);
         ui->lblp_Callsign->setTicked(validCallsign);
@@ -178,10 +183,7 @@ namespace swift::gui::components
 
     void COwnAircraftComponent::changedAircraftIcao(const CAircraftIcaoCode &icao)
     {
-        if (icao.isLoadedFromDb())
-        {
-            ui->le_AircraftCombinedType->setText(icao.getCombinedType());
-        }
+        if (icao.isLoadedFromDb()) { ui->le_AircraftCombinedType->setText(icao.getCombinedType()); }
         this->validate();
     }
 
@@ -265,10 +267,7 @@ namespace swift::gui::components
         return true;
     }
 
-    void COwnAircraftComponent::clearLivery()
-    {
-        ui->le_SendLivery->clear();
-    }
+    void COwnAircraftComponent::clearLivery() { ui->le_SendLivery->clear(); }
 
     CAircraftModel COwnAircraftComponent::getPrefillModel() const
     {
@@ -285,10 +284,7 @@ namespace swift::gui::components
                                 (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
         if (simulating)
         {
-            if (!model.hasModelString())
-            {
-                model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel();
-            }
+            if (!model.hasModelString()) { model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel(); }
             const QString modelAndKey(model.getModelStringAndDbKey());
 
             ui->le_SimulatorModel->setText(modelAndKey);
@@ -305,10 +301,7 @@ namespace swift::gui::components
         }
         else
         {
-            if (!model.hasModelString())
-            {
-                model = this->getPrefillModel();
-            }
+            if (!model.hasModelString()) { model = this->getPrefillModel(); }
             ui->le_SimulatorModel->clear();
             this->highlightModelField();
         }
@@ -317,7 +310,8 @@ namespace swift::gui::components
         ui->le_SendLivery->setText(model.getSwiftLiveryString());
 
         // reset the model
-        if (model.isLoadedFromDb() || (model.getAircraftIcaoCode().isLoadedFromDb() && model.getLivery().isLoadedFromDb()))
+        if (model.isLoadedFromDb() ||
+            (model.getAircraftIcaoCode().isLoadedFromDb() && model.getLivery().isLoadedFromDb()))
         {
             // full model from DB, take all values
             this->setGuiIcaoValues(model, false);
@@ -355,10 +349,7 @@ namespace swift::gui::components
             changedIcaoCodes = true;
         }
 
-        if (changedIcaoCodes)
-        {
-            sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(aircraftCode, airlineCode);
-        }
+        if (changedIcaoCodes) { sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(aircraftCode, airlineCode); }
 
         return changedIcaoCodes;
     }

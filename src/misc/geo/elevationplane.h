@@ -42,16 +42,19 @@ namespace swift::misc::geo
         CElevationPlane(const ICoordinateGeodetic &coordinate, const physical_quantities::CLength &radius);
 
         //! Plane at given coordinates with radius and altitude
-        CElevationPlane(const ICoordinateGeodetic &coordinate, const aviation::CAltitude &altitude, const physical_quantities::CLength &radius);
+        CElevationPlane(const ICoordinateGeodetic &coordinate, const aviation::CAltitude &altitude,
+                        const physical_quantities::CLength &radius);
 
         //! Plane at given coordinates with radius and altitude
-        CElevationPlane(const ICoordinateGeodetic &coordinate, double altitudeMSLft, const physical_quantities::CLength &radius);
+        CElevationPlane(const ICoordinateGeodetic &coordinate, double altitudeMSLft,
+                        const physical_quantities::CLength &radius);
 
         //! Plane at given coordinates with radius and altitude
         CElevationPlane(double latDeg, double lngDeg, double altitudeMSLft, const physical_quantities::CLength &radius);
 
         //! Plane at given coordinates with radius and altitude
-        CElevationPlane(const CLatitude &lat, const CLongitude &lng, const aviation::CAltitude &altitude, const physical_quantities::CLength &radius);
+        CElevationPlane(const CLatitude &lat, const CLongitude &lng, const aviation::CAltitude &altitude,
+                        const physical_quantities::CLength &radius);
 
         //! Constructors from CCoordinateGeodetic
         using CCoordinateGeodetic::CCoordinateGeodetic;

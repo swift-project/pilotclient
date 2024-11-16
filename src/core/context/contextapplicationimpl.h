@@ -31,9 +31,7 @@ namespace swift::core
     namespace context
     {
         //! Application context
-        class SWIFT_CORE_EXPORT CContextApplication :
-            public IContextApplication,
-            public swift::misc::CIdentifiable
+        class SWIFT_CORE_EXPORT CContextApplication : public IContextApplication, public swift::misc::CIdentifiable
         {
             Q_CLASSINFO("D-Bus Interface", SWIFT_CORE_CONTEXTAPPLICATION_INTERFACENAME)
             Q_OBJECT
@@ -42,7 +40,8 @@ namespace swift::core
 
         public slots:
             //! \copydoc swift::core::context::IContextApplication::changeSettings
-            virtual void changeSettings(const swift::misc::CValueCachePacket &settings, const swift::misc::CIdentifier &origin) override;
+            virtual void changeSettings(const swift::misc::CValueCachePacket &settings,
+                                        const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc swift::core::context::IContextApplication::getAllSettings
             virtual swift::misc::CValueCachePacket getAllSettings() const override;
@@ -66,10 +65,12 @@ namespace swift::core
             virtual swift::misc::CStatusMessage loadSettings() override;
 
             //! \copydoc swift::core::context::IContextApplication::registerHotkeyActions
-            virtual void registerHotkeyActions(const QStringList &actions, const swift::misc::CIdentifier &origin) override;
+            virtual void registerHotkeyActions(const QStringList &actions,
+                                               const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc swift::core::context::IContextApplication::callHotkeyActionRemotely
-            virtual void callHotkeyActionRemotely(const QString &action, bool argument, const swift::misc::CIdentifier &origin) override;
+            virtual void callHotkeyActionRemotely(const QString &action, bool argument,
+                                                  const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc swift::core::context::IContextApplication::registerApplication
             virtual swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) override;

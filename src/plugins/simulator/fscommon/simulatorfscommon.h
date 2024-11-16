@@ -34,7 +34,8 @@ namespace swift::simplugin::fscommon
         virtual bool isPaused() const override { return m_simPaused; }
         virtual bool isTimeSynchronized() const override { return m_simTimeSynced; }
         virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override;
-        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) override;
+        virtual bool setTimeSynchronization(bool enable,
+                                            const swift::misc::physical_quantities::CTime &offset) override;
         virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
         // ---------------------- ISimulator ------------------
 
@@ -43,8 +44,7 @@ namespace swift::simplugin::fscommon
         CSimulatorFsCommon(const swift::misc::simulation::CSimulatorPluginInfo &info,
                            swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
                            swift::misc::simulation::IRemoteAircraftProvider *renderedAircraftProvider,
-                           swift::misc::network::IClientProvider *clientProvider,
-                           QObject *parent = nullptr);
+                           swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! Init the internal objects
         virtual void initSimulatorInternals() override;
@@ -58,7 +58,8 @@ namespace swift::simplugin::fscommon
         //! Register help
         static void registerHelp();
 
-        int m_ownAircraftUpdateCycles = 0; //!< own aircraft updates, even with 50 updates/sec long enough even for 32bit
+        int m_ownAircraftUpdateCycles =
+            0; //!< own aircraft updates, even with 50 updates/sec long enough even for 32bit
         int m_skipCockpitUpdateCycles = 0; //!< skip some update cycles to allow changes in simulator cockpit to be set
         bool m_simPaused = false; //!< simulator paused?
         bool m_simTimeSynced = false; //!< time synchronized?

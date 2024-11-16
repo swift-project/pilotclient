@@ -22,9 +22,7 @@ namespace swift::misc::simulation
         case CSimulatorInfo::FG: return m_distributorsFG;
         case CSimulatorInfo::XPLANE: return m_distributorsXPlane;
         case CSimulatorInfo::MSFS: return m_distributorsMsfs;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
 
         static const CDistributorList empty;
@@ -36,7 +34,8 @@ namespace swift::misc::simulation
         return this->getDistributors(simulator).frontOrDefault();
     }
 
-    void CDistributorListPreferences::setDistributors(const CDistributorList &distributors, const CSimulatorInfo &simulator)
+    void CDistributorListPreferences::setDistributors(const CDistributorList &distributors,
+                                                      const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
         CDistributorList d(distributors);
@@ -51,9 +50,7 @@ namespace swift::misc::simulation
         case CSimulatorInfo::FG: m_distributorsFG = d; break;
         case CSimulatorInfo::XPLANE: m_distributorsXPlane = d; break;
         case CSimulatorInfo::MSFS: m_distributorsMsfs = d; break;
-        default:
-            Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator");
-            break;
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
     }
 
@@ -61,6 +58,10 @@ namespace swift::misc::simulation
     {
         Q_UNUSED(i18n);
         static const QString p("Preferences FSX %1, P3D %2, FS9 %3, XP %4 FG %5");
-        return p.arg(m_distributorsFsx.size()).arg(m_distributorsP3d.size()).arg(m_distributorsFs9.size()).arg(m_distributorsXPlane.size()).arg(m_distributorsFG.size());
+        return p.arg(m_distributorsFsx.size())
+            .arg(m_distributorsP3d.size())
+            .arg(m_distributorsFs9.size())
+            .arg(m_distributorsXPlane.size())
+            .arg(m_distributorsFG.size());
     }
 } // namespace swift::misc::simulation

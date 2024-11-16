@@ -42,32 +42,32 @@ namespace swift::misc::geo
 
     QString CKmlUtils::asPoint(const ICoordinateGeodetic &coordinate, const KMLSettings &settings)
     {
-        return u"<Point><coordinates>" %
-               CKmlUtils::asRawCoordinates(coordinate, settings.withAltitude) %
-               u"</coordinates>" %
-               (settings.extrude ? u"<extrude>1</extrude>" : u"") %
-               (settings.withAltitude && !settings.altitudeMode.isEmpty() ? u"<altitudeMode>" % settings.altitudeMode % "</altitudeMode>" : QString()) %
+        return u"<Point><coordinates>" % CKmlUtils::asRawCoordinates(coordinate, settings.withAltitude) %
+               u"</coordinates>" % (settings.extrude ? u"<extrude>1</extrude>" : u"") %
+               (settings.withAltitude && !settings.altitudeMode.isEmpty() ?
+                    u"<altitudeMode>" % settings.altitudeMode % "</altitudeMode>" :
+                    QString()) %
                u"</Point>";
     }
 
-    QString CKmlUtils::asPlacemark(
-        const QString &name, const QString &description,
-        const ICoordinateGeodetic &coordinate, const KMLSettings &settings)
+    QString CKmlUtils::asPlacemark(const QString &name, const QString &description,
+                                   const ICoordinateGeodetic &coordinate, const KMLSettings &settings)
     {
-        return u"<Placemark>" %
-               asPoint(coordinate, settings) %
+        return u"<Placemark>" % asPoint(coordinate, settings) %
                (name.isEmpty() ? QString() : u"<name>" % name.toHtmlEscaped() % u"</name>") %
-               (description.isEmpty() ? QString() : u"<description>" % description.toHtmlEscaped() % u"</description>") %
+               (description.isEmpty() ? QString() :
+                                        u"<description>" % description.toHtmlEscaped() % u"</description>") %
                u"</Placemark>";
     }
 
     QString CKmlUtils::asLineString(const QString &coordinatesRaw, const CKmlUtils::KMLSettings &settings)
     {
         return u"<LineString>" %
-               (settings.withAltitude && !settings.altitudeMode.isEmpty() ? u"<altitudeMode>" % settings.altitudeMode % "</altitudeMode>" : QString()) %
+               (settings.withAltitude && !settings.altitudeMode.isEmpty() ?
+                    u"<altitudeMode>" % settings.altitudeMode % "</altitudeMode>" :
+                    QString()) %
                (settings.tessellate ? u"<tessellate>1</tessellate>" : u"") %
-               (settings.extrude ? u"<extrude>1</extrude>" : u"") %
-               CKmlUtils::wrapAsKmlCoordinates(coordinatesRaw) %
+               (settings.extrude ? u"<extrude>1</extrude>" : u"") % CKmlUtils::wrapAsKmlCoordinates(coordinatesRaw) %
                u"</LineString>";
     }
 } // namespace swift::misc::geo

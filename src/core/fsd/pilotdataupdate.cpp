@@ -12,25 +12,16 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    PilotDataUpdate::PilotDataUpdate() : MessageBase()
-    {}
+    PilotDataUpdate::PilotDataUpdate() : MessageBase() {}
 
-    PilotDataUpdate::PilotDataUpdate(CTransponder::TransponderMode transponderMode, const QString &sender, int transponderCode, PilotRating rating,
-                                     double latitude, double longitude, int altitudeTrue, int altitudePressure, int groundSpeed,
-                                     double pitch, double bank, double heading, bool onGround)
-        : MessageBase(sender, {}),
-          m_transponderMode(transponderMode),
-          m_transponderCode(transponderCode),
-          m_rating(rating),
-          m_latitude(latitude),
-          m_longitude(longitude),
-          m_altitudeTrue(altitudeTrue),
-          m_altitudePressure(altitudePressure),
-          m_groundSpeed(groundSpeed),
-          m_pitch(pitch),
-          m_bank(bank),
-          m_heading(heading),
-          m_onGround(onGround)
+    PilotDataUpdate::PilotDataUpdate(CTransponder::TransponderMode transponderMode, const QString &sender,
+                                     int transponderCode, PilotRating rating, double latitude, double longitude,
+                                     int altitudeTrue, int altitudePressure, int groundSpeed, double pitch, double bank,
+                                     double heading, bool onGround)
+        : MessageBase(sender, {}), m_transponderMode(transponderMode), m_transponderCode(transponderCode),
+          m_rating(rating), m_latitude(latitude), m_longitude(longitude), m_altitudeTrue(altitudeTrue),
+          m_altitudePressure(altitudePressure), m_groundSpeed(groundSpeed), m_pitch(pitch), m_bank(bank),
+          m_heading(heading), m_onGround(onGround)
     {}
 
     QStringList PilotDataUpdate::toTokens() const
@@ -66,8 +57,9 @@ namespace swift::core::fsd
         bool onGround = false;
         unpackPBH(tokens[8].toUInt(), pitch, bank, heading, onGround);
 
-        return PilotDataUpdate(fromQString<CTransponder::TransponderMode>(tokens[0]), tokens[1], tokens[2].toInt(), fromQString<PilotRating>(tokens[3]),
-                               tokens[4].toDouble(), tokens[5].toDouble(), tokens[6].toInt(), tokens[6].toInt() + tokens[9].toInt(), tokens[7].toInt(),
-                               pitch, bank, heading, onGround);
+        return PilotDataUpdate(fromQString<CTransponder::TransponderMode>(tokens[0]), tokens[1], tokens[2].toInt(),
+                               fromQString<PilotRating>(tokens[3]), tokens[4].toDouble(), tokens[5].toDouble(),
+                               tokens[6].toInt(), tokens[6].toInt() + tokens[9].toInt(), tokens[7].toInt(), pitch, bank,
+                               heading, onGround);
     }
 } // namespace swift::core::fsd

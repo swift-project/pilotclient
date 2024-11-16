@@ -40,9 +40,11 @@ namespace swift::misc
             //! @}
 
             //! Reduce by categories
-            CAircraftModelList reduceByCategories(
-                const CAircraftModelList &alreadyMatchedModels, const CAircraftModelList &modelSet,
-                const CAircraftMatcherSetup &setup, const CSimulatedAircraft &remoteAircraft, bool &reduced, bool shortLog, CStatusMessageList *log = nullptr) const;
+            CAircraftModelList reduceByCategories(const CAircraftModelList &alreadyMatchedModels,
+                                                  const CAircraftModelList &modelSet,
+                                                  const CAircraftMatcherSetup &setup,
+                                                  const CSimulatedAircraft &remoteAircraft, bool &reduced,
+                                                  bool shortLog, CStatusMessageList *log = nullptr) const;
 
         private:
             //! Glider?

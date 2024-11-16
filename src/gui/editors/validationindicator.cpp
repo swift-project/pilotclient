@@ -17,8 +17,7 @@ using namespace swift::misc;
 
 namespace swift::gui::editors
 {
-    CValidationIndicator::CValidationIndicator(QWidget *parent) : QFrame(parent),
-                                                                  ui(new Ui::CValidationIndicator)
+    CValidationIndicator::CValidationIndicator(QWidget *parent) : QFrame(parent), ui(new Ui::CValidationIndicator)
     {
         ui->setupUi(this);
         this->clear();
@@ -31,8 +30,7 @@ namespace swift::gui::editors
         m_resetTimer.start(ResetInterval);
     }
 
-    CValidationIndicator::~CValidationIndicator()
-    {}
+    CValidationIndicator::~CValidationIndicator() {}
 
     void CValidationIndicator::passed()
     {
@@ -64,30 +62,15 @@ namespace swift::gui::editors
 
     void CValidationIndicator::setState(bool ok)
     {
-        if (ok)
-        {
-            passed();
-        }
-        else
-        {
-            failed();
-        }
+        if (ok) { passed(); }
+        else { failed(); }
     }
 
     void CValidationIndicator::setState(const swift::misc::CStatusMessageList &msgs)
     {
-        if (msgs.hasErrorMessages())
-        {
-            this->failed();
-        }
-        else if (msgs.hasWarningMessages())
-        {
-            this->warnings();
-        }
-        else
-        {
-            this->passed();
-        }
+        if (msgs.hasErrorMessages()) { this->failed(); }
+        else if (msgs.hasWarningMessages()) { this->warnings(); }
+        else { this->passed(); }
     }
 
     void CValidationIndicator::paintEvent(QPaintEvent *paintEvent)
@@ -98,10 +81,7 @@ namespace swift::gui::editors
 
     void CValidationIndicator::setBackgroundColor(const QString &colorName)
     {
-        if (colorName.isEmpty())
-        {
-            this->setStyleSheet(m_originalStyleSheet);
-        }
+        if (colorName.isEmpty()) { this->setStyleSheet(m_originalStyleSheet); }
         else
         {
             // I have to clean up any potential background image derived from style sheet

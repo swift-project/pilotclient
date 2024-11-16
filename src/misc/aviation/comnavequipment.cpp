@@ -7,20 +7,15 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CComNavEquipment)
 
 namespace swift::misc::aviation
 {
-    CComNavEquipment::CComNavEquipment(ComNavEquipment comNavEquipment, CpdlcSatcomEquipment cpdlcSatcomEquipment) : m_equipment(comNavEquipment), m_cpdlcSatcomEquipment(cpdlcSatcomEquipment)
+    CComNavEquipment::CComNavEquipment(ComNavEquipment comNavEquipment, CpdlcSatcomEquipment cpdlcSatcomEquipment)
+        : m_equipment(comNavEquipment), m_cpdlcSatcomEquipment(cpdlcSatcomEquipment)
     {
-        if (m_equipment == ComNavEquipment())
-        {
-            m_equipment = NoEquip;
-        }
+        if (m_equipment == ComNavEquipment()) { m_equipment = NoEquip; }
     }
 
     CComNavEquipment::CComNavEquipment(QString equipment)
     {
-        if (equipment.isEmpty())
-        {
-            return;
-        }
+        if (equipment.isEmpty()) { return; }
 
         m_equipment = {}; // Clear default flag
 
@@ -204,8 +199,9 @@ namespace swift::misc::aviation
     QStringList CComNavEquipment::allEquipmentLetters()
     {
         // In order as they appear in the final string
-        static const QStringList r({ "S", "A", "B", "C", "D", "E1", "E2", "E3", "F", "G", "H", "I", "J1", "J2", "J3", "J4", "J5", "J6", "J7", "K", "L", "M1", "M2", "M3",
-                                     "N", "O", "P1", "P2", "P3", "R", "T", "U", "V", "W", "X", "Y", "Z" });
+        static const QStringList r({ "S",  "A",  "B",  "C",  "D",  "E1", "E2", "E3", "F",  "G",  "H",  "I", "J1",
+                                     "J2", "J3", "J4", "J5", "J6", "J7", "K",  "L",  "M1", "M2", "M3", "N", "O",
+                                     "P1", "P2", "P3", "R",  "T",  "U",  "V",  "W",  "X",  "Y",  "Z" });
         return r;
     }
 

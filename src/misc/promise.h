@@ -42,10 +42,11 @@ namespace swift::misc
         {
             QSharedPointer<QFutureWatcher<T>> watcher(new QFutureWatcher<T>, &QObject::deleteLater);
             if (!context) { context = watcher.data(); }
-            QObject::connect(watcher.data(), &QFutureWatcher<T>::finished, context, [watcher, func = std::forward<F>(func)]() mutable {
-                if (!watcher->isCanceled()) { func(watcher->future()); }
-                watcher.reset();
-            });
+            QObject::connect(watcher.data(), &QFutureWatcher<T>::finished, context,
+                             [watcher, func = std::forward<F>(func)]() mutable {
+                                 if (!watcher->isCanceled()) { func(watcher->future()); }
+                                 watcher.reset();
+                             });
             watcher->setFuture(future);
             QCoreApplication::sendPostedEvents(watcher.data());
         }

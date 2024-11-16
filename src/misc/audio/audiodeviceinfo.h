@@ -106,7 +106,8 @@ namespace swift::misc::audio
     private:
         int m_type = static_cast<int>(Unknown); //!< Device type, @see CAudioDeviceInfo::DeviceType
         QString m_deviceName; //!< Device name
-        CIdentifier m_identifier; //!< We use a DBus based system. Hence an audio device can reside on a different computers, this here is its name
+        CIdentifier m_identifier; //!< We use a DBus based system. Hence an audio device can reside on a different
+                                  //!< computers, this here is its name
 
         SWIFT_METACLASS(
             CAudioDeviceInfo,

@@ -17,9 +17,9 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CUpdateInfo)
 
 namespace swift::misc::db
 {
-    CUpdateInfo::CUpdateInfo(const CArtifactList &artifacts, const CDistributionList &distributions) : m_artifactsPilotClient(artifacts.findByType(CArtifact::PilotClientInstaller)),
-                                                                                                       m_artifactsXSwiftBus(artifacts.findByType(CArtifact::XSwiftBus)),
-                                                                                                       m_distributions(distributions)
+    CUpdateInfo::CUpdateInfo(const CArtifactList &artifacts, const CDistributionList &distributions)
+        : m_artifactsPilotClient(artifacts.findByType(CArtifact::PilotClientInstaller)),
+          m_artifactsXSwiftBus(artifacts.findByType(CArtifact::XSwiftBus)), m_distributions(distributions)
     {
         // void
     }
@@ -87,21 +87,13 @@ namespace swift::misc::db
         return QStringList({ mostStable.getClassName(), CPlatform::currentPlatform().getPlatformName() });
     }
 
-    QString CUpdateInfo::convertToQString(bool i18n) const
-    {
-        return this->convertToQString(", ", i18n);
-    }
+    QString CUpdateInfo::convertToQString(bool i18n) const { return this->convertToQString(", ", i18n); }
 
     QString CUpdateInfo::convertToQString(const QString &separator, bool i18n) const
     {
         Q_UNUSED(i18n);
-        return u"artifacts (PC): " %
-               this->getArtifactsPilotClient().toQString(i18n) %
-               separator %
-               u"artifacts (XSB): " %
-               this->getArtifactsXSwiftBus().toQString(i18n) %
-               separator %
-               u"distributions: " %
+        return u"artifacts (PC): " % this->getArtifactsPilotClient().toQString(i18n) % separator %
+               u"artifacts (XSB): " % this->getArtifactsXSwiftBus().toQString(i18n) % separator % u"distributions: " %
                this->getDistributions().toQString(i18n);
     }
 

@@ -18,7 +18,8 @@ namespace swift::gui::models
     class CAtcStationTreeModel;
 
     //! ATC list model
-    class SWIFT_GUI_EXPORT CAtcStationListModel : public CListModelCallsignObjects<swift::misc::aviation::CAtcStationList, true>
+    class SWIFT_GUI_EXPORT CAtcStationListModel :
+        public CListModelCallsignObjects<swift::misc::aviation::CAtcStationList, true>
     {
         Q_OBJECT
 

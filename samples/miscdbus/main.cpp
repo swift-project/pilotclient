@@ -142,14 +142,8 @@ int main(int argc, char *argv[])
         // start DBus
         address = QString(useSessionBusForServer ? "session" : addressTcp); // testing with real transfer
         if (mode.contains("sb", Qt::CaseInsensitive)) address = "session";
-        if (mode.startsWith("1"))
-        {
-            mode = "testservice";
-        }
-        else
-        {
-            return 0;
-        }
+        if (mode.startsWith("1")) { mode = "testservice"; }
+        else { return 0; }
 
         // I know I am in the "server process here", so I can safely create a CDBusServer
         // this runs in the original process and can be directly debugged
@@ -176,10 +170,7 @@ int main(int argc, char *argv[])
         }
 
         // run tests
-        if (mode == "testservice")
-        {
-            swift::sample::ServiceTool::dataTransferTestServer(dBusServer, verbose);
-        }
+        if (mode == "testservice") { swift::sample::ServiceTool::dataTransferTestServer(dBusServer, verbose); }
 
         // testing in new process
         CProcessCtrl::startDetached(executable, args, true);

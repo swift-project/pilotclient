@@ -60,7 +60,8 @@ namespace swift::gui::components
         void onChangedAtcStations();
 
         //! Connection status did change
-        void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
+        void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
+                                       const swift::misc::network::CConnectionStatus &to);
 
         //! Button has been clicked
         void onButtonClicked();

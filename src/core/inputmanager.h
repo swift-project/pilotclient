@@ -38,7 +38,8 @@ namespace swift::core
         CInputManager(QObject *parent = nullptr);
 
         //! Register new action
-        void registerAction(const QString &action, swift::misc::CIcons::IconIndex icon = swift::misc::CIcons::StandardIconEmpty16);
+        void registerAction(const QString &action,
+                            swift::misc::CIcons::IconIndex icon = swift::misc::CIcons::StandardIconEmpty16);
 
         //! Register remote actions
         void registerRemoteActions(const QStringList &actions);
@@ -145,7 +146,8 @@ namespace swift::core
         swift::misc::input::CHotkeyCombination m_capturedCombination;
         swift::misc::input::CHotkeyCombination m_combinationBeforeCapture;
 
-        swift::misc::CSetting<application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::reloadHotkeySettings };
+        swift::misc::CSetting<application::TActionHotkeys> m_actionHotkeys { this,
+                                                                             &CInputManager::reloadHotkeySettings };
     };
 } // namespace swift::core
 

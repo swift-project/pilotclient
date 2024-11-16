@@ -7,20 +7,14 @@
 
 namespace swift::core::fsd
 {
-    PlaneInformationFsinn::PlaneInformationFsinn() : MessageBase()
-    {}
+    PlaneInformationFsinn::PlaneInformationFsinn() : MessageBase() {}
 
-    PlaneInformationFsinn::PlaneInformationFsinn(const QString &sender,
-                                                 const QString &receiver,
-                                                 const QString &airlineIcao,
-                                                 const QString &aircraftIcao,
+    PlaneInformationFsinn::PlaneInformationFsinn(const QString &sender, const QString &receiver,
+                                                 const QString &airlineIcao, const QString &aircraftIcao,
                                                  const QString &aircraftIcaoCombinedType,
                                                  const QString &sendMModelString)
-        : MessageBase(sender, receiver),
-          m_airlineIcao(airlineIcao),
-          m_aircraftIcao(aircraftIcao),
-          m_aircraftIcaoCombinedType(aircraftIcaoCombinedType),
-          m_sendMModelString(sendMModelString)
+        : MessageBase(sender, receiver), m_airlineIcao(airlineIcao), m_aircraftIcao(aircraftIcao),
+          m_aircraftIcaoCombinedType(aircraftIcaoCombinedType), m_sendMModelString(sendMModelString)
     {}
 
     QStringList PlaneInformationFsinn::toTokens() const
@@ -45,7 +39,8 @@ namespace swift::core::fsd
     {
         if (tokens.size() != 12)
         {
-            swift::misc::CLogMessage(static_cast<PlaneInformationFsinn *>(nullptr)).debug(u"Wrong number of arguments.");
+            swift::misc::CLogMessage(static_cast<PlaneInformationFsinn *>(nullptr))
+                .debug(u"Wrong number of arguments.");
             return {};
         };
 

@@ -27,7 +27,8 @@ namespace XSwiftBus
         const double diffLa = latRad2 - latRad1;
         const double doffLo = lonRad2 - lonRad1;
 
-        const double computation = asin(sqrt(sin(diffLa / 2) * sin(diffLa / 2) + cos(latRad1) * cos(latRad2) * sin(doffLo / 2) * sin(doffLo / 2)));
+        const double computation = asin(
+            sqrt(sin(diffLa / 2) * sin(diffLa / 2) + cos(latRad1) * cos(latRad2) * sin(doffLo / 2) * sin(doffLo / 2)));
         return 2 * c_earthRadiusKm * computation;
     }
 } // namespace XSwiftBus

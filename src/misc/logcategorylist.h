@@ -32,9 +32,7 @@ namespace swift::misc
     /*!
      * A sequence of log categories.
      */
-    class SWIFT_MISC_EXPORT CLogCategoryList :
-        public CSequence<CLogCategory>,
-        public mixin::MetaType<CLogCategoryList>
+    class SWIFT_MISC_EXPORT CLogCategoryList : public CSequence<CLogCategory>, public mixin::MetaType<CLogCategoryList>
     {
         using CSequence::CSequence;
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CLogCategoryList)
@@ -64,7 +62,8 @@ namespace swift::misc
          * This constructor will be disabled if T is not a class type.
          *
          * \param pointer The value of pointer is unimportant. Only the static type T is considered.
-         *                It is legal to pass static_cast<T>(nullptr), but in member functions passing the <tt>this</tt> pointer is easier.
+         *                It is legal to pass static_cast<T>(nullptr), but in member functions passing the <tt>this</tt>
+         * pointer is easier.
          */
         template <typename T, typename = std::enable_if_t<std::is_class_v<T>>>
         CLogCategoryList(const T *pointer) : CLogCategoryList(fromClass(pointer))
@@ -120,9 +119,15 @@ namespace swift::misc
             static_assert(sizeof(T) > 0, "T must be a complete type, not forward declared");
             static const auto staticList = [] {
                 CLogCategoryList list;
-                if constexpr (THasGetLogCategories<T>::value) { list.push_back(fromQStringList(T::getLogCategories())); }
+                if constexpr (THasGetLogCategories<T>::value)
+                {
+                    list.push_back(fromQStringList(T::getLogCategories()));
+                }
                 if constexpr (QMetaTypeId<T>::Defined) { list.push_back(QMetaType::typeName(qMetaTypeId<T>())); }
-                if constexpr (std::is_base_of_v<QObject, T>) { list.appendCategoriesFromMetaObject(T::staticMetaObject); }
+                if constexpr (std::is_base_of_v<QObject, T>)
+                {
+                    list.appendCategoriesFromMetaObject(T::staticMetaObject);
+                }
                 return list;
             }();
             auto list = staticList;

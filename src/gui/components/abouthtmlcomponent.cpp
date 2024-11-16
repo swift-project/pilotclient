@@ -19,12 +19,12 @@ using namespace swift::misc;
 
 namespace swift::gui::components
 {
-    CAboutHtmlComponent::CAboutHtmlComponent(QWidget *parent) : QFrame(parent),
-                                                                ui(new Ui::CAboutHtmlComponent)
+    CAboutHtmlComponent::CAboutHtmlComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CAboutHtmlComponent)
     {
         ui->setupUi(this);
         const QPointer<CAboutHtmlComponent> myself(this);
-        connect(ui->tbr_About, &QTextBrowser::anchorClicked, this, &CAboutHtmlComponent::onAnchorClicked, Qt::QueuedConnection);
+        connect(ui->tbr_About, &QTextBrowser::anchorClicked, this, &CAboutHtmlComponent::onAnchorClicked,
+                Qt::QueuedConnection);
 
         QTimer::singleShot(2500, this, [=] {
             if (!myself) { return; }
@@ -32,8 +32,7 @@ namespace swift::gui::components
         });
     }
 
-    CAboutHtmlComponent::~CAboutHtmlComponent()
-    {}
+    CAboutHtmlComponent::~CAboutHtmlComponent() {}
 
     void CAboutHtmlComponent::loadAbout()
     {
@@ -56,7 +55,8 @@ namespace swift::gui::components
         ui->tbr_About->setOpenLinks(false);
 
         // base URL
-        // ui->tbr_About->document()->setMetaInformation(QTextDocument::DocumentUrl, "https://datastore.swift-project.org/legal");
+        // ui->tbr_About->document()->setMetaInformation(QTextDocument::DocumentUrl,
+        // "https://datastore.swift-project.org/legal");
     }
 
     void CAboutHtmlComponent::onAnchorClicked(const QUrl &url)
@@ -66,11 +66,9 @@ namespace swift::gui::components
             QDesktopServices::openUrl(url);
             return;
         }
-        const QString possibleLegalFile = CFileUtils::appendFilePaths(CSwiftDirectories::legalDirectory(), url.fileName());
+        const QString possibleLegalFile =
+            CFileUtils::appendFilePaths(CSwiftDirectories::legalDirectory(), url.fileName());
         QFile f(possibleLegalFile);
-        if (f.exists())
-        {
-            QDesktopServices::openUrl(QUrl::fromLocalFile(possibleLegalFile));
-        };
+        if (f.exists()) { QDesktopServices::openUrl(QUrl::fromLocalFile(possibleLegalFile)); };
     }
 } // namespace swift::gui::components

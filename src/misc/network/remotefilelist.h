@@ -21,9 +21,7 @@ SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CRemoteFile, CRemoteFileList
 namespace swift::misc::network
 {
     //! Value object encapsulating a list of remote files.
-    class SWIFT_MISC_EXPORT CRemoteFileList :
-        public CSequence<CRemoteFile>,
-        public mixin::MetaType<CRemoteFileList>
+    class SWIFT_MISC_EXPORT CRemoteFileList : public CSequence<CRemoteFile>, public mixin::MetaType<CRemoteFileList>
     {
     public:
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CRemoteFileList)

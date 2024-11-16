@@ -9,6 +9,5 @@ namespace swift::misc::network
 {
     CUserList::CUserList() {}
 
-    CUserList::CUserList(const CSequence &other) : CSequence<CUser>(other)
-    {}
+    CUserList::CUserList(const CSequence &other) : CSequence<CUser>(other) {}
 } // namespace swift::misc::network

@@ -7,13 +7,12 @@
 
 namespace swift::gui::components
 {
-    CCopyModelsFromOtherSwiftVersionsDialog::CCopyModelsFromOtherSwiftVersionsDialog(QWidget *parent) : QDialog(parent),
-                                                                                                        ui(new Ui::CCopyModelsFromOtherSwiftVersionsDialog)
+    CCopyModelsFromOtherSwiftVersionsDialog::CCopyModelsFromOtherSwiftVersionsDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::CCopyModelsFromOtherSwiftVersionsDialog)
     {
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CCopyModelsFromOtherSwiftVersionsDialog::~CCopyModelsFromOtherSwiftVersionsDialog()
-    {}
+    CCopyModelsFromOtherSwiftVersionsDialog::~CCopyModelsFromOtherSwiftVersionsDialog() {}
 } // namespace swift::gui::components

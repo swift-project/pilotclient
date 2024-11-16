@@ -26,8 +26,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        WatchHandler(event_base *base, DBusWatch *watch)
-            : m_base(base), m_watch(watch)
+        WatchHandler(event_base *base, DBusWatch *watch) : m_base(base), m_watch(watch)
         {
             const unsigned int flags = dbus_watch_get_flags(watch);
             short monitoredEvents = EV_PERSIST;
@@ -69,8 +68,7 @@ namespace XSwiftBus
     {
     public:
         //! Constructor
-        TimeoutHandler(event_base *base, DBusTimeout *timeout)
-            : m_base(base), m_timeout(timeout)
+        TimeoutHandler(event_base *base, DBusTimeout *timeout) : m_base(base), m_timeout(timeout)
         {
             timeval timer;
             const int interval = dbus_timeout_get_interval(timeout);
@@ -105,8 +103,7 @@ namespace XSwiftBus
     public:
         Timer() = default;
         //! Constructor
-        Timer(event_base *base, const timeval &timeout, const std::function<void()> &func)
-            : m_base(base), m_func(func)
+        Timer(event_base *base, const timeval &timeout, const std::function<void()> &func) : m_base(base), m_func(func)
         {
             m_event.reset(evtimer_new(m_base, callback, this));
             evtimer_add(m_event.get(), &timeout);
@@ -140,14 +137,9 @@ namespace XSwiftBus
                                               std::bind(&CDBusDispatcher::dbusTimeoutToggled, this, _1));
     }
 
-    CDBusDispatcher::~CDBusDispatcher()
-    {
-    }
+    CDBusDispatcher::~CDBusDispatcher() {}
 
-    void CDBusDispatcher::add(IDispatchable *dispatchable)
-    {
-        m_dispatchList.push_back(dispatchable);
-    }
+    void CDBusDispatcher::add(IDispatchable *dispatchable) { m_dispatchList.push_back(dispatchable); }
 
     void CDBusDispatcher::remove(IDispatchable *dispatchable)
     {
@@ -172,10 +164,7 @@ namespace XSwiftBus
     {
         if (m_dispatchList.empty()) { return; }
 
-        for (IDispatchable *dispatchable : m_dispatchList)
-        {
-            dispatchable->dispatch();
-        }
+        for (IDispatchable *dispatchable : m_dispatchList) { dispatchable->dispatch(); }
     }
 
     dbus_bool_t CDBusDispatcher::dbusAddWatch(DBusWatch *watch)
@@ -211,9 +200,7 @@ namespace XSwiftBus
 
     void CDBusDispatcher::dbusRemoveTimeout(DBusTimeout *timeout)
     {
-        auto predicate = [timeout](const std::unique_ptr<TimeoutHandler> &ptr) {
-            return ptr->getTimeout() == timeout;
-        };
+        auto predicate = [timeout](const std::unique_ptr<TimeoutHandler> &ptr) { return ptr->getTimeout() == timeout; };
 
         m_timeouts.erase(std::remove_if(m_timeouts.begin(), m_timeouts.end(), predicate), m_timeouts.end());
     }

@@ -28,8 +28,7 @@ using namespace swift::core::db;
 
 namespace swift::gui::menus
 {
-    void IAircraftModelViewMenu::anchor()
-    {}
+    void IAircraftModelViewMenu::anchor() {}
 
     const QStringList &IAircraftModelViewMenu::getLogCategories()
     {
@@ -65,7 +64,8 @@ namespace swift::gui::menus
         return mv->selectedObjects();
     }
 
-    CShowSimulatorFileMenu::CShowSimulatorFileMenu(CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame) : IAircraftModelViewMenu(modelView), m_messageFrame(messageFrame)
+    CShowSimulatorFileMenu::CShowSimulatorFileMenu(CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame)
+        : IAircraftModelViewMenu(modelView), m_messageFrame(messageFrame)
     {}
 
     const QStringList &CShowSimulatorFileMenu::getLogCategories()
@@ -86,11 +86,15 @@ namespace swift::gui::menus
             if (model.hasFileName())
             {
                 menuActions.addMenuSimulator();
-                m_fileAction = menuActions.addAction(m_fileAction, CIcons::text16(), "Open simulator file", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::showSimulatorFile });
+                m_fileAction = menuActions.addAction(m_fileAction, CIcons::text16(), "Open simulator file",
+                                                     CMenuAction::pathSimulator(),
+                                                     { this, &CShowSimulatorFileMenu::showSimulatorFile });
                 added = true;
                 if (CModelConverterX::supportsModelConverterX())
                 {
-                    m_modelConverterX = menuActions.addAction(m_modelConverterX, CIcons::modelConverterX(), "ModelConverterX", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::startModelConverterX });
+                    m_modelConverterX = menuActions.addAction(m_modelConverterX, CIcons::modelConverterX(),
+                                                              "ModelConverterX", CMenuAction::pathSimulator(),
+                                                              { this, &CShowSimulatorFileMenu::startModelConverterX });
                 }
             }
 
@@ -98,13 +102,12 @@ namespace swift::gui::menus
             {
                 added = true;
                 menuActions.addMenuSimulator();
-                m_iconAction = menuActions.addAction(m_iconAction, CIcons::appAircraft16(), "Display icon", CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::displayIcon });
+                m_iconAction =
+                    menuActions.addAction(m_iconAction, CIcons::appAircraft16(), "Display icon",
+                                          CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::displayIcon });
             }
 
-            if (added)
-            {
-                menuActions.addSeparator(CMenuAction::pathSimulator());
-            }
+            if (added) { menuActions.addSeparator(CMenuAction::pathSimulator()); }
         }
         this->nestedCustomMenu(menuActions);
     }
@@ -122,7 +125,9 @@ namespace swift::gui::menus
         }
         else
         {
-            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityError, QStringLiteral("No file for model '&1'").arg(model.getFileName()), true);
+            const CStatusMessage m =
+                CStatusMessage(this, CStatusMessage::SeverityError,
+                               QStringLiteral("No file for model '&1'").arg(model.getFileName()), true);
             if (m_messageFrame) { m_messageFrame->showOverlayHTMLMessage(m); }
             CLogMessage::preformatted(m);
         }
@@ -136,14 +141,8 @@ namespace swift::gui::menus
         if (model.getIconFile().isEmpty()) { return; }
         CStatusMessage msg(this);
         const CPixmap pm(model.loadIcon(msg));
-        if (msg.isSuccess())
-        {
-            m_messageFrame->showOverlayImage(pm);
-        }
-        else
-        {
-            CLogMessage::preformatted(msg);
-        }
+        if (msg.isSuccess()) { m_messageFrame->showOverlayImage(pm); }
+        else { CLogMessage::preformatted(msg); }
     }
 
     void CShowSimulatorFileMenu::startModelConverterX()
@@ -157,7 +156,8 @@ namespace swift::gui::menus
 
     // --------------------------------- with DB data ---------------------------------
 
-    CConsolidateWithDbDataMenu::CConsolidateWithDbDataMenu(CAircraftModelView *modelView, QObject *modelsTarget) : IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
+    CConsolidateWithDbDataMenu::CConsolidateWithDbDataMenu(CAircraftModelView *modelView, QObject *modelsTarget)
+        : IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
     {
         // it can be the target is not yet known
         if (modelsTarget)
@@ -190,10 +190,14 @@ namespace swift::gui::menus
 
         menuActions.addMenuConsolidateModels();
 
-        m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::databaseEdit16(), "All with DB data", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateData });
+        m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::databaseEdit16(), "All with DB data",
+                                                 CMenuAction::pathModelConsolidate(),
+                                                 { this, &CConsolidateWithDbDataMenu::consolidateData });
         if (mv->hasSelection())
         {
-            m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::databaseEdit16(), "Selected with DB data", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateSelectedData });
+            m_consolidateSelected = menuActions.addAction(
+                m_consolidateSelected, CIcons::databaseEdit16(), "Selected with DB data",
+                CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithDbDataMenu::consolidateSelectedData });
         }
         this->nestedCustomMenu(menuActions);
     }
@@ -251,10 +255,7 @@ namespace swift::gui::menus
             return;
         }
         const int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
-        if (c > 0 && this->modelsTargetUpdatable())
-        {
-            this->modelsTargetUpdatable()->updateModels(models);
-        }
+        if (c > 0 && this->modelsTargetUpdatable()) { this->modelsTargetUpdatable()->updateModels(models); }
     }
 
     IModelsSetable *CConsolidateWithDbDataMenu::modelsTargetSetable() const
@@ -269,7 +270,9 @@ namespace swift::gui::menus
 
     // --------------------------------- with simulator models ---------------------------------
 
-    CConsolidateWithSimulatorModels::CConsolidateWithSimulatorModels(CAircraftModelView *modelView, QObject *modelsTarget) : IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
+    CConsolidateWithSimulatorModels::CConsolidateWithSimulatorModels(CAircraftModelView *modelView,
+                                                                     QObject *modelsTarget)
+        : IAircraftModelViewMenu(modelView), m_modelsTarget(modelsTarget)
     {
         // it can be the target is not yet known
         if (modelsTarget)
@@ -303,12 +306,28 @@ namespace swift::gui::menus
         menuActions.addMenuConsolidateModels();
 
         // consolidate
-        m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::appModels16(), "All with simulator models", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateData });
-        if (mv->hasSelection()) { m_consolidateSelected = menuActions.addAction(m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::consolidateSelectedData }); }
+        m_consolidateAll = menuActions.addAction(m_consolidateAll, CIcons::appModels16(), "All with simulator models",
+                                                 CMenuAction::pathModelConsolidate(),
+                                                 { this, &CConsolidateWithSimulatorModels::consolidateData });
+        if (mv->hasSelection())
+        {
+            m_consolidateSelected =
+                menuActions.addAction(m_consolidateSelected, CIcons::appModels16(), "Selected with simulator models",
+                                      CMenuAction::pathModelConsolidate(),
+                                      { this, &CConsolidateWithSimulatorModels::consolidateSelectedData });
+        }
 
         // update directories
-        m_updateDirsAll = menuActions.addAction(m_updateDirsAll, CIcons::disk16(), "Update all directories", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::updateDirectoryData });
-        if (mv->hasSelection()) { m_updateDirsSelected = menuActions.addAction(m_updateDirsSelected, CIcons::disk16(), "Update directories for selected", CMenuAction::pathModelConsolidate(), { this, &CConsolidateWithSimulatorModels::updateDirectorySelectedData }); }
+        m_updateDirsAll = menuActions.addAction(m_updateDirsAll, CIcons::disk16(), "Update all directories",
+                                                CMenuAction::pathModelConsolidate(),
+                                                { this, &CConsolidateWithSimulatorModels::updateDirectoryData });
+        if (mv->hasSelection())
+        {
+            m_updateDirsSelected =
+                menuActions.addAction(m_updateDirsSelected, CIcons::disk16(), "Update directories for selected",
+                                      CMenuAction::pathModelConsolidate(),
+                                      { this, &CConsolidateWithSimulatorModels::updateDirectorySelectedData });
+        }
 
         this->nestedCustomMenu(menuActions);
     }
@@ -320,23 +339,15 @@ namespace swift::gui::menus
         if (models.isEmpty()) { return; }
         QStringList removedModelStrings;
         const int i = this->modelView()->showLoadIndicator();
-        const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), removedModelStrings, true);
+        const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(
+            models, this->getSimulatorModels(), removedModelStrings, true);
         const CSimulatorInfo sim(this->getSimulator());
 
-        if (!filtered)
-        {
-            this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim);
-        }
+        if (!filtered) { this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim); }
         else
         {
-            if (!this->modelsTargetUpdatable())
-            {
-                CLogMessage(this).warning(u"No updatable target");
-            }
-            else
-            {
-                this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
-            }
+            if (!this->modelsTargetUpdatable()) { CLogMessage(this).warning(u"No updatable target"); }
+            else { this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim); }
         }
         this->modelView()->hideLoadIndicator(i);
         if (!removedModelStrings.isEmpty() && this->getMappingComponent())
@@ -359,7 +370,8 @@ namespace swift::gui::menus
 
         QStringList removedModelStrings;
         const int i = this->modelView()->showLoadIndicator();
-        const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(models, this->getSimulatorModels(), removedModelStrings, true);
+        const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(
+            models, this->getSimulatorModels(), removedModelStrings, true);
         const CSimulatorInfo sim(this->getSimulator());
 
         this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
@@ -378,23 +390,15 @@ namespace swift::gui::menus
         if (models.isEmpty()) { return; }
         QStringList removedModelStrings;
         const int i = this->modelView()->showLoadIndicator();
-        const CAircraftModelList consolidated = CDatabaseUtils::updateModelsDirectoriesAllowsGuiRefresh(models, this->getSimulatorModels(), removedModelStrings, true);
+        const CAircraftModelList consolidated = CDatabaseUtils::updateModelsDirectoriesAllowsGuiRefresh(
+            models, this->getSimulatorModels(), removedModelStrings, true);
         const CSimulatorInfo sim(this->getSimulator());
 
-        if (!filtered)
-        {
-            this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim);
-        }
+        if (!filtered) { this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim); }
         else
         {
-            if (!this->modelsTargetUpdatable())
-            {
-                CLogMessage(this).warning(u"No updatable target");
-            }
-            else
-            {
-                this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
-            }
+            if (!this->modelsTargetUpdatable()) { CLogMessage(this).warning(u"No updatable target"); }
+            else { this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim); }
         }
         this->modelView()->hideLoadIndicator(i);
         if (!removedModelStrings.isEmpty() && this->getMappingComponent())
@@ -417,7 +421,8 @@ namespace swift::gui::menus
 
         QStringList removedModelStrings;
         const int i = this->modelView()->showLoadIndicator();
-        const CAircraftModelList consolidated = CDatabaseUtils::updateModelsDirectoriesAllowsGuiRefresh(models, this->getSimulatorModels(), removedModelStrings, true);
+        const CAircraftModelList consolidated = CDatabaseUtils::updateModelsDirectoriesAllowsGuiRefresh(
+            models, this->getSimulatorModels(), removedModelStrings, true);
         const CSimulatorInfo sim(this->getSimulator());
 
         this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
@@ -467,14 +472,8 @@ namespace swift::gui::menus
         // try to cast target
         CDbMappingComponent *mc = nullptr;
         CDbMappingComponentAware *mca = qobject_cast<CDbMappingComponentAware *>(m_modelsTarget);
-        if (mca)
-        {
-            mc = mca->getMappingComponent();
-        }
-        if (!mc)
-        {
-            mc = qobject_cast<CDbMappingComponent *>(m_modelsTarget);
-        }
+        if (mca) { mc = mca->getMappingComponent(); }
+        if (!mc) { mc = qobject_cast<CDbMappingComponent *>(m_modelsTarget); }
         return mc;
     }
 } // namespace swift::gui::menus

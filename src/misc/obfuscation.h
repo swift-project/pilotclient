@@ -13,7 +13,8 @@
 namespace swift::misc
 {
     //! Utility class to obfuscate strings in the source code to make them unreadable.
-    //! \remark this is no real security, but as the name says just obfuscation. The sole purpose of this class is to remove potentially strings from the source code
+    //! \remark this is no real security, but as the name says just obfuscation. The sole purpose of this class is to
+    //! remove potentially strings from the source code
     class SWIFT_MISC_EXPORT CObfuscation
     {
     public:

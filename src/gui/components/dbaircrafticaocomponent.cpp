@@ -23,8 +23,8 @@ using namespace swift::gui::views;
 
 namespace swift::gui::components
 {
-    CDbAircraftIcaoComponent::CDbAircraftIcaoComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                          ui(new Ui::CDbAircraftIcaoComponent)
+    CDbAircraftIcaoComponent::CDbAircraftIcaoComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CDbAircraftIcaoComponent)
     {
         ui->setupUi(this);
         this->setViewWithIndicator(ui->tvp_AircraftIcao);
@@ -34,24 +34,21 @@ namespace swift::gui::components
         ui->tvp_AircraftIcao->setFilterWidget(ui->filter_AircraftIcao);
         ui->tvp_AircraftIcao->menuAddItems(CViewBaseNonTemplate::MenuCopy);
 
-        connect(ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this, &CDbAircraftIcaoComponent::onReload);
-        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::onIcaoRead, Qt::QueuedConnection);
-        connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this, &CDbAircraftIcaoComponent::onEntityDownloadProgress, Qt::QueuedConnection);
-        this->onIcaoRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished, sGui->getWebDataServices()->getAircraftIcaoCodesCount());
+        connect(ui->tvp_AircraftIcao, &CAircraftIcaoCodeView::requestNewBackendData, this,
+                &CDbAircraftIcaoComponent::onReload);
+        connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this, &CDbAircraftIcaoComponent::onIcaoRead,
+                Qt::QueuedConnection);
+        connect(sGui->getWebDataServices(), &CWebDataServices::entityDownloadProgress, this,
+                &CDbAircraftIcaoComponent::onEntityDownloadProgress, Qt::QueuedConnection);
+        this->onIcaoRead(CEntityFlags::AircraftIcaoEntity, CEntityFlags::ReadFinished,
+                         sGui->getWebDataServices()->getAircraftIcaoCodesCount());
     }
 
-    CDbAircraftIcaoComponent::~CDbAircraftIcaoComponent()
-    {}
+    CDbAircraftIcaoComponent::~CDbAircraftIcaoComponent() {}
 
-    swift::gui::views::CAircraftIcaoCodeView *CDbAircraftIcaoComponent::view() const
-    {
-        return ui->tvp_AircraftIcao;
-    }
+    swift::gui::views::CAircraftIcaoCodeView *CDbAircraftIcaoComponent::view() const { return ui->tvp_AircraftIcao; }
 
-    void CDbAircraftIcaoComponent::filter(const CAircraftIcaoCode &icao)
-    {
-        ui->filter_AircraftIcao->filter(icao);
-    }
+    void CDbAircraftIcaoComponent::filter(const CAircraftIcaoCode &icao) { ui->filter_AircraftIcao->filter(icao); }
 
     bool CDbAircraftIcaoComponent::selectAircraftIcao(const CAircraftIcaoCode &icao)
     {
@@ -67,16 +64,20 @@ namespace swift::gui::components
 
         if (CEntityFlags::isFinishedReadState(readState))
         {
-            this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)), 2000);
+            this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)),
+                                         2000);
             ui->tvp_AircraftIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAircraftIcaoCodes());
         }
         else
         {
-            this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::entitiesToString(entity) % u" " % CEntityFlags::stateToString(readState), 10000);
+            this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::entitiesToString(entity) % u" " %
+                                             CEntityFlags::stateToString(readState),
+                                         10000);
         }
     }
 
-    void CDbAircraftIcaoComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url)
+    void CDbAircraftIcaoComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress,
+                                                            qint64 current, qint64 max, const QUrl &url)
     {
         if (CEntityFlags::AircraftIcaoEntity != entity) { return; }
         this->showDownloadProgress(progress, current, max, url, 5000);

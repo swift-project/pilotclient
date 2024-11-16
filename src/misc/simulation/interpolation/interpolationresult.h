@@ -34,7 +34,10 @@ namespace swift::misc::simulation
         const CPartsStatus &getPartsStatus() const { return m_partsStatus; }
 
         //! Set situation
-        void setInterpolatedSituation(const aviation::CAircraftSituation &situation) { m_interpolatedSituation = situation; }
+        void setInterpolatedSituation(const aviation::CAircraftSituation &situation)
+        {
+            m_interpolatedSituation = situation;
+        }
 
         //! Set parts (interpolated or guessed)
         void setInterpolatedParts(const aviation::CAircraftParts &parts) { m_interpolatedParts = parts; }
@@ -58,8 +61,10 @@ namespace swift::misc::simulation
         //! @}
 
     private:
-        aviation::CAircraftSituation m_interpolatedSituation = aviation::CAircraftSituation::null(); //!< interpolated situation
-        aviation::CAircraftParts m_interpolatedParts = aviation::CAircraftParts::null(); //!< guessed or interpolated parts
+        aviation::CAircraftSituation m_interpolatedSituation =
+            aviation::CAircraftSituation::null(); //!< interpolated situation
+        aviation::CAircraftParts m_interpolatedParts =
+            aviation::CAircraftParts::null(); //!< guessed or interpolated parts
         CInterpolationStatus m_interpolationStatus; //!< interpolation status
         CPartsStatus m_partsStatus; //!< parts status
     };

@@ -24,8 +24,8 @@ using namespace swift::gui::components;
 
 namespace swift::gui::filters
 {
-    CAirlineIcaoFilterBar::CAirlineIcaoFilterBar(QWidget *parent) : CFilterWidget(parent),
-                                                                    ui(new Ui::CAirlineIcaoFilterBar)
+    CAirlineIcaoFilterBar::CAirlineIcaoFilterBar(QWidget *parent)
+        : CFilterWidget(parent), ui(new Ui::CAirlineIcaoFilterBar)
     {
         ui->setupUi(this);
         this->setButtonsAndCount(ui->filter_Buttons);
@@ -33,7 +33,8 @@ namespace swift::gui::filters
         connect(ui->le_Designator, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
         connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
         connect(ui->le_AirlineId, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
-        connect(ui->country_Selector, &CDbCountrySelectorComponent::countryChanged, this, &CAirlineIcaoFilterBar::ps_CountryChanged);
+        connect(ui->country_Selector, &CDbCountrySelectorComponent::countryChanged, this,
+                &CAirlineIcaoFilterBar::ps_CountryChanged);
 
         ui->le_Designator->setValidator(new CUpperCaseValidator(ui->le_Designator));
         ui->le_AirlineId->setValidator(new QIntValidator(ui->le_AirlineId));
@@ -47,12 +48,9 @@ namespace swift::gui::filters
     std::unique_ptr<IModelFilter<CAirlineIcaoCodeList>> CAirlineIcaoFilterBar::createModelFilter() const
     {
         return std::make_unique<CAirlineIcaoFilter>(
-            convertDbId(ui->le_AirlineId->text()),
-            ui->le_Designator->text().trimmed(),
-            ui->le_Name->text().trimmed(),
+            convertDbId(ui->le_AirlineId->text()), ui->le_Designator->text().trimmed(), ui->le_Name->text().trimmed(),
             ui->country_Selector->isSet() ? ui->country_Selector->getCountry().getIsoCode() : "",
-            ui->cb_RealAirline->isChecked(),
-            ui->cb_VirtualAirline->isChecked());
+            ui->cb_RealAirline->isChecked(), ui->cb_VirtualAirline->isChecked());
     }
 
     void CAirlineIcaoFilterBar::filter(const CAirlineIcaoCode &icao)
@@ -69,10 +67,7 @@ namespace swift::gui::filters
             filter = true;
         }
 
-        if (filter)
-        {
-            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
-        }
+        if (filter) { ui->filter_Buttons->clickButton(CFilterBarButtons::Filter); }
     }
 
     void CAirlineIcaoFilterBar::onRowCountChanged(int count, bool withFilter)
@@ -82,10 +77,7 @@ namespace swift::gui::filters
 
     void CAirlineIcaoFilterBar::ps_CountryChanged(const CCountry &country)
     {
-        if (country.hasIsoCode())
-        {
-            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
-        }
+        if (country.hasIsoCode()) { ui->filter_Buttons->clickButton(CFilterBarButtons::Filter); }
     }
 
     void CAirlineIcaoFilterBar::clearForm()

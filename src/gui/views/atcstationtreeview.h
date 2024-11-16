@@ -62,7 +62,8 @@ namespace swift::gui
             void testRequestDummyAtcOnlineStations(int number);
 
             //! Request COM frequency
-            void requestComFrequency(const swift::misc::physical_quantities::CFrequency &frequency, swift::misc::aviation::CComSystem::ComUnit unit);
+            void requestComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                     swift::misc::aviation::CComSystem::ComUnit unit);
 
             //! Request a text message to
             void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);
@@ -111,7 +112,8 @@ namespace swift::gui
             void requestTextMessage();
             //! @}
 
-            swift::misc::CDigestSignal m_dsFullResize { this, &CAtcStationTreeView::fullResizeToContentsImpl, 1000, 25 };
+            swift::misc::CDigestSignal m_dsFullResize { this, &CAtcStationTreeView::fullResizeToContentsImpl, 1000,
+                                                        25 };
             QMap<QString, bool> m_expanded; //!< suffix/expanded
         };
     } // namespace views

@@ -18,43 +18,56 @@ namespace swift::misc::geo
         return QStringLiteral("%1 radius: %2").arg(coordinate, m_radius.valueRoundedWithUnit(2, i18n));
     }
 
-    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate) : CCoordinateGeodetic(coordinate)
+    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate)
+        : CCoordinateGeodetic(coordinate)
     {
         this->setRadiusOrMinimumRadius(this->calculateGreatCircleDistance(rangeCoordinate));
     }
 
-    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CLength &radius) : CCoordinateGeodetic(coordinate), m_radius(radius)
+    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CLength &radius)
+        : CCoordinateGeodetic(coordinate), m_radius(radius)
     {}
 
-    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CAltitude &altitude, const CLength &radius) : CCoordinateGeodetic(coordinate), m_radius(radius)
+    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, const CAltitude &altitude,
+                                     const CLength &radius)
+        : CCoordinateGeodetic(coordinate), m_radius(radius)
     {
         this->setGeodeticHeight(altitude);
     }
 
-    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, double altitudeMSLft, const CLength &radius) : CCoordinateGeodetic(coordinate), m_radius(radius)
+    CElevationPlane::CElevationPlane(const ICoordinateGeodetic &coordinate, double altitudeMSLft, const CLength &radius)
+        : CCoordinateGeodetic(coordinate), m_radius(radius)
     {
         this->setGeodeticHeight(CAltitude(altitudeMSLft, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
     }
 
-    CElevationPlane::CElevationPlane(double latDeg, double lngDeg, double altitudeMSLft, const CLength &radius) : CCoordinateGeodetic(latDeg, lngDeg, altitudeMSLft), m_radius(radius)
+    CElevationPlane::CElevationPlane(double latDeg, double lngDeg, double altitudeMSLft, const CLength &radius)
+        : CCoordinateGeodetic(latDeg, lngDeg, altitudeMSLft), m_radius(radius)
     {
         Q_ASSERT_X(!std::isnan(altitudeMSLft), Q_FUNC_INFO, "elv.nan");
     }
 
-    CElevationPlane::CElevationPlane(const CLatitude &lat, const CLongitude &lng, const CAltitude &altitude, const CLength &radius) : CCoordinateGeodetic(lat, lng, altitude), m_radius(radius)
+    CElevationPlane::CElevationPlane(const CLatitude &lat, const CLongitude &lng, const CAltitude &altitude,
+                                     const CLength &radius)
+        : CCoordinateGeodetic(lat, lng, altitude), m_radius(radius)
     {
         Q_ASSERT_X(altitude.isMeanSeaLevel(), Q_FUNC_INFO, "Need MSL");
     }
 
     const CLength &CElevationPlane::getRadiusOrMinimumRadius() const
     {
-        if (m_radius.isNull() || m_radius < CElevationPlane::singlePointRadius()) { return CElevationPlane::singlePointRadius(); }
+        if (m_radius.isNull() || m_radius < CElevationPlane::singlePointRadius())
+        {
+            return CElevationPlane::singlePointRadius();
+        }
         return m_radius;
     }
 
     void CElevationPlane::setRadiusOrMinimumRadius(const CLength &radius)
     {
-        m_radius = ((radius.isNull() || radius < CElevationPlane::singlePointRadius())) ? CElevationPlane::singlePointRadius() : radius;
+        m_radius = ((radius.isNull() || radius < CElevationPlane::singlePointRadius())) ?
+                       CElevationPlane::singlePointRadius() :
+                       radius;
     }
 
     void CElevationPlane::fixRadius()
@@ -91,15 +104,9 @@ namespace swift::misc::geo
         return a;
     }
 
-    double CElevationPlane::getAltitudeValue(const CLengthUnit &unit) const
-    {
-        return this->getAltitude().value(unit);
-    }
+    double CElevationPlane::getAltitudeValue(const CLengthUnit &unit) const { return this->getAltitude().value(unit); }
 
-    bool CElevationPlane::isNull() const
-    {
-        return m_radius.isNull() || CCoordinateGeodetic::isNull();
-    }
+    bool CElevationPlane::isNull() const { return m_radius.isNull() || CCoordinateGeodetic::isNull(); }
 
     bool CElevationPlane::isWithinRange(const ICoordinateGeodetic &coordinate) const
     {
@@ -120,20 +127,11 @@ namespace swift::misc::geo
         return inRange;
     }
 
-    void CElevationPlane::setSinglePointRadius()
-    {
-        m_radius = singlePointRadius();
-    }
+    void CElevationPlane::setSinglePointRadius() { m_radius = singlePointRadius(); }
 
-    void CElevationPlane::setMinorAirportRadius()
-    {
-        m_radius = minorAirportRadius();
-    }
+    void CElevationPlane::setMinorAirportRadius() { m_radius = minorAirportRadius(); }
 
-    void CElevationPlane::setMajorAirportRadius()
-    {
-        m_radius = majorAirportRadius();
-    }
+    void CElevationPlane::setMajorAirportRadius() { m_radius = majorAirportRadius(); }
 
     QVariant CElevationPlane::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {

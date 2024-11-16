@@ -48,10 +48,12 @@ namespace swift::simplugin::emulated
         void appendStatusMessagesToList(const swift::misc::CStatusMessageList &statusMessages);
 
         //! Receiving call to be written in log widget
-        void appendReceivingCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
+        void appendReceivingCall(const QString &function, const QString &p1 = {}, const QString &p2 = {},
+                                 const QString &p3 = {});
 
         //! Sending call to be written in log widget
-        void appendSendingCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
+        void appendSendingCall(const QString &function, const QString &p1 = {}, const QString &p2 = {},
+                               const QString &p3 = {});
 
         //! Display status message
         void displayStatusMessage(const swift::misc::CStatusMessage &message);
@@ -66,7 +68,8 @@ namespace swift::simplugin::emulated
         static int constexpr MaxLogMessages = 500; //!< desired log message number
 
         //! Append a function call as status message
-        void appendFunctionCall(const QString &function, const QString &p1 = {}, const QString &p2 = {}, const QString &p3 = {});
+        void appendFunctionCall(const QString &function, const QString &p1 = {}, const QString &p2 = {},
+                                const QString &p3 = {});
 
         //! UI values changed
         void onSimulatorValuesChanged();

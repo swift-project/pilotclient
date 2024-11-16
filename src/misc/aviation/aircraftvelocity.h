@@ -37,13 +37,15 @@ namespace swift::misc::aviation
         CAircraftVelocity();
 
         //! Constructor
-        CAircraftVelocity(double x, double y, double z, physical_quantities::CSpeedUnit xyzUnit,
-                          double pitch, double roll, double heading, physical_quantities::CAngleUnit pbhAngleUnit, physical_quantities::CTimeUnit pbhTimeUnit);
+        CAircraftVelocity(double x, double y, double z, physical_quantities::CSpeedUnit xyzUnit, double pitch,
+                          double roll, double heading, physical_quantities::CAngleUnit pbhAngleUnit,
+                          physical_quantities::CTimeUnit pbhTimeUnit);
 
         //! @{
         //! Setter
         void setLinearVelocity(double x, double y, double z, physical_quantities::CSpeedUnit xyzUnit);
-        void setAngularVelocity(double pitch, double roll, double heading, physical_quantities::CAngleUnit pbhAngleUnit, physical_quantities::CTimeUnit pbhTimeUnit);
+        void setAngularVelocity(double pitch, double roll, double heading, physical_quantities::CAngleUnit pbhAngleUnit,
+                                physical_quantities::CTimeUnit pbhTimeUnit);
         //! @}
 
         //! @{
@@ -51,9 +53,12 @@ namespace swift::misc::aviation
         double getVelocityX(physical_quantities::CSpeedUnit unit) const;
         double getVelocityY(physical_quantities::CSpeedUnit unit) const;
         double getVelocityZ(physical_quantities::CSpeedUnit unit) const;
-        double getPitchVelocity(physical_quantities::CAngleUnit angleUnit, physical_quantities::CTimeUnit timeUnit) const;
-        double getRollVelocity(physical_quantities::CAngleUnit angleUnit, physical_quantities::CTimeUnit timeUnit) const;
-        double getHeadingVelocity(physical_quantities::CAngleUnit angleUnit, physical_quantities::CTimeUnit timeUnit) const;
+        double getPitchVelocity(physical_quantities::CAngleUnit angleUnit,
+                                physical_quantities::CTimeUnit timeUnit) const;
+        double getRollVelocity(physical_quantities::CAngleUnit angleUnit,
+                               physical_quantities::CTimeUnit timeUnit) const;
+        double getHeadingVelocity(physical_quantities::CAngleUnit angleUnit,
+                                  physical_quantities::CTimeUnit timeUnit) const;
         //! @}
 
         //! \copydoc mixin::String::toQString
@@ -72,7 +77,8 @@ namespace swift::misc::aviation
         //! Unit constants
         static const physical_quantities::CSpeedUnit c_xyzSpeedUnit;
         static const physical_quantities::CLengthUnit c_xyzLengthUnit;
-        static const physical_quantities::CAngleUnit c_pbhAngleUnit; // TODO Create a dedicated PQ class for angular velocity
+        static const physical_quantities::CAngleUnit
+            c_pbhAngleUnit; // TODO Create a dedicated PQ class for angular velocity
         static const physical_quantities::CTimeUnit c_timeUnit;
         //! @}
 

@@ -53,21 +53,22 @@ using namespace swift::misc::simulation::data;
 
 namespace swift::core::context
 {
-    CContextSimulator::CContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextSimulator(mode, runtime),
-                                                                                                      CIdentifiable(this),
-                                                                                                      m_plugins(new CPluginManagerSimulator(this))
+    CContextSimulator::CContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+        : IContextSimulator(mode, runtime), CIdentifiable(this), m_plugins(new CPluginManagerSimulator(this))
     {
         this->setObjectName("CContextSimulator");
         CContextSimulator::registerHelp();
 
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Need sApp");
-        MatchingLog logMatchingMessages = CBuildConfig::isLocalDeveloperDebugBuild() ? MatchingLogAll : MatchingLogSimplified;
+        MatchingLog logMatchingMessages =
+            CBuildConfig::isLocalDeveloperDebugBuild() ? MatchingLogAll : MatchingLogSimplified;
         m_logMatchingMessages = logMatchingMessages;
         m_plugins->collectPlugins();
         this->restoreSimulatorPlugins();
 
         connect(&m_aircraftMatcher, &CAircraftMatcher::setupChanged, this, &CContextSimulator::matchingSetupChanged);
-        connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(), &CCentralMultiSimulatorModelSetCachesProvider::cacheChanged, this, &CContextSimulator::modelSetChanged);
+        connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(),
+                &CCentralMultiSimulatorModelSetCachesProvider::cacheChanged, this, &CContextSimulator::modelSetChanged);
 
         // deferred init of last model set, if no other data are set in meantime
         const QPointer<CContextSimulator> myself(this);
@@ -85,7 +86,8 @@ namespace swift::core::context
         m_validator = new CBackgroundValidation(this);
         this->setValidator(this->getSimulatorPluginInfo().getSimulator());
         connect(this, &CContextSimulator::simulatorChanged, this, &CContextSimulator::setValidator);
-        connect(m_validator, &CBackgroundValidation::validated, this, &CContextSimulator::validatedModelSet, Qt::QueuedConnection);
+        connect(m_validator, &CBackgroundValidation::validated, this, &CContextSimulator::validatedModelSet,
+                Qt::QueuedConnection);
 
         m_validator->start(QThread::LowestPriority);
         m_validator->startUpdating(60);
@@ -98,10 +100,7 @@ namespace swift::core::context
             const QString simDir = m_multiSimulatorSettings.getSimulatorDirectoryOrDefault(simulator);
             m_validator->setCurrentSimulator(simulator, simDir);
         }
-        else
-        {
-            m_validator->setCurrentSimulator(CSimulatorInfo::None, {});
-        }
+        else { m_validator->setCurrentSimulator(CSimulatorInfo::None, {}); }
     }
 
     CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
@@ -116,10 +115,7 @@ namespace swift::core::context
         return m_simulatorPlugin.second && IContextSimulator::isSimulatorAvailable();
     }
 
-    CContextSimulator::~CContextSimulator()
-    {
-        this->gracefulShutdown();
-    }
+    CContextSimulator::~CContextSimulator() { this->gracefulShutdown(); }
 
     void CContextSimulator::gracefulShutdown()
     {
@@ -202,7 +198,10 @@ namespace swift::core::context
         static const CSimulatorPluginInfo unspecified;
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return unspecified; }
-        if (m_simulatorPlugin.first.getSimulator().contains("emulated", Qt::CaseInsensitive)) { return m_simulatorPlugin.second->getSimulatorPluginInfo(); }
+        if (m_simulatorPlugin.first.getSimulator().contains("emulated", Qt::CaseInsensitive))
+        {
+            return m_simulatorPlugin.second->getSimulatorPluginInfo();
+        }
         return m_simulatorPlugin.first;
     }
 
@@ -272,7 +271,9 @@ namespace swift::core::context
         const CSimulatorInfo simulators = this->simulatorsWithInitializedModelSet();
         if (simulators.isNoSimulator())
         {
-            msgs.push_back(CStatusMessage(this).validationError(u"No model set so far, you need at least one model set. Hint: You can create a model set in the mapping tool, or copy an existing set in the launcher."));
+            msgs.push_back(CStatusMessage(this).validationError(
+                u"No model set so far, you need at least one model set. Hint: You can create a model set in the "
+                u"mapping tool, or copy an existing set in the launcher."));
         }
         return msgs;
     }
@@ -298,7 +299,8 @@ namespace swift::core::context
         if (!simulator.isSingleSimulator()) { return 0; }
 
         CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
-        CAircraftModelList models = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+        CAircraftModelList models =
+            CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
         const int removed = models.removeModelsWithString(removeModels, Qt::CaseInsensitive);
         if (removed > 0)
         {
@@ -352,13 +354,17 @@ namespace swift::core::context
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_validator) { return false; }
-        const QString simDir = simulator.isSingleSimulator() ? m_multiSimulatorSettings.getSimulatorDirectoryOrDefault(simulator) : "";
+        const QString simDir =
+            simulator.isSingleSimulator() ? m_multiSimulatorSettings.getSimulatorDirectoryOrDefault(simulator) : "";
         return m_validator->triggerValidation(simulator, simDir);
     }
 
     CAircraftModelList CContextSimulator::getModelSetModelsStartingWith(const QString &modelString) const
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << modelString; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << modelString;
+        }
         if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CAircraftModelList(); }
 
         return this->getModelSet().findModelsStartingWith(modelString);
@@ -372,7 +378,8 @@ namespace swift::core::context
         const bool c = m_simulatorPlugin.second->setTimeSynchronization(enable, offset);
         if (!c) { return false; }
 
-        CLogMessage(this).info(enable ? QStringLiteral("Set time synchronization to %1").arg(offset.toQString()) : QStringLiteral("Disabled time syncrhonization"));
+        CLogMessage(this).info(enable ? QStringLiteral("Set time synchronization to %1").arg(offset.toQString()) :
+                                        QStringLiteral("Disabled time syncrhonization"));
         return true;
     }
 
@@ -397,14 +404,19 @@ namespace swift::core::context
         return m_simulatorPlugin.second->getInterpolationSetupsPerCallsign();
     }
 
-    CInterpolationAndRenderingSetupPerCallsign CContextSimulator::getInterpolationAndRenderingSetupPerCallsignOrDefault(const CCallsign &callsign) const
+    CInterpolationAndRenderingSetupPerCallsign
+    CContextSimulator::getInterpolationAndRenderingSetupPerCallsignOrDefault(const CCallsign &callsign) const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CInterpolationAndRenderingSetupPerCallsign(); }
+        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified())
+        {
+            return CInterpolationAndRenderingSetupPerCallsign();
+        }
         return m_simulatorPlugin.second->getInterpolationSetupPerCallsignOrDefault(callsign);
     }
 
-    bool CContextSimulator::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups, bool ignoreSameAsGlobal)
+    bool CContextSimulator::setInterpolationAndRenderingSetupsPerCallsign(const CInterpolationSetupList &setups,
+                                                                          bool ignoreSameAsGlobal)
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return false; }
@@ -435,7 +447,10 @@ namespace swift::core::context
     CTime CContextSimulator::getTimeSynchronizationOffset() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CTime(0, CTimeUnit::hrmin()); }
+        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified())
+        {
+            return CTime(0, CTimeUnit::hrmin());
+        }
         return m_simulatorPlugin.second->getTimeSynchronizationOffset();
     }
 
@@ -465,12 +480,14 @@ namespace swift::core::context
 
         // We assume we run in the same process as the own aircraft context
         // Hence we pass in memory reference to own aircraft object
-        Q_ASSERT_X(this->getIContextOwnAircraft()->isUsingImplementingObject(), Q_FUNC_INFO, "Need implementing object");
+        Q_ASSERT_X(this->getIContextOwnAircraft()->isUsingImplementingObject(), Q_FUNC_INFO,
+                   "Need implementing object");
         Q_ASSERT_X(this->getIContextNetwork()->isUsingImplementingObject(), Q_FUNC_INFO, "Need implementing object");
         IOwnAircraftProvider *ownAircraftProvider = this->getRuntime()->getCContextOwnAircraft();
         IRemoteAircraftProvider *renderedAircraftProvider = this->getRuntime()->getCContextNetwork();
         IClientProvider *clientProvider = this->getRuntime()->getCContextNetwork();
-        ISimulator *simulator = factory->create(simulatorPluginInfo, ownAircraftProvider, renderedAircraftProvider, clientProvider);
+        ISimulator *simulator =
+            factory->create(simulatorPluginInfo, ownAircraftProvider, renderedAircraftProvider, clientProvider);
         Q_ASSERT_X(simulator, Q_FUNC_INFO, "no simulator driver can be created");
 
         this->setRemoteAircraftProvider(renderedAircraftProvider);
@@ -483,11 +500,14 @@ namespace swift::core::context
             simInfo = CSimulatorInfo::p3d();
             if (simulator->isEmulatedDriver())
             {
-                CLogMessage(this).error(u"Emulated driver does NOT provide valid simulator, using default '%1', plugin: '%2'") << simInfo.toQString(true) << simulatorPluginInfo.toQString(true);
+                CLogMessage(this).error(
+                    u"Emulated driver does NOT provide valid simulator, using default '%1', plugin: '%2'")
+                    << simInfo.toQString(true) << simulatorPluginInfo.toQString(true);
             }
             else
             {
-                CLogMessage(this).error(u"Invalid driver using default '%1', plugin: '%2'") << simInfo.toQString(true) << simulatorPluginInfo.toQString(true);
+                CLogMessage(this).error(u"Invalid driver using default '%1', plugin: '%2'")
+                    << simInfo.toQString(true) << simulatorPluginInfo.toQString(true);
             }
         }
         Q_ASSERT_X(simInfo.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
@@ -497,17 +517,23 @@ namespace swift::core::context
         m_aircraftMatcher.setModelSet(modelSetModels, simInfo, true);
         m_aircraftMatcher.setDefaultModel(simulator->getDefaultModel());
 
-        bool c = connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::onSimulatorStatusChanged);
+        bool c =
+            connect(simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::onSimulatorStatusChanged);
         Q_ASSERT(c);
-        c = connect(simulator, &ISimulator::physicallyAddingRemoteModelFailed, this, &CContextSimulator::onAddingRemoteAircraftFailed);
+        c = connect(simulator, &ISimulator::physicallyAddingRemoteModelFailed, this,
+                    &CContextSimulator::onAddingRemoteAircraftFailed);
         Q_ASSERT(c);
-        c = connect(simulator, &ISimulator::ownAircraftModelChanged, this, &CContextSimulator::onOwnSimulatorModelChanged);
+        c = connect(simulator, &ISimulator::ownAircraftModelChanged, this,
+                    &CContextSimulator::onOwnSimulatorModelChanged);
         Q_ASSERT(c);
-        c = connect(simulator, &ISimulator::aircraftRenderingChanged, this, &IContextSimulator::aircraftRenderingChanged);
+        c = connect(simulator, &ISimulator::aircraftRenderingChanged, this,
+                    &IContextSimulator::aircraftRenderingChanged);
         Q_ASSERT(c);
-        c = connect(simulator, &ISimulator::renderRestrictionsChanged, this, &IContextSimulator::renderRestrictionsChanged);
+        c = connect(simulator, &ISimulator::renderRestrictionsChanged, this,
+                    &IContextSimulator::renderRestrictionsChanged);
         Q_ASSERT(c);
-        c = connect(simulator, &ISimulator::interpolationAndRenderingSetupChanged, this, &IContextSimulator::interpolationAndRenderingSetupChanged);
+        c = connect(simulator, &ISimulator::interpolationAndRenderingSetupChanged, this,
+                    &IContextSimulator::interpolationAndRenderingSetupChanged);
         Q_ASSERT(c);
         c = connect(simulator, &ISimulator::airspaceSnapshotHandled, this, &IContextSimulator::airspaceSnapshotHandled);
         Q_ASSERT(c);
@@ -517,15 +543,20 @@ namespace swift::core::context
         Q_ASSERT(c);
 
         // disconnect for X-Plane FPS below 20
-        c = connect(simulator, &ISimulator::insufficientFrameRateDetected, this, [this](bool fatal) { if (fatal) { emit this->vitalityLost(); } });
+        c = connect(simulator, &ISimulator::insufficientFrameRateDetected, this, [this](bool fatal) {
+            if (fatal) { emit this->vitalityLost(); }
+        });
         Q_ASSERT(c);
-        c = connect(simulator, &ISimulator::insufficientFrameRateDetected, this, &IContextSimulator::insufficientFrameRateDetected);
+        c = connect(simulator, &ISimulator::insufficientFrameRateDetected, this,
+                    &IContextSimulator::insufficientFrameRateDetected);
         Q_ASSERT(c);
 
         // log from context to simulator
-        c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &CContextSimulator::relayStatusMessageToSimulator);
+        c = connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this,
+                    &CContextSimulator::relayStatusMessageToSimulator);
         Q_ASSERT(c);
-        c = connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, this, &CContextSimulator::relayStatusMessageToSimulator);
+        c = connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, this,
+                    &CContextSimulator::relayStatusMessageToSimulator);
         Q_ASSERT(c);
         Q_UNUSED(c)
 
@@ -539,7 +570,8 @@ namespace swift::core::context
         const bool connected = simulator->connectTo();
         if (!connected)
         {
-            CLogMessage(this).error(u"Simulator plugin connection to simulator '%1' failed") << simulatorPluginInfo.toQString(true);
+            CLogMessage(this).error(u"Simulator plugin connection to simulator '%1' failed")
+                << simulatorPluginInfo.toQString(true);
             return false;
         }
 
@@ -555,8 +587,7 @@ namespace swift::core::context
             if (m_simulatorPlugin.second)
             {
                 CLogMessage(this).info(u"Simulator plugin loaded: '%1' connected: %2")
-                    << simulatorPluginInfo.toQString(true)
-                    << boolToYesNo(connected);
+                    << simulatorPluginInfo.toQString(true) << boolToYesNo(connected);
 
                 // use the real driver as this will also work eith emulated driver
                 emit this->simulatorPluginChanged(m_simulatorPlugin.second->getSimulatorPluginInfo());
@@ -587,7 +618,8 @@ namespace swift::core::context
         {
             Q_ASSERT_X(!listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
 
-            const bool c = connect(listener, &ISimulatorListener::simulatorStarted, this, &CContextSimulator::onSimulatorStarted, Qt::QueuedConnection);
+            const bool c = connect(listener, &ISimulatorListener::simulatorStarted, this,
+                                   &CContextSimulator::onSimulatorStarted, Qt::QueuedConnection);
             if (!c)
             {
                 CLogMessage(this).error(u"Unable to use '%1'") << simulatorInfo.toQString();
@@ -614,10 +646,7 @@ namespace swift::core::context
         for (const CSimulatorPluginInfo &p : plugins)
         {
             Q_ASSERT(!p.isUnspecified());
-            if (p.isValid())
-            {
-                this->listenForSimulator(p);
-            }
+            if (p.isValid()) { this->listenForSimulator(p); }
         }
     }
 
@@ -669,7 +698,8 @@ namespace swift::core::context
         MatchingLog whatToLog = m_logMatchingMessages;
         CStatusMessageList matchingMessages;
         CStatusMessageList *pMatchingMessages = m_logMatchingMessages > 0 ? &matchingMessages : nullptr;
-        CAircraftModel aircraftModel = m_aircraftMatcher.getClosestMatch(remoteAircraft, whatToLog, pMatchingMessages, true);
+        CAircraftModel aircraftModel =
+            m_aircraftMatcher.getClosestMatch(remoteAircraft, whatToLog, pMatchingMessages, true);
         Q_ASSERT_X(remoteAircraft.getCallsign() == aircraftModel.getCallsign(), Q_FUNC_INFO, "Mismatching callsigns");
 
         // decide CG
@@ -678,9 +708,7 @@ namespace swift::core::context
         const CSimulatorSettings simSettings = this->getSimulatorSettings();
         switch (simSettings.getCGSource())
         {
-        case CSimulatorSettings::CGFromSimulatorOnly:
-            aircraftModel.setCG(cgSim);
-            break;
+        case CSimulatorSettings::CGFromSimulatorOnly: aircraftModel.setCG(cgSim); break;
         case CSimulatorSettings::CGFromSimulatorFirst:
             if (!cgSim.isNull()) { aircraftModel.setCG(cgSim); }
             break;
@@ -688,36 +716,45 @@ namespace swift::core::context
             if (cgModel.isNull()) { aircraftModel.setCG(cgSim); }
             break;
         // case CSimulatorSettings::CGFromDBOnly:
-        default:
-            break; // leave CG from model alone
+        default: break; // leave CG from model alone
         }
 
-        const CLength overriddenCG = m_simulatorPlugin.second->overriddenCGorDefault(CLength::null(), aircraftModel.getModelString());
+        const CLength overriddenCG =
+            m_simulatorPlugin.second->overriddenCGorDefault(CLength::null(), aircraftModel.getModelString());
         if (!overriddenCG.isNull()) { aircraftModel.setCG(overriddenCG); }
 
         // model in provider
         this->updateAircraftModel(callsign, aircraftModel, this->identifier());
 
-        const CSimulatedAircraft aircraftAfterModelApplied = this->getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
+        const CSimulatedAircraft aircraftAfterModelApplied =
+            this->getAircraftInRangeForCallsign(remoteAircraft.getCallsign());
         if (!aircraftAfterModelApplied.hasModelString())
         {
             if (!aircraftAfterModelApplied.hasCallsign()) { return; } // removed
-            if (this->isAircraftInRange(aircraftAfterModelApplied.getCallsign())) { return; } // removed, but callsig, we did crosscheck
+            if (this->isAircraftInRange(aircraftAfterModelApplied.getCallsign()))
+            {
+                return;
+            } // removed, but callsig, we did crosscheck
 
             // callsign, but no model string
-            CLogMessage(this).error(u"Matching error for '%1', no model string") << aircraftAfterModelApplied.getCallsign().asString();
+            CLogMessage(this).error(u"Matching error for '%1', no model string")
+                << aircraftAfterModelApplied.getCallsign().asString();
 
             CSimulatedAircraft brokenAircraft(aircraftAfterModelApplied);
             brokenAircraft.setEnabled(false);
             brokenAircraft.setRendered(false);
-            CCallsign::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
+            CCallsign::addLogDetailsToList(
+                pMatchingMessages, callsign,
+                QStringLiteral("Cannot add remote aircraft, no model string: '%1'").arg(brokenAircraft.toQString()));
             emit this->aircraftRenderingChanged(brokenAircraft);
             return;
         }
 
         // here the model is added to the simulator
         m_simulatorPlugin.second->logicallyAddRemoteAircraft(aircraftAfterModelApplied);
-        CCallsign::addLogDetailsToList(pMatchingMessages, callsign, QStringLiteral("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
+        CCallsign::addLogDetailsToList(
+            pMatchingMessages, callsign,
+            QStringLiteral("Logically added remote aircraft: %1").arg(aircraftAfterModelApplied.toQString()));
 
         this->clearMatchingMessages(callsign);
         this->addMatchingMessages(callsign, matchingMessages);
@@ -781,14 +818,16 @@ namespace swift::core::context
         }
     }
 
-    void CContextSimulator::xCtxChangedRemoteAircraftModel(const CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator)
+    void CContextSimulator::xCtxChangedRemoteAircraftModel(const CSimulatedAircraft &aircraft,
+                                                           const swift::misc::CIdentifier &originator)
     {
         if (CIdentifiable::isMyIdentifier(originator)) { return; }
         if (!this->isSimulatorAvailable()) { return; }
         m_simulatorPlugin.second->changeRemoteAircraftModel(aircraft);
     }
 
-    void CContextSimulator::xCtxChangedOwnAircraftModel(const CAircraftModel &aircraftModel, const CIdentifier &originator)
+    void CContextSimulator::xCtxChangedOwnAircraftModel(const CAircraftModel &aircraftModel,
+                                                        const CIdentifier &originator)
     {
         if (CIdentifiable::isMyIdentifier(originator)) { return; }
         if (!this->isSimulatorAvailable()) { return; }
@@ -802,7 +841,8 @@ namespace swift::core::context
         m_simulatorPlugin.second->changeRemoteAircraftEnabled(aircraft);
     }
 
-    void CContextSimulator::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
+    void CContextSimulator::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from,
+                                                               const CConnectionStatus &to)
     {
         Q_UNUSED(from)
         SWIFT_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
@@ -829,7 +869,8 @@ namespace swift::core::context
         }
     }
 
-    void CContextSimulator::onAddingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, bool disabled, bool requestFailover, const CStatusMessage &message)
+    void CContextSimulator::onAddingRemoteAircraftFailed(const CSimulatedAircraft &remoteAircraft, bool disabled,
+                                                         bool requestFailover, const CStatusMessage &message)
     {
         if (!this->isSimulatorAvailable()) { return; }
         if (disabled) { m_aircraftMatcher.addingRemoteModelFailed(remoteAircraft); }
@@ -852,14 +893,16 @@ namespace swift::core::context
                 else
                 {
                     failover = false;
-                    CLogMessage(this).warning(u"Model for '%1' failed adding, tried %2 time(s) to resolve, giving up") << cs.toQString(true) << (trial + 1);
+                    CLogMessage(this).warning(u"Model for '%1' failed adding, tried %2 time(s) to resolve, giving up")
+                        << cs.toQString(true) << (trial + 1);
                 }
             }
         }
         emit this->addingRemoteModelFailed(remoteAircraft, disabled, failover, message);
     }
 
-    void CContextSimulator::xCtxUpdateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
+    void CContextSimulator::xCtxUpdateSimulatorCockpitFromContext(const CSimulatedAircraft &ownAircraft,
+                                                                  const CIdentifier &originator)
     {
         if (!this->isSimulatorAvailable()) { return; }
         if (originator.getName().isEmpty() || originator == IContextSimulator::InterfaceName()) { return; }
@@ -877,7 +920,8 @@ namespace swift::core::context
         m_simulatorPlugin.second->updateOwnSimulatorSelcal(selcal, originator);
     }
 
-    void CContextSimulator::xCtxNetworkRequestedNewAircraft(const CCallsign &callsign, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery)
+    void CContextSimulator::xCtxNetworkRequestedNewAircraft(const CCallsign &callsign, const QString &aircraftIcao,
+                                                            const QString &airlineIcao, const QString &livery)
     {
         if (m_networkSessionId.isEmpty()) { return; }
         m_aircraftMatcher.evaluateStatisticsEntry(m_networkSessionId, callsign, aircraftIcao, airlineIcao, livery);
@@ -917,10 +961,7 @@ namespace swift::core::context
         const CSimulatorPluginInfoList allSimulators = m_plugins->getAvailableSimulatorPlugins();
         for (const CSimulatorPluginInfo &s : allSimulators)
         {
-            if (enabledSimulators.contains(s.getIdentifier()))
-            {
-                startSimulatorPlugin(s);
-            }
+            if (enabledSimulators.contains(s.getIdentifier())) { startSimulatorPlugin(s); }
         }
     }
 
@@ -950,7 +991,10 @@ namespace swift::core::context
 
     void CContextSimulator::enableMatchingMessages(MatchingLog enabled)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << matchingLogToString(enabled); }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << matchingLogToString(enabled);
+        }
         if (m_logMatchingMessages == enabled) { return; }
         m_logMatchingMessages = enabled;
         emit IContext::changedLogOrDebugSettings();
@@ -958,16 +1002,20 @@ namespace swift::core::context
 
     CMatchingStatistics CContextSimulator::getCurrentMatchingStatistics(bool missingOnly) const
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << missingOnly; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << missingOnly;
+        }
         const CMatchingStatistics statistics = m_aircraftMatcher.getCurrentStatistics();
-        return missingOnly ?
-                   statistics.findMissingOnly() :
-                   statistics;
+        return missingOnly ? statistics.findMissingOnly() : statistics;
     }
 
     void CContextSimulator::setMatchingSetup(const CAircraftMatcherSetup &setup)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << setup.toQString(); }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << setup.toQString();
+        }
         m_aircraftMatcher.setSetup(setup);
         const CStatusMessage msg = m_matchingSettings.setAndSave(setup);
         CLogMessage::preformatted(msg);
@@ -996,7 +1044,8 @@ namespace swift::core::context
         return added;
     }
 
-    bool CContextSimulator::testUpdateRemoteAircraft(const CCallsign &cs, const CAircraftSituation &situation, const CAircraftParts &parts)
+    bool CContextSimulator::testUpdateRemoteAircraft(const CCallsign &cs, const CAircraftSituation &situation,
+                                                     const CAircraftParts &parts)
     {
         if (!m_simulatorPlugin.second || !m_simulatorPlugin.second->isConnected()) { return false; }
         CAircraftSituation s = situation; // make sure to have correct callsign
@@ -1008,11 +1057,10 @@ namespace swift::core::context
     {
         Q_UNUSED(originator)
         if (commandLine.isEmpty()) { return false; }
-        CSimpleCommandParser parser(
-            {
-                ".plugin", ".drv", ".driver", // forwarded to driver
-                ".ris" // rendering interpolator setup
-            });
+        CSimpleCommandParser parser({
+            ".plugin", ".drv", ".driver", // forwarded to driver
+            ".ris" // rendering interpolator setup
+        });
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
         if (parser.matchesCommand("ris"))
@@ -1079,9 +1127,14 @@ namespace swift::core::context
         return m_simulatorPlugin.second->requestElevationBySituation(situation);
     }
 
-    CElevationPlane CContextSimulator::findClosestElevationWithinRange(const CCoordinateGeodetic &reference, const CLength &range) const
+    CElevationPlane CContextSimulator::findClosestElevationWithinRange(const CCoordinateGeodetic &reference,
+                                                                       const CLength &range) const
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << reference.convertToQString(true) << range; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug()
+                << Q_FUNC_INFO << reference.convertToQString(true) << range;
+        }
         if (!m_simulatorPlugin.second || !m_simulatorPlugin.second->isConnected()) { return CElevationPlane::null(); }
         return m_simulatorPlugin.second->findClosestElevationWithinRange(reference, range);
     }
@@ -1106,7 +1159,10 @@ namespace swift::core::context
 
     bool CContextSimulator::doMatchingAgain(const CCallsign &callsign)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign.asString(); }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign.asString();
+        }
         if (!this->isAircraftInRange(callsign)) { return false; }
         if (!this->isSimulatorAvailable()) { return false; }
 
@@ -1146,10 +1202,7 @@ namespace swift::core::context
     void CContextSimulator::onOwnSimulatorModelChanged(const CAircraftModel &model)
     {
         CAircraftModel lookupModel(model);
-        if (!lookupModel.isLoadedFromDb())
-        {
-            lookupModel = this->reverseLookupModel(model);
-        }
+        if (!lookupModel.isLoadedFromDb()) { lookupModel = this->reverseLookupModel(model); }
         emit this->ownAircraftModelChanged(lookupModel);
     }
 
@@ -1177,10 +1230,7 @@ namespace swift::core::context
             CStatusMessageList &msgs = m_matchingMessages[callsign];
             msgs.push_back(messages);
         }
-        else
-        {
-            m_matchingMessages.insert(callsign, messages);
-        }
+        else { m_matchingMessages.insert(callsign, messages); }
     }
 
     void CContextSimulator::clearMatchingMessages(const CCallsign &callsign)
@@ -1192,7 +1242,8 @@ namespace swift::core::context
     CAircraftModel CContextSimulator::reverseLookupModel(const CAircraftModel &model)
     {
         bool modified = false;
-        const CAircraftModel reverseModel = CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
+        const CAircraftModel reverseModel =
+            CDatabaseUtils::consolidateOwnAircraftModelWithDbData(model, false, &modified);
         return reverseModel;
     }
 
@@ -1202,7 +1253,8 @@ namespace swift::core::context
         const CSimulatorInfo simulator(m_modelSetSimulator.get());
         CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
         const CAircraftModelList models(this->getModelSet()); // synced
-        CLogMessage(this).info(u"Init aircraft matcher with %1 models from set for '%2'") << models.size() << simulator.toQString();
+        CLogMessage(this).info(u"Init aircraft matcher with %1 models from set for '%2'")
+            << models.size() << simulator.toQString();
         m_aircraftMatcher.setModelSet(models, simulator, false);
     }
 } // namespace swift::core::context

@@ -22,9 +22,7 @@ SWIFT_DECLARE_COLLECTION_MIXINS(swift::misc::aviation, CCallsign, CCallsignSet)
 namespace swift::misc::aviation
 {
     //! Value object for a set of callsigns.
-    class SWIFT_MISC_EXPORT CCallsignSet :
-        public CCollection<CCallsign>,
-        public mixin::MetaType<CCallsignSet>
+    class SWIFT_MISC_EXPORT CCallsignSet : public CCollection<CCallsign>, public mixin::MetaType<CCallsignSet>
     {
         using CCollection::CCollection;
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CCallsignSet)

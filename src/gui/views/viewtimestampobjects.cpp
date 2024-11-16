@@ -23,7 +23,8 @@ namespace swift::gui::views
     }
 
     template <class T>
-    CViewWithTimestampWithOffsetObjects<T>::CViewWithTimestampWithOffsetObjects(QWidget *parent) : CViewBase<ModelClass>(parent)
+    CViewWithTimestampWithOffsetObjects<T>::CViewWithTimestampWithOffsetObjects(QWidget *parent)
+        : CViewBase<ModelClass>(parent)
     {
         // void
     }

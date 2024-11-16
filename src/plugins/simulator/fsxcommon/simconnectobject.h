@@ -37,9 +37,9 @@ namespace swift::simplugin::fsxcommon
         CSimConnectObject(SimObjectType type);
 
         //! Constructor providing initial situation/parts
-        CSimConnectObject(const swift::misc::simulation::CSimulatedAircraft &aircraft,
-                          DWORD requestId,
-                          swift::misc::simulation::ISimulationEnvironmentProvider *simEnvProvider, swift::misc::simulation::IInterpolationSetupProvider *setupProvider,
+        CSimConnectObject(const swift::misc::simulation::CSimulatedAircraft &aircraft, DWORD requestId,
+                          swift::misc::simulation::ISimulationEnvironmentProvider *simEnvProvider,
+                          swift::misc::simulation::IInterpolationSetupProvider *setupProvider,
                           swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                           swift::misc::simulation::CInterpolationLogger *logger);
 
@@ -68,7 +68,10 @@ namespace swift::simplugin::fsxcommon
         const QString &getTypeAsString() const { return typeToString(m_type); }
 
         //! Aircraft?
-        bool isAircraft() const { return this->getType() == AircraftNonAtc || this->getType() == AircraftSimulatedObject; }
+        bool isAircraft() const
+        {
+            return this->getType() == AircraftNonAtc || this->getType() == AircraftSimulatedObject;
+        }
 
         //! Aircraft simulated object?
         bool isAircraftSimulatedObject() const { return this->getType() == AircraftSimulatedObject; }
@@ -92,13 +95,19 @@ namespace swift::simplugin::fsxcommon
         void setAircraftCG(const swift::misc::physical_quantities::CLength &cg);
 
         //! Get current lights (requested from simulator)
-        const swift::misc::aviation::CAircraftLights &getCurrentLightsInSimulator() const { return m_currentLightsInSim; }
+        const swift::misc::aviation::CAircraftLights &getCurrentLightsInSimulator() const
+        {
+            return m_currentLightsInSim;
+        }
 
         //! Received lights in simulator
         bool hasCurrentLightsInSimulator() const { return !m_currentLightsInSim.isNull(); }
 
         //! Set current lights when received from simulator
-        void setCurrentLightsInSimulator(const swift::misc::aviation::CAircraftLights &lights) { m_currentLightsInSim = lights; }
+        void setCurrentLightsInSimulator(const swift::misc::aviation::CAircraftLights &lights)
+        {
+            m_currentLightsInSim = lights;
+        }
 
         //! Pretend to have received lights from simulator
         void fakeCurrentLightsInSimulator() { m_currentLightsInSim.setNull(false); }
@@ -148,7 +157,8 @@ namespace swift::simplugin::fsxcommon
         //! Adding is confirmed
         bool isConfirmedAdded() const;
 
-        //! Marked as confirmed, means the simulator has "confirmed" the objectId as added and not instantly removed the object
+        //! Marked as confirmed, means the simulator has "confirmed" the objectId as added and not instantly removed the
+        //! object
         void setConfirmedAdded(bool confirm);
 
         //! @{
@@ -270,19 +280,25 @@ namespace swift::simplugin::fsxcommon
         const QByteArray &getCallsignByteArray() const { return m_callsignByteArray; }
 
         //! \copydoc swift::misc::simulation::CInterpolator::getInterpolatorInfo
-        QString getInterpolatorInfo(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        QString
+        getInterpolatorInfo(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! \copydoc swift::misc::simulation::CInterpolator::attachLogger
         void attachInterpolatorLogger(swift::misc::simulation::CInterpolationLogger *logger) const;
 
         //! \copydoc swift::misc::simulation::CInterpolator::getInterpolation
-        swift::misc::simulation::CInterpolationResult getInterpolation(qint64 currentTimeSinceEpoch, const swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign &setup, uint32_t aircraftNumber) const;
+        swift::misc::simulation::CInterpolationResult
+        getInterpolation(qint64 currentTimeSinceEpoch,
+                         const swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign &setup,
+                         uint32_t aircraftNumber) const;
 
         //! \copydoc swift::misc::simulation::CInterpolator::getLastInterpolatedSituation
-        const swift::misc::aviation::CAircraftSituation &getLastInterpolatedSituation(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        const swift::misc::aviation::CAircraftSituation &getLastInterpolatedSituation(
+            swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! \copydoc swift::misc::simulation::CInterpolator::getInterpolationMessages
-        const swift::misc::CStatusMessageList &getInterpolationMessages(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
+        const swift::misc::CStatusMessageList &getInterpolationMessages(
+            swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const;
 
         //! Interpolator
         swift::misc::simulation::CInterpolatorMulti *getInterpolator() const { return m_interpolator.data(); }
@@ -322,10 +338,13 @@ namespace swift::simplugin::fsxcommon
         SIMCONNECT_DATA_PBH m_cameraRotation;
         QByteArray m_callsignByteArray;
         QString m_observerName;
-        swift::misc::aviation::CAircraftLights m_currentLightsInSim { nullptr }; //!< current lights to know state for toggling
+        swift::misc::aviation::CAircraftLights m_currentLightsInSim {
+            nullptr
+        }; //!< current lights to know state for toggling
         swift::misc::aviation::CAircraftLights m_lightsAsSent { nullptr }; //!< lights as sent to simulator
         SIMCONNECT_PERIOD m_requestSimDataPeriod = SIMCONNECT_PERIOD_NEVER; //!< how often do we query ground elevation
-        QSharedPointer<swift::misc::simulation::CInterpolatorMulti> m_interpolator; //!< shared pointer because CSimConnectObject can be copied
+        QSharedPointer<swift::misc::simulation::CInterpolatorMulti>
+            m_interpolator; //!< shared pointer because CSimConnectObject can be copied
     };
 
     //! Simulator objects (aka AI aircraft)

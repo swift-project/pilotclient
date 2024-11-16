@@ -83,7 +83,8 @@ namespace swift::gui
             swift::misc::simulation::CAircraftModelList getOwnModels() const;
 
             //! Own cached models from loader
-            swift::misc::simulation::CAircraftModelList getOwnCachedModels(const swift::misc::simulation::CSimulatorInfo &simulator) const;
+            swift::misc::simulation::CAircraftModelList
+            getOwnCachedModels(const swift::misc::simulation::CSimulatorInfo &simulator) const;
 
             //! Own models selected in view
             swift::misc::simulation::CAircraftModelList getOwnSelectedModels() const;
@@ -122,17 +123,26 @@ namespace swift::gui
             swift::misc::simulation::IAircraftModelLoader *modelLoader() const { return m_modelLoader; }
 
             //! Forced read for given simulator
-            bool requestModelsInBackground(const swift::misc::simulation::CSimulatorInfo &simulator, bool onlyIfNotEmpty);
+            bool requestModelsInBackground(const swift::misc::simulation::CSimulatorInfo &simulator,
+                                           bool onlyIfNotEmpty);
 
             //! Graceful shutdown
             void gracefulShutdown();
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const swift::misc::simulation::CAircraftModelList &models) override { this->setModelsForSimulator(models, this->getOwnModelsSimulator()); }
-            virtual void setModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator) override;
-            virtual int updateModels(const swift::misc::simulation::CAircraftModelList &models) override { return this->updateModelsForSimulator(models, this->getOwnModelsSimulator()); }
-            virtual int updateModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CSimulatorInfo &simulator) override;
+            virtual void setModels(const swift::misc::simulation::CAircraftModelList &models) override
+            {
+                this->setModelsForSimulator(models, this->getOwnModelsSimulator());
+            }
+            virtual void setModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models,
+                                               const swift::misc::simulation::CSimulatorInfo &simulator) override;
+            virtual int updateModels(const swift::misc::simulation::CAircraftModelList &models) override
+            {
+                return this->updateModelsForSimulator(models, this->getOwnModelsSimulator());
+            }
+            virtual int updateModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models,
+                                                 const swift::misc::simulation::CSimulatorInfo &simulator) override;
             //! @}
 
         signals:
@@ -144,25 +154,36 @@ namespace swift::gui
 
         private:
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
-            swift::misc::simulation::IAircraftModelLoader *m_modelLoader = nullptr; //!< read own aircraft models, aka models on disk
+            swift::misc::simulation::IAircraftModelLoader *m_modelLoader =
+                nullptr; //!< read own aircraft models, aka models on disk
             swift::misc::simulation::CSimulatorInfo m_simulator; //!< currently init to simulator
-            swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directorySettings { this }; //!< the swift directories
-            swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for directories
+            swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directorySettings {
+                this
+            }; //!< the swift directories
+            swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings {
+                this
+            }; //!< for directories
 
             //! Request own models
             void requestOwnModelsUpdate();
 
             //! Load the models
-            void loadInstalledModels(const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
+            void loadInstalledModels(const swift::misc::simulation::CSimulatorInfo &simulator,
+                                     swift::misc::simulation::IAircraftModelLoader::LoadMode mode,
+                                     const QStringList &modelDirectories = {});
 
             //! On disk loading started
-            void onModelLoaderDiskLoadingStarted(const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadMode mode);
+            void onModelLoaderDiskLoadingStarted(const swift::misc::simulation::CSimulatorInfo &simulator,
+                                                 swift::misc::simulation::IAircraftModelLoader::LoadMode mode);
 
             //! Loading in progress
-            void onModelLoadingProgress(const swift::misc::simulation::CSimulatorInfo &simulator, const QString &message, int progress);
+            void onModelLoadingProgress(const swift::misc::simulation::CSimulatorInfo &simulator,
+                                        const QString &message, int progress);
 
             //! Model loading finished
-            void onModelLoaderLoadingFinished(const swift::misc::CStatusMessageList &statusMessages, const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadFinishedInfo info);
+            void onModelLoaderLoadingFinished(const swift::misc::CStatusMessageList &statusMessages,
+                                              const swift::misc::simulation::CSimulatorInfo &simulator,
+                                              swift::misc::simulation::IAircraftModelLoader::LoadFinishedInfo info);
 
             //! Loading from disk (via view context menu)
             void onViewDiskLoadingFinished(const swift::misc::CStatusMessage &status);
@@ -171,7 +192,9 @@ namespace swift::gui
             void onCacheChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
             //! Request simulator models
-            void requestSimulatorModels(const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadMode mode, const QStringList &modelDirectories = {});
+            void requestSimulatorModels(const swift::misc::simulation::CSimulatorInfo &simulator,
+                                        swift::misc::simulation::IAircraftModelLoader::LoadMode mode,
+                                        const QStringList &modelDirectories = {});
 
             //! Request simulator models from cache
             void requestSimulatorModelsWithCacheInBackground(const swift::misc::simulation::CSimulatorInfo &simulator);
@@ -183,7 +206,9 @@ namespace swift::gui
             void onSimulatorSelectorChanged();
 
             //! Init or change model loader
-            bool initModelLoader(const swift::misc::simulation::CSimulatorInfo &simulator, swift::misc::simulation::IAircraftModelLoader::LoadMode load = swift::misc::simulation::IAircraftModelLoader::NotSet);
+            bool initModelLoader(const swift::misc::simulation::CSimulatorInfo &simulator,
+                                 swift::misc::simulation::IAircraftModelLoader::LoadMode load =
+                                     swift::misc::simulation::IAircraftModelLoader::NotSet);
 
             //! File name for saving as file
             void setSaveFileName(const swift::misc::simulation::CSimulatorInfo &sim);
@@ -210,7 +235,8 @@ namespace swift::gui
             {
             public:
                 //! Constructor
-                CLoadModelsMenu(CDbOwnModelsComponent *ownModelsComponent) : swift::gui::menus::IMenuDelegate(ownModelsComponent)
+                CLoadModelsMenu(CDbOwnModelsComponent *ownModelsComponent)
+                    : swift::gui::menus::IMenuDelegate(ownModelsComponent)
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu

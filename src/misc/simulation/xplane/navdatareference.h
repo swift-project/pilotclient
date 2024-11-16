@@ -52,7 +52,10 @@ namespace swift::misc::simulation::xplane
         virtual geo::CLongitude longitude() const override { return m_position.longitude(); }
         virtual const aviation::CAltitude &geodeticHeight() const override { return m_position.geodeticHeight(); }
         virtual QVector3D normalVector() const override { return m_position.normalVector(); }
-        virtual std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
+        virtual std::array<double, 3> normalVectorDouble() const override
+        {
+            return this->m_position.normalVectorDouble();
+        }
 
         //! \copydoc swift::misc::mixin::Index::propertyByIndex
         QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;

@@ -9,9 +9,8 @@ using namespace swift::gui;
 
 namespace swift::simplugin::fsxcommon
 {
-    CSimulatorFsxConfigWindow::CSimulatorFsxConfigWindow(const QString &simulator, QWidget *parent) : CPluginConfigWindow(parent),
-                                                                                                      m_simulator(simulator),
-                                                                                                      ui(new Ui::CSimulatorFsxConfigWindow)
+    CSimulatorFsxConfigWindow::CSimulatorFsxConfigWindow(const QString &simulator, QWidget *parent)
+        : CPluginConfigWindow(parent), m_simulator(simulator), ui(new Ui::CSimulatorFsxConfigWindow)
     {
         ui->setupUi(this);
         ui->tw_Settings->setCurrentIndex(0);

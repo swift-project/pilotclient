@@ -41,8 +41,5 @@ namespace swift::misc::shared_state::dbus
         m_receivedRequests.erase(it);
     }
 
-    quint32 IDuplex::getToken()
-    {
-        return m_token++;
-    }
+    quint32 IDuplex::getToken() { return m_token++; }
 } // namespace swift::misc::shared_state::dbus

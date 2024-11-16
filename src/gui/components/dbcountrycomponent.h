@@ -42,7 +42,8 @@ namespace swift::gui::components
 
     private:
         //! Countries have been read
-        void onCountriesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
+        void onCountriesRead(swift::misc::network::CEntityFlags::Entity entity,
+                             swift::misc::network::CEntityFlags::ReadState readState, int count, const QUrl &url);
 
         //! Reload models
         void onReload();

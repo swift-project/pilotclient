@@ -32,16 +32,15 @@ namespace swift::simplugin::emulated
         Q_INTERFACES(swift::misc::simulation::ISimulationEnvironmentProvider)
         Q_INTERFACES(swift::misc::simulation::IInterpolationSetupProvider)
 
-        friend class CSimulatorEmulatedMonitorDialog; //!< the monitor widget represents the simulator and needs access to internals (i.e. private/protected)
+        friend class CSimulatorEmulatedMonitorDialog; //!< the monitor widget represents the simulator and needs access
+                                                      //!< to internals (i.e. private/protected)
 
     public:
         //! Constructor, parameters as in \sa swift::core::ISimulatorFactory::create
-        CSimulatorEmulated(
-            const swift::misc::simulation::CSimulatorPluginInfo &info,
-            swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-            swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-            swift::misc::network::IClientProvider *clientProvider,
-            QObject *parent = nullptr);
+        CSimulatorEmulated(const swift::misc::simulation::CSimulatorPluginInfo &info,
+                           swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                           swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                           swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! Destructor
         virtual ~CSimulatorEmulated() override;
@@ -56,22 +55,31 @@ namespace swift::simplugin::emulated
         virtual bool isSimulating() const override;
         virtual bool changeRemoteAircraftModel(const swift::misc::simulation::CSimulatedAircraft &aircraft) override;
         virtual bool changeRemoteAircraftEnabled(const swift::misc::simulation::CSimulatedAircraft &aircraft) override;
-        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator) override;
-        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal, const swift::misc::CIdentifier &originator) override;
+        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                               const swift::misc::CIdentifier &originator) override;
+        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                              const swift::misc::CIdentifier &originator) override;
         virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
         virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
-        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) override;
+        virtual bool setTimeSynchronization(bool enable,
+                                            const swift::misc::physical_quantities::CTime &offset) override;
         virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override;
         virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
         virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
-        virtual swift::misc::CStatusMessageList getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
-        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftSituation &situation, const swift::misc::aviation::CAircraftParts &parts) override;
-        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference, const swift::misc::aviation::CCallsign &callsign) override;
+        virtual swift::misc::CStatusMessageList
+        getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
+        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign,
+                                               const swift::misc::aviation::CAircraftSituation &situation,
+                                               const swift::misc::aviation::CAircraftParts &parts) override;
+        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
+                                      const swift::misc::aviation::CCallsign &callsign) override;
 
         // ----- functions just logged -------
-        virtual bool logicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
+        virtual bool
+        logicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
         virtual bool logicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
-        virtual int physicallyRemoveMultipleRemoteAircraft(const swift::misc::aviation::CCallsignSet &callsigns) override;
+        virtual int
+        physicallyRemoveMultipleRemoteAircraft(const swift::misc::aviation::CCallsignSet &callsigns) override;
 
         // functions logged and used
         //! \ingroup swiftdotcommands
@@ -98,7 +106,8 @@ namespace swift::simplugin::emulated
 
         //! Simulator internal change of COM values
         //! \remark normally used by corresponding swift::simplugin::emulated::CSimulatorEmulatedMonitorDialog
-        bool changeInternalCom(const swift::misc::aviation::CComSystem &comSystem, swift::misc::aviation::CComSystem::ComUnit unit);
+        bool changeInternalCom(const swift::misc::aviation::CComSystem &comSystem,
+                               swift::misc::aviation::CComSystem::ComUnit unit);
 
         //! Simulator internal change of SELCAL
         //! \remark normally used by corresponding swift::simplugin::emulated::CSimulatorEmulatedMonitorDialog
@@ -126,7 +135,8 @@ namespace swift::simplugin::emulated
         void internalAircraftChanged();
 
     protected:
-        virtual bool physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
+        virtual bool
+        physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
         virtual bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
         virtual int physicallyRemoveAllRemoteAircraft() override;
 
@@ -170,10 +180,14 @@ namespace swift::simplugin::emulated
         swift::misc::physical_quantities::CTime m_offsetTime;
         swift::misc::simulation::CSimulatedAircraft m_myAircraft; //!< represents own aircraft of simulator
         swift::misc::simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator
-        QPointer<CSimulatorEmulatedMonitorDialog> m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
+        QPointer<CSimulatorEmulatedMonitorDialog>
+            m_monitorWidget; //!< parent will be main window, so we need to destroy widget when destroyed
         swift::misc::CConnectionGuard m_connectionGuard; //!< connected with provider
-        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TSwiftPlugin> m_pluginSettings { this, &CSimulatorEmulated::onSettingsChanged };
-        QMap<swift::misc::aviation::CCallsign, swift::misc::simulation::CInterpolatorMultiWrapper> m_interpolators; //!< interpolators per callsign
+        swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TSwiftPlugin> m_pluginSettings {
+            this, &CSimulatorEmulated::onSettingsChanged
+        };
+        QMap<swift::misc::aviation::CCallsign, swift::misc::simulation::CInterpolatorMultiWrapper>
+            m_interpolators; //!< interpolators per callsign
     };
 
     //! Listener for swift

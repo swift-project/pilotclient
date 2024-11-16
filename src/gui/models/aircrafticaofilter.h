@@ -15,20 +15,16 @@
 namespace swift::gui::models
 {
     //! Filter for aircraft ICAO data
-    class SWIFT_GUI_EXPORT CAircraftIcaoFilter :
-        public IModelFilter<swift::misc::aviation::CAircraftIcaoCodeList>
+    class SWIFT_GUI_EXPORT CAircraftIcaoFilter : public IModelFilter<swift::misc::aviation::CAircraftIcaoCodeList>
     {
     public:
         //! Constructor
-        CAircraftIcaoFilter(int id,
-                            const QString &designator,
-                            const QString &family,
-                            const QString &manufacturer,
-                            const QString &description,
-                            const QString &combinedType);
+        CAircraftIcaoFilter(int id, const QString &designator, const QString &family, const QString &manufacturer,
+                            const QString &description, const QString &combinedType);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::aviation::CAircraftIcaoCodeList filter(const swift::misc::aviation::CAircraftIcaoCodeList &inContainer) const override;
+        virtual swift::misc::aviation::CAircraftIcaoCodeList
+        filter(const swift::misc::aviation::CAircraftIcaoCodeList &inContainer) const override;
 
     private:
         int m_id = -1;

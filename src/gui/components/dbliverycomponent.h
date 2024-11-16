@@ -61,10 +61,12 @@ namespace swift::gui
 
         private:
             //! Liveries codes have been read
-            void onLiveriesRead(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CEntityFlags::ReadState readState, int count);
+            void onLiveriesRead(swift::misc::network::CEntityFlags::Entity entity,
+                                swift::misc::network::CEntityFlags::ReadState readState, int count);
 
             //! Download progress for an entity
-            void onEntityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress, qint64 current, qint64 max, const QUrl &url);
+            void onEntityDownloadProgress(swift::misc::network::CEntityFlags::Entity entity, int logId, int progress,
+                                          qint64 current, qint64 max, const QUrl &url);
 
             //! Reload models
             void onReload();

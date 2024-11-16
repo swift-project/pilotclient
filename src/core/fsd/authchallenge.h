@@ -36,16 +36,12 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const AuthChallenge &lhs, const AuthChallenge &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
                lhs.m_challengeKey == rhs.m_challengeKey;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const AuthChallenge &lhs, const AuthChallenge &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const AuthChallenge &lhs, const AuthChallenge &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

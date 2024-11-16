@@ -52,9 +52,9 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CAtcStationComponent::CAtcStationComponent(QWidget *parent) : COverlayMessagesFrameEnableForDockWidgetInfoArea(parent),
-                                                                  CIdentifiable(this),
-                                                                  ui(new Ui::CAtcStationComponent)
+    CAtcStationComponent::CAtcStationComponent(QWidget *parent)
+        : COverlayMessagesFrameEnableForDockWidgetInfoArea(parent), CIdentifiable(this),
+          ui(new Ui::CAtcStationComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         ui->setupUi(this);
@@ -86,35 +86,51 @@ namespace swift::gui::components
         ui->tvp_AtcStationsOnline->menuRemoveItems(CAtcStationView::MenuClear);
 
         // Signal / Slots
-        connect(ui->le_AtcStationsOnlineMetar, &QLineEdit::returnPressed, this, &CAtcStationComponent::getMetarAsEntered);
+        connect(ui->le_AtcStationsOnlineMetar, &QLineEdit::returnPressed, this,
+                &CAtcStationComponent::getMetarAsEntered);
         connect(ui->tb_AtcStationsLoadMetar, &QPushButton::clicked, this, &CAtcStationComponent::getMetarAsEntered);
         connect(ui->tb_Audio, &QPushButton::clicked, this, &CAtcStationComponent::requestAudioWidget);
-        connect(ui->tb_TextMessageOverlay, &QPushButton::clicked, this, &CAtcStationComponent::showOverlayInlineTextMessage);
+        connect(ui->tb_TextMessageOverlay, &QPushButton::clicked, this,
+                &CAtcStationComponent::showOverlayInlineTextMessage);
 
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectClicked, this, &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectSelected, this, &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::testCreateDummyOnlineAtcStations);
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::requestOnlineStationsUpdate);
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this, &CAtcStationComponent::requestOnlineStationsUpdate);
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
+        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectClicked, this,
+                &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
+        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectSelected, this,
+                &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
+        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this,
+                &CAtcStationComponent::testCreateDummyOnlineAtcStations);
+        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this,
+                &CAtcStationComponent::requestOnlineStationsUpdate);
+        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this,
+                &CAtcStationComponent::requestOnlineStationsUpdate);
+        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestComFrequency, this,
+                &CAtcStationComponent::setComFrequency);
+        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestTextMessageWidget, this,
+                &CAtcStationComponent::requestTextMessageWidget);
 
-        connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestComFrequency, this, &CAtcStationComponent::setComFrequency);
-        connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::objectSelected, this, &CAtcStationComponent::onOnlineAtcStationSelected, Qt::QueuedConnection);
-        connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestTextMessageWidget, this, &CAtcStationComponent::requestTextMessageWidget);
+        connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestComFrequency, this,
+                &CAtcStationComponent::setComFrequency);
+        connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::objectSelected, this,
+                &CAtcStationComponent::onOnlineAtcStationSelected, Qt::QueuedConnection);
+        connect(ui->tvp_AtcStationsOnlineTree, &CAtcStationTreeView::requestTextMessageWidget, this,
+                &CAtcStationComponent::requestTextMessageWidget);
 
         connect(ui->tb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtisUpdates);
         connect(&m_updateTimer, &QTimer::timeout, this, &CAtcStationComponent::update);
 
         // Group box
-        connect(ui->gb_Details, &QGroupBox::toggled, this, &CAtcStationComponent::onDetailsToggled, Qt::QueuedConnection);
+        connect(ui->gb_Details, &QGroupBox::toggled, this, &CAtcStationComponent::onDetailsToggled,
+                Qt::QueuedConnection);
 
         // runtime based connects
         if (sGui)
         {
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::changedAtcStationsOnline, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::atcStationDisconnected, this, &CAtcStationComponent::atcStationDisconnected, Qt::QueuedConnection);
-            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::connectionStatusChanged, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this,
+                    &CAtcStationComponent::changedAtcStationsOnline, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::atcStationDisconnected, this,
+                    &CAtcStationComponent::atcStationDisconnected, Qt::QueuedConnection);
+            connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
+                    &CAtcStationComponent::connectionStatusChanged, Qt::QueuedConnection);
         }
 
         // selection
@@ -133,7 +149,8 @@ namespace swift::gui::components
         // web readers
         if (sGui && sGui->hasWebDataServices())
         {
-            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this, &CAtcStationComponent::airportsRead);
+            connect(sGui->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this,
+                    &CAtcStationComponent::airportsRead);
             this->airportsRead();
         }
 
@@ -141,8 +158,7 @@ namespace swift::gui::components
         this->settingsChanged();
     }
 
-    CAtcStationComponent::~CAtcStationComponent()
-    {}
+    CAtcStationComponent::~CAtcStationComponent() {}
 
     void CAtcStationComponent::setTab(AtcTab tab)
     {
@@ -150,15 +166,13 @@ namespace swift::gui::components
         ui->tw_Atc->setCurrentIndex(t);
     }
 
-    int CAtcStationComponent::countOnlineStations() const
-    {
-        return ui->tvp_AtcStationsOnline->rowCount();
-    }
+    int CAtcStationComponent::countOnlineStations() const { return ui->tvp_AtcStationsOnline->rowCount(); }
 
     bool CAtcStationComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
         CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(parentDockableWidget);
-        const bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAtcStationComponent::infoAreaTabBarChanged, Qt::QueuedConnection);
+        const bool c = connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this,
+                               &CAtcStationComponent::infoAreaTabBarChanged, Qt::QueuedConnection);
         Q_ASSERT_X(c, Q_FUNC_INFO, "failed connect");
         Q_ASSERT_X(parentDockableWidget, Q_FUNC_INFO, "missing parent");
         return c && parentDockableWidget;
@@ -200,10 +214,7 @@ namespace swift::gui::components
                     ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage(msg, 5000);
                 }
 
-                if (stationsCount < 1)
-                {
-                    m_selectedCallsign.clear();
-                }
+                if (stationsCount < 1) { m_selectedCallsign.clear(); }
                 else if (!m_selectedCallsign.isEmpty() && onlineStations.containsCallsign(m_selectedCallsign))
                 {
                     const CAtcStation lastSelected = onlineStations.findFirstByCallsign(m_selectedCallsign);
@@ -234,15 +245,14 @@ namespace swift::gui::components
         ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, false);
     }
 
-    void CAtcStationComponent::getMetarAsEntered()
-    {
-        this->getMetar("");
-    }
+    void CAtcStationComponent::getMetarAsEntered() { this->getMetar(""); }
 
     void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
     {
         if (!this->canAccessContext()) { return; }
-        const CAirportIcaoCode icao(airportIcaoCode.isEmpty() ? ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper());
+        const CAirportIcaoCode icao(airportIcaoCode.isEmpty() ?
+                                        ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() :
+                                        airportIcaoCode.trimmed().toUpper());
         ui->le_AtcStationsOnlineMetar->setText(icao.asString());
         if (!icao.hasValidIcaoCode(true)) { return; }
         const CMetar metar(sGui->getIContextNetwork()->getMetarForAirport(icao));
@@ -251,10 +261,7 @@ namespace swift::gui::components
             const QString metarText = metar.getMessage() % u"\n\n" % metar.getMetarText();
             ui->te_AtcStationsOnlineInfo->setText(metarText);
         }
-        else
-        {
-            ui->te_AtcStationsOnlineInfo->clear();
-        }
+        else { ui->te_AtcStationsOnlineInfo->clear(); }
     }
 
     void CAtcStationComponent::changedAtcStationsOnline()
@@ -284,10 +291,7 @@ namespace swift::gui::components
     void CAtcStationComponent::testCreateDummyOnlineAtcStations(int number)
     {
         if (!sGui || !sGui->getIContextNetwork()) { return; }
-        if (this->canAccessContext())
-        {
-            sGui->getIContextNetwork()->testCreateDummyOnlineAtcStations(number);
-        }
+        if (this->canAccessContext()) { sGui->getIContextNetwork()->testCreateDummyOnlineAtcStations(number); }
     }
 
     void CAtcStationComponent::requestOnlineStationsUpdate()
@@ -318,12 +322,14 @@ namespace swift::gui::components
         static const QString o = ui->tw_Atc->tabBar()->tabText(io);
         static const QString t = ui->tw_Atc->tabBar()->tabText(it);
         const bool isFiltered = filtered < count && filtered >= 0;
-        const QString filteredInfo = isFiltered ? QStringLiteral(" (%1 of %2)").arg(filtered).arg(count) : QStringLiteral(" (%1)").arg(count);
+        const QString filteredInfo =
+            isFiltered ? QStringLiteral(" (%1 of %2)").arg(filtered).arg(count) : QStringLiteral(" (%1)").arg(count);
         ui->tw_Atc->tabBar()->setTabText(io, o % filteredInfo);
         ui->tw_Atc->tabBar()->setTabText(it, t % filteredInfo);
     }
 
-    void CAtcStationComponent::setComFrequency(const physical_quantities::CFrequency &frequency, CComSystem::ComUnit unit)
+    void CAtcStationComponent::setComFrequency(const physical_quantities::CFrequency &frequency,
+                                               CComSystem::ComUnit unit)
     {
         if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
         if (!CComSystem::isValidComFrequency(frequency)) { return; }
@@ -343,16 +349,10 @@ namespace swift::gui::components
             m_updateTimer.start(ms); // restart
             this->update();
         }
-        else
-        {
-            m_updateTimer.stop();
-        }
+        else { m_updateTimer.stop(); }
     }
 
-    void CAtcStationComponent::airportsRead()
-    {
-        this->initCompleters();
-    }
+    void CAtcStationComponent::airportsRead() { this->initCompleters(); }
 
     void CAtcStationComponent::updateTreeView()
     {
@@ -394,7 +394,8 @@ namespace swift::gui::components
     {
         if (!station.hasCallsign()) { return; }
         const QString infoMessage =
-            station.getCallsignAsString() % u": " % station.getFrequency().valueRoundedWithUnit(CFrequencyUnit::MHz(), 3) %
+            station.getCallsignAsString() % u": " %
+            station.getFrequency().valueRoundedWithUnit(CFrequencyUnit::MHz(), 3) %
             (station.hasAtis() ? u"\n\n" % station.getAtis().getMessage() : QStringLiteral("")) %
             (station.hasMetar() ? u"\n\n" % station.getMetar().getMessage() : QStringLiteral(""));
         ui->te_AtcStationsOnlineInfo->setText(infoMessage);
@@ -410,10 +411,7 @@ namespace swift::gui::components
         {
             ui->tvp_AtcStationsOnline->showOverlayHTMLMessage("Requested ATIS update", 5000);
         }
-        else
-        {
-            ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage("Requested ATIS update", 5000);
-        }
+        else { ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage("Requested ATIS update", 5000); }
     }
 
     bool CAtcStationComponent::canAccessContext() const
@@ -442,10 +440,7 @@ namespace swift::gui::components
         {
             if (checked)
             {
-                if (!m_splitterSizes.isEmpty())
-                {
-                    ui->sp_AtcSplitter->setSizes(m_splitterSizes);
-                }
+                if (!m_splitterSizes.isEmpty()) { ui->sp_AtcSplitter->setSizes(m_splitterSizes); }
             }
             else
             {

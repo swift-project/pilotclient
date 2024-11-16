@@ -12,8 +12,7 @@
 
 namespace swift::gui::components
 {
-    CScaleScreenFactor::CScaleScreenFactor(QWidget *parent) : QFrame(parent),
-                                                              ui(new Ui::CScaleScreenFactor)
+    CScaleScreenFactor::CScaleScreenFactor(QWidget *parent) : QFrame(parent), ui(new Ui::CScaleScreenFactor)
     {
         ui->setupUi(this);
         this->setMinMax(50, 150);
@@ -25,8 +24,7 @@ namespace swift::gui::components
         this->setToolTip(tt);
     }
 
-    CScaleScreenFactor::~CScaleScreenFactor()
-    {}
+    CScaleScreenFactor::~CScaleScreenFactor() {}
 
     void CScaleScreenFactor::setMinMax(int min, int max)
     {
@@ -44,10 +42,7 @@ namespace swift::gui::components
         ui->le_Factor->setText(QString::number(v));
     }
 
-    qreal CScaleScreenFactor::getScaleFactor() const
-    {
-        return 0.01 * ui->hs_Factor->value();
-    }
+    qreal CScaleScreenFactor::getScaleFactor() const { return 0.01 * ui->hs_Factor->value(); }
 
     QString CScaleScreenFactor::getScaleFactorAsString() const
     {

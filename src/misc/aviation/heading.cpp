@@ -12,13 +12,12 @@ namespace swift::misc::aviation
 {
     QString CHeading::convertToQString(bool i18n) const
     {
-        return i18n ?
-                   QStringLiteral("%1 %2").arg(CAngle::convertToQString(i18n),
-                                               this->isMagneticHeading() ?
-                                                   QCoreApplication::translate("Aviation", "magnetic") :
-                                                   QCoreApplication::translate("Aviation", "true")) :
-                   QStringLiteral("%1 %2").arg(CAngle::convertToQString(i18n),
-                                               this->isMagneticHeading() ? "magnetic" : "true");
+        return i18n ? QStringLiteral("%1 %2").arg(CAngle::convertToQString(i18n),
+                                                  this->isMagneticHeading() ?
+                                                      QCoreApplication::translate("Aviation", "magnetic") :
+                                                      QCoreApplication::translate("Aviation", "true")) :
+                      QStringLiteral("%1 %2").arg(CAngle::convertToQString(i18n),
+                                                  this->isMagneticHeading() ? "magnetic" : "true");
     }
 
     void CHeading::normalizeTo360Degrees()

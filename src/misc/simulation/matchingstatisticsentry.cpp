@@ -11,11 +11,13 @@ namespace swift::misc::simulation
 {
     CMatchingStatisticsEntry::CMatchingStatisticsEntry() {}
 
-    CMatchingStatisticsEntry::CMatchingStatisticsEntry(EntryType type, const QString &sessionId, const QString &modelSetId, const QString &description, const QString &aircraftDesignator, const QString &airlineDesignator) : m_sessionId(sessionId.trimmed()), m_modelSetId(modelSetId.trimmed()),
-                                                                                                                                                                                                                               m_description(description),
-                                                                                                                                                                                                                               m_aircraftDesignator(aircraftDesignator.trimmed().toUpper()),
-                                                                                                                                                                                                                               m_airlineDesignator(airlineDesignator.trimmed().toUpper()),
-                                                                                                                                                                                                                               m_entryType(type)
+    CMatchingStatisticsEntry::CMatchingStatisticsEntry(EntryType type, const QString &sessionId,
+                                                       const QString &modelSetId, const QString &description,
+                                                       const QString &aircraftDesignator,
+                                                       const QString &airlineDesignator)
+        : m_sessionId(sessionId.trimmed()), m_modelSetId(modelSetId.trimmed()), m_description(description),
+          m_aircraftDesignator(aircraftDesignator.trimmed().toUpper()),
+          m_airlineDesignator(airlineDesignator.trimmed().toUpper()), m_entryType(type)
     {
         this->setCurrentUtcTime();
     }
@@ -25,29 +27,22 @@ namespace swift::misc::simulation
         return static_cast<CMatchingStatisticsEntry::EntryType>(m_entryType);
     }
 
-    bool CMatchingStatisticsEntry::isMissing() const
-    {
-        return this->getEntryType() == Missing;
-    }
+    bool CMatchingStatisticsEntry::isMissing() const { return this->getEntryType() == Missing; }
 
     void CMatchingStatisticsEntry::setEntryType(CMatchingStatisticsEntry::EntryType type)
     {
         m_entryType = static_cast<int>(type);
     }
 
-    int CMatchingStatisticsEntry::getCount() const
-    {
-        return m_count;
-    }
+    int CMatchingStatisticsEntry::getCount() const { return m_count; }
 
-    void CMatchingStatisticsEntry::increaseCount()
-    {
-        m_count++;
-    }
+    void CMatchingStatisticsEntry::increaseCount() { m_count++; }
 
-    bool CMatchingStatisticsEntry::matches(CMatchingStatisticsEntry::EntryType type, const QString &sessionId, const QString &aircraftDesignator, const QString &airlineDesignator) const
+    bool CMatchingStatisticsEntry::matches(CMatchingStatisticsEntry::EntryType type, const QString &sessionId,
+                                           const QString &aircraftDesignator, const QString &airlineDesignator) const
     {
-        return this->getEntryType() == type && sessionId == this->getSessionId() && aircraftDesignator == this->getAircraftDesignator() && airlineDesignator == this->getAirlineDesignator();
+        return this->getEntryType() == type && sessionId == this->getSessionId() &&
+               aircraftDesignator == this->getAircraftDesignator() && airlineDesignator == this->getAirlineDesignator();
     }
 
     bool CMatchingStatisticsEntry::hasAircraftAirlineCombination() const
@@ -61,9 +56,7 @@ namespace swift::misc::simulation
         {
         case Found: return CIcon::iconByIndex(CIcons::StandardIconTick16);
         case Missing: return CIcon::iconByIndex(CIcons::StandardIconCross16);
-        default:
-            qFatal("Wrong Type");
-            return CIcon::iconByIndex(CIcons::StandardIconUnknown16);
+        default: qFatal("Wrong Type"); return CIcon::iconByIndex(CIcons::StandardIconUnknown16);
         }
     }
 
@@ -77,9 +70,7 @@ namespace swift::misc::simulation
         {
         case Found: return f;
         case Missing: return m;
-        default:
-            qFatal("Wrong Type");
-            return x;
+        default: qFatal("Wrong Type"); return x;
         }
     }
 
@@ -132,9 +123,13 @@ namespace swift::misc::simulation
         }
     }
 
-    int CMatchingStatisticsEntry::comparePropertyByIndex(CPropertyIndexRef index, const CMatchingStatisticsEntry &compareValue) const
+    int CMatchingStatisticsEntry::comparePropertyByIndex(CPropertyIndexRef index,
+                                                         const CMatchingStatisticsEntry &compareValue) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::comparePropertyByIndex(index, compareValue); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::comparePropertyByIndex(index, compareValue);
+        }
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -145,9 +140,13 @@ namespace swift::misc::simulation
         case IndexEntryType: return Compare::compare(m_entryType, compareValue.m_entryType);
         case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);
         case IndexCount: return Compare::compare(m_count, compareValue.m_count);
-        case IndexAircraftDesignator: return m_aircraftDesignator.compare(compareValue.m_aircraftDesignator, Qt::CaseInsensitive);
-        case IndexAirlineDesignator: return m_airlineDesignator.compare(compareValue.m_airlineDesignator, Qt::CaseInsensitive);
-        case IndexHasAircraftAirlineCombination: return Compare::compare(this->hasAircraftAirlineCombination(), compareValue.hasAircraftAirlineCombination());
+        case IndexAircraftDesignator:
+            return m_aircraftDesignator.compare(compareValue.m_aircraftDesignator, Qt::CaseInsensitive);
+        case IndexAirlineDesignator:
+            return m_airlineDesignator.compare(compareValue.m_airlineDesignator, Qt::CaseInsensitive);
+        case IndexHasAircraftAirlineCombination:
+            return Compare::compare(this->hasAircraftAirlineCombination(),
+                                    compareValue.hasAircraftAirlineCombination());
         default: return CValueObject::comparePropertyByIndex(index, compareValue);
         }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
@@ -158,6 +157,7 @@ namespace swift::misc::simulation
     {
         Q_UNUSED(i18n);
         static const QString s("%1 Session: '%2' model set: '%3' aircraft: '%4' airline: '%5' description: '%6'");
-        return s.arg(entryTypeToString(getEntryType()), m_sessionId, m_modelSetId, m_aircraftDesignator, m_airlineDesignator, m_description);
+        return s.arg(entryTypeToString(getEntryType()), m_sessionId, m_modelSetId, m_aircraftDesignator,
+                     m_airlineDesignator, m_description);
     }
 } // namespace swift::misc::simulation

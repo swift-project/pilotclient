@@ -26,10 +26,7 @@ namespace swift::misc
                 out += indent % type % u"signature " % signature % u'\n';
                 out += CDBusUtils::getQDBusArgumentSignature(qv.value<QDBusArgument>(), level + 1) % u'\n';
             }
-            else
-            {
-                out += indent % u"type: " % type % u"signature " % signature % u" value " % qv.toString() % u'\n';
-            }
+            else { out += indent % u"type: " % type % u"signature " % signature % u" value " % qv.toString() % u'\n'; }
         }
         arg.endArray();
         return out;
@@ -46,8 +43,7 @@ namespace swift::misc
         case QDBusArgument::MapType: return QLatin1String("MapType");
         case QDBusArgument::MapEntryType: return QLatin1String("MapEntryType");
         case QDBusArgument::UnknownType:
-        default:
-            return QLatin1String("Unknown type");
+        default: return QLatin1String("Unknown type");
         }
     }
 } // namespace swift::misc

@@ -53,7 +53,8 @@ namespace swift::misc::network
         //! \param server
         //! \param message       human readable message
         //! \param timeoutMs
-        static bool canConnect(const swift::misc::network::CServer &server, QString &message, int timeoutMs = getTimeoutMs());
+        static bool canConnect(const swift::misc::network::CServer &server, QString &message,
+                               int timeoutMs = getTimeoutMs());
 
         //! Can connect to URL?
         static bool canConnect(const QString &url, QString &message, int timeoutMs = getTimeoutMs());
@@ -77,7 +78,8 @@ namespace swift::misc::network
         static bool isValidPort(const QString &port);
 
         //! Build / concatenate an URL
-        static QString buildUrl(const QString &protocol, const QString &server, const QString &baseUrl, const QString &serviceUrl);
+        static QString buildUrl(const QString &protocol, const QString &server, const QString &baseUrl,
+                                const QString &serviceUrl);
 
         //! Set user agent for request
         static void setSwiftUserAgent(QNetworkRequest &request, const QString &userAgentDetails = {});
@@ -86,10 +88,12 @@ namespace swift::misc::network
         static void addDebugFlag(QUrlQuery &qurl);
 
         //! Our tweaked network request with swift header
-        static QNetworkRequest getSwiftNetworkRequest(const QUrl &url, RequestType type = Get, const QString &userAgentDetails = {});
+        static QNetworkRequest getSwiftNetworkRequest(const QUrl &url, RequestType type = Get,
+                                                      const QString &userAgentDetails = {});
 
         //! Get a copied network request with swift header
-        static QNetworkRequest getSwiftNetworkRequest(const QNetworkRequest &request, const QString &userAgentDetails = {});
+        static QNetworkRequest getSwiftNetworkRequest(const QNetworkRequest &request,
+                                                      const QString &userAgentDetails = {});
 
         //! Last modified from reply
         static qint64 lastModifiedMsSinceEpoch(const QNetworkReply *nwReply);
@@ -108,10 +112,16 @@ namespace swift::misc::network
 
         //! Is the reply an HTTP redirect?
         //! \details Status codes:
-        //! - 301: Permanent redirect. Clients making subsequent requests for this resource should use the new URI. Clients should not follow the redirect automatically for POST/PUT/DELETE requests.
-        //! - 302: Redirect for undefined reason. Clients making subsequent requests for this resource should not use the new URI. Clients should not follow the redirect automatically for POST/PUT/DELETE requests.
-        //! - 303: Redirect for undefined reason. Typically, 'Operation has completed, continue elsewhere.' Clients making subsequent requests for this resource should not use the new URI. Clients should follow the redirect for POST/PUT/DELETE requests.
-        //! - 307: Temporary redirect. Resource may return to this location at a later point. Clients making subsequent requests for this resource should use the old URI. Clients should not follow the redirect automatically for POST/PUT/DELETE requests.
+        //! - 301: Permanent redirect. Clients making subsequent requests for this resource should use the new URI.
+        //! Clients should not follow the redirect automatically for POST/PUT/DELETE requests.
+        //! - 302: Redirect for undefined reason. Clients making subsequent requests for this resource should not use
+        //! the new URI. Clients should not follow the redirect automatically for POST/PUT/DELETE requests.
+        //! - 303: Redirect for undefined reason. Typically, 'Operation has completed, continue elsewhere.' Clients
+        //! making subsequent requests for this resource should not use the new URI. Clients should follow the redirect
+        //! for POST/PUT/DELETE requests.
+        //! - 307: Temporary redirect. Resource may return to this location at a later point. Clients making subsequent
+        //! requests for this resource should use the old URI. Clients should not follow the redirect automatically for
+        //! POST/PUT/DELETE requests.
         static bool isHttpStatusRedirect(QNetworkReply *nwReply);
 
         //! Get the redirect URL if any

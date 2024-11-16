@@ -19,7 +19,8 @@ namespace swift::core::fsd
         //! Constructor
         EuroscopeSimData(const QString &sender, const QString &model, const QString &livery, quint64 timestamp,
                          double latitude, double longitude, double altitude, double heading, int bank, int pitch,
-                         int groundSpeed, bool onGround, double gearPercent, double thrustPercent, const swift::misc::aviation::CAircraftLights &lights);
+                         int groundSpeed, bool onGround, double gearPercent, double thrustPercent,
+                         const swift::misc::aviation::CAircraftLights &lights);
 
         //! Message converted to tokens
         QStringList toTokens() const;
@@ -55,29 +56,17 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const EuroscopeSimData &lhs, const EuroscopeSimData &rhs)
     {
-        return lhs.sender() == rhs.sender() &&
-               lhs.receiver() == rhs.receiver() &&
-               lhs.m_model == rhs.m_model &&
-               lhs.m_livery == rhs.m_livery &&
-               lhs.m_timestamp == rhs.m_timestamp &&
-               qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) &&
-               qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
-               qFuzzyCompare(lhs.m_altitude, rhs.m_altitude) &&
-               qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
-               lhs.m_bank == rhs.m_bank &&
-               lhs.m_pitch == rhs.m_pitch &&
-               lhs.m_groundSpeed == rhs.m_groundSpeed &&
-               lhs.m_onGround == rhs.m_onGround &&
-               lhs.m_gearPercent == rhs.m_gearPercent &&
-               lhs.m_thrustPercent == rhs.m_thrustPercent &&
-               lhs.m_lights == rhs.m_lights;
+        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.m_model == rhs.m_model &&
+               lhs.m_livery == rhs.m_livery && lhs.m_timestamp == rhs.m_timestamp &&
+               qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) && qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
+               qFuzzyCompare(lhs.m_altitude, rhs.m_altitude) && qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
+               lhs.m_bank == rhs.m_bank && lhs.m_pitch == rhs.m_pitch && lhs.m_groundSpeed == rhs.m_groundSpeed &&
+               lhs.m_onGround == rhs.m_onGround && lhs.m_gearPercent == rhs.m_gearPercent &&
+               lhs.m_thrustPercent == rhs.m_thrustPercent && lhs.m_lights == rhs.m_lights;
     }
 
     //! Not equal to operator
-    inline bool operator!=(const EuroscopeSimData &lhs, const EuroscopeSimData &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const EuroscopeSimData &lhs, const EuroscopeSimData &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

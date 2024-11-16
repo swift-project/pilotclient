@@ -29,7 +29,8 @@
 namespace swift::misc::private_ns
 {
     // cppcheck-suppress unusedFunction
-    void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit)
+    void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message,
+                      bool audit)
     {
         Q_UNUSED(condition)
         Q_UNUSED(filename)
@@ -62,7 +63,8 @@ namespace swift::misc::private_ns
         QString log;
         if (context && message)
         {
-            log = QStringLiteral("Failed to verify: %1 (%2 in %3) in %4 line %5").arg(condition, message, context, filename, QString::number(line));
+            log = QStringLiteral("Failed to verify: %1 (%2 in %3) in %4 line %5")
+                      .arg(condition, message, context, filename, QString::number(line));
         }
         else
         {

@@ -51,7 +51,8 @@ using namespace swift::core::vatsim;
 
 namespace swift::core::context
 {
-    CContextNetwork::CContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContextNetwork(mode, runtime)
+    CContextNetwork::CContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
+        : IContextNetwork(mode, runtime)
     {
         //! \fixme KB 2019-07 bad style we implicitly depend on 2 other contexts
         Q_ASSERT(this->getRuntime());
@@ -60,18 +61,22 @@ namespace swift::core::context
         CContextNetwork::registerHelp();
 
         // 1. Init by "network driver"
-        m_fsdClient = new CFSDClient(
-            this, // client provider
-            this->getRuntime()->getCContextOwnAircraft(), // own aircraft provider
-            this, // remote aircraft provider
-            this); // thread owner
+        m_fsdClient = new CFSDClient(this, // client provider
+                                     this->getRuntime()->getCContextOwnAircraft(), // own aircraft provider
+                                     this, // remote aircraft provider
+                                     this); // thread owner
         m_fsdClient->start(); // FSD thread
-        connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged, Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CContextNetwork::onFsdConnectionStatusChanged,
+                Qt::QueuedConnection);
         connect(m_fsdClient, &CFSDClient::killRequestReceived, this, &CContextNetwork::kicked, Qt::QueuedConnection);
-        connect(m_fsdClient, &CFSDClient::textMessagesReceived, this, &CContextNetwork::onTextMessagesReceived, Qt::QueuedConnection);
-        connect(m_fsdClient, &CFSDClient::textMessageSent, this, &CContextNetwork::onTextMessageSent, Qt::QueuedConnection);
-        connect(m_fsdClient, &CFSDClient::severeNetworkError, this, &CContextNetwork::severeNetworkError, Qt::QueuedConnection);
-        connect(m_fsdClient, &CFSDClient::muteRequestReceived, this, &CContextNetwork::muteRequestReceived, Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::textMessagesReceived, this, &CContextNetwork::onTextMessagesReceived,
+                Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::textMessageSent, this, &CContextNetwork::onTextMessageSent,
+                Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::severeNetworkError, this, &CContextNetwork::severeNetworkError,
+                Qt::QueuedConnection);
+        connect(m_fsdClient, &CFSDClient::muteRequestReceived, this, &CContextNetwork::muteRequestReceived,
+                Qt::QueuedConnection);
 
         // 2. Update timer for data (network data such as frequency)
         // we use 2 timers so we can query at different times (not too many queirs at once)
@@ -92,20 +97,27 @@ namespace swift::core::context
         m_staggeredMatchingTimer->setObjectName("CContextNetwork::m_staggeredMatchingTimer");
 
         // 4. Airspace contents
-        Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO, "this and own aircraft context must be local");
-        Q_ASSERT_X(this->getRuntime()->getCContextSimulator(), Q_FUNC_INFO, "this and own simulator context must be local");
-        m_airspace = new CAirspaceMonitor(
-            this->getRuntime()->getCContextOwnAircraft(),
-            this->getRuntime()->getCContextSimulator(),
-            m_fsdClient, this);
+        Q_ASSERT_X(this->getRuntime()->getCContextOwnAircraft(), Q_FUNC_INFO,
+                   "this and own aircraft context must be local");
+        Q_ASSERT_X(this->getRuntime()->getCContextSimulator(), Q_FUNC_INFO,
+                   "this and own simulator context must be local");
+        m_airspace = new CAirspaceMonitor(this->getRuntime()->getCContextOwnAircraft(),
+                                          this->getRuntime()->getCContextSimulator(), m_fsdClient, this);
         m_fsdClient->setClientProvider(m_airspace);
-        connect(m_airspace, &CAirspaceMonitor::atcStationDisconnected, this, &CContextNetwork::atcStationDisconnected, Qt::QueuedConnection);
-        connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline, Qt::QueuedConnection);
-        connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange, Qt::QueuedConnection);
-        connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft, Qt::QueuedConnection); // DBus
-        connect(m_airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextNetwork::onReadyForModelMatching); // intentionally NOT QueuedConnection
-        connect(m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft, Qt::QueuedConnection);
-        connect(m_airspace, &CAirspaceMonitor::changedAtisReceived, this, &CContextNetwork::onChangedAtisReceived, Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::atcStationDisconnected, this, &CContextNetwork::atcStationDisconnected,
+                Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this,
+                &CContextNetwork::changedAtcStationsOnline, Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::changedAircraftInRange, this, &CContextNetwork::changedAircraftInRange,
+                Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::removedAircraft, this, &IContextNetwork::removedAircraft,
+                Qt::QueuedConnection); // DBus
+        connect(m_airspace, &CAirspaceMonitor::readyForModelMatching, this,
+                &CContextNetwork::onReadyForModelMatching); // intentionally NOT QueuedConnection
+        connect(m_airspace, &CAirspaceMonitor::addedAircraft, this, &CContextNetwork::addedAircraft,
+                Qt::QueuedConnection);
+        connect(m_airspace, &CAirspaceMonitor::changedAtisReceived, this, &CContextNetwork::onChangedAtisReceived,
+                Qt::QueuedConnection);
     }
 
     CContextNetwork *CContextNetwork::registerWithDBus(swift::misc::CDBusServer *server)
@@ -121,10 +133,7 @@ namespace swift::core::context
         if (this->canUseFsd()) { m_fsdClient->setSimulationEnvironmentProvider(provider); }
     }
 
-    CContextNetwork::~CContextNetwork()
-    {
-        this->gracefulShutdown();
-    }
+    CContextNetwork::~CContextNetwork() { this->gracefulShutdown(); }
 
     CAircraftSituationList CContextNetwork::remoteAircraftSituations(const CCallsign &callsign) const
     {
@@ -138,7 +147,8 @@ namespace swift::core::context
         return m_airspace->remoteAircraftSituation(callsign, index);
     }
 
-    MillisecondsMinMaxMean CContextNetwork::remoteAircraftSituationsTimestampDifferenceMinMaxMean(const CCallsign &callsign) const
+    MillisecondsMinMaxMean
+    CContextNetwork::remoteAircraftSituationsTimestampDifferenceMinMaxMean(const CCallsign &callsign) const
     {
         if (!this->canUseAirspaceMonitor()) { return {}; }
         return m_airspace->remoteAircraftSituationsTimestampDifferenceMinMaxMean(callsign);
@@ -199,14 +209,14 @@ namespace swift::core::context
     }
 
     QList<QMetaObject::Connection> CContextNetwork::connectRemoteAircraftProviderSignals(
-        QObject *receiver,
-        std::function<void(const CAircraftSituation &)> situationSlot,
+        QObject *receiver, std::function<void(const CAircraftSituation &)> situationSlot,
         std::function<void(const CCallsign &, const CAircraftParts &)> partsSlot,
         std::function<void(const CCallsign &)> removedAircraftSlot,
         std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot)
     {
         Q_ASSERT_X(m_airspace, Q_FUNC_INFO, "Missing airspace");
-        return m_airspace->connectRemoteAircraftProviderSignals(receiver, situationSlot, partsSlot, removedAircraftSlot, aircraftSnapshotSlot);
+        return m_airspace->connectRemoteAircraftProviderSignals(receiver, situationSlot, partsSlot, removedAircraftSlot,
+                                                                aircraftSnapshotSlot);
     }
 
     void CContextNetwork::gracefulShutdown()
@@ -229,39 +239,67 @@ namespace swift::core::context
         }
     }
 
-    CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, const QString &extraLiveryString, bool sendLivery, const QString &extraModelString, bool sendModelString, const CCallsign &partnerCallsign, CLoginMode mode)
+    CStatusMessage CContextNetwork::connectToNetwork(const CServer &server, const QString &extraLiveryString,
+                                                     bool sendLivery, const QString &extraModelString,
+                                                     bool sendModelString, const CCallsign &partnerCallsign,
+                                                     CLoginMode mode)
     {
-        if (!this->canUseFsd()) { return { CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityInfo, u"Invalid FSD state (shutdown)") }; }
+        if (!this->canUseFsd())
+        {
+            return { CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityInfo,
+                                    u"Invalid FSD state (shutdown)") };
+        }
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
 
         QString msg;
-        if (!server.getUser().hasCredentials()) { return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError, u"Invalid user credentials"); }
-        if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator()) { return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError, u"Invalid ICAO data for own aircraft"); }
-        if (!CNetworkUtils::canConnect(server, msg, 5000)) { return CStatusMessage(CStatusMessage::SeverityError, msg); }
-        if (m_fsdClient->isConnected()) { return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError, u"Already connected"); }
-        if (this->isPendingConnection()) { return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError, u"Pending connection, please wait"); }
+        if (!server.getUser().hasCredentials())
+        {
+            return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError,
+                                  u"Invalid user credentials");
+        }
+        if (!this->ownAircraft().getAircraftIcaoCode().hasDesignator())
+        {
+            return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError,
+                                  u"Invalid ICAO data for own aircraft");
+        }
+        if (!CNetworkUtils::canConnect(server, msg, 5000))
+        {
+            return CStatusMessage(CStatusMessage::SeverityError, msg);
+        }
+        if (m_fsdClient->isConnected())
+        {
+            return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError,
+                                  u"Already connected");
+        }
+        if (this->isPendingConnection())
+        {
+            return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError,
+                                  u"Pending connection, please wait");
+        }
 
         this->getIContextOwnAircraft()->updateOwnAircraftPilot(server.getUser());
         const CSimulatedAircraft ownAircraft(this->ownAircraft());
-        m_fsdClient->setPartnerCallsign(isValidPartnerCallsign(ownAircraft.getCallsign(), partnerCallsign) ? partnerCallsign : CCallsign());
+        m_fsdClient->setPartnerCallsign(
+            isValidPartnerCallsign(ownAircraft.getCallsign(), partnerCallsign) ? partnerCallsign : CCallsign());
 
         // Fall back to observer mode, if no simulator is available or not simulating
         if (!CBuildConfig::isLocalDeveloperDebugBuild() && !this->getIContextSimulator()->isSimulatorSimulating())
         {
-            CLogMessage(this).info(u"No simulator connected or connected simulator not simulating. Falling back to observer mode");
+            CLogMessage(this).info(
+                u"No simulator connected or connected simulator not simulating. Falling back to observer mode");
             mode.setLoginMode(CLoginMode::Observer);
         }
 
-        const CSimulatorInfo sim = this->getIContextSimulator() ? this->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo() : CSimulatorInfo();
-        const QString l = extraLiveryString.isEmpty() ? ownAircraft.getModel().getSwiftLiveryString(sim) : extraLiveryString;
+        const CSimulatorInfo sim = this->getIContextSimulator() ?
+                                       this->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo() :
+                                       CSimulatorInfo();
+        const QString l =
+            extraLiveryString.isEmpty() ? ownAircraft.getModel().getSwiftLiveryString(sim) : extraLiveryString;
         const QString m = extraModelString.isEmpty() ? ownAircraft.getModelString() : extraModelString;
 
         // FG fix, do not send livery and model ids for FlightGear
         // https://discordapp.com/channels/539048679160676382/567091362030419981/698124094482415616
-        if (sim.isFG() && extraModelString.isEmpty())
-        {
-            sendModelString = false;
-        }
+        if (sim.isFG() && extraModelString.isEmpty()) { sendModelString = false; }
 
         m_currentMode = mode;
         m_fsdClient->setLoginMode(mode);
@@ -286,14 +324,17 @@ namespace swift::core::context
 
         m_fsdClient->setClientIdAndKey(static_cast<quint16>(clientId), clientKey.toLocal8Bit());
 #endif
-        m_fsdClient->setClientCapabilities(Capabilities::AircraftInfo | Capabilities::FastPos | Capabilities::VisPos | Capabilities::AtcInfo | Capabilities::AircraftConfig | Capabilities::IcaoEquipment);
+        m_fsdClient->setClientCapabilities(Capabilities::AircraftInfo | Capabilities::FastPos | Capabilities::VisPos |
+                                           Capabilities::AtcInfo | Capabilities::AircraftConfig |
+                                           Capabilities::IcaoEquipment);
         m_fsdClient->setServer(server);
 
         m_fsdClient->setPilotRating(PilotRating::Student);
         m_fsdClient->setAtcRating(AtcRating::Observer);
 
         m_fsdClient->connectToServer();
-        return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityInfo, u"Connection pending " % server.getAddress() % u' ' % QString::number(server.getPort()));
+        return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityInfo,
+                              u"Connection pending " % server.getAddress() % u' ' % QString::number(server.getPort()));
     }
 
     CServer CContextNetwork::getConnectedServer() const
@@ -311,16 +352,22 @@ namespace swift::core::context
 
     CStatusMessage CContextNetwork::disconnectFromNetwork()
     {
-        if (!this->canUseFsd()) { return { CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityInfo, u"Invalid FSD state (shutdown)") }; }
+        if (!this->canUseFsd())
+        {
+            return { CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityInfo,
+                                    u"Invalid FSD state (shutdown)") };
+        }
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         if (m_fsdClient->isConnected() || m_fsdClient->isPendingConnection())
         {
             m_fsdClient->disconnectFromServer();
-            return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityInfo, u"Connection terminating");
+            return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityInfo,
+                                  u"Connection terminating");
         }
         else
         {
-            return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityWarning, u"Already disconnected");
+            return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityWarning,
+                                  u"Already disconnected");
         }
     }
 
@@ -345,7 +392,9 @@ namespace swift::core::context
         if (!this->canUseFsd()) { return false; }
         if (commandLine.isEmpty()) { return false; }
 
-        static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".addtimeos", ".addtimeoffset", ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable", ".ignore", ".unignore", ".fsd" });
+        static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".addtimeos", ".addtimeoffset",
+                                        ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable",
+                                        ".ignore", ".unignore", ".fsd" });
         CSimpleCommandParser parser(cmds);
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
@@ -373,8 +422,8 @@ namespace swift::core::context
             CCallsign ownCallsign = ownAircraft.getCallsign();
             if (m_fsdClient)
             {
-                // override with the preset callsign, as the own callsign can be different for partner callsign scenarios
-                // copilot scenarios
+                // override with the preset callsign, as the own callsign can be different for partner callsign
+                // scenarios copilot scenarios
                 const CCallsign presetCallsign = m_fsdClient->getPresetCallsign();
                 if (!presetCallsign.isEmpty()) { ownCallsign = presetCallsign; }
             }
@@ -388,13 +437,15 @@ namespace swift::core::context
             CTextMessage tm;
             tm.setSenderCallsign(ownCallsign);
 
-            // based on the CPZ bug https://discordapp.com/channels/539048679160676382/539486309882789888/576765888401768449
-            // no longer use starts/ends with
+            // based on the CPZ bug
+            // https://discordapp.com/channels/539048679160676382/539486309882789888/576765888401768449 no longer use
+            // starts/ends with
             if (receiver == QStringView(u"c1") || receiver == QStringView(u"com1") || receiver == QStringView(u"comm1"))
             {
                 tm.setFrequency(ownAircraft.getCom1System().getFrequencyActive());
             }
-            else if (receiver == QStringView(u"c2") || receiver == QStringView(u"com2") || receiver == QStringView(u"comm2"))
+            else if (receiver == QStringView(u"c2") || receiver == QStringView(u"com2") ||
+                     receiver == QStringView(u"comm2"))
             {
                 tm.setFrequency(ownAircraft.getCom2System().getFrequencyActive());
             }
@@ -404,13 +455,11 @@ namespace swift::core::context
             }
             else
             {
-                const CFrequency radioFrequency = CComSystem::parseComFrequency(receiver, CPqString::SeparatorBestGuess);
+                const CFrequency radioFrequency =
+                    CComSystem::parseComFrequency(receiver, CPqString::SeparatorBestGuess);
                 if (!radioFrequency.isNull())
                 {
-                    if (CComSystem::isValidCivilAviationFrequency(radioFrequency))
-                    {
-                        tm.setFrequency(radioFrequency);
-                    }
+                    if (CComSystem::isValidCivilAviationFrequency(radioFrequency)) { tm.setFrequency(radioFrequency); }
                     else
                     {
                         CLogMessage(this).validationError(u"Wrong COM frequency for text message");
@@ -457,13 +506,14 @@ namespace swift::core::context
             }
 
             CLength os(CLength::null());
-            if (parser.hasPart(2))
-            {
-                os.parseFromString(parser.part(2), CPqString::SeparatorBestGuess);
-            }
+            if (parser.hasPart(2)) { os.parseFromString(parser.part(2), CPqString::SeparatorBestGuess); }
 
             const bool added = this->testAddAltitudeOffset(cs, os);
-            if (added) { CLogMessage(this).info(u"Added altitude offset %1 for %2") << os.valueRoundedWithUnit(2) << cs.asString(); }
+            if (added)
+            {
+                CLogMessage(this).info(u"Added altitude offset %1 for %2")
+                    << os.valueRoundedWithUnit(2) << cs.asString();
+            }
             else { CLogMessage(this).info(u"Removed altitude offset %1") << cs.asString(); }
 
             return true;
@@ -474,20 +524,14 @@ namespace swift::core::context
             if (parser.countParts() < 2) { return false; }
 
             CTime os(CTime::null());
-            if (parser.hasPart(2))
-            {
-                os.parseFromString(parser.part(2), CPqString::SeparatorBestGuess);
-            }
+            if (parser.hasPart(2)) { os.parseFromString(parser.part(2), CPqString::SeparatorBestGuess); }
 
             if (!os.isNull() && os.isPositiveWithEpsilonConsidered())
             {
                 const qint64 ost = os.valueInteger(CTimeUnit::ms());
                 CLogMessage(this).info(u"Added add offset time %1ms") << ost;
             }
-            else
-            {
-                CLogMessage(this).info(u"Reset add. time offset");
-            }
+            else { CLogMessage(this).info(u"Reset add. time offset"); }
         }
         else if (parser.matchesCommand(".watchdog"))
         {
@@ -502,10 +546,7 @@ namespace swift::core::context
         {
             if (!m_airspace) { return false; }
             const int count = m_airspace->reInitializeAllAircraft();
-            if (count > 0)
-            {
-                CLogMessage(this).info(u"Re-init %1 aircraft") << count;
-            }
+            if (count > 0) { CLogMessage(this).info(u"Re-init %1 aircraft") << count; }
         }
         else if (parser.matchesCommand(".wallop"))
         {
@@ -551,13 +592,19 @@ namespace swift::core::context
 
     void CContextNetwork::sendTextMessages(const CTextMessageList &textMessages)
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << textMessages; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << textMessages;
+        }
         m_fsdClient->sendTextMessages(textMessages);
     }
 
     void CContextNetwork::sendFlightPlan(const CFlightPlan &flightPlan)
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << flightPlan; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << flightPlan;
+        }
         m_fsdClient->sendFlightPlan(flightPlan);
         m_fsdClient->sendClientQueryFlightPlan(this->ownAircraft().getCallsign());
     }
@@ -638,10 +685,7 @@ namespace swift::core::context
         return m_airspace->setClientGndCapability(callsign, supportGndFlag);
     }
 
-    void CContextNetwork::markAsSwiftClient(const CCallsign &callsign)
-    {
-        m_airspace->markAsSwiftClient(callsign);
-    }
+    void CContextNetwork::markAsSwiftClient(const CCallsign &callsign) { m_airspace->markAsSwiftClient(callsign); }
 
     CServerList CContextNetwork::getVatsimFsdServers() const
     {
@@ -652,7 +696,8 @@ namespace swift::core::context
 
     void CContextNetwork::onFsdConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
-        // if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << from << to; }
+        // if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << from
+        // << to; }
 
         if (to.isDisconnected())
         {
@@ -696,7 +741,9 @@ namespace swift::core::context
         emit this->readyForModelMatching(aircraft);
     }
 
-    void CContextNetwork::createRelayMessageToPartnerCallsign(const CTextMessage &textMessage, const CCallsign &partnerCallsign, CTextMessageList &relayedMessages)
+    void CContextNetwork::createRelayMessageToPartnerCallsign(const CTextMessage &textMessage,
+                                                              const CCallsign &partnerCallsign,
+                                                              CTextMessageList &relayedMessages)
     {
         if (textMessage.isEmpty()) { return; }
         if (partnerCallsign.isEmpty()) { return; }
@@ -707,12 +754,14 @@ namespace swift::core::context
         relayedMessages.push_back(modified);
     }
 
-    void CContextNetwork::xCtxSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance)
+    void CContextNetwork::xCtxSimulatorRenderRestrictionsChanged(bool restricted, bool enabled, int maxAircraft,
+                                                                 const CLength &maxRenderedDistance)
     {
         // mainly passing changed restrictions from simulator to network
         if (!m_airspace) { return; }
         if (!m_airspace->analyzer()) { return; }
-        m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, enabled, maxAircraft, maxRenderedDistance);
+        m_airspace->analyzer()->setSimulatorRenderRestrictionsChanged(restricted, enabled, maxAircraft,
+                                                                      maxRenderedDistance);
     }
 
     void CContextNetwork::xCtxSimulatorStatusChanged(int status)
@@ -727,21 +776,12 @@ namespace swift::core::context
             m_simulatorConnected++;
             m_lastConnectedSim = simInfo;
         }
-        else
-        {
-            this->setSimulationEnvironmentProvider(nullptr);
-        }
+        else { this->setSimulationEnvironmentProvider(nullptr); }
     }
 
-    bool CContextNetwork::canUseFsd() const
-    {
-        return sApp && !sApp->isShuttingDown() && m_fsdClient;
-    }
+    bool CContextNetwork::canUseFsd() const { return sApp && !sApp->isShuttingDown() && m_fsdClient; }
 
-    bool CContextNetwork::canUseAirspaceMonitor() const
-    {
-        return sApp && !sApp->isShuttingDown() && m_airspace;
-    }
+    bool CContextNetwork::canUseAirspaceMonitor() const { return sApp && !sApp->isShuttingDown() && m_airspace; }
 
     void CContextNetwork::updateMetars(const CMetarList &metars)
     {
@@ -768,17 +808,16 @@ namespace swift::core::context
         if (!partnerCallsign.isEmpty())
         {
             partnerMessages = textMessages.findBySender(partnerCallsign);
-            const CTextMessageList relayedSentMessages = partnerMessages.findByNotForRecipient(ownCallsign).markedAsSent();
-            partnerMessages = partnerMessages.findByRecipient(ownCallsign); // really send to me as PM and not a forwared one
+            const CTextMessageList relayedSentMessages =
+                partnerMessages.findByNotForRecipient(ownCallsign).markedAsSent();
+            partnerMessages =
+                partnerMessages.findByRecipient(ownCallsign); // really send to me as PM and not a forwared one
 
             // avoid infinite rountrips
             textMessages = textMessages.withRemovedPrivateMessagesFromCallsign(partnerCallsign);
 
             // fake those as sent by myself
-            for (const CTextMessage &rsm : relayedSentMessages)
-            {
-                emit this->textMessageSent(rsm);
-            }
+            for (const CTextMessage &rsm : relayedSentMessages) { emit this->textMessageSent(rsm); }
         }
 
         // 1) relayed messaged "now look like PMs"
@@ -789,10 +828,7 @@ namespace swift::core::context
         if (textMessages.containsPrivateMessages())
         {
             const CTextMessageList supMessages(messages.getSupervisorMessages());
-            for (const CTextMessage &m : supMessages)
-            {
-                emit this->supervisorTextMessageReceived(m);
-            }
+            for (const CTextMessage &m : supMessages) { emit this->supervisorTextMessageReceived(m); }
 
             // part to send to partner, "forward/relay" to partner
             if (!partnerCallsign.isEmpty())
@@ -867,7 +903,8 @@ namespace swift::core::context
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         CAtcStationList stations = m_airspace->getAtcStationsOnline();
         if (!recalculateDistance || !this->getIContextOwnAircraft()) { return stations; }
-        stations.calculcateAndUpdateRelativeDistanceAndBearing(this->getIContextOwnAircraft()->getOwnAircraftSituation());
+        stations.calculcateAndUpdateRelativeDistanceAndBearing(
+            this->getIContextOwnAircraft()->getOwnAircraftSituation());
         return stations;
     }
 
@@ -911,19 +948,28 @@ namespace swift::core::context
 
     CSimulatedAircraft CContextNetwork::getAircraftInRangeForCallsign(const CCallsign &callsign) const
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        }
         return m_airspace->getAircraftInRangeForCallsign(callsign);
     }
 
     CAircraftModel CContextNetwork::getAircraftInRangeModelForCallsign(const CCallsign &callsign) const
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        }
         return m_airspace->getAircraftInRangeModelForCallsign(callsign);
     }
 
     CStatusMessageList CContextNetwork::getReverseLookupMessages(const CCallsign &callsign) const
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        }
         return m_airspace->getReverseLookupMessages(callsign);
     }
 
@@ -944,13 +990,19 @@ namespace swift::core::context
 
     CStatusMessageList CContextNetwork::getAircraftPartsHistory(const CCallsign &callsign) const
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        }
         return m_airspace->getAircraftPartsHistory(callsign);
     }
 
     CAircraftPartsList CContextNetwork::getRemoteAircraftParts(const CCallsign &callsign) const
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        }
         return m_airspace->remoteAircraftParts(callsign);
     }
 
@@ -1025,7 +1077,10 @@ namespace swift::core::context
 
     CAtcStation CContextNetwork::getOnlineStationForCallsign(const CCallsign &callsign) const
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        }
         return m_airspace->getAtcStationsOnline().findFirstByCallsign(callsign);
     }
 
@@ -1037,7 +1092,10 @@ namespace swift::core::context
 
     bool CContextNetwork::isOnlineStation(const CCallsign &callsign) const
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        }
         return m_airspace->getAtcStationsOnline().containsCallsign(callsign);
     }
 
@@ -1064,7 +1122,10 @@ namespace swift::core::context
     bool CContextNetwork::updateAircraftEnabled(const CCallsign &callsign, bool enabledForRendering)
     {
         if (!canUseAirspaceMonitor()) { return false; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRendering; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << enabledForRendering;
+        }
         const bool c = m_airspace->updateAircraftEnabled(callsign, enabledForRendering);
         if (c)
         {
@@ -1078,14 +1139,21 @@ namespace swift::core::context
     bool CContextNetwork::setAircraftEnabledFlag(const CCallsign &callsign, bool enabledForRendering)
     {
         if (!canUseAirspaceMonitor()) { return false; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        }
         return m_airspace->setAircraftEnabledFlag(callsign, enabledForRendering);
     }
 
-    bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
+    bool CContextNetwork::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model,
+                                              const CIdentifier &originator)
     {
         if (!canUseAirspaceMonitor()) { return false; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << model;
+        }
         const bool c = m_airspace->updateAircraftModel(callsign, model, originator);
         if (c)
         {
@@ -1096,10 +1164,14 @@ namespace swift::core::context
         return c;
     }
 
-    bool CContextNetwork::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model, const CIdentifier &originator)
+    bool CContextNetwork::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model,
+                                                     const CIdentifier &originator)
     {
         if (!canUseAirspaceMonitor()) { return false; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << model; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << model;
+        }
         const bool c = m_airspace->updateAircraftNetworkModel(callsign, model, originator);
         if (c)
         {
@@ -1112,12 +1184,17 @@ namespace swift::core::context
     bool CContextNetwork::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
     {
         if (!canUseAirspaceMonitor()) { return false; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << enableFastPositonUpdates; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug()
+                << Q_FUNC_INFO << callsign << enableFastPositonUpdates;
+        }
         const bool c = m_airspace->updateFastPositionEnabled(callsign, enableFastPositonUpdates);
         if (c)
         {
             const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-            CLogMessage(this).info(u"Callsign '%1' fast positions '%2'") << aircraft.getCallsign() << swift::misc::boolToOnOff(aircraft.fastPositionUpdates());
+            CLogMessage(this).info(u"Callsign '%1' fast positions '%2'")
+                << aircraft.getCallsign() << swift::misc::boolToOnOff(aircraft.fastPositionUpdates());
             emit this->changedFastPositionUpdates(aircraft);
         }
         return c;
@@ -1125,12 +1202,16 @@ namespace swift::core::context
 
     bool CContextNetwork::updateAircraftSupportingGndFLag(const CCallsign &callsign, bool supportGndFlag)
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << supportGndFlag; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << supportGndFlag;
+        }
         const bool c = m_airspace->setClientGndCapability(callsign, supportGndFlag);
         if (c)
         {
             const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
-            CLogMessage(this).info(u"Callsign '%1' set gnd.capability: %2") << aircraft.getCallsign() << boolToOnOff(aircraft.isSupportingGndFlag());
+            CLogMessage(this).info(u"Callsign '%1' set gnd.capability: %2")
+                << aircraft.getCallsign() << boolToOnOff(aircraft.isSupportingGndFlag());
             emit this->changedGndFlagCapability(aircraft);
         }
         return c;
@@ -1139,7 +1220,11 @@ namespace swift::core::context
     bool CContextNetwork::updateCG(const aviation::CCallsign &callsign, const CLength &cg)
     {
         if (!canUseAirspaceMonitor()) { return false; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1); }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug()
+                << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1);
+        }
         const bool c = m_airspace->updateCG(callsign, cg);
         return c;
     }
@@ -1147,15 +1232,24 @@ namespace swift::core::context
     CCallsignSet CContextNetwork::updateCGForModel(const QString &modelString, const CLength &cg)
     {
         if (!canUseAirspaceMonitor()) { return {}; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << modelString << cg.valueRoundedWithUnit(1); }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug()
+                << Q_FUNC_INFO << modelString << cg.valueRoundedWithUnit(1);
+        }
         const CCallsignSet set = m_airspace->updateCGForModel(modelString, cg);
         return set;
     }
 
-    bool CContextNetwork::updateCGAndModelString(const CCallsign &callsign, const CLength &cg, const QString &modelString)
+    bool CContextNetwork::updateCGAndModelString(const CCallsign &callsign, const CLength &cg,
+                                                 const QString &modelString)
     {
         if (!canUseAirspaceMonitor()) { return false; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1) << modelString; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug()
+                << Q_FUNC_INFO << callsign << cg.valueRoundedWithUnit(1) << modelString;
+        }
         const bool c = m_airspace->updateCGAndModelString(callsign, cg, modelString);
         return c;
     }
@@ -1181,7 +1275,9 @@ namespace swift::core::context
         return c;
     }
 
-    int CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation, CAircraftSituation::GndElevationInfo info, bool *setForOnGroundPosition)
+    int CContextNetwork::updateAircraftGroundElevation(const CCallsign &callsign, const CElevationPlane &elevation,
+                                                       CAircraftSituation::GndElevationInfo info,
+                                                       bool *setForOnGroundPosition)
     {
         if (!canUseAirspaceMonitor()) { return 0; }
         return m_airspace->updateAircraftGroundElevation(callsign, elevation, info, setForOnGroundPosition);
@@ -1230,21 +1326,17 @@ namespace swift::core::context
         return m_airspace->getLatestAirspaceAircraftSnapshot();
     }
 
-    CElevationPlane CContextNetwork::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference, const CLength &range, int minValues, int sufficientValues) const
+    CElevationPlane CContextNetwork::averageElevationOfNonMovingAircraft(const CAircraftSituation &reference,
+                                                                         const CLength &range, int minValues,
+                                                                         int sufficientValues) const
     {
         if (!canUseAirspaceMonitor()) { return {}; }
         return m_airspace->averageElevationOfNonMovingAircraft(reference, range, minValues, sufficientValues);
     }
 
-    void CContextNetwork::setClients(const CClientList &clients)
-    {
-        m_airspace->setClients(clients);
-    }
+    void CContextNetwork::setClients(const CClientList &clients) { m_airspace->setClients(clients); }
 
-    void CContextNetwork::clearClients()
-    {
-        m_airspace->clearClients();
-    }
+    void CContextNetwork::clearClients() { m_airspace->clearClients(); }
 
     CClient CContextNetwork::getClientOrDefaultForCallsign(const aviation::CCallsign &callsign) const
     {
@@ -1264,7 +1356,8 @@ namespace swift::core::context
         return m_airspace->addNewClient(client);
     }
 
-    int CContextNetwork::updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm, bool skipEqualValues)
+    int CContextNetwork::updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm,
+                                           bool skipEqualValues)
     {
         if (!canUseAirspaceMonitor()) { return 0; }
         return m_airspace->updateOrAddClient(callsign, vm, skipEqualValues);
@@ -1272,7 +1365,10 @@ namespace swift::core::context
 
     void CContextNetwork::setFastPositionEnabledCallsigns(CCallsignSet &callsigns)
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsigns; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsigns;
+        }
         Q_ASSERT(m_fsdClient);
         m_fsdClient->setInterimPositionReceivers(callsigns);
     }
@@ -1287,59 +1383,83 @@ namespace swift::core::context
     QString CContextNetwork::getLibraryInfo(bool detailed) const
     {
         if (!this->canUseFsd()) { return QString(); }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << detailed; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << detailed;
+        }
         return "";
     }
 
     void CContextNetwork::testRequestAircraftConfig(const CCallsign &callsign)
     {
         if (!this->canUseFsd()) { return; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign;
+        }
         m_fsdClient->sendClientQueryAircraftConfig(callsign);
     }
 
     void CContextNetwork::testCreateDummyOnlineAtcStations(int number)
     {
         if (!this->canUseAirspaceMonitor()) { return; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << number; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << number;
+        }
         m_airspace->testCreateDummyOnlineAtcStations(number);
     }
 
     void CContextNetwork::testAddAircraftParts(const CCallsign &callsign, const CAircraftParts &parts, bool incremental)
     {
         if (!this->canUseAirspaceMonitor()) { return; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << parts << incremental; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << parts << incremental;
+        }
         m_airspace->testAddAircraftParts(callsign, parts, incremental);
     }
 
     void CContextNetwork::testReceivedAtisMessage(const CCallsign &callsign, const CInformationMessage &msg)
     {
         if (!this->canUseFsd()) { return; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign.asString(); }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign.asString();
+        }
         emit this->fsdClient()->atisReplyReceived(callsign, msg);
     }
 
     void CContextNetwork::testReceivedTextMessages(const CTextMessageList &textMessages)
     {
         if (!this->canUseFsd()) { return; }
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << textMessages.toQString(); }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << textMessages.toQString();
+        }
         emit this->fsdClient()->textMessagesReceived(textMessages);
     }
 
     CMetar CContextNetwork::getMetarForAirport(const CAirportIcaoCode &airportIcaoCode) const
     {
-        if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode; }
+        if (this->isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode;
+        }
         if (!sApp || !sApp->getWebDataServices()) { return {}; }
         return sApp->getWebDataServices()->getMetarForAirport(airportIcaoCode);
     }
 
-    QMetaObject::Connection CContextNetwork::connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot)
+    QMetaObject::Connection
+    CContextNetwork::connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot)
     {
         Q_ASSERT_X(receiver, Q_FUNC_INFO, "Missing receiver");
 
         // bind does not allow to define connection type, so we use receiver as workaround
         const QMetaObject::Connection uc; // unconnected
-        const QMetaObject::Connection c = rawFsdMessageReceivedSlot ? connect(m_fsdClient, &CFSDClient::rawFsdMessage, receiver, rawFsdMessageReceivedSlot) : uc;
+        const QMetaObject::Connection c = rawFsdMessageReceivedSlot ? connect(m_fsdClient, &CFSDClient::rawFsdMessage,
+                                                                              receiver, rawFsdMessageReceivedSlot) :
+                                                                      uc;
         Q_ASSERT_X(c || !rawFsdMessageReceivedSlot, Q_FUNC_INFO, "connect failed");
         return c;
     }

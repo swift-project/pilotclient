@@ -19,15 +19,15 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::geo, CCoordinateGeodetic)
 
 namespace swift::misc::geo
 {
-    ICoordinateGeodetic::~ICoordinateGeodetic()
-    {}
+    ICoordinateGeodetic::~ICoordinateGeodetic() {}
 
     QString CCoordinateGeodetic::convertToQString(bool i18n) const
     {
         return ICoordinateGeodetic::convertToQString(i18n);
     }
 
-    CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CAltitude &geodeticHeight)
+    CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84,
+                                                       const CAltitude &geodeticHeight)
     {
         const CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
         const CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
@@ -48,15 +48,20 @@ namespace swift::misc::geo
 
         const QVector3D v1 = coordinate1.normalVector();
         const QVector3D v2 = coordinate2.normalVector();
-        Q_ASSERT_X(std::isfinite(v1.x()) && std::isfinite(v1.y()) && std::isfinite(v1.z()), Q_FUNC_INFO, "Distance calculation: v1 non-finite argument");
-        Q_ASSERT_X(std::isfinite(v2.x()) && std::isfinite(v2.y()) && std::isfinite(v2.z()), Q_FUNC_INFO, "Distance calculation: v2 non-finite argument");
+        Q_ASSERT_X(std::isfinite(v1.x()) && std::isfinite(v1.y()) && std::isfinite(v1.z()), Q_FUNC_INFO,
+                   "Distance calculation: v1 non-finite argument");
+        Q_ASSERT_X(std::isfinite(v2.x()) && std::isfinite(v2.y()) && std::isfinite(v2.z()), Q_FUNC_INFO,
+                   "Distance calculation: v2 non-finite argument");
 
-        const float d = earthRadiusMeters * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
+        const float d =
+            earthRadiusMeters * std::atan2(QVector3D::crossProduct(v1, v2).length(), QVector3D::dotProduct(v1, v2));
 
         SWIFT_VERIFY_X(!std::isnan(d), Q_FUNC_INFO, "Distance calculation: NaN in result");
         if (std::isnan(d))
         {
-            CLogMessage().debug(u"Distance calculation: NaN in result (given arguments %1 %2 %3; %4 %5 %6)") << static_cast<double>(v1.x()) << static_cast<double>(v1.y()) << static_cast<double>(v1.z()) << static_cast<double>(v2.x()) << static_cast<double>(v2.y()) << static_cast<double>(v2.z());
+            CLogMessage().debug(u"Distance calculation: NaN in result (given arguments %1 %2 %3; %4 %5 %6)")
+                << static_cast<double>(v1.x()) << static_cast<double>(v1.y()) << static_cast<double>(v1.z())
+                << static_cast<double>(v2.x()) << static_cast<double>(v2.y()) << static_cast<double>(v2.z());
             return CLength::null();
         }
         return { static_cast<double>(d), CLengthUnit::m() };
@@ -65,7 +70,8 @@ namespace swift::misc::geo
     CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
     {
         if (coordinate1.isNull() || coordinate2.isNull()) { return CAngle::null(); }
-        // if (coordinate1.equalNormalVectorDouble(coordinate2)) { return CAngle(0, CAngleUnit::defaultUnit()); } // null or 0?
+        // if (coordinate1.equalNormalVectorDouble(coordinate2)) { return CAngle(0, CAngleUnit::defaultUnit()); } //
+        // null or 0?
         static const QVector3D northPole { 0, 0, 1 };
         const QVector3D c1 = QVector3D::crossProduct(coordinate1.normalVector(), coordinate2.normalVector());
         const QVector3D c2 = QVector3D::crossProduct(coordinate1.normalVector(), northPole);
@@ -81,7 +87,8 @@ namespace swift::misc::geo
         return static_cast<double>(coordinate1.normalVector().distanceToPoint(coordinate2.normalVector()));
     }
 
-    double calculateEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+    double calculateEuclideanDistanceSquared(const ICoordinateGeodetic &coordinate1,
+                                             const ICoordinateGeodetic &coordinate2)
     {
         return static_cast<double>((coordinate1.normalVector() - coordinate2.normalVector()).lengthSquared());
     }
@@ -150,19 +157,25 @@ namespace swift::misc::geo
         return QVariant::fromValue(m);
     }
 
-    int ICoordinateGeodetic::comparePropertyByIndex(CPropertyIndexRef index, const ICoordinateGeodetic &compareValue) const
+    int ICoordinateGeodetic::comparePropertyByIndex(CPropertyIndexRef index,
+                                                    const ICoordinateGeodetic &compareValue) const
     {
         if (!index.isMyself())
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexLatitude: return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
-            case IndexLongitude: return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
+            case IndexLatitude:
+                return this->latitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.latitude());
+            case IndexLongitude:
+                return this->longitude().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.longitude());
             case IndexLatitudeAsString: return this->latitudeAsString().compare(compareValue.latitudeAsString());
             case IndexLongitudeAsString: return this->longitudeAsString().compare(compareValue.longitudeAsString());
-            case IndexGeodeticHeight: return this->geodeticHeight().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.geodeticHeight());
-            case IndexGeodeticHeightAsString: return this->geodeticHeightAsString().compare(compareValue.geodeticHeightAsString());
+            case IndexGeodeticHeight:
+                return this->geodeticHeight().comparePropertyByIndex(index.copyFrontRemoved(),
+                                                                     compareValue.geodeticHeight());
+            case IndexGeodeticHeightAsString:
+                return this->geodeticHeightAsString().compare(compareValue.geodeticHeightAsString());
             default: break;
             }
         }
@@ -176,7 +189,12 @@ namespace swift::misc::geo
     {
         const CLatitude lat = this->latitude();
         const CLongitude lng = this->longitude();
-        return QStringLiteral("Geodetic: {%1/%2, %3/%4, %5}").arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n), lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n), lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n), lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n), this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 2, i18n));
+        return QStringLiteral("Geodetic: {%1/%2, %3/%4, %5}")
+            .arg(lat.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
+                 lat.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
+                 lng.valueRoundedWithUnit(CAngleUnit::deg(), 6, i18n),
+                 lng.valueRoundedWithUnit(CAngleUnit::rad(), 6, i18n),
+                 this->geodeticHeight().valueRoundedWithUnit(CLengthUnit::ft(), 2, i18n));
     }
 
     bool ICoordinateGeodetic::isNaNVector() const
@@ -213,8 +231,7 @@ namespace swift::misc::geo
     bool ICoordinateGeodetic::isValidVector(const std::array<double, 3> &v)
     {
         constexpr double l = 1.00001; // because of interpolation
-        return v[0] <= l && v[1] <= l && v[2] <= l &&
-               v[0] >= -l && v[1] >= -l && v[2] >= -l;
+        return v[0] <= l && v[1] <= l && v[2] <= l && v[0] >= -l && v[1] >= -l && v[2] >= -l;
     }
 
     int CCoordinateGeodetic::clampVector()
@@ -258,9 +275,8 @@ namespace swift::misc::geo
     QVariant CCoordinateGeodetic::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        return (ICoordinateGeodetic::canHandleIndex(index)) ?
-                   ICoordinateGeodetic::propertyByIndex(index) :
-                   CValueObject::propertyByIndex(index);
+        return (ICoordinateGeodetic::canHandleIndex(index)) ? ICoordinateGeodetic::propertyByIndex(index) :
+                                                              CValueObject::propertyByIndex(index);
     }
 
     void CCoordinateGeodetic::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
@@ -284,7 +300,8 @@ namespace swift::misc::geo
         }
     }
 
-    int CCoordinateGeodetic::comparePropertyByIndex(CPropertyIndexRef index, const CCoordinateGeodetic &compareValue) const
+    int CCoordinateGeodetic::comparePropertyByIndex(CPropertyIndexRef index,
+                                                    const CCoordinateGeodetic &compareValue) const
     {
         return ICoordinateGeodetic::canHandleIndex(index) ?
                    ICoordinateGeodetic::comparePropertyByIndex(index, compareValue) :
@@ -296,22 +313,30 @@ namespace swift::misc::geo
         this->setNormalVector(normalVector);
     }
 
-    CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude) : CCoordinateGeodetic(latitude, longitude, CAltitude::null())
+    CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude)
+        : CCoordinateGeodetic(latitude, longitude, CAltitude::null())
     {
         // void
     }
 
-    CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude, const CAltitude &geodeticHeight) : m_x(latitude.cos() * longitude.cos()),
-                                                                                                                                        m_y(latitude.cos() * longitude.sin()),
-                                                                                                                                        m_z(latitude.sin()),
-                                                                                                                                        m_geodeticHeight(geodeticHeight)
+    CCoordinateGeodetic::CCoordinateGeodetic(const CLatitude &latitude, const CLongitude &longitude,
+                                             const CAltitude &geodeticHeight)
+        : m_x(latitude.cos() * longitude.cos()), m_y(latitude.cos() * longitude.sin()), m_z(latitude.sin()),
+          m_geodeticHeight(geodeticHeight)
     {}
 
-    CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees) : CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() }, { 0, nullptr }) {}
+    CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees)
+        : CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() },
+                              { 0, nullptr })
+    {}
 
-    CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightFeet) : CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() }, { heightFeet, CLengthUnit::ft() }) {}
+    CCoordinateGeodetic::CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightFeet)
+        : CCoordinateGeodetic({ latitudeDegrees, CAngleUnit::deg() }, { longitudeDegrees, CAngleUnit::deg() },
+                              { heightFeet, CLengthUnit::ft() })
+    {}
 
-    CCoordinateGeodetic::CCoordinateGeodetic(const ICoordinateGeodetic &coordinate) : m_geodeticHeight(coordinate.geodeticHeight())
+    CCoordinateGeodetic::CCoordinateGeodetic(const ICoordinateGeodetic &coordinate)
+        : m_geodeticHeight(coordinate.geodeticHeight())
     {
         this->setNormalVector(coordinate.normalVectorDouble());
     }
@@ -319,7 +344,10 @@ namespace swift::misc::geo
     CCoordinateGeodetic CCoordinateGeodetic::calculatePosition(const CLength &distance, const CAngle &relBearing) const
     {
         if (this->isNull()) { return CCoordinateGeodetic::null(); }
-        if (distance.isNull() || distance.isNegativeWithEpsilonConsidered() || relBearing.isNull()) { return CCoordinateGeodetic::null(); }
+        if (distance.isNull() || distance.isNegativeWithEpsilonConsidered() || relBearing.isNull())
+        {
+            return CCoordinateGeodetic::null();
+        }
         if (distance.isZeroEpsilonConsidered()) { return *this; }
 
         // http://www.movable-type.co.uk/scripts/latlong.html#destPoint
@@ -331,7 +359,8 @@ namespace swift::misc::geo
         const double bearingRad = relBearing.value(CAngleUnit::rad());
         const double distRatio = distance.value(CLengthUnit::m()) / earthRadiusMeters;
 
-        const double newLatRad = asin(sin(startLatRad) * cos(distRatio) + cos(startLatRad) * sin(distRatio) * cos(bearingRad));
+        const double newLatRad =
+            asin(sin(startLatRad) * cos(distRatio) + cos(startLatRad) * sin(distRatio) * cos(bearingRad));
         double newLngRad = 0;
 
         constexpr double epsilon = 1E-06;
@@ -340,7 +369,8 @@ namespace swift::misc::geo
         else
         {
             // λ1 + Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(φ1), Math.cos(d/R)-Math.sin(φ1)*Math.sin(φ2));
-            newLngRad = startLngRad + atan2(sin(bearingRad) * sin(distRatio) * cos(startLatRad), cos(distRatio) - sin(startLatRad) * sin(newLatRad));
+            newLngRad = startLngRad + atan2(sin(bearingRad) * sin(distRatio) * cos(startLatRad),
+                                            cos(distRatio) - sin(startLatRad) * sin(newLatRad));
             newLngRad = fmod(newLngRad + 3 * M_PI, 2 * M_PI) - M_PI; // normalize +-180deg
         }
 
@@ -364,27 +394,14 @@ namespace swift::misc::geo
 
     QVector3D CCoordinateGeodetic::normalVector() const
     {
-        return {
-            static_cast<float>(m_x),
-            static_cast<float>(m_y),
-            static_cast<float>(m_z)
-        };
+        return { static_cast<float>(m_x), static_cast<float>(m_y), static_cast<float>(m_z) };
     }
 
-    std::array<double, 3> CCoordinateGeodetic::normalVectorDouble() const
-    {
-        return { { m_x, m_y, m_z } };
-    }
+    std::array<double, 3> CCoordinateGeodetic::normalVectorDouble() const { return { { m_x, m_y, m_z } }; }
 
-    void CCoordinateGeodetic::setLatitude(const CLatitude &latitude)
-    {
-        this->setLatLong(latitude, this->longitude());
-    }
+    void CCoordinateGeodetic::setLatitude(const CLatitude &latitude) { this->setLatLong(latitude, this->longitude()); }
 
-    void CCoordinateGeodetic::setLatitudeFromWgs84(const QString &wgs)
-    {
-        this->setLatitude(CLatitude::fromWgs84(wgs));
-    }
+    void CCoordinateGeodetic::setLatitudeFromWgs84(const QString &wgs) { this->setLatitude(CLatitude::fromWgs84(wgs)); }
 
     void CCoordinateGeodetic::setLongitude(const CLongitude &longitude)
     {
@@ -409,10 +426,7 @@ namespace swift::misc::geo
         this->setLongitudeFromWgs84(longitude);
     }
 
-    void CCoordinateGeodetic::setGeodeticHeightToNull()
-    {
-        this->setGeodeticHeight(CAltitude::null());
-    }
+    void CCoordinateGeodetic::setGeodeticHeightToNull() { this->setGeodeticHeight(CAltitude::null()); }
 
     void CCoordinateGeodetic::setNormalVector(const std::array<double, 3> &normalVector)
     {
@@ -434,7 +448,8 @@ namespace swift::misc::geo
         return m_relativeDistance;
     }
 
-    CLength ICoordinateWithRelativePosition::calculcateAndUpdateRelativeDistanceAndBearing(const ICoordinateGeodetic &position)
+    CLength
+    ICoordinateWithRelativePosition::calculcateAndUpdateRelativeDistanceAndBearing(const ICoordinateGeodetic &position)
     {
         m_relativeDistance = geo::calculateGreatCircleDistance(*this, position);
         m_relativeBearing = geo::calculateBearing(*this, position);
@@ -477,16 +492,25 @@ namespace swift::misc::geo
         }
     }
 
-    int ICoordinateWithRelativePosition::comparePropertyByIndex(CPropertyIndexRef index, const ICoordinateWithRelativePosition &compareValue) const
+    int
+    ICoordinateWithRelativePosition::comparePropertyByIndex(CPropertyIndexRef index,
+                                                            const ICoordinateWithRelativePosition &compareValue) const
     {
-        if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue); }
+        if (ICoordinateGeodetic::canHandleIndex(index))
+        {
+            return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue);
+        }
         if (!index.isMyself())
         {
             const ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexRelativeBearing: return m_relativeBearing.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeBearing());
-            case IndexRelativeDistance: return m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getRelativeDistance());
+            case IndexRelativeBearing:
+                return m_relativeBearing.comparePropertyByIndex(index.copyFrontRemoved(),
+                                                                compareValue.getRelativeBearing());
+            case IndexRelativeDistance:
+                return m_relativeDistance.comparePropertyByIndex(index.copyFrontRemoved(),
+                                                                 compareValue.getRelativeDistance());
             default:
                 const QString m = QString("no property, index ").append(index.toQString());
                 Q_ASSERT_X(false, Q_FUNC_INFO, m.toLocal8Bit().constData());
@@ -499,13 +523,11 @@ namespace swift::misc::geo
 
     QString ICoordinateWithRelativePosition::convertToQString(bool i18n) const
     {
-        return m_relativeBearing.toQString(i18n) % u' ' %
-               m_relativeDistance.toQString(i18n) % u' ' %
+        return m_relativeBearing.toQString(i18n) % u' ' % m_relativeDistance.toQString(i18n) % u' ' %
                ICoordinateGeodetic::convertToQString(i18n);
     }
 
-    ICoordinateWithRelativePosition::ICoordinateWithRelativePosition()
-    {}
+    ICoordinateWithRelativePosition::ICoordinateWithRelativePosition() {}
 
     bool ICoordinateWithRelativePosition::canHandleIndex(CPropertyIndexRef index)
     {

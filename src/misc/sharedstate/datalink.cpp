@@ -22,10 +22,7 @@ namespace swift::misc::shared_state
 
     IDataLink::~IDataLink() = default;
 
-    IDataLink::IDataLink()
-    {
-        qRegisterMetaType<CPromise<CVariant>>();
-    }
+    IDataLink::IDataLink() { qRegisterMetaType<CPromise<CVariant>>(); }
 
     QString IDataLink::getChannelName(const QObject *object)
     {

@@ -48,7 +48,10 @@ namespace swift::gui::components
         void triggerDownload();
 
         //! Current distribution
-        swift::misc::db::CDistribution getCurrentDistribution() const { return this->getSelectedOrDefaultDistribution(); }
+        swift::misc::db::CDistribution getCurrentDistribution() const
+        {
+            return this->getSelectedOrDefaultDistribution();
+        }
 
     signals:
         //! Update info loaded
@@ -64,9 +67,14 @@ namespace swift::gui::components
         QScopedPointer<Ui::CUpdateInfoComponent> ui;
         QScopedPointer<CInstallXSwiftBusDialog> m_installXSwiftBusDialog; //!< dialog, install XSwiftXBus
         QScopedPointer<CDownloadDialog> m_downloadDialog; //!< dialog, download installer
-        swift::misc::CDataReadOnly<swift::misc::db::TUpdateInfo> m_updateInfo { this, &CUpdateInfoComponent::changedUpdateInfo }; //!< version cache
-        swift::misc::CSetting<swift::core::application::TUpdatePreferences> m_updateSettings { this }; //!< channel/platform selected
-        swift::misc::CDigestSignal m_dsDistributionAvailable { this, &CUpdateInfoComponent::updateInfoAvailable, 15000, 2 };
+        swift::misc::CDataReadOnly<swift::misc::db::TUpdateInfo> m_updateInfo {
+            this, &CUpdateInfoComponent::changedUpdateInfo
+        }; //!< version cache
+        swift::misc::CSetting<swift::core::application::TUpdatePreferences> m_updateSettings {
+            this
+        }; //!< channel/platform selected
+        swift::misc::CDigestSignal m_dsDistributionAvailable { this, &CUpdateInfoComponent::updateInfoAvailable, 15000,
+                                                               2 };
 
         //! Load latest version
         void requestLoadOfSetup();

@@ -40,9 +40,10 @@ using namespace swift::gui::menus;
 
 namespace swift::gui
 {
-    CDockWidget::CDockWidget(bool allowStatusBar, QWidget *parent) : COverlayMessagesDockWidget(parent),
-                                                                     CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessDockWidget", this),
-                                                                     m_allowStatusBar(allowStatusBar)
+    CDockWidget::CDockWidget(bool allowStatusBar, QWidget *parent)
+        : COverlayMessagesDockWidget(parent),
+          CEnableForFramelessWindow(CEnableForFramelessWindow::WindowTool, false, "framelessDockWidget", this),
+          m_allowStatusBar(allowStatusBar)
     {
         // init settings
         this->onStyleSheetsChanged();
@@ -57,11 +58,15 @@ namespace swift::gui
         m_fontMenu = new CFontMenu(this, Qt::WidgetWithChildrenShortcut);
 
         this->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(this, &CDockWidget::customContextMenuRequested, this, &CDockWidget::showContextMenu, Qt::QueuedConnection);
-        connect(m_input, &CMarginsInput::changedMargins, this, &CDockWidget::menuChangeMargins); // only works direct, as QMargins is not registered:  'QMargins' is registered using qRegisterMetaTyp
+        connect(this, &CDockWidget::customContextMenuRequested, this, &CDockWidget::showContextMenu,
+                Qt::QueuedConnection);
+        connect(m_input, &CMarginsInput::changedMargins, this,
+                &CDockWidget::menuChangeMargins); // only works direct, as QMargins is not registered:  'QMargins' is
+                                                  // registered using qRegisterMetaTyp
 
         // connect
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged, Qt::QueuedConnection);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged,
+                Qt::QueuedConnection);
         connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::onTopLevelChanged, Qt::QueuedConnection);
         connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::onVisibilityChanged, Qt::QueuedConnection);
         connect(m_fontMenu, &CFontMenu::fontSizeMinus, this, &CDockWidget::fontSizeMinus, Qt::QueuedConnection);
@@ -72,35 +77,35 @@ namespace swift::gui
     {
         if (this->isFloating())
         {
-            this->setContentsMargins(this->isFrameless() ? this->getMarginsWhenFramelessFloating() : this->getMarginsWhenFloating());
+            this->setContentsMargins(this->isFrameless() ? this->getMarginsWhenFramelessFloating() :
+                                                           this->getMarginsWhenFloating());
         }
-        else
-        {
-            this->setContentsMargins(this->getMarginsWhenDocked());
-        }
+        else { this->setContentsMargins(this->getMarginsWhenDocked()); }
     }
 
-    CDockWidget::CDockWidget(QWidget *parent) : CDockWidget(true, parent)
-    {}
+    CDockWidget::CDockWidget(QWidget *parent) : CDockWidget(true, parent) {}
 
     void CDockWidget::setOriginalTitleBar()
     {
         if (!m_titleBarWidgetOriginal) { this->initTitleBarWidgets(); }
-        if (this->titleBarWidget() == m_titleBarWidgetOriginal) { return; } // on purpose, as I do not know what happens when I call setTitleBar
+        if (this->titleBarWidget() == m_titleBarWidgetOriginal)
+        {
+            return;
+        } // on purpose, as I do not know what happens when I call setTitleBar
         this->setTitleBarWidget(m_titleBarWidgetOriginal);
     }
 
     void CDockWidget::setEmptyTitleBar()
     {
         if (!m_titleBarWidgetOriginal) { this->initTitleBarWidgets(); }
-        if (this->titleBarWidget() == m_titleBarWidgetEmpty) { return; } // on purpose, as I do not know what happens when I call setTitleBar
+        if (this->titleBarWidget() == m_titleBarWidgetEmpty)
+        {
+            return;
+        } // on purpose, as I do not know what happens when I call setTitleBar
         this->setTitleBarWidget(m_titleBarWidgetEmpty);
     }
 
-    void CDockWidget::setNullTitleBarWidget()
-    {
-        this->setTitleBarWidget(nullptr);
-    }
+    void CDockWidget::setNullTitleBarWidget() { this->setTitleBarWidget(nullptr); }
 
     void CDockWidget::setMarginsWhenFloating(const QMargins &margins)
     {
@@ -114,10 +119,7 @@ namespace swift::gui
         this->setMarginsWhenFloating(QMargins(left, top, right, bottom));
     }
 
-    QMargins CDockWidget::getMarginsWhenFloating() const
-    {
-        return this->getSettings().getMarginsWhenFloating();
-    }
+    QMargins CDockWidget::getMarginsWhenFloating() const { return this->getSettings().getMarginsWhenFloating(); }
 
     void CDockWidget::setMarginsWhenFramelessFloating(const QMargins &margins)
     {
@@ -148,15 +150,9 @@ namespace swift::gui
         this->setMarginsWhenDocked(QMargins(left, top, right, bottom));
     }
 
-    QMargins CDockWidget::getMarginsWhenDocked() const
-    {
-        return this->getSettings().getMarginsWhenDocked();
-    }
+    QMargins CDockWidget::getMarginsWhenDocked() const { return this->getSettings().getMarginsWhenDocked(); }
 
-    bool CDockWidget::isWidgetVisible() const
-    {
-        return m_dockWidgetVisible && this->isVisible();
-    }
+    bool CDockWidget::isWidgetVisible() const { return m_dockWidgetVisible && this->isVisible(); }
 
     void CDockWidget::setWindowTitle(const QString &title)
     {
@@ -179,25 +175,13 @@ namespace swift::gui
     void CDockWidget::showTitleWhenDocked(bool show)
     {
         m_windowTitleWhenDocked = show;
-        if (show)
-        {
-            QDockWidget::setWindowTitle(m_windowTitleBackup);
-        }
-        else
-        {
-            QDockWidget::setWindowTitle("");
-        }
+        if (show) { QDockWidget::setWindowTitle(m_windowTitleBackup); }
+        else { QDockWidget::setWindowTitle(""); }
     }
 
-    void CDockWidget::resetWasAlreadyFloating()
-    {
-        m_wasAlreadyFloating = false;
-    }
+    void CDockWidget::resetWasAlreadyFloating() { m_wasAlreadyFloating = false; }
 
-    void CDockWidget::setPreferredSizeWhenFloating(const QSize &size)
-    {
-        m_preferredSizeWhenFloating = size;
-    }
+    void CDockWidget::setPreferredSizeWhenFloating(const QSize &size) { m_preferredSizeWhenFloating = size; }
 
     void CDockWidget::setOffsetWhenFloating(const QPoint &point, bool frameless)
     {
@@ -213,17 +197,11 @@ namespace swift::gui
         bool hasStatusBar = m_statusBar.getStatusBar();
         if (frameless)
         {
-            if (hasStatusBar)
-            {
-                this->addFramelessSizeGripToStatusBar(m_statusBar.getStatusBar());
-            }
+            if (hasStatusBar) { this->addFramelessSizeGripToStatusBar(m_statusBar.getStatusBar()); }
         }
         else
         {
-            if (hasStatusBar)
-            {
-                this->hideFramelessSizeGripInStatusBar();
-            }
+            if (hasStatusBar) { this->hideFramelessSizeGripInStatusBar(); }
         }
 
         // resize
@@ -261,10 +239,7 @@ namespace swift::gui
             m_originalAreas = this->allowedAreas();
             this->setAllowedAreas(Qt::NoDockWidgetArea);
         }
-        else
-        {
-            this->setAllowedAreas(m_originalAreas);
-        }
+        else { this->setAllowedAreas(m_originalAreas); }
 
         this->setAlwaysOnTop(m_alwaysOnTop && changeToFloating);
         this->setFloating(changeToFloating);
@@ -278,17 +253,11 @@ namespace swift::gui
         {
             // check where we are, otherwise reset if NOT appropriate
             const QPoint p = this->rect().topLeft();
-            if (p.x() < 1 || p.y() < 1)
-            {
-                this->resetPosition();
-            }
+            if (p.x() < 1 || p.y() < 1) { this->resetPosition(); }
         }
     }
 
-    void CDockWidget::toggleVisibility()
-    {
-        this->setVisible(!this->isVisible());
-    }
+    void CDockWidget::toggleVisibility() { this->setVisible(!this->isVisible()); }
 
     void CDockWidget::toggleFrameless()
     {
@@ -327,14 +296,8 @@ namespace swift::gui
 
     void CDockWidget::setAlwaysOnTopFlag(bool onTop)
     {
-        if (onTop)
-        {
-            this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
-        }
-        else
-        {
-            this->setWindowFlags(this->windowFlags() & ~Qt::WindowStaysOnTopHint);
-        }
+        if (onTop) { this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint); }
+        else { this->setWindowFlags(this->windowFlags() & ~Qt::WindowStaysOnTopHint); }
     }
 
     bool CDockWidget::restoreFromSettings()
@@ -392,10 +355,7 @@ namespace swift::gui
 
             event->setAccepted(false); // refuse -> do not close (otherwise crash)
         }
-        else
-        {
-            QDockWidget::closeEvent(event);
-        }
+        else { QDockWidget::closeEvent(event); }
     }
 
     void CDockWidget::paintEvent(QPaintEvent *event)
@@ -428,22 +388,17 @@ namespace swift::gui
             const bool frameless = this->isFrameless();
 
             contextMenu->addAction(CIcons::dockTop16(), "Dock", this, &CDockWidget::toggleFloating);
-            contextMenu->addAction(CIcons::tableSheet16(), frameless ? "Normal window" : "Frameless", this, &CDockWidget::toggleFrameless);
+            contextMenu->addAction(CIcons::tableSheet16(), frameless ? "Normal window" : "Frameless", this,
+                                   &CDockWidget::toggleFrameless);
             contextMenu->addAction(CIcons::dockTop16(), "Always on top", this, &CDockWidget::windowAlwaysOnTop);
             contextMenu->addAction(CIcons::dockTop16(), "Not on top", this, &CDockWidget::windowNotAlwaysOnTop);
             contextMenu->addAction(CIcons::refresh16(), "Redraw", this, qOverload<>(&CDockWidget::update));
         }
-        else
-        {
-            contextMenu->addAction(CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
-        }
+        else { contextMenu->addAction(CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating); }
 
         // Font actions
         Q_ASSERT_X(m_fontMenu, Q_FUNC_INFO, "Missing menu object");
-        if (m_fontMenu)
-        {
-            contextMenu->addActions(m_fontMenu->getActions());
-        }
+        if (m_fontMenu) { contextMenu->addActions(m_fontMenu->getActions()); }
 
         // State actions (windows state)
         contextMenu->addAction(CIcons::load16(), "Restore from settings", this, &CDockWidget::restoreFromSettings);
@@ -494,10 +449,7 @@ namespace swift::gui
         this->setMargins(); // from settings or default
         if (topLevel)
         {
-            if (m_windowTitleBackup != QDockWidget::windowTitle())
-            {
-                QDockWidget::setWindowTitle(m_windowTitleBackup);
-            }
+            if (m_windowTitleBackup != QDockWidget::windowTitle()) { QDockWidget::setWindowTitle(m_windowTitleBackup); }
             this->setNullTitleBarWidget();
             if (m_wasFrameless) { this->setFrameless(true); }
 
@@ -560,7 +512,8 @@ namespace swift::gui
 
         Q_ASSERT_X(outerWidget->layout(), "CDockWidget::initStatusBar", "No outer widget layout");
         if (!outerWidget->layout()) { return; }
-        Q_ASSERT_X(outerWidget->layout()->itemAt(0) && outerWidget->layout()->itemAt(0)->widget(), "CDockWidget::initStatusBar", "No outer widget layout item");
+        Q_ASSERT_X(outerWidget->layout()->itemAt(0) && outerWidget->layout()->itemAt(0)->widget(),
+                   "CDockWidget::initStatusBar", "No outer widget layout item");
         if (!outerWidget->layout()->itemAt(0) || !outerWidget->layout()->itemAt(0)->widget())
         {
             m_allowStatusBar = false;
@@ -568,7 +521,8 @@ namespace swift::gui
         }
 
         // Inner widget is supposed to be a QFrame / promoted QFrame
-        QFrame *innerWidget = qobject_cast<QFrame *>(outerWidget->layout()->itemAt(0)->widget()); // the inner widget containing the layout
+        QFrame *innerWidget = qobject_cast<QFrame *>(
+            outerWidget->layout()->itemAt(0)->widget()); // the inner widget containing the layout
         Q_ASSERT_X(innerWidget, "CDockWidget::initStatusBar", "No inner widget");
         if (!innerWidget)
         {
@@ -613,10 +567,7 @@ namespace swift::gui
         Q_UNUSED(selectedItem)
     }
 
-    void CDockWidget::onVisibilityChanged(bool visible)
-    {
-        m_dockWidgetVisible = visible;
-    }
+    void CDockWidget::onVisibilityChanged(bool visible) { m_dockWidgetVisible = visible; }
 
     void CDockWidget::menuChangeMargins(const QMargins &margins)
     {
@@ -624,19 +575,10 @@ namespace swift::gui
         const bool floating = this->isFloating();
         if (floating)
         {
-            if (frameless)
-            {
-                this->setMarginsWhenFramelessFloating(margins);
-            }
-            else
-            {
-                this->setMarginsWhenFloating(margins);
-            }
+            if (frameless) { this->setMarginsWhenFramelessFloating(margins); }
+            else { this->setMarginsWhenFloating(margins); }
         }
-        else
-        {
-            this->setMarginsWhenDocked(margins);
-        }
+        else { this->setMarginsWhenDocked(margins); }
         this->setContentsMargins(margins);
         this->repaint();
     }
@@ -711,10 +653,7 @@ namespace swift::gui
         }
 
         const CStatusMessage m = m_settings.setAndSave(settings);
-        if (m.isFailure())
-        {
-            CLogMessage::preformatted(m);
-        }
+        if (m.isFailure()) { CLogMessage::preformatted(m); }
     }
 
     void CDockWidget::saveCurrentStateToSettings()
@@ -746,10 +685,7 @@ namespace swift::gui
         // pos can be null during init
         const QWidget *mw = CGuiUtility::mainApplicationWidget();
         QPoint pos = mw && mw->isVisible() ? CGuiUtility::mainWidgetGlobalPosition() : QPoint();
-        if (pos.isNull())
-        {
-            pos = CGuiApplication::currentScreen()->geometry().center() - this->rect().center();
-        }
+        if (pos.isNull()) { pos = CGuiApplication::currentScreen()->geometry().center() - this->rect().center(); }
 
         const int osFloatingX = m_offsetWhenFloating.x();
         const int osFloatingY = m_offsetWhenFloating.y();

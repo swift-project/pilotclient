@@ -53,14 +53,19 @@ namespace swift::simplugin::flightgear
         void push_back(const swift::misc::aviation::CAircraftSituation &situation)
         {
             this->callsigns.push_back(situation.getCallsign().asString());
-            this->latitudesDeg.push_back(situation.latitude().value(swift::misc::physical_quantities::CAngleUnit::deg()));
-            this->longitudesDeg.push_back(situation.longitude().value(swift::misc::physical_quantities::CAngleUnit::deg()));
-            this->altitudesFt.push_back(situation.getAltitude().value(swift::misc::physical_quantities::CLengthUnit::ft()));
+            this->latitudesDeg.push_back(
+                situation.latitude().value(swift::misc::physical_quantities::CAngleUnit::deg()));
+            this->longitudesDeg.push_back(
+                situation.longitude().value(swift::misc::physical_quantities::CAngleUnit::deg()));
+            this->altitudesFt.push_back(
+                situation.getAltitude().value(swift::misc::physical_quantities::CLengthUnit::ft()));
             this->pitchesDeg.push_back(situation.getPitch().value(swift::misc::physical_quantities::CAngleUnit::deg()));
             this->rollsDeg.push_back(situation.getBank().value(swift::misc::physical_quantities::CAngleUnit::deg()));
-            this->headingsDeg.push_back(situation.getHeading().value(swift::misc::physical_quantities::CAngleUnit::deg()));
+            this->headingsDeg.push_back(
+                situation.getHeading().value(swift::misc::physical_quantities::CAngleUnit::deg()));
             this->onGrounds.push_back(situation.isOnGround());
-            this->groundSpeedKts.push_back(situation.getGroundSpeed().value(swift::misc::physical_quantities::CSpeedUnit::kts()));
+            this->groundSpeedKts.push_back(
+                situation.getGroundSpeed().value(swift::misc::physical_quantities::CSpeedUnit::kts()));
         }
 
         QStringList callsigns; //!< List of callsigns
@@ -81,7 +86,8 @@ namespace swift::simplugin::flightgear
         bool isEmpty() const { return callsigns.isEmpty(); }
 
         //! Push back the latest parts
-        void push_back(const swift::misc::aviation::CCallsign &callsign, const swift::misc::aviation::CAircraftParts &parts)
+        void push_back(const swift::misc::aviation::CCallsign &callsign,
+                       const swift::misc::aviation::CAircraftParts &parts)
         {
             this->callsigns.push_back(callsign.asString());
             this->gears.push_back(parts.isFixedGearDown() ? 1 : 0);
@@ -149,10 +155,12 @@ namespace swift::simplugin::flightgear
 
     public:
         //! Elevation callback
-        using ElevationCallback = std::function<void(const swift::misc::geo::CElevationPlane &, const swift::misc::aviation::CCallsign &)>;
+        using ElevationCallback =
+            std::function<void(const swift::misc::geo::CElevationPlane &, const swift::misc::aviation::CCallsign &)>;
 
         //! Remote aircrafts data callback
-        using RemoteAircraftDataCallback = std::function<void(const QStringList &, const QDoubleList &, const QDoubleList &, const QDoubleList &, const QDoubleList &)>;
+        using RemoteAircraftDataCallback = std::function<void(
+            const QStringList &, const QDoubleList &, const QDoubleList &, const QDoubleList &, const QDoubleList &)>;
 
         //! Service name
         static const QString &InterfaceName()
@@ -186,7 +194,8 @@ namespace swift::simplugin::flightgear
         void remoteAircraftAddingFailed(const QString &callsign);
 
     public slots:
-        //! Returns whether multiplayer planes have been acquired. If not, owner will be set to the plugin that acquired it.
+        //! Returns whether multiplayer planes have been acquired. If not, owner will be set to the plugin that acquired
+        //! it.
         MultiplayerAcquireInfo acquireMultiplayerPlanes();
 
         //! Initialize the multiplayer planes rendering and return true if successful
@@ -196,7 +205,8 @@ namespace swift::simplugin::flightgear
         void cleanup();
 
         //! Introduce a new traffic aircraft
-        void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao, const QString &airlineIcao, const QString &livery);
+        void addPlane(const QString &callsign, const QString &modelName, const QString &aircraftIcao,
+                      const QString &airlineIcao, const QString &livery);
 
         //! Remove a traffic aircraft
         void removePlane(const QString &callsign);
@@ -217,8 +227,8 @@ namespace swift::simplugin::flightgear
         void getRemoteAircraftData(const QStringList &callsigns, const RemoteAircraftDataCallback &setter) const;
 
         //! \copydoc XSwiftBus::CTraffic::getElevationAtPosition
-        void getElevationAtPosition(const swift::misc::aviation::CCallsign &callsign, double latitudeDeg, double longitudeDeg, double altitudeMeters,
-                                    const ElevationCallback &setter) const;
+        void getElevationAtPosition(const swift::misc::aviation::CCallsign &callsign, double latitudeDeg,
+                                    double longitudeDeg, double altitudeMeters, const ElevationCallback &setter) const;
 
     private:
         swift::misc::CGenericDBusInterface *m_dbusInterface = nullptr;

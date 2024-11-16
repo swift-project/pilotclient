@@ -31,36 +31,53 @@ namespace swift::core::db
 
         //! Consolidate models with simulator model data (aka "models on disk")
         //! \remark kept here with the other consolidate functions, but actually DB independent
-        static swift::misc::simulation::CAircraftModelList consolidateModelsWithSimulatorModelsAllowsGuiRefresh(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CAircraftModelList &simulatorModels, QStringList &removedModelStrings, bool processEvents);
+        static swift::misc::simulation::CAircraftModelList consolidateModelsWithSimulatorModelsAllowsGuiRefresh(
+            const swift::misc::simulation::CAircraftModelList &models,
+            const swift::misc::simulation::CAircraftModelList &simulatorModels, QStringList &removedModelStrings,
+            bool processEvents);
 
         //! Update directories in models with simulator model data (aka "models on disk")
         //! \remark kept here with the other consolidate functions, but actually DB independent
-        static swift::misc::simulation::CAircraftModelList updateModelsDirectoriesAllowsGuiRefresh(const swift::misc::simulation::CAircraftModelList &models, const swift::misc::simulation::CAircraftModelList &simulatorModels, QStringList &removedModelStrings, bool processEvents);
+        static swift::misc::simulation::CAircraftModelList
+        updateModelsDirectoriesAllowsGuiRefresh(const swift::misc::simulation::CAircraftModelList &models,
+                                                const swift::misc::simulation::CAircraftModelList &simulatorModels,
+                                                QStringList &removedModelStrings, bool processEvents);
 
         //! Consolidate own (aircraft) model data with DB data
-        static swift::misc::simulation::CAircraftModel consolidateOwnAircraftModelWithDbData(const swift::misc::simulation::CAircraftModel &model, bool force, bool *modified = nullptr);
+        static swift::misc::simulation::CAircraftModel
+        consolidateOwnAircraftModelWithDbData(const swift::misc::simulation::CAircraftModel &model, bool force,
+                                              bool *modified = nullptr);
 
         //! Consolidate model data with DB data
-        static swift::misc::simulation::CAircraftModel consolidateModelWithDbData(const swift::misc::simulation::CAircraftModel &model, bool force, bool *modified = nullptr);
+        static swift::misc::simulation::CAircraftModel
+        consolidateModelWithDbData(const swift::misc::simulation::CAircraftModel &model, bool force,
+                                   bool *modified = nullptr);
 
         //! Consolidate model data with DB data
-        static swift::misc::simulation::CAircraftModel consolidateModelWithDbData(const swift::misc::simulation::CAircraftModel &model, const swift::misc::simulation::CAircraftModel &dbModel, bool force, bool *modified);
+        static swift::misc::simulation::CAircraftModel
+        consolidateModelWithDbData(const swift::misc::simulation::CAircraftModel &model,
+                                   const swift::misc::simulation::CAircraftModel &dbModel, bool force, bool *modified);
 
         //! Consolidate models with DB data
         static int consolidateModelsWithDbData(swift::misc::simulation::CAircraftModelList &models, bool force);
 
         //! Consolidate models with simulator model data (aka "models on disk")
         //! \remark kept here with the other consolidate functions, but actually DB independent
-        static int consolidateModelsWithDbData(const swift::misc::simulation::CAircraftModelList &dbModels, swift::misc::simulation::CAircraftModelList &simulatorModels, bool force);
+        static int consolidateModelsWithDbData(const swift::misc::simulation::CAircraftModelList &dbModels,
+                                               swift::misc::simulation::CAircraftModelList &simulatorModels,
+                                               bool force);
 
         //! Consolidate models with DB data
-        static int consolidateModelsWithDbDataAllowsGuiRefresh(swift::misc::simulation::CAircraftModelList &models, bool force, bool processEvents);
+        static int consolidateModelsWithDbDataAllowsGuiRefresh(swift::misc::simulation::CAircraftModelList &models,
+                                                               bool force, bool processEvents);
 
         //! Consolidate models with DB data (simpler/faster version of CAircraftModel::consolidateModelWithDbData)
-        static int consolidateModelsWithDbModelAndDistributor(swift::misc::simulation::CAircraftModelList &models, bool force);
+        static int consolidateModelsWithDbModelAndDistributor(swift::misc::simulation::CAircraftModelList &models,
+                                                              bool force);
 
         //! Consolidate model data with DB distributor
-        static swift::misc::simulation::CAircraftModel consolidateModelWithDbDistributor(const swift::misc::simulation::CAircraftModel &model, bool force);
+        static swift::misc::simulation::CAircraftModel
+        consolidateModelWithDbDistributor(const swift::misc::simulation::CAircraftModel &model, bool force);
 
         //! Consolidate model data with DB distributors
         static int consolidateModelsWithDbDistributor(swift::misc::simulation::CAircraftModelList &models, bool force);
@@ -69,7 +86,11 @@ namespace swift::core::db
         static int fillInMissingAircraftAndLiveryEntities(swift::misc::simulation::CAircraftModelList &models);
 
         //! Create stash models if the DB models miss that simulator
-        static swift::misc::simulation::CAircraftModelList updateSimulatorForFsFamily(const swift::misc::simulation::CAircraftModelList &ownModels, swift::misc::CStatusMessageList *updateInfo, int maxToStash = -1, swift::core::IProgressIndicator *progressIndicator = nullptr, bool processEvents = true);
+        static swift::misc::simulation::CAircraftModelList
+        updateSimulatorForFsFamily(const swift::misc::simulation::CAircraftModelList &ownModels,
+                                   swift::misc::CStatusMessageList *updateInfo, int maxToStash = -1,
+                                   swift::core::IProgressIndicator *progressIndicator = nullptr,
+                                   bool processEvents = true);
 
         //! Database JSON from content string, which can be compressed
         static QJsonDocument databaseJsonToQJsonDocument(const QString &content);
@@ -106,11 +127,16 @@ namespace swift::core::db
 
         //! Which auto-publish data did change?
         //! \sa CAutoPublishData::analyzeAgainstDBData
-        static swift::misc::simulation::ChangedAutoPublishData autoPublishDataChanged(const QString &modelString, const swift::misc::physical_quantities::CLength &cg, const swift::misc::simulation::CSimulatorInfo &simulator);
+        static swift::misc::simulation::ChangedAutoPublishData
+        autoPublishDataChanged(const QString &modelString, const swift::misc::physical_quantities::CLength &cg,
+                               const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Which auto-publish data did change?
         //! \sa CAutoPublishData::analyzeAgainstDBData
-        static swift::misc::simulation::ChangedAutoPublishData autoPublishDataChanged(const swift::misc::simulation::CAircraftModel &model, const swift::misc::physical_quantities::CLength &cg, const swift::misc::simulation::CSimulatorInfo &simulator);
+        static swift::misc::simulation::ChangedAutoPublishData
+        autoPublishDataChanged(const swift::misc::simulation::CAircraftModel &model,
+                               const swift::misc::physical_quantities::CLength &cg,
+                               const swift::misc::simulation::CSimulatorInfo &simulator);
     };
 } // namespace swift::core::db
 #endif // guard

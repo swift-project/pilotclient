@@ -7,12 +7,10 @@
 
 namespace swift::core::fsd
 {
-    Ping::Ping() : MessageBase()
-    {}
+    Ping::Ping() : MessageBase() {}
 
     Ping::Ping(const QString &sender, const QString &receiver, const QString &timestamp)
-        : MessageBase(sender, receiver),
-          m_timestamp(timestamp)
+        : MessageBase(sender, receiver), m_timestamp(timestamp)
     {}
 
     QStringList Ping::toTokens() const

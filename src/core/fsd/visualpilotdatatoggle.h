@@ -44,10 +44,7 @@ namespace swift::core::fsd
     }
 
     //! Not equal to operator
-    inline bool operator!=(const VisualPilotDataToggle &lhs, const VisualPilotDataToggle &rhs)
-    {
-        return !(lhs == rhs);
-    }
+    inline bool operator!=(const VisualPilotDataToggle &lhs, const VisualPilotDataToggle &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
 #endif // guard

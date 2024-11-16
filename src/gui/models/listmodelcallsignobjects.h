@@ -22,8 +22,7 @@ namespace swift::gui::models
 {
     //! List model for callsign based objects (callsign is unique key)
     template <typename T, bool UseCompare = false>
-    class CListModelCallsignObjects :
-        public CListModelBase<T, UseCompare>
+    class CListModelCallsignObjects : public CListModelBase<T, UseCompare>
     {
     public:
         //! Container type
@@ -36,7 +35,10 @@ namespace swift::gui::models
         virtual ~CListModelCallsignObjects() {}
 
         //! Keys to be highlighted
-        void setHighlightedCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) { m_highlightCallsigns = callsigns; }
+        void setHighlightedCallsigns(const swift::misc::aviation::CCallsignSet &callsigns)
+        {
+            m_highlightCallsigns = callsigns;
+        }
 
         //! Clear the highlighted callsign
         void clearHighlightedCallsigns() { m_highlightCallsigns.clear(); }

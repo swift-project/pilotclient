@@ -12,8 +12,7 @@ namespace swift::misc
     //! \private
     extern int qMetaTypeId_CVariantList; // defined in variant.cpp
 
-    CVariantList::CVariantList(const CSequence &other) : CSequence(other)
-    {}
+    CVariantList::CVariantList(const CSequence &other) : CSequence(other) {}
 
     CVariantList::CVariantList(const QVariantList &other)
     {
@@ -28,8 +27,10 @@ namespace swift::misc
     void CVariantList::registerMetadata()
     {
         mixin::MetaType<CVariantList>::registerMetadata();
-        QMetaType::registerConverter<CVariantList, QVector<CVariant>>([](const CVariantList &list) { return list.toVector(); });
-        QMetaType::registerConverter<QVector<CVariant>, CVariantList>([](const QVector<CVariant> &list) { return CSequence(list); });
+        QMetaType::registerConverter<CVariantList, QVector<CVariant>>(
+            [](const CVariantList &list) { return list.toVector(); });
+        QMetaType::registerConverter<QVector<CVariant>, CVariantList>(
+            [](const QVector<CVariant> &list) { return CSequence(list); });
         qMetaTypeId_CVariantList = qMetaTypeId<CVariantList>();
     }
 

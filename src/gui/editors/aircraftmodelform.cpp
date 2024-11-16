@@ -9,15 +9,13 @@ using namespace swift::misc;
 
 namespace swift::gui::editors
 {
-    CAircraftModelForm::CAircraftModelForm(QWidget *parent) : CForm(parent),
-                                                              ui(new Ui::CAircraftModelForm)
+    CAircraftModelForm::CAircraftModelForm(QWidget *parent) : CForm(parent), ui(new Ui::CAircraftModelForm)
     {
         ui->setupUi(this);
         this->setFocusProxy(ui->editor_AircraftIcao);
     }
 
-    CAircraftModelForm::~CAircraftModelForm()
-    {}
+    CAircraftModelForm::~CAircraftModelForm() {}
 
     void CAircraftModelForm::setReadOnly(bool readOnly)
     {
@@ -58,20 +56,14 @@ namespace swift::gui::editors
         return ui->editor_Distributor->validate(withNestedForms);
     }
 
-    aviation::CLivery CAircraftModelForm::getLivery() const
-    {
-        return ui->editor_Livery->getValue();
-    }
+    aviation::CLivery CAircraftModelForm::getLivery() const { return ui->editor_Livery->getValue(); }
 
     aviation::CAircraftIcaoCode CAircraftModelForm::getAircraftIcao() const
     {
         return ui->editor_AircraftIcao->getValue();
     }
 
-    simulation::CDistributor CAircraftModelForm::getDistributor() const
-    {
-        return ui->editor_Distributor->getValue();
-    }
+    simulation::CDistributor CAircraftModelForm::getDistributor() const { return ui->editor_Distributor->getValue(); }
 
     void CAircraftModelForm::allowDrop(bool allowDrop)
     {
@@ -102,18 +94,9 @@ namespace swift::gui::editors
         this->clearDistributor();
     }
 
-    void CAircraftModelForm::clearLivery()
-    {
-        ui->editor_Livery->clear();
-    }
+    void CAircraftModelForm::clearLivery() { ui->editor_Livery->clear(); }
 
-    void CAircraftModelForm::clearAircraftIcao()
-    {
-        ui->editor_AircraftIcao->clear();
-    }
+    void CAircraftModelForm::clearAircraftIcao() { ui->editor_AircraftIcao->clear(); }
 
-    void CAircraftModelForm::clearDistributor()
-    {
-        ui->editor_Distributor->clear();
-    }
+    void CAircraftModelForm::clearDistributor() { ui->editor_Distributor->clear(); }
 } // namespace swift::gui::editors

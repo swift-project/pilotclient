@@ -7,8 +7,5 @@
 
 namespace swift::misc::shared_state
 {
-    void CPassiveMutator::postEvent(const CVariant &param)
-    {
-        emit eventPosted(param);
-    }
+    void CPassiveMutator::postEvent(const CVariant &param) { emit eventPosted(param); }
 } // namespace swift::misc::shared_state

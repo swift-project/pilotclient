@@ -11,8 +11,7 @@ namespace swift::misc::aviation
 {
     CAircraftPartsList::CAircraftPartsList() {}
 
-    CAircraftPartsList::CAircraftPartsList(const CSequence<CAircraftParts> &other) : CSequence<CAircraftParts>(other)
-    {}
+    CAircraftPartsList::CAircraftPartsList(const CSequence<CAircraftParts> &other) : CSequence<CAircraftParts>(other) {}
 
     int CAircraftPartsList::setOnGround(bool onGround)
     {

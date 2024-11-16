@@ -15,11 +15,11 @@ namespace swift::gui::filters
     {
         this->setWindowTitle("Filter dialog");
         this->onStyleSheetChanged();
-        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterDialog::onStyleSheetChanged, Qt::QueuedConnection);
+        connect(sGui, &CGuiApplication::styleSheetsChanged, this, &CFilterDialog::onStyleSheetChanged,
+                Qt::QueuedConnection);
     }
 
-    CFilterDialog::~CFilterDialog()
-    {}
+    CFilterDialog::~CFilterDialog() {}
 
     void CFilterDialog::onStyleSheetChanged()
     {

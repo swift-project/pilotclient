@@ -29,23 +29,31 @@ using namespace swift::gui;
 
 namespace swift::simplugin::fsxcommon
 {
-    CSimConnectSettingsComponent::CSimConnectSettingsComponent(QWidget *parent) : COverlayMessagesFrame(parent),
-                                                                                  ui(new Ui::CSimConnectSettingsComponent)
+    CSimConnectSettingsComponent::CSimConnectSettingsComponent(QWidget *parent)
+        : COverlayMessagesFrame(parent), ui(new Ui::CSimConnectSettingsComponent)
     {
         ui->setupUi(this);
 
-        connect(ui->pb_OpenSwiftSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::openSwiftSimConnectCfgFile);
-        connect(ui->pb_DeleteSwiftSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::deleteSwiftSimConnectCfgFile);
-        connect(ui->pb_ExistsSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::checkSwiftSimConnectCfgFile);
-        connect(ui->pb_SaveSwiftSimConnectCfg, &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectCfgFile);
-        connect(ui->pb_OpenUserCfgFile, &QPushButton::clicked, this, &CSimConnectSettingsComponent::openUserSimConnectCfgFile);
-        connect(ui->pb_TestConnection, &QPushButton::clicked, this, &CSimConnectSettingsComponent::testSwiftSimConnectConnection);
-        connect(ui->pb_SaveAsSimConnectIni, &QPushButton::clicked, this, &CSimConnectSettingsComponent::saveSimConnectIniFileDialog);
+        connect(ui->pb_OpenSwiftSimConnectCfg, &QPushButton::clicked, this,
+                &CSimConnectSettingsComponent::openSwiftSimConnectCfgFile);
+        connect(ui->pb_DeleteSwiftSimConnectCfg, &QPushButton::clicked, this,
+                &CSimConnectSettingsComponent::deleteSwiftSimConnectCfgFile);
+        connect(ui->pb_ExistsSimConnectCfg, &QPushButton::clicked, this,
+                &CSimConnectSettingsComponent::checkSwiftSimConnectCfgFile);
+        connect(ui->pb_SaveSwiftSimConnectCfg, &QPushButton::clicked, this,
+                &CSimConnectSettingsComponent::saveSimConnectCfgFile);
+        connect(ui->pb_OpenUserCfgFile, &QPushButton::clicked, this,
+                &CSimConnectSettingsComponent::openUserSimConnectCfgFile);
+        connect(ui->pb_TestConnection, &QPushButton::clicked, this,
+                &CSimConnectSettingsComponent::testSwiftSimConnectConnection);
+        connect(ui->pb_SaveAsSimConnectIni, &QPushButton::clicked, this,
+                &CSimConnectSettingsComponent::saveSimConnectIniFileDialog);
         this->setSimConnectInfo();
 
         if (m_p3d64bit)
         {
-            connect(ui->cb_P3DVersion, &QComboBox::currentTextChanged, this, &CSimConnectSettingsComponent::onP3DVersionChanged);
+            connect(ui->cb_P3DVersion, &QComboBox::currentTextChanged, this,
+                    &CSimConnectSettingsComponent::onP3DVersionChanged);
         }
     }
 
@@ -75,7 +83,8 @@ namespace swift::simplugin::fsxcommon
         const bool result = file.exists() && file.remove();
         if (result)
         {
-            QMessageBox::information(qApp->activeWindow(), tr("File deleted"), tr("File %1 deleted successfully.").arg(fileName));
+            QMessageBox::information(qApp->activeWindow(), tr("File deleted"),
+                                     tr("File %1 deleted successfully.").arg(fileName));
         }
         this->checkSwiftSimConnectCfgFile();
     }
@@ -93,14 +102,8 @@ namespace swift::simplugin::fsxcommon
         if (!settings) { return; }
         const QString address = CSimConnectUtilities::ipAddress(settings.data());
         const int port = CSimConnectUtilities::ipPort(settings.data());
-        if (!address.isEmpty())
-        {
-            ui->le_Address->setText(address);
-        }
-        if (port > 0)
-        {
-            ui->le_Port->setText(QString::number(port));
-        }
+        if (!address.isEmpty()) { ui->le_Address->setText(address); }
+        if (port > 0) { ui->le_Port->setText(QString::number(port)); }
     }
 
     void CSimConnectSettingsComponent::testSwiftSimConnectConnection()
@@ -110,7 +113,8 @@ namespace swift::simplugin::fsxcommon
 
         if (address.isEmpty() || port.isEmpty())
         {
-            QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"), tr("Address and/or port not specified!"));
+            QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"),
+                                 tr("Address and/or port not specified!"));
             return;
         }
         if (!CNetworkUtils::isValidIPv4Address(address))
@@ -131,7 +135,8 @@ namespace swift::simplugin::fsxcommon
             return;
         }
 
-        QMessageBox::information(qApp->activeWindow(), tr("Connection successful"), tr("Connected to '%1:%2'.").arg(address, port));
+        QMessageBox::information(qApp->activeWindow(), tr("Connection successful"),
+                                 tr("Connected to '%1:%2'.").arg(address, port));
     }
 
     void CSimConnectSettingsComponent::saveSimConnectCfgFile()
@@ -141,7 +146,8 @@ namespace swift::simplugin::fsxcommon
 
         if (address.isEmpty() || port.isEmpty())
         {
-            QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"), tr("Address and/or port not specified!"));
+            QMessageBox::warning(qApp->activeWindow(), tr("Connection invalid"),
+                                 tr("Address and/or port not specified!"));
             return;
         }
         if (!CNetworkUtils::isValidIPv4Address(address))
@@ -160,18 +166,17 @@ namespace swift::simplugin::fsxcommon
 
         if (sGui->getIContextSimulator())
         {
-            const swift::misc::simulation::CSimulatorInternals internals(sGui->getIContextSimulator()->getSimulatorInternals());
+            const swift::misc::simulation::CSimulatorInternals internals(
+                sGui->getIContextSimulator()->getSimulatorInternals());
             fileName = internals.getStringValue("fsx/SimConnectCfgFilename");
         }
 
-        if (fileName.isEmpty())
-        {
-            fileName = CSimConnectUtilities::getSwiftLocalSimConnectCfgFilename();
-        }
+        if (fileName.isEmpty()) { fileName = CSimConnectUtilities::getSwiftLocalSimConnectCfgFilename(); }
 
         if (fileName.isEmpty())
         {
-            QMessageBox::warning(qApp->activeWindow(), tr("Failed writing SimConnect.cfg"), tr("No file name specified!"));
+            QMessageBox::warning(qApp->activeWindow(), tr("Failed writing SimConnect.cfg"),
+                                 tr("No file name specified!"));
             return;
         }
 
@@ -182,7 +187,8 @@ namespace swift::simplugin::fsxcommon
         }
         else
         {
-            QMessageBox::warning(qApp->activeWindow(), tr("Failed writing SimConnect.cfg"), tr("Failed writing '%1'!").arg(fileName));
+            QMessageBox::warning(qApp->activeWindow(), tr("Failed writing SimConnect.cfg"),
+                                 tr("Failed writing '%1'!").arg(fileName));
         }
     }
 
@@ -199,8 +205,8 @@ namespace swift::simplugin::fsxcommon
         }
 
         const QString defaultFileName = CFileUtils::appendFilePaths(dir, CSimConnectUtilities::simConnectIniFilename());
-        const QString fileName = QFileDialog::getSaveFileName(this, tr("Save SimConnect.ini"),
-                                                              defaultFileName, tr("FSX/P3D ini files (*.ini)"));
+        const QString fileName = QFileDialog::getSaveFileName(this, tr("Save SimConnect.ini"), defaultFileName,
+                                                              tr("FSX/P3D ini files (*.ini)"));
         if (!fileName.isEmpty())
         {
             const bool written = CFileUtils::writeStringToFile(iniFile, fileName);
@@ -233,7 +239,9 @@ namespace swift::simplugin::fsxcommon
         ui->lbl_P3DVersion->setVisible(m_p3d64bit);
         ui->cb_P3DVersion->setVisible(m_p3d64bit);
 
-        ui->le_UserCfgFile->setText(CSimConnectUtilities::hasUserSimConnectCfgFile() ? CSimConnectUtilities::getUserSimConnectCfgFilename() : "");
+        ui->le_UserCfgFile->setText(CSimConnectUtilities::hasUserSimConnectCfgFile() ?
+                                        CSimConnectUtilities::getUserSimConnectCfgFilename() :
+                                        "");
         const QString iniFiles = CSimConnectUtilities::getSimConnectIniFiles().join("\n");
         ui->pte_SimConnectIniFiles->setPlainText(iniFiles);
         this->checkSwiftSimConnectCfgFile();
@@ -261,7 +269,10 @@ namespace swift::simplugin::fsxcommon
         const CStatusMessage saveMsg = m_p3dVersion.setAndSave(version);
         if (saveMsg.isSuccess())
         {
-            const CStatusMessage m = CStatusMessage(this).info(u"Changed P3D version to '%1'. Requires a new start of swift to become effective!") << version;
+            const CStatusMessage m =
+                CStatusMessage(this).info(
+                    u"Changed P3D version to '%1'. Requires a new start of swift to become effective!")
+                << version;
             this->showOverlayMessage(m);
         }
     }

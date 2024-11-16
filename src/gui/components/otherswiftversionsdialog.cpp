@@ -7,12 +7,11 @@
 
 namespace swift::gui::components
 {
-    COtherSwiftVersionsDialog::COtherSwiftVersionsDialog(QWidget *parent) : QDialog(parent),
-                                                                            ui(new Ui::COtherSwiftVersionsDialog)
+    COtherSwiftVersionsDialog::COtherSwiftVersionsDialog(QWidget *parent)
+        : QDialog(parent), ui(new Ui::COtherSwiftVersionsDialog)
     {
         ui->setupUi(this);
     }
 
-    COtherSwiftVersionsDialog::~COtherSwiftVersionsDialog()
-    {}
+    COtherSwiftVersionsDialog::~COtherSwiftVersionsDialog() {}
 } // namespace swift::gui::components

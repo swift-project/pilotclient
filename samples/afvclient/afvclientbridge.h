@@ -19,7 +19,8 @@ class CAfvClientBridge : public QObject
     //! @{
     Q_PROPERTY(double inputVolumePeakVU READ getInputVolumePeakVU NOTIFY inputVolumePeakVU)
     Q_PROPERTY(double outputVolumePeakVU READ getOutputVolumePeakVU NOTIFY outputVolumePeakVU)
-    Q_PROPERTY(swift::core::afv::clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY connectionStatusChanged)
+    Q_PROPERTY(swift::core::afv::clients::CAfvClient::ConnectionStatus connectionStatus READ getConnectionStatus NOTIFY
+                   connectionStatusChanged)
     Q_PROPERTY(QString receivingCallsignsCom1 READ getReceivingCallsignsCom1 NOTIFY receivingCallsignsChanged)
     Q_PROPERTY(QString receivingCallsignsCom2 READ getReceivingCallsignsCom2 NOTIFY receivingCallsignsChanged)
     //! @}
@@ -66,13 +67,19 @@ public:
     Q_INVOKABLE void setBypassEffects(bool value) { m_afvClient->setBypassEffects(value); }
 
     //! \copydoc swift::core::afv::clients::CAfvClient::startAudio
-    Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName) { m_afvClient->startAudio(inputDeviceName, outputDeviceName); }
+    Q_INVOKABLE void startAudio(const QString &inputDeviceName, const QString &outputDeviceName)
+    {
+        m_afvClient->startAudio(inputDeviceName, outputDeviceName);
+    }
 
     //! \copydoc swift::core::afv::clients::CAfvClient::enableTransceiver
     Q_INVOKABLE void enableTransceiver(quint16 id, bool enable) { m_afvClient->enableTransceiver(id, enable); }
 
     //! \copydoc swift::core::afv::clients::CAfvClient::updateComFrequency
-    Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz) { m_afvClient->updateComFrequency(id, frequencyHz); }
+    Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz)
+    {
+        m_afvClient->updateComFrequency(id, frequencyHz);
+    }
 
     //! \copydoc swift::core::afv::clients::CAfvClient::updatePosition
     Q_INVOKABLE void updatePosition(double latitudeDeg, double longitudeDeg, double heightMeters)
@@ -93,7 +100,10 @@ public:
     Q_INVOKABLE void setInputVolumeDb(double valueDb) { m_afvClient->setInputVolumeDb(valueDb); }
 
     //! \copydoc swift::core::afv::clients::CAfvClient::setNormalizedMasterOutputVolume
-    Q_INVOKABLE void setNormalizedMasterOutputVolume(double valueDb) { m_afvClient->setNormalizedMasterOutputVolume(valueDb); }
+    Q_INVOKABLE void setNormalizedMasterOutputVolume(double valueDb)
+    {
+        m_afvClient->setNormalizedMasterOutputVolume(valueDb);
+    }
 
 signals:
     //! Receiving callsigns have been changed

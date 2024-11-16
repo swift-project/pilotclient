@@ -98,7 +98,8 @@ namespace swift::gui
             //! \remarks Using own resizing (other than QHeaderView::ResizeMode)
             enum ResizeMode
             {
-                ResizingAuto, //!< resizing when below threshold, \sa m_resizeAutoNthTime forcing only every n-th update to be resized
+                ResizingAuto, //!< resizing when below threshold, \sa m_resizeAutoNthTime forcing only every n-th update
+                              //!< to be resized
                 ResizingOnce, //!< only one time
                 PresizeSubset, //!< use a subset of the data to resize
                 ResizingAlways, //!< always resize
@@ -168,10 +169,12 @@ namespace swift::gui
             virtual bool isOrderable() const = 0;
 
             //! \copydoc swift::gui::models::CListModelBaseNonTemplate::setSorting
-            virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
+            virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex,
+                                    Qt::SortOrder order = Qt::AscendingOrder) = 0;
 
             //! \copydoc swift::gui::models::CListModelBaseNonTemplate::sortByPropertyIndex
-            virtual void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) = 0;
+            virtual void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex,
+                                             Qt::SortOrder order = Qt::AscendingOrder) = 0;
 
             //! \copydoc swift::gui::models::CListModelBaseNonTemplate::setNoSorting
             virtual void setNoSorting() = 0;
@@ -321,16 +324,16 @@ namespace swift::gui
             //! Force that columns are extended to full viewport width.
             //! Workaround as of https://stackoverflow.com/q/3433664/356726
             //! \deprecated use setWordWrap
-            void setForceColumnsToMaxSize(bool force)
-            {
-                this->setWordWrap(!force);
-            }
+            void setForceColumnsToMaxSize(bool force) { this->setWordWrap(!force); }
 
             //! Resize mode
             void setHorizontalHeaderSectionResizeMode(QHeaderView::ResizeMode mode);
 
             //! Index of the directory we "remember"
-            void setSettingsDirectoryIndex(swift::misc::CDirectories::ColumnIndex directoryIndex) { m_dirSettingsIndex = directoryIndex; }
+            void setSettingsDirectoryIndex(swift::misc::CDirectories::ColumnIndex directoryIndex)
+            {
+                m_dirSettingsIndex = directoryIndex;
+            }
 
         signals:
             //! Ask for new data from currently loaded data
@@ -581,7 +584,8 @@ namespace swift::gui
             int m_skipResizeThreshold = 40; //!< when to skip resize (rows count)
             int m_resizeAutoNthTime = 1; //!< with ResizeAuto, resize every n-th time
             int m_loadIndicatorTimeoutMsDefault = 30 * 1000; //!< default time for timeout
-            bool m_forceStretchLastColumnWhenResized = true; //!< a small table might (few columns) fail stretching, force again
+            bool m_forceStretchLastColumnWhenResized =
+                true; //!< a small table might (few columns) fail stretching, force again
             bool m_showingLoadIndicator = false; //!< showing loading indicator
             bool m_enabledLoadIndicator = false; //!< loading indicator enabled/disabled
             bool m_acceptClickSelection = false; //!< clicked
@@ -600,9 +604,15 @@ namespace swift::gui
             components::CTextEditDialog *m_textEditDialog = nullptr; //!< text edit dialog
             QMap<MenuFlag, menus::CMenuActions> m_menuFlagActions; //!< initialized actions for menu flag (enum)
             QString m_saveFileName; //!< save file name (JSON)
-            swift::misc::CDirectories::ColumnIndex m_dirSettingsIndex = swift::misc::CDirectories::IndexDirLastViewJsonOrDefault; //!< allows to set more specialized directories                             //!< remember last JSON directory, having this member allows to have specific dir
-            swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_dirSettings { this }; //!< directory for load/save
-            swift::misc::CSettingReadOnly<settings::TGeneralGui> m_guiSettings { this, &CViewBaseNonTemplate::settingsChanged }; //!< general GUI settings
+            swift::misc::CDirectories::ColumnIndex m_dirSettingsIndex = swift::misc::CDirectories::
+                IndexDirLastViewJsonOrDefault; //!< allows to set more specialized directories //!< remember last JSON
+                                               //!< directory, having this member allows to have specific dir
+            swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_dirSettings {
+                this
+            }; //!< directory for load/save
+            swift::misc::CSettingReadOnly<settings::TGeneralGui> m_guiSettings {
+                this, &CViewBaseNonTemplate::settingsChanged
+            }; //!< general GUI settings
 
         private:
             //! Remove selected rows if enabled
@@ -631,9 +641,7 @@ namespace swift::gui
 
         //! Base class for views
         template <class T>
-        class CViewBase :
-            public CViewBaseNonTemplate,
-            public models::ISelectionModel<typename T::ContainerType>
+        class CViewBase : public CViewBaseNonTemplate, public models::ISelectionModel<typename T::ContainerType>
         {
             // I cannot use Q_OBJECT here, because: Template classes are not supported by Q_OBJECT
             // and I cannot declare slots as SLOT because I have no Q_OBJECT macro
@@ -668,7 +676,8 @@ namespace swift::gui
             int updateContainer(const ContainerType &container, bool sort = true, bool resize = true);
 
             //! Update whole container in background
-            swift::misc::CWorker *updateContainerAsync(const ContainerType &container, bool sort = true, bool resize = true);
+            swift::misc::CWorker *updateContainerAsync(const ContainerType &container, bool sort = true,
+                                                       bool resize = true);
 
             //! Based on size call sync / async update
             void updateContainerMaybeAsync(const ContainerType &container, bool sort = true, bool resize = true);
@@ -790,10 +799,12 @@ namespace swift::gui
             virtual bool acceptDrop(const QMimeData *mimeData) const override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::setSorting
-            virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+            virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex,
+                                    Qt::SortOrder order = Qt::AscendingOrder) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::sortByPropertyIndex
-            virtual void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex, Qt::SortOrder order = Qt::AscendingOrder) override;
+            virtual void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex,
+                                             Qt::SortOrder order = Qt::AscendingOrder) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::setNoSorting
             virtual void setNoSorting() override { m_model->setNoSorting(); }
@@ -827,7 +838,8 @@ namespace swift::gui
             QJsonObject toJson(bool selectedOnly = false) const;
 
             //! Convert to JSON string
-            QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented, bool selectedOnly = false) const;
+            QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented,
+                                 bool selectedOnly = false) const;
 
             //! Set own name and the model's name
             virtual void setObjectName(const QString &name);
@@ -922,8 +934,8 @@ namespace swift::gui
             //! Verify JSON data loaded in swift::gui::views::CViewBaseNonTemplate::loadJson
             virtual swift::misc::CStatusMessage validateLoadedJsonData(const ContainerType &data) const;
 
-            //! In swift::gui::views::CViewBaseNonTemplate::loadJson the view has been updated because of loaded JSON data
-            //! \remark I cannot use a signal with a template parameter, so this functions serves as callback
+            //! In swift::gui::views::CViewBaseNonTemplate::loadJson the view has been updated because of loaded JSON
+            //! data \remark I cannot use a signal with a template parameter, so this functions serves as callback
             virtual void jsonLoadedAndModelUpdated(const ContainerType &data);
 
             //! \copydoc swift::gui::views::CViewBaseNonTemplate::customMenu
@@ -951,7 +963,8 @@ namespace swift::gui
             virtual swift::misc::CStatusMessage loadJson(const QString &directory = {}) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::saveJson
-            virtual swift::misc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) override;
+            virtual swift::misc::CStatusMessage saveJson(bool selectedOnly = false,
+                                                         const QString &directory = {}) override;
             //! @}
         };
     } // namespace views

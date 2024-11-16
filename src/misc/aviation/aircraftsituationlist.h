@@ -60,7 +60,8 @@ namespace swift::misc
             CAircraftSituation indexOrNull(int index) const;
 
             //! Set ground elevation from elevation plane
-            int setGroundElevationChecked(const geo::CElevationPlane &elevationPlane, CAircraftSituation::GndElevationInfo info, qint64 newerThanAdjustedMs = -1);
+            int setGroundElevationChecked(const geo::CElevationPlane &elevationPlane,
+                                          CAircraftSituation::GndElevationInfo info, qint64 newerThanAdjustedMs = -1);
 
             //! Adjust flag from parts by using CAircraftSituation::adjustGroundFlag
             int adjustGroundFlag(const CAircraftParts &parts, double timeDeviationFactor = 0.1);
@@ -115,7 +116,9 @@ namespace swift::misc
             int countOnGround(COnGroundInfo::IsOnGround og) const;
 
             //! CLosest elevation within given range
-            CAircraftSituation findClosestElevationWithinRange(const geo::ICoordinateGeodetic &coordinate, const physical_quantities::CLength &range = geo::CElevationPlane::singlePointRadius()) const;
+            CAircraftSituation findClosestElevationWithinRange(
+                const geo::ICoordinateGeodetic &coordinate,
+                const physical_quantities::CLength &range = geo::CElevationPlane::singlePointRadius()) const;
 
             //! Set on ground
             void setOnGroundInfo(const COnGroundInfo &info);
@@ -153,10 +156,14 @@ namespace swift::misc
 
             //! Transfer elevations forward from older to newer
             //! \pre requires a list which is sorted "latest first"
-            int transferElevationForward(const physical_quantities::CLength &radius = geo::CElevationPlane::singlePointRadius());
+            int transferElevationForward(
+                const physical_quantities::CLength &radius = geo::CElevationPlane::singlePointRadius());
 
             //! Average elevation for "nearby" aircraft "not/slowly moving" and having an elevation
-            geo::CElevationPlane averageElevationOfTaxiingOnGroundAircraft(const CAircraftSituation &reference, const physical_quantities::CLength &range, int minValues = 1, int sufficientValues = 2) const;
+            geo::CElevationPlane averageElevationOfTaxiingOnGroundAircraft(const CAircraftSituation &reference,
+                                                                           const physical_quantities::CLength &range,
+                                                                           int minValues = 1,
+                                                                           int sufficientValues = 2) const;
         };
 
         //! Situation per callsign

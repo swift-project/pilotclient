@@ -30,15 +30,9 @@ using namespace swift::misc::network;
 
 namespace swift::misc::network
 {
-    int CNetworkUtils::getTimeoutMs()
-    {
-        return 5000;
-    }
+    int CNetworkUtils::getTimeoutMs() { return 5000; }
 
-    int CNetworkUtils::getLongTimeoutMs()
-    {
-        return 3 * getTimeoutMs();
-    }
+    int CNetworkUtils::getLongTimeoutMs() { return 3 * getTimeoutMs(); }
 
     QStringList CNetworkUtils::getKnownLocalIpV4Addresses()
     {
@@ -117,10 +111,7 @@ namespace swift::misc::network
         const QString host(url.host());
         const QString scheme(url.scheme().toLower());
         int p = url.port();
-        if (p < 0)
-        {
-            p = scheme.contains("https") ? 443 : 80;
-        }
+        if (p < 0) { p = scheme.contains("https") ? 443 : 80; }
         return canConnect(host, p, message, timeoutMs);
     }
 
@@ -150,17 +141,15 @@ namespace swift::misc::network
         return (p >= 1 && p <= 65535);
     }
 
-    QString CNetworkUtils::buildUrl(const QString &protocol, const QString &server, const QString &baseUrl, const QString &serviceUrl)
+    QString CNetworkUtils::buildUrl(const QString &protocol, const QString &server, const QString &baseUrl,
+                                    const QString &serviceUrl)
     {
         Q_ASSERT_X(protocol.length() > 3, Q_FUNC_INFO, "worng protocol");
         Q_ASSERT_X(!server.isEmpty(), Q_FUNC_INFO, "missing server");
         Q_ASSERT_X(!serviceUrl.isEmpty(), Q_FUNC_INFO, "missing service URL");
 
         QString url(server);
-        if (!baseUrl.isEmpty())
-        {
-            url.append("/").append(baseUrl);
-        }
+        if (!baseUrl.isEmpty()) { url.append("/").append(baseUrl); }
         url.append("/").append(serviceUrl);
         url.replace("//", "/");
         return protocol + "://" + url;
@@ -171,16 +160,15 @@ namespace swift::misc::network
         static const QString defaultUserAgent("swift/" + CBuildConfig::getVersionString());
 
         // User-Agent is known header, we use high level setHeader not setRawHeader
-        const QVariant agent = QVariant::fromValue(userAgentDetails.isEmpty() ? defaultUserAgent : defaultUserAgent + "/" + userAgentDetails);
+        const QVariant agent = QVariant::fromValue(
+            userAgentDetails.isEmpty() ? defaultUserAgent : defaultUserAgent + "/" + userAgentDetails);
         request.setHeader(QNetworkRequest::UserAgentHeader, agent);
     }
 
-    void CNetworkUtils::addDebugFlag(QUrlQuery &qurl)
-    {
-        qurl.addQueryItem("XDEBUG_SESSION_START", "ECLIPSE_DBGP");
-    }
+    void CNetworkUtils::addDebugFlag(QUrlQuery &qurl) { qurl.addQueryItem("XDEBUG_SESSION_START", "ECLIPSE_DBGP"); }
 
-    QNetworkRequest CNetworkUtils::getSwiftNetworkRequest(const QUrl &url, RequestType type, const QString &userAgentDetails)
+    QNetworkRequest CNetworkUtils::getSwiftNetworkRequest(const QUrl &url, RequestType type,
+                                                          const QString &userAgentDetails)
     {
         QNetworkRequest request(url);
         switch (type)
@@ -188,14 +176,14 @@ namespace swift::misc::network
         case PostUrlEncoded:
             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
             break;
-        default:
-            break;
+        default: break;
         }
         CNetworkUtils::setSwiftUserAgent(request, userAgentDetails);
         return request;
     }
 
-    QNetworkRequest CNetworkUtils::getSwiftNetworkRequest(const QNetworkRequest &request, const QString &userAgentDetails)
+    QNetworkRequest CNetworkUtils::getSwiftNetworkRequest(const QNetworkRequest &request,
+                                                          const QString &userAgentDetails)
     {
         QNetworkRequest req(request); // copy
         CNetworkUtils::setSwiftUserAgent(req, userAgentDetails);
@@ -223,7 +211,8 @@ namespace swift::misc::network
     qint64 CNetworkUtils::lastModifiedSinceNow(const QNetworkReply *nwReply)
     {
         const qint64 sinceEpoch = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply);
-        return sinceEpoch > 0 ? std::max(0LL, QDateTime::currentMSecsSinceEpoch() - sinceEpoch) : QDateTime::currentMSecsSinceEpoch();
+        return sinceEpoch > 0 ? std::max(0LL, QDateTime::currentMSecsSinceEpoch() - sinceEpoch) :
+                                QDateTime::currentMSecsSinceEpoch();
     }
 
     qint64 CNetworkUtils::requestDuration(const QNetworkReply *nwReply)
@@ -261,10 +250,7 @@ namespace swift::misc::network
         const QVariant possibleRedirectUrl = nwReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
         if (!possibleRedirectUrl.isValid()) { return QUrl(); }
         QUrl redirectUrl = possibleRedirectUrl.toUrl();
-        if (redirectUrl.isRelative())
-        {
-            redirectUrl = nwReply->url().resolved(redirectUrl);
-        }
+        if (redirectUrl.isRelative()) { redirectUrl = nwReply->url().resolved(redirectUrl); }
         return redirectUrl;
     }
 
@@ -302,8 +288,7 @@ namespace swift::misc::network
         case QNetworkAccessManager::DeleteOperation: return d;
         case QNetworkAccessManager::CustomOperation: return c;
         case QNetworkAccessManager::UnknownOperation:
-        default:
-            break;
+        default: break;
         }
         return u;
     }
