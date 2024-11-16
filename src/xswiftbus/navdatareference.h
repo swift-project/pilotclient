@@ -20,13 +20,13 @@ namespace XSwiftBus
             : m_id(id), m_latitudeDegrees(latitudeDegrees), m_longitudeDegrees(longitudeDegrees)
         {}
 
-        //! \copydoc swift::misc::simulation::XPlane::CNavDataReference::id
+        //! \copydoc swift::misc::simulation::xplane::CNavDataReference::id
         int id() const { return m_id; }
 
-        //! \copydoc swift::misc::simulation::XPlane::CNavDataReference::latitude
+        //! \copydoc swift::misc::simulation::xplane::CNavDataReference::latitude
         double latitude() const { return m_latitudeDegrees; }
 
-        //! \copydoc swift::misc::simulation::XPlane::CNavDataReference::longitude
+        //! \copydoc swift::misc::simulation::xplane::CNavDataReference::longitude
         double longitude() const { return m_longitudeDegrees; }
 
     private:

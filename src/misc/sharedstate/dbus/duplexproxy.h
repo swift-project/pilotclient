@@ -30,25 +30,25 @@ namespace swift::misc
             //! \name Interface implementations
             //! @{
 
-            //! \copydoc swift::misc::shared_state::DBus::IDuplex::postEvent
+            //! \copydoc swift::misc::shared_state::dbus::IDuplex::postEvent
             virtual void postEvent(const QString &channel, const swift::misc::CVariant &param) override;
 
-            //! \copydoc swift::misc::shared_state::DBus::IDuplex::setSubscription
+            //! \copydoc swift::misc::shared_state::dbus::IDuplex::setSubscription
             virtual void setSubscription(const QString &channel, const swift::misc::CVariantList &filters) override;
 
-            //! \copydoc swift::misc::shared_state::DBus::IDuplex::requestPeerSubscriptions
+            //! \copydoc swift::misc::shared_state::dbus::IDuplex::requestPeerSubscriptions
             virtual void requestPeerSubscriptions() override;
 
-            //! \copydoc swift::misc::shared_state::DBus::IDuplex::submitRequest
+            //! \copydoc swift::misc::shared_state::dbus::IDuplex::submitRequest
             virtual void submitRequest(const QString &channel, const swift::misc::CVariant &param, quint32 token) override;
 
-            //! \copydoc swift::misc::shared_state::DBus::IDuplex::reply
+            //! \copydoc swift::misc::shared_state::dbus::IDuplex::reply
             virtual void reply(const swift::misc::CVariant &param, quint32 token) override;
 
-            //! \copydoc swift::misc::shared_state::DBus::IDuplex::advertise
+            //! \copydoc swift::misc::shared_state::dbus::IDuplex::advertise
             virtual void advertise(const QString &channel) override;
 
-            //! \copydoc swift::misc::shared_state::DBus::IDuplex::withdraw
+            //! \copydoc swift::misc::shared_state::dbus::IDuplex::withdraw
             virtual void withdraw(const QString &channel) override;
             //! @}
 

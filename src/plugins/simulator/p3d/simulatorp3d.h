@@ -50,17 +50,17 @@ namespace swift::simplugin::p3d
 #endif // guard
 
     protected:
-        //! \copydoc FsxCommon::CSimulatorFsxCommon::initEventsP3D
+        //! \copydoc fsxcommon::CSimulatorFsxCommon::initEventsP3D
         virtual HRESULT initEventsP3D() override;
 
 #ifdef Q_OS_WIN64
-        //! \copydoc FsxCommon::CSimulatorFsxCommon::removeCamera
+        //! \copydoc fsxcommon::CSimulatorFsxCommon::removeCamera
         virtual void removeCamera(fsxcommon::CSimConnectObject &simObject) override;
 
-        //! \copydoc FsxCommon::CSimulatorFsxCommon::removeObserver
+        //! \copydoc fsxcommon::CSimulatorFsxCommon::removeObserver
         virtual void removeObserver(fsxcommon::CSimConnectObject &simObject) override;
 
-        //! \copydoc FsxCommon::CSimulatorFsxCommon::releaseAIControl
+        //! \copydoc fsxcommon::CSimulatorFsxCommon::releaseAIControl
         //! \remark P3D API release of control
         virtual bool releaseAIControl(const fsxcommon::CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId) override;
 #endif

@@ -41,10 +41,10 @@ namespace swift::misc
             //! \name Interface implementations
             //! @{
 
-            //! \copydoc swift::misc::shared_state::DBus::IHub::openDuplex
+            //! \copydoc swift::misc::shared_state::dbus::IHub::openDuplex
             virtual bool openDuplex(const swift::misc::CIdentifier &client) override;
 
-            //! \copydoc swift::misc::shared_state::DBus::IHub::closeDuplex
+            //! \copydoc swift::misc::shared_state::dbus::IHub::closeDuplex
             virtual void closeDuplex(const swift::misc::CIdentifier &client) override;
             //! @}
 
