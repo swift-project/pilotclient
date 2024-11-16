@@ -2,41 +2,41 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/registermetadata.h"
-#include "misc/simulation/registermetadatasimulation.h"
-#include "misc/weather/registermetadataweather.h"
-#include "misc/network/registermetadatanetwork.h"
-#include "misc/db/registermetadatadb.h"
+
+#include <QDBusMetaType>
+#include <QMetaType>
+#include <QtGlobal>
+
+#include "misc/applicationinfolist.h"
 #include "misc/audio/registermetadataaudio.h"
 #include "misc/aviation/registermetadataaviation.h"
-#include "misc/input/registermetadatainput.h"
-#include "misc/geo/registermetadatageo.h"
-#include "misc/pq/registermetadatapq.h"
-
-#include "misc/sharedstate/passiveobserver.h"
-#include "misc/applicationinfolist.h"
 #include "misc/countrylist.h"
+#include "misc/db/registermetadatadb.h"
 #include "misc/directories.h"
+#include "misc/geo/registermetadatageo.h"
 #include "misc/iconlist.h"
 #include "misc/identifierlist.h"
+#include "misc/input/registermetadatainput.h"
 #include "misc/logcategorylist.h"
 #include "misc/logpattern.h"
 #include "misc/namevariantpair.h"
 #include "misc/namevariantpairlist.h"
+#include "misc/network/registermetadatanetwork.h"
 #include "misc/pixmap.h"
 #include "misc/platformset.h"
+#include "misc/pq/registermetadatapq.h"
 #include "misc/processinfo.h"
 #include "misc/propertyindexlist.h"
 #include "misc/propertyindexvariantmap.h"
 #include "misc/rgbcolor.h"
 #include "misc/sequence.h"
+#include "misc/sharedstate/passiveobserver.h"
+#include "misc/simulation/registermetadatasimulation.h"
 #include "misc/statusmessagelist.h"
 #include "misc/valuecache.h"
 #include "misc/variantlist.h"
 #include "misc/variantmap.h"
-
-#include <QDBusMetaType>
-#include <QMetaType>
-#include <QtGlobal>
+#include "misc/weather/registermetadataweather.h"
 
 void initMiscResourcesImpl()
 {
@@ -98,4 +98,4 @@ namespace swift::misc
         qDBusRegisterMetaType<CSequence<double>>();
     }
 
-} // ns
+} // namespace swift::misc

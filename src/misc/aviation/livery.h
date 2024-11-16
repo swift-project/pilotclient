@@ -6,19 +6,19 @@
 #ifndef SWIFT_MISC_AVIATION_LIVERY_H
 #define SWIFT_MISC_AVIATION_LIVERY_H
 
+#include <QJsonObject>
+#include <QMap>
+#include <QMetaType>
+#include <QString>
+
 #include "misc/aviation/airlineicaocode.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/db/datastore.h"
 #include "misc/metaclass.h"
 #include "misc/propertyindexref.h"
 #include "misc/rgbcolor.h"
 #include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QMap>
-#include <QJsonObject>
-#include <QMetaType>
-#include <QString>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CLivery)
 
@@ -249,7 +249,7 @@ namespace swift::misc::aviation
     //! Id/CLivery map
     using LiveryIdMap = QMap<int, CLivery>;
 
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CLivery)
 

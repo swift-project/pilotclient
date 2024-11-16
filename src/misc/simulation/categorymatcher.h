@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_SIMULATION_CATEGORYMATCHER_H
 #define SWIFT_MISC_SIMULATION_CATEGORYMATCHER_H
 
-#include "misc/simulation/aircraftmodellist.h"
 #include "misc/aviation/aircraftcategorylist.h"
+#include "misc/simulation/aircraftmodellist.h"
 #include "misc/swiftmiscexport.h"
 
 namespace swift::misc
@@ -56,7 +56,7 @@ namespace swift::misc
             aviation::CAircraftCategoryList m_militaryWingAircraft;
             aviation::CAircraftCategoryList m_militaryRotorAircraft;
         };
-    } // ns
-} // namespace
+    } // namespace simulation
+} // namespace swift::misc
 
 #endif // guard

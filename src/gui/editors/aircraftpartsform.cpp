@@ -2,16 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftpartsform.h"
+
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QPushButton>
+
 #include "ui_aircraftpartsform.h"
+
 #include "gui/guiutility.h"
 #include "misc/aviation/aircraftenginelist.h"
 #include "misc/aviation/aircraftlights.h"
 #include "misc/logmessage.h"
 #include "misc/statusmessage.h"
-
-#include <QPushButton>
-#include <QJsonDocument>
-#include <QJsonParseError>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -179,4 +181,4 @@ namespace swift::gui::editors
         const QString j(json.toJson(QJsonDocument::Indented));
         ui->te_AircraftPartsJson->setText(j);
     }
-} // ns
+} // namespace swift::gui::editors

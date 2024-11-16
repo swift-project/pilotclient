@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONSTATUS_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONSTATUS_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/aviation/aircraftsituation.h"
-
 #include <QString>
+
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -57,6 +57,6 @@ namespace swift::misc::simulation
         int m_situations = -1; //!< number of situations used for interpolation
         QString m_extraInfo; //!< optional details
     };
-}
+} // namespace swift::misc::simulation
 
 #endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONSTATUS_H

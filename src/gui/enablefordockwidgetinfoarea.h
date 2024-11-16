@@ -61,6 +61,6 @@ namespace swift::gui
         CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
         swift::misc::CConnectionGuard m_connections; //!< connections
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

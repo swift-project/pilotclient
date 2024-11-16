@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_APPLICATIONCLOSEDIALOG_H
 #define SWIFT_GUI_COMPONENTS_APPLICATIONCLOSEDIALOG_H
 
+#include <QAbstractButton>
 #include <QDialog>
 #include <QScopedPointer>
-#include <QAbstractButton>
+
 #include "core/context/contextapplication.h"
 
 namespace Ui
@@ -48,5 +49,5 @@ namespace swift::gui::components
         //! Init the settings view
         void initSettingsView();
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

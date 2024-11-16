@@ -6,27 +6,27 @@
 #ifndef SWIFT_GUI_GUIAPPLICATION_H
 #define SWIFT_GUI_GUIAPPLICATION_H
 
-#include "gui/settings/guisettings.h"
-#include "gui/settings/updatenotification.h"
+#include <QCommandLineOption>
+#include <QDialog>
+#include <QEvent>
+#include <QObject>
+#include <QPixmap>
+#include <QScopedPointer>
+#include <QScreen>
+#include <QString>
+#include <Qt>
+
+#include "core/application.h"
 #include "gui/enableforframelesswindow.h"
 #include "gui/mainwindowaccess.h"
+#include "gui/settings/guisettings.h"
+#include "gui/settings/updatenotification.h"
 #include "gui/splashscreen.h"
 #include "gui/stylesheetutility.h"
 #include "gui/swiftguiexport.h"
-#include "core/application.h"
-#include "misc/network/networkutils.h"
 #include "misc/icons.h"
+#include "misc/network/networkutils.h"
 #include "misc/statusmessage.h"
-
-#include <QCommandLineOption>
-#include <QDialog>
-#include <QObject>
-#include <QEvent>
-#include <QScreen>
-#include <QPixmap>
-#include <QScopedPointer>
-#include <QString>
-#include <Qt>
 
 class QMenu;
 class QWidget;
@@ -40,7 +40,7 @@ namespace swift::gui::components
 {
     class CApplicationCloseDialog;
     class CUpdateInfoDialog;
-}
+} // namespace swift::gui::components
 namespace swift::gui
 {
     /*!
@@ -360,7 +360,7 @@ namespace swift::gui
         //! Hash of names of toolbars and dockwidgets
         static int hashForStateSettingsSchema(const QMainWindow *window);
     };
-} // ns
+} // namespace swift::gui
 
 //! Single instance of GUI application object
 extern SWIFT_GUI_EXPORT swift::gui::CGuiApplication *sGui;

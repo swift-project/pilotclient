@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_INPUT_KEYBOARDKEY_H
 #define SWIFT_MISC_INPUT_KEYBOARDKEY_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/input/keycodes.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-
 #include <QList>
 #include <QMetaType>
 #include <QString>
+
+#include "misc/input/keycodes.h"
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CKeyboardKey)
 
@@ -89,7 +89,7 @@ namespace swift::misc::input
             CKeyboardKey,
             SWIFT_METAMEMBER(keyCode));
     };
-} // ns
+} // namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CKeyboardKey)
 

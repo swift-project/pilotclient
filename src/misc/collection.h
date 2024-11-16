@@ -6,16 +6,18 @@
 #ifndef SWIFT_MISC_COLLECTION_H
 #define SWIFT_MISC_COLLECTION_H
 
+#include <algorithm>
+#include <initializer_list>
+#include <iterator>
+#include <type_traits>
+#include <typeindex>
+#include <utility>
+
+#include <QMap>
+
 #include "misc/containerbase.h"
 #include "misc/mixin/mixindatastream.h"
 #include "misc/mixin/mixinicon.h"
-#include <QMap>
-#include <algorithm>
-#include <type_traits>
-#include <typeindex>
-#include <iterator>
-#include <utility>
-#include <initializer_list>
 
 //! \cond
 #define SWIFT_TEMPLATE_COLLECTION_MIXINS(NS, T, Set, Extern)             \

@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_SLOT_H
 #define SWIFT_MISC_SLOT_H
 
-#include "misc/invoke.h"
-
-#include <QPointer>
-#include <QObject>
-#include <QtGlobal>
-
 #include <atomic>
 #include <functional>
 #include <future>
 #include <memory>
+
+#include <QObject>
+#include <QPointer>
+#include <QtGlobal>
+
+#include "misc/invoke.h"
 
 namespace swift::misc
 {
@@ -141,6 +141,6 @@ namespace swift::misc
         QPointer<QObject> m_object;
         std::function<R(Args...)> m_function;
     };
-}
+} // namespace swift::misc
 
 #endif

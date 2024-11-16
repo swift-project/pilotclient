@@ -6,14 +6,14 @@
 #ifndef SWIFT_CORE_AFV_CRYPTO_CRYPTODTOCHANNEL_H
 #define SWIFT_CORE_AFV_CRYPTO_CRYPTODTOCHANNEL_H
 
-#include "core/afv/dto.h"
-#include "core/afv/crypto/cryptodtomode.h"
+#include <limits>
 
-#include <QDateTime>
 #include <QByteArray>
+#include <QDateTime>
 #include <QVector>
 
-#include <limits>
+#include "core/afv/crypto/cryptodtomode.h"
+#include "core/afv/dto.h"
 
 namespace swift::core::afv::crypto
 {
@@ -56,6 +56,6 @@ namespace swift::core::afv::crypto
         QDateTime m_LastTransmitUtc;
         QDateTime m_lastReceiveUtc;
     };
-} // ns
+} // namespace swift::core::afv::crypto
 
 #endif // guard

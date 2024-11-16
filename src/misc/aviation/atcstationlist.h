@@ -6,18 +6,18 @@
 #ifndef SWIFT_MISC_AVIATION_ATCSTATIONLIST_H
 #define SWIFT_MISC_AVIATION_ATCSTATIONLIST_H
 
+#include <QHash>
+#include <QMetaType>
+
 #include "misc/aviation/atcstation.h"
-#include "misc/aviation/comsystem.h"
 #include "misc/aviation/callsignobjectlist.h"
-#include "misc/pq/frequency.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/collection.h"
 #include "misc/geo/geoobjectlist.h"
 #include "misc/network/userlist.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
+#include "misc/pq/frequency.h"
 #include "misc/sequence.h"
-
-#include <QMetaType>
-#include <QHash>
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAtcStation, CAtcStationList)
 
@@ -78,7 +78,7 @@ namespace swift::misc::aviation
         //! \remark sort can be disabled if already sorted
         QHash<QString, CAtcStationList> splitPerSuffix(bool sort = true) const;
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAtcStationList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAtcStation>)

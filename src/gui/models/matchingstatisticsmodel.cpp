@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "matchingstatisticsmodel.h"
-#include "gui/models/columns.h"
+
 #include <QtGlobal>
+
+#include "gui/models/columns.h"
 
 using namespace swift::misc::simulation;
 
@@ -45,4 +47,4 @@ namespace swift::gui::models
         }
         this->setSortColumnByPropertyIndex(CMatchingStatisticsEntry::IndexAircraftDesignator);
     }
-} // namespace
+} // namespace swift::gui::models

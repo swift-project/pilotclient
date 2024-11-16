@@ -6,6 +6,9 @@
 #ifndef SWIFT_MISC_MIXIN_MIXINSTRING_H
 #define SWIFT_MISC_MIXIN_MIXINSTRING_H
 
+#include <ostream>
+#include <string>
+
 #include <QByteArray>
 #include <QDebug>
 #include <QString>
@@ -13,8 +16,6 @@
 #include <QStringView>
 #include <QTextStream>
 #include <QtGlobal>
-#include <string>
-#include <ostream>
 
 namespace swift::misc::mixin
 {
@@ -111,6 +112,6 @@ namespace swift::misc::mixin
     using ::swift::misc::mixin::String<DERIVED>::toStdString; \
     using ::swift::misc::mixin::String<DERIVED>::stringForStreaming;
     // *INDENT-ON*
-} // ns
+} // namespace swift::misc::mixin
 
 #endif // guard

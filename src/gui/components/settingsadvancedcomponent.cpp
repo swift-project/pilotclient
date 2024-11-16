@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_settingsadvancedcomponent.h"
 #include "gui/components/settingsadvancedcomponent.h"
+
+#include "ui_settingsadvancedcomponent.h"
 
 using namespace swift::misc;
 
@@ -32,4 +33,4 @@ namespace swift::gui::components
         m_crashDumpUploadEnabled.set(state == Qt::Checked);
     }
 
-} // ns
+} // namespace swift::gui::components

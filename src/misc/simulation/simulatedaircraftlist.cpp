@@ -1,8 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/simulatedaircraftlist.h"
+
+#include <tuple>
+
+#include <QString>
+
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/callsign.h"
@@ -10,9 +14,7 @@
 #include "misc/network/user.h"
 #include "misc/predicates.h"
 #include "misc/range.h"
-
-#include <QString>
-#include <tuple>
+#include "misc/simulation/simulatedaircraft.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::geo;
@@ -269,4 +271,4 @@ namespace swift::misc::simulation
             return a.getCallsignAsString() < b.getCallsignAsString();
         });
     }
-} // namespace
+} // namespace swift::misc::simulation

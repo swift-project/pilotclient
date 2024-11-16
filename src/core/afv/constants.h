@@ -13,6 +13,6 @@ namespace swift::core::afv
 
     //! Sample rate [Hz]
     constexpr int c_sampleRate = 48000;
-} // ns
+} // namespace swift::core::afv
 
 #endif // guard

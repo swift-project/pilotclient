@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/input/hotkeycombination.h"
-#include "misc/mixin/mixincompare.h"
+
+#include <algorithm>
 
 #include <QStringList>
 #include <QtGlobal>
-#include <algorithm>
+
+#include "misc/mixin/mixincompare.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::input, CHotkeyCombination)
 
@@ -123,4 +125,4 @@ namespace swift::misc::input
         }
         return sl.join('+');
     }
-} // ns
+} // namespace swift::misc::input

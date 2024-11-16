@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/server.h"
-#include "misc/logcategories.h"
-#include "misc/stringutils.h"
-#include "misc/obfuscation.h"
-#include "misc/propertyindexref.h"
-#include "misc/statusmessage.h"
-#include "misc/comparefunctions.h"
-#include "misc/obfuscation.h"
-#include "misc/verify.h"
 
 #include <Qt>
 #include <QtGlobal>
+
+#include "misc/comparefunctions.h"
+#include "misc/logcategories.h"
+#include "misc/obfuscation.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CServer)
 
@@ -278,4 +278,4 @@ namespace swift::misc::network
     {
         m_description = CObfuscation::decode(description).simplified();
     }
-} // namespace
+} // namespace swift::misc::network

@@ -6,14 +6,15 @@
 #ifndef SWIFT_CORE_AFV_CRYPTO_CRYPTODTO_SERIALIZER_H
 #define SWIFT_CORE_AFV_CRYPTO_CRYPTODTO_SERIALIZER_H
 
-#include "core/afv/crypto/cryptodtochannel.h"
-#include "core/afv/crypto/cryptodtomode.h"
-#include "core/afv/crypto/cryptodtoheaderdto.h"
+#include <QBuffer>
+#include <QByteArray>
+#include <QtDebug>
+
 #include "sodium.h"
 
-#include <QByteArray>
-#include <QBuffer>
-#include <QtDebug>
+#include "core/afv/crypto/cryptodtochannel.h"
+#include "core/afv/crypto/cryptodtoheaderdto.h"
+#include "core/afv/crypto/cryptodtomode.h"
 
 #ifndef crypto_aead_chacha20poly1305_IETF_ABYTES
 //! Number of a bytes
@@ -157,6 +158,6 @@ namespace swift::core::afv::crypto
         //! Deserialize
         static Deserializer deserialize(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback);
     };
-} // ns
+} // namespace swift::core::afv::crypto
 
 #endif // guard

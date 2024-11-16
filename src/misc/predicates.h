@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_PREDICATES_H
 #define SWIFT_MISC_PREDICATES_H
 
-#include "misc/algorithm.h"
-#include <functional>
 #include <algorithm>
+#include <functional>
+
+#include "misc/algorithm.h"
 
 namespace swift::misc
 {

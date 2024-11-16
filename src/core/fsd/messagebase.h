@@ -6,12 +6,12 @@
 #ifndef SWIFT_CORE_FSD_MESSAGEBASE_H
 #define SWIFT_CORE_FSD_MESSAGEBASE_H
 
-#include "core/swiftcoreexport.h"
-
+#include <QDebug>
 #include <QString>
 #include <QStringBuilder>
 #include <QStringList>
-#include <QDebug>
+
+#include "core/swiftcoreexport.h"
 
 //! Message type
 //! \remark FSD Server docu https://fsd-doc.norrisng.ca/
@@ -98,6 +98,6 @@ namespace swift::core::fsd
         if (!message.isValid()) return {};
         return message.pdu() % message.toTokens().join(':') % QStringLiteral("\r\n");
     }
-} // ns
+} // namespace swift::core::fsd
 
 #endif // guard

@@ -6,16 +6,17 @@
 #ifndef SWIFT_MISC_RGBCOLOR_H
 #define SWIFT_MISC_RGBCOLOR_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
+#include <tuple>
 
 #include <QColor>
-#include <QPixmap>
 #include <QMetaType>
+#include <QPixmap>
 #include <QString>
-#include <tuple>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CRgbColor)
 
@@ -140,7 +141,7 @@ namespace swift::misc
             SWIFT_METAMEMBER(g),
             SWIFT_METAMEMBER(b));
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CRgbColor)
 

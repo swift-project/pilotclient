@@ -6,12 +6,12 @@
 #ifndef SWIFT_SOUND_SAMPLEPROVIDER_EQUALIZERSAMPLEPROVIDER_H
 #define SWIFT_SOUND_SAMPLEPROVIDER_EQUALIZERSAMPLEPROVIDER_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/sampleprovider/sampleprovider.h"
-#include "sound/dsp/biquadfilter.h"
-
 #include <QSharedPointer>
 #include <QVector>
+
+#include "sound/dsp/biquadfilter.h"
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -51,6 +51,6 @@ namespace swift::sound::sample_provider
         double m_outputGain = 1.0;
         QVector<dsp::BiQuadFilter> m_filters;
     };
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

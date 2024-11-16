@@ -6,9 +6,9 @@
 #ifndef SWIFT_MISC_SIMULATION_PARTSTATUS_H
 #define SWIFT_MISC_SIMULATION_PARTSTATUS_H
 
-#include "misc/swiftmiscexport.h"
-
 #include <QString>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -49,6 +49,6 @@ namespace swift::misc::simulation
         bool m_resusedParts = false; //!< reusing from last step
         bool m_isSameParts = false; //!< same as last parts?
     };
-}
+} // namespace swift::misc::simulation
 
 #endif // SWIFT_MISC_SIMULATION_PARTSTATUS_H

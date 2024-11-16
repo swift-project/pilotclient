@@ -6,14 +6,15 @@
 #ifndef SWIFT_CORE_AIRPORTDATAREADER_H
 #define SWIFT_CORE_AIRPORTDATAREADER_H
 
-#include "core/swiftcoreexport.h"
-#include "core/data/dbcaches.h"
-#include "core/db/databasereader.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/network/entityflags.h"
+#include <atomic>
 
 #include <QNetworkAccessManager>
-#include <atomic>
+
+#include "core/data/dbcaches.h"
+#include "core/db/databasereader.h"
+#include "core/swiftcoreexport.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/network/entityflags.h"
 
 namespace swift::core::db
 {
@@ -86,6 +87,6 @@ namespace swift::core::db
         //! URL for airport list
         swift::misc::network::CUrl getAirportsUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
     };
-} // ns
+} // namespace swift::core::db
 
 #endif // guard

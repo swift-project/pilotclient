@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_SIMULATION_FSCOMMONUTIL_H
 #define SWIFT_MISC_SIMULATION_FSCOMMONUTIL_H
 
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/logcategories.h"
-#include "misc/swiftmiscexport.h"
-
 #include <atomic>
+
 #include <QSet>
 #include <QStringList>
+
+#include "misc/logcategories.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation::fscommon
 {
@@ -56,6 +57,6 @@ namespace swift::misc::simulation::fscommon
         //! \remark only for P3D/FSX
         static CStatusMessageList validateSimObjectsPath(const QSet<QString> &simObjectDirs, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped);
     };
-} // namespace
+} // namespace swift::misc::simulation::fscommon
 
 #endif // guard

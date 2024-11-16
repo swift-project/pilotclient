@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_PQ_ANGLE_H
 #define SWIFT_MISC_PQ_ANGLE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixinicon.h"
+#include <QMetaType>
+#include <QPair>
+#include <QString>
+
 #include "misc/math/mathutils.h"
+#include "misc/mixin/mixinicon.h"
 #include "misc/pq/physicalquantity.h"
 #include "misc/pq/units.h"
-
-#include <QMetaType>
-#include <QString>
-#include <QPair>
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::physical_quantities
 {
@@ -110,7 +110,7 @@ namespace swift::misc::physical_quantities
     };
 
     using CAnglePair = QPair<CAngle, CAngle>; //!< Pair of angle
-} // ns
+} // namespace swift::misc::physical_quantities
 
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CAngle)
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CAnglePair)

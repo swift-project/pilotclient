@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_AIRPORTCOMPLETER_H
 #define SWIFT_GUI_COMPONENTS_AIRPORTCOMPLETER_H
 
-#include "misc/aviation/airport.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/aviation/airport.h"
 
 namespace Ui
 {
@@ -63,6 +64,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CAirportCompleter> ui;
         swift::misc::aviation::CAirport m_current; //!< current airport
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

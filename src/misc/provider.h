@@ -6,10 +6,11 @@
 #ifndef SWIFT_MISC_PROVIDER_H
 #define SWIFT_MISC_PROVIDER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/connectionguard.h"
-#include <QObject>
 #include <QMetaObject>
+#include <QObject>
+
+#include "misc/connectionguard.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -85,7 +86,7 @@ namespace swift::misc
             m_provider = nullptr;
         }
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_INTERFACE(swift::misc::IProvider, "org.swift-project.misc.iprovider")
 

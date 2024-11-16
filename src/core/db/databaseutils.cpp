@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/db/databaseutils.h"
+
+#include <QElapsedTimer>
+
 #include "core/application.h"
 #include "core/webdataservices.h"
-#include "misc/logmessage.h"
-#include "misc/fileutils.h"
 #include "misc/compressutils.h"
-#include <QElapsedTimer>
+#include "misc/fileutils.h"
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::json;
@@ -525,4 +527,4 @@ namespace swift::core::db
         changed.changedSim = !(model.getSimulator().matchesAll(simulator));
         return changed;
     }
-} // ns
+} // namespace swift::core::db

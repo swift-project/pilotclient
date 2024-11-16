@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbusserveraddressselector.h"
-#include "ui_dbusserveraddressselector.h"
-#include "gui/guiapplication.h"
-#include "misc/network/networkutils.h"
-#include "misc/dbusserver.h"
-#include "config/buildconfig.h"
 
 #include <QIntValidator>
+
+#include "ui_dbusserveraddressselector.h"
+
+#include "config/buildconfig.h"
+#include "gui/guiapplication.h"
+#include "misc/dbusserver.h"
+#include "misc/network/networkutils.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -138,4 +140,4 @@ namespace swift::gui::components
         ui->cb_DBusServerAddress->setEnabled(p2p);
         emit this->editingFinished();
     }
-} // ns
+} // namespace swift::gui::components

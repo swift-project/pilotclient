@@ -7,13 +7,13 @@
 #define SWIFT_CORE_VATSIM_SETTINGS_H
 
 #include "core/swiftcoreexport.h"
-#include "misc/settingscache.h"
-#include "misc/valueobject.h"
-#include "misc/pq/time.h"
-#include "misc/network/serverlist.h"
-#include "misc/swiftdirectories.h"
 #include "misc/directoryutils.h"
 #include "misc/fileutils.h"
+#include "misc/network/serverlist.h"
+#include "misc/pq/time.h"
+#include "misc/settingscache.h"
+#include "misc/swiftdirectories.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::vatsim, CReaderSettings)
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::vatsim, CRawFsdMessageSettings)
@@ -205,7 +205,7 @@ namespace swift::core::vatsim
             return setting;
         }
     };
-} // ns
+} // namespace swift::core::vatsim
 
 Q_DECLARE_METATYPE(swift::core::vatsim::CReaderSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::core::vatsim::CReaderSettings>)

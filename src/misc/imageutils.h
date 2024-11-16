@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_IMAGEUTILS_H
 #define SWIFT_MISC_IMAGEUTILS_H
 
-#include "misc/swiftmiscexport.h"
-
 #include <QByteArray>
-#include <QString>
-#include <QPixmap>
 #include <QIcon>
+#include <QPixmap>
+#include <QString>
+
+#include "misc/swiftmiscexport.h"
 
 //! Free functions in swift::misc
 namespace swift::misc
@@ -36,6 +36,6 @@ namespace swift::misc
 
     //! Icon to pixmap
     SWIFT_MISC_EXPORT QPixmap iconToPixmap(const QIcon &icon);
-} // ns
+} // namespace swift::misc
 
 #endif

@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSNETWORKSERVERSCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSNETWORKSERVERSCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/swiftguiexport.h"
-#include "misc/network/settings/serversettings.h"
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/network/settings/serversettings.h"
 
 namespace Ui
 {
@@ -44,6 +44,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CSettingsNetworkServersComponent> ui;
         swift::misc::CSetting<swift::misc::network::settings::TTrafficServers> m_trafficNetworkServers { this, &CSettingsNetworkServersComponent::reloadSettings };
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

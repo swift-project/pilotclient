@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/variantmap.h"
-#include "misc/jsonexception.h"
-#include "misc/statusmessagelist.h"
 
 #include <QJsonValue>
+
+#include "misc/jsonexception.h"
+#include "misc/statusmessagelist.h"
 
 namespace swift::misc
 {
@@ -169,4 +170,4 @@ namespace swift::misc
         }
         return messages;
     }
-}
+} // namespace swift::misc

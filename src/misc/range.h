@@ -6,17 +6,19 @@
 #ifndef SWIFT_MISC_RANGE_H
 #define SWIFT_MISC_RANGE_H
 
-#include "misc/swiftmiscexport.h"
+#include <algorithm>
+#include <initializer_list>
+#include <iterator>
+#include <type_traits>
+
+#include <QDebug>
+#include <QtGlobal>
+
+#include "misc/algorithm.h"
 #include "misc/iterator.h"
 #include "misc/predicates.h"
-#include "misc/algorithm.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/typetraits.h"
-#include <QtGlobal>
-#include <QDebug>
-#include <algorithm>
-#include <type_traits>
-#include <iterator>
-#include <initializer_list>
 
 namespace swift::misc
 {
@@ -412,6 +414,6 @@ namespace swift::misc
         return findBy(swift::misc::predicates::MemberEqual(k0, v0, keysValues...));
     }
 
-}
+} // namespace swift::misc
 
 #endif // guard

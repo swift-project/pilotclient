@@ -21,4 +21,4 @@ namespace swift::misc::simulation
         return this->provider()->getModelSetCount();
     }
 
-} // ns
+} // namespace swift::misc::simulation

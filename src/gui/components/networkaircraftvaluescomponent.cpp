@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "networkaircraftvaluescomponent.h"
+
 #include "ui_networkaircraftvaluescomponent.h"
 
-#include "gui/guiapplication.h"
-#include "core/context/contextownaircraft.h"
 #include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "gui/guiapplication.h"
 
 using namespace swift::core::context;
 
@@ -39,4 +40,4 @@ namespace swift::gui::components
             ui->le_Callsign->setText(values.at(4));
         }
     }
-} // ns
+} // namespace swift::gui::components

@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "coordinatedialog.h"
-#include "ui_coordinatedialog.h"
+
 #include <QPushButton>
+
+#include "ui_coordinatedialog.h"
 
 using namespace swift::misc;
 using namespace swift::misc::geo;
@@ -64,4 +66,4 @@ namespace swift::gui::components
         caBtn->setAutoDefault(false);
         caBtn->setDefault(false);
     }
-} // ns
+} // namespace swift::gui::components

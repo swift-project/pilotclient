@@ -2,22 +2,24 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/logcomponent.h"
-#include "gui/components/statusmessageform.h"
-#include "gui/menus/menuaction.h"
-#include "gui/views/statusmessageview.h"
-#include "gui/views/viewbase.h"
-#include "gui/guiutility.h"
-#include "core/application.h"
-#include "misc/icons.h"
-#include "misc/logpattern.h"
-#include "misc/sharedstate/datalinkdbus.h"
-#include "ui_logcomponent.h"
 
 #include <QAction>
 #include <QMenu>
 #include <QTabWidget>
 #include <Qt>
 #include <QtGlobal>
+
+#include "ui_logcomponent.h"
+
+#include "core/application.h"
+#include "gui/components/statusmessageform.h"
+#include "gui/guiutility.h"
+#include "gui/menus/menuaction.h"
+#include "gui/views/statusmessageview.h"
+#include "gui/views/viewbase.h"
+#include "misc/icons.h"
+#include "misc/logpattern.h"
+#include "misc/sharedstate/datalinkdbus.h"
 
 using namespace swift::misc;
 using namespace swift::core;
@@ -117,4 +119,4 @@ namespace swift::gui::components
     {
         ui->comp_StatusMessages->clear();
     }
-} // namespace
+} // namespace swift::gui::components

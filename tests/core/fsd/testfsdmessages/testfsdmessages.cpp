@@ -8,6 +8,11 @@
  * \ingroup testswiftfsd
  */
 
+#include <QObject>
+#include <QTest>
+
+#include "test.h"
+
 #include "config/buildconfig.h"
 #include "core/fsd/addatc.h"
 #include "core/fsd/addpilot.h"
@@ -15,33 +20,29 @@
 #include "core/fsd/authchallenge.h"
 #include "core/fsd/authresponse.h"
 #include "core/fsd/clientidentification.h"
+#include "core/fsd/clientquery.h"
+#include "core/fsd/clientresponse.h"
 #include "core/fsd/deleteatc.h"
 #include "core/fsd/deletepilot.h"
+#include "core/fsd/enums.h"
 #include "core/fsd/euroscopesimdata.h"
+#include "core/fsd/flightplan.h"
+#include "core/fsd/fsdidentification.h"
+#include "core/fsd/interimpilotdataupdate.h"
+#include "core/fsd/killrequest.h"
 #include "core/fsd/pbh.h"
 #include "core/fsd/pilotdataupdate.h"
 #include "core/fsd/ping.h"
+#include "core/fsd/planeinforequest.h"
+#include "core/fsd/planeinforequestfsinn.h"
+#include "core/fsd/planeinformation.h"
+#include "core/fsd/planeinformationfsinn.h"
 #include "core/fsd/pong.h"
-#include "core/fsd/killrequest.h"
-#include "core/fsd/textmessage.h"
-#include "core/fsd/clientquery.h"
-#include "core/fsd/clientresponse.h"
-#include "core/fsd/flightplan.h"
-#include "core/fsd/fsdidentification.h"
 #include "core/fsd/serializer.h"
 #include "core/fsd/servererror.h"
-#include "core/fsd/interimpilotdataupdate.h"
-#include "core/fsd/visualpilotdataupdate.h"
+#include "core/fsd/textmessage.h"
 #include "core/fsd/visualpilotdatatoggle.h"
-#include "core/fsd/planeinforequest.h"
-#include "core/fsd/planeinformation.h"
-#include "core/fsd/planeinforequestfsinn.h"
-#include "core/fsd/planeinformationfsinn.h"
-#include "core/fsd/enums.h"
-#include "test.h"
-
-#include <QObject>
-#include <QTest>
+#include "core/fsd/visualpilotdataupdate.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;
@@ -701,7 +702,7 @@ namespace MiscTest
     void CTestFsdMessages::testTextMessage()
     {
     }
-}
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestFsdMessages);

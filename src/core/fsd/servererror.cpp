@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/servererror.h"
+
 #include <QVector>
 
 #include "misc/logmessage.h"
@@ -58,4 +59,4 @@ namespace swift::core::fsd
         }
         return ServerError(tokens[0], tokens[1], static_cast<ServerErrorCode>(tokens[2].toInt()), tokens[3], tokens[4]);
     }
-}
+} // namespace swift::core::fsd

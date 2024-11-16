@@ -6,11 +6,13 @@
 #ifndef SWIFT_INPUT_KEYBOARD_H
 #define SWIFT_INPUT_KEYBOARD_H
 
-#include "input/swiftinputexport.h"
-#include "misc/input/keyboardkeylist.h"
-#include "misc/input/hotkeycombination.h"
-#include <QObject>
 #include <memory>
+
+#include <QObject>
+
+#include "input/swiftinputexport.h"
+#include "misc/input/hotkeycombination.h"
+#include "misc/input/keyboardkeylist.h"
 
 namespace swift::input
 {
@@ -39,6 +41,6 @@ namespace swift::input
         //! Initializes the platform keyboard device
         virtual bool init() = 0;
     };
-} // ns
+} // namespace swift::input
 
 #endif // guard

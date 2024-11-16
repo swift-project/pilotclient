@@ -16,4 +16,4 @@ namespace swift::gui::views
     {
         this->m_model->setMode(mode);
     }
-} // namespace
+} // namespace swift::gui::views

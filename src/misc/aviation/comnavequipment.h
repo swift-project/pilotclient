@@ -108,7 +108,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(equipment),
             SWIFT_METAMEMBER(cpdlcSatcomEquipment));
     };
-}
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CComNavEquipment)
 

@@ -6,17 +6,18 @@
 #ifndef SWIFT_MISC_SIMULATION_AUTOPUBLISH_H
 #define SWIFT_MISC_SIMULATION_AUTOPUBLISH_H
 
-#include "aircraftmodellist.h"
-#include "simulatorinfo.h"
-#include "misc/pq/length.h"
-#include "misc/datacache.h"
-#include "misc/statusmessagelist.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QMap>
 #include <QSet>
+
+#include "aircraftmodellist.h"
+#include "simulatorinfo.h"
+
+#include "misc/datacache.h"
+#include "misc/directoryutils.h"
+#include "misc/pq/length.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftdirectories.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -38,7 +39,7 @@ namespace swift::misc::simulation
             //! Key
             static const char *key() { return "autopublishlast"; }
         };
-    }
+    } // namespace data
 
     //! Which data have changed
     struct ChangedAutoPublishData
@@ -125,6 +126,6 @@ namespace swift::misc::simulation
         QMap<QString, physical_quantities::CLength> m_modelStringVsCG;
         QMap<QString, CSimulatorInfo> m_modelStringVsSimulatorInfo;
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 #endif // guard

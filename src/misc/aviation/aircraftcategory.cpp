@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircraftcategory.h"
-#include "misc/db/datastoreutility.h"
-#include "misc/comparefunctions.h"
-#include "misc/logcategories.h"
-#include "misc/propertyindexref.h"
-#include "misc/statusmessage.h"
-#include "misc/stringutils.h"
 
 #include <QRegularExpression>
 #include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>
+
+#include "misc/comparefunctions.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/logcategories.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::db;
@@ -240,4 +241,4 @@ namespace swift::misc::aviation
         const int c = this->compareByLevel(other);
         return c < 0;
     }
-} // namespace
+} // namespace swift::misc::aviation

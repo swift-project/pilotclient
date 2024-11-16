@@ -6,26 +6,26 @@
 #ifndef SWIFT_GUI_COMPONENTS_ATCSTATIONCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_ATCSTATIONCOMPONENT_H
 
-#include "gui/settings/viewupdatesettings.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/swiftguiexport.h"
-#include "misc/aviation/atcstation.h"
-#include "misc/aviation/comsystem.h"
-#include "misc/pq/frequency.h"
-#include "misc/identifiable.h"
-#include "misc/network/connectionstatus.h"
-
 #include <QDateTime>
+#include <QFrame>
+#include <QList>
 #include <QModelIndex>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
 #include <QTabWidget>
-#include <QFrame>
-#include <QtGlobal>
-#include <QVBoxLayout>
 #include <QTimer>
-#include <QList>
+#include <QVBoxLayout>
+#include <QtGlobal>
+
+#include "gui/overlaymessagesframe.h"
+#include "gui/settings/viewupdatesettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/identifiable.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/pq/frequency.h"
 
 namespace Ui
 {
@@ -157,6 +157,6 @@ namespace swift::gui
             QDateTime m_timestampOnlineStationsChanged; //!< stations marked as changed
             swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settingsView { this, &CAtcStationComponent::settingsChanged };
         };
-    } // namespace
-} // namespace
+    } // namespace components
+} // namespace swift::gui
 #endif // guard

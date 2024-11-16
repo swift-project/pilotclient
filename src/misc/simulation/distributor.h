@@ -6,20 +6,20 @@
 #ifndef SWIFT_MISC_SIMULATION_DISTRIBUTOR_H
 #define SWIFT_MISC_SIMULATION_DISTRIBUTOR_H
 
-#include "misc/simulation/simulatorinfo.h"
+#include <QJsonObject>
+#include <QMap>
+#include <QMetaType>
+#include <QSet>
+#include <QString>
+
 #include "misc/db/datastore.h"
 #include "misc/metaclass.h"
 #include "misc/orderable.h"
 #include "misc/propertyindexref.h"
+#include "misc/simulation/simulatorinfo.h"
 #include "misc/statusmessagelist.h"
-#include "misc/valueobject.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QJsonObject>
-#include <QMetaType>
-#include <QMap>
-#include <QSet>
-#include <QString>
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributor)
 
@@ -157,7 +157,7 @@ namespace swift::misc::simulation
     //! Distributor/id map
     using DistributorIdMap = QMap<QString, CDistributor>;
 
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CDistributor)
 

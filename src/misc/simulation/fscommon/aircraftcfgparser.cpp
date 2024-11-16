@@ -1,15 +1,10 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/simulation/fscommon/aircraftcfgentries.h"
 #include "misc/simulation/fscommon/aircraftcfgparser.h"
-#include "misc/simulation/fscommon/fsdirectories.h"
-#include "misc/fileutils.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessagelist.h"
-#include "misc/worker.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
+
+#include <atomic>
+#include <tuple>
 
 #include <QDateTime>
 #include <QDir>
@@ -21,12 +16,19 @@
 #include <QList>
 #include <QMetaType>
 #include <QSettings>
+#include <QStringView>
 #include <QTextStream>
 #include <Qt>
 #include <QtGlobal>
-#include <atomic>
-#include <tuple>
-#include <QStringView>
+
+#include "config/buildconfig.h"
+#include "misc/fileutils.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/fscommon/aircraftcfgentries.h"
+#include "misc/simulation/fscommon/fsdirectories.h"
+#include "misc/statusmessagelist.h"
+#include "misc/stringutils.h"
+#include "misc/worker.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -494,6 +496,6 @@ namespace swift::misc::simulation::fscommon
         if (dir == u"model") { return true; }
         return false;
     }
-} // ns
+} // namespace swift::misc::simulation::fscommon
 
 Q_DECLARE_METATYPE(swift::misc::simulation::fscommon::LoaderResponse)

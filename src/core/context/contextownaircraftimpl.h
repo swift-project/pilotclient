@@ -6,37 +6,38 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTOWNAIRCRAFT_IMPL_H
 #define SWIFT_CORE_CONTEXT_CONTEXTOWNAIRCRAFT_IMPL_H
 
-#include "core/context/contextownaircraft.h"
-#include "core/corefacadeconfig.h"
-#include "core/vatsim/vatsimsettings.h"
-#include "core/actionbind.h"
-#include "core/swiftcoreexport.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/ownaircraftprovider.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/network/settings/serversettings.h"
-#include "misc/network/user.h"
-#include "misc/aviation/aircraftsituationlist.h"
-#include "misc/aviation/aircraftparts.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/aviation/atcstation.h"
-#include "misc/aviation/comsystem.h"
-#include "misc/aviation/selcal.h"
-#include "misc/geo/coordinategeodetic.h"
-#include "misc/pq/frequency.h"
-#include "misc/pq/length.h"
-#include "misc/input/actionhotkeydefs.h"
-#include "misc/icons.h"
-#include "misc/settingscache.h"
-#include "misc/identifiable.h"
-#include "misc/identifier.h"
-#include "misc/simplecommandparser.h"
+#include <atomic>
 
 #include <QObject>
 #include <QReadWriteLock>
 #include <QString>
 #include <QTimer>
-#include <atomic>
+
+#include "core/actionbind.h"
+#include "core/context/contextownaircraft.h"
+#include "core/corefacadeconfig.h"
+#include "core/swiftcoreexport.h"
+#include "core/vatsim/vatsimsettings.h"
+#include "misc/aviation/aircraftparts.h"
+#include "misc/aviation/aircraftsituationlist.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/selcal.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/icons.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/network/settings/serversettings.h"
+#include "misc/network/user.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/settingscache.h"
+#include "misc/simplecommandparser.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/ownaircraftprovider.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -50,8 +51,8 @@ namespace swift::misc
         class CAltitude;
         class CCallsign;
         class CTransponder;
-    }
-}
+    } // namespace aviation
+} // namespace swift::misc
 namespace swift::core
 {
     class CCoreFacade;
@@ -244,6 +245,6 @@ namespace swift::core
             //! Reverse lookup of the model against DB data
             static swift::misc::simulation::CAircraftModel reverseLookupModel(const swift::misc::simulation::CAircraftModel &model);
         };
-    } // ns
-} // ns
+    } // namespace context
+} // namespace swift::core
 #endif // guard

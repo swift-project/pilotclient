@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_MODELS_ATCLISTMODEL_H
 #define SWIFT_GUI_MODELS_ATCLISTMODEL_H
 
+#include <QObject>
+
 #include "gui/models/listmodelcallsignobjects.h"
+#include "gui/swiftguiexport.h"
 #include "misc/aviation/atcstation.h"
 #include "misc/aviation/atcstationlist.h"
-#include "gui/swiftguiexport.h"
-
-#include <QObject>
 
 namespace swift::gui::models
 {
@@ -52,6 +52,6 @@ namespace swift::gui::models
     private:
         AtcStationMode m_stationMode = NotSet;
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_NETWORK_REMOTEFILELIST_H
 #define SWIFT_MISC_NETWORK_REMOTEFILELIST_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/network/remotefile.h"
-#include "misc/sequence.h"
-
 #include <QJsonArray>
 #include <QMetaType>
 #include <QString>
 #include <QStringList>
+
+#include "misc/collection.h"
+#include "misc/network/remotefile.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CRemoteFile, CRemoteFileList)
 
@@ -65,7 +65,7 @@ namespace swift::misc::network
         //! From our database JSON format
         static CRemoteFileList fromDatabaseJson(const QString &json);
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CRemoteFileList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CRemoteFile>)

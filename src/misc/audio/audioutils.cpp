@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "config/buildconfig.h"
 #include "misc/audio/audioutils.h"
 
-#include <QProcess>
 #include <QMediaDevices>
+#include <QProcess>
+
+#include "config/buildconfig.h"
 
 using namespace swift::config;
 
@@ -28,4 +29,4 @@ namespace swift::misc::audio
         QMediaDevices::audioOutputs();
     }
 
-} // ns
+} // namespace swift::misc::audio

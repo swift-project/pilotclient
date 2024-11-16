@@ -4,6 +4,7 @@
 //! \file
 
 #include "misc/sharedstate/datalink.h"
+
 #include "misc/promise.h"
 #include "misc/variant.h"
 
@@ -33,4 +34,4 @@ namespace swift::misc::shared_state
         const QString name = object->parent()->objectName();
         return name.isEmpty() ? QString(info) : (info % QLatin1Char(':') % name);
     }
-}
+} // namespace swift::misc::shared_state

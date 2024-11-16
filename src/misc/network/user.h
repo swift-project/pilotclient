@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_NETWORK_USER_H
 #define SWIFT_MISC_NETWORK_USER_H
 
+#include <QMetaType>
+#include <QString>
+
 #include "misc/aviation/airporticaocode.h"
 #include "misc/aviation/callsign.h"
 #include "misc/metaclass.h"
 #include "misc/propertyindexref.h"
 #include "misc/statusmessagelist.h"
-#include "misc/valueobject.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QMetaType>
-#include <QString>
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUser)
 
@@ -189,7 +189,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(callsign),
             SWIFT_METAMEMBER(homebase));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CUser)
 

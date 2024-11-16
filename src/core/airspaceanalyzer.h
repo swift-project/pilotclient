@@ -6,33 +6,34 @@
 #ifndef SWIFT_CORE_AIRSPACE_ANALYZER_H
 #define SWIFT_CORE_AIRSPACE_ANALYZER_H
 
-#include "core/swiftcoreexport.h"
-#include "core/fsd/fsdclient.h"
-#include "misc/network/connectionstatus.h"
-#include "misc/simulation/airspaceaircraftsnapshot.h"
-#include "misc/simulation/ownaircraftprovider.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/aviation/atcstation.h"
-#include "misc/geo/coordinategeodetic.h"
-#include "misc/pq/frequency.h"
-#include "misc/pq/length.h"
-#include "misc/pq/time.h"
-#include "misc/pq/units.h"
-#include "misc/worker.h"
+#include <atomic>
 
 #include <QHash>
 #include <QObject>
 #include <QReadWriteLock>
 #include <QTimer>
 #include <QtGlobal>
-#include <atomic>
+
+#include "core/fsd/fsdclient.h"
+#include "core/swiftcoreexport.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/pq/time.h"
+#include "misc/pq/units.h"
+#include "misc/simulation/airspaceaircraftsnapshot.h"
+#include "misc/simulation/ownaircraftprovider.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/worker.h"
 
 namespace swift::misc::aviation
 {
     class CAircraftSituation;
     class CCallsign;
     class CTransponder;
-}
+} // namespace swift::misc::aviation
 
 namespace swift::core
 {
@@ -138,6 +139,6 @@ namespace swift::core
         mutable QReadWriteLock m_lockSnapshot; //!< lock snapshot
         mutable QReadWriteLock m_lockRestrictions; //!< lock simulator restrictions
     };
-} // namespace
+} // namespace swift::core
 
 #endif

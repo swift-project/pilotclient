@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #ifndef IN_BUILDCONFIG_H
-#error This file is only to be included by buildconfig.h
+#    error This file is only to be included by buildconfig.h
 #endif
 
 // in-line definitions with CMake substitutions
@@ -71,6 +71,6 @@ namespace swift::config
         return false;
 #endif
     }
-} // ns
+} // namespace swift::config
 
 //! \endcond

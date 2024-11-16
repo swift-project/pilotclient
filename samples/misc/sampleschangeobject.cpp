@@ -5,6 +5,10 @@
 //! \ingroup samplemisc
 
 #include "sampleschangeobject.h"
+
+#include <QDateTime>
+#include <QtDebug>
+
 #include "misc/aviation/atcstation.h"
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsign.h"
@@ -16,9 +20,6 @@
 #include "misc/predicates.h"
 #include "misc/propertyindexvariantmap.h"
 #include "misc/variant.h"
-
-#include <QDateTime>
-#include <QtDebug>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -73,4 +74,4 @@ namespace swift::sample
         qDebug() << "-----------------------------------------------";
         return 0;
     }
-} // namespace
+} // namespace swift::sample

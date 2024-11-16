@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_VIEWS_AIRPORTVIEW_H
 #define SWIFT_GUI_VIEWS_AIRPORTVIEW_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/airportlistmodel.h"
+#include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
 
 namespace swift::gui::views
@@ -21,6 +21,6 @@ namespace swift::gui::views
         //! Constructor
         explicit CAirportView(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::views
 
 #endif // guard

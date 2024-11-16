@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_COMPONENTS_SERVERLISTSELECTOR_H
 #define SWIFT_GUI_COMPONENTS_SERVERLISTSELECTOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/network/data/lastserver.h"
-#include "misc/network/serverlist.h"
-#include "misc/datacache.h"
-
 #include <QComboBox>
 #include <QObject>
 #include <QStringList>
+
+#include "gui/swiftguiexport.h"
+#include "misc/datacache.h"
+#include "misc/network/data/lastserver.h"
+#include "misc/network/serverlist.h"
 
 namespace swift::gui::components
 {
@@ -51,6 +51,6 @@ namespace swift::gui::components
         QString m_pendingPreselect; //!< pending preselect value
         swift::misc::CData<swift::misc::network::data::TLastServer> m_lastServer { this }; //!< recently used server (VATSIM, other)
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

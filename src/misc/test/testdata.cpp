@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/test/testdata.h"
-#include "misc/simulation/simulatedaircraft.h"
+
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/flightplan.h"
-#include "misc/network/userlist.h"
-#include "misc/network/server.h"
-#include "misc/fileutils.h"
-#include "misc/swiftdirectories.h"
 #include "misc/directoryutils.h"
-#include "misc/variantlist.h"
+#include "misc/fileutils.h"
 #include "misc/math/mathutils.h"
+#include "misc/network/server.h"
+#include "misc/network/userlist.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/swiftdirectories.h"
+#include "misc/variantlist.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::geo;
@@ -319,5 +320,5 @@ namespace swift::misc::test
         static const CSimulatedAircraft aircraft(getA320AircraftImpl());
         return aircraft;
     }
-} // ns
+} // namespace swift::misc::test
 //! \endcond

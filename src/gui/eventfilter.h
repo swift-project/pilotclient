@@ -33,6 +33,6 @@ namespace swift::gui
         QString m_illegalChars;
         bool m_onlyAscii = false;
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

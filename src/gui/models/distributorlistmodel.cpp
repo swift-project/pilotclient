@@ -1,17 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/columns.h"
 #include "gui/models/distributorlistmodel.h"
+
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
+
+#include "gui/models/columns.h"
 #include "misc/db/datastore.h"
 #include "misc/propertyindexvariantmap.h"
 #include "misc/simulation/distributor.h"
 #include "misc/simulation/simulatorinfo.h"
 #include "misc/timestampbased.h"
-
-#include <Qt>
-#include <QtDebug>
-#include <QtGlobal>
 
 using namespace swift::misc::simulation;
 
@@ -73,4 +74,4 @@ namespace swift::gui::models
             break;
         }
     }
-} // namespace
+} // namespace swift::gui::models

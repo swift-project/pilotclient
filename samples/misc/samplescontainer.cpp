@@ -5,12 +5,16 @@
 //! \ingroup samplemisc
 
 #include "samplescontainer.h"
-#include "misc/test/testdata.h"
+
+#include <QDateTime>
+#include <QDebug>
+#include <QtDebug>
+
 #include "misc/aviation/atcstation.h"
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsign.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/geo/coordinategeodetic.h"
+#include "misc/mixin/mixincompare.h"
 #include "misc/network/user.h"
 #include "misc/pq/frequency.h"
 #include "misc/pq/length.h"
@@ -19,11 +23,8 @@
 #include "misc/propertyindexvariantmap.h"
 #include "misc/range.h"
 #include "misc/stringutils.h"
+#include "misc/test/testdata.h"
 #include "misc/variant.h"
-
-#include <QDateTime>
-#include <QDebug>
-#include <QtDebug>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -87,4 +88,4 @@ namespace swift::sample
 
         return 0;
     }
-} // namespace
+} // namespace swift::sample

@@ -12,6 +12,6 @@ namespace swift::misc::simulation
 {
     //! Register metadata for simulation
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc::simulation
 
 #endif // guard

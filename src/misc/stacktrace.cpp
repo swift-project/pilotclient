@@ -3,13 +3,14 @@
 
 #include "misc/stacktrace.h"
 
-#include <QByteArray>
-#include <QLatin1String>
-#include <QStringBuilder>
-#include <QMutexLocker>
 #include <array>
 #include <cstdlib>
 #include <mutex>
+
+#include <QByteArray>
+#include <QLatin1String>
+#include <QMutexLocker>
+#include <QStringBuilder>
 
 #if defined(Q_CC_MSVC)
 #    include <Windows.h>
@@ -20,11 +21,12 @@
 
 #    pragma warning(pop)
 #elif defined(Q_OS_WIN) && defined(Q_CC_GNU)
-#    include <windows.h>
 #    include <dbghelp.h>
+#    include <windows.h>
 #elif defined(Q_CC_GNU)
 #    include <cxxabi.h>
 #    include <execinfo.h>
+
 #    include <cstring>
 #endif
 
@@ -134,4 +136,4 @@ namespace swift::misc
     }
 #endif
 
-}
+} // namespace swift::misc

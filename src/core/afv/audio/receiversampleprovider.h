@@ -6,17 +6,16 @@
 #ifndef SWIFT_CORE_AFV_AUDIO_RECEIVERSAMPLEPROVIDER_H
 #define SWIFT_CORE_AFV_AUDIO_RECEIVERSAMPLEPROVIDER_H
 
+#include <QtGlobal>
+
 #include "core/afv/audio/callsignsampleprovider.h"
-#include "sound/sampleprovider/sampleprovider.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/logcategories.h"
 #include "sound/sampleprovider/mixingsampleprovider.h"
+#include "sound/sampleprovider/sampleprovider.h"
 #include "sound/sampleprovider/sinusgenerator.h"
 #include "sound/sampleprovider/volumesampleprovider.h"
-
-#include "misc/logcategories.h"
-#include "misc/aviation/callsignset.h"
-#include "misc/audio/audiosettings.h"
-
-#include <QtGlobal>
 
 namespace swift::core::afv::audio
 {
@@ -113,7 +112,7 @@ namespace swift::core::afv::audio
         bool m_doBlockWhenAppropriate = false;
         int m_lastNumberOfInUseInputs = 0;
     };
-} // ns
+} // namespace swift::core::afv::audio
 
 Q_DECLARE_METATYPE(swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs)
 

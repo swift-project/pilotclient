@@ -6,12 +6,12 @@
 #ifndef SWIFT_SOUND_SELCALPLAYER_H
 #define SWIFT_SOUND_SELCALPLAYER_H
 
-#include "sound/threadedtonepairplayer.h"
-#include "sound/tonepair.h"
-#include "sound/swiftsoundexport.h"
 #include "misc/audio/audiodeviceinfo.h"
 #include "misc/aviation/selcal.h"
 #include "misc/worker.h"
+#include "sound/swiftsoundexport.h"
+#include "sound/threadedtonepairplayer.h"
+#include "sound/tonepair.h"
 
 namespace swift::sound
 {
@@ -37,6 +37,6 @@ namespace swift::sound
     private:
         CThreadedTonePairPlayer *m_threadedPlayer = nullptr;
     };
-}
+} // namespace swift::sound
 
 #endif // guard

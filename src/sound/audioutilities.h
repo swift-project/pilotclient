@@ -6,12 +6,12 @@
 #ifndef SWIFT_SOUND_AUDIOUTILITIES_H
 #define SWIFT_SOUND_AUDIOUTILITIES_H
 
-#include "sound/swiftsoundexport.h"
-#include "misc/audio/audiodeviceinfo.h"
-
 #include <QAudioDevice>
 #include <QByteArray>
 #include <QVector>
+
+#include "misc/audio/audiodeviceinfo.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound
 {
@@ -39,6 +39,6 @@ namespace swift::sound
 
     //! Open a input device
     SWIFT_SOUND_EXPORT void occupyAudioInputDevice();
-} // ns
+} // namespace swift::sound
 
 #endif

@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_EDITORS_INTERPOLATIONSETUPFORM_H
 #define SWIFT_GUI_EDITORS_INTERPOLATIONSETUPFORM_H
 
-#include "gui/editors/form.h"
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "misc/pq/angle.h"
-#include "misc/statusmessagelist.h"
-
-#include <QScopedPointer>
 #include <QCheckBox>
+#include <QScopedPointer>
+
+#include "gui/editors/form.h"
+#include "misc/pq/angle.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/statusmessagelist.h"
 
 namespace Ui
 {
@@ -73,5 +73,5 @@ namespace swift::gui::editors
         //! Set mode
         void setInterpolatorMode(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode);
     };
-} // ns
+} // namespace swift::gui::editors
 #endif // guard

@@ -117,4 +117,4 @@ namespace swift::core::vatsim
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-} // ns
+} // namespace swift::core::vatsim

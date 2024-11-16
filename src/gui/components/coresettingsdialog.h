@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_CORESETTINGSDIALOG_H
 #define SWIFT_GUI_COMPONENTS_CORESETTINGSDIALOG_H
 
-#include "gui/swiftguiexport.h"
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -36,6 +37,6 @@ namespace swift::gui::components
         //! Show the overview tab
         void showOverview();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

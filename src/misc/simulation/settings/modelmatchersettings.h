@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_SIMULATION_SETTINGS_MODELMATCHERSETTINGS_H
 #define SWIFT_MISC_SIMULATION_SETTINGS_MODELMATCHERSETTINGS_H
 
-#include "misc/simulation/aircraftmatchersetup.h"
 #include "misc/settingscache.h"
+#include "misc/simulation/aircraftmatchersetup.h"
 
 namespace swift::misc::simulation::settings
 {
@@ -24,6 +24,6 @@ namespace swift::misc::simulation::settings
             return name;
         }
     };
-} // ns
+} // namespace swift::misc::simulation::settings
 
 #endif // guard

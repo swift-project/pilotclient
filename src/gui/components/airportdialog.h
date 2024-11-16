@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_AIRPORTDIALOG_H
 #define SWIFT_GUI_COMPONENTS_AIRPORTDIALOG_H
 
-#include "misc/aviation/airport.h"
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "misc/aviation/airport.h"
 
 namespace Ui
 {
@@ -40,6 +41,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CAirportDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

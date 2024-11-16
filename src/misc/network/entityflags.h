@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_NETWORK_ENTITRFLAGS_H
 #define SWIFT_MISC_NETWORK_ENTITRFLAGS_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/statusmessage.h"
-
 #include <QFlags>
 #include <QMetaType>
 #include <QStringList>
+
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::network
 {
@@ -118,7 +118,7 @@ namespace swift::misc::network
         //! Register metadata
         static void registerMetadata();
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CEntityFlags::EntityFlag)
 Q_DECLARE_METATYPE(swift::misc::network::CEntityFlags::Entity)

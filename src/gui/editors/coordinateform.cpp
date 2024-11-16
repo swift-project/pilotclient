@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "coordinateform.h"
+
+#include <QIntValidator>
+
+#include "ui_coordinateform.h"
+
 #include "core/context/contextownaircraft.h"
 #include "core/db/airportdatareader.h"
 #include "core/webdataservices.h"
 #include "gui/guiapplication.h"
 #include "misc/aviation/airport.h"
-#include "ui_coordinateform.h"
-
-#include <QIntValidator>
 
 using namespace swift::gui;
 using namespace swift::misc;
@@ -305,4 +307,4 @@ namespace swift::gui::editors
         const CCoordinateGeodetic coordinate = sGui->getIContextOwnAircraft()->getOwnAircraft().getSituation();
         this->setCoordinate(coordinate);
     }
-} // ns
+} // namespace swift::gui::editors

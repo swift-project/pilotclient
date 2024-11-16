@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "cockpitcomform.h"
-#include "ui_cockpitcomform.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextsimulator.h"
-#include "misc/math/mathutils.h"
-#include "misc/logmessage.h"
-#include "misc/icons.h"
 
 #include <QPushButton>
+
+#include "ui_cockpitcomform.h"
+
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/math/mathutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -284,4 +286,4 @@ namespace swift::gui::editors
     {
         return CMathUtils::epsilonEqual(f1, f2);
     }
-} // ns
+} // namespace swift::gui::editors

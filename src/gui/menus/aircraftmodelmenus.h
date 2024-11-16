@@ -4,13 +4,13 @@
 #ifndef SWIFT_GUI_MENUS_AIRCRAFTMODELMENUS_H
 #define SWIFT_GUI_MENUS_AIRCRAFTMODELMENUS_H
 
+#include <QMenu>
+#include <QObject>
+
 #include "gui/menus/menudelegate.h"
 #include "gui/overlaymessagesframe.h"
 #include "gui/views/aircraftmodelview.h"
 #include "misc/simulation/aircraftmodelinterfaces.h"
-
-#include <QMenu>
-#include <QObject>
 
 class QAction;
 
@@ -153,7 +153,7 @@ namespace swift::gui
             QAction *m_updateDirsAll = nullptr; //!< consolidate file name/dir (all)
             QAction *m_updateDirsSelected = nullptr; //!< consolidate file name/dir (selected)
         };
-    } // ns
-} // ns
+    } // namespace menus
+} // namespace swift::gui
 
 #endif // guard

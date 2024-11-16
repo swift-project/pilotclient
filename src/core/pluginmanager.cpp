@@ -2,11 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/pluginmanager.h"
-#include "core/application.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
 
 #include <QDir>
 #include <QDirIterator>
@@ -16,6 +11,12 @@
 #include <QPluginLoader>
 #include <QStringBuilder>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "misc/directoryutils.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::misc;
 
@@ -143,4 +144,4 @@ namespace swift::core
             return nullptr;
         }
     }
-} // namespace
+} // namespace swift::core

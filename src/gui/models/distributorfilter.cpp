@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/distributorfilter.h"
+
 #include "misc/simulation/distributor.h"
 
 using namespace swift::misc;
@@ -32,4 +33,4 @@ namespace swift::gui::models
     {
         return (m_simulator.isNoSimulator() || m_simulator.isAllSimulators());
     }
-} // namespace
+} // namespace swift::gui::models

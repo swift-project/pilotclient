@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_ATCBUTTONCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_ATCBUTTONCOMPONENT_H
 
-#include "core/context/contextnetwork.h"
-#include "misc/network/connectionstatus.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "core/context/contextnetwork.h"
+#include "misc/network/connectionstatus.h"
 
 namespace Ui
 {
@@ -72,6 +73,6 @@ namespace swift::gui::components
         int m_rows = 2;
         int m_cols = 4;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

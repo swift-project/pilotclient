@@ -6,8 +6,8 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTOWNAIRCRAFT_EMPTY_H
 #define SWIFT_CORE_CONTEXT_CONTEXTOWNAIRCRAFT_EMPTY_H
 
-#include "core/swiftcoreexport.h"
 #include "core/context/contextownaircraft.h"
+#include "core/swiftcoreexport.h"
 #include "misc/logmessage.h"
 
 // clazy:excludeall=const-signal-or-slot
@@ -150,5 +150,5 @@ namespace swift::core::context
             return false;
         }
     };
-} // namespace
+} // namespace swift::core::context
 #endif // guard

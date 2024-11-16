@@ -6,11 +6,12 @@
 
 //! \file
 
-#include "input/joystick.h"
-#include "misc/input/joystickbutton.h"
+#include <IOKit/hid/IOHIDManager.h>
 
 #include <QHash>
-#include <IOKit/hid/IOHIDManager.h>
+
+#include "input/joystick.h"
+#include "misc/input/joystickbutton.h"
 
 namespace swift::input
 {

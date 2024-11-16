@@ -6,17 +6,17 @@
 #ifndef SWIFT_MISC_STATUSMESSAGE_H
 #define SWIFT_MISC_STATUSMESSAGE_H
 
-#include "misc/logcategorylist.h"
-#include "misc/timestampbased.h"
-#include "misc/orderable.h"
-#include "misc/mixin/mixinicon.h"
-#include "misc/propertyindexref.h"
-#include "misc/mixin/mixinstring.h"
-#include "misc/typetraits.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/stringutils.h"
-
 #include <QReadWriteLock>
+
+#include "misc/logcategorylist.h"
+#include "misc/mixin/mixinicon.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/orderable.h"
+#include "misc/propertyindexref.h"
+#include "misc/stringutils.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/typetraits.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CStatusMessage)
 
@@ -26,7 +26,7 @@ namespace swift::misc
     {
         //! Like QString::arg() but for QStringView.
         SWIFT_MISC_EXPORT QString arg(QStringView format, const QStringList &args);
-    }
+    } // namespace private_ns
 
     /*!
      * Status severities
@@ -647,7 +647,7 @@ namespace swift::misc
         }
         return {};
     }
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CStrongStringView)
 Q_DECLARE_METATYPE(swift::misc::CStatusMessage)

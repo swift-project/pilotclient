@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_MIXIN_MIXINJSON_H
 #define SWIFT_MISC_MIXIN_MIXINJSON_H
 
-#include "misc/json.h"
-#include "misc/inheritancetraits.h"
+#include <type_traits>
+#include <utility>
 
 #include <QByteArray>
 #include <QJsonArray>
@@ -17,8 +17,9 @@
 #include <QJsonValueRef>
 #include <QStringList>
 #include <QtGlobal>
-#include <type_traits>
-#include <utility>
+
+#include "misc/inheritancetraits.h"
+#include "misc/json.h"
 
 namespace swift::misc
 {
@@ -270,7 +271,7 @@ namespace swift::misc
 #define SWIFT_MISC_DECLARE_USING_MIXIN_JSON(DERIVED)              \
     using ::swift::misc::mixin::JsonByMetaClass<DERIVED>::toJson; \
     using ::swift::misc::mixin::JsonByMetaClass<DERIVED>::convertFromJson;
-    } // Mixin ns
-} // guard
+    } // namespace mixin
+} // namespace swift::misc
 
 #endif // guard

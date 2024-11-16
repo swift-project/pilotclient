@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "modelbrowsercomponent.h"
+
 #include "ui_modelbrowsercomponent.h"
-#include "gui/guiapplication.h"
+
 #include "core/context/contextownaircraft.h"
 #include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
 #include "misc/aviation/heading.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/speed.h"
@@ -198,4 +200,4 @@ namespace swift::gui::components
         if (ui->cb_OverrideCG->isChecked() != checked) { ui->cb_OverrideCG->setChecked(true); }
         if (ui->cb_UseCG->isChecked() != checked) { ui->cb_UseCG->setChecked(true); }
     }
-} // ns
+} // namespace swift::gui::components

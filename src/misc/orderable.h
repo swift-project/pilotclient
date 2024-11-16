@@ -6,11 +6,11 @@
 #ifndef SWIFT_MISC_ORDERABLE_H
 #define SWIFT_MISC_ORDERABLE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/propertyindexref.h"
-
-#include <QVariant>
 #include <QString>
+#include <QVariant>
+
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -61,6 +61,6 @@ namespace swift::misc
 
         int m_order = -1; //!< order number
     };
-} // namespace
+} // namespace swift::misc
 
 #endif // guard

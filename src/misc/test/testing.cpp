@@ -2,6 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/test/testing.h"
+
+#include <tuple>
+
+#include <QDateTime>
+#include <QList>
+#include <QStringList>
+#include <QtGlobal>
+
 #include "misc/aviation/callsign.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/iterator.h"
@@ -13,12 +21,6 @@
 #include "misc/propertyindexvariantmap.h"
 #include "misc/sequence.h"
 #include "misc/variant.h"
-
-#include <QDateTime>
-#include <QList>
-#include <QStringList>
-#include <QtGlobal>
-#include <tuple>
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::geo;
@@ -126,4 +128,4 @@ namespace swift::misc::test
         }
         return list;
     }
-} // namespace
+} // namespace swift::misc::test

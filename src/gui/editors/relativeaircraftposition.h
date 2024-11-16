@@ -9,8 +9,8 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-#include "misc/geo/coordinategeodetic.h"
 #include "gui/editors/form.h"
+#include "misc/geo/coordinategeodetic.h"
 
 namespace Ui
 {
@@ -49,6 +49,6 @@ namespace swift::gui::editors
         QScopedPointer<Ui::CRelativeAircraftPosition> ui;
         swift::misc::geo::CCoordinateGeodetic m_originCoordinate;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

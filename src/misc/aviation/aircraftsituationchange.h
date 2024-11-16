@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTSITUATIONCHANGE_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTSITUATIONCHANGE_H
 
-#include "misc/aviation/callsign.h"
 #include "misc/aviation/altitude.h"
+#include "misc/aviation/callsign.h"
+#include "misc/metaclass.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/speed.h"
-#include "misc/metaclass.h"
-#include "misc/timestampbased.h"
-#include "misc/valueobject.h"
 #include "misc/propertyindexref.h"
 #include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituationChange)
 
@@ -242,8 +242,8 @@ namespace swift::misc
                 SWIFT_METAMEMBER(oldestAdjustedTimestampMSecsSinceEpoch),
                 SWIFT_METAMEMBER(latestAdjustedTimestampMSecsSinceEpoch));
         };
-    } // namespace
-} // namespace
+    } // namespace aviation
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituationChange)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituationChange::GuessedSceneryDeviation)

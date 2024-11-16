@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/enableforviewbasedindicator.h"
-#include "gui/views/viewbase.h"
 
 #include <QtGlobal>
+
+#include "gui/views/viewbase.h"
 
 using namespace swift::misc;
 using namespace swift::gui;
@@ -48,4 +49,4 @@ namespace swift::gui
     {
         this->m_viewWithIndicator = viewWithIndicator;
     }
-} // namespace
+} // namespace swift::gui

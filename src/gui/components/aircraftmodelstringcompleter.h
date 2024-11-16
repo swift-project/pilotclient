@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_COMPLETER_AIRCRAFTMODELSTRINGCOMPLETER_H
 #define SWIFT_GUI_COMPLETER_AIRCRAFTMODELSTRINGCOMPLETER_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/aircraftmodel.h"
-
-#include <QFrame>
-#include <QScopedPointer>
 #include <QCompleter>
 #include <QFlags>
+#include <QFrame>
+#include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/data/modelcaches.h"
 
 namespace Ui
 {
@@ -99,6 +99,6 @@ namespace swift::gui::components
         swift::misc::simulation::CSimulatorInfo m_currentSimulator;
         CompleterSourceFlag m_currentDataSource = None;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

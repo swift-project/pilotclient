@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_DB_DBINFOLIST_H
 #define SWIFT_MISC_DB_DBINFOLIST_H
 
-#include "misc/db/dbinfo.h"
-#include "misc/db/datastoreobjectlist.h"
-#include "misc/network/entityflags.h"
+#include <initializer_list>
+
 #include "misc/collection.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/db/dbinfo.h"
+#include "misc/network/entityflags.h"
 #include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
-
-#include <initializer_list>
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::db, CDbInfo, CDbInfoList)
 
@@ -41,7 +41,7 @@ namespace swift::misc::db
         //! From our database JSON format
         static CDbInfoList fromDatabaseJson(const QJsonArray &array);
     };
-} // namespace
+} // namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CDbInfoList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::db::CDbInfo>)

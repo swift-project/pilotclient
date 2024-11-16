@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_NETWORK_URLLOGLIST_H
 #define SWIFT_MISC_NETWORK_URLLOGLIST_H
 
+#include <QNetworkReply>
+
+#include "misc/collection.h"
 #include "misc/network/urllog.h"
+#include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/timestampobjectlist.h"
-#include "misc/collection.h"
-#include "misc/sequence.h"
-#include <QNetworkReply>
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CUrlLog, CUrlLogList)
 
@@ -84,7 +85,7 @@ namespace swift::misc::network
         //! Summary
         QString getSummary() const;
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CUrlLogList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CUrlLog>)

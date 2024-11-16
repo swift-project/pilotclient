@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_PLATFORMSET_H
 #define SWIFT_MISC_PLATFORMSET_H
 
-#include "misc/platform.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/sequence.h"
+#include <tuple>
 
 #include <QMetaType>
-#include <tuple>
+
+#include "misc/collection.h"
+#include "misc/platform.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_COLLECTION_MIXINS(swift::misc, CPlatform, CPlatformSet)
 
@@ -51,7 +52,7 @@ namespace swift::misc
         //! Register metadata
         static void registerMetadata();
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CPlatformSet)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CPlatform>)

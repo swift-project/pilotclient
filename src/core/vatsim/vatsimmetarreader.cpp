@@ -2,11 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/vatsim/vatsimmetarreader.h"
-#include "core/application.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/logmessage.h"
-#include "misc/network/entityflags.h"
-#include "misc/network/url.h"
 
 #include <QByteArray>
 #include <QMetaObject>
@@ -20,6 +15,12 @@
 #include <QUrl>
 #include <QWriteLocker>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/url.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -149,4 +150,4 @@ namespace swift::core::vatsim
         const CReaderSettings s = m_settings.get();
         this->setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
     }
-} // ns
+} // namespace swift::core::vatsim

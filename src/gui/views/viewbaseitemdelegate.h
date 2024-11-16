@@ -37,6 +37,6 @@ namespace swift::gui::views
         //! Related CViewBaseNonTemplate
         CViewBaseNonTemplate *viewBase() const;
     };
-} // namespace
+} // namespace swift::gui::views
 
 #endif // guard

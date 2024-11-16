@@ -6,13 +6,13 @@
 #ifndef PINKNOISEGENERATOR_H
 #define PINKNOISEGENERATOR_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/sampleprovider/sampleprovider.h"
+#include <array>
 
 #include <QRandomGenerator>
 #include <QVector>
 
-#include <array>
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -36,6 +36,6 @@ namespace swift::sound::sample_provider
         std::array<double, 7> m_pinkNoiseBuffer = { { 0 } };
         double m_gain = 0.0;
     };
-}
+} // namespace swift::sound::sample_provider
 
 #endif // guard

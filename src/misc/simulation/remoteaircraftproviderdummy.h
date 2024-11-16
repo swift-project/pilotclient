@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_SIMULATION_REMOTEAIRCRAFTPROVIDERDUMMY_H
 #define SWIFT_MISC_SIMULATION_REMOTEAIRCRAFTPROVIDERDUMMY_H
 
-#include "misc/simulation/airspaceaircraftsnapshot.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/aviation/aircraftpartslist.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/callsignset.h"
+#include "misc/simulation/airspaceaircraftsnapshot.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
@@ -43,6 +43,6 @@ namespace swift::misc::simulation
         virtual CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
         //! @}
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 #endif // guard

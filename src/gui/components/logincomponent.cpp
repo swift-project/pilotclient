@@ -1,50 +1,52 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_logincomponent.h"
 #include "logincomponent.h"
-#include "gui/components/serverlistselector.h"
-#include "gui/editors/serverform.h"
-#include "gui/editors/pilotform.h"
-#include "gui/guiapplication.h"
-#include "gui/loginmodebuttons.h"
-#include "gui/ticklabel.h"
-#include "gui/uppercasevalidator.h"
+
+#include <QDialogButtonBox>
+#include <QGroupBox>
+#include <QIntValidator>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPointer>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QStringBuilder>
+#include <QTabWidget>
+#include <QTimer>
+#include <QToolButton>
+#include <QtGlobal>
+
+#include "ui_logincomponent.h"
+
+#include "config/buildconfig.h"
 #include "core/context/contextaudio.h"
 #include "core/context/contextnetwork.h"
 #include "core/context/contextownaircraft.h"
 #include "core/context/contextsimulator.h"
-#include "core/webdataservices.h"
 #include "core/data/globalsetup.h"
 #include "core/simulator.h"
+#include "core/webdataservices.h"
+#include "gui/components/serverlistselector.h"
+#include "gui/editors/pilotform.h"
+#include "gui/editors/serverform.h"
+#include "gui/guiapplication.h"
+#include "gui/loginmodebuttons.h"
+#include "gui/ticklabel.h"
+#include "gui/uppercasevalidator.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/airporticaocode.h"
+#include "misc/crashhandler.h"
 #include "misc/icons.h"
 #include "misc/logmessage.h"
 #include "misc/network/connectionstatus.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/serverlist.h"
-#include "misc/simulation/simulatorinternals.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatorinternals.h"
 #include "misc/statusmessage.h"
-#include "misc/crashhandler.h"
-#include "config/buildconfig.h"
-
-#include <QDialogButtonBox>
-#include <QMessageBox>
-#include <QGroupBox>
-#include <QIntValidator>
-#include <QLineEdit>
-#include <QProgressBar>
-#include <QPushButton>
-#include <QTabWidget>
-#include <QTimer>
-#include <QToolButton>
-#include <QStringBuilder>
-#include <QtGlobal>
-#include <QPointer>
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -569,4 +571,4 @@ namespace swift::gui::components
         ui->frp_CurrentServer->setServer(server);
         ui->comp_NetworkDetails->setLoginMode(nwc->getLoginMode());
     }
-} // namespace
+} // namespace swift::gui::components

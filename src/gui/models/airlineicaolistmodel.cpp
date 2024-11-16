@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/airlineicaolistmodel.h"
-#include "gui/models/columnformatters.h"
-#include "gui/models/columns.h"
-#include "misc/db/datastore.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/country.h"
-#include "misc/propertyindexvariantmap.h"
-#include "misc/timestampbased.h"
 
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/models/columns.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/country.h"
+#include "misc/db/datastore.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/timestampbased.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -49,4 +50,4 @@ namespace swift::gui::models
         (void)QT_TRANSLATE_NOOP("ModelAirlineIcaoList", "country");
         (void)QT_TRANSLATE_NOOP("ModelAirlineIcaoList", "changed");
     }
-} // ns
+} // namespace swift::gui::models

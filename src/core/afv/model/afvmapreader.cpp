@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/afv/model/afvmapreader.h"
-#include "core/application.h"
-#include "core/afv/dto.h"
-#include "misc/aviation/callsign.h"
+
 #include <QEventLoop>
-#include <QNetworkReply>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
+#include <QNetworkReply>
+
+#include "core/afv/dto.h"
+#include "core/application.h"
+#include "misc/aviation/callsign.h"
 
 using namespace swift::misc::aviation;
 
@@ -81,4 +83,4 @@ namespace swift::core::afv::model
             m_model->updateAtcStations(transceivers);
         }
     }
-} // ns
+} // namespace swift::core::afv::model

@@ -5,18 +5,19 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/mixin/mixincompare.h"
+#include <QString>
+#include <QTest>
+
+#include "test.h"
+
 #include "misc/identifier.h"
 #include "misc/input/actionhotkey.h"
 #include "misc/input/actionhotkeylist.h"
 #include "misc/input/hotkeycombination.h"
 #include "misc/input/keyboardkey.h"
 #include "misc/input/keycodes.h"
+#include "misc/mixin/mixincompare.h"
 #include "misc/variant.h"
-#include "test.h"
-
-#include <QString>
-#include <QTest>
 
 using namespace swift::misc;
 using namespace swift::misc::input;
@@ -186,7 +187,7 @@ namespace MiscTest
         QVERIFY2(!list1.findSubsetsOf(actionHotkey2).isEmpty(), "CTRL+F is a subset of CTRL");
         QVERIFY2(list1.findSubsetsOf(actionHotkey3).isEmpty(), "Shift+F is not a subset of CTRL");
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestInput);

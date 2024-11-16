@@ -6,20 +6,20 @@
 #ifndef SWIFT_MISC_SIMULATION_SIMULATORINFO_H
 #define SWIFT_MISC_SIMULATION_SIMULATORINFO_H
 
-#include "misc/statusmessage.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QFlag>
 #include <QFlags>
 #include <QJsonObject>
 #include <QList>
-#include <QSet>
 #include <QMetaType>
 #include <QMultiMap>
+#include <QSet>
 #include <QStringList>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CSimulatorInfo)
 
@@ -285,7 +285,7 @@ namespace swift::misc::simulation
         static int internalIndex(const CSimulatorInfo &simulator);
         static CSimulatorInfo simulator(int internalIndex);
     };
-} // ns
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorInfo)
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorInfo::SimulatorFlag)

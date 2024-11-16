@@ -6,13 +6,9 @@
 #ifndef SWIFT_MISC_SIMULATION_IAIRCRAFTMODELLOADER_H
 #define SWIFT_MISC_SIMULATION_IAIRCRAFTMODELLOADER_H
 
-#include "misc/simulation/aircraftmodelinterfaces.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/statusmessagelist.h"
-#include "misc/swiftmiscexport.h"
+#include <atomic>
+#include <functional>
+#include <memory>
 
 #include <QDateTime>
 #include <QFlags>
@@ -20,9 +16,14 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <atomic>
-#include <memory>
-#include <functional>
+
+#include "misc/simulation/aircraftmodelinterfaces.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -195,7 +196,7 @@ namespace swift::misc::simulation
     private:
         qint64 m_loadingStartedTs = -1;
     };
-} // ns
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::IAircraftModelLoader::LoadMode)
 Q_DECLARE_METATYPE(swift::misc::simulation::IAircraftModelLoader::LoadModeFlag)

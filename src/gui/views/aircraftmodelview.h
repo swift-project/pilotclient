@@ -6,8 +6,15 @@
 #ifndef SWIFT_GUI_AIRCRAFTMODELVIEW_H
 #define SWIFT_GUI_AIRCRAFTMODELVIEW_H
 
-#include "gui/swiftguiexport.h"
+#include <QBrush>
+#include <QFlags>
+#include <QMetaType>
+#include <QObject>
+#include <QStringList>
+#include <Qt>
+
 #include "gui/models/aircraftmodellistmodel.h"
+#include "gui/swiftguiexport.h"
 #include "gui/views/viewdbobjects.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/propertyindexvariantmap.h"
@@ -16,20 +23,13 @@
 #include "misc/simulation/simulatorinfo.h"
 #include "misc/statusmessage.h"
 
-#include <QBrush>
-#include <QFlags>
-#include <QMetaType>
-#include <QObject>
-#include <QStringList>
-#include <Qt>
-
 class QDropEvent;
 
 namespace swift::misc::aviation
 {
     class CAircraftIcaoCode;
     class CLivery;
-}
+} // namespace swift::misc::aviation
 namespace swift::misc::simulation
 {
     class CAircraftModel;
@@ -186,7 +186,7 @@ namespace swift::gui
             swift::misc::simulation::CSimulatorInfo m_correspondingSimulator; //!< validation, simulator required when loading
             QString m_correspondingSimulatorDir;
         };
-    } // ns
-} // ns
+    } // namespace views
+} // namespace swift::gui
 
 #endif // guard

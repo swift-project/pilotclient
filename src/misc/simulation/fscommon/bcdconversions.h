@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_SIMULATION_FSCOMMON_BCDCONVERSIONS_H
 #define SWIFT_MISC_SIMULATION_FSCOMMON_BCDCONVERSIONS_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/pq/frequency.h"
 #include <QtGlobal>
+
+#include "misc/pq/frequency.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -44,7 +45,7 @@ namespace swift::misc
             //! Horner scheme
             static quint32 hornerScheme(quint32 num, quint32 divider, quint32 factor);
         };
-    } // ns
-} // ns
+    } // namespace simulation::fscommon
+} // namespace swift::misc
 
 #endif // guard

@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/aircraftmatchersetup.h"
-#include "misc/stringutils.h"
+
 #include <QStringBuilder>
+
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAircraftMatcherSetup)
 
@@ -367,4 +369,4 @@ namespace swift::misc::simulation
         if (revLiveryIds) { mode |= ReverseLookupSwiftLiveryIds; }
         return mode;
     }
-} // namespace
+} // namespace swift::misc::simulation

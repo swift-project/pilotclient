@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/worker.h"
-#include "misc/threadutils.h"
-#include "misc/verify.h"
-#include "misc/logmessage.h"
 
 #include <future>
-#include <QTimer>
+
 #include <QPointer>
+#include <QTimer>
+
+#include "misc/logmessage.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
 
 #ifdef Q_OS_WIN32
 #    include <Windows.h>
@@ -294,4 +296,4 @@ namespace swift::misc
             workerThread->deleteLater();
         });
     }
-} // ns
+} // namespace swift::misc

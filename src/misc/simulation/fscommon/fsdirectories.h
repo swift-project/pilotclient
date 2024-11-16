@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_SIMULATION_FSDIRECTORIES_H
 #define SWIFT_MISC_SIMULATION_FSDIRECTORIES_H
 
-#include "misc/logcategories.h"
-#include "misc/swiftmiscexport.h"
-
 #include <atomic>
+
 #include <QSet>
 #include <QStringList>
+
+#include "misc/logcategories.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation::fscommon
 {
@@ -167,6 +168,6 @@ namespace swift::misc::simulation::fscommon
         //! Log the reading of config files
         static bool logConfigPathReading();
     };
-} // namespace
+} // namespace swift::misc::simulation::fscommon
 
 #endif // guard

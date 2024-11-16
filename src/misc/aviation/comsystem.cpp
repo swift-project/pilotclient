@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/comsystem.h"
-#include "misc/math/mathutils.h"
-#include "misc/pq/literals.h"
-#include "misc/stringutils.h"
 
 #include <QDBusMetaType>
 #include <QtGlobal>
+
+#include "misc/math/mathutils.h"
+#include "misc/pq/literals.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
@@ -239,4 +240,4 @@ namespace swift::misc::aviation
         default: qFatal("Wrong channel spacing"); return 0.0; // return just supressing compiler warning
         }
     }
-} // namespace
+} // namespace swift::misc::aviation

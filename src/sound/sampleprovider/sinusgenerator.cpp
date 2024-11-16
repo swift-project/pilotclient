@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "sinusgenerator.h"
-#include "misc/metadatautils.h"
+
 #include <cmath>
+
+#include "misc/metadatautils.h"
 
 using namespace swift::misc;
 
@@ -35,4 +37,4 @@ namespace swift::sound::sample_provider
     {
         m_frequencyHz = frequencyHz;
     }
-} // ns
+} // namespace swift::sound::sample_provider

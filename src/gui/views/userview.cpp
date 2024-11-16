@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/views/userview.h"
-#include "gui/models/userlistmodel.h"
 
 #include <QtGlobal>
+
+#include "gui/models/userlistmodel.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -43,4 +44,4 @@ namespace swift::gui::views
         if (!user.hasCallsign()) { return; }
         emit this->requestTextMessageWidget(user.getCallsign());
     }
-} // ns
+} // namespace swift::gui::views

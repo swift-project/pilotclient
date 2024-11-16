@@ -6,13 +6,15 @@
 #ifndef SWIFT_MISC_METACLASS_H
 #define SWIFT_MISC_METACLASS_H
 
+#include <functional>
+#include <type_traits>
+
+#include <QHash>
+#include <QLatin1String>
+#include <QString>
+
 #include "misc/invoke.h"
 #include "misc/tuple.h"
-#include <QHash>
-#include <QString>
-#include <QLatin1String>
-#include <type_traits>
-#include <functional>
 
 /*!
  * \defgroup MetaClass Metaclass system
@@ -279,7 +281,7 @@ namespace swift::misc
                 return CMetaClassIntrospector<typename T::MetaClass>();
             }
         };
-    }
+    } // namespace private_ns
 
     /*!
      * Obtain the CMetaClassIntrospector for the metaclass of T.
@@ -292,6 +294,6 @@ namespace swift::misc
         return private_ns::CMetaClassAccessor::getIntrospector<T>();
     }
 
-} // namespace
+} // namespace swift::misc
 
 #endif

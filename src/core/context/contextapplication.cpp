@@ -1,8 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
 #include "core/context/contextapplication.h"
+
+#include <algorithm>
+
+#include <QtDebug>
+
+#include "core/application.h"
 #include "core/context/contextapplicationempty.h"
 #include "core/context/contextapplicationimpl.h"
 #include "core/context/contextapplicationproxy.h"
@@ -14,9 +19,6 @@
 #include "misc/logmessage.h"
 #include "misc/settingscache.h"
 #include "misc/statusmessage.h"
-
-#include <QtDebug>
-#include <algorithm>
 
 using namespace swift::core;
 using namespace swift::core::context;
@@ -109,4 +111,4 @@ namespace swift::core::context
         if (!this->getRuntime()) { return false; }
         return this->getRuntime()->parseCommandLine(commandLine, originator);
     }
-} // ns
+} // namespace swift::core::context

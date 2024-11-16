@@ -4,9 +4,10 @@
 //! \file
 
 #include "misc/sharedstate/dbus/duplexproxy.h"
+
 #include "misc/genericdbusinterface.h"
-#include "misc/variantlist.h"
 #include "misc/identifier.h"
+#include "misc/variantlist.h"
 
 namespace swift::misc::shared_state::dbus
 {
@@ -51,4 +52,4 @@ namespace swift::misc::shared_state::dbus
     {
         m_interface->callDBus(QLatin1String("withdraw"), channel);
     }
-}
+} // namespace swift::misc::shared_state::dbus

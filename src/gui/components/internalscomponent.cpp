@@ -2,37 +2,38 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/internalscomponent.h"
-#include "gui/components/remoteaircraftselector.h"
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "core/context/contextapplication.h"
-#include "core/context/contextaudio.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextownaircraft.h"
-#include "core/context/contextsimulator.h"
-#include "misc/simulation/interpolation/interpolationlogger.h"
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "misc/aviation/callsign.h"
-#include "misc/network/client.h"
-#include "misc/network/textmessage.h"
-#include "misc/math/mathutils.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
-#include "misc/crashhandler.h"
-#include "config/buildconfig.h"
-
-#include "ui_internalscomponent.h"
 
 #include <QCheckBox>
+#include <QDateTime>
+#include <QDesktopServices>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QString>
 #include <QTextEdit>
 #include <Qt>
 #include <QtGlobal>
-#include <QDesktopServices>
-#include <QDateTime>
-#include <QMessageBox>
+
+#include "ui_internalscomponent.h"
+
+#include "config/buildconfig.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextsimulator.h"
+#include "gui/components/remoteaircraftselector.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/aviation/callsign.h"
+#include "misc/crashhandler.h"
+#include "misc/logmessage.h"
+#include "misc/math/mathutils.h"
+#include "misc/network/client.h"
+#include "misc/network/textmessage.h"
+#include "misc/simulation/interpolation/interpolationlogger.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -260,4 +261,4 @@ namespace swift::gui::components
         const bool on = sGui->getIContextNetwork()->setNetworkStatisticsEnable(checked);
         CLogMessage(this).info(u"Network statistics is %1") << boolToOnOff(on);
     }
-} // namespace
+} // namespace swift::gui::components

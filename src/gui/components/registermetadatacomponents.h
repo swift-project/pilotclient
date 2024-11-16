@@ -12,6 +12,6 @@ namespace swift::gui::components
 {
     //! Register metadata for components
     SWIFT_GUI_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

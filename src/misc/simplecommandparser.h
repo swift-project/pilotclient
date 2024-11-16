@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_SIMPLECOMMANDPARSER_H
 #define SWIFT_MISC_SIMPLECOMMANDPARSER_H
 
-#include "misc/swiftmiscexport.h"
 #include <QString>
 #include <QStringList>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -120,6 +121,6 @@ namespace swift::misc
         //! Command, starts with dot
         static bool isCommand(const QString &candidate);
     };
-}
+} // namespace swift::misc
 
 #endif // guard

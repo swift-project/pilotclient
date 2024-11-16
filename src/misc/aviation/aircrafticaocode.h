@@ -6,20 +6,20 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTICAOCODE_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTICAOCODE_H
 
-#include "misc/aviation/aircraftcategory.h"
-#include "misc/aviation/waketurbulencecategory.h"
-#include "misc/db/datastore.h"
-#include "misc/pq/length.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/statusmessagelist.h"
-#include "misc/valueobject.h"
-
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
 #include <QStringList>
+
+#include "misc/aviation/aircraftcategory.h"
+#include "misc/aviation/waketurbulencecategory.h"
+#include "misc/db/datastore.h"
+#include "misc/metaclass.h"
+#include "misc/pq/length.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftIcaoCode)
 
@@ -413,7 +413,7 @@ namespace swift::misc::aviation
     //! Id/CAircraftIcaoCode map
     using AircraftIcaoIdMap = QMap<int, CAircraftIcaoCode>;
 
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftIcaoCode)
 

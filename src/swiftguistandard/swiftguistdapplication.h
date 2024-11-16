@@ -6,12 +6,12 @@
 #ifndef SWIFTGUISTDAPPLICATION_H
 #define SWIFTGUISTDAPPLICATION_H
 
-#include "gui/guiapplication.h"
-
 #include <QCommandLineOption>
 #include <QCoreApplication>
 #include <QObject>
 #include <QString>
+
+#include "gui/guiapplication.h"
 
 /*!
  * Specialized GUI application for swift pilot client.

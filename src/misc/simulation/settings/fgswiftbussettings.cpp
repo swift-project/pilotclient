@@ -46,4 +46,4 @@ namespace swift::misc::simulation::settings
         return "DBusServer: " + m_dBusServerAddress;
     }
 
-} // ns
+} // namespace swift::misc::simulation::settings

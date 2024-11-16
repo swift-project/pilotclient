@@ -6,10 +6,12 @@
 #ifndef SWIFT_INPUT_JOYSTICK_H
 #define SWIFT_INPUT_JOYSTICK_H
 
+#include <memory>
+
+#include <QObject>
+
 #include "input/swiftinputexport.h"
 #include "misc/input/hotkeycombination.h"
-#include <QObject>
-#include <memory>
 
 namespace swift::input
 {
@@ -41,6 +43,6 @@ namespace swift::input
         //! Initializes the platform joystick devices
         virtual bool init() { return false; }
     };
-}
+} // namespace swift::input
 
 #endif // guard

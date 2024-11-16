@@ -2,11 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/vatsim/vatsimstatusfilereader.h"
-#include "core/application.h"
-#include "core/data/globalsetup.h"
-#include "misc/logmessage.h"
-#include "misc/network/url.h"
-#include "misc/statusmessage.h"
 
 #include <QByteArray>
 #include <QDateTime>
@@ -20,6 +15,12 @@
 #include <QTimer>
 #include <QUrl>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "core/data/globalsetup.h"
+#include "misc/logmessage.h"
+#include "misc/network/url.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -139,4 +140,4 @@ namespace swift::core::vatsim
             emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFailed, 0);
         }
     }
-} // ns
+} // namespace swift::core::vatsim

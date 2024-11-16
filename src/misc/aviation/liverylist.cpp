@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/liverylist.h"
+
 #include "misc/predicates.h"
 #include "misc/range.h"
 
@@ -206,4 +207,4 @@ namespace swift::misc::aviation
         }
         return models;
     }
-} // namespace
+} // namespace swift::misc::aviation

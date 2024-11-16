@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/inputmanager.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/dictionary.h"
-#include "misc/input/actionhotkey.h"
-#include "misc/range.h"
-#include "misc/sequence.h"
 
 #include <limits.h>
+
 #include <QtGlobal>
+
+#include "misc/dictionary.h"
+#include "misc/input/actionhotkey.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/range.h"
+#include "misc/sequence.h"
 
 // clazy:excludeall=detaching-member
 
@@ -195,4 +197,4 @@ namespace swift::core
         // combination
         m_lastCombination = currentCombination;
     }
-}
+} // namespace swift::core

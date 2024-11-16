@@ -58,6 +58,6 @@ namespace XSwiftBus
         bool m_visible = false;
     };
 
-}
+} // namespace XSwiftBus
 
 #endif

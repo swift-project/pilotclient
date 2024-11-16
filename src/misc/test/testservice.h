@@ -10,6 +10,14 @@
 #pragma push_macro("interface")
 #undef interface
 
+#include <QDBusConnection>
+#include <QDBusObjectPath>
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <QTextStream>
+#include <QVariantList>
+
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/airportlist.h"
@@ -26,21 +34,13 @@
 #include "misc/pq/speed.h"
 #include "misc/propertyindexref.h"
 #include "misc/propertyindexvariantmap.h"
-#include "misc/variantlist.h"
 #include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/simulation/simulatorplugininfo.h"
-#include "misc/variant.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QList>
-#include <QObject>
-#include <QString>
-#include <QTextStream>
-#include <QVariantList>
-#include <QDBusConnection>
-#include <QDBusObjectPath>
+#include "misc/variant.h"
+#include "misc/variantlist.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -52,7 +52,7 @@ namespace swift::misc::aviation
     class CCallsign;
     class CComSystem;
     class CTrack;
-}
+} // namespace swift::misc::aviation
 
 //! DBus interface for test service
 #define SWIFT_MISC_TESTSERVICE_INTERFACENAME "misc.test"
@@ -227,7 +227,7 @@ namespace swift::misc::test
         static QTextStream &err();
         bool m_verbose = true;
     };
-} // ns
+} // namespace swift::misc::test
 
 #pragma pop_macro("interface")
 

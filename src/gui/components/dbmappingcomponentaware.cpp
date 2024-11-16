@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/dbmappingcomponent.h"
 #include "gui/components/dbmappingcomponentaware.h"
 
 #include <QObject>
+
+#include "gui/components/dbmappingcomponent.h"
 
 using namespace swift::misc;
 
@@ -36,4 +37,4 @@ namespace swift::gui::components
         if (!m_mappingComponent) { return false; }
         return m_mappingComponent->showOverlayHTMLMessage(message, timeoutMs);
     }
-} // ns
+} // namespace swift::gui::components

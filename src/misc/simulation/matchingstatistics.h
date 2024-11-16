@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_SIMULATION_MATCHINGSTATISTICS_H
 #define SWIFT_MISC_SIMULATION_MATCHINGSTATISTICS_H
 
+#include "misc/collection.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/sequence.h"
 #include "misc/simulation/matchingstatisticsentry.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/timestampobjectlist.h"
-#include "misc/sequence.h"
-#include "misc/collection.h"
-#include "misc/mixin/mixinmetatype.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CMatchingStatisticsEntry, CMatchingStatistics)
 
@@ -57,7 +57,7 @@ namespace swift::misc::simulation
         //! Add a combination, normally with no duplicates (in that case count is increased
         void addAircraftAirlineCombination(CMatchingStatisticsEntry::EntryType type, const QString &sessionId, const QString &modelSetId, const QString &description, const QString &aircraftDesignator, const QString &airlineDesignator, bool avoidDuplicates = true);
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CMatchingStatistics)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CMatchingStatisticsEntry>)

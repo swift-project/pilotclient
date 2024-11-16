@@ -6,8 +6,9 @@
 #ifndef SWIFT_CORE_AUDIO_SETTINGS_H
 #define SWIFT_CORE_AUDIO_SETTINGS_H
 
-#include "misc/settingscache.h"
 #include <QString>
+
+#include "misc/settingscache.h"
 
 namespace swift::core::audio
 {
@@ -52,6 +53,6 @@ namespace swift::core::audio
             return device;
         }
     };
-} // ns
+} // namespace swift::core::audio
 
 #endif

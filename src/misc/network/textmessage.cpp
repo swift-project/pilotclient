@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/textmessage.h"
+
+#include <QStringBuilder>
+#include <Qt>
+#include <QtGlobal>
+
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/selcal.h"
 #include "misc/pq/constants.h"
 #include "misc/pq/physicalquantity.h"
 #include "misc/stringutils.h"
-
-#include <Qt>
-#include <QtGlobal>
-#include <QStringBuilder>
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
@@ -351,4 +352,4 @@ namespace swift::misc::network
         Q_ASSERT_X(false, Q_FUNC_INFO, "No comparison");
         return 0;
     }
-} // namespace
+} // namespace swift::misc::network

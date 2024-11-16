@@ -1,30 +1,32 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/webdataservices.h"
 #include "gui/components/distributorpreferencescomponent.h"
-#include "gui/components/simulatorselector.h"
-#include "gui/views/distributorview.h"
-#include "gui/views/viewbase.h"
-#include "gui/models/distributorlistmodel.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/distributor.h"
-#include "misc/simulation/distributorlistpreferences.h"
-#include "misc/logmessage.h"
-#include "misc/orderable.h"
-#include "misc/statusmessage.h"
-#include "ui_distributorpreferencescomponent.h"
 
 #include <QFlags>
+#include <QPointer>
 #include <QPushButton>
 #include <QTimer>
 #include <Qt>
 #include <QtGlobal>
-#include <QPointer>
+
+#include "ui_distributorpreferencescomponent.h"
+
+#include "core/webdataservices.h"
+#include "gui/components/simulatorselector.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/models/distributorlistmodel.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/views/distributorview.h"
+#include "gui/views/viewbase.h"
+#include "misc/logmessage.h"
+#include "misc/orderable.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/distributorlistpreferences.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -157,4 +159,4 @@ namespace swift::gui::components
         }
         ui->tvp_Distributors->updateContainerMaybeAsync(models);
     }
-} // ns
+} // namespace swift::gui::components

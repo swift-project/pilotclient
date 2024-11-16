@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "fsxsettingscomponent.h"
-#include "ui_fsxsettingscomponent.h"
-#include "simulatorfsxcommon.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextsimulator.h"
-#include "config/buildconfig.h"
 
 #include <QPointer>
 #include <QTimer>
+
+#include "simulatorfsxcommon.h"
+#include "ui_fsxsettingscomponent.h"
+
+#include "config/buildconfig.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "gui/overlaymessagesframe.h"
 
 using namespace swift::core;
 using namespace swift::core::context;
@@ -131,4 +133,4 @@ namespace swift::simplugin::fsxcommon
         CSimulatorFsxCommon *fsx = static_cast<CSimulatorFsxCommon *>(simulator);
         return fsx;
     }
-} // ns
+} // namespace swift::simplugin::fsxcommon

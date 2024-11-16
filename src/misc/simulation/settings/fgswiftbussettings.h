@@ -7,6 +7,7 @@
 #define SWIFT_MISC_SIMULATION_SETTINGS_FGSWIFTBUSSETTINGS_H
 
 #include <QString>
+
 #include "misc/dbusserver.h"
 #include "misc/settingscache.h"
 #include "misc/valueobject.h"
@@ -73,7 +74,7 @@ namespace swift::misc::simulation::settings
         //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const CFGSwiftBusSettings &settings, QString &) { return swift::misc::CDBusServer::isSessionOrSystemAddress(settings.getDBusServerAddress()) || swift::misc::CDBusServer::isQtDBusAddress(settings.getDBusServerAddress()); }
     };
-} // ns
+} // namespace swift::misc::simulation::settings
 
 Q_DECLARE_METATYPE(swift::misc::simulation::settings::CFGSwiftBusSettings)
 

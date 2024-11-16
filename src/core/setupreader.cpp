@@ -1,29 +1,30 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
 #include "core/setupreader.h"
-#include "misc/verify.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/fileutils.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/logcategories.h"
-#include "misc/logmessage.h"
-#include "misc/network/networkutils.h"
-#include "misc/network/url.h"
-#include "misc/statusmessage.h"
-#include "config/buildconfig.h"
 
-#include <QStringBuilder>
 #include <QByteArray>
 #include <QFile>
 #include <QPointer>
 #include <QScopedPointer>
 #include <QScopedPointerDeleteLater>
+#include <QStringBuilder>
 #include <QTimer>
 #include <QUrl>
 #include <QtGlobal>
+
+#include "config/buildconfig.h"
+#include "core/application.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/networkutils.h"
+#include "misc/network/url.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftdirectories.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -82,4 +83,4 @@ namespace swift::core
     {
         return m_setup;
     }
-} // namespace
+} // namespace swift::core

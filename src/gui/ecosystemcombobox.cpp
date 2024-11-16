@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "ecosystemcombobox.h"
+
 #include "misc/network/ecosystemlist.h"
 
 using namespace swift::misc::network;
@@ -46,4 +47,4 @@ namespace swift::gui
             this->addItem(e.getSystemString());
         }
     }
-} // ns
+} // namespace swift::gui

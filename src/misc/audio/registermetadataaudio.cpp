@@ -4,11 +4,11 @@
 #include "misc/audio/registermetadataaudio.h"
 
 // Audio headers
+#include <QDBusMetaType>
+
 #include "misc/audio/audiodeviceinfo.h"
 #include "misc/audio/audiodeviceinfolist.h"
 #include "misc/audio/audiosettings.h"
-
-#include <QDBusMetaType>
 
 namespace swift::misc::audio
 {
@@ -23,6 +23,6 @@ namespace swift::misc::audio
         qDBusRegisterMetaType<CNotificationSounds::NotificationFlag>();
         qDBusRegisterMetaType<CAudioDeviceInfo::DeviceType>();
     }
-}
+} // namespace swift::misc::audio
 
 // ns

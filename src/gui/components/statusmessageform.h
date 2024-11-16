@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_STATUSMESSAGEFORM_H
 #define SWIFT_GUI_COMPONENTS_STATUSMESSAGEFORM_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/statusmessage.h"
-#include "misc/variant.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessage.h"
+#include "misc/variant.h"
 
 class QWidget;
 
@@ -54,5 +54,5 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CStatusMessageForm> ui;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

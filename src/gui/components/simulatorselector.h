@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_COMPONENTS_SIMULATORSELECTOR_H
 #define SWIFT_GUI_COMPONENTS_SIMULATORSELECTOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/digestsignal.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/digestsignal.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/simulatorinfo.h"
 
 namespace Ui
 {
@@ -149,6 +149,6 @@ namespace swift::gui::components
         swift::misc::CData<swift::misc::simulation::data::TSimulatorLastSelection> m_currentSimulator { this, &CSimulatorSelector::changedLastSelectionRb }; //!< current simulator (used with radio buttons)
         swift::misc::CData<swift::misc::simulation::data::TSimulatorLastSelections> m_currentSimulators { this, &CSimulatorSelector::changedLastSelectionCb }; //!< current simulators (used with multiple checkboxes)
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

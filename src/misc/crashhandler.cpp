@@ -2,22 +2,23 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/crashhandler.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/logmessage.h"
-#include "misc/filelogger.h"
-#include "config/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QStringBuilder>
 
+#include "config/buildconfig.h"
+#include "misc/directoryutils.h"
+#include "misc/filelogger.h"
+#include "misc/logmessage.h"
+#include "misc/swiftdirectories.h"
+
 #ifdef SWIFT_USE_CRASHPAD
 #    if defined(Q_OS_WIN) && !defined(NOMINMAX)
 #        define NOMINMAX
 #    endif
-#    include "crashpad/client/crashpad_client.h"
 #    include "crashpad/client/crash_report_database.h"
+#    include "crashpad/client/crashpad_client.h"
 #    include "crashpad/client/settings.h"
 #    include "crashpad/client/simulate_crash.h"
 #endif
@@ -199,4 +200,4 @@ namespace swift::misc
 
     CCrashHandler::CCrashHandler(QObject *parent) : QObject(parent)
     {}
-}
+} // namespace swift::misc

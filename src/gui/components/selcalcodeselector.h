@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_SELCALCODESELECTOR_H
 #define SWIFT_GUI_SELCALCODESELECTOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/aviation/selcal.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/selcal.h"
 
 class QWidget;
 
@@ -74,6 +74,6 @@ namespace swift::gui::components
         //! Set valid/invalid icon
         void setValidityHint();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

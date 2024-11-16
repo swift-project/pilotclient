@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_NETWORK_ECOSYSTEMPROVIDER_H
 #define SWIFT_MISC_NETWORK_ECOSYSTEMPROVIDER_H
 
+#include <QReadWriteLock>
+
 #include "misc/network/ecosystem.h"
 #include "misc/provider.h"
-#include <QReadWriteLock>
 
 namespace swift::misc::network
 {
@@ -87,7 +88,7 @@ namespace swift::misc::network
         //! Constructor
         CEcosystemAware(IEcosystemProvider *EcosystemProvider) : IProviderAware(EcosystemProvider) { Q_ASSERT(EcosystemProvider); }
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_INTERFACE(swift::misc::network::IEcosystemProvider, "org.swift-project.misc::network::iecosystemprovider")
 

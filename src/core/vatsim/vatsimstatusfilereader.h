@@ -6,14 +6,14 @@
 #ifndef SWIFT_CORE_VATSIM_VATSIMSTATUSFILEREADER_H
 #define SWIFT_CORE_VATSIM_VATSIMSTATUSFILEREADER_H
 
-#include "core/swiftcoreexport.h"
+#include <QObject>
+
 #include "core/data/vatsimsetup.h"
+#include "core/swiftcoreexport.h"
+#include "core/threadedreader.h"
 #include "misc/datacache.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/url.h"
-#include "core/threadedreader.h"
-
-#include <QObject>
 
 class QNetworkReply;
 
@@ -56,6 +56,6 @@ namespace swift::core::vatsim
 
         swift::misc::CData<swift::core::data::TVatsimSetup> m_lastGoodSetup { this };
     };
-} // ns
+} // namespace swift::core::vatsim
 
 #endif // guard

@@ -6,6 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_LISTMODELFILTER_H
 #define SWIFT_GUI_MODELS_LISTMODELFILTER_H
 
+#include <memory>
+
+#include <QString>
+#include <Qt>
+
 #include "misc/aviation/aircrafticaocodelist.h"
 #include "misc/aviation/airlineicaocodelist.h"
 #include "misc/aviation/airportlist.h"
@@ -23,10 +28,6 @@
 #include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/statusmessagelist.h"
 #include "misc/variant.h"
-
-#include <QString>
-#include <Qt>
-#include <memory>
 
 namespace swift::gui::models
 {
@@ -77,5 +78,5 @@ namespace swift::gui::models
         //! Get the filter, this is the filter itself, not its widget or dialog
         virtual std::unique_ptr<IModelFilter<ContainerType>> createModelFilter() const = 0;
     };
-} // namespace
+} // namespace swift::gui::models
 #endif // guard

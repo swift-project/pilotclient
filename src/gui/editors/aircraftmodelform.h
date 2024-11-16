@@ -7,8 +7,8 @@
 #define SWIFT_GUI_EDITORS_AIRCRAFTMODELFORM_H
 
 #include "gui/editors/form.h"
-#include "misc/aviation/livery.h"
 #include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/livery.h"
 #include "misc/simulation/distributor.h"
 
 namespace Ui
@@ -85,6 +85,6 @@ namespace swift::gui::editors
     private:
         QScopedPointer<Ui::CAircraftModelForm> ui;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

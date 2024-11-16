@@ -6,13 +6,15 @@
 #ifndef SWIFT_MISC_VARIANTLIST_H
 #define SWIFT_MISC_VARIANTLIST_H
 
-#include "misc/swiftmiscexport.h"
+#include <iterator>
+
+#include <QMetaType>
+#include <QVariantList>
+
 #include "misc/collection.h"
 #include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/variant.h"
-#include <QVariantList>
-#include <QMetaType>
-#include <iterator>
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CVariant, CVariantList)
 
@@ -63,7 +65,7 @@ namespace swift::misc
         //! True if any element of the list matches the given event.
         bool matches(const CVariant &event) const;
     };
-}
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CVariantList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CVariant>)

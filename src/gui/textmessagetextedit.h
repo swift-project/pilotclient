@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_TEXTMESSAGETEXTEDIT_H
 #define SWIFT_GUI_TEXTMESSAGETEXTEDIT_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/network/textmessagelist.h"
-
 #include <QObject>
 #include <QString>
-#include <QTextEdit>
 #include <QTextDocument>
+#include <QTextEdit>
+
+#include "gui/swiftguiexport.h"
+#include "misc/network/textmessagelist.h"
 
 class QAction;
 class QPoint;
@@ -94,6 +94,6 @@ namespace swift::gui
         QAction *m_actionWithRecipient = nullptr;
         QAction *m_actionWordWrap = nullptr;
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

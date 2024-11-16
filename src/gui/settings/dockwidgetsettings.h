@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_SETTINGS_DOCKWIDGET_H
 #define SWIFT_GUI_SETTINGS_DOCKWIDGET_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/settingscache.h"
-#include "misc/propertyindex.h"
-#include "misc/dictionary.h"
-#include "misc/variant.h"
-
 #include <QMap>
-#include <QString>
 #include <QMetaType>
+#include <QString>
+
+#include "gui/swiftguiexport.h"
+#include "misc/dictionary.h"
+#include "misc/propertyindex.h"
+#include "misc/settingscache.h"
+#include "misc/variant.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CDockWidgetSettings)
 
@@ -125,7 +125,7 @@ namespace swift::gui::settings
             return name;
         }
     };
-} // ns
+} // namespace swift::gui::settings
 
 Q_DECLARE_METATYPE(swift::gui::settings::CDockWidgetSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::gui::settings::CDockWidgetSettings>)

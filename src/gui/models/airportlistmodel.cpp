@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/airportlistmodel.h"
+
+#include <Qt>
+#include <QtGlobal>
+
 #include "gui/models/columnformatters.h"
 #include "gui/models/columns.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/pq/length.h"
 #include "misc/pq/units.h"
-
-#include <Qt>
-#include <QtGlobal>
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::geo;
@@ -38,4 +39,4 @@ namespace swift::gui::models
         (void)QT_TRANSLATE_NOOP("ModelAirportList", "elevation");
         (void)QT_TRANSLATE_NOOP("ModelAirportList", "bearing");
     }
-} // ns
+} // namespace swift::gui::models

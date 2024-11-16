@@ -27,4 +27,4 @@ namespace swift::misc::shared_state
     {
         m_eventHandler(param);
     }
-}
+} // namespace swift::misc::shared_state

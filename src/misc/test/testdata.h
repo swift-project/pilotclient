@@ -24,7 +24,7 @@ namespace swift::misc
         class CAirlineIcaoCode;
         class CLivery;
         class CFlightPlan;
-    }
+    } // namespace aviation
     namespace geo
     {
         class CCoordinateGeodetic;
@@ -34,12 +34,12 @@ namespace swift::misc
         class CUser;
         class CUserList;
         class CServer;
-    }
+    } // namespace network
     namespace simulation
     {
         class CAircraftModel;
         class CSimulatedAircraft;
-    }
+    } // namespace simulation
 
     namespace test
     {
@@ -140,7 +140,7 @@ namespace swift::misc
             //! Prefilled flightplan from EDDM-EDDF
             static const swift::misc::aviation::CFlightPlan &getFlightPlan();
         };
-    } // ns
-} // ns
+    } // namespace test
+} // namespace swift::misc
 
 #endif

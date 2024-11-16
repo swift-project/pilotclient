@@ -2,6 +2,7 @@
 //  SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/ongroundinfo.h"
+
 #include "misc/verify.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, COnGroundInfo)
@@ -177,4 +178,4 @@ namespace swift::misc::aviation
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-}
+} // namespace swift::misc::aviation

@@ -2,9 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "pbhsform.h"
-#include "ui_pbhsform.h"
-#include "misc/stringutils.h"
+
 #include <QDoubleValidator>
+
+#include "ui_pbhsform.h"
+
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -212,4 +215,4 @@ namespace swift::gui::editors
         ui->hs_Heading->setValue(0);
     }
 
-} // ns
+} // namespace swift::gui::editors

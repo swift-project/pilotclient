@@ -203,4 +203,4 @@ namespace swift::misc::simulation
         if (!this->hasProvider()) { return CInterpolationAndRenderingSetupGlobal(); }
         return this->provider()->getInterpolationSetupGlobal();
     }
-} // namespace
+} // namespace swift::misc::simulation

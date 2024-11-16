@@ -2,15 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "directplaypeer.h"
+
+#include <QDebug>
+#include <QFile>
+#include <QScopedPointer>
+#include <QStringList>
+#include <QTimer>
+
+#include "directplayerror.h"
 #include "directplayutils.h"
 #include "multiplayerpacketparser.h"
-#include "directplayerror.h"
+
 #include "misc/logmessage.h"
-#include <QDebug>
-#include <QTimer>
-#include <QFile>
-#include <QStringList>
-#include <QScopedPointer>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -322,4 +325,4 @@ namespace swift::simplugin::fs9
     {
         m_playerUser = 0;
     }
-} // ns
+} // namespace swift::simplugin::fs9

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "relativeaircraftposition.h"
+
 #include "ui_relativeaircraftposition.h"
 
 using namespace swift::misc::geo;
@@ -45,4 +46,4 @@ namespace swift::gui::editors
         ui->le_Info->setText(
             QStringLiteral("%1 / %2").arg(m_originCoordinate.toQString(true), p.toQString(true)));
     }
-} // ns
+} // namespace swift::gui::editors

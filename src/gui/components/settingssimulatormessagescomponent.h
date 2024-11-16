@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSSIMULATORMESSAGESCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSSIMULATORMESSAGESCOMPONENT_H
 
-#include "misc/simulation/settings/simulatorsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/simulation/settings/simulatorsettings.h"
 
 namespace Ui
 {
@@ -41,5 +42,5 @@ namespace swift::gui::components
         QScopedPointer<Ui::CSettingsSimulatorMessagesComponent> ui;
         swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorMessages> m_settings { this }; //!< settings for messages
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

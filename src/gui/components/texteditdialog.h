@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_TEXTEDITDIALOG_H
 #define SWIFT_GUI_COMPONENTS_TEXTEDITDIALOG_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 class QTextEdit;
 
@@ -40,5 +40,5 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CTextEditDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

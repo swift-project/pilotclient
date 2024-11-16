@@ -6,8 +6,6 @@
 #ifndef SWIFT_MISC_ICONS_H
 #define SWIFT_MISC_ICONS_H
 
-#include "misc/swiftmiscexport.h"
-
 #include <QIcon>
 #include <QImage>
 #include <QMap>
@@ -15,6 +13,8 @@
 #include <QPixmap>
 #include <QString>
 #include <Qt>
+
+#include "misc/swiftmiscexport.h"
 
 class QSize;
 
@@ -765,7 +765,7 @@ namespace swift::misc
         //! File cache for the loaded files
         static QMap<QString, QPixmap> &getResourceFileCache();
     };
-}
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIcons::IconIndex)
 

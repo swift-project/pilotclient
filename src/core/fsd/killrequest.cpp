@@ -33,4 +33,4 @@ namespace swift::core::fsd
         };
         return KillRequest(tokens[0], tokens[1], tokens.size() > 2 ? tokens[2] : QString());
     }
-}
+} // namespace swift::core::fsd

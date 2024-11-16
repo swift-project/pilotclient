@@ -6,9 +6,6 @@
 #ifndef SWIFT_MISC_DBUSSERVER_H
 #define SWIFT_MISC_DBUSSERVER_H
 
-#include "misc/logcategories.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QDBusConnection>
 #include <QDBusError>
 #include <QFlags>
@@ -16,6 +13,9 @@
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "misc/logcategories.h"
+#include "misc/swiftmiscexport.h"
 
 class QDBusServer;
 
@@ -156,6 +156,6 @@ namespace swift::misc
         //! Called when a new DBus client has connected in P2P mode
         bool registerObjectsWithP2PConnection(QDBusConnection connection);
     };
-}
+} // namespace swift::misc
 
 #endif // guard

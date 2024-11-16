@@ -67,6 +67,6 @@ namespace swift::gui::components
     private:
         CInitialDataLoadComponent *m_config = nullptr;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

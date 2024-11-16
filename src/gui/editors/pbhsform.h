@@ -6,13 +6,14 @@
 #ifndef SWIFT_GUI_EDITORS_PBHSFORM_H
 #define SWIFT_GUI_EDITORS_PBHSFORM_H
 
+#include <QFrame>
+#include <QScopedPointer>
+
 #include "gui/editors/form.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/heading.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/speed.h"
-#include <QFrame>
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -103,6 +104,6 @@ namespace swift::gui::editors
 
         QScopedPointer<Ui::CPbhsForm> ui;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

@@ -2,9 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "marginsinput.h"
-#include "ui_marginsinput.h"
-#include "gui/stylesheetutility.h"
+
 #include <QIntValidator>
+
+#include "ui_marginsinput.h"
+
+#include "gui/stylesheetutility.h"
 
 namespace swift::gui::components
 {
@@ -63,4 +66,4 @@ namespace swift::gui::components
         emit this->changedMargins(m);
     }
 
-} // ns
+} // namespace swift::gui::components

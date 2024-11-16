@@ -6,17 +6,17 @@
 #ifndef SWIFT_MISC_SIMULATION_XPLANE_AIRCRAFTMODELLOADERXPLANE_H
 #define SWIFT_MISC_SIMULATION_XPLANE_AIRCRAFTMODELLOADERXPLANE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/aircraftmodelloader.h"
-#include "misc/simulation/simulatorinfo.h"
-
 #include <QObject>
 #include <QPointer>
 #include <QString>
 #include <QStringList>
 #include <QVector>
 #include <QtGlobal>
+
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodelloader.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -122,7 +122,7 @@ namespace swift::misc
             static const QString &fileFilterFlyable();
             static const QString &fileFilterCsl();
         };
-    } // namespace
-} // namespace
+    } // namespace simulation::xplane
+} // namespace swift::misc
 
 #endif // guard

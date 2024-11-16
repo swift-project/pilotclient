@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/context.h"
+
 #include "core/application.h"
 #include "misc/logcategories.h"
 
@@ -96,4 +97,4 @@ namespace swift::core::context
         static const CStatusMessage m(static_cast<IContext *>(nullptr), CStatusMessage::SeverityWarning, u"empty context");
         return m;
     }
-} // ns
+} // namespace swift::core::context

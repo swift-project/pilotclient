@@ -43,6 +43,6 @@ namespace swift::simplugin::msfs
     protected:
         virtual void startImpl() override;
     };
-} // ns
+} // namespace swift::simplugin::msfs
 
 #endif // guard

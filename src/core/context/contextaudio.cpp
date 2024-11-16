@@ -2,18 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextaudio.h"
+
+#include "config/buildconfig.h"
+#include "core/afv/clients/afvclient.h"
+#include "core/context/contextaudioimpl.h"
+#include "core/context/contextaudioproxy.h"
 #include "core/context/contextnetwork.h" // for user login
 #include "core/context/contextownaircraft.h" // for COM integration
 #include "core/context/contextsimulator.h" // for COM intergration
-#include "core/context/contextaudioimpl.h"
-#include "core/context/contextaudioproxy.h"
-#include "core/afv/clients/afvclient.h"
-#include "misc/simplecommandparser.h"
 #include "misc/dbusserver.h"
+#include "misc/icons.h"
+#include "misc/simplecommandparser.h"
 #include "misc/stringutils.h"
 #include "misc/verify.h"
-#include "misc/icons.h"
-#include "config/buildconfig.h"
 
 #ifdef Q_OS_WIN
 #    include "comdef.h"
@@ -644,6 +645,6 @@ namespace swift::core::context
         return sApp && sApp->isLocalContext();
     }
 
-} // ns
+} // namespace swift::core::context
 
 //! \endcond

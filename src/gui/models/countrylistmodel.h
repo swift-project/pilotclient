@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_MODELS_COUNTRYLISTMODEL_H
 #define SWIFT_GUI_MODELS_COUNTRYLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/listmodeldbobjects.h"
 #include <QString>
+
+#include "gui/models/listmodeldbobjects.h"
+#include "gui/swiftguiexport.h"
 
 class QObject;
 
@@ -16,7 +17,7 @@ namespace swift::misc
 {
     class CCountry;
     class CCountryList;
-}
+} // namespace swift::misc
 
 namespace swift::gui::models
 {
@@ -33,5 +34,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CCountryListModel() {}
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

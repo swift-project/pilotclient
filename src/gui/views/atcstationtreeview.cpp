@@ -2,18 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/views/atcstationtreeview.h"
-#include "gui/models/atcstationtreemodel.h"
+
+#include <QAction>
+#include <QFlags>
+#include <QMenu>
+#include <QModelIndex>
+#include <QtGlobal>
+
+#include "config/buildconfig.h"
 #include "gui/menus/menuaction.h"
+#include "gui/models/atcstationtreemodel.h"
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsign.h"
 #include "misc/icons.h"
-#include "config/buildconfig.h"
-
-#include <QFlags>
-#include <QMenu>
-#include <QtGlobal>
-#include <QAction>
-#include <QModelIndex>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -189,4 +190,4 @@ namespace swift::gui::views
         if (s.getCallsign().isEmpty()) { return; }
         emit this->requestTextMessageWidget(s.getCallsign());
     }
-} // namespace
+} // namespace swift::gui::views

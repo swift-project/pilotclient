@@ -6,12 +6,13 @@
 #ifndef SWIFT_CORE_FSD_SERIALIZER_H
 #define SWIFT_CORE_FSD_SERIALIZER_H
 
+#include <QString>
+#include <QtGlobal>
+
 #include "enums.h"
+
 #include "misc/aviation/transponder.h"
 #include "misc/network/facilitytype.h"
-
-#include <QtGlobal>
-#include <QString>
 
 namespace swift::core::fsd
 {
@@ -73,6 +74,6 @@ namespace swift::core::fsd
     template <>
     AtisLineType fromQString(const QString &str);
     //! \endcond
-}
+} // namespace swift::core::fsd
 
 #endif // guard

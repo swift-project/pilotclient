@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_SIMULATION_MODELCONVERTERX_H
 #define SWIFT_MISC_SIMULATION_MODELCONVERTERX_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/settingscache.h"
+#include <QFile>
 #include <QProcess>
 #include <QString>
-#include <QFile>
+
+#include "misc/settingscache.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -52,7 +53,7 @@ namespace swift::misc::simulation
                 return f.exists();
             }
         };
-    } // ns
-} // ns
+    } // namespace settings
+} // namespace swift::misc::simulation
 
 #endif // guard

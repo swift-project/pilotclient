@@ -6,19 +6,10 @@
 #ifndef SWIFT_MISC_DICTIONARY_H
 #define SWIFT_MISC_DICTIONARY_H
 
-#include "misc/containerbase.h"
-#include "misc/mixin/mixindbus.h"
-#include "misc/mixin/mixindatastream.h"
-#include "misc/inheritancetraits.h"
-#include "misc/iterator.h"
-#include "misc/mixin/mixinjson.h"
-#include "misc/metaclass.h"
-#include "misc/predicates.h"
-#include "misc/range.h"
-#include "misc/mixin/mixinstring.h"
-#include "misc/typetraits.h"
-#include "misc/mixin/mixinhash.h"
-#include "misc/swiftmiscexport.h"
+#include <algorithm>
+#include <initializer_list>
+#include <type_traits>
+#include <utility>
 
 #include <QDBusArgument>
 #include <QHash>
@@ -31,10 +22,20 @@
 #include <QString>
 #include <QtDebug>
 #include <QtGlobal>
-#include <algorithm>
-#include <initializer_list>
-#include <type_traits>
-#include <utility>
+
+#include "misc/containerbase.h"
+#include "misc/inheritancetraits.h"
+#include "misc/iterator.h"
+#include "misc/metaclass.h"
+#include "misc/mixin/mixindatastream.h"
+#include "misc/mixin/mixindbus.h"
+#include "misc/mixin/mixinhash.h"
+#include "misc/mixin/mixinjson.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/predicates.h"
+#include "misc/range.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/typetraits.h"
 
 namespace swift::misc
 {
@@ -63,7 +64,7 @@ namespace swift::misc
             };
         };
         //! \endcond
-    }
+    } // namespace private_ns
 
     /*!
      * Trait to select the appropriate default associative container type depending on what the key type supports.

@@ -2,13 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/windllutils.h"
+
+#include <QCoreApplication>
 #include <QDir>
 #include <QtGlobal>
-#include <QCoreApplication>
 
 #ifdef Q_OS_WIN
+// clang-format off
 #    include <windows.h>
 #    include <tlhelp32.h>
+// clang-format on
 #endif
 
 namespace swift::misc
@@ -47,7 +50,7 @@ namespace swift::misc
             const QString queryString = QString::fromWCharArray(szQueryString, dwBytes);
             return queryString;
         }
-    } // ns
+    } // namespace PrivateWindows
 
     CWinDllUtils::DLLInfo CWinDllUtils::getDllInfo(const QString &dllFile)
     {
@@ -200,4 +203,4 @@ namespace swift::misc
     }
 #endif
 
-} // ns
+} // namespace swift::misc

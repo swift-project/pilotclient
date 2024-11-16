@@ -6,30 +6,31 @@
 #ifndef SWIFT_GUI_OVERLAYMESSAGES_FRAME_H
 #define SWIFT_GUI_OVERLAYMESSAGES_FRAME_H
 
-#include "gui/components/textmessagecomponenttab.h"
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/overlaymessages.h"
-#include "gui/guiutility.h"
-#include "gui/swiftguiexport.h"
-#include "misc/network/textmessage.h"
-#include "misc/statusmessagelist.h"
-#include "misc/pixmap.h"
-#include "misc/logmessage.h"
-#include "misc/variant.h"
+#include <functional>
 
-#include <QKeyEvent>
-#include <QFrame>
-#include <QTabWidget>
-#include <QWizardPage>
 #include <QDockWidget>
-#include <QTableView>
-#include <QTreeView>
+#include <QFrame>
+#include <QKeyEvent>
 #include <QMessageBox>
 #include <QObject>
 #include <QSize>
-#include <QUrl>
 #include <QString>
-#include <functional>
+#include <QTabWidget>
+#include <QTableView>
+#include <QTreeView>
+#include <QUrl>
+#include <QWizardPage>
+
+#include "gui/components/textmessagecomponenttab.h"
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/guiutility.h"
+#include "gui/overlaymessages.h"
+#include "gui/swiftguiexport.h"
+#include "misc/logmessage.h"
+#include "misc/network/textmessage.h"
+#include "misc/pixmap.h"
+#include "misc/statusmessagelist.h"
+#include "misc/variant.h"
 
 class QKeyEvent;
 class QPaintEvent;
@@ -490,6 +491,6 @@ namespace swift::gui
         explicit COverlayMessagesTreeView(QWidget *parent = nullptr);
     };
 
-} // ns
+} // namespace swift::gui
 
 #endif // guard

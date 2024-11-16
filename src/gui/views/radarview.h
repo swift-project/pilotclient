@@ -6,8 +6,9 @@
 #ifndef SWIFT_GUI_RADARVIEW_H
 #define SWIFT_GUI_RADARVIEW_H
 
-#include "gui/swiftguiexport.h"
 #include <QGraphicsView>
+
+#include "gui/swiftguiexport.h"
 
 namespace swift::gui::views
 {
@@ -34,6 +35,6 @@ namespace swift::gui::views
         //! \copydoc QWidget::wheelEvent
         virtual void wheelEvent(QWheelEvent *event) override;
     };
-} // ns
+} // namespace swift::gui::views
 
 #endif // guard

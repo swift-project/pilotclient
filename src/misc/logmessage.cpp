@@ -66,6 +66,6 @@ namespace swift::misc
             preformatted(msg);
         }
     }
-} // ns
+} // namespace swift::misc
 
 //! \endcond

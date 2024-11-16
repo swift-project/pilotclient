@@ -1,20 +1,22 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
-#include "misc/directoryutils.h"
-#include "samplesalgorithm.h"
-#include "sampleschangeobject.h"
-#include "samplescontainer.h"
-#include "samplesjson.h"
-#include "samplesmetadata.h"
-#include "samplesperformance.h"
-#include "samplesfile.h"
-
 #include <stdio.h>
+
 #include <QCoreApplication>
 #include <QString>
 #include <QTextStream>
+
+#include "samplesalgorithm.h"
+#include "sampleschangeobject.h"
+#include "samplescontainer.h"
+#include "samplesfile.h"
+#include "samplesjson.h"
+#include "samplesmetadata.h"
+#include "samplesperformance.h"
+
+#include "core/application.h"
+#include "misc/directoryutils.h"
 
 //! \file
 //! \ingroup samplekmisc

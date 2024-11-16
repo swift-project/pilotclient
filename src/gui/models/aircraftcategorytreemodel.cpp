@@ -2,13 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/aircraftcategorytreemodel.h"
-#include "gui/models/columnformatters.h"
-#include "gui/models/columns.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/icon.h"
-#include "misc/threadutils.h"
-#include "misc/variant.h"
-#include "misc/propertyindex.h"
 
 #include <QList>
 #include <QMap>
@@ -18,6 +11,14 @@
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/models/columns.h"
+#include "misc/icon.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/propertyindex.h"
+#include "misc/threadutils.h"
+#include "misc/variant.h"
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -89,4 +90,4 @@ namespace swift::gui::models
         m_categories.clear();
         QStandardItemModel::clear();
     }
-} // namespace
+} // namespace swift::gui::models

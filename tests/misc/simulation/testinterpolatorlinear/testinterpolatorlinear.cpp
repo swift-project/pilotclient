@@ -5,9 +5,16 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/simulation/interpolation/interpolator.h"
-#include "misc/simulation/interpolation/interpolatorlinear.h"
-#include "misc/simulation/remoteaircraftproviderdummy.h"
+#include <QCoreApplication>
+#include <QDebug>
+#include <QEventLoop>
+#include <QScopedPointer>
+#include <QTest>
+#include <QTime>
+#include <QtDebug>
+
+#include "test.h"
+
 #include "misc/aviation/aircraftengine.h"
 #include "misc/aviation/aircraftenginelist.h"
 #include "misc/aviation/aircraftlights.h"
@@ -19,21 +26,15 @@
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
+#include "misc/mixin/mixincompare.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/length.h"
 #include "misc/pq/physicalquantity.h"
 #include "misc/pq/speed.h"
 #include "misc/pq/units.h"
-#include "misc/mixin/mixincompare.h"
-#include "test.h"
-
-#include <QCoreApplication>
-#include <QDebug>
-#include <QEventLoop>
-#include <QScopedPointer>
-#include <QTest>
-#include <QTime>
-#include <QtDebug>
+#include "misc/simulation/interpolation/interpolator.h"
+#include "misc/simulation/interpolation/interpolatorlinear.h"
+#include "misc/simulation/remoteaircraftproviderdummy.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -198,7 +199,7 @@ namespace MiscTest
         p.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         return p;
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestInterpolatorLinear);

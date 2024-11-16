@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextownaircraftproxy.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/dbus.h"
-#include "misc/dbusserver.h"
-#include "misc/genericdbusinterface.h"
 
 #include <QDBusConnection>
 #include <QLatin1String>
 #include <QObject>
 #include <QtGlobal>
+
+#include "misc/dbus.h"
+#include "misc/dbusserver.h"
+#include "misc/genericdbusinterface.h"
+#include "misc/simulation/aircraftmodel.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -139,4 +140,4 @@ namespace swift::core::context
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("parseCommandLine"), commandLine, originator);
     }
-} // namespace
+} // namespace swift::core::context

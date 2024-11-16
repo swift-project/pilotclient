@@ -2,30 +2,32 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/dbownmodelscomponent.h"
-#include "gui/components/simulatorselector.h"
-#include "gui/menus/aircraftmodelmenus.h"
-#include "gui/menus/menuaction.h"
-#include "gui/views/aircraftmodelview.h"
-#include "gui/models/aircraftmodellistmodel.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "core/db/databaseutils.h"
-#include "misc/simulation/aircraftmodelloaderprovider.h"
-#include "misc/icons.h"
-#include "misc/swiftdirectories.h"
-#include "misc/logmessage.h"
-#include "misc/processctrl.h"
-#include "misc/statusmessage.h"
-#include "config/buildconfig.h"
-#include "ui_dbownmodelscomponent.h"
 
 #include <QAction>
-#include <QIcon>
 #include <QDir>
-#include <QtGlobal>
-#include <QPointer>
 #include <QFileDialog>
+#include <QIcon>
 #include <QMessageBox>
+#include <QPointer>
+#include <QtGlobal>
+
+#include "ui_dbownmodelscomponent.h"
+
+#include "config/buildconfig.h"
+#include "core/db/databaseutils.h"
+#include "core/webdataservices.h"
+#include "gui/components/simulatorselector.h"
+#include "gui/guiapplication.h"
+#include "gui/menus/aircraftmodelmenus.h"
+#include "gui/menus/menuaction.h"
+#include "gui/models/aircraftmodellistmodel.h"
+#include "gui/views/aircraftmodelview.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/processctrl.h"
+#include "misc/simulation/aircraftmodelloaderprovider.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -825,4 +827,4 @@ namespace swift::gui::components
         if (!m_modelLoader) { return; }
         m_modelLoader->clearCachedModels(simulator);
     }
-} // ns
+} // namespace swift::gui::components

@@ -5,20 +5,22 @@
 //! \ingroup samplemiscsim
 
 #include "samplesfscommon.h"
-#include "sampleutils.h"
-#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "misc/simulation/fscommon/aircraftcfgparser.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/simulatorinfo.h"
 
 #include <QByteArray>
+#include <QDir>
+#include <QElapsedTimer>
 #include <QJsonDocument>
 #include <QString>
 #include <QTemporaryFile>
 #include <QTextStream>
-#include <QElapsedTimer>
-#include <QDir>
 #include <QtGlobal>
+
+#include "sampleutils.h"
+
+#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "misc/simulation/fscommon/aircraftcfgparser.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorinfo.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -83,4 +85,4 @@ namespace swift::sample
         // restore settings: DO NOT SAVE !!!
         multiSettings.setSettings(originalSettings, sim);
     }
-} // namespace
+} // namespace swift::sample

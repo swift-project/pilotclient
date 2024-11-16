@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbaircraftcategorycomponent.h"
-#include "ui_dbaircraftcategorycomponent.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
 
 #include <QStringBuilder>
+
+#include "ui_dbaircraftcategorycomponent.h"
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
 
 using namespace swift::core;
 using namespace swift::misc::network;
@@ -67,4 +69,4 @@ namespace swift::gui::components
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AircraftCategoryEntity, QDateTime());
     }
 
-} // ns
+} // namespace swift::gui::components

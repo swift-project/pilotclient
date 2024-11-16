@@ -2,21 +2,30 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextnetworkimpl.h"
-#include "core/context/contextownaircraft.h"
-#include "core/context/contextownaircraftimpl.h"
-#include "core/context/contextsimulatorimpl.h"
+
+#include <stdbool.h>
+
+#include <QStringBuilder>
+#include <QTimer>
+
+#include "config/buildconfig.h"
 #include "core/airspaceanalyzer.h"
 #include "core/airspacemonitor.h"
 #include "core/application.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextownaircraftimpl.h"
+#include "core/context/contextsimulatorimpl.h"
 #include "core/corefacade.h"
 #include "core/fsd/fsdclient.h"
 #include "core/webdataservices.h"
-#include "misc/simulation/simulatorplugininfo.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/atcstationlist.h"
-#include "misc/aviation/comsystem.h"
 #include "misc/aviation/callsign.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/dbusserver.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/networkutils.h"
 #include "misc/network/textmessage.h"
@@ -24,17 +33,10 @@
 #include "misc/pq/frequency.h"
 #include "misc/pq/time.h"
 #include "misc/pq/units.h"
-#include "misc/dbusserver.h"
-#include "misc/logcategories.h"
-#include "misc/logmessage.h"
 #include "misc/sequence.h"
 #include "misc/simplecommandparser.h"
+#include "misc/simulation/simulatorplugininfo.h"
 #include "misc/stringutils.h"
-#include "config/buildconfig.h"
-
-#include <stdbool.h>
-#include <QStringBuilder>
-#include <QTimer>
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -1341,4 +1343,4 @@ namespace swift::core::context
         Q_ASSERT_X(c || !rawFsdMessageReceivedSlot, Q_FUNC_INFO, "connect failed");
         return c;
     }
-} // namespace
+} // namespace swift::core::context

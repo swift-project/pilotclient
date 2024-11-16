@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/pq/registermetadatapq.h"
+
 #include "misc/pq/acceleration.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/frequency.h"
@@ -40,4 +41,4 @@ namespace swift::misc::physical_quantities
         CTime::registerMetadata();
         CTimeUnit::registerMetadata();
     }
-} // ns
+} // namespace swift::misc::physical_quantities

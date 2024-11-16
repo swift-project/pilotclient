@@ -4,22 +4,24 @@
 //! \file
 //! \ingroup samplemiscsim
 
-#include "samplesfscommon.h"
-#include "samplesfsx.h"
-#include "samplesp3d.h"
-#include "samplesfsuipc.h"
-#include "samplesmodelmapping.h"
-#include "samplesvpilotrules.h"
-#include "core/application.h"
-#include "misc/directoryutils.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <QCoreApplication>
+#include <QElapsedTimer>
 #include <QString>
 #include <QTextStream>
-#include <QElapsedTimer>
 #include <QtGlobal>
+
+#include "samplesfscommon.h"
+#include "samplesfsuipc.h"
+#include "samplesfsx.h"
+#include "samplesmodelmapping.h"
+#include "samplesp3d.h"
+#include "samplesvpilotrules.h"
+
+#include "core/application.h"
+#include "misc/directoryutils.h"
 
 using namespace swift::misc;
 using namespace swift::sample;

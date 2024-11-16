@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_NETWORK_USERLIST_H
 #define SWIFT_MISC_NETWORK_USERLIST_H
 
+#include <QMetaType>
+
 #include "misc/aviation/callsignobjectlist.h"
-#include "misc/network/user.h"
 #include "misc/collection.h"
+#include "misc/network/user.h"
 #include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QMetaType>
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CUser, CUserList)
 
@@ -34,7 +34,7 @@ namespace swift::misc::network
         //! Construct from a base class object.
         CUserList(const CSequence &other);
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CUserList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CUser>)

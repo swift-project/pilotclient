@@ -28,6 +28,6 @@ namespace swift::core
             swift::core::CApplication::processEventsFor(10);
         }
     };
-} // ns
+} // namespace swift::core
 
 #endif // guard

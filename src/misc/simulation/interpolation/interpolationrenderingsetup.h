@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONRENDERINGSETUP_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONRENDERINGSETUP_H
 
-#include "misc/aviation/callsign.h"
-#include "misc/pq/length.h"
-#include "misc/pq/angle.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/propertyindexlist.h"
-#include "misc/valueobject.h"
 #include <QString>
+
+#include "misc/aviation/callsign.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/length.h"
+#include "misc/propertyindexlist.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupGlobal)
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign)
@@ -280,8 +281,8 @@ namespace swift::misc
                 SWIFT_METAMEMBER(interpolatorMode),
                 SWIFT_METAMEMBER(pitchOnGround));
         };
-    } // namespace
-} // namespace
+    } // namespace simulation
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign)
 Q_DECLARE_METATYPE(swift::misc::simulation::CInterpolationAndRenderingSetupGlobal)

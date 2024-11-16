@@ -6,11 +6,11 @@
 #ifndef SWIFT_MISC_DB_DBFLAGS_H
 #define SWIFT_MISC_DB_DBFLAGS_H
 
-#include "misc/swiftmiscexport.h"
-
 #include <QFlags>
 #include <QMetaType>
 #include <QString>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::db
 {
@@ -57,7 +57,7 @@ namespace swift::misc::db
         //! Register metadata
         static void registerMetadata();
     };
-} // namespace
+} // namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CDbFlags::DataRetrievalModeFlag)
 Q_DECLARE_METATYPE(swift::misc::db::CDbFlags::DataRetrievalMode)

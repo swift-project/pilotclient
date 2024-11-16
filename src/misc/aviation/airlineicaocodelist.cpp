@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/airlineicaocodelist.h"
-#include "misc/logcategories.h"
-#include "misc/country.h"
-#include "misc/setbuilder.h"
 
 #include <QJsonValue>
 #include <QStringBuilder>
+
+#include "misc/country.h"
+#include "misc/logcategories.h"
+#include "misc/setbuilder.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAirlineIcaoCode, CAirlineIcaoCodeList)
 
@@ -382,4 +383,4 @@ namespace swift::misc::aviation
         }
         return map;
     }
-} // ns
+} // namespace swift::misc::aviation

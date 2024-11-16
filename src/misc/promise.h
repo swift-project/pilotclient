@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_PROMISE_H
 #define SWIFT_MISC_PROMISE_H
 
-#include <QObject>
+#include <utility>
+
+#include <QCoreApplication>
 #include <QFuture>
 #include <QFutureWatcher>
-#include <QCoreApplication>
+#include <QObject>
 #include <QSharedPointer>
-#include <utility>
 
 namespace swift::misc
 {
@@ -48,7 +49,7 @@ namespace swift::misc
             watcher->setFuture(future);
             QCoreApplication::sendPostedEvents(watcher.data());
         }
-    }
+    } // namespace private_ns
 
     /*!
      * Connect a slot or function to be invoked in the given context when a QFuture is finished.
@@ -163,6 +164,6 @@ namespace swift::misc
         QSharedPointer<private_ns::CPromiseData<void>> m_data { new private_ns::CPromiseData<void> };
     };
 
-}
+} // namespace swift::misc
 
 #endif

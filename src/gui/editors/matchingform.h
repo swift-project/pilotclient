@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_EDITORS_MATCHINGFORM_H
 #define SWIFT_GUI_EDITORS_MATCHINGFORM_H
 
-#include "gui/editors/form.h"
-#include "misc/simulation/aircraftmatchersetup.h"
-#include "misc/directories.h"
-
 #include <QScopedPointer>
+
+#include "gui/editors/form.h"
+#include "misc/directories.h"
+#include "misc/simulation/aircraftmatchersetup.h"
 
 namespace Ui
 {
@@ -79,6 +79,6 @@ namespace swift::gui::editors
         swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directories { this }; //!< the swift directories
         QScopedPointer<Ui::CMatchingForm> ui;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

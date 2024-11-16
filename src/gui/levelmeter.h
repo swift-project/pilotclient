@@ -7,12 +7,12 @@
 #ifndef SWIFT_GUI_LEVELMETER_H
 #define SWIFT_GUI_LEVELMETER_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QColor>
-#include <QObject>
 #include <QElapsedTimer>
 #include <QFrame>
+#include <QObject>
+
+#include "gui/swiftguiexport.h"
 
 class QPaintEvent;
 class QTimer;
@@ -81,6 +81,6 @@ namespace swift::gui
         QColor m_highColor; //!< color for high values
         QColor m_peakColor; //!< color for peak values
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

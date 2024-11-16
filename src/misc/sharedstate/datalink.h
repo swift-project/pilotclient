@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_DATALINK_H
 #define SWIFT_MISC_SHAREDSTATE_DATALINK_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/promise.h"
-#include "misc/variant.h"
-#include <QObject>
-#include <QMetaObject>
 #include <QMetaClassInfo>
+#include <QMetaObject>
+#include <QObject>
 #include <QStringBuilder>
+
+#include "misc/promise.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 /*!
  * \defgroup shared_state Shared state
@@ -97,7 +98,7 @@ namespace swift::misc::shared_state
     private:
         CDataLinkConnectionWatcher m_watcher;
     };
-}
+} // namespace swift::misc::shared_state
 
 Q_DECLARE_INTERFACE(swift::misc::shared_state::IDataLink, "swift::misc::shared_state::IDataLink")
 Q_DECLARE_METATYPE(swift::misc::CPromise<swift::misc::CVariant>)

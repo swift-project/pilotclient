@@ -55,7 +55,7 @@ namespace swift::misc
         private:
             CGenericDBusInterface *m_interface = nullptr;
         };
-    }
-}
+    } // namespace shared_state::dbus
+} // namespace swift::misc
 
 #endif

@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "setuploadingdialog.h"
-#include "gui/components/copymodelsfromotherswiftversionsdialog.h"
-#include "ui_setuploadingdialog.h"
-#include "gui/guiapplication.h"
-#include "core/setupreader.h"
-#include "misc/swiftdirectories.h"
 
-#include <QPushButton>
 #include <QDesktopServices>
+#include <QPushButton>
+
+#include "ui_setuploadingdialog.h"
+
+#include "core/setupreader.h"
+#include "gui/components/copymodelsfromotherswiftversionsdialog.h"
+#include "gui/guiapplication.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -39,4 +41,4 @@ namespace swift::gui::components
 
     CSetupLoadingDialog::~CSetupLoadingDialog()
     {}
-} // ns
+} // namespace swift::gui::components

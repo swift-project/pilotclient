@@ -6,22 +6,23 @@
 #ifndef SWIFT_MISC_AVIATION_AIRPORT_H
 #define SWIFT_MISC_AVIATION_AIRPORT_H
 
+#include <array>
+
+#include <QMetaType>
+#include <QString>
+#include <QVector3D>
+
 #include "misc/aviation/airporticaocode.h"
-#include "misc/swiftmiscexport.h"
+#include "misc/country.h"
 #include "misc/db/datastore.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
 #include "misc/metaclass.h"
 #include "misc/pq/length.h"
-#include "misc/country.h"
 #include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QMetaType>
-#include <QString>
-#include <QVector3D>
-#include <array>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirport)
 
@@ -182,7 +183,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(dbKey),
             SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAirport)
 

@@ -6,8 +6,8 @@
 #ifndef SWIFT_SIM_XSWIFTBUS_UTILS_H
 #define SWIFT_SIM_XSWIFTBUS_UTILS_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace XSwiftBus
 {
@@ -39,7 +39,7 @@ namespace XSwiftBus
         //! Print message to X-Plane log
         static void print(const std::string &filePath, int line, MsgType type, const std::string &message);
     };
-}
+} // namespace XSwiftBus
 
 //! @{
 //! Logger convenience macros

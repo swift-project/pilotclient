@@ -6,9 +6,9 @@
 #ifndef SWIFT_GUI_VIEWS_LIVERYVIEW_H
 #define SWIFT_GUI_VIEWS_LIVERYVIEW_H
 
-#include "gui/views/viewdbobjects.h"
 #include "gui/models/liverylistmodel.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewdbobjects.h"
 
 namespace swift::gui::views
 {
@@ -22,5 +22,5 @@ namespace swift::gui::views
         //! Constructor
         explicit CLiveryView(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::views
 #endif // guard

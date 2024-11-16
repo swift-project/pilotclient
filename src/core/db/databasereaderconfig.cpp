@@ -5,6 +5,7 @@
 // without the Doxygen exclusion I get a strange no matching class member found for warning in the gcc build
 
 #include "core/db/databasereaderconfig.h"
+
 #include <QStringBuilder>
 
 using namespace swift::misc;
@@ -263,6 +264,6 @@ namespace swift::core::db
         l.push_back(CDatabaseReaderConfig(CEntityFlags::AircraftCategoryEntity, retrievalFlags, cacheLifetime));
         return l;
     }
-} // ns
+} // namespace swift::core::db
 
 //! \endcond

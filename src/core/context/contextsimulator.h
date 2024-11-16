@@ -6,31 +6,30 @@
 #ifndef SWIFT_CORE_CONTEXTSIMULATOR_H
 #define SWIFT_CORE_CONTEXTSIMULATOR_H
 
+#include <QObject>
+#include <QString>
+
+#include "config/buildconfig.h"
 #include "core/context/context.h"
 #include "core/corefacade.h"
 #include "core/corefacadeconfig.h"
 #include "core/simulator.h"
 #include "core/swiftcoreexport.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/aircraftmatchersetup.h"
-#include "misc/simulation/matchingstatistics.h"
-#include "misc/simulation/matchinglog.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/simulation/simulatorplugininfolist.h"
-#include "misc/simulation/simulatorinternals.h"
-#include "misc/simulation/matchingstatistics.h"
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "misc/aviation/airportlist.h"
 #include "misc/geo/elevationplane.h"
-#include "misc/pq/length.h"
-#include "misc/pq/time.h"
 #include "misc/identifier.h"
 #include "misc/pixmap.h"
-#include "config/buildconfig.h"
-
-#include <QObject>
-#include <QString>
+#include "misc/pq/length.h"
+#include "misc/pq/time.h"
+#include "misc/simulation/aircraftmatchersetup.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/simulation/matchinglog.h"
+#include "misc/simulation/matchingstatistics.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorinternals.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfolist.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -51,7 +50,7 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
     }
-}
+} // namespace swift::misc
 namespace swift::core::context
 {
     //! Network context
@@ -312,6 +311,6 @@ namespace swift::core::context
         //! Constructor
         IContextSimulator(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime) {}
     };
-} // namespace
+} // namespace swift::core::context
 
 #endif // guard

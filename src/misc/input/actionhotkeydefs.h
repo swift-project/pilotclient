@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_INPUT_ACTIONHOTKEYDEFS_H
 #define SWIFT_MISC_INPUT_ACTIONHOTKEYDEFS_H
 
+#include <QString>
+
 #include "misc/icons.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QString>
 
 namespace swift::misc::input
 {
@@ -67,6 +67,6 @@ namespace swift::misc::input
     //! Radar zoom out
     SWIFT_MISC_EXPORT swift::misc::CIcons::IconIndex radarZoomOutHotkeyIcon();
 
-} // ns
+} // namespace swift::misc::input
 
 #endif

@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "misc/simulation/remoteaircraftproviderdummy.h"
+
 #include "misc/aviation/callsign.h"
 #include "misc/geo/elevationplane.h"
-#include "misc/simulation/remoteaircraftproviderdummy.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::geo;
@@ -49,4 +50,4 @@ namespace swift::misc::simulation
     {
         return CAirspaceAircraftSnapshot();
     }
-} // namespace
+} // namespace swift::misc::simulation

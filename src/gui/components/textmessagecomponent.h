@@ -6,21 +6,21 @@
 #ifndef SWIFT_GUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_TEXTMESSAGECOMPONENT_H
 
-#include "gui/components/textmessagecomponenttab.h"
-#include "gui/settings/textmessagesettings.h"
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/network/textmessagelist.h"
-#include "misc/aviation/atcstation.h"
-#include "misc/audio/audiosettings.h"
-#include "misc/identifier.h"
-#include "misc/variant.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/components/textmessagecomponenttab.h"
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/settings/textmessagesettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/identifier.h"
+#include "misc/network/textmessagelist.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/variant.h"
 
 namespace Ui
 {
@@ -251,7 +251,7 @@ namespace swift::gui
             //! Get the 1st part of the tab text, "DAMBZ: Joe Doe" -> "DAMBZ", "123.45 Foo" -> "123.45"
             static QString firstPartOfTabText(const QString &tabText);
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

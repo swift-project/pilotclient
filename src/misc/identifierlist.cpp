@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/identifierlist.h"
-#include "misc/mixin/mixincompare.h"
 
 #include <QStringList>
+
+#include "misc/mixin/mixincompare.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CIdentifier, CIdentifierList)
 
@@ -55,4 +56,4 @@ namespace swift::misc
         *this = il;
         return delta;
     }
-} // namespace
+} // namespace swift::misc

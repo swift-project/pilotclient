@@ -1,27 +1,29 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "dbmodelworkbenchcomponent.h"
+
+#include <QAction>
+#include <QDir>
+#include <QFileDialog>
+#include <QIcon>
+#include <QPointer>
+#include <QtGlobal>
+
+#include "ui_dbmodelworkbenchcomponent.h"
+
+#include "core/db/databaseutils.h"
+#include "core/webdataservices.h"
 #include "gui/components/dbownmodelscomponent.h"
 #include "gui/components/simulatorselector.h"
+#include "gui/guiapplication.h"
 #include "gui/menus/aircraftmodelmenus.h"
 #include "gui/menus/menuaction.h"
-#include "gui/views/aircraftmodelview.h"
 #include "gui/models/aircraftmodellistmodel.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "core/db/databaseutils.h"
+#include "gui/views/aircraftmodelview.h"
 #include "misc/icons.h"
 #include "misc/logmessage.h"
 #include "misc/statusmessage.h"
-#include "dbmodelworkbenchcomponent.h"
-#include "ui_dbmodelworkbenchcomponent.h"
-
-#include <QAction>
-#include <QIcon>
-#include <QDir>
-#include <QtGlobal>
-#include <QPointer>
-#include <QFileDialog>
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -100,4 +102,4 @@ namespace swift::gui::components
         Q_UNUSED(simulator);
         return ui->tvp_Models->replaceOrAddModelsWithString(models);
     }
-} // ns
+} // namespace swift::gui::components

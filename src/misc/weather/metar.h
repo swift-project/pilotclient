@@ -6,20 +6,20 @@
 #ifndef SWIFT_MISC_AVIATION_METAR_H
 #define SWIFT_MISC_AVIATION_METAR_H
 
+#include <QMetaType>
+#include <QString>
+
 #include "misc/aviation/airporticaocode.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/metaclass.h"
 #include "misc/pq/length.h"
 #include "misc/pq/pressure.h"
 #include "misc/pq/temperature.h"
 #include "misc/pq/time.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
 #include "misc/weather/cloudlayerlist.h"
 #include "misc/weather/presentweatherlist.h"
 #include "misc/weather/windlayer.h"
-
-#include <QMetaType>
-#include <QString>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CMetar)
 
@@ -171,7 +171,7 @@ namespace swift::misc::weather
             SWIFT_METAMEMBER(dewPoint),
             SWIFT_METAMEMBER(altimeter));
     };
-} // namespace
+} // namespace swift::misc::weather
 
 Q_DECLARE_METATYPE(swift::misc::weather::CMetar)
 

@@ -6,8 +6,9 @@
 #ifndef SWIFT_MISC_HTMLUTILS_H
 #define SWIFT_MISC_HTMLUTILS_H
 
-#include "misc/swiftmiscexport.h"
 #include <QStringBuilder>
+
+#include "misc/swiftmiscexport.h"
 
 //! Free functions in swift::misc
 namespace swift::misc
@@ -18,6 +19,6 @@ namespace swift::misc
     //! As hyperlink
     SWIFT_MISC_EXPORT QString asHyperlink(const QString &url, const QString &text = "");
 
-} // ns
+} // namespace swift::misc
 
 #endif // guard

@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/clientlistmodel.h"
-#include "gui/models/columnformatters.h"
-#include "gui/models/columns.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/network/user.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/propertyindex.h"
-#include "misc/propertyindexvariantmap.h"
 
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/models/columns.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/user.h"
+#include "misc/propertyindex.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/simulation/aircraftmodel.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -61,4 +62,4 @@ namespace swift::gui::models
         }
         return CListModelBase::data(index, role);
     }
-} // namespace
+} // namespace swift::gui::models

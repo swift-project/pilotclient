@@ -42,6 +42,6 @@ namespace swift::gui
         bool m_elided = false;
         QString m_content;
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

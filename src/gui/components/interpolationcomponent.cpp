@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "interpolationcomponent.h"
+
 #include "ui_interpolationcomponent.h"
 
+#include "core/context/contextsimulator.h"
 #include "gui/guiapplication.h"
 #include "gui/views/statusmessageview.h"
-#include "core/context/contextsimulator.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -37,4 +38,4 @@ namespace swift::gui::components
         const CStatusMessageList messages = sGui->getIContextSimulator()->getInterpolationMessages(cs);
         ui->tvp_InterpolationMessages->updateContainerMaybeAsync(messages);
     }
-} // ns
+} // namespace swift::gui::components

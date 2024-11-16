@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_AUDIOACCESSREQUEST_H
 #define SWIFT_MISC_AUDIOACCESSREQUEST_H
 
-#include "misc/swiftmiscexport.h"
-#include <QtGlobal>
 #include <QObject>
+#include <QtGlobal>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -39,6 +40,6 @@ namespace swift::misc
         //! User has answered the permission request popup
         void permissionRequestAnswered(bool granted);
     };
-}
+} // namespace swift::misc
 
 #endif

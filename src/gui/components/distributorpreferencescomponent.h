@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_DISTRIBUTORPREFERENCESCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DISTRIBUTORPREFERENCESCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
-#include "misc/simulation/settings/modelsettings.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/settingscache.h"
-
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/overlaymessagesframe.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/settings/modelsettings.h"
+#include "misc/simulation/simulatorinfo.h"
 
 namespace Ui
 {
@@ -67,7 +67,7 @@ namespace swift::gui
             //! Update
             void updateContainerMaybeAsync(const swift::misc::simulation::CDistributorList &models, bool sortByOrder = true);
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

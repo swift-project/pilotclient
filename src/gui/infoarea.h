@@ -6,11 +6,6 @@
 #ifndef SWIFT_GUI_INFOAREA_H
 #define SWIFT_GUI_INFOAREA_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/enableforframelesswindow.h"
-#include "misc/statusmessage.h"
-#include "misc/statusmessagelist.h"
-
 #include <QDockWidget>
 #include <QList>
 #include <QMainWindow>
@@ -19,6 +14,11 @@
 #include <QString>
 #include <QTabWidget>
 #include <Qt>
+
+#include "gui/enableforframelesswindow.h"
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 
 class QAction;
 class QCloseEvent;
@@ -277,6 +277,6 @@ namespace swift::gui
         //! \remark result stored in m_dockableWidgets
         QList<CDockWidgetInfoArea *> findOwnDockWidgetInfoAreas() const;
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

@@ -7,4 +7,4 @@ namespace swift::misc
 {
     IProvider::~IProvider()
     {}
-}
+} // namespace swift::misc

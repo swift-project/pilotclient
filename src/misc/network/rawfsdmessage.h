@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_NETWORK_RAWFSDMESSAGE_H
 #define SWIFT_MISC_NETWORK_RAWFSDMESSAGE_H
 
-#include "misc/timestampbased.h"
-#include "misc/valueobject.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QDateTime>
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRawFsdMessage)
 
@@ -70,7 +70,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(rawMessage),
             SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CRawFsdMessage)
 

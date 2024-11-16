@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/statusmessage.h"
-#include "misc/propertyindexref.h"
-#include "misc/iconlist.h"
-#include "misc/comparefunctions.h"
-#include "misc/stringutils.h"
-#include "misc/verify.h"
 
 #include <QMetaEnum>
 #include <QStringBuilder>
 #include <QThreadStorage>
+
+#include "misc/comparefunctions.h"
+#include "misc/iconlist.h"
+#include "misc/propertyindexref.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CStatusMessage)
 
@@ -73,7 +74,7 @@ namespace swift::misc
             result.squeeze(); // release unused capacity and implicitly detach so temp keeps its capacity for next time
             return result;
         }
-    }
+    } // namespace private_ns
 
     CStatusMessage::CStatusMessage(const CLogCategory &category) : CMessageBase(category), ITimestampBased(QDateTime::currentMSecsSinceEpoch())
     {}
@@ -502,4 +503,4 @@ namespace swift::misc
         }
         return img % this->getMessage();
     }
-} // ns
+} // namespace swift::misc

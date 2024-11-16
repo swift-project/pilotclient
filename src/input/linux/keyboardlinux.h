@@ -6,12 +6,14 @@
 #ifndef SWIFT_INPUT_KEYBOARD_LINUX_H
 #define SWIFT_INPUT_KEYBOARD_LINUX_H
 
-#include "input/keyboard.h"
-#include "misc/input/hotkeycombination.h"
-#include <QHash>
 #include <QDir>
 #include <QFileSystemWatcher>
+#include <QHash>
 
+#include "input/keyboard.h"
+#include "misc/input/hotkeycombination.h"
+
+// Explicitly including X11 last
 #include <X11/X.h>
 #include <X11/Xlib.h>
 
@@ -62,6 +64,6 @@ namespace swift::input
 
         Display *m_display;
     };
-}
+} // namespace swift::input
 
 #endif // guard

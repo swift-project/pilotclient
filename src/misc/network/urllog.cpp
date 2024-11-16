@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/urllog.h"
-#include "misc/network/networkutils.h"
-#include "misc/propertyindexref.h"
-#include "misc/stringutils.h"
+
+#include <atomic>
 
 #include <QJsonValue>
 #include <QtGlobal>
 
-#include <atomic>
+#include "misc/network/networkutils.h"
+#include "misc/propertyindexref.h"
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CUrlLog)
 
@@ -91,4 +92,4 @@ namespace swift::misc::network
         const int id = s_id++;
         return id;
     }
-} // namespace
+} // namespace swift::misc::network

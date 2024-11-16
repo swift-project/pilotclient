@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/views/liveryview.h"
+
 #include "gui/views/viewbase.h"
 
 using namespace swift::gui::models;
@@ -13,4 +14,4 @@ namespace swift::gui::views
         this->standardInit(new CLiveryListModel(this));
         this->setMenu(MenuDefaultDbViews);
     }
-} // namespace
+} // namespace swift::gui::views

@@ -6,11 +6,11 @@
 #ifndef SWIFT_CORE_FSD_TEXTMESSAGE_H
 #define SWIFT_CORE_FSD_TEXTMESSAGE_H
 
-#include "core/fsd/messagebase.h"
-
 #include <QString>
 #include <QStringList>
 #include <QVector>
+
+#include "core/fsd/messagebase.h"
 
 namespace swift::core::fsd
 {
@@ -44,6 +44,6 @@ namespace swift::core::fsd
     private:
         TextMessage();
     };
-}
+} // namespace swift::core::fsd
 
 #endif // guard

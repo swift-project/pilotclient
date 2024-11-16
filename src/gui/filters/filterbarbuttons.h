@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_FILTERS_FILTERBARBUTTONS_H
 #define SWIFT_GUI_FILTERS_FILTERBARBUTTONS_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QFrame>
 #include <QMetaType>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 class QWidget;
 
@@ -64,7 +64,7 @@ namespace swift::gui::filters
     private:
         QScopedPointer<Ui::CFilterBarButtons> ui;
     };
-} // ns
+} // namespace swift::gui::filters
 
 Q_DECLARE_METATYPE(swift::gui::filters::CFilterBarButtons::FilterButton)
 

@@ -3,9 +3,6 @@
 // Class based on qLed: Copyright (C) 2010 by P. Sereno, http://www.sereno-online.com
 
 #include "loadindicator.h"
-#include "gui/guiapplication.h"
-#include "misc/verify.h"
-#include "misc/threadutils.h"
 
 #include <QColor>
 #include <QPainter>
@@ -13,6 +10,10 @@
 #include <QRect>
 #include <QSizePolicy>
 #include <QtGlobal>
+
+#include "gui/guiapplication.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
 
 using namespace swift::misc;
 
@@ -229,4 +230,4 @@ namespace swift::gui
     {
         // to be overridden
     }
-} // ns
+} // namespace swift::gui

@@ -2,11 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/managedstatusbar.h"
-#include "misc/iterator.h"
-#include "misc/sequence.h"
 
-#include <QLabel>
 #include <QFontMetrics>
+#include <QLabel>
 #include <QSize>
 #include <QSizePolicy>
 #include <QStatusBar>
@@ -14,6 +12,9 @@
 #include <QTimer>
 #include <QWidget>
 #include <QtGlobal>
+
+#include "misc/iterator.h"
+#include "misc/sequence.h"
 
 using namespace swift::misc;
 
@@ -200,4 +201,4 @@ namespace swift::gui
         emit requestLogPage();
     }
 
-} // namespace
+} // namespace swift::gui

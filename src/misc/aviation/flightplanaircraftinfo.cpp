@@ -385,4 +385,4 @@ namespace swift::misc::aviation
         }
     }
 
-}
+} // namespace swift::misc::aviation

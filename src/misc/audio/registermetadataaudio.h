@@ -12,6 +12,6 @@ namespace swift::misc::audio
 {
     //! Register metadata for audio / voice
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc::audio
 
 #endif // SWIFT_MISC_AUDIO_REGISTERMETADATAAUDIO_H

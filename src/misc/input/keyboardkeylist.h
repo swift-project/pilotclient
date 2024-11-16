@@ -6,15 +6,16 @@
 #ifndef SWIFT_MISC_INPUT_KEYBOARDKEYLIST_H
 #define SWIFT_MISC_INPUT_KEYBOARDKEYLIST_H
 
-#include "misc/swiftmiscexport.h"
+#include <initializer_list>
+#include <tuple>
+
+#include <QMetaType>
+#include <QStringList>
+
 #include "misc/collection.h"
 #include "misc/input/keyboardkey.h"
 #include "misc/sequence.h"
-
-#include <QStringList>
-#include <QMetaType>
-#include <initializer_list>
-#include <tuple>
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CKeyboardKey, CKeyboardKeyList)
 
@@ -41,7 +42,7 @@ namespace swift::misc::input
         //! Get all supported keys
         static const CKeyboardKeyList &allSupportedKeys();
     };
-} // namespace
+} // namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CKeyboardKeyList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::input::CKeyboardKey>)

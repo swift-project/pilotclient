@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/actionitem.h"
+
 #include <QtAlgorithms>
 
 using namespace swift::misc;
@@ -76,4 +77,4 @@ namespace swift::gui::models
         if (m_parentItem) { return m_parentItem->m_childItems.indexOf(const_cast<CActionItem *>(this)); }
         return 0;
     }
-}
+} // namespace swift::gui::models

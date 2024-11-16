@@ -1,11 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "gui/components/settingsnetworkserverscomponent.h"
+
+#include <QPushButton>
+#include <QString>
+#include <QTableView>
+
+#include "ui_settingsnetworkserverscomponent.h"
+
 #include "config/buildconfig.h"
 #include "core/context/contextapplication.h"
 #include "core/data/globalsetup.h"
 #include "gui/editors/serverform.h"
-#include "gui/components/settingsnetworkserverscomponent.h"
 #include "gui/guiapplication.h"
 #include "gui/views/serverview.h"
 #include "misc/logmessage.h"
@@ -13,11 +20,6 @@
 #include "misc/network/serverlist.h"
 #include "misc/statusmessage.h"
 #include "misc/statusmessagelist.h"
-#include "ui_settingsnetworkserverscomponent.h"
-
-#include <QPushButton>
-#include <QString>
-#include <QTableView>
 
 using namespace swift::config;
 using namespace swift::core;
@@ -105,4 +107,4 @@ namespace swift::gui::components
             CLogMessage::preformatted(msg);
         }
     }
-} // namespace
+} // namespace swift::gui::components

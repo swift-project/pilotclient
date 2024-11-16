@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "scalescreenfactor.h"
-#include "ui_scalescreenfactor.h"
-#include "gui/guiutility.h"
 
-#include <QScreen>
 #include <QIntValidator>
+#include <QScreen>
+
+#include "ui_scalescreenfactor.h"
+
+#include "gui/guiutility.h"
 
 namespace swift::gui::components
 {
@@ -70,4 +72,4 @@ namespace swift::gui::components
         if (ui->hs_Factor->value() == value) { return; } // avoid signal roundtrips
         ui->hs_Factor->setValue(value);
     }
-} // ns
+} // namespace swift::gui::components

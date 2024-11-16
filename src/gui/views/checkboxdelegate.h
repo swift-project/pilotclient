@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_CCOLUMNCHECKBOXDELEGATE_H
 #define SWIFT_GUI_CCOLUMNCHECKBOXDELEGATE_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QItemDelegate>
 #include <QObject>
 #include <QString>
 #include <QStyleOptionViewItem>
+
+#include "gui/swiftguiexport.h"
 
 class QAbstractItemModel;
 class QModelIndex;
@@ -51,6 +51,6 @@ namespace swift::gui::views
         QString m_iconCheckedUrl;
         QString m_iconUncheckedUrl;
     };
-} // namespace
+} // namespace swift::gui::views
 
 #endif // guard

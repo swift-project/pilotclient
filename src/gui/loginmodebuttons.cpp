@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "gui/loginmodebuttons.h"
+
+#include <QRadioButton>
+
 #include "ui_loginmodebuttons.h"
 
 #include "config/buildconfig.h"
-#include "gui/loginmodebuttons.h"
-#include "gui/guiapplication.h"
 #include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
 #include "misc/verify.h"
-
-#include <QRadioButton>
 
 using namespace swift::config;
 using namespace swift::core;
@@ -94,4 +95,4 @@ namespace swift::gui
 
         ui->rb_LoginStealth->setVisible(false); // 2019-01 hide as based on discussion with RR
     }
-} // ns
+} // namespace swift::gui

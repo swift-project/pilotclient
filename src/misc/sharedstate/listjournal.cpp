@@ -4,6 +4,7 @@
 //! \file
 
 #include "misc/sharedstate/listjournal.h"
+
 #include "misc/sharedstate/datalink.h"
 
 namespace swift::misc::shared_state
@@ -29,4 +30,4 @@ namespace swift::misc::shared_state
     {
         m_value.push_back(param);
     }
-}
+} // namespace swift::misc::shared_state

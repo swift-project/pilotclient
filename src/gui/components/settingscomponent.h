@@ -6,12 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/settings/simulatorsettings.h"
 #include <QColor>
 #include <QObject>
 #include <QScopedPointer>
 #include <QTabWidget>
+
+#include "gui/swiftguiexport.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 
 class QWidget;
 
@@ -73,6 +74,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CSettingsComponent> ui;
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

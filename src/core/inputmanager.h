@@ -6,14 +6,9 @@
 #ifndef SWIFT_CORE_INPUTMANAGER_H
 #define SWIFT_CORE_INPUTMANAGER_H
 
-#include "core/swiftcoreexport.h"
-#include "core/application/applicationsettings.h"
-#include "input/joystick.h"
-#include "input/keyboard.h"
-#include "misc/input/hotkeycombination.h"
-#include "misc/input/joystickbuttonlist.h"
-#include "misc/settingscache.h"
-#include "misc/icons.h"
+#include <algorithm>
+#include <functional>
+#include <memory>
 
 #include <QHash>
 #include <QObject>
@@ -21,9 +16,15 @@
 #include <QString>
 #include <QStringList>
 #include <QVector>
-#include <algorithm>
-#include <functional>
-#include <memory>
+
+#include "core/application/applicationsettings.h"
+#include "core/swiftcoreexport.h"
+#include "input/joystick.h"
+#include "input/keyboard.h"
+#include "misc/icons.h"
+#include "misc/input/hotkeycombination.h"
+#include "misc/input/joystickbuttonlist.h"
+#include "misc/settingscache.h"
 
 namespace swift::core
 {
@@ -146,6 +147,6 @@ namespace swift::core
 
         swift::misc::CSetting<application::TActionHotkeys> m_actionHotkeys { this, &CInputManager::reloadHotkeySettings };
     };
-} // ns
+} // namespace swift::core
 
 #endif // guard

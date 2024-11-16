@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_SETTINGSCACHE_H
 #define SWIFT_MISC_SETTINGSCACHE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/statusmessage.h"
-#include "misc/valuecache.h"
-
 #include <QObject>
 #include <QString>
 #include <QStringList>
 #include <QtDebug>
+
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valuecache.h"
 
 namespace swift::misc
 {
@@ -173,6 +173,6 @@ namespace swift::misc
         //! Deleted copy assignment operator.
         TSettingTrait &operator=(const TSettingTrait &) = delete;
     };
-}
+} // namespace swift::misc
 
 #endif

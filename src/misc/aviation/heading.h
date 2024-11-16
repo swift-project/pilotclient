@@ -6,20 +6,20 @@
 #ifndef SWIFT_MISC_AVIATION_HEADING_H
 #define SWIFT_MISC_AVIATION_HEADING_H
 
-#include "misc/swiftmiscexport.h"
+#include <QMetaType>
+#include <QString>
+
+#include "misc/metaclass.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/mixin/mixindbus.h"
 #include "misc/mixin/mixinhash.h"
+#include "misc/mixin/mixinindex.h"
 #include "misc/mixin/mixinjson.h"
-#include "misc/metaclass.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/mixin/mixinstring.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/units.h"
-#include "misc/mixin/mixinindex.h"
-#include "misc/mixin/mixinstring.h"
-#include "misc/mixin/mixinmetatype.h"
-
-#include <QMetaType>
-#include <QString>
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::aviation
 {
@@ -103,7 +103,7 @@ namespace swift::misc::aviation
             CHeading,
             SWIFT_METAMEMBER(north));
     };
-} // ns
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CHeading)
 Q_DECLARE_METATYPE(swift::misc::aviation::CHeading::ReferenceNorth)

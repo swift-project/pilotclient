@@ -10,4 +10,4 @@ namespace XSwiftBus
         : m_name(error->name), m_message(error->message)
     {}
 
-}
+} // namespace XSwiftBus

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "infobarwebreadersstatussmallcomponent.h"
+
 #include "ui_infobarwebreadersstatussmallcomponent.h"
 
 namespace swift::gui::components
@@ -16,4 +17,4 @@ namespace swift::gui::components
 
     CInfoBarWebReadersStatusSmallComponent::~CInfoBarWebReadersStatusSmallComponent()
     {}
-} // ns
+} // namespace swift::gui::components

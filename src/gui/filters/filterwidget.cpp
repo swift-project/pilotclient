@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/filters/filterwidget.h"
-#include "gui/guiapplication.h"
-#include "gui/stylesheetutility.h"
 
 #include <QString>
 #include <QtGlobal>
+
+#include "gui/guiapplication.h"
+#include "gui/stylesheetutility.h"
 
 namespace swift::gui::filters
 {
@@ -68,4 +69,4 @@ namespace swift::gui::filters
             break;
         }
     }
-} // namespace
+} // namespace swift::gui::filters

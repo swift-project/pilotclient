@@ -6,31 +6,31 @@
 #ifndef SWIFT_GUI_COMPONENTS_COPYSETTINGSANDCACHESCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_COPYSETTINGSANDCACHESCOMPONENT_H
 
-#include "gui/settings/guisettings.h"
-#include "gui/settings/dockwidgetsettings.h"
-#include "gui/settings/viewupdatesettings.h"
-#include "gui/settings/textmessagesettings.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/swiftguiexport.h"
-#include "core/data/launchersetup.h"
-#include "core/data/vatsimsetup.h"
-#include "core/audio/audiosettings.h"
-#include "core/application/applicationsettings.h"
-#include "core/application/updatesettings.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/data/lastmodel.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/settings/modelsettings.h"
-#include "misc/network/data/lastserver.h"
-#include "misc/network/settings/serversettings.h"
-#include "misc/audio/audiosettings.h"
-#include "misc/directories.h"
-#include "misc/applicationinfo.h"
-
-#include <QWizardPage>
-#include <QScopedPointer>
 #include <QCheckBox>
 #include <QList>
+#include <QScopedPointer>
+#include <QWizardPage>
+
+#include "core/application/applicationsettings.h"
+#include "core/application/updatesettings.h"
+#include "core/audio/audiosettings.h"
+#include "core/data/launchersetup.h"
+#include "core/data/vatsimsetup.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/settings/dockwidgetsettings.h"
+#include "gui/settings/guisettings.h"
+#include "gui/settings/textmessagesettings.h"
+#include "gui/settings/viewupdatesettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/applicationinfo.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/directories.h"
+#include "misc/network/data/lastserver.h"
+#include "misc/network/settings/serversettings.h"
+#include "misc/simulation/data/lastmodel.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/settings/modelsettings.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 
 namespace Ui
 {
@@ -157,6 +157,6 @@ namespace swift::gui::components
     private:
         CCopySettingsAndCachesComponent *m_copyCachesAndSettings = nullptr;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

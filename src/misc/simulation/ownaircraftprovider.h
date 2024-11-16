@@ -6,22 +6,22 @@
 #ifndef SWIFT_MISC_SIMULATION_OWNAIRCRAFTPROVIDER_H
 #define SWIFT_MISC_SIMULATION_OWNAIRCRAFTPROVIDER_H
 
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/simulatedaircraft.h"
+#include <QObject>
+#include <QtGlobal>
+
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/callsign.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/selcal.h"
-#include "misc/aviation/callsign.h"
 #include "misc/geo/coordinategeodetic.h"
+#include "misc/identifier.h"
 #include "misc/pq/frequency.h"
 #include "misc/pq/length.h"
 #include "misc/provider.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
 #include "misc/swiftmiscexport.h"
-#include "misc/identifier.h"
-
-#include <QObject>
-#include <QtGlobal>
 
 namespace swift::misc
 {
@@ -29,7 +29,7 @@ namespace swift::misc
     {
         class CAircraftIcaoCode;
         class CAircraftSituation;
-    }
+    } // namespace aviation
 
     namespace simulation
     {
@@ -186,8 +186,8 @@ namespace swift::misc
             //! Constructor
             COwnAircraftAware(IOwnAircraftProvider *ownAircraftProvider) : IProviderAware(ownAircraftProvider) { Q_ASSERT(ownAircraftProvider); }
         };
-    } // namespace
-} // namespace
+    } // namespace simulation
+} // namespace swift::misc
 
 Q_DECLARE_INTERFACE(swift::misc::simulation::IOwnAircraftProvider, "org.swift-project.misc::simulation::iownaircraftprovider")
 

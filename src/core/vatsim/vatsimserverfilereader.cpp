@@ -2,21 +2,22 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/vatsim/vatsimserverfilereader.h"
+
+#include <QMetaObject>
+#include <QNetworkReply>
+#include <QPointer>
+#include <QScopedPointerDeleteLater>
+#include <QStringBuilder>
+#include <QTimer>
+#include <QUrl>
+#include <QtGlobal>
+
 #include "core/application.h"
+#include "misc/logmessage.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/server.h"
 #include "misc/network/user.h"
 #include "misc/pq/units.h"
-#include "misc/logmessage.h"
-
-#include <QStringBuilder>
-#include <QMetaObject>
-#include <QNetworkReply>
-#include <QScopedPointerDeleteLater>
-#include <QTimer>
-#include <QUrl>
-#include <QtGlobal>
-#include <QPointer>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -141,4 +142,4 @@ namespace swift::core::vatsim
                        CServer::FSDServerVatsim, server["clients_connection_allowed"].toInt());
     }
 
-} // ns
+} // namespace swift::core::vatsim

@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_DATALINKDBUS_H
 #define SWIFT_MISC_SHAREDSTATE_DATALINKDBUS_H
 
+#include <QSharedPointer>
+
+#include "misc/identifier.h"
 #include "misc/sharedstate/datalink.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/variantlist.h"
-#include "misc/identifier.h"
-#include <QSharedPointer>
 
 class QDBusConnection;
 
@@ -24,7 +25,7 @@ namespace swift::misc
         {
             class IHub;
             class IDuplex;
-        }
+        } // namespace dbus
 
         /*!
          * A transport mechanism using signals and slots distributed by DBus.
@@ -87,7 +88,7 @@ namespace swift::misc
             QMap<QString, Channel> m_channels;
             mutable QRecursiveMutex m_channelsMutex;
         };
-    }
-}
+    } // namespace shared_state
+} // namespace swift::misc
 
 #endif

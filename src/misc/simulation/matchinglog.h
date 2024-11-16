@@ -6,10 +6,11 @@
 #ifndef SWIFT_MISC_SIMULATION_MATCHINGLOG_H
 #define SWIFT_MISC_SIMULATION_MATCHINGLOG_H
 
-#include "misc/swiftmiscexport.h"
-#include <QStringList>
-#include <QMetaType>
 #include <QDBusArgument>
+#include <QMetaType>
+#include <QStringList>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -32,7 +33,7 @@ namespace swift::misc::simulation
 
     //! Log flag to string
     SWIFT_MISC_EXPORT const QString &matchingLogFlagToString(MatchingLogFlag logFlag);
-} // ns
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::MatchingLog)
 Q_DECLARE_METATYPE(swift::misc::simulation::MatchingLogFlag)

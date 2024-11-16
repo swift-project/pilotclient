@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_COCKPITCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_COCKPITCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
-#include "gui/swiftguiexport.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QSize>
+
+#include "gui/overlaymessagesframe.h"
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -76,7 +76,7 @@ namespace swift::gui
             QSize m_sizeFloatingHidden; //! size when info area is hidden
             int m_minHeightInfoArea = -1; //! minimum height of the info area
         };
-    } // namespace
-} // namespace
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

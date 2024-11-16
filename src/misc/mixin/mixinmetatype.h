@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_MIXIN_MIXINMETATYPE_H
 #define SWIFT_MISC_MIXIN_MIXINMETATYPE_H
 
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
+
 #include "misc/inheritancetraits.h"
 #include "misc/propertyindexref.h"
 #include "misc/variant.h"
-#include <QMetaType>
-#include <QtGlobal>
-#include <QString>
 
 namespace swift::misc
 {
@@ -111,7 +112,7 @@ namespace swift::misc
     using ::swift::misc::mixin::MetaType<DERIVED>::isA;
         // *INDENT-ON*
 
-    } // Mixin
-} // namespace
+    } // namespace mixin
+} // namespace swift::misc
 
 #endif

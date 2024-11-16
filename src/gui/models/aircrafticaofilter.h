@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_AIRCRAFTICAOFILTER_H
 #define SWIFT_GUI_AIRCRAFTICAOFILTER_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/modelfilter.h"
-#include "misc/aviation/aircrafticaocodelist.h"
-
 #include <QString>
+
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/aircrafticaocodelist.h"
 
 namespace swift::gui::models
 {
@@ -38,6 +38,6 @@ namespace swift::gui::models
         QString m_description;
         QString m_combinedType;
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

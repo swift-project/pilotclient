@@ -4,13 +4,14 @@
 //! \file
 
 #include "core/afv/audio/receiversampleprovider.h"
+
+#include <QDebug>
+#include <QStringBuilder>
+
 #include "misc/logmessage.h"
 #include "misc/metadatautils.h"
 #include "sound/sampleprovider/resourcesoundsampleprovider.h"
 #include "sound/sampleprovider/samples.h"
-
-#include <QDebug>
-#include <QStringBuilder>
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -220,4 +221,4 @@ namespace swift::core::afv::audio
         CLogMessage(this).debug(l);
     }
 
-} // ns
+} // namespace swift::core::afv::audio

@@ -93,4 +93,4 @@ namespace swift::misc::input
         return getButtonAsString().trimmed();
     }
 
-} // namespacexs
+} // namespace swift::misc::input

@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_CONNECTIONGUARD_H
 #define SWIFT_MISC_CONNECTIONGUARD_H
 
-#include "misc/swiftmiscexport.h"
-
 #include <QList>
 #include <QMetaObject>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -57,6 +57,6 @@ namespace swift::misc
     private:
         QList<QMetaObject::Connection> m_connections;
     };
-} // ns
+} // namespace swift::misc
 
 #endif

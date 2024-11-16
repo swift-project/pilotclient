@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/geo/kmlutils.h"
+
 #include <QStringBuilder>
 
 using namespace swift::misc;
@@ -69,4 +70,4 @@ namespace swift::misc::geo
                CKmlUtils::wrapAsKmlCoordinates(coordinatesRaw) %
                u"</LineString>";
     }
-} // ns
+} // namespace swift::misc::geo

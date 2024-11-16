@@ -7,8 +7,8 @@
 #define SWIFT_GUI_VIEWS_AIRCRAFTICAOVIEW_H
 
 #include "gui/models/aircrafticaolistmodel.h"
-#include "gui/views/viewdbobjects.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewdbobjects.h"
 
 namespace swift::gui::views
 {
@@ -22,5 +22,5 @@ namespace swift::gui::views
         //! Constructor
         explicit CAircraftIcaoCodeView(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::views
 #endif // guard

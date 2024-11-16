@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/platform.h"
-#include "misc/icons.h"
-#include "misc/comparefunctions.h"
-#include "config/buildconfig.h"
 
 #include <QJsonValue>
 #include <QtGlobal>
+
+#include "config/buildconfig.h"
+#include "misc/comparefunctions.h"
+#include "misc/icons.h"
 
 using namespace swift::config;
 
@@ -172,7 +173,7 @@ namespace swift::misc
             if (CBuildConfig::isRunningOnMacOSPlatform()) { return CPlatform::macOSPlatform(); }
             return CPlatform::unknownOs();
         }
-    }
+    } // namespace private_ns
 
     const CPlatform &CPlatform::currentPlatform()
     {
@@ -241,4 +242,4 @@ namespace swift::misc
         static const CPlatform p(All);
         return p;
     }
-} // namespace
+} // namespace swift::misc

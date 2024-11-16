@@ -6,16 +6,6 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTAPPLICATION_H
 #define SWIFT_CORE_CONTEXT_CONTEXTAPPLICATION_H
 
-#include "core/swiftcoreexport.h"
-#include "core/context/context.h"
-#include "core/corefacadeconfig.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/dictionary.h"
-#include "misc/identifier.h"
-#include "misc/identifierlist.h"
-#include "misc/statusmessage.h"
-#include "misc/valuecache.h"
-
 #include <QDBusArgument>
 #include <QHash>
 #include <QList>
@@ -25,6 +15,16 @@
 #include <QString>
 #include <QStringList>
 #include <QtGlobal>
+
+#include "core/context/context.h"
+#include "core/corefacadeconfig.h"
+#include "core/swiftcoreexport.h"
+#include "misc/dictionary.h"
+#include "misc/identifier.h"
+#include "misc/identifierlist.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/statusmessage.h"
+#include "misc/valuecache.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -155,8 +155,8 @@ namespace swift::core
             //! Constructor
             IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
         };
-    } // ns
-} // ns
+    } // namespace context
+} // namespace swift::core
 
 Q_DECLARE_METATYPE(swift::core::context::CSettingsDictionary)
 

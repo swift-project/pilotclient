@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "altitudedialog.h"
-#include "ui_altitudedialog.h"
 
-#include "misc/statusmessagelist.h"
-#include "misc/aviation/altitude.h"
-
-#include <QValidator>
 #include <QPushButton>
 #include <QStringBuilder>
+#include <QValidator>
+
+#include "ui_altitudedialog.h"
+
+#include "misc/aviation/altitude.h"
+#include "misc/statusmessagelist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -248,4 +249,4 @@ namespace swift::gui::components
         this->setStyleSheet("");
         this->setStyleSheet(ss);
     }
-} // ns
+} // namespace swift::gui::components

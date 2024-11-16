@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_IDENTIFIER_H
 #define SWIFT_MISC_IDENTIFIER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/valueobject.h"
-
 #include <QByteArray>
 #include <QMetaType>
-#include <QString>
 #include <QObject>
+#include <QString>
 #include <QUuid>
 #include <QtGlobal>
+
+#include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CIdentifier)
 
@@ -166,7 +166,7 @@ namespace swift::misc
             SWIFT_METAMEMBER(processName),
             SWIFT_METAMEMBER(processId));
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIdentifier)
 

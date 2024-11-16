@@ -8,12 +8,12 @@
 #include <QList>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPointer>
 #include <QRgb>
 #include <QSize>
 #include <QStringList>
 #include <QStyleOption>
 #include <QSvgRenderer>
-#include <QPointer>
 #include <Qt>
 #include <QtGlobal>
 
@@ -317,4 +317,4 @@ namespace swift::gui
         static const QList<int> widths({ 16, 16, 16, 16 });
         return widths;
     }
-} // ns
+} // namespace swift::gui

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorplugincommon.h"
+
 #include "gui/components/interpolationlogdisplaydialog.h"
 #include "gui/guiapplication.h"
 #include "misc/simplecommandparser.h"
@@ -84,4 +85,4 @@ namespace swift::simplugin::common
         if (CSimpleCommandParser::registered("swift::simplugin::common::CSimulatorPluginCommon")) { return; }
         CSimpleCommandParser::registerCommand({ ".drv intdisplay", "interpolation display" });
     }
-} // namespace
+} // namespace swift::simplugin::common

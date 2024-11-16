@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_FILELOGGER_H
 #define SWIFT_MISC_FILELOGGER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/logpattern.h"
-#include "misc/statusmessage.h"
-
 #include <QFile>
 #include <QObject>
 #include <QString>
 #include <QTextStream>
+
+#include "misc/logpattern.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -57,6 +57,6 @@ namespace swift::misc
         QTextStream m_stream;
         QString m_previousCategories;
     };
-}
+} // namespace swift::misc
 
 #endif

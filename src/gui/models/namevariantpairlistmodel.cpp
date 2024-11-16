@@ -1,16 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/columnformatters.h"
-#include "gui/models/columns.h"
 #include "gui/models/namevariantpairlistmodel.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/namevariantpair.h"
-#include "misc/propertyindexvariantmap.h"
 
 #include <QModelIndex>
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/models/columns.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/namevariantpair.h"
+#include "misc/propertyindexvariantmap.h"
 
 using namespace swift::misc;
 
@@ -87,4 +88,4 @@ namespace swift::gui::models
         const CNameVariantPair cv = this->at(i);
         return value == CVariant::from(cv);
     }
-} // namespace
+} // namespace swift::gui::models

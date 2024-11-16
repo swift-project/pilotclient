@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/timestampbased.h"
-#include "misc/comparefunctions.h"
-#include "misc/stringutils.h"
-#include "misc/verify.h"
 
 #include <QByteArray>
 #include <QDateTime>
+
+#include "misc/comparefunctions.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 namespace swift::misc
 {
@@ -379,4 +380,4 @@ namespace swift::misc
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
         return 0;
     }
-} // namespace
+} // namespace swift::misc

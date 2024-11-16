@@ -4,17 +4,18 @@
 //! \cond PRIVATE
 
 #include "misc/icons.h"
-#include "misc/swiftdirectories.h"
-#include "misc/fileutils.h"
-#include "misc/threadutils.h"
 
 #include <QIcon>
 #include <QImage>
 #include <QMap>
-#include <QTransform>
 #include <QPainter>
 #include <QSize>
+#include <QTransform>
 #include <QtGlobal>
+
+#include "misc/fileutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/threadutils.h"
 
 namespace swift::misc
 {
@@ -1303,6 +1304,6 @@ namespace swift::misc
         QImage destBackgroundImg(changeImageBackgroundColor(imgSource, backgroundColor));
         return QIcon(QPixmap::fromImage(destBackgroundImg));
     }
-} // namespace
+} // namespace swift::misc
 
 //! \endcond

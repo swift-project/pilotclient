@@ -2,6 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/airspaceanalyzer.h"
+
+#include <QDateTime>
+#include <QMetaObject>
+#include <QReadLocker>
+#include <QString>
+#include <QThread>
+#include <QWriteLocker>
+
 #include "core/airspacemonitor.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/callsign.h"
@@ -10,13 +18,6 @@
 #include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/statusmessage.h"
 #include "misc/threadutils.h"
-
-#include <QDateTime>
-#include <QMetaObject>
-#include <QReadLocker>
-#include <QString>
-#include <QThread>
-#include <QWriteLocker>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -243,4 +244,4 @@ namespace swift::core
 
         emit this->airspaceAircraftSnapshot(snapshot);
     }
-} // ns
+} // namespace swift::core

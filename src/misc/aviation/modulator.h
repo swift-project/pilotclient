@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_AVIATION_MODULATORUNIT_H
 #define SWIFT_MISC_AVIATION_MODULATORUNIT_H
 
-#include "misc/propertyindexref.h"
 #include "misc/pq/frequency.h"
+#include "misc/propertyindexref.h"
 
 namespace swift::misc::aviation
 {
@@ -152,6 +152,6 @@ namespace swift::misc::aviation
     extern template class SWIFT_MISC_EXPORT_DECLARE_TEMPLATE CModulator<CNavSystem>;
     //! \endcond
 
-} // namespace
+} // namespace swift::misc::aviation
 
 #endif // guard

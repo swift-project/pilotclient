@@ -1,10 +1,28 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/webdataservices.h"
-#include "gui/components/dbautostashingcomponent.h"
-#include "gui/components/dbautosimulatorstashingcomponent.h"
 #include "gui/components/dbmappingcomponent.h"
+
+#include <QAction>
+#include <QDialog>
+#include <QFileDialog>
+#include <QFrame>
+#include <QMenu>
+#include <QModelIndex>
+#include <QPoint>
+#include <QShortcut>
+#include <QSplitter>
+#include <QTabWidget>
+#include <QVariant>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
+
+#include "ui_dbmappingcomponent.h"
+
+#include "core/webdataservices.h"
+#include "gui/components/dbautosimulatorstashingcomponent.h"
+#include "gui/components/dbautostashingcomponent.h"
 #include "gui/components/dbmodelmappingmodifydialog.h"
 #include "gui/components/dbownmodelscomponent.h"
 #include "gui/components/dbownmodelsetcomponent.h"
@@ -19,33 +37,17 @@
 #include "gui/menus/aircraftmodelmenus.h"
 #include "gui/menus/menuaction.h"
 #include "gui/models/aircraftmodellistmodel.h"
+#include "gui/shortcut.h"
 #include "gui/views/aircraftmodelview.h"
 #include "gui/views/viewbase.h"
-#include "gui/shortcut.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/livery.h"
 #include "misc/icons.h"
-#include "misc/swiftdirectories.h"
 #include "misc/logmessage.h"
 #include "misc/network/authenticateduser.h"
 #include "misc/propertyindexvariantmap.h"
 #include "misc/simulation/aircraftmodelutils.h"
-#include "ui_dbmappingcomponent.h"
-
-#include <QAction>
-#include <QDialog>
-#include <QFrame>
-#include <QShortcut>
-#include <QMenu>
-#include <QModelIndex>
-#include <QPoint>
-#include <QSplitter>
-#include <QTabWidget>
-#include <QVariant>
-#include <QWidget>
-#include <QFileDialog>
-#include <Qt>
-#include <QtGlobal>
+#include "misc/swiftdirectories.h"
 
 using namespace swift::core;
 using namespace swift::misc;
@@ -1060,4 +1062,4 @@ namespace swift::gui::components
     {
         return qobject_cast<CDbMappingComponent *>(this->parent());
     }
-} // ns
+} // namespace swift::gui::components

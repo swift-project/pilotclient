@@ -1,16 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
 #include "core/modelsetbuilder.h"
-#include "core/webdataservices.h"
-#include "core/db/databaseutils.h"
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "misc/simulation/aircraftmodel.h"
 
 #include <QStringList>
 #include <Qt>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "core/db/databaseutils.h"
+#include "core/webdataservices.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/simulation/aircraftmodel.h"
 
 using namespace swift::misc::simulation;
 using namespace swift::core::db;
@@ -87,4 +88,4 @@ namespace swift::core
         // result
         return modelSet;
     }
-} // ns
+} // namespace swift::core

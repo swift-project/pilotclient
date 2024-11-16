@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "visualpilotdatatoggle.h"
+
 #include "pbh.h"
 #include "serializer.h"
 
@@ -40,4 +41,4 @@ namespace swift::core::fsd
 
         return VisualPilotDataToggle(tokens[0], tokens[1], tokens[2] == QStringLiteral("1"));
     }
-}
+} // namespace swift::core::fsd

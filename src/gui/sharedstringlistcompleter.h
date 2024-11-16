@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_SHAREDSTRINGLISTCOMPLETER_H
 #define SWIFT_GUI_SHAREDSTRINGLISTCOMPLETER_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QCompleter>
-#include <QStringListModel>
 #include <QScopedPointer>
+#include <QStringListModel>
+
+#include "gui/swiftguiexport.h"
 
 namespace swift::gui
 {
@@ -63,6 +63,6 @@ namespace swift::gui
         //! How completer behaves
         static void setCompleterParameters(QCompleter *completer);
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

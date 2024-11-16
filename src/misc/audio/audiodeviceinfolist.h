@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_AUDIO_AUDIODEVICELIST_H
 #define SWIFT_MISC_AUDIO_AUDIODEVICELIST_H
 
+#include <QAudioDevice>
+#include <QMetaType>
+#include <QStringList>
+
 #include "misc/audio/audiodeviceinfo.h"
-#include "misc/identifier.h"
 #include "misc/collection.h"
+#include "misc/identifier.h"
 #include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QMetaType>
-#include <QAudioDevice>
-#include <QStringList>
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::audio, CAudioDeviceInfo, CAudioDeviceInfoList)
 
@@ -96,7 +96,7 @@ namespace swift::misc::audio
         static CAudioDeviceInfo defaultOutputDevice();
         //! @}
     };
-} // namespace
+} // namespace swift::misc::audio
 
 Q_DECLARE_METATYPE(swift::misc::audio::CAudioDeviceInfoList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::audio::CAudioDeviceInfo>)

@@ -5,14 +5,15 @@
 //! \file
 //! \ingroup testmisc
 
+#include <QTest>
+
+#include "test.h"
+
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/earthangle.h"
 #include "misc/geo/latitude.h"
 #include "misc/pq/physicalquantity.h"
 #include "misc/pq/units.h"
-#include "test.h"
-
-#include <QTest>
 
 using namespace swift::misc::geo;
 using namespace swift::misc::physical_quantities;
@@ -74,7 +75,7 @@ namespace MiscTest
         latValue = testCoordinate.latitude().value(CAngleUnit::deg());
         QCOMPARE(latValue, newLat.value(CAngleUnit::deg()));
     }
-} // ns
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestGeo);

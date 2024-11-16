@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/aircraftmodelutils.h"
-#include "misc/simulation/fscommon/fscommonutil.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/verify.h"
 
 #include <algorithm>
+
+#include "misc/directoryutils.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/fscommon/fscommonutil.h"
+#include "misc/swiftdirectories.h"
+#include "misc/verify.h"
 
 namespace swift::misc::simulation
 {
@@ -197,4 +198,4 @@ namespace swift::misc::simulation
         msgs.push_back(specificTests);
         return msgs;
     }
-} // ns
+} // namespace swift::misc::simulation

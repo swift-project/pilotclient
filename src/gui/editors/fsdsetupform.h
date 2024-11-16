@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_EDITORS_FSDSETUPCOMPONENT_H
 #define SWIFT_GUI_EDITORS_FSDSETUPCOMPONENT_H
 
-#include "gui/editors/form.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "gui/editors/form.h"
 #include "misc/network/fsdsetup.h"
 
 namespace Ui
@@ -72,6 +73,6 @@ namespace swift::gui::editors
         bool m_visibleEnableInfo = true;
         bool m_alwaysAllowOverride = false;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

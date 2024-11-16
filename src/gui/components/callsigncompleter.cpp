@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "callsigncompleter.h"
+
+#include <QStringListModel>
+
 #include "ui_callsigncompleter.h"
+
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
 #include "gui/guiapplication.h"
 #include "gui/led.h"
 #include "gui/uppercasevalidator.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextownaircraft.h"
 #include "misc/simulation/simulatedaircraftlist.h"
-
-#include <QStringListModel>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -147,4 +149,4 @@ namespace swift::gui::components
         static CSharedStringListCompleter *c = new CSharedStringListCompleter();
         return c;
     }
-} // ns
+} // namespace swift::gui::components

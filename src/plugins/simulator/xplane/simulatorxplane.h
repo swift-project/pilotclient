@@ -6,33 +6,34 @@
 #ifndef SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_H
 #define SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_H
 
+#include <QDBusConnection>
+#include <QHash>
+#include <QList>
+#include <QObject>
+#include <QPair>
+#include <QString>
+#include <QStringList>
+#include <QTimer>
+
 #include "xplanempaircraft.h"
-#include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
-#include "plugins/simulator/plugincommon/simulatorplugincommon.h"
+
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/identifier.h"
+#include "misc/pixmap.h"
+#include "misc/pq/time.h"
+#include "misc/pq/units.h"
+#include "misc/sequence.h"
+#include "misc/settingscache.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/data/modelcaches.h"
 #include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/simulation/settings/xswiftbussettings.h"
 #include "misc/simulation/simulatedaircraftlist.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/aviation/callsignset.h"
-#include "misc/geo/coordinategeodetic.h"
-#include "misc/pq/time.h"
-#include "misc/pq/units.h"
-#include "misc/settingscache.h"
 #include "misc/statusmessage.h"
-#include "misc/identifier.h"
-#include "misc/pixmap.h"
-#include "misc/sequence.h"
-
-#include <QDBusConnection>
-#include <QList>
-#include <QObject>
-#include <QString>
-#include <QStringList>
-#include <QHash>
-#include <QPair>
-#include <QTimer>
+#include "plugins/simulator/plugincommon/simulatorplugincommon.h"
+#include "plugins/simulator/xplaneconfig/simulatorxplaneconfig.h"
 
 class QDBusServiceWatcher;
 
@@ -43,7 +44,7 @@ namespace swift::misc
         class CAircraftParts;
         class CAircraftSituation;
         class CCallsign;
-    }
+    } // namespace aviation
     namespace network
     {
         class CTextMessage;
@@ -54,8 +55,8 @@ namespace swift::misc
         class CSimulatorPluginInfo;
         class IOwnAircraftProvider;
         class IRemoteAircraftProvider;
-    }
-}
+    } // namespace simulation
+} // namespace swift::misc
 
 namespace swift::simplugin::xplane
 {
@@ -340,6 +341,6 @@ namespace swift::simplugin::xplane
         //! \copydoc swift::core::ISimulatorFactory::createListener
         virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override { return new CSimulatorXPlaneListener(info); }
     };
-} // ns
+} // namespace swift::simplugin::xplane
 
 #endif // guard

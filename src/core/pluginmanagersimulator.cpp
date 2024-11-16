@@ -1,17 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
 #include "core/pluginmanagersimulator.h"
-#include "core/simulator.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/logmessage.h"
 
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QStringBuilder>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "core/simulator.h"
+#include "misc/directoryutils.h"
+#include "misc/logmessage.h"
+#include "misc/swiftdirectories.h"
 
 namespace swift::core
 {
@@ -110,4 +111,4 @@ namespace swift::core
         static const QString d(CFileUtils::appendFilePaths(CSwiftDirectories::pluginsDirectory(), "simulator"));
         return d;
     }
-}
+} // namespace swift::core

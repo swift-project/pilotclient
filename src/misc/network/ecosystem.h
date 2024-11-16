@@ -6,11 +6,11 @@
 #ifndef SWIFT_MISC_NETWORK_ECOSYSTEM_H
 #define SWIFT_MISC_NETWORK_ECOSYSTEM_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/valueobject.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CEcosystem)
 
@@ -93,7 +93,7 @@ namespace swift::misc::network
             CEcosystem,
             SWIFT_METAMEMBER(system));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CEcosystem)
 Q_DECLARE_METATYPE(swift::misc::network::CEcosystem::System)

@@ -4,14 +4,14 @@
 #ifndef SWIFT_MISC_AVIATION_FLIGHTPLAN_AIRCRAFT_INFO_H
 #define SWIFT_MISC_AVIATION_FLIGHTPLAN_AIRCRAFT_INFO_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/valueobject.h"
+#include <QString>
+
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/comnavequipment.h"
 #include "misc/aviation/ssrequipment.h"
 #include "misc/aviation/waketurbulencecategory.h"
-
-#include <QString>
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlanAircraftInfo)
 
@@ -76,7 +76,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(wtc));
     };
 
-}
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CFlightPlanAircraftInfo)
 

@@ -2,14 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "situationform.h"
-#include "ui_situationform.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextownaircraft.h"
-#include "misc/pq/pressure.h"
-#include "misc/pq/angle.h"
-#include "misc/stringutils.h"
-#include "misc/logmessage.h"
+
 #include <QDoubleValidator>
+
+#include "ui_situationform.h"
+
+#include "core/context/contextownaircraft.h"
+#include "gui/guiapplication.h"
+#include "misc/logmessage.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/pressure.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -288,4 +291,4 @@ namespace swift::gui::editors
     {
         emit this->changeAircraftSituation();
     }
-} // ns
+} // namespace swift::gui::editors

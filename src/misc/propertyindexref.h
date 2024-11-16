@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_PROPERTYINDEXREF_H
 #define SWIFT_MISC_PROPERTYINDEXREF_H
 
+#include <QVector>
+
 #include "misc/swiftmiscexport.h"
 #include "misc/typetraits.h"
-#include <QVector>
 
 namespace swift::misc
 {
@@ -197,6 +198,6 @@ namespace swift::misc
         const int *m_begin = nullptr;
         int m_sizeOrIndex = -1;
     };
-}
+} // namespace swift::misc
 
 #endif

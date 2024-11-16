@@ -2,14 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "airportsmallcompleter.h"
+
+#include <QCompleter>
+
 #include "ui_airportsmallcompleter.h"
+
+#include "core/webdataservices.h"
 #include "gui/components/airportdialog.h"
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "gui/uppercasevalidator.h"
-#include "core/webdataservices.h"
 #include "misc/aviation/airportlist.h"
-#include <QCompleter>
 
 using namespace swift::core;
 using namespace swift::misc::aviation;
@@ -145,4 +148,4 @@ namespace swift::gui::components
         if (airport.isNull()) { return; }
         this->setAirport(airport);
     }
-} // ns
+} // namespace swift::gui::components

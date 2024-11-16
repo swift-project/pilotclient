@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/cloudlayerlistmodel.h"
-#include "gui/models/columnformatters.h"
 
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -131,4 +132,4 @@ namespace swift::gui::models
         (void)QT_TRANSLATE_NOOP("ModelCloudLayerList", "clouds");
         (void)QT_TRANSLATE_NOOP("ModelCloudLayerList", "coverage");
     }
-} // ns
+} // namespace swift::gui::models

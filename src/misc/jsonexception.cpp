@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/jsonexception.h"
-#include "misc/range.h"
+
+#include <vector>
+
 #include <QStringBuilder>
 #include <QThreadStorage>
-#include <vector>
+
+#include "misc/range.h"
 
 namespace swift::misc
 {
@@ -48,4 +51,4 @@ namespace swift::misc
         Q_ASSERT(jsonStack().back() == this);
         jsonStack().pop_back();
     }
-}
+} // namespace swift::misc

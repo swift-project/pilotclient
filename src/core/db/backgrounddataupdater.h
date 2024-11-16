@@ -6,16 +6,17 @@
 #ifndef SWIFT_CORE_DB_BACKGROUNDDATAUPDATER_H
 #define SWIFT_CORE_DB_BACKGROUNDDATAUPDATER_H
 
-#include "core/data/dbcaches.h"
-#include "core/swiftcoreexport.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/network/entityflags.h"
-#include "misc/statusmessagelist.h"
-#include "misc/worker.h"
+#include <atomic>
 
 #include <QMap>
 #include <QReadWriteLock>
-#include <atomic>
+
+#include "core/data/dbcaches.h"
+#include "core/swiftcoreexport.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/statusmessagelist.h"
+#include "misc/worker.h"
 
 namespace swift::core::db
 {
@@ -78,5 +79,5 @@ namespace swift::core::db
         //! \threadsafe
         void addHistory(const swift::misc::CStatusMessage &msg);
     };
-} // ns
+} // namespace swift::core::db
 #endif // guard

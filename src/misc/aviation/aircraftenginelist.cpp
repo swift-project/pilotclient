@@ -100,4 +100,4 @@ namespace swift::misc::aviation
             push_back(engine);
         }
     }
-} // namespace
+} // namespace swift::misc::aviation

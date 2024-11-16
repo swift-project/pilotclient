@@ -4,10 +4,11 @@
 //! \file
 
 #include "misc/sharedstate/dbus/dupleximpl.h"
-#include "misc/sharedstate/dbus/hubimpl.h"
-#include "misc/variantlist.h"
+
 #include "misc/dbusserver.h"
 #include "misc/identifier.h"
+#include "misc/sharedstate/dbus/hubimpl.h"
+#include "misc/variantlist.h"
 #include "misc/verify.h"
 
 namespace swift::misc::shared_state::dbus
@@ -100,4 +101,4 @@ namespace swift::misc::shared_state::dbus
     {
         m_handlingChannels.remove(channel);
     }
-}
+} // namespace swift::misc::shared_state::dbus

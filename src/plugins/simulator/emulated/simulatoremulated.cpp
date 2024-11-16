@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatoremulated.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextsimulator.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/aviation/altitude.h"
-#include "misc/math/mathutils.h"
 
+#include <QApplication>
 #include <QPointer>
 #include <QTimer>
-#include <QApplication>
+
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "misc/aviation/altitude.h"
+#include "misc/math/mathutils.h"
+#include "misc/simulation/simulatorplugininfo.h"
 
 using namespace swift::gui;
 using namespace swift::misc;
@@ -567,4 +568,4 @@ namespace swift::simplugin::emulated
     {
         this->startImpl();
     }
-} // ns
+} // namespace swift::simplugin::emulated

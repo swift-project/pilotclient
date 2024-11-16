@@ -6,10 +6,13 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTOWNAIRCRAFT_H
 #define SWIFT_CORE_CONTEXT_CONTEXTOWNAIRCRAFT_H
 
-#include "core/swiftcoreexport.h"
+#include <QObject>
+#include <QString>
+
 #include "core/context/context.h"
 #include "core/corefacade.h"
 #include "core/corefacadeconfig.h"
+#include "core/swiftcoreexport.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/selcal.h"
@@ -18,9 +21,6 @@
 #include "misc/network/user.h"
 #include "misc/pq/frequency.h"
 #include "misc/simulation/simulatedaircraft.h"
-
-#include <QObject>
-#include <QString>
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -42,8 +42,8 @@ namespace swift::misc
         class CAltitude;
         class CCallsign;
         class CTransponder;
-    }
-}
+    } // namespace aviation
+} // namespace swift::misc
 namespace swift::core::context
 {
     //! Own context proxy
@@ -158,6 +158,6 @@ namespace swift::core::context
         //! Constructor
         IContextOwnAircraft(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime) {}
     };
-} // ns
+} // namespace swift::core::context
 
 #endif // guard

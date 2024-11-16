@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "rehost.h"
+
 #include "serializer.h"
 
 #include "misc/logmessage.h"
@@ -34,4 +35,4 @@ namespace swift::core::fsd
 
         return Rehost(tokens[0], tokens[1]);
     }
-}
+} // namespace swift::core::fsd

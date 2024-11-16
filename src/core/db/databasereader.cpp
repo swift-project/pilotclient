@@ -2,32 +2,32 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/db/databasereader.h"
-#include "core/db/infodatareader.h"
-#include "core/db/databaseutils.h"
-#include "core/webdataservices.h"
-#include "core/application.h"
-#include "misc/db/datastoreutility.h"
-#include "misc/network/networkutils.h"
-#include "misc/network/entityflags.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/logcategories.h"
-#include "misc/logmessage.h"
-#include "misc/verify.h"
 
-#include <QStringBuilder>
 #include <QByteArray>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QPointer>
-#include <QFileInfo>
 #include <QJsonValueRef>
 #include <QMetaObject>
 #include <QNetworkReply>
+#include <QPointer>
 #include <QReadLocker>
-#include <QUrl>
 #include <QStringBuilder>
+#include <QUrl>
 #include <QWriteLocker>
+
+#include "core/application.h"
+#include "core/db/databaseutils.h"
+#include "core/db/infodatareader.h"
+#include "core/webdataservices.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/directoryutils.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/networkutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/verify.h"
 
 using namespace swift::misc;
 using namespace swift::misc::db;
@@ -805,4 +805,4 @@ namespace swift::core::db
         this->setLastModifiedTimestamp(lastModified);
         this->setContentLengthHeader(size);
     }
-} // ns
+} // namespace swift::core::db

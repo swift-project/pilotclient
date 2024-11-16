@@ -262,4 +262,4 @@ namespace XSwiftBus
         return msg;
     }
 
-}
+} // namespace XSwiftBus

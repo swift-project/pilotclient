@@ -4,12 +4,12 @@
 #ifndef SWIFT_GUI_LABELANDICON_H
 #define SWIFT_GUI_LABELANDICON_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/swiftguiexport.h"
 
 class QPixmap;
 class QWidget;
@@ -45,6 +45,6 @@ namespace swift::gui
         QScopedPointer<Ui::CLabelAndIcon> ui;
     };
 
-} // ns
+} // namespace swift::gui
 
 #endif // guard

@@ -2,17 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/hotkeydialog.h"
-#include "gui/guiapplication.h"
-#include "gui/stylesheetutility.h"
-#include "core/context/contextapplication.h"
-#include "core/inputmanager.h"
-#include "misc/icons.h"
-#include "misc/identifier.h"
-#include "misc/input/hotkeycombination.h"
-#include "misc/input/keyboardkeylist.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
-#include "ui_hotkeydialog.h"
 
 #include <QFrame>
 #include <QGroupBox>
@@ -31,6 +20,19 @@
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
+
+#include "ui_hotkeydialog.h"
+
+#include "core/context/contextapplication.h"
+#include "core/inputmanager.h"
+#include "gui/guiapplication.h"
+#include "gui/stylesheetutility.h"
+#include "misc/icons.h"
+#include "misc/identifier.h"
+#include "misc/input/hotkeycombination.h"
+#include "misc/input/keyboardkeylist.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::input;
@@ -398,4 +400,4 @@ namespace swift::gui::components
         static const QString k = "[none]";
         return k;
     }
-} // ns
+} // namespace swift::gui::components

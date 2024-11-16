@@ -77,6 +77,6 @@ namespace swift::misc::geo
     extern template class SWIFT_MISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLatitude>;
     extern template class SWIFT_MISC_EXPORT_DECLARE_TEMPLATE CEarthAngle<CLongitude>;
     //! \endcond
-} // ns
+} // namespace swift::misc::geo
 
 #endif // guard

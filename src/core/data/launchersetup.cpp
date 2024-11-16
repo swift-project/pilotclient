@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/data/launchersetup.h"
+
 #include "misc/stringutils.h"
 
 using namespace swift::misc;
@@ -49,4 +50,4 @@ namespace swift::core::data
             break;
         }
     }
-} // ns
+} // namespace swift::core::data

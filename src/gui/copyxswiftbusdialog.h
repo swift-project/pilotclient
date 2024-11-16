@@ -7,6 +7,7 @@
 #define SWIFT_GUI_COPYXSWIFTBUSDIALOG_H
 
 #include <QWidget>
+
 #include "gui/swiftguiexport.h"
 
 namespace swift::gui
@@ -19,5 +20,5 @@ namespace swift::gui
         //! \remark normally only displayed in a local environment
         static int displayDialogAndCopyBuildFiles(const QString &xplaneRootDir, bool checkLatestFile = true, QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui
 #endif

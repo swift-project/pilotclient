@@ -5,9 +5,11 @@
 //! \ingroup samplemiscsim
 
 #include "samplesp3d.h"
+
+#include <QTextStream>
+
 #include "misc/simulation/fscommon/fsdirectories.h"
 #include "misc/stringutils.h"
-#include <QTextStream>
 
 using namespace swift::misc::simulation::fscommon;
 
@@ -26,4 +28,4 @@ namespace swift::sample
         const QSet<QString> simObjectPaths = CFsDirectories::fsxSimObjectsPaths("B:/fsx.cfg", false);
         streamOut << swift::misc::joinStringSet(simObjectPaths, ", ") << Qt::endl;
     }
-} // namespace
+} // namespace swift::sample

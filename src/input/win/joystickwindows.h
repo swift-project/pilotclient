@@ -6,12 +6,14 @@
 
 //! \file
 
-#include "input/swiftinputexport.h"
-#include "input/joystick.h"
-#include "misc/input/joystickbutton.h"
-#include "misc/collection.h"
-#include <QVector>
 #include <memory>
+
+#include <QVector>
+
+#include "input/joystick.h"
+#include "input/swiftinputexport.h"
+#include "misc/collection.h"
+#include "misc/input/joystickbutton.h"
 
 #ifndef NOMINMAX
 #    define NOMINMAX
@@ -166,6 +168,6 @@ namespace swift::input
 
         swift::misc::input::CHotkeyCombination m_buttonCombination;
     };
-} // ns
+} // namespace swift::input
 
 #endif // guard

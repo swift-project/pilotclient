@@ -2,15 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsguicomponent.h"
-#include "core/context/contextnetwork.h"
-#include "gui/guiapplication.h"
-#include "misc/logmessage.h"
-#include "ui_settingsguicomponent.h"
+
 #include <QColorDialog>
 #include <QFont>
 #include <QFontComboBox>
-#include <QStyleFactory>
 #include <QMessageBox>
+#include <QStyleFactory>
+
+#include "ui_settingsguicomponent.h"
+
+#include "core/context/contextnetwork.h"
+#include "gui/guiapplication.h"
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 using namespace swift::gui::settings;
@@ -121,4 +124,4 @@ namespace swift::gui::components
         const CStatusMessage m = m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexWidgetStyle, widgetStyle);
         CLogMessage::preformatted(m);
     }
-} // ns
+} // namespace swift::gui::components

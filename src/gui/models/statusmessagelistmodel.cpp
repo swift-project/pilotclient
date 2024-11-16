@@ -1,14 +1,15 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/columnformatters.h"
-#include "gui/models/columns.h"
 #include "gui/models/statusmessagelistmodel.h"
-#include "misc/propertyindexvariantmap.h"
-#include "misc/timestampbased.h"
 
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/models/columns.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/timestampbased.h"
 
 using namespace swift::misc;
 
@@ -128,4 +129,4 @@ namespace swift::gui::models
         }
         return CListModelTimestampObjects::data(index, role);
     }
-} // namespace
+} // namespace swift::gui::models

@@ -57,5 +57,5 @@ namespace swift::gui::models
     private:
         Mode m_mode; //!< used mode
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

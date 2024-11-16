@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_COMPONENTS_COLORSELECTOR_H
 #define SWIFT_GUI_COMPONENTS_COLORSELECTOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/rgbcolor.h"
-
 #include <QColor>
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/swiftguiexport.h"
+#include "misc/rgbcolor.h"
 
 class QDragEnterEvent;
 class QDragLeaveEvent;
@@ -94,6 +94,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CColorSelector> ui;
         swift::misc::CRgbColor m_lastColor;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -8,12 +8,19 @@
  * \ingroup testmisc
  */
 
+#include <QDBusArgument>
+#include <QDateTime>
+#include <QObject>
+#include <QTest>
+
+#include "test.h"
+
 #include "misc/aviation/airlineicaocodelist.h"
 #include "misc/aviation/atcstation.h"
 #include "misc/aviation/callsign.h"
+#include "misc/geo/coordinategeodetic.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/mixin/mixinmetatype.h"
-#include "misc/geo/coordinategeodetic.h"
 #include "misc/network/user.h"
 #include "misc/pq/frequency.h"
 #include "misc/pq/length.h"
@@ -21,14 +28,8 @@
 #include "misc/pq/units.h"
 #include "misc/propertyindexvariantmap.h"
 #include "misc/registermetadata.h"
-#include "misc/variantlist.h"
 #include "misc/variant.h"
-#include "test.h"
-
-#include <QDBusArgument>
-#include <QObject>
-#include <QDateTime>
-#include <QTest>
+#include "misc/variantlist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -73,7 +74,7 @@ namespace MiscTest
         friend QDataStream &operator<<(QDataStream &ds, const CTestMatcher &) { return ds; }
         friend QDataStream &operator>>(QDataStream &ds, CTestMatcher &) { return ds; }
     };
-} // namespace
+} // namespace MiscTest
 
 Q_DECLARE_METATYPE(MiscTest::CTestMatcher)
 
@@ -192,7 +193,7 @@ namespace MiscTest
         vmCopy.setWildcard(!vm.isWildcard());
         QVERIFY2(qHash(vm) != qHash(vmCopy), "Hashs should not be equal (detailed)");
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestVariantAndMap);

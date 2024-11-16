@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "viewbaseitemdelegate.h"
+
 #include "viewbase.h"
 
 namespace swift::gui::views
@@ -22,4 +23,4 @@ namespace swift::gui::views
     {
         return qobject_cast<CViewBaseNonTemplate *>(this->parent());
     }
-} // namespace
+} // namespace swift::gui::views

@@ -8,21 +8,22 @@
  * \ingroup testswiftfsd
  */
 
+#include <QObject>
+#include <QSignalSpy>
+#include <QTest>
+
+#include "test.h"
+
 #include "config/buildconfig.h"
 #include "core/fsd/fsdclient.h"
 #include "misc/aviation/flightplan.h"
 #include "misc/network/clientprovider.h"
-#include "misc/network/rawfsdmessage.h"
 #include "misc/network/networkutils.h"
+#include "misc/network/rawfsdmessage.h"
+#include "misc/network/user.h"
+#include "misc/registermetadata.h"
 #include "misc/simulation/ownaircraftproviderdummy.h"
 #include "misc/simulation/remoteaircraftproviderdummy.h"
-#include "misc/registermetadata.h"
-#include "misc/network/user.h"
-#include "test.h"
-
-#include <QObject>
-#include <QSignalSpy>
-#include <QTest>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -973,7 +974,7 @@ namespace SwiftFsdTest
     //        QCOMPARE(CConnectionStatus::Disconnecting, arguments.at(0).value<CConnectionStatus>().getConnectionStatus());
     //        QCOMPARE(CConnectionStatus::Disconnected, arguments.at(1).value<CConnectionStatus>().getConnectionStatus());
     //    }
-}
+} // namespace SwiftFsdTest
 
 //! main
 SWIFTTEST_MAIN(SwiftFsdTest::CTestFSDClient);

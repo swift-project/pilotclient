@@ -46,4 +46,4 @@ namespace swift::gui
     {
         this->setFont(font);
     }
-}
+} // namespace swift::gui

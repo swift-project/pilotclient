@@ -2,26 +2,27 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/audiodevicevolumesetupcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "core/afv/clients/afvclient.h"
-#include "core/context/contextsimulator.h"
-#include "core/context/contextaudioimpl.h"
-
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/audio/audiodeviceinfo.h"
-#include "misc/audio/notificationsounds.h"
-#include "misc/audio/audiosettings.h"
-#include "misc/sequence.h"
-#include "ui_audiodevicevolumesetupcomponent.h"
 
 #include <QCheckBox>
 #include <QComboBox>
+#include <QFileDialog>
+#include <QPointer>
+#include <QStringLiteral>
 #include <QToolButton>
 #include <QtGlobal>
-#include <QPointer>
-#include <QFileDialog>
-#include <QStringLiteral>
+
+#include "ui_audiodevicevolumesetupcomponent.h"
+
+#include "core/afv/clients/afvclient.h"
+#include "core/context/contextaudioimpl.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/sequence.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 
 using namespace swift::core;
 using namespace swift::core::afv::audio;
@@ -594,4 +595,4 @@ namespace swift::gui::components
         as.setAudioEffectsEnabled(enabled);
         m_audioSettings.setAndSave(as);
     }
-} // namespace
+} // namespace swift::gui::components

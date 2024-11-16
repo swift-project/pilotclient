@@ -4,9 +4,10 @@
 //! \file
 
 #include "misc/sharedstate/datalinklocal.h"
-#include "misc/sharedstate/activeobserver.h"
-#include "misc/sharedstate/activemutator.h"
+
 #include "misc/promise.h"
+#include "misc/sharedstate/activemutator.h"
+#include "misc/sharedstate/activeobserver.h"
 
 namespace swift::misc::shared_state
 {
@@ -77,4 +78,4 @@ namespace swift::misc::shared_state
     {
         return getChannel(getChannelName(object));
     }
-}
+} // namespace swift::misc::shared_state

@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/categorymatcher.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/aircraftmatchersetup.h"
-#include "misc/simulation/matchingutils.h"
-#include "misc/statusmessagelist.h"
 
 #include <QStringBuilder>
+
+#include "misc/simulation/aircraftmatchersetup.h"
+#include "misc/simulation/matchingutils.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/statusmessagelist.h"
 
 using namespace swift::misc::aviation;
 
@@ -165,4 +166,4 @@ namespace swift::misc::simulation
         if (m_gliders.isEmpty()) { return -1; }
         return m_gliders.front().getFirstLevel();
     }
-} // namespace
+} // namespace swift::misc::simulation

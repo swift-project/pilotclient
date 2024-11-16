@@ -4,12 +4,12 @@
 #ifndef SWIFT_GUI_COMPONENTS_REGISTERCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_REGISTERCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QFrame>
 #include <QObject>
-#include <QTimer>
 #include <QScopedPointer>
+#include <QTimer>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -37,6 +37,6 @@ namespace swift::gui::components
         //! Update data
         void update();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

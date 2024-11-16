@@ -6,8 +6,9 @@
 #ifndef SWIFT_GUI_COMPONENTS_MODELCONVERTERXSETUPCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_MODELCONVERTERXSETUPCOMPONENT_H
 
-#include "misc/simulation/modelconverterx.h"
 #include <QFrame>
+
+#include "misc/simulation/modelconverterx.h"
 
 namespace Ui
 {
@@ -39,6 +40,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CModelConverterXSetupComponent> ui;
         swift::misc::CSetting<swift::misc::simulation::settings::TModelConverterXBinary> m_setting { this };
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

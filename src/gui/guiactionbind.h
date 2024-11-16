@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_GUIACTIONBIND_H
 #define SWIFT_GUI_GUIACTIONBIND_H
 
-#include "gui/swiftguiexport.h"
-#include "core/actionbind.h"
-
-#include <QMenu>
 #include <QList>
+#include <QMenu>
 #include <QPushButton>
-#include <QToolButton>
 #include <QScopedPointer>
+#include <QToolButton>
+
+#include "core/actionbind.h"
+#include "gui/swiftguiexport.h"
 
 namespace swift::gui
 {
@@ -75,6 +75,6 @@ namespace swift::gui
         QAction *m_action = nullptr;
         QAbstractButton *m_button = nullptr;
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/aircraftcombinedtypeselector.h"
-#include "gui/guiutility.h"
-#include "gui/uppercasevalidator.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "ui_aircraftcombinedtypeselector.h"
 
 #include <QComboBox>
 #include <QLineEdit>
 #include <QStringBuilder>
 #include <QtGlobal>
+
+#include "ui_aircraftcombinedtypeselector.h"
+
+#include "gui/guiutility.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/aviation/aircrafticaocode.h"
 
 using namespace swift::misc::aviation;
 
@@ -109,4 +111,4 @@ namespace swift::gui::components
         QString ct2(QString(t + ec + et).toUpper());
         return ct2.replace('U', '-');
     }
-} // ns
+} // namespace swift::gui::components

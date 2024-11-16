@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_DBDISTRIBUTORSELECTORCOMPONENT_H
 #define SWIFT_GUI_DBDISTRIBUTORSELECTORCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/dropbase.h"
-#include "misc/network/entityflags.h"
-#include "misc/simulation/distributor.h"
-
 #include <QFrame>
 #include <QMetaObject>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/dropbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/distributor.h"
 
 class QCompleter;
 class QDragEnterEvent;
@@ -99,5 +99,5 @@ namespace swift::gui::components
         QMetaObject::Connection m_signalConnection;
         swift::misc::simulation::CDistributor m_currentDistributor;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

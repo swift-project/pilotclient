@@ -6,9 +6,9 @@
 #ifndef SWIFT_GUI_VIEWS_AIRCRAFTPARTSVIEW_H
 #define SWIFT_GUI_VIEWS_AIRCRAFTPARTSVIEW_H
 
-#include "gui/views/viewtimestampobjects.h"
 #include "gui/models/aircraftpartslistmodel.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewtimestampobjects.h"
 
 namespace swift::gui::views
 {
@@ -21,6 +21,6 @@ namespace swift::gui::views
         //! Constructor
         explicit CAircraftPartsView(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::views
 
 #endif // guard

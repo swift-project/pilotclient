@@ -3,9 +3,9 @@
 
 #include "elidedpushbutton.h"
 
+#include <QFontMetrics>
 #include <QPainter>
 #include <QTextLine>
-#include <QFontMetrics>
 
 namespace swift::gui
 {
@@ -35,4 +35,4 @@ namespace swift::gui
         QPushButton::setText(elidedText);
         QPushButton::paintEvent(event);
     }
-} // ns
+} // namespace swift::gui

@@ -1,15 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
-#include "core/webdataservices.h"
 #include "gui/components/dbdistributorselectorcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/variant.h"
-#include "ui_dbdistributorselectorcomponent.h"
 
 #include <QCompleter>
 #include <QDragEnterEvent>
@@ -23,6 +15,16 @@
 #include <QStringList>
 #include <Qt>
 #include <QtGlobal>
+
+#include "ui_dbdistributorselectorcomponent.h"
+
+#include "core/application.h"
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/variant.h"
 
 using namespace swift::gui;
 using namespace swift::core;
@@ -203,4 +205,4 @@ namespace swift::gui::components
         this->setDistributor(distributorKeyOrAlias);
     }
 
-} // ns
+} // namespace swift::gui::components

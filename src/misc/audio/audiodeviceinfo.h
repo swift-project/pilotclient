@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_AUDIO_AUDIODEVICE_H
 #define SWIFT_MISC_AUDIO_AUDIODEVICE_H
 
-#include "misc/identifier.h"
-#include "misc/metaclass.h"
-#include "misc/valueobject.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/identifier.h"
+#include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::audio, CAudioDeviceInfo)
 
@@ -114,7 +114,7 @@ namespace swift::misc::audio
             SWIFT_METAMEMBER(deviceName),
             SWIFT_METAMEMBER(identifier));
     };
-} // namespace
+} // namespace swift::misc::audio
 
 Q_DECLARE_METATYPE(swift::misc::audio::CAudioDeviceInfo)
 Q_DECLARE_METATYPE(swift::misc::audio::CAudioDeviceInfo::DeviceType)

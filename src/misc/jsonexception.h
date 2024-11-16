@@ -6,9 +6,11 @@
 #ifndef SWIFT_MISC_JSONEXCEPTION_H
 #define SWIFT_MISC_JSONEXCEPTION_H
 
-#include "misc/swiftmiscexport.h"
-#include <QString>
 #include <stdexcept>
+
+#include <QString>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -77,6 +79,6 @@ namespace swift::misc
         const QString *m_string = nullptr;
         QLatin1String m_latin1;
     };
-}
+} // namespace swift::misc
 
 #endif

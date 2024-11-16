@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_TICKLABEL_H
 #define SWIFT_GUI_TICKLABEL_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/icons.h"
-
 #include <QLabel>
 #include <QObject>
 #include <QPixmap>
 #include <QString>
+
+#include "gui/swiftguiexport.h"
+#include "misc/icons.h"
 
 namespace swift::gui
 {
@@ -51,6 +51,6 @@ namespace swift::gui
         //! Set the label
         void setLabel();
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

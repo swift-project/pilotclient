@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "sawtoothgenerator.h"
+
 #include <cmath>
 
 namespace swift::sound::sample_provider
@@ -27,4 +28,4 @@ namespace swift::sound::sample_provider
         }
         return static_cast<int>(count);
     }
-} // ns
+} // namespace swift::sound::sample_provider

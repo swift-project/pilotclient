@@ -32,6 +32,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CCopyModelsFromOtherSwiftVersionsDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

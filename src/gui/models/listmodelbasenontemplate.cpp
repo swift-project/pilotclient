@@ -5,6 +5,7 @@
 // http://doc.qt.io/qt-5/model-view-programming.html#using-drag-and-drop-with-item-views
 
 #include "gui/models/listmodelbasenontemplate.h"
+
 #include "misc/verify.h"
 
 using namespace swift::misc;
@@ -181,4 +182,4 @@ namespace swift::gui::models
         connect(this, &CListModelBaseNonTemplate::dataChanged, this, &CListModelBaseNonTemplate::onDataChanged);
     }
 
-} // namespace
+} // namespace swift::gui::models

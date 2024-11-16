@@ -6,13 +6,13 @@
 #ifndef SWIFT_CORE_PLUGIN_MANAGER_H
 #define SWIFT_CORE_PLUGIN_MANAGER_H
 
-#include "core/swiftcoreexport.h"
-#include "misc/sequence.h"
-
 #include <QJsonObject>
 #include <QMap>
 #include <QObject>
 #include <QString>
+
+#include "core/swiftcoreexport.h"
+#include "misc/sequence.h"
 
 namespace swift::core
 {
@@ -85,6 +85,6 @@ namespace swift::core
         QMap<QString, QString> m_configs; //!< identifier <-> identifier pairs
         QMap<const QObject *, QString> m_instanceIds; //!< instance <-> identifier pairs
     };
-}
+} // namespace swift::core
 
 #endif // guard

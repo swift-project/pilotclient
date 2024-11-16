@@ -6,12 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_COPYMODELSFROMOTHERSWIFTVERSIONS_H
 #define SWIFT_GUI_COMPONENTS_COPYMODELSFROMOTHERSWIFTVERSIONS_H
 
-#include "gui/overlaymessagesframe.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/applicationinfo.h"
 #include <QFrame>
-#include <QWizardPage>
 #include <QScopedPointer>
+#include <QWizardPage>
+
+#include "gui/overlaymessagesframe.h"
+#include "misc/applicationinfo.h"
+#include "misc/simulation/data/modelcaches.h"
 
 namespace Ui
 {
@@ -79,6 +80,6 @@ namespace swift::gui::components
     private:
         CCopyModelsFromOtherSwiftVersionsComponent *m_copyModels = nullptr;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

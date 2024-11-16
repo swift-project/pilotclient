@@ -6,19 +6,19 @@
 #ifndef SWIFT_CORE_DATA_NETWORKSETUP_H
 #define SWIFT_CORE_DATA_NETWORKSETUP_H
 
-#include "core/vatsim/vatsimsettings.h"
+#include <QMetaType>
+#include <QObject>
+#include <QString>
+
 #include "core/data/vatsimsetup.h"
 #include "core/swiftcoreexport.h"
-#include "misc/network/data/lastserver.h"
-#include "misc/network/settings/serversettings.h"
-#include "misc/network/serverlist.h"
-#include "misc/statusmessage.h"
-#include "misc/settingscache.h"
+#include "core/vatsim/vatsimsettings.h"
 #include "misc/metaclass.h"
-
-#include <QMetaType>
-#include <QString>
-#include <QObject>
+#include "misc/network/data/lastserver.h"
+#include "misc/network/serverlist.h"
+#include "misc/network/settings/serversettings.h"
+#include "misc/settingscache.h"
+#include "misc/statusmessage.h"
 
 namespace swift::core::data
 {
@@ -73,6 +73,6 @@ namespace swift::core::data
         swift::misc::CData<swift::misc::network::data::TLastServer> m_lastServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used server (VATSIM, other)
         swift::misc::CData<swift::core::data::TVatsimLastServer> m_lastVatsimServer { this, &CNetworkSetup::onSettingsChanged }; //!< recently used VATSIM server
     };
-} // ns
+} // namespace swift::core::data
 
 #endif // guard

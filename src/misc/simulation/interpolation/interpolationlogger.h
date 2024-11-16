@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONLOGGER_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONLOGGER_H
 
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/aviation/aircraftsituationlist.h"
-#include "misc/aviation/aircraftpartslist.h"
-#include "misc/aviation/aircraftsituationchange.h"
-#include "misc/logcategories.h"
-
 #include <QObject>
 #include <QStringList>
 #include <QtGlobal>
+
+#include "misc/aviation/aircraftpartslist.h"
+#include "misc/aviation/aircraftsituationchange.h"
+#include "misc/aviation/aircraftsituationlist.h"
+#include "misc/logcategories.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/simulation/remoteaircraftprovider.h"
 
 namespace swift::misc
 {
@@ -220,6 +220,6 @@ namespace swift::misc
             QList<PartsLog> m_partsLogs; //!< logs of parts
             QList<SituationLog> m_situationLogs; //!< logs of interpolation
         };
-    } // namespace
-} // namespace
+    } // namespace simulation
+} // namespace swift::misc
 #endif // guard

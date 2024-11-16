@@ -6,13 +6,14 @@
 #ifndef SWIFT_GUI_SPLASHSCREEN_H
 #define SWIFT_GUI_SPLASHSCREEN_H
 
-#include "misc/statusmessage.h"
-#include <QSplashScreen>
+#include <QFont>
+#include <QLabel>
 #include <QPainter>
 #include <QPixmap>
-#include <QLabel>
-#include <QFont>
+#include <QSplashScreen>
 #include <QTimer>
+
+#include "misc/statusmessage.h"
 
 namespace swift::gui
 {
@@ -38,6 +39,6 @@ namespace swift::gui
         QString m_message;
         QTimer m_clearTextTimer;
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

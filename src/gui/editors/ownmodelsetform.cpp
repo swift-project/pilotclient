@@ -1,18 +1,20 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/webdataservices.h"
 #include "gui/editors/ownmodelsetform.h"
-#include "gui/models/distributorlistmodel.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "gui/views/distributorview.h"
-#include "misc/simulation/distributorlist.h"
-#include "ui_ownmodelsetform.h"
 
+#include <QPointer>
 #include <QRadioButton>
 #include <QtGlobal>
-#include <QPointer>
+
+#include "ui_ownmodelsetform.h"
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/models/distributorlistmodel.h"
+#include "gui/views/distributorview.h"
+#include "misc/simulation/distributorlist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -197,4 +199,4 @@ namespace swift::gui::editors
         const CDistributorListPreferences prefs(m_distributorPreferences.get());
         return !prefs.getDistributors(m_simulator).isEmpty();
     }
-} // ns
+} // namespace swift::gui::editors

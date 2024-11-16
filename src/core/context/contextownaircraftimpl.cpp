@@ -3,6 +3,10 @@
 
 #include "core/context/contextownaircraftimpl.h"
 
+#include <QReadLocker>
+#include <QWriteLocker>
+#include <QtGlobal>
+
 // ----- cross context -----
 #include "core/context/contextapplication.h"
 #include "core/context/contextaudio.h"
@@ -10,30 +14,26 @@
 // ----- cross context -----
 
 #include "core/application.h"
+#include "core/db/databaseutils.h"
 #include "core/webdataservices.h"
-#include "misc/network/server.h"
+#include "misc/audio/notificationsounds.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/altitude.h"
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/transponder.h"
-#include "misc/audio/notificationsounds.h"
-#include "core/db/databaseutils.h"
+#include "misc/dbusserver.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
-#include "misc/pq/physicalquantity.h"
-#include "misc/pq/units.h"
-#include "misc/simplecommandparser.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/dbusserver.h"
 #include "misc/logcategories.h"
 #include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/server.h"
+#include "misc/pq/physicalquantity.h"
+#include "misc/pq/units.h"
 #include "misc/sequence.h"
+#include "misc/simplecommandparser.h"
 #include "misc/statusmessage.h"
-
-#include <QReadLocker>
-#include <QWriteLocker>
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -518,4 +518,4 @@ namespace swift::core::context
         }
         return false;
     }
-} // namespace
+} // namespace swift::core::context

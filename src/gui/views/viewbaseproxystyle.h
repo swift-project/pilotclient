@@ -6,9 +6,9 @@
 #ifndef SWIFT_GUI_VIEWBASE_PROXYSTYLE_H
 #define SWIFT_GUI_VIEWBASE_PROXYSTYLE_H
 
-#include <QProxyStyle>
-#include <QPen>
 #include <QPainter>
+#include <QPen>
+#include <QProxyStyle>
 #include <QStyleOptionViewItem>
 
 namespace swift::gui::views
@@ -36,5 +36,5 @@ namespace swift::gui::views
     private:
         CViewBaseNonTemplate *m_view = nullptr; //!< "parent view"
     };
-} // namespace
+} // namespace swift::gui::views
 #endif // guard

@@ -6,9 +6,11 @@
 #ifndef SWIFT_MISC_OPTIONAL_H
 #define SWIFT_MISC_OPTIONAL_H
 
-#include "misc/typetraits.h"
-#include <QtGlobal>
 #include <utility>
+
+#include <QtGlobal>
+
+#include "misc/typetraits.h"
 
 namespace swift::misc
 {

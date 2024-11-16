@@ -214,4 +214,4 @@ namespace swift::input
         }
         return CallNextHookEx(g_keyboardWindows->m_keyboardHook, nCode, wParam, lParam);
     }
-}
+} // namespace swift::input

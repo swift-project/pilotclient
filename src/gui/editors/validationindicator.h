@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_EDITOR_VALIDATIONINDICATOR_H
 #define SWIFT_GUI_EDITOR_VALIDATIONINDICATOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/statusmessagelist.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
 #include <QTimer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessagelist.h"
 
 class QPaintEvent;
 class QWidget;
@@ -72,6 +72,6 @@ namespace swift::gui::editors
         QTimer m_resetTimer; //!< reset to neutral
         QString m_originalStyleSheet; //!< stored, to be able to reset
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

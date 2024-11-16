@@ -10,12 +10,12 @@
 #include <QString>
 #include <QStringList>
 
-#include "misc/swiftmiscexport.h"
 #include "misc/collection.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/sequence.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/fscommon/vpilotmodelrule.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_COLLECTION_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule, CVPilotModelRuleSet)
 
@@ -66,7 +66,7 @@ namespace swift::misc::simulation::fscommon
         //! Convert values to upper case
         static QStringList toUpper(const QStringList &stringList);
     };
-} // namespace
+} // namespace swift::misc::simulation::fscommon
 
 Q_DECLARE_METATYPE(swift::misc::simulation::fscommon::CVPilotModelRuleSet)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::fscommon::CVPilotModelRule>)

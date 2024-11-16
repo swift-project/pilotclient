@@ -12,4 +12,4 @@ namespace swift::gui::views
         this->standardInit(new CAircraftPartsListModel(this));
         this->setMenu(MenuDefault);
     }
-} // ns
+} // namespace swift::gui::views

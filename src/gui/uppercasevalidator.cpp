@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/stringutils.h"
 #include "gui/uppercasevalidator.h"
+
 #include <QString>
 #include <QtGlobal>
+
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 
@@ -65,4 +67,4 @@ namespace swift::gui
             input = removeIfNotInString(input, m_allowedCharacters);
         }
     }
-} // namespace
+} // namespace swift::gui

@@ -6,12 +6,13 @@
 #ifndef SWIFT_GUI_MANAGEDSTATUSBAR_H
 #define SWIFT_GUI_MANAGEDSTATUSBAR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/statusmessage.h"
-#include "misc/statusmessagelist.h"
 #include <QObject>
 #include <QPushButton>
 #include <QTimer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 
 class QLabel;
 class QStatusBar;
@@ -86,6 +87,6 @@ namespace swift::gui
         Qt::TextElideMode m_elideMode = Qt::ElideMiddle; //!< label text elide
         swift::misc::StatusSeverity m_currentSeverity = swift::misc::StatusSeverity::SeverityDebug; //!< severity currently displayed
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

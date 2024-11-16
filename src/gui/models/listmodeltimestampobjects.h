@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_LISTMODELTIMESTAMPOBJECTS_H
 #define SWIFT_GUI_MODELS_LISTMODELTIMESTAMPOBJECTS_H
 
-#include "gui/models/listmodelbase.h"
-
 #include <QString>
 #include <QVariant>
 #include <Qt>
+
+#include "gui/models/listmodelbase.h"
 
 class QModelIndex;
 class QObject;
@@ -65,6 +65,6 @@ namespace swift::gui::models
         //! Standard timestamp offset columns
         void addTimestampOffsetColumns();
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

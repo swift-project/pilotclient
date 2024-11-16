@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_NETWORK_ROLELIST_H
 #define SWIFT_MISC_NETWORK_ROLELIST_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/network/role.h"
-#include "misc/sequence.h"
-
 #include <QJsonArray>
 #include <QMetaType>
 #include <QString>
 #include <QStringList>
+
+#include "misc/collection.h"
+#include "misc/network/role.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CRole, CRoleList)
 
@@ -52,7 +52,7 @@ namespace swift::misc::network
         //! From our database JSON format
         static CRoleList fromDatabaseJson(const QJsonArray &array);
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CRoleList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CRole>)

@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "bufferedwaveprovider.h"
-#include "sound/audioutilities.h"
 
 #include <QDebug>
+
+#include "sound/audioutilities.h"
 
 namespace swift::sound::sample_provider
 {
@@ -40,4 +41,4 @@ namespace swift::sound::sample_provider
     {
         m_audioBuffer.clear();
     }
-} // ns
+} // namespace swift::sound::sample_provider

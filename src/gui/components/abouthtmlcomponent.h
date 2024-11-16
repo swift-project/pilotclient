@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_ABOUTHTMLCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_ABOUTHTMLCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include <QUrl>
 #include <QFrame>
 #include <QScopedPointer>
+#include <QUrl>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -40,6 +41,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CAboutHtmlComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

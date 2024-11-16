@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_SIMULATION_FSCOMMON_VPILOTMODELRULE_H
 #define SWIFT_MISC_SIMULATION_FSCOMMON_VPILOTMODELRULE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/timestampbased.h"
-#include "misc/valueobject.h"
-
 #include <QMetaType>
 #include <QString>
 #include <QtGlobal>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule)
 
@@ -98,7 +98,7 @@ namespace swift::misc::simulation::fscommon
             SWIFT_METAMEMBER(updatedMsSinceEpoch));
     };
 
-} // namespace
+} // namespace swift::misc::simulation::fscommon
 
 Q_DECLARE_METATYPE(swift::misc::simulation::fscommon::CVPilotModelRule)
 

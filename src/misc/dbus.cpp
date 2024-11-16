@@ -4,8 +4,9 @@
 #include "misc/dbus.h"
 
 #ifdef Q_OS_WIN
-#    include <QDBusConnection>
 #    include <qt_windows.h>
+
+#    include <QDBusConnection>
 
 // https://blogs.msdn.microsoft.com/oldnewthing/20131105-00/?p=2733
 // See https://bugreports.qt.io/browse/QTBUG-53031 for more details

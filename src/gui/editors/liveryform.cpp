@@ -2,7 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "liveryform.h"
+
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QMetaType>
+
 #include "ui_liveryform.h"
+
+#include "core/webdataservices.h"
 #include "gui/components/colorselector.h"
 #include "gui/components/dbliveryselectorcomponent.h"
 #include "gui/dropsite.h"
@@ -12,14 +19,9 @@
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "gui/labelandicon.h"
-#include "core/webdataservices.h"
 #include "misc/aviation/liverylist.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/icons.h"
-
-#include <QCheckBox>
-#include <QLineEdit>
-#include <QMetaType>
+#include "misc/mixin/mixincompare.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -294,4 +296,4 @@ namespace swift::gui::editors
         }
         this->setValue(livery);
     }
-} // ns
+} // namespace swift::gui::editors

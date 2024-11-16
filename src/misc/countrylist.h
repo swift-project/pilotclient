@@ -6,17 +6,18 @@
 #ifndef SWIFT_MISC_COUNTRYLIST_H
 #define SWIFT_MISC_COUNTRYLIST_H
 
-#include "misc/db/datastoreobjectlist.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/country.h"
-#include "misc/sequence.h"
+#include <tuple>
 
 #include <QJsonArray>
 #include <QMetaType>
 #include <QString>
 #include <QStringList>
-#include <tuple>
+
+#include "misc/collection.h"
+#include "misc/country.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CCountry, CCountryList)
 
@@ -66,7 +67,7 @@ namespace swift::misc
         //! From our database JSON format
         static CCountryList fromDatabaseJson(const QJsonArray &array);
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CCountryList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CCountry>)

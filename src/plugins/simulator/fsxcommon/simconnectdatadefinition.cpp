@@ -2,14 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simconnectdatadefinition.h"
-#include "simconnectsymbols.h"
-#include "../fscommon/simulatorfscommonfunctions.h"
-#include "misc/aviation/aircraftparts.h"
-#include "misc/aviation/aircraftenginelist.h"
-#include "misc/logmessage.h"
+
+#include <tuple>
 
 #include <QStringBuilder>
-#include <tuple>
+
+#include "../fscommon/simulatorfscommonfunctions.h"
+#include "simconnectsymbols.h"
+
+#include "misc/aviation/aircraftenginelist.h"
+#include "misc/aviation/aircraftparts.h"
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -409,4 +412,4 @@ namespace swift::simplugin::fsxcommon
                u" 19 (ident): " % QString::number(data[19]);
     }
 
-} // namespace
+} // namespace swift::simplugin::fsxcommon

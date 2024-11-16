@@ -1,47 +1,49 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/enableforframelesswindow.h"
 #include "gui/guiutility.h"
-#include "gui/overlaymessagesframe.h"
-#include "misc/icon.h"
-#include "misc/verify.h"
 
+#include <QAbstractItemModel>
 #include <QApplication>
 #include <QCheckBox>
 #include <QComboBox>
-#include <QLineEdit>
-#include <QAbstractItemModel>
+#include <QGraphicsOpacityEffect>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QLabel>
 #include <QLayout>
 #include <QLayoutItem>
+#include <QLineEdit>
 #include <QList>
 #include <QMainWindow>
 #include <QMetaType>
 #include <QMimeData>
 #include <QObject>
+#include <QPointer>
+#include <QPropertyAnimation>
 #include <QRegularExpression>
+#include <QScreen>
+#include <QStringBuilder>
 #include <QTabWidget>
 #include <QThreadStorage>
+#include <QTimer>
 #include <QWidget>
 #include <QWizard>
-#include <QScreen>
-#include <QLabel>
-#include <QTimer>
 #include <Qt>
-#include <QPointer>
 #include <QtGlobal>
-#include <QStringBuilder>
-#include <QGraphicsOpacityEffect>
-#include <QPropertyAnimation>
+
+#include "gui/enableforframelesswindow.h"
+#include "gui/overlaymessagesframe.h"
+#include "misc/icon.h"
+#include "misc/verify.h"
 
 // for the screen size
 
 #ifdef Q_OS_WINDOWS
-#    include "wtypes.h"
 #    include <iostream>
+
+#    include "wtypes.h"
 #endif
 
 using namespace swift::misc;
@@ -83,7 +85,7 @@ namespace swift::gui
             }
             return nullptr;
         }
-    } // ns
+    } // namespace Private
 
     void CGuiUtility::registerMainApplicationWidget(QWidget *mainWidget)
     {
@@ -1107,4 +1109,4 @@ namespace swift::gui
         return titles;
     }
 
-} // ns
+} // namespace swift::gui

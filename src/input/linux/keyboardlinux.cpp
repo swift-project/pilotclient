@@ -2,14 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "keyboardlinux.h"
-#include "misc/logmessage.h"
+
+#include <X11/XKBlib.h>
+#include <X11/keysym.h>
+#include <fcntl.h>
+#include <linux/input.h>
+
 #include <QDebug>
 #include <QHash>
 #include <QSocketNotifier>
-#include <linux/input.h>
-#include <fcntl.h>
-#include <X11/keysym.h>
-#include <X11/XKBlib.h>
+
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::input;
@@ -323,4 +326,4 @@ namespace swift::input
             return false;
         }
     }
-}
+} // namespace swift::input

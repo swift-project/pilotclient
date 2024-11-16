@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_WEATHER_WINDLAYER_H
 #define SWIFT_MISC_WEATHER_WINDLAYER_H
 
+#include <QMetaType>
+#include <QString>
+
 #include "misc/aviation/altitude.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/metaclass.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/speed.h"
 #include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QMetaType>
-#include <QString>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CWindLayer)
 
@@ -125,7 +125,7 @@ namespace swift::misc::weather
             SWIFT_METAMEMBER(gustSpeed));
     };
 
-} // namespace
+} // namespace swift::misc::weather
 
 Q_DECLARE_METATYPE(swift::misc::weather::CWindLayer)
 

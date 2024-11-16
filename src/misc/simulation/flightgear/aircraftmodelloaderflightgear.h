@@ -4,8 +4,9 @@
 #ifndef SWIFT_MISC_SIMULATION_FLIGHTGEAR_AIRCRAFTMODELLOADERFLIGHTGEAR_H
 #define SWIFT_MISC_SIMULATION_FLIGHTGEAR_AIRCRAFTMODELLOADERFLIGHTGEAR_H
 
-#include "misc/simulation/aircraftmodelloader.h"
 #include <QPointer>
+
+#include "misc/simulation/aircraftmodelloader.h"
 
 namespace swift::misc::simulation::flightgear
 {
@@ -39,6 +40,6 @@ namespace swift::misc::simulation::flightgear
         QPointer<CWorker> m_parserWorker;
         CAircraftModelList performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories);
     };
-}
+} // namespace swift::misc::simulation::flightgear
 
 #endif // SWIFT_MISC_SIMULATION_FLIGHTGEAR_AIRCRAFTMODELLOADERFLIGHTGEAR_H

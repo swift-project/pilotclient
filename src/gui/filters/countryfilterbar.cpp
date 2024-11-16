@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/filters/countryfilterbar.h"
+
+#include <QLineEdit>
+
+#include "ui_countryfilterbar.h"
+
 #include "gui/filters/filterbarbuttons.h"
 #include "gui/models/countryfilter.h"
 #include "gui/uppercasevalidator.h"
 #include "misc/countrylist.h"
-#include "ui_countryfilterbar.h"
-
-#include <QLineEdit>
 
 using namespace swift::gui;
 using namespace swift::gui::models;
@@ -52,4 +54,4 @@ namespace swift::gui::filters
         ui->le_IsoCode->clear();
         ui->le_Name->clear();
     }
-} // ns
+} // namespace swift::gui::filters

@@ -5,6 +5,10 @@
 //! \ingroup samplekmiscquantities
 
 #include "samplesphysicalquantities.h"
+
+#include <QString>
+#include <QTextStream>
+
 #include "misc/aviation/altitude.h"
 #include "misc/pq/acceleration.h"
 #include "misc/pq/angle.h"
@@ -18,9 +22,6 @@
 #include "misc/pq/time.h"
 #include "misc/pq/units.h"
 #include "misc/stringutils.h"
-
-#include <QString>
-#include <QTextStream>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -128,4 +129,4 @@ namespace swift::sample
         out << "-----------------------------------------------" << Qt::endl;
         return 0;
     }
-} // namespace
+} // namespace swift::sample

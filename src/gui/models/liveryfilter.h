@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_LIVERYFILTER_H
 #define SWIFT_GUI_LIVERYFILTER_H
 
-#include "gui/swiftguiexport.h"
+#include <QString>
+
 #include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
 #include "misc/aviation/liverylist.h"
 #include "misc/rgbcolor.h"
-
-#include <QString>
 
 namespace swift::gui::models
 {
@@ -51,6 +51,6 @@ namespace swift::gui::models
         //! Valid filter?
         bool valid() const;
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

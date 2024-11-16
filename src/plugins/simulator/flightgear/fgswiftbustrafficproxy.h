@@ -6,15 +6,15 @@
 #ifndef SWIFT_SIMPLUGIN_FLIGHTGEAR_TRAFFIC_PROXY_H
 #define SWIFT_SIMPLUGIN_FLIGHTGEAR_TRAFFIC_PROXY_H
 
-#include "misc/genericdbusinterface.h"
-#include "misc/aviation/aircraftsituation.h"
-#include "misc/aviation/aircraftparts.h"
-#include "misc/aviation/callsign.h"
-#include "misc/geo/elevationplane.h"
-
 #include <QObject>
 #include <QString>
 #include <QStringList>
+
+#include "misc/aviation/aircraftparts.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/callsign.h"
+#include "misc/genericdbusinterface.h"
+#include "misc/geo/elevationplane.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -223,6 +223,6 @@ namespace swift::simplugin::flightgear
     private:
         swift::misc::CGenericDBusInterface *m_dbusInterface = nullptr;
     };
-} // ns
+} // namespace swift::simplugin::flightgear
 
 #endif // guard

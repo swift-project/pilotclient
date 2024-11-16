@@ -61,6 +61,6 @@ namespace swift::misc::simulation
         //! Init the loader
         IAircraftModelLoader *initLoader(const CSimulatorInfo &simulator);
     };
-} // ns
+} // namespace swift::misc::simulation
 
 #endif // guard

@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_PQ_TEMPERATURE_H
 #define SWIFT_MISC_PQ_TEMPERATURE_H
 
-#include "misc/swiftmiscexport.h"
 #include "misc/pq/physicalquantity.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::physical_quantities
 {
@@ -28,7 +28,7 @@ namespace swift::misc::physical_quantities
         CTemperature(const QString &unitString) : CPhysicalQuantity(unitString) {}
     };
 
-}
+} // namespace swift::misc::physical_quantities
 
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CTemperature)
 

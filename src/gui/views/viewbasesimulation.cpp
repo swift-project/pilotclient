@@ -10,4 +10,4 @@ namespace swift::gui::views
     template class CViewBase<swift::gui::models::CInterpolationSetupListModel>;
     template class CViewBase<swift::gui::models::CMatchingStatisticsModel>;
     template class CViewBase<swift::gui::models::CSimulatedAircraftListModel>;
-} // namespace
+} // namespace swift::gui::views

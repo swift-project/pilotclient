@@ -4,17 +4,19 @@
 //! \file
 //! \ingroup samplemiscquantities
 
-#include "samplesaviation.h"
-#include "samplesgeo.h"
-#include "samplesphysicalquantities.h"
-#include "core/application.h"
-#include "misc/directoryutils.h"
-
 #include <stdio.h>
+
 #include <QCoreApplication>
 #include <QIODevice>
 #include <QTextStream>
 #include <QtGlobal>
+
+#include "samplesaviation.h"
+#include "samplesgeo.h"
+#include "samplesphysicalquantities.h"
+
+#include "core/application.h"
+#include "misc/directoryutils.h"
 
 using namespace swift::misc;
 using namespace swift::sample;

@@ -4,11 +4,12 @@
 #ifndef SWIFT_GUI_DROPBASE_H
 #define SWIFT_GUI_DROPBASE_H
 
+#include <QFileInfo>
+#include <QList>
+#include <QMimeData>
+
 #include "gui/swiftguiexport.h"
 #include "misc/variant.h"
-#include <QList>
-#include <QFileInfo>
-#include <QMimeData>
 
 namespace swift::gui
 {
@@ -54,6 +55,6 @@ namespace swift::gui
         bool m_acceptJsonFile = false; //!< accept JSON files
         QList<int> m_acceptedMetaTypes; //!< accepted meta types
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

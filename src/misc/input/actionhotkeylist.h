@@ -6,15 +6,16 @@
 #ifndef SWIFT_MISC_INPUT_ACTIONHOTKEYLIST_H
 #define SWIFT_MISC_INPUT_ACTIONHOTKEYLIST_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/input/actionhotkey.h"
-#include "misc/sequence.h"
+#include <initializer_list>
+#include <tuple>
 
 #include <QMetaType>
 #include <QString>
-#include <initializer_list>
-#include <tuple>
+
+#include "misc/collection.h"
+#include "misc/input/actionhotkey.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CActionHotkey, CActionHotkeyList)
 
@@ -52,7 +53,7 @@ namespace swift::misc::input
         //! Update for my machine
         void updateToCurrentMachine();
     };
-} // ns
+} // namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CActionHotkeyList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::input::CActionHotkey>)

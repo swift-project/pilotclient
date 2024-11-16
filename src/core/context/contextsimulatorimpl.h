@@ -6,37 +6,37 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 #define SWIFT_CORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 
-#include "core/context/contextsimulator.h"
-#include "core/application/applicationsettings.h"
-#include "core/simulator.h"
-#include "core/corefacadeconfig.h"
-#include "core/aircraftmatcher.h"
-#include "core/swiftcoreexport.h"
-#include "misc/network/connectionstatus.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/settings/modelmatchersettings.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/settings/interpolationrenderingsetupsettings.h"
-#include "misc/simulation/aircraftmodelsetprovider.h"
-#include "misc/simulation/backgroundvalidation.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/interpolation/interpolationsetuplist.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/simulation/simulatorplugininfolist.h"
-#include "misc/simulation/simulatorinternals.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/network/textmessagelist.h"
-#include "misc/pq/length.h"
-#include "misc/pq/time.h"
-#include "misc/identifier.h"
-#include "misc/pixmap.h"
-#include "misc/settingscache.h"
-#include "misc/worker.h"
-
 #include <QObject>
 #include <QPair>
-#include <QString>
 #include <QPointer>
+#include <QString>
+
+#include "core/aircraftmatcher.h"
+#include "core/application/applicationsettings.h"
+#include "core/context/contextsimulator.h"
+#include "core/corefacadeconfig.h"
+#include "core/simulator.h"
+#include "core/swiftcoreexport.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/identifier.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/textmessagelist.h"
+#include "misc/pixmap.h"
+#include "misc/pq/length.h"
+#include "misc/pq/time.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodelsetprovider.h"
+#include "misc/simulation/backgroundvalidation.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/interpolation/interpolationsetuplist.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/settings/interpolationrenderingsetupsettings.h"
+#include "misc/simulation/settings/modelmatchersettings.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorinternals.h"
+#include "misc/simulation/simulatorplugininfolist.h"
+#include "misc/worker.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -51,7 +51,7 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
     }
-}
+} // namespace swift::misc
 
 namespace swift::core
 {
@@ -391,7 +391,7 @@ namespace swift::core
             swift::misc::CSetting<swift::misc::simulation::settings::TInterpolationAndRenderingSetupGlobal> m_renderSettings { this }; //!< rendering/interpolation settings (all simulators)
             swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TSimulatorMessages> m_messageSettings { this }; //!< settings for messages (all simulators)
         };
-    } // namespace
-} // namespace
+    } // namespace context
+} // namespace swift::core
 
 #endif // guard

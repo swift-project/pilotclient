@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_FILTERS_STATUSMESSAGEFILTERBAR_H
 #define SWIFT_GUI_FILTERS_STATUSMESSAGEFILTERBAR_H
 
+#include <QFrame>
+
 #include "gui/filters/filterwidget.h"
 #include "gui/models/modelfilter.h"
 #include "misc/statusmessagelist.h"
-#include <QFrame>
 
 namespace Ui
 {
@@ -59,5 +60,5 @@ namespace swift::gui::filters
         //! Get the selected severity
         swift::misc::CStatusMessage::StatusSeverity getSelectedSeverity() const;
     };
-} // ns
+} // namespace swift::gui::filters
 #endif // guard

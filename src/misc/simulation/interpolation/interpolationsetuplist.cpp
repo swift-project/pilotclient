@@ -17,4 +17,4 @@ namespace swift::misc::simulation
     CInterpolationSetupList::CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other) : CSequence<CInterpolationAndRenderingSetupPerCallsign>(other)
     {}
 
-} // namespace
+} // namespace swift::misc::simulation

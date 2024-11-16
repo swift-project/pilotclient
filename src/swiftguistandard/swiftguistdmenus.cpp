@@ -1,28 +1,29 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/maininfoareacomponent.h"
-#include "gui/components/settingscomponent.h"
-#include "gui/components/autopublishdialog.h"
-#include "gui/guiactionbind.h"
-#include "gui/guiapplication.h"
-#include "gui/foreignwindows.h"
-#include "gui/copyxswiftbusdialog.h"
-#include "misc/aviation/altitude.h"
-#include "misc/pq/units.h"
-#include "misc/logmessage.h"
-#include "config/buildconfig.h"
-#include "swiftguistd.h"
-#include "ui_swiftguistd.h"
-
 #include <QAction>
+#include <QDesktopServices>
 #include <QMenu>
+#include <QMessageBox>
 #include <QObject>
 #include <QScopedPointer>
 #include <QStackedWidget>
 #include <QtGlobal>
-#include <QDesktopServices>
-#include <QMessageBox>
+
+#include "swiftguistd.h"
+#include "ui_swiftguistd.h"
+
+#include "config/buildconfig.h"
+#include "gui/components/autopublishdialog.h"
+#include "gui/components/maininfoareacomponent.h"
+#include "gui/components/settingscomponent.h"
+#include "gui/copyxswiftbusdialog.h"
+#include "gui/foreignwindows.h"
+#include "gui/guiactionbind.h"
+#include "gui/guiapplication.h"
+#include "misc/aviation/altitude.h"
+#include "misc/logmessage.h"
+#include "misc/pq/units.h"
 
 using namespace swift::config;
 using namespace swift::gui;

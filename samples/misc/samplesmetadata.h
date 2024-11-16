@@ -17,6 +17,6 @@ namespace swift::sample
         //! Run the samples
         static int samples();
     };
-} // namespace
+} // namespace swift::sample
 
 #endif

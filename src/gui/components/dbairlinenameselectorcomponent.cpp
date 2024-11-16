@@ -1,17 +1,19 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_dbairlinenameselectorcomponent.h"
 #include "gui/components/dbairlinenameselectorcomponent.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/db/datastoreutility.h"
 
 #include <QCompleter>
 #include <QLineEdit>
 #include <QString>
 #include <Qt>
+
+#include "ui_dbairlinenameselectorcomponent.h"
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/db/datastoreutility.h"
 
 using namespace swift::core;
 using namespace swift::gui;
@@ -76,4 +78,4 @@ namespace swift::gui::components
             this->setAirlineIcao(icao);
         }
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSTEXTMESSAGEINLINECOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSTEXTMESSAGEINLINECOMPONENT_H
 
-#include "gui/settings/textmessagesettings.h"
-#include <QScopedPointer>
 #include <QFrame>
+#include <QScopedPointer>
+
+#include "gui/settings/textmessagesettings.h"
 
 namespace Ui
 {
@@ -46,6 +47,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CSettingsTextMessageInlineComponent> ui;
         swift::misc::CSetting<swift::gui::settings::TextMessageSettings> m_settings { this, &CSettingsTextMessageInlineComponent::settingsChanged }; //!< settings changed
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

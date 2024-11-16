@@ -6,24 +6,24 @@
 #ifndef SWIFT_CORE_AIRCRAFTMATCHER_H
 #define SWIFT_CORE_AIRCRAFTMATCHER_H
 
-#include "core/webdataservicesms.h"
+#include <QFlags>
+#include <QObject>
+#include <QPair>
+#include <QSet>
+#include <QString>
+
 #include "core/swiftcoreexport.h"
-#include "misc/simulation/aircraftmodelsetprovider.h"
+#include "core/webdataservicesms.h"
 #include "misc/simulation/aircraftmatchersetup.h"
 #include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodelsetprovider.h"
+#include "misc/simulation/categorymatcher.h"
+#include "misc/simulation/matchinglog.h"
 #include "misc/simulation/matchingscriptmisc.h"
 #include "misc/simulation/matchingstatistics.h"
-#include "misc/simulation/matchinglog.h"
-#include "misc/simulation/categorymatcher.h"
 #include "misc/statusmessage.h"
 #include "misc/valueobject.h"
 #include "misc/variant.h"
-
-#include <QFlags>
-#include <QObject>
-#include <QString>
-#include <QPair>
-#include <QSet>
 
 namespace swift::misc
 {
@@ -37,7 +37,7 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
     }
-}
+} // namespace swift::misc
 
 namespace swift::core
 {
@@ -409,6 +409,6 @@ namespace swift::core
         swift::misc::simulation::CCategoryMatcher m_categoryMatcher; //!< the category matcher
         QString m_modelSetInfo; //!< info string
     };
-} // namespace
+} // namespace swift::core
 
 #endif // guard

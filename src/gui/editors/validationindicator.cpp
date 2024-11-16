@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/editors/validationindicator.h"
+
+#include <QLabel>
+#include <QtGlobal>
+
+#include "ui_validationindicator.h"
+
 #include "gui/stylesheetutility.h"
 #include "misc/icon.h"
 #include "misc/icons.h"
 #include "misc/statusmessage.h"
-#include "ui_validationindicator.h"
-
-#include <QLabel>
-#include <QtGlobal>
 
 using namespace swift::misc;
 
@@ -109,4 +111,4 @@ namespace swift::gui::editors
         }
     }
 
-} // ns
+} // namespace swift::gui::editors

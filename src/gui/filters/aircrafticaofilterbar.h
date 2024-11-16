@@ -6,13 +6,14 @@
 #ifndef SWIFT_GUI_FILTERS_AIRCRAFTICAOFILTERBAR_H
 #define SWIFT_GUI_FILTERS_AIRCRAFTICAOFILTERBAR_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/filters/filterwidget.h"
-#include "gui/models/modelfilter.h"
+#include <memory>
 
 #include <QObject>
 #include <QScopedPointer>
-#include <memory>
+
+#include "gui/filters/filterwidget.h"
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -22,7 +23,7 @@ namespace swift::misc::aviation
 {
     class CAircraftIcaoCode;
     class CAircraftIcaoCodeList;
-}
+} // namespace swift::misc::aviation
 namespace swift::gui::filters
 {
     /*!
@@ -65,6 +66,6 @@ namespace swift::gui::filters
         //! Set the completers
         void initCompleters();
     };
-} // ns
+} // namespace swift::gui::filters
 
 #endif // guard

@@ -6,12 +6,12 @@
 #ifndef SWIFT_CORE_APPLICATION_APPLICATIONSETTINGS_H
 #define SWIFT_CORE_APPLICATION_APPLICATIONSETTINGS_H
 
-#include "misc/simulation/simulatorplugininfo.h"
+#include <QStringList>
+
+#include "config/buildconfig.h"
 #include "misc/input/actionhotkeylist.h"
 #include "misc/settingscache.h"
-#include "config/buildconfig.h"
-
-#include <QStringList>
+#include "misc/simulation/simulatorplugininfo.h"
 
 namespace swift::core::application
 {
@@ -92,6 +92,6 @@ namespace swift::core::application
         //! \copydoc swift::misc::TSettingTrait::defaultValue
         static bool defaultValue() { return false; }
     };
-} // ns
+} // namespace swift::core::application
 
 #endif

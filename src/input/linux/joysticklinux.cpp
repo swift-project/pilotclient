@@ -1,16 +1,19 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/logmessage.h"
 #include "joysticklinux.h"
-#include <QFile>
-#include <QFileSystemWatcher>
-#include <QSocketNotifier>
-#include <QSignalMapper>
-#include <QDir>
+
+#include <fcntl.h>
 #include <linux/joystick.h>
 #include <unistd.h>
-#include <fcntl.h>
+
+#include <QDir>
+#include <QFile>
+#include <QFileSystemWatcher>
+#include <QSignalMapper>
+#include <QSocketNotifier>
+
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::input;
@@ -21,7 +24,7 @@ namespace
     {
         return QStringLiteral("/dev/input/");
     }
-}
+} // namespace
 
 namespace swift::input
 {
@@ -156,4 +159,4 @@ namespace swift::input
         }
     }
 
-} // ns
+} // namespace swift::input

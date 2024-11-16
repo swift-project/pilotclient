@@ -6,20 +6,21 @@
 #ifndef SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATED_H
 #define SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATED_H
 
+#include <QMap>
+#include <QPointer>
+#include <QTimer>
+
 #include "../plugincommon/simulatorplugincommon.h"
-#include "misc/aviation/comsystem.h"
-#include "misc/simulation/interpolation/interpolatormulti.h"
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "misc/simulation/interpolation/interpolationlogger.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/simulation/settings/swiftpluginsettings.h"
-#include "misc/pq/time.h"
-#include "misc/connectionguard.h"
 #include "simulatoremulatedmonitordialog.h"
 
-#include <QMap>
-#include <QTimer>
-#include <QPointer>
+#include "misc/aviation/comsystem.h"
+#include "misc/connectionguard.h"
+#include "misc/pq/time.h"
+#include "misc/simulation/interpolation/interpolationlogger.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/settings/swiftpluginsettings.h"
+#include "misc/simulation/simulatorplugininfo.h"
 
 namespace swift::simplugin::emulated
 {
@@ -194,6 +195,6 @@ namespace swift::simplugin::emulated
         //! \copydoc swift::core::ISimulatorListener::stopImpl
         virtual void checkImpl() override;
     };
-} // ns
+} // namespace swift::simplugin::emulated
 
 #endif // guard

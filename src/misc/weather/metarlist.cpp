@@ -17,4 +17,4 @@ namespace swift::misc::weather
         return this->findFirstByOrDefault(&CMetar::getAirportIcaoCode, icao);
     }
 
-} // namespace
+} // namespace swift::misc::weather

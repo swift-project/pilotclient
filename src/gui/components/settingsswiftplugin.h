@@ -7,8 +7,9 @@
 #define SWIFT_GUI_COMPONENTS_SETTINGSSWIFTPLUGIN_H
 
 #include <QFrame>
-#include "misc/simulation/settings/swiftpluginsettings.h"
+
 #include "gui/swiftguiexport.h"
+#include "misc/simulation/settings/swiftpluginsettings.h"
 
 namespace Ui
 {
@@ -46,6 +47,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CSettingsSwiftPlugin> ui;
         swift::misc::CSetting<swift::misc::simulation::settings::TSwiftPlugin> m_settings { this, &CSettingsSwiftPlugin::onSettingsChanged };
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

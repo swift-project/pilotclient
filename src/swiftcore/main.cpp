@@ -1,17 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/corefacadeconfig.h"
-#include "gui/guiapplication.h"
-#include "misc/icons.h"
-#include "misc/crashhandler.h"
-#include "swiftcore.h"
-
 #include <cstdlib>
+
 #include <QApplication>
 #include <QString>
 #include <QSystemTrayIcon>
 #include <Qt>
+
+#include "core/corefacadeconfig.h"
+#include "gui/guiapplication.h"
+#include "misc/crashhandler.h"
+#include "misc/icons.h"
+#include "swiftcore.h"
 
 using namespace swift::misc;
 using namespace swift::core;

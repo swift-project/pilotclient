@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_DIRECTORIES_H
 #define SWIFT_MISC_DIRECTORIES_H
 
-#include "misc/settingscache.h"
-#include "misc/valueobject.h"
-#include "misc/propertyindexref.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QString>
+
+#include "misc/propertyindexref.h"
+#include "misc/settingscache.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CDirectories)
 
@@ -135,8 +135,8 @@ namespace swift::misc
                 return name;
             }
         };
-    }
-} // namespace
+    } // namespace settings
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CDirectories)
 

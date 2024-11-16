@@ -6,13 +6,13 @@
 #ifndef SWIFT_CORE_DB_INFODATAREADER_H
 #define SWIFT_CORE_DB_INFODATAREADER_H
 
-#include "core/swiftcoreexport.h"
-#include "core/db/databasereader.h"
-#include "misc/db/dbinfolist.h"
-
-#include <QObject>
 #include <QNetworkReply>
+#include <QObject>
 #include <QReadWriteLock>
+
+#include "core/db/databasereader.h"
+#include "core/swiftcoreexport.h"
+#include "misc/db/dbinfolist.h"
 
 namespace swift::core::db
 {
@@ -86,5 +86,5 @@ namespace swift::core::db
         swift::misc::network::CUrl m_urlInfoObjects;
         mutable QReadWriteLock m_lockInfoObjects;
     };
-} // ns
+} // namespace swift::core::db
 #endif // guard

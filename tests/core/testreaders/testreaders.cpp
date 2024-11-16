@@ -5,6 +5,14 @@
 //! \file
 //! \ingroup testswiftcore
 
+#include <QDateTime>
+#include <QDebug>
+#include <QString>
+#include <QTest>
+#include <QtDebug>
+
+#include "test.h"
+
 #include "core/application.h"
 #include "core/data/globalsetup.h"
 #include "core/db/airportdatareader.h"
@@ -19,13 +27,6 @@
 #include "misc/network/networkutils.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/aircraftmodellist.h"
-#include "test.h"
-
-#include <QDateTime>
-#include <QDebug>
-#include <QTest>
-#include <QString>
-#include <QtDebug>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -211,7 +212,7 @@ namespace swiftcoretest
         m_icaoReader->quitAndWait();
         m_modelReader->quitAndWait();
     }
-} // ns
+} // namespace swiftcoretest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(swiftcoretest::CTestReaders);

@@ -19,4 +19,4 @@ namespace swift::misc::simulation
         }
         return d;
     }
-} // namespace
+} // namespace swift::misc::simulation

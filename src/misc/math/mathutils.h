@@ -6,13 +6,15 @@
 #ifndef SWIFT_MISC_MATH_MATHUTILS_H
 #define SWIFT_MISC_MATH_MATHUTILS_H
 
-#include "misc/swiftmiscexport.h"
-
-#include <QRandomGenerator>
 #include <QtCore/qmath.h>
-#include <QPair>
+
 #include <cmath>
 #include <numeric>
+
+#include <QPair>
+#include <QRandomGenerator>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::math
 {
@@ -109,6 +111,6 @@ namespace swift::misc::math
         //! The squared differences to mean
         static QList<double> squaredDifferences(const QList<double> &values, double meanValue);
     };
-} // namespace
+} // namespace swift::misc::math
 
 #endif // guard

@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBLOGINCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBLOGINCOMPONENT_H
 
-#include "core/db/databaseauthentication.h"
-#include "core/data/globalsetup.h"
-#include "gui/swiftguiexport.h"
-#include "gui/loadindicator.h"
-#include "misc/statusmessagelist.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "core/data/globalsetup.h"
+#include "core/db/databaseauthentication.h"
+#include "gui/loadindicator.h"
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessagelist.h"
 
 namespace swift::misc::network
 {
@@ -71,6 +71,6 @@ namespace swift::gui::components
         //! User authentication completed
         void onAuthenticationFinished(const swift::misc::network::CAuthenticatedUser &user, const swift::misc::CStatusMessageList &statusMsgs);
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_AVIATION_AIRPORTLIST_H
 #define SWIFT_MISC_AVIATION_AIRPORTLIST_H
 
+#include <QMetaType>
+
 #include "misc/aviation/airport.h"
 #include "misc/aviation/airporticaocode.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/collection.h"
 #include "misc/db/datastoreobjectlist.h"
 #include "misc/geo/geoobjectlist.h"
 #include "misc/sequence.h"
-
-#include <QMetaType>
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAirport, CAirportList)
 
@@ -71,7 +71,7 @@ namespace swift::misc::aviation
         //! From our DB JSON
         static CAirportList fromDatabaseJson(const QJsonArray &array, CAirportList *inconsistent = nullptr);
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAirportList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAirport>)

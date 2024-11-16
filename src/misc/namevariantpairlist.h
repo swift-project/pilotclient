@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_NAMEVARIANPAIRTLIST_H
 #define SWIFT_MISC_NAMEVARIANPAIRTLIST_H
 
-#include "misc/swiftmiscexport.h"
+#include <QMetaType>
+#include <QString>
+
 #include "misc/collection.h"
 #include "misc/namevariantpair.h"
 #include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/variant.h"
-
-#include <QMetaType>
-#include <QString>
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CNameVariantPair, CNameVariantPairList)
 
@@ -57,7 +57,7 @@ namespace swift::misc
         //! If one is sure(!) the name does not exists, \sa push_back() can be used
         bool addOrReplaceValue(const QString &name, const CVariant &value, const CIcon &icon = CIcon());
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CNameVariantPairList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CNameVariantPair>)

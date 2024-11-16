@@ -8,10 +8,11 @@
  * \ingroup testmisc
  */
 
-#include "misc/worker.h"
-#include "misc/eventloop.h"
 #include <QObject>
 #include <QTest>
+
+#include "misc/eventloop.h"
+#include "misc/worker.h"
 
 using namespace swift::misc;
 
@@ -44,7 +45,7 @@ namespace MiscTest
         QVERIFY2(future.result() == 123, "Future provides access to slot's return value");
     }
 
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestWorker);

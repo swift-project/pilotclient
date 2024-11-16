@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_PROPERTYINDEXLIST_H
 #define SWIFT_MISC_PROPERTYINDEXLIST_H
 
-#include "misc/swiftmiscexport.h"
+#include <QMetaType>
+
 #include "misc/collection.h"
 #include "misc/propertyindex.h"
 #include "misc/sequence.h"
-
-#include <QMetaType>
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CPropertyIndex, CPropertyIndexList)
 
@@ -35,7 +35,7 @@ namespace swift::misc
         //! List without front element, or empty list if not applicable
         Q_REQUIRED_RESULT CPropertyIndexList copyFrontRemoved() const;
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CPropertyIndexList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CPropertyIndex>)

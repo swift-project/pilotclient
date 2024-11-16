@@ -7,8 +7,8 @@
 #define SWIFT_GUI_VIEWS_AUDIODEVICEINFOVIEW_H
 
 #include "gui/models/audiodeviceinfolistmodel.h"
-#include "gui/views/viewbase.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewbase.h"
 
 namespace swift::gui::views
 {
@@ -21,6 +21,6 @@ namespace swift::gui::views
         //! Constructor
         explicit CAudioDeviceInfoView(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::views
 
 #endif // guard

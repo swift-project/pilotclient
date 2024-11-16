@@ -6,30 +6,30 @@
 #ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMULATORFSXCOMMON_H
 #define SWIFT_SIMPLUGIN_FSXCOMMON_SIMULATORFSXCOMMON_H
 
+#include <QFutureWatcher>
+#include <QHash>
+#include <QList>
+#include <QObject>
+#include <QtPlugin>
+
+#include "config/buildconfig.h"
+#include "core/simulator.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/altitude.h"
+#include "misc/network/client.h"
+#include "misc/pixmap.h"
+#include "misc/pq/frequency.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/interpolation/interpolatorlinear.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/statusmessage.h"
+#include "plugins/simulator/fscommon/simulatorfscommon.h"
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
 #include "plugins/simulator/fsxcommon/simconnectobject.h"
 #include "plugins/simulator/fsxcommon/simconnectwindows.h"
-#include "plugins/simulator/fscommon/simulatorfscommon.h"
-#include "core/simulator.h"
-#include "misc/simulation/interpolation/interpolatorlinear.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/aviation/altitude.h"
-#include "misc/statusmessage.h"
-#include "misc/network/client.h"
-#include "misc/pixmap.h"
-#include "misc/pq/frequency.h"
-#include "config/buildconfig.h"
-
-#include <QObject>
-#include <QtPlugin>
-#include <QHash>
-#include <QList>
-#include <QFutureWatcher>
 
 namespace swift::simplugin::fsxcommon
 {
@@ -706,6 +706,6 @@ namespace swift::simplugin::fsxcommon
         //! \sa CSimConnectObjects::SimConnectProc
         static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
     };
-} // namespace
+} // namespace swift::simplugin::fsxcommon
 
 #endif // guard

@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_AVIATION_SIMBRIEFDATA_H
 #define SWIFT_MISC_AVIATION_SIMBRIEFDATA_H
 
-#include "misc/network/url.h"
-#include "misc/valueobject.h"
-#include "misc/datacache.h"
-#include "misc/metaclass.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QString>
 #include <QtGlobal>
+
+#include "misc/datacache.h"
+#include "misc/metaclass.h"
+#include "misc/network/url.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSimBriefData)
 
@@ -84,8 +84,8 @@ namespace swift::misc::aviation
             //! First load is synchronous
             static constexpr bool isPinned() { return true; }
         };
-    }
-} // namespace
+    } // namespace Data
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CSimBriefData)
 

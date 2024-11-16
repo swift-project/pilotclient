@@ -83,6 +83,6 @@ namespace swift::core::fsd
 
         onGround = pbhstrct.onground == 1;
     }
-}
+} // namespace swift::core::fsd
 
 #endif // guard

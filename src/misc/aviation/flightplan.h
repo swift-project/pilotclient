@@ -6,30 +6,30 @@
 #ifndef SWIFT_MISC_AVIATION_FLIGHTPLAN_H
 #define SWIFT_MISC_AVIATION_FLIGHTPLAN_H
 
-#include "misc/aviation/airporticaocode.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/altitude.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/aviation/callsign.h"
-#include "misc/aviation/selcal.h"
-#include "misc/aviation/flightplanaircraftinfo.h"
-#include "misc/network/voicecapabilities.h"
-#include "misc/network/url.h"
-#include "misc/pq/speed.h"
-#include "misc/pq/time.h"
-#include "misc/pq/units.h"
-#include "misc/statusmessagelist.h"
-#include "misc/logcategories.h"
-#include "misc/timestampbased.h"
-#include "misc/valueobject.h"
-#include "misc/metaclass.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QDateTime>
 #include <QMetaType>
 #include <QString>
 #include <QTime>
 #include <QtGlobal>
+
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/airporticaocode.h"
+#include "misc/aviation/altitude.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/flightplanaircraftinfo.h"
+#include "misc/aviation/selcal.h"
+#include "misc/logcategories.h"
+#include "misc/metaclass.h"
+#include "misc/network/url.h"
+#include "misc/network/voicecapabilities.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/time.h"
+#include "misc/pq/units.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, CFlightPlanRemarks)
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, CFlightPlan)
@@ -443,7 +443,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(remarks),
             SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CFlightPlanRemarks)
 Q_DECLARE_METATYPE(swift::misc::aviation::CFlightPlan)

@@ -7,8 +7,8 @@
 #define SWIFT_MISC_APPLICATIONINFOLIST_H
 
 #include "misc/applicationinfo.h"
-#include "misc/sequence.h"
 #include "misc/collection.h"
+#include "misc/sequence.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CApplicationInfo, CApplicationInfoList)
 
@@ -55,7 +55,7 @@ namespace swift::misc
         //! Other swift data directories
         static bool hasOtherSwiftDataDirectories();
     };
-} // ns
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CApplicationInfoList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CApplicationInfo>)

@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/filters/distributorfilterbar.h"
+
+#include <QLineEdit>
+
+#include "ui_distributorfilterbar.h"
+
 #include "gui/filters/filterbarbuttons.h"
 #include "gui/models/distributorfilter.h"
 #include "gui/uppercasevalidator.h"
 #include "misc/simulation/distributorlist.h"
-#include "ui_distributorfilterbar.h"
-
-#include <QLineEdit>
 
 using namespace swift::gui::models;
 using namespace swift::gui::components;
@@ -66,4 +68,4 @@ namespace swift::gui::filters
     {
         connect(ui->comp_Simulator, &CSimulatorSelector::changed, this, &CFilterWidget::triggerFilter, Qt::QueuedConnection);
     }
-} // ns
+} // namespace swift::gui::filters

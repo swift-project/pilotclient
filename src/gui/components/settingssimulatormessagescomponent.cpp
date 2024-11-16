@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingssimulatormessagescomponent.h"
+
 #include "ui_settingssimulatormessagescomponent.h"
+
 #include "misc/simulation/settings/simulatorsettings.h"
 
 using namespace swift::misc;
@@ -84,4 +86,4 @@ namespace swift::gui::components
         ui->cb_Com1->setChecked(settings.isRelayCom1TextMessages());
         ui->cb_Com2->setChecked(settings.isRelayCom2TextMessages());
     }
-} // ns
+} // namespace swift::gui::components

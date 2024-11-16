@@ -2,33 +2,36 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorfsxcommon.h"
-#include "simconnectsymbols.h"
+
+#include <type_traits>
+
+#include <QElapsedTimer>
+#include <QPointer>
+#include <QStringBuilder>
+#include <QTimer>
+
 #include "../fscommon/simulatorfscommonfunctions.h"
+#include "simconnectsymbols.h"
+
+#include "config/buildconfig.h"
 #include "core/application.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/country.h"
+#include "misc/geo/elevationplane.h"
+#include "misc/logmessage.h"
+#include "misc/math/mathutils.h"
 #include "misc/network/textmessage.h"
-#include "misc/simulation/fsx/simconnectutilities.h"
+#include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/fscommon/aircraftcfgparser.h"
 #include "misc/simulation/fscommon/bcdconversions.h"
 #include "misc/simulation/fscommon/fscommonutil.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/fsx/simconnectutilities.h"
 #include "misc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/simulation/simulatorplugininfo.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/geo/elevationplane.h"
-#include "misc/math/mathutils.h"
-#include "misc/country.h"
-#include "misc/logmessage.h"
 #include "misc/statusmessagelist.h"
 #include "misc/threadutils.h"
 #include "misc/verify.h"
-#include "config/buildconfig.h"
-
-#include <QTimer>
-#include <QPointer>
-#include <QStringBuilder>
-#include <type_traits>
-#include <QElapsedTimer>
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -2965,4 +2968,4 @@ namespace swift::simplugin::fsxcommon
         default: break;
         }
     }
-} // namespace
+} // namespace swift::simplugin::fsxcommon

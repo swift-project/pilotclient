@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_ALGORITHM_H
 #define SWIFT_MISC_ALGORITHM_H
 
-#include <QtGlobal>
 #include <algorithm>
 #include <iterator>
-#include <utility>
 #include <random>
 #include <tuple>
+#include <utility>
+
+#include <QtGlobal>
 
 namespace swift::misc
 {
@@ -44,7 +45,7 @@ namespace swift::misc
             thread_local std::mt19937 rng(std::random_device {}());
             return rng;
         }
-    }
+    } // namespace private_ns
 
     /*!
      * Use the random number generator rng to choose n elements from the range [in,end) and copy them to out.
@@ -159,7 +160,7 @@ namespace swift::misc
             // cppcheck-suppress accessForwarded
             (static_cast<void>(std::forward<F>(visitor)(std::get<Is * 2>(std::forward<T>(tuple)), std::get<Is * 2 + 1>(std::forward<T>(tuple)))), ...);
         }
-    }
+    } // namespace private_ns
 
     /*!
      * Invoke a visitor function on each pair of elements of a tuple in order.
@@ -170,6 +171,6 @@ namespace swift::misc
         using seq = std::make_index_sequence<std::tuple_size_v<std::decay_t<T>> / 2>;
         return private_ns::tupleForEachPairImpl(std::forward<T>(tuple), std::forward<F>(visitor), seq());
     }
-}
+} // namespace swift::misc
 
 #endif

@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextaudioproxy.h"
-#include "core/afv/clients/afvclient.h"
-#include "misc/dbus.h"
-#include "misc/dbusserver.h"
-#include "misc/genericdbusinterface.h"
 
 #include <QDBusConnection>
 #include <QLatin1String>
 #include <QtGlobal>
+
+#include "core/afv/clients/afvclient.h"
+#include "misc/dbus.h"
+#include "misc/dbusserver.h"
+#include "misc/genericdbusinterface.h"
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -92,4 +93,4 @@ namespace swift::core::context
         this->relayBaseClassSignals(serviceName, connection, IContextAudio::ObjectPath(), IContextAudio::InterfaceName());
     }
 
-} // namespace
+} // namespace swift::core::context

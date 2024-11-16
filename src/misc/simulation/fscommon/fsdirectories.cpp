@@ -2,27 +2,26 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/fscommon/fsdirectories.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/fileutils.h"
-#include "misc/stringutils.h"
-#include "misc/logmessage.h"
-#include "config/buildconfig.h"
 
 #include <QDir>
-#include <QList>
-#include <QPair>
-#include <QFileInfo>
-#include <QSettings>
-#include <QStringList>
-#include <QVariant>
-#include <QFileInfo>
-#include <QStandardPaths>
 #include <QDomDocument>
 #include <QDomNodeList>
+#include <QFileInfo>
+#include <QList>
+#include <QPair>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QStringBuilder>
+#include <QStringList>
 #include <QTextStream>
+#include <QVariant>
+
+#include "config/buildconfig.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/logmessage.h"
+#include "misc/stringutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 
@@ -768,4 +767,4 @@ namespace swift::misc::simulation::fscommon
     {
         return true;
     }
-} // namespace
+} // namespace swift::misc::simulation::fscommon

@@ -1,13 +1,15 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/context/contextapplication.h"
 #include "gui/components/registercomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/views/identifierview.h"
-#include "ui_registercomponent.h"
 
 #include <QtGlobal>
+
+#include "ui_registercomponent.h"
+
+#include "core/context/contextapplication.h"
+#include "gui/guiapplication.h"
+#include "gui/views/identifierview.h"
 
 using namespace swift::core;
 using namespace swift::core::context;
@@ -42,4 +44,4 @@ namespace swift::gui::components
         if (!sGui || !sGui->supportsContexts() || sGui->isShuttingDown()) { return; }
         ui->tvp_RegisteredComponents->updateContainer(sGui->getIContextApplication()->getRegisteredApplications());
     }
-} // ns
+} // namespace swift::gui::components

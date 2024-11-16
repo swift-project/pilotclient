@@ -6,11 +6,12 @@
 #ifndef SWIFT_CORE_APPLICATION_UPDATESETTINGS_H
 #define SWIFT_CORE_APPLICATION_UPDATESETTINGS_H
 
-#include "core/application.h"
+#include <QStringList>
+
 #include "config/buildconfig.h"
+#include "core/application.h"
 #include "misc/platform.h"
 #include "misc/settingscache.h"
-#include <QStringList>
 
 namespace swift::core::application
 {
@@ -37,6 +38,6 @@ namespace swift::core::application
             return name;
         }
     };
-} // ns
+} // namespace swift::core::application
 
 #endif // guard

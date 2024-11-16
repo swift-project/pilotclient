@@ -6,19 +6,19 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTSITUATIONLIST_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTSITUATIONLIST_H
 
+#include <QHash>
+#include <QList>
+#include <QMetaType>
+#include <QPair>
+
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/callsignobjectlist.h"
-#include "misc/geo/geoobjectlist.h"
-#include "misc/geo/elevationplane.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/collection.h"
+#include "misc/geo/elevationplane.h"
+#include "misc/geo/geoobjectlist.h"
 #include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/timestampobjectlist.h"
-
-#include <QMetaType>
-#include <QList>
-#include <QPair>
-#include <QHash>
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituation, CAircraftSituationList)
 
@@ -165,8 +165,8 @@ namespace swift::misc
         //! Situations (list) per callsign
         using CAircraftSituationListPerCallsign = QHash<CCallsign, CAircraftSituationList>;
 
-    } // namespace
-} // namespace
+    } // namespace aviation
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituationList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAircraftSituation>)

@@ -10,6 +10,7 @@
 #    define NOMINMAX
 #endif
 
+// clang-format off
 #include "dbusobject.h"
 #include "datarefs.h"
 #include "messages.h"
@@ -19,6 +20,7 @@
 #include <string>
 #include <chrono>
 #include <limits>
+// clang-format on
 
 //! \cond PRIVATE
 #define XSWIFTBUS_SERVICE_INTERFACENAME "org.swift_project.xswiftbus.service"
@@ -401,6 +403,6 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::flightmodel2::controls::speedbrake_ratio> m_speedBrakeRatio;
         DataRef<xplane::data::sim::weather::barometer_sealevel_inhg> m_qnhInhg;
     };
-}
+} // namespace XSwiftBus
 
 #endif // guard

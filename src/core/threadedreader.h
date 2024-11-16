@@ -6,19 +6,20 @@
 #ifndef SWIFT_CORE_THREADED_READER_H
 #define SWIFT_CORE_THREADED_READER_H
 
-#include "core/vatsim/vatsimsettings.h"
-#include "core/swiftcoreexport.h"
-#include "misc/network/urlloglist.h"
-#include "misc/logcategories.h"
-#include "misc/worker.h"
+#include <atomic>
 
 #include <QDateTime>
 #include <QObject>
+#include <QPair>
 #include <QReadWriteLock>
 #include <QString>
 #include <QtGlobal>
-#include <QPair>
-#include <atomic>
+
+#include "core/swiftcoreexport.h"
+#include "core/vatsim/vatsimsettings.h"
+#include "misc/logcategories.h"
+#include "misc/network/urlloglist.h"
+#include "misc/worker.h"
 
 class QNetworkReply;
 class QTimer;
@@ -149,6 +150,6 @@ namespace swift::core
         bool m_unitTest { false }; //!< mark as unit test
         swift::misc::network::CUrlLogList m_urlReadLog; //!< URL based reading can be logged
     };
-} // namespace
+} // namespace swift::core
 
 #endif // guard

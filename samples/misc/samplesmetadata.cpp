@@ -5,11 +5,13 @@
 //! \ingroup samplemisc
 
 #include "samplesmetadata.h"
-#include "misc/metadatautils.h"
-#include "misc/registermetadata.h"
 
 #include <stdio.h>
+
 #include <QTextStream>
+
+#include "misc/metadatautils.h"
+#include "misc/registermetadata.h"
 
 namespace swift::sample
 {
@@ -25,4 +27,4 @@ namespace swift::sample
         return 0;
     }
 
-} // namespace
+} // namespace swift::sample

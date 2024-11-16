@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/views/viewcallsignobjects.h"
+
+#include <QAction>
+#include <QHBoxLayout>
+#include <QIntValidator>
+#include <QLabel>
+#include <QLineEdit>
+#include <QWidgetAction>
+
 #include "gui/models/atcstationlistmodel.h"
 #include "gui/models/interpolationsetupmodel.h"
 #include "gui/models/simulatedaircraftlistmodel.h"
 #include "misc/icons.h"
-
-#include <QAction>
-#include <QIntValidator>
-#include <QLineEdit>
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QWidgetAction>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -117,4 +118,4 @@ namespace swift::gui::views
     template class CViewWithCallsignObjects<swift::gui::models::CInterpolationSetupListModel>;
     template class CViewWithCallsignObjects<swift::gui::models::CSimulatedAircraftListModel>;
 
-} // namespace
+} // namespace swift::gui::views

@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_ENABLEFORFRAMLESSWINDOW_H
 #define SWIFT_GUI_ENABLEFORFRAMLESSWINDOW_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QByteArray>
 #include <QPoint>
-#include <QString>
 #include <QSize>
+#include <QString>
 #include <Qt>
+
+#include "gui/swiftguiexport.h"
 
 class QEvent;
 class QHBoxLayout;
@@ -140,6 +140,6 @@ namespace swift::gui
         //! Translate mode
         static Qt::WindowFlags modeToWindowFlags(WindowMode mode);
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

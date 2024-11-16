@@ -7,8 +7,8 @@
 #define SWIFT_CORE_DATA_LAUNCHERSETUP
 
 #include "core/swiftcoreexport.h"
-#include "misc/propertyindex.h"
 #include "misc/datacache.h"
+#include "misc/propertyindex.h"
 #include "misc/valueobject.h"
 #include "misc/variant.h"
 
@@ -108,7 +108,7 @@ namespace swift::core::data
         //! First load is synchronous
         static constexpr bool isPinned() { return true; }
     };
-} // ns
+} // namespace swift::core::data
 
 Q_DECLARE_METATYPE(swift::core::data::CLauncherSetup)
 Q_DECLARE_METATYPE(swift::core::data::CLauncherSetup::AudioModeFlag)

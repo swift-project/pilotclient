@@ -8,8 +8,9 @@
 
 #include <QFrame>
 #include <QTabWidget>
-#include <QTimer>
 #include <QTextDocument>
+#include <QTimer>
+
 #include "misc/network/connectionstatus.h"
 
 namespace Ui
@@ -63,6 +64,6 @@ namespace swift::gui::components
         //! Connection status changed
         void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/geo/coordinategeodetic.h"
+
+#include <cmath>
+
+#include <QStringBuilder>
+#include <QtGlobal>
+
 #include "misc/logmessage.h"
 #include "misc/verify.h"
-
-#include <QtGlobal>
-#include <QStringBuilder>
-#include <cmath>
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
@@ -511,4 +513,4 @@ namespace swift::misc::geo
         const int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexRelativeDistance)) && (i <= static_cast<int>(IndexRelativeBearing));
     }
-} // namespace
+} // namespace swift::misc::geo

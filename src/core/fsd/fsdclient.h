@@ -6,46 +6,45 @@
 #ifndef SWIFT_CORE_FSD_CLIENT_H
 #define SWIFT_CORE_FSD_CLIENT_H
 
-#include "core/swiftcoreexport.h"
-#include "core/vatsim/vatsimsettings.h"
 #include "core/fsd/enums.h"
 #include "core/fsd/messagebase.h"
-
-#include "misc/simulation/ownaircraftprovider.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/simulation/simulationenvironmentprovider.h"
+#include "core/swiftcoreexport.h"
+#include "core/vatsim/vatsimsettings.h"
+#include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/flightplan.h"
 #include "misc/aviation/informationmessage.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/network/rawfsdmessage.h"
-#include "misc/network/connectionstatus.h"
-#include "misc/network/loginmode.h"
-#include "misc/network/server.h"
-#include "misc/network/ecosystemprovider.h"
-#include "misc/network/clientprovider.h"
-#include "misc/network/textmessagelist.h"
-#include "misc/worker.h"
 #include "misc/digestsignal.h"
+#include "misc/network/clientprovider.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/ecosystemprovider.h"
+#include "misc/network/loginmode.h"
+#include "misc/network/rawfsdmessage.h"
+#include "misc/network/server.h"
+#include "misc/network/textmessagelist.h"
+#include "misc/simulation/ownaircraftprovider.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/simulationenvironmentprovider.h"
 #include "misc/tokenbucket.h"
+#include "misc/worker.h"
 
 #ifdef SWIFT_VATSIM_SUPPORT
 #    include "vatsim/vatsimauth.h"
 #endif
 
-#include <QtGlobal>
-#include <QHash>
-#include <QString>
-#include <QObject>
-#include <QTcpSocket>
-#include <QCommandLineOption>
-#include <QTimer>
-#include <QTextCodec>
-#include <QReadWriteLock>
-#include <QQueue>
-
 #include <atomic>
+
+#include <QCommandLineOption>
+#include <QHash>
+#include <QObject>
+#include <QQueue>
+#include <QReadWriteLock>
+#include <QString>
+#include <QTcpSocket>
+#include <QTextCodec>
+#include <QTimer>
+#include <QtGlobal>
 
 //! @{
 //! Protocol version
@@ -663,6 +662,6 @@ namespace swift::core::fsd
         bool m_serverWantsVisualPositions = false; //!< there are interested clients in range
         unsigned m_visualPositionUpdateSentCount = 0; //!< for choosing when to send a periodic (slowfast) packet
     };
-} // ns
+} // namespace swift::core::fsd
 
 #endif

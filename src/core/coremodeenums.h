@@ -48,5 +48,5 @@ namespace swift::core
             return {};
         }
     };
-}
+} // namespace swift::core
 #endif // guard

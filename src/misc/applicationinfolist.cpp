@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/applicationinfolist.h"
-#include "misc/swiftdirectories.h"
+
+#include "config/buildconfig.h"
 #include "misc/directoryutils.h"
 #include "misc/stringutils.h"
-#include "config/buildconfig.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 
@@ -100,4 +101,4 @@ namespace swift::misc
     {
         return !applicationDataDirectoryMapWithoutCurrentVersion().isEmpty();
     }
-} // ns
+} // namespace swift::misc

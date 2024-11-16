@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_PQ_PQSTRING_H
 #define SWIFT_MISC_PQ_PQSTRING_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/valueobject.h"
-#include "misc/variant.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
+#include "misc/variant.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::physical_quantities, CPqString)
 
@@ -77,7 +77,7 @@ namespace swift::misc::physical_quantities
             CPqString,
             SWIFT_METAMEMBER(string));
     };
-} // ns
+} // namespace swift::misc::physical_quantities
 
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CPqString)
 

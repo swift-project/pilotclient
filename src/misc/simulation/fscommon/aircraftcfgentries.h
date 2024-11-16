@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGENTRY_H
 #define SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGENTRY_H
 
-#include "misc/swiftmiscexport.h"
+#include <QMetaType>
+#include <QString>
+
 #include "misc/metaclass.h"
 #include "misc/propertyindexref.h"
 #include "misc/simulation/aircraftmodel.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/timestampbased.h"
 #include "misc/valueobject.h"
-
-#include <QMetaType>
-#include <QString>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries)
 
@@ -216,7 +216,7 @@ namespace swift::misc::simulation::fscommon
             SWIFT_METAMEMBER(rotorcraft),
             SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
-} // ns
+} // namespace swift::misc::simulation::fscommon
 
 Q_DECLARE_METATYPE(swift::misc::simulation::fscommon::CAircraftCfgEntries)
 

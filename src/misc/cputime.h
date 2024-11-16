@@ -20,6 +20,6 @@ namespace swift::misc
      * Get the time in milliseconds that the CPU has spent executing the current thread.
      */
     SWIFT_MISC_EXPORT int getThreadCpuTimeMs();
-}
+} // namespace swift::misc
 
 #endif

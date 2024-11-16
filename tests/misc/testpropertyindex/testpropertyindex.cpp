@@ -5,12 +5,14 @@
 //! \file
 //! \ingroup testmisc
 
+#include <QTest>
+
+#include "test.h"
+
+#include "misc/comparefunctions.h"
+#include "misc/sequence.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/statusmessagelist.h"
-#include "misc/sequence.h"
-#include "misc/comparefunctions.h"
-#include "test.h"
-#include <QTest>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -104,7 +106,7 @@ namespace MiscTest
         QVERIFY(msgs.front().getMSecsSinceEpoch() == 4000);
         QVERIFY(msgs.back().getMSecsSinceEpoch() == 1000);
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestPropertyIndex);

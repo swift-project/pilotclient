@@ -2,19 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/afv/audio/callsignsampleprovider.h"
-#include "core/afv/audio/callsigndelaycache.h"
 
+#include <QDebug>
+#include <QStringBuilder>
+#include <QStringLiteral>
+#include <QtMath>
+
+#include "config/buildconfig.h"
+#include "core/afv/audio/callsigndelaycache.h"
 #include "core/afv/audio/receiversampleprovider.h"
-#include "sound/sampleprovider/samples.h"
-#include "sound/audioutilities.h"
 #include "misc/logmessage.h"
 #include "misc/metadatautils.h"
-#include "config/buildconfig.h"
-
-#include <QtMath>
-#include <QDebug>
-#include <QStringLiteral>
-#include <QStringBuilder>
+#include "sound/audioutilities.h"
+#include "sound/sampleprovider/samples.h"
 
 using namespace swift::misc;
 using namespace swift::sound::sample_provider;
@@ -229,4 +229,4 @@ namespace swift::core::afv::audio
                QStringLiteral(" type: ") % m_aircraftType;
     }
 
-} // ns
+} // namespace swift::core::afv::audio

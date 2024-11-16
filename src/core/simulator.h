@@ -6,38 +6,39 @@
 #ifndef SWIFT_CORE_SIMULATOR_H
 #define SWIFT_CORE_SIMULATOR_H
 
-#include "core/application.h"
-#include "core/swiftcoreexport.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "misc/simulation/simulatorinternals.h"
-#include "misc/simulation/interpolation/interpolatormulti.h"
-#include "misc/simulation/ownaircraftprovider.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/simulation/simulationenvironmentprovider.h"
-#include "misc/simulation/interpolation/interpolationsetupprovider.h"
-#include "misc/simulation/autopublishdata.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/aviation/callsignset.h"
-#include "misc/network/clientprovider.h"
-#include "misc/geo/elevationplane.h"
-#include "misc/pq/length.h"
-#include "misc/pq/time.h"
-#include "misc/statusmessage.h"
-#include "misc/identifiable.h"
-#include "misc/identifier.h"
-#include "misc/pixmap.h"
-#include "misc/simplecommandparser.h"
-#include "misc/tokenbucket.h"
-#include "config/buildconfig.h"
+#include <atomic>
 
 #include <QFlags>
 #include <QObject>
 #include <QString>
-#include <atomic>
+
+#include "config/buildconfig.h"
+#include "core/application.h"
+#include "core/swiftcoreexport.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/geo/elevationplane.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
+#include "misc/network/clientprovider.h"
+#include "misc/pixmap.h"
+#include "misc/pq/length.h"
+#include "misc/pq/time.h"
+#include "misc/simplecommandparser.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/autopublishdata.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/simulation/interpolation/interpolationsetupprovider.h"
+#include "misc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/ownaircraftprovider.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulationenvironmentprovider.h"
+#include "misc/simulation/simulatorinternals.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/statusmessage.h"
+#include "misc/tokenbucket.h"
 
 namespace swift::misc::network
 {
@@ -695,7 +696,7 @@ namespace swift::core
         //! Default ctor
         ISimulatorFactory() {}
     };
-} // namespace
+} // namespace swift::core
 
 Q_DECLARE_METATYPE(swift::core::ISimulator::SimulatorStatusFlag)
 Q_DECLARE_METATYPE(swift::core::ISimulator::SimulatorStatus)

@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/foreignwindows.h"
-#include "gui/windowfinder.h"
 
 #include <QWidget>
 #include <QWindow>
 #include <QtGlobal>
+
+#include "gui/windowfinder.h"
 
 using namespace swift::misc::simulation;
 
@@ -100,4 +101,4 @@ namespace swift::gui
         child->windowHandle()->setTransientParent(nullptr);
         return true;
     }
-}
+} // namespace swift::gui

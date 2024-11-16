@@ -1,20 +1,21 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/guiutility.h"
 #include "gui/views/viewbase.h"
-#include "gui/views/viewbaseproxystyle.h"
-#include "gui/views/viewbaseitemdelegate.h"
-#include "gui/models/allmodels.h"
-#include "gui/components/texteditdialog.h"
-#include "misc/worker.h"
-#include "config/buildconfig.h"
 
 #include <QApplication>
 #include <QClipboard>
 #include <QFileDialog>
-#include <QTextEdit>
 #include <QStringBuilder>
+#include <QTextEdit>
+
+#include "config/buildconfig.h"
+#include "gui/components/texteditdialog.h"
+#include "gui/guiutility.h"
+#include "gui/models/allmodels.h"
+#include "gui/views/viewbaseitemdelegate.h"
+#include "gui/views/viewbaseproxystyle.h"
+#include "misc/worker.h"
 
 using namespace swift::misc;
 using namespace swift::gui;
@@ -948,4 +949,4 @@ namespace swift::gui::views
         emit this->objectSelected(CVariant::fromValue(at(index)));
     }
 
-} // namespace
+} // namespace swift::gui::views

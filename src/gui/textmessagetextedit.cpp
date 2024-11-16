@@ -1,19 +1,20 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/guiapplication.h"
 #include "gui/textmessagetextedit.h"
-#include "misc/aviation/callsign.h"
-#include "misc/network/textmessage.h"
 
 #include <QAction>
 #include <QMenu>
 #include <QScopedPointer>
+#include <QStringBuilder>
 #include <QTextDocument>
 #include <QTextOption>
 #include <Qt>
 #include <QtGlobal>
-#include <QStringBuilder>
+
+#include "gui/guiapplication.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/textmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -192,4 +193,4 @@ namespace swift::gui
             this->setWordWrapMode(QTextOption::NoWrap);
         }
     }
-} // namespace
+} // namespace swift::gui

@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/compressutils.h"
-#include "misc/fileutils.h"
-#include "misc/swiftdirectories.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
 
 #include <QFileInfo>
 #include <QProcess>
+
+#include "config/buildconfig.h"
+#include "misc/fileutils.h"
+#include "misc/stringutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 
@@ -138,4 +139,4 @@ namespace swift::misc
 
         return zipProcess->exitStatus() == QProcess::NormalExit;
     }
-} // ns
+} // namespace swift::misc

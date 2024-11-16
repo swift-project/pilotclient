@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_FOREIGNWINDOWS_H
 #define SWIFT_GUI_FOREIGNWINDOWS_H
 
+#include <QScopedPointer>
+
 #include "gui/swiftguiexport.h"
 #include "misc/simulation/simulatorinfo.h"
-#include <QScopedPointer>
 
 class QWidget;
 class QWindow;
@@ -51,6 +52,6 @@ namespace swift::gui
 
         static QScopedPointer<IWindowFinder> m_windowFinder;
     };
-}
+} // namespace swift::gui
 
 #endif // guard

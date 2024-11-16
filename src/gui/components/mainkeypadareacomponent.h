@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_MAINKEYPADAREACOMPONENT_H
 #define SWIFT_GUI_MAINKEYPADAREACOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/components/maininfoareacomponent.h"
-#include "misc/identifier.h"
-#include "misc/network/connectionstatus.h"
-
 #include <QFrame>
 #include <QList>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/components/maininfoareacomponent.h"
+#include "gui/swiftguiexport.h"
+#include "misc/identifier.h"
+#include "misc/network/connectionstatus.h"
 
 class QPushButton;
 
@@ -102,6 +102,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
         swift::misc::CIdentifier m_identifier { "MainKeypadAreaComponent", this };
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

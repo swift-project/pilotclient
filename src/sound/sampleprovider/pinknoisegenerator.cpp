@@ -30,4 +30,4 @@ namespace swift::sound::sample_provider
         }
         return c;
     }
-}
+} // namespace swift::sound::sample_provider

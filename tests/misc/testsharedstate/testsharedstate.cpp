@@ -9,14 +9,17 @@
  */
 
 #include "testsharedstate.h"
-#include "misc/sharedstate/datalinklocal.h"
-#include "misc/sharedstate/datalinkdbus.h"
-#include "misc/registermetadata.h"
-#include "misc/dbusserver.h"
-#include "test.h"
-#include <QTest>
-#include <QProcess>
+
 #include <QDBusConnection>
+#include <QProcess>
+#include <QTest>
+
+#include "test.h"
+
+#include "misc/dbusserver.h"
+#include "misc/registermetadata.h"
+#include "misc/sharedstate/datalinkdbus.h"
+#include "misc/sharedstate/datalinklocal.h"
 
 using namespace QTest;
 using namespace swift::misc;
@@ -206,7 +209,7 @@ namespace MiscTest
         qWait(1000);
         QVERIFY2(observer.allValues() == QList<int>({ 1, 3, 5, 7 }), "still has expected value");
     }
-}
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestSharedState);

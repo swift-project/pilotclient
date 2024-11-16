@@ -35,4 +35,4 @@ namespace swift::core::fsd
         };
         return FSDIdentification(tokens[0], tokens[1], tokens[2], tokens[3]);
     }
-}
+} // namespace swift::core::fsd

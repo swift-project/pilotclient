@@ -2,31 +2,33 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/infobarstatuscomponent.h"
-#include "gui/components/transpondermodecomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/led.h"
-#include "gui/guiutility.h"
-#include "core/context/contextapplication.h"
-#include "core/context/contextaudio.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
-#include "core/simulator.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/network/server.h"
-#include "misc/audio/audioutils.h"
-#include "config/buildconfig.h"
-#include "ui_infobarstatuscomponent.h"
 
 #include <QLabel>
 #include <QList>
 #include <QMenu>
 #include <QPoint>
-#include <QWidget>
-#include <Qt>
-#include <QtGlobal>
 #include <QPointer>
 #include <QStringBuilder>
 #include <QTimer>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
+
+#include "ui_infobarstatuscomponent.h"
+
+#include "config/buildconfig.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "core/simulator.h"
+#include "gui/components/transpondermodecomponent.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/led.h"
+#include "misc/audio/audioutils.h"
+#include "misc/network/server.h"
+#include "misc/simulation/simulatorplugininfo.h"
 
 using namespace swift::config;
 using namespace swift::core;
@@ -313,4 +315,4 @@ namespace swift::gui::components
         if (!sGui->getCContextAudioBase()->isAudioStarted()) { return false; }
         return !sGui->getCContextAudioBase()->isOutputMuted();
     }
-} // namespace
+} // namespace swift::gui::components

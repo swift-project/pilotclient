@@ -12,6 +12,6 @@ namespace swift::misc::input
 {
     //! Register metadata for input
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc::input
 
 #endif // guard

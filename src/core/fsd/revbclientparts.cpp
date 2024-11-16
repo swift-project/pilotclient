@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/revbclientparts.h"
-#include "core/fsd/serializer.h"
 
+#include "core/fsd/serializer.h"
 #include "misc/logmessage.h"
 
 namespace swift::core::fsd
@@ -39,4 +39,4 @@ namespace swift::core::fsd
         return RevBClientParts(tokens[0], tokens[1], tokens[2], tokens[3]);
     }
 
-}
+} // namespace swift::core::fsd

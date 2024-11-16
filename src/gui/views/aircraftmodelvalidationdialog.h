@@ -8,6 +8,7 @@
 
 #include <QDialog>
 #include <QScopedPointer>
+
 #include "misc/simulation/aircraftmodellist.h"
 
 namespace Ui
@@ -49,6 +50,6 @@ namespace swift::gui::views
         swift::misc::simulation::CSimulatorInfo m_simulator { swift::misc::simulation::CSimulatorInfo::None };
         QString m_simulatorDir;
     };
-} // ns
+} // namespace swift::gui::views
 
 #endif // guard

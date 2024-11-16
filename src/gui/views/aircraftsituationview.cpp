@@ -36,4 +36,4 @@ namespace swift::gui::views
         const CAircraftSituation situation = this->selectedObject();
         emit this->requestElevation(situation);
     }
-} // ns
+} // namespace swift::gui::views

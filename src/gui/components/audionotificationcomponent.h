@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_AUDIONOTIFICATION_COMPONENT_H
 #define SWIFT_GUI_AUDIONOTIFICATION_COMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/audio/audiosettings.h"
-#include "misc/audio/audiodeviceinfolist.h"
-#include "misc/settingscache.h"
-
-#include <QFrame>
 #include <QCheckBox>
+#include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/audio/audiodeviceinfolist.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/settingscache.h"
 
 namespace Ui
 {
@@ -59,6 +59,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CAudioNotificationComponent> ui;
         swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings { this, &CAudioNotificationComponent::reloadSettings };
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

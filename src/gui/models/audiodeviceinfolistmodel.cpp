@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/audiodeviceinfolistmodel.h"
-#include "gui/models/columnformatters.h"
-#include "gui/models/columns.h"
 
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/models/columns.h"
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -24,4 +25,4 @@ namespace swift::gui::models
         this->setSortColumnByPropertyIndex(CAudioDeviceInfo::IndexName);
         m_sortOrder = Qt::AscendingOrder;
     }
-} // ns
+} // namespace swift::gui::models

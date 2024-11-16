@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/orderable.h"
-#include "misc/comparefunctions.h"
-#include "misc/verify.h"
+
+#include <limits>
 
 #include <QByteArray>
 #include <QtGlobal>
-#include <limits>
+
+#include "misc/comparefunctions.h"
+#include "misc/verify.h"
 
 namespace swift::misc
 {
@@ -81,4 +83,4 @@ namespace swift::misc
         const int o2 = compareValue.hasValidOrder() ? compareValue.getOrder() : max;
         return Compare::compare(o1, o2);
     }
-} // namespace
+} // namespace swift::misc

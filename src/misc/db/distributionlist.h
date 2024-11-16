@@ -6,14 +6,15 @@
 #ifndef SWIFT_MISC_DB_DISTRIBUTIONLIST_H
 #define SWIFT_MISC_DB_DISTRIBUTIONLIST_H
 
-#include "misc/db/distribution.h"
-#include "misc/db/datastoreobjectlist.h"
-#include "misc/platform.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/sequence.h"
 #include <QSet>
 #include <QString>
+
+#include "misc/collection.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/db/distribution.h"
+#include "misc/platform.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::db, CDistribution, CDistributionList)
 
@@ -71,7 +72,7 @@ namespace swift::misc::db
         //! From database JSON by string
         static CDistributionList fromDatabaseJson(const QString &json);
     };
-} // ns
+} // namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CDistributionList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::db::CDistribution>)

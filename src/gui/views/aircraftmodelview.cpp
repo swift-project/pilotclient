@@ -2,36 +2,36 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftmodelview.h"
-#include "gui/views/viewbase.h"
-#include "gui/views/aircraftmodelstatisticsdialog.h"
-#include "gui/views/aircraftmodelvalidationdialog.h"
+
+#include <QAction>
+#include <QDropEvent>
+#include <QMap>
+#include <QShortcut>
+#include <QString>
+#include <QStringBuilder>
+#include <QWidget>
+#include <QtGlobal>
+
 #include "gui/filters/aircraftmodelfilterdialog.h"
-#include "gui/menus/menuaction.h"
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
+#include "gui/menus/menuaction.h"
 #include "gui/shortcut.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/simulation/simulatorinfolist.h"
+#include "gui/views/aircraftmodelstatisticsdialog.h"
+#include "gui/views/aircraftmodelvalidationdialog.h"
+#include "gui/views/viewbase.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/aircrafticaocodelist.h"
 #include "misc/aviation/airlineicaocodelist.h"
 #include "misc/aviation/livery.h"
 #include "misc/aviation/liverylist.h"
 #include "misc/directories.h"
-#include "misc/statusmessagelist.h"
 #include "misc/icons.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/simulatorinfolist.h"
+#include "misc/statusmessagelist.h"
 #include "misc/variant.h"
-
-#include <QAction>
-#include <QDropEvent>
-#include <QMap>
-#include <QShortcut>
-#include <QStringBuilder>
-#include <QString>
-#include <QWidget>
-#include <QtGlobal>
-#include <QStringBuilder>
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -481,4 +481,4 @@ namespace swift::gui::views
         m_fileValidationDialog->triggerValidation(1000);
         m_fileValidationDialog->exec();
     }
-} // namespace
+} // namespace swift::gui::views

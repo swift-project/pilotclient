@@ -5,18 +5,20 @@
 //! \file
 //! \ingroup testswiftcore
 
+#include <QDateTime>
+#include <QDebug>
+#include <QObject>
+#include <QString>
+#include <QTest>
+#include <QtDebug>
+
+#include "test.h"
+
 #include "core/application.h"
 #include "core/setupreader.h"
 #include "misc/applicationinfo.h"
 #include "misc/network/networkutils.h"
 #include "misc/statusmessagelist.h"
-#include "test.h"
-#include <QObject>
-#include <QDateTime>
-#include <QDebug>
-#include <QTest>
-#include <QString>
-#include <QtDebug>
 
 using namespace swift::core;
 using namespace swift::core::db;
@@ -88,7 +90,7 @@ namespace swiftcoretest
         qDebug() << "Completed" << max << "ping tests in" << elapsedMs << "ms to" << url.getFullUrl();
         QVERIFY2(true, "pingServer");
     }
-} // ns
+} // namespace swiftcoretest
 
 //! main
 int main(int argc, char *argv[])

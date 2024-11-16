@@ -6,14 +6,15 @@
 #ifndef SWIFT_GUI_FILTERS_LIVERYFILTERBAR_H
 #define SWIFT_GUI_FILTERS_LIVERYFILTERBAR_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/filters/filterwidget.h"
-#include "gui/models/modelfilter.h"
-#include "misc/rgbcolor.h"
+#include <memory>
 
 #include <QObject>
 #include <QScopedPointer>
-#include <memory>
+
+#include "gui/filters/filterwidget.h"
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
+#include "misc/rgbcolor.h"
 
 namespace Ui
 {
@@ -23,7 +24,7 @@ namespace swift::misc::aviation
 {
     class CLivery;
     class CLiveryList;
-}
+} // namespace swift::misc::aviation
 namespace swift::gui::filters
 {
     /*!
@@ -68,6 +69,6 @@ namespace swift::gui::filters
 
         QScopedPointer<Ui::CLiveryFilterBar> ui;
     };
-} // ns
+} // namespace swift::gui::filters
 
 #endif // guard

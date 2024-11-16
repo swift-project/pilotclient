@@ -6,14 +6,15 @@
 
 //! \file
 
-#include "drawable.h"
-#include "command.h"
-#include "datarefs.h"
-#include <vector>
-#include <string>
+#include <algorithm>
 #include <array>
 #include <iterator>
-#include <algorithm>
+#include <string>
+#include <vector>
+
+#include "command.h"
+#include "datarefs.h"
+#include "drawable.h"
 
 namespace XSwiftBus
 {
@@ -25,7 +26,7 @@ namespace XSwiftBus
             using namespace std::literals;
             return u8""s;
         }
-    }
+    } // namespace Private
     //! \endcond
 
     /*!
@@ -170,6 +171,6 @@ namespace XSwiftBus
         CCommand m_scrollToTopCommand;
         CCommand m_scrollToBottomCommand;
     };
-} // ns
+} // namespace XSwiftBus
 
 #endif

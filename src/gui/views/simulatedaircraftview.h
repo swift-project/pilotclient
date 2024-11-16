@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_VIEWS_SIMULATEDAIRCRAFTVIEW_H
 #define SWIFT_GUI_VIEWS_SIMULATEDAIRCRAFTVIEW_H
 
-#include "gui/views/viewcallsignobjects.h"
+#include <QObject>
+
 #include "gui/models/simulatedaircraftlistmodel.h"
 #include "gui/swiftguiexport.h"
-#include "misc/simulation/simulatedaircraftlist.h"
+#include "gui/views/viewcallsignobjects.h"
 #include "misc/pq/angle.h"
-
-#include <QObject>
+#include "misc/simulation/simulatedaircraftlist.h"
 
 namespace swift::misc
 {
@@ -24,13 +24,13 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
     }
-}
+} // namespace swift::misc
 
 namespace swift::core::context
 {
     class IContextSimulator;
     class IContextNetwork;
-}
+} // namespace swift::core::context
 namespace swift::gui
 {
     namespace menus
@@ -165,6 +165,6 @@ namespace swift::gui
 
             CFlightPlanDialog *m_fpDialog = nullptr;
         };
-    } // ns
-} // ns
+    } // namespace views
+} // namespace swift::gui
 #endif // guard

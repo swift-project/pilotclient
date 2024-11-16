@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_NETWORK_REMOTEFILE_H
 #define SWIFT_MISC_NETWORK_REMOTEFILE_H
 
-#include "misc/network/url.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/timestampbased.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/network/url.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRemoteFile)
 
@@ -138,7 +138,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(size),
             SWIFT_METAMEMBER(created));
     };
-} // ns
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CRemoteFile)
 

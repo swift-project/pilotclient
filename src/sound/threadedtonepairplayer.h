@@ -6,18 +6,18 @@
 #ifndef SWIFT_SOUND_THREADEDTONEPAIRPLAYER_H
 #define SWIFT_SOUND_THREADEDTONEPAIRPLAYER_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/tonepair.h"
-#include "misc/audio/audiodeviceinfo.h"
-#include "misc/worker.h"
-
+#include <QAudioFormat>
 #include <QAudioSink>
 #include <QBuffer>
 #include <QMap>
 #include <QReadWriteLock>
 #include <QtEndian>
 #include <QtGlobal>
-#include <QAudioFormat>
+
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/worker.h"
+#include "sound/swiftsoundexport.h"
+#include "sound/tonepair.h"
 
 class QTimer;
 
@@ -73,6 +73,6 @@ namespace swift::sound
         QMap<CTonePair, QByteArray> m_tonePairCache;
         mutable QRecursiveMutex m_mutex;
     };
-} // ns
+} // namespace swift::sound
 
 #endif // guard

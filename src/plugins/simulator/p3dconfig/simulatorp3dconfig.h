@@ -29,6 +29,6 @@ namespace swift::simplugin::p3d
         //! \copydoc swift::gui::IPluginConfig::createConfigWindow()
         swift::gui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
     };
-}
+} // namespace swift::simplugin::p3d
 
 #endif // guard

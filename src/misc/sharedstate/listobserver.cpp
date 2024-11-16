@@ -4,6 +4,7 @@
 //! \file
 
 #include "misc/sharedstate/listobserver.h"
+
 #include "misc/sharedstate/datalink.h"
 #include "misc/variantlist.h"
 
@@ -53,4 +54,4 @@ namespace swift::misc::shared_state
         lock.unlock();
         onGenericElementAdded(param);
     }
-}
+} // namespace swift::misc::shared_state

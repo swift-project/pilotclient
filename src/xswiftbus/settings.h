@@ -4,10 +4,11 @@
 #ifndef SWIFT_MISC_XSWIFTBUS_CSETTINGS_H
 #define SWIFT_MISC_XSWIFTBUS_CSETTINGS_H
 
-#include "misc/simulation/settings/xswiftbussettingsqtfree.h"
-#include "config.h"
-#include <string>
 #include <mutex>
+#include <string>
+
+#include "config.h"
+#include "misc/simulation/settings/xswiftbussettingsqtfree.h"
 
 namespace XSwiftBus
 {
@@ -79,6 +80,6 @@ namespace XSwiftBus
     private:
         CSettingsProvider *m_provider = nullptr;
     };
-} // ns
+} // namespace XSwiftBus
 
 #endif

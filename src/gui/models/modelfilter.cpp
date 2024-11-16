@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/modelfilter.h"
-#include "misc/logmessage.h"
+
 #include <QtGlobal>
+
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 
@@ -86,4 +88,4 @@ namespace swift::gui::models
     template class IModelFilter<swift::misc::simulation::CAircraftModelList>;
     template class IModelFilter<swift::misc::simulation::CDistributorList>;
 
-} // namespace
+} // namespace swift::gui::models

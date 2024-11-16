@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_SIMULATION_XPLANE_XPLANQTFREEUTILS_H
 #define SWIFT_MISC_SIMULATION_XPLANE_XPLANQTFREEUTILS_H
 
-#include <string>
-#include <fstream>
-#include <vector>
+#include <algorithm>
 #include <cctype>
 #include <cmath>
-#include <algorithm>
+#include <fstream>
 #include <iterator>
+#include <string>
+#include <vector>
 
 // Strict header only X-Plane model parser utils shared between Misc and xswiftbus.
 // Header only is necessary to no require xswiftbus to link against Misc.
@@ -297,6 +297,6 @@ namespace swift::misc::simulation::xplane::qtfreeutils
         I base; //!< Underlying iterator
         I end; //!< Underlying end iterator
     };
-} // namespace
+} // namespace swift::misc::simulation::xplane::qtfreeutils
 
 #endif // guard

@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "transpondermodecomponent.h"
-#include "ui_transpondermodecomponent.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextownaircraft.h"
-#include "misc/aviation/transponder.h"
 
-#include <QTimer>
 #include <QPointer>
+#include <QTimer>
+
+#include "ui_transpondermodecomponent.h"
+
+#include "core/context/contextownaircraft.h"
+#include "gui/guiapplication.h"
+#include "misc/aviation/transponder.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -77,4 +79,4 @@ namespace swift::gui::components
         this->init();
         emit this->changed();
     }
-} // ns
+} // namespace swift::gui::components

@@ -2,28 +2,29 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/aircraftmatcher.h"
+
+#include <QJSEngine>
+#include <QList>
+#include <QPair>
+#include <QStringBuilder>
+#include <QStringList>
+#include <QtGlobal>
+
 #include "core/application.h"
 #include "core/webdataservices.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/matchingscript.h"
-#include "misc/simulation/matchingutils.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/livery.h"
+#include "misc/directoryutils.h"
 #include "misc/fileutils.h"
 #include "misc/logcategories.h"
 #include "misc/logmessage.h"
+#include "misc/simulation/matchingscript.h"
+#include "misc/simulation/matchingutils.h"
+#include "misc/simulation/simulatedaircraft.h"
 #include "misc/statusmessagelist.h"
 #include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-
-#include <QList>
-#include <QStringList>
-#include <QtGlobal>
-#include <QPair>
-#include <QStringBuilder>
-#include <QJSEngine>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -2008,4 +2009,4 @@ namespace swift::core
         if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return true; }
         return (sApp->getWebDataServices()->containsAirlineIcaoDesignator(designator));
     }
-} // namespace
+} // namespace swift::core

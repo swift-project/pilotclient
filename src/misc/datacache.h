@@ -6,15 +6,10 @@
 #ifndef SWIFT_MISC_DATACACHE_H
 #define SWIFT_MISC_DATACACHE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/threadutils.h"
-#include "misc/identifier.h"
-#include "misc/propertyindexref.h"
-#include "misc/statusmessage.h"
-#include "misc/valuecache.h"
-#include "misc/valuecacheprivate.h"
-#include "misc/variantmap.h"
-#include "misc/worker.h"
+#include <future>
+#include <memory>
+#include <utility>
+#include <vector>
 
 #include <QDateTime>
 #include <QFileSystemWatcher>
@@ -25,17 +20,23 @@
 #include <QMap>
 #include <QMutex>
 #include <QObject>
-#include <QSet>
 #include <QPointer>
+#include <QSet>
 #include <QString>
 #include <QStringList>
 #include <QUuid>
 #include <QtDebug>
 #include <QtGlobal>
-#include <future>
-#include <memory>
-#include <utility>
-#include <vector>
+
+#include "misc/identifier.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/threadutils.h"
+#include "misc/valuecache.h"
+#include "misc/valuecacheprivate.h"
+#include "misc/variantmap.h"
+#include "misc/worker.h"
 
 namespace swift::misc
 {
@@ -68,7 +69,7 @@ namespace swift::misc
             QList<std::pair<CValueCachePacket, QObject *>> m_queue;
             QMutex m_mutex;
         };
-    }
+    } // namespace private_ns
 
     class CDataCache;
 
@@ -496,6 +497,6 @@ namespace swift::misc
         //! Deleted copy assignment operator.
         TDataTrait &operator=(const TDataTrait &) = delete;
     };
-}
+} // namespace swift::misc
 
 #endif

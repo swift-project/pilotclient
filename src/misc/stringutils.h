@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_STRINGUTILS_H
 #define SWIFT_MISC_STRINGUTILS_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/range.h"
-#include "misc/typetraits.h"
+#include <algorithm>
+#include <atomic>
+#include <iosfwd>
+#include <string>
 
 #include <QByteArray>
 #include <QDataStream>
@@ -16,18 +17,18 @@
 #include <QDebug>
 #include <QFlags>
 #include <QList>
+#include <QMap>
 #include <QMapIterator>
+#include <QSet>
 #include <QString>
 #include <QStringRef>
 #include <QStringView>
 #include <QTextStream>
 #include <QtGlobal>
-#include <QSet>
-#include <QMap>
-#include <atomic>
-#include <iosfwd>
-#include <string>
-#include <algorithm>
+
+#include "misc/range.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/typetraits.h"
 
 template <class T1, class T2>
 class QMap;
@@ -433,6 +434,6 @@ namespace swift::misc
         static QString toQString(const std::atomic<T> &n) { return TString<T>::toQString(n); }
     };
     //! \endcond
-} // ns
+} // namespace swift::misc
 
 #endif // guard

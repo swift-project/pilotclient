@@ -13,4 +13,4 @@ namespace swift::misc::simulation
                QStringLiteral(" | reused: ") % boolToYesNo(m_resusedParts) %
                QStringLiteral(" | same: ") % boolToYesNo(m_isSameParts);
     }
-}
+} // namespace swift::misc::simulation

@@ -6,9 +6,9 @@
 #ifndef SWIFT_CORE_CONTEXTAPPLICATION_EMPTY_H
 #define SWIFT_CORE_CONTEXTAPPLICATION_EMPTY_H
 
-#include "core/swiftcoreexport.h"
 #include "core/context/contextapplication.h"
 #include "core/corefacade.h"
+#include "core/swiftcoreexport.h"
 #include "misc/identifierlist.h"
 
 // clazy:excludeall=const-signal-or-slot
@@ -132,6 +132,6 @@ namespace swift::core
                 return swift::misc::CIdentifier();
             }
         };
-    } // namespace
-} // namespace
+    } // namespace context
+} // namespace swift::core
 #endif // guard

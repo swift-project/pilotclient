@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/afv/connection/clientconnection.h"
-#include "misc/logmessage.h"
-#include "config/buildconfig.h"
 
 #include <QNetworkDatagram>
+
+#include "config/buildconfig.h"
+#include "misc/logmessage.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -196,4 +197,4 @@ namespace swift::core::afv::connection
         const QByteArray dataBytes = CryptoDtoSerializer::serialize(*m_connection.m_voiceCryptoChannel, CryptoDtoMode::AEAD_ChaCha20Poly1305, keepAlive);
         m_udpSocket->writeDatagram(dataBytes, QHostAddress(voiceServerUrl.host()), static_cast<quint16>(voiceServerUrl.port()));
     }
-} // ns
+} // namespace swift::core::afv::connection

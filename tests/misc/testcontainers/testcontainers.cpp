@@ -8,19 +8,10 @@
  * \ingroup testmisc
  */
 
-#include "../testvalueobject.h"
-#include "misc/aviation/aircraftsituation.h"
-#include "misc/aviation/aircraftsituationlist.h"
-#include "misc/aviation/callsign.h"
-#include "misc/aviation/callsignset.h"
-#include "misc/collection.h"
-#include "misc/dictionary.h"
-#include "misc/iterator.h"
-#include "misc/range.h"
-#include "misc/registermetadata.h"
-#include "misc/sequence.h"
-#include "misc/math/mathutils.h"
-#include "test.h"
+#include <algorithm>
+#include <iterator>
+#include <set>
+#include <vector>
 
 #include <QDateTime>
 #include <QJsonObject>
@@ -30,10 +21,21 @@
 #include <QTest>
 #include <QVector>
 #include <QtGlobal>
-#include <algorithm>
-#include <iterator>
-#include <set>
-#include <vector>
+
+#include "../testvalueobject.h"
+#include "test.h"
+
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/aircraftsituationlist.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/collection.h"
+#include "misc/dictionary.h"
+#include "misc/iterator.h"
+#include "misc/math/mathutils.h"
+#include "misc/range.h"
+#include "misc/registermetadata.h"
+#include "misc/sequence.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -414,7 +416,7 @@ namespace MiscTest
             }
         }
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestContainers);

@@ -67,5 +67,5 @@ namespace swift::gui
         //! As string for menus etc. Looks like "(CTRL + R)"
         static QString toParenthesisString(const QKeySequence &sequence);
     };
-} // ns
+} // namespace swift::gui
 #endif // guard

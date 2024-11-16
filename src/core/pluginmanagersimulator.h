@@ -6,17 +6,17 @@
 #ifndef SWIFT_CORE_PLUGIN_MANAGER_SIMULATOR_H
 #define SWIFT_CORE_PLUGIN_MANAGER_SIMULATOR_H
 
-#include "core/swiftcoreexport.h"
-#include "core/pluginmanager.h"
-#include "misc/sequence.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/simulation/simulatorplugininfolist.h"
-#include "misc/variant.h"
-
 #include <QHash>
 #include <QMap>
 #include <QObject>
 #include <QString>
+
+#include "core/pluginmanager.h"
+#include "core/swiftcoreexport.h"
+#include "misc/sequence.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfolist.h"
+#include "misc/variant.h"
 
 namespace swift::core
 {
@@ -74,6 +74,6 @@ namespace swift::core
 
         QMap<QString, PluginExtended> m_plugins; //!< Id <-> extended data pairs
     };
-} // namespace
+} // namespace swift::core
 
 #endif // guard

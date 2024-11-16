@@ -4,17 +4,21 @@
 #ifndef SWIFT_SIMPLUGIN_FS9_DIRECTPLAY_PEER_H
 #define SWIFT_SIMPLUGIN_FS9_DIRECTPLAY_PEER_H
 
+#include <dplay8.h>
+
+#include <atomic>
+#include <functional>
+
+#include <QList>
+#include <QObject>
+#include <QScopedPointer>
+
+#include "callbackwrapper.h"
 #include "fs9.h"
 #include "hostnode.h"
-#include "callbackwrapper.h"
+
 #include "misc/aviation/callsign.h"
 #include "misc/logcategorylist.h"
-#include <QObject>
-#include <QList>
-#include <QScopedPointer>
-#include <dplay8.h>
-#include <functional>
-#include <atomic>
 
 namespace swift::simplugin::fs9
 {
@@ -93,6 +97,6 @@ namespace swift::simplugin::fs9
     private:
         bool m_coInitializeSucceeded = false;
     };
-} // ns
+} // namespace swift::simplugin::fs9
 
 #endif // guard

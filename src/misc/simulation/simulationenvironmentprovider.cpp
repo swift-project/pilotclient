@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/simulationenvironmentprovider.h"
-#include "misc/aviation/aircraftsituationchange.h"
-
-#include "misc/logmessage.h"
-#include "misc/verify.h"
-#include "config/buildconfig.h"
 
 #include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/aviation/aircraftsituationchange.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -821,4 +821,4 @@ namespace swift::misc::simulation
         if (!this->hasProvider()) { return false; }
         return this->provider()->cleanElevationValues(reference, range, forced);
     }
-} // namespace
+} // namespace swift::misc::simulation

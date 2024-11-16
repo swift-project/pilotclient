@@ -6,10 +6,13 @@
 #ifndef SWIFT_CORE_AFV_CRYPTO_CRYPTODTOHEADERDTO_H
 #define SWIFT_CORE_AFV_CRYPTO_CRYPTODTOHEADERDTO_H
 
-#include "core/afv/crypto/cryptodtomode.h"
-#include "msgpack.hpp"
-#include <QString>
 #include <cstdint>
+
+#include <QString>
+
+#include "msgpack.hpp"
+
+#include "core/afv/crypto/cryptodtomode.h"
 
 namespace swift::core::afv::crypto
 {
@@ -21,6 +24,6 @@ namespace swift::core::afv::crypto
         CryptoDtoMode Mode; //!< mode
         MSGPACK_DEFINE(ChannelTag, Sequence, Mode)
     };
-} // ns
+} // namespace swift::core::afv::crypto
 
 #endif // gaurd

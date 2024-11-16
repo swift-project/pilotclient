@@ -6,7 +6,16 @@
 #ifndef SWIFT_MISC_TEST_TESTSERVICEINTERFACE_H
 #define SWIFT_MISC_TEST_TESTSERVICEINTERFACE_H
 
-#include "misc/swiftmiscexport.h"
+#include <QDBusAbstractInterface>
+#include <QDBusPendingCall>
+#include <QDBusPendingReply>
+#include <QLatin1String>
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <QTextStream>
+#include <QVariant>
+
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/airportlist.h"
@@ -30,17 +39,8 @@
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/simulation/simulatorplugininfo.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/variantlist.h"
-
-#include <QDBusAbstractInterface>
-#include <QDBusPendingCall>
-#include <QDBusPendingReply>
-#include <QLatin1String>
-#include <QList>
-#include <QObject>
-#include <QString>
-#include <QVariant>
-#include <QTextStream>
 
 class QDBusConnection;
 class QDBusObjectPath;
@@ -53,7 +53,7 @@ namespace swift::misc
     {
         class CAircraftCfgEntriesList;
     }
-}
+} // namespace swift::misc
 
 namespace swift::misc::test
 {
@@ -418,5 +418,5 @@ namespace swift::misc::test
         //! Error info string
         static const QString &errorInfo(bool ok);
     };
-} // ns
+} // namespace swift::misc::test
 #endif

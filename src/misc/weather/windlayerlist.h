@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_WEATHER_WINDLAYERLIST_H
 #define SWIFT_MISC_WEATHER_WINDLAYERLIST_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/sequence.h"
-#include "misc/weather/windlayer.h"
-
-#include <QMetaType>
 #include <initializer_list>
 #include <tuple>
+
+#include <QMetaType>
+
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/weather/windlayer.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::weather, CWindLayer, CWindLayerList)
 
@@ -49,8 +50,8 @@ namespace swift::misc
             CWindLayer findByLevel(const swift::misc::aviation::CAltitude &level) const;
         };
 
-    } // namespace
-} // namespace
+    } // namespace weather
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::weather::CWindLayerList)
 

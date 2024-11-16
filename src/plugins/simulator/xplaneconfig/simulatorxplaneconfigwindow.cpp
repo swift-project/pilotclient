@@ -1,15 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_simulatorxplaneconfigwindow.h"
 #include "simulatorxplaneconfigwindow.h"
-#include "core/context/contextsimulator.h"
-#include "gui/guiapplication.h"
-#include "misc/simulation/xplane/xswiftbusconfigwriter.h"
+
+#include <vector>
 
 #include <QComboBox>
 #include <QDialogButtonBox>
-#include <vector>
+
+#include "ui_simulatorxplaneconfigwindow.h"
+
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "misc/simulation/xplane/xswiftbusconfigwriter.h"
 
 using namespace swift::gui;
 using namespace swift::core::context;
@@ -157,4 +160,4 @@ namespace swift::simplugin::xplane
         const int v = text.toInt(&ok);
         return ok ? v : defaultValue;
     }
-} // ns
+} // namespace swift::simplugin::xplane

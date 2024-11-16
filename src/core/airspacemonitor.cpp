@@ -2,36 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/airspacemonitor.h"
-#include "core/vatsim/vatsimdatafilereader.h"
-#include "core/airspaceanalyzer.h"
-#include "core/aircraftmatcher.h"
-#include "core/application.h"
-#include "core/webdataservices.h"
-#include "core/context/contextnetwork.h"
-#include "core/fsd/fsdclient.h"
-#include "misc/aviation/aircraftparts.h"
-#include "misc/aviation/aircraftsituation.h"
-#include "misc/aviation/comsystem.h"
-#include "misc/aviation/modulator.h"
-#include "misc/aviation/transponder.h"
-#include "misc/geo/elevationplane.h"
-#include "misc/network/user.h"
-#include "misc/network/voicecapabilities.h"
-#include "misc/pq/units.h"
-#include "misc/test/testing.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/iterator.h"
-#include "misc/logmessage.h"
-#include "misc/propertyindexvariantmap.h"
-#include "misc/range.h"
-#include "misc/sequence.h"
-#include "misc/statusmessagelist.h"
-#include "misc/threadutils.h"
-#include "misc/eventloop.h"
-#include "misc/variant.h"
-#include "misc/verify.h"
-#include "misc/worker.h"
-#include "config/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -42,6 +12,37 @@
 #include <QVariant>
 #include <QWriteLocker>
 #include <Qt>
+
+#include "config/buildconfig.h"
+#include "core/aircraftmatcher.h"
+#include "core/airspaceanalyzer.h"
+#include "core/application.h"
+#include "core/context/contextnetwork.h"
+#include "core/fsd/fsdclient.h"
+#include "core/vatsim/vatsimdatafilereader.h"
+#include "core/webdataservices.h"
+#include "misc/aviation/aircraftparts.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/modulator.h"
+#include "misc/aviation/transponder.h"
+#include "misc/eventloop.h"
+#include "misc/geo/elevationplane.h"
+#include "misc/iterator.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/user.h"
+#include "misc/network/voicecapabilities.h"
+#include "misc/pq/units.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/range.h"
+#include "misc/sequence.h"
+#include "misc/statusmessagelist.h"
+#include "misc/test/testing.h"
+#include "misc/threadutils.h"
+#include "misc/variant.h"
+#include "misc/verify.h"
+#include "misc/worker.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -1740,4 +1741,4 @@ namespace swift::core
     CAirspaceMonitor::FsInnPacket::FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator, const QString &combinedCode, const QString &modelString) : aircraftIcaoDesignator(aircraftIcaoDesignator.trimmed().toUpper()), airlineIcaoDesignator(airlineIcaoDesignator.trimmed().toUpper()), combinedCode(combinedCode.trimmed().toUpper()), modelString(modelString.trimmed())
     {}
 
-} // namespace
+} // namespace swift::core

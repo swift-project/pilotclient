@@ -28,4 +28,4 @@ namespace swift::gui
 
         return finder;
     }
-}
+} // namespace swift::gui

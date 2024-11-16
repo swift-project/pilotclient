@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/remotefilelist.h"
-#include "misc/network/remotefile.h"
-#include "misc/json.h"
 
 #include <QJsonValue>
+
+#include "misc/json.h"
+#include "misc/network/remotefile.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRemoteFile, CRemoteFileList)
 
@@ -107,4 +108,4 @@ namespace swift::misc::network
         if (json.isEmpty()) { return CRemoteFileList(); }
         return CRemoteFileList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
-} // namespace
+} // namespace swift::misc::network

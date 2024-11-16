@@ -2,13 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simconnectsymbols.h"
-#include "misc/stringutils.h"
-#include "misc/logmessage.h"
-#include "misc/logcategories.h"
-#include <QLibrary>
+
+// clang-format off
 #include <Windows.h>
 #include <SimConnect.h>
+// clang-format on
+
 #include <array>
+
+#include <QLibrary>
+
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/stringutils.h"
 
 // clazy:excludeall=function-args-by-ref
 

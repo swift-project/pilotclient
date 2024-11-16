@@ -6,8 +6,8 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTSIMULATOR_EMPTY_H
 #define SWIFT_CORE_CONTEXT_CONTEXTSIMULATOR_EMPTY_H
 
-#include "core/swiftcoreexport.h"
 #include "core/context/contextsimulator.h"
+#include "core/swiftcoreexport.h"
 #include "misc/logmessage.h"
 
 // clazy:excludeall=const-signal-or-slot
@@ -414,6 +414,6 @@ namespace swift::core::context
             return swift::misc::simulation::CAircraftMatcherSetup();
         }
     };
-} // namespace
+} // namespace swift::core::context
 
 #endif // guard

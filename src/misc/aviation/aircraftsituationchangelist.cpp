@@ -29,4 +29,4 @@ namespace swift::misc::aviation
         if (this->size() > index) { return (*this)[index]; }
         return CAircraftSituationChange::null();
     }
-} // namespace
+} // namespace swift::misc::aviation

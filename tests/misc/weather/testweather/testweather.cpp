@@ -5,6 +5,10 @@
 //! \file
 //! \ingroup testmisc
 
+#include <QTest>
+
+#include "test.h"
+
 #include "misc/aviation/airporticaocode.h"
 #include "misc/aviation/altitude.h"
 #include "misc/mixin/mixincompare.h"
@@ -24,9 +28,6 @@
 #include "misc/weather/presentweatherlist.h"
 #include "misc/weather/windlayer.h"
 #include "misc/weather/windlayerlist.h"
-#include "test.h"
-
-#include <QTest>
 
 using namespace swift::misc::weather;
 using namespace swift::misc::aviation;
@@ -160,7 +161,7 @@ namespace MiscTest
         QVERIFY2(cloudLayers2.findByBase(CAltitude(30000, CAltitude::AboveGround, CLengthUnit::ft())).getCoverage() == CCloudLayer::Scattered, "Failed to parse cloud layer in 30000 ft");
     }
 
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestWeather);

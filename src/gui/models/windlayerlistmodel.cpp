@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "windlayerlistmodel.h"
-#include "gui/models/columnformatters.h"
 
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -30,4 +31,4 @@ namespace swift::gui::models
         (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "speed");
         (void)QT_TRANSLATE_NOOP("ModelWindLayerList", "gust speed");
     }
-} // ns
+} // namespace swift::gui::models

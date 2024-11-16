@@ -1,19 +1,21 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/colorselector.h"
-#include "gui/filters/filterbarbuttons.h"
 #include "gui/filters/liveryfilterbar.h"
-#include "gui/models/liveryfilter.h"
-#include "gui/uppercasevalidator.h"
-#include "misc/aviation/livery.h"
-#include "misc/aviation/liverylist.h"
-#include "ui_liveryfilterbar.h"
 
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QSlider>
 #include <QtGlobal>
+
+#include "ui_liveryfilterbar.h"
+
+#include "gui/components/colorselector.h"
+#include "gui/filters/filterbarbuttons.h"
+#include "gui/models/liveryfilter.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/aviation/livery.h"
+#include "misc/aviation/liverylist.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::gui::models;
@@ -130,4 +132,4 @@ namespace swift::gui::filters
         Q_UNUSED(distance);
     }
 
-} // ns
+} // namespace swift::gui::filters

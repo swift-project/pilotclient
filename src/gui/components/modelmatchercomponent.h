@@ -6,19 +6,19 @@
 #ifndef SWIFT_GUI_COMPONENT_MODELMATCHERCOMPONENT_H
 #define SWIFT_GUI_COMPONENT_MODELMATCHERCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "core/aircraftmatcher.h"
-#include "misc/simulation/settings/modelmatchersettings.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/network/entityflags.h"
-#include "misc/settingscache.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QPointer>
 #include <QScopedPointer>
+
+#include "core/aircraftmatcher.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/entityflags.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/settings/modelmatchersettings.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatorinfo.h"
 
 namespace Ui
 {
@@ -104,7 +104,7 @@ namespace swift::gui
             swift::core::CAircraftMatcher m_matcher { this }; //!< used matcher
             swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TModelMatching> m_matchingSettings { this }; //!< settings
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

@@ -4,10 +4,12 @@
 #ifndef SWIFT_SIMPLUGIN_FS9_MULTIPLAYER_PACKETS_H
 #define SWIFT_SIMPLUGIN_FS9_MULTIPLAYER_PACKETS_H
 
-#include "fs9.h"
+#include <tuple>
+
 #include <QString>
 #include <QtGlobal>
-#include <tuple>
+
+#include "fs9.h"
 
 //! \file
 
@@ -125,6 +127,6 @@ namespace swift::simplugin::fs9
         //! Struct size
         qint32 size() const { return 52; }
     };
-}
+} // namespace swift::simplugin::fs9
 
 #endif // SWIFT_SIMPLUGIN_FS9_MULTIPLAYER_PACKETS_H

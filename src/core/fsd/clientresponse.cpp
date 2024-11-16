@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/clientresponse.h"
-#include "core/fsd/serializer.h"
 
+#include "core/fsd/serializer.h"
 #include "misc/logmessage.h"
 
 namespace swift::core::fsd
@@ -39,4 +39,4 @@ namespace swift::core::fsd
         if (tokens.size() > 3) { responseData = tokens.mid(3); }
         return ClientResponse(tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), responseData);
     }
-}
+} // namespace swift::core::fsd

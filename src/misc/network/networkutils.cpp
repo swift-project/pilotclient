@@ -2,25 +2,27 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/networkutils.h"
-#include "misc/network/server.h"
-#include "misc/eventloop.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
+
 #include <QAbstractSocket>
 #include <QDateTime>
-#include <QMetaEnum>
 #include <QHostAddress>
 #include <QList>
+#include <QMetaEnum>
 #include <QNetworkInterface>
 #include <QNetworkReply>
 #include <QObject>
+#include <QRegularExpression>
 #include <QSignalMapper>
+#include <QStringBuilder>
 #include <QTcpSocket>
 #include <QUrl>
 #include <QUrlQuery>
-#include <QStringBuilder>
 #include <QVariant>
-#include <QRegularExpression>
+
+#include "config/buildconfig.h"
+#include "misc/eventloop.h"
+#include "misc/network/server.h"
+#include "misc/stringutils.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -305,4 +307,4 @@ namespace swift::misc::network
         }
         return u;
     }
-} // namespace
+} // namespace swift::misc::network

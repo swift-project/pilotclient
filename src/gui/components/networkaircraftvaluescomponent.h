@@ -33,6 +33,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CNetworkAircraftValuesComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

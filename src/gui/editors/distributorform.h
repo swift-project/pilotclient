@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_EDITORS_DISTRIBUTORFORM_H
 #define SWIFT_GUI_EDITORS_DISTRIBUTORFORM_H
 
-#include "gui/swiftguiexport.h"
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/editors/form.h"
+#include "gui/swiftguiexport.h"
 #include "misc/simulation/distributor.h"
 #include "misc/statusmessagelist.h"
 #include "misc/variant.h"
-
-#include <QObject>
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -71,6 +71,6 @@ namespace swift::gui::editors
         QScopedPointer<Ui::CDistributorForm> ui;
         swift::misc::simulation::CDistributor m_currentDistributor;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

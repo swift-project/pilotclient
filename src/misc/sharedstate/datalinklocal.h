@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_DATALINKLOCAL_H
 #define SWIFT_MISC_SHAREDSTATE_DATALINKLOCAL_H
 
-#include "misc/sharedstate/datalink.h"
-#include "misc/variant.h"
-#include "misc/swiftmiscexport.h"
-#include <QObject>
 #include <QFuture>
 #include <QMutex>
+#include <QObject>
+
+#include "misc/sharedstate/datalink.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 namespace swift::misc::shared_state
 {
@@ -51,6 +52,6 @@ namespace swift::misc::shared_state
         QMap<QString, Channel> m_channels;
         mutable QRecursiveMutex m_channelsMutex;
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

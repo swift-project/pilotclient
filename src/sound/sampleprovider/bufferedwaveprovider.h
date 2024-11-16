@@ -6,12 +6,12 @@
 #ifndef SWIFT_SOUND_BUFFEREDWAVEPROVIDER_H
 #define SWIFT_SOUND_BUFFEREDWAVEPROVIDER_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/sampleprovider/sampleprovider.h"
-
 #include <QAudioFormat>
 #include <QByteArray>
 #include <QVector>
+
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -40,6 +40,6 @@ namespace swift::sound::sample_provider
         QVector<float> m_audioBuffer;
         qint32 m_maxBufferSize;
     };
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

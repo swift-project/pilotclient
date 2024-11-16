@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_HOTKEYDIALOG_H
 #define SWIFT_GUI_COMPONENTS_HOTKEYDIALOG_H
 
-#include "gui/models/actionmodel.h"
-#include "gui/horizontalcombobox.h"
-#include "gui/swiftguiexport.h"
-#include "misc/input/actionhotkey.h"
-#include "misc/identifierlist.h"
-
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/horizontalcombobox.h"
+#include "gui/models/actionmodel.h"
+#include "gui/swiftguiexport.h"
+#include "misc/identifierlist.h"
+#include "misc/input/actionhotkey.h"
 
 class QItemSelection;
 
@@ -30,7 +30,7 @@ namespace swift::misc::input
 {
     class CHotkeyCombination;
     class CKeyboardKeyList;
-}
+} // namespace swift::misc::input
 namespace swift::gui::components
 {
     /*!
@@ -114,6 +114,6 @@ namespace swift::gui::components
         //! "No key/button"
         static const QString &noKeyButton();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif

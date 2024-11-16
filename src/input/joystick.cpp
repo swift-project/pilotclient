@@ -32,4 +32,4 @@ namespace swift::input
         return ptr;
     }
 
-} // swift::input
+} // namespace swift::input

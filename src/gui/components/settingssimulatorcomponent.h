@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSSIMULATORCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSSIMULATORCOMPONENT_H
 
-#include "core/application/applicationsettings.h"
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/simulatorplugininfolist.h"
-#include "misc/settingscache.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "core/application/applicationsettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorplugininfolist.h"
 
 namespace Ui
 {
@@ -106,6 +106,6 @@ namespace swift::gui::components
         swift::core::CPluginManagerSimulator *m_plugins = nullptr;
         swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_enabledSimulators { this, &CSettingsSimulatorComponent::onEnabledSimulatorsChanged };
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

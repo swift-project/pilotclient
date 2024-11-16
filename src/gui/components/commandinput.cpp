@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/commandinput.h"
-#include "gui/guiapplication.h"
+
 #include "core/context/contextapplication.h"
-#include "core/context/contextsimulator.h"
 #include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
 #include "misc/simplecommandparser.h"
 
 using namespace swift::misc;
@@ -106,4 +107,4 @@ namespace swift::gui::components
         // commands of network
         m_dsCommandTooltip.inputSignal();
     }
-} // ns
+} // namespace swift::gui::components

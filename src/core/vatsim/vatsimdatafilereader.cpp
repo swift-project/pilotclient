@@ -2,11 +2,30 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/vatsim/vatsimdatafilereader.h"
+
+#include <QByteArray>
+#include <QDateTime>
+#include <QMetaObject>
+#include <QNetworkReply>
+#include <QPointer>
+#include <QReadLocker>
+#include <QRegularExpression>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
+#include <QStringBuilder>
+#include <QTimer>
+#include <QUrl>
+#include <QWriteLocker>
+#include <Qt>
+#include <QtGlobal>
+
 #include "core/application.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/altitude.h"
 #include "misc/aviation/atcstation.h"
 #include "misc/geo/coordinategeodetic.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/server.h"
 #include "misc/network/url.h"
@@ -15,29 +34,11 @@
 #include "misc/pq/length.h"
 #include "misc/pq/speed.h"
 #include "misc/pq/units.h"
-#include "misc/logmessage.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/predicates.h"
 #include "misc/range.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/statusmessage.h"
 #include "misc/verify.h"
-
-#include <QStringBuilder>
-#include <QByteArray>
-#include <QDateTime>
-#include <QMetaObject>
-#include <QNetworkReply>
-#include <QReadLocker>
-#include <QRegularExpression>
-#include <QScopedPointer>
-#include <QScopedPointerDeleteLater>
-#include <QTimer>
-#include <QUrl>
-#include <QWriteLocker>
-#include <Qt>
-#include <QtGlobal>
-#include <QPointer>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -326,4 +327,4 @@ namespace swift::core::vatsim
         CReaderSettings s = m_settings.get();
         setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
     }
-} // ns
+} // namespace swift::core::vatsim

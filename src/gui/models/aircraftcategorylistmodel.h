@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_MODELS_AIRCRAFTCATEGORYLISTMODEL_H
 #define SWIFT_GUI_MODELS_AIRCRAFTCATEGORYLISTMODEL_H
 
-#include "misc/aviation/aircraftcategorylist.h"
-#include "misc/aviation/aircraftcategory.h"
 #include "gui/models/listmodeldbobjects.h"
 #include "gui/swiftguiexport.h"
+#include "misc/aviation/aircraftcategory.h"
+#include "misc/aviation/aircraftcategorylist.h"
 
 namespace swift::gui::models
 {
@@ -26,5 +26,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CAircraftCategoryListModel() {}
     };
-}
+} // namespace swift::gui::models
 #endif // guard

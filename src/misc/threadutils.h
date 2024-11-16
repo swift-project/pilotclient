@@ -6,15 +6,17 @@
 #ifndef SWIFT_MISC_THREADUTILS_H
 #define SWIFT_MISC_THREADUTILS_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/stacktrace.h"
-#include "misc/promise.h"
-#include <QTimer>
-#include <QThread>
-#include <QObject>
-#include <QMetaObject>
-#include <QSharedPointer>
 #include <functional>
+
+#include <QMetaObject>
+#include <QObject>
+#include <QSharedPointer>
+#include <QThread>
+#include <QTimer>
+
+#include "misc/promise.h"
+#include "misc/stacktrace.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -62,6 +64,6 @@ namespace swift::misc
         //! Info about current thread, for debug messages
         static QString currentThreadInfo();
     };
-} // ns
+} // namespace swift::misc
 
 #endif // guard

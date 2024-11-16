@@ -2,23 +2,24 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/firstmodelsetcomponent.h"
-#include "gui/components/dbownmodelsdialog.h"
-#include "gui/components/dbownmodelscomponent.h"
-#include "gui/components/dbownmodelsetdialog.h"
-#include "gui/components/dbownmodelsetcomponent.h"
+
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QPointer>
+#include <QStringList>
+
 #include "ui_firstmodelsetcomponent.h"
 
-#include "gui/views/distributorview.h"
-#include "gui/guiapplication.h"
+#include "config/buildconfig.h"
 #include "core/webdataservices.h"
+#include "gui/components/dbownmodelscomponent.h"
+#include "gui/components/dbownmodelsdialog.h"
+#include "gui/components/dbownmodelsetcomponent.h"
+#include "gui/components/dbownmodelsetdialog.h"
+#include "gui/guiapplication.h"
+#include "gui/views/distributorview.h"
 #include "misc/directoryutils.h"
 #include "misc/verify.h"
-#include "config/buildconfig.h"
-
-#include <QStringList>
-#include <QFileDialog>
-#include <QPointer>
-#include <QMessageBox>
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -297,4 +298,4 @@ namespace swift::gui::components
     {
         return true;
     }
-} // ns
+} // namespace swift::gui::components

@@ -1,6 +1,10 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include <cstdlib>
+
+#include <QApplication>
+
 #include "swiftguistd.h"
 #include "swiftguistdapplication.h"
 
@@ -9,10 +13,6 @@
 #include "gui/guiutility.h"
 #include "misc/audio/audioutils.h"
 #include "misc/crashhandler.h"
-
-#include <cstdlib>
-
-#include <QApplication>
 
 using namespace swift::gui;
 using namespace swift::misc;

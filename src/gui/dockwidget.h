@@ -6,20 +6,20 @@
 #ifndef SWIFT_GUI_DOCKWIDGET_H
 #define SWIFT_GUI_DOCKWIDGET_H
 
-#include "gui/overlaymessagesframe.h"
-#include "gui/enableforframelesswindow.h"
-#include "gui/managedstatusbar.h"
-#include "gui/settings/dockwidgetsettings.h"
-#include "gui/swiftguiexport.h"
-#include "misc/statusmessagelist.h"
-#include "misc/statusmessage.h"
-
 #include <QDockWidget>
 #include <QMargins>
 #include <QObject>
 #include <QPoint>
 #include <QSize>
 #include <QString>
+
+#include "gui/enableforframelesswindow.h"
+#include "gui/managedstatusbar.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/settings/dockwidgetsettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 
 class QCloseEvent;
 class QMenu;
@@ -290,6 +290,6 @@ namespace swift::gui
         //! Save settings
         void saveSettings(const swift::gui::settings::CDockWidgetSettings &settings);
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

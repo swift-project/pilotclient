@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_NETWORK_FSDSETUP_H
 #define SWIFT_MISC_NETWORK_FSDSETUP_H
 
-#include "misc/statusmessagelist.h"
-#include "misc/valueobject.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CFsdSetup)
 
@@ -143,7 +143,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(textCodec),
             SWIFT_METAMEMBER(sendReceive));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CFsdSetup)
 Q_DECLARE_METATYPE(swift::misc::network::CFsdSetup::SendReceiveDetails)

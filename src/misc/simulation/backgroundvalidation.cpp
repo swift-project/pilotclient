@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/backgroundvalidation.h"
-#include "misc/simulation/aircraftmodelutils.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/threadutils.h"
-#include "misc/eventloop.h"
-#include "misc/logmessage.h"
 
 #include <QDateTime>
+
+#include "misc/eventloop.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodelutils.h"
+#include "misc/threadutils.h"
 
 using namespace swift::misc::network;
 using namespace swift::misc::simulation::data;
@@ -173,4 +174,4 @@ namespace swift::misc::simulation
             if (e || !isTimerBased) { emit this->validated(simulator, valid, invalid, m_wasStopped, msgs); }
         }
     }
-} // ns
+} // namespace swift::misc::simulation

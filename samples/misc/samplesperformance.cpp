@@ -5,9 +5,25 @@
 //! \ingroup samplemisc
 
 #include "samplesperformance.h"
+
+#include <algorithm>
+#include <iterator>
+
+#include <QDateTime>
+#include <QElapsedTimer>
+#include <QHash>
+#include <QList>
+#include <QRegExp>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QString>
+#include <QStringBuilder>
+#include <QStringList>
+#include <QTextStream>
+#include <QVector>
+#include <Qt>
+
 #include "core/db/databasereader.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/distributorlist.h"
 #include "misc/aviation/aircrafticaocodelist.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/aircraftsituationlist.h"
@@ -16,29 +32,15 @@
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/liverylist.h"
+#include "misc/directoryutils.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/math/mathutils.h"
 #include "misc/pq/units.h"
-#include "misc/test/testing.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributorlist.h"
 #include "misc/stringutils.h"
-
-#include <QDateTime>
-#include <QHash>
-#include <QList>
-#include <QRegExp>
-#include <QRegularExpression>
-#include <QRegularExpressionMatch>
-#include <QString>
-#include <QStringList>
-#include <QStringBuilder>
-#include <QTextStream>
-#include <QElapsedTimer>
-#include <QVector>
-#include <Qt>
-#include <algorithm>
-#include <iterator>
+#include "misc/swiftdirectories.h"
+#include "misc/test/testing.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -865,4 +867,4 @@ namespace swift::sample
         }
         return r;
     }
-} // namespace
+} // namespace swift::sample

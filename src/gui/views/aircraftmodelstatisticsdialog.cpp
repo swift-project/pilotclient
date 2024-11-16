@@ -2,16 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftmodelstatisticsdialog.h"
+
+#include <QDesktopServices>
+#include <QPushButton>
+#include <QStringBuilder>
+#include <QStringList>
+#include <QUrl>
+
 #include "ui_aircraftmodelstatisticsdialog.h"
+
 #include "gui/guiapplication.h"
 #include "misc/aviation/aircrafticaocodelist.h"
 #include "misc/simulation/aircraftmodelutils.h"
-
-#include <QPushButton>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QStringBuilder>
-#include <QStringList>
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
@@ -43,4 +45,4 @@ namespace swift::gui::views
         if (file.isEmpty()) { return; }
         QDesktopServices::openUrl(QUrl::fromLocalFile(file));
     }
-} // ns
+} // namespace swift::gui::views

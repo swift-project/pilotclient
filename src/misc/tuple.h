@@ -6,8 +6,9 @@
 #ifndef SWIFT_MISC_TUPLE_H
 #define SWIFT_MISC_TUPLE_H
 
-#include <utility>
 #include <stddef.h>
+
+#include <utility>
 
 //! \cond
 namespace swift::misc::private_ns
@@ -39,7 +40,7 @@ namespace swift::misc::private_ns
     template <typename... Ts>
     struct tuple : public tuple_impl<std::make_index_sequence<sizeof...(Ts)>, Ts...>
     {};
-}
+} // namespace swift::misc::private_ns
 //! \endcond
 
 #endif

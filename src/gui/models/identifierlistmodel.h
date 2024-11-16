@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_MODELS_IDENTIFIERLISTMODEL_H
 #define SWIFT_GUI_MODELS_IDENTIFIERLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
 #include "misc/identifier.h"
 #include "misc/identifierlist.h"
 
@@ -25,5 +25,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CIdentifierListModel() {}
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

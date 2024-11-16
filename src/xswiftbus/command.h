@@ -7,6 +7,7 @@
 //! \file
 
 #include <XPLMUtilities.h>
+
 #include <functional>
 
 namespace XSwiftBus
@@ -48,6 +49,6 @@ namespace XSwiftBus
         XPLMCommandRef m_command;
     };
 
-}
+} // namespace XSwiftBus
 
 #endif

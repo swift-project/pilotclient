@@ -6,18 +6,18 @@
 #ifndef SWIFT_CORE_DATA_GLOBALSETUP_H
 #define SWIFT_CORE_DATA_GLOBALSETUP_H
 
+#include <QMetaType>
+#include <QString>
+
 #include "core/swiftcoreexport.h"
+#include "misc/datacache.h"
+#include "misc/identifiable.h"
+#include "misc/metaclass.h"
 #include "misc/network/serverlist.h"
 #include "misc/network/url.h"
-#include "misc/identifiable.h"
-#include "misc/datacache.h"
-#include "misc/metaclass.h"
 #include "misc/propertyindex.h"
 #include "misc/valueobject.h"
 #include "misc/variant.h"
-
-#include <QMetaType>
-#include <QString>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::data, CGlobalSetup)
 
@@ -199,7 +199,7 @@ namespace swift::core::data
             SWIFT_METAMEMBER(afvMapUrl, 0, RequiredForJson),
             SWIFT_METAMEMBER(vatsimAuthUrl, 0, RequiredForJson));
     };
-} // ns
+} // namespace swift::core::data
 
 Q_DECLARE_METATYPE(swift::core::data::CGlobalSetup)
 

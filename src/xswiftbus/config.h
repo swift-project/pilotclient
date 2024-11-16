@@ -78,6 +78,6 @@ namespace XSwiftBus
         bool m_debug = false;
         bool m_tcas = true;
     };
-} // ns
+} // namespace XSwiftBus
 
 #endif

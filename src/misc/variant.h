@@ -6,28 +6,29 @@
 #ifndef SWIFT_MISC_VARIANT_H
 #define SWIFT_MISC_VARIANT_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/mixin/mixindbus.h"
-#include "misc/mixin/mixindatastream.h"
-#include "misc/inheritancetraits.h"
-#include "misc/mixin/mixinjson.h"
-#include "misc/range.h"
-#include "misc/mixin/mixinstring.h"
-#include "misc/variantprivate.h"
-#include "misc/icons.h"
+#include <algorithm>
+#include <type_traits>
 
 #include <QDBusArgument>
 #include <QDateTime>
 #include <QJsonObject>
 #include <QMetaType>
 #include <QPixmap>
+#include <QSequentialIterable>
 #include <QString>
 #include <QVariant>
-#include <QSequentialIterable>
 #include <QtGlobal>
-#include <algorithm>
-#include <type_traits>
+
+#include "misc/icons.h"
+#include "misc/inheritancetraits.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/mixin/mixindatastream.h"
+#include "misc/mixin/mixindbus.h"
+#include "misc/mixin/mixinjson.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/range.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variantprivate.h"
 
 namespace swift::misc
 {
@@ -371,7 +372,7 @@ namespace swift::misc
         }
         bool isVariantList() const;
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CVariant)
 
@@ -394,6 +395,6 @@ namespace swift::misc::private_ns
         }
     }
     //! \endcond
-} // namespace
+} // namespace swift::misc::private_ns
 
 #endif

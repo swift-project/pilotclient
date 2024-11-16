@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/ecosystem.h"
+
+#include "misc/comparefunctions.h"
 #include "misc/iconlist.h"
 #include "misc/verify.h"
-#include "misc/comparefunctions.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CEcosystem)
 
@@ -106,4 +107,4 @@ namespace swift::misc::network
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
         return 0;
     }
-} // namespace
+} // namespace swift::misc::network

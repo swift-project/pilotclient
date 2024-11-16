@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircraftengine.h"
-#include "misc/stringutils.h"
 
 #include <QtGlobal>
+
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftEngine)
 
@@ -26,4 +27,4 @@ namespace swift::misc::aviation
         Q_UNUSED(i18n);
         return QStringLiteral("%1: %2").arg(m_number).arg(swift::misc::boolToOnOff(m_on));
     }
-} // namespace
+} // namespace swift::misc::aviation

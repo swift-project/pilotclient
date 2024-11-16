@@ -1,15 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/dockwidget.h"
-#include "gui/dockwidgetinfoarea.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
 #include "gui/infoarea.h"
-#include "gui/stylesheetutility.h"
-#include "misc/icons.h"
-#include "misc/logmessage.h"
-#include "misc/verify.h"
 
 #include <QAction>
 #include <QCloseEvent>
@@ -29,6 +21,15 @@
 #include <QVariant>
 #include <QWidget>
 #include <QtGlobal>
+
+#include "gui/dockwidget.h"
+#include "gui/dockwidgetinfoarea.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/stylesheetutility.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 using namespace swift::misc;
 
@@ -937,4 +938,4 @@ namespace swift::gui
             QMainWindow::closeEvent(event);
         }
     }
-} // namespace
+} // namespace swift::gui

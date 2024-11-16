@@ -15,6 +15,10 @@
 #    define NOMINMAX
 #endif
 
+// clang-format off
+#include <memory>
+#include <thread>
+
 #include "dbusconnection.h"
 #include "dbusdispatcher.h"
 #include "dbusserver.h"
@@ -24,8 +28,7 @@
 #include "settings.h"
 
 #include "XPLM/XPLMCamera.h"
-#include <memory>
-#include <thread>
+// clang-format on
 
 namespace XSwiftBus
 {
@@ -95,6 +98,6 @@ namespace XSwiftBus
         static float startServerDeferred(float, float, int, void *refcon);
         static float flightLoopCallback(float, float, int, void *refcon);
     };
-} // ns
+} // namespace XSwiftBus
 
 #endif // guard

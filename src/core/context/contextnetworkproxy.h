@@ -6,9 +6,14 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTNETWORK_PROXY_H
 #define SWIFT_CORE_CONTEXT_CONTEXTNETWORK_PROXY_H
 
-#include "core/swiftcoreexport.h"
+#include <stdbool.h>
+
+#include <QObject>
+#include <QString>
+
 #include "core/context/contextnetwork.h"
 #include "core/corefacadeconfig.h"
+#include "core/swiftcoreexport.h"
 #include "misc/aviation/airporticaocode.h"
 #include "misc/aviation/atcstation.h"
 #include "misc/aviation/atcstationlist.h"
@@ -27,10 +32,6 @@
 #include "misc/statusmessage.h"
 #include "misc/weather/metar.h"
 
-#include <stdbool.h>
-#include <QObject>
-#include <QString>
-
 // clazy:excludeall=const-signal-or-slot
 
 class QDBusConnection;
@@ -42,12 +43,12 @@ namespace swift::misc
     {
         class CAircraftParts;
         class CCallsign;
-    }
+    } // namespace aviation
     namespace simulation
     {
         class CAircraftModel;
     }
-}
+} // namespace swift::misc
 
 namespace swift::core
 {
@@ -262,6 +263,6 @@ namespace swift::core
             //! DBus version constructor
             CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
         };
-    } // ns
-} // ns
+    } // namespace context
+} // namespace swift::core
 #endif // guard

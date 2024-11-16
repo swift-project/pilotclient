@@ -6,10 +6,11 @@
 #ifndef MIXINGSAMPLEPROVIDER_H
 #define MIXINGSAMPLEPROVIDER_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/sampleprovider/sampleprovider.h"
 #include <QSharedPointer>
 #include <QVector>
+
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -29,6 +30,6 @@ namespace swift::sound::sample_provider
     private:
         QVector<ISampleProvider *> m_sources;
     };
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

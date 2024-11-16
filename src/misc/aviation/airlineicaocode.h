@@ -6,19 +6,19 @@
 #ifndef SWIFT_MISC_AVIATION_AIRLINEICAOCODE_H
 #define SWIFT_MISC_AVIATION_AIRLINEICAOCODE_H
 
-#include "misc/swiftmiscexport.h"
+#include <QJsonObject>
+#include <QMap>
+#include <QMetaType>
+#include <QSet>
+#include <QString>
+
 #include "misc/country.h"
 #include "misc/db/datastore.h"
 #include "misc/metaclass.h"
 #include "misc/propertyindexref.h"
 #include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QJsonObject>
-#include <QMetaType>
-#include <QString>
-#include <QMap>
-#include <QSet>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirlineIcaoCode)
 
@@ -303,7 +303,7 @@ namespace swift::misc::aviation
     //! Airline ICAO/id list
     using AirlineIcaoIdMap = QMap<int, CAirlineIcaoCode>;
 
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAirlineIcaoCode)
 

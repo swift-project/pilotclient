@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_AIRCRAFTSITUATIONLISTMODEL_H
 #define SWIFT_GUI_MODELS_AIRCRAFTSITUATIONLISTMODEL_H
 
+#include <QVariant>
+
 #include "gui/models/listmodeltimestampobjects.h"
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/aircraftsituationlist.h"
-
-#include <QVariant>
 
 namespace swift::gui::models
 {
@@ -26,5 +26,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CAircraftSituationListModel() {}
     };
-} // namespace
+} // namespace swift::gui::models
 #endif // guard

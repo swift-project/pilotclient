@@ -1,17 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "simulatorfsxcommon.h"
+#include <cstring>
+
 #include "simconnectdatadefinition.h"
+#include "simulatorfsxcommon.h"
+
+#include "config/buildconfig.h"
 #include "core/application.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/logmessage.h"
 #include "misc/simulation/fscommon/bcdconversions.h"
 #include "misc/simulation/fsx/simconnectutilities.h"
 #include "misc/simulation/simulatorplugininfo.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/logmessage.h"
-#include "config/buildconfig.h"
-
-#include <cstring>
 
 using namespace swift::core;
 using namespace swift::config;
@@ -410,4 +411,4 @@ namespace swift::simplugin::fsxcommon
             simulatorFsxP3D->m_dispatchProcMaxTimeMs = simulatorFsxP3D->m_dispatchProcTimeMs;
         }
     } // method
-} // namespace
+} // namespace swift::simplugin::fsxcommon

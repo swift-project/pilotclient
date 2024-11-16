@@ -1,17 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_dbaircrafticaoselectorcomponent.h"
-#include "core/application.h"
-#include "core/webdataservices.h"
 #include "gui/components/dbaircrafticaoselectorcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "misc/db/datastoreutility.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/stringutils.h"
-#include "misc/variant.h"
 
 #include <QCompleter>
 #include <QDragEnterEvent>
@@ -23,6 +13,18 @@
 #include <QMetaType>
 #include <QPalette>
 #include <Qt>
+
+#include "ui_dbaircrafticaoselectorcomponent.h"
+
+#include "core/application.h"
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/stringutils.h"
+#include "misc/variant.h"
 
 using namespace swift::gui;
 using namespace swift::core;
@@ -231,4 +233,4 @@ namespace swift::gui::components
         if (dbKey < 0) { return; }
         this->setAircraftIcao(dbKey);
     }
-} // ns
+} // namespace swift::gui::components

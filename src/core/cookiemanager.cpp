@@ -50,4 +50,4 @@ namespace swift::core
         this->setAllCookies(QList<QNetworkCookie>());
     }
 
-} // ns
+} // namespace swift::core

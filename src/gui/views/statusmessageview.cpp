@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/statusmessagelistmodel.h"
 #include "gui/views/statusmessageview.h"
-#include "gui/filters/statusmessagefilterdialog.h"
+
 #include <QFlags>
+
+#include "gui/filters/statusmessagefilterdialog.h"
+#include "gui/models/statusmessagelistmodel.h"
 
 using namespace swift::misc;
 using namespace swift::gui::models;
@@ -65,4 +67,4 @@ namespace swift::gui::views
     {
         return qobject_cast<CStatusMessageFilterDialog *>(this->getFilterWidget());
     }
-} // namespace
+} // namespace swift::gui::views

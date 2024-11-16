@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatormsfsconfig.h"
+
 #include "../fsxcommon/simulatorfsxconfigwindow.h"
 
 namespace swift::simplugin::msfs
@@ -15,4 +16,4 @@ namespace swift::simplugin::msfs
     {
         return new fsxcommon::CSimulatorFsxConfigWindow("MSFS", parent);
     }
-}
+} // namespace swift::simplugin::msfs

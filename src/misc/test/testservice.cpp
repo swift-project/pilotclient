@@ -2,23 +2,24 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/test/testservice.h"
-#include "misc/test/testing.h"
-#include "misc/dbusutils.h"
-#include "misc/aviation/callsign.h"
-#include "misc/aviation/comsystem.h"
-#include "misc/aviation/track.h"
-#include "misc/dbus.h"
-#include "misc/pq/frequency.h"
-#include "misc/pq/units.h"
-#include "misc/stringutils.h"
 
 #include <QDBusArgument>
-#include <QDBusObjectPath>
 #include <QDBusError>
+#include <QDBusObjectPath>
 #include <QDebug>
 #include <QVariant>
 #include <QtDebug>
 #include <QtGlobal>
+
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/aviation/track.h"
+#include "misc/dbus.h"
+#include "misc/dbusutils.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/units.h"
+#include "misc/stringutils.h"
+#include "misc/test/testing.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -348,4 +349,4 @@ namespace swift::misc::test
         }
         return paths;
     }
-} // ns
+} // namespace swift::misc::test

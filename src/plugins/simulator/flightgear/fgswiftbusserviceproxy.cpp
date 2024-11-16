@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "fgswiftbusserviceproxy.h"
-#include "simulatorflightgear.h"
 
 #include <QLatin1String>
 #include <QPointer>
+
+#include "simulatorflightgear.h"
 
 class QDBusConnection;
 
@@ -448,4 +449,4 @@ namespace swift::simplugin::flightgear
     {
         m_dbusInterface->callDBusAsync(QLatin1String("getGroundElevation"), setterCallback(o_groundElevation));
     }
-} // ns
+} // namespace swift::simplugin::flightgear

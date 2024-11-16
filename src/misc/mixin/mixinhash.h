@@ -6,8 +6,10 @@
 #ifndef SWIFT_MISC_MIXIN_MIXINHASH_H
 #define SWIFT_MISC_MIXIN_MIXINHASH_H
 
-#include "misc/metaclass.h"
-#include "misc/inheritancetraits.h"
+#include <algorithm>
+#include <initializer_list>
+#include <type_traits>
+#include <utility>
 
 #include <QDBusArgument>
 #include <QHash>
@@ -20,10 +22,9 @@
 #include <QString>
 #include <QtDebug>
 #include <QtGlobal>
-#include <algorithm>
-#include <initializer_list>
-#include <type_traits>
-#include <utility>
+
+#include "misc/inheritancetraits.h"
+#include "misc/metaclass.h"
 
 namespace swift::misc
 {
@@ -87,7 +88,7 @@ namespace swift::misc
         {
             return 0;
         }
-    }
+    } // namespace mixin
 } // namespace swift::misc
 
 #endif // SWIFT_MISC_DICTIONARY_H

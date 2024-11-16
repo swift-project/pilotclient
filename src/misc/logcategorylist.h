@@ -6,12 +6,9 @@
 #ifndef SWIFT_MISC_LOGCATEGORYLIST_H
 #define SWIFT_MISC_LOGCATEGORYLIST_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/logcategory.h"
-#include "misc/sequence.h"
-#include "misc/typetraits.h"
+#include <initializer_list>
+#include <tuple>
+#include <type_traits>
 
 #include <QJsonObject>
 #include <QMetaType>
@@ -20,9 +17,13 @@
 #include <QStringList>
 #include <QThreadStorage>
 #include <QtGlobal>
-#include <initializer_list>
-#include <tuple>
-#include <type_traits>
+
+#include "misc/collection.h"
+#include "misc/logcategory.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/typetraits.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CLogCategory, CLogCategoryList)
 
@@ -136,7 +137,7 @@ namespace swift::misc
 
         void appendCategoriesFromMetaObject(const QMetaObject &, const QMetaObject &super = QObject::staticMetaObject);
     };
-}
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CLogCategoryList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CLogCategory>)

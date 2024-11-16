@@ -2,16 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "interpolationlogdisplay.h"
-#include "ui_interpolationlogdisplay.h"
-#include "gui/editors/coordinateform.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextnetworkimpl.h"
-#include "core/context/contextsimulator.h"
-#include "core/airspacemonitor.h"
-#include "misc/timestampobjectlist.h"
-#include "misc/stringutils.h"
 
 #include <QStringLiteral>
+
+#include "ui_interpolationlogdisplay.h"
+
+#include "core/airspacemonitor.h"
+#include "core/context/contextnetworkimpl.h"
+#include "core/context/contextsimulator.h"
+#include "gui/editors/coordinateform.h"
+#include "gui/guiapplication.h"
+#include "misc/stringutils.h"
+#include "misc/timestampobjectlist.h"
 
 using namespace swift::core;
 using namespace swift::core::context;
@@ -631,4 +633,4 @@ namespace swift::gui::components
         static const QString stop("stop");
         return stop;
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_TRANSPONDERCODESPINBOX_H
 #define SWIFT_GUI_COMPONENTS_TRANSPONDERCODESPINBOX_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QObject>
 #include <QSpinBox>
 #include <QString>
+
+#include "gui/swiftguiexport.h"
 
 namespace swift::gui::components
 {
@@ -25,6 +25,6 @@ namespace swift::gui::components
         //! \copydoc QDoubleSpinBox::textFromValue
         virtual QString textFromValue(int value) const override;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

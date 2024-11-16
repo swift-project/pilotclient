@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_NETWORK_PING_H
 #define SWIFT_MISC_NETWORK_PING_H
 
-#include "misc/swiftmiscexport.h"
 #include <QString>
 #include <QUrl>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::network
 {
@@ -19,6 +20,6 @@ namespace swift::misc::network
     //! Can ping the address?
     //! \note uses OS ping
     SWIFT_MISC_EXPORT bool canPing(const QUrl &url);
-}
+} // namespace swift::misc::network
 
 #endif

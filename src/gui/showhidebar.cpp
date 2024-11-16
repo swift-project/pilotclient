@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/showhidebar.h"
-#include "ui_showhidebar.h"
 
 #include <QPushButton>
+
+#include "ui_showhidebar.h"
 
 namespace swift::gui
 {
@@ -23,4 +24,4 @@ namespace swift::gui
     {
         return ui->pb_ShowHidePushButton->isChecked();
     }
-} // namespacee
+} // namespace swift::gui

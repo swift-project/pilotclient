@@ -4,6 +4,7 @@
 //! \file
 
 #include "core/fsd/euroscopesimdata.h"
+
 #include "misc/logmessage.h"
 
 using namespace swift::misc;
@@ -86,4 +87,4 @@ namespace swift::core::fsd
                                 tokens[6].toDouble(), tokens[7].toDouble(), tokens[8].toDouble(), tokens[9].toInt(), tokens[10].toInt(),
                                 tokens[11].toInt(), tokens[12].toInt(), tokens[13].toDouble(), tokens[14].toDouble(), fromFlags(tokens[17].toInt()));
     }
-}
+} // namespace swift::core::fsd

@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_IDENTIFIERLIST_H
 #define SWIFT_MISC_IDENTIFIERLIST_H
 
+#include <QMetaType>
+
 #include "misc/identifier.h"
 #include "misc/sequence.h"
-#include "misc/timestampobjectlist.h"
 #include "misc/swiftmiscexport.h"
-#include <QMetaType>
+#include "misc/timestampobjectlist.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CIdentifier, CIdentifierList)
 
@@ -46,7 +47,7 @@ namespace swift::misc
         //! Remove duplicates
         int removeDuplicates();
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIdentifierList)
 // in set: Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CIdentifier>)

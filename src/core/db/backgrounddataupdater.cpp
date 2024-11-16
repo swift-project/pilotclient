@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/db/backgrounddataupdater.h"
+
+#include <QElapsedTimer>
+
+#include "core/application.h"
 #include "core/db/databaseutils.h"
 #include "core/db/databasewriter.h"
-#include "core/application.h"
 #include "core/webdataservices.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/threadutils.h"
 #include "misc/eventloop.h"
 #include "misc/logmessage.h"
-#include <QElapsedTimer>
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/threadutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -207,4 +209,4 @@ namespace swift::core::db
         QWriteLocker l(&m_lockMsg);
         m_messageHistory.push_frontMaxElements(msg, 100); // latest
     }
-} // ns
+} // namespace swift::core::db

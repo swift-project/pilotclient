@@ -6,19 +6,19 @@
 #ifndef SWIFT_MISC_NETWORK_TEXTMESSAGE_H
 #define SWIFT_MISC_NETWORK_TEXTMESSAGE_H
 
+#include <QMetaType>
+#include <QPixmap>
+#include <QString>
+
 #include "misc/aviation/callsign.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/metaclass.h"
 #include "misc/pq/frequency.h"
 #include "misc/pq/units.h"
 #include "misc/propertyindexref.h"
 #include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/timestampbased.h"
 #include "misc/valueobject.h"
-
-#include <QMetaType>
-#include <QPixmap>
-#include <QString>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CTextMessage)
 
@@ -210,7 +210,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(recipientCallsign),
             SWIFT_METAMEMBER(frequency));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CTextMessage)
 

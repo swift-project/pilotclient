@@ -6,15 +6,16 @@
 #ifndef SWIFT_MISC_DB_DATABASEOBJECTLIST_H
 #define SWIFT_MISC_DB_DATABASEOBJECTLIST_H
 
-#include "misc/timestampobjectlist.h"
-#include "misc/jsonexception.h"
-#include "misc/db/datastore.h"
-#include "misc/setbuilder.h"
-#include "misc/mapbuilder.h"
 #include <QJsonArray>
-#include <QSet>
 #include <QMap>
+#include <QSet>
 #include <QString>
+
+#include "misc/db/datastore.h"
+#include "misc/jsonexception.h"
+#include "misc/mapbuilder.h"
+#include "misc/setbuilder.h"
+#include "misc/timestampobjectlist.h"
 
 namespace swift::misc::db
 {
@@ -358,6 +359,6 @@ namespace swift::misc::db
         //! Constructor
         IDatastoreObjectList() = default;
     };
-} // ns
+} // namespace swift::misc::db
 
 #endif // guard

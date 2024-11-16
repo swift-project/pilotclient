@@ -4,12 +4,12 @@
 #include "misc/input/registermetadatainput.h"
 
 // Input headers
+#include <QDBusMetaType>
+
 #include "misc/input/actionhotkeylist.h"
 #include "misc/input/hotkeycombination.h"
-#include "misc/input/keyboardkeylist.h"
 #include "misc/input/joystickbuttonlist.h"
-
-#include <QDBusMetaType>
+#include "misc/input/keyboardkeylist.h"
 
 namespace swift::misc::input
 {
@@ -25,4 +25,4 @@ namespace swift::misc::input
         qDBusRegisterMetaType<KeyCode>();
     }
 
-} // ns
+} // namespace swift::misc::input

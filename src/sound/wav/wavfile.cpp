@@ -1,12 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include <limits> // Workaround for QTBUG-90395
+#include "wavfile.h"
 
 #include <qendian.h>
-#include <QVector>
+
+#include <limits> // Workaround for QTBUG-90395
+
 #include <QDebug>
-#include "wavfile.h"
+#include <QVector>
 // #include "utils.h"
 
 namespace swift::sound::wav
@@ -140,4 +142,4 @@ namespace swift::sound::wav
         }
         return result;
     }
-} // ns
+} // namespace swift::sound::wav

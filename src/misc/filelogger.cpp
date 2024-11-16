@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/filelogger.h"
-#include "misc/swiftdirectories.h"
-#include "config/buildconfig.h"
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -13,6 +11,9 @@
 #include <QString>
 #include <QStringBuilder>
 #include <QtGlobal>
+
+#include "config/buildconfig.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 
@@ -129,4 +130,4 @@ namespace swift::misc
     {
         m_stream << content << Qt::endl;
     }
-}
+} // namespace swift::misc

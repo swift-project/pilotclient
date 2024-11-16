@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_REMOTEAIRCRAFTSELECTOR_H
 #define SWIFT_GUI_REMOTEAIRCRAFTSELECTOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/simulatedaircraftlist.h"
-#include "misc/aviation/callsign.h"
-#include "misc/digestsignal.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/callsign.h"
+#include "misc/digestsignal.h"
+#include "misc/simulation/simulatedaircraftlist.h"
 
 class QShowEvent;
 class QWidget;
@@ -75,6 +75,6 @@ namespace swift::gui::components
         swift::misc::simulation::CSimulatedAircraftList m_aircraft;
         swift::misc::CDigestSignal m_dsFillComboBox { this, &CRemoteAircraftSelector::fillComboBox, 3000, 5 };
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSMODELCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSMODELCOMPONENT_H
 
+#include <QFrame>
+
 #include "gui/settings/guisettings.h"
 #include "misc/simulation/settings/modelsettings.h"
-#include <QFrame>
 
 namespace Ui
 {
@@ -55,6 +56,6 @@ namespace swift::gui::components
         //! Cache has been changed
         void cacheChanged();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

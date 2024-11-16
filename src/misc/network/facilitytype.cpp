@@ -27,4 +27,4 @@ namespace swift::misc::network
         return QStringLiteral("Unknown");
     }
 
-} // namespace
+} // namespace swift::misc::network

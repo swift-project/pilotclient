@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_LISTMUTATOR_H
 #define SWIFT_MISC_SHAREDSTATE_LISTMUTATOR_H
 
-#include "misc/sharedstate/passivemutator.h"
-#include "misc/variantlist.h"
-#include "misc/swiftmiscexport.h"
-#include <QObject>
 #include <QMutex>
+#include <QObject>
+
+#include "misc/sharedstate/passivemutator.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variantlist.h"
 
 namespace swift::misc::shared_state
 {
@@ -55,6 +56,6 @@ namespace swift::misc::shared_state
         //! Add list element.
         void addElement(const typename T::value_type &value) { CGenericListMutator::addElement(CVariant::from(value)); }
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

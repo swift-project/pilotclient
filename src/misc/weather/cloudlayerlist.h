@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_WEATHER_CLOUDLAYERLIST_H
 #define SWIFT_MISC_WEATHER_CLOUDLAYERLIST_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/sequence.h"
-#include "misc/weather/cloudlayer.h"
-
-#include <QMetaType>
 #include <initializer_list>
 #include <tuple>
+
+#include <QMetaType>
+
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/weather/cloudlayer.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::weather, CCloudLayer, CCloudLayerList)
 
@@ -49,8 +50,8 @@ namespace swift::misc
             CCloudLayer findByBase(const swift::misc::aviation::CAltitude &base) const;
         };
 
-    } // namespace
-} // namespace
+    } // namespace weather
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayerList)
 

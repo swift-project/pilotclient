@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/db/artifact.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
+
 #include <QRegularExpression>
 #include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/stringutils.h"
 
 using namespace swift::config;
 using namespace swift::misc::network;
@@ -254,4 +256,4 @@ namespace swift::misc::db
         if (seg.length() >= 9) { return QStringLiteral("0"); }
         return seg;
     }
-} // ns
+} // namespace swift::misc::db

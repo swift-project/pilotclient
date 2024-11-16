@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/labelandicon.h"
-#include "ui_labelandicon.h"
 
 #include <QLabel>
+
+#include "ui_labelandicon.h"
 
 namespace swift::gui
 {
@@ -29,4 +30,4 @@ namespace swift::gui
         ui->lbl_Left->setText(text);
     }
 
-} // ns
+} // namespace swift::gui

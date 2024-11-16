@@ -2,11 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/threadedreader.h"
-#include "core/application.h"
-#include "misc/network/networkutils.h"
-#include "misc/threadutils.h"
-#include "misc/logmessage.h"
-#include "misc/verify.h"
 
 #include <QCoreApplication>
 #include <QMetaObject>
@@ -14,6 +9,12 @@
 #include <QThread>
 #include <QTimer>
 #include <QWriteLocker>
+
+#include "core/application.h"
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -210,4 +211,4 @@ namespace swift::core
         }
         CLogMessage::preformatted(logMsg);
     }
-} // namespace
+} // namespace swift::core

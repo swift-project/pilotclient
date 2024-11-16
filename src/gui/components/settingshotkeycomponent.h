@@ -6,18 +6,18 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSHOTKEYCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/actionhotkeylistmodel.h"
-#include "core/actionbind.h"
-#include "core/application/applicationsettings.h"
-#include "misc/identifierlist.h"
-#include "misc/settingscache.h"
-#include "misc/icons.h"
-
 #include <QFrame>
 #include <QObject>
-#include <QWizardPage>
 #include <QScopedPointer>
+#include <QWizardPage>
+
+#include "core/actionbind.h"
+#include "core/application/applicationsettings.h"
+#include "gui/models/actionhotkeylistmodel.h"
+#include "gui/swiftguiexport.h"
+#include "misc/icons.h"
+#include "misc/identifierlist.h"
+#include "misc/settingscache.h"
 
 namespace Ui
 {
@@ -87,6 +87,6 @@ namespace swift::gui::components
     private:
         CSettingsHotkeyComponent *m_config = nullptr;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

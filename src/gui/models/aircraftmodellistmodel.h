@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_MODELS_AIRCRAFTMODELLISTMODEL_H
 #define SWIFT_GUI_MODELS_AIRCRAFTMODELLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/listmodeldbobjects.h"
-#include "misc/simulation/aircraftmodellist.h"
-
 #include <QBrush>
 #include <QStringList>
 #include <QVariant>
 #include <Qt>
+
+#include "gui/models/listmodeldbobjects.h"
+#include "gui/swiftguiexport.h"
+#include "misc/simulation/aircraftmodellist.h"
 
 class QModelIndex;
 
@@ -94,5 +94,5 @@ namespace swift::gui::models
         QStringList m_highlightStrings; //!< model strings to highlight
         QBrush m_highlightColor { Qt::yellow }; //!< how to highlight
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

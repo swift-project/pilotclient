@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "config.h"
-#include "utils.h"
-#include "misc/simulation/xplane/qtfreeutils.h"
 
-#include <fstream>
-#include <string>
-#include <cctype>
 #include <algorithm>
+#include <cctype>
 #include <chrono>
+#include <fstream>
 #include <iomanip>
+#include <string>
+
+#include "utils.h"
+
+#include "misc/simulation/xplane/qtfreeutils.h"
 
 using namespace swift::misc::simulation::xplane::qtfreeutils;
 
@@ -192,4 +194,4 @@ namespace XSwiftBus
         if (on) { return "on"; }
         return "off";
     }
-} // ns
+} // namespace XSwiftBus

@@ -1,35 +1,36 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/context/contextnetwork.h"
-#include "core/data/globalsetup.h"
-#include "core/db/airportdatareader.h"
-#include "core/db/infodatareader.h"
-#include "core/db/icaodatareader.h"
-#include "core/db/databasewriter.h"
-#include "core/db/modeldatareader.h"
-#include "core/vatsim/vatsimdatafilereader.h"
-#include "core/vatsim/vatsimmetarreader.h"
-#include "core/vatsim/vatsimstatusfilereader.h"
-#include "core/vatsim/vatsimserverfilereader.h"
 #include "core/webdataservices.h"
-#include "core/setupreader.h"
-#include "core/application.h"
-#include "misc/fileutils.h"
-#include "misc/logcategories.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
-#include "misc/worker.h"
-#include "misc/threadutils.h"
-#include "config/buildconfig.h"
 
 #include <QDir>
 #include <QJsonDocument>
+#include <QPointer>
 #include <QSslSocket>
 #include <QThread>
 #include <QTimer>
 #include <QtGlobal>
-#include <QPointer>
+
+#include "config/buildconfig.h"
+#include "core/application.h"
+#include "core/context/contextnetwork.h"
+#include "core/data/globalsetup.h"
+#include "core/db/airportdatareader.h"
+#include "core/db/databasewriter.h"
+#include "core/db/icaodatareader.h"
+#include "core/db/infodatareader.h"
+#include "core/db/modeldatareader.h"
+#include "core/setupreader.h"
+#include "core/vatsim/vatsimdatafilereader.h"
+#include "core/vatsim/vatsimmetarreader.h"
+#include "core/vatsim/vatsimserverfilereader.h"
+#include "core/vatsim/vatsimstatusfilereader.h"
+#include "misc/fileutils.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
+#include "misc/threadutils.h"
+#include "misc/worker.h"
 
 using namespace swift::core;
 using namespace swift::core::db;
@@ -1629,4 +1630,4 @@ namespace swift::core
         return msgs;
     }
     //! \endcond
-} // ns
+} // namespace swift::core

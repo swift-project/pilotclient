@@ -2,20 +2,22 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircraftsituation.h"
-#include "misc/aviation/aircraftpartslist.h"
+
+#include <QtGlobal>
+
+#include "QStringBuilder"
+
+#include "config/buildconfig.h"
 #include "misc/aviation/aircraftlights.h"
+#include "misc/aviation/aircraftpartslist.h"
+#include "misc/comparefunctions.h"
 #include "misc/geo/elevationplane.h"
 #include "misc/pq/length.h"
 #include "misc/pq/units.h"
 #include "misc/propertyindexref.h"
-#include "misc/comparefunctions.h"
-#include "misc/verify.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
 #include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply
-
-#include "QStringBuilder"
-#include <QtGlobal>
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 using namespace swift::misc::geo;
 using namespace swift::misc::physical_quantities;
@@ -876,4 +878,4 @@ namespace swift::misc::aviation
         m_onGroundInfo = COnGroundInfo(og, COnGroundInfo::InFromParts);
         return true;
     }
-} // namespace
+} // namespace swift::misc::aviation

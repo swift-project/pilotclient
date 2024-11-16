@@ -6,14 +6,11 @@
 #ifndef SWIFT_MISC_LOGHANDLER_H
 #define SWIFT_MISC_LOGHANDLER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/logcategory.h"
-#include "misc/logpattern.h"
-#include "misc/statusmessage.h"
-#include "misc/tokenbucket.h"
+#include <atomic>
+#include <utility>
 
-#include <QList>
 #include <QHash>
+#include <QList>
 #include <QMetaMethod>
 #include <QMetaObject>
 #include <QObject>
@@ -22,8 +19,12 @@
 #include <QTimer>
 #include <QtGlobal>
 #include <QtMessageHandler>
-#include <atomic>
-#include <utility>
+
+#include "misc/logcategory.h"
+#include "misc/logpattern.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/tokenbucket.h"
 
 namespace swift::misc
 {
@@ -250,6 +251,6 @@ namespace swift::misc
         bool m_inheritFallThrough = true;
         bool m_enableFallThrough = true;
     };
-}
+} // namespace swift::misc
 
 #endif

@@ -1,19 +1,21 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/dbcountryselectorcomponent.h"
 #include "gui/filters/airlineicaofilterbar.h"
+
+#include <QCheckBox>
+#include <QIntValidator>
+#include <QLineEdit>
+#include <QString>
+
+#include "ui_airlineicaofilterbar.h"
+
+#include "gui/components/dbcountryselectorcomponent.h"
 #include "gui/filters/filterbarbuttons.h"
 #include "gui/models/airlineicaofilter.h"
 #include "gui/uppercasevalidator.h"
 #include "misc/aviation/airlineicaocodelist.h"
 #include "misc/country.h"
-#include "ui_airlineicaofilterbar.h"
-
-#include <QCheckBox>
-#include <QLineEdit>
-#include <QString>
-#include <QIntValidator>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -95,4 +97,4 @@ namespace swift::gui::filters
         ui->cb_RealAirline->setChecked(true);
         ui->cb_VirtualAirline->setChecked(true);
     }
-} // ns
+} // namespace swift::gui::filters

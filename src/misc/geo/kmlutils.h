@@ -55,6 +55,6 @@ namespace swift::misc::geo
         //! As KML line
         static QString asLineString(const QString &coordinatesRaw, const KMLSettings &settings);
     };
-} // ns
+} // namespace swift::misc::geo
 
 #endif // guard

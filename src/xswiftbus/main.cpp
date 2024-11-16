@@ -4,12 +4,15 @@
 #ifndef NOMINMAX
 #    define NOMINMAX
 #endif
+
+// clang-format off
 #include "plugin.h"
 #include "traffic.h"
 #include "utils.h"
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMPlugin.h>
 #include <cstring>
+// clang-format on
 
 #if !defined(XPLM210)
 #    define XPLM_MSG_LIVERY_LOADED 108

@@ -6,17 +6,7 @@
 #ifndef SWIFT_MISC_PROPERTYINDEXVARIANTMAP_H
 #define SWIFT_MISC_PROPERTYINDEXVARIANTMAP_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/mixin/mixindbus.h"
-#include "misc/mixin/mixinindex.h"
-#include "misc/inheritancetraits.h"
-#include "misc/predicates.h"
-#include "misc/propertyindex.h"
-#include "misc/propertyindexlist.h"
-#include "misc/mixin/mixinstring.h"
-#include "misc/mixin/mixinmetatype.h"
-#include "misc/variant.h"
+#include <type_traits>
 
 #include <QDBusArgument>
 #include <QList>
@@ -26,7 +16,18 @@
 #include <QVariant>
 #include <QtDebug>
 #include <QtGlobal>
-#include <type_traits>
+
+#include "misc/inheritancetraits.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/mixin/mixindbus.h"
+#include "misc/mixin/mixinindex.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/predicates.h"
+#include "misc/propertyindex.h"
+#include "misc/propertyindexlist.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 namespace swift::misc
 {
@@ -166,8 +167,8 @@ namespace swift::misc
             }
             return changed;
         }
-    }
-} // ns
+    } // namespace mixin
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CPropertyIndexVariantMap)
 

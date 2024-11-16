@@ -1,17 +1,19 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_dbdistributorcomponent.h"
 #include "gui/components/dbdistributorcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/views/distributorview.h"
-#include "gui/views/viewbase.h"
-#include "core/webdataservices.h"
-#include "misc/simulation/simulatorinfo.h"
 
 #include <QFrame>
 #include <QPointer>
 #include <QtGlobal>
+
+#include "ui_dbdistributorcomponent.h"
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/views/distributorview.h"
+#include "gui/views/viewbase.h"
+#include "misc/simulation/simulatorinfo.h"
 
 using namespace swift::core;
 using namespace swift::misc::network;
@@ -114,4 +116,4 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::DistributorEntity);
     }
-} // ns
+} // namespace swift::gui::components

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/geo/coordinategeodeticlist.h"
+
 #include "misc/math/mathutils.h"
 
 using namespace swift::misc::math;
@@ -41,4 +42,4 @@ namespace swift::misc::geo
         return CElevationPlane(reference, elvStdDevMean.second, CElevationPlane::singlePointRadius());
     }
 
-} // namespace
+} // namespace swift::misc::geo

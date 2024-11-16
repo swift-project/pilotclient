@@ -6,9 +6,9 @@
 #ifndef SWIFT_GUI_VIEWS_AIRCRAFTSITUATIONVIEW_H
 #define SWIFT_GUI_VIEWS_AIRCRAFTSITUATIONVIEW_H
 
-#include "gui/views/viewtimestampobjects.h"
 #include "gui/models/aircraftsituationlistmodel.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewtimestampobjects.h"
 
 namespace swift::gui::views
 {
@@ -38,5 +38,5 @@ namespace swift::gui::views
 
         bool m_withMenuRequestElevation = false;
     };
-} // ns
+} // namespace swift::gui::views
 #endif // guard

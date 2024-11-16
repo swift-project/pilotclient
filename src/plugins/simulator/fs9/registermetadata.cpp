@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "registermetadata.h"
-#include "fs9host.h"
+
 #include "fs9client.h"
+#include "fs9host.h"
 
 namespace swift::simplugin::fs9
 {
@@ -12,4 +13,4 @@ namespace swift::simplugin::fs9
         qRegisterMetaType<CFs9Host::HostStatus>();
         qRegisterMetaType<CFs9Client::ClientStatus>();
     }
-}
+} // namespace swift::simplugin::fs9

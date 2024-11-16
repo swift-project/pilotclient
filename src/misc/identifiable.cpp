@@ -17,4 +17,4 @@ namespace swift::misc
     {
         QObject::disconnect(m_connection);
     }
-} // ns
+} // namespace swift::misc

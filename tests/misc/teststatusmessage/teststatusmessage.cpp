@@ -5,11 +5,13 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/statusmessage.h"
-#include "test.h"
-#include <QStringView>
 #include <QObject>
+#include <QStringView>
 #include <QTest>
+
+#include "test.h"
+
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 
@@ -68,7 +70,7 @@ namespace MiscTest
         QVERIFY(s7.getMessage() == u"will be expanded: foo+bar");
         QVERIFY(s8.getMessage() == u"will be expanded: foo2");
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestStatusMessage);

@@ -2,12 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/dbairlineicaoselectorbase.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/db/datastoreutility.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/variant.h"
 
 #include <QCompleter>
 #include <QDragEnterEvent>
@@ -16,8 +10,15 @@
 #include <QDropEvent>
 #include <QMetaType>
 #include <QPalette>
-#include <QtGlobal>
 #include <QPointer>
+#include <QtGlobal>
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/variant.h"
 
 using namespace swift::gui;
 using namespace swift::core;
@@ -149,4 +150,4 @@ namespace swift::gui::components
         if (dbKey < 0) { return; }
         this->setAirlineIcao(dbKey);
     }
-} // ns
+} // namespace swift::gui::components

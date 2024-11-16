@@ -42,4 +42,4 @@ namespace swift::sound::codecs
         if (!m_opusDecoder) { return; }
         opus_decoder_ctl(m_opusDecoder, OPUS_RESET_STATE);
     }
-} // ns
+} // namespace swift::sound::codecs

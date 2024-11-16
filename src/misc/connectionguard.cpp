@@ -48,4 +48,4 @@ namespace swift::misc
         m_connections.clear();
         return c;
     }
-} // ns
+} // namespace swift::misc

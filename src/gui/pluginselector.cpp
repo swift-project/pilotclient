@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/pluginselector.h"
-#include "misc/icons.h"
-#include "misc/verify.h"
 
 #include <QCheckBox>
 #include <QHBoxLayout>
@@ -13,6 +11,9 @@
 #include <QVariant>
 #include <Qt>
 #include <QtGlobal>
+
+#include "misc/icons.h"
+#include "misc/verify.h"
 
 namespace swift::gui
 {
@@ -86,4 +87,4 @@ namespace swift::gui
 
         emit this->pluginStateChanged(identifier, enabled);
     }
-} // ns
+} // namespace swift::gui

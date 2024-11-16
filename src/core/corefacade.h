@@ -6,17 +6,17 @@
 #ifndef SWIFT_CORE_COREFACADE_H
 #define SWIFT_CORE_COREFACADE_H
 
-#include "core/corefacadeconfig.h"
-#include "core/data/launchersetup.h"
-#include "core/vatsim/vatsimsettings.h"
-#include "core/swiftcoreexport.h"
-#include "misc/identifier.h"
-#include "misc/settingscache.h"
-
 #include <QDBusConnection>
 #include <QMap>
 #include <QObject>
 #include <QString>
+
+#include "core/corefacadeconfig.h"
+#include "core/data/launchersetup.h"
+#include "core/swiftcoreexport.h"
+#include "core/vatsim/vatsimsettings.h"
+#include "misc/identifier.h"
+#include "misc/settingscache.h"
 
 namespace swift::misc
 {
@@ -28,7 +28,7 @@ namespace swift::misc
     {
         class CDataLinkDBus;
     }
-}
+} // namespace swift::misc
 namespace swift::core
 {
     namespace context
@@ -44,7 +44,7 @@ namespace swift::core
         class IContextNetwork;
         class IContextOwnAircraft;
         class IContextSimulator;
-    }
+    } // namespace context
 
     /*!
      * The class providing facades (the contexts) for all DBus relevant operations.
@@ -203,5 +203,5 @@ namespace swift::core
         //! post init tasks, load simulator and connecting context signal slots
         void initPostSetup(QMap<QString, qint64> &times);
     };
-} // namespace
+} // namespace swift::core
 #endif // guard

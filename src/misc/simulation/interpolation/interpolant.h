@@ -52,5 +52,5 @@ namespace swift::misc::simulation
         bool m_valid = true; //!< valid?
         bool m_recalculated = false; //!< recalculated interpolant
     };
-} // namespace
+} // namespace swift::misc::simulation
 #endif // guard

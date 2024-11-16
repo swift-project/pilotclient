@@ -5,9 +5,11 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/aviation/flightplanaircraftinfo.h"
-#include "test.h"
 #include <QTest>
+
+#include "test.h"
+
+#include "misc/aviation/flightplanaircraftinfo.h"
 
 using namespace swift::misc::aviation;
 
@@ -219,7 +221,7 @@ namespace MiscTest
         QCOMPARE(info.asIcaoString(), "B737/M-SDE2E3FGHIRWXY/LB1");
     }
 
-} // ns
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestFlightPlanAircraftInfo);

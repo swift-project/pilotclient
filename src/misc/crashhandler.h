@@ -6,17 +6,17 @@
 #ifndef SWIFT_MISC_CRASHHANDLER_H
 #define SWIFT_MISC_CRASHHANDLER_H
 
-#include "misc/swiftmiscexport.h"
+#include <memory>
+
 #include "misc/crashinfo.h"
 #include "misc/digestsignal.h"
-
-#include <memory>
+#include "misc/swiftmiscexport.h"
 
 namespace crashpad
 {
     class CrashpadClient;
     class CrashReportDatabase;
-}
+} // namespace crashpad
 
 namespace swift::misc
 {
@@ -81,6 +81,6 @@ namespace swift::misc
         std::unique_ptr<crashpad::CrashReportDatabase> m_crashReportDatabase;
 #endif
     };
-}
+} // namespace swift::misc
 
 #endif

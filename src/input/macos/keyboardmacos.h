@@ -6,14 +6,14 @@
 #ifndef SWIFT_INPUT_KEYBOARDMACOS_H
 #define SWIFT_INPUT_KEYBOARDMACOS_H
 
+#include <ApplicationServices/ApplicationServices.h>
+#include <IOKit/hid/IOHIDManager.h>
+
+#include <QHash>
+
 #include "input/keyboard.h"
 #include "misc/input/hotkeycombination.h"
 #include "misc/input/keycodes.h"
-
-#include <IOKit/hid/IOHIDManager.h>
-
-#include <ApplicationServices/ApplicationServices.h>
-#include <QHash>
 
 namespace swift::input
 {
@@ -50,6 +50,6 @@ namespace swift::input
         IOHIDManagerRef m_hidManager = nullptr;
         swift::misc::input::CHotkeyCombination m_keyCombination; //!< Current status of pressed keys;
     };
-} // ns
+} // namespace swift::input
 
 #endif // guard

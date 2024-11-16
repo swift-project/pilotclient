@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "singleapplicationui.h"
-#include "gui/guiapplication.h"
+
 #include <QWidget>
+
+#include "gui/guiapplication.h"
 
 using namespace swift::misc;
 
@@ -24,4 +26,4 @@ namespace swift::gui
         const bool enable = apps.size() < 2;
         m_ui->setEnabled(enable);
     }
-} // ns
+} // namespace swift::gui

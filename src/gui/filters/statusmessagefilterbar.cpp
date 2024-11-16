@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "statusmessagefilterbar.h"
-#include "misc/logpattern.h"
-#include "ui_statusmessagefilterbar.h"
-#include "gui/models/statusmessagefilter.h"
+
 #include <QCompleter>
+
+#include "ui_statusmessagefilterbar.h"
+
+#include "gui/models/statusmessagefilter.h"
+#include "misc/logpattern.h"
 
 using namespace swift::misc;
 using namespace swift::gui::models;
@@ -88,4 +91,4 @@ namespace swift::gui::filters
         if (ui->rb_Warning->isChecked()) { return CStatusMessage::SeverityWarning; }
         return CStatusMessage::SeverityInfo;
     }
-} // ns
+} // namespace swift::gui::filters

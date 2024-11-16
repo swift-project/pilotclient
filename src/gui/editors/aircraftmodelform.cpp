@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftmodelform.h"
+
 #include "ui_aircraftmodelform.h"
 
 using namespace swift::misc;
@@ -115,4 +116,4 @@ namespace swift::gui::editors
     {
         ui->editor_Distributor->clear();
     }
-} // ns
+} // namespace swift::gui::editors

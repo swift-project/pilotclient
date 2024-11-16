@@ -6,9 +6,7 @@
 #ifndef SWIFT_GUI_MODELS_LISTMODELBASE_H
 #define SWIFT_GUI_MODELS_LISTMODELBASE_H
 
-#include "gui/models/listmodelbasenontemplate.h"
-#include "gui/models/modelfilter.h"
-#include "gui/models/selectionmodel.h"
+#include <memory>
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -17,7 +15,10 @@
 #include <QString>
 #include <QVariant>
 #include <QVector>
-#include <memory>
+
+#include "gui/models/listmodelbasenontemplate.h"
+#include "gui/models/modelfilter.h"
+#include "gui/models/selectionmodel.h"
 
 class QMimeData;
 class QModelIndex;
@@ -237,7 +238,7 @@ namespace swift::gui::models
             }
             return (order == Qt::AscendingOrder) ? (aQv < bQv) : (bQv < aQv);
         }
-    } // namespace
-} // namespace
+    } // namespace Private
+} // namespace swift::gui::models
 
 #endif // guard

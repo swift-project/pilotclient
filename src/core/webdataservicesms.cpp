@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/webdataservicesms.h"
-#include "core/webdataservices.h"
+
 #include "core/application.h"
+#include "core/webdataservices.h"
 #include "misc/aviation/aircrafticaocodelist.h"
 
 using namespace swift::misc::aviation;
@@ -26,4 +27,4 @@ namespace swift::core
     {
         return (sApp && !sApp->isShuttingDown() && sApp->getWebDataServices());
     }
-} // ns
+} // namespace swift::core

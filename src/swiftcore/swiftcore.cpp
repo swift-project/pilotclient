@@ -2,34 +2,36 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "swiftcore.h"
-#include "gui/components/commandinput.h"
-#include "gui/components/coreinfoareacomponent.h"
-#include "gui/components/coresettingsdialog.h"
-#include "gui/components/cockpitcomaudiodialog.h"
-#include "gui/components/audioadvanceddistributeddialog.h"
-#include "gui/components/logcomponent.h"
-#include "gui/components/rawfsdmessagesdialog.h"
-#include "gui/guiapplication.h"
-#include "gui/stylesheetutility.h"
-#include "core/context/contextaudio.h"
-#include "core/context/contextnetwork.h"
-#include "core/corefacade.h"
-#include "misc/dbusserver.h"
-#include "misc/icons.h"
-#include "misc/loghandler.h"
-#include "misc/logpattern.h"
-#include "ui_swiftcore.h"
 
 #include <QDialog>
 #include <QFlags>
 #include <QGroupBox>
 #include <QIcon>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QtGlobal>
 #include <QVBoxLayout>
-#include <QMessageBox>
+#include <QtGlobal>
+
+#include "ui_swiftcore.h"
+
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/corefacade.h"
+#include "gui/components/audioadvanceddistributeddialog.h"
+#include "gui/components/cockpitcomaudiodialog.h"
+#include "gui/components/commandinput.h"
+#include "gui/components/coreinfoareacomponent.h"
+#include "gui/components/coresettingsdialog.h"
+#include "gui/components/logcomponent.h"
+#include "gui/components/rawfsdmessagesdialog.h"
+#include "gui/guiapplication.h"
+#include "gui/stylesheetutility.h"
+#include "misc/dbusserver.h"
+#include "misc/icons.h"
+#include "misc/loghandler.h"
+#include "misc/logpattern.h"
 
 using namespace swift::misc;
 using namespace swift::core;

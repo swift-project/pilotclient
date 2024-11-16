@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_MIXIN_MIXINCOMPARE_H
 #define SWIFT_MISC_MIXIN_MIXINCOMPARE_H
 
-#include "misc/metaclass.h"
-#include "misc/inheritancetraits.h"
-#include "misc/typetraits.h"
 #include <QList>
 #include <QPair>
 #include <QString>
+
+#include "misc/inheritancetraits.h"
+#include "misc/metaclass.h"
+#include "misc/typetraits.h"
 
 namespace swift::misc
 {
@@ -262,7 +263,7 @@ namespace swift::misc
                                                0; }
         }
 
-    } // Mixin
-} // swift::misc
+    } // namespace mixin
+} // namespace swift::misc
 
 #endif

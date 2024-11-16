@@ -6,27 +6,28 @@
 #ifndef SWIFT_MISC_SIMULATION_REMOTEAIRCRAFTPROVIDER_H
 #define SWIFT_MISC_SIMULATION_REMOTEAIRCRAFTPROVIDER_H
 
+#include <functional>
+
+#include <QHash>
+#include <QJsonObject>
+#include <QList>
+#include <QMetaObject>
+#include <QObject>
+#include <QReadWriteLock>
+#include <QtGlobal>
+
+#include "misc/aviation/aircraftpartslist.h"
+#include "misc/aviation/aircraftsituationchangelist.h"
+#include "misc/aviation/aircraftsituationlist.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/aviation/percallsign.h"
+#include "misc/identifiable.h"
+#include "misc/provider.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/airspaceaircraftsnapshot.h"
 #include "misc/simulation/reverselookup.h"
 #include "misc/simulation/simulatedaircraftlist.h"
-#include "misc/aviation/aircraftpartslist.h"
-#include "misc/aviation/aircraftsituationlist.h"
-#include "misc/aviation/aircraftsituationchangelist.h"
-#include "misc/aviation/percallsign.h"
-#include "misc/aviation/callsignset.h"
-#include "misc/provider.h"
 #include "misc/swiftmiscexport.h"
-#include "misc/identifiable.h"
-
-#include <QHash>
-#include <QList>
-#include <QMetaObject>
-#include <QObject>
-#include <QJsonObject>
-#include <QtGlobal>
-#include <QReadWriteLock>
-#include <functional>
 
 namespace swift::misc
 {
@@ -276,8 +277,8 @@ namespace swift::misc
             //! Constructor
             IRemoteAircraftProvider();
         };
-    } // s
-} // ns
+    } // namespace simulation
+} // namespace swift::misc
 
 Q_DECLARE_INTERFACE(swift::misc::simulation::IRemoteAircraftProvider, "org.swift-project.iremoteaircraftprovider")
 
@@ -629,6 +630,6 @@ namespace swift::misc::simulation
         //! Constructor
         CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : IProviderAware(remoteAircraftProvider) { Q_ASSERT(remoteAircraftProvider); }
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 #endif // guard

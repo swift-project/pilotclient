@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_ALTITUDEDIALOG_H
 #define SWIFT_GUI_COMPONENTS_ALTITUDEDIALOG_H
 
-#include "misc/aviation/altitude.h"
-
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "misc/aviation/altitude.h"
 
 namespace Ui
 {
@@ -84,6 +84,6 @@ namespace swift::gui::components
         //! Update style sheet
         void updateStyleSheet();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

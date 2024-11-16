@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/simbriefdata.h"
-#include "misc/logcategories.h"
+
 #include <QStringBuilder>
+
+#include "misc/logcategories.h"
 
 using namespace swift::misc::network;
 
@@ -63,4 +65,4 @@ namespace swift::misc::aviation
         Q_UNUSED(i18n);
         return m_username % " " % m_url;
     }
-} // namespace
+} // namespace swift::misc::aviation

@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_LOGCATEGORY_H
 #define SWIFT_MISC_LOGCATEGORY_H
 
-#include "misc/metaclass.h"
-#include "misc/valueobject.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/logcategories.h"
-
 #include <QList>
 #include <QMetaType>
 #include <QString>
+
+#include "misc/logcategories.h"
+#include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CLogCategory)
 
@@ -56,7 +56,7 @@ namespace swift::misc
             CLogCategory,
             SWIFT_METAMEMBER(string));
     };
-} // ns
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CLogCategory)
 

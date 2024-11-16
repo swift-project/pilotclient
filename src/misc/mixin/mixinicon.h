@@ -6,11 +6,13 @@
 #ifndef SWIFT_MISC_MIXIN_MIXINICON_H
 #define SWIFT_MISC_MIXIN_MIXINICON_H
 
-#include "misc/icons.h"
+#include <tuple>
+
 #include <QIcon>
 #include <QPixmap>
 #include <QString>
-#include <tuple>
+
+#include "misc/icons.h"
 
 namespace swift::misc
 {
@@ -57,7 +59,7 @@ namespace swift::misc
          */
 #define SWIFT_MISC_DECLARE_USING_MIXIN_ICON(DERIVED) \
     using ::swift::misc::mixin::Icon<DERIVED>::toIcon;
-    }
-} // namespace
+    } // namespace mixin
+} // namespace swift::misc
 
 #endif // guard

@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/db/updateinfo.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
-#include <QStringBuilder>
+
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
+#include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/stringutils.h"
 
 using namespace swift::config;
 
@@ -201,4 +203,4 @@ namespace swift::misc::db
         }
         return result;
     }
-} // ns
+} // namespace swift::misc::db

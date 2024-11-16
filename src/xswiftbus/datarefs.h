@@ -8,9 +8,10 @@
 
 #include <XPLM/XPLMDataAccess.h>
 #include <XPLM/XPLMUtilities.h>
+
 #include <array>
-#include <string>
 #include <cassert>
+#include <string>
 
 // Avoid checking large auto-generated header with cppcheck
 #ifndef CPPCHECK
@@ -303,6 +304,6 @@ namespace XSwiftBus
         return d;
     }
 
-} // namespace
+} // namespace XSwiftBus
 
 #endif // guard

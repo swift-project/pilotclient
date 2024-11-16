@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorfscommon.h"
+
 #include "core/webdataservices.h"
-#include "misc/simplecommandparser.h"
 #include "misc/logmessage.h"
+#include "misc/simplecommandparser.h"
 #include "misc/stringutils.h"
 
 using namespace swift::misc;
@@ -92,4 +93,4 @@ namespace swift::simplugin::fscommon
         }
         ISimulator::onSwiftDbAirportsRead();
     }
-} // namespace
+} // namespace swift::simplugin::fscommon

@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/coreinfoareacomponent.h"
+
+#include "ui_coreinfoareacomponent.h"
+
 #include "gui/infoarea.h"
 #include "misc/icons.h"
-#include "ui_coreinfoareacomponent.h"
 
 using namespace swift::misc;
 using namespace swift::gui;
@@ -55,4 +57,4 @@ namespace swift::gui::components
             return CIcons::statusBar16();
         }
     }
-} // namespace
+} // namespace swift::gui::components

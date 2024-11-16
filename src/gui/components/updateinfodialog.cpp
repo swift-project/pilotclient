@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "updateinfodialog.h"
-#include "ui_updateinfodialog.h"
-#include "gui/guiapplication.h"
-#include <QPushButton>
+
 #include <QDesktopServices>
+#include <QPushButton>
+
+#include "ui_updateinfodialog.h"
+
+#include "gui/guiapplication.h"
 
 using namespace swift::misc::db;
 
@@ -59,4 +62,4 @@ namespace swift::gui::components
         const bool nv = ui->comp_UpdateInfo->isNewPilotClientVersionAvailable();
         ui->bb_UpdateInfolDialog->button(QDialogButtonBox::Ok)->setVisible(nv);
     }
-} // ns
+} // namespace swift::gui::components

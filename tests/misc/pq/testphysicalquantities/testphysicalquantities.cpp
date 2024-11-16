@@ -5,6 +5,12 @@
 //! \file
 //! \ingroup testmisc
 
+#include <QString>
+#include <QTest>
+#include <QtGlobal>
+
+#include "test.h"
+
 #include "misc/math/mathutils.h"
 #include "misc/pq/acceleration.h"
 #include "misc/pq/angle.h"
@@ -22,11 +28,6 @@
 #include "misc/pq/time.h"
 #include "misc/pq/units.h"
 #include "misc/variant.h"
-#include "test.h"
-
-#include <QString>
-#include <QtGlobal>
-#include <QTest>
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
@@ -443,7 +444,7 @@ namespace MiscTest
         QVERIFY2(510_hrmin == CTime(510, CTimeUnit::hrmin()), "Time needs to be the same");
         QVERIFY2(2637_minsec == CTime(2637, CTimeUnit::minsec()), "Time needs to be the same");
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestPhysicalQuantities);

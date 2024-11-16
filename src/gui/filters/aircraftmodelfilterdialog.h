@@ -6,13 +6,14 @@
 #ifndef SWIFT_GUI_FILTERS_AIRCRAFTMODELFILTERFORM_H
 #define SWIFT_GUI_FILTERS_AIRCRAFTMODELFILTERFORM_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/filters/filterdialog.h"
-#include "gui/models/modelfilter.h"
+#include <memory>
 
 #include <QObject>
 #include <QScopedPointer>
-#include <memory>
+
+#include "gui/filters/filterdialog.h"
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
 
 class QWidget;
 
@@ -47,6 +48,6 @@ namespace swift::gui::filters
     private:
         QScopedPointer<Ui::CAircraftModelFilterDialog> ui;
     };
-} // namespace
+} // namespace swift::gui::filters
 
 #endif // guard

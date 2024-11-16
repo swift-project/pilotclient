@@ -6,18 +6,18 @@
 #ifndef SWIFT_MISC_SIMULATION_SETTINGS_SIMULATORSETTINGS_H
 #define SWIFT_MISC_SIMULATION_SETTINGS_SIMULATORSETTINGS_H
 
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/simulatorinfo.h"
+#include <QObject>
+#include <QStringList>
+
+#include "misc/directoryutils.h"
 #include "misc/network/textmessage.h"
 #include "misc/pq/length.h"
-#include "misc/settingscache.h"
-#include "misc/statusmessage.h"
 #include "misc/propertyindexref.h"
-#include "misc/directoryutils.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/statusmessage.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QStringList>
-#include <QObject>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CSimulatorSettings)
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CFsxP3DSettings)
@@ -661,7 +661,7 @@ namespace swift::misc::simulation::settings
         }
     };
 
-} // ns
+} // namespace swift::misc::simulation::settings
 
 Q_DECLARE_METATYPE(swift::misc::simulation::settings::CSimulatorSettings)
 Q_DECLARE_METATYPE(swift::misc::simulation::settings::CSimulatorSettings::CGSource)

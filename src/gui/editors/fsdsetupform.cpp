@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "fsdsetupform.h"
-#include "ui_fsdsetupform.h"
-#include "misc/stringutils.h"
-#include "gui/guiutility.h"
+
 #include <QCompleter>
+
+#include "ui_fsdsetupform.h"
+
+#include "gui/guiutility.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -138,4 +141,4 @@ namespace swift::gui::editors
         CFsdSetup s;
         this->setValue(s);
     }
-} // ns
+} // namespace swift::gui::editors

@@ -6,11 +6,11 @@
 #ifndef SWIFT_CORE_AFV_AUDIO_OUTPUT_H
 #define SWIFT_CORE_AFV_AUDIO_OUTPUT_H
 
-#include "sound/sampleprovider/sampleprovider.h"
-#include "misc/audio/audiodeviceinfo.h"
-
-#include <QObject>
 #include <QAudioSink>
+#include <QObject>
+
+#include "misc/audio/audiodeviceinfo.h"
+#include "sound/sampleprovider/sampleprovider.h"
 
 namespace swift::core::afv::audio
 {
@@ -103,6 +103,6 @@ namespace swift::core::afv::audio
         QScopedPointer<QAudioSink> m_audioOutput;
         CAudioOutputBuffer *m_audioOutputBuffer = nullptr;
     };
-} // ns
+} // namespace swift::core::afv::audio
 
 #endif // guard

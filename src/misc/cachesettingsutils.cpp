@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/cachesettingsutils.h"
-#include "misc/settingscache.h"
-#include "misc/datacache.h"
+
 #include <QRegularExpression>
+
+#include "misc/datacache.h"
+#include "misc/settingscache.h"
 
 namespace swift::misc
 {
@@ -97,4 +99,4 @@ namespace swift::misc
         const QString jsonStr = CFileUtils::readFileToString(file);
         return jsonStr;
     }
-} // namespace
+} // namespace swift::misc

@@ -6,31 +6,30 @@
 #ifndef SWIFT_CORE_AFV_CLIENTS_AFVCLIENT_H
 #define SWIFT_CORE_AFV_CLIENTS_AFVCLIENT_H
 
-#include "core/context/contextownaircraft.h"
-#include "core/afv/connection/clientconnection.h"
-#include "core/afv/audio/input.h"
-#include "core/afv/audio/output.h"
-#include "core/afv/audio/soundcardsampleprovider.h"
-#include "core/afv/dto.h"
-#include "core/swiftcoreexport.h"
+#include <atomic>
 
-#include "sound/sampleprovider/volumesampleprovider.h"
-#include "misc/aviation/comsystem.h"
-#include "misc/audio/audiosettings.h"
-#include "misc/audio/audiodeviceinfo.h"
-#include "misc/logcategories.h"
-#include "misc/identifiable.h"
-#include "misc/settingscache.h"
-#include "misc/worker.h"
-
-#include <QDateTime>
 #include <QAudioInput>
 #include <QAudioOutput>
+#include <QDateTime>
 #include <QObject>
 #include <QString>
 #include <QVector>
 
-#include <atomic>
+#include "core/afv/audio/input.h"
+#include "core/afv/audio/output.h"
+#include "core/afv/audio/soundcardsampleprovider.h"
+#include "core/afv/connection/clientconnection.h"
+#include "core/afv/dto.h"
+#include "core/context/contextownaircraft.h"
+#include "core/swiftcoreexport.h"
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/identifiable.h"
+#include "misc/logcategories.h"
+#include "misc/settingscache.h"
+#include "misc/worker.h"
+#include "sound/sampleprovider/volumesampleprovider.h"
 
 namespace swift::core::afv::clients
 {
@@ -441,6 +440,6 @@ namespace swift::core::afv::clients
         mutable QRecursiveMutex m_mutexVolume;
         mutable QRecursiveMutex m_mutexSampleProviders;
     };
-} // ns
+} // namespace swift::core::afv::clients
 
 #endif

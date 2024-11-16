@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/afv/audio/output.h"
-#include "sound/audioutilities.h"
-#include "misc/metadatautils.h"
-#include "misc/logmessage.h"
-#include "misc/verify.h"
+
+#include <cmath>
 
 #include <QDebug>
 #include <QStringBuilder>
-#include <cmath>
+
+#include "misc/logmessage.h"
+#include "misc/metadatautils.h"
+#include "misc/verify.h"
+#include "sound/audioutilities.h"
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -149,4 +151,4 @@ namespace swift::core::afv::audio
     }
     */
 
-} // ns
+} // namespace swift::core::afv::audio

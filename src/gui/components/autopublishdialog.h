@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_AUTOPUBLISHDIALOG_H
 #define SWIFT_GUI_COMPONENTS_AUTOPUBLISHDIALOG_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -38,6 +38,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CAutoPublishDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

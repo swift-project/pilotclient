@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_AVIATION_SELCAL_H
 #define SWIFT_MISC_AVIATION_SELCAL_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/valueobject.h"
-
 #include <QChar>
 #include <QList>
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CSelcal)
 namespace swift::misc::physical_quantities
@@ -83,7 +83,7 @@ namespace swift::misc::aviation
             CSelcal,
             SWIFT_METAMEMBER(code));
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CSelcal)
 

@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "legalinfocomponent.h"
-#include "ui_legalinfocomponent.h"
-
-#include "gui/guiapplication.h"
-#include "core/data/globalsetup.h"
-#include "misc/network/url.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
-#include "config/buildconfig.h"
 
 #include <QPointer>
+
+#include "ui_legalinfocomponent.h"
+
+#include "config/buildconfig.h"
+#include "core/data/globalsetup.h"
+#include "gui/guiapplication.h"
+#include "misc/logmessage.h"
+#include "misc/network/url.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -69,4 +70,4 @@ namespace swift::gui::components
     {
         return m_legalInfo && m_legalInfo->validateAgreement();
     }
-} // ns
+} // namespace swift::gui::components

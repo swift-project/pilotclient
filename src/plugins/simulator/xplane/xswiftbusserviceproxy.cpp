@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "xswiftbusserviceproxy.h"
-#include "simulatorxplane.h"
 
 #include <QLatin1String>
 #include <QPointer>
+
+#include "simulatorxplane.h"
 
 class QDBusConnection;
 
@@ -826,4 +827,4 @@ namespace swift::simplugin::xplane
     {
         m_dbusInterface->callDBus(QLatin1String("setSettingsJson"), json);
     }
-} // ns
+} // namespace swift::simplugin::xplane

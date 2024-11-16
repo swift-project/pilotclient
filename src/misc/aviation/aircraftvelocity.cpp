@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircraftvelocity.h"
-#include "misc/verify.h"
+
 #include <QStringBuilder>
+
+#include "misc/verify.h"
 
 using namespace swift::misc::physical_quantities;
 
@@ -92,4 +94,4 @@ namespace swift::misc::aviation
         SWIFT_VERIFY(index.isMyself());
         return compare(*this, compareValue);
     }
-}
+} // namespace swift::misc::aviation

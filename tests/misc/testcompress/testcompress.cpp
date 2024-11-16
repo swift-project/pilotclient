@@ -8,17 +8,18 @@
  * \ingroup testmisc
  */
 
-#include "config/buildconfig.h"
-#include "misc/compressutils.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/fileutils.h"
-#include "test.h"
-
-#include <QObject>
 #include <QFileInfo>
+#include <QObject>
 #include <QTemporaryDir>
 #include <QTest>
+
+#include "test.h"
+
+#include "config/buildconfig.h"
+#include "misc/compressutils.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::misc;
 using namespace swift::config;
@@ -72,7 +73,7 @@ namespace MiscTest
 
         qDebug() << "Uncompressed" << compressedFile << "to" << unCompressedFile << "with size" << check.size();
     }
-}
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestCompress);

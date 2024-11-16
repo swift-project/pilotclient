@@ -2,17 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/flightgear/flightgearutil.h"
-#include "misc/fileutils.h"
-#include "misc/directoryutils.h"
-#include "config/buildconfig.h"
-#include "qsystemdetection.h"
+
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QIODevice>
-#include <QTextStream>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QTextStream>
+
+#include "qsystemdetection.h"
+
+#include "config/buildconfig.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
 
 using namespace swift::config;
 
@@ -60,4 +63,4 @@ namespace swift::misc::simulation::flightgear
         static const QStringList empty;
         return empty;
     }
-} // namespace
+} // namespace swift::misc::simulation::flightgear

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/clientprovider.h"
+
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/verify.h"
 
@@ -210,4 +211,4 @@ namespace swift::misc::network
         static CClientProviderDummy *dummy = new CClientProviderDummy();
         return dummy;
     }
-} // namespace
+} // namespace swift::misc::network

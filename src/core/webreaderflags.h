@@ -6,11 +6,11 @@
 #ifndef SWIFT_CORE_CWEBREADERFLAGS_H
 #define SWIFT_CORE_CWEBREADERFLAGS_H
 
-#include "core/swiftcoreexport.h"
-#include "misc/network/entityflags.h"
-
 #include <QFlags>
 #include <QMetaType>
+
+#include "core/swiftcoreexport.h"
+#include "misc/network/entityflags.h"
 
 namespace swift::core
 {
@@ -59,7 +59,7 @@ namespace swift::core
         //! Is single reader
         static bool isSingleReader(WebReader readers);
     };
-} // namespace
+} // namespace swift::core
 
 Q_DECLARE_METATYPE(swift::core::CWebReaderFlags::WebReaderFlag)
 Q_DECLARE_METATYPE(swift::core::CWebReaderFlags::WebReader)

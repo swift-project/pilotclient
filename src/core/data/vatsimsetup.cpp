@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/data/vatsimsetup.h"
+
 #include <QStringList>
 
 using namespace swift::misc;
@@ -86,4 +87,4 @@ namespace swift::core::data
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-} // ns
+} // namespace swift::core::data

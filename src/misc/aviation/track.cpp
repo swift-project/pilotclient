@@ -24,4 +24,4 @@ namespace swift::misc::aviation
             return s.append(this->isMagneticTrack() ? "magnetic" : "true");
         }
     }
-} // namespace
+} // namespace swift::misc::aviation

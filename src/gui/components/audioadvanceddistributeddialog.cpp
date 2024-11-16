@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "audioadvanceddistributeddialog.h"
+
 #include "ui_audioadvanceddistributeddialog.h"
 
 namespace swift::gui::components
@@ -22,4 +23,4 @@ namespace swift::gui::components
         ui->comp_AudioAdvancedDistributed->reloadRegisteredDevices();
     }
 
-} // ns
+} // namespace swift::gui::components

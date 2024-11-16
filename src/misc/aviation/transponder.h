@@ -6,17 +6,18 @@
 #ifndef SWIFT_MISC_AVIATION_TRANSPONDER_H
 #define SWIFT_MISC_AVIATION_TRANSPONDER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/dictionary.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
+#include <tuple>
 
 #include <QHash>
 #include <QMetaType>
 #include <QString>
 #include <QtGlobal>
-#include <tuple>
+
+#include "misc/dictionary.h"
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CTransponder)
 
@@ -162,7 +163,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(transponderCode),
             SWIFT_METAMEMBER(transponderMode));
     };
-} // ns
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CTransponder)
 Q_DECLARE_METATYPE(swift::misc::aviation::CTransponder::TransponderMode)

@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_NETWORK_CLIENTPROVIDER_H
 #define SWIFT_MISC_NETWORK_CLIENTPROVIDER_H
 
-#include "misc/network/clientlist.h"
-#include "misc/aviation/callsignset.h"
-#include "misc/provider.h"
-#include <QReadWriteLock>
 #include <QMap>
+#include <QReadWriteLock>
+
+#include "misc/aviation/callsignset.h"
+#include "misc/network/clientlist.h"
+#include "misc/provider.h"
 
 namespace swift::misc
 {
@@ -166,8 +167,8 @@ namespace swift::misc
             //! Dummy instance
             static CClientProviderDummy *instance();
         };
-    } // namespace
-} // namespace
+    } // namespace network
+} // namespace swift::misc
 
 Q_DECLARE_INTERFACE(swift::misc::network::IClientProvider, "org.swift-project.misc::network::iclientprovider")
 

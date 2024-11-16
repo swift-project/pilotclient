@@ -12,4 +12,4 @@ namespace swift::gui::models
     template class CListModelBase<swift::misc::network::CTextMessageList, true>;
     template class CListModelBase<swift::misc::network::CClientList, false>;
 
-} // namespace
+} // namespace swift::gui::models

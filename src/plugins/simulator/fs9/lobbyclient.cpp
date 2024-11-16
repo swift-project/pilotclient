@@ -3,21 +3,22 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "core/actionbind.h"
-#include "core/application.h"
+#include "lobbyclient.h"
+
+#include <QDebug>
+#include <QFile>
+#include <QMutexLocker>
+#include <QScopedPointer>
+#include <QStringList>
+#include <QTimer>
+
 #include "directplayerror.h"
 #include "directplayutils.h"
 #include "fs9.h"
-#include "lobbyclient.h"
 
+#include "core/actionbind.h"
+#include "core/application.h"
 #include "misc/logmessage.h"
-
-#include <QDebug>
-#include <QTimer>
-#include <QFile>
-#include <QStringList>
-#include <QScopedPointer>
-#include <QMutexLocker>
 
 using namespace swift::misc;
 
@@ -332,4 +333,4 @@ namespace swift::simplugin::fs9
         }
         return S_OK;
     }
-} // ns
+} // namespace swift::simplugin::fs9

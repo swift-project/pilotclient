@@ -1,13 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "misc/statusmessagelist.h"
-#include "misc/stringutils.h"
+
 #include "misc/predicates.h"
 #include "misc/range.h"
 #include "misc/setbuilder.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/statusmessagelist.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -115,4 +116,4 @@ namespace swift::misc::simulation::fscommon
         return this->findBy([=](const CAircraftCfgEntries &entries) { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
     }
 
-} // namespace
+} // namespace swift::misc::simulation::fscommon

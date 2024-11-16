@@ -6,18 +6,19 @@
 #ifndef SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGPARSER_H
 #define SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGPARSER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/aircraftmodelloader.h"
-#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "misc/simulation/simulatorinfo.h"
+#include <memory>
 
 #include <QObject>
 #include <QPointer>
 #include <QString>
 #include <QStringList>
 #include <QVariant>
-#include <memory>
+
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodelloader.h"
+#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/swiftmiscexport.h"
 
 class QSettings;
 
@@ -97,7 +98,7 @@ namespace swift::misc
             CAircraftCfgEntriesList m_parsedCfgEntriesList; //!< parsed entries
             QPointer<swift::misc::CWorker> m_parserWorker; //!< worker will destroy itself, so weak pointer
         };
-    } // ns
-} // ns
+    } // namespace simulation::fscommon
+} // namespace swift::misc
 
 #endif // guard

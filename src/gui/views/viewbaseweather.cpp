@@ -7,4 +7,4 @@ namespace swift::gui::views
 {
     template class CViewBase<swift::gui::models::CCloudLayerListModel>;
     template class CViewBase<swift::gui::models::CWindLayerListModel>;
-} // namespace
+} // namespace swift::gui::views

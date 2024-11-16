@@ -31,6 +31,6 @@ namespace swift::simplugin::fs9
         delete[] pT;
         pT = nullptr;
     }
-}
+} // namespace swift::simplugin::fs9
 
 #endif

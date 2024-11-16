@@ -6,8 +6,9 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_DBUS_DUPLEXIMPL_H
 #define SWIFT_MISC_SHAREDSTATE_DBUS_DUPLEXIMPL_H
 
-#include "misc/sharedstate/dbus/duplex.h"
 #include <functional>
+
+#include "misc/sharedstate/dbus/duplex.h"
 
 namespace swift::misc
 {
@@ -63,7 +64,7 @@ namespace swift::misc
             QMap<QString, CVariantList> m_subscriptions;
             QSet<QString> m_handlingChannels;
         };
-    }
-}
+    } // namespace shared_state::dbus
+} // namespace swift::misc
 
 #endif

@@ -4,11 +4,12 @@
 //! \file
 
 #include "misc/aviation/airporticaocode.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/stringutils.h"
 
 #include <Qt>
 #include <QtGlobal>
+
+#include "misc/mixin/mixincompare.h"
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirportIcaoCode)
 
@@ -82,4 +83,4 @@ namespace swift::misc::aviation
         // https://en.wikipedia.org/wiki/ICAO_airport_code#Pseudo_ICAO-codes says France has some 6-character airport codes
         // and ZZZZ can be used in a flight plan as ICAO code for any airport that doesn't have one
     }
-} // namespace
+} // namespace swift::misc::aviation

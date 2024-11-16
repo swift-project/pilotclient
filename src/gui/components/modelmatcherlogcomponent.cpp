@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "modelmatcherlogcomponent.h"
-#include "ui_modelmatcherlogcomponent.h"
-
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
-#include "misc/propertyindexlist.h"
-#include "misc/htmlutils.h"
 
 #include <QCompleter>
 #include <QStringListModel>
+
+#include "ui_modelmatcherlogcomponent.h"
+
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/htmlutils.h"
+#include "misc/propertyindexlist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -57,4 +58,4 @@ namespace swift::gui::components
         m_text.setHtml(html);
         ui->te_Messages->setDocument(&m_text);
     }
-} // ns
+} // namespace swift::gui::components

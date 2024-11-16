@@ -28,4 +28,4 @@ namespace swift::misc
     {
         if (!message.isEmpty()) { throw CStatusException(message); }
     }
-} // ns
+} // namespace swift::misc

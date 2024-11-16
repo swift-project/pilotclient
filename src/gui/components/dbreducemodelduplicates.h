@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBREDUCEMODELDUPLICATES_H
 #define SWIFT_GUI_COMPONENTS_DBREDUCEMODELDUPLICATES_H
 
-#include "core/progress.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/settings/modelsettings.h"
-#include "misc/settingscache.h"
-
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "core/progress.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/settings/modelsettings.h"
 
 namespace Ui
 {
@@ -63,6 +63,6 @@ namespace swift::gui::components
         swift::misc::simulation::CAircraftModelList m_removeCandidates;
         swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences { this }; //!< distributor preferences
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

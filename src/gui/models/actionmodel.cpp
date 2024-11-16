@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
-#include "gui/models/actionitem.h"
 #include "gui/models/actionmodel.h"
-#include "misc/icons.h"
 
 #include <QString>
-#include <QStringList>
 #include <QStringBuilder>
+#include <QStringList>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "gui/models/actionitem.h"
+#include "misc/icons.h"
 
 using namespace swift::misc;
 using namespace swift::core;
@@ -119,4 +120,4 @@ namespace swift::gui::models
             }
         }
     }
-} // ns
+} // namespace swift::gui::models

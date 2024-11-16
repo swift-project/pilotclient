@@ -70,4 +70,4 @@ namespace swift::misc
         if (numberOfTokens > 0) { m_lastReplenishmentTime = now; }
         return numberOfTokens;
     }
-} // namespace
+} // namespace swift::misc

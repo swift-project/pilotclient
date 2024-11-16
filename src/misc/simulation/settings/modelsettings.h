@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_SIMULATION_SETTINGS_MODELSETTINGS_H
 #define SWIFT_MISC_SIMULATION_SETTINGS_MODELSETTINGS_H
 
-#include "misc/simulation/distributorlistpreferences.h"
-#include "misc/settingscache.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/propertyindexref.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/distributorlistpreferences.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CModelSettings)
 
@@ -78,7 +78,7 @@ namespace swift::misc::simulation::settings
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "mapping/distributorpreferences"; }
     };
-} // ns
+} // namespace swift::misc::simulation::settings
 
 Q_DECLARE_METATYPE(swift::misc::simulation::settings::CModelSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::settings::CModelSettings>)

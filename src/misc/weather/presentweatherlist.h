@@ -6,11 +6,11 @@
 #ifndef SWIFT_MISC_WEATHER_PRESENTWEATHERLIST_H
 #define SWIFT_MISC_WEATHER_PRESENTWEATHERLIST_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/sequence.h"
-#include "misc/weather/presentweather.h"
-
 #include <QMetaType>
+
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/weather/presentweather.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::weather, CPresentWeather, CPresentWeatherList)
 
@@ -34,7 +34,7 @@ namespace swift::misc::weather
         CPresentWeatherList(const CSequence<CPresentWeather> &other);
     };
 
-} // namespace
+} // namespace swift::misc::weather
 
 Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeatherList)
 

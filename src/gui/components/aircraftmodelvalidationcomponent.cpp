@@ -1,12 +1,14 @@
 ﻿// SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_aircraftmodelvalidationcomponent.h"
 #include "aircraftmodelvalidationcomponent.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextsimulator.h"
 
 #include <QPointer>
+
+#include "ui_aircraftmodelvalidationcomponent.h"
+
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -218,4 +220,4 @@ namespace swift::gui::components
         const CStatusMessage m = models.saveInvalidModels();
         Q_UNUSED(m)
     }
-} // ns
+} // namespace swift::gui::components

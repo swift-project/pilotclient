@@ -12,6 +12,6 @@ namespace swift::core
 {
     //! Register all relevant metadata in swift::core
     SWIFT_CORE_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::core
 
 #endif // guard

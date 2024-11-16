@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/settings/xswiftbussettings.h"
+
 #include "misc/simulation/settings/xswiftbussettingsqtfree.inc"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CXSwiftBusSettings)
@@ -94,4 +95,4 @@ namespace swift::misc::simulation::settings
     {
         m_timestampMSecsSinceEpoch = m_msSinceEpochQtFree;
     }
-} // ns
+} // namespace swift::misc::simulation::settings

@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_DOCKWIDGETINFOBAR_H
 #define SWIFT_GUI_DOCKWIDGETINFOBAR_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/dockwidget.h"
-
 #include <QObject>
+
+#include "gui/dockwidget.h"
+#include "gui/swiftguiexport.h"
 
 class QMenu;
 
@@ -41,6 +41,6 @@ namespace swift::gui
         //! \copydoc CDockWidget::onStyleSheetsChanged
         virtual void onStyleSheetsChanged() override;
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

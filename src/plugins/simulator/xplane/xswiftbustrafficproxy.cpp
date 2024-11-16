@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "xswiftbustrafficproxy.h"
-#include "misc/logmessage.h"
 
-#include <QLatin1String>
-#include <QDBusConnection>
 #include <cmath>
+
+#include <QDBusConnection>
+#include <QLatin1String>
+
+#include "misc/logmessage.h"
 
 #define XSWIFTBUS_SERVICENAME "org.swift-project.xswiftbus"
 
@@ -189,4 +191,4 @@ namespace swift::simplugin::xplane
     {
         m_dbusInterface->callDBus(QLatin1String("setFollowedAircraft"), callsign);
     }
-}
+} // namespace swift::simplugin::xplane

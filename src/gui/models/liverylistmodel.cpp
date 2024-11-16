@@ -1,17 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "gui/models/liverylistmodel.h"
+
+#include <QtGlobal>
+
 #include "gui/models/columnformatters.h"
 #include "gui/models/columns.h"
-#include "gui/models/liverylistmodel.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/livery.h"
 #include "misc/country.h"
 #include "misc/db/datastore.h"
 #include "misc/propertyindexvariantmap.h"
 #include "misc/timestampbased.h"
-
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -45,4 +46,4 @@ namespace swift::gui::models
         (void)QT_TRANSLATE_NOOP("ModelLiveryList", "mil.");
         (void)QT_TRANSLATE_NOOP("ModelLiveryList", "military");
     }
-} // namespace
+} // namespace swift::gui::models

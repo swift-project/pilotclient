@@ -81,4 +81,4 @@ namespace swift::core
     {
         return numberOfReaders(readers) == 1;
     }
-} // namespace
+} // namespace swift::core

@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "interpolationlogdisplaydialog.h"
+
 #include "ui_interpolationlogdisplaydialog.h"
-#include "gui/guiapplication.h"
+
 #include "core/simulator.h"
+#include "gui/guiapplication.h"
 
 using namespace swift::core;
 
@@ -47,4 +49,4 @@ namespace swift::gui::components
         if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
         return QDialog::event(event);
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,20 +6,20 @@
 #ifndef SWIFT_CORE_CONTEXTSIMULATOR_PROXY_H
 #define SWIFT_CORE_CONTEXTSIMULATOR_PROXY_H
 
-#include "core/swiftcoreexport.h"
-#include "core/context/contextsimulator.h"
-#include "core/corefacadeconfig.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/simulatorplugininfolist.h"
-#include "misc/simulation/simulatorinternals.h"
-#include "misc/geo/elevationplane.h"
-#include "misc/pq/length.h"
-#include "misc/pq/time.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/pixmap.h"
-
 #include <QObject>
 #include <QString>
+
+#include "core/context/contextsimulator.h"
+#include "core/corefacadeconfig.h"
+#include "core/swiftcoreexport.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/geo/elevationplane.h"
+#include "misc/pixmap.h"
+#include "misc/pq/length.h"
+#include "misc/pq/time.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/simulatorinternals.h"
+#include "misc/simulation/simulatorplugininfolist.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -31,7 +31,7 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
     }
-}
+} // namespace swift::misc
 
 namespace swift::core
 {
@@ -227,6 +227,6 @@ namespace swift::core
             //! DBus version constructor
             CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
         };
-    } // ns
-} // ns
+    } // namespace context
+} // namespace swift::core
 #endif // guard

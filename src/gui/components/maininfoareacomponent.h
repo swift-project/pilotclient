@@ -6,11 +6,12 @@
 #ifndef SWIFT_GUI_MAININFOAREACOMPONENT_H
 #define SWIFT_GUI_MAININFOAREACOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/infoarea.h"
 #include <QObject>
 #include <QScopedPointer>
 #include <QSize>
+
+#include "gui/infoarea.h"
+#include "gui/swiftguiexport.h"
 
 class QPixmap;
 class QWidget;
@@ -128,6 +129,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CMainInfoAreaComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

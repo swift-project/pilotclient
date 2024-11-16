@@ -1,15 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
 #include "settingstextmessageinlinecomponent.h"
+
+#include <QCheckBox>
+#include <QPointer>
+#include <QPushButton>
+#include <QTimer>
+
 #include "ui_settingstextmessageinlinecomponent.h"
 
-#include <QPushButton>
-#include <QCheckBox>
-#include <QTimer>
-#include <QPointer>
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::gui::settings;
 using namespace swift::misc;
@@ -82,4 +84,4 @@ namespace swift::gui::components
             if (myself) { myself->settingsChanged(); }
         });
     }
-} // ns
+} // namespace swift::gui::components

@@ -58,4 +58,4 @@ namespace swift::core::fsd
         }
         return PlaneInformation(tokens[0], tokens[1], aircraft, airline, livery);
     }
-}
+} // namespace swift::core::fsd

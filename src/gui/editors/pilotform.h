@@ -6,13 +6,14 @@
 #ifndef SWIFT_GUI_EDITORS_PILOTFORM_H
 #define SWIFT_GUI_EDITORS_PILOTFORM_H
 
+#include <QFrame>
+#include <QIntValidator>
+#include <QScopedPointer>
+
 #include "gui/editors/form.h"
 #include "gui/swiftguiexport.h"
-#include "misc/network/user.h"
 #include "misc/network/entityflags.h"
-#include <QFrame>
-#include <QScopedPointer>
-#include <QIntValidator>
+#include "misc/network/user.h"
 
 namespace Ui
 {
@@ -61,6 +62,6 @@ namespace swift::gui::editors
         QScopedPointer<QIntValidator> m_vatsimIntValidator { new QIntValidator(100000, 9999999, this) };
         bool m_vatsim = false;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

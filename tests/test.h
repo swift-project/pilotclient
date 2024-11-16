@@ -8,9 +8,9 @@
 //! \file
 //! \ingroup testmisc
 
-#include <QTest>
-#include <QStringList>
 #include <QCoreApplication>
+#include <QStringList>
+#include <QTest>
 
 //! Implements a main() function that executes all tests in TestObject
 //! without instantiating a QApplication object.

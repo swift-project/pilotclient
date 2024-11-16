@@ -18,6 +18,6 @@ namespace swift::sample
         //! Run the samples
         static int samples(QTextStream &out);
     };
-} // namespace
+} // namespace swift::sample
 
 #endif

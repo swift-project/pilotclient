@@ -6,18 +6,17 @@
 #ifndef SWIFT_GUI_COMPONENTS_COCKPITCOMCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_COCKPITCOMCOMPONENT_H
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/enablefordockwidgetinfoarea.h"
 #include "gui/swiftguiexport.h"
-
 #include "misc/aviation/selcal.h"
 #include "misc/aviation/transponder.h"
 #include "misc/identifiable.h"
 #include "misc/identifier.h"
 #include "misc/simulation/simulatedaircraft.h"
-
-#include <QFrame>
-#include <QObject>
-#include <QScopedPointer>
 
 class QPaintEvent;
 
@@ -93,6 +92,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CCockpitComComponent> ui;
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

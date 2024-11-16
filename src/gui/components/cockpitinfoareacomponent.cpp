@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/cockpitinfoareacomponent.h"
-#include "gui/infoarea.h"
-#include "misc/icons.h"
-#include "ui_cockpitinfoareacomponent.h"
 
 #include <QTabWidget>
 #include <QtGlobal>
+
+#include "ui_cockpitinfoareacomponent.h"
+
+#include "gui/infoarea.h"
+#include "misc/icons.h"
 
 using namespace swift::misc;
 
@@ -44,4 +46,4 @@ namespace swift::gui::components
         }
     }
 
-} // namespace
+} // namespace swift::gui::components

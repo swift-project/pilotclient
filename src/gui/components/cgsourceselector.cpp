@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "cgsourceselector.h"
+
 #include "ui_cgsourceselector.h"
 
 using namespace swift::misc::simulation::settings;
@@ -43,4 +44,4 @@ namespace swift::gui::components
         ui->cb_CGSourceSelector->addItem(CSimulatorSettings::cgSourceAsString(CSimulatorSettings::CGFromDBOnly), CSimulatorSettings::CGFromDBOnly);
         this->setValue(CSimulatorSettings::CGFromSimulatorFirst);
     }
-} // ns
+} // namespace swift::gui::components

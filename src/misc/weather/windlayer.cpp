@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/weather/windlayer.h"
+
 #include "misc/pq/physicalquantity.h"
 #include "misc/propertyindexref.h"
 
@@ -86,4 +87,4 @@ namespace swift::misc::weather
         return windAsString;
     }
 
-} // namespace
+} // namespace swift::misc::weather

@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_NETWORKSERVERFORM_H
 #define SWIFT_GUI_COMPONENTS_NETWORKSERVERFORM_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/editors/form.h"
-#include "misc/network/server.h"
-#include "misc/statusmessagelist.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/editors/form.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/server.h"
+#include "misc/statusmessagelist.h"
 
 namespace Ui
 {
@@ -64,6 +64,6 @@ namespace swift::gui::editors
         QScopedPointer<Ui::CNetworkServerForm> ui;
         QString m_passwordNameLabel;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

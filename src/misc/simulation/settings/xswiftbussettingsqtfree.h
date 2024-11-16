@@ -4,10 +4,10 @@
 #ifndef SWIFT_MISC_SIMULATION_SETTINGS_CXSWIFTBUSSETTINGSQTFREE_H
 #define SWIFT_MISC_SIMULATION_SETTINGS_CXSWIFTBUSSETTINGSQTFREE_H
 
-#include "misc/simulation/xplane/qtfreeutils.h"
-
-#include <string>
 #include <chrono>
+#include <string>
+
+#include "misc/simulation/xplane/qtfreeutils.h"
 
 namespace swift::misc::simulation::settings
 {
@@ -191,6 +191,6 @@ namespace swift::misc::simulation::settings
         double m_maxDrawDistanceNM = 50.0; //!< distance in XPlane
         int64_t m_msSinceEpochQtFree = 0; //!< timestamp
     };
-} // ns
+} // namespace swift::misc::simulation::settings
 
 #endif

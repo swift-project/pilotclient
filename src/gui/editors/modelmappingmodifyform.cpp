@@ -1,19 +1,21 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/modelmodeselector.h"
-#include "gui/components/simulatorselector.h"
 #include "gui/editors/modelmappingmodifyform.h"
-#include "gui/uppercasevalidator.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/network/authenticateduser.h"
-#include "misc/stringutils.h"
-#include "ui_modelmappingmodifyform.h"
 
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QString>
+
+#include "ui_modelmappingmodifyform.h"
+
+#include "gui/components/modelmodeselector.h"
+#include "gui/components/simulatorselector.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/network/authenticateduser.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -161,4 +163,4 @@ namespace swift::gui::editors
         cg.parseFromString(cgv, CPqString::SeparatorBestGuess);
         ui->le_CG->setText(cg.isNull() ? "" : cg.toQString(true));
     }
-} // ns
+} // namespace swift::gui::editors

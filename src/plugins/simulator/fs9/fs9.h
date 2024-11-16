@@ -6,9 +6,10 @@
 #ifndef SWIFT_SIMPLUGIN_FS9_FS9SDK_H
 #define SWIFT_SIMPLUGIN_FS9_FS9SDK_H
 
+#include <array>
+
 #include <QByteArray>
 #include <QString>
-#include <array>
 
 #ifndef NOMINMAX
 #    define NOMINMAX
@@ -216,6 +217,6 @@ namespace swift::simplugin::fs9
             int pitch : 10; //!< Pitch
         };
     };
-} // ns
+} // namespace swift::simplugin::fs9
 
 #endif // guard

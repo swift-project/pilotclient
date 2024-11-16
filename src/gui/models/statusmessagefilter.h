@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_STATUSMESSAGEFILTER_H
 #define SWIFT_GUI_MODELS_STATUSMESSAGEFILTER_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/modelfilter.h"
-#include "misc/statusmessagelist.h"
 #include <QString>
+
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessagelist.h"
 
 namespace swift::misc
 {
@@ -36,6 +37,6 @@ namespace swift::gui::models
         QString m_msgText;
         QString m_category;
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

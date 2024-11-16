@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_PROCESSINFO_H
 #define SWIFT_MISC_PROCESSINFO_H
 
-#include "misc/valueobject.h"
 #include <QCoreApplication>
 #include <QString>
+
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CProcessInfo)
 
@@ -58,7 +59,7 @@ namespace swift::misc
             SWIFT_METAMEMBER(pid),
             SWIFT_METAMEMBER(name));
     };
-}
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CProcessInfo)
 

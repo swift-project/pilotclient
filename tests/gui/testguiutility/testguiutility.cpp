@@ -5,8 +5,9 @@
 //! \file
 //! \ingroup testswiftgui
 
-#include "gui/guiutility.h"
 #include "test.h"
+
+#include "gui/guiutility.h"
 
 using namespace swift::gui;
 
@@ -28,7 +29,7 @@ namespace SwiftGuiTest
         QVERIFY2(CGuiUtility::lenientTitleComparison("foo&", "&Foo"), "wrong title match");
         QVERIFY2(!CGuiUtility::lenientTitleComparison("foo", "bar"), "wrong title mismatch");
     }
-} // ns
+} // namespace SwiftGuiTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(SwiftGuiTest::CTestGuiUtility);

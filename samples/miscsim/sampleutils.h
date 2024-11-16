@@ -23,6 +23,6 @@ namespace swift::misc
     private:
         CSampleUtils() = delete;
     };
-}
+} // namespace swift::misc
 
 #endif // guard

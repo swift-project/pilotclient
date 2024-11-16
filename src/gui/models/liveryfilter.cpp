@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/liveryfilter.h"
+
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/livery.h"
 
@@ -80,4 +81,4 @@ namespace swift::gui::models
         return (m_colorLiveries && !m_airlineLiveries) || (!m_colorLiveries && m_airlineLiveries);
     }
 
-} // namespace
+} // namespace swift::gui::models

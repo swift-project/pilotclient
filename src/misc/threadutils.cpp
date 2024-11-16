@@ -3,12 +3,13 @@
 
 #include "misc/threadutils.h"
 
+#include <sstream>
+#include <thread>
+
 #include <QCoreApplication>
 #include <QObject>
 #include <QThread>
 #include <QtGlobal>
-#include <thread>
-#include <sstream>
 
 namespace swift::misc
 {
@@ -30,4 +31,4 @@ namespace swift::misc
         const QString id = QString::fromStdString(oss.str());
         return QStringLiteral("%1 (%2) prio %3").arg(id).arg(thread->objectName()).arg(thread->priority());
     }
-} // ns
+} // namespace swift::misc

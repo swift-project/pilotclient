@@ -6,8 +6,9 @@
 #ifndef SWIFT_CORE_GITHUBPACKAGESREADER_H
 #define SWIFT_CORE_GITHUBPACKAGESREADER_H
 
-#include "misc/db/updateinfo.h"
 #include <QObject>
+
+#include "misc/db/updateinfo.h"
 
 namespace swift::core
 {
@@ -35,6 +36,6 @@ namespace swift::core
     private:
         swift::misc::CData<swift::misc::db::TUpdateInfo> m_updateInfo { this };
     };
-}
+} // namespace swift::core
 
 #endif

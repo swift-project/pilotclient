@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_SIMULATION_SETTINGS_INTERPOLATIONRENDERINGSETUP_H
 #define SWIFT_MISC_SIMULATION_SETTINGS_INTERPOLATIONRENDERINGSETUP_H
 
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "misc/settingscache.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
 
 namespace swift::misc::simulation::settings
 {
@@ -24,6 +24,6 @@ namespace swift::misc::simulation::settings
             return name;
         }
     };
-} // ns
+} // namespace swift::misc::simulation::settings
 
 #endif // guard

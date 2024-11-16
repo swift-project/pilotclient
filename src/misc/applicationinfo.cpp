@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/applicationinfo.h"
-#include "misc/iconlist.h"
-#include "misc/comparefunctions.h"
-#include "config/buildconfig.h"
 
 #include <QDir>
 #include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/comparefunctions.h"
+#include "misc/iconlist.h"
 
 using namespace swift::config;
 
@@ -221,4 +222,4 @@ namespace swift::misc
         if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
         return CApplicationInfo::Unknown;
     }
-} // ns
+} // namespace swift::misc

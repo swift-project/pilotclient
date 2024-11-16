@@ -6,32 +6,32 @@
 #ifndef STDGUI_SWIFTGUISTD_H
 #define STDGUI_SWIFTGUISTD_H
 
-#include "gui/components/maininfoareacomponent.h"
-#include "gui/components/navigatordialog.h"
-#include "gui/components/aircraftmodelsetvalidationdialog.h"
-#include "gui/components/textmessagecomponenttab.h"
-#include "gui/enableforframelesswindow.h"
-#include "gui/mainwindowaccess.h"
-#include "gui/managedstatusbar.h"
-#include "gui/guiactionbind.h"
-#include "core/actionbind.h"
-#include "misc/network/connectionstatus.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/autopublishdata.h"
-#include "misc/audio/notificationsounds.h"
-#include "misc/audio/audiosettings.h"
-#include "misc/input/actionhotkeydefs.h"
-#include "misc/identifiable.h"
-#include "misc/variant.h"
-#include "misc/loghandler.h"
-#include "misc/loghistory.h"
-#include "misc/statusmessage.h"
-#include "misc/icons.h"
-
 #include <QMainWindow>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "core/actionbind.h"
+#include "gui/components/aircraftmodelsetvalidationdialog.h"
+#include "gui/components/maininfoareacomponent.h"
+#include "gui/components/navigatordialog.h"
+#include "gui/components/textmessagecomponenttab.h"
+#include "gui/enableforframelesswindow.h"
+#include "gui/guiactionbind.h"
+#include "gui/mainwindowaccess.h"
+#include "gui/managedstatusbar.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/icons.h"
+#include "misc/identifiable.h"
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/loghandler.h"
+#include "misc/loghistory.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/simulation/autopublishdata.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/statusmessage.h"
+#include "misc/variant.h"
 
 class QAction;
 class QCloseEvent;
@@ -48,7 +48,7 @@ namespace swift::gui::components
     class CDbLoadDataDialog;
     class CAutoPublishDialog;
     class CModelBrowserDialog;
-}
+} // namespace swift::gui::components
 namespace Ui
 {
     class SwiftGuiStd;

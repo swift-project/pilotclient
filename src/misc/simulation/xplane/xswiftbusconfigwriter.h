@@ -6,9 +6,9 @@
 #ifndef SWIFT_MISC_SIMULATION_XPLANE_XSWIFTBUSCONFIGWRITER_H
 #define SWIFT_MISC_SIMULATION_XPLANE_XSWIFTBUSCONFIGWRITER_H
 
-#include "misc/swiftmiscexport.h"
-
 #include <QObject>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation::xplane
 {
@@ -52,6 +52,6 @@ namespace swift::misc::simulation::xplane
         bool m_debug = false;
         bool m_tcas = true;
     };
-}
+} // namespace swift::misc::simulation::xplane
 
 #endif

@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/interpolation/interpolatorlinearpbh.h"
+
+#include "config/buildconfig.h"
 #include "misc/simulation/interpolation/interpolatorfunctions.h"
 #include "misc/verify.h"
-#include "config/buildconfig.h"
 
 using namespace swift::config;
 using namespace swift::misc::aviation;
@@ -83,4 +84,4 @@ namespace swift::misc::simulation
         }
         m_simulationTimeFraction = clampValidTimeFraction(tf);
     }
-} // namespace
+} // namespace swift::misc::simulation

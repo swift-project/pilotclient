@@ -49,5 +49,5 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CSettingsFontDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

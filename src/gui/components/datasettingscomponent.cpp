@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/datasettingscomponent.h"
+
 #include "ui_datasettingscomponent.h"
 
 using namespace swift::gui;
@@ -23,4 +24,4 @@ namespace swift::gui::components
     {
         ui->comp_ModelSettings->setBackgroundUpdater(updater);
     }
-} // ns
+} // namespace swift::gui::components

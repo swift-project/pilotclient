@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBOWNMODELSETFORMDIALOG_H
 #define SWIFT_GUI_COMPONENTS_DBOWNMODELSETFORMDIALOG_H
 
-#include "gui/components/dbmappingcomponentaware.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/simulatorinfo.h"
-
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/components/dbmappingcomponentaware.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/simulatorinfo.h"
 
 namespace Ui
 {
@@ -82,6 +82,6 @@ namespace swift::gui::components
         //! Build the set
         swift::misc::simulation::CAircraftModelList buildSet(const swift::misc::simulation::CSimulatorInfo &simulator, const swift::misc::simulation::CAircraftModelList &currentSet = {});
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

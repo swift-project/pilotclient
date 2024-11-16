@@ -47,6 +47,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CMarginsInput> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

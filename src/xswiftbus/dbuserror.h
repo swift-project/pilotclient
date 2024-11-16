@@ -5,6 +5,7 @@
 #define SWIFT_SIM_XSWIFTBUS_DBUSERROR_H
 
 #include <dbus/dbus.h>
+
 #include <string>
 
 namespace XSwiftBus
@@ -36,6 +37,6 @@ namespace XSwiftBus
         std::string m_message;
     };
 
-}
+} // namespace XSwiftBus
 
 #endif // guard

@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+
+#include <QStringBuilder>
+
+#include "config/buildconfig.h"
 #include "misc/network/client.h"
+#include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply
 #include "misc/stringutils.h"
 #include "misc/verify.h"
-#include "config/buildconfig.h"
-#include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply
-#include <QStringBuilder>
 
 using namespace swift::config;
 using namespace swift::misc::aviation;
@@ -373,4 +375,4 @@ namespace swift::misc::simulation
         static const CInterpolationAndRenderingSetupPerCallsign null;
         return null;
     }
-} // ns
+} // namespace swift::misc::simulation

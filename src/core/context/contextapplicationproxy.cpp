@@ -1,18 +1,19 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
 #include "core/context/contextapplicationproxy.h"
-#include "misc/dbus.h"
-#include "misc/dbusserver.h"
-#include "misc/genericdbusinterface.h"
-#include "misc/identifierlist.h"
-#include "misc/loghandler.h"
 
 #include <QDBusConnection>
 #include <QLatin1String>
 #include <QObject>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "misc/dbus.h"
+#include "misc/dbusserver.h"
+#include "misc/genericdbusinterface.h"
+#include "misc/identifierlist.h"
+#include "misc/loghandler.h"
 
 using namespace swift::misc;
 
@@ -169,4 +170,4 @@ namespace swift::core::context
         sApp->getInputManager()->callFunctionsBy(action, argument);
         CLogMessage(this, CLogCategories::contextSlot()).debug() << "Calling function" << action << "from origin" << origin.getMachineName();
     }
-} // namespace
+} // namespace swift::core::context

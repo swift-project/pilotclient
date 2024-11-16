@@ -7,6 +7,7 @@
 #define SWIFT_MISC_NETWORK_DATA_LASTSERVER_H
 
 #include "../server.h"
+
 #include "misc/datacache.h"
 
 namespace swift::misc::network::data
@@ -27,6 +28,6 @@ namespace swift::misc::network::data
             return name;
         }
     };
-} // ns
+} // namespace swift::misc::network::data
 
 #endif // guard

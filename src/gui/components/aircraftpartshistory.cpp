@@ -2,19 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftpartshistory.h"
-#include "ui_aircraftpartshistory.h"
-
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
-#include "misc/propertyindexlist.h"
-#include "misc/htmlutils.h"
 
 #include <QCompleter>
+#include <QHash>
 #include <QStringBuilder>
 #include <QStringListModel>
-#include <QHash>
+
+#include "ui_aircraftpartshistory.h"
+
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/htmlutils.h"
+#include "misc/propertyindexlist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -164,4 +165,4 @@ namespace swift::gui::components
             this->initGui();
         }
     }
-} // ns
+} // namespace swift::gui::components

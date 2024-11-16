@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_DBUS_HUB_H
 #define SWIFT_MISC_SHAREDSTATE_DBUS_HUB_H
 
+#include <QFuture>
+#include <QObject>
+#include <QSharedPointer>
+
 #include "core/corefacadeconfig.h"
 #include "misc/swiftmiscexport.h"
-#include <QSharedPointer>
-#include <QObject>
-#include <QFuture>
 
 //! DBus interface for sharedstate hub.
 #define SWIFT_MISC_HUB_INTERFACE "org.swift_project.misc.sharedstate.hub"
@@ -61,7 +62,7 @@ namespace swift::misc
             //! Constructor.
             IHub(QObject *parent = nullptr);
         };
-    }
-}
+    } // namespace shared_state::dbus
+} // namespace swift::misc
 
 #endif

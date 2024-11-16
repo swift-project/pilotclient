@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "stringlistdialog.h"
+
 #include "ui_stringlistdialog.h"
 
 namespace swift::gui::components
@@ -29,4 +30,4 @@ namespace swift::gui::components
         if (selectedItems.isEmpty()) { return {}; }
         return selectedItems.front()->text();
     }
-} // ns
+} // namespace swift::gui::components

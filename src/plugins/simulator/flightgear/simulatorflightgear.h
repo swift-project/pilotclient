@@ -6,33 +6,34 @@
 #ifndef SWIFT_SIMPLUGIN_SIMULATOR_FLIGHTGEAR_H
 #define SWIFT_SIMPLUGIN_SIMULATOR_FLIGHTGEAR_H
 
+#include <QDBusConnection>
+#include <QHash>
+#include <QList>
+#include <QObject>
+#include <QPair>
+#include <QString>
+#include <QStringList>
+#include <QTimer>
+
 #include "flightgearmpaircraft.h"
-#include "plugins/simulator/flightgearconfig/simulatorflightgearconfig.h"
-#include "plugins/simulator/plugincommon/simulatorplugincommon.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/settings/fgswiftbussettings.h"
-#include "misc/simulation/simulatedaircraftlist.h"
+
 #include "misc/aviation/airportlist.h"
 #include "misc/aviation/callsignset.h"
 #include "misc/geo/coordinategeodetic.h"
-#include "misc/pq/time.h"
-#include "misc/pq/units.h"
-#include "misc/settingscache.h"
-#include "misc/statusmessage.h"
 #include "misc/identifier.h"
 #include "misc/pixmap.h"
+#include "misc/pq/time.h"
+#include "misc/pq/units.h"
 #include "misc/sequence.h"
-
-#include <QDBusConnection>
-#include <QList>
-#include <QObject>
-#include <QString>
-#include <QStringList>
-#include <QHash>
-#include <QPair>
-#include <QTimer>
+#include "misc/settingscache.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/settings/fgswiftbussettings.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/statusmessage.h"
+#include "plugins/simulator/flightgearconfig/simulatorflightgearconfig.h"
+#include "plugins/simulator/plugincommon/simulatorplugincommon.h"
 
 class QDBusServiceWatcher;
 
@@ -43,7 +44,7 @@ namespace swift::misc
         class CAircraftParts;
         class CAircraftSituation;
         class CCallsign;
-    }
+    } // namespace aviation
     namespace network
     {
         class CTextMessage;
@@ -54,8 +55,8 @@ namespace swift::misc
         class CSimulatorPluginInfo;
         class IOwnAircraftProvider;
         class IRemoteAircraftProvider;
-    }
-}
+    } // namespace simulation
+} // namespace swift::misc
 
 namespace swift::simplugin::flightgear
 {
@@ -298,6 +299,6 @@ namespace swift::simplugin::flightgear
         //! \copydoc swift::core::ISimulatorFactory::createListener
         virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override { return new CSimulatorFlightgearListener(info); }
     };
-} // ns
+} // namespace swift::simplugin::flightgear
 
 #endif // guard

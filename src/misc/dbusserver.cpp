@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/dbusserver.h"
-#include "misc/logmessage.h"
-#include "misc/network/networkutils.h"
-#include "misc/statusmessage.h"
 
 #include <QDBusServer>
 #include <QMetaClassInfo>
 #include <QMetaObject>
 #include <QStringList>
 #include <QtGlobal>
+
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc::network;
 
@@ -496,4 +497,4 @@ namespace swift::misc
         QString unused;
         return CDBusServer::isDBusAvailable(dbusAddress, unused, timeoutMs);
     }
-} // namespace
+} // namespace swift::misc

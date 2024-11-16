@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/client.h"
-#include "misc/aviation/callsign.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/iconlist.h"
-#include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply
 
 #include <QPixmap>
 #include <QString>
 #include <QStringBuilder>
 #include <QStringList>
+
+#include "misc/aviation/callsign.h"
+#include "misc/iconlist.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CClient)
 
@@ -138,4 +139,4 @@ namespace swift::misc::network
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-} // namespace
+} // namespace swift::misc::network

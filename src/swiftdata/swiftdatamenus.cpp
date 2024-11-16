@@ -1,16 +1,6 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/datainfoareacomponent.h"
-#include "gui/components/datamaininfoareacomponent.h"
-#include "gui/components/dbmappingcomponent.h"
-#include "gui/guiapplication.h"
-#include "misc/icons.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "swiftdata.h"
-#include "ui_swiftdata.h"
-
 #include <QAction>
 #include <QDir>
 #include <QMenu>
@@ -18,6 +8,17 @@
 #include <QScopedPointer>
 #include <QString>
 #include <QtGlobal>
+
+#include "ui_swiftdata.h"
+
+#include "gui/components/datainfoareacomponent.h"
+#include "gui/components/datamaininfoareacomponent.h"
+#include "gui/components/dbmappingcomponent.h"
+#include "gui/guiapplication.h"
+#include "misc/directoryutils.h"
+#include "misc/icons.h"
+#include "misc/swiftdirectories.h"
+#include "swiftdata.h"
 
 using namespace swift::gui;
 using namespace swift::core;

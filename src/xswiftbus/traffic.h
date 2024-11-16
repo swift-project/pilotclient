@@ -6,18 +6,20 @@
 
 //! \file
 
-#include "dbusobject.h"
-#include "settings.h"
-#include "command.h"
-#include "datarefs.h"
-#include "terrainprobe.h"
-#include "drawable.h"
-#include "menus.h"
-#include "XPMPMultiplayer.h"
 #include <XPLM/XPLMCamera.h>
 #include <XPLM/XPLMDisplay.h>
+
 #include <functional>
 #include <utility>
+
+#include "XPMPMultiplayer.h"
+#include "command.h"
+#include "datarefs.h"
+#include "dbusobject.h"
+#include "drawable.h"
+#include "menus.h"
+#include "settings.h"
+#include "terrainprobe.h"
 
 //! \cond PRIVATE
 #define XSWIFTBUS_TRAFFIC_INTERFACENAME "org.swift_project.xswiftbus.traffic"
@@ -270,6 +272,6 @@ namespace XSwiftBus
         void interpolatePosition(Plane *);
         void interpolateGear(Plane *);
     };
-} // ns
+} // namespace XSwiftBus
 
 #endif // guard

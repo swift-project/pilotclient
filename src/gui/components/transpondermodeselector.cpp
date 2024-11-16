@@ -91,4 +91,4 @@ namespace swift::gui::components
         if (!this->isIdentSelected()) return; // avoid unnecessary events
         this->setSelectedTransponderMode(m_resetMode);
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,18 +6,19 @@
 #ifndef SWIFT_MISC_ICONLIST_H
 #define SWIFT_MISC_ICONLIST_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/icon.h"
-#include "misc/icons.h"
-#include "misc/sequence.h"
+#include <tuple>
 
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
 #include <QtGlobal>
-#include <tuple>
+
+#include "misc/collection.h"
+#include "misc/icon.h"
+#include "misc/icons.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CIcon, CIconList)
 
@@ -46,7 +47,7 @@ namespace swift::misc
         //! Register metadata of unit and quantity
         static void registerMetadata();
     };
-}
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIconList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CIcon>)

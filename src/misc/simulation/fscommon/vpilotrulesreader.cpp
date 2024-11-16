@@ -1,12 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/logmessage.h"
-#include "misc/simulation/fscommon/vpilotmodelrule.h"
 #include "misc/simulation/fscommon/vpilotrulesreader.h"
-#include "misc/statusmessage.h"
-#include "misc/worker.h"
-#include "misc/stringutils.h"
 
 #include <QByteArray>
 #include <QDateTime>
@@ -25,6 +20,12 @@
 #include <QTimer>
 #include <QWriteLocker>
 #include <QtGlobal>
+
+#include "misc/logmessage.h"
+#include "misc/simulation/fscommon/vpilotmodelrule.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
+#include "misc/worker.h"
 
 using namespace swift::misc;
 
@@ -270,4 +271,4 @@ namespace swift::misc::simulation::fscommon
         return true;
     }
 
-} // namespace
+} // namespace swift::misc::simulation::fscommon

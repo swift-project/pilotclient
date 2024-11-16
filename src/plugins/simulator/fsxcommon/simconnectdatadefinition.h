@@ -6,14 +6,15 @@
 #ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
 #define SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
 
-#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
-#include "plugins/simulator/fsxcommon/simconnectwindows.h"
+#include <algorithm>
+
+#include <QString>
+#include <QtGlobal>
+
 #include "misc/aviation/aircraftlights.h"
 #include "misc/simulation/simulatorinfo.h"
-
-#include <algorithm>
-#include <QtGlobal>
-#include <QString>
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
+#include "plugins/simulator/fsxcommon/simconnectwindows.h"
 
 namespace swift::misc::aviation
 {
@@ -352,6 +353,6 @@ namespace swift::simplugin::fsxcommon
         //! Initialize data definition for MSFS transponder
         static HRESULT initMSFSTransponder(const HANDLE hSimConnect);
     };
-} // namespace
+} // namespace swift::simplugin::fsxcommon
 
 #endif // guard

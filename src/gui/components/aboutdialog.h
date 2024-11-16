@@ -38,6 +38,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CAboutDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

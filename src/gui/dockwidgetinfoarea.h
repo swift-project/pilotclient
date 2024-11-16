@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_DOCKWIDGETINFOAREA_H
 #define SWIFT_GUI_DOCKWIDGETINFOAREA_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/dockwidget.h"
-
 #include <QList>
 #include <QObject>
+
+#include "gui/dockwidget.h"
+#include "gui/swiftguiexport.h"
 
 class QMenu;
 
@@ -61,6 +61,6 @@ namespace swift::gui
         //! The parent info areas
         QList<const CInfoArea *> findParentInfoAreas() const;
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

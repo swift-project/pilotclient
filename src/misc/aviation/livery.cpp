@@ -1,21 +1,22 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/db/datastoreutility.h"
 #include "misc/aviation/livery.h"
-#include "misc/mixin/mixincompare.h"
+
+#include <QCoreApplication>
+#include <QJsonValue>
+#include <QStringBuilder>
+#include <Qt>
+#include <QtGlobal>
+
 #include "misc/comparefunctions.h"
+#include "misc/db/datastoreutility.h"
 #include "misc/logcategories.h"
+#include "misc/mixin/mixincompare.h"
 #include "misc/propertyindexref.h"
 #include "misc/statusmessage.h"
 #include "misc/stringutils.h"
 #include "misc/verify.h"
-
-#include <QCoreApplication>
-#include <QJsonValue>
-#include <Qt>
-#include <QtGlobal>
-#include <QStringBuilder>
 
 using namespace swift::misc;
 using namespace swift::misc::db;
@@ -501,4 +502,4 @@ namespace swift::misc::aviation
         static const CLivery null;
         return null;
     }
-} // namespace
+} // namespace swift::misc::aviation

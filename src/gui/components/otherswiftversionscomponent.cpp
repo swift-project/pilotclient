@@ -2,12 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "otherswiftversionscomponent.h"
-#include "ui_otherswiftversionscomponent.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "gui/guiapplication.h"
-#include <QUrl>
+
 #include <QDesktopServices>
+#include <QUrl>
+
+#include "ui_otherswiftversionscomponent.h"
+
+#include "gui/guiapplication.h"
+#include "misc/directoryutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::misc;
 using namespace swift::gui::views;
@@ -73,4 +76,4 @@ namespace swift::gui::components
         const CApplicationInfo info(object.value<CApplicationInfo>());
         emit this->versionChanged(info);
     }
-} // ns
+} // namespace swift::gui::components

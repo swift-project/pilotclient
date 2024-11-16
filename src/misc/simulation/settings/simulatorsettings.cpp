@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/fscommon/fsdirectories.h"
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/simulation/flightgear/flightgearutil.h"
-#include "misc/verify.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
+
 #include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/simulation/flightgear/flightgearutil.h"
+#include "misc/simulation/fscommon/fsdirectories.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/xplane/xplaneutil.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc::physical_quantities;
@@ -810,4 +812,4 @@ namespace swift::misc::simulation::settings
         return false;
     }
 
-} // ns
+} // namespace swift::misc::simulation::settings

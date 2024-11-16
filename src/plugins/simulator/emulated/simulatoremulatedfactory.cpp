@@ -2,9 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatoremulatedfactory.h"
-#include "simulatoremulated.h"
-#include "misc/simulation/simulatorplugininfo.h"
+
 #include <QTimer>
+
+#include "simulatoremulated.h"
+
+#include "misc/simulation/simulatorplugininfo.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -24,4 +27,4 @@ namespace swift::simplugin::emulated
     {
         return new CSimulatorEmulatedListener(info);
     }
-} // namespace
+} // namespace swift::simplugin::emulated

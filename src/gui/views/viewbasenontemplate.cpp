@@ -1,6 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include <algorithm>
+
+#include <QAction>
+#include <QApplication>
+#include <QMetaMethod>
+#include <QShortcut>
+
 #include "config/buildconfig.h"
 #include "gui/components/texteditdialog.h"
 #include "gui/dockwidgetinfoarea.h"
@@ -11,16 +18,9 @@
 #include "gui/loadindicator.h"
 #include "gui/menus/fontmenus.h"
 #include "gui/menus/menudelegate.h"
-#include "gui/views/viewbase.h"
 #include "gui/shortcut.h"
+#include "gui/views/viewbase.h"
 #include "misc/logmessage.h"
-
-#include <QApplication>
-#include <QAction>
-#include <QMetaMethod>
-#include <QShortcut>
-
-#include <algorithm>
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -962,4 +962,4 @@ namespace swift::gui::views
         const int presizeRandomElements = containerSize > 1000 ? containerSize / 100 : containerSize / 40;
         return presizeRandomElements;
     }
-} // namespace
+} // namespace swift::gui::views

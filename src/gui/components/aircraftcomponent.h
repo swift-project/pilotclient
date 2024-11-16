@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_AIRCRAFTCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_AIRCRAFTCOMPONENT_H
 
-#include "gui/settings/viewupdatesettings.h"
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/swiftguiexport.h"
-#include "misc/network/connectionstatus.h"
-
 #include <QObject>
 #include <QScopedPointer>
 #include <QTabWidget>
-#include <QtGlobal>
 #include <QTimer>
+#include <QtGlobal>
+
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/settings/viewupdatesettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/connectionstatus.h"
 
 namespace Ui
 {
@@ -31,7 +31,7 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
     }
-}
+} // namespace swift::misc
 namespace swift::gui
 {
     class CDockWidgetInfoArea;
@@ -103,7 +103,7 @@ namespace swift::gui
             QTimer m_updateTimer;
             int m_updateCounter = 0;
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

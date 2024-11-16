@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_AIRCRAFTSITUATIONCHANGELISTMODEL_H
 #define SWIFT_GUI_MODELS_AIRCRAFTSITUATIONCHANGELISTMODEL_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/listmodeltimestampobjects.h"
-#include "misc/aviation/aircraftsituationchangelist.h"
 #include <QVariant>
+
+#include "gui/models/listmodeltimestampobjects.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/aircraftsituationchangelist.h"
 
 class QModelIndex;
 class QObject;
@@ -28,6 +29,6 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CAircraftSituationChangeListModel() {}
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

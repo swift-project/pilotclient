@@ -12,6 +12,6 @@ namespace swift::misc::geo
 {
     //! Register metadata for geo
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc::geo
 
 #endif // guard

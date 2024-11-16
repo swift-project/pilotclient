@@ -5,14 +5,15 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/mixin/mixincompare.h"
-#include "misc/identifier.h"
-#include "misc/identifiable.h"
-#include "test.h"
-
 #include <QObject>
 #include <QString>
 #include <QTest>
+
+#include "test.h"
+
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
+#include "misc/mixin/mixincompare.h"
 
 using namespace swift::misc;
 
@@ -77,7 +78,7 @@ namespace MiscTest
     CTestIdentifiable::CTestIdentifiable(QObject *nameObject) : CIdentifiable(nameObject)
     {}
 
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestIdentifier);

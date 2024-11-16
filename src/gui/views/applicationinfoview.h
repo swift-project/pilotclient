@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_VIEWS_APPLICATIONINFOVIEW_H
 #define SWIFT_GUI_VIEWS_APPLICATIONINFOVIEW_H
 
-#include "gui/views/viewbase.h"
-#include "gui/models/applicationinfolistmodel.h"
-#include "gui/menus/menudelegate.h"
-#include "gui/swiftguiexport.h"
-
 #include <QAction>
+
+#include "gui/menus/menudelegate.h"
+#include "gui/models/applicationinfolistmodel.h"
+#include "gui/swiftguiexport.h"
+#include "gui/views/viewbase.h"
 
 namespace swift::gui::views
 {
@@ -53,5 +53,5 @@ namespace swift::gui::views
 
         QAction *m_menuActionDeleteDirectory = nullptr; //!< action to delete menu
     };
-} // ns
+} // namespace swift::gui::views
 #endif // guard

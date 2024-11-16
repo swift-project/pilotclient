@@ -30,6 +30,6 @@ namespace swift::gui
         QListView *m_view = nullptr;
         int m_popupWidth = -1;
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbreducemodelduplicates.h"
-#include "ui_dbreducemodelduplicates.h"
-
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "core/webdataservices.h"
-#include "misc/statusmessage.h"
 
 #include <QCompleter>
 #include <QPushButton>
+
+#include "ui_dbreducemodelduplicates.h"
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -162,4 +163,4 @@ namespace swift::gui::components
         ui->pb_Progress->setFormat("%v/%m");
     }
 
-} // ns
+} // namespace swift::gui::components

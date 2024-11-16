@@ -6,8 +6,9 @@
 #ifndef SAMPLES_AFVCLIENTBRIDGE_H
 #define SAMPLES_AFVCLIENTBRIDGE_H
 
-#include "core/afv/clients/afvclient.h"
 #include <QObject>
+
+#include "core/afv/clients/afvclient.h"
 
 //! Bridge, running in main thread -> voice client in own thread
 class CAfvClientBridge : public QObject

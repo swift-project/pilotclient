@@ -12,4 +12,4 @@ namespace swift::gui::views
     {
         this->standardInit(new CServerListModel(this));
     }
-} // namespace
+} // namespace swift::gui::views

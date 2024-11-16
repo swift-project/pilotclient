@@ -1,26 +1,27 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/data/globalsetup.h"
 #include "core/db/databasewriter.h"
-#include "core/db/databaseutils.h"
-#include "core/application.h"
-#include "misc/simulation/autopublishdata.h"
-#include "misc/network/networkutils.h"
-#include "misc/db/datastoreutility.h"
-#include "misc/logcategories.h"
-#include "misc/statusmessage.h"
 
-#include <QStringBuilder>
+#include <QByteArray>
 #include <QHttpMultiPart>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QScopedPointer>
 #include <QScopedPointerDeleteLater>
 #include <QString>
+#include <QStringBuilder>
 #include <QUrl>
-#include <QByteArray>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "core/data/globalsetup.h"
+#include "core/db/databaseutils.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/logcategories.h"
+#include "misc/network/networkutils.h"
+#include "misc/simulation/autopublishdata.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::db;
@@ -344,4 +345,4 @@ namespace swift::core::db
 
         return hasData;
     }
-} // ns
+} // namespace swift::core::db

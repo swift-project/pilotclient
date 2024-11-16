@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_MODELS_ACTIONMODEL_H
 #define SWIFT_GUI_MODELS_ACTIONMODEL_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QAbstractItemModel>
 #include <QModelIndex>
 #include <QObject>
 #include <QScopedPointer>
 #include <QVariant>
 #include <Qt>
+
+#include "gui/swiftguiexport.h"
 
 namespace swift::gui::models
 {
@@ -64,6 +64,6 @@ namespace swift::gui::models
 
         QScopedPointer<CActionItem> m_rootItem;
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

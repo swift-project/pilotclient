@@ -6,11 +6,12 @@
 #ifndef SWIFT_GUI_COMPONENTS_CONFIGSIMULATORCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_CONFIGSIMULATORCOMPONENT_H
 
-#include "misc/simulation/data/modelcaches.h"
-#include "core/application/applicationsettings.h"
-#include <QWizardPage>
 #include <QFrame>
 #include <QScopedPointer>
+#include <QWizardPage>
+
+#include "core/application/applicationsettings.h"
+#include "misc/simulation/data/modelcaches.h"
 
 namespace Ui
 {
@@ -76,5 +77,5 @@ namespace swift::gui::components
     private:
         CConfigSimulatorComponent *m_config = nullptr;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

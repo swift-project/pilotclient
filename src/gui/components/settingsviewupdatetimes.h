@@ -6,8 +6,9 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSVIEWUPDATETIMES_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSVIEWUPDATETIMES_H
 
-#include "gui/settings/viewupdatesettings.h"
 #include <QFrame>
+
+#include "gui/settings/viewupdatesettings.h"
 
 namespace Ui
 {
@@ -43,6 +44,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CSettingsViewUpdateTimes> ui;
         swift::misc::CSetting<swift::gui::settings::TViewUpdateSettings> m_settings { this, &CSettingsViewUpdateTimes::ps_settingsChanged }; //!< settings changed
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

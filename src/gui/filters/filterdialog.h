@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_FILTERS_FILTERDIALOG_H
 #define SWIFT_GUI_FILTERS_FILTERDIALOG_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QDialog>
 #include <QObject>
+
+#include "gui/swiftguiexport.h"
 
 class QWidget;
 
@@ -32,6 +32,6 @@ namespace swift::gui::filters
         void onStyleSheetChanged();
     };
 
-} // namespace
+} // namespace swift::gui::filters
 
 #endif // guard

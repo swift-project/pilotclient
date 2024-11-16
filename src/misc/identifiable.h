@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_IDENTIFIABLE_H
 #define SWIFT_MISC_IDENTIFIABLE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/identifier.h"
-
 #include <QMetaObject>
 #include <QObject>
 #include <QString>
+
+#include "misc/identifier.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -54,6 +54,6 @@ namespace swift::misc
         CIdentifier m_identifier;
         QMetaObject::Connection m_connection;
     };
-} // namespace
+} // namespace swift::misc
 
 #endif // guard

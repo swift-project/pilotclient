@@ -4,14 +4,14 @@
 #ifndef SWIFT_GUI_MENUS_MENUACTION_H
 #define SWIFT_GUI_MENUS_MENUACTION_H
 
-#include "misc/slot.h"
-
 #include <QIcon>
 #include <QKeySequence>
 #include <QList>
 #include <QMap>
 #include <QMultiMap>
 #include <QString>
+
+#include "misc/slot.h"
 
 class QAction;
 class QMenu;
@@ -547,6 +547,6 @@ namespace swift::gui::menus
         //! Find key in top level menus
         static QMenu *findUpwardsInMenus(const QString &key, const QMap<QString, QMenu *> &menus);
     };
-} // ns
+} // namespace swift::gui::menus
 
 #endif // guard

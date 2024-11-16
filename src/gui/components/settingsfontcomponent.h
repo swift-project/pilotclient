@@ -81,6 +81,6 @@ namespace swift::gui::components
         void initValues();
         void initUiValues(const QFont &font, const QColor &color);
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

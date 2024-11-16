@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_EDITORS_LIVERYFORM_H
 #define SWIFT_GUI_EDITORS_LIVERYFORM_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/editors/form.h"
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/components/dbliverycolorsearchdialog.h"
+#include "gui/editors/form.h"
+#include "gui/swiftguiexport.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/livery.h"
 #include "misc/statusmessagelist.h"
 #include "misc/variant.h"
-
-#include <QObject>
-#include <QScopedPointer>
 
 class QWidget;
 
@@ -94,6 +94,6 @@ namespace swift::gui::editors
         swift::misc::aviation::CLivery m_originalLivery; //!< object allowing to override values
         swift::gui::components::CDbLiveryColorSearchDialog *m_colorSearch = nullptr; //!< search for color
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

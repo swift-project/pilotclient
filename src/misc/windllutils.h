@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_WINDLLUTILS_H
 #define SWIFT_MISC_WINDLLUTILS_H
 
-#include "misc/swiftmiscexport.h"
-#include <QString>
 #include <QList>
+#include <QString>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -63,5 +64,5 @@ namespace swift::misc
         //! Process modules per id
         static QList<ProcessModule> getModules(qint64 processId = -1, const QString &nameFilter = {});
     };
-} // ns
+} // namespace swift::misc
 #endif // guard

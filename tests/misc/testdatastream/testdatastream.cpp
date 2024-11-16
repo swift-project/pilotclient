@@ -8,13 +8,15 @@
  * \ingroup testmisc
  */
 
+#include <QByteArray>
+#include <QTest>
+
+#include "test.h"
+
 #include "misc/registermetadata.h"
 #include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/test/testservice.h"
 #include "misc/test/testserviceinterface.h"
-#include "test.h"
-#include <QTest>
-#include <QByteArray>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -61,7 +63,7 @@ namespace MiscTest
             QVERIFY2(result == testData, "roundtrip marshal/unmarshal compares equal");
         }
     }
-}
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestDataStream);

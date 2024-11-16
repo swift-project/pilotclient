@@ -4,6 +4,7 @@
 //! \file
 
 #include "volumesampleprovider.h"
+
 #include "misc/metadatautils.h"
 
 using namespace swift::misc;
@@ -37,4 +38,4 @@ namespace swift::sound::sample_provider
         if (changed) { m_gainRatio = volume; }
         return changed;
     }
-} // ns
+} // namespace swift::sound::sample_provider

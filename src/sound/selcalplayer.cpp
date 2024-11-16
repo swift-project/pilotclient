@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "selcalplayer.h"
+
 #include <QTimer>
 
 using namespace swift::misc;
@@ -46,4 +47,4 @@ namespace swift::sound
         }
         return duration;
     }
-}
+} // namespace swift::sound

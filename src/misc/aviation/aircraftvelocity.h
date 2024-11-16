@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTVELOCITY_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTVELOCITY_H
 
-#include "misc/pq/speed.h"
-#include "misc/pq/angle.h"
-#include "misc/pq/time.h"
-#include "misc/valueobject.h"
-#include "misc/propertyindexref.h"
 #include "misc/metaclass.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/time.h"
+#include "misc/propertyindexref.h"
 #include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftVelocity)
 
@@ -93,7 +93,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(roll),
             SWIFT_METAMEMBER(heading));
     };
-}
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftVelocity)
 

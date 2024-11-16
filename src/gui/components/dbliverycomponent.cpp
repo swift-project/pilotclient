@@ -1,15 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/webdataservices.h"
 #include "gui/components/dbliverycomponent.h"
+
+#include <QStringBuilder>
+#include <QtGlobal>
+
+#include "ui_dbliverycomponent.h"
+
+#include "core/webdataservices.h"
 #include "gui/filters/liveryfilterbar.h"
 #include "gui/guiapplication.h"
 #include "gui/views/liveryview.h"
-#include "ui_dbliverycomponent.h"
-
-#include <QtGlobal>
-#include <QStringBuilder>
 
 using namespace swift::core;
 using namespace swift::gui::views;
@@ -82,4 +84,4 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::LiveryEntity);
     }
-} // ns
+} // namespace swift::gui::components

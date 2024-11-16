@@ -12,4 +12,4 @@ namespace swift::gui::views
         this->standardInit(new CCountryListModel(this));
         this->setMenu(MenuDefaultDbViews);
     }
-} // ns
+} // namespace swift::gui::views

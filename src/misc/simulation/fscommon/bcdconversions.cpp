@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "misc/simulation/fscommon/bcdconversions.h"
+
 #include "misc/aviation/transponder.h"
 #include "misc/pq/units.h"
-#include "misc/simulation/fscommon/bcdconversions.h"
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::aviation;
@@ -37,4 +38,4 @@ namespace swift::misc::simulation::fscommon
         }
         return result;
     }
-} // namespacee
+} // namespace swift::misc::simulation::fscommon

@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/columns.h"
-#include "gui/guiapplication.h"
-#include "misc/mixin/mixincompare.h"
 
 #include <QByteArray>
 #include <QCoreApplication>
 #include <QModelIndex>
+
+#include "gui/guiapplication.h"
+#include "misc/mixin/mixincompare.h"
 
 using namespace swift::misc;
 
@@ -277,4 +278,4 @@ namespace swift::gui::models
         const CColumn c = m_columns.at(index.column());
         return c.getFormatter();
     }
-} // namespace
+} // namespace swift::gui::models

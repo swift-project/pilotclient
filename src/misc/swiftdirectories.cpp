@@ -4,17 +4,19 @@
 //! \cond PRIVATE
 
 #include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/fileutils.h"
-#include "misc/stringutils.h"
-#include "misc/range.h"
-#include "config/buildconfig.h"
+
 #include <QCoreApplication>
 #include <QDir>
-#include <QUrl>
-#include <QSet>
 #include <QRegularExpression>
+#include <QSet>
 #include <QStandardPaths>
+#include <QUrl>
+
+#include "config/buildconfig.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/range.h"
+#include "misc/stringutils.h"
 
 using namespace swift::config;
 
@@ -409,6 +411,6 @@ namespace swift::misc
         return (fi.exists()) ? fi.absoluteFilePath() : QString();
     }
 
-} // ns
+} // namespace swift::misc
 
 //! \endcond

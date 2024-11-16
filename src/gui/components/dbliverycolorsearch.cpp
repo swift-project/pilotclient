@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/dbliverycolorsearch.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "misc/aviation/liverylist.h"
+
 #include "ui_dbliverycolorsearch.h"
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "misc/aviation/liverylist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -38,4 +40,4 @@ namespace swift::gui::components
             ui->comp_TailSelector->setColor(livery.getColorTail());
         }
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_AUDIOADVANCEDDISTRIBUTEDCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_AUDIOADVANCEDDISTRIBUTEDCOMPONENT_H
 
-#include "misc/audio/audiodeviceinfo.h"
-
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/audio/audiodeviceinfo.h"
 
 namespace Ui
 {
@@ -38,6 +38,6 @@ namespace swift::gui::components
         //! Contexts
         static bool hasContexts();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

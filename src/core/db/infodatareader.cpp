@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/db/infodatareader.h"
-#include "core/application.h"
-#include "core/webdataservices.h"
-#include "misc/sequence.h"
-#include "misc/logmessage.h"
-#include "misc/network/networkutils.h"
-#include "misc/verify.h"
 
-#include <QTimer>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTimer>
+
+#include "core/application.h"
+#include "core/webdataservices.h"
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/sequence.h"
+#include "misc/verify.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -244,4 +245,4 @@ namespace swift::core::db
     {
         return this->getEntityForMode();
     }
-} // namespace
+} // namespace swift::core::db

@@ -6,11 +6,11 @@
 #ifndef SWIFT_MISC_AVIATION_PERCALLSIGN_H
 #define SWIFT_MISC_AVIATION_PERCALLSIGN_H
 
+#include <QHash>
+
 #include "misc/aviation/callsign.h"
 #include "misc/pq/length.h"
 #include "misc/statusmessagelist.h"
-
-#include <QHash>
 
 namespace swift::misc::aviation
 {
@@ -26,6 +26,6 @@ namespace swift::misc::aviation
     //! Lenght per callsign
     using CLengthPerCallsign = QHash<CCallsign, physical_quantities::CLength>;
 
-} // namespace
+} // namespace swift::misc::aviation
 
 #endif // guard

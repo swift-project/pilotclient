@@ -5,15 +5,16 @@
 //! \ingroup samplemiscsim
 
 #include "samplesvpilotrules.h"
-#include "misc/registermetadata.h"
-#include "misc/simulation/fscommon/vpilotmodelruleset.h"
-#include "misc/simulation/fscommon/vpilotrulesreader.h"
-#include "misc/stringutils.h"
 
 #include <QScopedPointer>
 #include <QStringList>
 #include <QTextStream>
 #include <QtGlobal>
+
+#include "misc/registermetadata.h"
+#include "misc/simulation/fscommon/vpilotmodelruleset.h"
+#include "misc/simulation/fscommon/vpilotrulesreader.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -37,4 +38,4 @@ namespace swift::sample
         Q_UNUSED(streamIn);
     }
 
-} // namespace
+} // namespace swift::sample

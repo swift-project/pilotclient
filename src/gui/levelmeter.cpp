@@ -5,6 +5,7 @@
 #include "gui/levelmeter.h"
 
 #include <math.h>
+
 #include <QPainter>
 #include <QRect>
 #include <QSizePolicy>
@@ -87,4 +88,4 @@ namespace swift::gui
         }
     }
 
-} // namespace
+} // namespace swift::gui

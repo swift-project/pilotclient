@@ -5,11 +5,13 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/simulation/interpolation/interpolatorspline.h"
-#include "misc/simulation/remoteaircraftproviderdummy.h"
-#include "test.h"
 #include <QTest>
 #include <QtDebug>
+
+#include "test.h"
+
+#include "misc/simulation/interpolation/interpolatorspline.h"
+#include "misc/simulation/remoteaircraftproviderdummy.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -183,7 +185,7 @@ namespace MiscTest
         s.setTimeOffsetMs(offset);
         return s;
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestInterpolatorParts);

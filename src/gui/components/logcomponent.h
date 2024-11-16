@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_LOGCOMPONENT_H
 #define SWIFT_GUI_LOGCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/loghistory.h"
-#include "misc/statusmessagelist.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QPlainTextEdit>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/swiftguiexport.h"
+#include "misc/loghistory.h"
+#include "misc/statusmessagelist.h"
 
 class QAction;
 class QPoint;
@@ -93,5 +93,5 @@ namespace swift::gui::components
         QScopedPointer<Ui::CLogComponent> ui;
         swift::misc::CLogHistoryReplica m_history;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

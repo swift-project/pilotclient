@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_SWIFTDIRECTORIES_H
 #define SWIFT_MISC_SWIFTDIRECTORIES_H
 
-#include "misc/swiftmiscexport.h"
-#include <QMap>
-#include <QSet>
-#include <QString>
 #include <QDateTime>
 #include <QDir>
 #include <QFileInfoList>
+#include <QMap>
+#include <QSet>
+#include <QString>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -142,6 +143,6 @@ namespace swift::misc
         //! \warning The normalization rules are implementation specific and could change over time.
         static const QString &normalizedApplicationDirectory();
     };
-} // ns
+} // namespace swift::misc
 
 #endif // guard

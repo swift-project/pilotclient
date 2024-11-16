@@ -1,16 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "gui/components/dbcountrycomponent.h"
+
+#include <QtGlobal>
+
+#include "ui_dbcountrycomponent.h"
+
 #include "core/application.h"
 #include "core/webdataservices.h"
-#include "gui/components/dbcountrycomponent.h"
 #include "gui/filters/countryfilterbar.h"
 #include "gui/guiapplication.h"
 #include "gui/views/countryview.h"
 #include "gui/views/viewbase.h"
-#include "ui_dbcountrycomponent.h"
-
-#include <QtGlobal>
 
 using namespace swift::core;
 using namespace swift::misc::network;
@@ -54,4 +56,4 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
         sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::CountryEntity);
     }
-} // ns
+} // namespace swift::gui::components

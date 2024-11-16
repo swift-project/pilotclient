@@ -6,25 +6,10 @@
 #ifndef SWIFT_MISC_SIMULATION_AIRCRAFTMODEL_H
 #define SWIFT_MISC_SIMULATION_AIRCRAFTMODEL_H
 
-#include "misc/simulation/distributorlist.h"
-#include "misc/simulation/distributor.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/aviation/callsign.h"
-#include "misc/aviation/livery.h"
-#include "misc/pq/length.h"
-#include "misc/db/datastore.h"
-#include "misc/statusmessagelist.h"
-#include "misc/valueobject.h"
-#include "misc/dictionary.h"
-#include "misc/memotable.h"
-#include "misc/metaclass.h"
-#include "misc/orderable.h"
-#include "misc/pixmap.h"
-#include "misc/propertyindexref.h"
-#include "misc/swiftmiscexport.h"
+#include <tuple>
 
+#include <QDir>
+#include <QFileInfo>
 #include <QFlags>
 #include <QHash>
 #include <QJsonDocument>
@@ -32,9 +17,25 @@
 #include <QMetaType>
 #include <QStringList>
 #include <Qt>
-#include <QFileInfo>
-#include <QDir>
-#include <tuple>
+
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/livery.h"
+#include "misc/db/datastore.h"
+#include "misc/dictionary.h"
+#include "misc/memotable.h"
+#include "misc/metaclass.h"
+#include "misc/orderable.h"
+#include "misc/pixmap.h"
+#include "misc/pq/length.h"
+#include "misc/propertyindexref.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CAircraftModel)
 
@@ -592,8 +593,8 @@ namespace swift::misc
                 SWIFT_METAMEMBER(modelType),
                 SWIFT_METAMEMBER(modelMode));
         };
-    } // namespace
-} // namespace
+    } // namespace simulation
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftModel)
 Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftModel::ModelType)

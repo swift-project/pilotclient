@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "networkdetailscomponent.h"
-#include "ui_networkdetailscomponent.h"
-#include "gui/uppercasevalidator.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextnetwork.h"
-#include "core/webdataservices.h"
 
 #include <QToolButton>
+
+#include "ui_networkdetailscomponent.h"
+
+#include "core/context/contextnetwork.h"
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
 
 using namespace swift::misc::network;
 using namespace swift::misc::audio;
@@ -150,4 +152,4 @@ namespace swift::gui::components
         ui->comp_OtherServers->setServers(otherServers);
     }
 
-} // ns
+} // namespace swift::gui::components

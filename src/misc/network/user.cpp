@@ -2,20 +2,21 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/user.h"
-#include "misc/aviation/airporticaocode.h"
-#include "misc/comparefunctions.h"
-#include "misc/obfuscation.h"
-#include "misc/propertyindexref.h"
-#include "misc/statusmessage.h"
-#include "misc/stringutils.h"
-#include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply
 
 #include <QChar>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>
-#include <QStringBuilder>
+
+#include "misc/aviation/airporticaocode.h"
+#include "misc/comparefunctions.h"
+#include "misc/obfuscation.h"
+#include "misc/propertyindexref.h"
+#include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc::aviation;
 
@@ -320,4 +321,4 @@ namespace swift::misc::network
     {
         m_id = CObfuscation::decode(id);
     }
-} // namespace
+} // namespace swift::misc::network

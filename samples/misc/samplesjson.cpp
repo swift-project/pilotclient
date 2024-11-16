@@ -5,6 +5,16 @@
 //! \ingroup samplemisc
 
 #include "samplesjson.h"
+
+#include <stdio.h>
+
+#include <QDateTime>
+#include <QDebug>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QTextStream>
+#include <QtDebug>
+
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/airlineicaocode.h"
@@ -23,16 +33,8 @@
 #include "misc/pq/speed.h"
 #include "misc/pq/units.h"
 #include "misc/simulation/simulatedaircraft.h"
-#include "misc/test/testdata.h"
 #include "misc/stringutils.h"
-
-#include <stdio.h>
-#include <QDateTime>
-#include <QDebug>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QTextStream>
-#include <QtDebug>
+#include "misc/test/testdata.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -106,4 +108,4 @@ namespace swift::sample
 
         return 0;
     }
-} // namespace
+} // namespace swift::sample

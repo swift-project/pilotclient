@@ -6,11 +6,8 @@
 #ifndef SWIFT_MISC_JSON_H
 #define SWIFT_MISC_JSON_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/fileutils.h"
-#include "misc/inheritancetraits.h"
-#include "misc/metaclass.h"
-#include "misc/jsonexception.h"
+#include <type_traits>
+#include <utility>
 
 #include <QByteArray>
 #include <QJsonArray>
@@ -20,8 +17,12 @@
 #include <QJsonValueRef>
 #include <QStringList>
 #include <QtGlobal>
-#include <type_traits>
-#include <utility>
+
+#include "misc/fileutils.h"
+#include "misc/inheritancetraits.h"
+#include "misc/jsonexception.h"
+#include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
 
 class QDateTime;
 class QPixmap;
@@ -67,15 +68,13 @@ SWIFT_MISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, QByteArray &value
 //! \remarks needs to be in global namespace
 //! \ingroup JSON
 template <class ENUM>
-std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject>
-    &operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value)
+std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject> &operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
 }
 template <class ENUM>
-std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject>
-    &operator<<(QJsonObject &json, std::pair<swift::misc::CExplicitLatin1String, const ENUM &> value)
+std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject> &operator<<(QJsonObject &json, std::pair<swift::misc::CExplicitLatin1String, const ENUM &> value)
 {
     json[value.first] = QJsonValue(static_cast<int>(value.second));
     return json;
@@ -315,6 +314,6 @@ namespace swift::misc::json
         if (jsonString.isEmpty()) { return false; }
         return CFileUtils::writeStringToFile(jsonString, fileNameAndPath);
     }
-}
+} // namespace swift::misc::json
 
 #endif // guard

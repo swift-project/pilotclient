@@ -2,24 +2,26 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "installxswiftbuscomponent.h"
-#include "ui_installxswiftbuscomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/overlaymessagesframe.h"
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/compressutils.h"
-#include "misc/logmessage.h"
-#include "misc/directoryutils.h"
-#include "misc/fileutils.h"
-#include "config/buildconfig.h"
 
-#include <QMessageBox>
-#include <QFileDialog>
+#include <QDesktopServices>
 #include <QDir>
+#include <QFileDialog>
 #include <QFileInfo>
+#include <QMessageBox>
+#include <QPointer>
 #include <QStandardPaths>
 #include <QTimer>
-#include <QPointer>
-#include <QDesktopServices>
+
+#include "ui_installxswiftbuscomponent.h"
+
+#include "config/buildconfig.h"
+#include "gui/guiapplication.h"
+#include "gui/overlaymessagesframe.h"
+#include "misc/compressutils.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/xplane/xplaneutil.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -365,4 +367,4 @@ namespace swift::gui::components
     {
         return true;
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBAUTOSTASHINGCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBAUTOSTASHINGCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/components/dbmappingcomponentaware.h"
-#include "core/progress.h"
-#include "misc/network/entityflags.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/statusmessage.h"
-
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "core/progress.h"
+#include "gui/components/dbmappingcomponentaware.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/statusmessage.h"
 
 namespace swift::misc
 {
@@ -24,7 +24,7 @@ namespace swift::misc
     {
         class CAircraftModel;
     }
-}
+} // namespace swift::misc
 namespace Ui
 {
     class CDbAutoStashingComponent;
@@ -123,7 +123,7 @@ namespace swift::gui
             State m_state = Idle; //!< modus
             swift::misc::simulation::CAircraftModelList m_modelsToStash; //!< Models about to be stashed
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

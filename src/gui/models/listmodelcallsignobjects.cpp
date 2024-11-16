@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "listmodelcallsignobjects.h"
-#include "gui/models/allmodelcontainers.h"
-#include "misc/orderable.h"
+
+#include <type_traits>
 
 #include <QBrush>
 #include <QModelIndex>
-#include <type_traits>
+
+#include "gui/models/allmodelcontainers.h"
+#include "misc/orderable.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -46,4 +48,4 @@ namespace swift::gui::models
     template class CListModelCallsignObjects<swift::misc::aviation::CAtcStationList, true>;
     template class CListModelCallsignObjects<swift::misc::simulation::CSimulatedAircraftList, true>;
     template class CListModelCallsignObjects<swift::misc::simulation::CInterpolationSetupList, false>;
-} // namespace
+} // namespace swift::gui::models

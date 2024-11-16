@@ -6,10 +6,11 @@
 #ifndef SWIFT_MISC_METADATAUTILS_H
 #define SWIFT_MISC_METADATAUTILS_H
 
-#include "misc/swiftmiscexport.h"
+#include <stddef.h>
 
 #include <QString>
-#include <stddef.h>
+
+#include "misc/swiftmiscexport.h"
 
 class QMetaType;
 class QTextStream;
@@ -37,6 +38,6 @@ namespace swift::misc
     //! Class name as from QMetaObject::className without namespace
     SWIFT_MISC_EXPORT QString classNameShort(const QObject *object);
 
-} // ns
+} // namespace swift::misc
 
 #endif // guard

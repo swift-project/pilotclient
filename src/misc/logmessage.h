@@ -6,14 +6,16 @@
 
 //! \file
 
-#include "misc/swiftmiscexport.h"
-#include "misc/statusmessagelist.h"
-#include "misc/statusmessage.h"
-#include "misc/integersequence.h"
-#include <QDebug>
-#include <QLoggingCategory>
-#include <QList>
 #include <type_traits>
+
+#include <QDebug>
+#include <QList>
+#include <QLoggingCategory>
+
+#include "misc/integersequence.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -56,7 +58,7 @@ namespace swift::misc
         QByteArray qtCategory() const;
         QDebug ostream(const QByteArray &category) const;
     };
-}
+} // namespace swift::misc
 
 /*!
  * Convenience macro to construct a CLogMessage with the filename, line number, and function name,

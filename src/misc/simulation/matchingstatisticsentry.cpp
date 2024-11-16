@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/matchingstatisticsentry.h"
+
 #include "misc/comparefunctions.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CMatchingStatisticsEntry)
@@ -159,4 +160,4 @@ namespace swift::misc::simulation
         static const QString s("%1 Session: '%2' model set: '%3' aircraft: '%4' airline: '%5' description: '%6'");
         return s.arg(entryTypeToString(getEntryType()), m_sessionId, m_modelSetId, m_aircraftDesignator, m_airlineDesignator, m_description);
     }
-} // namespace
+} // namespace swift::misc::simulation

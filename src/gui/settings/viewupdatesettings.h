@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_SETTINGS_VIEWUPDATESETTINGS_H
 #define SWIFT_GUI_SETTINGS_VIEWUPDATESETTINGS_H
 
+#include <QMap>
+#include <QMetaType>
+#include <QString>
+
 #include "gui/swiftguiexport.h"
-#include "misc/settingscache.h"
 #include "misc/pq/time.h"
 #include "misc/propertyindex.h"
+#include "misc/settingscache.h"
 #include "misc/variant.h"
-
-#include <QMap>
-#include <QString>
-#include <QMetaType>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CViewUpdateSettings)
 
@@ -106,7 +106,7 @@ namespace swift::gui::settings
         //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const CViewUpdateSettings &settings, QString &) { return settings.isValid(); }
     };
-} // ns
+} // namespace swift::gui::settings
 
 Q_DECLARE_METATYPE(swift::gui::settings::CViewUpdateSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::gui::settings::CViewUpdateSettings>)

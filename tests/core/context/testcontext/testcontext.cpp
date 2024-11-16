@@ -5,16 +5,18 @@
 //! \file
 //! \ingroup testswiftcore
 
+#include <QTest>
+
+#include "test.h"
+
+#include "core/application.h"
 #include "core/context/contextapplicationproxy.h"
 #include "core/context/contextaudioproxy.h"
 #include "core/context/contextnetworkproxy.h"
 #include "core/context/contextownaircraftproxy.h"
 #include "core/context/contextsimulatorproxy.h"
-#include "core/application.h"
-#include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/dbusutils.h"
-#include "test.h"
-#include <QTest>
+#include "misc/simulation/simulatedaircraftlist.h"
 
 #ifdef Q_OS_WIN
 #    include "comdef.h"
@@ -80,7 +82,7 @@ namespace SwiftCoreTest
         s = CDBusUtils::dBusSignatureSize(aircraftList);
         QVERIFY2(s < MaxSize, "CSimulatedAircraftList");
     }
-} // ns
+} // namespace SwiftCoreTest
 
 //! main
 int main(int argc, char *argv[])

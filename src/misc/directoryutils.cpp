@@ -4,17 +4,19 @@
 //! \cond PRIVATE
 
 #include "misc/directoryutils.h"
+
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QDir>
+#include <QRegularExpression>
+#include <QSet>
+#include <QUrl>
+
+#include "config/buildconfig.h"
 #include "misc/fileutils.h"
-#include "misc/stringutils.h"
 #include "misc/network/ping.h"
 #include "misc/setbuilder.h"
-#include "config/buildconfig.h"
-#include <QCoreApplication>
-#include <QDir>
-#include <QUrl>
-#include <QSet>
-#include <QDateTime>
-#include <QRegularExpression>
+#include "misc/stringutils.h"
 
 using namespace swift::config;
 using namespace swift::misc::network;
@@ -325,6 +327,6 @@ namespace swift::misc
         sameNameInSource += otherComparison.sameNameInSource;
         sameNameInTarget += otherComparison.sameNameInTarget;
     }
-} // ns
+} // namespace swift::misc
 
 //! \endcond

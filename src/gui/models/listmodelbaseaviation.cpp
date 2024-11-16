@@ -16,4 +16,4 @@ namespace swift::gui::models
     template class CListModelBase<swift::misc::aviation::CAircraftPartsList, true>;
     template class CListModelBase<swift::misc::aviation::CAircraftSituationList, true>;
     template class CListModelBase<swift::misc::aviation::CAircraftSituationChangeList, true>;
-} // namespace
+} // namespace swift::gui::models

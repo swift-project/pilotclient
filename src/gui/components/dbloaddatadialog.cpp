@@ -2,17 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/dbloaddatadialog.h"
-#include "ui_dbloaddatadialog.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "core/db/databaseutils.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/logmessage.h"
 
 #include <QDialogButtonBox>
 #include <QModelIndexList>
 #include <QPointer>
 #include <QStringBuilder>
+
+#include "ui_dbloaddatadialog.h"
+
+#include "core/db/databaseutils.h"
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/aircraftmodellist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -209,4 +211,4 @@ namespace swift::gui::components
             }
         });
     }
-} // ns
+} // namespace swift::gui::components

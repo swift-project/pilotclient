@@ -6,15 +6,15 @@
 #ifndef SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 #define SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDMONITORDIALOG_H
 
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/network/textmessage.h"
-#include "misc/statusmessagelist.h"
-#include "misc/logcategories.h"
-#include "misc/identifiable.h"
-
 #include <QDialog>
 #include <QScopedPointer>
 #include <QTimer>
+
+#include "misc/identifiable.h"
+#include "misc/logcategories.h"
+#include "misc/network/textmessage.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/statusmessagelist.h"
 
 namespace Ui
 {
@@ -117,6 +117,6 @@ namespace swift::simplugin::emulated
         CSimulatorEmulated *m_simulator = nullptr;
         QTimer m_uiUpdateTimer;
     };
-} // ns
+} // namespace swift::simplugin::emulated
 
 #endif // guard

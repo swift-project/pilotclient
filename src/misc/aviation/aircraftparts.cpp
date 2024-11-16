@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircraftparts.h"
+
+#include <QtGlobal>
+
+#include "QStringBuilder"
+
 #include "misc/aviation/aircraftlights.h"
 #include "misc/comparefunctions.h"
 #include "misc/propertyindex.h"
 #include "misc/stringutils.h"
-
-#include "QStringBuilder"
-#include <QtGlobal>
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftParts)
 
@@ -207,4 +209,4 @@ namespace swift::misc::aviation
         engines.setEngines(engine, engineNumber);
         m_engines = engines;
     }
-} // namespace
+} // namespace swift::misc::aviation

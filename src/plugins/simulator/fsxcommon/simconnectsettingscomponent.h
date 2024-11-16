@@ -6,13 +6,13 @@
 #ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
 #define SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H
 
-#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
+#include <QScopedPointer>
+
 #include "gui/overlaymessagesframe.h"
 #include "misc/settingscache.h"
 #include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/simulation/simulatorinfo.h"
-
-#include <QScopedPointer>
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 
 namespace Ui
 {
@@ -70,6 +70,6 @@ namespace swift::simplugin::fsxcommon
         QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
         bool m_p3d64bit = false;
     };
-} // ns
+} // namespace swift::simplugin::fsxcommon
 
 #endif // guard

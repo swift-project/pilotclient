@@ -23,4 +23,4 @@ namespace swift::misc::network
         return {};
     }
 
-} // namespace
+} // namespace swift::misc::network

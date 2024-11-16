@@ -63,4 +63,4 @@ namespace swift::misc::simulation
         static const QString p("Preferences FSX %1, P3D %2, FS9 %3, XP %4 FG %5");
         return p.arg(m_distributorsFsx.size()).arg(m_distributorsP3d.size()).arg(m_distributorsFs9.size()).arg(m_distributorsXPlane.size()).arg(m_distributorsFG.size());
     }
-} // namespace
+} // namespace swift::misc::simulation

@@ -6,15 +6,17 @@
 #ifndef SWIFT_MISC_SETBUILDER_H
 #define SWIFT_MISC_SETBUILDER_H
 
-#include "misc/swiftmiscexport.h"
-#include <QSet>
-#include <QList>
-#include <QVector>
-#include <QStringList>
 #include <algorithm>
 #include <iterator>
-#include <vector>
 #include <set>
+#include <vector>
+
+#include <QList>
+#include <QSet>
+#include <QStringList>
+#include <QVector>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -72,6 +74,6 @@ namespace swift::misc
             return C<T>(std::make_move_iterator(list.begin()), std::make_move_iterator(list.end()));
         }
     };
-}
+} // namespace swift::misc
 
 #endif

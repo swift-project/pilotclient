@@ -6,22 +6,22 @@
 #ifndef SWIFT_CORE_AFV_CONNECTION_APISERVERCONNECTION_H
 #define SWIFT_CORE_AFV_CONNECTION_APISERVERCONNECTION_H
 
+#include <QDebug>
+#include <QElapsedTimer>
+#include <QEventLoop>
+#include <QJsonDocument>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
+#include <QString>
+#include <QUuid>
+
 #include "core/afv/dto.h"
 #include "core/application.h"
-#include "misc/slot.h"
-#include "misc/logmessage.h"
 #include "misc/logcategories.h"
-
-#include <QString>
-#include <QNetworkAccessManager>
-#include <QObject>
-#include <QElapsedTimer>
-#include <QUuid>
-#include <QDebug>
-#include <QEventLoop>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QJsonDocument>
+#include "misc/logmessage.h"
+#include "misc/slot.h"
 
 namespace swift::core::afv::connection
 {
@@ -179,6 +179,6 @@ namespace swift::core::afv::connection
         qint64 m_serverToUserOffsetMs;
         bool m_isAuthenticated = false;
     };
-} // ns
+} // namespace swift::core::afv::connection
 
 #endif // guard

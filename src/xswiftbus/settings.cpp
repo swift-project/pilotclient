@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/simulation/settings/xswiftbussettingsqtfree.inc"
 #include "settings.h"
+
 #include <string>
+
+#include "misc/simulation/settings/xswiftbussettingsqtfree.inc"
 
 using namespace swift::misc::simulation::settings;
 
@@ -51,4 +53,4 @@ namespace XSwiftBus
         return m_provider->writeConfig(tcas, debug);
     }
 
-} // ns
+} // namespace XSwiftBus

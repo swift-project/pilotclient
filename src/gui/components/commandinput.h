@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_COMMANDINPUT_H
 #define SWIFT_GUI_COMPONENTS_COMMANDINPUT_H
 
+#include <QLineEdit>
+#include <QObject>
+#include <QString>
+
 #include "gui/lineedithistory.h"
 #include "gui/swiftguiexport.h"
 #include "misc/digestsignal.h"
 #include "misc/identifiable.h"
 #include "misc/identifier.h"
-
-#include <QLineEdit>
-#include <QObject>
-#include <QString>
 
 namespace swift::misc
 {
@@ -26,7 +26,7 @@ namespace swift::misc
     {
         class CSimulatorPluginInfo;
     }
-}
+} // namespace swift::misc
 namespace swift::gui::components
 {
     //! Specialized line edit for command inputs
@@ -66,5 +66,5 @@ namespace swift::gui::components
         bool m_showToolTip = true;
         swift::misc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandToolTip, 5000, 2 };
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

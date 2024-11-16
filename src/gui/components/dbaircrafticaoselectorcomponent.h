@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBAIRCRAFTICAOSELECTORCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBAIRCRAFTICAOSELECTORCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/dropbase.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/network/entityflags.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/dropbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/network/entityflags.h"
 
 class QCompleter;
 class QDragEnterEvent;
@@ -117,5 +117,5 @@ namespace swift::gui::components
         Display m_display = DisplayIcaoAndId;
         QStringList m_completerStrings; //!< the completer strings
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

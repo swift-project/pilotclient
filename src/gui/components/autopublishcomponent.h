@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_AUTOPUBLISHCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_AUTOPUBLISHCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
-#include "misc/simulation/autopublishdata.h"
-
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "gui/overlaymessagesframe.h"
+#include "misc/simulation/autopublishdata.h"
 
 namespace Ui
 {
@@ -59,6 +59,6 @@ namespace swift::gui::components
         //! Close parent dialog (if any)
         void closeParentDialog();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

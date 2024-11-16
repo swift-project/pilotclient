@@ -6,14 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBLOADDATADIALOG_H
 #define SWIFT_GUI_COMPONENTS_DBLOADDATADIALOG_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/network/entityflags.h"
-#include "misc/simulation/data/modelcaches.h"
+#include <QAbstractButton>
 #include <QDialog>
 #include <QScopedPointer>
 #include <QStringListModel>
 #include <QUrl>
-#include <QAbstractButton>
+
+#include "gui/swiftguiexport.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/data/modelcaches.h"
 
 namespace Ui
 {
@@ -68,6 +69,6 @@ namespace swift::gui::components
         bool m_consolidating = false; //! currently consolidating
         bool m_autoConsolidate = false;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

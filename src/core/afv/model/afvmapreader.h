@@ -4,11 +4,11 @@
 #ifndef SWIFT_CORE_AFV_AFVMAPREADER_H
 #define SWIFT_CORE_AFV_AFVMAPREADER_H
 
-#include "core/afv/model/atcstationmodel.h"
-#include "core/swiftcoreexport.h"
-
 #include <QObject>
 #include <QTimer>
+
+#include "core/afv/model/atcstationmodel.h"
+#include "core/swiftcoreexport.h"
 
 namespace swift::core::afv::model
 {
@@ -40,6 +40,6 @@ namespace swift::core::afv::model
         QTimer *m_timer = nullptr;
         QString m_callsign;
     };
-} // ns
+} // namespace swift::core::afv::model
 
 #endif // guard

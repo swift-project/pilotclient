@@ -9,4 +9,4 @@ namespace swift::gui::views
     template class CViewBase<swift::gui::models::CServerListModel>;
     template class CViewBase<swift::gui::models::CTextMessageListModel>;
     template class CViewBase<swift::gui::models::CUserListModel>;
-} // namespace
+} // namespace swift::gui::views

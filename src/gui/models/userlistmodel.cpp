@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/columns.h"
 #include "gui/models/userlistmodel.h"
-#include "misc/aviation/airporticaocode.h"
-#include "misc/aviation/callsign.h"
-#include "misc/propertyindexvariantmap.h"
 
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
+
+#include "gui/models/columns.h"
+#include "misc/aviation/airporticaocode.h"
+#include "misc/aviation/callsign.h"
+#include "misc/propertyindexvariantmap.h"
 
 using namespace swift::misc::network;
 using namespace swift::misc::aviation;
@@ -63,4 +64,4 @@ namespace swift::gui::models
             break;
         }
     }
-} // ns
+} // namespace swift::gui::models

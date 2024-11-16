@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/network/role.h"
 #include "misc/network/rolelist.h"
 
 #include <QJsonValue>
+
+#include "misc/network/role.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRole, CRoleList)
 
@@ -55,4 +56,4 @@ namespace swift::misc::network
         return roles;
     }
 
-} // namespace
+} // namespace swift::misc::network

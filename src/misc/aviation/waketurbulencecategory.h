@@ -4,11 +4,11 @@
 #ifndef SWIFT_MISC_AVIATION_WAKETURBULENCECATEGORY_H
 #define SWIFT_MISC_AVIATION_WAKETURBULENCECATEGORY_H
 
-#include "misc/valueobject.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QString>
 #include <QtGlobal>
+
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CWakeTurbulenceCategory)
 
@@ -54,7 +54,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(wtc));
     };
 
-}
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CWakeTurbulenceCategory)
 

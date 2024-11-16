@@ -6,9 +6,9 @@
 #ifndef SWIFT_GUI_VIEWS_AIRCRAFTSITUATIONCHANGEVIEW_H
 #define SWIFT_GUI_VIEWS_AIRCRAFTSITUATIONCHANGEVIEW_H
 
-#include "gui/views/viewtimestampobjects.h"
 #include "gui/models/aircraftsituationchangelistmodel.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewtimestampobjects.h"
 #include "misc/aviation/aircraftsituationchangelist.h"
 
 class QWidget;
@@ -24,6 +24,6 @@ namespace swift::gui::views
         //! Constructor
         explicit CAircraftSituationChangeView(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::views
 
 #endif // guard

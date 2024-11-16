@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/dockwidgetinfobar.h"
-#include "gui/guiapplication.h"
-#include "gui/stylesheetutility.h"
-#include "misc/icons.h"
 
 #include <QIcon>
 #include <QString>
+
+#include "gui/guiapplication.h"
+#include "gui/stylesheetutility.h"
+#include "misc/icons.h"
 
 using namespace swift::misc;
 using namespace swift::gui::components;
@@ -37,4 +38,4 @@ namespace swift::gui
         this->setStyleSheet("");
         this->setStyleSheet(st);
     }
-}
+} // namespace swift::gui

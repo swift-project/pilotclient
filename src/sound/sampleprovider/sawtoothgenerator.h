@@ -6,11 +6,13 @@
 #ifndef SWIFT_SOUND_SAMPLEPROVIDER_SAWTOOTHGENERATOR_H
 #define SWIFT_SOUND_SAMPLEPROVIDER_SAWTOOTHGENERATOR_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/sampleprovider/sampleprovider.h"
+#include <array>
+
 #include <QRandomGenerator>
 #include <QVector>
-#include <array>
+
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -35,6 +37,6 @@ namespace swift::sound::sample_provider
         double m_sampleRate = 48000;
         int m_nSample = 0;
     };
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "applicationinfoview.h"
-#include "misc/fileutils.h"
 
-#include <QMessageBox>
 #include <QDir>
+#include <QMessageBox>
+
+#include "misc/fileutils.h"
 
 using namespace swift::misc;
 using namespace swift::gui::models;
@@ -71,4 +72,4 @@ namespace swift::gui::views
     {
         return static_cast<CApplicationInfoView *>(this->parent());
     }
-} // namespace
+} // namespace swift::gui::views

@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSNETWORKCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSNETWORKCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "core/vatsim/vatsimsettings.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "core/vatsim/vatsimsettings.h"
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -34,6 +34,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CSettingsNetworkComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

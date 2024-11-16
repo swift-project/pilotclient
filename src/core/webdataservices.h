@@ -6,36 +6,37 @@
 #ifndef SWIFT_CORE_WEBDATASERVICES_H
 #define SWIFT_CORE_WEBDATASERVICES_H
 
-#include "core/db/databasereader.h"
-#include "core/webreaderflags.h"
-#include "core/swiftcoreexport.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/simulation/distributor.h"
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/aviation/airporticaocode.h"
-#include "misc/aviation/atcstationlist.h"
-#include "misc/aviation/liverylist.h"
-#include "misc/network/serverlist.h"
-#include "misc/network/url.h"
-#include "misc/network/userlist.h"
-#include "misc/network/entityflags.h"
-#include "misc/network/voicecapabilities.h"
-#include "misc/weather/metarlist.h"
-#include "misc/weather/metar.h"
-#include "misc/statusmessagelist.h"
-#include "misc/countrylist.h"
+#include <atomic>
 
 #include <QDateTime>
 #include <QList>
-#include <QSet>
 #include <QObject>
+#include <QSet>
 #include <QString>
 #include <QStringList>
-#include <atomic>
+
+#include "core/db/databasereader.h"
+#include "core/swiftcoreexport.h"
+#include "core/webreaderflags.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/airporticaocode.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/countrylist.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/serverlist.h"
+#include "misc/network/url.h"
+#include "misc/network/userlist.h"
+#include "misc/network/voicecapabilities.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/statusmessagelist.h"
+#include "misc/weather/metar.h"
+#include "misc/weather/metarlist.h"
 
 namespace swift::misc
 {
@@ -49,8 +50,8 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
         class CAutoPublishData;
-    }
-}
+    } // namespace simulation
+} // namespace swift::misc
 
 namespace swift::core
 {
@@ -60,7 +61,7 @@ namespace swift::core
         class CVatsimMetarReader;
         class CVatsimStatusFileReader;
         class CVatsimServerFileReader;
-    }
+    } // namespace vatsim
 
     namespace db
     {
@@ -70,7 +71,7 @@ namespace swift::core
         class CIcaoDataReader;
         class CModelDataReader;
         class CInfoDataReader;
-    }
+    } // namespace db
 
     /*!
      * Encapsulates reading data from web sources
@@ -620,6 +621,6 @@ namespace swift::core
         // writing objects directly into DB
         db::CDatabaseWriter *m_databaseWriter = nullptr;
     };
-} // namespace
+} // namespace swift::core
 
 #endif

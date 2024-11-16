@@ -5,12 +5,12 @@
 #define SWIFT_GUI_MODELS_ALLMODELS_H
 
 #include "gui/models/actionhotkeylistmodel.h"
-#include "gui/models/aircrafticaolistmodel.h"
 #include "gui/models/aircraftcategorylistmodel.h"
+#include "gui/models/aircrafticaolistmodel.h"
 #include "gui/models/aircraftmodellistmodel.h"
 #include "gui/models/aircraftpartslistmodel.h"
-#include "gui/models/aircraftsituationlistmodel.h"
 #include "gui/models/aircraftsituationchangelistmodel.h"
+#include "gui/models/aircraftsituationlistmodel.h"
 #include "gui/models/airlineicaolistmodel.h"
 #include "gui/models/airportlistmodel.h"
 #include "gui/models/applicationinfolistmodel.h"

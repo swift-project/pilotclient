@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATORLINEAR_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATORLINEAR_H
 
-#include "misc/simulation/interpolation/interpolator.h"
-#include "misc/simulation/interpolation/interpolationlogger.h"
-#include "misc/simulation/interpolation/interpolant.h"
-#include "misc/aviation/aircraftsituation.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QtGlobal>
+
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/simulation/interpolation/interpolant.h"
+#include "misc/simulation/interpolation/interpolationlogger.h"
+#include "misc/simulation/interpolation/interpolator.h"
+#include "misc/swiftmiscexport.h"
 
 class QObject;
 
@@ -75,7 +75,7 @@ namespace swift::misc
         private:
             CInterpolant m_interpolant; //!< current interpolant
         };
-    } // ns
-} // ns
+    } // namespace simulation
+} // namespace swift::misc
 
 #endif // guard

@@ -6,8 +6,8 @@
 #ifndef SWIFT_CORE_FSD_VISUALPILOTDATATOGGLE_H
 #define SWIFT_CORE_FSD_VISUALPILOTDATATOGGLE_H
 
-#include "messagebase.h"
 #include "enums.h"
+#include "messagebase.h"
 
 namespace swift::core::fsd
 {
@@ -48,6 +48,6 @@ namespace swift::core::fsd
     {
         return !(lhs == rhs);
     }
-}
+} // namespace swift::core::fsd
 
 #endif // guard

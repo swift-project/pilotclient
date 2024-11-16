@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/flightgear/aircraftmodelloaderflightgear.h"
-#include "misc/simulation/aircraftmodel.h"
+
 #include <QDirIterator>
+
+#include "misc/simulation/aircraftmodel.h"
 namespace swift::misc::simulation::flightgear
 {
 
@@ -165,4 +167,4 @@ namespace swift::misc::simulation::flightgear
         modelString.append(f);
         return modelString;
     }
-}
+} // namespace swift::misc::simulation::flightgear

@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_VALUECACHE_PRIVATE_H
 #define SWIFT_MISC_VALUECACHE_PRIVATE_H
 
-#include "misc/variantmap.h"
-#include "misc/statusmessage.h"
-#include <QObject>
-#include <QMutex>
 #include <QMap>
+#include <QMutex>
+#include <QObject>
+
+#include "misc/statusmessage.h"
+#include "misc/variantmap.h"
 
 namespace swift::misc
 {
@@ -144,8 +145,8 @@ namespace swift::misc
             CStatusMessage validate(const Element &element, const CVariant &value, CStatusMessage::StatusSeverity invalidSeverity) const;
         };
 
-    } // namespace
+    } // namespace private_ns
 
-} // namespace
+} // namespace swift::misc
 
 #endif

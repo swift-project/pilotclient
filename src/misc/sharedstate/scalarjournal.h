@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_SCALARJOURNAL_H
 #define SWIFT_MISC_SHAREDSTATE_SCALARJOURNAL_H
 
+#include <QMutex>
+#include <QObject>
+
 #include "misc/sharedstate/activemutator.h"
 #include "misc/sharedstate/passiveobserver.h"
-#include "misc/variant.h"
 #include "misc/swiftmiscexport.h"
-#include <QObject>
-#include <QMutex>
+#include "misc/variant.h"
 
 namespace swift::misc::shared_state
 {
@@ -54,6 +55,6 @@ namespace swift::misc::shared_state
         //! Constructor.
         CScalarJournal(QObject *parent) : CGenericScalarJournal(parent) {}
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

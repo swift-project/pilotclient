@@ -6,8 +6,9 @@
 #ifndef SWIFT_MISC_CRASHINFO_H
 #define SWIFT_MISC_CRASHINFO_H
 
-#include "misc/valueobject.h"
 #include <QString>
+
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CCrashInfo)
 
@@ -100,7 +101,7 @@ namespace swift::misc
             SWIFT_METAMEMBER(flightNetwork),
             SWIFT_METAMEMBER(logFileAndPath));
     };
-} // ns
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CCrashInfo)
 

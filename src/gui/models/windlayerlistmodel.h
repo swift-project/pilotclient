@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_MODELS_WINDLAYERLISTMODEL_H
 #define SWIFT_GUI_MODELS_WINDLAYERLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
 #include "misc/weather/windlayer.h"
 #include "misc/weather/windlayerlist.h"
 
@@ -28,5 +28,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CWindLayerListModel() {}
     };
-}
+} // namespace swift::gui::models
 #endif // guard

@@ -5,11 +5,13 @@
 //! \file
 //! \ingroup testmisc
 
+#include <QJsonObject>
+#include <QTest>
+
+#include "test.h"
+
 #include "misc/aviation/aircraftparts.h"
 #include "misc/json.h"
-#include "test.h"
-#include <QTest>
-#include <QJsonObject>
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::json;
@@ -80,7 +82,7 @@ namespace MiscTest
         CAircraftParts ap(lights, true, 0, false, engines, onGround);
         return ap;
     }
-} // ns
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestAircraftParts);

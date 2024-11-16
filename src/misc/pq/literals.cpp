@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/pq/literals.h"
+
 #include "misc/pq/acceleration.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/frequency.h"
@@ -454,4 +455,4 @@ namespace swift::misc::physical_quantities::Literals
     {
         return { static_cast<double>(value), CTimeUnit::minsec() };
     }
-}
+} // namespace swift::misc::physical_quantities::Literals

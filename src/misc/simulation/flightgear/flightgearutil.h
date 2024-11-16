@@ -6,9 +6,9 @@
 #ifndef SWIFT_MISC_SIMULATION_FLIGHTGEAR_FLIGHTGEARUTIL_H
 #define SWIFT_MISC_SIMULATION_FLIGHTGEAR_FLIGHTGEARUTIL_H
 
-#include "misc/swiftmiscexport.h"
-
 #include <QStringList>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation::flightgear
 {
@@ -35,6 +35,6 @@ namespace swift::misc::simulation::flightgear
         //! Exclude directories for models
         static const QStringList &flightgearModelExcludeDirectoryPatterns();
     };
-} // namespace
+} // namespace swift::misc::simulation::flightgear
 
 #endif // guard

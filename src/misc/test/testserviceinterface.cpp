@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/test/testserviceinterface.h"
-#include "misc/test/testservice.h"
-#include "misc/test/testing.h"
-#include "misc/test/testdata.h"
-#include "misc/aviation/flightplan.h"
+
 #include <QTextStream>
+
+#include "misc/aviation/flightplan.h"
+#include "misc/test/testdata.h"
+#include "misc/test/testing.h"
+#include "misc/test/testservice.h"
 
 class QDBusConnection;
 
@@ -170,4 +172,4 @@ namespace swift::misc::test
         static const QString sError(": !! ERROR !!");
         return ok ? sOk : sError;
     }
-} // ns
+} // namespace swift::misc::test

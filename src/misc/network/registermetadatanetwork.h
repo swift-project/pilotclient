@@ -12,6 +12,6 @@ namespace swift::misc::network
 {
     //! Register metadata for network
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc::network
 
 #endif // guard

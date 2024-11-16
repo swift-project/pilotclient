@@ -2,35 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/application.h"
-#include "config/buildconfig.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulatorimpl.h"
-#include "core/context/contextaudio.h"
-#include "core/context/contextapplication.h"
-#include "core/cookiemanager.h"
-#include "core/corefacade.h"
-#include "core/registermetadata.h"
-#include "core/setupreader.h"
-#include "core/webdataservices.h"
-#include "core/inputmanager.h"
-#include "misc/applicationinfo.h"
-#include "misc/crashhandler.h"
-#include "misc/datacache.h"
-#include "misc/dbusserver.h"
-#include "misc/swiftdirectories.h"
-#include "misc/eventloop.h"
-#include "misc/filelogger.h"
-#include "misc/loghandler.h"
-#include "misc/logmessage.h"
-#include "misc/logpattern.h"
-#include "misc/network/networkutils.h"
-#include "misc/registermetadata.h"
-#include "misc/settingscache.h"
-#include "misc/stringutils.h"
-#include "misc/threadutils.h"
-#include "misc/verify.h"
 
 #include <cstdio>
+#include <cstdlib>
+
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QEventLoop>
@@ -44,14 +19,41 @@
 #include <QStandardPaths>
 #include <QStringBuilder>
 #include <QStringList>
+#include <QSysInfo>
 #include <QTemporaryDir>
 #include <QThread>
 #include <QTimer>
 #include <QWriteLocker>
 #include <Qt>
 #include <QtGlobal>
-#include <QSysInfo>
-#include <cstdlib>
+
+#include "config/buildconfig.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulatorimpl.h"
+#include "core/cookiemanager.h"
+#include "core/corefacade.h"
+#include "core/inputmanager.h"
+#include "core/registermetadata.h"
+#include "core/setupreader.h"
+#include "core/webdataservices.h"
+#include "misc/applicationinfo.h"
+#include "misc/crashhandler.h"
+#include "misc/datacache.h"
+#include "misc/dbusserver.h"
+#include "misc/eventloop.h"
+#include "misc/filelogger.h"
+#include "misc/loghandler.h"
+#include "misc/logmessage.h"
+#include "misc/logpattern.h"
+#include "misc/network/networkutils.h"
+#include "misc/registermetadata.h"
+#include "misc/settingscache.h"
+#include "misc/stringutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -1479,4 +1481,4 @@ namespace swift::core
         const QString filePath(CFileUtils::appendFilePaths(dir.path(), CApplicationInfo::fileName())); // will be overridden by next swift app
         CFileUtils::writeStringToFile(aiStr, filePath);
     }
-} // ns
+} // namespace swift::core

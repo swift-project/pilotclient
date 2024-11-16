@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_CLIENTLISTMODEL_H
 #define SWIFT_GUI_MODELS_CLIENTLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/listmodelbase.h"
-#include "misc/network/clientlist.h"
-
 #include <QVariant>
+
+#include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/clientlist.h"
 
 class QModelIndex;
 class QObject;
@@ -32,5 +32,5 @@ namespace swift::gui::models
         //! \copydoc QAbstractListModel::data()
         virtual QVariant data(const QModelIndex &index, int role) const override;
     };
-} // namespace
+} // namespace swift::gui::models
 #endif // guard

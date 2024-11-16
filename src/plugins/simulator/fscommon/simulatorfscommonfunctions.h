@@ -7,6 +7,7 @@
 #define SWIFT_SIMPLUGIN_FSCOMMON_SIMULATORFSCOMMONFUNCTIONS_H
 
 #include <Windows.h>
+
 #include <QtGlobal>
 
 namespace swift::simplugin::fscommon
@@ -21,6 +22,6 @@ namespace swift::simplugin::fscommon
     bool inline isFailure(HRESULT hr1, HRESULT hr2, HRESULT hr3 = s_ok(), HRESULT hr4 = s_ok()) { return !isOk(hr1, hr2, hr3, hr4); }
     bool inline dtb(double doubleBool) { return static_cast<bool>(qRound(doubleBool)); }
     //! @}
-} // namespace
+} // namespace swift::simplugin::fscommon
 
 #endif // guard

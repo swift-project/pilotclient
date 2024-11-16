@@ -25,4 +25,4 @@ namespace swift::misc::network
             return rawFsdMessage.containsString(str);
         });
     }
-} // namespace
+} // namespace swift::misc::network

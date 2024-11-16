@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_NAMEVARIANTLISTMODEL_H
 #define SWIFT_GUI_NAMEVARIANTLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
+#include <QString>
+
 #include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
 #include "misc/namevariantpairlist.h"
 #include "misc/variant.h"
-
-#include <QString>
 
 class QObject;
 
@@ -19,7 +19,7 @@ namespace swift::misc
 {
     class CIcon;
     class CNameVariantPair;
-}
+} // namespace swift::misc
 
 namespace swift::gui::models
 {
@@ -54,5 +54,5 @@ namespace swift::gui::models
         //! Current row index of given name
         int getRowIndexForName(const QString &name) const;
     };
-}
+} // namespace swift::gui::models
 #endif // guard

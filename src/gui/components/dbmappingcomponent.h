@@ -6,28 +6,28 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBMAPPINGCOMPONENT_H
 
-#include "gui/enableforviewbasedindicator.h"
-#include "gui/menus/menudelegate.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/swiftguiexport.h"
-#include "core/data/authenticateduser.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/network/entityflags.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/distributor.h"
-#include "misc/simulation/fscommon/vpilotrulesreader.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/datacache.h"
-#include "misc/digestsignal.h"
-#include "misc/statusmessage.h"
-#include "misc/statusmessagelist.h"
-
 #include <QList>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
 #include <QStringList>
+
+#include "core/data/authenticateduser.h"
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/enableforviewbasedindicator.h"
+#include "gui/menus/menudelegate.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/datacache.h"
+#include "misc/digestsignal.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/fscommon/vpilotrulesreader.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 
 class QAction;
 class QModelIndex;
@@ -37,7 +37,7 @@ namespace swift::misc::aviation
 {
     class CAircraftIcaoCode;
     class CLivery;
-}
+} // namespace swift::misc::aviation
 namespace Ui
 {
     class CDbMappingComponent;
@@ -479,6 +479,6 @@ namespace swift::gui
                 QList<QAction *> m_menuActions; //!< actions, kept when once initialized
             };
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 #endif // guard

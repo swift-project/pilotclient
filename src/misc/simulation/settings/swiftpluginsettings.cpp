@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/settings/swiftpluginsettings.h"
+
 #include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSwiftPluginSettings)
@@ -70,4 +71,4 @@ namespace swift::misc::simulation::settings
             break;
         }
     }
-} // ns
+} // namespace swift::misc::simulation::settings

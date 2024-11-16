@@ -5,19 +5,9 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/valuecache.h"
-#include "misc/aviation/atcstation.h"
-#include "misc/aviation/atcstationlist.h"
-#include "misc/dictionary.h"
-#include "misc/identifier.h"
-#include "misc/registermetadata.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/simulatedaircraftlist.h"
-#include "misc/statusmessage.h"
-#include "misc/variant.h"
-#include "misc/variantmap.h"
-#include "misc/worker.h"
-#include "test.h"
+#include <chrono>
+#include <future>
+#include <ratio>
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -34,9 +24,21 @@
 #include <QThread>
 #include <QTimer>
 #include <QtDebug>
-#include <chrono>
-#include <future>
-#include <ratio>
+
+#include "test.h"
+
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/dictionary.h"
+#include "misc/identifier.h"
+#include "misc/registermetadata.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/statusmessage.h"
+#include "misc/valuecache.h"
+#include "misc/variant.h"
+#include "misc/variantmap.h"
+#include "misc/worker.h"
 
 namespace MiscTest
 {
@@ -330,7 +332,7 @@ namespace MiscTest
         }
         return false;
     }
-} // ns
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestValueCache);

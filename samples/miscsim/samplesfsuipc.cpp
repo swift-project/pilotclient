@@ -4,13 +4,14 @@
 //! \file
 //! \ingroup samplemiscsim
 
-#include "plugins/simulator/fscommon/fsuipc.h"
 #include "samplesfsuipc.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/registermetadata.h"
 
-#include <QTextStream>
 #include <QScopedPointer>
+#include <QTextStream>
+
+#include "misc/registermetadata.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "plugins/simulator/fscommon/fsuipc.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -52,4 +53,4 @@ namespace swift::sample
     }
 #endif
 
-} // namespace
+} // namespace swift::sample

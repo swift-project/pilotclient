@@ -6,21 +6,21 @@
 #ifndef SWIFT_GUI_GUIUTILITY_H
 #define SWIFT_GUI_GUIUTILITY_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/variant.h"
-
 #include <QByteArray>
-#include <QSize>
-#include <QPoint>
-#include <QString>
-#include <QWindow>
-#include <QWidget>
-#include <QWidgetList>
-#include <QFont>
 #include <QDockWidget>
+#include <QFont>
 #include <QFontMetrics>
 #include <QFontMetricsF>
 #include <QModelIndexList>
+#include <QPoint>
+#include <QSize>
+#include <QString>
+#include <QWidget>
+#include <QWidgetList>
+#include <QWindow>
+
+#include "gui/swiftguiexport.h"
+#include "misc/variant.h"
 
 class QCheckBox;
 class QComboBox;
@@ -326,6 +326,6 @@ namespace swift::gui
 
         static QWidget *s_mainApplicationWidget;
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

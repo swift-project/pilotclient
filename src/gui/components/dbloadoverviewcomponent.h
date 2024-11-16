@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBLOADOVERVIEWCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBLOADOVERVIEWCOMPONENT_H
 
+#include <QFrame>
+#include <QScopedPointer>
+
 #include "gui/loadindicator.h"
 #include "gui/swiftguiexport.h"
 #include "misc/digestsignal.h"
 #include "misc/network/entityflags.h"
-
-#include <QFrame>
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -126,5 +126,5 @@ namespace swift::gui::components
         //! Admit caches
         static void admitCaches();
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

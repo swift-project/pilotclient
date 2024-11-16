@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/informationmessage.h"
+
 #include "misc/comparefunctions.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CInformationMessage)
@@ -109,4 +110,4 @@ namespace swift::misc::aviation
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
         return 0;
     }
-} // namespace
+} // namespace swift::misc::aviation

@@ -15,4 +15,4 @@ namespace swift::gui::models
 
     template class CListModelBase<swift::misc::audio::CAudioDeviceInfoList, true>;
 
-} // namespace
+} // namespace swift::gui::models

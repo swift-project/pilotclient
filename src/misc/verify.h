@@ -15,7 +15,7 @@ namespace swift::misc::private_ns
 
     //! \private Called by SWIFT_VERIFY when the condition is false.
     SWIFT_MISC_EXPORT SWIFT_NO_INLINE void failedVerify(const char *condition, const char *filename, int line, const char *context, const char *message, bool audit);
-}
+} // namespace swift::misc::private_ns
 
 //! @{
 /*!

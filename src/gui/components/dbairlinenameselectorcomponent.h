@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBAIRLINENAMESELECTORCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBAIRLINENAMESELECTORCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/components/dbairlineicaoselectorbase.h"
-#include "misc/aviation/airlineicaocode.h"
-
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/components/dbairlineicaoselectorbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/airlineicaocode.h"
 
 class QCompleter;
 class QWidget;
@@ -55,6 +55,6 @@ namespace swift::gui::components
         //! Data changed
         void ps_dataChanged();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

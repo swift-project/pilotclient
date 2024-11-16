@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_NETWORK_CLIENTLIST_H
 #define SWIFT_MISC_NETWORK_CLIENTLIST_H
 
+#include <QMap>
+#include <QMetaType>
+
 #include "misc/aviation/callsignobjectlist.h"
 #include "misc/collection.h"
 #include "misc/network/client.h"
 #include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
-#include <QMap>
-#include <QMetaType>
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CClient, CClientList)
 
@@ -37,7 +38,7 @@ namespace swift::misc::network
 
     //! Client per callsign
     using CClientPerCallsign = QHash<aviation::CCallsign, CClient>;
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CClientList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CClient>)

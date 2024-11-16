@@ -2,19 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingstextmessagestyle.h"
+
+#include <QKeySequence>
+#include <QPushButton>
+#include <QRegularExpression>
+#include <QShortcut>
+#include <QStringBuilder>
+#include <QTextEdit>
+
 #include "ui_settingstextmessagestyle.h"
+
 #include "gui/components/settingsfontdialog.h"
 #include "gui/components/texteditdialog.h"
 #include "gui/shortcut.h"
-
-#include <QTextEdit>
-#include <QPushButton>
-#include <QRegularExpression>
-#include <QStringBuilder>
-#include <QKeySequence>
-#include <QStringBuilder>
-
-#include <QShortcut>
 
 namespace swift::gui::components
 {
@@ -143,4 +143,4 @@ namespace swift::gui::components
         this->replaceTableStyle(tableStyle);
         return true;
     }
-} // ns
+} // namespace swift::gui::components

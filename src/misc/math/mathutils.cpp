@@ -1,15 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/math/constants.h"
 #include "misc/math/mathutils.h"
-#include "misc/verify.h"
 
-#include <QTime>
-#include <QtGlobal>
 #include <cmath>
 #include <cstdlib>
 #include <limits>
+
+#include <QTime>
+#include <QtGlobal>
+
+#include "misc/math/constants.h"
+#include "misc/verify.h"
 
 namespace swift::misc::math
 {
@@ -170,4 +172,4 @@ namespace swift::misc::math
         const double sd = sqrt(varianceValue);
         return QPair<double, double>(sd, meanValue);
     }
-} // namespace
+} // namespace swift::misc::math

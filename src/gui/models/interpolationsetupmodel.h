@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_INTERPOLATIONSETUPMODEL_H
 #define SWIFT_GUI_MODELS_INTERPOLATIONSETUPMODEL_H
 
-#include "misc/simulation/interpolation/interpolationsetuplist.h"
+#include <QString>
+
 #include "gui/models/listmodelcallsignobjects.h"
 #include "gui/swiftguiexport.h"
-#include <QString>
+#include "misc/simulation/interpolation/interpolationsetuplist.h"
 
 namespace swift::gui::models
 {
@@ -26,5 +27,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CInterpolationSetupListModel() override {}
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

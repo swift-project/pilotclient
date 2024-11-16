@@ -102,6 +102,6 @@ namespace swift::misc
             }
         };
     };
-}
+} // namespace swift::misc
 
 #endif

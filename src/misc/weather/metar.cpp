@@ -1,13 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/pq/units.h"
-#include "misc/weather/cloudlayer.h"
 #include "misc/weather/metar.h"
-#include "misc/weather/presentweather.h"
 
 #include <QStringBuilder>
 #include <QtGlobal>
+
+#include "misc/pq/units.h"
+#include "misc/weather/cloudlayer.h"
+#include "misc/weather/presentweather.h"
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::aviation;
@@ -139,4 +140,4 @@ namespace swift::misc::weather
         metar.setCavok();
         return metar;
     }
-} // namespace
+} // namespace swift::misc::weather

@@ -6,18 +6,18 @@
 #ifndef SWIFT_MISC_NETWORK_SERVER_H
 #define SWIFT_MISC_NETWORK_SERVER_H
 
-#include "misc/network/user.h"
-#include "misc/network/fsdsetup.h"
-#include "misc/network/ecosystem.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/statusmessagelist.h"
-#include "misc/timestampbased.h"
-#include "misc/valueobject.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/network/ecosystem.h"
+#include "misc/network/fsdsetup.h"
+#include "misc/network/user.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CServer)
 
@@ -230,7 +230,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(isAcceptingConnections),
             SWIFT_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CServer)
 Q_DECLARE_METATYPE(swift::misc::network::CServer::ServerType)

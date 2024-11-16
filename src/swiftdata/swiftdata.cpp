@@ -2,31 +2,33 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "swiftdata.h"
+
+#include <QAction>
+#include <QPointer>
+#include <QString>
+#include <QStyle>
+#include <QVersionNumber>
+#include <QtGlobal>
+
+#include "ui_swiftdata.h"
+
+#include "config/buildconfig.h"
+#include "core/data/globalsetup.h"
+#include "gui/components/autopublishdialog.h"
 #include "gui/components/datamaininfoareacomponent.h"
+#include "gui/components/datasettingscomponent.h"
 #include "gui/components/dbmappingcomponent.h"
 #include "gui/components/logcomponent.h"
-#include "gui/components/datasettingscomponent.h"
-#include "gui/components/autopublishdialog.h"
 #include "gui/guiapplication.h"
 #include "gui/stylesheetutility.h"
-#include "core/data/globalsetup.h"
-#include "misc/simulation/autopublishdata.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/sharedstate/datalinkdbus.h"
 #include "misc/loghandler.h"
-#include "misc/statusmessage.h"
 #include "misc/logmessage.h"
 #include "misc/logpattern.h"
 #include "misc/network/url.h"
-#include "config/buildconfig.h"
-#include "ui_swiftdata.h"
-
-#include <QAction>
-#include <QString>
-#include <QStyle>
-#include <QtGlobal>
-#include <QVersionNumber>
-#include <QPointer>
+#include "misc/sharedstate/datalinkdbus.h"
+#include "misc/simulation/autopublishdata.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;

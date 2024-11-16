@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_ACTIONITEM_H
 #define SWIFT_GUI_MODELS_ACTIONITEM_H
 
-#include "misc/icons.h"
 #include <QList>
-#include <QString>
 #include <QPixmap>
+#include <QString>
+
+#include "misc/icons.h"
 
 namespace swift::gui::models
 {
@@ -78,6 +79,6 @@ namespace swift::gui::models
         QList<CActionItem *> m_childItems;
         CActionItem *m_parentItem = nullptr;
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

@@ -6,8 +6,9 @@
 #ifndef SWIFT_MISC_NOTIFICATIONSOUNDS_H
 #define SWIFT_MISC_NOTIFICATIONSOUNDS_H
 
-#include "misc/swiftmiscexport.h"
 #include <QMetaType>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::audio
 {
@@ -70,7 +71,7 @@ namespace swift::misc::audio
         //! As string
         static QString toString(Notification notification);
     };
-} // ns
+} // namespace swift::misc::audio
 
 Q_DECLARE_METATYPE(swift::misc::audio::CNotificationSounds::Notification)
 Q_DECLARE_METATYPE(swift::misc::audio::CNotificationSounds::NotificationFlag)

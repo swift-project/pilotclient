@@ -1,31 +1,32 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/data/globalsetup.h"
 #include "core/db/modeldatareader.h"
-#include "core/db/databaseutils.h"
-#include "core/webdataservices.h"
-#include "core/application.h"
-#include "misc/fileutils.h"
-#include "misc/json.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
 
 #include <QDir>
-#include <QFlags>
+#include <QElapsedTimer>
 #include <QFileInfo>
+#include <QFlags>
 #include <QJsonDocument>
 #include <QNetworkReply>
+#include <QPointer>
 #include <QReadLocker>
 #include <QScopedPointer>
 #include <QScopedPointerDeleteLater>
 #include <QTimer>
-#include <QElapsedTimer>
-#include <QPointer>
 #include <QUrl>
 #include <QWriteLocker>
 #include <Qt>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "core/data/globalsetup.h"
+#include "core/db/databaseutils.h"
+#include "core/webdataservices.h"
+#include "misc/fileutils.h"
+#include "misc/json.h"
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::db;
@@ -725,4 +726,4 @@ namespace swift::core::db
     {
         return getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::ModelEntity, mode));
     }
-} // ns
+} // namespace swift::core::db

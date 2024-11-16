@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/pq/time.h"
-#include "misc/math/mathutils.h"
+
+#include <cmath>
+
 #include <QTime>
 #include <QtGlobal>
-#include <cmath>
+
+#include "misc/math/mathutils.h"
 
 using swift::misc::math::CMathUtils;
 
@@ -176,4 +179,4 @@ namespace swift::misc::physical_quantities
         const QTime t(parts[0], parts[1], parts[2]);
         return t;
     }
-} // ns
+} // namespace swift::misc::physical_quantities

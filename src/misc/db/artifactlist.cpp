@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/db/artifactlist.h"
+
 #include "misc/stringutils.h"
 
 using namespace swift::misc::network;
@@ -214,4 +215,4 @@ namespace swift::misc::db
         if (json.isEmpty()) { return CArtifactList(); }
         return CArtifactList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
-} // namespace
+} // namespace swift::misc::db

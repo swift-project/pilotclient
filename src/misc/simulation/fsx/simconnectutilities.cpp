@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/fsx/simconnectutilities.h"
-#include "misc/stringutils.h"
 
 #include <QCoreApplication>
 #include <QFile>
@@ -11,9 +10,11 @@
 #include <QLatin1String>
 #include <QMetaEnum>
 #include <QMetaObject>
-#include <QTextStream>
 #include <QStandardPaths>
 #include <QStringBuilder>
+#include <QTextStream>
+
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -215,4 +216,4 @@ namespace swift::misc::simulation::fsx
         }
         return CWinDllUtils::getDllInfo(modules.first().executable);
     }
-} // namespace
+} // namespace swift::misc::simulation::fsx

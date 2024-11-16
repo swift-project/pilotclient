@@ -41,4 +41,4 @@ namespace swift::gui
     {
         m_popupWidth = w;
     }
-} // ns
+} // namespace swift::gui

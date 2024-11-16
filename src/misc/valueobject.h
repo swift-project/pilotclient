@@ -6,29 +6,30 @@
 #ifndef SWIFT_MISC_VALUEOBJECT_H
 #define SWIFT_MISC_VALUEOBJECT_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixindbus.h"
-#include "misc/mixin/mixindatastream.h"
-#include "misc/metaclass.h"
-#include "misc/mixin/mixinjson.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/mixin/mixinmetatype.h"
-#include "misc/mixin/mixinindex.h"
-#include "misc/mixin/mixinicon.h"
-#include "misc/mixin/mixinhash.h"
-#include "misc/mixin/mixinstring.h"
+#include <iostream>
+#include <type_traits>
 
-#include <QtDBus/QDBusMetaType>
-#include <QString>
-#include <QtGlobal>
 #include <QDataStream>
 #include <QDebug>
-#include <QPixmap>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonValueRef>
-#include <type_traits>
-#include <iostream>
+#include <QPixmap>
+#include <QString>
+#include <QtDBus/QDBusMetaType>
+#include <QtGlobal>
+
+#include "misc/metaclass.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/mixin/mixindatastream.h"
+#include "misc/mixin/mixindbus.h"
+#include "misc/mixin/mixinhash.h"
+#include "misc/mixin/mixinicon.h"
+#include "misc/mixin/mixinindex.h"
+#include "misc/mixin/mixinjson.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/swiftmiscexport.h"
 
 //! \cond
 #define SWIFT_TEMPLATE_VALUEOBJECT_MIXINS(Namespace, Class, Extern)    \
@@ -199,6 +200,6 @@ namespace swift::misc
         using mixin::DataStreamByMetaClass<Derived>::unmarshalFromDataStream;
     };
 
-} // namespace
+} // namespace swift::misc
 
 #endif // guard

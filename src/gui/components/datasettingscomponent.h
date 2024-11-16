@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_SETTINGS_DATASETTINGSCOMPONENT_H
 #define SWIFT_GUI_SETTINGS_DATASETTINGSCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/overlaymessagesframe.h"
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/overlaymessagesframe.h"
+#include "gui/swiftguiexport.h"
 
 class QWidget;
 
@@ -43,6 +44,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CDataSettingsComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

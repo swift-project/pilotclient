@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_DOWNLOADCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DOWNLOADCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/loadindicator.h"
-#include "misc/network/remotefilelist.h"
-
-#include <QNetworkReply>
 #include <QFileDialog>
-#include <QWizard>
-#include <QScopedPointer>
 #include <QFlags>
+#include <QNetworkReply>
+#include <QScopedPointer>
+#include <QWizard>
+
+#include "gui/loadindicator.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/remotefilelist.h"
 
 namespace Ui
 {
@@ -131,7 +131,7 @@ namespace swift::gui::components
         //! File info
         void showFileInfo();
     };
-} // ns
+} // namespace swift::gui::components
 
 Q_DECLARE_METATYPE(swift::gui::components::CDownloadComponent::Mode)
 Q_DECLARE_METATYPE(swift::gui::components::CDownloadComponent::ModeFlag)

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/settings/modelsettings.h"
+
 #include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CModelSettings)
@@ -42,4 +43,4 @@ namespace swift::misc::simulation::settings
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-} // ns
+} // namespace swift::misc::simulation::settings

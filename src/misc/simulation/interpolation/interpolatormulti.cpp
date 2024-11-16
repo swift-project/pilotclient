@@ -79,4 +79,4 @@ namespace swift::misc::simulation
         m_interpolator.reset(new CInterpolatorMulti(callsign, p1, p2, p3));
         m_interpolator->attachLogger(logger);
     }
-} // ns
+} // namespace swift::misc::simulation

@@ -6,8 +6,9 @@
 #ifndef SWIFT_GUI_COMPONENTS_INFOBARWEBREADERSSTATUSSMALLCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_INFOBARWEBREADERSSTATUSSMALLCOMPONENT_H
 
-#include "gui/components/infobarwebreadersstatuscomponent.h"
 #include <QScopedPointer>
+
+#include "gui/components/infobarwebreadersstatuscomponent.h"
 
 namespace Ui
 {
@@ -32,5 +33,5 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CInfoBarWebReadersStatusSmallComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

@@ -2,27 +2,29 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/aircraftmodellist.h"
-#include "misc/network/networkutils.h"
-#include "misc/aviation/callsign.h"
-#include "misc/math/mathutils.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/iterator.h"
-#include "misc/range.h"
-#include "misc/fileutils.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/statusmessage.h"
-#include "misc/stringutils.h"
-#include "misc/setbuilder.h"
-#include "config/buildconfig.h"
 
-#include <QStringBuilder>
+#include <tuple>
+
+#include <QDir>
+#include <QFileInfo>
 #include <QJsonValue>
 #include <QList>
 #include <QMultiMap>
-#include <QFileInfo>
-#include <QDir>
-#include <tuple>
+#include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/aviation/callsign.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/iterator.h"
+#include "misc/math/mathutils.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/networkutils.h"
+#include "misc/range.h"
+#include "misc/setbuilder.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 using namespace swift::misc::network;
@@ -754,7 +756,7 @@ namespace swift::misc::simulation
             const double fsRatio = count / total;
             return fsRatio > 0.95;
         }
-    }
+    } // namespace private_ns
 
     bool CAircraftModelList::isLikelyFsFamilyModelList() const
     {
@@ -1845,4 +1847,4 @@ namespace swift::misc::simulation
             CAircraftModelList::addAsValidOrInvalidModel(model, valid, validModels, invalidModels);
         }
     }
-} // namespace
+} // namespace swift::misc::simulation

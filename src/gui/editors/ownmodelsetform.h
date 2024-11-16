@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_EDITORS_OWNMODELSETFORM_H
 #define SWIFT_GUI_EDITORS_OWNMODELSETFORM_H
 
-#include "gui/editors/form.h"
-#include "misc/simulation/settings/modelsettings.h"
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/editors/form.h"
+#include "misc/simulation/settings/modelsettings.h"
 
 namespace Ui
 {
@@ -105,6 +106,6 @@ namespace swift::gui::editors
         swift::misc::simulation::CSimulatorInfo m_simulator;
         swift::misc::CSetting<swift::misc::simulation::settings::TDistributorListPreferences> m_distributorPreferences { this, &COwnModelSetForm::onPreferencesChanged };
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "visualpilotdataperiodic.h"
-#include "visualpilotdataupdate.h"
+
 #include "pbh.h"
 #include "serializer.h"
+#include "visualpilotdataupdate.h"
 
 #include "misc/logmessage.h"
 
@@ -82,4 +83,4 @@ namespace swift::core::fsd
         return VisualPilotDataUpdate(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading,
                                      m_xVelocity, m_yVelocity, m_zVelocity, m_pitchRadPerSec, m_bankRadPerSec, m_headingRadPerSec, m_noseGearAngle);
     }
-}
+} // namespace swift::core::fsd

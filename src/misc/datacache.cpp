@@ -4,10 +4,10 @@
 //! \cond PRIVATE
 
 #include "misc/datacache.h"
-#include "misc/atomicfile.h"
-#include "misc/identifier.h"
-#include "misc/logmessage.h"
-#include "misc/processinfo.h"
+
+#include <chrono>
+#include <memory>
+#include <utility>
 
 #include <QByteArray>
 #include <QDir>
@@ -20,9 +20,11 @@
 #include <QStandardPaths>
 #include <QTimer>
 #include <Qt>
-#include <memory>
-#include <utility>
-#include <chrono>
+
+#include "misc/atomicfile.h"
+#include "misc/identifier.h"
+#include "misc/logmessage.h"
+#include "misc/processinfo.h"
 
 namespace swift::misc
 {
@@ -834,6 +836,6 @@ namespace swift::misc
         }
     }
 
-}
+} // namespace swift::misc
 
 //! \endcond

@@ -3,8 +3,9 @@
 
 #include "misc/simulation/simulatorinfolist.h"
 
-#include <QList>
 #include <tuple>
+
+#include <QList>
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorInfo, CSimulatorInfoList)
 
@@ -59,4 +60,4 @@ namespace swift::misc::simulation
         if (sim.isXPlane()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
         return sims;
     }
-} // namespace
+} // namespace swift::misc::simulation

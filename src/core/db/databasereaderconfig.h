@@ -6,13 +6,6 @@
 #ifndef SWIFT_CORE_DB_DATABASE_READERCONFIG_H
 #define SWIFT_CORE_DB_DATABASE_READERCONFIG_H
 
-#include "core/swiftcoreexport.h"
-#include "misc/pq/time.h"
-#include "misc/network/entityflags.h"
-#include "misc/db/dbflags.h"
-#include "misc/sequence.h"
-#include "misc/valueobject.h"
-
 #include <QDateTime>
 #include <QJsonArray>
 #include <QObject>
@@ -20,6 +13,13 @@
 #include <QString>
 #include <QTimer>
 #include <QtGlobal>
+
+#include "core/swiftcoreexport.h"
+#include "misc/db/dbflags.h"
+#include "misc/network/entityflags.h"
+#include "misc/pq/time.h"
+#include "misc/sequence.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::db, CDatabaseReaderConfig)
 
@@ -82,7 +82,7 @@ namespace swift::core::db
             SWIFT_METAMEMBER(retrievalMode),
             SWIFT_METAMEMBER(cacheLifetime));
     };
-}
+} // namespace swift::core::db
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::core::db, CDatabaseReaderConfig, CDatabaseReaderConfigList)
 
@@ -146,7 +146,7 @@ namespace swift::core::db
         //! Init all with direct DB access
         static CDatabaseReaderConfigList allDirectDbAccess();
     };
-} // ns
+} // namespace swift::core::db
 
 Q_DECLARE_METATYPE(swift::core::db::CDatabaseReaderConfig)
 Q_DECLARE_METATYPE(swift::core::db::CDatabaseReaderConfigList)

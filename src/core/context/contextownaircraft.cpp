@@ -1,12 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
-#include "core/webdataservices.h"
 #include "core/context/contextownaircraft.h"
+
+#include "core/application.h"
 #include "core/context/contextownaircraftempty.h"
 #include "core/context/contextownaircraftimpl.h"
 #include "core/context/contextownaircraftproxy.h"
+#include "core/webdataservices.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/dbusserver.h"
 
@@ -60,4 +61,4 @@ namespace swift::core::context
         }
         return defaultModel;
     }
-} // namespace
+} // namespace swift::core::context

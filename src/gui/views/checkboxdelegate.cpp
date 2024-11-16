@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/stylesheetutility.h"
 #include "gui/views/checkboxdelegate.h"
 
 #include <QAbstractItemModel>
@@ -11,6 +10,8 @@
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/stylesheetutility.h"
 
 using namespace swift::gui;
 
@@ -59,4 +60,4 @@ namespace swift::gui::views
         editor->setGeometry(option.rect);
     }
 
-} // namespace
+} // namespace swift::gui::views

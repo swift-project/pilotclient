@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H
 #define SWIFT_MISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H
 
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/aviation/aircraftlights.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/windllutils.h"
-
 #include <QMetaType>
 #include <QObject>
-#include <QString>
 #include <QSettings>
 #include <QSharedPointer>
+#include <QString>
+
+#include "misc/aviation/aircraftlights.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/windllutils.h"
 
 // Apart from the below definitions, the following code is OS independent,
 // though it does not make sense to be used on non WIN machines.
@@ -246,7 +246,7 @@ namespace swift::misc::simulation::fsx
         //! Hidden constructor
         CSimConnectUtilities();
     };
-} // namespace
+} // namespace swift::misc::simulation::fsx
 
 Q_DECLARE_METATYPE(swift::misc::simulation::fsx::CSimConnectUtilities::SIMCONNECT_EXCEPTION)
 Q_DECLARE_METATYPE(swift::misc::simulation::fsx::CSimConnectUtilities::SIMCONNECT_SURFACE)

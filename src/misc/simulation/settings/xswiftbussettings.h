@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_SIMULATION_SETTINGS_XSWIFTBUSSETTINGS_H
 #define SWIFT_MISC_SIMULATION_SETTINGS_XSWIFTBUSSETTINGS_H
 
+#include <QString>
+
+#include "misc/dbusserver.h"
+#include "misc/settingscache.h"
 #include "misc/simulation/settings/xswiftbussettingsqtfree.h"
 #include "misc/statusmessagelist.h"
-#include "misc/settingscache.h"
-#include "misc/dbusserver.h"
-#include "misc/valueobject.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QString>
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CXSwiftBusSettings)
 
@@ -129,7 +129,7 @@ namespace swift::misc::simulation::settings
             return msgs.isSuccess();
         }
     };
-} // ns
+} // namespace swift::misc::simulation::settings
 
 Q_DECLARE_METATYPE(swift::misc::simulation::settings::CXSwiftBusSettings)
 

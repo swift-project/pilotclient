@@ -6,8 +6,9 @@
 #ifndef SWIFT_GUI_ECOSYSTEMCOMBOBOX_H
 #define SWIFT_GUI_ECOSYSTEMCOMBOBOX_H
 
-#include "misc/network/ecosystemlist.h"
 #include <QComboBox>
+
+#include "misc/network/ecosystemlist.h"
 
 namespace swift::gui
 {
@@ -41,5 +42,5 @@ namespace swift::gui
 
         swift::misc::network::CEcosystemList m_systems { swift::misc::network::CEcosystemList::allKnownSystems() };
     };
-} // ns
+} // namespace swift::gui
 #endif // guard

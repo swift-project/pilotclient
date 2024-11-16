@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "plugin.h"
-#include "service.h"
-#include "traffic.h"
-#include "utils.h"
-#include "XPLM/XPLMProcessing.h"
+
 #include <cmath>
 #include <functional>
 #include <thread>
+
+#include "XPLM/XPLMProcessing.h"
+#include "service.h"
+#include "traffic.h"
+#include "utils.h"
 
 namespace
 {
@@ -16,7 +18,7 @@ namespace
     {
         return std::string("org.swift-project.xswiftbus");
     }
-}
+} // namespace
 
 namespace XSwiftBus
 {
@@ -187,4 +189,4 @@ namespace XSwiftBus
         if (plugin->m_traffic) { plugin->m_traffic->process(); }
         return -1;
     }
-}
+} // namespace XSwiftBus

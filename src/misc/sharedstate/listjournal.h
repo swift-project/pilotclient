@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_LISTJOURNAL_H
 #define SWIFT_MISC_SHAREDSTATE_LISTJOURNAL_H
 
+#include <QMutex>
+#include <QObject>
+
 #include "misc/sharedstate/activemutator.h"
 #include "misc/sharedstate/passiveobserver.h"
-#include "misc/variantlist.h"
 #include "misc/swiftmiscexport.h"
-#include <QObject>
-#include <QMutex>
+#include "misc/variantlist.h"
 
 namespace swift::misc::shared_state
 {
@@ -54,6 +55,6 @@ namespace swift::misc::shared_state
         //! Constructor.
         CListJournal(QObject *parent) : CGenericListJournal(parent) {}
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

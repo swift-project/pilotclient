@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatormsfsfactory.h"
+
 #include "simulatormsfs.h"
+
 #include "misc/simulation/simulatorplugininfo.h"
 
 using namespace swift::misc::network;
@@ -24,4 +26,4 @@ namespace swift::simplugin::msfs
     {
         return new CSimulatorMsFsListener(info);
     }
-} // namespace
+} // namespace swift::simplugin::msfs

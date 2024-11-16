@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "modelbrowserdialog.h"
+
 #include "ui_modelbrowserdialog.h"
+
 #include "gui/guiapplication.h"
 
 namespace swift::gui::components
@@ -30,4 +32,4 @@ namespace swift::gui::components
         QDialog::done(r);
     }
 
-} // ns
+} // namespace swift::gui::components

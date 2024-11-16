@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simplecommandparser.h"
-#include "misc/pq/pqstring.h"
-#include "misc/stringutils.h"
+
+#include <algorithm>
 
 #include <QList>
 #include <QSet>
 #include <QStringBuilder>
-#include <algorithm>
+
+#include "misc/pq/pqstring.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc::physical_quantities;
 
@@ -226,4 +228,4 @@ namespace swift::misc
             m_knownCommands.append(formatCommand(c));
         }
     }
-} // namespace
+} // namespace swift::misc

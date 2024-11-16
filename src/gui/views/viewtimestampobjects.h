@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_VIEWS_VIEWTIMESTAMPOBJECTS_H
 #define SWIFT_GUI_VIEWS_VIEWTIMESTAMPOBJECTS_H
 
-#include "gui/views/viewbase.h"
 #include <QObject>
 #include <QString>
 #include <QtGlobal>
+
+#include "gui/views/viewbase.h"
 
 namespace swift::gui
 {
@@ -41,6 +42,6 @@ namespace swift::gui
             //! Constructor
             explicit CViewWithTimestampWithOffsetObjects(QWidget *parent = nullptr);
         };
-    } // namespace
-} // namespace
+    } // namespace views
+} // namespace swift::gui
 #endif // guard

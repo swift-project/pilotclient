@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbmodelkeycompleter.h"
+
+#include <QCompleter>
+
+#include "core/webdataservices.h"
 #include "gui/guiapplication.h"
 #include "gui/uppercasevalidator.h"
-#include "core/webdataservices.h"
-#include <QCompleter>
 
 using namespace swift::core;
 using namespace swift::misc::simulation;
@@ -45,4 +47,4 @@ namespace swift::gui::components
         if (models.isEmpty()) { return; }
         this->setCompleter(new QCompleter(models, this));
     }
-} // ns
+} // namespace swift::gui::components

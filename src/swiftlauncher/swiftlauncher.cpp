@@ -2,38 +2,41 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "swiftlauncher.h"
+
+#include <qcompilerdetection.h>
+
+#include <QBitmap>
+#include <QDesktopServices>
+#include <QMessageBox>
+#include <QPixmap>
+#include <QPointer>
+#include <QProcess>
+#include <QPushButton>
+#include <QShortcut>
+#include <QStringBuilder>
+#include <QTimer>
+
 #include "ui_swiftlauncher.h"
-#include "gui/overlaymessagesframe.h"
+
+#include "config/buildconfig.h"
+#include "core/context/contextapplicationproxy.h"
+#include "core/context/contextnetwork.h"
+#include "core/setupreader.h"
 #include "gui/components/configurationwizard.h"
 #include "gui/components/texteditdialog.h"
 #include "gui/guiapplication.h"
+#include "gui/overlaymessagesframe.h"
 #include "gui/stylesheetutility.h"
-#include "core/context/contextapplicationproxy.h"
-#include "core/setupreader.h"
-#include "sound/audioutilities.h"
-#include "misc/simulation/fscommon/fsdirectories.h"
-#include "core/context/contextnetwork.h"
-#include "misc/network/networkutils.h"
 #include "misc/dbusserver.h"
-#include "misc/swiftdirectories.h"
 #include "misc/directoryutils.h"
 #include "misc/icons.h"
-#include "misc/logmessage.h"
 #include "misc/loghandler.h"
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
 #include "misc/sharedstate/datalinkdbus.h"
-#include "config/buildconfig.h"
-
-#include <QMessageBox>
-#include <QPixmap>
-#include <QBitmap>
-#include <QTimer>
-#include <QProcess>
-#include <QPushButton>
-#include <QStringBuilder>
-#include <QDesktopServices>
-#include <QShortcut>
-#include <QPointer>
-#include <qcompilerdetection.h>
+#include "misc/simulation/fscommon/fsdirectories.h"
+#include "misc/swiftdirectories.h"
+#include "sound/audioutilities.h"
 
 using namespace swift::config;
 using namespace swift::gui;

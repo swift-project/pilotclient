@@ -6,18 +6,18 @@
 #ifndef SWIFT_GUI_COMPONENTS_AUDIODEVICEVOLUMESETUPCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_AUDIODEVICEVOLUMESETUPCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/audio/audiosettings.h"
-#include "misc/audio/audiodeviceinfolist.h"
-#include "misc/aviation/callsignset.h"
-#include "misc/connectionguard.h"
-#include "misc/settingscache.h"
-#include "misc/digestsignal.h"
-
-#include <QFrame>
 #include <QCheckBox>
+#include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/audio/audiodeviceinfolist.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/connectionguard.h"
+#include "misc/digestsignal.h"
+#include "misc/settingscache.h"
 
 namespace Ui
 {
@@ -158,6 +158,6 @@ namespace swift::gui::components
     private slots:
         void simulatorSettingsChanged();
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

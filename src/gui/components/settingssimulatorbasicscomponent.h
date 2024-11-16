@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSSIMULATORBASICSCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/fscommon/fscommonutil.h"
-#include "misc/logcategories.h"
-
-#include <QFrame>
 #include <QFileDialog>
+#include <QFrame>
+
+#include "gui/overlaymessagesframe.h"
+#include "misc/logcategories.h"
+#include "misc/simulation/fscommon/fscommonutil.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 
 namespace Ui
 {
@@ -134,6 +134,6 @@ namespace swift::gui::components
         //! Simulator directory either from input or settings or default
         QString getFileBrowserSimulatorDirectory() const;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -6,29 +6,29 @@
 #ifndef SWIFT_GUI_LOGINCOMPONENT_H
 #define SWIFT_GUI_LOGINCOMPONENT_H
 
-#include "core/vatsim/vatsimsettings.h"
+#include <QFrame>
+#include <QIcon>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+#include <QTimer>
+
 #include "core/data/networksetup.h"
-#include "gui/settings/guisettings.h"
+#include "core/vatsim/vatsimsettings.h"
 #include "gui/overlaymessagesframe.h"
+#include "gui/settings/guisettings.h"
 #include "gui/swiftguiexport.h"
-#include "misc/simulation/data/lastmodel.h"
-#include "misc/simulation/simulatedaircraft.h"
 #include "misc/aviation/callsign.h"
+#include "misc/datacache.h"
+#include "misc/digestsignal.h"
 #include "misc/network/connectionstatus.h"
 #include "misc/network/data/lastserver.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/server.h"
 #include "misc/network/user.h"
-#include "misc/digestsignal.h"
 #include "misc/settingscache.h"
-#include "misc/datacache.h"
-
-#include <QFrame>
-#include <QIcon>
-#include <QTimer>
-#include <QObject>
-#include <QScopedPointer>
-#include <QString>
+#include "misc/simulation/data/lastmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 namespace Ui
 {
@@ -38,7 +38,7 @@ namespace swift::misc::simulation
 {
     class CAircraftModel;
     class CSimulatedAircraft;
-}
+} // namespace swift::misc::simulation
 namespace swift::gui::components
 {
     /*!
@@ -192,6 +192,6 @@ namespace swift::gui::components
         swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
         swift::core::data::CNetworkSetup m_networkSetup; //!< servers last used
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

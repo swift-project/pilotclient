@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsmodelcomponent.h"
-#include "ui_settingsmodelcomponent.h"
-#include "gui/guiapplication.h"
-#include "core/db/backgrounddataupdater.h"
-#include "misc/logmessage.h"
 
 #include <QValidator>
+
+#include "ui_settingsmodelcomponent.h"
+
+#include "core/db/backgrounddataupdater.h"
+#include "gui/guiapplication.h"
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation::settings;
@@ -93,4 +95,4 @@ namespace swift::gui::components
             ui->cb_AllowExcludeModels->setChecked(ms.getAllowExcludedModels());
         }
     }
-} // ns
+} // namespace swift::gui::components

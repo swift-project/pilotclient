@@ -6,17 +6,17 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTAPPLICATION_PROXY_H
 #define SWIFT_CORE_CONTEXT_CONTEXTAPPLICATION_PROXY_H
 
-#include "core/swiftcoreexport.h"
-#include "core/context/contextapplication.h"
-#include "core/corefacadeconfig.h"
-#include "misc/statusmessage.h"
-#include "misc/valuecache.h"
-
 #include <QObject>
+#include <QSet>
 #include <QString>
 #include <QStringList>
 #include <QTimer>
-#include <QSet>
+
+#include "core/context/contextapplication.h"
+#include "core/corefacadeconfig.h"
+#include "core/swiftcoreexport.h"
+#include "misc/statusmessage.h"
+#include "misc/valuecache.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -111,7 +111,7 @@ namespace swift::core
 
             void processRemoteHotkeyActionCall(const QString &action, bool argument, const swift::misc::CIdentifier &origin);
         };
-    } // ns
-} // ns
+    } // namespace context
+} // namespace swift::core
 
 #endif // guard

@@ -29,6 +29,6 @@ namespace swift::simplugin::msfs
         //! \copydoc swift::gui::IPluginConfig::createConfigWindow()
         swift::gui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
     };
-}
+} // namespace swift::simplugin::msfs
 
 #endif // guard

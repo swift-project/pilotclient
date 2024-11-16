@@ -6,14 +6,16 @@
 #ifndef SWIFT_MISC_AVIATION_CALLSIGN_H
 #define SWIFT_MISC_AVIATION_CALLSIGN_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-#include "misc/statusmessage.h"
+#include <tuple>
+
 #include <QMetaType>
 #include <QString>
-#include <tuple>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CCallsign)
 
@@ -231,8 +233,8 @@ namespace swift::misc
                 SWIFT_METAMEMBER(telephonyDesignator, 0, DisabledForComparison | DisabledForHashing),
                 SWIFT_METAMEMBER(typeHint, 0, DisabledForComparison | DisabledForHashing));
         };
-    } // namespace
-} // namespace
+    } // namespace aviation
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CCallsign)
 Q_DECLARE_METATYPE(swift::misc::aviation::CCallsign::TypeHint)

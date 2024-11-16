@@ -3,12 +3,13 @@
 
 #include "misc/pixmap.h"
 
+#include <tuple>
+
 #include <QBuffer>
 #include <QIODevice>
 #include <QReadLocker>
 #include <QWriteLocker>
 #include <QtGlobal>
-#include <tuple>
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CPixmap)
 
@@ -84,4 +85,4 @@ namespace swift::misc
         buffer.close();
     }
 
-} // namespace
+} // namespace swift::misc

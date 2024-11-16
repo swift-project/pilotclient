@@ -18,4 +18,4 @@ namespace swift::misc::simulation
         m_interpolationStatus = interpolation;
         m_partsStatus = parts;
     }
-}
+} // namespace swift::misc::simulation

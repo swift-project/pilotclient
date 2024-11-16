@@ -4,13 +4,15 @@
 //! \file
 
 #include "core/githubpackagesreader.h"
-#include "core/application.h"
-#include "config/buildconfig.h"
+
 #include <QNetworkAccessManager>
-#include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QStringBuilder>
 #include <QUrl>
+
+#include "config/buildconfig.h"
+#include "core/application.h"
 
 using namespace swift::misc::db;
 using namespace swift::config;
@@ -43,4 +45,4 @@ namespace swift::core
     {
         return m_updateInfo.get();
     }
-}
+} // namespace swift::core

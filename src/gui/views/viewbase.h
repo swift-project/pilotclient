@@ -6,19 +6,7 @@
 #ifndef SWIFT_GUI_VIEWBASE_H
 #define SWIFT_GUI_VIEWBASE_H
 
-#include "gui/models/modelfilter.h"
-#include "gui/models/selectionmodel.h"
-#include "gui/settings/guisettings.h"
-#include "gui/menus/menuaction.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/swiftguiexport.h"
-#include "misc/namevariantpairlist.h"
-#include "misc/directories.h"
-#include "misc/statusmessage.h"
-#include "misc/variant.h"
-#include "misc/propertyindexvariantmap.h"
-#include "misc/propertyindex.h"
+#include <memory>
 
 #include <QAbstractItemView>
 #include <QFlags>
@@ -32,7 +20,20 @@
 #include <QTableView>
 #include <Qt>
 #include <QtGlobal>
-#include <memory>
+
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/menus/menuaction.h"
+#include "gui/models/modelfilter.h"
+#include "gui/models/selectionmodel.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/settings/guisettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/directories.h"
+#include "misc/namevariantpairlist.h"
+#include "misc/propertyindex.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/statusmessage.h"
+#include "misc/variant.h"
 
 class QDragEnterEvent;
 class QDragLeaveEvent;
@@ -59,7 +60,7 @@ namespace swift::gui
     {
         class IMenuDelegate;
         class CFontMenu;
-    }
+    } // namespace menus
 
     namespace models
     {
@@ -70,7 +71,7 @@ namespace swift::gui
     {
         class CFilterDialog;
         class CFilterWidget;
-    }
+    } // namespace filters
 
     namespace components
     {
@@ -953,6 +954,6 @@ namespace swift::gui
             virtual swift::misc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) override;
             //! @}
         };
-    } // namespace
-} // namespace
+    } // namespace views
+} // namespace swift::gui
 #endif // guard

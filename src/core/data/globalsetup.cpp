@@ -1,22 +1,23 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "config/buildconfig.h"
 #include "core/data/globalsetup.h"
+
+#include <QJsonObject>
+#include <QStringBuilder>
+#include <QStringList>
+#include <QSysInfo>
+#include <QVersionNumber>
+
+#include "config/buildconfig.h"
 #include "core/application.h"
-#include "misc/json.h"
-#include "misc/swiftdirectories.h"
+#include "misc/crashhandler.h"
 #include "misc/directoryutils.h"
+#include "misc/json.h"
 #include "misc/network/server.h"
 #include "misc/network/user.h"
 #include "misc/stringutils.h"
-#include "misc/crashhandler.h"
-
-#include <QVersionNumber>
-#include <QJsonObject>
-#include <QSysInfo>
-#include <QStringList>
-#include <QStringBuilder>
+#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -203,4 +204,4 @@ namespace swift::core::data
         static const QString v("0.7.0");
         return v;
     }
-} // ns
+} // namespace swift::core::data

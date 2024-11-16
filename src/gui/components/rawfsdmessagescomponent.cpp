@@ -1,16 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_rawfsdmessagescomponent.h"
 #include "gui/components/rawfsdmessagescomponent.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextnetwork.h"
-#include "misc/directoryutils.h"
 
-#include <QFileDialog>
 #include <QDir>
+#include <QFileDialog>
 #include <QStringList>
 #include <QtGlobal>
+
+#include "ui_rawfsdmessagescomponent.h"
+
+#include "core/context/contextnetwork.h"
+#include "gui/guiapplication.h"
+#include "misc/directoryutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -230,4 +232,4 @@ namespace swift::gui::components
     {
         return QStringLiteral("%1 %2").arg(rawFsdMessage.getFormattedUtcTimestampHmsz(), rawFsdMessage.getRawMessage());
     }
-} // namespace
+} // namespace swift::gui::components

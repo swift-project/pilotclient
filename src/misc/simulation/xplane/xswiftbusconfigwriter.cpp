@@ -4,12 +4,13 @@
 //! \file
 
 #include "misc/simulation/xplane/xswiftbusconfigwriter.h"
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/dbusserver.h"
-#include "misc/stringutils.h"
 
 #include <QFile>
 #include <QTextStream>
+
+#include "misc/dbusserver.h"
+#include "misc/simulation/xplane/xplaneutil.h"
+#include "misc/stringutils.h"
 
 namespace swift::misc::simulation::xplane
 {
@@ -95,4 +96,4 @@ namespace swift::misc::simulation::xplane
             ts << Qt::endl;
         }
     }
-} // ns
+} // namespace swift::misc::simulation::xplane

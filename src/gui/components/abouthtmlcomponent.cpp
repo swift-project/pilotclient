@@ -1,19 +1,19 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/guiapplication.h"
-#include "misc/fileutils.h"
-#include "misc/directoryutils.h"
 #include "abouthtmlcomponent.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/fileutils.h"
+
+#include <QDesktopServices>
+#include <QFile>
+#include <QPointer>
+#include <QTimer>
+
 #include "ui_abouthtmlcomponent.h"
 
-#include <QFile>
-#include <QTimer>
-#include <QPointer>
-#include <QDesktopServices>
+#include "gui/guiapplication.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::misc;
 
@@ -73,4 +73,4 @@ namespace swift::gui::components
             QDesktopServices::openUrl(QUrl::fromLocalFile(possibleLegalFile));
         };
     }
-} // ns
+} // namespace swift::gui::components

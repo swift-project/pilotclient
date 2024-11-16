@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsswiftplugin.h"
-#include "misc/logmessage.h"
+
 #include "ui_settingsswiftplugin.h"
+
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -60,4 +62,4 @@ namespace swift::gui::components
         settings.setLoggingFunctionCalls(ui->cb_LogFunctionCalls->isChecked());
         return settings;
     }
-} // ns
+} // namespace swift::gui::components

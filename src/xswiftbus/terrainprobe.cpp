@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "terrainprobe.h"
-#include "utils.h"
+
 #include <XPLM/XPLMGraphics.h>
-#include <limits>
+
 #include <cmath>
+#include <limits>
+
+#include "utils.h"
 
 namespace XSwiftBus
 {
@@ -58,4 +61,4 @@ namespace XSwiftBus
         o_isWater = probe.is_wet;
         return { { metersAltitude, degreesLatitude, degreesLongitude } };
     }
-} // ns
+} // namespace XSwiftBus

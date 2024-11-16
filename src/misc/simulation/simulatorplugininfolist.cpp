@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/range.h"
-#include "misc/simulation/simulatorplugininfo.h"
 #include "misc/simulation/simulatorplugininfolist.h"
 
 #include <algorithm>
+
+#include "misc/range.h"
+#include "misc/simulation/simulatorplugininfo.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorPluginInfo, CSimulatorPluginInfoList)
 
@@ -38,4 +39,4 @@ namespace swift::misc::simulation
         }
         return CSimulatorPluginInfo();
     }
-} // namespace
+} // namespace swift::misc::simulation

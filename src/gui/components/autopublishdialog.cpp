@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "autopublishdialog.h"
-#include "gui/guiapplication.h"
+
 #include "ui_autopublishdialog.h"
+
+#include "gui/guiapplication.h"
 
 namespace swift::gui::components
 {
@@ -29,4 +31,4 @@ namespace swift::gui::components
         CGuiApplication::modalWindowToFront();
         return r;
     }
-} // ns
+} // namespace swift::gui::components

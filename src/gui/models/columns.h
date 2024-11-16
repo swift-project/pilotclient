@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_MODELS_COLUMNS_H
 #define SWIFT_GUI_MODELS_COLUMNS_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/columnformatters.h"
-#include "misc/propertyindex.h"
-#include "misc/variant.h"
-
 #include <QList>
 #include <QObject>
 #include <QSharedPointer>
 #include <QString>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/swiftguiexport.h"
+#include "misc/propertyindex.h"
+#include "misc/variant.h"
 
 class QModelIndex;
 
@@ -243,6 +243,6 @@ namespace swift::gui::models
         QList<CColumn> m_columns; //!< all columns
         QString m_translationContext; //!< for future usage
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

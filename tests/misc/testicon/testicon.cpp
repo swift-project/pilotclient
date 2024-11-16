@@ -5,10 +5,12 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/iconlist.h"
-#include "test.h"
 #include <QString>
 #include <QTest>
+
+#include "test.h"
+
+#include "misc/iconlist.h"
 
 using namespace swift::misc;
 
@@ -43,7 +45,7 @@ namespace MiscTest
             c++;
         }
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestIcon);

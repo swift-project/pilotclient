@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simbriefdownloaddialog.h"
+
 #include "ui_simbriefdownloaddialog.h"
 
 using namespace swift::misc::aviation;
@@ -39,4 +40,4 @@ namespace swift::gui::components
         }
         return r;
     }
-} // ns
+} // namespace swift::gui::components

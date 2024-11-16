@@ -9,9 +9,9 @@
 #include <QObject>
 #include <QString>
 
-#include "core/swiftcoreexport.h"
 #include "core/context/contextaudio.h"
 #include "core/corefacadeconfig.h"
+#include "core/swiftcoreexport.h"
 #include "misc/audio/audiodeviceinfolist.h"
 #include "misc/audio/notificationsounds.h"
 #include "misc/aviation/callsignset.h"
@@ -35,7 +35,7 @@ namespace swift::misc
     {
         class CCallsign;
     }
-}
+} // namespace swift::misc
 
 namespace swift::core
 {
@@ -94,7 +94,7 @@ namespace swift::core
             //! DBus version constructor
             CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
         };
-    } // ns
-} // ns
+    } // namespace context
+} // namespace swift::core
 
 #endif // guard

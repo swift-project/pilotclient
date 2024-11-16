@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_INSTALLFSXTERRAINPROBECOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_INSTALLFSXTERRAINPROBECOMPONENT_H
 
-#include "misc/simulation/settings/simulatorsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/simulation/settings/simulatorsettings.h"
 
 namespace Ui
 {
@@ -42,6 +43,6 @@ namespace swift::gui::components
 
         swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings { this }; //!< for SimObjects directories
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -6,8 +6,9 @@
 #ifndef SWIFT_MISC_OBFUSCATION_H
 #define SWIFT_MISC_OBFUSCATION_H
 
-#include "misc/swiftmiscexport.h"
 #include <QString>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -31,5 +32,5 @@ namespace swift::misc
     private:
         static constexpr quint64 Key = 7234623562;
     };
-}
+} // namespace swift::misc
 #endif // guard

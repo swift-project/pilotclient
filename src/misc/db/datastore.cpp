@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/db/datastore.h"
+
+#include <QDateTime>
+#include <QStringBuilder>
+#include <QtGlobal>
+
 #include "misc/comparefunctions.h"
 #include "misc/db/datastoreutility.h"
 #include "misc/icon.h"
-
-#include <QDateTime>
-#include <QtGlobal>
-#include <QStringBuilder>
 
 namespace swift::misc::db
 {
@@ -250,4 +251,4 @@ namespace swift::misc::db
         const int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexDbStringKey)) && (i < static_cast<int>(IndexEndMarker));
     }
-} // namespace
+} // namespace swift::misc::db

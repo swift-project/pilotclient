@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsxswiftbuscomponent.h"
+
+#include <QComboBox>
+
 #include "ui_settingsxswiftbuscomponent.h"
+
 #include "misc/dbusserver.h"
 #include "misc/logmessage.h"
 #include "misc/simulation/xplane/xswiftbusconfigwriter.h"
-
-#include <QComboBox>
 
 using namespace swift::misc;
 using namespace swift::misc::simulation::settings;
@@ -59,4 +61,4 @@ namespace swift::gui::components
             CLogMessage::preformatted(msg);
         }
     }
-} // ns
+} // namespace swift::gui::components

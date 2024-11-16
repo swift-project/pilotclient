@@ -2,21 +2,23 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/interpolation/interpolationlogger.h"
-#include "misc/aviation/callsign.h"
-#include "misc/aviation/heading.h"
-#include "misc/geo/kmlutils.h"
-#include "misc/pq/angle.h"
-#include "misc/pq/speed.h"
-#include "misc/pq/units.h"
-#include "misc/pq/length.h"
-#include "misc/logmessage.h"
-#include "misc/worker.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
+
 #include <QDateTime>
 #include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/heading.h"
+#include "misc/directoryutils.h"
+#include "misc/geo/kmlutils.h"
+#include "misc/logmessage.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/length.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/units.h"
+#include "misc/stringutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/worker.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -587,4 +589,4 @@ namespace swift::misc::simulation
 #    pragma GCC diagnostic pop
 #endif
 
-} // namespace
+} // namespace swift::misc::simulation

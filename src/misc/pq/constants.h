@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_PQ_CONSTANTS_H
 #define SWIFT_MISC_PQ_CONSTANTS_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/pq/temperature.h"
-#include "misc/pq/pressure.h"
 #include "misc/pq/frequency.h"
+#include "misc/pq/pressure.h"
+#include "misc/pq/temperature.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::physical_quantities
 {
@@ -83,6 +83,6 @@ namespace swift::misc::physical_quantities
         }
     };
 
-} // namespace
+} // namespace swift::misc::physical_quantities
 
 #endif // guard

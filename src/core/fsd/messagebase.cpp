@@ -13,4 +13,4 @@ namespace swift::core::fsd
         : m_sender(sender),
           m_receiver(receiver)
     {}
-}
+} // namespace swift::core::fsd

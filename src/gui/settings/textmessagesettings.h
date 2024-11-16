@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_SETTINGS_TEXTMESSAGESETTINGS_H
 #define SWIFT_GUI_SETTINGS_TEXTMESSAGESETTINGS_H
 
+#include <QString>
+
 #include "gui/swiftguiexport.h"
 #include "misc/settingscache.h"
-#include <QString>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CTextMessageSettings)
 
@@ -22,7 +23,7 @@ namespace swift::misc
     {
         class CTextMessage;
     }
-}
+} // namespace swift::misc
 namespace swift::gui::settings
 {
     //! Text message settings
@@ -162,7 +163,7 @@ namespace swift::gui::settings
             return name;
         }
     };
-} // ns
+} // namespace swift::gui::settings
 
 Q_DECLARE_METATYPE(swift::gui::settings::CTextMessageSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::gui::settings::CTextMessageSettings>)

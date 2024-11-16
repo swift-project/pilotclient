@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/afv/crypto/cryptodtochannel.h"
-#include "misc/verify.h"
+
 #include "sodium/crypto_aead_chacha20poly1305.h"
+
+#include "misc/verify.h"
 
 using namespace swift::misc;
 
@@ -129,4 +131,4 @@ namespace swift::core::afv::crypto
         }
         return minValue;
     }
-} // ns
+} // namespace swift::core::afv::crypto

@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_WORKER_H
 #define SWIFT_MISC_WORKER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/connectionguard.h"
-#include "misc/logcategories.h"
-#include "misc/invoke.h"
-#include "misc/promise.h"
-#include "misc/stacktrace.h"
+#include <algorithm>
+#include <atomic>
+#include <functional>
+#include <future>
+#include <memory>
+#include <type_traits>
 
 #include <QFuture>
 #include <QMetaObject>
@@ -27,12 +27,13 @@
 #include <QVariant>
 #include <QWeakPointer>
 #include <QtGlobal>
-#include <algorithm>
-#include <functional>
-#include <memory>
-#include <type_traits>
-#include <atomic>
-#include <future>
+
+#include "misc/connectionguard.h"
+#include "misc/invoke.h"
+#include "misc/logcategories.h"
+#include "misc/promise.h"
+#include "misc/stacktrace.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -348,6 +349,6 @@ namespace swift::misc
         QString m_name; //!< worker's name
         std::atomic<bool> m_enabled { true }; //!< marker it is enabled
     };
-}
+} // namespace swift::misc
 
 #endif

@@ -6,16 +6,17 @@
 #ifndef SWIFT_MISC_CONTAINERBASE_H
 #define SWIFT_MISC_CONTAINERBASE_H
 
-#include "misc/range.h"
-#include "misc/predicates.h"
+#include <algorithm>
+
+#include <QStringList>
+
 #include "misc/json.h"
+#include "misc/mixin/mixindbus.h"
 #include "misc/mixin/mixinjson.h"
 #include "misc/mixin/mixinmetatype.h"
-#include "misc/mixin/mixindbus.h"
 #include "misc/mixin/mixinstring.h"
-
-#include <algorithm>
-#include <QStringList>
+#include "misc/predicates.h"
+#include "misc/range.h"
 
 namespace swift::misc
 {
@@ -246,6 +247,6 @@ namespace swift::misc
         Derived &derived() { return static_cast<Derived &>(*this); }
         const Derived &derived() const { return static_cast<const Derived &>(*this); }
     };
-}
+} // namespace swift::misc
 
 #endif // guard

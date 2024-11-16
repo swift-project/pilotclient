@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/audio/notificationsounds.h"
-#include <QStringList>
+
 #include <QString>
+#include <QStringList>
 
 namespace swift::misc::audio
 {
@@ -63,4 +64,4 @@ namespace swift::misc::audio
         if (notification.testFlag(AFVBlocked)) n << flagToString(AFVBlocked);
         return n.join(", ");
     }
-} // ns
+} // namespace swift::misc::audio

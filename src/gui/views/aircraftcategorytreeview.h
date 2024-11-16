@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_VIEWS_AIRCRAFTCATEGORYTREEVIEW_H
 #define SWIFT_GUI_VIEWS_AIRCRAFTCATEGORYTREEVIEW_H
 
+#include <QMap>
+#include <QModelIndex>
+#include <QObject>
+#include <QPoint>
+#include <QTreeView>
+
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/aircraftcategorylist.h"
 #include "misc/digestsignal.h"
-
-#include <QTreeView>
-#include <QObject>
-#include <QPoint>
-#include <QMap>
-#include <QModelIndex>
 
 namespace swift::gui
 {
@@ -22,7 +22,7 @@ namespace swift::gui
     {
         class CAircraftCategoryTreeModel;
         class CColumns;
-    }
+    } // namespace models
 
     namespace views
     {
@@ -71,7 +71,7 @@ namespace swift::gui
 
             swift::misc::CDigestSignal m_dsFullResize { this, &CAircraftCategoryTreeView::fullResizeToContentsImpl, 1000, 25 };
         };
-    } // ns
-} // ns
+    } // namespace views
+} // namespace swift::gui
 
 #endif // guard

@@ -2,9 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "coresettingsdialog.h"
-#include "ui_coresettingsdialog.h"
-#include "gui/guiapplication.h"
+
 #include <QPushButton>
+
+#include "ui_coresettingsdialog.h"
+
+#include "gui/guiapplication.h"
 
 namespace swift::gui::components
 {
@@ -26,4 +29,4 @@ namespace swift::gui::components
     {
         ui->comp_SettingsComponent->setSettingsOverviewTab();
     }
-} // ns
+} // namespace swift::gui::components

@@ -1,32 +1,34 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/pq/measurementunit.h"
 #include "misc/pq/physicalquantity.h"
-#include "misc/pq/pqstring.h"
-#include "misc/propertyindexref.h"
-#include "misc/pq/length.h"
-#include "misc/pq/pressure.h"
-#include "misc/pq/frequency.h"
-#include "misc/pq/mass.h"
-#include "misc/pq/temperature.h"
-#include "misc/pq/speed.h"
-#include "misc/pq/angle.h"
-#include "misc/pq/time.h"
-#include "misc/pq/acceleration.h"
-#include "misc/propertyindexvariantmap.h"
-#include "misc/comparefunctions.h"
-#include "misc/stringutils.h"
-#include "misc/dictionary.h"
-#include "misc/verify.h"
+
+#include <cmath>
+#include <limits>
 
 #include <QDBusArgument>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QString>
 #include <QtGlobal>
-#include <limits>
-#include <cmath>
+
+#include "misc/comparefunctions.h"
+#include "misc/dictionary.h"
+#include "misc/pq/acceleration.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/pq/mass.h"
+#include "misc/pq/measurementunit.h"
+#include "misc/pq/pqstring.h"
+#include "misc/pq/pressure.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/temperature.h"
+#include "misc/pq/time.h"
+#include "misc/propertyindexref.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 SWIFT_DEFINE_PQ_MIXINS(CAngleUnit, CAngle)
 SWIFT_DEFINE_PQ_MIXINS(CLengthUnit, CLength)
@@ -596,4 +598,4 @@ namespace swift::misc::physical_quantities
     template class CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
     //! \endcond
 
-} // namespace
+} // namespace swift::misc::physical_quantities

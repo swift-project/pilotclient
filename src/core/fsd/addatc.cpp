@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/addatc.h"
+
 #include "core/fsd/serializer.h"
 #include "misc/logmessage.h"
 
@@ -45,4 +46,4 @@ namespace swift::core::fsd
         const int protocolRevision = tokens[6].toInt();
         return AddAtc(tokens[0], tokens[2], tokens[3], tokens[4], rating, protocolRevision);
     }
-}
+} // namespace swift::core::fsd

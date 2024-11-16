@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbownmodelsetdialog.h"
+
 #include "ui_dbownmodelsetdialog.h"
 
 using namespace swift::misc::simulation;
@@ -38,4 +39,4 @@ namespace swift::gui::components
     {
         ui->comp_OwnModelSet->enableButtons(firstSet, newSet);
     }
-} // ns
+} // namespace swift::gui::components

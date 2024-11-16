@@ -2,6 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/aircraftcomponent.h"
+
+#include <QPointer>
+#include <QString>
+#include <QTabBar>
+#include <QTimer>
+
+#include "ui_aircraftcomponent.h"
+
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextsimulator.h"
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "gui/infoarea.h"
@@ -9,17 +20,8 @@
 #include "gui/views/airportview.h"
 #include "gui/views/simulatedaircraftview.h"
 #include "gui/views/viewbase.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
-#include "core/context/contextownaircraft.h"
-#include "misc/network/server.h"
 #include "misc/network/fsdsetup.h"
-#include "ui_aircraftcomponent.h"
-
-#include <QString>
-#include <QTabBar>
-#include <QTimer>
-#include <QPointer>
+#include "misc/network/server.h"
 
 using namespace swift::gui;
 using namespace swift::gui::views;
@@ -183,4 +185,4 @@ namespace swift::gui::components
         Q_UNUSED(distance)
         this->updateViews();
     }
-} // namespace
+} // namespace swift::gui::components

@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/logpattern.h"
-#include "misc/logcategory.h"
-#include "misc/logcategorylist.h"
-#include "misc/sequence.h"
+
+#include <algorithm>
 
 #include <QHash>
 #include <QList>
-#include <algorithm>
+
+#include "misc/logcategory.h"
+#include "misc/logcategorylist.h"
+#include "misc/sequence.h"
 
 namespace swift::misc
 {
@@ -396,4 +398,4 @@ namespace swift::misc
             if (severities & (1 << s)) { m_severities.insert(static_cast<CStatusMessage::StatusSeverity>(s)); }
         }
     }
-}
+} // namespace swift::misc

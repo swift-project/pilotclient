@@ -6,26 +6,27 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBSTASHCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBSTASHCOMPONENT_H
 
+#include <functional>
+
+#include <QFrame>
+#include <QList>
+#include <QMessageBox>
+#include <QObject>
+#include <QScopedPointer>
+#include <QStringList>
+
+#include "core/data/authenticateduser.h"
 #include "gui/components/dbmappingcomponentaware.h"
 #include "gui/enablefordockwidgetinfoarea.h"
 #include "gui/swiftguiexport.h"
-#include "core/data/authenticateduser.h"
 #include "misc/aviation/airlineicaocode.h"
-#include "misc/propertyindexvariantmap.h"
 #include "misc/network/authenticateduser.h"
+#include "misc/propertyindexvariantmap.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/distributor.h"
 #include "misc/statusmessage.h"
 #include "misc/statusmessagelist.h"
-
-#include <QFrame>
-#include <QList>
-#include <QObject>
-#include <QScopedPointer>
-#include <QMessageBox>
-#include <QStringList>
-#include <functional>
 
 class QWidget;
 
@@ -36,8 +37,8 @@ namespace swift::misc
     {
         class CAircraftIcaoCode;
         class CLivery;
-    }
-}
+    } // namespace aviation
+} // namespace swift::misc
 namespace Ui
 {
     class CDbStashComponent;
@@ -213,7 +214,7 @@ namespace swift::gui
             //! Authenticated DB user
             swift::misc::network::CAuthenticatedUser getSwiftDbUser() const;
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

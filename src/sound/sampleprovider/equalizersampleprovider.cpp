@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "equalizersampleprovider.h"
-#include "sound/audioutilities.h"
+
 #include <QDebug>
+
+#include "sound/audioutilities.h"
 
 using namespace swift::sound::dsp;
 
@@ -58,4 +60,4 @@ namespace swift::sound::sample_provider
     {
         m_outputGain = outputGain;
     }
-} // ns
+} // namespace swift::sound::sample_provider

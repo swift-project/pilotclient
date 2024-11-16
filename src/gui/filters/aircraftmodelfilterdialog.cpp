@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/filters/aircraftmodelfilterbar.h"
 #include "gui/filters/aircraftmodelfilterdialog.h"
-#include "misc/simulation/aircraftmodellist.h"
+
 #include "ui_aircraftmodelfilterdialog.h"
+
+#include "gui/filters/aircraftmodelfilterbar.h"
+#include "misc/simulation/aircraftmodellist.h"
 
 using namespace swift::gui::models;
 using namespace swift::gui::filters;
@@ -30,4 +32,4 @@ namespace swift::gui::filters
     {
         return ui->filter_Models->createModelFilter();
     }
-} // namespace
+} // namespace swift::gui::filters

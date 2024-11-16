@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/matchinglog.h"
+
 #include <QStringList>
 
 namespace swift::misc::simulation
@@ -44,4 +45,4 @@ namespace swift::misc::simulation
         if (log.testFlag(MatchingLogScoring)) { l << matchingLogFlagToString(MatchingLogScoring); }
         return l.join(", ");
     }
-} // ns
+} // namespace swift::misc::simulation

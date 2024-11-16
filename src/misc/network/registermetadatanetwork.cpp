@@ -16,10 +16,10 @@
 #include "misc/network/loginmode.h"
 #include "misc/network/rawfsdmessage.h"
 #include "misc/network/rawfsdmessagelist.h"
-#include "misc/network/role.h"
-#include "misc/network/rolelist.h"
 #include "misc/network/remotefile.h"
 #include "misc/network/remotefilelist.h"
+#include "misc/network/role.h"
+#include "misc/network/rolelist.h"
 #include "misc/network/server.h"
 #include "misc/network/serverlist.h"
 #include "misc/network/textmessage.h"
@@ -66,6 +66,6 @@ namespace swift::misc
             CUserList::registerMetadata();
             CVoiceCapabilities::registerMetadata();
         }
-    }
+    } // namespace network
 
-} // ns
+} // namespace swift::misc

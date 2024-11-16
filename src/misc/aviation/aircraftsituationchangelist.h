@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTSITUATIONCHANGELIST_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTSITUATIONCHANGELIST_H
 
-#include "misc/swiftmiscexport.h"
+#include "misc/aviation/aircraftsituationchange.h"
 #include "misc/collection.h"
 #include "misc/sequence.h"
-#include "misc/aviation/aircraftsituationchange.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/timestampobjectlist.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituationChange, CAircraftSituationChangeList)
@@ -48,7 +48,7 @@ namespace swift::misc::aviation
     //! Changes per callsign
     using CAircraftSituationChangeListPerCallsign = QHash<CCallsign, CAircraftSituationChangeList>;
 
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituationChangeList)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituationChangePerCallsign)

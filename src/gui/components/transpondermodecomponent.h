@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_TRANSPONDERMODECOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_TRANSPONDERMODECOMPONENT_H
 
-#include "misc/aviation/transponder.h"
-#include "misc/identifiable.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/aviation/transponder.h"
+#include "misc/identifiable.h"
 
 namespace Ui
 {
@@ -22,7 +23,7 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
     }
-}
+} // namespace swift::misc
 namespace swift::gui::components
 {
     /*!
@@ -56,6 +57,6 @@ namespace swift::gui::components
         //! Changed cockpit data
         void onChangedAircraftCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft, const swift::misc::CIdentifier &originator);
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

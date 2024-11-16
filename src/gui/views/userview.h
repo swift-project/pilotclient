@@ -6,9 +6,9 @@
 #ifndef SWIFT_GUI_USERVIEW_H
 #define SWIFT_GUI_USERVIEW_H
 
-#include "gui/views/viewbase.h"
 #include "gui/models/userlistmodel.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewbase.h"
 #include "misc/network/userlist.h"
 
 namespace swift::misc::network
@@ -41,6 +41,6 @@ namespace swift::gui::views
         //! Request text message for selected aircraft
         void requestTextMessage();
     };
-} // ns
+} // namespace swift::gui::views
 
 #endif // guard

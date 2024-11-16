@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_CACHESETTINGSUTILS_H
 #define SWIFT_MISC_CACHESETTINGSUTILS_H
 
+#include <QString>
+
 #include "misc/applicationinfo.h"
 #include "misc/swiftmiscexport.h"
-#include <QString>
 
 namespace swift::misc
 {
@@ -55,6 +56,6 @@ namespace swift::misc
         //! Cache JSON object as string
         static QString otherVersionCacheFileContent(const swift::misc::CApplicationInfo &info, const QString &myCacheFile);
     };
-} // ns
+} // namespace swift::misc
 
 #endif // guard

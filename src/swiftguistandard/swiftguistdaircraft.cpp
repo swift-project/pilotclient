@@ -1,18 +1,19 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include <QString>
+
+#include "swiftguistd.h"
+
 #include "core/context/contextownaircraft.h"
 #include "gui/guiapplication.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
+#include "misc/mixin/mixincompare.h"
 #include "misc/pq/length.h"
 #include "misc/pq/units.h"
 #include "misc/simulation/simulatedaircraft.h"
-#include "swiftguistd.h"
-
-#include <QString>
 
 using namespace swift::core;
 using namespace swift::misc;

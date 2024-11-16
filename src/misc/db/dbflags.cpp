@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/db/dbflags.h"
-#include "misc/verify.h"
 
 #include <QStringList>
 #include <QtGlobal>
+
+#include "misc/verify.h"
 
 namespace swift::misc::db
 {
@@ -77,4 +78,4 @@ namespace swift::misc::db
         qRegisterMetaType<CDbFlags::DataRetrievalModeFlag>();
         qRegisterMetaType<CDbFlags::DataRetrievalMode>();
     }
-} // namespace
+} // namespace swift::misc::db

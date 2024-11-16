@@ -6,16 +6,17 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTICAOCODELIST_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTICAOCODELIST_H
 
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/db/datastoreobjectlist.h"
-#include "misc/sequence.h"
+#include <tuple>
 
 #include <QJsonArray>
 #include <QMetaType>
 #include <QStringList>
-#include <tuple>
+
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/collection.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftIcaoCode, CAircraftIcaoCodeList)
 
@@ -140,7 +141,7 @@ namespace swift::misc::aviation
         //! From our database JSON format
         static CAircraftIcaoCodeList fromDatabaseJson(const QJsonArray &array, const CAircraftCategoryList &categories, bool ignoreIncompleteAndDuplicates = true, CAircraftIcaoCodeList *inconsistent = nullptr);
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftIcaoCodeList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAircraftIcaoCode>)

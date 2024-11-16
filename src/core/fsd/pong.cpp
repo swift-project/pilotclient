@@ -33,4 +33,4 @@ namespace swift::core::fsd
         };
         return Pong(tokens[0], tokens[1], tokens[2]);
     }
-}
+} // namespace swift::core::fsd

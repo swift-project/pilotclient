@@ -6,20 +6,20 @@
 #ifndef SWIFT_GUI_COMPONENTS_INTERPOLATIONLOGDISPLAY_H
 #define SWIFT_GUI_COMPONENTS_INTERPOLATIONLOGDISPLAY_H
 
+#include <QFrame>
+#include <QPointer>
+#include <QScopedPointer>
+#include <QStringListModel>
+#include <QTimer>
+
+#include "core/simulator.h"
 #include "gui/overlaymessagesframe.h"
 #include "gui/swiftguiexport.h"
-#include "core/simulator.h"
-#include "misc/simulation/interpolation/interpolationlogger.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/callsign.h"
-#include "misc/logcategories.h"
 #include "misc/identifiable.h"
-
-#include <QStringListModel>
-#include <QFrame>
-#include <QTimer>
-#include <QScopedPointer>
-#include <QPointer>
+#include "misc/logcategories.h"
+#include "misc/simulation/interpolation/interpolationlogger.h"
 
 namespace Ui
 {
@@ -203,6 +203,6 @@ namespace swift::gui::components
         static const QString &startText();
         static const QString &stopText();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

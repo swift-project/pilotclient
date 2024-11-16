@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "registermetadatacomponents.h"
-#include "gui/components/textmessagecomponenttab.h"
 
 #include <QMetaType>
+
+#include "gui/components/textmessagecomponenttab.h"
 
 namespace swift::gui::components
 {
@@ -12,4 +13,4 @@ namespace swift::gui::components
     {
         qRegisterMetaType<TextMessageTab>();
     }
-} // ns
+} // namespace swift::gui::components

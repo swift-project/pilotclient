@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/json.h"
-#include "misc/imageutils.h"
-#include "misc/stringutils.h"
 
 #include <QDateTime>
 #include <QJsonDocument>
 #include <QStringList>
+
+#include "misc/imageutils.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 
@@ -661,7 +662,7 @@ namespace swift::misc::json
         }
         return sl;
     }
-} // ns
+} // namespace swift::misc::json
 
 QDataStream &operator<<(QDataStream &s, const std::string &v)
 {

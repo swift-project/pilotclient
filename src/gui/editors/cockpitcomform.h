@@ -6,12 +6,13 @@
 #ifndef SWIFT_GUI_EDITORS_COCKPITCOMFORM_H
 #define SWIFT_GUI_EDITORS_COCKPITCOMFORM_H
 
-#include "gui/editors/form.h"
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/aviation/atcstationlist.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "gui/editors/form.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 namespace Ui
 {
@@ -109,5 +110,5 @@ namespace swift::gui::editors
 
         QScopedPointer<Ui::CCockpitComForm> ui;
     };
-} // ns
+} // namespace swift::gui::editors
 #endif // guard

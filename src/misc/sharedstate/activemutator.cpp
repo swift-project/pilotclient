@@ -11,4 +11,4 @@ namespace swift::misc::shared_state
     {
         return m_requestHandler(param);
     }
-}
+} // namespace swift::misc::shared_state

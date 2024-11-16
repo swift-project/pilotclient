@@ -11,4 +11,4 @@ namespace swift::misc::aviation
 
     CFlightPlanList::CFlightPlanList(const CSequence<CFlightPlan> &other) : CSequence<CFlightPlan>(other)
     {}
-} // namespace
+} // namespace swift::misc::aviation

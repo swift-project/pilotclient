@@ -6,17 +6,18 @@
 #ifndef SWIFT_GUI_COMPONENTS_INSTALLXSWIFTBUSCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_INSTALLXSWIFTBUSCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
-#include "gui/loadindicator.h"
+#include <QFileDialog>
+#include <QNetworkReply>
+#include <QScopedPointer>
+#include <QWizard>
+
 #include "core/application/applicationsettings.h"
 #include "core/application/updatesettings.h"
+#include "gui/loadindicator.h"
+#include "gui/overlaymessagesframe.h"
 #include "misc/db/updateinfo.h"
-#include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/network/remotefilelist.h"
-#include <QNetworkReply>
-#include <QFileDialog>
-#include <QWizard>
-#include <QScopedPointer>
+#include "misc/simulation/settings/simulatorsettings.h"
 
 namespace Ui
 {
@@ -119,5 +120,5 @@ namespace swift::gui::components
     private:
         CInstallXSwiftBusComponent *m_config = nullptr;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_VIEWS_INTERPOLATIONSETUPVIEW_H
 #define SWIFT_GUI_VIEWS_INTERPOLATIONSETUPVIEW_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/interpolationsetupmodel.h"
+#include "gui/swiftguiexport.h"
 #include "gui/views/viewcallsignobjects.h"
 #include "misc/countrylist.h"
 
@@ -24,5 +24,5 @@ namespace swift::gui::views
         //! Constructor
         explicit CInterpolationSetupView(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::views
 #endif // guard

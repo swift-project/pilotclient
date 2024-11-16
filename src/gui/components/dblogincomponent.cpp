@@ -1,20 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_dblogincomponent.h"
 #include "gui/components/dblogincomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "gui/overlaymessagesframe.h"
-#include "core/data/globalsetup.h"
-#include "misc/network/authenticateduser.h"
-#include "misc/network/url.h"
-#include "misc/htmlutils.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
-#include "misc/verify.h"
-#include "misc/crashhandler.h"
-#include "config/buildconfig.h"
 
 #include <QLabel>
 #include <QLineEdit>
@@ -24,6 +11,21 @@
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
+
+#include "ui_dblogincomponent.h"
+
+#include "config/buildconfig.h"
+#include "core/data/globalsetup.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/overlaymessagesframe.h"
+#include "misc/crashhandler.h"
+#include "misc/htmlutils.h"
+#include "misc/logmessage.h"
+#include "misc/network/authenticateduser.h"
+#include "misc/network/url.h"
+#include "misc/statusmessage.h"
+#include "misc/verify.h"
 
 using namespace swift::core;
 using namespace swift::core::db;
@@ -163,4 +165,4 @@ namespace swift::gui::components
             this->setModeLogin(true);
         }
     }
-} // ns
+} // namespace swift::gui::components

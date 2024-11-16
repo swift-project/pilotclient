@@ -31,6 +31,6 @@ namespace swift::gui
         QTimer m_timer;
         QWidget *m_ui = nullptr; //!< enabled/disabled UI
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

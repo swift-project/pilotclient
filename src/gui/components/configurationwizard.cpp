@@ -2,12 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "configurationwizard.h"
+
+#include <QPointer>
+
 #include "ui_configurationwizard.h"
+
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
-#include "misc/math/mathutils.h"
 #include "misc/directoryutils.h"
-#include <QPointer>
+#include "misc/math/mathutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::math;
@@ -138,4 +141,4 @@ namespace swift::gui::components
         const int h = qMin(750, calcH);
         this->resize(w, h);
     }
-} // ns
+} // namespace swift::gui::components

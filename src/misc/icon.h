@@ -6,23 +6,24 @@
 #ifndef SWIFT_MISC_ICON_H
 #define SWIFT_MISC_ICON_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/mixin/mixindbus.h"
-#include "misc/dbus.h"
-#include "misc/mixin/mixindatastream.h"
-#include "misc/mixin/mixinhash.h"
-#include "misc/icons.h"
-#include "misc/mixin/mixinjson.h"
-#include "misc/metaclass.h"
-#include "misc/mixin/mixinstring.h"
-#include "misc/mixin/mixinmetatype.h"
+#include <tuple>
 
 #include <QIcon>
 #include <QMetaType>
 #include <QPixmap>
 #include <QString>
-#include <tuple>
+
+#include "misc/dbus.h"
+#include "misc/icons.h"
+#include "misc/metaclass.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/mixin/mixindatastream.h"
+#include "misc/mixin/mixindbus.h"
+#include "misc/mixin/mixinhash.h"
+#include "misc/mixin/mixinjson.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -123,7 +124,7 @@ namespace swift::misc
             SWIFT_METAMEMBER(descriptiveText),
             SWIFT_METAMEMBER(fileResourcePath));
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIcon)
 

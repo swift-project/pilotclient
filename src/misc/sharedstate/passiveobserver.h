@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_PASSIVEOBSERVER_H
 #define SWIFT_MISC_SHAREDSTATE_PASSIVEOBSERVER_H
 
-#include "misc/variant.h"
-#include "misc/valueobject.h"
-#include "misc/swiftmiscexport.h"
+#include <QMutex>
 #include <QObject>
 #include <QSharedPointer>
-#include <QMutex>
+
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
+#include "misc/variant.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::shared_state, CAnyMatch)
 
@@ -83,7 +84,7 @@ namespace swift::misc::shared_state
 
         SWIFT_METACLASS(CAnyMatch, SWIFT_METAMEMBER(dummy));
     };
-}
+} // namespace swift::misc::shared_state
 
 Q_DECLARE_METATYPE(swift::misc::shared_state::CAnyMatch)
 

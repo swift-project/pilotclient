@@ -50,4 +50,4 @@ namespace swift::core::fsd
         QStringList messageTokens = tokens.mid(2);
         return TextMessage(tokens[0], tokens[1], messageTokens.join(":"));
     }
-}
+} // namespace swift::core::fsd

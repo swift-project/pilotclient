@@ -6,23 +6,24 @@
 #ifndef SWIFT_MISC_PROPERTYINDEX_H
 #define SWIFT_MISC_PROPERTYINDEX_H
 
-#include "misc/propertyindexref.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/mixin/mixindbus.h"
-#include "misc/mixin/mixindatastream.h"
-#include "misc/mixin/mixinhash.h"
-#include "misc/mixin/mixinjson.h"
-#include "misc/metaclass.h"
-#include "misc/mixin/mixinstring.h"
-#include "misc/typetraits.h"
-#include "misc/mixin/mixinmetatype.h"
+#include <initializer_list>
+#include <type_traits>
 
 #include <QList>
 #include <QMetaType>
 #include <QString>
-#include <initializer_list>
-#include <type_traits>
+
+#include "misc/metaclass.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/mixin/mixindatastream.h"
+#include "misc/mixin/mixindbus.h"
+#include "misc/mixin/mixinhash.h"
+#include "misc/mixin/mixinjson.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/typetraits.h"
 
 namespace swift::misc
 {
@@ -162,7 +163,7 @@ namespace swift::misc
             CPropertyIndex,
             SWIFT_METAMEMBER(indexes));
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CPropertyIndex)
 

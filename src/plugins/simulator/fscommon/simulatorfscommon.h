@@ -6,13 +6,14 @@
 #ifndef SWIFT_SIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 #define SWIFT_SIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H
 
-#include "plugins/simulator/plugincommon/simulatorplugincommon.h"
-#include "misc/simulation/interpolation/interpolator.h"
-#include "misc/simulation/fscommon/aircraftcfgparser.h"
-#include "plugins/simulator/fscommon/fscommonexport.h"
+#include <memory>
 
 #include <QObject>
-#include <memory>
+
+#include "misc/simulation/fscommon/aircraftcfgparser.h"
+#include "misc/simulation/interpolation/interpolator.h"
+#include "plugins/simulator/fscommon/fscommonexport.h"
+#include "plugins/simulator/plugincommon/simulatorplugincommon.h"
 
 namespace swift::simplugin::fscommon
 {
@@ -70,6 +71,6 @@ namespace swift::simplugin::fscommon
         swift::misc::aviation::CTransponder m_simTransponder; //!< cockpit xpdr state in simulator
         swift::misc::aviation::CSelcal m_selcal; //!< SELCAL as in cockpit
     };
-} // namespace
+} // namespace swift::simplugin::fscommon
 
 #endif // guard

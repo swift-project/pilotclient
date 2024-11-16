@@ -3,10 +3,10 @@
 
 #include "misc/metadatautils.h"
 
-#include <QMetaType>
 #include <QMetaObject>
-#include <QTextStream>
+#include <QMetaType>
 #include <QObject>
+#include <QTextStream>
 
 namespace swift::misc
 {
@@ -102,4 +102,4 @@ namespace swift::misc
 
 #endif //! Q_CC_MSVC
 
-} // ns
+} // namespace swift::misc

@@ -1,26 +1,27 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/simulation/matchingutils.h"
 #include "misc/simulation/aircraftmodel.h"
-#include "misc/db/datastoreutility.h"
-#include "misc/comparefunctions.h"
-#include "misc/fileutils.h"
-#include "misc/logcategories.h"
-#include "misc/statusmessage.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/verify.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
 
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QList>
 #include <QString>
-#include <QtGlobal>
 #include <QStringBuilder>
-#include <QFileInfo>
+#include <QtGlobal>
+
+#include "config/buildconfig.h"
+#include "misc/comparefunctions.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/fileutils.h"
+#include "misc/logcategories.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/simulation/matchingutils.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc::aviation;
@@ -1103,4 +1104,4 @@ namespace swift::misc::simulation
         static const QString p("EFGLS");
         return p;
     }
-} // namespace
+} // namespace swift::misc::simulation

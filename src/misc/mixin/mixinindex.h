@@ -6,10 +6,8 @@
 #ifndef SWIFT_MISC_MIXIN_MIXININDEX_H
 #define SWIFT_MISC_MIXIN_MIXININDEX_H
 
-#include "misc/icon.h"
-#include "misc/inheritancetraits.h"
-#include "misc/predicates.h"
-#include "misc/propertyindexref.h"
+#include <type_traits>
+
 #include <QDBusArgument>
 #include <QList>
 #include <QMap>
@@ -18,7 +16,11 @@
 #include <QVariant>
 #include <QtDebug>
 #include <QtGlobal>
-#include <type_traits>
+
+#include "misc/icon.h"
+#include "misc/inheritancetraits.h"
+#include "misc/predicates.h"
+#include "misc/propertyindexref.h"
 
 namespace swift::misc
 {
@@ -209,7 +211,7 @@ namespace swift::misc
             // slow, only last resort
             return derived()->toQString().compare(compareValue.toQString());
         }
-    } // ns
-} // ns
+    } // namespace mixin
+} // namespace swift::misc
 
 #endif // guard

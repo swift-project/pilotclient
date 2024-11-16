@@ -6,15 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_FIRSTMODELSETCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_FIRSTMODELSETCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/overlaymessagesframe.h"
-#include "core/application/applicationsettings.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/aircraftmodelloader.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/logcategories.h"
 #include <QFrame>
 #include <QWizardPage>
+
+#include "core/application/applicationsettings.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/swiftguiexport.h"
+#include "misc/logcategories.h"
+#include "misc/simulation/aircraftmodelloader.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorinfo.h"
 
 namespace Ui
 {
@@ -103,5 +104,5 @@ namespace swift::gui::components
     private:
         CFirstModelSetComponent *m_firstModelSet = nullptr;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

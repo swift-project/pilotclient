@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/identifier.h"
-#include "misc/comparefunctions.h"
-#include "misc/stringutils.h"
-#include "misc/propertyindexref.h"
 
 #include <QCoreApplication>
 #include <QHostInfo>
-#include <QSysInfo>
 #include <QStringBuilder>
+#include <QSysInfo>
+
+#include "misc/comparefunctions.h"
+#include "misc/propertyindexref.h"
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CIdentifier)
 
@@ -278,4 +279,4 @@ namespace swift::misc
         CValueObject::setPropertyByIndex(index, variant);
     }
 
-} // ns
+} // namespace swift::misc

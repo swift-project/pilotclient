@@ -6,11 +6,11 @@
 #ifndef SWIFT_SOUND_TONEPAIR_H
 #define SWIFT_SOUND_TONEPAIR_H
 
-#include "sound/swiftsoundexport.h"
+#include <tuple>
+
 #include "misc/pq/frequency.h"
 #include "misc/pq/time.h"
-
-#include <tuple>
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound
 {
@@ -43,6 +43,6 @@ namespace swift::sound
         int m_secondFrequencyHz; //!< second tone's frequency, or 0
         qint64 m_durationMs; //!< How long to play (duration)
     };
-}
+} // namespace swift::sound
 
 #endif // guard

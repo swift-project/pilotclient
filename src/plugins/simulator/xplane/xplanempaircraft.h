@@ -6,10 +6,11 @@
 #ifndef SWIFT_SIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
 #define SWIFT_SIMPLUGIN_XPLANE_XPLANEMPAIRCRAFT_H
 
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/interpolation/interpolatormulti.h"
 #include <QSharedPointer>
 #include <QStringList>
+
+#include "misc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 namespace swift::core
 {
@@ -89,6 +90,6 @@ namespace swift::simplugin::xplane
         //! Toggle interpolator modes
         void toggleInterpolatorMode(const swift::misc::aviation::CCallsign &callsign);
     };
-} // namespace
+} // namespace swift::simplugin::xplane
 
 #endif // guard

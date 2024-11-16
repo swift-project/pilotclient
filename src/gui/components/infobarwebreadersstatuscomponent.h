@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_INFOBARWEBREADERSSTATUSCOMPONENT_H
 #define SWIFT_GUI_INFOBARWEBREADERSSTATUSCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/led.h"
-#include "misc/network/url.h"
-#include "misc/network/entityflags.h"
-
 #include <QFrame>
 #include <QList>
 #include <QObject>
 #include <QScopedPointer>
 #include <QTimer>
+
+#include "gui/led.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/url.h"
 
 namespace Ui
 {
@@ -104,6 +104,6 @@ namespace swift::gui
         private:
             QScopedPointer<Ui::CInfoBarWebReadersStatusComponent> ui;
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 #endif // guard

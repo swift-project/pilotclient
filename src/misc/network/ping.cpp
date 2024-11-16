@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/ping.h"
-#include "config/buildconfig.h"
+
 #include <QProcess>
+
+#include "config/buildconfig.h"
 
 using namespace swift::config;
 
@@ -40,4 +42,4 @@ namespace swift::misc::network
         if (url.isEmpty()) { return false; }
         return canPing(url.host());
     }
-}
+} // namespace swift::misc::network

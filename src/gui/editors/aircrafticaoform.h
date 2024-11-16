@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_EDITORS_AIRCRAFTICAOFORM_H
 #define SWIFT_GUI_EDITORS_AIRCRAFTICAOFORM_H
 
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/editors/form.h"
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/statusmessagelist.h"
 #include "misc/variant.h"
-
-#include <QObject>
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -78,6 +78,6 @@ namespace swift::gui::editors
         //! Key from GUI
         int getDbKeyFromGui() const;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

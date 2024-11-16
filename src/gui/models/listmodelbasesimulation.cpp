@@ -13,4 +13,4 @@ namespace swift::gui::models
     template class CListModelBase<swift::misc::simulation::CInterpolationSetupList, false>;
     template class CListModelBase<swift::misc::simulation::CMatchingStatistics, true>;
 
-} // namespace
+} // namespace swift::gui::models

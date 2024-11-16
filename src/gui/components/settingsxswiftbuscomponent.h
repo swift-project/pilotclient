@@ -6,12 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSXSWIFTBUSCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSXSWIFTBUSCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/settings/xswiftbussettings.h"
-#include "misc/settingscache.h"
-#include "misc/logcategories.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/logcategories.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/settings/xswiftbussettings.h"
 
 namespace Ui
 {
@@ -43,5 +44,5 @@ namespace swift::gui::components
         void resetServer();
         void saveServer();
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

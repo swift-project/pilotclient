@@ -6,8 +6,9 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETUPLOADINGDIALOG_H
 #define SWIFT_GUI_COMPONENTS_SETUPLOADINGDIALOG_H
 
-#include "misc/statusmessagelist.h"
 #include <QDialog>
+
+#include "misc/statusmessagelist.h"
 
 namespace Ui
 {
@@ -35,6 +36,6 @@ namespace swift::gui::components
         //! Ctor
         explicit CSetupLoadingDialog(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

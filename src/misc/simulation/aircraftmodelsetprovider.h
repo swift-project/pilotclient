@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_SIMULATION_AIRCRAFTMODELSETPROVIDER_H
 #define SWIFT_MISC_SIMULATION_AIRCRAFTMODELSETPROVIDER_H
 
-#include "misc/simulation/aircraftmodellist.h"
 #include "misc/provider.h"
+#include "misc/simulation/aircraftmodellist.h"
 #include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
@@ -46,7 +46,7 @@ namespace swift::misc::simulation
         CAircraftModelSetAware(IAircraftModelSetProvider *modelSetProvider) : IProviderAware(modelSetProvider) { Q_ASSERT(modelSetProvider); }
     };
 
-} // ns
+} // namespace swift::misc::simulation
 
 Q_DECLARE_INTERFACE(swift::misc::simulation::IAircraftModelSetProvider, "org.swift-project.misc.simulation.iaircraftmodelsetprovider")
 

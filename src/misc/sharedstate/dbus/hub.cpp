@@ -4,9 +4,11 @@
 //! \file
 
 #include "misc/sharedstate/dbus/hub.h"
+
+#include <QDBusConnection>
+
 #include "misc/sharedstate/dbus/hubimpl.h"
 #include "misc/sharedstate/dbus/hubproxy.h"
-#include <QDBusConnection>
 
 namespace swift::misc::shared_state::dbus
 {
@@ -18,4 +20,4 @@ namespace swift::misc::shared_state::dbus
         if (proxy) { return new CHubProxy(connection, service, parent); }
         else { return new CHub(server, parent); }
     }
-}
+} // namespace swift::misc::shared_state::dbus

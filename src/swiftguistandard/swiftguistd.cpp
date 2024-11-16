@@ -3,45 +3,46 @@
 
 #include "ui_swiftguistd.h"
 
+#include "config/buildconfig.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "core/corefacadeconfig.h"
+#include "core/webdataservices.h"
+#include "gui/components/autopublishdialog.h"
+#include "gui/components/dbloaddatadialog.h"
 #include "gui/components/infobarstatuscomponent.h"
 #include "gui/components/logcomponent.h"
-#include "gui/components/dbloaddatadialog.h"
-#include "gui/components/autopublishdialog.h"
 #include "gui/components/modelbrowserdialog.h"
 #include "gui/components/settingscomponent.h"
 #include "gui/components/textmessagecomponent.h"
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "gui/overlaymessagesframe.h"
-#include "core/context/contextapplication.h"
-#include "core/context/contextaudio.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
-#include "core/webdataservices.h"
-#include "core/corefacadeconfig.h"
 #include "misc/audio/notificationsounds.h"
 #include "misc/icons.h"
 #include "misc/logcategories.h"
 #include "misc/logmessage.h"
 #include "misc/threadutils.h"
-#include "config/buildconfig.h"
 
 #if defined(Q_OS_MACOS)
 #    include "input/macos/macosinpututils.h"
 #endif
 
-#include "swiftguistd.h"
 #include <QAction>
 #include <QDateTime>
 #include <QIcon>
+#include <QMessageBox>
+#include <QPointer>
 #include <QSize>
 #include <QStackedWidget>
 #include <QStyle>
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
-#include <QMessageBox>
-#include <QPointer>
+
+#include "swiftguistd.h"
 
 class QCloseEvent;
 class QEvent;
@@ -52,7 +53,7 @@ namespace swift::gui
 {
     class CEnableForFramelessWindow;
     class IMainWindowAccess;
-}
+} // namespace swift::gui
 namespace swift::misc
 {
     class CIdentifiable;

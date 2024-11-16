@@ -1,12 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/columns.h"
 #include "gui/models/serverlistmodel.h"
-#include "misc/network/server.h"
-#include "misc/network/user.h"
 
 #include <QtGlobal>
+
+#include "gui/models/columns.h"
+#include "misc/network/server.h"
+#include "misc/network/user.h"
 
 using namespace swift::misc::network;
 
@@ -34,4 +35,4 @@ namespace swift::gui::models
         (void)QT_TRANSLATE_NOOP("ServerListModel", "type");
     }
 
-} // namespace
+} // namespace swift::gui::models

@@ -2,18 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/verify.h"
-#include "misc/logcategories.h"
+
 #include <QLoggingCategory>
-#include <QtGlobal>
 #include <QString>
+#include <QtGlobal>
+
+#include "misc/logcategories.h"
 
 #ifdef SWIFT_USE_CRASHPAD
 #    include "crashpad/client/simulate_crash.h"
 #endif
 
 #if defined(Q_CC_MSVC)
-#    include <intrin.h>
 #    include <Windows.h>
+#    include <intrin.h>
 #endif
 
 #if defined(Q_CC_CLANG)
@@ -72,4 +74,4 @@ namespace swift::misc::private_ns
 #    endif
 #endif
     }
-}
+} // namespace swift::misc::private_ns

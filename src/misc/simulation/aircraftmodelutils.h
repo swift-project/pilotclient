@@ -7,8 +7,9 @@
 #define SWIFT_MISC_SIMULATION_AIRCRAFTMODELUTILS_H
 
 #include <atomic>
-#include "misc/swiftmiscexport.h"
+
 #include "misc/simulation/aircraftmodellist.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -32,6 +33,6 @@ namespace swift::misc::simulation
         //! Validate aircraft.cfg entries
         static CStatusMessageList validateModelFiles(const CSimulatorInfo &simulator, const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels, bool ignoreEmpty, int stopAtFailedFiles, std::atomic_bool &wasStopped, const QString &simulatorDir);
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 #endif // guard

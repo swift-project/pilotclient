@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/aircrafticaofilter.h"
+
 #include "misc/aviation/aircrafticaocode.h"
 
 using namespace swift::misc::aviation;
@@ -68,4 +69,4 @@ namespace swift::gui::models
         }
         return outContainer;
     }
-} // namespace
+} // namespace swift::gui::models

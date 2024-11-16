@@ -2,17 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/dbaircrafticaocomponent.h"
-#include "gui/filters/aircrafticaofilterbar.h"
-#include "gui/views/aircrafticaoview.h"
-#include "gui/views/viewbase.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
+
+#include <QDateTime>
+#include <QStringBuilder>
+#include <QtGlobal>
+
 #include "dbaircrafticaocomponent.h"
 #include "ui_dbaircrafticaocomponent.h"
 
-#include <QDateTime>
-#include <QtGlobal>
-#include <QStringBuilder>
+#include "core/webdataservices.h"
+#include "gui/filters/aircrafticaofilterbar.h"
+#include "gui/guiapplication.h"
+#include "gui/views/aircrafticaoview.h"
+#include "gui/views/viewbase.h"
 
 using namespace swift::core;
 using namespace swift::misc::network;
@@ -86,4 +88,4 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown()) { return; }
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AircraftIcaoEntity, QDateTime());
     }
-} // ns
+} // namespace swift::gui::components

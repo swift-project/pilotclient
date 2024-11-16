@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_VIEWS_DISTRIBUTORVIEW_H
 #define SWIFT_GUI_VIEWS_DISTRIBUTORVIEW_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/distributorlistmodel.h"
+#include "gui/swiftguiexport.h"
 #include "gui/views/viewdbobjects.h"
 
 class QString;
@@ -17,7 +17,7 @@ namespace swift::misc::simulation
 {
     class CDistributor;
     class CDistributorList;
-}
+} // namespace swift::misc::simulation
 
 namespace swift::gui::views
 {
@@ -37,5 +37,5 @@ namespace swift::gui::views
         //! Mode
         swift::gui::models::CDistributorListModel::DistributorMode getDistributorMode() const;
     };
-} // ns
+} // namespace swift::gui::views
 #endif // guard

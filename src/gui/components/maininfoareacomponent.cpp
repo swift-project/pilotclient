@@ -1,14 +1,16 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/logcomponent.h"
 #include "gui/components/maininfoareacomponent.h"
-#include "gui/components/settingscomponent.h"
-#include "misc/icons.h"
+
+#include <QGuiApplication>
+#include <QIcon>
+
 #include "ui_maininfoareacomponent.h"
 
-#include <QIcon>
-#include <QGuiApplication>
+#include "gui/components/logcomponent.h"
+#include "gui/components/settingscomponent.h"
+#include "misc/icons.h"
 
 using namespace swift::misc;
 using namespace swift::gui;
@@ -182,4 +184,4 @@ namespace swift::gui::components
         default: return CIcons::empty();
         }
     }
-} // namespace
+} // namespace swift::gui::components

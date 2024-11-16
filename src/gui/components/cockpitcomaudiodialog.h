@@ -6,8 +6,9 @@
 #ifndef SWIFT_GUI_COMPONENTS_COCKPITCOMAUDIODIALOG_H
 #define SWIFT_GUI_COMPONENTS_COCKPITCOMAUDIODIALOG_H
 
-#include "gui/swiftguiexport.h"
 #include <QDialog>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -30,6 +31,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CCockpitComAudioDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

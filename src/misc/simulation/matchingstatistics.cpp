@@ -75,4 +75,4 @@ namespace swift::misc::simulation
         }
         this->push_back(CMatchingStatisticsEntry(type, sessionId, modelSetId, description, aircraftDesignator, airlineDesignator));
     }
-} // namespace
+} // namespace swift::misc::simulation

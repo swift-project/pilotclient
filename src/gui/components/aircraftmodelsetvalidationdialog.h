@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_AIRCRAFTMODELSETVALIDATIONDIALOG_H
 #define SWIFT_GUI_COMPONENTS_AIRCRAFTMODELSETVALIDATIONDIALOG_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -22,8 +22,8 @@ namespace swift::misc
     {
         class CSimulatorInfo;
         class CAircraftModelList;
-    }
-}
+    } // namespace simulation
+} // namespace swift::misc
 namespace swift::gui::components
 {
     /*!
@@ -51,6 +51,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CAircraftModelSetValidationDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

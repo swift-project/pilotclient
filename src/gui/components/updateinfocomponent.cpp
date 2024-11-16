@@ -2,18 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/updateinfocomponent.h"
-#include "ui_updateinfocomponent.h"
-#include "gui/components/installxswiftbusdialog.h"
-#include "gui/components/downloaddialog.h"
-#include "gui/guiapplication.h"
-#include "misc/network/networkutils.h"
-#include "misc/db/distributionlist.h"
-#include "misc/logmessage.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
 
 #include <QDesktopServices>
 #include <QMessageBox>
+
+#include "ui_updateinfocomponent.h"
+
+#include "config/buildconfig.h"
+#include "gui/components/downloaddialog.h"
+#include "gui/components/installxswiftbusdialog.h"
+#include "gui/guiapplication.h"
+#include "misc/db/distributionlist.h"
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/stringutils.h"
 
 using namespace swift::config;
 using namespace swift::core::application;
@@ -259,4 +261,4 @@ namespace swift::gui::components
                    updateInfo.getDistributions().getMostStableOrDefault() :
                    updateInfo.getDistributions().findFirstByChannelOrDefault(c);
     }
-} // ns
+} // namespace swift::gui::components

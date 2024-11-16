@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/dropsite.h"
-#include "gui/guiapplication.h"
-#include "gui/stylesheetutility.h"
 
 #include <QDragEnterEvent>
 #include <QDragLeaveEvent>
@@ -14,6 +12,9 @@
 #include <QStyle>
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/guiapplication.h"
+#include "gui/stylesheetutility.h"
 
 using namespace swift::misc;
 
@@ -85,4 +86,4 @@ namespace swift::gui
     {
         // style sheet changes go here
     }
-} // ns
+} // namespace swift::gui

@@ -2,16 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "applicationclosedialog.h"
+
+#include <QDialogButtonBox>
+#include <QModelIndexList>
+#include <QPushButton>
+#include <QStringListModel>
+
 #include "ui_applicationclosedialog.h"
+
+#include "core/context/contextapplication.h"
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
-#include "core/context/contextapplication.h"
-#include "misc/settingscache.h"
 #include "misc/logmessage.h"
-#include <QStringListModel>
-#include <QModelIndexList>
-#include <QDialogButtonBox>
-#include <QPushButton>
+#include "misc/settingscache.h"
 
 using namespace swift::misc;
 using namespace swift::gui;
@@ -80,4 +83,4 @@ namespace swift::gui::components
         m_settingsDictionary = settingsDictionary;
         m_settingsDescriptions = descriptions;
     }
-} // ns
+} // namespace swift::gui::components

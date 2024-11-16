@@ -4,15 +4,15 @@
 #ifndef SWIFT_CORE_AFV_MODEL_ATCSTATIONMODEL_H
 #define SWIFT_CORE_AFV_MODEL_ATCSTATIONMODEL_H
 
-#include "core/afv/dto.h"
-#include "core/swiftcoreexport.h"
-
-#include <QtGlobal>
 #include <QAbstractListModel>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
 #include <QObject>
+#include <QtGlobal>
+
+#include "core/afv/dto.h"
+#include "core/swiftcoreexport.h"
 
 namespace swift::core::afv::model
 {
@@ -90,6 +90,6 @@ namespace swift::core::afv::model
 
         QList<CSampleAtcStation> m_atcStations;
     };
-} // ns
+} // namespace swift::core::afv::model
 
 #endif // guard

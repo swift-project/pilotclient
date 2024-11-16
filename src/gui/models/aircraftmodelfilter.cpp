@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/aircraftmodelfilter.h"
+
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/livery.h"
@@ -165,4 +166,4 @@ namespace swift::gui::models
         const bool noMilitary = (m_military == Qt::PartiallyChecked);
         return !(noSim && noModelMode && noDbState && noKey && noMilitary && noColorRestriction);
     }
-} // namespace
+} // namespace swift::gui::models

@@ -6,13 +6,14 @@
 #ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
 #define SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTOBJECT_H
 
-#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
-#include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/interpolation/interpolatormulti.h"
+#include <QByteArray>
 #include <QSharedPointer>
 #include <QStringList>
-#include <QByteArray>
+
+#include "misc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
+#include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
 
 namespace swift::simplugin::fsxcommon
 {
@@ -424,6 +425,6 @@ namespace swift::simplugin::fsxcommon
         //! Aircraft?
         bool containsAircraft() const;
     };
-} // namespace
+} // namespace swift::simplugin::fsxcommon
 
 #endif // guard

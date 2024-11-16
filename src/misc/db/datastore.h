@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_DB_DATASTORE_H
 #define SWIFT_MISC_DB_DATASTORE_H
 
-#include "misc/timestampbased.h"
-#include "misc/propertyindex.h"
-#include "misc/swiftmiscexport.h"
-#include "config/buildconfig.h"
-
 #include <QJsonObject>
 #include <QJsonValue>
-#include <QVersionNumber>
-#include <QString>
 #include <QObject>
+#include <QString>
+#include <QVersionNumber>
+
+#include "config/buildconfig.h"
+#include "misc/propertyindex.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
 
 namespace swift::misc
 {
@@ -243,8 +243,8 @@ namespace swift::misc
             QString m_dbKey; //!< key
             bool m_loadedFromDb = false; //!< as we have no artificial key, it can happen key is set, but not loaded from DB
         };
-    } // ns
-} // ns
+    } // namespace db
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::db::DbKeyState)
 Q_DECLARE_METATYPE(swift::misc::db::DbKeyStateFilter)

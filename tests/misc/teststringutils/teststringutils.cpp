@@ -8,12 +8,13 @@
  * \ingroup testmisc
  */
 
-#include "misc/stringutils.h"
+#include <QTest>
+#include <QTextCodec>
+#include <QTime>
+
 #include "test.h"
 
-#include <QTest>
-#include <QTime>
-#include <QTextCodec>
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 
@@ -161,7 +162,7 @@ namespace MiscTest
         QCOMPARE(simplifyAccents(input), output);
         QCOMPARE(simplifyByDecomposition(input), output);
     }
-}
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestStringUtils);

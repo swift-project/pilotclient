@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/heading.h"
+
 #include <QCoreApplication>
 
 using swift::misc::physical_quantities::CAngle;
@@ -55,4 +56,4 @@ namespace swift::misc::aviation
         mixin::MetaType<CHeading>::registerMetadata();
         qRegisterMetaType<CHeading::ReferenceNorth>();
     }
-} // namespace
+} // namespace swift::misc::aviation

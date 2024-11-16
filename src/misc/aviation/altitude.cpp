@@ -2,18 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/altitude.h"
-#include "misc/pq/measurementunit.h"
-#include "misc/pq/constants.h"
-#include "misc/pq/pqstring.h"
-#include "misc/math/mathutils.h"
-#include "misc/stringutils.h"
+
+#include <QStringBuilder>
+#include <Qt>
+#include <QtGlobal>
+
 #include "misc/comparefunctions.h"
 #include "misc/iconlist.h"
 #include "misc/icons.h"
-
-#include <Qt>
-#include <QtGlobal>
-#include <QStringBuilder>
+#include "misc/math/mathutils.h"
+#include "misc/pq/constants.h"
+#include "misc/pq/measurementunit.h"
+#include "misc/pq/pqstring.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
@@ -526,4 +527,4 @@ namespace swift::misc::aviation
         static const CPressure standardPressure(CPhysicalQuantitiesConstants::ISASeaLevelPressure());
         return standardPressure;
     }
-} // namespace
+} // namespace swift::misc::aviation

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatoremulatedconfigwidget.h"
+
 #include "ui_simulatoremulatedconfigwidget.h"
 
 using namespace swift::gui;
@@ -18,4 +19,4 @@ namespace swift::simplugin::emulated
 
     CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget()
     {}
-} // ns
+} // namespace swift::simplugin::emulated

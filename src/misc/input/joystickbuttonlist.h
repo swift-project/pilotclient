@@ -6,14 +6,15 @@
 #ifndef SWIFT_MISC_INPUT_JOYSTICKBUTTONLIST_H
 #define SWIFT_MISC_INPUT_JOYSTICKBUTTONLIST_H
 
-#include "misc/swiftmiscexport.h"
+#include <initializer_list>
+#include <tuple>
+
+#include <QMetaType>
+
 #include "misc/collection.h"
 #include "misc/input/joystickbutton.h"
 #include "misc/sequence.h"
-
-#include <QMetaType>
-#include <initializer_list>
-#include <tuple>
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::input, CJoystickButton, CJoystickButtonList)
 
@@ -35,7 +36,7 @@ namespace swift::misc::input
         CJoystickButtonList(const CSequence<CJoystickButton> &baseClass);
     };
 
-} // namespace
+} // namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CJoystickButtonList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::input::CJoystickButton>)

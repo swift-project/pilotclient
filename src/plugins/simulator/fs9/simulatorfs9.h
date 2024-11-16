@@ -6,22 +6,24 @@
 #ifndef SWIFT_SIMPLUGIN_SIMULATOR_FS9_H
 #define SWIFT_SIMPLUGIN_SIMULATOR_FS9_H
 
-#include "fs9host.h"
-#include "fs9client.h"
-#include "lobbyclient.h"
+#include <QHash>
+#include <QList>
+#include <QObject>
+#include <QThread>
+#include <QtPlugin>
+
 #include "../fscommon/simulatorfscommon.h"
+#include "fs9client.h"
+#include "fs9host.h"
+#include "lobbyclient.h"
+
 #include "core/simulator.h"
-#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/pixmap.h"
 #include "misc/simulation/interpolation/interpolator.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/simulatorplugininfo.h"
-#include "misc/pixmap.h"
 #include "plugins/simulator/fscommon/fsuipc.h"
-#include <QObject>
-#include <QtPlugin>
-#include <QList>
-#include <QThread>
-#include <QHash>
 
 namespace swift::simplugin::fs9
 {
@@ -169,6 +171,6 @@ namespace swift::simplugin::fs9
         QSharedPointer<CFs9Host> m_fs9Host;
         QSharedPointer<CLobbyClient> m_lobbyClient;
     };
-} // ns
+} // namespace swift::simplugin::fs9
 
 #endif // guard

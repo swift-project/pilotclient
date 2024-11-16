@@ -52,7 +52,7 @@ namespace swift::simplugin::fs9
 
         HostStatus m_hostStatus = Terminated;
     };
-} // ns
+} // namespace swift::simplugin::fs9
 
 Q_DECLARE_METATYPE(swift::simplugin::fs9::CFs9Host::HostStatus)
 

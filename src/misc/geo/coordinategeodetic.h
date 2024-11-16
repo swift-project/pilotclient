@@ -6,22 +6,22 @@
 #ifndef SWIFT_MISC_GEO_COORDINATEGEODETIC_H
 #define SWIFT_MISC_GEO_COORDINATEGEODETIC_H
 
-#include "misc/metaclass.h"
+#include <array>
+
+#include <QString>
+#include <QVector3D>
+
+#include "misc/aviation/altitude.h"
+#include "misc/geo/latitude.h"
+#include "misc/geo/longitude.h"
 #include "misc/math/mathutils.h"
+#include "misc/metaclass.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/length.h"
 #include "misc/pq/units.h"
-#include "misc/aviation/altitude.h"
-#include "misc/geo/latitude.h"
-
-#include "misc/geo/longitude.h"
 #include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QVector3D>
-#include <QString>
-#include <array>
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::geo, CCoordinateGeodetic)
 
@@ -359,7 +359,7 @@ namespace swift::misc
                 SWIFT_METAMEMBER(z),
                 SWIFT_METAMEMBER(geodeticHeight));
         };
-    } // namespace
+    } // namespace geo
 
     //! \cond
     template <>
@@ -368,7 +368,7 @@ namespace swift::misc
         static QString toQString(const geo::ICoordinateGeodetic &coord) { return coord.convertToQString(); }
     };
     //! \endcond
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::geo::CCoordinateGeodetic)
 

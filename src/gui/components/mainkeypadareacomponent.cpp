@@ -1,21 +1,23 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "gui/components/mainkeypadareacomponent.h"
+
+#include <QLineEdit>
+#include <QPointer>
+#include <QPushButton>
+#include <QtGlobal>
+
+#include "ui_mainkeypadareacomponent.h"
+
 #include "core/context/contextapplication.h"
 #include "core/context/contextaudio.h"
 #include "core/context/contextnetwork.h"
 #include "core/context/contextownaircraft.h"
 #include "core/corefacade.h"
-#include "gui/components/mainkeypadareacomponent.h"
 #include "gui/guiapplication.h"
 #include "misc/aviation/transponder.h"
 #include "misc/simulation/simulatedaircraft.h"
-#include "ui_mainkeypadareacomponent.h"
-
-#include <QLineEdit>
-#include <QPushButton>
-#include <QtGlobal>
-#include <QPointer>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -269,4 +271,4 @@ namespace swift::gui::components
             this->connectionStatusChanged(CConnectionStatus::Disconnected, CConnectionStatus::Disconnected);
         }
     }
-} // namespace
+} // namespace swift::gui::components

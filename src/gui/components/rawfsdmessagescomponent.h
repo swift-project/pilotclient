@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_RAWFSDMESSAGESCOMPONENT_H
 #define SWIFT_GUI_RAWFSDMESSAGESCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "core/vatsim/vatsimsettings.h"
-#include "misc/network/rawfsdmessagelist.h"
-#include "misc/connectionguard.h"
-
 #include <QFrame>
+
+#include "core/vatsim/vatsimsettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/connectionguard.h"
+#include "misc/network/rawfsdmessagelist.h"
 
 namespace Ui
 {
@@ -61,5 +61,5 @@ namespace swift::gui::components
         int m_maxDisplayedMessages = 100;
         int m_maxBufferSize = 1000;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

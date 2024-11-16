@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "fontmenus.h"
+
+#include <QShortcut>
+
 #include "gui/guiapplication.h"
 #include "gui/shortcut.h"
 #include "misc/verify.h"
-#include <QShortcut>
 
 using namespace swift::misc;
 using namespace swift::gui::components;
@@ -96,4 +98,4 @@ namespace swift::gui::menus
         Q_ASSERT_X(m_widget, Q_FUNC_INFO, "No widget");
         m_widget->setStyleSheet("");
     }
-} // ns
+} // namespace swift::gui::menus

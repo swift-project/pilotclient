@@ -6,8 +6,9 @@
 #ifndef SWIFT_GUI_COMPONENTS_INSTALLSIMULATORSPECIFICCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_INSTALLSIMULATORSPECIFICCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
 #include <QWizard>
+
+#include "gui/overlaymessagesframe.h"
 
 namespace swift::gui::components
 {
@@ -39,5 +40,5 @@ namespace swift::gui::components
         CInstallXSwiftBusComponent *m_xSwiftBusConfig = nullptr;
         CInstallFsxTerrainProbeComponent *m_fsxTerrainProbe = nullptr;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

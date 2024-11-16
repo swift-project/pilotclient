@@ -2,29 +2,30 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/enableforframelesswindow.h"
-#include "gui/guiutility.h"
-#include "gui/foreignwindows.h"
-#include "misc/icons.h"
-#include "misc/stringutils.h"
-#include "misc/worker.h"
 
 #include <QEvent>
 #include <QFlags>
 #include <QHBoxLayout>
+#include <QMainWindow>
 #include <QMenuBar>
 #include <QMouseEvent>
 #include <QObject>
+#include <QPointer>
 #include <QPushButton>
 #include <QRect>
 #include <QSizeGrip>
 #include <QStatusBar>
 #include <QThread>
+#include <QTimer>
 #include <QVariant>
 #include <QWidget>
-#include <QMainWindow>
 #include <QtGlobal>
-#include <QPointer>
-#include <QTimer>
+
+#include "gui/foreignwindows.h"
+#include "gui/guiutility.h"
+#include "misc/icons.h"
+#include "misc/stringutils.h"
+#include "misc/worker.h"
 
 using namespace swift::misc;
 
@@ -337,4 +338,4 @@ namespace swift::gui
             return (Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
         }
     }
-} // namespace
+} // namespace swift::gui

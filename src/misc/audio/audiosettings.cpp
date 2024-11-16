@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/audio/audiosettings.h"
-#include "misc/swiftdirectories.h"
-#include "misc/fileutils.h"
-#include <QtGlobal>
+
 #include <QDir>
+#include <QtGlobal>
+
+#include "misc/fileutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::misc::audio;
 
@@ -104,4 +106,4 @@ namespace swift::misc::audio
         return u"Notification flags: " % CNotificationSounds::toString(this->getNotification()) %
                u" volume: " % QString::number(m_notificationVolume);
     }
-} // namespace
+} // namespace swift::misc::audio

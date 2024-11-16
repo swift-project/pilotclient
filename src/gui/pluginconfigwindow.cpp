@@ -14,4 +14,4 @@ namespace swift::gui
     {
         this->setWindowModality(Qt::WindowModal);
     }
-}
+} // namespace swift::gui

@@ -2,21 +2,22 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "ownaircraftcomponent.h"
-#include "ui_ownaircraftcomponent.h"
-
-#include "gui/uppercasevalidator.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextsimulator.h"
-#include "core/context/contextownaircraft.h"
-#include "core/context/contextnetwork.h"
-#include "core/webdataservices.h"
-#include "core/simulator.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/crashhandler.h"
-#include "misc/logmessage.h"
-#include "config/buildconfig.h"
 
 #include <QPushButton>
+
+#include "ui_ownaircraftcomponent.h"
+
+#include "config/buildconfig.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextsimulator.h"
+#include "core/simulator.h"
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/crashhandler.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/aircraftmodel.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -362,4 +363,4 @@ namespace swift::gui::components
         return changedIcaoCodes;
     }
 
-} // ns
+} // namespace swift::gui::components

@@ -6,19 +6,19 @@
 #ifndef SWIFT_MISC_SIMULATION_AIRSPACEAIRCRAFTANALYZER_H
 #define SWIFT_MISC_SIMULATION_AIRSPACEAIRCRAFTANALYZER_H
 
+#include <QDateTime>
+#include <QMetaType>
+#include <QString>
+#include <QtGlobal>
+
 #include "misc/aviation/callsignset.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/metaclass.h"
 #include "misc/pq/length.h"
 #include "misc/pq/units.h"
 #include "misc/propertyindexref.h"
 #include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QDateTime>
-#include <QMetaType>
-#include <QString>
-#include <QtGlobal>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAirspaceAircraftSnapshot)
 
@@ -111,7 +111,7 @@ namespace swift::misc::simulation
             SWIFT_METAMEMBER(vtolAircraftCallsignsByDistance, 0, DisabledForComparison),
             SWIFT_METAMEMBER(enabledVtolAircraftCallsignsByDistance, 0, DisabledForComparison));
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CAirspaceAircraftSnapshot)
 

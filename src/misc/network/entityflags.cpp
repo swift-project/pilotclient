@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/entityflags.h"
-#include "misc/verify.h"
-#include "misc/setbuilder.h"
+
+#include <bitset>
 
 #include <QStringList>
 #include <QtGlobal>
-#include <bitset>
+
+#include "misc/setbuilder.h"
+#include "misc/verify.h"
 
 namespace swift::misc::network
 {
@@ -244,4 +246,4 @@ namespace swift::misc::network
         qRegisterMetaType<CEntityFlags::EntityFlag>();
         qRegisterMetaType<CEntityFlags::ReadState>();
     }
-} // namespace
+} // namespace swift::misc::network

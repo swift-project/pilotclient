@@ -38,6 +38,6 @@ namespace XSwiftBus
     //! Free function to calculate great circle distance
     double calculateGreatCircleDistance(const CNavDataReference &a, const CNavDataReference &b);
 
-} // ns
+} // namespace XSwiftBus
 
 #endif // guard

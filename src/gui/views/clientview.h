@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_VIEWS_CLIENTVIEW_H
 #define SWIFT_GUI_VIEWS_CLIENTVIEW_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/clientlistmodel.h"
+#include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
 #include "misc/network/clientlist.h"
 
@@ -26,5 +26,5 @@ namespace swift::gui::views
         //! Constructor
         explicit CClientView(QWidget *parent = nullptr);
     };
-}
+} // namespace swift::gui::views
 #endif // guard

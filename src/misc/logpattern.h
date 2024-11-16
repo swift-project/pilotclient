@@ -6,25 +6,25 @@
 #ifndef SWIFT_MISC_LOGPATTERN_H
 #define SWIFT_MISC_LOGPATTERN_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/mixin/mixindbus.h"
-#include "misc/mixin/mixindatastream.h"
-#include "misc/mixin/mixinhash.h"
-#include "misc/mixin/mixinicon.h"
-#include "misc/metaclass.h"
-#include "misc/mixin/mixinindex.h"
-#include "misc/statusmessage.h"
-#include "misc/mixin/mixinstring.h"
-#include "misc/mixin/mixinmetatype.h"
-#include "misc/variant.h"
-
 #include <QDBusArgument>
 #include <QMetaType>
 #include <QSet>
 #include <QString>
 #include <QStringList>
 #include <QtGlobal>
+
+#include "misc/metaclass.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/mixin/mixindatastream.h"
+#include "misc/mixin/mixindbus.h"
+#include "misc/mixin/mixinhash.h"
+#include "misc/mixin/mixinicon.h"
+#include "misc/mixin/mixinindex.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 template <class Key, class T>
 class QHash;
@@ -174,7 +174,7 @@ namespace swift::misc
             SWIFT_METAMEMBER(strategy),
             SWIFT_METAMEMBER(strings));
     };
-}
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CLogPattern)
 

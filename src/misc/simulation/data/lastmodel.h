@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_SIMULATION_DATA_LASTMODEL_H
 #define SWIFT_MISC_SIMULATION_DATA_LASTMODEL_H
 
-#include "misc/simulation/aircraftmodel.h"
 #include "misc/datacache.h"
+#include "misc/simulation/aircraftmodel.h"
 
 namespace swift::misc::simulation::data
 {
@@ -24,6 +24,6 @@ namespace swift::misc::simulation::data
             return name;
         }
     };
-} // ns
+} // namespace swift::misc::simulation::data
 
 #endif // guard

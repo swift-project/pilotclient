@@ -2,22 +2,23 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/flightplan.h"
+
+#include <QDateTime>
+#include <QDomDocument>
+#include <QFile>
+#include <QRegularExpression>
+#include <QStringBuilder>
+#include <QTimeZone>
+
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/altitude.h"
-#include "misc/pq/time.h"
-#include "misc/pq/speed.h"
-#include "misc/iconlist.h"
 #include "misc/fileutils.h"
-#include "misc/stringutils.h"
+#include "misc/iconlist.h"
 #include "misc/json.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/time.h"
 #include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply
-
-#include <QFile>
-#include <QDateTime>
-#include <QTimeZone>
-#include <QStringBuilder>
-#include <QRegularExpression>
-#include <QDomDocument>
+#include "misc/stringutils.h"
 
 using namespace swift::misc::network;
 using namespace swift::misc::physical_quantities;
@@ -640,4 +641,4 @@ namespace swift::misc::aviation
         return CIcons::StandardIconAppFlightPlan16;
     }
 
-} // namespace
+} // namespace swift::misc::aviation

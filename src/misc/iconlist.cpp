@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/iconlist.h"
-#include "misc/containerbase.h"
+
 #include <QDBusMetaType>
+
+#include "misc/containerbase.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CIcon, CIconList)
 
@@ -27,4 +29,4 @@ namespace swift::misc
         qDBusRegisterMetaType<CIconList>();
         registerMetaValueType<CIconList>();
     }
-} // ns
+} // namespace swift::misc

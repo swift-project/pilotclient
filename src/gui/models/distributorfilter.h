@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_MODELS_DISTRIBUTORFILTER_H
 #define SWIFT_GUI_MODELS_DISTRIBUTORFILTER_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/modelfilter.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/simulation/distributorlist.h"
-
 #include <QString>
+
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/simulatorinfo.h"
 
 namespace swift::gui::models
 {
@@ -31,6 +31,6 @@ namespace swift::gui::models
 
         swift::misc::simulation::CSimulatorInfo m_simulator;
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

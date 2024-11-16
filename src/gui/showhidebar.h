@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_SHOWHIDEBAR_H
 #define SWIFT_GUI_SHOWHIDEBAR_H
 
-#include "gui/swiftguiexport.h"
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -40,5 +41,5 @@ namespace swift::gui
         QScopedPointer<Ui::CShowHideBar> ui;
     };
 
-} // namespace
+} // namespace swift::gui
 #endif // guard

@@ -1,19 +1,21 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/dbdistributorselectorcomponent.h"
 #include "gui/editors/distributorform.h"
-#include "gui/editors/validationindicator.h"
-#include "gui/labelandicon.h"
-#include "gui/dropsite.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/icons.h"
-#include "misc/simulation/distributorlist.h"
-#include "distributorform.h"
-#include "ui_distributorform.h"
 
 #include <QLineEdit>
 #include <QMetaType>
+
+#include "distributorform.h"
+#include "ui_distributorform.h"
+
+#include "gui/components/dbdistributorselectorcomponent.h"
+#include "gui/dropsite.h"
+#include "gui/editors/validationindicator.h"
+#include "gui/labelandicon.h"
+#include "misc/icons.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/simulation/distributorlist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -140,4 +142,4 @@ namespace swift::gui::editors
     {
         return !(ui->le_Alias1->text().isEmpty() && ui->le_Alias2->text().isEmpty() && ui->le_Description->text().isEmpty() && ui->le_Updated->text().isEmpty());
     }
-} // ns
+} // namespace swift::gui::editors

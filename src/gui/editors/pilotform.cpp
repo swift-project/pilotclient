@@ -2,16 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "pilotform.h"
-#include "ui_pilotform.h"
-#include "gui/components/airportsmallcompleter.h"
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "gui/guiutility.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/network/user.h"
-#include "config/buildconfig.h"
+
 #include <QCompleter>
 #include <QStyledItemDelegate>
+
+#include "ui_pilotform.h"
+
+#include "config/buildconfig.h"
+#include "gui/components/airportsmallcompleter.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/network/user.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -140,4 +143,4 @@ namespace swift::gui::editors
         // ui->comp_HomeAirport->clearIfInvalidCode(false);
         this->validate();
     }
-} // ns
+} // namespace swift::gui::editors

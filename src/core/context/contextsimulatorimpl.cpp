@@ -2,39 +2,40 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextsimulatorimpl.h"
-#include "core/context/contextapplication.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextnetworkimpl.h"
-#include "core/context/contextownaircraft.h"
-#include "core/context/contextownaircraftimpl.h"
-#include "core/db/databaseutils.h"
-#include "core/corefacade.h"
-#include "core/application.h"
-#include "core/pluginmanagersimulator.h"
-#include "core/simulator.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/simulation/matchingutils.h"
-#include "misc/aviation/callsign.h"
-#include "misc/pq/units.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/dbusserver.h"
-#include "misc/simplecommandparser.h"
-#include "misc/logcategories.h"
-#include "misc/loghandler.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
-#include "misc/threadutils.h"
-#include "misc/verify.h"
-#include "config/buildconfig.h"
 
 #include <QMetaObject>
+#include <QPointer>
 #include <QStringBuilder>
 #include <QStringList>
 #include <QThread>
 #include <Qt>
 #include <QtGlobal>
-#include <QPointer>
+
+#include "config/buildconfig.h"
+#include "core/application.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextnetworkimpl.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextownaircraftimpl.h"
+#include "core/corefacade.h"
+#include "core/db/databaseutils.h"
+#include "core/pluginmanagersimulator.h"
+#include "core/simulator.h"
+#include "misc/aviation/callsign.h"
+#include "misc/dbusserver.h"
+#include "misc/logcategories.h"
+#include "misc/loghandler.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/pq/units.h"
+#include "misc/simplecommandparser.h"
+#include "misc/simulation/matchingutils.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/xplane/xplaneutil.h"
+#include "misc/statusmessage.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::core::db;
@@ -1204,4 +1205,4 @@ namespace swift::core::context
         CLogMessage(this).info(u"Init aircraft matcher with %1 models from set for '%2'") << models.size() << simulator.toQString();
         m_aircraftMatcher.setModelSet(models, simulator, false);
     }
-} // namespace
+} // namespace swift::core::context

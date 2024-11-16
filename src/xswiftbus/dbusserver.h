@@ -4,18 +4,19 @@
 #ifndef SWIFT_SIM_XSWIFTBUS_DBUSSERVER_H
 #define SWIFT_SIM_XSWIFTBUS_DBUSSERVER_H
 
-#include "dbusmessage.h"
-#include "dbuserror.h"
-#include "dbuscallbacks.h"
-#include "dbusdispatcher.h"
-
-#include <event2/event.h>
 #include <dbus/dbus.h>
+#include <event2/event.h>
+
+#include <functional>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <memory>
-#include <functional>
+
+#include "dbuscallbacks.h"
+#include "dbusdispatcher.h"
+#include "dbuserror.h"
+#include "dbusmessage.h"
 
 namespace XSwiftBus
 {
@@ -71,6 +72,6 @@ namespace XSwiftBus
         CDBusError m_lastError;
         NewConnectionFunc m_newConnectionFunc;
     };
-} // ns
+} // namespace XSwiftBus
 
 #endif // guard

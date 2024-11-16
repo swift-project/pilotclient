@@ -8,12 +8,14 @@
 #endif
 
 #include "utils.h"
-#include <XPMPMultiplayer.h>
-#include <XPLM/XPLMUtilities.h>
+
 #include <XPLM/XPLMPlugin.h>
-#include <string>
-#include <sstream>
+#include <XPLM/XPLMUtilities.h>
+#include <XPMPMultiplayer.h>
+
 #include <cassert>
+#include <sstream>
+#include <string>
 
 #ifdef APL
 #    include <Carbon/Carbon.h>
@@ -141,6 +143,6 @@ namespace XSwiftBus
 #        pragma clang diagnostic pop
 #    endif
 #endif // APL
-}
+} // namespace XSwiftBus
 
 //! \endcond

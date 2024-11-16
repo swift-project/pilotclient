@@ -2,18 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/atcstation.h"
+
+#include <QCoreApplication>
+#include <QStringBuilder>
+#include <QtGlobal>
+
 #include "misc/aviation/comsystem.h"
+#include "misc/comparefunctions.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/pq/physicalquantity.h"
 #include "misc/pq/units.h"
 #include "misc/propertyindexref.h"
-#include "misc/comparefunctions.h"
-#include "misc/stringutils.h"
 #include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply
-
-#include <QCoreApplication>
-#include <QtGlobal>
-#include <QStringBuilder>
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -316,4 +317,4 @@ namespace swift::misc::aviation
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
         return 0;
     }
-} // namespace
+} // namespace swift::misc::aviation

@@ -6,11 +6,12 @@
 #ifndef SWIFT_SIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
 #define SWIFT_SIMPLUGIN_FSXCOMMON_FSXSETTINGSCOMPONENT_H
 
-#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/simulation/simulatorplugininfo.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 
 namespace Ui
 {
@@ -71,6 +72,6 @@ namespace swift::simplugin::fsxcommon
         swift::gui::COverlayMessagesFrame *m_mf = nullptr;
         QScopedPointer<Ui::CFsxSettingsComponent> ui;
     };
-} // ns
+} // namespace swift::simplugin::fsxcommon
 
 #endif // guard

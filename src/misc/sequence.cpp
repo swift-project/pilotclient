@@ -4,6 +4,7 @@
 //! \file
 
 #include "misc/sequence.h"
+
 #include <numeric>
 
 namespace swift::misc::private_ns
@@ -23,4 +24,4 @@ namespace swift::misc::private_ns
         std::sort(result.begin(), result.end(), cmp);
         return result;
     }
-}
+} // namespace swift::misc::private_ns

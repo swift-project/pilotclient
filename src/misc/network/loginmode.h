@@ -52,7 +52,7 @@ namespace swift::misc::network
             CLoginMode,
             SWIFT_METAMEMBER(loginMode));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CLoginMode)
 

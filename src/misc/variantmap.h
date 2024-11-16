@@ -6,17 +6,18 @@
 #ifndef SWIFT_MISC_VARIANTMAP_H
 #define SWIFT_MISC_VARIANTMAP_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixinhash.h"
-#include "misc/dictionary.h"
-#include "misc/variant.h"
+#include <initializer_list>
+#include <utility>
 
 #include <QJsonObject>
 #include <QMap>
 #include <QMetaType>
 #include <QString>
-#include <initializer_list>
-#include <utility>
+
+#include "misc/dictionary.h"
+#include "misc/mixin/mixinhash.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 namespace swift::misc
 {
@@ -101,7 +102,7 @@ namespace swift::misc
         CStatusMessageList convertFromMemoizedJsonNoThrow(const QJsonObject &json, const QStringList &keys, const CLogCategoryList &categories, const QString &prefix);
     };
 
-}
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CVariantMap)
 

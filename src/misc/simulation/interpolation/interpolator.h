@@ -6,28 +6,28 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATOR_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATOR_H
 
-#include "misc/simulation/interpolation/interpolationresult.h"
-#include "misc/simulation/interpolation/interpolationstatus.h"
-#include "misc/simulation/partsstatus.h"
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/simulation/interpolation/interpolationsetupprovider.h"
-#include "misc/simulation/simulationenvironmentprovider.h"
-#include "misc/simulation/interpolation/interpolationlogger.h"
-#include "misc/simulation/interpolation/interpolant.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/aviation/aircraftsituationchange.h"
-#include "misc/aviation/aircraftsituation.h"
-#include "misc/aviation/aircraftpartslist.h"
-#include "misc/aviation/callsign.h"
-#include "misc/logcategories.h"
-#include "misc/statusmessagelist.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QString>
 #include <QStringList>
-#include <QtGlobal>
 #include <QTimer>
+#include <QtGlobal>
+
+#include "misc/aviation/aircraftpartslist.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/aircraftsituationchange.h"
+#include "misc/aviation/callsign.h"
+#include "misc/logcategories.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/interpolation/interpolant.h"
+#include "misc/simulation/interpolation/interpolationlogger.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/simulation/interpolation/interpolationresult.h"
+#include "misc/simulation/interpolation/interpolationsetupprovider.h"
+#include "misc/simulation/interpolation/interpolationstatus.h"
+#include "misc/simulation/partsstatus.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/simulationenvironmentprovider.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -177,6 +177,6 @@ namespace swift::misc::simulation
         //! Get the interpolant for the given time point
         virtual const IInterpolant &getInterpolant(SituationLog &log) = 0;
     };
-} // namespace
+} // namespace swift::misc::simulation
 // namespace
 #endif // guard

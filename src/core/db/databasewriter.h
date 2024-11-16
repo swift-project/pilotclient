@@ -6,15 +6,15 @@
 #ifndef SWIFT_CORE_DATABASE_WRITER_H
 #define SWIFT_CORE_DATABASE_WRITER_H
 
-#include "core/swiftcoreexport.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/network/urlloglist.h"
-#include "misc/network/url.h"
-#include "misc/statusmessagelist.h"
-
 #include <QByteArray>
 #include <QList>
 #include <QObject>
+
+#include "core/swiftcoreexport.h"
+#include "misc/network/url.h"
+#include "misc/network/urlloglist.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/statusmessagelist.h"
 
 class QNetworkReply;
 
@@ -107,6 +107,6 @@ namespace swift::core::db
                                               swift::misc::simulation::CAircraftModelList &skippedModels,
                                               swift::misc::CStatusMessageList &messages, bool &directWrite);
     };
-} // ns
+} // namespace swift::core::db
 
 #endif // guard

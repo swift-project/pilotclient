@@ -18,7 +18,7 @@ namespace swift::core::afv::crypto
         AEAD_ChaCha20Poly1305 = 2 //!< AEAD
     };
 
-} // ns
+} // namespace swift::core::afv::crypto
 
 //! \private
 MSGPACK_ADD_ENUM(swift::core::afv::crypto::CryptoDtoMode);

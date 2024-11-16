@@ -13,4 +13,4 @@ namespace swift::gui::views
 
     template class CViewBase<swift::gui::models::CAudioDeviceInfoListModel>;
 
-} // namespace
+} // namespace swift::gui::views

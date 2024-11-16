@@ -6,14 +6,14 @@
 #ifndef SWIFT_CORE_CMODELSETBUILDER_H
 #define SWIFT_CORE_CMODELSETBUILDER_H
 
+#include <QFlags>
+#include <QMetaType>
+#include <QObject>
+
 #include "core/swiftcoreexport.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/distributorlist.h"
 #include "misc/simulation/simulatorinfo.h"
-
-#include <QFlags>
-#include <QMetaType>
-#include <QObject>
 
 namespace swift::core
 {
@@ -48,7 +48,7 @@ namespace swift::core
             const swift::misc::simulation::CAircraftModelList &currentSet, Builder options,
             const swift::misc::simulation::CDistributorList &distributors = {}) const;
     };
-} // ns
+} // namespace swift::core
 
 Q_DECLARE_METATYPE(swift::core::CModelSetBuilder::BuilderFlag)
 Q_DECLARE_METATYPE(swift::core::CModelSetBuilder::Builder)

@@ -15,8 +15,10 @@
 #pragma push_macro("interface")
 #undef interface
 
+// clang-format off
 #include <Windows.h>
 #include <SimConnect.h>
+// clang-format on
 
 #include <QtGlobal>
 

@@ -6,9 +6,9 @@
 #ifndef SWIFT_MISC_INTEGERSEQUENCE_H
 #define SWIFT_MISC_INTEGERSEQUENCE_H
 
+#include <cstddef>
 #include <tuple>
 #include <type_traits>
-#include <cstddef>
 
 namespace swift::misc::private_ns
 {
@@ -37,6 +37,6 @@ namespace swift::misc::private_ns
     using MaskSequence = typename MaskSequenceImpl<Seq, std::index_sequence<>, Mask...>::type;
 
     //! \endcond
-} // namespace namespace swift::misc
+} // namespace swift::misc::private_ns
 
 #endif // guard

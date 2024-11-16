@@ -6,17 +6,19 @@
 #ifndef SWIFT_MISC_SEQUENCE_H
 #define SWIFT_MISC_SEQUENCE_H
 
-#include "misc/containerbase.h"
-#include "misc/mixin/mixinicon.h"
-#include "misc/mixin/mixindatastream.h"
-#include "misc/swiftmiscexport.h"
-#include <QVector>
 #include <algorithm>
-#include <type_traits>
-#include <iterator>
-#include <utility>
-#include <initializer_list>
 #include <functional>
+#include <initializer_list>
+#include <iterator>
+#include <type_traits>
+#include <utility>
+
+#include <QVector>
+
+#include "misc/containerbase.h"
+#include "misc/mixin/mixindatastream.h"
+#include "misc/mixin/mixinicon.h"
+#include "misc/swiftmiscexport.h"
 
 //! \cond
 #define SWIFT_TEMPLATE_SEQUENCE_MIXINS(NS, T, List, Extern)            \
@@ -70,7 +72,7 @@ namespace swift::misc
 
         //! \private Decouple sorting from value type.
         SWIFT_MISC_EXPORT SWIFT_NO_INLINE QVector<int> sortIndices(int size, const std::function<bool(int, int)> &cmp);
-    }
+    } // namespace private_ns
 
     /*!
      * Generic sequential container with value semantics.

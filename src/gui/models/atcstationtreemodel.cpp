@@ -2,17 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/atcstationtreemodel.h"
-#include "gui/models/columnformatters.h"
-#include "gui/models/columns.h"
-#include "misc/aviation/callsign.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/icon.h"
-#include "misc/network/user.h"
-#include "misc/pq/frequency.h"
-#include "misc/pq/length.h"
-#include "misc/pq/units.h"
-#include "misc/variant.h"
-#include "misc/propertyindex.h"
 
 #include <QDateTime>
 #include <QList>
@@ -24,6 +13,18 @@
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/models/columns.h"
+#include "misc/aviation/callsign.h"
+#include "misc/icon.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/user.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/length.h"
+#include "misc/pq/units.h"
+#include "misc/propertyindex.h"
+#include "misc/variant.h"
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -101,4 +102,4 @@ namespace swift::gui::models
         Q_UNUSED(station)
         Q_UNUSED(added)
     }
-} // namespace
+} // namespace swift::gui::models

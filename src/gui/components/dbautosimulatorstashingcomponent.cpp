@@ -1,11 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/db/databaseutils.h"
 #include "dbautosimulatorstashingcomponent.h"
-#include "gui/components/dbmappingcomponent.h"
-#include "ui_dbautosimulatorstashingcomponent.h"
+
 #include <QIntValidator>
+
+#include "ui_dbautosimulatorstashingcomponent.h"
+
+#include "core/db/databaseutils.h"
+#include "gui/components/dbmappingcomponent.h"
 
 using namespace swift::gui;
 using namespace swift::core::db;
@@ -170,4 +173,4 @@ namespace swift::gui::components
         this->addStatusMessage(CStatusMessage(this, CStatusMessage::SeverityInfo, result.arg(ownModelsCount).arg(m_modelsToStash.size())));
         m_state = Completed;
     }
-} // ns
+} // namespace swift::gui::components

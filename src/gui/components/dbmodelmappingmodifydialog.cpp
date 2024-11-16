@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/dbmodelmappingmodifydialog.h"
-#include "gui/editors/modelmappingmodifyform.h"
-#include "ui_dbmodelmappingmodifydialog.h"
 
 #include <QWidget>
+
+#include "ui_dbmodelmappingmodifydialog.h"
+
+#include "gui/editors/modelmappingmodifyform.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -34,4 +36,4 @@ namespace swift::gui::components
     {
         ui->editor_ModelMappingModify->setValue(model);
     }
-} // ns
+} // namespace swift::gui::components

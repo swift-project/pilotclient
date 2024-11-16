@@ -6,9 +6,9 @@
 #ifndef SWIFT_GUI_VIEWS_SERVERVIEW_H
 #define SWIFT_GUI_VIEWS_SERVERVIEW_H
 
+#include "gui/models/serverlistmodel.h"
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
-#include "gui/models/serverlistmodel.h"
 
 class QWidget;
 
@@ -23,5 +23,5 @@ namespace swift::gui::views
         //! Constructor
         explicit CServerView(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::views
 #endif // guard

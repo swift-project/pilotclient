@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/remotefile.h"
-#include "misc/stringutils.h"
+
 #include <QJsonValue>
 #include <QtGlobal>
+
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRemoteFile)
 
@@ -134,4 +136,4 @@ namespace swift::misc::network
         file.setMSecsSinceEpoch(lastUpdated);
         return file;
     }
-} // ns
+} // namespace swift::misc::network

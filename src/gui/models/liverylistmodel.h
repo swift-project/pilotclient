@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_LIVERYLISTMODEL_H
 #define SWIFT_GUI_LIVERYLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodeldbobjects.h"
+#include "gui/swiftguiexport.h"
 
 class QObject;
 
@@ -15,7 +15,7 @@ namespace swift::misc::aviation
 {
     class CLivery;
     class CLiveryList;
-}
+} // namespace swift::misc::aviation
 
 namespace swift::gui::models
 {
@@ -32,6 +32,6 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CLiveryListModel() override {}
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

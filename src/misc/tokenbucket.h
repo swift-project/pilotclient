@@ -4,8 +4,9 @@
 #ifndef SWIFT_MISC_TOKENBUCKET_H
 #define SWIFT_MISC_TOKENBUCKET_H
 
-#include "misc/swiftmiscexport.h"
 #include <QDateTime>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -55,6 +56,6 @@ namespace swift::misc
         qint64 m_intervalMs = 5000; //!< Refill interval, e.g. every 5 secs
         qint64 m_lastReplenishmentTime = QDateTime::currentMSecsSinceEpoch(); //!< Last time
     };
-} // ns
+} // namespace swift::misc
 
 #endif

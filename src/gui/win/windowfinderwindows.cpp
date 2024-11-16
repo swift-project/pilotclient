@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/win/windowfinderwindows.h"
-#include <QWindow>
-#include <QScopedArrayPointer>
 
 #include <windows.h>
+
+#include <QScopedArrayPointer>
+#include <QWindow>
 
 namespace swift::gui
 {
@@ -32,4 +33,4 @@ namespace swift::gui
 
         return nullptr;
     }
-}
+} // namespace swift::gui

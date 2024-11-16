@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbownmodelsdialog.h"
-#include "gui/components/dbownmodelscomponent.h"
+
 #include "ui_dbownmodelsdialog.h"
+
+#include "gui/components/dbownmodelscomponent.h"
 
 using namespace swift::misc::simulation;
 
@@ -40,4 +42,4 @@ namespace swift::gui::components
     {
         return ui->comp_OwnModels;
     }
-} // ns
+} // namespace swift::gui::components

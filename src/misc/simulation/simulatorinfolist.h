@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_SIMULATION_SIMULATORINFOLIST_H
 #define SWIFT_MISC_SIMULATION_SIMULATORINFOLIST_H
 
-#include "misc/swiftmiscexport.h"
+#include <QMetaType>
+
 #include "misc/collection.h"
 #include "misc/sequence.h"
 #include "misc/simulation/simulatorinfo.h"
-
-#include <QMetaType>
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::Simulation, CSimulatorInfo, CSimulatorPluginInfoList)
 
@@ -41,7 +41,7 @@ namespace swift::misc::simulation
         //! Split into single simulators, unknown simulators are ignored
         static CSimulatorInfoList splitIntoSingleSimulators(const CSimulatorInfo &sim);
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorInfoList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CSimulatorInfo>)

@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_MODELS_CLOUDLAYERLISTMODEL_H
 #define SWIFT_GUI_MODELS_CLOUDLAYERLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
 #include "misc/weather/cloudlayer.h"
 #include "misc/weather/cloudlayerlist.h"
 
@@ -28,5 +28,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CCloudLayerListModel() {}
     };
-}
+} // namespace swift::gui::models
 #endif // guard

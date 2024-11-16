@@ -10,8 +10,8 @@
 #include "misc/aviation/heading.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/speed.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/simulation/interpolation/interpolatorpbh.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -47,6 +47,6 @@ namespace swift::misc::simulation
         aviation::CAircraftSituation m_startSituation;
         aviation::CAircraftSituation m_endSituation;
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 #endif

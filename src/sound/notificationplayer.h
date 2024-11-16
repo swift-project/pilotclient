@@ -6,13 +6,13 @@
 #ifndef SWIFT_SOUND_NOTIFICATIONPLAYER_H
 #define SWIFT_SOUND_NOTIFICATIONPLAYER_H
 
-#include "sound/swiftsoundexport.h"
-#include "misc/audio/notificationsounds.h"
-
-#include <QObject>
 #include <QHash>
-#include <QSoundEffect>
+#include <QObject>
 #include <QPointer>
+#include <QSoundEffect>
+
+#include "misc/audio/notificationsounds.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound
 {
@@ -46,6 +46,6 @@ namespace swift::sound
         //! Update an effect
         void updateEffect(swift::misc::audio::CNotificationSounds::NotificationFlag f, const QString &directory, const QString &name);
     };
-} // ns
+} // namespace swift::sound
 
 #endif // guard

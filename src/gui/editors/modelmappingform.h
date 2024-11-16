@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_EDITORS_MODELMAPPINGFORM_H
 #define SWIFT_GUI_EDITORS_MODELMAPPINGFORM_H
 
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/editors/form.h"
 #include "gui/swiftguiexport.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/statusmessagelist.h"
-
-#include <QObject>
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -70,6 +70,6 @@ namespace swift::gui::editors
         QScopedPointer<Ui::CModelMappingForm> ui;
         swift::misc::simulation::CAircraftModel m_originalModel;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

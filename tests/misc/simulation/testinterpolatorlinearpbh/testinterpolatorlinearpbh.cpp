@@ -5,13 +5,14 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/aviation/aircraftsituation.h"
-#include "misc/aviation/heading.h"
-#include "misc/simulation/interpolation/interpolatorlinearpbh.h"
-#include "misc/math/mathutils.h"
+#include <QTest>
+
 #include "test.h"
 
-#include <QTest>
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/heading.h"
+#include "misc/math/mathutils.h"
+#include "misc/simulation/interpolation/interpolatorlinearpbh.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -257,7 +258,7 @@ namespace MiscTest
             lastDeg = p;
         }
     }
-}
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestInterpolatorLinearPbh);

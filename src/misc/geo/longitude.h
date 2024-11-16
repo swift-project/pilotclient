@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_GEO_LONGITUDE_H
 #define SWIFT_MISC_GEO_LONGITUDE_H
 
-#include "misc/swiftmiscexport.h"
 #include "misc/geo/earthangle.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::geo
 {
@@ -55,7 +55,7 @@ namespace swift::misc::geo
         //! Longitude measurements range from 0° to (+/–)180°.
         CLongitude(double value, const swift::misc::physical_quantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
     };
-} // ns
+} // namespace swift::misc::geo
 
 Q_DECLARE_METATYPE(swift::misc::geo::CLongitude)
 

@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/logcategorylist.h"
-#include "misc/containerbase.h"
-#include "misc/iterator.h"
-#include "misc/range.h"
 
 #include <QDBusMetaType>
 #include <QList>
 #include <QMetaObject>
+
+#include "misc/containerbase.h"
+#include "misc/iterator.h"
+#include "misc/range.h"
 
 struct QMetaObject;
 
@@ -66,4 +67,4 @@ namespace swift::misc
         qDBusRegisterMetaType<CLogCategoryList>();
         registerMetaValueType<CLogCategoryList>();
     }
-}
+} // namespace swift::misc

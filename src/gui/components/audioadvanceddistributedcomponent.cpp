@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "audioadvanceddistributedcomponent.h"
+
 #include "ui_audioadvanceddistributedcomponent.h"
 
-#include "gui/guiapplication.h"
+#include "core/afv/clients/afvclient.h"
 #include "core/context/contextaudio.h"
 #include "core/context/contextnetwork.h"
-#include "core/afv/clients/afvclient.h"
+#include "gui/guiapplication.h"
 
 using namespace swift::misc::audio;
 using namespace swift::core::context;
@@ -38,4 +39,4 @@ namespace swift::gui::components
         if (!sGui->getIContextNetwork()) { return false; }
         return true;
     }
-}
+} // namespace swift::gui::components

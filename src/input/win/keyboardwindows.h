@@ -6,12 +6,13 @@
 #ifndef SWIFT_INPUT_KEYBOARD_WINDOWS_H
 #define SWIFT_INPUT_KEYBOARD_WINDOWS_H
 
-#include "input/swiftinputexport.h"
-#include "input/keyboard.h"
-#include "misc/input/keyboardkey.h"
-#include "misc/input/keyboardkeylist.h"
 #include <QHash>
 #include <QTimer>
+
+#include "input/keyboard.h"
+#include "input/swiftinputexport.h"
+#include "misc/input/keyboardkey.h"
+#include "misc/input/keyboardkeylist.h"
 #ifndef NOMINMAX
 #    define NOMINMAX
 #endif
@@ -59,6 +60,6 @@ namespace swift::input
         QTimer m_pollTimer;
         QVector<int> m_pressedKeys;
     };
-}
+} // namespace swift::input
 
 #endif // guard

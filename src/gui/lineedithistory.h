@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_LINEEDITHISTORY_H
 #define SWIFT_GUI_LINEEDITHISTORY_H
 
-#include "gui/swiftguiexport.h"
 #include <QLineEdit>
 #include <QStringList>
+
+#include "gui/swiftguiexport.h"
 
 namespace swift::gui
 {
@@ -49,6 +50,6 @@ namespace swift::gui
         QStringList m_history;
         int m_position = 0;
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

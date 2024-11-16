@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextaudioimpl.h"
-#include "core/afv/clients/afvclient.h"
-#include "misc/dbusserver.h"
 
+#include <QPointer>
 #include <QTimer>
 #include <QtGlobal>
-#include <QPointer>
+
+#include "core/afv/clients/afvclient.h"
+#include "misc/dbusserver.h"
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -71,4 +72,4 @@ namespace swift::core::context
         return m_registeredDevices;
     }
 
-} // namespace
+} // namespace swift::core::context

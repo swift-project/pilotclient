@@ -1,19 +1,28 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "gui/components/cockpitcomcomponent.h"
+
+#include <QDoubleSpinBox>
+#include <QLabel>
+#include <QPushButton>
+#include <QString>
+#include <QtGlobal>
+
+#include "ui_cockpitcomcomponent.h"
+
 #include "core/context/contextaudio.h"
 #include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
 #include "core/context/contextownaircraft.h"
-#include "gui/components/cockpitcomcomponent.h"
+#include "core/context/contextsimulator.h"
 #include "gui/components/selcalcodeselector.h"
 #include "gui/components/transpondercodespinbox.h"
 #include "gui/components/transpondermodeselector.h"
 #include "gui/guiapplication.h"
 #include "gui/led.h"
 #include "gui/stylesheetutility.h"
-#include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/atcstation.h"
+#include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/logmessage.h"
@@ -21,13 +30,6 @@
 #include "misc/pq/units.h"
 #include "misc/sequence.h"
 #include "misc/verify.h"
-#include "ui_cockpitcomcomponent.h"
-
-#include <QDoubleSpinBox>
-#include <QLabel>
-#include <QPushButton>
-#include <QString>
-#include <QtGlobal>
 
 using namespace swift::gui;
 using namespace swift::gui::editors;
@@ -171,4 +173,4 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
         sGui->getIContextOwnAircraft()->updateSelcal(selcal, identifier());
     }
-} // namespace
+} // namespace swift::gui::components

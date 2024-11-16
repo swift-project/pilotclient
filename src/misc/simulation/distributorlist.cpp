@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/distributorlist.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/simulation/aircraftmodel.h"
 
 #include <tuple>
+
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatorinfo.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CDistributor, CDistributorList)
 
@@ -126,4 +127,4 @@ namespace swift::misc::simulation
     {
         return this->removeIf(&CDistributor::isLoadedFromDb, false);
     }
-} // namespace
+} // namespace swift::misc::simulation

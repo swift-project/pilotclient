@@ -1,16 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/configurationwizard.h"
 #include "gui/components/settingshotkeycomponent.h"
-#include "gui/components/hotkeydialog.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextapplication.h"
-#include "core/context/contextaudio.h"
-#include "core/inputmanager.h"
-#include "misc/input/actionhotkeydefs.h"
-#include "misc/metadatautils.h"
-#include "ui_settingshotkeycomponent.h"
 
 #include <QAbstractItemModel>
 #include <QFlags>
@@ -24,6 +15,17 @@
 #include <QTableView>
 #include <QVariant>
 #include <QtGlobal>
+
+#include "ui_settingshotkeycomponent.h"
+
+#include "core/context/contextapplication.h"
+#include "core/context/contextaudio.h"
+#include "core/inputmanager.h"
+#include "gui/components/configurationwizard.h"
+#include "gui/components/hotkeydialog.h"
+#include "gui/guiapplication.h"
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/metadatautils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::input;
@@ -223,4 +225,4 @@ namespace swift::gui::components
         Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing configuration");
         m_config->reloadHotkeysFromSettings();
     }
-} // ns
+} // namespace swift::gui::components

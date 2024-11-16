@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/airport.h"
+
+#include <QCoreApplication>
+#include <QStringBuilder>
+#include <Qt>
+#include <QtGlobal>
+
 #include "misc/pq/angle.h"
 #include "misc/propertyindexref.h"
 #include "misc/stringutils.h"
-
-#include <QCoreApplication>
-#include <Qt>
-#include <QtGlobal>
-#include <QStringBuilder>
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -167,4 +168,4 @@ namespace swift::misc::aviation
         Q_ASSERT_X(false, Q_FUNC_INFO, "Compare failed");
         return 0;
     }
-} // namespace
+} // namespace swift::misc::aviation

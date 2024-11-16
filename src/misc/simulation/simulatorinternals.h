@@ -6,18 +6,19 @@
 #ifndef SWIFT_MISC_SIMULATION_SIMULATORINTERNALS_H
 #define SWIFT_MISC_SIMULATION_SIMULATORINTERNALS_H
 
-#include "misc/swiftmiscexport.h"
+#include <tuple>
+
+#include <QHash>
+#include <QMetaType>
+#include <QString>
+
 #include "misc/containerbase.h"
 #include "misc/dictionary.h"
 #include "misc/metaclass.h"
 #include "misc/namevariantpairlist.h"
 #include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QHash>
-#include <QMetaType>
-#include <QString>
-#include <tuple>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInternals)
 
@@ -101,7 +102,7 @@ namespace swift::misc::simulation
             CSimulatorInternals,
             SWIFT_METAMEMBER(data));
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorInternals)
 

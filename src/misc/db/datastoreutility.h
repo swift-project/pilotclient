@@ -6,11 +6,11 @@
 #ifndef SWIFT_MISC_DB_DATASTOREUTILITY_H
 #define SWIFT_MISC_DB_DATASTOREUTILITY_H
 
-#include "misc/logcategories.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QDateTime>
 #include <QString>
+
+#include "misc/logcategories.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -48,7 +48,7 @@ namespace swift::misc
             //! Auto publish response
             static bool parseAutoPublishResponse(const QString &jsonResponse, CStatusMessageList &messages);
         };
-    } // namespace
-} // namespace
+    } // namespace db
+} // namespace swift::misc
 
 #endif // guard

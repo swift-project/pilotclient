@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "countryselector.h"
+
+#include <QCompleter>
+
 #include "ui_countryselector.h"
 
+#include "core/webdataservices.h"
 #include "gui/guiapplication.h"
 #include "gui/uppercasevalidator.h"
-#include "core/webdataservices.h"
 #include "misc/countrylist.h"
-#include <QCompleter>
 
 using namespace swift::misc;
 using namespace swift::core;
@@ -65,4 +67,4 @@ namespace swift::gui::components
         if (m_current.getName() == name) { return; }
         this->setCountry(sGui->getWebDataServices()->getCountryForName(name));
     }
-} // ns
+} // namespace swift::gui::components

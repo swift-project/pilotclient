@@ -6,13 +6,14 @@
 #ifndef SWIFT_GUI_FILTERS_DISTRIBUTORFILTERBAR_H
 #define SWIFT_GUI_FILTERS_DISTRIBUTORFILTERBAR_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/filters/filterwidget.h"
-#include "gui/models/modelfilter.h"
+#include <memory>
 
 #include <QObject>
 #include <QScopedPointer>
-#include <memory>
+
+#include "gui/filters/filterwidget.h"
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -22,7 +23,7 @@ namespace swift::misc::simulation
 {
     class CDistributorList;
     class CSimulatorInfo;
-}
+} // namespace swift::misc::simulation
 namespace swift::gui::filters
 {
     /*!
@@ -60,6 +61,6 @@ namespace swift::gui::filters
 
         QScopedPointer<Ui::CDistributorFilterBar> ui;
     };
-} // ns
+} // namespace swift::gui::filters
 
 #endif // guard

@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_MODELMATCHERLOGENABLE_H
 #define SWIFT_GUI_COMPONENTS_MODELMATCHERLOGENABLE_H
 
-#include "misc/network/connectionstatus.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/network/connectionstatus.h"
 
 namespace Ui
 {
@@ -52,6 +53,6 @@ namespace swift::gui::components
         //! Connection status has been changed
         void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from, const swift::misc::network::CConnectionStatus &to);
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

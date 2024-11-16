@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBAIRCRAFTCATEGORYCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBAIRCRAFTCATEGORYCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
+#include <QScopedPointer>
+
 #include "gui/enablefordockwidgetinfoarea.h"
 #include "gui/enableforviewbasedindicator.h"
+#include "gui/overlaymessagesframe.h"
 #include "gui/swiftguiexport.h"
 #include "misc/network/entityflags.h"
-
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -49,6 +49,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CDbAircraftCategoryComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

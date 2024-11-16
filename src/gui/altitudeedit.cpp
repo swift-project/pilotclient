@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "altitudeedit.h"
-#include <QRegularExpressionValidator>
+
 #include <QMessageBox>
+#include <QRegularExpressionValidator>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -35,4 +36,4 @@ namespace swift::gui
         CAltitude a;
         return a.parseFromFpAltitudeString(this->text(), msgs);
     }
-} // ns
+} // namespace swift::gui

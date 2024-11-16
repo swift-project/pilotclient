@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/serverlistselector.h"
-#include "gui/guiapplication.h"
-#include "misc/sequence.h"
-#include "core/webdataservices.h"
-#include "core/db/icaodatareader.h"
 
 #include <QString>
+
+#include "core/db/icaodatareader.h"
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "misc/sequence.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -102,4 +103,4 @@ namespace swift::gui::components
         emit this->serverChanged(this->currentServer());
     }
 
-} // ns
+} // namespace swift::gui::components

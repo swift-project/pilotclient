@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_MODELS_ATCTREEMODEL_H
 #define SWIFT_GUI_MODELS_ATCTREEMODEL_H
 
-#include "gui/models/columns.h"
-#include "misc/aviation/atcstationlist.h"
-#include "gui/swiftguiexport.h"
-
-#include <QStandardItemModel>
 #include <QHash>
+#include <QStandardItemModel>
+
+#include "gui/models/columns.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/atcstationlist.h"
 
 namespace swift::gui::models
 {
@@ -49,5 +49,5 @@ namespace swift::gui::models
         QHash<QString, swift::misc::aviation::CAtcStationList> m_stationsBySuffix;
         QStringList m_suffixes;
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

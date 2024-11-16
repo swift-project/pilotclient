@@ -4,9 +4,9 @@
 #ifndef SWIFT_MISC_PROPERTYINDEXALLCLASSES_H
 #define SWIFT_MISC_PROPERTYINDEXALLCLASSES_H
 
-#include "misc/propertyindexlist.h"
-#include "misc/propertyindexvariantmap.h"
-#include "misc/propertyindexref.h"
 #include "misc/propertyindex.h"
+#include "misc/propertyindexlist.h"
+#include "misc/propertyindexref.h"
+#include "misc/propertyindexvariantmap.h"
 
 #endif // guard

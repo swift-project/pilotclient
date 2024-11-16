@@ -8,8 +8,8 @@
 
 #include <QFrame>
 #include <QTabWidget>
-#include <QTimer>
 #include <QTextDocument>
+#include <QTimer>
 
 namespace Ui
 {
@@ -44,6 +44,6 @@ namespace swift::gui::components
         //! Callsign was entered
         void callsignEntered();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

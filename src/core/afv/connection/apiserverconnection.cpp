@@ -3,19 +3,20 @@
 
 #include "core/afv/connection/apiserverconnection.h"
 
-#include "misc/network/networkutils.h"
-#include "qjsonwebtoken/qjsonwebtoken.h"
-#include "misc/logmessage.h"
-#include "misc/stringutils.h"
-#include "config/buildconfig.h"
-
-#include <QJsonObject>
 #include <QJsonArray>
-#include <QUrl>
-#include <QUrlQuery>
-#include <QScopedPointer>
+#include <QJsonObject>
 #include <QMetaEnum>
 #include <QPointer>
+#include <QScopedPointer>
+#include <QUrl>
+#include <QUrlQuery>
+
+#include "qjsonwebtoken/qjsonwebtoken.h"
+
+#include "config/buildconfig.h"
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -329,4 +330,4 @@ namespace swift::core::afv::connection
         return !sApp || sApp->isShuttingDown();
     }
 
-} // ns
+} // namespace swift::core::afv::connection

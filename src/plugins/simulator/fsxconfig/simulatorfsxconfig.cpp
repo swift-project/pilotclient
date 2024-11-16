@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorfsxconfig.h"
+
 #include "../fsxcommon/simulatorfsxconfigwindow.h"
 
 using namespace swift::gui;
@@ -18,4 +19,4 @@ namespace swift::simplugin::fsx
     {
         return new CSimulatorFsxConfigWindow("FSX", parent);
     }
-}
+} // namespace swift::simplugin::fsx

@@ -6,9 +6,9 @@
 #ifndef SWIFT_MISC_AVIATION_ONGROUNDINFO_H
 #define SWIFT_MISC_AVIATION_ONGROUNDINFO_H
 
+#include "misc/pq/length.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-#include "misc/pq/length.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Aviation, COnGroundInfo)
 
@@ -121,7 +121,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(onGroundFactor));
     };
 
-}
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::COnGroundInfo)
 Q_DECLARE_METATYPE(swift::misc::aviation::COnGroundInfo::IsOnGround)

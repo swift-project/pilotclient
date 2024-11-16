@@ -6,16 +6,17 @@
 #ifndef SWIFT_MISC_DB_ARTIFACTLIST_H
 #define SWIFT_MISC_DB_ARTIFACTLIST_H
 
-#include "misc/db/artifact.h"
-#include "misc/db/distributionlist.h"
-#include "misc/db/datastoreobjectlist.h"
-#include "misc/network/remotefilelist.h"
-#include "misc/platformset.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/sequence.h"
 #include <QSet>
 #include <QString>
+
+#include "misc/collection.h"
+#include "misc/db/artifact.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/db/distributionlist.h"
+#include "misc/network/remotefilelist.h"
+#include "misc/platformset.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::db, CArtifact, CArtifactList)
 
@@ -108,7 +109,7 @@ namespace swift::misc::db
         //! From database JSON by string
         static CArtifactList fromDatabaseJson(const QString &json);
     };
-} // ns
+} // namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CArtifactList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::db::CArtifact>)

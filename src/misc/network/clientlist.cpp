@@ -13,4 +13,4 @@ namespace swift::misc::network
 
     CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other)
     {}
-} // namespace
+} // namespace swift::misc::network

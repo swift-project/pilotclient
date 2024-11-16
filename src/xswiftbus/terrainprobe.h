@@ -5,8 +5,9 @@
 #define SWIFT_SIM_XSWIFTBUS_ELEVATIONPROVIDER_H
 
 #include <XPLM/XPLMScenery.h>
-#include <string>
+
 #include <array>
+#include <string>
 
 namespace XSwiftBus
 {
@@ -40,6 +41,6 @@ namespace XSwiftBus
         XPLMProbeRef m_ref = nullptr;
         mutable int m_logMessageCount = 0;
     };
-} // ns
+} // namespace XSwiftBus
 
 #endif

@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_MODELS_LISTMODELCALLSIGNOBJECTS_H
 #define SWIFT_GUI_MODELS_LISTMODELCALLSIGNOBJECTS_H
 
-#include "gui/models/listmodelbase.h"
-#include "misc/aviation/callsignset.h"
-
 #include <QColor>
 #include <QList>
 #include <QString>
 #include <QVariant>
 #include <Qt>
+
+#include "gui/models/listmodelbase.h"
+#include "misc/aviation/callsignset.h"
 
 class QModelIndex;
 class QObject;
@@ -68,5 +68,5 @@ namespace swift::gui::models
         swift::misc::aviation::CCallsignSet m_highlightCallsigns; //!< callsigns to be highlighted
         QColor m_highlightColor = Qt::green;
     };
-} // namespace
+} // namespace swift::gui::models
 #endif // guard

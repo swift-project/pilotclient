@@ -4,6 +4,7 @@
 //! \cond PRIVATE
 
 #include "navdatareference.h"
+
 #include <cmath>
 
 namespace XSwiftBus
@@ -29,6 +30,6 @@ namespace XSwiftBus
         const double computation = asin(sqrt(sin(diffLa / 2) * sin(diffLa / 2) + cos(latRad1) * cos(latRad2) * sin(doffLo / 2) * sin(doffLo / 2)));
         return 2 * c_earthRadiusKm * computation;
     }
-} // ns
+} // namespace XSwiftBus
 
 //! \endcond

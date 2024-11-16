@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_DB_ARTIFACT_H
 #define SWIFT_MISC_DB_ARTIFACT_H
 
-#include "misc/db/distributionlist.h"
+#include <QString>
+
 #include "misc/db/datastore.h"
+#include "misc/db/distributionlist.h"
+#include "misc/network/remotefile.h"
 #include "misc/platform.h"
 #include "misc/swiftmiscexport.h"
-#include "misc/network/remotefile.h"
-#include <QString>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CArtifact)
 
@@ -174,7 +175,7 @@ namespace swift::misc::db
             SWIFT_METAMEMBER(distributions),
             SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
-} // ns
+} // namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CArtifact)
 Q_DECLARE_METATYPE(swift::misc::db::CArtifact::ArtifactType)

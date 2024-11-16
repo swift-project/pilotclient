@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "guisettings.h"
+
 #include <QStyleFactory>
 
 using namespace swift::misc;
@@ -81,4 +82,4 @@ namespace swift::gui::settings
             break;
         }
     }
-} // ns
+} // namespace swift::gui::settings

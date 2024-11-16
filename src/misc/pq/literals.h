@@ -284,8 +284,8 @@ namespace swift::misc::physical_quantities
         SWIFT_MISC_EXPORT CTime operator""_minsec(long double);
         SWIFT_MISC_EXPORT CTime operator""_minsec(unsigned long long);
         //! @}
-    }
+    } // namespace Literals
 
-}
+} // namespace swift::misc::physical_quantities
 
 #endif

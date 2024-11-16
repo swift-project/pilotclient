@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_PLATFORM_H
 #define SWIFT_MISC_PLATFORM_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-
 #include <QMetaEnum>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CPlatform)
 
@@ -149,7 +149,7 @@ namespace swift::misc
             CPlatform,
             SWIFT_METAMEMBER(platform));
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CPlatform)
 Q_DECLARE_METATYPE(swift::misc::CPlatform::Platform)

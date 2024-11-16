@@ -6,10 +6,11 @@
 #ifndef SWIFT_SIMPLUGIN_SIMULATOR_P3D_H
 #define SWIFT_SIMPLUGIN_SIMULATOR_P3D_H
 
-#include "../fsxcommon/simulatorfsxcommon.h"
 #include "../fsxcommon/simconnectobject.h"
-#include "misc/simulation/settings/simulatorsettings.h"
+#include "../fsxcommon/simulatorfsxcommon.h"
+
 #include "misc/settingscache.h"
+#include "misc/simulation/settings/simulatorsettings.h"
 
 namespace swift::simplugin::p3d
 {
@@ -87,6 +88,6 @@ namespace swift::simplugin::p3d
     private:
         swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TP3DVersion> m_p3dVersion { this };
     };
-} // ns
+} // namespace swift::simplugin::p3d
 
 #endif // guard

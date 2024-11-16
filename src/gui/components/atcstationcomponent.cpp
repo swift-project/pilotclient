@@ -2,40 +2,42 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/atcstationcomponent.h"
-#include "gui/views/atcstationview.h"
-#include "gui/views/viewbase.h"
-#include "gui/models/atcstationlistmodel.h"
-#include "gui/models/atcstationtreemodel.h"
-#include "gui/uppercasevalidator.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "gui/dockwidgetinfoarea.h"
-#include "gui/infoarea.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextownaircraft.h"
-#include "core/webdataservices.h"
-#include "misc/aviation/atcstationlist.h"
-#include "misc/aviation/informationmessage.h"
-#include "misc/weather/metar.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/icons.h"
-#include "misc/logmessage.h"
-#include "ui_atcstationcomponent.h"
 
 #include <QAbstractItemModel>
+#include <QCompleter>
+#include <QGroupBox>
 #include <QLineEdit>
 #include <QModelIndex>
+#include <QPointer>
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QStringBuilder>
 #include <QTabBar>
-#include <QGroupBox>
 #include <QTableView>
 #include <QTextEdit>
 #include <QTimer>
 #include <QTreeView>
-#include <QCompleter>
-#include <QPointer>
+
+#include "ui_atcstationcomponent.h"
+
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/webdataservices.h"
+#include "gui/dockwidgetinfoarea.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/infoarea.h"
+#include "gui/models/atcstationlistmodel.h"
+#include "gui/models/atcstationtreemodel.h"
+#include "gui/uppercasevalidator.h"
+#include "gui/views/atcstationview.h"
+#include "gui/views/viewbase.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/informationmessage.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/weather/metar.h"
 
 using namespace swift::gui::models;
 using namespace swift::gui::views;
@@ -473,4 +475,4 @@ namespace swift::gui::components
         QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(this->layout());
         return layout;
     }
-} // namespace
+} // namespace swift::gui::components

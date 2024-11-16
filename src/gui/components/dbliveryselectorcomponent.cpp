@@ -1,17 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
-#include "core/webdataservices.h"
 #include "gui/components/dbliveryselectorcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "misc/aviation/liverylist.h"
-#include "misc/db/datastoreutility.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/stringutils.h"
-#include "misc/variant.h"
-#include "ui_dbliveryselectorcomponent.h"
 
 #include <QCompleter>
 #include <QDragEnterEvent>
@@ -25,6 +15,18 @@
 #include <QStringList>
 #include <Qt>
 #include <QtGlobal>
+
+#include "ui_dbliveryselectorcomponent.h"
+
+#include "core/application.h"
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/stringutils.h"
+#include "misc/variant.h"
 
 using namespace swift::gui;
 using namespace swift::core;
@@ -242,4 +244,4 @@ namespace swift::gui::components
         if (i < 0) { return l; }
         return l.left(i);
     }
-} // ns
+} // namespace swift::gui::components

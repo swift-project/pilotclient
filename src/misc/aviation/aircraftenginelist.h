@@ -6,17 +6,17 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTENGINELIST_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTENGINELIST_H
 
-#include "misc/aviation/aircraftengine.h"
-#include "misc/aviation/aircraftengine.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/json.h"
-#include "misc/sequence.h"
+#include <initializer_list>
+#include <tuple>
 
 #include <QJsonObject>
 #include <QMetaType>
-#include <initializer_list>
-#include <tuple>
+
+#include "misc/aviation/aircraftengine.h"
+#include "misc/collection.h"
+#include "misc/json.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftEngine, CAircraftEngineList)
 
@@ -68,7 +68,7 @@ namespace swift::misc::aviation
         //! \copydoc swift::misc::mixin::JsonByMetaClass::convertFromJson
         void convertFromJson(const QJsonObject &json);
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftEngineList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAircraftEngine>)

@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_MODELS_SERVERLISTMODEL_H
 #define SWIFT_GUI_MODELS_SERVERLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
 #include "misc/network/serverlist.h"
 
 class QObject;
@@ -26,5 +26,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CServerListModel() {}
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

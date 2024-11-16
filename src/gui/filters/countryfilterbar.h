@@ -6,13 +6,14 @@
 #ifndef SWIFT_GUI_FILTERS_COUNTRYFILTERBAR_H
 #define SWIFT_GUI_FILTERS_COUNTRYFILTERBAR_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/filters/filterwidget.h"
-#include "gui/models/modelfilter.h"
+#include <memory>
 
 #include <QObject>
 #include <QScopedPointer>
-#include <memory>
+
+#include "gui/filters/filterwidget.h"
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
 
 class QWidget;
 
@@ -56,6 +57,6 @@ namespace swift::gui::filters
     private:
         QScopedPointer<Ui::CCountryFilterBar> ui;
     };
-} // ns
+} // namespace swift::gui::filters
 
 #endif // guard

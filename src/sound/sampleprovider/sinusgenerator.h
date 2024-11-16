@@ -6,10 +6,10 @@
 #ifndef SWIFT_SOUND_SAMPLEPROVIDER_SINUSGENERATOR_H
 #define SWIFT_SOUND_SAMPLEPROVIDER_SINUSGENERATOR_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/sampleprovider/sampleprovider.h"
-
 #include <QtMath>
+
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -38,6 +38,6 @@ namespace swift::sound::sample_provider
         int m_nSample = 0;
         static constexpr double s_twoPi = 2 * M_PI;
     };
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

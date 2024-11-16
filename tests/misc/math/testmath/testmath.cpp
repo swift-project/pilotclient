@@ -5,10 +5,11 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/math/mathutils.h"
+#include <QTest>
+
 #include "test.h"
 
-#include <QTest>
+#include "misc/math/mathutils.h"
 
 using namespace swift::misc::math;
 
@@ -45,7 +46,7 @@ namespace MiscTest
         QVERIFY2(CMathUtils::roundToMultipleOf(-3, -3) == -3, "Nearest multiple of -3 from -3 should be -3");
     }
 
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestMath);

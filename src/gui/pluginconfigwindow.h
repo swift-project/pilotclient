@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_PLUGINCONFIGWINDOW_H
 #define SWIFT_GUI_PLUGINCONFIGWINDOW_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/overlaymessagesframe.h"
+#include "gui/swiftguiexport.h"
 
 class QShowEvent;
 
@@ -23,6 +23,6 @@ namespace swift::gui
         //! No parent
         explicit CPluginConfigWindow(QWidget *parent);
     };
-}
+} // namespace swift::gui
 
 #endif // guard

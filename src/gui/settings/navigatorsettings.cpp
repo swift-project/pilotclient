@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "navigatorsettings.h"
+
+#include <QStringList>
+
 #include "gui/guiutility.h"
 #include "misc/stringutils.h"
-#include <QStringList>
 
 using namespace swift::misc;
 using namespace swift::gui;
@@ -100,4 +102,4 @@ namespace swift::gui::settings
             break;
         }
     }
-} // ns
+} // namespace swift::gui::settings

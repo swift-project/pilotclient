@@ -26,5 +26,5 @@ namespace swift::gui::models
         //! Select
         virtual void selectObjects(const ContainerType &selectedObjects) = 0;
     };
-} // namespace
+} // namespace swift::gui::models
 #endif // guard

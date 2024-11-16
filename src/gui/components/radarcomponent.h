@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_RADARCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_RADARCOMPONENT_H
 
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/swiftguiexport.h"
-#include "core/actionbind.h"
-#include "misc/input/actionhotkeydefs.h"
-
-#include <QGraphicsScene>
-#include <QGraphicsItemGroup>
 #include <QFrame>
+#include <QGraphicsItemGroup>
+#include <QGraphicsScene>
 #include <QScopedPointer>
 #include <QTimer>
+
+#include "core/actionbind.h"
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/swiftguiexport.h"
+#include "misc/input/actionhotkeydefs.h"
 
 namespace Ui
 {
@@ -88,6 +88,6 @@ namespace swift::gui::components
             if (keydown) { changeRangeInSteps(false); }
         }
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

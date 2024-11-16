@@ -1,26 +1,9 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/context/contextapplication.h"
-#include "core/context/contextsimulator.h"
-#include "core/pluginmanagersimulator.h"
 #include "gui/components/settingssimulatorcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/led.h"
-#include "gui/pluginconfig.h"
-#include "gui/pluginconfigwindow.h"
-#include "gui/plugindetailswindow.h"
-#include "gui/pluginselector.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/simulation/simulatorplugininfolist.h"
-#include "misc/pq/length.h"
-#include "misc/pq/time.h"
-#include "misc/pq/units.h"
-#include "misc/iterator.h"
-#include "misc/logmessage.h"
-#include "misc/statusmessage.h"
-#include "misc/verify.h"
-#include "ui_settingssimulatorcomponent.h"
+
+#include <algorithm>
 
 #include <QApplication>
 #include <QCheckBox>
@@ -31,7 +14,27 @@
 #include <QStringList>
 #include <Qt>
 #include <QtGlobal>
-#include <algorithm>
+
+#include "ui_settingssimulatorcomponent.h"
+
+#include "core/context/contextapplication.h"
+#include "core/context/contextsimulator.h"
+#include "core/pluginmanagersimulator.h"
+#include "gui/guiapplication.h"
+#include "gui/led.h"
+#include "gui/pluginconfig.h"
+#include "gui/pluginconfigwindow.h"
+#include "gui/plugindetailswindow.h"
+#include "gui/pluginselector.h"
+#include "misc/iterator.h"
+#include "misc/logmessage.h"
+#include "misc/pq/length.h"
+#include "misc/pq/time.h"
+#include "misc/pq/units.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/simulation/simulatorplugininfolist.h"
+#include "misc/statusmessage.h"
+#include "misc/verify.h"
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -426,4 +429,4 @@ namespace swift::gui::components
         if (sGui->getIContextSimulator()->isSimulatorAvailable()) { return; } // already available
         sGui->getIContextSimulator()->checkListeners();
     }
-} // namespace
+} // namespace swift::gui::components

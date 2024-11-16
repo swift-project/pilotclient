@@ -6,6 +6,8 @@
 #ifndef NOMINMAX
 #    define NOMINMAX
 #endif
+
+// clang-format off
 #include "plugin.h"
 #include "traffic.h"
 #include "utils.h"
@@ -22,6 +24,7 @@
 #include <ctime>
 #include <algorithm>
 #include <limits>
+// clang-format on
 
 // clazy:excludeall=reserve-candidates
 
@@ -1213,6 +1216,6 @@ namespace XSwiftBus
                " prh: " +
                std::to_string(camPos->pitch) + "/" + std::to_string(camPos->roll) + "/" + std::to_string(camPos->heading);
     }
-} // ns
+} // namespace XSwiftBus
 
 //! \endcond

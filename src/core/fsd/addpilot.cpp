@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/addpilot.h"
-#include "core/fsd/serializer.h"
 
+#include "core/fsd/serializer.h"
 #include "misc/logmessage.h"
 
 using namespace swift::misc;
@@ -45,4 +45,4 @@ namespace swift::core::fsd
         const AddPilot packet(tokens[0], tokens[2], tokens[3], rating, protocolRevision, simType, tokens[7]);
         return packet;
     }
-}
+} // namespace swift::core::fsd

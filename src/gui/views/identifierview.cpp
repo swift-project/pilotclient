@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/identifierlistmodel.h"
 #include "gui/views/identifierview.h"
+
+#include "gui/models/identifierlistmodel.h"
 
 using namespace swift::misc;
 using namespace swift::gui::models;
@@ -13,4 +14,4 @@ namespace swift::gui::views
     {
         this->standardInit(new CIdentifierListModel(this));
     }
-} // namespace
+} // namespace swift::gui::views

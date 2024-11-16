@@ -6,9 +6,10 @@
 #ifndef SWIFT_SIMPLUGIN_FSUIPC_H
 #define SWIFT_SIMPLUGIN_FSUIPC_H
 
-#include "plugins/simulator/fscommon/fscommonexport.h"
-#include "misc/simulation/simulatedaircraft.h"
 #include <QStringList>
+
+#include "misc/simulation/simulatedaircraft.h"
+#include "plugins/simulator/fscommon/fscommonexport.h"
 
 namespace swift::simplugin::fscommon
 {
@@ -115,6 +116,6 @@ namespace swift::simplugin::fscommon
         //! Integer representing fractional
         static double intToFractional(double fractional);
     };
-} // ns
+} // namespace swift::simplugin::fscommon
 
 #endif // guard

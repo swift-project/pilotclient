@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsviewupdatetimes.h"
+
 #include "ui_settingsviewupdatetimes.h"
 
 using namespace swift::gui::settings;
@@ -50,4 +51,4 @@ namespace swift::gui::components
         m_settings.setAndSave(settings);
         this->ps_settingsChanged();
     }
-} // ns
+} // namespace swift::gui::components

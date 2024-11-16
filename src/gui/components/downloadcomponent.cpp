@@ -2,22 +2,24 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "downloadcomponent.h"
-#include "ui_downloadcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/overlaymessagesframe.h"
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/logmessage.h"
-#include "misc/directoryutils.h"
-#include "misc/fileutils.h"
-#include "config/buildconfig.h"
 
-#include <QProcess>
-#include <QMessageBox>
+#include <QDesktopServices>
 #include <QFileDialog>
+#include <QMessageBox>
+#include <QPointer>
+#include <QProcess>
 #include <QStandardPaths>
 #include <QTimer>
-#include <QPointer>
-#include <QDesktopServices>
+
+#include "ui_downloadcomponent.h"
+
+#include "config/buildconfig.h"
+#include "gui/guiapplication.h"
+#include "gui/overlaymessagesframe.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/xplane/xplaneutil.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -370,4 +372,4 @@ namespace swift::gui::components
     {
         ui->le_Info->setText(QStringLiteral("Files: %1 size: %2").arg(m_remoteFiles.size()).arg(m_remoteFiles.getTotalFileSizeHumanReadable()));
     }
-} // ns
+} // namespace swift::gui::components

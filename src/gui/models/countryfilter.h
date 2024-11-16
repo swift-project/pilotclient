@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_COUNTRYFILTER_H
 #define SWIFT_GUI_MODELS_COUNTRYFILTER_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/modelfilter.h"
-#include "misc/countrylist.h"
-
 #include <QString>
+
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
+#include "misc/countrylist.h"
 
 namespace swift::gui::models
 {
@@ -28,6 +28,6 @@ namespace swift::gui::models
         QString m_isoCode;
         QString m_name;
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

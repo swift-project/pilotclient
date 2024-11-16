@@ -4,11 +4,11 @@
 #ifndef SWIFT_GUI_MAINWINDOWACCESS_H
 #define SWIFT_GUI_MAINWINDOWACCESS_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/statusmessagelist.h"
-
 #include <QObject>
 #include <QString>
+
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessagelist.h"
 
 namespace swift::gui
 {
@@ -54,7 +54,7 @@ namespace swift::gui
         CManagedStatusBar *m_mwaStatusBar = nullptr; //!< status bar if any
         COverlayMessagesFrame *m_mwaOverlayFrame = nullptr; //!< overlay messages if any
     };
-} // ns
+} // namespace swift::gui
 
 Q_DECLARE_INTERFACE(swift::gui::IMainWindowAccess, "org.swift-project.swiftgui.mainwindowaccess")
 

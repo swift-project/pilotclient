@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/db/datastoreutility.h"
-#include "misc/logcategories.h"
-#include "misc/network/networkutils.h"
-#include "misc/statusmessage.h"
-#include "misc/statusmessagelist.h"
-#include "misc/stringutils.h"
 
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QTimeZone>
+
+#include "misc/logcategories.h"
+#include "misc/network/networkutils.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -109,4 +110,4 @@ namespace swift::misc::db
         }
         return false;
     }
-} // ns
+} // namespace swift::misc::db

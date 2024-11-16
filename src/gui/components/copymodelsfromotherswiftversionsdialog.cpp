@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "copymodelsfromotherswiftversionsdialog.h"
+
 #include "ui_copymodelsfromotherswiftversionsdialog.h"
 
 namespace swift::gui::components
@@ -15,4 +16,4 @@ namespace swift::gui::components
 
     CCopyModelsFromOtherSwiftVersionsDialog::~CCopyModelsFromOtherSwiftVersionsDialog()
     {}
-} // ns
+} // namespace swift::gui::components

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/db/distribution.h"
+
 #include <QRegularExpression>
 #include <QStringBuilder>
 
@@ -143,4 +144,4 @@ namespace swift::misc::db
         }
         return distribution;
     }
-} // ns
+} // namespace swift::misc::db

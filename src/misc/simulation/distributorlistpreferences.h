@@ -6,18 +6,19 @@
 #ifndef SWIFT_MISC_SIMULATION_DISTRIBUTORLISTPREFRENCES_H
 #define SWIFT_MISC_SIMULATION_DISTRIBUTORLISTPREFRENCES_H
 
-#include "misc/swiftmiscexport.h"
+#include <tuple>
+
+#include <QHash>
+#include <QMetaType>
+#include <QString>
+
 #include "misc/containerbase.h"
 #include "misc/dictionary.h"
 #include "misc/metaclass.h"
 #include "misc/simulation/distributorlist.h"
 #include "misc/simulation/simulatorinfo.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QHash>
-#include <QMetaType>
-#include <QString>
-#include <tuple>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributorListPreferences)
 
@@ -65,7 +66,7 @@ namespace swift::misc::simulation
             SWIFT_METAMEMBER(distributorsMsfs),
             SWIFT_METAMEMBER(lastUpdatedSimulator));
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CDistributorListPreferences)
 

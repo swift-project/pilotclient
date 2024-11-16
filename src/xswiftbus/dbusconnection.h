@@ -4,16 +4,17 @@
 #ifndef SWIFT_SIM_XSWIFTBUS_DBUSCONNECTION_H
 #define SWIFT_SIM_XSWIFTBUS_DBUSCONNECTION_H
 
-#include "dbusmessage.h"
-#include "dbuserror.h"
-#include "dbuscallbacks.h"
-#include "dbusdispatcher.h"
-
-#include <event2/event.h>
 #include <dbus/dbus.h>
+#include <event2/event.h>
+
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include <memory>
+
+#include "dbuscallbacks.h"
+#include "dbusdispatcher.h"
+#include "dbuserror.h"
+#include "dbusmessage.h"
 
 namespace XSwiftBus
 {
@@ -101,6 +102,6 @@ namespace XSwiftBus
         std::unordered_map<CDBusObject *, DisconnectedCallback> m_disconnectedCallbacks;
     };
 
-}
+} // namespace XSwiftBus
 
 #endif // guard

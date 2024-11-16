@@ -6,21 +6,20 @@
 #ifndef SWIFT_CORE_AIRSPACE_MONITOR_H
 #define SWIFT_CORE_AIRSPACE_MONITOR_H
 
+#include <functional>
+
+#include <QHash>
+#include <QJsonObject>
+#include <QList>
+#include <QMetaObject>
+#include <QObject>
+#include <QQueue>
+#include <QReadWriteLock>
+#include <QString>
+#include <QTimer>
+#include <QtGlobal>
+
 #include "core/swiftcoreexport.h"
-#include "misc/simulation/settings/modelmatchersettings.h"
-#include "misc/simulation/aircraftmodelsetprovider.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/airspaceaircraftsnapshot.h"
-#include "misc/simulation/matchinglog.h"
-#include "misc/simulation/ownaircraftprovider.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/simulation/simulationenvironmentprovider.h"
-#include "misc/simulation/simulatedaircraftlist.h"
-#include "misc/network/server.h"
-#include "misc/network/ecosystem.h"
-#include "misc/network/connectionstatus.h"
-#include "misc/network/clientprovider.h"
-#include "misc/network/userlist.h"
 #include "misc/aviation/aircraftpartslist.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/atcstation.h"
@@ -28,23 +27,25 @@
 #include "misc/aviation/callsignset.h"
 #include "misc/aviation/flightplan.h"
 #include "misc/geo/coordinategeodetic.h"
+#include "misc/identifier.h"
+#include "misc/network/clientprovider.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/ecosystem.h"
+#include "misc/network/server.h"
+#include "misc/network/userlist.h"
+#include "misc/pq/angle.h"
 #include "misc/pq/frequency.h"
 #include "misc/pq/length.h"
-#include "misc/pq/angle.h"
 #include "misc/simplecommandparser.h"
-#include "misc/identifier.h"
-
-#include <QJsonObject>
-#include <QList>
-#include <QHash>
-#include <QMetaObject>
-#include <QObject>
-#include <QReadWriteLock>
-#include <QString>
-#include <QTimer>
-#include <QtGlobal>
-#include <QQueue>
-#include <functional>
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodelsetprovider.h"
+#include "misc/simulation/airspaceaircraftsnapshot.h"
+#include "misc/simulation/matchinglog.h"
+#include "misc/simulation/ownaircraftprovider.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/settings/modelmatchersettings.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/simulation/simulationenvironmentprovider.h"
 
 namespace swift::core
 {
@@ -436,7 +437,7 @@ namespace swift::core
         void onConnectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus, swift::misc::network::CConnectionStatus newStatus);
         void onRevBAircraftConfigReceived(const swift::misc::aviation::CCallsign &callsign, const QString &config, qint64 currentOffsetMs);
     };
-} // namespace
+} // namespace swift::core
 
 Q_DECLARE_METATYPE(swift::core::CAirspaceMonitor::MatchingReadinessFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::core::CAirspaceMonitor::MatchingReadiness)

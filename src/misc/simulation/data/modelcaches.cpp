@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/data/modelcaches.h"
+
+#include <QtGlobal>
+
 #include "misc/cachesettingsutils.h"
 #include "misc/logmessage.h"
 #include "misc/verify.h"
-#include <QtGlobal>
 
 using namespace swift::misc;
 
@@ -602,4 +604,4 @@ namespace swift::misc::simulation::data
         }
         return true;
     }
-} // ns
+} // namespace swift::misc::simulation::data

@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/interimpilotdataupdate.h"
-#include "core/fsd/pbh.h"
 
+#include "core/fsd/pbh.h"
 #include "misc/logmessage.h"
 
 namespace swift::core::fsd
@@ -62,4 +62,4 @@ namespace swift::core::fsd
         return InterimPilotDataUpdate(tokens[0], tokens[1], tokens[3].toDouble(), tokens[4].toDouble(), tokens[5].toInt(), tokens[6].toInt(),
                                       pitch, bank, heading, onGround);
     }
-}
+} // namespace swift::core::fsd

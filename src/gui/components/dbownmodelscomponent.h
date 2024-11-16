@@ -6,26 +6,27 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBOWNMODELSCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBOWNMODELSCOMPONENT_H
 
-#include "gui/components/simulatorselector.h"
-#include "gui/menus/menudelegate.h"
-#include "gui/overlaymessagesframe.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/aircraftmodelloader.h"
-#include "misc/simulation/aircraftmodelinterfaces.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/settings/modelsettings.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/datacache.h"
-#include "misc/directories.h"
-#include "misc/statusmessage.h"
-#include "misc/connectionguard.h"
+#include <memory>
 
 #include <QFrame>
 #include <QList>
 #include <QObject>
 #include <QScopedPointer>
 #include <QStringList>
-#include <memory>
+
+#include "gui/components/simulatorselector.h"
+#include "gui/menus/menudelegate.h"
+#include "gui/overlaymessagesframe.h"
+#include "misc/connectionguard.h"
+#include "misc/datacache.h"
+#include "misc/directories.h"
+#include "misc/simulation/aircraftmodelinterfaces.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodelloader.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/settings/modelsettings.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/statusmessage.h"
 
 class QAction;
 
@@ -222,6 +223,6 @@ namespace swift::gui
                 QAction *m_csl2xsbAction = nullptr; //!< run csl2xsb script
             };
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 #endif // guard

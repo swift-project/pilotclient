@@ -133,4 +133,4 @@ namespace swift::misc::simulation
         Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
         return this->provider()->updateOwnIcaoCodes(aircraftIcaoData, airlineIcaoCode);
     }
-} // namespace
+} // namespace swift::misc::simulation

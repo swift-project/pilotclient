@@ -6,18 +6,18 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXT_H
 #define SWIFT_CORE_CONTEXT_CONTEXT_H
 
+#include <QDateTime>
+#include <QObject>
+#include <QString>
+#include <QStringBuilder>
+#include <QtGlobal>
+
 #include "core/corefacade.h"
 #include "core/corefacadeconfig.h"
 #include "core/swiftcoreexport.h"
 #include "misc/logcategories.h"
 #include "misc/logmessage.h"
 #include "misc/statusmessage.h"
-
-#include <QDateTime>
-#include <QObject>
-#include <QString>
-#include <QtGlobal>
-#include <QStringBuilder>
 
 namespace swift::misc
 {
@@ -165,5 +165,5 @@ namespace swift::core::context
         qint64 m_contextId; //!< unique identifer, avoid redirection rountrips
         bool m_debugEnabled = false; //!< debug messages enabled
     };
-} // ns
+} // namespace swift::core::context
 #endif // guard

@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/airportlist.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/setbuilder.h"
 
 #include <QString>
+
+#include "misc/mixin/mixincompare.h"
+#include "misc/setbuilder.h"
 
 using namespace swift::misc::physical_quantities;
 
@@ -126,4 +127,4 @@ namespace swift::misc::aviation
         }
         return airports;
     }
-} // namespace
+} // namespace swift::misc::aviation

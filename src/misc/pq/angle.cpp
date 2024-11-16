@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/pq/angle.h"
+
+#include <cmath>
+
 #include "misc/iconlist.h"
 #include "misc/icons.h"
 #include "misc/math/constants.h"
 #include "misc/math/mathutils.h"
-
-#include <cmath>
 
 using namespace swift::misc::math;
 
@@ -139,4 +140,4 @@ namespace swift::misc::physical_quantities
         const double d = CMathUtils::normalizeDegrees360(degrees);
         return roundDigits < 0 ? d : CMathUtils::round(d, roundDigits);
     }
-} // ns
+} // namespace swift::misc::physical_quantities

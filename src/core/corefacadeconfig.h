@@ -6,9 +6,9 @@
 #ifndef SWIFT_CORE_COREFACADECONFIG_H
 #define SWIFT_CORE_COREFACADECONFIG_H
 
-#include "core/swiftcoreexport.h"
-
 #include <QString>
+
+#include "core/swiftcoreexport.h"
 
 namespace swift::core
 {
@@ -98,5 +98,5 @@ namespace swift::core
         //! Predefined, all empty configs (normally used when the real config can only be determined later)
         static CCoreFacadeConfig allEmpty();
     };
-}
+} // namespace swift::core
 #endif // guard

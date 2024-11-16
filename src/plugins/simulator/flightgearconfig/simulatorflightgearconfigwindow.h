@@ -6,11 +6,13 @@
 #ifndef SWIFT_SIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
 #define SWIFT_SIMPLUGIN_SIMULATOR_FLIGHTGEAR_CONFIG_WINDOW_H
 
-#include "gui/pluginconfigwindow.h"
-#include "misc/simulation/settings/fgswiftbussettings.h"
-#include "simulatorflightgearconfig.h"
 #include <QObject>
 #include <QScopedPointer>
+
+#include "simulatorflightgearconfig.h"
+
+#include "gui/pluginconfigwindow.h"
+#include "misc/simulation/settings/fgswiftbussettings.h"
 
 namespace Ui
 {
@@ -45,6 +47,6 @@ namespace swift::simplugin::flightgear
         QScopedPointer<Ui::CSimulatorFlightgearConfigWindow> ui;
         swift::misc::CSetting<swift::misc::simulation::settings::TFGSwiftBusServer> m_fgswiftbusServerSetting { this, &CSimulatorFlightgearConfigWindow::onSettingsChanged };
     };
-} // ns
+} // namespace swift::simplugin::flightgear
 
 #endif // guard

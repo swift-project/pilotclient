@@ -7,6 +7,7 @@
 #define SWIFT_MISC_SHAREDSTATE_DBUS_HUBPROXY_H
 
 #include <QDBusConnection>
+
 #include "misc/sharedstate/dbus/hub.h"
 
 namespace swift::misc
@@ -57,7 +58,7 @@ namespace swift::misc
             CGenericDBusInterface *m_interface = nullptr;
             QString m_service;
         };
-    }
-}
+    } // namespace shared_state::dbus
+} // namespace swift::misc
 
 #endif

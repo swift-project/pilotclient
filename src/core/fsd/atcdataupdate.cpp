@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/atcdataupdate.h"
-#include "core/fsd/serializer.h"
 
+#include "core/fsd/serializer.h"
 #include "misc/logmessage.h"
 
 using namespace swift::misc;
@@ -51,4 +51,4 @@ namespace swift::core::fsd
                              tokens[5].toDouble(), tokens[6].toDouble(), tokens[7].toInt());
         return packet;
     }
-}
+} // namespace swift::core::fsd

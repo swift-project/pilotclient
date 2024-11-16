@@ -2,25 +2,27 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/interpolation/interpolator.h"
+
+#include <QDateTime>
+#include <QStringBuilder>
+#include <QTimer>
+
 #include "config/buildconfig.h"
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/aviation/aircraftsituationchange.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/heading.h"
+#include "misc/logmessage.h"
+#include "misc/network/fsdsetup.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/length.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/units.h"
 #include "misc/simulation/interpolation/interpolationlogger.h"
 #include "misc/simulation/interpolation/interpolatorlinear.h"
 #include "misc/simulation/interpolation/interpolatorspline.h"
-#include "misc/aviation/aircraftsituationchange.h"
-#include "misc/aviation/aircraftsituation.h"
-#include "misc/network/fsdsetup.h"
-#include "misc/aviation/callsign.h"
-#include "misc/aviation/heading.h"
-#include "misc/pq/angle.h"
-#include "misc/pq/speed.h"
-#include "misc/pq/units.h"
-#include "misc/pq/length.h"
-#include "misc/logmessage.h"
-#include "misc/verify.h"
 #include "misc/stringutils.h"
-#include <QTimer>
-#include <QDateTime>
-#include <QStringBuilder>
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc::aviation;
@@ -713,4 +715,4 @@ namespace swift::misc::simulation
     {
         m_unitTest = true;
     }
-} // namespace
+} // namespace swift::misc::simulation

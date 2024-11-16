@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/textmessagelist.h"
-#include "misc/network/textmessage.h"
-#include "misc/range.h"
 
 #include <algorithm>
+
+#include "misc/network/textmessage.h"
+#include "misc/range.h"
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::aviation;
@@ -184,4 +185,4 @@ namespace swift::misc::network
         }
         this->push_back(message);
     }
-} // namespace
+} // namespace swift::misc::network

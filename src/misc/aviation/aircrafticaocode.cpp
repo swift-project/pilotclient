@@ -2,13 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircrafticaocode.h"
-#include "misc/db/datastoreutility.h"
-#include "misc/comparefunctions.h"
-#include "misc/logcategories.h"
-#include "misc/propertyindexref.h"
-#include "misc/statusmessage.h"
-#include "misc/stringutils.h"
-#include "misc/pq/speed.h"
 
 #include <QChar>
 #include <QMultiMap>
@@ -16,6 +9,14 @@
 #include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>
+
+#include "misc/comparefunctions.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/logcategories.h"
+#include "misc/pq/speed.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::db;
@@ -919,4 +920,4 @@ namespace swift::misc::aviation
         const bool valid = (engineCount >= 0 && engineCount < 10);
         return createdCombinedString(type, valid ? QString::number(engineCount) : "", engine);
     }
-} // namespace
+} // namespace swift::misc::aviation

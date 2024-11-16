@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_DBUS_DUPLEX_H
 #define SWIFT_MISC_SHAREDSTATE_DBUS_DUPLEX_H
 
-#include "misc/genericdbusinterface.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/promise.h"
-#include "misc/variant.h"
-#include <QObject>
 #include <QFuture>
 #include <QMap>
+#include <QObject>
+
+#include "misc/genericdbusinterface.h"
+#include "misc/promise.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 //! DBus interface for sharedstate hub.
 #define SWIFT_MISC_DUPLEX_INTERFACE "org.swift_project.misc.sharedstate.duplex"
@@ -89,7 +90,7 @@ namespace swift::misc
             QMap<quint32, CPromise<CVariant>> m_submittedRequests;
             QMap<quint32, CPromise<CVariant>> m_receivedRequests;
         };
-    }
-}
+    } // namespace shared_state::dbus
+} // namespace swift::misc
 
 #endif

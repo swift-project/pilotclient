@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H
 #define SWIFT_GUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H
 
-#include "misc/statusmessage.h"
-#include "gui/swiftguiexport.h"
 #include <QObject>
+
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessage.h"
 
 namespace swift::gui::components
 {
@@ -46,7 +47,7 @@ namespace swift::gui::components
     private:
         CDbMappingComponent *m_mappingComponent = nullptr; //!< reference to component
     };
-} // ns
+} // namespace swift::gui::components
 
 Q_DECLARE_INTERFACE(swift::gui::components::CDbMappingComponentAware, "org.swift-project.swiftgui.components.dbmappingcomponentaware")
 

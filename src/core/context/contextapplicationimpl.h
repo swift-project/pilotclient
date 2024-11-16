@@ -10,9 +10,9 @@
 #include <QString>
 #include <QStringList>
 
-#include "core/swiftcoreexport.h"
 #include "core/context/contextapplication.h"
 #include "core/corefacadeconfig.h"
+#include "core/swiftcoreexport.h"
 #include "misc/identifiable.h"
 #include "misc/identifierlist.h"
 #include "misc/statusmessage.h"
@@ -96,6 +96,6 @@ namespace swift::core
             //! Housekeeping
             void cleanupRegisteredApplications();
         };
-    } // namespace
-} // namespace
+    } // namespace context
+} // namespace swift::core
 #endif // guard

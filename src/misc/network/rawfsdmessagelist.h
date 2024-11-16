@@ -6,14 +6,15 @@
 #ifndef SWIFT_MISC_NETWORK_RAWFSDMESSAGELIST_H
 #define SWIFT_MISC_NETWORK_RAWFSDMESSAGELIST_H
 
-#include "misc/network/rawfsdmessage.h"
-#include "misc/timestampobjectlist.h"
-#include "misc/collection.h"
-#include "misc/sequence.h"
-#include "misc/swiftmiscexport.h"
+#include <initializer_list>
 
 #include <QMetaType>
-#include <initializer_list>
+
+#include "misc/collection.h"
+#include "misc/network/rawfsdmessage.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampobjectlist.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CRawFsdMessage, CRawFsdMessageList)
 
@@ -41,7 +42,7 @@ namespace swift::misc::network
         //! Find by a given list of models by strings
         CRawFsdMessageList findByContainsString(const QString &str) const;
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CRawFsdMessageList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CRawFsdMessage>)

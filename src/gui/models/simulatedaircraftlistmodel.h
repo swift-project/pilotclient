@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_MODELS_SIMULATEDAIRCRAFTLISTMODEL_H
 #define SWIFT_GUI_MODELS_SIMULATEDAIRCRAFTLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodelcallsignobjects.h"
+#include "gui/swiftguiexport.h"
 #include "misc/simulation/simulatedaircraftlist.h"
 
 namespace swift::misc::simulation
@@ -43,5 +43,5 @@ namespace swift::gui::models
     private:
         AircraftMode m_mode = NotSet;
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

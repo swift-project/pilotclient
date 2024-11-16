@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBLIVERYCOLORSEARCH_H
 #define SWIFT_GUI_COMPONENTS_DBLIVERYCOLORSEARCH_H
 
-#include "misc/aviation/livery.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/aviation/livery.h"
 
 namespace Ui
 {
@@ -39,6 +40,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CDbLiveryColorSearch> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

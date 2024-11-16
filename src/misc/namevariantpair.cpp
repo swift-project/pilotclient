@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/namevariantpair.h"
+
 #include "misc/propertyindexvariantmap.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CNameVariantPair)
@@ -80,4 +81,4 @@ namespace swift::misc
             break;
         }
     }
-} // namespace
+} // namespace swift::misc

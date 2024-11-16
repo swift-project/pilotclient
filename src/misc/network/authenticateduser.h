@@ -6,19 +6,19 @@
 #ifndef SWIFT_MISC_NETWORK_AUTHENTICATEDUSER_H
 #define SWIFT_MISC_NETWORK_AUTHENTICATEDUSER_H
 
-#include "misc/swiftmiscexport.h"
+#include <QJsonObject>
+#include <QMetaType>
+#include <QString>
+#include <QStringList>
+
 #include "misc/country.h"
 #include "misc/db/datastore.h"
 #include "misc/metaclass.h"
 #include "misc/network/rolelist.h"
 #include "misc/propertyindexref.h"
 #include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QJsonObject>
-#include <QMetaType>
-#include <QString>
-#include <QStringList>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CAuthenticatedUser)
 
@@ -186,7 +186,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(authenticated),
             SWIFT_METAMEMBER(roles));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CAuthenticatedUser)
 

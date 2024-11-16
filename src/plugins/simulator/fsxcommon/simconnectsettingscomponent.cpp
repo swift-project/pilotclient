@@ -2,20 +2,23 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simconnectsettingscomponent.h"
-#include "ui_simconnectsettingscomponent.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextapplication.h"
-#include "core/context/contextsimulator.h"
-#include "misc/simulation/fsx/simconnectutilities.h"
-#include "misc/network/networkutils.h"
-#include "misc/logmessage.h"
-#include "config/buildconfig.h"
-#include <QFileInfo>
-#include <QFileDialog>
+
 #include <QDesktopServices>
+#include <QDir>
+#include <QFileDialog>
+#include <QFileInfo>
 #include <QMessageBox>
 #include <QStringBuilder>
-#include <QDir>
+
+#include "ui_simconnectsettingscomponent.h"
+
+#include "config/buildconfig.h"
+#include "core/context/contextapplication.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
+#include "misc/simulation/fsx/simconnectutilities.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -262,4 +265,4 @@ namespace swift::simplugin::fsxcommon
             this->showOverlayMessage(m);
         }
     }
-} // ns
+} // namespace swift::simplugin::fsxcommon

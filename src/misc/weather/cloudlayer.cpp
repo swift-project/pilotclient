@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/weather/cloudlayer.h"
-#include "misc/propertyindexref.h"
 
 #include <QHash>
+
+#include "misc/propertyindexref.h"
 
 using namespace swift::misc::aviation;
 
@@ -115,4 +116,4 @@ namespace swift::misc::weather
         return QStringLiteral("%1 from %2 to %3").arg(hash.value(getCoverage()), m_base.toQString(), m_top.toQString());
     }
 
-} // namespace
+} // namespace swift::misc::weather

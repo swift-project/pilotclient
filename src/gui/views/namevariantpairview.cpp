@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/namevariantpairlistmodel.h"
 #include "gui/views/namevariantpairview.h"
 
 #include <QtGlobal>
+
+#include "gui/models/namevariantpairlistmodel.h"
 
 using namespace swift::misc;
 using namespace swift::gui::models;
@@ -41,4 +42,4 @@ namespace swift::gui::views
     {
         return m_model->containsName(name);
     }
-} // namespace
+} // namespace swift::gui::views

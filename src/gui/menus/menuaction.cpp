@@ -2,18 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/menus/menuaction.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "misc/icons.h"
-#include "misc/slot.h"
-#include "misc/verify.h"
+
+#include <algorithm>
 
 #include <QAction>
 #include <QMap>
 #include <QMenu>
 #include <QStringList>
 #include <QtGlobal>
-#include <algorithm>
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "misc/icons.h"
+#include "misc/slot.h"
+#include "misc/verify.h"
 
 using namespace swift::misc;
 
@@ -584,4 +586,4 @@ namespace swift::gui::menus
         }
         return nullptr;
     }
-} // ns
+} // namespace swift::gui::menus

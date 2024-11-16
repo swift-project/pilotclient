@@ -6,14 +6,7 @@
 #ifndef SWIFT_GUI_OVERLAYMESSAGES_H
 #define SWIFT_GUI_OVERLAYMESSAGES_H
 
-#include "gui/components/textmessagecomponenttab.h"
-#include "gui/settings/textmessagesettings.h"
-#include "gui/swiftguiexport.h"
-#include "misc/aviation/callsign.h"
-#include "misc/statusmessagelist.h"
-#include "misc/statusmessage.h"
-#include "misc/pixmap.h"
-#include "misc/variant.h"
+#include <functional>
 
 #include <QFrame>
 #include <QMessageBox>
@@ -21,7 +14,15 @@
 #include <QScopedPointer>
 #include <QString>
 #include <QTimer>
-#include <functional>
+
+#include "gui/components/textmessagecomponenttab.h"
+#include "gui/settings/textmessagesettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/callsign.h"
+#include "misc/pixmap.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/variant.h"
 
 class QKeyEvent;
 class QPaintEvent;
@@ -219,6 +220,6 @@ namespace swift::gui
         //! Display this message (use settings to decide)
         bool displayTextMessage(const swift::misc::network::CTextMessage &textMessage) const;
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

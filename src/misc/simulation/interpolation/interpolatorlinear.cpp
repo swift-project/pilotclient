@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/interpolation/interpolatorlinear.h"
-#include "misc/simulation/interpolation/interpolatorfunctions.h"
+
+#include <array>
+
+#include "config/buildconfig.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/altitude.h"
 #include "misc/geo/coordinategeodetic.h"
-#include "misc/pq/physicalquantity.h"
 #include "misc/logmessage.h"
-#include "misc/verify.h"
+#include "misc/pq/physicalquantity.h"
 #include "misc/range.h"
-#include "config/buildconfig.h"
-
-#include <array>
+#include "misc/simulation/interpolation/interpolatorfunctions.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc::aviation;
@@ -219,4 +220,4 @@ namespace swift::misc::simulation
 
         return m_interpolant;
     }
-} // namespace
+} // namespace swift::misc::simulation

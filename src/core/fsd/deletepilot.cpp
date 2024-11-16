@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/deletepilot.h"
+
 #include "misc/logmessage.h"
 
 using namespace swift::misc;
@@ -37,4 +38,4 @@ namespace swift::core::fsd
         DeletePilot packet(tokens[0], (tokens.size() >= 2) ? tokens[1] : "");
         return packet;
     }
-}
+} // namespace swift::core::fsd

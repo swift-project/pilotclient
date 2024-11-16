@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbusserver.h"
-#include "dbusobject.h"
-#include "utils.h"
 
-#include <utility>
 #include <algorithm>
 #include <cassert>
 #include <memory>
+#include <utility>
+
+#include "dbusobject.h"
+#include "utils.h"
 
 namespace XSwiftBus
 {
@@ -82,4 +83,4 @@ namespace XSwiftBus
         auto *obj = static_cast<CDBusServer *>(data);
         obj->onNewConnection(server, conn);
     }
-}
+} // namespace XSwiftBus

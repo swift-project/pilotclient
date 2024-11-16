@@ -1,20 +1,22 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/context/contextnetwork.h"
 #include "gui/components/remoteaircraftselector.h"
+
+#include <QComboBox>
+#include <QString>
+#include <QStringBuilder>
+#include <QStringList>
+#include <QWidget>
+#include <QtGlobal>
+
+#include "ui_remoteaircraftselector.h"
+
+#include "core/context/contextnetwork.h"
 #include "gui/guiapplication.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/sequence.h"
 #include "misc/simulation/simulatedaircraft.h"
-#include "ui_remoteaircraftselector.h"
-
-#include <QComboBox>
-#include <QString>
-#include <QStringList>
-#include <QWidget>
-#include <QtGlobal>
-#include <QStringBuilder>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -128,4 +130,4 @@ namespace swift::gui::components
             ui->cb_RemoteAircraftSelector->setCurrentIndex(index);
         }
     }
-} // namespace
+} // namespace swift::gui::components

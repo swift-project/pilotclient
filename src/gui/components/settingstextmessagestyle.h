@@ -7,8 +7,8 @@
 #define SWIFT_GUI_COMPONENTS_SETTINGSTEXTMESSAGESTYLE_H
 
 #include <QFrame>
-#include <QStringList>
 #include <QScopedPointer>
+#include <QStringList>
 
 namespace Ui
 {
@@ -74,6 +74,6 @@ namespace swift::gui::components
         //! Increase/decrease font size
         bool changeFontSize(bool increase);
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/aircraftmodelloader.h"
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/directoryutils.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/logmessage.h"
 
 #include <QDir>
+#include <QMap>
 #include <Qt>
 #include <QtGlobal>
-#include <QMap>
+
+#include "misc/directoryutils.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/simulation/xplane/xplaneutil.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation::data;
@@ -227,4 +228,4 @@ namespace swift::misc::simulation
         m_loadingStartedTs = QDateTime::currentMSecsSinceEpoch();
     }
 
-} // ns
+} // namespace swift::misc::simulation

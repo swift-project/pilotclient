@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/context/contextownaircraft.h"
 #include "gui/components/cockpittranspondermodeledscomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/led.h"
 
 #include <QBoxLayout>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QWidget>
+
+#include "core/context/contextownaircraft.h"
+#include "gui/guiapplication.h"
+#include "gui/led.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -132,4 +133,4 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CSimulatedAircraft(); }
         return sGui->getIContextOwnAircraft()->getOwnAircraft();
     }
-} // namespace
+} // namespace swift::gui::components

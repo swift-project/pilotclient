@@ -1,15 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2017 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "misc/logmessage.h"
 #include "settingsfontcomponent.h"
-#include "ui_settingsfontcomponent.h"
 
 #include <QColorDialog>
 #include <QPushButton>
 #include <QStringBuilder>
+
+#include "ui_settingsfontcomponent.h"
+
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 
@@ -171,4 +173,4 @@ namespace swift::gui::components
         this->resetFont();
         emit this->accept();
     }
-} // ns
+} // namespace swift::gui::components

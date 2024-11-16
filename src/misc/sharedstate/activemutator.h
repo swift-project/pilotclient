@@ -6,12 +6,14 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_ACTIVEMUTATOR_H
 #define SWIFT_MISC_SHAREDSTATE_ACTIVEMUTATOR_H
 
-#include "misc/sharedstate/passivemutator.h"
-#include "misc/variant.h"
-#include "misc/swiftmiscexport.h"
-#include <QObject>
-#include <QFuture>
 #include <functional>
+
+#include <QFuture>
+#include <QObject>
+
+#include "misc/sharedstate/passivemutator.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 namespace swift::misc::shared_state
 {
@@ -46,6 +48,6 @@ namespace swift::misc::shared_state
     private:
         const std::function<QFuture<CVariant>(const CVariant &)> m_requestHandler;
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

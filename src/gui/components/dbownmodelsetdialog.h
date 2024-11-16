@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBOWNMODELSETDIALOG_H
 #define SWIFT_GUI_COMPONENTS_DBOWNMODELSETDIALOG_H
 
-#include "misc/simulation/simulatorinfo.h"
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "misc/simulation/simulatorinfo.h"
 
 namespace Ui
 {
@@ -45,5 +46,5 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CDbOwnModelSetDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

@@ -6,21 +6,21 @@
 #ifndef SWIFT_CORE_AFV_AUDIO_CALLSIGNSAMPLEPROVIDER_H
 #define SWIFT_CORE_AFV_AUDIO_CALLSIGNSAMPLEPROVIDER_H
 
+#include <QAudioFormat>
+#include <QDateTime>
+#include <QSharedPointer>
+#include <QSoundEffect>
+#include <QTimer>
+
 #include "core/afv/dto.h"
-#include "sound/sampleprovider/pinknoisegenerator.h"
+#include "sound/codecs/opusdecoder.h"
 #include "sound/sampleprovider/bufferedwaveprovider.h"
-#include "sound/sampleprovider/mixingsampleprovider.h"
 #include "sound/sampleprovider/equalizersampleprovider.h"
+#include "sound/sampleprovider/mixingsampleprovider.h"
+#include "sound/sampleprovider/pinknoisegenerator.h"
+#include "sound/sampleprovider/resourcesoundsampleprovider.h"
 #include "sound/sampleprovider/sawtoothgenerator.h"
 #include "sound/sampleprovider/simplecompressoreffect.h"
-#include "sound/sampleprovider/resourcesoundsampleprovider.h"
-#include "sound/codecs/opusdecoder.h"
-
-#include <QAudioFormat>
-#include <QSoundEffect>
-#include <QSharedPointer>
-#include <QTimer>
-#include <QDateTime>
 
 namespace swift::core::afv::audio
 {
@@ -104,6 +104,6 @@ namespace swift::core::afv::audio
         QDateTime m_lastSamplesAddedUtc;
         bool m_underflow = false;
     };
-} // ns
+} // namespace swift::core::afv::audio
 
 #endif // guard

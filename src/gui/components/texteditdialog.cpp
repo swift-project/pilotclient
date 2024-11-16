@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "texteditdialog.h"
+
 #include "ui_texteditdialog.h"
 
 namespace swift::gui::components
@@ -25,4 +26,4 @@ namespace swift::gui::components
     {
         ui->te_TextEdit->setReadOnly(true);
     }
-} // ns
+} // namespace swift::gui::components

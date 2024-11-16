@@ -53,4 +53,4 @@ namespace swift::core
         if (n.endsWith('/')) { n.remove(n.length() - 1, 1); }
         return n;
     }
-}
+} // namespace swift::core

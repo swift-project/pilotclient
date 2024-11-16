@@ -4,10 +4,11 @@
 //! \cond PRIVATE
 
 #include "misc/platformset.h"
-#include "misc/containerbase.h"
 
 #include <QDBusMetaType>
 #include <QString>
+
+#include "misc/containerbase.h"
 
 SWIFT_DEFINE_COLLECTION_MIXINS(swift::misc, CPlatform, CPlatformSet)
 
@@ -71,6 +72,6 @@ namespace swift::misc
         qDBusRegisterMetaType<CPlatformSet>();
         registerMetaValueType<CPlatformSet>();
     }
-} // namespace
+} // namespace swift::misc
 
 //! \endcond

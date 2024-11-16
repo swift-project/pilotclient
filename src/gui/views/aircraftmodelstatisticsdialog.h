@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_VIEW_AIRCRAFTMODELSTATISTICSDIALOG_H
 #define SWIFT_GUI_VIEW_AIRCRAFTMODELSTATISTICSDIALOG_H
 
-#include "misc/simulation/aircraftmodellist.h"
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "misc/simulation/aircraftmodellist.h"
 
 namespace Ui
 {
@@ -38,6 +39,6 @@ namespace swift::gui::views
         QScopedPointer<Ui::CAircraftModelStatisticsDialog> ui;
         swift::misc::simulation::CAircraftModelList m_models;
     };
-} // ns
+} // namespace swift::gui::views
 
 #endif // guard

@@ -1,14 +1,16 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include <QMessageBox>
 #include "copyxswiftbusdialog.h"
-#include "gui/guiapplication.h"
+
+#include <QMessageBox>
+
+#include "config/buildconfig.h"
 #include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "misc/directoryutils.h"
 #include "misc/simulation/xplane/xplaneutil.h"
 #include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "config/buildconfig.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -39,4 +41,4 @@ namespace swift::gui
         if (reply != QMessageBox::Yes) { return 0; }
         return CXPlaneUtil::copyXSwiftBusBuildFiles(xplaneRootDir);
     } // ns
-}
+} // namespace swift::gui

@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_NAMEVARIANTPAIRVIEW_H
 #define SWIFT_GUI_NAMEVARIANTPAIRVIEW_H
 
-#include "gui/swiftguiexport.h"
+#include <QString>
+
 #include "gui/models/namevariantpairlistmodel.h"
+#include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
 #include "misc/icon.h"
 #include "misc/namevariantpairlist.h"
 #include "misc/variant.h"
-
-#include <QString>
 
 namespace swift::misc
 {
@@ -42,5 +42,5 @@ namespace swift::gui::views
         //! Contains name
         bool containsName(const QString &name);
     };
-}
+} // namespace swift::gui::views
 #endif // guard

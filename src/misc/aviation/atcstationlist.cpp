@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/atcstationlist.h"
+
+#include <QString>
+#include <QtGlobal>
+
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/predicates.h"
 #include "misc/range.h"
-
-#include <QString>
-#include <QtGlobal>
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::network;
@@ -138,4 +139,4 @@ namespace swift::misc::aviation
         }
         return split;
     }
-} // namespace
+} // namespace swift::misc::aviation

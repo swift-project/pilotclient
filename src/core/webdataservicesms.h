@@ -6,9 +6,9 @@
 #ifndef SWIFT_CORE_WEBDATASERVICES_MATCHINGSCRIPT_H
 #define SWIFT_CORE_WEBDATASERVICES_MATCHINGSCRIPT_H
 
-#include "core/swiftcoreexport.h"
-
 #include <QObject>
+
+#include "core/swiftcoreexport.h"
 
 namespace swift::core
 {
@@ -35,6 +35,6 @@ namespace swift::core
         //! sApp available?
         static bool checkApp();
     };
-} // namespace
+} // namespace swift::core
 
 #endif

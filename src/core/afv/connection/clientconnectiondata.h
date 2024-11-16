@@ -6,15 +6,15 @@
 #ifndef SWIFT_CORE_AFV_CONNECTION_CLIENTCONNECTIONDATA_H
 #define SWIFT_CORE_AFV_CONNECTION_CLIENTCONNECTIONDATA_H
 
-#include "core/afv/dto.h"
-#include "core/afv/connection/apiserverconnection.h"
-#include "misc/logcategories.h"
-#include "core/afv/crypto/cryptodtochannel.h"
-
 #include <QDateTime>
-#include <QtGlobal>
-#include <QString>
 #include <QScopedPointer>
+#include <QString>
+#include <QtGlobal>
+
+#include "core/afv/connection/apiserverconnection.h"
+#include "core/afv/crypto/cryptodtochannel.h"
+#include "core/afv/dto.h"
+#include "misc/logcategories.h"
 
 namespace swift::core::afv::connection
 {
@@ -109,6 +109,6 @@ namespace swift::core::afv::connection
 
         static constexpr qint64 ServerTimeoutSecs = 10; //!< timeout
     };
-} // ns
+} // namespace swift::core::afv::connection
 
 #endif // guard

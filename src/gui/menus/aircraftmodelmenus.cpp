@@ -2,18 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftmodelmenus.h"
-#include "gui/guiapplication.h"
+
+#include <QDesktopServices>
+
+#include "config/buildconfig.h"
+#include "core/db/databaseutils.h"
+#include "core/webdataservices.h"
 #include "gui/components/dbmappingcomponent.h"
 #include "gui/components/dbmappingcomponentaware.h"
-#include "core/webdataservices.h"
-#include "core/db/databaseutils.h"
-#include "misc/verify.h"
+#include "gui/guiapplication.h"
 #include "misc/icons.h"
 #include "misc/logmessage.h"
 #include "misc/simulation/aircraftmodelutils.h"
 #include "misc/simulation/modelconverterx.h"
-#include "config/buildconfig.h"
-#include <QDesktopServices>
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -475,4 +477,4 @@ namespace swift::gui::menus
         }
         return mc;
     }
-} // ns
+} // namespace swift::gui::menus

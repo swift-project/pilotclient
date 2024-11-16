@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/views/aircraftcategorytreeview.h"
-#include "gui/models/aircraftcategorytreemodel.h"
-#include "gui/menus/menuaction.h"
-#include "misc/icons.h"
-#include "config/buildconfig.h"
 
+#include <QAction>
 #include <QFlags>
 #include <QMenu>
-#include <QtGlobal>
-#include <QAction>
 #include <QModelIndex>
+#include <QtGlobal>
+
+#include "config/buildconfig.h"
+#include "gui/menus/menuaction.h"
+#include "gui/models/aircraftcategorytreemodel.h"
+#include "misc/icons.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -104,4 +105,4 @@ namespace swift::gui::views
         menu->addAction(resize);
         menu->popup(this->viewport()->mapToGlobal(point));
     }
-} // namespace
+} // namespace swift::gui::views

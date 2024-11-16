@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_PQ_FREQUENCY_H
 #define SWIFT_MISC_PQ_FREQUENCY_H
 
-#include "misc/swiftmiscexport.h"
 #include "misc/pq/physicalquantity.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::physical_quantities
 {
@@ -29,7 +29,7 @@ namespace swift::misc::physical_quantities
         //! \copydoc CPhysicalQuantity(const QString &unitString)
         CFrequency(const QString &unitString) : CPhysicalQuantity(unitString) {}
     };
-}
+} // namespace swift::misc::physical_quantities
 
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CFrequency)
 

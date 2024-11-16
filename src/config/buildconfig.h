@@ -6,9 +6,9 @@
 #ifndef SWIFT_CONFIG_BUILDCONFIG_H
 #define SWIFT_CONFIG_BUILDCONFIG_H
 
+#include <QDateTime>
 #include <QList>
 #include <QStringList>
-#include <QDateTime>
 #include <QVersionNumber>
 
 namespace swift::config
@@ -150,7 +150,7 @@ namespace swift::config
         //! Patch version
         static int versionRevision(); // defined in buildconfig_gen.cpp.in
     };
-} // ns
+} // namespace swift::config
 
 // inline definitions of constexpr methods
 #define IN_BUILDCONFIG_H

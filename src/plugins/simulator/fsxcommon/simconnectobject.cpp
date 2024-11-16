@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simconnectobject.h"
-#include "misc/stringutils.h"
+
 #include "simulatorfsxcommon.h"
-#include "core/simulator.h"
+
+#include "config/buildconfig.h"
 #include "core/simulator.h"
 #include "misc/simulation/interpolation/interpolatormulti.h"
-#include "config/buildconfig.h"
+#include "misc/stringutils.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -551,4 +552,4 @@ namespace swift::simplugin::fsxcommon
         }
         return removedObjects;
     }
-} // namespace
+} // namespace swift::simplugin::fsxcommon

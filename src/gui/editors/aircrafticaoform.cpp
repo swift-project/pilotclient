@@ -1,9 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_aircrafticaoform.h"
 #include "aircrafticaoform.h"
 
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QMetaType>
+#include <QString>
+
+#include "ui_aircrafticaoform.h"
+
+#include "core/webdataservices.h"
 #include "gui/components/aircraftcombinedtypeselector.h"
 #include "gui/components/dbaircrafticaoselectorcomponent.h"
 #include "gui/dropsite.h"
@@ -12,17 +20,10 @@
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "gui/labelandicon.h"
-#include "core/webdataservices.h"
 #include "misc/aviation/aircrafticaocodelist.h"
 #include "misc/db/datastore.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/icons.h"
-
-#include <QCheckBox>
-#include <QComboBox>
-#include <QLineEdit>
-#include <QMetaType>
-#include <QString>
+#include "misc/mixin/mixincompare.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -247,4 +248,4 @@ namespace swift::gui::editors
         QString key(ui->le_Id->text().trimmed());
         return IDatastoreObjectWithIntegerKey::stringToDbKey(key);
     }
-} // ns
+} // namespace swift::gui::editors

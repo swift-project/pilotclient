@@ -6,17 +6,17 @@
 #ifndef SWIFT_MISC_NETWORK_TEXTMESSAGELIST_H
 #define SWIFT_MISC_NETWORK_TEXTMESSAGELIST_H
 
+#include <QList>
+#include <QMetaType>
+#include <QString>
+
 #include "misc/aviation/callsign.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/collection.h"
 #include "misc/network/textmessage.h"
 #include "misc/pq/frequency.h"
 #include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/timestampobjectlist.h"
-
-#include <QList>
-#include <QMetaType>
-#include <QString>
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CTextMessage, CTextMessageList)
 
@@ -109,7 +109,7 @@ namespace swift::misc::network
         //! Add a text message, but append it to an existing message if possible
         void addConsolidatedTextMessage(const CTextMessage &message);
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CTextMessageList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CTextMessage>)

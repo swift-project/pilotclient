@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/crashinfo.h"
+
 #include "misc/fileutils.h"
 #include "misc/worker.h"
 
@@ -94,4 +95,4 @@ namespace swift::misc
                (m_flightNetwork.isEmpty() ? QStringLiteral("") : u"network: " % m_flightNetwork % u"\n") %
                (m_info.isEmpty() ? QStringLiteral("") : u"info: " % m_info % u"\n");
     }
-} // ns
+} // namespace swift::misc

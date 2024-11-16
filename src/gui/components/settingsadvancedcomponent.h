@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSGENERALCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSGENERALCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "core/application/applicationsettings.h"
-#include "misc/settingscache.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "core/application/applicationsettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/settingscache.h"
 
 namespace Ui
 {
@@ -38,6 +38,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CSettingsAdvancedComponent> ui;
         swift::misc::CSetting<swift::core::application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

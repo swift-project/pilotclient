@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/ticklabel.h"
+
 #include "misc/icons.h"
 
 using namespace swift::misc;
@@ -50,4 +51,4 @@ namespace swift::gui
         this->setPixmap(this->m_isPixmapTicked ? m_pixmapTicked : m_pixmapUnticked);
         this->setToolTip(this->m_isPixmapTicked ? m_toolTipTicked : m_toolTipUnticked);
     }
-} // namespace
+} // namespace swift::gui

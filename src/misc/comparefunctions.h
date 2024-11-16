@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_COMPAREFUNCTIONS_H
 #define SWIFT_MISC_COMPAREFUNCTIONS_H
 
-#include <QFlags>
-#include <QDateTime>
 #include <type_traits>
+
+#include <QDateTime>
+#include <QFlags>
 
 namespace swift::misc::Compare
 {
@@ -42,6 +43,6 @@ namespace swift::misc::Compare
     {
         return compare(a.toMSecsSinceEpoch(), b.toMSecsSinceEpoch());
     }
-} // ns
+} // namespace swift::misc::Compare
 
 #endif // SWIFT_MISC_COMPAREFUNCTIONS_H

@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_EDITORS_AIRLINEICAOFORM_H
 #define SWIFT_GUI_EDITORS_AIRLINEICAOFORM_H
 
-#include "gui/swiftguiexport.h"
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/editors/form.h"
+#include "gui/swiftguiexport.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/digestsignal.h"
 #include "misc/statusmessagelist.h"
 #include "misc/variant.h"
-
-#include <QObject>
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -86,6 +86,6 @@ namespace swift::gui::editors
         swift::misc::CDigestSignal m_digestChanges { this, &CAirlineIcaoForm::airlineChanged, &CAirlineIcaoForm::emitAirlineChangedDigest, 500, 3 };
         swift::misc::aviation::CAirlineIcaoCode m_currentCode; //!< object allowing to override values
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

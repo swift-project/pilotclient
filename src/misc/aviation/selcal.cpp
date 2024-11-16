@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/selcal.h"
-#include "misc/pq/frequency.h"
-#include "misc/pq/units.h"
 
 #include <QStringList>
 #include <Qt>
 #include <QtGlobal>
+
+#include "misc/pq/frequency.h"
+#include "misc/pq/units.h"
 
 using namespace swift::misc::physical_quantities;
 
@@ -119,11 +120,11 @@ namespace swift::misc::aviation
             }
             return pairs;
         }
-    }
+    } // namespace private_ns
 
     const QStringList &CSelcal::codePairs()
     {
         static const QStringList allCodePairs = private_ns::selcalCodePairs();
         return allCodePairs;
     }
-} // namespace
+} // namespace swift::misc::aviation

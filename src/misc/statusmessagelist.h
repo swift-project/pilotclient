@@ -6,19 +6,19 @@
 #ifndef SWIFT_MISC_STATUSMESSAGELIST_H
 #define SWIFT_MISC_STATUSMESSAGELIST_H
 
-#include "misc/statusmessage.h"
-#include "misc/logcategorylist.h"
-#include "misc/logcategory.h"
-#include "misc/collection.h"
-#include "misc/sequence.h"
-#include "misc/timestampobjectlist.h"
-#include "misc/orderablelist.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QJsonArray>
+#include <QMap>
 #include <QMetaType>
 #include <QtGlobal>
-#include <QMap>
+
+#include "misc/collection.h"
+#include "misc/logcategory.h"
+#include "misc/logcategorylist.h"
+#include "misc/orderablelist.h"
+#include "misc/sequence.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampobjectlist.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc, CStatusMessage, CStatusMessageList)
 
@@ -138,7 +138,7 @@ namespace swift::misc
         //! From our database JSON format
         static CStatusMessageList fromDatabaseJson(const QJsonArray &array);
     };
-} // ns
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CStatusMessageList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CStatusMessage>)

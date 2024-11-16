@@ -11,7 +11,7 @@
 namespace swiftcoretest
 {
 
-} // namespace
+} // namespace swiftcoretest
 
 //! \endcond
 

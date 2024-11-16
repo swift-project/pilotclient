@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_NETWORK_URLLOG_H
 #define SWIFT_MISC_NETWORK_URLLOG_H
 
-#include "misc/network/url.h"
-#include "misc/timestampbased.h"
-#include "misc/valueobject.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/propertyindexref.h"
-
 #include <QJsonObject>
 #include <QString>
+
+#include "misc/network/url.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUrlLog)
 
@@ -96,7 +96,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(responseTimeMSecsSinceEpoch),
             SWIFT_METAMEMBER(responseTimeMs));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CUrlLog)
 

@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_ACTIVEOBSERVER_H
 #define SWIFT_MISC_SHAREDSTATE_ACTIVEOBSERVER_H
 
-#include "misc/sharedstate/passiveobserver.h"
-#include "misc/promise.h"
-#include "misc/variant.h"
-#include "misc/swiftmiscexport.h"
 #include <QObject>
 #include <QSharedPointer>
+
+#include "misc/promise.h"
+#include "misc/sharedstate/passiveobserver.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 namespace swift::misc::shared_state
 {
@@ -50,6 +51,6 @@ namespace swift::misc::shared_state
         //! Emitted by request and requestAsync.
         void requestPosted(const swift::misc::CVariant &param, swift::misc::CPromise<swift::misc::CVariant> o_reply);
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

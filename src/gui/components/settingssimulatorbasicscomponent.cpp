@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingssimulatorbasicscomponent.h"
-#include "ui_settingssimulatorbasicscomponent.h"
-
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/fileutils.h"
-#include "misc/htmlutils.h"
-#include "misc/logmessage.h"
-#include "config/buildconfig.h"
 
 #include <QMessageBox>
 #include <QRegularExpression>
+
+#include "ui_settingssimulatorbasicscomponent.h"
+
+#include "config/buildconfig.h"
+#include "misc/fileutils.h"
+#include "misc/htmlutils.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/xplane/xplaneutil.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -392,4 +393,4 @@ namespace swift::gui::components
         }
         return CFileUtils::normalizeFilePathToQtStandard(sd);
     }
-} // ns
+} // namespace swift::gui::components

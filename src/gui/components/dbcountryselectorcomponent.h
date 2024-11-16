@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_DBCOUNTRYSELECTORCOMPONENT_H
 #define SWIFT_GUI_DBCOUNTRYSELECTORCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/dropbase.h"
-#include "misc/country.h"
-#include "misc/network/entityflags.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/dropbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/country.h"
+#include "misc/network/entityflags.h"
 
 class QCompleter;
 class QDragEnterEvent;
@@ -94,5 +94,5 @@ namespace swift::gui::components
         QScopedPointer<QCompleter> m_completerCountryNames;
         swift::misc::CCountry m_currentCountry;
     };
-}
+} // namespace swift::gui::components
 #endif // guard

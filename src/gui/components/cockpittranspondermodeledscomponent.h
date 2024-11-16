@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_COCKPITTRANSPONDERMODELEDSCOMPONENT_H
 #define SWIFT_MISC_COCKPITTRANSPONDERMODELEDSCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/led.h"
+#include "gui/swiftguiexport.h"
 #include "misc/aviation/transponder.h"
 #include "misc/identifiable.h"
 #include "misc/identifier.h"
 #include "misc/simulation/simulatedaircraft.h"
-
-#include <QFrame>
-#include <QObject>
-#include <QScopedPointer>
 
 namespace swift::gui::components
 {
@@ -56,6 +56,6 @@ namespace swift::gui::components
         QScopedPointer<swift::gui::CLedWidget> m_ledModes;
         QScopedPointer<swift::gui::CLedWidget> m_ledIdent;
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

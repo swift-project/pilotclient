@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/dbus.h"
 #include "misc/simulation/simulatorinternals.h"
 
 #include <QDBusMetaType>
 #include <QJsonObject>
+
+#include "misc/dbus.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInternals)
 
@@ -113,4 +114,4 @@ namespace swift::misc::simulation
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-} // ns
+} // namespace swift::misc::simulation

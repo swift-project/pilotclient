@@ -2,18 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/aircraftmodelloaderprovider.h"
-#include "misc/simulation/fscommon/aircraftcfgparser.h"
-#include "misc/simulation/xplane/aircraftmodelloaderxplane.h"
-#include "misc/simulation/flightgear/aircraftmodelloaderflightgear.h"
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/directoryutils.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/logmessage.h"
 
 #include <QDir>
+#include <QMap>
 #include <Qt>
 #include <QtGlobal>
-#include <QMap>
+
+#include "misc/directoryutils.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/simulation/flightgear/aircraftmodelloaderflightgear.h"
+#include "misc/simulation/fscommon/aircraftcfgparser.h"
+#include "misc/simulation/xplane/aircraftmodelloaderxplane.h"
+#include "misc/simulation/xplane/xplaneutil.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation::data;
@@ -95,4 +96,4 @@ namespace swift::misc::simulation
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         return loader;
     }
-} // ns
+} // namespace swift::misc::simulation

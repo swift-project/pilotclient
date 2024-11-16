@@ -6,11 +6,12 @@
 #ifndef SWIFT_GUI_COMPONENTS_COCKPITCOMPONENTTRANSMISSION_H
 #define SWIFT_GUI_COMPONENTS_COCKPITCOMPONENTTRANSMISSION_H
 
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/aviation/comsystem.h"
-#include "gui/swiftguiexport.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 namespace Ui
 {
@@ -49,6 +50,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CCockpitComTransmissionComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

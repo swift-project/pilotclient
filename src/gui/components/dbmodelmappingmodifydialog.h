@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBMODELMAPPINGMODIFYDIALOG_H
 #define SWIFT_GUI_COMPONENTS_DBMODELMAPPINGMODIFYDIALOG_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/components/dbmappingcomponentaware.h"
-#include "misc/propertyindexvariantmap.h"
-
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/components/dbmappingcomponentaware.h"
+#include "gui/swiftguiexport.h"
+#include "misc/propertyindexvariantmap.h"
 
 namespace swift::misc::simulation
 {
@@ -49,5 +49,5 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CDbModelMappingModifyDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

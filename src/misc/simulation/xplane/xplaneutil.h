@@ -6,10 +6,11 @@
 #ifndef SWIFT_MISC_SIMULATION_XPLANE_XPLANEUTIL_H
 #define SWIFT_MISC_SIMULATION_XPLANE_XPLANEUTIL_H
 
+#include <QStringList>
+
 #include "misc/logcategories.h"
 #include "misc/statusmessagelist.h"
 #include "misc/swiftmiscexport.h"
-#include <QStringList>
 
 namespace swift::misc::simulation::xplane
 {
@@ -101,6 +102,6 @@ namespace swift::misc::simulation::xplane
         //! Concatenates dirs for used OS
         static QString xplaneDir(const QString &xplaneInstallFile);
     };
-} // namespace
+} // namespace swift::misc::simulation::xplane
 
 #endif // guard

@@ -28,6 +28,6 @@ namespace swift::core::data
         //! Cache lifetime
         static int timeToLive() { return 18 * 60 * 60 * 1000; }
     };
-} // ns
+} // namespace swift::core::data
 
 #endif // guard

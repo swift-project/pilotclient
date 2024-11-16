@@ -6,17 +6,17 @@
 #ifndef SWIFT_GUI_USERCOMPONENT_H
 #define SWIFT_GUI_USERCOMPONENT_H
 
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/swiftguiexport.h"
-#include "gui/settings/viewupdatesettings.h"
-#include "misc/aviation/callsign.h"
-#include "misc/network/connectionstatus.h"
-
 #include <QObject>
 #include <QScopedPointer>
 #include <QTabWidget>
-#include <QtGlobal>
 #include <QTimer>
+#include <QtGlobal>
+
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/settings/viewupdatesettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/connectionstatus.h"
 
 namespace Ui
 {
@@ -65,5 +65,5 @@ namespace swift::gui::components
         QTimer m_updateTimer;
         swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settings { this, &CUserComponent::onSettingsChanged };
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

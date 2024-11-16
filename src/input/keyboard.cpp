@@ -29,4 +29,4 @@ namespace swift::input
         ptr->init();
         return ptr;
     }
-} // ns
+} // namespace swift::input

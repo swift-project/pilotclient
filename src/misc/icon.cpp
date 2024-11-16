@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/icon.h"
-#include "misc/sequence.h"
 
+#include <QDir>
 #include <QStringBuilder>
 #include <QtGlobal>
-#include <QDir>
+
+#include "misc/sequence.h"
 
 namespace swift::misc
 {
@@ -280,4 +281,4 @@ namespace swift::misc
     {
         return QVariant::fromValue(CIcon(icon).toPixmap());
     }
-} // namespace
+} // namespace swift::misc

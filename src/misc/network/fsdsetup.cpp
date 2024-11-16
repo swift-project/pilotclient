@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/fsdsetup.h"
+
+#include <QtGlobal>
+
+#include "misc/comparefunctions.h"
 #include "misc/logcategorylist.h"
 #include "misc/propertyindexref.h"
 #include "misc/statusmessage.h"
 #include "misc/stringutils.h"
 #include "misc/verify.h"
-#include "misc/comparefunctions.h"
-
-#include <QtGlobal>
 
 using namespace swift::misc;
 
@@ -130,4 +131,4 @@ namespace swift::misc::network
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
         return 0;
     }
-} // namespace
+} // namespace swift::misc::network

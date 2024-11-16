@@ -6,17 +6,17 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBMODELSWORKBENCHCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBMODELSWORKBENCHCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
-#include "misc/simulation/aircraftmodelinterfaces.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/directories.h"
-#include "misc/statusmessage.h"
-
 #include <QFrame>
 #include <QList>
 #include <QObject>
 #include <QScopedPointer>
 #include <QStringList>
+
+#include "gui/overlaymessagesframe.h"
+#include "misc/directories.h"
+#include "misc/simulation/aircraftmodelinterfaces.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/statusmessage.h"
 
 namespace Ui
 {
@@ -94,6 +94,6 @@ namespace swift::gui
             QScopedPointer<Ui::CDbModelWorkbenchComponent> ui;
             swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_directorySettings { this }; //!< the swift directories
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 #endif // guard

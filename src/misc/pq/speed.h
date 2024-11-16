@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_PQ_SPEED_H
 #define SWIFT_MISC_PQ_SPEED_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/pq/physicalquantity.h"
 #include <QPair>
+
+#include "misc/pq/physicalquantity.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::physical_quantities
 {
@@ -29,7 +30,7 @@ namespace swift::misc::physical_quantities
     };
 
     using CSpeedPair = QPair<CSpeed, CSpeed>; //!< Pair of speeds
-} // ns
+} // namespace swift::misc::physical_quantities
 
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CSpeed)
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CSpeedPair)

@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "notificationplayer.h"
+
+#include <QTimer>
+
 #include "misc/logmessage.h"
 #include "misc/swiftdirectories.h"
 #include "sound/sampleprovider/samples.h"
-#include <QTimer>
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -96,4 +98,4 @@ namespace swift::sound
         m_effects[f] = effect;
         connect(effect, &QSoundEffect::playingChanged, this, &CNotificationPlayer::onPlayingChanged, Qt::QueuedConnection);
     }
-} // ns
+} // namespace swift::sound

@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_MODELBROWSERDIALOG_H
 #define SWIFT_GUI_COMPONENTS_MODELBROWSERDIALOG_H
 
-#include "gui/swiftguiexport.h"
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -38,6 +39,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CModelBrowserDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

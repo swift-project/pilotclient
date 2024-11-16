@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_AIRCRAFTPARTSCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_AIRCRAFTPARTSCOMPONENT_H
 
-#include "misc/aviation/callsign.h"
-
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/aviation/callsign.h"
 
 namespace Ui
 {
@@ -57,6 +57,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CAircraftPartsComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

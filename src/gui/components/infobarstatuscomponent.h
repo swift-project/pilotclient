@@ -6,17 +6,16 @@
 #ifndef SWIFT_GUI_INFOBARSTATUSCOMPONENT_H
 #define SWIFT_GUI_INFOBARSTATUSCOMPONENT_H
 
-#include "core/actionbind.h"
-#include "gui/swiftguiexport.h"
-
-#include "misc/audio/audiodeviceinfo.h"
-#include "misc/input/actionhotkeydefs.h"
-#include "misc/network/connectionstatus.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "core/actionbind.h"
+#include "gui/swiftguiexport.h"
+#include "misc/audio/audiodeviceinfo.h"
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/network/connectionstatus.h"
 
 class QPoint;
 
@@ -100,6 +99,6 @@ namespace swift::gui::components
         //! Update spacing based on main window size
         void updateSpacing();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

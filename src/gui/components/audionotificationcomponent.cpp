@@ -2,19 +2,21 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/audionotificationcomponent.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextaudio.h"
-#include "misc/audio/notificationsounds.h"
-#include "misc/audio/audiosettings.h"
-#include "misc/sequence.h"
-#include "ui_audionotificationcomponent.h"
 
 #include <QCheckBox>
 #include <QComboBox>
+#include <QFileDialog>
+#include <QPointer>
 #include <QToolButton>
 #include <QtGlobal>
-#include <QPointer>
-#include <QFileDialog>
+
+#include "ui_audionotificationcomponent.h"
+
+#include "core/context/contextaudio.h"
+#include "gui/guiapplication.h"
+#include "misc/audio/audiosettings.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/sequence.h"
 
 using namespace swift::core;
 using namespace swift::core::context;
@@ -189,4 +191,4 @@ namespace swift::gui::components
         ui->le_SoundDir->clear();
     }
 
-} // namespace
+} // namespace swift::gui::components

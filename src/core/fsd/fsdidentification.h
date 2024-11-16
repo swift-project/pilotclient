@@ -35,6 +35,6 @@ namespace swift::core::fsd
     private:
         FSDIdentification();
     };
-}
+} // namespace swift::core::fsd
 
 #endif // guard

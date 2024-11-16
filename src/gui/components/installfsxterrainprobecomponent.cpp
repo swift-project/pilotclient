@@ -2,19 +2,21 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "installfsxterrainprobecomponent.h"
+
+#include <QFileDialog>
+#include <QPointer>
+#include <QPushButton>
+#include <QTimer>
+
 #include "ui_installfsxterrainprobecomponent.h"
-#include "gui/overlaymessagesframe.h"
+
 #include "gui/guiutility.h"
+#include "gui/overlaymessagesframe.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
 #include "misc/simulation/fscommon/fscommonutil.h"
 #include "misc/simulation/simulatorinfo.h"
 #include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
-#include "misc/fileutils.h"
-
-#include <QPushButton>
-#include <QFileDialog>
-#include <QPointer>
-#include <QTimer>
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -84,4 +86,4 @@ namespace swift::gui::components
                     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks));
         ui->le_Target->setText(dir);
     }
-} // ns
+} // namespace swift::gui::components

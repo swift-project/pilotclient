@@ -6,18 +6,17 @@
 #ifndef SWIFT_GUI_COMPONENTS_NAVIGATORDIALOG_H
 #define SWIFT_GUI_COMPONENTS_NAVIGATORDIALOG_H
 
-#include "gui/swiftguiexport.h"
+#include <QDialog>
+#include <QGridLayout>
+#include <QObject>
+#include <QPoint>
+#include <QScopedPointer>
+#include <QTimer>
+#include <QWidgetAction>
+
 #include "gui/enableforframelesswindow.h"
 #include "gui/settings/navigatorsettings.h"
-
-#include <QDialog>
-#include <QObject>
-#include <QScopedPointer>
-#include <QWidgetAction>
-#include <QTimer>
-#include <QGridLayout>
-#include <QTimer>
-#include <QPoint>
+#include "gui/swiftguiexport.h"
 
 class QEvent;
 class QMenu;
@@ -149,6 +148,6 @@ namespace swift::gui::components
         QTimer m_watchdog; //!< navigator watchdog
         swift::misc::CSetting<swift::gui::settings::TNavigator> m_settings { this, &CNavigatorDialog::onSettingsChanged };
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

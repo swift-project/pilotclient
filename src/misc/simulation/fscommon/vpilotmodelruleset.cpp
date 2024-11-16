@@ -1,15 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/range.h"
-#include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/fscommon/vpilotmodelruleset.h"
+
+#include <tuple>
 
 #include <QList>
 #include <QSet>
 #include <QStringList>
 #include <Qt>
-#include <tuple>
+
+#include "misc/range.h"
+#include "misc/simulation/aircraftmodel.h"
 
 SWIFT_DEFINE_COLLECTION_MIXINS(swift::misc::simulation::fscommon, CVPilotModelRule, CVPilotModelRuleSet)
 
@@ -134,4 +136,4 @@ namespace swift::misc::simulation::fscommon
         }
         return models;
     }
-} // namespace
+} // namespace swift::misc::simulation::fscommon

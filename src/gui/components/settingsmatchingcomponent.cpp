@@ -2,12 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsmatchingcomponent.h"
-#include "ui_settingsmatchingcomponent.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextsimulator.h"
-#include "misc/simulation/aircraftmatchersetup.h"
-#include "misc/logmessage.h"
+
 #include <QPointer>
+
+#include "ui_settingsmatchingcomponent.h"
+
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/aircraftmatchersetup.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -105,4 +108,4 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return nullptr; }
         return sGui->getIContextSimulator();
     }
-} // ns
+} // namespace swift::gui::components

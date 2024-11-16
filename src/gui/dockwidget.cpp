@@ -1,36 +1,37 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/marginsinput.h"
-#include "gui/menus/fontmenus.h"
 #include "gui/dockwidget.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "gui/stylesheetutility.h"
-#include "misc/icons.h"
-#include "misc/logmessage.h"
-#include "misc/verify.h"
 
+#include <QApplication>
 #include <QCloseEvent>
 #include <QFrame>
 #include <QLayout>
 #include <QLayoutItem>
 #include <QMenu>
+#include <QPointer>
 #include <QScopedPointer>
 #include <QScreen>
 #include <QSettings>
 #include <QSizePolicy>
 #include <QStatusBar>
 #include <QStyle>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <QVariant>
-#include <QWidgetAction>
 #include <QWidget>
+#include <QWidgetAction>
 #include <Qt>
-#include <QTimer>
-#include <QPointer>
 #include <QtGlobal>
-#include <QApplication>
+
+#include "gui/components/marginsinput.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/menus/fontmenus.h"
+#include "gui/stylesheetutility.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 using namespace swift::misc;
 using namespace swift::gui::components;
@@ -756,4 +757,4 @@ namespace swift::gui
         const int y = pos.y() + osFloatingY;
         this->move(x, y);
     }
-} // namespace
+} // namespace swift::gui

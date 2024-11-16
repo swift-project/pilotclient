@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_RAWFSDMESSAGESDIALOG_H
 #define SWIFT_GUI_COMPONENTS_RAWFSDMESSAGESDIALOG_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/components/rawfsdmessagescomponent.h"
-
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "gui/components/rawfsdmessagescomponent.h"
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -33,6 +33,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CRawFsdMessagesDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

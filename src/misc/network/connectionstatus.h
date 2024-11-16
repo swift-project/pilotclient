@@ -56,7 +56,7 @@ namespace swift::misc::network
             CConnectionStatus,
             SWIFT_METAMEMBER(connectionStatus));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CConnectionStatus)
 

@@ -17,6 +17,6 @@ namespace swift::misc::math
     //! PI * 2
     constexpr double c_pi2 = c_pi * 2;
 
-} // ns
+} // namespace swift::misc::math
 
 #endif // guard

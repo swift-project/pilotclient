@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/audio/audiodeviceinfo.h"
-#include "misc/stringutils.h"
-#include "misc/comparefunctions.h"
-#include "misc/verify.h"
 
-#include <QHostInfo>
-#include <QtGlobal>
 #include <QAudioDevice>
+#include <QHostInfo>
 #include <QMediaDevices>
+#include <QtGlobal>
+
+#include "misc/comparefunctions.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::audio, CAudioDeviceInfo)
 
@@ -124,4 +125,4 @@ namespace swift::misc::audio
         return m_deviceName % u" [" % this->getMachineName() % u']';
     }
 
-} // ns
+} // namespace swift::misc::audio

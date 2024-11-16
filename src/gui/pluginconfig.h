@@ -6,9 +6,9 @@
 #ifndef SWIFT_GUI_PLUGINCONFIG_H
 #define SWIFT_GUI_PLUGINCONFIG_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QtPlugin>
+
+#include "gui/swiftguiexport.h"
 
 class QWidget;
 
@@ -32,7 +32,7 @@ namespace swift::gui
         //! Creates a new config window and returns its pointer.
         virtual CPluginConfigWindow *createConfigWindow(QWidget *parent) = 0;
     };
-}
+} // namespace swift::gui
 
 Q_DECLARE_INTERFACE(swift::gui::IPluginConfig, "org.swift-project.swiftgui.pluginconfiginterface")
 

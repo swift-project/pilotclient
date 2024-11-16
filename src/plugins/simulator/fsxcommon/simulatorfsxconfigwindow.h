@@ -6,10 +6,11 @@
 #ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMULATORFSXCONFIGWINDOW_H
 #define SWIFT_SIMPLUGIN_FSXCOMMON_SIMULATORFSXCONFIGWINDOW_H
 
-#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
+#include <QScopedPointer>
+
 #include "gui/pluginconfigwindow.h"
 #include "misc/simulation/simulatorinfo.h"
-#include <QScopedPointer>
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 
 namespace Ui
 {
@@ -38,6 +39,6 @@ namespace swift::simplugin::fsxcommon
         const swift::misc::simulation::CSimulatorInfo m_simulator { "FSX" };
         QScopedPointer<Ui::CSimulatorFsxConfigWindow> ui;
     };
-} // ns
+} // namespace swift::simplugin::fsxcommon
 
 #endif // guard

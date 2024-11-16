@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/db/distributionlist.h"
+
 #include "misc/stringutils.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CDistribution, CDistributionList)
@@ -90,4 +91,4 @@ namespace swift::misc::db
         if (json.isEmpty()) { return CDistributionList(); }
         return CDistributionList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
-} // namespace
+} // namespace swift::misc::db

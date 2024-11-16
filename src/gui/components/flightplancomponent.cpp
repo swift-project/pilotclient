@@ -2,54 +2,55 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "flightplancomponent.h"
-#include "gui/components/altitudedialog.h"
-#include "gui/components/stringlistdialog.h"
-#include "gui/components/simbriefdownloaddialog.h"
-#include "gui/components/selcalcodeselector.h"
-#include "gui/uppercasevalidator.h"
-#include "gui/eventfilter.h"
-#include "gui/guiapplication.h"
+
+#include <QCheckBox>
+#include <QComboBox>
+#include <QCompleter>
+#include <QDateTime>
+#include <QDesktopServices>
+#include <QFile>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QPlainTextEdit>
+#include <QPointer>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QStringBuilder>
+#include <QTabBar>
+#include <QToolButton>
+#include <QWidgetAction>
+#include <Qt>
+
+#include "ui_flightplancomponent.h"
+
+#include "config/buildconfig.h"
 #include "core/context/contextnetwork.h"
 #include "core/context/contextownaircraft.h"
 #include "core/context/contextsimulator.h"
 #include "core/webdataservices.h"
-#include "misc/simulation/simulatedaircraft.h"
+#include "gui/components/altitudedialog.h"
+#include "gui/components/selcalcodeselector.h"
+#include "gui/components/simbriefdownloaddialog.h"
+#include "gui/components/stringlistdialog.h"
+#include "gui/eventfilter.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airportlist.h"
 #include "misc/aviation/altitude.h"
 #include "misc/aviation/callsign.h"
-#include "misc/pq/pqstring.h"
-#include "misc/pq/speed.h"
-#include "misc/pq/units.h"
+#include "misc/directoryutils.h"
 #include "misc/logcategories.h"
 #include "misc/logmessage.h"
 #include "misc/network/user.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
+#include "misc/pq/pqstring.h"
+#include "misc/pq/speed.h"
+#include "misc/pq/units.h"
+#include "misc/simulation/simulatedaircraft.h"
 #include "misc/statusmessage.h"
 #include "misc/stringutils.h"
-#include "config/buildconfig.h"
-
-#include "ui_flightplancomponent.h"
-
-#include <QCheckBox>
-#include <QComboBox>
-#include <QDateTime>
-#include <QDesktopServices>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPlainTextEdit>
-#include <QPushButton>
-#include <QToolButton>
-#include <QRadioButton>
-#include <QTabBar>
-#include <QCompleter>
-#include <QStringBuilder>
-#include <QPointer>
-#include <QFile>
-#include <QMessageBox>
-#include <Qt>
-#include <QWidgetAction>
+#include "misc/swiftdirectories.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -1153,4 +1154,4 @@ namespace swift::gui::components
             }
         }
     }
-} // namespace
+} // namespace swift::gui::components

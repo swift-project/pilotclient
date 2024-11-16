@@ -77,5 +77,5 @@ namespace swift::gui::editors
         //! All engines on
         void setAllEngines();
     };
-} // ns
+} // namespace swift::gui::editors
 #endif // guard

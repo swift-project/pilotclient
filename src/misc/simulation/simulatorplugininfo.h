@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_SIMULATION_SIMULATORPLUGININFO_H
 #define SWIFT_MISC_SIMULATION_SIMULATORPLUGININFO_H
 
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/valueobject.h"
-
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorPluginInfo)
 
@@ -112,7 +112,7 @@ namespace swift::misc::simulation
             SWIFT_METAMEMBER(info, 0, DisabledForComparison | DisabledForHashing),
             SWIFT_METAMEMBER(valid, 0, DisabledForComparison | DisabledForHashing));
     };
-} // ns
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorPluginInfo)
 

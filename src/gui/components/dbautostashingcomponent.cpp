@@ -1,8 +1,24 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/webdataservices.h"
 #include "gui/components/dbautostashingcomponent.h"
+
+#include <QCheckBox>
+#include <QDialogButtonBox>
+#include <QFlags>
+#include <QIntValidator>
+#include <QLineEdit>
+#include <QProgressBar>
+#include <QRadioButton>
+#include <QString>
+#include <QStringBuilder>
+#include <QWidget>
+#include <Qt>
+#include <QtGlobal>
+
+#include "ui_dbautostashingcomponent.h"
+
+#include "core/webdataservices.h"
 #include "gui/components/dbmappingcomponent.h"
 #include "gui/components/dbstashcomponent.h"
 #include "gui/guiapplication.h"
@@ -15,20 +31,6 @@
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/statusmessagelist.h"
-#include "ui_dbautostashingcomponent.h"
-
-#include <QCheckBox>
-#include <QDialogButtonBox>
-#include <QFlags>
-#include <QIntValidator>
-#include <QLineEdit>
-#include <QProgressBar>
-#include <QRadioButton>
-#include <QStringBuilder>
-#include <QString>
-#include <QWidget>
-#include <Qt>
-#include <QtGlobal>
 
 using namespace swift::core;
 using namespace swift::misc;
@@ -364,4 +366,4 @@ namespace swift::gui::components
         if (!sGui || !sGui->hasWebDataServices()) { return CLivery(); }
         return sGui->getWebDataServices()->getTempLiveryOrDefault();
     }
-} // ns
+} // namespace swift::gui::components

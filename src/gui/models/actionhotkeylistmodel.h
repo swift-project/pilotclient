@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_MODELS_ACTIONHOTKEYLISTMODEL_H
 #define SWIFT_GUI_MODELS_ACTIONHOTKEYLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/input/actionhotkeylist.h"
-
 #include <QAbstractTableModel>
 #include <QModelIndex>
 #include <QObject>
 #include <QVariant>
 #include <Qt>
+
+#include "gui/swiftguiexport.h"
+#include "misc/input/actionhotkeylist.h"
 
 class QModelIndex;
 
@@ -64,6 +64,6 @@ namespace swift::gui::models
     private:
         swift::misc::input::CActionHotkeyList m_actionHotkeys;
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

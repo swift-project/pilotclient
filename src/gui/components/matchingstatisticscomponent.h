@@ -35,6 +35,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CMatchingStatisticsComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

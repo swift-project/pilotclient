@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_STATUSEXCEPTION_H
 #define SWIFT_MISC_STATUSEXCEPTION_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/statusmessage.h"
+#include <exception>
 
 #include <QByteArray>
 #include <QReadWriteLock>
-#include <exception>
+
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -47,6 +48,6 @@ namespace swift::misc
         mutable QByteArray m_temp;
         mutable QReadWriteLock m_lock; //!< lock (because of mutable members)
     };
-} // ns
+} // namespace swift::misc
 
 #endif

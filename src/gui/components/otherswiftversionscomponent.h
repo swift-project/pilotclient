@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_OTHERSWIFTVERSIONS_H
 #define SWIFT_GUI_COMPONENTS_OTHERSWIFTVERSIONS_H
 
-#include "misc/applicationinfo.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/applicationinfo.h"
 
 namespace Ui
 {
@@ -55,6 +56,6 @@ namespace swift::gui::components
         //! Object has been selected
         void onObjectSelected(const swift::misc::CVariant &object);
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

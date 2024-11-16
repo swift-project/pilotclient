@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_NAMEVARIANTPAIR_H
 #define SWIFT_MISC_NAMEVARIANTPAIR_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-#include "misc/variant.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
+#include "misc/variant.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CNameVariantPair)
 
@@ -77,7 +77,7 @@ namespace swift::misc
             SWIFT_METAMEMBER(variant),
             SWIFT_METAMEMBER(icon));
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CNameVariantPair)
 

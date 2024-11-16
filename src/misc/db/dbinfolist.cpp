@@ -34,4 +34,4 @@ namespace swift::misc::db
         infoObjects.sortByKey(); // make sure the data are in proper order
         return infoObjects;
     }
-} // namespace
+} // namespace swift::misc::db

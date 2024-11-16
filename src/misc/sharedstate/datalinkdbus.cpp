@@ -4,14 +4,16 @@
 //! \file
 
 #include "misc/sharedstate/datalinkdbus.h"
-#include "misc/sharedstate/dbus/hub.h"
+
+#include <QDBusConnection>
+#include <QDBusServiceWatcher>
+
+#include "misc/dbusserver.h"
+#include "misc/sharedstate/activemutator.h"
+#include "misc/sharedstate/activeobserver.h"
 #include "misc/sharedstate/dbus/duplex.h"
 #include "misc/sharedstate/dbus/duplexproxy.h"
-#include "misc/sharedstate/activeobserver.h"
-#include "misc/sharedstate/activemutator.h"
-#include "misc/dbusserver.h"
-#include <QDBusServiceWatcher>
-#include <QDBusConnection>
+#include "misc/sharedstate/dbus/hub.h"
 
 using namespace swift::misc::shared_state::dbus;
 
@@ -211,4 +213,4 @@ namespace swift::misc::shared_state
     {
         return getChannel(getChannelName(object));
     }
-}
+} // namespace swift::misc::shared_state

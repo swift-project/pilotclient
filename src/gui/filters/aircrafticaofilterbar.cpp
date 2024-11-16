@@ -1,20 +1,22 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/aircraftcombinedtypeselector.h"
 #include "gui/filters/aircrafticaofilterbar.h"
-#include "gui/filters/filterbarbuttons.h"
-#include "gui/models/aircrafticaofilter.h"
-#include "gui/uppercasevalidator.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "ui_aircrafticaofilterbar.h"
 
+#include <QCompleter>
 #include <QLineEdit>
 #include <QString>
-#include <QCompleter>
+
+#include "ui_aircrafticaofilterbar.h"
+
+#include "core/webdataservices.h"
+#include "gui/components/aircraftcombinedtypeselector.h"
+#include "gui/filters/filterbarbuttons.h"
+#include "gui/guiapplication.h"
+#include "gui/models/aircrafticaofilter.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircrafticaocodelist.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::gui;
@@ -126,4 +128,4 @@ namespace swift::gui::filters
         const QStringList manufacturers = codes.allManufacturers().values();
         ui->le_Manufacturer->setCompleter(new QCompleter(manufacturers, ui->le_Manufacturer));
     }
-} // nss
+} // namespace swift::gui::filters

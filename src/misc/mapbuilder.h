@@ -6,14 +6,16 @@
 #ifndef SWIFT_MISC_MAPBUILDER_H
 #define SWIFT_MISC_MAPBUILDER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/range.h"
-#include <QMap>
-#include <QHash>
-#include <QList>
 #include <algorithm>
 #include <iterator>
 #include <map>
+
+#include <QHash>
+#include <QList>
+#include <QMap>
+
+#include "misc/range.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -67,6 +69,6 @@ namespace swift::misc
             return map;
         }
     };
-}
+} // namespace swift::misc
 
 #endif

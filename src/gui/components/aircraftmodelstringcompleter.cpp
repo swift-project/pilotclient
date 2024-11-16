@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftmodelstringcompleter.h"
-#include "ui_aircraftmodelstringcompleter.h"
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "core/webdataservices.h"
-#include "core/context/contextsimulator.h"
 
+#include <QPointer>
 #include <QRadioButton>
 #include <QStringListModel>
-#include <QPointer>
+
+#include "ui_aircraftmodelstringcompleter.h"
+
+#include "core/context/contextsimulator.h"
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
 
 using namespace swift::core;
 using namespace swift::core::context;
@@ -170,4 +172,4 @@ namespace swift::gui::components
     {
         this->initGui();
     }
-} // ns
+} // namespace swift::gui::components

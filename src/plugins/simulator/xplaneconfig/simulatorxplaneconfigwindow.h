@@ -6,11 +6,13 @@
 #ifndef SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 #define SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_CONFIG_WINDOW_H
 
-#include "gui/pluginconfigwindow.h"
-#include "misc/simulation/settings/xswiftbussettings.h"
-#include "simulatorxplaneconfig.h"
 #include <QObject>
 #include <QScopedPointer>
+
+#include "simulatorxplaneconfig.h"
+
+#include "gui/pluginconfigwindow.h"
+#include "misc/simulation/settings/xswiftbussettings.h"
 
 namespace Ui
 {
@@ -51,6 +53,6 @@ namespace swift::simplugin::xplane
         QScopedPointer<Ui::CSimulatorXPlaneConfigWindow> ui;
         swift::misc::CSetting<swift::misc::simulation::settings::TXSwiftBusSettings> m_xSwiftBusServerSettings { this, &CSimulatorXPlaneConfigWindow::onSettingsChanged };
     };
-} // ns
+} // namespace swift::simplugin::xplane
 
 #endif // guard

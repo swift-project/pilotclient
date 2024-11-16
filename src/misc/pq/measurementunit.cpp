@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/pq/measurementunit.h"
-#include "misc/math/mathutils.h"
+
 #include <QLocale>
+
+#include "misc/math/mathutils.h"
 
 using namespace swift::misc::math;
 
@@ -49,4 +51,4 @@ namespace swift::misc::physical_quantities
         const QString s = (withGroupSeparator ? QLocale::system() : localeWithoutSeparator).toString(v, 'f', digits);
         return s;
     }
-} // namespace
+} // namespace swift::misc::physical_quantities

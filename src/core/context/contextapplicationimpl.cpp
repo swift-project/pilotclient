@@ -1,20 +1,21 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
 #include "core/context/contextapplicationimpl.h"
-#include "core/inputmanager.h"
-#include "misc/dbusserver.h"
-#include "misc/logcategories.h"
-#include "misc/logmessage.h"
-#include "misc/settingscache.h"
-#include "misc/simplecommandparser.h"
 
 #include <QFile>
 #include <QFlags>
 #include <QIODevice>
 #include <QTextStream>
 #include <QtGlobal>
+
+#include "core/application.h"
+#include "core/inputmanager.h"
+#include "misc/dbusserver.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/settingscache.h"
+#include "misc/simplecommandparser.h"
 
 using namespace swift::misc;
 
@@ -146,4 +147,4 @@ namespace swift::core::context
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         return this->identifier();
     }
-} // ns
+} // namespace swift::core::context

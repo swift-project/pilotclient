@@ -6,21 +6,22 @@
 #ifndef SWIFT_CORE_ICAODATAREADER_H
 #define SWIFT_CORE_ICAODATAREADER_H
 
-#include "core/swiftcoreexport.h"
-#include "core/db/databasereader.h"
-#include "core/data/dbcaches.h"
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/network/entityflags.h"
-#include "misc/network/url.h"
-#include "misc/country.h"
-#include "misc/countrylist.h"
-#include "misc/datacache.h"
+#include <atomic>
 
 #include <QObject>
 #include <QReadWriteLock>
 #include <QString>
-#include <atomic>
+
+#include "core/data/dbcaches.h"
+#include "core/db/databasereader.h"
+#include "core/swiftcoreexport.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/country.h"
+#include "misc/countrylist.h"
+#include "misc/datacache.h"
+#include "misc/network/entityflags.h"
+#include "misc/network/url.h"
 
 class QDateTime;
 class QNetworkReply;
@@ -213,6 +214,6 @@ namespace swift::core::db
         //! URL
         swift::misc::network::CUrl getAircraftCategoryUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
     };
-} // ns
+} // namespace swift::core::db
 
 #endif // guard

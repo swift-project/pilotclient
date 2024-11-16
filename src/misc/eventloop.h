@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_EVENTLOOP_H
 #define SWIFT_MISC_EVENTLOOP_H
 
-#include "misc/swiftmiscexport.h"
-
-#include <QObject>
 #include <QEventLoop>
+#include <QObject>
 #include <QPointer>
 #include <QTimer>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -73,6 +73,6 @@ namespace swift::misc
         QEventLoop m_eventLoop;
         QPointer<QObject> m_guard;
     };
-} // ns
+} // namespace swift::misc
 
 #endif // guard

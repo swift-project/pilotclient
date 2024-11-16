@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_SCALESCREENFACTOR_H
 #define SWIFT_GUI_COMPONENTS_SCALESCREENFACTOR_H
 
-#include "gui/swiftguiexport.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -48,6 +49,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CScaleScreenFactor> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

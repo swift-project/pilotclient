@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/callsignset.h"
-#include "misc/containerbase.h"
 
 #include <QDBusMetaType>
 #include <QString>
+
+#include "misc/containerbase.h"
 
 SWIFT_DEFINE_COLLECTION_MIXINS(swift::misc::aviation, CCallsign, CCallsignSet)
 
@@ -64,4 +65,4 @@ namespace swift::misc::aviation
         qDBusRegisterMetaType<CCallsignSet>();
         registerMetaValueType<CCallsignSet>();
     }
-} // namespace
+} // namespace swift::misc::aviation

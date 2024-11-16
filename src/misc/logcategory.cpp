@@ -14,4 +14,4 @@ namespace swift::misc
         Q_UNUSED(i18n);
         return m_string;
     }
-}
+} // namespace swift::misc

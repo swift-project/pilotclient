@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorflightgearconfig.h"
+
 #include "simulatorflightgearconfigwindow.h"
 
 class QWidget;
@@ -17,4 +18,4 @@ namespace swift::simplugin::flightgear
         CSimulatorFlightgearConfigWindow *w = new CSimulatorFlightgearConfigWindow(parent);
         return w;
     }
-}
+} // namespace swift::simplugin::flightgear

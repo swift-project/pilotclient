@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "swiftguistdapplication.h"
+
+#include <QtGlobal>
+
 #include "core/application.h"
 #include "core/corefacadeconfig.h"
 #include "core/coremodeenums.h"
 #include "misc/dbusserver.h"
 #include "misc/icons.h"
-
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::core;

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/weather/presentweather.h"
+
 #include "misc/propertyindexref.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CPresentWeather)
@@ -126,4 +127,4 @@ namespace swift::misc::weather
         return str;
     }
 
-} // namespace
+} // namespace swift::misc::weather

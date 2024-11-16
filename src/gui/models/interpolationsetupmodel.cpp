@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/columns.h"
 #include "gui/models/interpolationsetupmodel.h"
 
 #include <Qt>
 #include <QtGlobal>
+
+#include "gui/models/columns.h"
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -30,4 +31,4 @@ namespace swift::gui::models
         this->setSortColumnByPropertyIndex(CCountry::IndexIsoCode);
         m_sortOrder = Qt::AscendingOrder;
     }
-} // ns
+} // namespace swift::gui::models

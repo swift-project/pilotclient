@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_SCALARMUTATOR_H
 #define SWIFT_MISC_SHAREDSTATE_SCALARMUTATOR_H
 
-#include "misc/sharedstate/passivemutator.h"
-#include "misc/variant.h"
-#include "misc/swiftmiscexport.h"
-#include <QObject>
 #include <QMutex>
+#include <QObject>
+
+#include "misc/sharedstate/passivemutator.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 namespace swift::misc::shared_state
 {
@@ -55,6 +56,6 @@ namespace swift::misc::shared_state
         //! Set scalar value.
         void setValue(const T &value) { CGenericScalarMutator::setValue(CVariant::from(value)); }
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

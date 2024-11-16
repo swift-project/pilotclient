@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSMATCHINGDIALOG_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSMATCHINGDIALOG_H
 
-#include "misc/simulation/aircraftmatchersetup.h"
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "misc/simulation/aircraftmatchersetup.h"
 
 namespace Ui
 {
@@ -37,6 +38,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CSettingsMatchingDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

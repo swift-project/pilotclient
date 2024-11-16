@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_UPDATEINFODIALOG_H
 #define SWIFT_GUI_COMPONENTS_UPDATEINFODIALOG_H
 
+#include <QDialog>
+
 #include "gui/settings/updatenotification.h"
 #include "gui/swiftguiexport.h"
-#include <QDialog>
 
 namespace Ui
 {
@@ -50,6 +51,6 @@ namespace swift::gui::components
         //! Selection in distribution component changed
         void selectionChanged();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

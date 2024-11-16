@@ -6,7 +6,7 @@
 #ifndef SWIFT_SIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
 #define SWIFT_SIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H
 
-#include "misc/genericdbusinterface.h"
+#include <functional>
 
 #include <QDBusError>
 #include <QDBusPendingReply>
@@ -14,7 +14,8 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <functional>
+
+#include "misc/genericdbusinterface.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -506,6 +507,6 @@ namespace swift::simplugin::xplane
         //! \copydoc XSwiftBus::CSettingsProvider::setSettings
         void setSettingsJson(const QString &json);
     };
-} // ns
+} // namespace swift::simplugin::xplane
 
 #endif // guard

@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/modelmodeselector.h"
-#include "ui_modelmodeselector.h"
 
 #include <QRadioButton>
+
+#include "ui_modelmodeselector.h"
 
 using namespace swift::misc::simulation;
 
@@ -55,4 +56,4 @@ namespace swift::gui::components
     {
         this->setEnabled(!readOnly);
     }
-} // ns
+} // namespace swift::gui::components

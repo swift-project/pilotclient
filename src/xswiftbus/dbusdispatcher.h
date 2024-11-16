@@ -4,14 +4,14 @@
 #ifndef SWIFT_SIM_XSWIFTBUS_DBUSDISPATCHER_H
 #define SWIFT_SIM_XSWIFTBUS_DBUSDISPATCHER_H
 
-#include "dbuscallbacks.h"
-
-#include <event2/event.h>
 #include <dbus/dbus.h>
+#include <event2/event.h>
 
+#include <memory>
 #include <unordered_map>
 #include <vector>
-#include <memory>
+
+#include "dbuscallbacks.h"
 
 namespace XSwiftBus
 {
@@ -93,6 +93,6 @@ namespace XSwiftBus
 
         std::vector<IDispatchable *> m_dispatchList;
     };
-}
+} // namespace XSwiftBus
 
 #endif

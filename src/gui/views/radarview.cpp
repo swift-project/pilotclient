@@ -29,4 +29,4 @@ namespace swift::gui::views
         const bool zoom = (delta.y() > 0);
         emit zoomEvent(zoom);
     }
-} // ns
+} // namespace swift::gui::views

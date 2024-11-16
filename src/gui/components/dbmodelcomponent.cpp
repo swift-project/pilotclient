@@ -2,20 +2,22 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/dbmodelcomponent.h"
-#include "gui/filters/aircraftmodelfilterbar.h"
-#include "gui/models/aircraftmodellistmodel.h"
-#include "gui/guiapplication.h"
+
+#include <QDateTime>
+#include <QStringBuilder>
+#include <QWidget>
+#include <QtGlobal>
+
+#include "ui_dbmodelcomponent.h"
+
 #include "core/application.h"
 #include "core/webdataservices.h"
+#include "gui/filters/aircraftmodelfilterbar.h"
+#include "gui/guiapplication.h"
+#include "gui/models/aircraftmodellistmodel.h"
 #include "gui/views/aircraftmodelview.h"
 #include "gui/views/viewbase.h"
 #include "misc/simulation/aircraftmodel.h"
-#include "ui_dbmodelcomponent.h"
-
-#include <QDateTime>
-#include <QWidget>
-#include <QtGlobal>
-#include <QStringBuilder>
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -111,4 +113,4 @@ namespace swift::gui::components
         this->showDownloadProgress(progress, current, max, url, 5000);
         Q_UNUSED(logId)
     }
-} // ns
+} // namespace swift::gui::components

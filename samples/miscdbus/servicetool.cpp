@@ -5,15 +5,10 @@
 //! \ingroup samplemiscdbus
 
 #include "servicetool.h"
-#include "core/application.h"
-#include "misc/test/testservice.h"
-#include "misc/test/testserviceinterface.h"
-#include "misc/dbusserver.h"
-#include "misc/network/server.h"
-#include "misc/test/testdata.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <QChar>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -36,6 +31,13 @@
 #include <QThread>
 #include <QVariant>
 #include <QtDebug>
+
+#include "core/application.h"
+#include "misc/dbusserver.h"
+#include "misc/network/server.h"
+#include "misc/test/testdata.h"
+#include "misc/test/testservice.h"
+#include "misc/test/testserviceinterface.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -294,4 +296,4 @@ namespace swift::sample
             }
         }
     }
-} // namespace
+} // namespace swift::sample

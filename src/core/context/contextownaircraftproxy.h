@@ -12,7 +12,6 @@
 #include "core/context/contextownaircraft.h"
 #include "core/corefacadeconfig.h"
 #include "core/swiftcoreexport.h"
-#include "misc/simulation/simulatedaircraft.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/selcal.h"
@@ -20,6 +19,7 @@
 #include "misc/identifier.h"
 #include "misc/network/user.h"
 #include "misc/pq/frequency.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -34,8 +34,8 @@ namespace swift::misc
         class CAltitude;
         class CCallsign;
         class CTransponder;
-    }
-}
+    } // namespace aviation
+} // namespace swift::misc
 namespace swift::core
 {
     class CCoreFacade;
@@ -115,6 +115,6 @@ namespace swift::core
             //! \brief Relay connection signals to local signals.
             void relaySignals(const QString &serviceName, QDBusConnection &connection);
         };
-    } // ns
-} // ns
+    } // namespace context
+} // namespace swift::core
 #endif // guard

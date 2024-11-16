@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_PLUGINSELECTOR_H
 #define SWIFT_GUI_PLUGINSELECTOR_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QObject>
+#include <QSignalMapper>
 #include <QString>
 #include <QWidget>
-#include <QSignalMapper>
+
+#include "gui/swiftguiexport.h"
 
 namespace swift::gui
 {
@@ -49,6 +49,6 @@ namespace swift::gui
 
         QSignalMapper *m_configButtonMapper = new QSignalMapper(this);
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

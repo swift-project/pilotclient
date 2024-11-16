@@ -7,33 +7,34 @@
 #        define NOMINMAX
 #    endif
 
-#    include "fsuipc.h"
 #    include <Windows.h>
+
+#    include "fsuipc.h"
 // bug in FSUIPC_User.h, windows.h not included, so we have to import it first
 
 #    ifdef SWIFT_USING_FSUIPC32
 extern "C"
 {
-#        include "../fsuipc32/IPCuser.h"
 #        include "../fsuipc32/FSUIPC_User.h"
+#        include "../fsuipc32/IPCuser.h"
 #        include "../fsuipc32/NewWeather.h"
 }
 #    elif SWIFT_USING_FSUIPC64
 extern "C"
 {
-#        include "../fsuipc64/IPCuser64.h"
 #        include "../fsuipc64/FSUIPC_User64.h"
+#        include "../fsuipc64/IPCuser64.h"
 #        include "../fsuipc64/NewWeather.h"
 }
 #    endif
 
-#    include "misc/simulation/fscommon/bcdconversions.h"
-#    include "misc/threadutils.h"
-#    include "misc/logmessage.h"
-
+#    include <QDateTime>
 #    include <QDebug>
 #    include <QLatin1Char>
-#    include <QDateTime>
+
+#    include "misc/logmessage.h"
+#    include "misc/simulation/fscommon/bcdconversions.h"
+#    include "misc/threadutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation::fscommon;
@@ -398,6 +399,6 @@ namespace swift::simplugin::fscommon
         if (f < 1.0) { return f; }
         return intToFractional(f);
     }
-} // namespace
+} // namespace swift::simplugin::fscommon
 
 #endif // defined(SWIFT_USING_FSUIPC32) || defined(SWIFT_USING_FSUIPC64)

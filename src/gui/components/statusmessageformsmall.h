@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_STATUSMESSAGEFORMSMALL_H
 #define SWIFT_GUI_COMPONENTS_STATUSMESSAGEFORMSMALL_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/statusmessage.h"
-#include "misc/variant.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/statusmessage.h"
+#include "misc/variant.h"
 
 namespace Ui
 {
@@ -49,5 +49,5 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CStatusMessageFormSmall> ui;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

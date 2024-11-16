@@ -41,6 +41,6 @@ namespace swift::gui
         views::CViewBaseNonTemplate *m_viewWithIndicator = nullptr;
     };
 
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

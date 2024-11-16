@@ -4,11 +4,11 @@
 //! \file
 //! \ingroup samplehotkey
 
-#include "misc/directoryutils.h"
+#include <QApplication>
+
 #include "gui/components/settingshotkeycomponent.h"
 #include "gui/guiapplication.h"
-
-#include <QApplication>
+#include "misc/directoryutils.h"
 
 using namespace swift::misc;
 using namespace swift::gui;

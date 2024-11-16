@@ -2,13 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftmodelvalidationdialog.h"
-#include "ui_aircraftmodelvalidationdialog.h"
-#include "misc/simulation/aircraftmodelutils.h"
 
-#include <QPushButton>
+#include <atomic>
+
 #include <QDialogButtonBox>
 #include <QPointer>
-#include <atomic>
+#include <QPushButton>
+
+#include "ui_aircraftmodelvalidationdialog.h"
+
+#include "misc/simulation/aircraftmodelutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -62,4 +65,4 @@ namespace swift::gui::views
         ui->comp_StatusMessage->appendStatusMessagesToList(msgs);
     }
 
-} // ns
+} // namespace swift::gui::views

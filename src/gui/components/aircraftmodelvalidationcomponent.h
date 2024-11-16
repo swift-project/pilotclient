@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_AIRCRAFTMODELVALIDATIONCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_AIRCRAFTMODELVALIDATIONCOMPONENT_H
 
-#include "misc/simulation/settings/modelmatchersettings.h"
-#include "misc/settingscache.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/swiftguiexport.h"
-
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "gui/overlaymessagesframe.h"
+#include "gui/swiftguiexport.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/settings/modelmatchersettings.h"
 
 namespace Ui
 {
@@ -25,8 +25,8 @@ namespace swift::misc
     {
         class CSimulatorInfo;
         class CAircraftModelList;
-    }
-}
+    } // namespace simulation
+} // namespace swift::misc
 namespace swift::gui::components
 {
     /*!
@@ -79,5 +79,5 @@ namespace swift::gui::components
         //! Save invalid models
         void saveInvalidModels(const swift::misc::simulation::CAircraftModelList &models) const;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

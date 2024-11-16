@@ -6,12 +6,16 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTNETWORK_H
 #define SWIFT_CORE_CONTEXT_CONTEXTNETWORK_H
 
+#include <functional>
+
+#include <QCommandLineOption>
+#include <QObject>
+#include <QString>
+
 #include "core/context/context.h"
 #include "core/corefacade.h"
 #include "core/corefacadeconfig.h"
 #include "core/swiftcoreexport.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/aviation/aircraftpartslist.h"
 #include "misc/aviation/airporticaocode.h"
 #include "misc/aviation/atcstation.h"
@@ -19,23 +23,20 @@
 #include "misc/aviation/callsignset.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/flightplan.h"
-#include "misc/network/connectionstatus.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
 #include "misc/network/clientlist.h"
+#include "misc/network/connectionstatus.h"
 #include "misc/network/loginmode.h"
 #include "misc/network/server.h"
 #include "misc/network/serverlist.h"
 #include "misc/network/textmessagelist.h"
 #include "misc/network/user.h"
 #include "misc/network/userlist.h"
-#include "misc/identifiable.h"
-#include "misc/identifier.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/statusmessage.h"
 #include "misc/weather/metar.h"
-
-#include <QObject>
-#include <QString>
-#include <QCommandLineOption>
-#include <functional>
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -55,17 +56,17 @@ namespace swift::misc
     {
         class CAircraftParts;
         class CCallsign;
-    }
+    } // namespace aviation
     namespace network
     {
         class CRawFsdMessage;
         class CTextMessage;
-    }
+    } // namespace network
     namespace simulation
     {
         class CAircraftModel;
     }
-}
+} // namespace swift::misc
 namespace swift::core::context
 {
     //! Network context proxy
@@ -368,5 +369,5 @@ namespace swift::core::context
         //! Constructor
         IContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime) {}
     };
-} // ns
+} // namespace swift::core::context
 #endif // guard

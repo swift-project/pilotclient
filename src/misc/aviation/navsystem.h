@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_AVIATION_NAVSYSTEM_H
 #define SWIFT_MISC_AVIATION_NAVSYSTEM_H
 
-#include "misc/swiftmiscexport.h"
 #include "misc/aviation/modulator.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::aviation
 {
@@ -99,7 +99,7 @@ namespace swift::misc::aviation
         //! Easy access to derived class (CRTP template parameter)
         CNavSystem *derived() { return static_cast<CNavSystem *>(this); }
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CNavSystem)
 

@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_ATCSTATIONVIEW_H
 #define SWIFT_GUI_ATCSTATIONVIEW_H
 
-#include "gui/views/viewcallsignobjects.h"
+#include <QList>
+#include <QObject>
+
 #include "gui/models/atcstationlistmodel.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewcallsignobjects.h"
 #include "misc/aviation/atcstation.h"
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/pq/frequency.h"
-
-#include <QList>
-#include <QObject>
 
 class QAction;
 
@@ -70,7 +70,7 @@ namespace swift::gui
             QList<QAction *> m_actions; //!< real actions
             QList<QAction *> m_debugActions; //!< used for debug context menu
         };
-    }
-} // ns
+    } // namespace views
+} // namespace swift::gui
 
 #endif // guard

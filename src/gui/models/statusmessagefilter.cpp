@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/statusmessagefilter.h"
+
 #include "misc/logpattern.h"
 
 using namespace swift::misc;
@@ -62,4 +63,4 @@ namespace swift::gui::models
 
         return CVariant::from(CLogPattern::anyOf(categories.join(humanCats)).withSeverityAtOrAbove(m_severity));
     }
-} // namespace
+} // namespace swift::gui::models

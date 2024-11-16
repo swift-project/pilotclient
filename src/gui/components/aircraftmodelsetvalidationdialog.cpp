@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftmodelsetvalidationdialog.h"
+
+#include "ui_aircraftmodelsetvalidationdialog.h"
+
 #include "gui/guiapplication.h"
 #include "misc/simulation/simulatorinfo.h"
-#include "ui_aircraftmodelsetvalidationdialog.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -34,4 +36,4 @@ namespace swift::gui::components
         if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
         return QDialog::event(event);
     }
-} // ns
+} // namespace swift::gui::components

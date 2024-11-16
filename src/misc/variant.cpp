@@ -4,14 +4,10 @@
 //! \cond PRIVATE
 
 #include "misc/variant.h"
-#include "misc/imageutils.h"
-#include "misc/logmessage.h"
-#include "misc/propertyindexref.h"
-#include "misc/statusmessage.h"
-#include "misc/stringutils.h"
 
 #include <QDBusArgument>
 #include <QDBusVariant>
+#include <QDataStream>
 #include <QDate>
 #include <QFlags>
 #include <QHash>
@@ -21,7 +17,12 @@
 #include <QTime>
 #include <Qt>
 #include <QtDebug>
-#include <QDataStream>
+
+#include "misc/imageutils.h"
+#include "misc/logmessage.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
 
 namespace swift::misc
 {
@@ -654,6 +655,6 @@ namespace swift::misc
         return QVariant(); // suppress compiler warning
     }
 
-} // namespace
+} // namespace swift::misc
 
 //! \endcond

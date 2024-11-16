@@ -2,22 +2,23 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/afv/clients/afvclient.h"
-#include "core/context/contextownaircraft.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
-#include "core/application.h"
-#include "sound/audioutilities.h"
-#include "misc/audio/audiodeviceinfolist.h"
-#include "misc/aviation/comsystem.h"
-#include "misc/threadutils.h"
-#include "misc/stringutils.h"
-#include "misc/verify.h"
+
+#include <QDebug>
 
 #ifdef Q_OS_WIN
 #    include "comdef.h"
 #endif
 
-#include <QDebug>
+#include "core/application.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/context/contextsimulator.h"
+#include "misc/audio/audiodeviceinfolist.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/stringutils.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
+#include "sound/audioutilities.h"
 
 using namespace swift::core::context;
 using namespace swift::core::afv::audio;
@@ -1540,4 +1541,4 @@ namespace swift::core::afv::clients
     {
         return this->isConnected() ? Connected : Disconnected;
     }
-} // ns
+} // namespace swift::core::afv::clients

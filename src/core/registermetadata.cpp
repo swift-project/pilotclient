@@ -2,23 +2,24 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/registermetadata.h"
-#include "core/context/contextapplication.h"
-#include "core/data/launchersetup.h"
-#include "core/data/globalsetup.h"
-#include "core/data/vatsimsetup.h"
-#include "core/db/databasereader.h"
-#include "core/vatsim/vatsimsettings.h"
-#include "core/fsd/fsdclient.h"
-#include "core/afv/clients/afvclient.h"
-#include "core/simulator.h"
-#include "core/webreaderflags.h"
-#include "core/aircraftmatcher.h"
-#include "misc/network/loginmode.h"
-#include "misc/dbus.h"
-#include "misc/valueobject.h"
 
 #include <QDBusMetaType>
 #include <QMetaType>
+
+#include "core/afv/clients/afvclient.h"
+#include "core/aircraftmatcher.h"
+#include "core/context/contextapplication.h"
+#include "core/data/globalsetup.h"
+#include "core/data/launchersetup.h"
+#include "core/data/vatsimsetup.h"
+#include "core/db/databasereader.h"
+#include "core/fsd/fsdclient.h"
+#include "core/simulator.h"
+#include "core/vatsim/vatsimsettings.h"
+#include "core/webreaderflags.h"
+#include "misc/dbus.h"
+#include "misc/network/loginmode.h"
+#include "misc/valueobject.h"
 
 using namespace swift::core::fsd;
 
@@ -59,4 +60,4 @@ namespace swift::core
         qRegisterMetaType<ServerType>();
         qRegisterMetaType<Capabilities>();
     }
-} // namespace
+} // namespace swift::core

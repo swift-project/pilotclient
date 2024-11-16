@@ -6,6 +6,9 @@
 #ifndef SWIFT_UI_COMPONENTS_DBMODELCOMPONENT_H
 #define SWIFT_UI_COMPONENTS_DBMODELCOMPONENT_H
 
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/components/dbmappingcomponentaware.h"
 #include "gui/enablefordockwidgetinfoarea.h"
 #include "gui/enableforviewbasedindicator.h"
@@ -14,9 +17,6 @@
 #include "misc/network/entityflags.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/aircraftmodellist.h"
-
-#include <QObject>
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -71,6 +71,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CDbModelComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

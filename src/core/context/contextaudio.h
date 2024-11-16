@@ -6,33 +6,33 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTAUDIO_H
 #define SWIFT_CORE_CONTEXT_CONTEXTAUDIO_H
 
+#include <QCommandLineOption>
+#include <QObject>
+#include <QString>
+
+#include "core/actionbind.h"
+#include "core/afv/audio/receiversampleprovider.h"
 #include "core/audio/audiosettings.h"
 #include "core/context/context.h"
-#include "core/actionbind.h"
 #include "core/corefacade.h"
 #include "core/corefacadeconfig.h"
 #include "core/swiftcoreexport.h"
-#include "core/afv/audio/receiversampleprovider.h"
-#include "sound/selcalplayer.h"
-#include "sound/notificationplayer.h"
-#include "misc/macos/microphoneaccess.h"
 #include "misc/audio/audiodeviceinfolist.h"
-#include "misc/audio/notificationsounds.h"
 #include "misc/audio/audiosettings.h"
+#include "misc/audio/notificationsounds.h"
 #include "misc/aviation/callsignset.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/selcal.h"
-#include "misc/network/connectionstatus.h"
-#include "misc/network/userlist.h"
-#include "misc/input/actionhotkeydefs.h"
 #include "misc/genericdbusinterface.h"
-#include "misc/simplecommandparser.h"
 #include "misc/identifiable.h"
 #include "misc/identifier.h"
-
-#include <QObject>
-#include <QString>
-#include <QCommandLineOption>
+#include "misc/input/actionhotkeydefs.h"
+#include "misc/macos/microphoneaccess.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/userlist.h"
+#include "misc/simplecommandparser.h"
+#include "sound/notificationplayer.h"
+#include "sound/selcalplayer.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -358,7 +358,7 @@ namespace swift::core
             swift::sound::CSelcalPlayer *m_selcalPlayer = nullptr;
             swift::sound::CNotificationPlayer m_notificationPlayer;
         };
-    } // ns
-} // ns
+    } // namespace context
+} // namespace swift::core
 
 #endif // guard

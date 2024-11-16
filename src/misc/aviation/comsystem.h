@@ -6,24 +6,25 @@
 #ifndef SWIFT_MISC_AVIATION_COMSYSTEM_H
 #define SWIFT_MISC_AVIATION_COMSYSTEM_H
 
-#include "misc/aviation/modulator.h"
-#include "misc/metaclass.h"
-#include "misc/pq/constants.h"
-#include "misc/pq/frequency.h"
-#include "misc/pq/physicalquantity.h"
-#include "misc/pq/units.h"
-#include "misc/pq/pqstring.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixinindex.h"
-#include "misc/mixin/mixinhash.h"
-#include "misc/mixin/mixinjson.h"
-#include "misc/mixin/mixinmetatype.h"
+#include <tuple>
 
 #include <QHash>
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
-#include <tuple>
+
+#include "misc/aviation/modulator.h"
+#include "misc/metaclass.h"
+#include "misc/mixin/mixinhash.h"
+#include "misc/mixin/mixinindex.h"
+#include "misc/mixin/mixinjson.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/pq/constants.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/physicalquantity.h"
+#include "misc/pq/pqstring.h"
+#include "misc/pq/units.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::aviation
 {
@@ -157,7 +158,7 @@ namespace swift::misc::aviation
             CComSystem,
             SWIFT_METAMEMBER(channelSpacing));
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CComSystem)
 Q_DECLARE_METATYPE(swift::misc::aviation::CComSystem::ChannelSpacing)

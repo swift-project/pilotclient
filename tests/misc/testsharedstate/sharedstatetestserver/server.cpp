@@ -8,12 +8,14 @@
  * \ingroup testmisc
  */
 
-#include "../testsharedstate.h"
-#include "misc/sharedstate/datalinkdbus.h"
-#include "misc/registermetadata.h"
-#include "misc/dbusserver.h"
 #include <QCoreApplication>
 #include <QDBusConnection>
+
+#include "../testsharedstate.h"
+
+#include "misc/dbusserver.h"
+#include "misc/registermetadata.h"
+#include "misc/sharedstate/datalinkdbus.h"
 
 using namespace swift::misc;
 using namespace swift::misc::shared_state;

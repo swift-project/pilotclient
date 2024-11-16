@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_SIMULATION_REVERSELOOKUP_H
 #define SWIFT_MISC_SIMULATION_REVERSELOOKUP_H
 
-#include <QMetaType>
 #include <QDBusArgument>
+#include <QMetaType>
 
 namespace swift::misc::simulation
 {
@@ -20,7 +20,7 @@ namespace swift::misc::simulation
         RevLogEnabledSimplified = RevLogEnabled | RevLogSimplifiedInfo
     };
     Q_DECLARE_FLAGS(ReverseLookupLogging, ReverseLookupLoggingFlag)
-} // ns
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::ReverseLookupLogging)
 Q_DECLARE_METATYPE(swift::misc::simulation::ReverseLookupLoggingFlag)

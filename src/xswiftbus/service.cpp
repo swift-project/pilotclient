@@ -1,17 +1,19 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "plugin.h"
 #include "service.h"
-#include "utils.h"
-#include "misc/simulation/xplane/qtfreeutils.h"
 
 #include <XPLM/XPLMPlanes.h>
 #include <XPLM/XPLMUtilities.h>
 
+#include <algorithm>
 #include <cmath>
 #include <cstring>
-#include <algorithm>
+
+#include "plugin.h"
+#include "utils.h"
+
+#include "misc/simulation/xplane/qtfreeutils.h"
 
 // clazy:excludeall=reserve-candidates
 
@@ -1036,4 +1038,4 @@ namespace XSwiftBus
             this->setDisappearMessageWindowTimeMs(values[5]);
         }
     }
-}
+} // namespace XSwiftBus

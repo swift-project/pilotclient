@@ -8,14 +8,15 @@
  * \ingroup testmisc
  */
 
-#include "misc/sharedstate/scalarmutator.h"
-#include "misc/sharedstate/scalarjournal.h"
-#include "misc/sharedstate/scalarobserver.h"
-#include "misc/sharedstate/listmutator.h"
-#include "misc/sharedstate/listjournal.h"
-#include "misc/sharedstate/listobserver.h"
-#include "misc/sharedstate/datalink.h"
 #include <QMetaType>
+
+#include "misc/sharedstate/datalink.h"
+#include "misc/sharedstate/listjournal.h"
+#include "misc/sharedstate/listmutator.h"
+#include "misc/sharedstate/listobserver.h"
+#include "misc/sharedstate/scalarjournal.h"
+#include "misc/sharedstate/scalarmutator.h"
+#include "misc/sharedstate/scalarobserver.h"
 
 namespace MiscTest
 {
@@ -34,7 +35,7 @@ namespace MiscTest
         unsigned m_mask = ~0u;
         SWIFT_METACLASS(CTestFilter, SWIFT_METAMEMBER(mask));
     };
-}
+} // namespace MiscTest
 
 //! \cond
 Q_DECLARE_METATYPE(MiscTest::CTestFilter);
@@ -112,6 +113,6 @@ namespace MiscTest
         virtual void onElementsReplaced(const QList<int> &) override {}
         //! @}
     };
-}
+} // namespace MiscTest
 
 //! \endcond

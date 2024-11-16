@@ -2,17 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/atomicfile.h"
-#include "misc/algorithm.h"
+
+#include <type_traits>
 
 #include <QDir>
 #include <QFileInfo>
 #include <QFlags>
 #include <QStringBuilder>
-#include <type_traits>
+
+#include "misc/algorithm.h"
 
 #if defined(Q_OS_POSIX)
-#    include <stdio.h>
 #    include <errno.h>
+#    include <stdio.h>
 #elif defined(Q_OS_WIN32)
 #    include <Windows.h>
 #    include <io.h>
@@ -169,4 +171,4 @@ namespace swift::misc
     }
 #endif
 
-}
+} // namespace swift::misc

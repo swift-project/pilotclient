@@ -6,10 +6,11 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_PASSIVEMUTATOR_H
 #define SWIFT_MISC_SHAREDSTATE_PASSIVEMUTATOR_H
 
-#include "misc/variant.h"
-#include "misc/swiftmiscexport.h"
 #include <QObject>
 #include <QSharedPointer>
+
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 namespace swift::misc::shared_state
 {
@@ -41,6 +42,6 @@ namespace swift::misc::shared_state
         //! Emitted by postEvent.
         void eventPosted(const swift::misc::CVariant &param);
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_MIXIN_MIXINDATASTREAM_H
 #define SWIFT_MISC_MIXIN_MIXINDATASTREAM_H
 
-#include "misc/metaclass.h"
-#include "misc/inheritancetraits.h"
 #include <QDataStream>
+
+#include "misc/inheritancetraits.h"
+#include "misc/metaclass.h"
 
 namespace swift::misc
 {
@@ -142,7 +143,7 @@ namespace swift::misc
 #define SWIFT_MISC_DECLARE_USING_MIXIN_DATASTREAM(DERIVED)                           \
     using ::swift::misc::mixin::DataStreamByMetaClass<DERIVED>::marshalToDataStream; \
     using ::swift::misc::mixin::DataStreamByMetaClass<DERIVED>::unmarshalFromDataStream;
-    }
-}
+    } // namespace mixin
+} // namespace swift::misc
 
 #endif

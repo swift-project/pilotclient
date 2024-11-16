@@ -8,8 +8,9 @@
 //! \file
 //! \ingroup testsimplugin
 
-#include "test.h"
 #include <QObject>
+
+#include "test.h"
 
 namespace SwiftSimPluginFsxP3D
 {
@@ -29,7 +30,7 @@ namespace SwiftSimPluginFsxP3D
         //! Request IDs
         void requestIds();
     };
-} // namespace
+} // namespace SwiftSimPluginFsxP3D
 
 //! \endcond
 

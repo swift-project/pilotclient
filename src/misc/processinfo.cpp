@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/processinfo.h"
+
+#include <type_traits>
+
 #include <QFile>
 #include <QFileInfo>
-#include <type_traits>
 
 #if defined(Q_OS_MACOS)
 #    include <libproc.h>
@@ -12,8 +14,10 @@
 #    ifndef NOMINMAX
 #        define NOMINMAX
 #    endif
+// clang-format off
 #    include <windows.h>
 #    include <psapi.h>
+// clang-format on
 #endif
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CProcessInfo)
@@ -58,4 +62,4 @@ namespace swift::misc
     }
 #endif
 
-}
+} // namespace swift::misc

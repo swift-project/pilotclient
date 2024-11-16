@@ -2,9 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/corefacade.h"
+
+#include <QDBusConnection>
+#include <QElapsedTimer>
+#include <QMap>
+#include <QObject>
+#include <QString>
+#include <QStringBuilder>
+#include <QtGlobal>
+
+#include "core/airspacemonitor.h"
 #include "core/context/contextapplication.h"
-#include "core/context/contextapplicationproxy.h"
 #include "core/context/contextapplicationimpl.h"
+#include "core/context/contextapplicationproxy.h"
 #include "core/context/contextaudio.h"
 #include "core/context/contextaudioimpl.h"
 #include "core/context/contextnetwork.h"
@@ -12,28 +22,19 @@
 #include "core/context/contextownaircraft.h"
 #include "core/context/contextownaircraftimpl.h"
 #include "core/context/contextsimulator.h"
-#include "misc/sharedstate/datalinkdbus.h"
-#include "misc/loghistory.h"
 #include "core/context/contextsimulatorimpl.h"
-#include "core/data/launchersetup.h"
 #include "core/corefacadeconfig.h"
+#include "core/data/launchersetup.h"
 #include "core/registermetadata.h"
-#include "core/airspacemonitor.h"
 #include "misc/dbusserver.h"
 #include "misc/identifier.h"
+#include "misc/loghistory.h"
 #include "misc/logmessage.h"
 #include "misc/registermetadata.h"
+#include "misc/sharedstate/datalinkdbus.h"
 #include "misc/statusmessage.h"
 #include "misc/stringutils.h"
 #include "misc/verify.h"
-
-#include <QDBusConnection>
-#include <QMap>
-#include <QObject>
-#include <QStringBuilder>
-#include <QString>
-#include <QElapsedTimer>
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -527,4 +528,4 @@ namespace swift::core
         Q_ASSERT_X(m_contextSimulator && m_contextSimulator->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextSimulator *>(m_contextSimulator);
     }
-} // namespace
+} // namespace swift::core

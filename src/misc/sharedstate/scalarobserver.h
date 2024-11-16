@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_SCALAROBSERVER_H
 #define SWIFT_MISC_SHAREDSTATE_SCALAROBSERVER_H
 
-#include "misc/sharedstate/activeobserver.h"
-#include "misc/variant.h"
-#include "misc/swiftmiscexport.h"
-#include <QObject>
 #include <QMutex>
+#include <QObject>
+
+#include "misc/sharedstate/activeobserver.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/variant.h"
 
 namespace swift::misc::shared_state
 {
@@ -67,6 +68,6 @@ namespace swift::misc::shared_state
 
         virtual void onGenericValueChanged(const CVariant &value) override final { onValueChanged(value.to<T>()); }
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "flightplandialog.h"
+
 #include "ui_flightplandialog.h"
 
-#include "gui/guiapplication.h"
 #include "core/context/contextnetwork.h"
+#include "gui/guiapplication.h"
 #include "misc/aviation/flightplan.h"
 
 using namespace swift::misc::aviation;
@@ -54,4 +55,4 @@ namespace swift::gui::views
         this->showFlightPlan(cs);
     }
 
-} // ns
+} // namespace swift::gui::views

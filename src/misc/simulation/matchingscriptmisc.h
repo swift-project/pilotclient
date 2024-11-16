@@ -41,6 +41,6 @@ namespace swift::misc::simulation
         //! Did run the script, modified value and re-run requested
         bool runScriptModifiedAndRerun() const { return modified && rerun && runScript; }
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 #endif // guard

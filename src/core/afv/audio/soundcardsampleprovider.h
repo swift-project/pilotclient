@@ -6,13 +6,13 @@
 #ifndef SWIFT_CORE_AFV_AUDIO_SOUNDCARDSAMPLEPROVIDER_H
 #define SWIFT_CORE_AFV_AUDIO_SOUNDCARDSAMPLEPROVIDER_H
 
-#include "sound/sampleprovider/sampleprovider.h"
-#include "sound/sampleprovider/mixingsampleprovider.h"
-#include "core/afv/audio/receiversampleprovider.h"
-#include "misc/aviation/callsignset.h"
-
 #include <QAudioFormat>
 #include <QObject>
+
+#include "core/afv/audio/receiversampleprovider.h"
+#include "misc/aviation/callsignset.h"
+#include "sound/sampleprovider/mixingsampleprovider.h"
+#include "sound/sampleprovider/sampleprovider.h"
 
 namespace swift::core::afv::audio
 {
@@ -63,6 +63,6 @@ namespace swift::core::afv::audio
         QVector<quint16> m_receiverIDs;
     };
 
-} // ns
+} // namespace swift::core::afv::audio
 
 #endif // guard

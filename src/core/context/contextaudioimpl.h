@@ -6,18 +6,19 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTAUDIO_IMPL_H
 #define SWIFT_CORE_CONTEXT_CONTEXTAUDIO_IMPL_H
 
+#include <memory>
+
+#include <QHash>
+#include <QList>
+#include <QMap>
+#include <QObject>
+#include <QSharedPointer>
+#include <QString>
+
 #include "core/context/contextaudio.h"
 #include "core/corefacadeconfig.h"
 #include "core/swiftcoreexport.h"
 #include "misc/network/userlist.h"
-
-#include <QHash>
-#include <QMap>
-#include <QList>
-#include <QObject>
-#include <QSharedPointer>
-#include <QString>
-#include <memory>
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -69,7 +70,7 @@ namespace swift::core
             swift::misc::audio::CAudioDeviceInfoList m_registeredDevices;
             QMap<swift::misc::CIdentifier, swift::misc::aviation::CCallsign> m_registeredCallsigns;
         };
-    } // namespace
-} // namespace
+    } // namespace context
+} // namespace swift::core
 
 #endif // guard

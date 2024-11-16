@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/afv/connection/clientconnectiondata.h"
-#include "misc/logmessage.h"
+
 #include <QDebug>
+
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 using namespace swift::core::afv::crypto;
@@ -78,4 +80,4 @@ namespace swift::core::afv::connection
         return (m_authenticatedDateTimeUtc.isValid() && timeSinceAuthenticationSecs() < ServerTimeoutSecs) ||
                (m_lastVoiceServerHeartbeatAckUtc.isValid() && m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()) < ServerTimeoutSecs);
     }
-} // ns
+} // namespace swift::core::afv::connection

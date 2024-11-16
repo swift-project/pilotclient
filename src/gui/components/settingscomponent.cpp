@@ -1,11 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/audionotificationcomponent.h"
 #include "gui/components/settingscomponent.h"
-#include "gui/guiapplication.h"
-#include "config/buildconfig.h"
-#include "ui_settingscomponent.h"
 
 #include <QAction>
 #include <QComboBox>
@@ -13,6 +9,12 @@
 #include <QTabBar>
 #include <QToolButton>
 #include <QtGlobal>
+
+#include "ui_settingscomponent.h"
+
+#include "config/buildconfig.h"
+#include "gui/components/audionotificationcomponent.h"
+#include "gui/guiapplication.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -135,4 +137,4 @@ namespace swift::gui::components
         }
         this->setCurrentIndex(SettingTabOverview);
     }
-} // namespace
+} // namespace swift::gui::components

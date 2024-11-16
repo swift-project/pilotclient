@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_CONFIGURATIONWIZARD_H
 #define SWIFT_GUI_COMPONENTS_CONFIGURATIONWIZARD_H
 
-#include "gui/swiftguiexport.h"
-#include <QWizard>
 #include <QScopedPointer>
+#include <QWizard>
+
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -75,5 +76,5 @@ namespace swift::gui::components
         int m_maxId = -1;
         bool m_skipped = false;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

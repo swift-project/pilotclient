@@ -6,25 +6,25 @@
 #ifndef SWIFT_GUI_COMPONENTS_MAPPINGCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_MAPPINGCOMPONENT_H
 
-#include "gui/settings/viewupdatesettings.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/swiftguiexport.h"
-#include "misc/tokenbucket.h"
-#include "misc/identifiable.h"
-#include "misc/identifier.h"
-#include "misc/propertyindex.h"
-#include "misc/network/connectionstatus.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/variant.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
-#include <QTimer>
 #include <QString>
+#include <QTimer>
 #include <Qt>
+
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/settings/viewupdatesettings.h"
+#include "gui/swiftguiexport.h"
+#include "misc/identifiable.h"
+#include "misc/identifier.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/propertyindex.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/tokenbucket.h"
+#include "misc/variant.h"
 
 class QModelIndex;
 
@@ -42,7 +42,7 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
     }
-}
+} // namespace swift::misc
 namespace swift::gui
 {
     namespace views
@@ -191,7 +191,7 @@ namespace swift::gui
             swift::misc::CSettingReadOnly<settings::TViewUpdateSettings> m_settings { this, &CMappingComponent::settingsChanged }; //!< settings changed
             views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
         };
-    } // namespace
-} // namespace
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

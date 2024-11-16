@@ -31,6 +31,6 @@ namespace swift::gui::settings
             return name;
         }
     };
-} // ns
+} // namespace swift::gui::settings
 
 #endif // guard

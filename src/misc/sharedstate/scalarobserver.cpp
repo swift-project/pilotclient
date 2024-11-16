@@ -4,6 +4,7 @@
 //! \file
 
 #include "misc/sharedstate/scalarobserver.h"
+
 #include "misc/sharedstate/datalink.h"
 
 namespace swift::misc::shared_state
@@ -35,4 +36,4 @@ namespace swift::misc::shared_state
         lock.unlock();
         onGenericValueChanged(param);
     }
-}
+} // namespace swift::misc::shared_state

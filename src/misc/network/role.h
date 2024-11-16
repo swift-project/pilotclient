@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_NETWORK_ROLE_H
 #define SWIFT_MISC_NETWORK_ROLE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/db/datastore.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
+
+#include "misc/db/datastore.h"
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CRole)
 
@@ -76,7 +76,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(description));
     };
 
-} // ns
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CRole)
 

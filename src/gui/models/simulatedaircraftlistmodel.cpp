@@ -1,9 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "gui/models/simulatedaircraftlistmodel.h"
+
+#include <Qt>
+#include <QtDebug>
+#include <QtGlobal>
+
 #include "gui/models/columnformatters.h"
 #include "gui/models/columns.h"
-#include "gui/models/simulatedaircraftlistmodel.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/comsystem.h"
@@ -12,10 +17,6 @@
 #include "misc/network/user.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/simulatedaircraft.h"
-
-#include <Qt>
-#include <QtDebug>
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -110,4 +111,4 @@ namespace swift::gui::models
             break;
         }
     }
-} // namespace
+} // namespace swift::gui::models

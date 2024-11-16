@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aircraftpartscomponent.h"
+
 #include "ui_aircraftpartscomponent.h"
 
-#include "gui/guiapplication.h"
 #include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
 #include "core/context/contextownaircraft.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
 #include "misc/aviation/aircraftenginelist.h"
 #include "misc/aviation/aircraftlights.h"
 
@@ -170,4 +171,4 @@ namespace swift::gui::components
         sGui->getIContextSimulator()->parseCommandLine(dotCmd, i);
     }
 
-} // ns
+} // namespace swift::gui::components

@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/role.h"
+
 #include <QJsonValue>
-#include <QtGlobal>
 #include <QStringBuilder>
+#include <QtGlobal>
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CRole)
 
@@ -66,4 +67,4 @@ namespace swift::misc::network
         role.setDbKey(json.value("idrole").toInt(-1));
         return role;
     }
-} // ns
+} // namespace swift::misc::network

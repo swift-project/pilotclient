@@ -6,30 +6,30 @@
 #ifndef SWIFT_GUI_COMPONENTS_FLIGHTPLANCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_FLIGHTPLANCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/data/lastmodel.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/aviation/flightplan.h"
-#include "misc/aviation/comnavequipment.h"
-#include "misc/aviation/ssrequipment.h"
-#include "misc/network/data/lastserver.h"
-#include "misc/network/user.h"
-#include "misc/directories.h"
-#include "misc/settingscache.h"
-#include "misc/datacache.h"
-#include "misc/identifier.h"
-#include "misc/statusmessagelist.h"
-#include "misc/logcategories.h"
-
+#include <QFileDialog>
+#include <QListWidget>
+#include <QNetworkReply>
 #include <QObject>
 #include <QScopedPointer>
 #include <QStringList>
 #include <QTabWidget>
 #include <QtGlobal>
-#include <QFileDialog>
-#include <QNetworkReply>
-#include <QListWidget>
+
+#include "gui/overlaymessagesframe.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/comnavequipment.h"
+#include "misc/aviation/flightplan.h"
+#include "misc/aviation/ssrequipment.h"
+#include "misc/datacache.h"
+#include "misc/directories.h"
+#include "misc/identifier.h"
+#include "misc/logcategories.h"
+#include "misc/network/data/lastserver.h"
+#include "misc/network/user.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/data/lastmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/statusmessagelist.h"
 
 namespace Ui
 {
@@ -66,7 +66,7 @@ namespace swift::gui::components
                 return name;
             }
         };
-    }
+    } // namespace FlightPlanSettings
 
     class CStringListDialog;
     class CAltitudeDialog;
@@ -296,5 +296,5 @@ namespace swift::gui::components
         //! Consolidate the new remarks list, latest on front
         static bool consolidateRemarks(QStringList &remarks, const QString &newRemarks);
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

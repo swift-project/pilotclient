@@ -6,11 +6,12 @@
 
 //! \file
 
-#include "input/joystick.h"
-#include "misc/input/joystickbutton.h"
-#include "misc/collection.h"
 #include <QMap>
 #include <QString>
+
+#include "input/joystick.h"
+#include "misc/collection.h"
+#include "misc/input/joystickbutton.h"
 
 class QFile;
 class QFileSystemWatcher;

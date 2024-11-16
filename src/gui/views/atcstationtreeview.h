@@ -6,19 +6,19 @@
 #ifndef SWIFT_GUI_VIEWS_ATCSTATIONTREEVIEW_H
 #define SWIFT_GUI_VIEWS_ATCSTATIONTREEVIEW_H
 
+#include <QList>
+#include <QMap>
+#include <QModelIndex>
+#include <QObject>
+#include <QPoint>
+#include <QTreeView>
+
 #include "gui/overlaymessagesframe.h"
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/comsystem.h"
-#include "misc/pq/frequency.h"
 #include "misc/digestsignal.h"
-
-#include <QTreeView>
-#include <QList>
-#include <QObject>
-#include <QPoint>
-#include <QMap>
-#include <QModelIndex>
+#include "misc/pq/frequency.h"
 
 namespace swift::gui
 {
@@ -26,7 +26,7 @@ namespace swift::gui
     {
         class CAtcStationTreeModel;
         class CColumns;
-    }
+    } // namespace models
 
     namespace views
     {
@@ -114,7 +114,7 @@ namespace swift::gui
             swift::misc::CDigestSignal m_dsFullResize { this, &CAtcStationTreeView::fullResizeToContentsImpl, 1000, 25 };
             QMap<QString, bool> m_expanded; //!< suffix/expanded
         };
-    } // ns
-} // ns
+    } // namespace views
+} // namespace swift::gui
 
 #endif // guard

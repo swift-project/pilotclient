@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "joystickwindows.h"
+
+#include "Dbt.h"
+#include "comdef.h"
+
 #include "misc/logmessage.h"
 #include "misc/metadatautils.h"
-
-#include "comdef.h"
-#include "Dbt.h"
 
 // Qt5 defines UNICODE, hence we can expect an wchar_t strings.
 // If it fails to compile, because of char/wchar_t errors, you are most likely
@@ -424,4 +425,4 @@ namespace swift::input
         return lhs.m_offset == rhs.m_offset &&
                lhs.m_button == rhs.m_button;
     }
-} // ns
+} // namespace swift::input

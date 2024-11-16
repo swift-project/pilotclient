@@ -6,18 +6,18 @@
 #ifndef SWIFT_GUI_SIMULATORCOMPONENT_H
 #define SWIFT_GUI_SIMULATORCOMPONENT_H
 
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/logcategories.h"
-#include "misc/icons.h"
-
 #include <QObject>
-#include <QTimer>
 #include <QScopedPointer>
 #include <QString>
 #include <QTabWidget>
+#include <QTimer>
 #include <QtGlobal>
+
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/swiftguiexport.h"
+#include "misc/icons.h"
+#include "misc/logcategories.h"
+#include "misc/simulation/simulatorinfo.h"
 
 namespace Ui
 {
@@ -31,7 +31,7 @@ namespace swift::misc
     {
         class CSimulatedAircraft;
     }
-}
+} // namespace swift::misc
 namespace swift::gui::components
 {
     //! Simulator component
@@ -89,6 +89,6 @@ namespace swift::gui::components
         QTimer m_updateTimer;
         swift::misc::simulation::CSimulatorInfo m_simulator;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

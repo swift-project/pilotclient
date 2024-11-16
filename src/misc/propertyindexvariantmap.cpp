@@ -4,9 +4,10 @@
 //! \cond PRIVATE
 
 #include "misc/propertyindexvariantmap.h"
-#include "misc/dictionary.h"
 
 #include <QHash>
+
+#include "misc/dictionary.h"
 
 namespace swift::misc
 {
@@ -145,6 +146,6 @@ namespace swift::misc
         // there is no hash for map, so I use this workaround here
         return qHash(this->toQString(false));
     }
-} // namespace
+} // namespace swift::misc
 
 //! \endcond

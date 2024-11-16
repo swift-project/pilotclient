@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_TEST_TESTING_H
 #define SWIFT_MISC_TEST_TESTING_H
 
-#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "misc/aviation/atcstationlist.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/network/clientlist.h"
-#include "misc/swiftmiscexport.h"
 #include <QString>
+
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/atcstationlist.h"
+#include "misc/network/clientlist.h"
+#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "misc/swiftmiscexport.h"
 
 //! Generate data for testing purposes.
 namespace swift::misc::test
@@ -35,6 +36,6 @@ namespace swift::misc::test
         //! Get clients
         static swift::misc::network::CClientList getClients(int number);
     };
-} // ns
+} // namespace swift::misc::test
 
 #endif

@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/pq/units.h"
-#include "misc/math/mathutils.h"
 
 #include <QCoreApplication>
+
+#include "misc/math/mathutils.h"
 
 SWIFT_DEFINE_UNIT_MIXINS(CAngleUnit)
 SWIFT_DEFINE_UNIT_MIXINS(CLengthUnit)
@@ -117,4 +118,4 @@ namespace swift::misc::physical_quantities
         return s;
     }
 
-} // namespace
+} // namespace swift::misc::physical_quantities

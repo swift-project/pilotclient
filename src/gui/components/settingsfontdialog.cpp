@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsfontdialog.h"
+
 #include "ui_settingsfontdialog.h"
 
 namespace swift::gui::components
@@ -44,4 +45,4 @@ namespace swift::gui::components
     {
         ui->comp_FontSettings->setWithColorSelection(withColor);
     }
-} // ns
+} // namespace swift::gui::components

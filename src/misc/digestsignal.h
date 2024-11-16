@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_DIGESTSIGNAL_H
 #define SWIFT_MISC_DIGESTSIGNAL_H
 
-#include "misc/swiftmiscexport.h"
-
 #include <QObject>
 #include <QTimer>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -60,6 +60,6 @@ namespace swift::misc
         const int m_maxInputsPerDigest = 3;
         int m_inputsCount = 0;
     };
-}
+} // namespace swift::misc
 
 #endif

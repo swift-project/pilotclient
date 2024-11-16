@@ -40,4 +40,4 @@ namespace swift::misc
         while (true);
         return selectedDir;
     }
-}
+} // namespace swift::misc

@@ -6,18 +6,18 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTCATEGORY_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTCATEGORY_H
 
+#include <QJsonObject>
+#include <QList>
+#include <QMap>
+#include <QMetaType>
+#include <QString>
+
 #include "misc/db/datastore.h"
-#include "misc/statusmessagelist.h"
 #include "misc/metaclass.h"
 #include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
+#include "misc/statusmessagelist.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QJsonObject>
-#include <QMap>
-#include <QList>
-#include <QString>
-#include <QMetaType>
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftCategory)
 
@@ -176,7 +176,7 @@ namespace swift::misc::aviation
     //! Category/id map
     using AircraftCategoryIdMap = QMap<int, CAircraftCategory>;
 
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftCategory)
 

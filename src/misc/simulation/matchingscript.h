@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_SIMULATION_MATCHINGSCRIPT_H
 #define SWIFT_MISC_SIMULATION_MATCHINGSCRIPT_H
 
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/livery.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/swiftmiscexport.h"
-
-#include <QString>
 #include <QObject>
+#include <QString>
+
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -320,6 +320,6 @@ namespace swift::misc::simulation
         swift::misc::simulation::CAircraftModelList m_modelSet;
     };
 
-} // namespace
+} // namespace swift::misc::simulation
 
 #endif // guard

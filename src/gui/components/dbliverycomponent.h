@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBLIVERYCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBLIVERYCOMPONENT_H
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/enablefordockwidgetinfoarea.h"
 #include "gui/enableforviewbasedindicator.h"
 #include "gui/overlaymessagesframe.h"
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/network/entityflags.h"
-
-#include <QFrame>
-#include <QObject>
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -72,7 +72,7 @@ namespace swift::gui
         private:
             QScopedPointer<Ui::CDbLiveryComponent> ui;
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorp3dfactory.h"
+
 #include "simulatorp3d.h"
+
 #include "misc/simulation/simulatorplugininfo.h"
 
 using namespace swift::misc::simulation;
@@ -23,4 +25,4 @@ namespace swift::simplugin::p3d
     {
         return new CSimulatorP3DListener(info);
     }
-} // namespace
+} // namespace swift::simplugin::p3d

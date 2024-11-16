@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_TIMESTAMPBASED_H
 #define SWIFT_MISC_TIMESTAMPBASED_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/propertyindexref.h"
-
 #include <QDateTime>
 #include <QString>
 #include <QVariant>
 #include <QtGlobal>
+
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -239,6 +239,6 @@ namespace swift::misc
 
         qint64 m_timeOffsetMs = 0; //!< offset time in ms
     };
-} // namespace
+} // namespace swift::misc
 
 #endif // guard

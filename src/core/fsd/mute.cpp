@@ -30,4 +30,4 @@ namespace swift::core::fsd
         };
         return Mute(tokens[0], tokens[1], tokens[2] == QStringLiteral("1"));
     }
-}
+} // namespace swift::core::fsd

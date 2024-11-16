@@ -6,17 +6,18 @@
 #ifndef SWIFT_MISC_SIMULATION_BACKGROUNDVALIDATION_H
 #define SWIFT_MISC_SIMULATION_BACKGROUNDVALIDATION_H
 
-#include "misc/simulation/settings/modelmatchersettings.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/network/entityflags.h"
-#include "misc/settingscache.h"
-#include "misc/worker.h"
-#include "misc/statusmessagelist.h"
-#include "misc/swiftmiscexport.h"
+#include <atomic>
 
 #include <QMap>
 #include <QReadWriteLock>
-#include <atomic>
+
+#include "misc/network/entityflags.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/settings/modelmatchersettings.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/worker.h"
 
 namespace swift::misc::simulation
 {
@@ -96,5 +97,5 @@ namespace swift::misc::simulation
         //! Do the validation checks
         void doWork();
     };
-} // ns
+} // namespace swift::misc::simulation
 #endif // guard

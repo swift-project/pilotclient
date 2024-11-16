@@ -4,9 +4,9 @@
 #ifndef SWIFT_SOUND_SAMPLEPROVIDER_RESOURCESOUNDSAMPLEPROVIDER_H
 #define SWIFT_SOUND_SAMPLEPROVIDER_RESOURCESOUNDSAMPLEPROVIDER_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/sampleprovider/sampleprovider.h"
 #include "sound/sampleprovider/resourcesound.h"
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -47,6 +47,6 @@ namespace swift::sound::sample_provider
         QVector<float> m_tempBuffer;
         bool m_isFinished = false;
     };
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

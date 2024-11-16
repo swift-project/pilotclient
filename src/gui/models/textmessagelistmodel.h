@@ -51,6 +51,6 @@ namespace swift::gui::models
     private:
         TextMessageMode m_textMessageMode = NotSet;
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

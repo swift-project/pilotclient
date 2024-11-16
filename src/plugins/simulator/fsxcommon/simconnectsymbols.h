@@ -6,9 +6,9 @@
 #ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTSYMBOLS_H
 #define SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTSYMBOLS_H
 
-#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
-
 #include <QtGlobal>
+
+#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 
 #ifdef Q_OS_WIN64
 

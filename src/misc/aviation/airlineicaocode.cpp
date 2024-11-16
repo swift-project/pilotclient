@@ -2,22 +2,23 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/airlineicaocode.h"
+
+#include <QDir>
+#include <QStringBuilder>
+#include <Qt>
+#include <QtGlobal>
+
 #include "misc/aviation/callsign.h"
-#include "misc/db/datastoreutility.h"
 #include "misc/comparefunctions.h"
+#include "misc/db/datastoreutility.h"
 #include "misc/icons.h"
 #include "misc/logcategories.h"
 #include "misc/propertyindexref.h"
+#include "misc/setbuilder.h"
 #include "misc/statusmessage.h"
 #include "misc/stringutils.h"
 #include "misc/swiftdirectories.h"
 #include "misc/verify.h"
-#include "misc/setbuilder.h"
-
-#include <QStringBuilder>
-#include <QDir>
-#include <Qt>
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::misc::db;
@@ -524,4 +525,4 @@ namespace swift::misc::aviation
         static const QSet<int> ids = iconIdsImpl();
         return ids;
     }
-} // namespace
+} // namespace swift::misc::aviation

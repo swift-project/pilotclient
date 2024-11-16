@@ -6,8 +6,8 @@
 #ifndef SWIFT_CORE_FSD_FLIGHTPLAN_H
 #define SWIFT_CORE_FSD_FLIGHTPLAN_H
 
-#include "core/fsd/messagebase.h"
 #include "core/fsd/enums.h"
+#include "core/fsd/messagebase.h"
 
 namespace swift::core::fsd
 {
@@ -80,6 +80,6 @@ namespace swift::core::fsd
     {
         return !(lhs == rhs);
     }
-}
+} // namespace swift::core::fsd
 
 #endif // guard

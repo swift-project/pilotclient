@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/transpondercodespinbox.h"
+
 #include <QChar>
 
 namespace swift::gui::components
@@ -14,4 +15,4 @@ namespace swift::gui::components
         /* 4 - number of digits, 10 - base of number, '0' - pad character*/
         return QStringLiteral("%1").arg(value, 4, 10, QChar('0'));
     }
-} // ns
+} // namespace swift::gui::components

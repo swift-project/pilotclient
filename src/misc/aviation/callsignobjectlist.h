@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_AVIATION_CALLSIGNOBJECTLIST_H
 #define SWIFT_MISC_AVIATION_CALLSIGNOBJECTLIST_H
 
-#include "misc/aviation/callsignset.h"
-#include "misc/propertyindexvariantmap.h"
-#include "misc/predicates.h"
-
-#include <QtGlobal>
 #include <QHash>
 #include <QMap>
+#include <QtGlobal>
+
+#include "misc/aviation/callsignset.h"
+#include "misc/predicates.h"
+#include "misc/propertyindexvariantmap.h"
 
 namespace swift::misc::aviation
 {
@@ -294,6 +294,6 @@ namespace swift::misc::aviation
             return static_cast<CONTAINER &>(*this);
         }
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 #endif // guard

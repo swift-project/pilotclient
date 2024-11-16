@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_INPUT_JOYSTICKBUTTON_H
 #define SWIFT_MISC_INPUT_JOYSTICKBUTTON_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-
 #include <QMetaType>
 #include <QString>
 #include <QtGlobal>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CJoystickButton)
 
@@ -96,7 +96,7 @@ namespace swift::misc::input
             SWIFT_METAMEMBER(deviceName),
             SWIFT_METAMEMBER(buttonIndex));
     };
-} // ns
+} // namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CJoystickButton)
 

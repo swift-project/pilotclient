@@ -44,6 +44,6 @@ namespace swift::sample
         //! No constructor
         ServiceTool() = delete;
     };
-} // namespace
+} // namespace swift::sample
 
 #endif // guard

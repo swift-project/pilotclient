@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_WEATHER_METARDECODER_H
 #define SWIFT_MISC_WEATHER_METARDECODER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/weather/metar.h"
+#include <memory>
+#include <vector>
 
 #include <QObject>
 #include <QString>
-#include <memory>
-#include <vector>
+
+#include "misc/swiftmiscexport.h"
+#include "misc/weather/metar.h"
 
 namespace swift::misc::weather
 {
@@ -38,6 +39,6 @@ namespace swift::misc::weather
         std::vector<std::unique_ptr<IMetarDecoderPart>> m_decoders;
     };
 
-} // namespace
+} // namespace swift::misc::weather
 
 #endif // guard

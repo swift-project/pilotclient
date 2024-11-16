@@ -1,12 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "config/buildconfig.h"
 #include "gui/stylesheetutility.h"
-#include "misc/fileutils.h"
-#include "misc/logmessage.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
 
 #include <QAbstractScrollArea>
 #include <QCoreApplication>
@@ -18,12 +13,18 @@
 #include <QFont>
 #include <QIODevice>
 #include <QRegularExpression>
+#include <QStringBuilder>
 #include <QStyleOption>
 #include <QStylePainter>
 #include <QTextStream>
 #include <QWidget>
 #include <QtGlobal>
-#include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/logmessage.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -510,4 +511,4 @@ namespace swift::gui
         const QFileInfo f(CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(), filename));
         return f.exists() && f.isReadable();
     }
-} // ns
+} // namespace swift::gui

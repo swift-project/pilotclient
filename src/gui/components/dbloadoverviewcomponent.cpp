@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbloadoverviewcomponent.h"
+
+#include <QMessageBox>
+#include <QPointer>
+
 #include "ui_dbloadoverviewcomponent.h"
 
+#include "core/db/infodatareader.h"
+#include "core/webdataservices.h"
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
-#include "core/webdataservices.h"
-#include "core/db/infodatareader.h"
-#include "misc/network/networkutils.h"
 #include "misc/htmlutils.h"
-
-#include <QPointer>
-#include <QMessageBox>
+#include "misc/network/networkutils.h"
 
 using namespace swift::gui;
 using namespace swift::core;
@@ -411,4 +412,4 @@ namespace swift::gui::components
             ui->lbl_SharedCount->setText("S#");
         }
     }
-} // ns
+} // namespace swift::gui::components

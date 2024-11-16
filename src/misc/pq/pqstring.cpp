@@ -2,6 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/pq/pqstring.h"
+
+#include <QLocale>
+#include <QRegularExpression>
+#include <QtDebug>
+
 #include "misc/pq/acceleration.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/frequency.h"
@@ -13,10 +18,6 @@
 #include "misc/pq/temperature.h"
 #include "misc/pq/time.h"
 #include "misc/pq/units.h"
-
-#include <QLocale>
-#include <QRegularExpression>
-#include <QtDebug>
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::physical_quantities, CPqString)
 
@@ -126,4 +127,4 @@ namespace swift::misc::physical_quantities
         }
         return numberD;
     }
-} // namespace
+} // namespace swift::misc::physical_quantities

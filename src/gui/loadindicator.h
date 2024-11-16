@@ -7,14 +7,14 @@
 #ifndef SWIFT_GUI_LOADINDICATOR_H
 #define SWIFT_GUI_LOADINDICATOR_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QColor>
+#include <QList>
 #include <QObject>
 #include <QSize>
 #include <QWidget>
 #include <Qt>
-#include <QList>
+
+#include "gui/swiftguiexport.h"
 
 class QPaintEvent;
 class QPainter;
@@ -157,6 +157,6 @@ namespace swift::gui
         bool m_loadInProgress = false; //!< flag indicating loading
         int m_indicatorId = -1; //!< last indicator id returned
     };
-} // ns
+} // namespace swift::gui
 
 #endif

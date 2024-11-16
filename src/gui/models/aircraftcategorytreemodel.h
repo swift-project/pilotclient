@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_AIRCRAFTCATEGORYTREEMODEL_H
 #define SWIFT_GUI_MODELS_AIRCRAFTCATEGORYTREEMODEL_H
 
-#include "gui/models/columns.h"
-#include "misc/aviation/aircraftcategorylist.h"
-#include "gui/swiftguiexport.h"
-
 #include <QStandardItemModel>
+
+#include "gui/models/columns.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/aircraftcategorylist.h"
 
 namespace swift::gui::models
 {
@@ -43,6 +43,6 @@ namespace swift::gui::models
         CColumns m_columns { "CAircraftCategoryTreeModel" };
         swift::misc::aviation::CAircraftCategoryList m_categories;
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

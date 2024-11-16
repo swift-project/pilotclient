@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextnetwork.h"
+
+#include "config/buildconfig.h"
+#include "core/application.h"
 #include "core/context/contextnetworkempty.h"
 #include "core/context/contextnetworkimpl.h"
 #include "core/context/contextnetworkproxy.h"
-#include "core/application.h"
 #include "misc/dbusserver.h"
-#include "config/buildconfig.h"
 
 using namespace swift::config;
 using namespace swift::core;
@@ -64,4 +65,4 @@ namespace swift::core::context
     }
 #endif
 
-} // namesapce
+} // namespace swift::core::context

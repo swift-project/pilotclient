@@ -6,25 +6,18 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTNETWORK_IMPL_H
 #define SWIFT_CORE_CONTEXT_CONTEXTNETWORK_IMPL_H
 
+#include <functional>
+
 #include <QList>
 #include <QMetaObject>
 #include <QObject>
+#include <QQueue>
 #include <QString>
 #include <QtGlobal>
-#include <QQueue>
-#include <functional>
 
-#include "core/swiftcoreexport.h"
 #include "core/context/contextnetwork.h"
 #include "core/corefacadeconfig.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/airspaceaircraftsnapshot.h"
-#include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/simulatedaircraftlist.h"
-#include "misc/simulation/simulationenvironmentprovider.h"
-#include "misc/weather/metar.h"
-#include "misc/weather/metarlist.h"
+#include "core/swiftcoreexport.h"
 #include "misc/aviation/aircraftpartslist.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/airporticaocode.h"
@@ -32,6 +25,8 @@
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsignset.h"
 #include "misc/aviation/flightplan.h"
+#include "misc/digestsignal.h"
+#include "misc/identifier.h"
 #include "misc/network/clientlist.h"
 #include "misc/network/clientprovider.h"
 #include "misc/network/server.h"
@@ -40,10 +35,16 @@
 #include "misc/network/user.h"
 #include "misc/network/userlist.h"
 #include "misc/pq/length.h"
-#include "misc/statusmessage.h"
-#include "misc/digestsignal.h"
-#include "misc/identifier.h"
 #include "misc/simplecommandparser.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/airspaceaircraftsnapshot.h"
+#include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/simulation/simulationenvironmentprovider.h"
+#include "misc/statusmessage.h"
+#include "misc/weather/metar.h"
+#include "misc/weather/metarlist.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -57,8 +58,8 @@ namespace swift::misc
         class CAircraftParts;
         class CAircraftSituation;
         class CCallsign;
-    }
-}
+    } // namespace aviation
+} // namespace swift::misc
 
 namespace swift::core
 {
@@ -463,7 +464,7 @@ namespace swift::core
             //! Can the airspace monitor be used be used?
             bool canUseAirspaceMonitor() const;
         };
-    } // ns
-} // ns
+    } // namespace context
+} // namespace swift::core
 
 #endif // guard

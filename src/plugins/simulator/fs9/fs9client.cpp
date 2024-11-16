@@ -4,16 +4,19 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "fs9client.h"
-#include "multiplayerpackets.h"
-#include "multiplayerpacketparser.h"
+
+#include <QScopedArrayPointer>
+
+#include "../fscommon/simulatorfscommonfunctions.h"
 #include "directplayerror.h"
 #include "directplayutils.h"
-#include "../fscommon/simulatorfscommonfunctions.h"
+#include "multiplayerpacketparser.h"
+#include "multiplayerpackets.h"
+
 #include "core/simulator.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/logmessage.h"
-#include <QScopedArrayPointer>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -427,4 +430,4 @@ namespace swift::simplugin::fs9
     {
         return qobject_cast<const ISimulator *>(this->parent());
     }
-}
+} // namespace swift::simplugin::fs9

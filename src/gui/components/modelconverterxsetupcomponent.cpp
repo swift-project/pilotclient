@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "modelconverterxsetupcomponent.h"
-#include "ui_modelconverterxsetupcomponent.h"
-#include "misc/statusmessage.h"
-#include "misc/logmessage.h"
+
 #include <QFileDialog>
+
+#include "ui_modelconverterxsetupcomponent.h"
+
+#include "misc/logmessage.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 
@@ -43,4 +46,4 @@ namespace swift::gui::components
         const CStatusMessage msg = m_setting.setAndSave(t);
         CLogMessage::preformatted(msg);
     }
-} // ns
+} // namespace swift::gui::components

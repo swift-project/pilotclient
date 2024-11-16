@@ -2,21 +2,23 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbquickmappingwizard.h"
+
+#include <QStringBuilder>
+
 #include "ui_dbquickmappingwizard.h"
-#include "gui/components/dbaircrafticaoselectorcomponent.h"
-#include "gui/components/dbairlinenameselectorcomponent.h"
-#include "gui/views/aircrafticaoview.h"
-#include "gui/views/liveryview.h"
-#include "gui/views/distributorview.h"
-#include "gui/uppercasevalidator.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
+
+#include "config/buildconfig.h"
 #include "core/context/contextsimulator.h"
 #include "core/db/databasewriter.h"
 #include "core/webdataservices.h"
-#include "config/buildconfig.h"
-
-#include <QStringBuilder>
+#include "gui/components/dbaircrafticaoselectorcomponent.h"
+#include "gui/components/dbairlinenameselectorcomponent.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/uppercasevalidator.h"
+#include "gui/views/aircrafticaoview.h"
+#include "gui/views/distributorview.h"
+#include "gui/views/liveryview.h"
 
 using namespace swift::core;
 using namespace swift::core::db;
@@ -407,4 +409,4 @@ namespace swift::gui::components
             this->setAircraftIcaoFilter();
         }
     }
-} // ns
+} // namespace swift::gui::components

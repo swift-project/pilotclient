@@ -12,4 +12,4 @@ namespace swift::sound
                                                                                     m_durationMs(static_cast<qint64>(duration.valueRounded(swift::misc::physical_quantities::CTimeUnit::ms())))
     {}
 
-}
+} // namespace swift::sound

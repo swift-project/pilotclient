@@ -7,6 +7,7 @@
 //! \file
 
 #include <XPLM/XPLMMenus.h>
+
 #include <functional>
 #include <list>
 #include <memory>
@@ -103,6 +104,6 @@ namespace XSwiftBus
         std::shared_ptr<Data> m_data;
     };
 
-}
+} // namespace XSwiftBus
 
 #endif // guard

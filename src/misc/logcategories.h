@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_LOGCATEGORIES_H
 #define SWIFT_MISC_LOGCATEGORIES_H
 
-#include "misc/swiftmiscexport.h"
-
-#include <QString>
 #include <QList>
+#include <QString>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -326,6 +326,6 @@ namespace swift::misc
             return cats;
         }
     };
-} // ns
+} // namespace swift::misc
 
 #endif

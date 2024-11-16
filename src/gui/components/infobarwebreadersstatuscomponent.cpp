@@ -1,13 +1,15 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/webdataservices.h"
 #include "gui/components/infobarwebreadersstatuscomponent.h"
-#include "gui/guiapplication.h"
-#include "misc/verify.h"
-#include "ui_infobarwebreadersstatuscomponent.h"
 
 #include <QtGlobal>
+
+#include "ui_infobarwebreadersstatuscomponent.h"
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "misc/verify.h"
 
 using namespace swift::gui;
 using namespace swift::misc;
@@ -172,4 +174,4 @@ namespace swift::gui::components
         ui->lbl_Consolidation->setVisible(show);
         CInfoBarWebReadersStatusBase::showConsolidationStatus(show);
     }
-} // namespace
+} // namespace swift::gui::components

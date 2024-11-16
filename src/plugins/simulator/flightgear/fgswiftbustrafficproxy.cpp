@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "fgswiftbustrafficproxy.h"
-#include <QLatin1String>
+
 #include <QDBusConnection>
+#include <QLatin1String>
 
 #define FGSWIFTBUS_SERVICENAME "org.swift-project.fgswiftbus"
 
@@ -136,4 +137,4 @@ namespace swift::simplugin::flightgear
         };
         m_dbusInterface->callDBusAsync(QLatin1String("getElevationAtPosition"), callback, callsign.asString(), latitudeDeg, longitudeDeg, altitudeMeters);
     }
-} // ns
+} // namespace swift::simplugin::flightgear

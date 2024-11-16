@@ -4,13 +4,13 @@
 #ifndef SWIFT_GUI_MENUS_FONTMENUS_H
 #define SWIFT_GUI_MENUS_FONTMENUS_H
 
+#include <QObject>
+
 #include "gui/components/settingsfontdialog.h"
 #include "gui/menus/menudelegate.h"
-#include "gui/views/aircraftmodelview.h"
 #include "gui/overlaymessagesframe.h"
+#include "gui/views/aircraftmodelview.h"
 #include "misc/simulation/aircraftmodelinterfaces.h"
-
-#include <QObject>
 
 class QAction;
 class QShortcut;
@@ -59,6 +59,6 @@ namespace swift::gui::menus
         QScopedPointer<QAction> m_fontDialogAction;
         QScopedPointer<swift::gui::components::CSettingsFontDialog> m_dialog;
     };
-} // ns
+} // namespace swift::gui::menus
 
 #endif // guard

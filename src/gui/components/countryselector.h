@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_COUNTRYSELECTOR_H
 #define SWIFT_GUI_COMPONENTS_COUNTRYSELECTOR_H
 
-#include "misc/country.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/country.h"
 
 namespace Ui
 {
@@ -53,5 +54,5 @@ namespace swift::gui::components
         swift::misc::CCountry m_current;
         QScopedPointer<Ui::CCountrySelector> ui;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

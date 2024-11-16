@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/filters/statusmessagefilterdialog.h"
+
+#include "ui_statusmessagefilterdialog.h"
+
 #include "gui/filters/statusmessagefilterbar.h"
 #include "misc/statusmessagelist.h"
-#include "ui_statusmessagefilterdialog.h"
 
 using namespace swift::gui::models;
 using namespace swift::gui::filters;
@@ -29,4 +31,4 @@ namespace swift::gui::filters
     {
         return ui->filter_Messages->createModelFilter();
     }
-} // namespace
+} // namespace swift::gui::filters

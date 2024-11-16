@@ -1,17 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/application.h"
-#include "core/data/globalsetup.h"
 #include "core/db/databaseauthentication.h"
-#include "misc/json.h"
-#include "misc/logcategories.h"
-#include "misc/logmessage.h"
-#include "misc/network/authenticateduser.h"
-#include "misc/network/networkutils.h"
-#include "misc/network/rolelist.h"
-#include "misc/network/url.h"
-#include "misc/statusmessage.h"
 
 #include <QByteArray>
 #include <QJsonObject>
@@ -22,6 +12,17 @@
 #include <QString>
 #include <QUrl>
 #include <QUrlQuery>
+
+#include "core/application.h"
+#include "core/data/globalsetup.h"
+#include "misc/json.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/network/authenticateduser.h"
+#include "misc/network/networkutils.h"
+#include "misc/network/rolelist.h"
+#include "misc/network/url.h"
+#include "misc/statusmessage.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -185,4 +186,4 @@ namespace swift::core::db
     {
         // this->logoff();
     }
-} // ns
+} // namespace swift::core::db

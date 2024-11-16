@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_CLOUDLAYERVIEW_H
 #define SWIFT_GUI_CLOUDLAYERVIEW_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/cloudlayerlistmodel.h"
+#include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
 
 class QWidget;
@@ -28,5 +28,5 @@ namespace swift::gui::views
         //! Constructor
         explicit CCloudLayerView(QWidget *parent = nullptr);
     };
-}
+} // namespace swift::gui::views
 #endif // guard

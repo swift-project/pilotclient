@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/actionhotkeylistmodel.h"
+
+#include <QString>
+#include <QtGlobal>
+
 #include "misc/identifier.h"
 #include "misc/input/actionhotkey.h"
 #include "misc/input/hotkeycombination.h"
 #include "misc/sequence.h"
-
-#include <QString>
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::misc::input;
@@ -125,4 +126,4 @@ namespace swift::gui::models
         m_actionHotkeys.clear();
         endResetModel();
     }
-} // namespace
+} // namespace swift::gui::models

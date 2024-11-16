@@ -5,6 +5,7 @@
 //! \ingroup samplemisc
 
 #include "samplesfile.h"
+
 #include "misc/directoryutils.h"
 #include "misc/stringutils.h"
 
@@ -21,4 +22,4 @@ namespace swift::sample
         return 0;
     }
 
-} // namespace
+} // namespace swift::sample

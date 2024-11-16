@@ -1,17 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/columnformatters.h"
-#include "gui/models/columns.h"
 #include "gui/models/textmessagelistmodel.h"
-#include "misc/aviation/callsign.h"
-#include "misc/network/textmessage.h"
-#include "misc/propertyindexvariantmap.h"
-#include "misc/timestampbased.h"
 
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/models/columns.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/textmessage.h"
+#include "misc/propertyindexvariantmap.h"
+#include "misc/timestampbased.h"
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::network;
@@ -82,4 +83,4 @@ namespace swift::gui::models
         }
         return CListModelBase::data(index, role);
     }
-} // namespace
+} // namespace swift::gui::models

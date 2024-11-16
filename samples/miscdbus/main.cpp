@@ -4,14 +4,8 @@
 //! \file
 //! \ingroup samplemiscdbus
 
-#include "misc/dbusserver.h"
-#include "misc/directoryutils.h"
-#include "misc/registermetadata.h"
-#include "misc/network/networkutils.h"
-#include "misc/dbusutils.h"
-#include "misc/processctrl.h"
-#include "servicetool.h"
 #include <stdio.h>
+
 #include <QCoreApplication>
 #include <QDBusServer>
 #include <QDebug>
@@ -22,6 +16,15 @@
 #include <QTextStream>
 #include <Qt>
 #include <QtDebug>
+
+#include "servicetool.h"
+
+#include "misc/dbusserver.h"
+#include "misc/dbusutils.h"
+#include "misc/directoryutils.h"
+#include "misc/network/networkutils.h"
+#include "misc/processctrl.h"
+#include "misc/registermetadata.h"
 
 using namespace swift::misc;
 

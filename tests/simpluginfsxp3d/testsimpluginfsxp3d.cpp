@@ -9,11 +9,12 @@
  */
 
 #include "testsimpluginfsxp3d.h"
+
+#include <QTest>
+
 #include "plugins/simulator/fsxcommon/simconnectdatadefinition.h"
 #include "plugins/simulator/fsxcommon/simconnectsymbols.h"
 #include "plugins/simulator/fsxcommon/simulatorfsxcommon.h"
-
-#include <QTest>
 
 using namespace swift::simplugin::fsxcommon;
 
@@ -67,7 +68,7 @@ namespace swift::simplugin::fsxp3d
         sor = CSimulatorFsxCommon::requestToSimObjectRequest(requestId);
         QVERIFY(sor == CSimConnectDefinitions::SimObjectMisc);
     }
-} // ns
+} // namespace swift::simplugin::fsxp3d
 
 //! main
 SWIFTTEST_MAIN(SwiftSimPluginFsxP3D::CSimPluginFsxP3d);

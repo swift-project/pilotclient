@@ -7,14 +7,15 @@
 #ifndef SWIFT_SAMPLE_SAMPLESPERFORMANCE_H
 #define SWIFT_SAMPLE_SAMPLESPERFORMANCE_H
 
-#include "misc/simulation/aircraftmodellist.h"
+#include <QHash>
+#include <QMap>
+#include <QTextStream>
+#include <QtGlobal>
+
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsignset.h"
-#include <QTextStream>
-#include <QtGlobal>
-#include <QMap>
-#include <QHash>
+#include "misc/simulation/aircraftmodellist.h"
 
 class QTextStream;
 
@@ -96,6 +97,6 @@ namespace swift::sample
         //! Situations hash
         static QHash<swift::misc::aviation::CCallsign, swift::misc::aviation::CAircraftSituation> situationsHash(const swift::misc::aviation::CCallsignSet &callsigns);
     };
-} // namespace
+} // namespace swift::sample
 
 #endif

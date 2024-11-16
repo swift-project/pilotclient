@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/listmodeltimestampobjects.h"
-#include "gui/models/allmodelcontainers.h"
+
+#include <type_traits>
 
 #include <QModelIndex>
-#include <type_traits>
+
+#include "gui/models/allmodelcontainers.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -59,4 +61,4 @@ namespace swift::gui::models
     template class CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftPartsList, true>;
     template class CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftSituationList, true>;
     template class CListModelTimestampWithOffsetObjects<swift::misc::aviation::CAircraftSituationChangeList, true>;
-} // namespace
+} // namespace swift::gui::models

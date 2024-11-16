@@ -6,15 +6,16 @@
 #ifndef SWIFT_MISC_AVIATION_CALLSIGNSET_H
 #define SWIFT_MISC_AVIATION_CALLSIGNSET_H
 
-#include "misc/aviation/callsign.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/sequence.h"
+#include <tuple>
 
 #include <QMetaType>
 #include <QStringList>
-#include <tuple>
+
+#include "misc/aviation/callsign.h"
+#include "misc/collection.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_COLLECTION_MIXINS(swift::misc::aviation, CCallsign, CCallsignSet)
 
@@ -53,7 +54,7 @@ namespace swift::misc::aviation
         //! Register metadata
         static void registerMetadata();
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CCallsignSet)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CCallsign>)

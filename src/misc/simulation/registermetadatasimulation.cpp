@@ -9,26 +9,25 @@
 #include "misc/simulation/airspaceaircraftsnapshot.h"
 #include "misc/simulation/distributorlist.h"
 #include "misc/simulation/distributorlistpreferences.h"
+#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "misc/simulation/fscommon/vpilotmodelruleset.h"
+#include "misc/simulation/fsx/simconnectutilities.h"
 #include "misc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "misc/simulation/interpolation/interpolationsetuplist.h"
-#include "misc/simulation/matchingstatistics.h"
 #include "misc/simulation/matchinglog.h"
+#include "misc/simulation/matchingstatistics.h"
 #include "misc/simulation/reverselookup.h"
+#include "misc/simulation/settings/fgswiftbussettings.h"
+#include "misc/simulation/settings/modelsettings.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/settings/swiftpluginsettings.h"
+#include "misc/simulation/settings/xswiftbussettings.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/simulation/simulatorinfolist.h"
 #include "misc/simulation/simulatorinternals.h"
 #include "misc/simulation/simulatorplugininfo.h"
 #include "misc/simulation/simulatorplugininfolist.h"
-#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "misc/simulation/fscommon/vpilotmodelruleset.h"
-#include "misc/simulation/fsx/simconnectutilities.h"
-#include "misc/simulation/settings/fgswiftbussettings.h"
-#include "misc/simulation/settings/modelsettings.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/settings/swiftpluginsettings.h"
-#include "misc/simulation/settings/xswiftbussettings.h"
-
 #include "misc/variant.h"
 
 using namespace swift::misc::simulation;
@@ -94,4 +93,4 @@ namespace swift::misc::simulation
         qDBusRegisterMetaType<ReverseLookupLogging>();
     }
 
-} // ns
+} // namespace swift::misc::simulation

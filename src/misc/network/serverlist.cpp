@@ -86,4 +86,4 @@ namespace swift::misc::network
             s.setFsdSetup(setup);
         }
     }
-} // namespace
+} // namespace swift::misc::network

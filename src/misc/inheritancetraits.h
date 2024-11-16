@@ -80,6 +80,6 @@ namespace swift::misc
      */
     template <class T>
     using TIndexBaseOfT = typename TIndexBaseOf<T>::type;
-}
+} // namespace swift::misc
 
 #endif

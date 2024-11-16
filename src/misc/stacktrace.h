@@ -6,8 +6,9 @@
 #ifndef SWIFT_MISC_STACKTRACE_H
 #define SWIFT_MISC_STACKTRACE_H
 
-#include "misc/swiftmiscexport.h"
 #include <QStringList>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -22,6 +23,6 @@ namespace swift::misc
      * Returns a stack trace of the current thread of execution as a list of function names.
      */
     SWIFT_MISC_EXPORT QStringList getStackTraceAlways();
-}
+} // namespace swift::misc
 
 #endif

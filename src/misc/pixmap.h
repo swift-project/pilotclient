@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_PIXMAP_H
 #define SWIFT_MISC_PIXMAP_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/valueobject.h"
-
 #include <QByteArray>
 #include <QMetaType>
 #include <QPixmap>
 #include <QReadWriteLock>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CPixmap)
 
@@ -70,7 +70,7 @@ namespace swift::misc
             CPixmap,
             SWIFT_METAMEMBER(array));
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CPixmap)
 

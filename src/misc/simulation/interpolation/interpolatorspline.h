@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATORSPLINE_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATORSPLINE_H
 
-#include "misc/simulation/interpolation/interpolator.h"
-#include "misc/simulation/interpolation/interpolationlogger.h"
-#include "misc/simulation/interpolation/interpolant.h"
 #include "misc/aviation/aircraftsituation.h"
+#include "misc/simulation/interpolation/interpolant.h"
+#include "misc/simulation/interpolation/interpolationlogger.h"
+#include "misc/simulation/interpolation/interpolator.h"
 #include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
@@ -112,6 +112,6 @@ namespace swift::misc::simulation
         std::array<aviation::CAircraftSituation, 3> m_s; //!< used situations
         CInterpolant m_interpolant;
     };
-} // ns
+} // namespace swift::misc::simulation
 
 #endif

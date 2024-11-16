@@ -6,14 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBAUTOSIMULATORSTASHINGCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBAUTOSIMULATORSTASHINGCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/components/dbmappingcomponentaware.h"
-#include "gui/views/aircraftmodelview.h"
-#include "core/progress.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/statusmessage.h"
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "core/progress.h"
+#include "gui/components/dbmappingcomponentaware.h"
+#include "gui/swiftguiexport.h"
+#include "gui/views/aircraftmodelview.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/statusmessage.h"
 
 namespace Ui
 {
@@ -84,6 +85,6 @@ namespace swift::gui::components
         State m_state = Idle; //!< modus
         swift::misc::simulation::CAircraftModelList m_modelsToStash; //!< Models about to be stashed
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

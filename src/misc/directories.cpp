@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/directories.h"
-#include "misc/swiftdirectories.h"
-#include <QFileInfo>
+
 #include <QDir>
+#include <QFileInfo>
+
+#include "misc/swiftdirectories.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CDirectories)
 
@@ -113,4 +115,4 @@ namespace swift::misc
         if (d.exists()) { return checkDir; }
         return defaultDir;
     }
-} // namespace
+} // namespace swift::misc

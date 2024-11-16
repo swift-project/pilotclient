@@ -6,11 +6,12 @@
 #ifndef SWIFT_GUI_ALTITUDEEDIT_H
 #define SWIFT_GUI_ALTITUDEEDIT_H
 
-#include "misc/aviation/altitude.h"
-#include "misc/statusmessagelist.h"
-#include "gui/swiftguiexport.h"
 #include <QLineEdit>
 #include <QRegularExpression>
+
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/altitude.h"
+#include "misc/statusmessagelist.h"
 
 namespace swift::gui
 {
@@ -34,6 +35,6 @@ namespace swift::gui
         //! Valid altitude
         bool isValid(swift::misc::CStatusMessageList *msgs = nullptr) const;
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

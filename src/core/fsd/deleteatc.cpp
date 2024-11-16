@@ -32,4 +32,4 @@ namespace swift::core::fsd
         };
         return DeleteAtc(tokens[0], (tokens.size() >= 2) ? tokens[1] : QString());
     }
-}
+} // namespace swift::core::fsd

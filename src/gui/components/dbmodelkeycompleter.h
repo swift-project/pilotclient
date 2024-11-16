@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBMODELKEYCOMPLETER_H
 #define SWIFT_GUI_COMPONENTS_DBMODELKEYCOMPLETER_H
 
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/simulation/aircraftmodel.h"
 #include <QLineEdit>
+
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatorinfo.h"
 
 namespace swift::gui::components
 {
@@ -38,6 +39,6 @@ namespace swift::gui::components
 
         swift::misc::simulation::CSimulatorInfo m_simulator { swift::misc::simulation::CSimulatorInfo::All };
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

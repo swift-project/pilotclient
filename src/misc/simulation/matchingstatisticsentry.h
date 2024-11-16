@@ -7,8 +7,8 @@
 #define SWIFT_MISC_SIMULATION_MATCHINGSTATISTICSENTRY_H
 
 #include "misc/swiftmiscexport.h"
-#include "misc/valueobject.h"
 #include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CMatchingStatisticsEntry)
 
@@ -136,7 +136,7 @@ namespace swift::misc::simulation
             SWIFT_METAMEMBER(entryType),
             SWIFT_METAMEMBER(count));
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CMatchingStatisticsEntry)
 Q_DECLARE_METATYPE(swift::misc::simulation::CMatchingStatisticsEntry::EntryType)

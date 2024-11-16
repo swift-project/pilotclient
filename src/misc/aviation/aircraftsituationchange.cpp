@@ -2,21 +2,24 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircraftsituationchange.h"
+
+#include <QPair>
+#include <QtGlobal>
+
+#include "QStringBuilder"
+
+#include "config/buildconfig.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/callsign.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/pq/length.h"
-#include "misc/pq/angle.h"
-#include "misc/pq/units.h"
-#include "misc/math/mathutils.h"
 #include "misc/comparefunctions.h"
+#include "misc/math/mathutils.h"
+#include "misc/pq/angle.h"
+#include "misc/pq/length.h"
+#include "misc/pq/units.h"
 #include "misc/propertyindexref.h"
-#include "misc/verify.h"
+#include "misc/simulation/aircraftmodel.h"
 #include "misc/stringutils.h"
-#include "config/buildconfig.h"
-#include "QStringBuilder"
-#include <QtGlobal>
-#include <QPair>
+#include "misc/verify.h"
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
@@ -460,4 +463,4 @@ namespace swift::misc::aviation
             while (false);
         }
     }
-} // namespace
+} // namespace swift::misc::aviation

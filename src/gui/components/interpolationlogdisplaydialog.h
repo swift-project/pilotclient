@@ -6,15 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_INTERPOLATIONLOGDISPLAYDIALOG_H
 #define SWIFT_GUI_COMPONENTS_INTERPOLATIONLOGDISPLAYDIALOG_H
 
-#include "gui/swiftguiexport.h"
-#include <QScopedPointer>
 #include <QDialog>
+#include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 namespace swift::core
 {
     class ISimulator;
     class CAirspaceMonitor;
-}
+} // namespace swift::core
 namespace Ui
 {
     class CInterpolationLogDisplayDialog;
@@ -50,6 +51,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CInterpolationLogDisplayDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -145,4 +145,4 @@ namespace swift::misc::network
         if (this->isEmpty()) return QStringLiteral("No data");
         return s.arg(this->size()).arg(this->sizePending()).arg(this->sizeErrors()).arg(this->getMinResponseTime()).arg(this->getAverageResponseTime()).arg(this->getMaxResponseTime());
     }
-} // namespace
+} // namespace swift::misc::network

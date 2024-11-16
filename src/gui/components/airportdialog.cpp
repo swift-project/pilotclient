@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "airportdialog.h"
+
 #include "ui_airportdialog.h"
 
 using namespace swift::misc::aviation;
@@ -32,4 +33,4 @@ namespace swift::gui::components
     {
         ui->comp_AirportCompleter->clear();
     }
-} // ns
+} // namespace swift::gui::components

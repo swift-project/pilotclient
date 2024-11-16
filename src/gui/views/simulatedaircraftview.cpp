@@ -2,20 +2,21 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatedaircraftview.h"
-#include "gui/views/flightplandialog.h"
-#include "gui/models/simulatedaircraftlistmodel.h"
-#include "gui/menus/menuaction.h"
-#include "gui/guiapplication.h"
-#include "core/context/contextsimulator.h"
+
+#include <QPointer>
+#include <QStringBuilder>
+#include <QtGlobal>
+
+#include "config/buildconfig.h"
 #include "core/context/contextnetwork.h"
-#include "misc/simulation/simulatedaircraftlist.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "gui/menus/menuaction.h"
+#include "gui/models/simulatedaircraftlistmodel.h"
+#include "gui/views/flightplandialog.h"
 #include "misc/aviation/callsign.h"
 #include "misc/icons.h"
-#include "config/buildconfig.h"
-
-#include <QStringBuilder>
-#include <QPointer>
-#include <QtGlobal>
+#include "misc/simulation/simulatedaircraftlist.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -368,4 +369,4 @@ namespace swift::gui::views
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return nullptr; }
         return sGui->getIContextNetwork();
     }
-} // ns
+} // namespace swift::gui::views

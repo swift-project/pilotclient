@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/views/aircraftcategoryview.h"
+
 #include "gui/views/viewbase.h"
 
 using namespace swift::misc;
@@ -14,4 +15,4 @@ namespace swift::gui::views
         this->standardInit(new CAircraftCategoryListModel(this));
         this->setMenu(MenuDefaultDbViews);
     }
-} // namespace
+} // namespace swift::gui::views

@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "resourcesoundsampleprovider.h"
-#include "misc/metadatautils.h"
 
 #include <QDebug>
+
+#include "misc/metadatautils.h"
 
 using namespace swift::misc;
 
@@ -59,4 +60,4 @@ namespace swift::sound::sample_provider
 
         return static_cast<int>(samplesToCopy);
     }
-} // ns
+} // namespace swift::sound::sample_provider

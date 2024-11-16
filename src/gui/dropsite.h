@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_DROPSITE_H
 #define SWIFT_GUI_DROPSITE_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/dropbase.h"
-#include "misc/variant.h"
-
 #include <QLabel>
 #include <QList>
 #include <QObject>
 #include <QString>
+
+#include "gui/dropbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/variant.h"
 
 class QDragEnterEvent;
 class QDragLeaveEvent;
@@ -72,6 +72,6 @@ namespace swift::gui
         bool m_allowDrop = true; //!< dropping allowed?
         QList<int> m_acceptedMetaTypes; //!< accepted meta types
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

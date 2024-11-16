@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "rawfsdmessagesdialog.h"
+
 #include "ui_rawfsdmessagesdialog.h"
 
 namespace swift::gui::components
@@ -14,4 +15,4 @@ namespace swift::gui::components
 
     CRawFsdMessagesDialog::~CRawFsdMessagesDialog()
     {}
-} // ns
+} // namespace swift::gui::components

@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/statusmessageformsmall.h"
-#include "misc/logpattern.h"
-#include "ui_statusmessageformsmall.h"
 
 #include <QLabel>
 #include <QLineEdit>
 #include <QPlainTextEdit>
+
+#include "ui_statusmessageformsmall.h"
+
+#include "misc/logpattern.h"
 
 using namespace swift::misc;
 
@@ -52,4 +54,4 @@ namespace swift::gui::components
         ui->lbl_SeverityIcon->setVisible(!minimized);
         ui->lbl_Severity->setVisible(!minimized);
     }
-} // ns
+} // namespace swift::gui::components

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "guiactionbind.h"
+
 #include "misc/fileutils.h"
 #include "misc/imageutils.h"
 
@@ -136,4 +137,4 @@ namespace swift::gui
         static const QString s("Core UI/");
         return s;
     }
-} // namespace
+} // namespace swift::gui

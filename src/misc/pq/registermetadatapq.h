@@ -12,6 +12,6 @@ namespace swift::misc::physical_quantities
 {
     //! Register metadata for PQs
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc::physical_quantities
 
 #endif // guard

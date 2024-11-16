@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "flightgearmpaircraft.h"
+
 #include "core/simulator.h"
 #include "misc/simulation/interpolation/interpolatormulti.h"
 
@@ -60,4 +61,4 @@ namespace swift::simplugin::flightgear
     {
         return this->getAllCallsigns().getCallsignStrings(sorted);
     }
-} // namespace
+} // namespace swift::simplugin::flightgear

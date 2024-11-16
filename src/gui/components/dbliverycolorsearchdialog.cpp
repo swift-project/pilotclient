@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbliverycolorsearchdialog.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "misc/aviation/liverylist.h"
+
 #include "ui_dbliverycolorsearchdialog.h"
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "misc/aviation/liverylist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -31,4 +33,4 @@ namespace swift::gui::components
     {
         m_foundLivery = ui->comp_LiverySearch->getLivery();
     }
-} // ns
+} // namespace swift::gui::components

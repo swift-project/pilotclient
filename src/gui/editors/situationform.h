@@ -6,11 +6,12 @@
 #ifndef SWIFT_GUI_EDITORS_SITUATIONSFORM_H
 #define SWIFT_GUI_EDITORS_SITUATIONSFORM_H
 
-#include "gui/swiftguiexport.h"
+#include <QScopedPointer>
+
 #include "gui/editors/form.h"
+#include "gui/swiftguiexport.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/statusmessagelist.h"
-#include <QScopedPointer>
 
 namespace Ui
 {
@@ -104,5 +105,5 @@ namespace swift::gui::editors
 
         QScopedPointer<Ui::CSituationForm> ui;
     };
-} // ns
+} // namespace swift::gui::editors
 #endif // guard

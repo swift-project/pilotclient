@@ -49,6 +49,6 @@ namespace swift::core::afv::audio
         QHash<QString, int> successfulTransmissionsCache;
     };
 
-} // ns
+} // namespace swift::core::afv::audio
 
 #endif // guard

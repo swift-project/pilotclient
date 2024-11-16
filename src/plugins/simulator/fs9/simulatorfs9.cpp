@@ -1,25 +1,28 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "fs9.h"
-#include "directplayerror.h"
 #include "simulatorfs9.h"
-#include "fs9client.h"
-#include "multiplayerpackets.h"
-#include "multiplayerpacketparser.h"
-#include "registermetadata.h"
+
+#include <algorithm>
+
+#include <QPointer>
+#include <QTimer>
+
 #include "../fscommon/simulatorfscommonfunctions.h"
+#include "directplayerror.h"
+#include "fs9.h"
+#include "fs9client.h"
+#include "multiplayerpacketparser.h"
+#include "multiplayerpackets.h"
+#include "registermetadata.h"
+
+#include "config/buildconfig.h"
+#include "misc/logmessage.h"
 #include "misc/network/textmessage.h"
+#include "misc/propertyindexallclasses.h"
 #include "misc/simulation/fscommon/fscommonutil.h"
 #include "misc/simulation/simulatorplugininfo.h"
-#include "misc/logmessage.h"
-#include "misc/propertyindexallclasses.h"
 #include "misc/verify.h"
-#include "config/buildconfig.h"
-
-#include <QTimer>
-#include <QPointer>
-#include <algorithm>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -522,4 +525,4 @@ namespace swift::simplugin::fs9
     {
         return new CSimulatorFs9Listener(info, m_fs9Host, m_lobbyClient);
     }
-} // namespace
+} // namespace swift::simplugin::fs9

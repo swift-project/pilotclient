@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_LOGHISTORY_H
 #define SWIFT_MISC_LOGHISTORY_H
 
+#include <QObject>
+
+#include "misc/logpattern.h"
 #include "misc/sharedstate/datalink.h"
 #include "misc/sharedstate/listjournal.h"
 #include "misc/sharedstate/listmutator.h"
 #include "misc/sharedstate/listobserver.h"
 #include "misc/statusmessagelist.h"
-#include "misc/logpattern.h"
-#include <QObject>
 
 namespace swift::misc
 {
@@ -65,6 +66,6 @@ namespace swift::misc
         virtual void onElementAdded(const CStatusMessage &msg) override final;
         virtual void onElementsReplaced(const CStatusMessageList &msgs) override final;
     };
-}
+} // namespace swift::misc
 
 #endif

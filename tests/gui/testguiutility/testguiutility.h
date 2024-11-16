@@ -16,7 +16,7 @@
 namespace SwiftGuiTest
 {
 
-} // namespace
+} // namespace SwiftGuiTest
 
 //! \endcond
 

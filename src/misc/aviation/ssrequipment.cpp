@@ -200,4 +200,4 @@ namespace swift::misc::aviation
         return r;
     }
 
-}
+} // namespace swift::misc::aviation

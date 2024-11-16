@@ -6,17 +6,18 @@
 #ifndef SWIFT_MISC_CFILEUTILS_H
 #define SWIFT_MISC_CFILEUTILS_H
 
-#include "misc/swiftmiscexport.h"
+#include <functional>
 
-#include <QUrl>
 #include <QDir>
 #include <QFileInfo>
 #include <QFileInfoList>
 #include <QLockFile>
-#include <QStringList>
 #include <QString>
+#include <QStringList>
+#include <QUrl>
 #include <Qt>
-#include <functional>
+
+#include "misc/swiftmiscexport.h"
 
 class QDateTime;
 
@@ -191,6 +192,6 @@ namespace swift::misc
         //! swift installer
         static bool isSwiftInstaller(const QString &fileName);
     };
-} // ns
+} // namespace swift::misc
 
 #endif // guard

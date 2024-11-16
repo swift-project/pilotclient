@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/dockwidgetinfoarea.h"
-#include "gui/enableforframelesswindow.h"
-#include "gui/guiutility.h"
-#include "gui/infoarea.h"
 
 #include <QDockWidget>
 #include <QMetaObject>
 #include <QObject>
-#include <QtGlobal>
-#include <QTimer>
 #include <QPointer>
+#include <QTimer>
+#include <QtGlobal>
+
+#include "gui/dockwidgetinfoarea.h"
+#include "gui/enableforframelesswindow.h"
+#include "gui/guiutility.h"
+#include "gui/infoarea.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::gui;
@@ -89,4 +90,4 @@ namespace swift::gui
             this->getParentInfoArea()->selectArea(this->getDockWidgetInfoArea());
         }
     }
-} // namespace
+} // namespace swift::gui

@@ -6,10 +6,17 @@
 #ifndef SWIFT_MISC_AVIATION_ATCSTATION_H
 #define SWIFT_MISC_AVIATION_ATCSTATION_H
 
+#include <array>
+#include <tuple>
+
+#include <QDateTime>
+#include <QMetaType>
+#include <QString>
+#include <QVector3D>
+
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/informationmessage.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
@@ -19,14 +26,8 @@
 #include "misc/pq/length.h"
 #include "misc/pq/time.h"
 #include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QDateTime>
-#include <QMetaType>
-#include <QString>
-#include <QVector3D>
-#include <array>
-#include <tuple>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAtcStation)
 
@@ -256,7 +257,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(relativeDistance),
             SWIFT_METAMEMBER(relativeBearing));
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAtcStation)
 

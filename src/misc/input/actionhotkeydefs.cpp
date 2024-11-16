@@ -106,4 +106,4 @@ namespace swift::misc::input
         return CIcons::StandardIconZoomOut16;
     }
 
-} // ns
+} // namespace swift::misc::input

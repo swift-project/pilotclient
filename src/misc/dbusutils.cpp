@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/dbusutils.h"
+
 #include <QString>
 #include <QStringBuilder>
 #include <QVariant>
@@ -49,4 +50,4 @@ namespace swift::misc
             return QLatin1String("Unknown type");
         }
     }
-} // ns
+} // namespace swift::misc

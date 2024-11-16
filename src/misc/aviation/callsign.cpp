@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/callsign.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/stringutils.h"
-#include "misc/statusmessagelist.h"
 
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QStringList>
 #include <Qt>
 #include <QtGlobal>
+
+#include "misc/mixin/mixincompare.h"
+#include "misc/statusmessagelist.h"
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CCallsign)
 
@@ -427,4 +428,4 @@ namespace swift::misc::aviation
         }
         return false;
     }
-} // namespace
+} // namespace swift::misc::aviation

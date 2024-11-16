@@ -11,4 +11,4 @@ namespace swift::misc::network
 
     CUserList::CUserList(const CSequence &other) : CSequence<CUser>(other)
     {}
-} // namespace
+} // namespace swift::misc::network

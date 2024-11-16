@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTPARTS_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTPARTS_H
 
-#include "misc/aviation/aircraftenginelist.h"
-#include "misc/aviation/aircraftlights.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/timestampbased.h"
-#include "misc/valueobject.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/aviation/aircraftenginelist.h"
+#include "misc/aviation/aircraftlights.h"
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftParts)
 
@@ -200,7 +200,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison),
             SWIFT_METAMEMBER(timeOffsetMs, 0, DisabledForJson | DisabledForComparison));
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftParts)
 

@@ -1,43 +1,45 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_textmessagecomponent.h"
 #include "gui/components/textmessagecomponent.h"
-#include "gui/views/textmessageview.h"
-#include "gui/dockwidgetinfoarea.h"
-#include "gui/guiapplication.h"
-#include "gui/textmessagetextedit.h"
-#include "core/context/contextaudio.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextownaircraft.h"
-#include "core/application.h"
-#include "core/corefacade.h"
-#include "misc/audio/notificationsounds.h"
-#include "misc/network/textmessage.h"
-#include "misc/network/user.h"
-#include "misc/aviation/atcstation.h"
-#include "misc/aviation/callsign.h"
-#include "misc/aviation/comsystem.h"
-#include "misc/pq/constants.h"
-#include "misc/pq/frequency.h"
-#include "misc/pq/units.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/iterator.h"
-#include "misc/logmessage.h"
-#include "misc/sequence.h"
-#include "misc/verify.h"
 
 #include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QToolButton>
+#include <QStringBuilder>
 #include <QTabWidget>
+#include <QToolButton>
 #include <QVBoxLayout>
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
-#include <QStringBuilder>
+
+#include "ui_textmessagecomponent.h"
+
+#include "core/application.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
+#include "core/corefacade.h"
+#include "gui/dockwidgetinfoarea.h"
+#include "gui/guiapplication.h"
+#include "gui/textmessagetextedit.h"
+#include "gui/views/textmessageview.h"
+#include "misc/audio/notificationsounds.h"
+#include "misc/aviation/atcstation.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/comsystem.h"
+#include "misc/iterator.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/textmessage.h"
+#include "misc/network/user.h"
+#include "misc/pq/constants.h"
+#include "misc/pq/frequency.h"
+#include "misc/pq/units.h"
+#include "misc/sequence.h"
+#include "misc/verify.h"
 
 using namespace swift::core;
 using namespace swift::core::context;
@@ -959,4 +961,4 @@ namespace swift::gui::components
         }
         return tabText;
     }
-} // namespace
+} // namespace swift::gui::components

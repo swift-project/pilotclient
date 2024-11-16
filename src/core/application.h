@@ -6,37 +6,37 @@
 #ifndef SWIFT_CORE_APPLICATION_H
 #define SWIFT_CORE_APPLICATION_H
 
-#include "core/swiftcoreexport.h"
-#include "core/corefacadeconfig.h"
-#include "core/db/databasereaderconfig.h"
-#include "core/data/globalsetup.h"
-#include "core/githubpackagesreader.h"
-#include "core/application/applicationsettings.h"
-#include "core/inputmanager.h"
-#include "core/webreaderflags.h"
-#include "misc/db/updateinfo.h"
-#include "misc/network/url.h"
-#include "misc/network/networkutils.h"
-#include "misc/identifiable.h"
-#include "misc/slot.h"
-#include "misc/digestsignal.h"
-#include "misc/applicationinfolist.h"
-#include "misc/statusmessagelist.h"
-#include "misc/crashinfo.h"
+#include <atomic>
+#include <functional>
 
 #include <QByteArray>
 #include <QCommandLineOption>
 #include <QCommandLineParser>
-#include <QNetworkAccessManager>
-#include <QReadWriteLock>
-#include <QStringList>
-#include <QString>
 #include <QList>
+#include <QNetworkAccessManager>
 #include <QObject>
+#include <QReadWriteLock>
 #include <QScopedPointer>
-#include <QByteArray>
-#include <atomic>
-#include <functional>
+#include <QString>
+#include <QStringList>
+
+#include "core/application/applicationsettings.h"
+#include "core/corefacadeconfig.h"
+#include "core/data/globalsetup.h"
+#include "core/db/databasereaderconfig.h"
+#include "core/githubpackagesreader.h"
+#include "core/inputmanager.h"
+#include "core/swiftcoreexport.h"
+#include "core/webreaderflags.h"
+#include "misc/applicationinfolist.h"
+#include "misc/crashinfo.h"
+#include "misc/db/updateinfo.h"
+#include "misc/digestsignal.h"
+#include "misc/identifiable.h"
+#include "misc/network/networkutils.h"
+#include "misc/network/url.h"
+#include "misc/slot.h"
+#include "misc/statusmessagelist.h"
 
 class QHttpMultiPart;
 class QNetworkReply;
@@ -50,7 +50,7 @@ namespace swift::misc
     {
         class CDataLinkDBus;
     }
-}
+} // namespace swift::misc
 
 namespace swift::core
 {
@@ -67,7 +67,7 @@ namespace swift::core
         class IContextNetwork;
         class IContextOwnAircraft;
         class IContextSimulator;
-    }
+    } // namespace context
 
     /*!
      * Our runtime. Normally one instance is to be initialized at the beginning of main, and thereafter
@@ -662,7 +662,7 @@ namespace swift::core
         //! Upload settings changed
         void onCrashDumpUploadEnabledChanged();
     };
-} // namespace
+} // namespace swift::core
 
 //! Single instance of application object
 extern SWIFT_CORE_EXPORT swift::core::CApplication *sApp;

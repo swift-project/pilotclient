@@ -4,18 +4,19 @@
 //! \cond PRIVATE
 
 #include "buildconfig.h"
+
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QLocale>
-#include <QStandardPaths>
-#include <QStringList>
-#include <QStringBuilder>
-#include <QtGlobal>
-#include <QSysInfo>
 #include <QOperatingSystemVersion>
+#include <QStandardPaths>
+#include <QStringBuilder>
+#include <QStringList>
+#include <QSysInfo>
+#include <QtGlobal>
 
 namespace swift::config
 {
@@ -77,7 +78,7 @@ namespace swift::config
             if (p.contains("msvc")) { return true; }
             return false;
         }
-    }
+    } // namespace Private
 
     bool CBuildConfig::isLocalDeveloperDebugBuild()
     {
@@ -192,13 +193,13 @@ namespace swift::config
             if (abiWs.contains("64")) { return 64; }
             return -1;
         }
-    }
+    } // namespace Private
 
     int CBuildConfig::buildWordSize()
     {
         static const int bws = Private::buildWordSizeImpl();
         return bws;
     }
-} // ns
+} // namespace swift::config
 
 //! \endcond

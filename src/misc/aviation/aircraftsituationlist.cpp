@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircraftsituationlist.h"
+
+#include <QList>
+
 #include "misc/geo/elevationplane.h"
 #include "misc/math/mathutils.h"
 #include "misc/pq/speed.h"
-
-#include <QList>
 
 using namespace swift::misc::geo;
 using namespace swift::misc::physical_quantities;
@@ -418,4 +419,4 @@ namespace swift::misc::aviation
         if (elvStdDevMean.first > MaxDevFt) { return CElevationPlane::null(); }
         return CElevationPlane(reference, elvStdDevMean.second, CElevationPlane::singlePointRadius());
     }
-} // namespace
+} // namespace swift::misc::aviation

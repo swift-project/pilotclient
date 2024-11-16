@@ -133,4 +133,4 @@ namespace swift::misc
         }
         return countries;
     }
-} // namespace
+} // namespace swift::misc

@@ -1,23 +1,23 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "afvclientbridge.h"
-#include "core/afv/model/atcstationmodel.h"
-#include "core/afv/model/afvmapreader.h"
-#include "core/afv/clients/afvclient.h"
-#include "core/registermetadata.h"
-
-#include "core/application.h"
-#include "misc/network/user.h"
-#include "misc/obfuscation.h"
-#include "config/buildconfig.h"
-
 #include <QGuiApplication>
+#include <QPointer>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QPointer>
 #include <QThread>
 #include <QTimer>
+
+#include "afvclientbridge.h"
+
+#include "config/buildconfig.h"
+#include "core/afv/clients/afvclient.h"
+#include "core/afv/model/afvmapreader.h"
+#include "core/afv/model/atcstationmodel.h"
+#include "core/application.h"
+#include "core/registermetadata.h"
+#include "misc/network/user.h"
+#include "misc/obfuscation.h"
 
 using namespace swift::config;
 using namespace swift::misc;

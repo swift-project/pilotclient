@@ -1,12 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_matchingform.h"
 #include "matchingform.h"
-#include "gui/guiutility.h"
 
-#include <QPushButton>
 #include <QFileDialog>
+#include <QPushButton>
+
+#include "ui_matchingform.h"
+
+#include "gui/guiutility.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -262,4 +264,4 @@ namespace swift::gui::editors
         const CAircraftMatcherSetup setup = this->value();
         this->setValue(setup);
     }
-} // ns
+} // namespace swift::gui::editors

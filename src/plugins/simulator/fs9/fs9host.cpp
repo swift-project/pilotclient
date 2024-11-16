@@ -3,15 +3,18 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "core/application.h"
-#include "misc/logmessage.h"
-#include "directplayerror.h"
-#include "directplayutils.h"
 #include "fs9host.h"
-#include "multiplayerpacketparser.h"
-#include "multiplayerpackets.h"
+
 #include <QScopedArrayPointer>
 #include <QVector>
+
+#include "directplayerror.h"
+#include "directplayutils.h"
+#include "multiplayerpacketparser.h"
+#include "multiplayerpackets.h"
+
+#include "core/application.h"
+#include "misc/logmessage.h"
 
 using namespace swift::misc;
 
@@ -204,4 +207,4 @@ namespace swift::simplugin::fs9
         emit statusChanged(m_hostStatus);
         return hr;
     }
-}
+} // namespace swift::simplugin::fs9

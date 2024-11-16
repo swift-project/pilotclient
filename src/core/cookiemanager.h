@@ -6,12 +6,12 @@
 #ifndef SWIFT_CORE_COOKIEMANAGER_H
 #define SWIFT_CORE_COOKIEMANAGER_H
 
-#include "core/swiftcoreexport.h"
-
 #include <QList>
 #include <QNetworkCookieJar>
 #include <QObject>
 #include <QReadWriteLock>
+
+#include "core/swiftcoreexport.h"
 
 class QNetworkCookie;
 class QUrl;
@@ -57,6 +57,6 @@ namespace swift::core
         mutable QReadWriteLock m_lock { QReadWriteLock::Recursive };
     };
 
-} // ns
+} // namespace swift::core
 
 #endif // guard

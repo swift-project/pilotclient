@@ -6,9 +6,9 @@
 #ifndef WAVFILE_H
 #define WAVFILE_H
 
-#include <QObject>
-#include <QFile>
 #include <QAudioFormat>
+#include <QFile>
+#include <QObject>
 
 namespace swift::sound::wav
 {
@@ -41,6 +41,6 @@ namespace swift::sound::wav
         qint64 m_headerLength;
         QByteArray m_audioData;
     };
-} // ns
+} // namespace swift::sound::wav
 
 #endif // guard

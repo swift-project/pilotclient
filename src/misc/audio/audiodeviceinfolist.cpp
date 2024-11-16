@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/audio/audiodeviceinfolist.h"
-#include "misc/stringutils.h"
 
-#include <QString>
-#include <QMediaDevices>
 #include <algorithm>
+
+#include <QMediaDevices>
+#include <QString>
+
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::audio, CAudioDeviceInfo, CAudioDeviceInfoList)
 
@@ -224,4 +226,4 @@ namespace swift::misc::audio
         return CAudioDeviceInfo(CAudioDeviceInfo::OutputDevice, defaultQtOutputDevice().description());
     }
 
-} // namespace
+} // namespace swift::misc::audio

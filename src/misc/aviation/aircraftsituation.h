@@ -6,30 +6,31 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTSITUATION_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTSITUATION_H
 
+#include <array>
+
+#include <QMetaType>
+#include <QString>
+#include <QVector3D>
+
+#include "misc/aviation/aircraftvelocity.h"
 #include "misc/aviation/altitude.h"
 #include "misc/aviation/callsign.h"
-#include "misc/aviation/ongroundinfo.h"
 #include "misc/aviation/heading.h"
-#include "misc/aviation/aircraftvelocity.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/geo/elevationplane.h"
+#include "misc/aviation/ongroundinfo.h"
 #include "misc/geo/coordinategeodetic.h"
+#include "misc/geo/elevationplane.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
+#include "misc/math/mathutils.h"
 #include "misc/metaclass.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/length.h"
 #include "misc/pq/speed.h"
 #include "misc/pq/time.h"
-#include "misc/math/mathutils.h"
 #include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/timestampbased.h"
 #include "misc/valueobject.h"
-
-#include <QMetaType>
-#include <QString>
-#include <QVector3D>
-#include <array>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftSituation)
 
@@ -521,8 +522,8 @@ namespace swift::misc
                 SWIFT_METAMEMBER(timeOffsetMs),
                 SWIFT_METAMEMBER(isInterim));
         };
-    } // namespace
-} // namespace
+    } // namespace aviation
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituation)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituation::AltitudeCorrection)

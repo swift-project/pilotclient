@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/logcomponent.h"
 #include "gui/mainwindowaccess.h"
+
+#include "gui/components/logcomponent.h"
 #include "gui/managedstatusbar.h"
 #include "gui/overlaymessagesframe.h"
 
@@ -46,4 +47,4 @@ namespace swift::gui
         m_mwaOverlayFrame->showOverlayHTMLMessage(html, timeOutMs);
         return true;
     }
-} // ns
+} // namespace swift::gui

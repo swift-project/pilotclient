@@ -1,30 +1,32 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/db/databaseutils.h"
 #include "core/simulator.h"
-#include "core/webdataservices.h"
-#include "core/application.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/math/mathutils.h"
-#include "misc/crashhandler.h"
-#include "misc/directoryutils.h"
-#include "misc/threadutils.h"
-#include "misc/logmessage.h"
-#include "misc/verify.h"
 
-#include <QFlag>
-#include <Qt>
-#include <QtGlobal>
-#include <QPointer>
+#include <functional>
+
 #include <QDateTime>
+#include <QDesktopServices>
+#include <QDir>
+#include <QFlag>
+#include <QPointer>
 #include <QString>
 #include <QStringBuilder>
 #include <QThread>
-#include <QDir>
 #include <QUrl>
-#include <QDesktopServices>
-#include <functional>
+#include <Qt>
+#include <QtGlobal>
+
+#include "core/application.h"
+#include "core/db/databaseutils.h"
+#include "core/webdataservices.h"
+#include "misc/crashhandler.h"
+#include "misc/directoryutils.h"
+#include "misc/logmessage.h"
+#include "misc/math/mathutils.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/threadutils.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -1335,4 +1337,4 @@ namespace swift::core
 
         this->checkImpl();
     }
-} // namespace
+} // namespace swift::core

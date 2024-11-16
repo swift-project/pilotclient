@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "hostnode.h"
+
 #include "directplayutils.h"
 
 namespace swift::simplugin::fs9
@@ -31,4 +32,4 @@ namespace swift::simplugin::fs9
         other.m_hostAddress->Duplicate(&m_hostAddress);
         return *this;
     }
-}
+} // namespace swift::simplugin::fs9

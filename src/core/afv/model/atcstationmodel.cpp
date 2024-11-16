@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/afv/model/atcstationmodel.h"
+
 #include <QtMath>
 
 using namespace swift::core::afv;
@@ -109,4 +110,4 @@ namespace swift::core::afv::model
         roles[FrequencyKhzRole] = "frequencyKhz";
         return roles;
     }
-}
+} // namespace swift::core::afv::model

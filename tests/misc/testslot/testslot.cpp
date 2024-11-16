@@ -5,10 +5,11 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/slot.h"
+#include <QTest>
+
 #include "test.h"
 
-#include <QTest>
+#include "misc/slot.h"
 
 using namespace swift::misc;
 
@@ -38,7 +39,7 @@ namespace MiscTest
         QVERIFY2(!slot3, "Slot has an invalid pointer and invalid function - cannot be called.");
     }
 
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestSlot);

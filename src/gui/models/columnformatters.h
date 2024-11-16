@@ -6,8 +6,15 @@
 #ifndef SWIFT_GUI_MODELS_COLUMNFORMATTERS_H
 #define SWIFT_GUI_MODELS_COLUMNFORMATTERS_H
 
-#include "gui/swiftguiexport.h"
+#include <QFlags>
+#include <QList>
+#include <QPixmap>
+#include <QString>
+#include <Qt>
+#include <QtGlobal>
+
 #include "gui/led.h"
+#include "gui/swiftguiexport.h"
 #include "misc/icon.h"
 #include "misc/icons.h"
 #include "misc/pq/angle.h"
@@ -16,13 +23,6 @@
 #include "misc/pq/speed.h"
 #include "misc/pq/units.h"
 #include "misc/variant.h"
-
-#include <QFlags>
-#include <QList>
-#include <QPixmap>
-#include <QString>
-#include <Qt>
-#include <QtGlobal>
 
 namespace swift::gui::models
 {
@@ -508,6 +508,6 @@ namespace swift::gui::models
         //! \copydoc CDefaultFormatter::displayRole
         virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

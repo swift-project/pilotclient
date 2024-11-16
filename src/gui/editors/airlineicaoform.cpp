@@ -1,25 +1,27 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/dbairlineicaoselectorcomponent.h"
-#include "gui/components/dbairlinenameselectorcomponent.h"
-#include "gui/components/dbcountryselectorcomponent.h"
-#include "gui/dropsite.h"
 #include "gui/editors/airlineicaoform.h"
-#include "gui/editors/validationindicator.h"
-#include "gui/guiutility.h"
-#include "gui/labelandicon.h"
-#include "gui/guiapplication.h"
-#include "core/webdataservices.h"
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/icons.h"
-#include "ui_airlineicaoform.h"
 
 #include <QCheckBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMetaType>
+
+#include "ui_airlineicaoform.h"
+
+#include "core/webdataservices.h"
+#include "gui/components/dbairlineicaoselectorcomponent.h"
+#include "gui/components/dbairlinenameselectorcomponent.h"
+#include "gui/components/dbcountryselectorcomponent.h"
+#include "gui/dropsite.h"
+#include "gui/editors/validationindicator.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/labelandicon.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/icons.h"
+#include "misc/mixin/mixincompare.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -230,4 +232,4 @@ namespace swift::gui::editors
     {
         emit this->airlineChangedDigest(m_currentCode);
     }
-} // ns
+} // namespace swift::gui::editors

@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "statusmessagesdetail.h"
+
 #include "ui_statusmessagesdetail.h"
+
 #include "gui/filters/statusmessagefilterbar.h"
 #include "gui/filters/statusmessagefilterdialog.h"
 
@@ -138,4 +140,4 @@ namespace swift::gui::components
         m_action->setCheckable(true);
         m_action->setChecked(v);
     }
-} // ns
+} // namespace swift::gui::components

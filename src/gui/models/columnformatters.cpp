@@ -2,20 +2,21 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/columnformatters.h"
+
+#include <QDate>
+#include <QDateTime>
+#include <QImage>
+#include <QMetaType>
+#include <QScopedPointer>
+#include <QTime>
+#include <QVariant>
+
 #include "misc/aviation/altitude.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/iconlist.h"
 #include "misc/icons.h"
 #include "misc/rgbcolor.h"
 #include "misc/variant.h"
-
-#include <QDate>
-#include <QDateTime>
-#include <QImage>
-#include <QMetaType>
-#include <QTime>
-#include <QVariant>
-#include <QScopedPointer>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -459,4 +460,4 @@ namespace swift::gui::models
         return masked;
     }
 
-} // namespace
+} // namespace swift::gui::models

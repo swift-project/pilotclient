@@ -10,6 +10,6 @@ namespace swift::simplugin::fs9
 {
     //! Register all relevant metadata in plugin
     void registerMetadata();
-} // ns
+} // namespace swift::simplugin::fs9
 
 #endif // guard

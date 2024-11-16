@@ -4,13 +4,15 @@
 #ifndef DIRECTPLAY_CLIENT_H
 #define DIRECTPLAY_CLIENT_H
 
+#include <QReadWriteLock>
+#include <QScopedPointer>
+
 #include "directplaypeer.h"
-#include "misc/simulation/interpolation/interpolatormulti.h"
+
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/callsign.h"
 #include "misc/pq/time.h"
-#include <QScopedPointer>
-#include <QReadWriteLock>
+#include "misc/simulation/interpolation/interpolatormulti.h"
 
 //! \file
 
@@ -110,7 +112,7 @@ namespace swift::simplugin::fs9
         PLAYER_INFO_STRUCT m_playerInfo;
         DPN_PLAYER_INFO m_player;
     };
-} // ns
+} // namespace swift::simplugin::fs9
 
 Q_DECLARE_METATYPE(swift::simplugin::fs9::CFs9Client::ClientStatus)
 

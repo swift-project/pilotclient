@@ -6,12 +6,12 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTENGINES_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTENGINES_H
 
-#include "misc/metaclass.h"
-#include "misc/valueobject.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftEngine)
 
@@ -54,7 +54,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(number, 0, DisabledForJson),
             SWIFT_METAMEMBER(on));
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftEngine)
 

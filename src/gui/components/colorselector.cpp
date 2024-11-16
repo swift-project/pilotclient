@@ -2,12 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/colorselector.h"
-#include "gui/guiutility.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/icons.h"
-#include "misc/rgbcolor.h"
-#include "misc/variant.h"
-#include "ui_colorselector.h"
 
 #include <QColor>
 #include <QColorDialog>
@@ -27,6 +21,14 @@
 #include <QVariant>
 #include <Qt>
 #include <QtGlobal>
+
+#include "ui_colorselector.h"
+
+#include "gui/guiutility.h"
+#include "misc/icons.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/rgbcolor.h"
+#include "misc/variant.h"
 
 using namespace swift::misc;
 
@@ -203,4 +205,4 @@ namespace swift::gui::components
         if (!m_lastColor.isValid()) { return; }
         this->setColor(m_lastColor);
     }
-} // ns
+} // namespace swift::gui::components

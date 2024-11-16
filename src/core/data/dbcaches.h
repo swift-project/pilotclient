@@ -6,19 +6,19 @@
 #ifndef SWIFT_CORE_DATA_DBCACHES
 #define SWIFT_CORE_DATA_DBCACHES
 
-#include "misc/datacache.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "misc/aviation/aircraftcategorylist.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/aviation/liverylist.h"
-#include "misc/network/url.h"
-#include "misc/countrylist.h"
-
 #include <QDateTime>
 #include <QObject>
+
+#include "misc/aviation/aircraftcategorylist.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/airportlist.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/countrylist.h"
+#include "misc/datacache.h"
+#include "misc/network/url.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributorlist.h"
 
 namespace swift::core::data
 {
@@ -121,6 +121,6 @@ namespace swift::core::data
         //! Key in data cache
         static const char *key() { return "dbmodelreaderurl"; }
     };
-} // ns
+} // namespace swift::core::data
 
 #endif // guard

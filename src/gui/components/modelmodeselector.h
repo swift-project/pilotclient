@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_COMPONENTS_MODELMODESELECTOR_H
 #define SWIFT_GUI_COMPONENTS_MODELMODESELECTOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/aircraftmodel.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/simulation/aircraftmodel.h"
 
 class QWidget;
 
@@ -55,6 +55,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CModelModeSelector> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

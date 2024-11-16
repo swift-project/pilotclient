@@ -1,12 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/icons.h"
 #include "misc/network/voicecapabilities.h"
 
 #include <QList>
 #include <QString>
 #include <QtGlobal>
+
+#include "misc/icons.h"
 
 using namespace swift::misc;
 
@@ -154,4 +155,4 @@ namespace swift::misc::network
         static const QList<CVoiceCapabilities> all({ fromVoiceCapabilities(Unknown), fromVoiceCapabilities(Voice), fromVoiceCapabilities(VoiceReceivingOnly), fromVoiceCapabilities(TextOnly) });
         return all;
     }
-} // namespace
+} // namespace swift::misc::network

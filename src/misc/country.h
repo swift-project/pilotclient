@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_COUNTRY_H
 #define SWIFT_MISC_COUNTRY_H
 
-#include "misc/db/datastore.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
+
+#include "misc/db/datastore.h"
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CCountry)
 
@@ -151,7 +151,7 @@ namespace swift::misc
             SWIFT_METAMEMBER(alias2),
             SWIFT_METAMEMBER(historic));
     };
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CCountry)
 

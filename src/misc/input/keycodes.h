@@ -130,7 +130,7 @@ namespace swift::misc::input
         Key_Function24,
     };
 
-} // namespace
+} // namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::KeyCode)
 

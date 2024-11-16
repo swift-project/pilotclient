@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "config/buildconfig.h"
 #include "misc/simulation/simulatorplugininfo.h"
+
 #include <QJsonValue>
 #include <QtGlobal>
+
+#include "config/buildconfig.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -146,4 +148,4 @@ namespace swift::misc::simulation
             fgPluginIdentifier()
         };
     }
-} // ns
+} // namespace swift::misc::simulation

@@ -5,14 +5,15 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/simulation/xplane/qtfreeutils.h"
-#include "misc/simulation/settings/xswiftbussettings.h"
-#include "misc/simulation/settings/xswiftbussettingsqtfree.inc"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
+#include <QTest>
+
 #include "test.h"
 
-#include <QTest>
+#include "misc/directoryutils.h"
+#include "misc/simulation/settings/xswiftbussettings.h"
+#include "misc/simulation/settings/xswiftbussettingsqtfree.inc"
+#include "misc/simulation/xplane/qtfreeutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation::xplane::qtfreeutils;
@@ -173,7 +174,7 @@ namespace MiscTest
         vOut = normalizeValue(-190, -180.0, 180.0);
         QVERIFY2(qFuzzyCompare(170, vOut), "Wrong normalize +-180");
     }
-}
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestXPlane);

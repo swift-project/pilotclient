@@ -6,12 +6,13 @@
 #ifndef SWIFT_GUI_EDITORS_MODELMAPPINGMODIFYFORM_H
 #define SWIFT_GUI_EDITORS_MODELMAPPINGMODIFYFORM_H
 
-#include "gui/editors/form.h"
-#include "gui/swiftguiexport.h"
-#include "misc/propertyindexvariantmap.h"
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/editors/form.h"
+#include "gui/swiftguiexport.h"
+#include "misc/propertyindexvariantmap.h"
 
 class QCheckBox;
 
@@ -67,6 +68,6 @@ namespace swift::gui::editors
 
         QScopedPointer<Ui::CModelMappingModifyForm> ui;
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

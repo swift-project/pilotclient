@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "misc/weather/cloudlayerlist.h"
+
 #include "misc/aviation/altitude.h"
 #include "misc/mixin/mixincompare.h"
-#include "misc/weather/cloudlayerlist.h"
 
 using namespace swift::misc::aviation;
 
@@ -24,4 +25,4 @@ namespace swift::misc::weather
         return findFirstByOrDefault(&CCloudLayer::getBase, base);
     }
 
-} // namespace
+} // namespace swift::misc::weather

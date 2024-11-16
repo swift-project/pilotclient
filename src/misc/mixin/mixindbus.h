@@ -6,11 +6,13 @@
 #ifndef SWIFT_MISC_MIXIN_MIXINDBUS_H
 #define SWIFT_MISC_MIXIN_MIXINDBUS_H
 
-#include "misc/metaclass.h"
-#include "misc/inheritancetraits.h"
-#include "misc/typetraits.h"
-#include <QDBusArgument>
 #include <type_traits>
+
+#include <QDBusArgument>
+
+#include "misc/inheritancetraits.h"
+#include "misc/metaclass.h"
+#include "misc/typetraits.h"
 
 namespace swift::misc
 {
@@ -178,7 +180,7 @@ namespace swift::misc
     using ::swift::misc::mixin::DBusByMetaClass<DERIVED SWIFT_TRAILING_VA_ARGS(__VA_ARGS__)>::unmarshallFromDbus;
         // *INDENT-ON*
 
-    } // Mixin
-} // swift::misc
+    } // namespace mixin
+} // namespace swift::misc
 
 #endif // guard

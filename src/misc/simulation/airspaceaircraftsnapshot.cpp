@@ -1,12 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/aviation/callsign.h"
-#include "misc/pq/physicalquantity.h"
 #include "misc/simulation/airspaceaircraftsnapshot.h"
-#include "misc/simulation/simulatedaircraft.h"
 
 #include <QThread>
+
+#include "misc/aviation/callsign.h"
+#include "misc/pq/physicalquantity.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
@@ -125,4 +126,4 @@ namespace swift::misc::simulation
         return this->getTimestamp().toString();
     }
 
-} // ns
+} // namespace swift::misc::simulation

@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_LOGINMODEBUTTONS_H
 #define SWIFT_GUI_LOGINMODEBUTTONS_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/network/connectionstatus.h"
-#include "misc/network/loginmode.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/loginmode.h"
 
 namespace Ui
 {
@@ -46,6 +46,6 @@ namespace swift::gui
 
         QScopedPointer<Ui::CLoginModeButtons> ui;
     };
-} // ns
+} // namespace swift::gui
 
 #endif // guard

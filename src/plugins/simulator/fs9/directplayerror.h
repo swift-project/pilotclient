@@ -16,6 +16,6 @@ namespace swift::simplugin::fs9
 {
     //! Print the direct play error
     HRESULT logDirectPlayError(HRESULT error);
-}
+} // namespace swift::simplugin::fs9
 
 #endif

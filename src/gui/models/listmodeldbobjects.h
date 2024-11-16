@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_MODELS_LISTMODELDBOBJECTS_H
 #define SWIFT_GUI_MODELS_LISTMODELDBOBJECTS_H
 
-#include "gui/models/listmodelbase.h"
-
 #include <QColor>
 #include <QList>
 #include <QString>
 #include <QVariant>
 #include <Qt>
+
+#include "gui/models/listmodelbase.h"
 
 class QModelIndex;
 class QObject;
@@ -113,5 +113,5 @@ namespace swift::gui::models
         //! Constructor
         COrderableListModelDbObjects(const QString &translationContext, QObject *parent = nullptr);
     };
-} // namespace
+} // namespace swift::gui::models
 #endif // guard

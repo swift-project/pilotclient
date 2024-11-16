@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/afv/audio/soundcardsampleprovider.h"
-#include "misc/metadatautils.h"
+
 #include "config/buildconfig.h"
+#include "misc/metadatautils.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -183,4 +184,4 @@ namespace swift::core::afv::audio
         return m_receiverInputs.at(transceiverID)->getReceivingCallsigns();
     }
 
-} // ns
+} // namespace swift::core::afv::audio

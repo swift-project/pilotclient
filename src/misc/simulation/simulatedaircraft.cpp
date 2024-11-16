@@ -1,15 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "misc/simulation/simulatedaircraft.h"
+
+#include <tuple>
+
+#include <QStringBuilder>
+
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/comparefunctions.h"
 #include "misc/pq/constants.h"
-#include "misc/verify.h"
 #include "misc/propertyindexref.h"
-#include "misc/simulation/simulatedaircraft.h"
 #include "misc/stringutils.h"
-#include <QStringBuilder>
-#include <tuple>
+#include "misc/verify.h"
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;
@@ -584,4 +587,4 @@ namespace swift::misc::simulation
                           u' ' % this->getModel().toQString(i18n);
         return s;
     }
-} // namespace
+} // namespace swift::misc::simulation

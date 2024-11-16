@@ -13,6 +13,6 @@ namespace swift::misc
 {
     //! Register all relevant metadata in Misc
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc
 
 #endif // guard

@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/aircraftpartslistmodel.h"
+
+#include <Qt>
+#include <QtGlobal>
+
 #include "gui/models/columnformatters.h"
 #include "gui/models/columns.h"
 #include "misc/aviation/aircraftpartslist.h"
 #include "misc/propertyindex.h"
-
-#include <Qt>
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -27,4 +28,4 @@ namespace swift::gui::models
         m_columns.addColumn(CColumn::standardString("engines", CAircraftParts::IndexEnginesAsString));
         m_columns.addColumn(CColumn::standardString("lights", { CAircraftParts::IndexLights, CAircraftParts::IndexString }));
     }
-} // namespace
+} // namespace swift::gui::models

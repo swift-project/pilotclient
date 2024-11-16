@@ -11,4 +11,4 @@ namespace swift::misc::shared_state
     {
         emit eventPosted(param);
     }
-}
+} // namespace swift::misc::shared_state

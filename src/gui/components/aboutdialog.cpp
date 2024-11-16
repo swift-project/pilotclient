@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "aboutdialog.h"
+
 #include "ui_aboutdialog.h"
 
 #include "gui/guiapplication.h"
@@ -53,4 +54,4 @@ namespace swift::gui::components
         const QString html = swift::misc::CFileUtils::readFileToString(swift::misc::CSwiftDirectories::legalDirectory() + "/3rdparty.html");
         ui->tbr_ThirdPartyLicenses->setHtml(html);
     }
-} // ns
+} // namespace swift::gui::components

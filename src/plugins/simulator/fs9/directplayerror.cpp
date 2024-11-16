@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "directplayerror.h"
+
 #include "misc/logmessage.h"
 
 namespace swift::simplugin::fs9
@@ -53,4 +54,4 @@ namespace swift::simplugin::fs9
         swift::misc::CLogMessage("swift.fs9.freefunctions").error(errorMessage);
         return error;
     }
-}
+} // namespace swift::simplugin::fs9

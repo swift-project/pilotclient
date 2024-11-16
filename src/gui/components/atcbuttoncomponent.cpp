@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "atcbuttoncomponent.h"
+
+#include <math.h>
+
+#include <QGridLayout>
+#include <QPushButton>
+
 #include "ui_atcbuttoncomponent.h"
 
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "misc/aviation/atcstationlist.h"
-
-#include <math.h>
-#include <QGridLayout>
-#include <QPushButton>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -125,4 +127,4 @@ namespace swift::gui::components
         const CAtcStation station = v.value<CAtcStation>();
         emit this->requestAtcStation(station);
     }
-} // ns
+} // namespace swift::gui::components

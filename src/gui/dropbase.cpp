@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/dropbase.h"
-#include "gui/guiutility.h"
 
 #include <QMetaType>
-#include <QtGlobal>
 #include <QUrl>
+#include <QtGlobal>
+
+#include "gui/guiutility.h"
 
 using namespace swift::misc;
 
@@ -51,4 +52,4 @@ namespace swift::gui
     {
         return CGuiUtility::fromSwiftDragAndDropData(mime);
     }
-} // ns
+} // namespace swift::gui

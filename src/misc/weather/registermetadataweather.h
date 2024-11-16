@@ -12,6 +12,6 @@ namespace swift::misc::weather
 {
     //! Register metadata for weather
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc::weather
 
 #endif // guard

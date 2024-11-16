@@ -1,43 +1,45 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/dbmappingcomponent.h"
 #include "gui/components/dbownmodelsetcomponent.h"
-#include "gui/components/dbownmodelsetformdialog.h"
-#include "gui/components/dbreducemodelduplicates.h"
-#include "gui/components/firstmodelsetdialog.h"
-#include "gui/components/copymodelsfromotherswiftversionsdialog.h"
-#include "gui/menus/aircraftmodelmenus.h"
-#include "gui/menus/menuaction.h"
-#include "gui/models/aircraftmodellistmodel.h"
-#include "gui/views/aircraftmodelview.h"
-#include "gui/views/viewbase.h"
-#include "gui/views/aircraftmodelstatisticsdialog.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "misc/simulation/aircraftmodelutils.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/simulation/distributorlistpreferences.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/icons.h"
-#include "misc/logmessage.h"
-#include "misc/orderable.h"
-#include "ui_dbownmodelsetcomponent.h"
 
 #include <QAction>
+#include <QDesktopServices>
 #include <QDialog>
 #include <QFlags>
 #include <QIcon>
 #include <QLineEdit>
+#include <QPointer>
 #include <QPushButton>
-#include <QStringBuilder>
 #include <QString>
+#include <QStringBuilder>
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
-#include <QPointer>
-#include <QDesktopServices>
+
+#include "ui_dbownmodelsetcomponent.h"
+
+#include "gui/components/copymodelsfromotherswiftversionsdialog.h"
+#include "gui/components/dbmappingcomponent.h"
+#include "gui/components/dbownmodelsetformdialog.h"
+#include "gui/components/dbreducemodelduplicates.h"
+#include "gui/components/firstmodelsetdialog.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/menus/aircraftmodelmenus.h"
+#include "gui/menus/menuaction.h"
+#include "gui/models/aircraftmodellistmodel.h"
+#include "gui/views/aircraftmodelstatisticsdialog.h"
+#include "gui/views/aircraftmodelview.h"
+#include "gui/views/viewbase.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/orderable.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodelutils.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/distributorlistpreferences.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -629,4 +631,4 @@ namespace swift::gui::components
         }
         this->nestedCustomMenu(menuActions);
     }
-} // ns
+} // namespace swift::gui::components

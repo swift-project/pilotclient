@@ -1,15 +1,31 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include <QAction>
+#include <QHBoxLayout>
+#include <QPointer>
+#include <QScopedPointer>
+#include <QStackedWidget>
+#include <QStatusBar>
+#include <QString>
+#include <QTimer>
+#include <QVBoxLayout>
+
 #include "swiftguistd.h"
 #include "ui_swiftguistd.h"
+
+#include "config/buildconfig.h"
+#include "core/context/contextaudio.h"
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "core/webdataservices.h"
 #include "gui/components/aircraftcomponent.h"
 #include "gui/components/atcstationcomponent.h"
 #include "gui/components/cockpitcomponent.h"
 #include "gui/components/flightplancomponent.h"
+#include "gui/components/interpolationcomponent.h"
 #include "gui/components/logcomponent.h"
 #include "gui/components/logincomponent.h"
-#include "gui/components/interpolationcomponent.h"
 #include "gui/components/maininfoareacomponent.h"
 #include "gui/components/mainkeypadareacomponent.h"
 #include "gui/components/mappingcomponent.h"
@@ -22,30 +38,14 @@
 #include "gui/managedstatusbar.h"
 #include "gui/overlaymessagesframe.h"
 #include "gui/stylesheetutility.h"
-#include "core/webdataservices.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
-#include "core/context/contextaudio.h"
-#include "sound/audioutilities.h"
-#include "misc/network/networkutils.h"
-#include "misc/sharedstate/datalinkdbus.h"
 #include "misc/loghandler.h"
 #include "misc/logmessage.h"
 #include "misc/logpattern.h"
+#include "misc/network/networkutils.h"
+#include "misc/sharedstate/datalinkdbus.h"
 #include "misc/slot.h"
 #include "misc/statusmessage.h"
-#include "config/buildconfig.h"
-
-#include <QAction>
-#include <QHBoxLayout>
-#include <QScopedPointer>
-#include <QStackedWidget>
-#include <QStatusBar>
-#include <QString>
-#include <QTimer>
-#include <QPointer>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include "sound/audioutilities.h"
 
 using namespace swift::config;
 using namespace swift::core;

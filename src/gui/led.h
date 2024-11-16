@@ -7,8 +7,6 @@
 #ifndef SWIFT_GUI_LEDWIDGET_H
 #define SWIFT_GUI_LEDWIDGET_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QList>
 #include <QObject>
 #include <QPixmap>
@@ -16,6 +14,8 @@
 #include <QString>
 #include <QTimer>
 #include <QWidget>
+
+#include "gui/swiftguiexport.h"
 
 class QMouseEvent;
 class QPaintEvent;
@@ -207,5 +207,5 @@ namespace swift::gui
         //! Color string
         static const QString &colorString(LedColor color); //!< Color string
     };
-}
+} // namespace swift::gui
 #endif

@@ -2,13 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/modulator.h"
+
+#include <type_traits>
+
+#include <QtGlobal>
+
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/navsystem.h"
+#include "misc/comparefunctions.h"
 #include "misc/pq/units.h"
 #include "misc/propertyindexref.h"
-#include "misc/comparefunctions.h"
-#include <QtGlobal>
-#include <type_traits>
 
 using swift::misc::physical_quantities::CFrequency;
 using swift::misc::physical_quantities::CFrequencyUnit;
@@ -247,4 +250,4 @@ namespace swift::misc::aviation
     template class CModulator<CNavSystem>;
     //! \endcond
 
-} // namespace
+} // namespace swift::misc::aviation

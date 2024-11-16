@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2018 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include <utility>
-
 #include "dbusconnection.h"
-#include "dbusobject.h"
 
 #include <algorithm>
 #include <cassert>
 #include <memory>
+#include <utility>
+
+#include "dbusobject.h"
 
 namespace XSwiftBus
 {
@@ -130,8 +130,7 @@ namespace XSwiftBus
         dbus_connection_ref(m_connection.get());
         if (dbus_connection_get_dispatch_status(m_connection.get()) == DBUS_DISPATCH_DATA_REMAINS)
         {
-            while (dbus_connection_dispatch(m_connection.get()) == DBUS_DISPATCH_DATA_REMAINS)
-                ;
+            while (dbus_connection_dispatch(m_connection.get()) == DBUS_DISPATCH_DATA_REMAINS);
         }
         dbus_connection_unref(m_connection.get());
     }
@@ -177,4 +176,4 @@ namespace XSwiftBus
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
     }
 
-}
+} // namespace XSwiftBus

@@ -6,32 +6,33 @@
 #ifndef SWIFT_MISC_SIMULATION_AIRCRAFTMODELLIST_H
 #define SWIFT_MISC_SIMULATION_AIRCRAFTMODELLIST_H
 
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/aviation/aircraftcategorylist.h"
-#include "misc/aviation/liverylist.h"
-#include "misc/aviation/callsignobjectlist.h"
-#include "misc/db/datastoreobjectlist.h"
-#include "misc/statusmessage.h"
-#include "misc/collection.h"
-#include "misc/orderablelist.h"
-#include "misc/sequence.h"
-#include "misc/statusmessagelist.h"
-#include "misc/swiftmiscexport.h"
+#include <atomic>
 
+#include <QHash>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QMap>
 #include <QMetaType>
+#include <QMultiMap>
 #include <QString>
 #include <QStringList>
 #include <Qt>
-#include <QHash>
-#include <QMap>
-#include <QMultiMap>
-#include <atomic>
+
+#include "misc/aviation/aircraftcategorylist.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/callsignobjectlist.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/collection.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/orderablelist.h"
+#include "misc/sequence.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::Simulation, CAircraftModel, CAircraftModelList)
 
@@ -42,7 +43,7 @@ namespace swift::misc
         class CCallsign;
         class CLivery;
         class CAirlineIcaoCode;
-    }
+    } // namespace aviation
 
     namespace simulation
     {
@@ -571,8 +572,8 @@ namespace swift::misc
         //! Model per callsign
         using CAircraftModelPerCallsign = QHash<aviation::CCallsign, CAircraftModel>;
 
-    } // ns
-} // ns
+    } // namespace simulation
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftModelList)
 Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftModelPerCallsign)

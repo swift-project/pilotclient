@@ -6,8 +6,9 @@
 #ifndef SWIFT_GUI_WINDOWFINDER_H
 #define SWIFT_GUI_WINDOWFINDER_H
 
-#include "gui/swiftguiexport.h"
 #include <QString>
+
+#include "gui/swiftguiexport.h"
 
 class QWindow;
 
@@ -29,6 +30,6 @@ namespace swift::gui
         //! Factory method
         static IWindowFinder *create();
     };
-}
+} // namespace swift::gui
 
 #endif // guard

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/weather/registermetadataweather.h"
+
 #include "misc/valueobject.h"
 #include "misc/variant.h"
 
@@ -29,4 +30,4 @@ namespace swift::misc::weather
         CWindLayerList::registerMetadata();
     }
 
-} // ns
+} // namespace swift::misc::weather

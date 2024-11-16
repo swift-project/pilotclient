@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/filters/filterbarbuttons.h"
-#include "ui_filterbarbuttons.h"
 
 #include <QLineEdit>
 #include <QString>
 #include <QToolButton>
+
+#include "ui_filterbarbuttons.h"
 
 namespace swift::gui::filters
 {
@@ -66,4 +67,4 @@ namespace swift::gui::filters
         }
     }
 
-} // ns
+} // namespace swift::gui::filters

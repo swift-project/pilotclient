@@ -4,14 +4,17 @@
 //! \cond PRIVATE
 
 #include "misc/loghandler.h"
+
+#include "config/buildconfig.h"
 #include "misc/algorithm.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/threadutils.h"
-#include "config/buildconfig.h"
 
 #ifdef SWIFT_USE_CRASHPAD
 #    include "crashpad/client/simulate_crash.h"
 #endif
+
+#include <algorithm>
 
 #include <QAbstractNativeEventFilter>
 #include <QCoreApplication>
@@ -21,7 +24,6 @@
 #include <QString>
 #include <Qt>
 #include <QtDebug>
-#include <algorithm>
 
 #ifdef Q_OS_WIN
 #    include <windows.h>
@@ -344,6 +346,6 @@ namespace swift::misc
             m_handler->enableConsoleOutput(enable);
         }
     }
-}
+} // namespace swift::misc
 
 //! \endcond

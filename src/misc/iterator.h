@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_ITERATOR_H
 #define SWIFT_MISC_ITERATOR_H
 
+#include <algorithm>
+#include <iterator>
+#include <type_traits>
+#include <typeindex>
+#include <utility>
+
 #include "misc/optional.h"
 #include "misc/typetraits.h"
-#include <algorithm>
-#include <type_traits>
-#include <iterator>
-#include <utility>
-#include <typeindex>
 
 namespace swift::misc::Iterators
 {
@@ -363,6 +364,6 @@ namespace swift::misc::Iterators
         return { std::move(iterators) };
     }
 
-} // namespace swift::misc
+} // namespace swift::misc::Iterators
 
 #endif // SWIFT_MISC_ITERATOR_H

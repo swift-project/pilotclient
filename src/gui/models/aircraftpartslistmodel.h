@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_AIRCRAFTPARTSLISTMODEL_H
 #define SWIFT_GUI_MODELS_AIRCRAFTPARTSLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/listmodeltimestampobjects.h"
-#include "misc/aviation/aircraftpartslist.h"
-
 #include <QVariant>
+
+#include "gui/models/listmodeltimestampobjects.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/aircraftpartslist.h"
 
 class QModelIndex;
 class QObject;
@@ -29,6 +29,6 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CAircraftPartsListModel() {}
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

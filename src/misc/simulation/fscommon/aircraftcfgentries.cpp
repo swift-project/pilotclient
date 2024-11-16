@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/aviation/livery.h"
-#include "misc/simulation/distributor.h"
 #include "misc/simulation/fscommon/aircraftcfgentries.h"
 
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/simulation/distributor.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -230,4 +231,4 @@ namespace swift::misc::simulation::fscommon
             break;
         }
     }
-} // namespace
+} // namespace swift::misc::simulation::fscommon

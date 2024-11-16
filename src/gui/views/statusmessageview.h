@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_VIEWS_STATUSMESSAGEVIEW_H
 #define SWIFT_GUI_VIEWS_STATUSMESSAGEVIEW_H
 
-#include "gui/views/viewbase.h"
-#include "gui/models/statusmessagelistmodel.h"
-#include "misc/statusmessagelist.h"
-#include "misc/statusmessage.h"
-#include "gui/swiftguiexport.h"
-
 #include <QObject>
+
+#include "gui/models/statusmessagelistmodel.h"
+#include "gui/swiftguiexport.h"
+#include "gui/views/viewbase.h"
+#include "misc/statusmessage.h"
+#include "misc/statusmessagelist.h"
 
 namespace swift::gui
 {
@@ -52,6 +52,6 @@ namespace swift::gui
             //! Filter dialog if any
             filters::CStatusMessageFilterDialog *getFilterDialog() const;
         };
-    } // ns
-} // ns
+    } // namespace views
+} // namespace swift::gui
 #endif // guard

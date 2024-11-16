@@ -75,7 +75,7 @@ namespace swift::misc::network
             CVoiceCapabilities,
             SWIFT_METAMEMBER(voiceCapabilities));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CVoiceCapabilities)
 

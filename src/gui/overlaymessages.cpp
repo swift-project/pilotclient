@@ -1,35 +1,37 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/statusmessageform.h"
-#include "gui/components/statusmessageformsmall.h"
-#include "gui/views/statusmessageview.h"
-#include "gui/views/viewbase.h"
-#include "gui/models/statusmessagelistmodel.h"
 #include "gui/overlaymessages.h"
-#include "gui/stylesheetutility.h"
-#include "gui/guiapplication.h"
-#include "misc/aviation/callsign.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/network/textmessage.h"
-#include "core/context/contextownaircraft.h"
-#include "core/application.h"
-#include "ui_overlaymessages.h"
 
+#include <QGraphicsDropShadowEffect>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPixmap>
+#include <QPointer>
 #include <QPushButton>
 #include <QSize>
 #include <QStackedWidget>
 #include <QStyle>
-#include <QGraphicsDropShadowEffect>
 #include <QTextEdit>
 #include <QToolButton>
 #include <Qt>
 #include <QtGlobal>
-#include <QPointer>
+
+#include "ui_overlaymessages.h"
+
+#include "core/application.h"
+#include "core/context/contextownaircraft.h"
+#include "gui/components/statusmessageform.h"
+#include "gui/components/statusmessageformsmall.h"
+#include "gui/guiapplication.h"
+#include "gui/models/statusmessagelistmodel.h"
+#include "gui/stylesheetutility.h"
+#include "gui/views/statusmessageview.h"
+#include "gui/views/viewbase.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/textmessage.h"
+#include "misc/simulation/simulatedaircraft.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -651,4 +653,4 @@ namespace swift::gui
             m_autoCloseTimer.stop();
         }
     }
-} // ns
+} // namespace swift::gui

@@ -6,7 +6,7 @@
 #ifndef SWIFT_SIMPLUGIN_FLIGHTGEAR_SERVICE_PROXY_H
 #define SWIFT_SIMPLUGIN_FLIGHTGEAR_SERVICE_PROXY_H
 
-#include "misc/genericdbusinterface.h"
+#include <functional>
 
 #include <QDBusError>
 #include <QDBusPendingReply>
@@ -14,7 +14,8 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <functional>
+
+#include "misc/genericdbusinterface.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -352,6 +353,6 @@ namespace swift::simplugin::flightgear
         void getGroundElevationAsync(double *o_groundElevation);
         //! @}
     };
-}
+} // namespace swift::simplugin::flightgear
 
 #endif // guard

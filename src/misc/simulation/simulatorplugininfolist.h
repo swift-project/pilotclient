@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_SIMULATION_SIMULATORPLUGININFOLIST_H
 #define SWIFT_MISC_SIMULATION_SIMULATORPLUGININFOLIST_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/collection.h"
-#include "misc/sequence.h"
-
 #include <QMetaType>
 #include <QString>
 #include <QStringList>
+
+#include "misc/collection.h"
+#include "misc/sequence.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/simulation/simulatorplugininfo.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorPluginInfo, CSimulatorPluginInfoList)
 
@@ -49,7 +49,7 @@ namespace swift::misc::simulation
         //! Find by simulator
         CSimulatorPluginInfo findBySimulator(const swift::misc::simulation::CSimulatorInfo &simulator) const;
     };
-} // ns
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorPluginInfoList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CSimulatorPluginInfo>)

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "samples.h"
+
 #include "misc/directoryutils.h"
 #include "misc/fileutils.h"
 
@@ -57,4 +58,4 @@ namespace swift::sound::sample_provider
     {
         this->initSounds();
     }
-} // ns
+} // namespace swift::sound::sample_provider

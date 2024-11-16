@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_INTERNALSCOMPONENT_H
 #define SWIFT_GUI_INTERNALSCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/aviation/aircraftparts.h"
-
 #include <QObject>
 #include <QScopedPointer>
 #include <QWidget>
+
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/aircraftparts.h"
 
 class QShowEvent;
 
@@ -79,6 +79,6 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CInternalsComponent> ui;
     };
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

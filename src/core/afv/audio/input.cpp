@@ -4,15 +4,17 @@
 //! \file
 
 #include "core/afv/audio/input.h"
-#include "sound/audioutilities.h"
+
+#include <cmath>
+
+#include <QAudioDevice>
+#include <QDebug>
+#include <QStringBuilder>
+#include <QtGlobal>
+
 #include "misc/logmessage.h"
 #include "misc/verify.h"
-
-#include <QtGlobal>
-#include <QStringBuilder>
-#include <QDebug>
-#include <QAudioDevice>
-#include <cmath>
+#include "sound/audioutilities.h"
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -209,4 +211,4 @@ namespace swift::core::afv::audio
     }
 #endif
 
-} // ns
+} // namespace swift::core::afv::audio

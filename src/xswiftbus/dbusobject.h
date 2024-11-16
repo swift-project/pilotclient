@@ -3,12 +3,15 @@
 
 #ifndef SWIFT_SIM_XSWIFTBUS_DBUSOBJECT_H
 #define SWIFT_SIM_XSWIFTBUS_DBUSOBJECT_H
+// clang-format off
+#include <deque>
+#include <mutex>
 
 #include "dbusconnection.h"
 #include "settings.h"
+
 #include <XPLM/XPLMDisplay.h>
-#include <mutex>
-#include <deque>
+// clang-format on
 
 namespace XSwiftBus
 {
@@ -88,6 +91,6 @@ namespace XSwiftBus
 
         const DBusObjectPathVTable m_dbusObjectPathVTable = { dbusObjectPathUnregisterFunction, dbusObjectPathMessageFunction, nullptr, nullptr, nullptr, nullptr };
     };
-} // ns
+} // namespace XSwiftBus
 
 #endif // guard

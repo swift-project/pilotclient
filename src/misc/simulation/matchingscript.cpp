@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/matchingscript.h"
+
 #include "misc/stringutils.h"
 
 using namespace swift::misc::aviation;
@@ -288,4 +289,4 @@ namespace swift::misc::simulation
         m_inputAircraftAndAirlineCount = models.size();
     }
 
-} // namespace
+} // namespace swift::misc::simulation

@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_COMPONENTS_INSTALLXSWIFTBUSDIALOG_H
 #define SWIFT_GUI_COMPONENTS_INSTALLXSWIFTBUSDIALOG_H
 
-#include <QString>
 #include <QDialog>
+#include <QString>
 
 namespace Ui
 {
@@ -35,6 +35,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CInstallXSwiftBusDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/pilotdataupdate.h"
+
 #include "core/fsd/pbh.h"
 #include "core/fsd/serializer.h"
-
 #include "misc/logmessage.h"
 
 using namespace swift::misc;
@@ -70,4 +70,4 @@ namespace swift::core::fsd
                                tokens[4].toDouble(), tokens[5].toDouble(), tokens[6].toInt(), tokens[6].toInt() + tokens[9].toInt(), tokens[7].toInt(),
                                pitch, bank, heading, onGround);
     }
-}
+} // namespace swift::core::fsd

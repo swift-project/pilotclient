@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_TRANSPONDERMODESELECTOR_H
 #define SWIFT_GUI_COMPONENTS_TRANSPONDERMODESELECTOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/aviation/transponder.h"
-
 #include <QComboBox>
 #include <QObject>
 #include <QString>
 #include <QTimer>
+
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/transponder.h"
 
 namespace swift::gui::components
 {
@@ -68,6 +68,6 @@ namespace swift::gui::components
         swift::misc::aviation::CTransponder::TransponderMode m_resetMode = swift::misc::aviation::CTransponder::StateStandby;
         QTimer m_resetTimer;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

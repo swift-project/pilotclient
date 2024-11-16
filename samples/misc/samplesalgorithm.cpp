@@ -5,10 +5,11 @@
 //! \ingroup samplemisc
 
 #include "samplesalgorithm.h"
-#include "misc/algorithm.h"
-#include "misc/iterator.h"
-#include "misc/sequence.h"
-#include "misc/stringutils.h"
+
+#include <algorithm>
+#include <cmath>
+#include <ctime>
+#include <numeric>
 
 #include <QChar>
 #include <QDebug>
@@ -17,10 +18,11 @@
 #include <QStringList>
 #include <QTypeInfo>
 #include <QtDebug>
-#include <algorithm>
-#include <cmath>
-#include <ctime>
-#include <numeric>
+
+#include "misc/algorithm.h"
+#include "misc/iterator.h"
+#include "misc/sequence.h"
+#include "misc/stringutils.h"
 
 namespace swift::sample
 {
@@ -80,4 +82,4 @@ namespace swift::sample
         return 0;
     }
 
-} // namespace
+} // namespace swift::sample

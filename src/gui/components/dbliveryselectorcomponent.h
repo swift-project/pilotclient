@@ -6,16 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_CDBLIVERYSELECTORCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_CDBLIVERYSELECTORCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/dropbase.h"
-#include "misc/aviation/livery.h"
-#include "misc/network/entityflags.h"
-
 #include <QFrame>
 #include <QMetaObject>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/dropbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/livery.h"
+#include "misc/network/entityflags.h"
 
 class QCompleter;
 class QDragEnterEvent;
@@ -105,6 +105,6 @@ namespace swift::gui::components
         QScopedPointer<QCompleter> m_completerLiveries;
         swift::misc::aviation::CLivery m_currentLivery;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -25,4 +25,4 @@ namespace swift::misc::simulation
         cats.push_back(CLogCategoryList::fromQStringList(extraCategories));
         return cats;
     }
-} // ns
+} // namespace swift::misc::simulation

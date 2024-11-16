@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/authenticateduser.h"
-#include "misc/icons.h"
-#include "misc/propertyindexref.h"
-#include "misc/statusmessage.h"
 
 #include <QJsonValue>
 #include <QStringBuilder>
 #include <QtGlobal>
+
+#include "misc/icons.h"
+#include "misc/propertyindexref.h"
+#include "misc/statusmessage.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CAuthenticatedUser)
 
@@ -157,4 +158,4 @@ namespace swift::misc::network
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-} // namespace
+} // namespace swift::misc::network

@@ -6,11 +6,12 @@
 #ifndef SWIFT_GUI_COMPONENTS_LEGALINFOCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_LEGALINFOCOMPONENT_H
 
-#include "gui/overlaymessagesframe.h"
-#include "core/application/applicationsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
 #include <QWizardPage>
+
+#include "core/application/applicationsettings.h"
+#include "gui/overlaymessagesframe.h"
 
 namespace Ui
 {
@@ -69,6 +70,6 @@ namespace swift::gui::components
     private:
         CLegalInfoComponent *m_legalInfo = nullptr;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

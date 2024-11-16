@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatormsfs.h"
+
 #include "../fsxcommon/simconnectsymbols.h"
 
 using namespace swift::misc;
@@ -53,4 +54,4 @@ namespace swift::simplugin::msfs
         CSimulatorFsxCommonListener::startImpl();
     }
 
-} // ns
+} // namespace swift::simplugin::msfs

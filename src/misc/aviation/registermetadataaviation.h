@@ -12,6 +12,6 @@ namespace swift::misc::aviation
 {
     //! Register metadata for aviation
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc::aviation
 
 #endif // guard

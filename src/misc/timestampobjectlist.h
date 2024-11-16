@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 #define SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 
-#include "misc/timestampbased.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/predicates.h"
-#include "misc/verify.h"
-#include "config/buildconfig.h"
 #include <QList>
 #include <QtGlobal>
+
+#include "config/buildconfig.h"
+#include "misc/predicates.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/verify.h"
 
 class QDateTime;
 
@@ -769,6 +770,6 @@ namespace swift::misc
 
         HintAdjustedTimestampSort m_tsAdjustedSortHint = NoAdjustedTimestampSortHint; //!< sort hint
     };
-} // namespace
+} // namespace swift::misc
 
 #endif // guard

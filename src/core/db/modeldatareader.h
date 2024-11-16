@@ -6,24 +6,24 @@
 #ifndef SWIFT_CORE_MODELDATAREADER_H
 #define SWIFT_CORE_MODELDATAREADER_H
 
+#include <QDateTime>
+#include <QList>
+#include <QObject>
+#include <QReadWriteLock>
+#include <QSet>
+#include <QString>
+#include <QStringList>
+
 #include "core/data/dbcaches.h"
 #include "core/db/databasereader.h"
 #include "core/swiftcoreexport.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/distributorlist.h"
 #include "misc/aviation/aircraftcategorylist.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/liverylist.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/url.h"
-
-#include <QDateTime>
-#include <QList>
-#include <QObject>
-#include <QReadWriteLock>
-#include <QString>
-#include <QStringList>
-#include <QSet>
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributorlist.h"
 
 class QNetworkReply;
 
@@ -204,6 +204,6 @@ namespace swift::core::db
         //! URL model web service
         swift::misc::network::CUrl getModelUrl(swift::misc::db::CDbFlags::DataRetrievalModeFlag mode) const;
     };
-} // ns
+} // namespace swift::core::db
 
 #endif // guard

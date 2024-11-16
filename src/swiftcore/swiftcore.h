@@ -6,15 +6,15 @@
 #ifndef SWIFTCORE_H
 #define SWIFTCORE_H
 
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+
 #include "core/coremodeenums.h"
 #include "gui/mainwindowaccess.h"
 #include "gui/systemtraywindow.h"
 #include "misc/identifiable.h"
 #include "misc/statusmessage.h"
-
-#include <QObject>
-#include <QScopedPointer>
-#include <QString>
 
 class QWidget;
 namespace swift::gui::components
@@ -23,7 +23,7 @@ namespace swift::gui::components
     class CRawFsdMessagesDialog;
     class CCockpitComAudioDialog;
     class CAudioAdvancedDistributedDialog;
-}
+} // namespace swift::gui::components
 namespace Ui
 {
     class CSwiftCore;

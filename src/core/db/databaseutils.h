@@ -6,16 +6,16 @@
 #ifndef SWIFT_CORE_DB_DATABASEUTILS_H
 #define SWIFT_CORE_DB_DATABASEUTILS_H
 
+#include <QByteArray>
+#include <QHttpPart>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QUrlQuery>
+
 #include "core/progress.h"
 #include "core/swiftcoreexport.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/autopublishdata.h"
-
-#include <QHttpPart>
-#include <QUrlQuery>
-#include <QByteArray>
-#include <QJsonArray>
-#include <QJsonObject>
 
 namespace swift::core::db
 {
@@ -112,5 +112,5 @@ namespace swift::core::db
         //! \sa CAutoPublishData::analyzeAgainstDBData
         static swift::misc::simulation::ChangedAutoPublishData autoPublishDataChanged(const swift::misc::simulation::CAircraftModel &model, const swift::misc::physical_quantities::CLength &cg, const swift::misc::simulation::CSimulatorInfo &simulator);
     };
-} // ns
+} // namespace swift::core::db
 #endif // guard

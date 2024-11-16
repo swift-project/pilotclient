@@ -6,16 +6,17 @@
 #ifndef SWIFT_MISC_WEATHER_PRESENTWEATHER_H
 #define SWIFT_MISC_WEATHER_PRESENTWEATHER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/dictionary.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
+#include <tuple>
 
 #include <QHash>
 #include <QMetaType>
 #include <QString>
-#include <tuple>
+
+#include "misc/dictionary.h"
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CPresentWeather)
 
@@ -135,7 +136,7 @@ namespace swift::misc::weather
             SWIFT_METAMEMBER(weatherPhenomena));
     };
 
-} // namespace
+} // namespace swift::misc::weather
 
 Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeather)
 Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeather::Intensity)

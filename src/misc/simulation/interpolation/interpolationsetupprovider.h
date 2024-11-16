@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPPROVIDER_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPPROVIDER_H
 
-#include "misc/simulation/interpolation/interpolationsetuplist.h"
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "misc/simulation/interpolation/interpolationsetuplist.h"
-#include "misc/aviation/callsignset.h"
-#include "misc/provider.h"
 #include <QMap>
 #include <QReadWriteLock>
+
+#include "misc/aviation/callsignset.h"
+#include "misc/provider.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/simulation/interpolation/interpolationsetuplist.h"
 
 namespace swift::misc::simulation
 {
@@ -121,7 +121,7 @@ namespace swift::misc::simulation
         //! Provider
         void setInterpolationSetupProvider(IInterpolationSetupProvider *provider) { this->setProvider(provider); }
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_INTERFACE(swift::misc::simulation::IInterpolationSetupProvider, "org.swift-project.misc::network::iinterpolationsetupprovider")
 

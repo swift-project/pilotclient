@@ -6,24 +6,24 @@
 #ifndef SWIFT_CORE_DB_DATABASEREADER_H
 #define SWIFT_CORE_DB_DATABASEREADER_H
 
-#include "core/swiftcoreexport.h"
-#include "core/db/databasereaderconfig.h"
-#include "misc/db/dbinfolist.h"
-#include "misc/pq/time.h"
-#include "misc/network/url.h"
-#include "misc/statusmessage.h"
-#include "core/threadedreader.h"
-#include "misc/sequence.h"
-#include "misc/valueobject.h"
-
 #include <QDateTime>
 #include <QJsonArray>
 #include <QMap>
+#include <QNetworkReply>
 #include <QObject>
 #include <QReadWriteLock>
 #include <QString>
 #include <QtGlobal>
-#include <QNetworkReply>
+
+#include "core/db/databasereaderconfig.h"
+#include "core/swiftcoreexport.h"
+#include "core/threadedreader.h"
+#include "misc/db/dbinfolist.h"
+#include "misc/network/url.h"
+#include "misc/pq/time.h"
+#include "misc/sequence.h"
+#include "misc/statusmessage.h"
+#include "misc/valueobject.h"
 
 class QNetworkReply;
 class QFileInfo;
@@ -421,6 +421,6 @@ namespace swift::core::db
         //! Read / re-read data file
         virtual void read(swift::misc::network::CEntityFlags::Entity entities, swift::misc::db::CDbFlags::DataRetrievalModeFlag mode, const QDateTime &newerThan) = 0;
     };
-} // ns
+} // namespace swift::core::db
 
 #endif // guard

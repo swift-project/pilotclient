@@ -1,13 +1,15 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_simulatorflightgearconfigwindow.h"
 #include "simulatorflightgearconfigwindow.h"
-#include "core/application.h"
-#include "gui/guiapplication.h"
 
 #include <QComboBox>
 #include <QDialogButtonBox>
+
+#include "ui_simulatorflightgearconfigwindow.h"
+
+#include "core/application.h"
+#include "gui/guiapplication.h"
 
 using namespace swift::gui;
 using namespace swift::misc;
@@ -56,4 +58,4 @@ namespace swift::simplugin::flightgear
         }
         close();
     }
-} // ns
+} // namespace swift::simplugin::flightgear

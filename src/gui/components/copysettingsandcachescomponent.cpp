@@ -2,17 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "copysettingsandcachescomponent.h"
+
+#include <QFileInfo>
+#include <QRegularExpression>
+#include <QStringBuilder>
+
 #include "ui_copysettingsandcachescomponent.h"
+
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "misc/cachesettingsutils.h"
-#include "misc/json.h"
 #include "misc/fileutils.h"
 #include "misc/icons.h"
-
-#include <QRegularExpression>
-#include <QFileInfo>
-#include <QStringBuilder>
+#include "misc/json.h"
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -459,4 +461,4 @@ namespace swift::gui::components
         return true;
     }
 
-} // ns
+} // namespace swift::gui::components

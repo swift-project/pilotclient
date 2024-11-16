@@ -6,7 +6,13 @@
 #ifndef SWIFT_MISC_SIMULATION_XPLANE_NAVDATAREFERENCE_H
 #define SWIFT_MISC_SIMULATION_XPLANE_NAVDATAREFERENCE_H
 
-#include "misc/swiftmiscexport.h"
+#include <array>
+#include <tuple>
+
+#include <QMetaType>
+#include <QString>
+#include <QVector3D>
+
 #include "misc/collection.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/geoobjectlist.h"
@@ -16,13 +22,8 @@
 #include "misc/pq/length.h"
 #include "misc/propertyindexref.h"
 #include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QMetaType>
-#include <QString>
-#include <QVector3D>
-#include <array>
-#include <tuple>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::XPlane, CNavDataReference)
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation::XPlane, CNavDataReference, CNavDataReferenceList)
@@ -90,7 +91,7 @@ namespace swift::misc::simulation::xplane
         //! Construct from a base class object.
         CNavDataReferenceList(const CSequence<CNavDataReference> &other);
     };
-}
+} // namespace swift::misc::simulation::xplane
 
 Q_DECLARE_METATYPE(swift::misc::simulation::xplane::CNavDataReference)
 Q_DECLARE_METATYPE(swift::misc::simulation::xplane::CNavDataReferenceList)

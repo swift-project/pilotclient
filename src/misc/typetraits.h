@@ -27,7 +27,7 @@ namespace swift::misc
         struct SyntheticDerived<T, false>
         {};
         //! \endcond
-    }
+    } // namespace private_ns
 
     /*!
      * Whether an input parameter type should be passed by value or by const reference.
@@ -183,6 +183,6 @@ namespace swift::misc
     {};
     //! \endcond
 
-}
+} // namespace swift::misc
 
 #endif

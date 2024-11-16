@@ -2,18 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "copymodelsfromotherswiftversionscomponent.h"
-#include "ui_copymodelsfromotherswiftversionscomponent.h"
-#include "gui/models/aircraftmodellistmodel.h"
-#include "core/application.h"
-#include "misc/stringutils.h"
-#include "misc/fileutils.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
 
-#include <QSet>
-#include <QPointer>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QPointer>
+#include <QSet>
+
+#include "ui_copymodelsfromotherswiftversionscomponent.h"
+
+#include "core/application.h"
+#include "gui/models/aircraftmodellistmodel.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/stringutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::core;
 using namespace swift::misc;
@@ -191,4 +193,4 @@ namespace swift::gui::components
         Q_ASSERT_X(m_copyModels, Q_FUNC_INFO, "Missing widget");
         return true;
     }
-} // ns
+} // namespace swift::gui::components

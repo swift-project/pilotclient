@@ -6,25 +6,25 @@
 #ifndef SWIFTLAUNCHER_H
 #define SWIFTLAUNCHER_H
 
-#include "gui/enableforframelesswindow.h"
-#include "gui/overlaymessagesframe.h"
-#include "gui/mainwindowaccess.h"
+#include "core/coremodeenums.h"
 #include "core/data/globalsetup.h"
 #include "core/data/launchersetup.h"
-#include "core/coremodeenums.h"
-#include "misc/simulation/data/modelcaches.h"
+#include "gui/enableforframelesswindow.h"
+#include "gui/mainwindowaccess.h"
+#include "gui/overlaymessagesframe.h"
 #include "misc/db/artifact.h"
 #include "misc/identifiable.h"
 #include "misc/loghistory.h"
+#include "misc/simulation/data/modelcaches.h"
 
 #ifdef Q_OS_MAC
 #    include "misc/macos/microphoneaccess.h"
 #endif
 
 #include <QMainWindow>
-#include <QTimer>
-#include <QScopedPointer>
 #include <QNetworkReply>
+#include <QScopedPointer>
+#include <QTimer>
 
 namespace Ui
 {
@@ -34,7 +34,7 @@ namespace swift::gui::components
 {
     class CConfigurationWizard;
     class CTextEditDialog;
-}
+} // namespace swift::gui::components
 
 /*!
  * swift launcher tool

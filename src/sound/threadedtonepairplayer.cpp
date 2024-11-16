@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "threadedtonepairplayer.h"
-#include "misc/logmessage.h"
-#include "sound/audioutilities.h"
 
 #include <QTimer>
+
+#include "misc/logmessage.h"
+#include "sound/audioutilities.h"
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -204,4 +205,4 @@ namespace swift::sound
         qToLittleEndian<qint16>(value, bufferPointer);
 #endif
     }
-}
+} // namespace swift::sound

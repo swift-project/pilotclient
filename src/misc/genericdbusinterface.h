@@ -6,15 +6,16 @@
 #ifndef SWIFT_MISC_GENERICDBUSINTERFACE_H
 #define SWIFT_MISC_GENERICDBUSINTERFACE_H
 
-#include "misc/logmessage.h"
-#include "misc/promise.h"
 #include <QDBusAbstractInterface>
+#include <QDBusError>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
-#include <QDBusError>
-#include <QObject>
 #include <QMetaMethod>
+#include <QObject>
 #include <QSharedPointer>
+
+#include "misc/logmessage.h"
+#include "misc/promise.h"
 
 #ifndef Q_MOC_RUN
 /*!
@@ -117,6 +118,6 @@ namespace swift::misc
             }
         }
     };
-} // ns
+} // namespace swift::misc
 
 #endif // guard

@@ -4,10 +4,11 @@
 //! \cond PRIVATE
 
 #include "misc/stringutils.h"
+
 #include <QChar>
-#include <QTextCodec>
-#include <QStringBuilder>
 #include <QRegularExpression>
+#include <QStringBuilder>
+#include <QTextCodec>
 
 namespace swift::misc
 {
@@ -593,6 +594,6 @@ namespace swift::misc
         return n;
     }
 
-} // ns
+} // namespace swift::misc
 
 //! \endcond

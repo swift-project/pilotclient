@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_VIEWS_FLIGHTPLANDIALOG_H
 #define SWIFT_GUI_VIEWS_FLIGHTPLANDIALOG_H
 
-#include "misc/aviation/callsign.h"
-
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "misc/aviation/callsign.h"
 
 namespace Ui
 {
@@ -42,6 +42,6 @@ namespace swift::gui::views
         QScopedPointer<Ui::CFlightPlanDialog> ui;
     };
 
-} // ns
+} // namespace swift::gui::views
 
 #endif // guard

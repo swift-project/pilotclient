@@ -1,33 +1,34 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/data/globalsetup.h"
 #include "core/db/icaodatareader.h"
-#include "core/db/databaseutils.h"
+
+#include <QDateTime>
+#include <QDir>
+#include <QElapsedTimer>
+#include <QFileInfo>
+#include <QFlags>
+#include <QJsonDocument>
+#include <QNetworkReply>
+#include <QPointer>
+#include <QReadLocker>
+#include <QScopedPointer>
+#include <QScopedPointerDeleteLater>
+#include <QStringBuilder>
+#include <QTimer>
+#include <QUrl>
+#include <QWriteLocker>
+#include <Qt>
+#include <QtGlobal>
+
 #include "core/application.h"
+#include "core/data/globalsetup.h"
+#include "core/db/databaseutils.h"
 #include "misc/aviation/aircraftcategorylist.h"
 #include "misc/fileutils.h"
 #include "misc/json.h"
 #include "misc/logmessage.h"
 #include "misc/statusmessage.h"
-
-#include <QStringBuilder>
-#include <QElapsedTimer>
-#include <QDateTime>
-#include <QDir>
-#include <QFlags>
-#include <QFileInfo>
-#include <QJsonDocument>
-#include <QNetworkReply>
-#include <QReadLocker>
-#include <QScopedPointer>
-#include <QScopedPointerDeleteLater>
-#include <QTimer>
-#include <QUrl>
-#include <QPointer>
-#include <QWriteLocker>
-#include <Qt>
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::misc::db;
@@ -835,4 +836,4 @@ namespace swift::core::db
     {
         return this->getBaseUrl(mode).withAppendedPath(fileNameForMode(CEntityFlags::AircraftCategoryEntity, mode));
     }
-} // ns
+} // namespace swift::core::db

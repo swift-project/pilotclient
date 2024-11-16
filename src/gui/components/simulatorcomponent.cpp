@@ -1,26 +1,28 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_simulatorcomponent.h"
-#include "core/simulator.h"
 #include "gui/components/simulatorcomponent.h"
-#include "gui/views/namevariantpairview.h"
+
+#include "ui_simulatorcomponent.h"
+
 #include "core/context/contextownaircraft.h"
 #include "core/context/contextsimulator.h"
+#include "core/simulator.h"
 #include "gui/guiapplication.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/simulatorplugininfo.h"
+#include "gui/views/namevariantpairview.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/altitude.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/heading.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
+#include "misc/iconlist.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/frequency.h"
 #include "misc/pq/speed.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatorplugininfo.h"
 #include "misc/stringutils.h"
-#include "misc/iconlist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -264,4 +266,4 @@ namespace swift::gui::components
         if (!sGui || sGui->isShuttingDown()) { return 10000; }
         return sGui->getIContextSimulator()->isUsingImplementingObject() ? 1000 : 5000;
     }
-} // namespace
+} // namespace swift::gui::components

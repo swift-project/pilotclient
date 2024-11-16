@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_LISTOBSERVER_H
 #define SWIFT_MISC_SHAREDSTATE_LISTOBSERVER_H
 
+#include <QMutex>
+#include <QObject>
+
 #include "misc/sharedstate/activeobserver.h"
 #include "misc/sharedstate/datalink.h"
-#include "misc/variantlist.h"
 #include "misc/swiftmiscexport.h"
-#include <QObject>
-#include <QMutex>
+#include "misc/variantlist.h"
 
 namespace swift::misc::shared_state
 {
@@ -88,6 +89,6 @@ namespace swift::misc::shared_state
         virtual void onGenericElementAdded(const CVariant &value) override final { onElementAdded(value.to<typename T::value_type>()); }
         virtual void onGenericElementsReplaced(const CVariantList &values) override final { onElementsReplaced(values.to<T>()); }
     };
-}
+} // namespace swift::misc::shared_state
 
 #endif

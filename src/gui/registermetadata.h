@@ -10,6 +10,6 @@ namespace swift::gui
 {
     //! Register metadata for GUI
     SWIFT_GUI_EXPORT void registerMetadata();
-}
+} // namespace swift::gui
 
 #endif // guard

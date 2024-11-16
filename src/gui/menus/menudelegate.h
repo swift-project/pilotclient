@@ -4,11 +4,11 @@
 #ifndef SWIFT_GUI_MENUS_MENUDELEGATE_H
 #define SWIFT_GUI_MENUS_MENUDELEGATE_H
 
-#include "misc/logcategories.h"
-#include "gui/menus/menuaction.h"
-
 #include <QMenu>
 #include <QObject>
+
+#include "gui/menus/menuaction.h"
+#include "misc/logcategories.h"
 
 class QWidget;
 
@@ -62,6 +62,6 @@ namespace swift::gui::menus
 
         IMenuDelegate *m_nestedDelegate = nullptr; //!< nested delegate if any
     };
-} // ns
+} // namespace swift::gui::menus
 
 #endif // guard

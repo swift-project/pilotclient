@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_PQ_LENGTH_H
 #define SWIFT_MISC_PQ_LENGTH_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/pq/physicalquantity.h"
 #include <QPair>
+
+#include "misc/pq/physicalquantity.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::physical_quantities
 {
@@ -33,7 +34,7 @@ namespace swift::misc::physical_quantities
     };
 
     using CLengthPair = QPair<CLength, CLength>; //!< Pair of length
-} // ns
+} // namespace swift::misc::physical_quantities
 
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CLength)
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CLengthPair)

@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "matchingstatisticscomponent.h"
+
 #include "ui_matchingstatisticscomponent.h"
-#include "gui/guiapplication.h"
+
 #include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
 
 using namespace swift::misc::simulation;
 using namespace swift::core::context;
@@ -33,4 +35,4 @@ namespace swift::gui::components
         const CMatchingStatistics stats = sGui->getIContextSimulator()->getCurrentMatchingStatistics(missingOnly);
         ui->tvp_MatchingStatistics->updateContainerMaybeAsync(stats);
     }
-} // ns
+} // namespace swift::gui::components

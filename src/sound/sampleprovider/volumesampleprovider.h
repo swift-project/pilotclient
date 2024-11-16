@@ -6,8 +6,8 @@
 #ifndef SWIFT_SOUND_SAMPLEPROVIDER_VOLUMESAMPLEPROVIDER_H
 #define SWIFT_SOUND_SAMPLEPROVIDER_VOLUMESAMPLEPROVIDER_H
 
-#include "sound/swiftsoundexport.h"
 #include "sound/sampleprovider/sampleprovider.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -38,6 +38,6 @@ namespace swift::sound::sample_provider
         ISampleProvider *m_sourceProvider = nullptr;
         double m_gainRatio = 1.0;
     };
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

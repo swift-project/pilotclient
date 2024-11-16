@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_AIRCRAFTCOMBINEDTYPESELECTOR_H
 #define SWIFT_GUI_AIRCRAFTCOMBINEDTYPESELECTOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/aviation/aircrafticaocode.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/aircrafticaocode.h"
 
 namespace Ui
 {
@@ -70,6 +70,6 @@ namespace swift::gui::components
         QString m_cc;
         QScopedPointer<Ui::CAircraftCombinedTypeSelector> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

@@ -45,4 +45,4 @@ namespace swift::misc::shared_state::dbus
     {
         return m_token++;
     }
-}
+} // namespace swift::misc::shared_state::dbus

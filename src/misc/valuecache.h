@@ -6,21 +6,11 @@
 #ifndef SWIFT_MISC_VALUECACHE_H
 #define SWIFT_MISC_VALUECACHE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/mixin/mixindbus.h"
-#include "misc/mixin/mixindatastream.h"
-#include "misc/mixin/mixinhash.h"
-#include "misc/dictionary.h"
-#include "misc/identifier.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/range.h"
-#include "misc/slot.h"
-#include "misc/statusmessagelist.h"
-#include "misc/valuecacheprivate.h"
-#include "misc/mixin/mixinmetatype.h"
-#include "misc/variantmap.h"
+#include <cstddef>
+#include <memory>
+#include <stdexcept>
+#include <tuple>
+#include <utility>
 
 #include <QChar>
 #include <QDBusArgument>
@@ -38,11 +28,22 @@
 #include <QThread>
 #include <QVariant>
 #include <QtGlobal>
-#include <stdexcept>
-#include <cstddef>
-#include <tuple>
-#include <utility>
-#include <memory>
+
+#include "misc/dictionary.h"
+#include "misc/identifier.h"
+#include "misc/metaclass.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/mixin/mixindatastream.h"
+#include "misc/mixin/mixindbus.h"
+#include "misc/mixin/mixinhash.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/propertyindexref.h"
+#include "misc/range.h"
+#include "misc/slot.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valuecacheprivate.h"
+#include "misc/variantmap.h"
 
 namespace swift::misc
 {
@@ -514,7 +515,7 @@ namespace swift::misc
         private_ns::CValuePage *m_page;
     };
 
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CValueCachePacket)
 

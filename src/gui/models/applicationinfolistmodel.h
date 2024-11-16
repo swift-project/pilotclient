@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_APPLICATIONINFOLISTMODEL_H
 #define SWIFT_GUI_MODELS_APPLICATIONINFOLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/listmodelbase.h"
-#include "misc/applicationinfolist.h"
 #include <QObject>
+
+#include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/applicationinfolist.h"
 
 class QStandardItemModel;
 
@@ -30,5 +31,5 @@ namespace swift::gui::models
         //! \copydoc swift::misc::CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories
         void otherSwiftVersionsFromDataDirectories(bool reinit);
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

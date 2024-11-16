@@ -18,7 +18,7 @@ namespace swift::gui::components
         TextMessagesCom1,
         TextMessagesCom2
     };
-} // ns
+} // namespace swift::gui::components
 
 Q_DECLARE_METATYPE(swift::gui::components::TextMessageTab)
 

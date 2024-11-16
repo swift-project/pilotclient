@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_MODELS_DISTRIBUTORLISTMODEL_H
 #define SWIFT_GUI_MODELS_DISTRIBUTORLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/models/listmodeldbobjects.h"
-#include "misc/simulation/distributorlist.h"
-
 #include <QString>
+
+#include "gui/models/listmodeldbobjects.h"
+#include "gui/swiftguiexport.h"
+#include "misc/simulation/distributorlist.h"
 
 namespace swift::misc::simulation
 {
@@ -53,6 +53,6 @@ namespace swift::gui::models
     private:
         DistributorMode m_distributorMode = NotSet;
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

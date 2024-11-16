@@ -6,11 +6,11 @@
 #ifndef SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H
 #define SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H
 
-#include "gui/pluginconfig.h"
-#include "misc/settingscache.h"
-
 #include <QObject>
 #include <QString>
+
+#include "gui/pluginconfig.h"
+#include "misc/settingscache.h"
 
 class QWidget;
 
@@ -39,6 +39,6 @@ namespace swift::simplugin::xplane
         //! \copydoc swift::gui::IPluginConfig::createConfigWindow()
         swift::gui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
     };
-} // ns
+} // namespace swift::simplugin::xplane
 
 #endif // guard

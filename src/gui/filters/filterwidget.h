@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_FILTERS_FILTERWIDGET_H
 #define SWIFT_GUI_FILTERS_FILTERWIDGET_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/filters/filterbarbuttons.h"
-
 #include <QFrame>
 #include <QObject>
+
+#include "gui/filters/filterbarbuttons.h"
+#include "gui/swiftguiexport.h"
 
 class QWidget;
 
@@ -58,6 +58,6 @@ namespace swift::gui::filters
         //! Stylesheet changed
         void onStyleSheetChanged();
     };
-} // namespace
+} // namespace swift::gui::filters
 
 #endif // guard

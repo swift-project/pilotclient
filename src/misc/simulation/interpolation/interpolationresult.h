@@ -6,13 +6,11 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONRESULT_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONRESULT_H
 
-#include "misc/swiftmiscexport.h"
-
-#include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/aircraftparts.h"
-
+#include "misc/aviation/aircraftsituation.h"
 #include "misc/simulation/interpolation/interpolationstatus.h"
 #include "misc/simulation/partsstatus.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation
 {
@@ -66,6 +64,6 @@ namespace swift::misc::simulation
         CPartsStatus m_partsStatus; //!< parts status
     };
 
-}
+} // namespace swift::misc::simulation
 
 #endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONRESULT_H

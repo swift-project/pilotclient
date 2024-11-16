@@ -1,16 +1,18 @@
 // SPDX-FileCopyrightText: Copyright (C) 2019 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "ui_radarcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/infoarea.h"
 #include "gui/components/radarcomponent.h"
+
+#include <QStringBuilder>
+#include <QtMath>
+
+#include "ui_radarcomponent.h"
+
 #include "core/context/contextnetwork.h"
 #include "core/context/contextownaircraft.h"
+#include "gui/guiapplication.h"
+#include "gui/infoarea.h"
 #include "misc/simulation/simulatedaircraft.h"
-
-#include <QtMath>
-#include <QStringBuilder>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -302,4 +304,4 @@ namespace swift::gui::components
         p.setY(-p.y());
         return p;
     }
-} // namespace
+} // namespace swift::gui::components

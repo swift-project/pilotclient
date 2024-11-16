@@ -123,4 +123,4 @@ namespace swift::gui
         connect(m_systemTrayIcon, &QSystemTrayIcon::activated, this, &CSystemTrayWindow::ps_activateWindow);
     }
 
-} // namespace
+} // namespace swift::gui

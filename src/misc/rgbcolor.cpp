@@ -2,10 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/rgbcolor.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/comparefunctions.h"
-#include "misc/icons.h"
-#include "misc/stringutils.h"
 
 #include <QBrush>
 #include <QPainter>
@@ -13,6 +9,11 @@
 #include <QSize>
 #include <QStringBuilder>
 #include <QtGlobal>
+
+#include "misc/comparefunctions.h"
+#include "misc/icons.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/stringutils.h"
 
 using namespace swift::misc;
 
@@ -269,4 +270,4 @@ namespace swift::misc
         return swift::misc::intToHex(h, digits);
     }
 
-} // namespace
+} // namespace swift::misc

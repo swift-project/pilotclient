@@ -6,26 +6,27 @@
 #ifndef SWIFT_MISC_PQ_MEASUREMENTUNIT_H
 #define SWIFT_MISC_PQ_MEASUREMENTUNIT_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixinhash.h"
-#include "misc/mixin/mixinicon.h"
-#include "misc/math/mathutils.h"
-#include "misc/mixin/mixinstring.h"
-#include "misc/stringutils.h"
+#include <cmath>
+#include <cstddef>
+#include <string>
 
 #include <QCoreApplication>
 #include <QDBusArgument>
 #include <QHash>
+#include <QList>
 #include <QSharedData>
 #include <QSharedDataPointer>
 #include <QString>
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
-#include <QList>
-#include <cmath>
-#include <cstddef>
-#include <string>
+
+#include "misc/math/mathutils.h"
+#include "misc/mixin/mixinhash.h"
+#include "misc/mixin/mixinicon.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/stringutils.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::physical_quantities
 {
@@ -505,6 +506,6 @@ namespace swift::misc::physical_quantities
             return none;
         }
     };
-} // ns
+} // namespace swift::misc::physical_quantities
 
 #endif // guard

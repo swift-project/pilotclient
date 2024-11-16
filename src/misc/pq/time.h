@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_PQ_TIME_H
 #define SWIFT_MISC_PQ_TIME_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/pq/physicalquantity.h"
-#include "misc/pq/pqstring.h"
-#include "misc/pq/units.h"
-
+#include <QDateTime>
 #include <QList>
 #include <QMetaType>
 #include <QString>
 #include <QTime>
-#include <QDateTime>
+
+#include "misc/pq/physicalquantity.h"
+#include "misc/pq/pqstring.h"
+#include "misc/pq/units.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::physical_quantities
 {
@@ -79,7 +79,7 @@ namespace swift::misc::physical_quantities
         //! To Qt time
         QTime toQTime() const;
     };
-} // ns
+} // namespace swift::misc::physical_quantities
 
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CTime)
 

@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_DBUSUTILS_H
 #define SWIFT_MISC_DBUSUTILS_H
 
-#include "misc/swiftmiscexport.h"
 #include <QDBusArgument>
 #include <QTextStream>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -41,6 +42,6 @@ namespace swift::misc
         //! Show some (important) DBus signatures
         static void showDBusSignatures(QTextStream &out);
     };
-} // ns
+} // namespace swift::misc
 
 #endif // guard

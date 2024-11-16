@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircraftcategorylist.h"
-#include "misc/setbuilder.h"
 
 #include <QJsonValue>
-#include <Qt>
 #include <QMap>
+#include <Qt>
+
+#include "misc/setbuilder.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftCategory, CAircraftCategoryList)
 
@@ -221,4 +222,4 @@ namespace swift::misc::aviation
         return categories;
     }
 
-} // namespace
+} // namespace swift::misc::aviation

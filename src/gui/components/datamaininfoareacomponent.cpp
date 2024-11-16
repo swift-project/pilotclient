@@ -1,8 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/datainfoareacomponent.h"
 #include "gui/components/datamaininfoareacomponent.h"
+
+#include <QIcon>
+
+#include "ui_datamaininfoareacomponent.h"
+
+#include "gui/components/datainfoareacomponent.h"
 #include "gui/components/dbaircrafticaocomponent.h"
 #include "gui/components/dbliverycomponent.h"
 #include "gui/components/dbmappingcomponent.h"
@@ -10,8 +15,6 @@
 #include "gui/components/logcomponent.h"
 #include "misc/icons.h"
 #include "misc/verify.h"
-#include "ui_datamaininfoareacomponent.h"
-#include <QIcon>
 
 using namespace swift::misc;
 using namespace swift::gui;
@@ -98,4 +101,4 @@ namespace swift::gui::components
         default: return CIcons::empty();
         }
     }
-} // ns
+} // namespace swift::gui::components

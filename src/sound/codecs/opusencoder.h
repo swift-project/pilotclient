@@ -6,11 +6,12 @@
 #ifndef SWIFT_SOUND_CODECS_OPUSENCODER_H
 #define SWIFT_SOUND_CODECS_OPUSENCODER_H
 
-#include "opus/opus.h"
-#include "sound/swiftsoundexport.h"
-
 #include <QByteArray>
 #include <QVector>
+
+#include "opus/opus.h"
+
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::codecs
 {
@@ -41,6 +42,6 @@ namespace swift::sound::codecs
 
         static constexpr int maxDataBytes = 4000;
     };
-} // ns
+} // namespace swift::sound::codecs
 
 #endif // guard

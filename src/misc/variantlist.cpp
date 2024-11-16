@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/variantlist.h"
+
 #include <algorithm>
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CVariant, CVariantList)
@@ -36,4 +37,4 @@ namespace swift::misc
     {
         return containsBy([&](const CVariant &pattern) { return pattern.matches(event); });
     }
-} // ns
+} // namespace swift::misc

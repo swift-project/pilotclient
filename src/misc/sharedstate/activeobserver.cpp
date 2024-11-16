@@ -23,4 +23,4 @@ namespace swift::misc::shared_state
             if (lock) { callback(reply.result()); }
         });
     }
-}
+} // namespace swift::misc::shared_state

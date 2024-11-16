@@ -4,10 +4,12 @@
 #ifndef SWIFT_SIMPLUGIN_FS9_LOBBYCLIENT_H
 #define SWIFT_SIMPLUGIN_FS9_LOBBYCLIENT_H
 
-#include "callbackwrapper.h"
-#include <QDebug>
 #include <dplay8.h>
 #include <dplobby8.h>
+
+#include <QDebug>
+
+#include "callbackwrapper.h"
 
 namespace swift::simplugin::fs9
 {
@@ -65,6 +67,6 @@ namespace swift::simplugin::fs9
 
         static const size_t m_maxSizePlayerName = 14;
     };
-} // ns
+} // namespace swift::simplugin::fs9
 
 #endif

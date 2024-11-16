@@ -4,6 +4,7 @@
 //! \file
 
 #include "misc/sharedstate/scalarjournal.h"
+
 #include "misc/sharedstate/datalink.h"
 
 namespace swift::misc::shared_state
@@ -26,4 +27,4 @@ namespace swift::misc::shared_state
     {
         m_value = param;
     }
-}
+} // namespace swift::misc::shared_state

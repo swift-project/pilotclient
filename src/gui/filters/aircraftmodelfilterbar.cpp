@@ -1,22 +1,24 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/dbdistributorselectorcomponent.h"
-#include "gui/components/simulatorselector.h"
 #include "gui/filters/aircraftmodelfilterbar.h"
-#include "gui/filters/filterbarbuttons.h"
-#include "gui/models/aircraftmodelfilter.h"
-#include "gui/uppercasevalidator.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/db/datastore.h"
-#include "ui_aircraftmodelfilterbar.h"
 
 #include <QCheckBox>
 #include <QLineEdit>
-#include <QtGlobal>
 #include <QPointer>
 #include <QTimer>
+#include <QtGlobal>
+
+#include "ui_aircraftmodelfilterbar.h"
+
+#include "gui/components/dbdistributorselectorcomponent.h"
+#include "gui/components/simulatorselector.h"
+#include "gui/filters/filterbarbuttons.h"
+#include "gui/models/aircraftmodelfilter.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/db/datastore.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodellist.h"
 
 using namespace swift::misc::simulation;
 using namespace swift::misc::db;
@@ -176,4 +178,4 @@ namespace swift::gui::filters
         connect(ui->comp_DistributorSelector, &CDbDistributorSelectorComponent::changedDistributor, this, &CAircraftModelFilterBar::onDistributorChanged);
         connect(ui->comp_CombinedType, &CAircraftCombinedTypeSelector::changedCombinedType, this, &CAircraftModelFilterBar::onCombinedTypeChanged);
     }
-} // ns
+} // namespace swift::gui::filters

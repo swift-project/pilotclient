@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_DBAIRLINEICAOSELECTORBASE_H
 #define SWIFT_GUI_DBAIRLINEICAOSELECTORBASE_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/dropbase.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/network/entityflags.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/dropbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/network/entityflags.h"
 
 class QCompleter;
 class QDragEnterEvent;
@@ -89,5 +89,5 @@ namespace swift::gui::components
         //! Data have been changed
         void onCompleterActivated(const QString &icaoString);
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

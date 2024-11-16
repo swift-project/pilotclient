@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_UPPERCASEVALIDATOR_H
 #define SWIFT_GUI_UPPERCASEVALIDATOR_H
 
-#include "gui/swiftguiexport.h"
 #include <QStringList>
 #include <QValidator>
+
+#include "gui/swiftguiexport.h"
 
 namespace swift::gui
 {
@@ -49,5 +50,5 @@ namespace swift::gui
         QString m_allowedCharacters; //!< allowedCharacters
         QStringList m_restrictions; //!< list of allowed strings
     };
-}
+} // namespace swift::gui
 #endif // guard

@@ -2,11 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/processctrl.h"
-#include "misc/logmessage.h"
+
 #include <QStringBuilder>
+
+#include "misc/logmessage.h"
 
 #ifdef Q_OS_WIN
 #    include <windows.h>
+
 #    include <array>
 #endif
 
@@ -68,4 +71,4 @@ namespace swift::misc
         else { return QProcess::startDetached(program, arguments); }
     }
 
-} // ns
+} // namespace swift::misc

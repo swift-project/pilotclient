@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_TEXTMESSAGEVIEW_H
 #define SWIFT_GUI_TEXTMESSAGEVIEW_H
 
-#include "gui/views/viewbase.h"
 #include "gui/models/textmessagelistmodel.h"
-#include "misc/network/textmessagelist.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewbase.h"
+#include "misc/network/textmessagelist.h"
 
 namespace swift::misc::network
 {
@@ -35,6 +35,6 @@ namespace swift::gui::views
         //! Sorted by a timestamp property, latest messages at the end
         bool isSortedByTimestampPropertyLatestLast() const;
     };
-} // namespace
+} // namespace swift::gui::views
 
 #endif // guard

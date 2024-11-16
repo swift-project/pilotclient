@@ -6,15 +6,16 @@
 #ifndef SWIFT_MISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
 #define SWIFT_MISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H
 
-#include "misc/simulation/simulatedaircraft.h"
+#include <QMetaType>
+
 #include "misc/aviation/callsignobjectlist.h"
 #include "misc/aviation/callsignset.h"
+#include "misc/collection.h"
 #include "misc/geo/geoobjectlist.h"
 #include "misc/network/userlist.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
 #include "misc/sequence.h"
-#include <QMetaType>
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatedAircraft, CSimulatedAircraftList)
 
@@ -24,12 +25,12 @@ namespace swift::misc
     {
         class CAircraftParts;
         class CCallsign;
-    }
+    } // namespace aviation
     namespace simulation
     {
         class CAircraftModel;
         class CSimulatedAircraft;
-    }
+    } // namespace simulation
     namespace simulation
     {
         //! Value object encapsulating a list of aircraft.
@@ -123,8 +124,8 @@ namespace swift::misc
         //! Aircraft per callsign
         using CSimulatedAircraftPerCallsign = QHash<aviation::CCallsign, CSimulatedAircraft>;
 
-    } // namespace
-} // namespace
+    } // namespace simulation
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatedAircraftList)
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatedAircraftPerCallsign)

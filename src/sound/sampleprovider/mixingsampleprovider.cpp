@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "mixingsampleprovider.h"
+
 #include "misc/metadatautils.h"
 
 using namespace swift::misc;
@@ -56,4 +57,4 @@ namespace swift::sound::sample_provider
 
         return outputLen;
     }
-} // ns
+} // namespace swift::sound::sample_provider

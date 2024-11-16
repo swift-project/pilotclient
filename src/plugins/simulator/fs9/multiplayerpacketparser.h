@@ -4,12 +4,14 @@
 #ifndef SWIFT_SIMPLUGIN_FS9_MP_PACKET_PARSER_H
 #define SWIFT_SIMPLUGIN_FS9_MP_PACKET_PARSER_H
 
-#include "fs9.h"
-#include <QtGlobal>
-#include <QDebug>
-#include <QByteArray>
-#include <QString>
 #include <tuple>
+
+#include <QByteArray>
+#include <QDebug>
+#include <QString>
+#include <QtGlobal>
+
+#include "fs9.h"
 
 //! \file
 
@@ -129,6 +131,6 @@ namespace swift::simplugin::fs9
             data.append(reinterpret_cast<const char *>(&size), sizeof(qint32));
         }
     };
-}
+} // namespace swift::simplugin::fs9
 
 #endif // SWIFT_SIMPLUGIN_FS9_MP_PACKET_PARSER_H

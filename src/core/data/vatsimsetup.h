@@ -6,6 +6,9 @@
 #ifndef SWIFT_CORE_DATA_VATSIMDATA_H
 #define SWIFT_CORE_DATA_VATSIMDATA_H
 
+#include <QMetaType>
+#include <QString>
+
 #include "core/swiftcoreexport.h"
 #include "misc/datacache.h"
 #include "misc/metaclass.h"
@@ -16,9 +19,6 @@
 #include "misc/timestampbased.h"
 #include "misc/valueobject.h"
 #include "misc/variant.h"
-
-#include <QMetaType>
-#include <QString>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::core::data, CVatsimSetup)
 
@@ -141,7 +141,7 @@ namespace swift::core::data
             return name;
         }
     };
-} // ns
+} // namespace swift::core::data
 
 Q_DECLARE_METATYPE(swift::core::data::CVatsimSetup)
 

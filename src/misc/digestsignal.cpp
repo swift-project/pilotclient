@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/digestsignal.h"
-#include "misc/threadutils.h"
+
 #include <QPointer>
+
+#include "misc/threadutils.h"
 
 namespace swift::misc
 {
@@ -41,4 +43,4 @@ namespace swift::misc
         m_timer.setSingleShot(true);
         m_timer.setInterval(maxDelayMs);
     }
-} // namespace
+} // namespace swift::misc

@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_CORESTATUSCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_CORESTATUSCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/swiftguiexport.h"
 
 class QWidget;
 
@@ -37,6 +37,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CCoreStatusComponent> ui;
     };
 
-} // namespace
+} // namespace swift::gui::components
 
 #endif // guard

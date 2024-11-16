@@ -4,10 +4,12 @@
 #ifndef SWIFT_SIMPLUGIN_FS9_CALLBACK_WRAPPER_H
 #define SWIFT_SIMPLUGIN_FS9_CALLBACK_WRAPPER_H
 
+#include <dplay8.h>
+
+#include <functional>
+
 #include <QObject>
 #include <QPointer>
-#include <dplay8.h>
-#include <functional>
 
 namespace swift::simplugin::fs9
 {
@@ -36,6 +38,6 @@ namespace swift::simplugin::fs9
         QPointer<Object> m_object;
         MemberFunction m_memberFunction;
     };
-}
+} // namespace swift::simplugin::fs9
 
 #endif // guard

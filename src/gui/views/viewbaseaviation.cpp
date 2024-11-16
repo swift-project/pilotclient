@@ -14,4 +14,4 @@ namespace swift::gui::views
     template class CViewBase<swift::gui::models::CAirportListModel>;
     template class CViewBase<swift::gui::models::CAtcStationListModel>;
     template class CViewBase<swift::gui::models::CLiveryListModel>;
-} // namespace
+} // namespace swift::gui::views

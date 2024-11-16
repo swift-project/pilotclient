@@ -6,11 +6,12 @@
 #ifndef SWIFT_GUI_VIEWS_VIEWCALLSIGNOBJECTS_H
 #define SWIFT_GUI_VIEWS_VIEWCALLSIGNOBJECTS_H
 
-#include "gui/views/viewbase.h"
-#include <QSet>
 #include <QObject>
+#include <QSet>
 #include <QString>
 #include <QtGlobal>
+
+#include "gui/views/viewbase.h"
 
 class QAction;
 class QIntValidator;
@@ -68,6 +69,6 @@ namespace swift::gui
             //! Constructor
             explicit CViewWithCallsignObjects(QWidget *parent = nullptr);
         };
-    } // namespace
-} // namespace
+    } // namespace views
+} // namespace swift::gui
 #endif // guard

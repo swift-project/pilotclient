@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_AIRLINEICAOLISTMODEL_H
 #define SWIFT_GUI_AIRLINEICAOLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodeldbobjects.h"
+#include "gui/swiftguiexport.h"
 
 class QObject;
 
@@ -15,7 +15,7 @@ namespace swift::misc::aviation
 {
     class CAirlineIcaoCode;
     class CAirlineIcaoCodeList;
-}
+} // namespace swift::misc::aviation
 
 namespace swift::gui::models
 {
@@ -32,5 +32,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CAirlineIcaoCodeListModel() {}
     };
-}
+} // namespace swift::gui::models
 #endif // guard

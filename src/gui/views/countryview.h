@@ -6,9 +6,9 @@
 #ifndef SWIFT_GUI_VIEWS_COUNTRYVIEW_H
 #define SWIFT_GUI_VIEWS_COUNTRYVIEW_H
 
-#include "gui/views/viewbase.h"
 #include "gui/models/countrylistmodel.h"
 #include "gui/swiftguiexport.h"
+#include "gui/views/viewbase.h"
 #include "misc/countrylist.h"
 
 namespace swift::gui::views
@@ -22,5 +22,5 @@ namespace swift::gui::views
         //! Constructor
         explicit CCountryView(QWidget *parent = nullptr);
     };
-} // ns
+} // namespace swift::gui::views
 #endif // guard

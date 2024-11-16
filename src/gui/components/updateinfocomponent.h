@@ -6,13 +6,14 @@
 #ifndef SWIFT_GUI_COMPONENTS_UPDATEINFOCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_UPDATEINFOCOMPONENT_H
 
+#include <QFrame>
+
 #include "core/application/updatesettings.h"
 #include "gui/swiftguiexport.h"
-#include "misc/db/updateinfo.h"
 #include "misc/db/artifact.h"
-#include "misc/settingscache.h"
+#include "misc/db/updateinfo.h"
 #include "misc/digestsignal.h"
-#include <QFrame>
+#include "misc/settingscache.h"
 
 namespace Ui
 {
@@ -97,5 +98,5 @@ namespace swift::gui::components
         //! Selected or default distribution
         swift::misc::db::CDistribution getSelectedOrDefaultDistribution() const;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

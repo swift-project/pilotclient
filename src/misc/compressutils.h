@@ -6,9 +6,10 @@
 #ifndef SWIFT_MISC_COMPRESSUTILS_H
 #define SWIFT_MISC_COMPRESSUTILS_H
 
-#include "misc/swiftmiscexport.h"
 #include <QByteArray>
 #include <QStringList>
+
+#include "misc/swiftmiscexport.h"
 
 class QProcess;
 
@@ -39,6 +40,6 @@ namespace swift::misc
     private:
         static bool runZip7Process(QProcess *zipProcess, QStringList *stdOutAndError);
     };
-} // ns
+} // namespace swift::misc
 
 #endif // SWIFT_MISC_COMPRESSUTILS_H

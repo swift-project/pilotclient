@@ -6,14 +6,14 @@
 #ifndef SWIFT_MISC_WEATHER_CLOUDLAYER_H
 #define SWIFT_MISC_WEATHER_CLOUDLAYER_H
 
-#include "misc/aviation/altitude.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/aviation/altitude.h"
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::weather, CCloudLayer)
 
@@ -151,7 +151,7 @@ namespace swift::misc::weather
             SWIFT_METAMEMBER(clouds),
             SWIFT_METAMEMBER(coveragePercent));
     };
-} // namespace
+} // namespace swift::misc::weather
 
 Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayer)
 Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayer::Coverage)

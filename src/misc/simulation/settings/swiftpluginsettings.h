@@ -6,10 +6,10 @@
 #ifndef SWIFT_MISC_SIMULATION_SETTINGS_SWIFTPLUGINSETTINGS_H
 #define SWIFT_MISC_SIMULATION_SETTINGS_SWIFTPLUGINSETTINGS_H
 
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/settingscache.h"
 #include "misc/propertyindexref.h"
+#include "misc/settingscache.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatorinfo.h"
 #include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation::Settings, CSwiftPluginSettings)
@@ -95,7 +95,7 @@ namespace swift::misc::simulation::settings
         //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const CSwiftPluginSettings &value, QString &) { return value.getEmulatedSimulator().isSingleSimulator(); }
     };
-} // ns
+} // namespace swift::misc::simulation::settings
 
 Q_DECLARE_METATYPE(swift::misc::simulation::settings::CSwiftPluginSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::settings::CSwiftPluginSettings>)

@@ -47,6 +47,6 @@ namespace swift::core::fsd
     {
         return !(lhs == rhs);
     }
-}
+} // namespace swift::core::fsd
 
 #endif // guard

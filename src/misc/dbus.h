@@ -6,13 +6,14 @@
 #ifndef SWIFT_MISC_DBUS_H
 #define SWIFT_MISC_DBUS_H
 
-#include "misc/swiftmiscexport.h"
-
-#include <QFlags>
-#include <QDBusArgument>
+#include <string>
 #include <type_traits>
 #include <utility>
-#include <string>
+
+#include <QDBusArgument>
+#include <QFlags>
+
+#include "misc/swiftmiscexport.h"
 
 /*!
  * Non member non-friend streaming for std::string

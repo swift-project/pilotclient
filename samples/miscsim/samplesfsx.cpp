@@ -5,10 +5,11 @@
 //! \ingroup samplemiscsim
 
 #include "samplesfsx.h"
-#include "misc/simulation/fsx/simconnectutilities.h"
-#include "misc/registermetadata.h"
 
 #include <QTextStream>
+
+#include "misc/registermetadata.h"
+#include "misc/simulation/fsx/simconnectutilities.h"
 
 using namespace swift::misc::simulation::fsx;
 
@@ -21,4 +22,4 @@ namespace swift::sample
         streamOut << CSimConnectUtilities::simConnectExceptionToString(CSimConnectUtilities::SIMCONNECT_EXCEPTION_ILLEGAL_OPERATION) << Qt::endl;
         streamOut << CSimConnectUtilities::simConnectSurfaceTypeToString(CSimConnectUtilities::Bituminus) << Qt::endl;
     }
-} // namespace
+} // namespace swift::sample

@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "downloaddialog.h"
-#include "ui_downloaddialog.h"
+
 #include <QTimer>
+
+#include "ui_downloaddialog.h"
 
 using namespace swift::misc::network;
 
@@ -68,4 +70,4 @@ namespace swift::gui::components
         }
     }
 
-} // ns
+} // namespace swift::gui::components

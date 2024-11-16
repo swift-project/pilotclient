@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/remoteaircraftprovider.h"
-#include "misc/simulation/matchingutils.h"
-#include "misc/logmessage.h"
-#include "misc/json.h"
-#include "misc/verify.h"
-#include "misc/stringutils.h"
+
 #include "config/buildconfig.h"
+#include "misc/json.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/matchingutils.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
@@ -1179,4 +1180,4 @@ namespace swift::misc::simulation
         static const CCallsign wildcard("ZZZZ");
         return wildcard;
     }
-} // namespace
+} // namespace swift::misc::simulation

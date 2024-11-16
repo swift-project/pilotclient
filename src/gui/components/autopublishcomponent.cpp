@@ -2,19 +2,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "autopublishcomponent.h"
-#include "ui_autopublishcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-
-#include "core/webdataservices.h"
-#include "core/db/databasewriter.h"
-#include "misc/simulation/aircraftmodellist.h"
 
 #include <QDateTime>
-#include <QPushButton>
-#include <QPointer>
-#include <QTimer>
 #include <QDialog>
+#include <QPointer>
+#include <QPushButton>
+#include <QTimer>
+
+#include "ui_autopublishcomponent.h"
+
+#include "core/db/databasewriter.h"
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "misc/simulation/aircraftmodellist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -134,4 +135,4 @@ namespace swift::gui::components
         if (d) { d->close(); }
     }
 
-} // ns
+} // namespace swift::gui::components

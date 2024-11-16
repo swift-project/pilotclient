@@ -5,6 +5,11 @@
 //! \ingroup samplemiscquantities
 
 #include "samplesgeo.h"
+
+#include <QString>
+#include <QTextStream>
+#include <QVector3D>
+
 #include "misc/aviation/altitude.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/earthangle.h"
@@ -13,10 +18,6 @@
 #include "misc/pq/physicalquantity.h"
 #include "misc/pq/units.h"
 #include "misc/stringutils.h"
-
-#include <QString>
-#include <QTextStream>
-#include <QVector3D>
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -70,4 +71,4 @@ namespace swift::sample
         out << "-----------------------------------------------" << Qt::endl;
         return 0;
     }
-} // namespace
+} // namespace swift::sample

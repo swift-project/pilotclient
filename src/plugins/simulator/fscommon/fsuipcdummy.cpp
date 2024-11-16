@@ -65,7 +65,7 @@ namespace swift::simplugin
             Q_UNUSED(aircraftParts);
             return false;
         }
-    } // namespace
-} // namespace
+    } // namespace fscommon
+} // namespace swift::simplugin
 
 #endif // !defined(SWIFT_USING_FSUIPC32) && !defined(SWIFT_USING_FSUIPC64)

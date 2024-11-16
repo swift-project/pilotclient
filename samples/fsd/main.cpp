@@ -4,12 +4,13 @@
 //! \file
 //! \ingroup samplefsd
 
+#include <QCoreApplication>
+#include <QThread>
+
 #include "core/fsd/fsdclient.h"
 #include "misc/network/clientprovider.h"
 #include "misc/simulation/ownaircraftproviderdummy.h"
 #include "misc/simulation/remoteaircraftproviderdummy.h"
-#include <QCoreApplication>
-#include <QThread>
 
 using namespace swift::misc::network;
 using namespace swift::misc::simulation;

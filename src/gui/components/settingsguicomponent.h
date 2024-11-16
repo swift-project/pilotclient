@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSGUICOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSGUICOMPONENT_H
 
-#include "gui/singleapplicationui.h"
-#include "gui/settings/guisettings.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "gui/settings/guisettings.h"
+#include "gui/singleapplicationui.h"
 
 namespace Ui
 {
@@ -56,5 +57,5 @@ namespace swift::gui::components
         QScopedPointer<Ui::CSettingsGuiComponent> ui;
         swift::misc::CSetting<settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

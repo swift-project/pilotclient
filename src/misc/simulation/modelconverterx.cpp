@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/modelconverterx.h"
-#include "config/buildconfig.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/logmessage.h"
-#include <QFile>
+
 #include <QDir>
+#include <QFile>
+
+#include "config/buildconfig.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/aircraftmodel.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -63,4 +65,4 @@ namespace swift::misc::simulation
         const QFile f(mcx);
         return (f.exists()) ? mcx : QString();
     }
-} // ns
+} // namespace swift::misc::simulation

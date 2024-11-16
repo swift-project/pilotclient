@@ -6,17 +6,17 @@
 #ifndef SWIFT_MISC_DB_DISTRIBUTION_H
 #define SWIFT_MISC_DB_DISTRIBUTION_H
 
-#include "config/buildconfig.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/network/url.h"
-#include "misc/db/datastore.h"
-#include "misc/settingscache.h"
-#include "misc/dictionary.h"
-#include "misc/valueobject.h"
-
 #include <QMetaType>
-#include <QVersionNumber>
 #include <QString>
+#include <QVersionNumber>
+
+#include "config/buildconfig.h"
+#include "misc/db/datastore.h"
+#include "misc/dictionary.h"
+#include "misc/network/url.h"
+#include "misc/settingscache.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CDistribution)
 
@@ -117,7 +117,7 @@ namespace swift::misc::db
             SWIFT_METAMEMBER(stability),
             SWIFT_METAMEMBER(downloadUrl));
     };
-} // ns
+} // namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CDistribution)
 

@@ -5,13 +5,14 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/aviation/aircraftsituation.h"
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
-#include "test.h"
-
 #include <QDebug>
 #include <QTest>
 #include <QtDebug>
+
+#include "test.h"
+
+#include "misc/aviation/aircraftsituation.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::geo;
@@ -118,7 +119,7 @@ namespace MiscTest
             QVERIFY2(!s1.equalPbhVectorAltitude(s2), "Heading test, expect same PHB/Vector/Altitude");
         }
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestInterpolatorMisc);

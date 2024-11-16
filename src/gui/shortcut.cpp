@@ -98,4 +98,4 @@ namespace swift::gui
     {
         return QStringLiteral("(%1)").arg(sequence.toString());
     }
-} // ns
+} // namespace swift::gui

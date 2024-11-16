@@ -6,12 +6,12 @@
 #ifndef SWIFT_CORE_AFV_DTO_H
 #define SWIFT_CORE_AFV_DTO_H
 
-#include "msgpack.hpp"
-
 #include <QByteArray>
 #include <QJsonObject>
 #include <QString>
 #include <QUuid>
+
+#include "msgpack.hpp"
 
 namespace swift::core::afv
 {
@@ -285,6 +285,6 @@ namespace swift::core::afv
         QByteArray audio; //!< Opus compressed audio
         bool lastPacket; //!< Used to indicate to receiver that the sender has stopped sending
     };
-} // ns
+} // namespace swift::core::afv
 
 #endif // guard

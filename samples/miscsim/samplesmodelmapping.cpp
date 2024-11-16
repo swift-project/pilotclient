@@ -5,23 +5,25 @@
 //! \ingroup samplemiscsim
 
 #include "samplesmodelmapping.h"
-#include "sampleutils.h"
-#include "core/aircraftmatcher.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/aircraftmodelloader.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
-#include "misc/simulation/fscommon/aircraftcfgparser.h"
-#include "misc/simulation/fscommon/vpilotrulesreader.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/stringutils.h"
 
 #include <QFlags>
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
+
+#include "sampleutils.h"
+
+#include "core/aircraftmatcher.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/aircraftmodelloader.h"
+#include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
+#include "misc/simulation/fscommon/aircraftcfgparser.h"
+#include "misc/simulation/fscommon/vpilotrulesreader.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/stringutils.h"
 
 using namespace swift::core;
 using namespace swift::misc;
@@ -70,4 +72,4 @@ namespace swift::sample
         // restore settings: DO NOT SAVE !!!
         multiSettings.setSettings(originalSettings, sim);
     }
-} // namespace
+} // namespace swift::sample

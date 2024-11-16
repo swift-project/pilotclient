@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_STATUSMESSAGESDETAIL_H
 #define SWIFT_GUI_COMPONENTS_STATUSMESSAGESDETAIL_H
 
-#include "gui/menus/menudelegate.h"
-#include "gui/swiftguiexport.h"
-#include "misc/statusmessagelist.h"
-#include "misc/digestsignal.h"
-#include "misc/variant.h"
-
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/menus/menudelegate.h"
+#include "gui/swiftguiexport.h"
+#include "misc/digestsignal.h"
+#include "misc/statusmessagelist.h"
+#include "misc/variant.h"
 
 namespace Ui
 {
@@ -101,6 +101,6 @@ namespace swift::gui::components
             QAction *m_action = nullptr;
         };
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

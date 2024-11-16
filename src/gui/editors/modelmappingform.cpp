@@ -1,19 +1,21 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "gui/editors/modelmappingform.h"
+
+#include <QLineEdit>
+#include <QPushButton>
+
+#include "ui_modelmappingform.h"
+
 #include "gui/components/modelmodeselector.h"
 #include "gui/components/simulatorselector.h"
-#include "gui/editors/modelmappingform.h"
 #include "gui/editors/validationindicator.h"
 #include "gui/labelandicon.h"
 #include "gui/uppercasevalidator.h"
 #include "misc/icons.h"
 #include "misc/network/authenticateduser.h"
 #include "misc/stringutils.h"
-#include "ui_modelmappingform.h"
-
-#include <QLineEdit>
-#include <QPushButton>
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -146,4 +148,4 @@ namespace swift::gui::editors
         const CLength cg = this->getCGFromUI();
         this->setCGtoUI(cg);
     }
-} // ns
+} // namespace swift::gui::editors

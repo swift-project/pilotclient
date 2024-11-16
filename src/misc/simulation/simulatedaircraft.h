@@ -6,7 +6,13 @@
 #ifndef SWIFT_MISC_SIMULATION_SIMULATEDAIRCRAFT_H
 #define SWIFT_MISC_SIMULATION_SIMULATEDAIRCRAFT_H
 
-#include "misc/simulation/aircraftmodellist.h"
+#include <array>
+
+#include <QMetaType>
+#include <QString>
+#include <QVector3D>
+#include <QtGlobal>
+
 #include "misc/aviation/aircraftlights.h"
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/aircraftsituation.h"
@@ -16,23 +22,18 @@
 #include "misc/aviation/livery.h"
 #include "misc/aviation/selcal.h"
 #include "misc/aviation/transponder.h"
-#include "misc/network/user.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
+#include "misc/metaclass.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/user.h"
 #include "misc/pq/frequency.h"
 #include "misc/pq/length.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/metaclass.h"
 #include "misc/propertyindexref.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QMetaType>
-#include <QString>
-#include <QVector3D>
-#include <QtGlobal>
-#include <array>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatedAircraft)
 
@@ -43,12 +44,12 @@ namespace swift::misc
         class CAircraftIcaoCode;
         class CAltitude;
         class CHeading;
-    }
+    } // namespace aviation
     namespace physical_quantities
     {
         class CAngle;
         class CSpeed;
-    }
+    } // namespace physical_quantities
 
     namespace simulation
     {
@@ -497,8 +498,8 @@ namespace swift::misc
                 SWIFT_METAMEMBER(relativeDistance),
                 SWIFT_METAMEMBER(relativeBearing));
         };
-    } // namespace
-} // namespace
+    } // namespace simulation
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatedAircraft)
 

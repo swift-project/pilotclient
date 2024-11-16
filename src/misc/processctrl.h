@@ -6,8 +6,9 @@
 #ifndef SWIFT_MISC_PROCESS_H
 #define SWIFT_MISC_PROCESS_H
 
-#include "misc/swiftmiscexport.h"
 #include <QProcess>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -26,6 +27,6 @@ namespace swift::misc
         //! Start a programm detached and without any console window
         static bool startDetached(const QString &program, const QStringList &arguments, bool withConsoleWindow);
     };
-} // ns
+} // namespace swift::misc
 
 #endif // guard

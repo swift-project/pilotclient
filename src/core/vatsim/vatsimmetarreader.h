@@ -6,15 +6,15 @@
 #ifndef SWIFT_CORE_VATSIM_VATSIMMETARREADER_H
 #define SWIFT_CORE_VATSIM_VATSIMMETARREADER_H
 
+#include <QObject>
+
 #include "core/swiftcoreexport.h"
+#include "core/threadedreader.h"
+#include "misc/aviation/airporticaocode.h"
+#include "misc/network/entityflags.h"
 #include "misc/weather/metar.h"
 #include "misc/weather/metardecoder.h"
 #include "misc/weather/metarlist.h"
-#include "misc/network/entityflags.h"
-#include "misc/aviation/airporticaocode.h"
-#include "core/threadedreader.h"
-
-#include <QObject>
 
 class QNetworkReply;
 
@@ -68,5 +68,5 @@ namespace swift::core::vatsim
         swift::misc::weather::CMetarList m_metars;
         swift::misc::CSettingReadOnly<swift::core::vatsim::TVatsimMetars> m_settings { this, &CVatsimMetarReader::reloadSettings };
     };
-} // ns
+} // namespace swift::core::vatsim
 #endif // guard

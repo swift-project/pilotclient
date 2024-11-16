@@ -1,19 +1,21 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "config/buildconfig.h"
-#include "misc/simulation/fscommon/fsdirectories.h"
 #include "misc/simulation/simulatorinfo.h"
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/db/datastoreutility.h"
-#include "misc/stringutils.h"
-#include "misc/iconlist.h"
-#include "misc/comparefunctions.h"
+
+#include <algorithm>
 
 #include <QJsonValue>
-#include <QtGlobal>
 #include <QStringBuilder>
-#include <algorithm>
+#include <QtGlobal>
+
+#include "config/buildconfig.h"
+#include "misc/comparefunctions.h"
+#include "misc/db/datastoreutility.h"
+#include "misc/iconlist.h"
+#include "misc/simulation/fscommon/fsdirectories.h"
+#include "misc/simulation/xplane/xplaneutil.h"
+#include "misc/stringutils.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -465,4 +467,4 @@ namespace swift::misc::simulation
         default: return CSimulatorInfo(CSimulatorInfo::None);
         }
     }
-} // ns
+} // namespace swift::misc::simulation

@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_SETTINGS_NAVIGATOR_H
 #define SWIFT_GUI_SETTINGS_NAVIGATOR_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/settingscache.h"
-#include "misc/propertyindex.h"
-#include "misc/variant.h"
-
 #include <QMap>
-#include <QString>
 #include <QMetaType>
+#include <QString>
+
+#include "gui/swiftguiexport.h"
+#include "misc/propertyindex.h"
+#include "misc/settingscache.h"
+#include "misc/variant.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CNavigatorSettings)
 
@@ -104,7 +104,7 @@ namespace swift::gui::settings
             return name;
         }
     };
-} // ns
+} // namespace swift::gui::settings
 
 Q_DECLARE_METATYPE(swift::gui::settings::CNavigatorSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::gui::settings::CNavigatorSettings>)

@@ -27,5 +27,5 @@ namespace swift::misc::simulation
         if (timeFraction < 0.0) { return 0.0; }
         return timeFraction;
     }
-} // namespace
+} // namespace swift::misc::simulation
 #endif // guard

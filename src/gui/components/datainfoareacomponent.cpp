@@ -1,29 +1,31 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/webdataservices.h"
 #include "gui/components/datainfoareacomponent.h"
+
+#include <QDateTime>
+#include <QIcon>
+#include <QTabWidget>
+#include <QtGlobal>
+
+#include "ui_datainfoareacomponent.h"
+
+#include "core/webdataservices.h"
+#include "gui/components/dbaircraftcategorycomponent.h"
 #include "gui/components/dbaircrafticaocomponent.h"
 #include "gui/components/dbairlineicaocomponent.h"
 #include "gui/components/dbcountrycomponent.h"
 #include "gui/components/dbdistributorcomponent.h"
 #include "gui/components/dbliverycomponent.h"
 #include "gui/components/dbmodelcomponent.h"
-#include "gui/components/dbaircraftcategorycomponent.h"
 #include "gui/guiapplication.h"
+#include "misc/directoryutils.h"
 #include "misc/icons.h"
 #include "misc/logmessage.h"
 #include "misc/network/entityflags.h"
 #include "misc/statusmessage.h"
 #include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
 #include "misc/verify.h"
-#include "ui_datainfoareacomponent.h"
-
-#include <QDateTime>
-#include <QIcon>
-#include <QTabWidget>
-#include <QtGlobal>
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -175,4 +177,4 @@ namespace swift::gui::components
         SWIFT_VERIFY_X(requested, Q_FUNC_INFO, "Entity not supported");
         Q_UNUSED(requested);
     }
-} // ns
+} // namespace swift::gui::components

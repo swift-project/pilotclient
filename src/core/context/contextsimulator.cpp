@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextsimulator.h"
+
+#include <QFlag>
+
 #include "core/context/contextsimulatorempty.h"
 #include "core/context/contextsimulatorimpl.h"
 #include "core/context/contextsimulatorproxy.h"
 #include "misc/dbusserver.h"
 #include "misc/pq/units.h"
-
-#include <QFlag>
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -64,4 +65,4 @@ namespace swift::core::context
         if (!isSimulatorAvailable() || !getSimulatorStatusEnum().testFlag(ISimulator::Simulating)) { return false; }
         return true;
     }
-} // namespace
+} // namespace swift::core::context

@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_NETWORKUTILS_H
 #define SWIFT_MISC_NETWORKUTILS_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/statusmessagelist.h"
-#include "misc/network/ping.h"
-
-#include <QNetworkRequest>
 #include <QNetworkAccessManager>
+#include <QNetworkRequest>
 #include <QString>
 #include <QStringList>
 #include <QtGlobal>
+
+#include "misc/network/ping.h"
+#include "misc/statusmessagelist.h"
+#include "misc/swiftmiscexport.h"
 
 class QHttpPart;
 class QNetworkReply;
@@ -130,6 +130,6 @@ namespace swift::misc::network
         //! Hidden constructor
         CNetworkUtils() {}
     };
-} // namespace
+} // namespace swift::misc::network
 
 #endif // guard

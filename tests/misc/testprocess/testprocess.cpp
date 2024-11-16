@@ -5,10 +5,12 @@
 //! \file
 //! \ingroup testmisc
 
-#include "misc/processinfo.h"
-#include "test.h"
-#include <QTest>
 #include <QCoreApplication>
+#include <QTest>
+
+#include "test.h"
+
+#include "misc/processinfo.h"
 
 using namespace swift::misc;
 
@@ -36,7 +38,7 @@ namespace MiscTest
         QVERIFY2(current1 == current2, "Current process equals process with current PID");
         QVERIFY2(current1 == current3, "Current process equals process with current PID and name");
     }
-}
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestProcess);

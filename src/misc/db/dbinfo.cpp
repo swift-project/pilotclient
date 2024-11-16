@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/db/dbinfo.h"
-#include "misc/comparefunctions.h"
+
 #include <QStringBuilder>
+
+#include "misc/comparefunctions.h"
 
 using namespace swift::misc::network;
 
@@ -190,4 +192,4 @@ namespace swift::misc::db
         }
         return empty;
     }
-} // namespace
+} // namespace swift::misc::db

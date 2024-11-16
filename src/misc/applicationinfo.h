@@ -6,10 +6,11 @@
 #ifndef SWIFT_MISC_APPLICATIONINFO_H
 #define SWIFT_MISC_APPLICATIONINFO_H
 
-#include "misc/processinfo.h"
-#include <QString>
-#include <QMetaType>
 #include <QFlags>
+#include <QMetaType>
+#include <QString>
+
+#include "misc/processinfo.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc, CApplicationInfo)
 
@@ -187,7 +188,7 @@ namespace swift::misc
             SWIFT_METAMEMBER(platform),
             SWIFT_METAMEMBER(process));
     };
-} // ns
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CApplicationInfo)
 

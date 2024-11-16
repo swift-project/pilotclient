@@ -4,8 +4,9 @@
 #ifndef SWIFT_SIMPLUGIN_FS9_HOST_NODE_H
 #define SWIFT_SIMPLUGIN_FS9_HOST_NODE_H
 
-#include <QString>
 #include <dplay8.h>
+
+#include <QString>
 
 //! \file
 
@@ -52,6 +53,6 @@ namespace swift::simplugin::fs9
         DPN_APPLICATION_DESC m_appDesc;
         QString m_sessionName;
     };
-}
+} // namespace swift::simplugin::fs9
 
 #endif // guard

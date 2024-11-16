@@ -6,11 +6,12 @@
 #ifndef SWIFT_GUI_COMPONENTS_INTERPOLATIONSETUPCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_INTERPOLATIONSETUPCOMPONENT_H
 
-#include "misc/simulation/interpolation/interpolationsetuplist.h"
-#include "gui/overlaymessagesframe.h"
 #include <QFrame>
-#include <QScopedPointer>
 #include <QModelIndex>
+#include <QScopedPointer>
+
+#include "gui/overlaymessagesframe.h"
+#include "misc/simulation/interpolation/interpolationsetuplist.h"
 
 namespace Ui
 {
@@ -88,6 +89,6 @@ namespace swift::gui::components
 
         swift::misc::simulation::CInterpolationSetupList m_lastSetSetups; //!< last setups set to context
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

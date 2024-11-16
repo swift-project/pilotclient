@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsvatsimreaderscomponent.h"
+
 #include "ui_settingsvatsimreaderscomponent.h"
 
 using namespace swift::misc;
@@ -58,4 +59,4 @@ namespace swift::gui::components
         ui->sb_Metar->setValue(metarSec);
         ui->sb_DataFile->setValue(dataFileSec);
     }
-} // ns
+} // namespace swift::gui::components

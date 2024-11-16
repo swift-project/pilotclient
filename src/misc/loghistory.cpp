@@ -4,6 +4,7 @@
 //! \file
 
 #include "misc/loghistory.h"
+
 #include "misc/loghandler.h"
 
 namespace swift::misc
@@ -32,4 +33,4 @@ namespace swift::misc
     {
         emit elementsReplaced(msgs);
     }
-}
+} // namespace swift::misc

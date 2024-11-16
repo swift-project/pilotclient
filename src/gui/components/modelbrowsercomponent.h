@@ -9,8 +9,8 @@
 #include <QFrame>
 #include <QScopedPointer>
 
-#include "misc/simulation/simulatedaircraft.h"
 #include "misc/aviation/aircraftsituation.h"
+#include "misc/simulation/simulatedaircraft.h"
 #include "misc/variant.h"
 
 namespace Ui
@@ -55,6 +55,6 @@ namespace swift::gui::components
         swift::misc::aviation::CAircraftSituation m_situation;
         swift::misc::simulation::CSimulatedAircraft m_aircraft;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

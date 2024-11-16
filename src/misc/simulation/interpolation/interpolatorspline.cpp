@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/interpolation/interpolatorspline.h"
-#include "misc/simulation/interpolation/interpolatorfunctions.h"
-#include "misc/network/fsdsetup.h"
-#include "misc/logmessage.h"
-#include "misc/verify.h"
+
 #include "config/buildconfig.h"
+#include "misc/logmessage.h"
+#include "misc/network/fsdsetup.h"
+#include "misc/simulation/interpolation/interpolatorfunctions.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc::aviation;
@@ -95,7 +96,7 @@ namespace swift::misc::simulation
             }
             return y;
         }
-    }
+    } // namespace
 
     bool CInterpolatorSpline::fillSituationsArray()
     {
@@ -455,4 +456,4 @@ namespace swift::misc::simulation
         return sorted && details;
     }
 
-} // ns
+} // namespace swift::misc::simulation

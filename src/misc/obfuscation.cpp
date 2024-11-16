@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/obfuscation.h"
-#include "simplecrypt/simplecrypt.h"
+
 #include <QStringBuilder>
+
+#include "simplecrypt/simplecrypt.h"
 
 namespace swift::misc
 {
@@ -28,4 +30,4 @@ namespace swift::misc
         static const QString obfuscated("OBF:");
         return obfuscated;
     }
-} // ns
+} // namespace swift::misc

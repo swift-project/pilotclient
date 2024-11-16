@@ -20,4 +20,4 @@ namespace swift::misc
         return copy;
     }
 
-} // namespace
+} // namespace swift::misc

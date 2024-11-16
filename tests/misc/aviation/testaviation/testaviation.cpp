@@ -5,6 +5,12 @@
 //! \file
 //! \ingroup testmisc
 
+#include <QDateTime>
+#include <QString>
+#include <QTest>
+
+#include "test.h"
+
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/airlineicaocode.h"
@@ -18,10 +24,10 @@
 #include "misc/aviation/navsystem.h"
 #include "misc/aviation/transponder.h"
 #include "misc/aviation/waketurbulencecategory.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
+#include "misc/mixin/mixincompare.h"
 #include "misc/network/server.h"
 #include "misc/network/user.h"
 #include "misc/pq/angle.h"
@@ -29,11 +35,6 @@
 #include "misc/pq/length.h"
 #include "misc/pq/physicalquantity.h"
 #include "misc/pq/units.h"
-#include "test.h"
-
-#include <QDateTime>
-#include <QString>
-#include <QTest>
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
@@ -437,7 +438,7 @@ namespace MiscTest
         QCOMPARE(catUnknown1.toQString(), "-");
     }
 
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestAviation);

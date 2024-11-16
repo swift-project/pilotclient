@@ -6,16 +6,16 @@
 #ifndef SWIFT_CORE_AFV_CONNECTION_CLIENTCONNECTION_H
 #define SWIFT_CORE_AFV_CONNECTION_CLIENTCONNECTION_H
 
-#include "core/afv/crypto/cryptodtoserializer.h"
-#include "core/afv/connection/clientconnectiondata.h"
-#include "core/afv/connection/apiserverconnection.h"
-#include "core/afv/dto.h"
-#include "misc/verify.h"
-
 #include <QObject>
 #include <QString>
 #include <QTimer>
 #include <QUdpSocket>
+
+#include "core/afv/connection/apiserverconnection.h"
+#include "core/afv/connection/clientconnectiondata.h"
+#include "core/afv/crypto/cryptodtoserializer.h"
+#include "core/afv/dto.h"
+#include "misc/verify.h"
 
 namespace swift::core::afv::connection
 {
@@ -135,6 +135,6 @@ namespace swift::core::afv::connection
         // Properties
         bool m_receiveAudioDto = true;
     };
-} // ns
+} // namespace swift::core::afv::connection
 
 #endif // guard

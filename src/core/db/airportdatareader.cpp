@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/db/airportdatareader.h"
-#include "core/db/databaseutils.h"
-#include "core/application.h"
-#include "misc/network/networkutils.h"
-#include "misc/logmessage.h"
 
-#include <QStringBuilder>
-#include <QNetworkReply>
 #include <QElapsedTimer>
 #include <QFileInfo>
+#include <QNetworkReply>
 #include <QPointer>
+#include <QStringBuilder>
+
+#include "core/application.h"
+#include "core/db/databaseutils.h"
+#include "misc/logmessage.h"
+#include "misc/network/networkutils.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -281,4 +282,4 @@ namespace swift::core::db
             CLogMessage::preformatted(m);
         }
     }
-} // ns
+} // namespace swift::core::db

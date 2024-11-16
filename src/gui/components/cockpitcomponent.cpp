@@ -1,15 +1,17 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/cockpitcomcomponent.h"
 #include "gui/components/cockpitcomponent.h"
-#include "gui/components/cockpitinfoareacomponent.h"
-#include "gui/dockwidgetinfoarea.h"
-#include "gui/showhidebar.h"
-#include "ui_cockpitcomponent.h"
 
 #include <QDockWidget>
 #include <QtGlobal>
+
+#include "ui_cockpitcomponent.h"
+
+#include "gui/components/cockpitcomcomponent.h"
+#include "gui/components/cockpitinfoareacomponent.h"
+#include "gui/dockwidgetinfoarea.h"
+#include "gui/showhidebar.h"
 
 namespace swift::gui::components
 {
@@ -146,4 +148,4 @@ namespace swift::gui::components
             this->window()->setMinimumSize(sizeMinimum);
         }
     }
-} // namespace
+} // namespace swift::gui::components

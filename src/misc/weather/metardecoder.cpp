@@ -3,6 +3,14 @@
 
 //! \cond PRIVATE
 
+#include "misc/weather/metardecoder.h"
+
+#include <QHash>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QStringList>
+#include <QtGlobal>
+
 #include "misc/aviation/airporticaocode.h"
 #include "misc/aviation/altitude.h"
 #include "misc/logmessage.h"
@@ -16,15 +24,8 @@
 #include "misc/pq/units.h"
 #include "misc/statusmessage.h"
 #include "misc/weather/cloudlayer.h"
-#include "misc/weather/metardecoder.h"
 #include "misc/weather/presentweather.h"
 #include "misc/weather/windlayer.h"
-
-#include <QHash>
-#include <QRegularExpression>
-#include <QRegularExpressionMatch>
-#include <QStringList>
-#include <QtGlobal>
 
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::aviation;
@@ -994,6 +995,6 @@ namespace swift::misc::weather
         m_decoders.push_back(std::make_unique<CMetarDecoderWindShear>());
     }
 
-} // namespace
+} // namespace swift::misc::weather
 
 //! \endcond

@@ -84,6 +84,6 @@ namespace swift::misc::simulation
     private:
         QSharedPointer<CInterpolatorMulti> m_interpolator; //!< shared pointer because CInterpolatorMultiWrapper can be copied
     };
-} // ns
+} // namespace swift::misc::simulation
 
 #endif

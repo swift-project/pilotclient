@@ -202,7 +202,7 @@ namespace swift::core::fsd
         ZuluLogoff,
         LineCount
     };
-}
+} // namespace swift::core::fsd
 
 Q_DECLARE_METATYPE(swift::core::fsd::AtcRating)
 Q_DECLARE_METATYPE(swift::core::fsd::PilotRating)

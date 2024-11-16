@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_SIMBRIEFDOWNLOADDIALOG_H
 #define SWIFT_GUI_COMPONENTS_SIMBRIEFDOWNLOADDIALOG_H
 
-#include "misc/aviation/simbriefdata.h"
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "misc/aviation/simbriefdata.h"
 
 namespace Ui
 {
@@ -41,6 +42,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CSimBriefDownloadDialog> ui;
         swift::misc::CData<swift::misc::aviation::Data::TSimBriefData> m_simBrief { this };
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

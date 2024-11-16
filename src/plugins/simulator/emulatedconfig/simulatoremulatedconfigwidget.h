@@ -6,8 +6,9 @@
 #ifndef SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
 #define SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDCONFIGWIDGET_H
 
-#include "gui/pluginconfigwindow.h"
 #include <QScopedPointer>
+
+#include "gui/pluginconfigwindow.h"
 
 namespace Ui
 {
@@ -32,6 +33,6 @@ namespace swift::simplugin::emulated
     private:
         QScopedPointer<Ui::CSimulatorEmulatedConfigWidget> ui;
     };
-} // ns
+} // namespace swift::simplugin::emulated
 
 #endif // guard

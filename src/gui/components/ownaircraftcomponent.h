@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_OWNAIRCRAFTCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_OWNAIRCRAFTCOMPONENT_H
 
-#include "misc/simulation/data/lastmodel.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/network/user.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/callsign.h"
-
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/callsign.h"
+#include "misc/network/user.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/data/lastmodel.h"
 
 namespace Ui
 {
@@ -106,6 +106,6 @@ namespace swift::gui::components
         swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel { this }; //!< recently used aircraft model
         QScopedPointer<Ui::COwnAircraftComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

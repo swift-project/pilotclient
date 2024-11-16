@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_SETTINGS_GUI_H
 #define SWIFT_GUI_SETTINGS_GUI_H
 
+#include <QAbstractItemView>
+#include <QString>
+
 #include "gui/swiftguiexport.h"
 #include "misc/settingscache.h"
 #include "misc/simulation/aircraftmodel.h"
-
-#include <QString>
-#include <QAbstractItemView>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::gui::settings, CGeneralGuiSettings)
 
@@ -109,7 +109,7 @@ namespace swift::gui::settings
         //! Maximum
         static int maxSecs() { return 3600; }
     };
-} // ns
+} // namespace swift::gui::settings
 
 Q_DECLARE_METATYPE(swift::gui::settings::CGeneralGuiSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::gui::settings::CGeneralGuiSettings>)

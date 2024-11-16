@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_VIEWS_MATCHINGSTATISTICSVIEW_H
 #define SWIFT_GUI_VIEWS_MATCHINGSTATISTICSVIEW_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/matchingstatisticsmodel.h"
+#include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
 #include "misc/network/serverlist.h"
 
@@ -27,5 +27,5 @@ namespace swift::gui::views
         //! Set vie mode
         void setStatisticsModelMode(models::CMatchingStatisticsModel::MatchingStatisticsMode mode);
     };
-} // ns
+} // namespace swift::gui::views
 #endif // guard

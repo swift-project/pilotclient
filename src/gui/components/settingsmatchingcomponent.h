@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSMATCHINGCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSMATCHINGCOMPONENT_H
 
-#include "misc/simulation/aircraftmatchersetup.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "misc/simulation/aircraftmatchersetup.h"
 
 namespace swift::core::context
 {
@@ -62,6 +63,6 @@ namespace swift::gui::components
         //! Network context
         static swift::core::context::IContextSimulator *simulatorContext();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

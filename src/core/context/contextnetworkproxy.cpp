@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/context/contextnetworkproxy.h"
-#include "misc/dbus.h"
-#include "misc/dbusserver.h"
-#include "misc/genericdbusinterface.h"
 
 #include <QDBusConnection>
 #include <QLatin1String>
+#include <QMetaObject>
 #include <QObject>
 #include <QtGlobal>
-#include <QMetaObject>
+
+#include "misc/dbus.h"
+#include "misc/dbusserver.h"
+#include "misc/genericdbusinterface.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -379,4 +380,4 @@ namespace swift::core::context
         Q_UNUSED(rawFsdMessageReceivedSlot);
         return {};
     }
-} // ns
+} // namespace swift::core::context

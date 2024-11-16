@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/propertyindex.h"
-#include "misc/verify.h"
+
 #include <QStringList>
 #include <QtGlobal>
+
+#include "misc/verify.h"
 
 namespace swift::misc
 {
@@ -121,4 +123,4 @@ namespace swift::misc
         if (this->isEmpty()) { return false; }
         return this->frontToInt() == index;
     }
-} // namespace
+} // namespace swift::misc

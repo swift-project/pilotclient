@@ -1,56 +1,57 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/applicationclosedialog.h"
-#include "gui/components/updateinfodialog.h"
-#include "gui/components/aboutdialog.h"
-#include "gui/components/setuploadingdialog.h"
-#include "gui/splashscreen.h"
 #include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "gui/registermetadata.h"
-#include "core/context/contextnetwork.h"
-#include "core/data/globalsetup.h"
-#include "core/db/infodatareader.h"
-#include "core/webdataservices.h"
-#include "core/setupreader.h"
-#include "misc/slot.h"
-#include "misc/stringutils.h"
-#include "misc/swiftdirectories.h"
-#include "misc/datacache.h"
-#include "misc/logcategories.h"
-#include "misc/logmessage.h"
-#include "misc/loghandler.h"
-#include "misc/metadatautils.h"
-#include "misc/settingscache.h"
-#include "misc/verify.h"
-#include "config/buildconfig.h"
 
 #include <QAction>
-#include <QCloseEvent>
 #include <QApplication>
+#include <QCloseEvent>
 #include <QCommandLineParser>
 #include <QDesktopServices>
 #include <QDir>
 #include <QEventLoop>
+#include <QFont>
 #include <QGuiApplication>
 #include <QIcon>
-#include <QFont>
 #include <QKeySequence>
+#include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
 #include <QSettings>
-#include <QStyleFactory>
-#include <QStringList>
 #include <QStringBuilder>
+#include <QStringList>
 #include <QStyle>
+#include <QStyleFactory>
 #include <QToolBar>
 #include <QUrl>
-#include <QWidget>
-#include <QMainWindow>
-#include <QtGlobal>
 #include <QWhatsThis>
+#include <QWidget>
 #include <Qt>
+#include <QtGlobal>
+
+#include "config/buildconfig.h"
+#include "core/context/contextnetwork.h"
+#include "core/data/globalsetup.h"
+#include "core/db/infodatareader.h"
+#include "core/setupreader.h"
+#include "core/webdataservices.h"
+#include "gui/components/aboutdialog.h"
+#include "gui/components/applicationclosedialog.h"
+#include "gui/components/setuploadingdialog.h"
+#include "gui/components/updateinfodialog.h"
+#include "gui/guiutility.h"
+#include "gui/registermetadata.h"
+#include "gui/splashscreen.h"
+#include "misc/datacache.h"
+#include "misc/logcategories.h"
+#include "misc/loghandler.h"
+#include "misc/logmessage.h"
+#include "misc/metadatautils.h"
+#include "misc/settingscache.h"
+#include "misc/slot.h"
+#include "misc/stringutils.h"
+#include "misc/swiftdirectories.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -1244,4 +1245,4 @@ namespace swift::gui
     {
         CGuiUtility::superviseMainWindowMinSizes();
     }
-} // ns
+} // namespace swift::gui

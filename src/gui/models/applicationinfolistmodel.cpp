@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/models/applicationinfolistmodel.h"
-#include "gui/models/columnformatters.h"
-#include "gui/models/columns.h"
 
 #include <QModelIndex>
 #include <QStandardItem>
@@ -12,6 +10,9 @@
 #include <Qt>
 #include <QtDebug>
 #include <QtGlobal>
+
+#include "gui/models/columnformatters.h"
+#include "gui/models/columns.h"
 
 using namespace swift::misc;
 
@@ -35,4 +36,4 @@ namespace swift::gui::models
     {
         this->update(CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories(reinit));
     }
-} // namespace
+} // namespace swift::gui::models

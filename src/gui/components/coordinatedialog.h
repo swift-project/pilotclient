@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_COORDINATEDIALOG_H
 #define SWIFT_GUI_COMPONENTS_COORDINATEDIALOG_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/editors/coordinateform.h"
-
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "gui/editors/coordinateform.h"
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -59,6 +59,6 @@ namespace swift::gui::components
         //! disable default buttons
         void noDefaultButtons();
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

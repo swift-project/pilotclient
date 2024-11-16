@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_DATAINFOAREACOMPONENT_H
 #define SWIFT_GUI_DATAINFOAREACOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/infoarea.h"
-#include "misc/network/entityflags.h"
-
 #include <QObject>
 #include <QScopedPointer>
 #include <QSize>
+
+#include "gui/infoarea.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/entityflags.h"
 
 class QPixmap;
 class QWidget;
@@ -104,6 +104,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CDataInfoAreaComponent> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

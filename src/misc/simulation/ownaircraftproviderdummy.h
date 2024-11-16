@@ -6,11 +6,13 @@
 #ifndef SWIFT_MISC_SIMULATION_OWNAIRCRAFTPROVIDERDUMMY_H
 #define SWIFT_MISC_SIMULATION_OWNAIRCRAFTPROVIDERDUMMY_H
 
+#include <QObject>
+#include <QReadWriteLock>
+
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/aviation/selcal.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/identifier.h"
 #include "misc/pq/frequency.h"
@@ -18,9 +20,7 @@
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/ownaircraftprovider.h"
 #include "misc/simulation/simulatedaircraft.h"
-
-#include <QObject>
-#include <QReadWriteLock>
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -30,7 +30,7 @@ namespace swift::misc
         class CAircraftSituation;
         class CCallsign;
         class CTransponder;
-    }
+    } // namespace aviation
 
     namespace simulation
     {
@@ -107,7 +107,7 @@ namespace swift::misc
             swift::misc::simulation::CSimulatedAircraft m_ownAircraft;
             mutable QReadWriteLock m_lock; //!< lock for m_ownAircraft
         };
-    } // namespace
-} // namespace
+    } // namespace simulation
+} // namespace swift::misc
 
 #endif

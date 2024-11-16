@@ -6,13 +6,6 @@
 #ifndef SWIFT_GUI_MODELS_LISTMODELBASENONTEMPLATE_H
 #define SWIFT_GUI_MODELS_LISTMODELBASENONTEMPLATE_H
 
-#include "gui/models/columns.h"
-#include "gui/dropbase.h"
-#include "gui/swiftguiexport.h"
-#include "misc/propertyindexlist.h"
-#include "misc/digestsignal.h"
-#include "misc/variant.h"
-
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QModelIndex>
@@ -22,6 +15,13 @@
 #include <QStringList>
 #include <QVariant>
 #include <QVector>
+
+#include "gui/dropbase.h"
+#include "gui/models/columns.h"
+#include "gui/swiftguiexport.h"
+#include "misc/digestsignal.h"
+#include "misc/propertyindexlist.h"
+#include "misc/variant.h"
 
 class QMimeData;
 class QModelIndex;
@@ -189,5 +189,5 @@ namespace swift::gui::models
         swift::misc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed, &CListModelBaseNonTemplate::onChangedDigest, 500, 10 };
     };
 
-} // namespace
+} // namespace swift::gui::models
 #endif // guard

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "settingsmatchingdialog.h"
+
 #include "ui_settingsmatchingdialog.h"
 
 using namespace swift::misc::simulation;
@@ -26,4 +27,4 @@ namespace swift::gui::components
     {
         ui->comp_Settings->setMatchingSetup(setup);
     }
-} // ns
+} // namespace swift::gui::components

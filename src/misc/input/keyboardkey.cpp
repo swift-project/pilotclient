@@ -164,4 +164,4 @@ namespace swift::misc::input
             break;
         }
     }
-} // ns
+} // namespace swift::misc::input

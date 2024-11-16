@@ -29,4 +29,4 @@ namespace swift::sound::codecs
         encoded.truncate(length);
         return encoded;
     }
-} // ns
+} // namespace swift::sound::codecs

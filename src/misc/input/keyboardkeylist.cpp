@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/input/keyboardkeylist.h"
+
 #include "misc/input/keycodes.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CKeyboardKey, CKeyboardKeyList)
@@ -138,4 +139,4 @@ namespace swift::misc::input
 
         return allKeys;
     }
-} // ns
+} // namespace swift::misc::input

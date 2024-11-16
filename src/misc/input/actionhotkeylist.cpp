@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/input/actionhotkeylist.h"
+
 #include "misc/input/hotkeycombination.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CActionHotkey, CActionHotkeyList)
@@ -65,4 +66,4 @@ namespace swift::misc::input
             // if (sameMachine) { actionHotkey.updateToCurrentMachine(); }
         }
     }
-} // ns
+} // namespace swift::misc::input

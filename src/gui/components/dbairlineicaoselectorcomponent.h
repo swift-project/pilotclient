@@ -6,13 +6,13 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBAIRLINEICAOSELECTORCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBAIRLINEICAOSELECTORCOMPONENT_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/components/dbairlineicaoselectorbase.h"
-#include "misc/aviation/airlineicaocode.h"
-
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
+
+#include "gui/components/dbairlineicaoselectorbase.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/airlineicaocode.h"
 
 class QCompleter;
 class QWidget;
@@ -76,5 +76,5 @@ namespace swift::gui::components
         QScopedPointer<Ui::CDbAirlineIcaoSelectorComponent> ui;
         Display m_display = DisplayVDesignatorAndId;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

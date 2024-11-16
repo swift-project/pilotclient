@@ -6,19 +6,20 @@
 #ifndef SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGLIST_H
 #define SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGLIST_H
 
-#include "misc/swiftmiscexport.h"
+#include <tuple>
+
+#include <QMetaType>
+#include <QSet>
+#include <QString>
+#include <QStringList>
+#include <Qt>
+
 #include "misc/collection.h"
 #include "misc/sequence.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/fscommon/aircraftcfgentries.h"
 #include "misc/simulation/simulatorinfo.h"
-
-#include <QMetaType>
-#include <QString>
-#include <QStringList>
-#include <QSet>
-#include <Qt>
-#include <tuple>
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntries, CAircraftCfgEntriesList)
 
@@ -75,7 +76,7 @@ namespace swift::misc::simulation::fscommon
             Unknown
         };
     };
-} // namespace
+} // namespace swift::misc::simulation::fscommon
 
 Q_DECLARE_METATYPE(swift::misc::simulation::fscommon::CAircraftCfgEntriesList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::fscommon::CAircraftCfgEntries>)

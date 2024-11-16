@@ -2,27 +2,29 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "listmodeldbobjects.h"
-#include "gui/models/allmodelcontainers.h"
-#include "misc/db/datastoreobjectlist.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/simulation/distributor.h"
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/aircraftcategorylist.h"
-#include "misc/aviation/aircraftcategory.h"
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/aviation/liverylist.h"
-#include "misc/aviation/livery.h"
-#include "misc/countrylist.h"
-#include "misc/country.h"
-#include "misc/orderable.h"
+
+#include <type_traits>
 
 #include <QBrush>
 #include <QModelIndex>
-#include <type_traits>
+
+#include "gui/models/allmodelcontainers.h"
+#include "misc/aviation/aircraftcategory.h"
+#include "misc/aviation/aircraftcategorylist.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircrafticaocodelist.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/livery.h"
+#include "misc/aviation/liverylist.h"
+#include "misc/country.h"
+#include "misc/countrylist.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/orderable.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/distributorlist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -114,4 +116,4 @@ namespace swift::gui::models
     template class COrderableListModelDbObjects<swift::misc::simulation::CAircraftModelList, int, true>;
     template class COrderableListModelDbObjects<swift::misc::simulation::CDistributorList, QString, true>;
 
-} // namespace
+} // namespace swift::gui::models

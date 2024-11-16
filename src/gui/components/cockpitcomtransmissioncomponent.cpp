@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "cockpitcomtransmissioncomponent.h"
+
 #include "ui_cockpitcomtransmissioncomponent.h"
 
 using namespace swift::misc::aviation;
@@ -76,4 +77,4 @@ namespace swift::gui::components
         const CComSystem::ComUnit unit = (s == ui->pb_Com2Save) ? CComSystem::Com2 : CComSystem::Com1;
         emit this->changedValues(unit);
     }
-} // ns
+} // namespace swift::gui::components

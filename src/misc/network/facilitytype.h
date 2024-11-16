@@ -52,7 +52,7 @@ namespace swift::misc::network
             CFacilityType,
             SWIFT_METAMEMBER(facilityType));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CFacilityType)
 

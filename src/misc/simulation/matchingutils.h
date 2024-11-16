@@ -32,6 +32,6 @@ namespace swift::misc::simulation
         //! Categories
         static CLogCategoryList categories(const QStringList &extraCategories);
     };
-} // ns
+} // namespace swift::misc::simulation
 
 #endif // guard

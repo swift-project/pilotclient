@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/models/textmessagelistmodel.h"
 #include "gui/views/textmessageview.h"
 
 #include <QtGlobal>
+
+#include "gui/models/textmessagelistmodel.h"
 
 using namespace swift::misc;
 using namespace swift::gui::models;
@@ -34,4 +35,4 @@ namespace swift::gui::views
         return m_model->isSortedByTimestampProperty() && this->getSortOrder() == Qt::AscendingOrder;
     }
 
-} // namespace
+} // namespace swift::gui::views

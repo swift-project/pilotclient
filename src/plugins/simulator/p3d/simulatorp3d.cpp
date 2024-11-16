@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorp3d.h"
-#include "../fsxcommon/simconnectsymbols.h"
+
 #include "../fscommon/simulatorfscommonfunctions.h"
-#include "misc/threadutils.h"
-#include "misc/logmessage.h"
+#include "../fsxcommon/simconnectsymbols.h"
+
 #include "config/buildconfig.h"
+#include "misc/logmessage.h"
+#include "misc/threadutils.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -303,4 +305,4 @@ namespace swift::simplugin::p3d
 #endif
     }
 
-} // namespace
+} // namespace swift::simplugin::p3d

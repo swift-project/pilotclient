@@ -6,14 +6,15 @@
 #ifndef SWIFT_GUI_FILTERS_AIRLINEICAOFILTERBAR_H
 #define SWIFT_GUI_FILTERS_AIRLINEICAOFILTERBAR_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/filters/filterwidget.h"
-#include "gui/models/modelfilter.h"
-#include "misc/aviation/airlineicaocode.h"
+#include <memory>
 
 #include <QObject>
 #include <QScopedPointer>
-#include <memory>
+
+#include "gui/filters/filterwidget.h"
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/airlineicaocode.h"
 
 namespace Ui
 {
@@ -26,7 +27,7 @@ namespace swift::misc
     {
         class CAirlineIcaoCodeList;
     }
-}
+} // namespace swift::misc
 namespace swift::gui::filters
 {
     /*!
@@ -66,6 +67,6 @@ namespace swift::gui::filters
     private:
         QScopedPointer<Ui::CAirlineIcaoFilterBar> ui;
     };
-} // ns
+} // namespace swift::gui::filters
 
 #endif // guard

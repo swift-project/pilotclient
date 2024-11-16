@@ -6,15 +6,17 @@
 #ifndef SWIFT_MISC_VARIANT_PRIVATE_H
 #define SWIFT_MISC_VARIANT_PRIVATE_H
 
-#include "misc/swiftmiscexport.h"
+#include <stdexcept>
+
+#include <QDBusArgument>
+#include <QDBusMetaType>
+#include <QJsonObject>
+#include <QMetaType>
+#include <QString>
+
 #include "misc/inheritancetraits.h"
 #include "misc/propertyindexref.h"
-#include <QString>
-#include <QMetaType>
-#include <QDBusMetaType>
-#include <QDBusArgument>
-#include <QJsonObject>
-#include <stdexcept>
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -389,8 +391,8 @@ namespace swift::misc
             }
         };
         //! \endcond
-    }
-}
+    } // namespace private_ns
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::private_ns::IValueObjectMetaInfo *)
 

@@ -6,8 +6,8 @@
 #ifndef SWIFT_CORE_FSD_CLIENTIDENTIFICATION_H
 #define SWIFT_CORE_FSD_CLIENTIDENTIFICATION_H
 
-#include "core/fsd/messagebase.h"
 #include "config/buildconfig.h"
+#include "core/fsd/messagebase.h"
 
 namespace swift::core::fsd
 {
@@ -64,6 +64,6 @@ namespace swift::core::fsd
     {
         return !(lhs == rhs);
     }
-}
+} // namespace swift::core::fsd
 
 #endif // guard

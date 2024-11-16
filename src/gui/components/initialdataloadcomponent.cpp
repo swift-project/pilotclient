@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "initialdataloadcomponent.h"
+
 #include "ui_initialdataloadcomponent.h"
 
 namespace swift::gui::components
@@ -42,4 +43,4 @@ namespace swift::gui::components
         Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
         return !m_config->isLoadInProgress();
     }
-} // ns
+} // namespace swift::gui::components

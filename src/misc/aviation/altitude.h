@@ -6,28 +6,29 @@
 #ifndef SWIFT_MISC_AVIATION_ALTITUDE_H
 #define SWIFT_MISC_AVIATION_ALTITUDE_H
 
-#include "misc/pq/length.h"
-#include "misc/pq/pqstring.h"
-#include "misc/pq/units.h"
-#include "misc/statusmessagelist.h"
+#include <tuple>
+
+#include <QMetaType>
+#include <QPair>
+#include <QRegularExpression>
+#include <QString>
+#include <QVector>
+
+#include "misc/metaclass.h"
 #include "misc/mixin/mixincompare.h"
-#include "misc/mixin/mixindbus.h"
 #include "misc/mixin/mixindatastream.h"
+#include "misc/mixin/mixindbus.h"
 #include "misc/mixin/mixinhash.h"
 #include "misc/mixin/mixinicon.h"
-#include "misc/metaclass.h"
-#include "misc/pq/pressure.h"
 #include "misc/mixin/mixinindex.h"
-#include "misc/mixin/mixinstring.h"
 #include "misc/mixin/mixinmetatype.h"
+#include "misc/mixin/mixinstring.h"
+#include "misc/pq/length.h"
+#include "misc/pq/pqstring.h"
+#include "misc/pq/pressure.h"
+#include "misc/pq/units.h"
+#include "misc/statusmessagelist.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QPair>
-#include <QMetaType>
-#include <QString>
-#include <QRegularExpression>
-#include <QVector>
-#include <tuple>
 
 namespace swift::misc::aviation
 {
@@ -234,7 +235,7 @@ namespace swift::misc::aviation
     };
 
     using CAltitudePair = QPair<CAltitude, CAltitude>; //!< Pair of altitude
-} // ns
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAltitude)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAltitude::ReferenceDatum)

@@ -32,4 +32,4 @@ namespace swift::core::fsd
         }
         return AuthChallenge(tokens[0], tokens[1], tokens[2]);
     }
-}
+} // namespace swift::core::fsd

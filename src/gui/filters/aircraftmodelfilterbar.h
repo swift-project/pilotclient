@@ -6,15 +6,16 @@
 #ifndef SWIFT_GUI_FILTERS_FILTERBARAIRCRAFTMODEL_H
 #define SWIFT_GUI_FILTERS_FILTERBARAIRCRAFTMODEL_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/filters/filterwidget.h"
-#include "gui/models/modelfilter.h"
-#include "misc/simulation/distributor.h"
-#include "misc/simulation/simulatorinfo.h"
+#include <memory>
 
 #include <QObject>
 #include <QScopedPointer>
-#include <memory>
+
+#include "gui/filters/filterwidget.h"
+#include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/simulatorinfo.h"
 
 namespace Ui
 {
@@ -73,6 +74,6 @@ namespace swift::gui::filters
 
         QScopedPointer<Ui::CAircraftModelFilterBar> ui;
     };
-} // ns
+} // namespace swift::gui::filters
 
 #endif // guard

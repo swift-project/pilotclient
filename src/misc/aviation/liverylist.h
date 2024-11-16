@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_AVIATION_LIVERYLIST_H
 #define SWIFT_MISC_AVIATION_LIVERYLIST_H
 
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/aviation/livery.h"
-#include "misc/db/datastoreobjectlist.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/sequence.h"
-
 #include <QMetaType>
 #include <QString>
 #include <QStringList>
+
+#include "misc/aviation/airlineicaocodelist.h"
+#include "misc/aviation/livery.h"
+#include "misc/collection.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::aviation, CLivery, CLiveryList)
 
@@ -84,7 +84,7 @@ namespace swift::misc::aviation
         //! \remark without passing related airlines there is not much sense using this function, as most airlines/liveries have a 1:1 ratio
         static CLiveryList fromDatabaseJsonCaching(const QJsonArray &array, const CAirlineIcaoCodeList &relatedAirlines = {});
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CLiveryList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CLivery>)

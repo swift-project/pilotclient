@@ -25,6 +25,6 @@ namespace swift::input
         //! Creates a new device matching dict using usagePage and usage
         static CFMutableDictionaryRef createDeviceMatchingDictionary(UInt32 usagePage, UInt32 usage);
     };
-}
+} // namespace swift::input
 
 #endif

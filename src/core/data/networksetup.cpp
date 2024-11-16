@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/data/networksetup.h"
-#include "core/application.h"
+
 #include "config/buildconfig.h"
+#include "core/application.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -80,4 +81,4 @@ namespace swift::core::data
     {
         emit this->setupChanged();
     }
-} // ns
+} // namespace swift::core::data

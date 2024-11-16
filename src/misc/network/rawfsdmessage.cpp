@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/rawfsdmessage.h"
+
+#include <QtGlobal>
+
 #include "misc/propertyindexref.h"
 #include "misc/statusmessage.h"
 #include "misc/stringutils.h"
-
-#include <QtGlobal>
 
 using namespace swift::misc;
 
@@ -79,4 +80,4 @@ namespace swift::misc::network
             break;
         }
     }
-} // namespace
+} // namespace swift::misc::network

@@ -37,4 +37,4 @@ namespace swift::misc::simulation
                QStringLiteral(" | same: ") % boolToYesNo(m_isSameSituation) %
                (m_extraInfo.isEmpty() ? QString() : QStringLiteral(" info: ") % m_extraInfo);
     }
-}
+} // namespace swift::misc::simulation

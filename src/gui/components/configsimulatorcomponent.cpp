@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "configsimulatorcomponent.h"
+
+#include "ui_configsimulatorcomponent.h"
+
+#include "config/buildconfig.h"
 #include "gui/guiutility.h"
 #include "misc/logmessage.h"
 #include "misc/simulation/fscommon/fsdirectories.h"
-#include "config/buildconfig.h"
-#include "ui_configsimulatorcomponent.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -115,4 +117,4 @@ namespace swift::gui::components
         m_config->save();
         return true;
     }
-} // ns
+} // namespace swift::gui::components

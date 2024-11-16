@@ -1,30 +1,31 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/menus/menuaction.h"
 #include "gui/views/viewdbobjects.h"
-#include "gui/models/aircrafticaolistmodel.h"
+
+#include <QAction>
+#include <QHBoxLayout>
+#include <QIntValidator>
+#include <QLabel>
+#include <QLineEdit>
+#include <QWidgetAction>
+
+#include "gui/menus/menuaction.h"
 #include "gui/models/aircraftcategorylistmodel.h"
+#include "gui/models/aircrafticaolistmodel.h"
 #include "gui/models/aircraftmodellistmodel.h"
 #include "gui/models/airlineicaolistmodel.h"
 #include "gui/models/countrylistmodel.h"
 #include "gui/models/distributorlistmodel.h"
 #include "gui/models/liverylistmodel.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/distributor.h"
-#include "misc/simulation/distributorlist.h"
 #include "misc/aviation/aircrafticaocodelist.h"
 #include "misc/aviation/airlineicaocodelist.h"
 #include "misc/aviation/liverylist.h"
-#include "misc/icons.h"
 #include "misc/countrylist.h"
-
-#include <QAction>
-#include <QIntValidator>
-#include <QLineEdit>
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QWidgetAction>
+#include "misc/icons.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/distributorlist.h"
 
 using namespace swift::misc;
 using namespace swift::gui;
@@ -241,4 +242,4 @@ namespace swift::gui::views
     template class COrderableViewWithDbObjects<swift::gui::models::CDistributorListModel>;
     template class COrderableViewWithDbObjects<swift::gui::models::CAircraftModelListModel>;
 
-} // namespace
+} // namespace swift::gui::views

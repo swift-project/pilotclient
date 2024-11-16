@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/country.h"
-#include "misc/icons.h"
-#include "misc/stringutils.h"
+
 #include <QJsonValue>
+#include <QStringBuilder>
 #include <Qt>
 #include <QtGlobal>
-#include <QStringBuilder>
+
+#include "misc/icons.h"
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc, CCountry)
 
@@ -210,4 +212,4 @@ namespace swift::misc
         const QString simplified = simplifyAccents(m_name);
         m_simplifiedName = m_name == simplified ? "" : simplified;
     }
-} // namespace
+} // namespace swift::misc

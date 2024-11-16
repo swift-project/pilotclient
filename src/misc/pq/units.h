@@ -9,20 +9,21 @@
 #pragma push_macro("min")
 #undef min
 
-#include "misc/swiftmiscexport.h"
-#include "misc/mixin/mixindbus.h"
-#include "misc/pq/measurementunit.h"
-#include "misc/mixin/mixinindex.h"
-#include "misc/mixin/mixinmetatype.h"
-
 #include <cmath>
+#include <cstddef>
+
 #include <QDBusArgument>
 #include <QList>
 #include <QMetaType>
 #include <QString>
 #include <QtGlobal>
 #include <QtMath>
-#include <cstddef>
+
+#include "misc/mixin/mixindbus.h"
+#include "misc/mixin/mixinindex.h"
+#include "misc/mixin/mixinmetatype.h"
+#include "misc/pq/measurementunit.h"
+#include "misc/swiftmiscexport.h"
 
 //! \cond
 #define SWIFT_TEMPLATE_UNIT_MIXINS(MU, Extern, Export)                               \
@@ -1103,7 +1104,7 @@ namespace swift::misc::physical_quantities
         }
     };
 
-} // namespace
+} // namespace swift::misc::physical_quantities
 
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CLengthUnit)
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CAngleUnit)

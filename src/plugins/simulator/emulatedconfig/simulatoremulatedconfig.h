@@ -29,6 +29,6 @@ namespace swift::simplugin::emulated
         //! \copydoc swift::gui::IPluginConfig::createConfigWindow()
         swift::gui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;
     };
-} // ns
+} // namespace swift::simplugin::emulated
 
 #endif // guard

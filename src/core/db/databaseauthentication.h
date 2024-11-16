@@ -6,14 +6,14 @@
 #ifndef SWIFT_CORE_DATABASE_CDATABASEUATHENTICATIONSERVICE_H
 #define SWIFT_CORE_DATABASE_CDATABASEUATHENTICATIONSERVICE_H
 
+#include <QObject>
+#include <QString>
+
 #include "core/data/authenticateduser.h"
 #include "core/swiftcoreexport.h"
 #include "misc/datacache.h"
 #include "misc/logcategories.h"
 #include "misc/statusmessagelist.h"
-
-#include <QObject>
-#include <QString>
 
 class QNetworkReply;
 
@@ -67,6 +67,6 @@ namespace swift::core::db
         swift::misc::CData<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser { this, &CDatabaseAuthenticationService::userChanged };
         bool m_shutdown = false;
     };
-} // ns
+} // namespace swift::core::db
 
 #endif // guard

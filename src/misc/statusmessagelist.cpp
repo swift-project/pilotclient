@@ -4,12 +4,13 @@
 //! \cond PRIVATE
 
 #include "misc/statusmessagelist.h"
-#include "misc/propertyindexlist.h"
 
 #include <QJsonValue>
 #include <QString>
 #include <QStringBuilder>
 #include <QStringList>
+
+#include "misc/propertyindexlist.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CStatusMessage, CStatusMessageList)
 
@@ -292,6 +293,6 @@ namespace swift::misc
         }
         return messages;
     }
-} // ns
+} // namespace swift::misc
 
 //! \endcond

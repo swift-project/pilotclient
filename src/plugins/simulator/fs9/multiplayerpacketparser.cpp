@@ -22,4 +22,4 @@ namespace swift::simplugin::fs9::private_ns
         data.append(qPrintable(value), value.size() + 1);
         return data;
     }
-} // ns
+} // namespace swift::simplugin::fs9::private_ns

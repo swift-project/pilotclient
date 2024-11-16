@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/fileutils.h"
-#include "misc/stringutils.h"
-#include "misc/setbuilder.h"
-#include "config/buildconfig.h"
+
+#include <algorithm>
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -14,10 +13,13 @@
 #include <QList>
 #include <QLockFile>
 #include <QRegularExpression>
+#include <QStringBuilder>
 #include <QTextStream>
 #include <QtGlobal>
-#include <algorithm>
-#include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/setbuilder.h"
+#include "misc/stringutils.h"
 
 using namespace swift::config;
 
@@ -552,4 +554,4 @@ namespace swift::misc
         if (fileName.isEmpty()) { return false; }
         return fileName.contains("swift", Qt::CaseInsensitive) && fileName.contains("installer");
     }
-} // ns
+} // namespace swift::misc

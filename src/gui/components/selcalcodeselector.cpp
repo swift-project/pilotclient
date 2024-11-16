@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/selcalcodeselector.h"
-#include "gui/ticklabel.h"
-#include "misc/aviation/selcal.h"
-#include "ui_selcalcodeselector.h"
 
 #include <QComboBox>
 #include <QStringList>
 #include <QtGlobal>
+
+#include "ui_selcalcodeselector.h"
+
+#include "gui/ticklabel.h"
+#include "misc/aviation/selcal.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -114,4 +116,4 @@ namespace swift::gui::components
     {
         ui->lblp_ValidCodeIcon->setTicked(this->hasValidCode());
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,9 +6,10 @@
 #ifndef SWIFT_GUI_COMPONENTS_SETTINGSVATSIMREADERSCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_SETTINGSVATSIMREADERSCOMPONENT_H
 
-#include "core/vatsim/vatsimsettings.h"
 #include <QFrame>
 #include <QScopedPointer>
+
+#include "core/vatsim/vatsimsettings.h"
 
 namespace Ui
 {
@@ -41,6 +42,6 @@ namespace swift::gui::components
         swift::misc::CSetting<swift::core::vatsim::TVatsimDataFile> m_settingsDataFile { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
         swift::misc::CSetting<swift::core::vatsim::TVatsimMetars> m_settingsMetars { this, &CSettingsVatsimReadersComponent::onSettingsChanged };
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

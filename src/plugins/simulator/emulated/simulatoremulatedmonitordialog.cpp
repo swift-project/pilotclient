@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatoremulatedmonitordialog.h"
-#include "ui_simulatoremulatedmonitordialog.h"
+
+#include <QIntValidator>
+
 #include "simulatoremulated.h"
+#include "ui_simulatoremulatedmonitordialog.h"
+
 #include "core/context/contextsimulator.h"
 #include "gui/components/cockpitcomtransmissioncomponent.h"
 #include "gui/guiapplication.h"
 #include "misc/logmessage.h"
-
-#include <QIntValidator>
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -316,4 +318,4 @@ namespace swift::simplugin::emulated
     {
         return (m_simulator && sGui && !sGui->isShuttingDown());
     }
-} // ns
+} // namespace swift::simplugin::emulated

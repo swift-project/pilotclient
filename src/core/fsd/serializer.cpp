@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/serializer.h"
-#include "misc/verify.h"
-#include "misc/logmessage.h"
-#include "misc/logcategories.h"
+
 #include "config/buildconfig.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -37,7 +38,7 @@ namespace swift::core::fsd
 
             CLogMessage(CLogCategories::fsd()).info(u"%1. Please report this to the DEVELOPERS!") << message;
         }
-    }
+    } // namespace Private
 
     template <>
     QString toQString(const AtcRating &value)
@@ -503,4 +504,4 @@ namespace swift::core::fsd
 
     //! \endcond
 
-} // ns
+} // namespace swift::core::fsd

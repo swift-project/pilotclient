@@ -6,10 +6,6 @@
 #ifndef SWIFT_GUI_STYLESHEETUTILITY_H
 #define SWIFT_GUI_STYLESHEETUTILITY_H
 
-#include "gui/swiftguiexport.h"
-#include "misc/logcategories.h"
-#include "misc/digestsignal.h"
-
 #include <QFileSystemWatcher>
 #include <QMap>
 #include <QObject>
@@ -18,6 +14,10 @@
 #include <QString>
 #include <QStringList>
 #include <QStyle>
+
+#include "gui/swiftguiexport.h"
+#include "misc/digestsignal.h"
+#include "misc/logcategories.h"
 
 class QFont;
 class QWidget;
@@ -170,5 +170,5 @@ namespace swift::gui
         QMap<QString, QString> m_styleSheets; //!< filename, stylesheet
         QFileSystemWatcher m_fileWatcher { this }; //!< monitor my qss files
     };
-}
+} // namespace swift::gui
 #endif // guard

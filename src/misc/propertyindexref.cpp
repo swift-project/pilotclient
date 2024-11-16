@@ -4,8 +4,10 @@
 //! \file
 
 #include "misc/propertyindexref.h"
-#include "misc/verify.h"
+
 #include <QtGlobal>
+
+#include "misc/verify.h"
 
 namespace swift::misc
 {
@@ -70,4 +72,4 @@ namespace swift::misc
         }
         return s;
     }
-}
+} // namespace swift::misc

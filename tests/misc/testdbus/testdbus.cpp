@@ -8,14 +8,16 @@
  * \ingroup testmisc
  */
 
+#include <QDBusConnection>
+#include <QTest>
+
+#include "test.h"
+
+#include "misc/dbusutils.h"
 #include "misc/registermetadata.h"
 #include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/test/testservice.h"
 #include "misc/test/testserviceinterface.h"
-#include "misc/dbusutils.h"
-#include "test.h"
-#include <QDBusConnection>
-#include <QTest>
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -77,7 +79,7 @@ namespace MiscTest
         s = CDBusUtils::dBusSignature(al);
         QVERIFY2(s.length() <= max, "Signature CSimulatedAircraftList");
     }
-}
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestDBus);

@@ -50,6 +50,6 @@ namespace swift::misc::network::settings
             return dv;
         }
     };
-} // ns
+} // namespace swift::misc::network::settings
 
 #endif

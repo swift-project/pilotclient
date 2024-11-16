@@ -49,4 +49,4 @@ namespace swift::misc::aviation
         case WakeTurbulenceCategory::UNKNOWN: return QStringLiteral("-");
         }
     }
-}
+} // namespace swift::misc::aviation

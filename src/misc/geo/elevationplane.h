@@ -142,7 +142,7 @@ namespace swift::misc::geo
             CElevationPlane,
             SWIFT_METAMEMBER(radius));
     };
-} // namespace
+} // namespace swift::misc::geo
 
 Q_DECLARE_METATYPE(swift::misc::geo::CElevationPlane)
 

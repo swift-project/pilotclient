@@ -1,14 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/webdataservices.h"
 #include "gui/components/dbcountryselectorcomponent.h"
-#include "gui/guiapplication.h"
-#include "gui/uppercasevalidator.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/countrylist.h"
-#include "misc/variant.h"
-#include "ui_dbcountryselectorcomponent.h"
 
 #include <QCompleter>
 #include <QDragEnterEvent>
@@ -21,6 +14,15 @@
 #include <QPalette>
 #include <QPixmap>
 #include <Qt>
+
+#include "ui_dbcountryselectorcomponent.h"
+
+#include "core/webdataservices.h"
+#include "gui/guiapplication.h"
+#include "gui/uppercasevalidator.h"
+#include "misc/countrylist.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/variant.h"
 
 using namespace swift::gui;
 using namespace swift::core;
@@ -196,4 +198,4 @@ namespace swift::gui::components
         this->setCountry(sGui->getWebDataServices()->getCountryForName(countryName));
     }
 
-} // ns
+} // namespace swift::gui::components

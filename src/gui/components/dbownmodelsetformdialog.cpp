@@ -1,19 +1,21 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "core/modelsetbuilder.h"
-#include "gui/components/dbmappingcomponent.h"
 #include "gui/components/dbownmodelsetformdialog.h"
-#include "gui/editors/ownmodelsetform.h"
-#include "gui/guiapplication.h"
-#include "misc/logcategories.h"
-#include "misc/simulation/distributorlist.h"
-#include "ui_dbownmodelsetformdialog.h"
 
 #include <QPushButton>
 #include <QString>
 #include <QWidget>
 #include <QtGlobal>
+
+#include "ui_dbownmodelsetformdialog.h"
+
+#include "core/modelsetbuilder.h"
+#include "gui/components/dbmappingcomponent.h"
+#include "gui/editors/ownmodelsetform.h"
+#include "gui/guiapplication.h"
+#include "misc/logcategories.h"
+#include "misc/simulation/distributorlist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -157,4 +159,4 @@ namespace swift::gui::components
         if (consolidateWithDb) { options |= CModelSetBuilder::ConsolidateWithDb; }
         return builder.buildModelSet(simulator, models, currentSet, options, distributors);
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,12 +6,13 @@
 #ifndef SWIFT_GUI_EDITORS_FORM_H
 #define SWIFT_GUI_EDITORS_FORM_H
 
-#include "gui/overlaymessagesframe.h"
-#include "gui/swiftguiexport.h"
-#include "core/data/authenticateduser.h"
-#include "misc/datacache.h"
 #include <QFrame>
 #include <QObject>
+
+#include "core/data/authenticateduser.h"
+#include "gui/overlaymessagesframe.h"
+#include "gui/swiftguiexport.h"
+#include "misc/datacache.h"
 
 class QWidget;
 
@@ -85,6 +86,6 @@ namespace swift::gui::editors
 
         swift::misc::CDataReadOnly<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser { this, &CFormDbUser::userChanged }; //!< authenticated user
     };
-} // ns
+} // namespace swift::gui::editors
 
 #endif // guard

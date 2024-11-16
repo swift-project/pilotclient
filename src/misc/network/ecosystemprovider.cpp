@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/network/ecosystemprovider.h"
+
 #include <QReadLocker>
 
 namespace swift::misc::network
@@ -95,4 +96,4 @@ namespace swift::misc::network
         IEcosystemProvider *p = qobject_cast<IEcosystemProvider *>(object);
         return p;
     }
-} // namespace
+} // namespace swift::misc::network

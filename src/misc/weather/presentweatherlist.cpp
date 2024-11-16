@@ -10,4 +10,4 @@ namespace swift::misc::weather
     CPresentWeatherList::CPresentWeatherList(const CSequence<CPresentWeather> &other) : CSequence<CPresentWeather>(other)
     {}
 
-} // namespace
+} // namespace swift::misc::weather

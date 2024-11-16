@@ -6,18 +6,19 @@
 #ifndef SWIFT_MISC_SIMULATION_DATA_MODELCACHES
 #define SWIFT_MISC_SIMULATION_DATA_MODELCACHES
 
-#include "misc/simulation/aircraftmodelinterfaces.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/applicationinfo.h"
-#include "misc/statusmessage.h"
-#include "misc/datacache.h"
-#include "misc/threadutils.h"
-#include "misc/swiftmiscexport.h"
+#include <atomic>
 
 #include <QDateTime>
 #include <QObject>
-#include <atomic>
+
+#include "misc/applicationinfo.h"
+#include "misc/datacache.h"
+#include "misc/simulation/aircraftmodelinterfaces.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/threadutils.h"
 
 namespace swift::misc::simulation::data
 {
@@ -564,6 +565,6 @@ namespace swift::misc::simulation::data
         virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override { return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().updateModelsForSimulator(models, simulator); }
     };
 
-} // ns
+} // namespace swift::misc::simulation::data
 
 #endif // guard

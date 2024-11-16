@@ -1,33 +1,36 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/dbmappingcomponent.h"
 #include "gui/components/dbstashcomponent.h"
-#include "gui/views/aircraftmodelview.h"
-#include "gui/views/viewbase.h"
-#include "gui/guiapplication.h"
-#include "gui/models/aircraftmodellistmodel.h"
-#include "core/db/databasewriter.h"
-#include "core/db/databaseutils.h"
-#include "core/application.h"
-#include "core/webdataservices.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/livery.h"
-#include "misc/logcategories.h"
-#include "misc/sequence.h"
-#include "misc/verify.h"
-#include "ui_dbstashcomponent.h"
+
+#include <iterator>
 
 #include <QCheckBox>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QWidget>
 #include <QStringBuilder>
+#include <QWidget>
 #include <Qt>
 #include <QtGlobal>
-#include <iterator>
+
+#include "ui_dbstashcomponent.h"
+
+#include "core/application.h"
+#include "core/db/databaseutils.h"
+#include "core/db/databasewriter.h"
+#include "core/webdataservices.h"
+#include "gui/components/dbmappingcomponent.h"
+#include "gui/guiapplication.h"
+#include "gui/models/aircraftmodellistmodel.h"
+#include "gui/views/aircraftmodelview.h"
+#include "gui/views/viewbase.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/logcategories.h"
+#include "misc/sequence.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/distributorlist.h"
+#include "misc/verify.h"
 
 using namespace swift::core;
 using namespace swift::core::db;
@@ -557,4 +560,4 @@ namespace swift::gui::components
         if (!this->getMappingComponent()) { return; }
         this->getMappingComponent()->clearOverlayMessages();
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,21 +6,21 @@
 #ifndef SWIFT_GUI_COMPONENTS_CDBOWNMODELSETCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_CDBOWNMODELSETCOMPONENT_H
 
-#include "gui/components/dbmappingcomponentaware.h"
-#include "gui/components/simulatorselector.h"
-#include "gui/menus/menudelegate.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/settings/modelsettings.h"
-#include "misc/simulation/settings/simulatorsettings.h"
-#include "misc/simulation/aircraftmodelinterfaces.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/simulatorinfo.h"
-#include "misc/statusmessage.h"
-
 #include <QFrame>
 #include <QList>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/components/dbmappingcomponentaware.h"
+#include "gui/components/simulatorselector.h"
+#include "gui/menus/menudelegate.h"
+#include "misc/simulation/aircraftmodelinterfaces.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/settings/modelsettings.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorinfo.h"
+#include "misc/statusmessage.h"
 
 class QAction;
 
@@ -42,7 +42,7 @@ namespace swift::gui
     {
         class CAircraftModelView;
         class CAircraftModelStatisticsDialog;
-    }
+    } // namespace views
     namespace components
     {
         class CDbMappingComponent;
@@ -218,7 +218,7 @@ namespace swift::gui
                 QList<QAction *> m_setNewActions;
             };
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

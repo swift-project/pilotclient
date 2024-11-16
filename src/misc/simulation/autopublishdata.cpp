@@ -2,18 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/autopublishdata.h"
-#include "misc/swiftdirectories.h"
-#include "misc/fileutils.h"
-#include "misc/json.h"
-#include "misc/logcategories.h"
-#include "misc/setbuilder.h"
 
-#include <QStringList>
-#include <QStringBuilder>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QStringBuilder>
+#include <QStringList>
+
+#include "misc/fileutils.h"
+#include "misc/json.h"
+#include "misc/logcategories.h"
+#include "misc/setbuilder.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::misc::physical_quantities;
 
@@ -287,4 +288,4 @@ namespace swift::misc::simulation
         return correctedList;
     }
 
-} // namespace
+} // namespace swift::misc::simulation

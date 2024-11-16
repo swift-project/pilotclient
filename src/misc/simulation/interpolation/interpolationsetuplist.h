@@ -6,11 +6,11 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPLIST_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPLIST_H
 
-#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "misc/aviation/callsignobjectlist.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/collection.h"
 #include "misc/sequence.h"
+#include "misc/simulation/interpolation/interpolationrenderingsetup.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRenderingSetupPerCallsign, CInterpolationSetupList)
 
@@ -35,7 +35,7 @@ namespace swift::misc::simulation
         //! Construct from a base class object.
         CInterpolationSetupList(const CSequence<CInterpolationAndRenderingSetupPerCallsign> &other);
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CInterpolationSetupList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign>)

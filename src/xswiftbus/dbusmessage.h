@@ -4,10 +4,11 @@
 #ifndef SWIFT_SIM_XSWIFTBUS_DBUSMESSAGE_H
 #define SWIFT_SIM_XSWIFTBUS_DBUSMESSAGE_H
 
-#include "dbus/dbus.h"
 #include <string>
-#include <vector>
 #include <string_view>
+#include <vector>
+
+#include "dbus/dbus.h"
 
 namespace XSwiftBus
 {
@@ -93,6 +94,6 @@ namespace XSwiftBus
         dbus_uint32_t m_serial = 0;
     };
 
-}
+} // namespace XSwiftBus
 
 #endif // guard

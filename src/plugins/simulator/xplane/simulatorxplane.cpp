@@ -2,18 +2,22 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorxplane.h"
+
+#include <math.h>
+
+#include <QColor>
+#include <QDBusServiceWatcher>
+#include <QElapsedTimer>
+#include <QPointer>
+#include <QString>
+#include <QTimer>
+#include <QtGlobal>
+
+#include "dbus/dbus.h"
 #include "qcompilerdetection.h"
-#include "xswiftbusserviceproxy.h"
-#include "xswiftbustrafficproxy.h"
+
+#include "config/buildconfig.h"
 #include "core/aircraftmatcher.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/simulatedaircraftlist.h"
-#include "misc/simulation/settings/xswiftbussettingsqtfree.inc"
-#include "misc/weather/cloudlayer.h"
-#include "misc/weather/cloudlayerlist.h"
-#include "misc/weather/windlayer.h"
-#include "misc/weather/windlayerlist.h"
 #include "misc/aviation/aircraftengine.h"
 #include "misc/aviation/aircraftenginelist.h"
 #include "misc/aviation/aircrafticaocode.h"
@@ -26,34 +30,32 @@
 #include "misc/aviation/heading.h"
 #include "misc/aviation/livery.h"
 #include "misc/aviation/transponder.h"
-#include "misc/network/textmessage.h"
+#include "misc/dbusserver.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/latitude.h"
 #include "misc/geo/longitude.h"
+#include "misc/iterator.h"
+#include "misc/logmessage.h"
+#include "misc/mixin/mixincompare.h"
+#include "misc/network/textmessage.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/frequency.h"
 #include "misc/pq/length.h"
 #include "misc/pq/pressure.h"
 #include "misc/pq/speed.h"
 #include "misc/pq/temperature.h"
-#include "misc/verify.h"
-#include "misc/mixin/mixincompare.h"
-#include "misc/dbusserver.h"
-#include "misc/iterator.h"
-#include "misc/logmessage.h"
 #include "misc/setbuilder.h"
-#include "config/buildconfig.h"
-
-#include "dbus/dbus.h"
-
-#include <QColor>
-#include <QDBusServiceWatcher>
-#include <QString>
-#include <QTimer>
-#include <QtGlobal>
-#include <QPointer>
-#include <QElapsedTimer>
-#include <math.h>
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/settings/xswiftbussettingsqtfree.inc"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatedaircraftlist.h"
+#include "misc/verify.h"
+#include "misc/weather/cloudlayer.h"
+#include "misc/weather/cloudlayerlist.h"
+#include "misc/weather/windlayer.h"
+#include "misc/weather/windlayerlist.h"
+#include "xswiftbusserviceproxy.h"
+#include "xswiftbustrafficproxy.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -78,7 +80,7 @@ namespace
         static const QString hash(XSWIFTBUS_COMMIT);
         return hash;
     }
-}
+} // namespace
 
 namespace swift::simplugin::xplane
 {
@@ -1469,4 +1471,4 @@ namespace swift::simplugin::xplane
             m_dBusServerAddress = s.getDBusServerAddressQt();
         }
     }
-} // namespace
+} // namespace swift::simplugin::xplane

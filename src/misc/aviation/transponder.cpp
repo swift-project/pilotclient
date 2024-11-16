@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/transponder.h"
-#include "misc/propertyindexref.h"
 
 #include <QRegularExpression>
 #include <Qt>
+
+#include "misc/propertyindexref.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CTransponder)
 
@@ -258,4 +259,4 @@ namespace swift::misc::aviation
             break;
         }
     }
-} // namespace
+} // namespace swift::misc::aviation

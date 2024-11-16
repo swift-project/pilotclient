@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "dbusdispatcher.h"
-#include "dbusconnection.h"
+
 #include <algorithm>
+
+#include "dbusconnection.h"
 
 namespace XSwiftBus
 {
@@ -224,4 +226,4 @@ namespace XSwiftBus
             dbusRemoveTimeout(timeout);
     }
 
-}
+} // namespace XSwiftBus

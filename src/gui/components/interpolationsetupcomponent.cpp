@@ -2,13 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "interpolationsetupcomponent.h"
+
+#include <QPointer>
+
 #include "ui_interpolationsetupcomponent.h"
-#include "gui/views/interpolationsetupview.h"
-#include "gui/guiapplication.h"
+
 #include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "gui/views/interpolationsetupview.h"
 #include "misc/simulation/interpolation/interpolationsetuplist.h"
 #include "misc/statusmessage.h"
-#include <QPointer>
 
 using namespace swift::gui::views;
 using namespace swift::misc;
@@ -264,4 +267,4 @@ namespace swift::gui::components
             Q_UNUSED(set)
         }
     }
-} // ns
+} // namespace swift::gui::components

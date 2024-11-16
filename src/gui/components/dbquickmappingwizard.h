@@ -6,10 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBQUICKMAPPINGWIZARD_H
 #define SWIFT_GUI_COMPONENTS_DBQUICKMAPPINGWIZARD_H
 
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include <QWizard>
 #include <QScopedPointer>
+#include <QWizard>
+
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/simulation/aircraftmodellist.h"
 
 namespace Ui
 {
@@ -120,5 +121,5 @@ namespace swift::gui::components
         //! Aircraft selected
         void onAircraftSelected(const swift::misc::aviation::CAircraftIcaoCode &icao);
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

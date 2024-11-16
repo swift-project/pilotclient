@@ -6,12 +6,13 @@
 #ifndef SWIFT_MISC_NETWORK_ECOSYSTEMLIST_H
 #define SWIFT_MISC_NETWORK_ECOSYSTEMLIST_H
 
-#include "misc/network/ecosystem.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/sequence.h"
-#include <QStringList>
 #include <QMetaType>
+#include <QStringList>
+
+#include "misc/collection.h"
+#include "misc/network/ecosystem.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::network, CEcosystem, CEcosystemList)
 
@@ -38,7 +39,7 @@ namespace swift::misc::network
         //! All systems
         static const CEcosystemList &allKnownSystems();
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CEcosystemList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CEcosystem>)

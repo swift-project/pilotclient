@@ -4,6 +4,7 @@
 //! \file
 
 #include "misc/sharedstate/listmutator.h"
+
 #include "misc/sharedstate/datalink.h"
 
 namespace swift::misc::shared_state
@@ -17,4 +18,4 @@ namespace swift::misc::shared_state
     {
         m_mutator->postEvent(value);
     }
-}
+} // namespace swift::misc::shared_state

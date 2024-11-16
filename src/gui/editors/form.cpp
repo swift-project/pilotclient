@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/editors/form.h"
-#include "gui/guiutility.h"
+
 #include <QApplication>
 #include <QClipboard>
 #include <QShortcut>
+
+#include "gui/guiutility.h"
 
 using namespace swift::misc;
 using namespace swift::misc::network;
@@ -68,4 +70,4 @@ namespace swift::gui::editors
     {
         // void
     }
-} // ns
+} // namespace swift::gui::editors

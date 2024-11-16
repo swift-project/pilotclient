@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_SIMULATION_DISTRIBUTORLIST_H
 #define SWIFT_MISC_SIMULATION_DISTRIBUTORLIST_H
 
-#include "misc/db/datastoreobjectlist.h"
-#include "misc/simulation/distributor.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/collection.h"
-#include "misc/orderablelist.h"
-#include "misc/sequence.h"
-
 #include <QMetaType>
 #include <QString>
 #include <QStringList>
+
+#include "misc/collection.h"
+#include "misc/db/datastoreobjectlist.h"
+#include "misc/orderablelist.h"
+#include "misc/sequence.h"
+#include "misc/simulation/distributor.h"
+#include "misc/swiftmiscexport.h"
 
 SWIFT_DECLARE_SEQUENCE_MIXINS(swift::misc::simulation, CDistributor, CDistributorList)
 
@@ -75,7 +75,7 @@ namespace swift::misc::simulation
         //! Remove distributors not from DB
         int removeIfNotLoadedFromDb();
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CDistributorList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CDistributor>)

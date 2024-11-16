@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_SIMULATION_AIRCRAFTMATCHERSETUP_H
 #define SWIFT_MISC_SIMULATION_AIRCRAFTMATCHERSETUP_H
 
-#include "misc/valueobject.h"
 #include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::Simulation, CAircraftMatcherSetup)
 
@@ -288,7 +288,7 @@ namespace swift::misc::simulation
             SWIFT_METAMEMBER(msReverseEnabled),
             SWIFT_METAMEMBER(msMatchingEnabled));
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftMatcherSetup)
 Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftMatcherSetup::MatchingAlgorithm)

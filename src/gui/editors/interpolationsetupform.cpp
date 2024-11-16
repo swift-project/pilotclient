@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "interpolationsetupform.h"
+
 #include "ui_interpolationsetupform.h"
+
 #include "gui/guiutility.h"
 
 using namespace swift::misc;
@@ -127,4 +129,4 @@ namespace swift::gui::editors
         const QString p = pitchOnGround.valueRoundedWithUnit(CAngleUnit::deg(), 1, true);
         ui->le_PitchOnGround->setText(p);
     }
-} // ns
+} // namespace swift::gui::editors

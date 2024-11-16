@@ -6,10 +6,11 @@
 #ifndef SWIFT_MISC_SHAREDSTATE_DBUS_HUBIMPL_H
 #define SWIFT_MISC_SHAREDSTATE_DBUS_HUBIMPL_H
 
-#include "misc/sharedstate/dbus/hub.h"
-#include "misc/identifier.h"
-#include <QSharedPointer>
 #include <QMap>
+#include <QSharedPointer>
+
+#include "misc/identifier.h"
+#include "misc/sharedstate/dbus/hub.h"
 
 namespace swift::misc
 {
@@ -64,7 +65,7 @@ namespace swift::misc
             CDBusServer *m_server = nullptr;
             QMap<CIdentifier, QSharedPointer<CDuplex>> m_clients;
         };
-    }
-}
+    } // namespace shared_state::dbus
+} // namespace swift::misc
 
 #endif

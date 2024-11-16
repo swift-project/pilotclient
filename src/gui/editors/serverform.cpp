@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/editors/serverform.h"
-#include "misc/network/user.h"
-#include "ui_serverform.h"
 
 #include <QIntValidator>
 #include <QLabel>
 #include <QLineEdit>
 #include <QToolButton>
+
+#include "ui_serverform.h"
+
+#include "misc/network/user.h"
 
 using namespace swift::misc;
 using namespace swift::misc::audio;
@@ -145,4 +147,4 @@ namespace swift::gui::editors
         const CServer server = this->getServer();
         return server.validate();
     }
-} // ns
+} // namespace swift::gui::editors

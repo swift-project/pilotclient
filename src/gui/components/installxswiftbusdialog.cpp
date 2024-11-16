@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "installxswiftbusdialog.h"
+
 #include "ui_installxswiftbusdialog.h"
 
 namespace swift::gui::components
@@ -19,4 +20,4 @@ namespace swift::gui::components
     {
         ui->comp_InstallXSwiftBus->setDefaultDownloadName(defaultName);
     }
-} // ns
+} // namespace swift::gui::components

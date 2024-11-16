@@ -6,10 +6,11 @@
 #ifndef SWIFT_SOUND_SAMPLEPROVIDER_H
 #define SWIFT_SOUND_SAMPLEPROVIDER_H
 
-#include "config/buildconfig.h"
-#include "sound/swiftsoundexport.h"
 #include <QObject>
 #include <QVector>
+
+#include "config/buildconfig.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -36,6 +37,6 @@ namespace swift::sound::sample_provider
         bool static verbose() { return swift::config::CBuildConfig::isLocalDeveloperDebugBuild(); }
     };
 
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

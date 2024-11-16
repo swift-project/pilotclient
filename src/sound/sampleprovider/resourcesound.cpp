@@ -4,10 +4,12 @@
 //! \file
 
 #include "resourcesound.h"
-#include "sound/audioutilities.h"
+
+#include <QCoreApplication>
+
 #include "misc/fileutils.h"
 #include "misc/stringutils.h"
-#include <QCoreApplication>
+#include "sound/audioutilities.h"
 
 using namespace swift::misc;
 using namespace swift::sound::wav;
@@ -58,4 +60,4 @@ namespace swift::sound::sample_provider
         if (fn.isEmpty()) { return false; }
         return stringCompare(fn, m_data->fileName, CFileUtils::osFileNameCaseSensitivity());
     }
-} // ns
+} // namespace swift::sound::sample_provider

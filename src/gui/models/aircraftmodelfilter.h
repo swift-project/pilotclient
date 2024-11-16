@@ -6,15 +6,15 @@
 #ifndef SWIFT_GUI_MODELS_AIRCRAFTMODELFILTER_H
 #define SWIFT_GUI_MODELS_AIRCRAFTMODELFILTER_H
 
-#include "gui/swiftguiexport.h"
+#include <QString>
+
 #include "gui/models/modelfilter.h"
+#include "gui/swiftguiexport.h"
+#include "misc/db/datastore.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/distributor.h"
 #include "misc/simulation/simulatorinfo.h"
-#include "misc/db/datastore.h"
-
-#include <QString>
 
 namespace swift::gui::models
 {
@@ -58,6 +58,6 @@ namespace swift::gui::models
         swift::misc::simulation::CDistributor m_distributor;
         bool valid() const;
     };
-} // namespace
+} // namespace swift::gui::models
 
 #endif // guard

@@ -10,4 +10,4 @@ namespace swift::gui::models
     template class CListModelBase<swift::misc::weather::CCloudLayerList, false>;
     template class CListModelBase<swift::misc::weather::CWindLayerList, false>;
 
-} // namespace
+} // namespace swift::gui::models

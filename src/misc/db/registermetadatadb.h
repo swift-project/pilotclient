@@ -12,6 +12,6 @@ namespace swift::misc::db
 {
     //! Register metadata for DB related classes
     SWIFT_MISC_EXPORT void registerMetadata();
-} // ns
+} // namespace swift::misc::db
 
 #endif // guard

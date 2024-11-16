@@ -2,15 +2,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/fileutils.h"
-#include "misc/swiftdirectories.h"
-#include "misc/directoryutils.h"
+
 #include <qsystemdetection.h>
+
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QIODevice>
 #include <QTextStream>
+
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/swiftdirectories.h"
 
 #if defined(Q_OS_WIN)
 #    include <ShlObj.h>
@@ -307,4 +310,4 @@ namespace swift::misc::simulation::xplane
         msgs.addValidationCategory();
         return msgs;
     }
-} // namespace
+} // namespace swift::misc::simulation::xplane

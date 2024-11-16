@@ -6,15 +6,16 @@
 #ifndef SWIFT_GUI_COMPONENTS_CALLSIGNCOMPLETER_H
 #define SWIFT_GUI_COMPONENTS_CALLSIGNCOMPLETER_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/sharedstringlistcompleter.h"
-#include "misc/digestsignal.h"
-#include "misc/aviation/callsignset.h"
-#include "misc/network/connectionstatus.h"
+#include <QCompleter>
 #include <QFrame>
 #include <QScopedPointer>
 #include <QTimer>
-#include <QCompleter>
+
+#include "gui/sharedstringlistcompleter.h"
+#include "gui/swiftguiexport.h"
+#include "misc/aviation/callsignset.h"
+#include "misc/digestsignal.h"
+#include "misc/network/connectionstatus.h"
 
 namespace Ui
 {
@@ -86,5 +87,5 @@ namespace swift::gui::components
         bool m_addOwnCallsign = false;
         bool m_onlyWithParts = false;
     };
-} // ns
+} // namespace swift::gui::components
 #endif // guard

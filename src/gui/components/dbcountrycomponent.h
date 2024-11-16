@@ -6,14 +6,14 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBCOUNTRYCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBCOUNTRYCOMPONENT_H
 
+#include <QFrame>
+#include <QObject>
+#include <QScopedPointer>
+
 #include "gui/enablefordockwidgetinfoarea.h"
 #include "gui/enableforviewbasedindicator.h"
 #include "gui/swiftguiexport.h"
 #include "misc/network/entityflags.h"
-
-#include <QFrame>
-#include <QObject>
-#include <QScopedPointer>
 
 class QWidget;
 
@@ -51,6 +51,6 @@ namespace swift::gui::components
         QScopedPointer<Ui::CDbCountryComponent> ui;
     };
 
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

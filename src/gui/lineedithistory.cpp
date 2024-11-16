@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "lineedithistory.h"
+
 #include <QKeyEvent>
 #include <QMenu>
 
@@ -78,4 +79,4 @@ namespace swift::gui
         menu->exec(event->globalPos());
         delete menu;
     }
-} // ns
+} // namespace swift::gui

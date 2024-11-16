@@ -2,17 +2,19 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/usercomponent.h"
+
+#include <QString>
+#include <QTabBar>
+
+#include "ui_usercomponent.h"
+
+#include "core/context/contextnetwork.h"
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "gui/views/clientview.h"
 #include "gui/views/userview.h"
-#include "core/context/contextnetwork.h"
 #include "misc/network/connectionstatus.h"
 #include "misc/network/userlist.h"
-#include "ui_usercomponent.h"
-
-#include <QString>
-#include <QTabBar>
 
 using namespace swift::misc::network;
 using namespace swift::gui;
@@ -111,4 +113,4 @@ namespace swift::gui::components
         const int ms = settings.getAtcUpdateTime().toMs();
         m_updateTimer.setInterval(ms);
     }
-} // namespace
+} // namespace swift::gui::components

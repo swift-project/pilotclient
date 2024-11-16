@@ -6,11 +6,11 @@
 #ifndef SWIFT_GUI_COMPONENTS_DOWNLOADDIALOG_H
 #define SWIFT_GUI_COMPONENTS_DOWNLOADDIALOG_H
 
-#include "gui/swiftguiexport.h"
-#include "gui/components/downloadcomponent.h"
-
 #include <QDialog>
 #include <QScopedPointer>
+
+#include "gui/components/downloadcomponent.h"
+#include "gui/swiftguiexport.h"
 
 namespace Ui
 {
@@ -20,7 +20,7 @@ namespace swift::misc::network
 {
     class CRemoteFile;
     class CRemoteFileList;
-}
+} // namespace swift::misc::network
 namespace swift::gui::components
 {
     /*!
@@ -59,6 +59,6 @@ namespace swift::gui::components
     private:
         QScopedPointer<Ui::CDownloadDialog> ui;
     };
-} // ns
+} // namespace swift::gui::components
 
 #endif // guard

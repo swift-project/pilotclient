@@ -6,17 +6,17 @@
 #ifndef SWIFTDATA_H
 #define SWIFTDATA_H
 
-#include "gui/settings/guisettings.h"
-#include "gui/mainwindowaccess.h"
-#include "gui/managedstatusbar.h"
-#include "core/db/backgrounddataupdater.h"
-#include "misc/loghistory.h"
-#include "misc/identifiable.h"
-#include "misc/statusmessage.h"
-
 #include <QMainWindow>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "core/db/backgrounddataupdater.h"
+#include "gui/mainwindowaccess.h"
+#include "gui/managedstatusbar.h"
+#include "gui/settings/guisettings.h"
+#include "misc/identifiable.h"
+#include "misc/loghistory.h"
+#include "misc/statusmessage.h"
 
 namespace Ui
 {

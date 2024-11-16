@@ -49,4 +49,4 @@ namespace swift::misc::simulation::xplane
 
     CNavDataReferenceList::CNavDataReferenceList(const CSequence<CNavDataReference> &other) : CSequence<CNavDataReference>(other)
     {}
-}
+} // namespace swift::misc::simulation::xplane

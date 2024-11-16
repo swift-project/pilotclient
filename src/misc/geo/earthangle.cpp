@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/geo/earthangle.h"
-#include "misc/pq/units.h"
-#include "misc/geo/latitude.h"
-#include "misc/geo/longitude.h"
 
 #include <QRegularExpression>
 #include <Qt>
 #include <QtGlobal>
+
+#include "misc/geo/latitude.h"
+#include "misc/geo/longitude.h"
+#include "misc/pq/units.h"
 
 using namespace swift::misc::physical_quantities;
 
@@ -184,4 +185,4 @@ namespace swift::misc::geo
     template class CEarthAngle<CLongitude>;
     //! \endcond
 
-} // namespace
+} // namespace swift::misc::geo

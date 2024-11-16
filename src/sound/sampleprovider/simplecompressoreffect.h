@@ -6,12 +6,12 @@
 #ifndef SWIFT_SOUND_SAMPLEPROVIDER_SIMPLECOMPRESSOREFFECT_H
 #define SWIFT_SOUND_SAMPLEPROVIDER_SIMPLECOMPRESSOREFFECT_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/sampleprovider/sampleprovider.h"
-#include "sound/dsp/SimpleComp.h"
-
 #include <QObject>
 #include <QTimer>
+
+#include "sound/dsp/SimpleComp.h"
+#include "sound/sampleprovider/sampleprovider.h"
+#include "sound/swiftsoundexport.h"
 
 namespace swift::sound::sample_provider
 {
@@ -43,6 +43,6 @@ namespace swift::sound::sample_provider
         int m_channels = 1;
         chunkware_simple::SimpleComp m_simpleCompressor;
     };
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

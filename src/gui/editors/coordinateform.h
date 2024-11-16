@@ -66,5 +66,5 @@ namespace swift::gui::editors
 
         swift::misc::geo::CCoordinateGeodetic m_coordinate;
     };
-} // ns
+} // namespace swift::gui::editors
 #endif // guard

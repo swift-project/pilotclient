@@ -1,25 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/aircraftmodelutils.h"
-#include "misc/simulation/distributor.h"
 #include "misc/simulation/xplane/aircraftmodelloaderxplane.h"
-#include "misc/simulation/xplane/xplaneutil.h"
-#include "misc/simulation/xplane/qtfreeutils.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/aviation/livery.h"
-#include "misc/worker.h"
-#include "misc/stringutils.h"
-#include "misc/fileutils.h"
-#include "misc/directoryutils.h"
-#include "misc/statusmessage.h"
-#include "misc/logmessage.h"
-#include "misc/verify.h"
-#include "config/buildconfig.h"
 
 #include <string.h>
+
+#include <algorithm>
+#include <functional>
+
 #include <QChar>
 #include <QDateTime>
 #include <QDir>
@@ -31,10 +19,25 @@
 #include <QList>
 #include <QMap>
 #include <QRegularExpression>
-#include <QTextStream>
 #include <QStringBuilder>
-#include <algorithm>
-#include <functional>
+#include <QTextStream>
+
+#include "config/buildconfig.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/livery.h"
+#include "misc/directoryutils.h"
+#include "misc/fileutils.h"
+#include "misc/logmessage.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/aircraftmodelutils.h"
+#include "misc/simulation/distributor.h"
+#include "misc/simulation/xplane/qtfreeutils.h"
+#include "misc/simulation/xplane/xplaneutil.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
+#include "misc/verify.h"
+#include "misc/worker.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -645,4 +648,4 @@ namespace swift::misc::simulation::xplane
         return f;
     }
 
-} // namespace
+} // namespace swift::misc::simulation::xplane

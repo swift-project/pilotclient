@@ -6,11 +6,11 @@
 #ifndef SWIFT_SIMPLUGIN_SIMULATOR_FSXFACTORY_H
 #define SWIFT_SIMPLUGIN_SIMULATOR_FSXFACTORY_H
 
-#include "core/simulator.h"
-#include "misc/simulation/simulatorplugininfo.h"
-
 #include <QObject>
 #include <QtPlugin>
+
+#include "core/simulator.h"
+#include "misc/simulation/simulatorplugininfo.h"
 
 namespace swift::simplugin::fsx
 {
@@ -33,6 +33,6 @@ namespace swift::simplugin::fsx
         //! \copydoc swift::core::ISimulatorFactory::createListener
         virtual swift::core::ISimulatorListener *createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override;
     };
-} // namespace
+} // namespace swift::simplugin::fsx
 
 #endif // guard

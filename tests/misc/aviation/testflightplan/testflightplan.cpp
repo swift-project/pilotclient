@@ -5,11 +5,13 @@
 //! \file
 //! \ingroup testmisc
 
+#include <QTest>
+
+#include "test.h"
+
 #include "misc/aviation/flightplan.h"
 #include "misc/aviation/selcal.h"
 #include "misc/network/voicecapabilities.h"
-#include "test.h"
-#include <QTest>
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;
@@ -98,7 +100,7 @@ namespace MiscTest
         a = CAltitude(1600, CAltitude::MeanSeaLevel, CLengthUnit::m());
         QVERIFY2(a.asFpICAOAltitudeString() == "M0160", "Expect M0160");
     }
-} // ns
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CTestFlightPlan);

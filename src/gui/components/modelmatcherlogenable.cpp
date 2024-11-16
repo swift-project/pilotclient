@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "modelmatcherlogenable.h"
-#include "gui/guiapplication.h"
-#include "ui_modelmatcherlogenable.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
 
 #include <QPointer>
 #include <QTimer>
+
+#include "ui_modelmatcherlogenable.h"
+
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
 
 using namespace swift::core;
 using namespace swift::core::context;
@@ -119,4 +121,4 @@ namespace swift::gui::components
             this->initGui();
         }
     }
-} // ns
+} // namespace swift::gui::components

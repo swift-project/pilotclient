@@ -6,16 +6,17 @@
 #ifndef SWIFT_MISC_NETWORK_CLIENT_H
 #define SWIFT_MISC_NETWORK_CLIENT_H
 
-#include "misc/network/user.h"
-#include "misc/network/voicecapabilities.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/aviation/callsign.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
 #include <QMetaType>
 #include <QString>
+
+#include "misc/aviation/callsign.h"
+#include "misc/metaclass.h"
+#include "misc/network/user.h"
+#include "misc/network/voicecapabilities.h"
+#include "misc/propertyindexref.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CClient)
 
@@ -167,7 +168,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(server),
             SWIFT_METAMEMBER(voiceCapabilities));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CClient)
 Q_DECLARE_METATYPE(swift::misc::network::CClient::Capability)

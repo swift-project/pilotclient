@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_MODELS_USERLISTMODEL_H
 #define SWIFT_GUI_MODELS_USERLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
 #include "misc/network/userlist.h"
 
 namespace swift::gui::models
@@ -41,5 +41,5 @@ namespace swift::gui::models
     private:
         UserMode m_userMode = NotSet;
     };
-}
+} // namespace swift::gui::models
 #endif // guard

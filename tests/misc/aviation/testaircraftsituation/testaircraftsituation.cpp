@@ -8,16 +8,16 @@
 #include "config/buildconfig.h"
 #include "misc/aviation/aircraftsituationchange.h"
 #include "misc/aviation/aircraftsituationlist.h"
-#include "misc/network/fsdsetup.h"
 #include "misc/cputime.h"
+#include "misc/network/fsdsetup.h"
 // #include "misc/math/mathutils.h"
 // #include "misc/stringutils.h"
-#include "test.h"
-
-#include <QTest>
-#include <QTimer>
 #include <QDateTime>
 #include <QDebug>
+#include <QTest>
+#include <QTimer>
+
+#include "test.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -365,7 +365,7 @@ namespace MiscTest
         static const CLength cg(2.0, CLengthUnit::m());
         return cg;
     }
-} // namespace
+} // namespace MiscTest
 
 //! main
 SWIFTTEST_MAIN(MiscTest::CTestAircraftSituation);

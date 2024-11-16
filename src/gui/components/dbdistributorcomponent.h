@@ -6,14 +6,15 @@
 #ifndef SWIFT_GUI_COMPONENTS_DBDISTRIBUTORCOMPONENT_H
 #define SWIFT_GUI_COMPONENTS_DBDISTRIBUTORCOMPONENT_H
 
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/enableforviewbasedindicator.h"
-#include "gui/swiftguiexport.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/network/entityflags.h"
 #include <QFrame>
 #include <QObject>
 #include <QScopedPointer>
+
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/enableforviewbasedindicator.h"
+#include "gui/swiftguiexport.h"
+#include "misc/network/entityflags.h"
+#include "misc/simulation/distributorlist.h"
 
 namespace Ui
 {
@@ -75,7 +76,7 @@ namespace swift::gui
             //! Reload models
             void reload();
         };
-    } // ns
-} // ns
+    } // namespace components
+} // namespace swift::gui
 
 #endif // guard

@@ -2,33 +2,35 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/navigatordialog.h"
-#include "gui/components/marginsinput.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "gui/stylesheetutility.h"
-#include "misc/logmessage.h"
-#include "misc/icons.h"
-#include "ui_navigatordialog.h"
 
 #include <QAction>
-#include <QMouseEvent>
 #include <QEvent>
 #include <QFrame>
-#include <QMainWindow>
 #include <QGridLayout>
+#include <QGuiApplication>
 #include <QIcon>
 #include <QList>
+#include <QMainWindow>
 #include <QMenu>
+#include <QMouseEvent>
 #include <QPoint>
 #include <QSize>
 #include <QString>
+#include <QStringBuilder>
 #include <QStyle>
 #include <QToolButton>
 #include <QVariant>
 #include <Qt>
-#include <QStringBuilder>
-#include <QGuiApplication>
 #include <QtGlobal>
+
+#include "ui_navigatordialog.h"
+
+#include "gui/components/marginsinput.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/stylesheetutility.h"
+#include "misc/icons.h"
+#include "misc/logmessage.h"
 
 using namespace swift::gui;
 using namespace swift::gui::settings;
@@ -384,4 +386,4 @@ namespace swift::gui::components
         contextMenu->addAction(CIcons::load16(), "Restore from settings", this, &CNavigatorDialog::restoreFromSettings);
         contextMenu->addAction(CIcons::save16(), "Save state", this, &CNavigatorDialog::saveToSettings);
     }
-} // ns
+} // namespace swift::gui::components

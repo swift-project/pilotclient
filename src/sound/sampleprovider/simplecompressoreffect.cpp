@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simplecompressoreffect.h"
+
 #include <QDebug>
 
 namespace swift::sound::sample_provider
@@ -60,4 +61,4 @@ namespace swift::sound::sample_provider
         else if (channels > 2) { channels = 2; }
         m_channels = channels;
     }
-}
+} // namespace swift::sound::sample_provider

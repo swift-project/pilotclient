@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_AUDIO_SETTINGS_H
 #define SWIFT_MISC_AUDIO_SETTINGS_H
 
-#include "misc/audio/notificationsounds.h"
-#include "misc/settingscache.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/statusmessage.h"
-#include "misc/valueobject.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/audio/notificationsounds.h"
+#include "misc/metaclass.h"
+#include "misc/settingscache.h"
+#include "misc/statusmessage.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::audio, CSettings)
 
@@ -160,7 +160,7 @@ namespace swift::misc::audio
             return true;
         }
     };
-} // namespace
+} // namespace swift::misc::audio
 
 Q_DECLARE_METATYPE(swift::misc::audio::CSettings)
 

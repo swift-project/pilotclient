@@ -6,10 +6,10 @@
 #ifndef SWIFT_GUI_MODELS_AIRCRAFTICAOLISTMODEL_H
 #define SWIFT_GUI_MODELS_AIRCRAFTICAOLISTMODEL_H
 
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "misc/aviation/aircrafticaocode.h"
 #include "gui/models/listmodeldbobjects.h"
 #include "gui/swiftguiexport.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/aircrafticaocodelist.h"
 
 namespace swift::gui::models
 {
@@ -26,6 +26,6 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CAircraftIcaoCodeListModel() {}
     };
-} // ns
+} // namespace swift::gui::models
 
 #endif // guard

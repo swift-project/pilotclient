@@ -10,4 +10,4 @@ namespace swift::misc::input
     CJoystickButtonList::CJoystickButtonList(const CSequence<CJoystickButton> &baseClass) : CSequence<CJoystickButton>(baseClass)
     {}
 
-} // namespace
+} // namespace swift::misc::input

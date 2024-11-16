@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "simulatorp3dconfig.h"
+
 #include "../fsxcommon/simulatorfsxconfigwindow.h"
 
 namespace swift::simplugin::p3d
@@ -15,4 +16,4 @@ namespace swift::simplugin::p3d
     {
         return new fsxcommon::CSimulatorFsxConfigWindow("P3D", parent);
     }
-}
+} // namespace swift::simplugin::p3d

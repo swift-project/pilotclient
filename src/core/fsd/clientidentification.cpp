@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "core/fsd/clientidentification.h"
+
 #include "misc/logmessage.h"
 
 namespace swift::core::fsd
@@ -45,4 +46,4 @@ namespace swift::core::fsd
                                     tokens[6], tokens[7], tokens.size() > 8 ? tokens[8] : QString());
         return packet;
     }
-}
+} // namespace swift::core::fsd

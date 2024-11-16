@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/htmlutils.h"
+
 #include <QStringBuilder>
 #include <QStringList>
 
@@ -36,4 +37,4 @@ namespace swift::misc
                    u"<a href=\"" % url % u"\">" % text % u"</a>";
     }
 
-} // ns
+} // namespace swift::misc

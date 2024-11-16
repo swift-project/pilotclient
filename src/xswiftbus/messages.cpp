@@ -7,6 +7,7 @@
 #    define NOMINMAX
 #endif
 #include "messages.h"
+
 #include <XPLMGraphics.h>
 #include <XPUIGraphics.h>
 
@@ -172,6 +173,6 @@ namespace XSwiftBus
         m_messageBox.setMessages(start, end);
         m_messageBox.enableArrows(m_position > lines, m_position < m_messages.size());
     }
-}
+} // namespace XSwiftBus
 
 //! \endcond

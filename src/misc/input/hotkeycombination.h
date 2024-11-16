@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_INPUT_HOTKEYCOMBINATION_H
 #define SWIFT_MISC_INPUT_HOTKEYCOMBINATION_H
 
-#include "misc/swiftmiscexport.h"
+#include <QMetaType>
+#include <QStringList>
+
 #include "misc/input/joystickbutton.h"
 #include "misc/input/joystickbuttonlist.h"
 #include "misc/input/keyboardkey.h"
 #include "misc/input/keyboardkeylist.h"
 #include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"
-
-#include <QMetaType>
-#include <QStringList>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CHotkeyCombination)
 
@@ -101,7 +101,7 @@ namespace swift::misc::input
             SWIFT_METAMEMBER(keyboardKeys),
             SWIFT_METAMEMBER(joystickButtons));
     };
-} // ns
+} // namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CHotkeyCombination)
 

@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: Copyright (C) 2014 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/aircraftpartslist.h"
+
+#include "misc/aviation/aircraftparts.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftParts, CAircraftPartsList)
 
@@ -24,4 +25,4 @@ namespace swift::misc::aviation
         }
         return c;
     }
-} // namespace
+} // namespace swift::misc::aviation

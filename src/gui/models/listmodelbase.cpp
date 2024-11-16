@@ -5,15 +5,16 @@
 // http://doc.qt.io/qt-5/model-view-programming.html#using-drag-and-drop-with-item-views
 
 #include "gui/models/listmodelbase.h"
-#include "gui/models/allmodelcontainers.h"
-#include "gui/guiutility.h"
-#include "misc/variant.h"
-#include "misc/worker.h"
 
 #include <QFlags>
 #include <QJsonDocument>
 #include <QList>
 #include <QMimeData>
+
+#include "gui/guiutility.h"
+#include "gui/models/allmodelcontainers.h"
+#include "misc/variant.h"
+#include "misc/worker.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -611,4 +612,4 @@ namespace swift::gui::models
         return false;
     }
 
-} // namespace
+} // namespace swift::gui::models

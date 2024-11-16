@@ -90,7 +90,7 @@ namespace swift::misc::simulation
         ISimulatorSelectable &operator=(const ISimulatorSelectable &) = default;
         //! @}
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_INTERFACE(swift::misc::simulation::IModelsSetable, "org.swift-project.misc.simulation.imodelssetable")
 Q_DECLARE_INTERFACE(swift::misc::simulation::IModelsUpdatable, "org.swift-project.misc.simulation.imodelsupdateable")

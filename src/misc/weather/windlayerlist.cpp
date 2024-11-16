@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
+#include "misc/weather/windlayerlist.h"
+
 #include "misc/aviation/altitude.h"
 #include "misc/mixin/mixincompare.h"
-#include "misc/weather/windlayerlist.h"
 
 using namespace swift::misc::aviation;
 
@@ -24,4 +25,4 @@ namespace swift::misc::weather
         return findFirstByOrDefault(&CWindLayer::getLevel, level);
     }
 
-} // namespace
+} // namespace swift::misc::weather

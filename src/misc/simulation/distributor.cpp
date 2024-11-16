@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: Copyright (C) 2015 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "misc/logcategories.h"
 #include "misc/simulation/distributor.h"
-#include "misc/statusmessage.h"
-#include "misc/stringutils.h"
 
 #include <QJsonValue>
-#include <Qt>
 #include <QStringBuilder>
+#include <Qt>
 #include <QtGlobal>
+
+#include "misc/logcategories.h"
+#include "misc/statusmessage.h"
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributor)
 
@@ -254,4 +255,4 @@ namespace swift::misc::simulation
         return removeChars(value.trimmed().toUpper(), [](QChar c) { return !c.isLetterOrNumber(); });
     }
 
-} // namespace
+} // namespace swift::misc::simulation

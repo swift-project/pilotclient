@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_MODELS_AUDIODEVICEINFOLISTMODEL_H
 #define SWIFT_GUI_MODELS_AUDIODEVICEINFOLISTMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
 #include "misc/audio/audiodeviceinfolist.h"
 
 namespace swift::gui::models
@@ -25,5 +25,5 @@ namespace swift::gui::models
         //! Destructor
         virtual ~CAudioDeviceInfoListModel() override {}
     };
-}
+} // namespace swift::gui::models
 #endif // guard

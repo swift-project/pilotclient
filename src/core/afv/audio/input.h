@@ -6,18 +6,18 @@
 #ifndef SWIFT_CORE_AFV_AUDIO_AUDIO_INPUT_H
 #define SWIFT_CORE_AFV_AUDIO_AUDIO_INPUT_H
 
-#include "sound/sampleprovider/bufferedwaveprovider.h"
-#include "sound/codecs/opusencoder.h"
 #include "misc/audio/audiodeviceinfo.h"
+#include "sound/codecs/opusencoder.h"
+#include "sound/sampleprovider/bufferedwaveprovider.h"
 
 #ifdef Q_OS_MAC
 #    include "misc/macos/microphoneaccess.h"
 #endif
 
 #include <QAudioSource>
-#include <QString>
 #include <QDateTime>
 #include <QSharedPointer>
+#include <QString>
 
 namespace swift::core::afv::audio
 {
@@ -160,6 +160,6 @@ namespace swift::core::afv::audio
         void delayedInitMicrophone();
 #endif
     };
-} // ns
+} // namespace swift::core::afv::audio
 
 #endif // guard

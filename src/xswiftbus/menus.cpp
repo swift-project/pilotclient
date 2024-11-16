@@ -4,10 +4,11 @@
 //! \cond PRIVATE
 
 #include "menus.h"
-#include <type_traits>
+
+#include <algorithm>
 #include <cassert>
 #include <string>
-#include <algorithm>
+#include <type_traits>
 
 namespace XSwiftBus
 {
@@ -130,6 +131,6 @@ namespace XSwiftBus
         XPLMEnableMenuItem(m_data->parent, m_data->index, enabled);
     }
 
-}
+} // namespace XSwiftBus
 
 //! \endcond

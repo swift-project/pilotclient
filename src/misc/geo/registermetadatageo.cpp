@@ -4,11 +4,11 @@
 #include "misc/geo/registermetadatageo.h"
 
 // Geo headers
-#include "misc/geo/latitude.h"
-#include "misc/geo/longitude.h"
 #include "misc/geo/coordinategeodetic.h"
 #include "misc/geo/coordinategeodeticlist.h"
 #include "misc/geo/elevationplane.h"
+#include "misc/geo/latitude.h"
+#include "misc/geo/longitude.h"
 
 namespace swift::misc::geo
 {
@@ -21,4 +21,4 @@ namespace swift::misc::geo
         CElevationPlane::registerMetadata();
     }
 
-} // ns
+} // namespace swift::misc::geo

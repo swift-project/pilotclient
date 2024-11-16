@@ -6,13 +6,13 @@
 #ifndef SWIFT_MISC_AVIATION_AIRCRAFTLIGHTS_H
 #define SWIFT_MISC_AVIATION_AIRCRAFTLIGHTS_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-
 #include <QMetaType>
 #include <QString>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftLights)
 
@@ -150,7 +150,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(cabin, 0, DisabledForJson) // disable since JSON is used for network
         );
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftLights)
 

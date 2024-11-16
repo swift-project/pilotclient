@@ -6,14 +6,15 @@
 #ifndef SWIFT_MISC_GEO_GEOOBJECTLIST_H
 #define SWIFT_MISC_GEO_GEOOBJECTLIST_H
 
-#include "misc/aviation/altitude.h"
-#include "misc/pq/length.h"
-#include "misc/swiftmiscexport.h"
-#include "misc/sequence.h"
-#include "misc/geo/coordinategeodetic.h"
+#include <tuple>
 
 #include <QList>
-#include <tuple>
+
+#include "misc/aviation/altitude.h"
+#include "misc/geo/coordinategeodetic.h"
+#include "misc/pq/length.h"
+#include "misc/sequence.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc::geo
 {
@@ -300,6 +301,6 @@ namespace swift::misc::geo
         IGeoObjectWithRelativePositionList()
         {}
     };
-} // namespace
+} // namespace swift::misc::geo
 
 #endif // guard

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "textmessagesettings.h"
+
 #include "misc/network/textmessage.h"
 #include "misc/simulation/simulatedaircraft.h"
 
@@ -111,4 +112,4 @@ namespace swift::gui::settings
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-} // ns
+} // namespace swift::gui::settings

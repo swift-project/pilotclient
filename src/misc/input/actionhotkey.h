@@ -6,15 +6,15 @@
 #ifndef SWIFT_MISC_INPUT_ACTIONHOTKEY_H
 #define SWIFT_MISC_INPUT_ACTIONHOTKEY_H
 
+#include <QMetaType>
+#include <QString>
+
+#include "misc/identifier.h"
 #include "misc/input/hotkeycombination.h"
 #include "misc/metaclass.h"
 #include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-#include "misc/identifier.h"
 #include "misc/swiftmiscexport.h"
-
-#include <QMetaType>
-#include <QString>
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::input, CActionHotkey)
 
@@ -104,7 +104,7 @@ namespace swift::misc::input
             SWIFT_METAMEMBER(combination),
             SWIFT_METAMEMBER(action));
     };
-} // ns
+} // namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CActionHotkey)
 

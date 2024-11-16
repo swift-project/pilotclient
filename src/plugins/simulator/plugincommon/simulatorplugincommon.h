@@ -6,10 +6,11 @@
 #ifndef SWIFT_SIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H
 #define SWIFT_SIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H
 
-#include "plugins/simulator/plugincommon/simulatorplugincommonexport.h"
-#include "core/simulator.h"
 #include <QObject>
 #include <QPointer>
+
+#include "core/simulator.h"
+#include "plugins/simulator/plugincommon/simulatorplugincommonexport.h"
 
 namespace swift::gui::components
 {
@@ -59,6 +60,6 @@ namespace swift::simplugin::common
 
         QPointer<swift::gui::components::CInterpolationLogDisplayDialog> m_interpolationDisplayDialog; //!< can be owned by main window after setting a parent
     };
-} // namespace
+} // namespace swift::simplugin::common
 
 #endif // guard

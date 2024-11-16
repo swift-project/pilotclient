@@ -41,6 +41,6 @@ namespace swift::simplugin::fsx
     protected:
         virtual void startImpl() override;
     };
-} // ns
+} // namespace swift::simplugin::fsx
 
 #endif // guard

@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_AVIATION_INFORMATIONMESSAGE_H
 #define SWIFT_MISC_AVIATION_INFORMATIONMESSAGE_H
 
-#include "misc/timestampbased.h"
-#include "misc/metaclass.h"
-#include "misc/valueobject.h"
-#include "misc/dbus.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QDateTime>
 #include <QMetaType>
 #include <QString>
 #include <QtGlobal>
+
+#include "misc/dbus.h"
+#include "misc/metaclass.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/timestampbased.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CInformationMessage)
 
@@ -121,7 +121,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER(message),
             SWIFT_METAMEMBER(timestampMSecsSinceEpoch));
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CInformationMessage)
 Q_DECLARE_METATYPE(swift::misc::aviation::CInformationMessage::InformationType)

@@ -8,6 +8,14 @@
 //! \file
 //! \ingroup testmisc
 
+#include <type_traits>
+
+#include <QDBusArgument>
+#include <QHash>
+#include <QMap>
+#include <QMetaType>
+#include <QString>
+
 #include "misc/collection.h"
 #include "misc/dictionary.h"
 #include "misc/metaclass.h"
@@ -15,13 +23,6 @@
 #include "misc/sequence.h"
 #include "misc/valueobject.h"
 #include "misc/variant.h"
-
-#include <QDBusArgument>
-#include <QHash>
-#include <QMap>
-#include <QMetaType>
-#include <QString>
-#include <type_traits>
 
 class QJsonArray;
 class QJsonValueRef;
@@ -132,7 +133,7 @@ namespace swift::misc
     inline QDataStream &operator>>(QDataStream &a, const CNotHashable &) { return a; }
     //! \endcond
 
-} // namespace
+} // namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CTestValueObject)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CTestValueObject>)

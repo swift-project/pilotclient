@@ -6,8 +6,8 @@
 #ifndef SWIFT_GUI_MATCHINGSTATISTICSMODEL_H
 #define SWIFT_GUI_MATCHINGSTATISTICSMODEL_H
 
-#include "gui/swiftguiexport.h"
 #include "gui/models/listmodelbase.h"
+#include "gui/swiftguiexport.h"
 #include "misc/simulation/matchingstatistics.h"
 
 class QObject;
@@ -40,5 +40,5 @@ namespace swift::gui::models
     private:
         MatchingStatisticsMode m_mode = NoSet;
     };
-} // ns
+} // namespace swift::gui::models
 #endif // guard

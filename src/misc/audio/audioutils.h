@@ -16,6 +16,6 @@ namespace swift::misc::audio
     //! On windows init the audio devices
     //! \remarks workaround for WASAPI driver crashes, hoping that upfront init already sets global vars. etc.
     SWIFT_MISC_EXPORT void initWindowsAudioDevices();
-}
+} // namespace swift::misc::audio
 
 #endif // guard

@@ -8,8 +8,8 @@
 
 #include "misc/db/datastore.h"
 #include "misc/network/entityflags.h"
-#include "misc/valueobject.h"
 #include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CDbInfo)
 
@@ -109,7 +109,7 @@ namespace swift::misc::db
             SWIFT_METAMEMBER(tableName),
             SWIFT_METAMEMBER(entries));
     };
-} // namespace
+} // namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CDbInfo)
 

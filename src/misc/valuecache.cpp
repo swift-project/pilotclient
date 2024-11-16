@@ -4,12 +4,11 @@
 //! \cond PRIVATE
 
 #include "misc/valuecache.h"
-#include "misc/atomicfile.h"
-#include "misc/swiftdirectories.h"
-#include "misc/identifier.h"
-#include "misc/lockfree.h"
-#include "misc/logcategories.h"
-#include "misc/logmessage.h"
+
+#include <atomic>
+#include <exception>
+#include <functional>
+#include <limits>
 
 #include <QByteArray>
 #include <QCoreApplication>
@@ -26,10 +25,13 @@
 #include <QStandardPaths>
 #include <QThread>
 #include <Qt>
-#include <atomic>
-#include <exception>
-#include <functional>
-#include <limits>
+
+#include "misc/atomicfile.h"
+#include "misc/identifier.h"
+#include "misc/lockfree.h"
+#include "misc/logcategories.h"
+#include "misc/logmessage.h"
+#include "misc/swiftdirectories.h"
 
 namespace swift::misc
 {
@@ -849,6 +851,6 @@ namespace swift::misc
         }
     }
 
-}
+} // namespace swift::misc
 
 //! \endcond

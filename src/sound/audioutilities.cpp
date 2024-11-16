@@ -2,14 +2,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "audioutilities.h"
-#include "misc/audio/audiodeviceinfolist.h"
-#include "config/buildconfig.h"
 
-#include <QStringBuilder>
 #include <QAudioInput>
 #include <QAudioSink>
 #include <QAudioSource>
 #include <QMediaDevices>
+#include <QStringBuilder>
+
+#include "config/buildconfig.h"
+#include "misc/audio/audiodeviceinfolist.h"
 
 using namespace swift::config;
 using namespace swift::misc::audio;
@@ -222,4 +223,4 @@ namespace swift::sound
         static const QAudioInput input(QMediaDevices::defaultAudioInput());
     }
 
-} // ns
+} // namespace swift::sound

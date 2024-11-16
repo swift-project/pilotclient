@@ -4,8 +4,9 @@
 //! \file
 
 #include "misc/sharedstate/dbus/hubimpl.h"
-#include "misc/sharedstate/dbus/dupleximpl.h"
+
 #include "misc/dbusserver.h"
+#include "misc/sharedstate/dbus/dupleximpl.h"
 #include "misc/variantlist.h"
 
 namespace swift::misc::shared_state::dbus
@@ -53,4 +54,4 @@ namespace swift::misc::shared_state::dbus
         const auto clients = std::move(m_clients);
         Q_UNUSED(clients)
     }
-}
+} // namespace swift::misc::shared_state::dbus

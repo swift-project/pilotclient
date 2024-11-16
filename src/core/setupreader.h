@@ -6,20 +6,21 @@
 #ifndef SWIFT_CORE_SETUPREADER_H
 #define SWIFT_CORE_SETUPREADER_H
 
-#include "core/swiftcoreexport.h"
-#include "core/data/globalsetup.h"
-#include "misc/db/updateinfo.h"
-#include "misc/datacache.h"
-#include "misc/statusmessagelist.h"
+#include <atomic>
 
 #include <QCommandLineOption>
 #include <QCoreApplication>
 #include <QJsonObject>
-#include <QNetworkReply>
 #include <QList>
+#include <QNetworkReply>
 #include <QObject>
 #include <QString>
-#include <atomic>
+
+#include "core/data/globalsetup.h"
+#include "core/swiftcoreexport.h"
+#include "misc/datacache.h"
+#include "misc/db/updateinfo.h"
+#include "misc/statusmessagelist.h"
 
 namespace SwiftCoreTest
 {
@@ -67,6 +68,6 @@ namespace swift::core
         //! Read by local file
         swift::misc::CStatusMessageList readLocalBootstrapFile();
     };
-} // ns
+} // namespace swift::core
 
 #endif // guard

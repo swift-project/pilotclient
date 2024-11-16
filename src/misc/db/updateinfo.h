@@ -6,11 +6,12 @@
 #ifndef SWIFT_MISC_DB_UPDATEINFO_H
 #define SWIFT_MISC_DB_UPDATEINFO_H
 
+#include <QStringList>
+
+#include "misc/datacache.h"
 #include "misc/db/artifactlist.h"
 #include "misc/db/distributionlist.h"
-#include "misc/datacache.h"
 #include "misc/valueobject.h"
-#include <QStringList>
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::db, CUpdateInfo)
 
@@ -116,7 +117,7 @@ namespace swift::misc::db
         //! First load is synchronous
         static constexpr bool isPinned() { return true; }
     };
-} // ns
+} // namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CUpdateInfo)
 

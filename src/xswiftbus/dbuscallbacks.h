@@ -5,6 +5,7 @@
 #define SWIFT_SIM_XSWIFTBUS_DBUSASYNCCALLBACKS_H
 
 #include <dbus/dbus.h>
+
 #include <functional>
 
 namespace XSwiftBus
@@ -43,6 +44,6 @@ namespace XSwiftBus
     };
     //! \endcond
 
-}
+} // namespace XSwiftBus
 
 #endif // guard

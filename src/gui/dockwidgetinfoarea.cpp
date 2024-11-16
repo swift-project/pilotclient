@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/dockwidgetinfoarea.h"
-#include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/infoarea.h"
 
 #include <QMenu>
 #include <QString>
 #include <QWidget>
 #include <QtGlobal>
+
+#include "gui/enablefordockwidgetinfoarea.h"
+#include "gui/infoarea.h"
 
 using namespace swift::gui::components;
 
@@ -153,4 +154,4 @@ namespace swift::gui
         }
         return parents;
     }
-} // namespace
+} // namespace swift::gui

@@ -1,39 +1,41 @@
 // SPDX-FileCopyrightText: Copyright (C) 2016 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "gui/components/aircraftcombinedtypeselector.h"
-#include "gui/components/dbaircrafticaoselectorcomponent.h"
-#include "gui/components/dbairlineicaoselectorcomponent.h"
-#include "gui/components/dbliveryselectorcomponent.h"
 #include "gui/components/modelmatchercomponent.h"
-#include "gui/components/settingsmatchingdialog.h"
-#include "gui/components/simulatorselector.h"
-#include "gui/models/statusmessagelistmodel.h"
-#include "gui/views/statusmessageview.h"
-#include "gui/views/aircraftmodelview.h"
-#include "gui/uppercasevalidator.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "core/webdataservices.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/matchingutils.h"
-#include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/aviation/callsign.h"
-#include "misc/aviation/livery.h"
-#include "misc/network/user.h"
-#include "misc/statusmessagelist.h"
-#include "ui_modelmatchercomponent.h"
 
 #include <QCheckBox>
 #include <QCompleter>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QStringList>
 #include <QStringBuilder>
+#include <QStringList>
 #include <QTabWidget>
 #include <QTextEdit>
 #include <QtGlobal>
+
+#include "ui_modelmatchercomponent.h"
+
+#include "core/webdataservices.h"
+#include "gui/components/aircraftcombinedtypeselector.h"
+#include "gui/components/dbaircrafticaoselectorcomponent.h"
+#include "gui/components/dbairlineicaoselectorcomponent.h"
+#include "gui/components/dbliveryselectorcomponent.h"
+#include "gui/components/settingsmatchingdialog.h"
+#include "gui/components/simulatorselector.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "gui/models/statusmessagelistmodel.h"
+#include "gui/uppercasevalidator.h"
+#include "gui/views/aircraftmodelview.h"
+#include "gui/views/statusmessageview.h"
+#include "misc/aviation/aircrafticaocode.h"
+#include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/callsign.h"
+#include "misc/aviation/livery.h"
+#include "misc/network/user.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/matchingutils.h"
+#include "misc/statusmessagelist.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -296,4 +298,4 @@ namespace swift::gui::components
 
         return inModel;
     }
-} // ns
+} // namespace swift::gui::components

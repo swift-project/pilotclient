@@ -24,6 +24,6 @@ namespace swift::gui
         //! \copydoc IWindowFinder::findForeignWindow
         virtual QWindow *findForeignWindow(const QString &windowName, const QString &className) override;
     };
-}
+} // namespace swift::gui
 
 #endif // guard

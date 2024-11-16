@@ -6,14 +6,15 @@
 #ifndef SWIFT_MISC_AVIATION_AIRPORTICAOCODE_H
 #define SWIFT_MISC_AVIATION_AIRPORTICAOCODE_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
+#include <tuple>
 
 #include <QMetaType>
 #include <QString>
-#include <tuple>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAirportIcaoCode)
 
@@ -78,7 +79,7 @@ namespace swift::misc::aviation
             CAirportIcaoCode,
             SWIFT_METAMEMBER(icaoCode, 0, CaseInsensitiveComparison));
     };
-} // namespace
+} // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAirportIcaoCode)
 

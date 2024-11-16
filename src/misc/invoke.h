@@ -6,14 +6,16 @@
 #ifndef SWIFT_MISC_INVOKE_H
 #define SWIFT_MISC_INVOKE_H
 
-#include "misc/typetraits.h"
-#include "misc/integersequence.h"
-#include "misc/promise.h"
+#include <tuple>
+
 #include <QMetaObject>
-#include <QtGlobal>
 #include <QThread>
 #include <QTimer>
-#include <tuple>
+#include <QtGlobal>
+
+#include "misc/integersequence.h"
+#include "misc/promise.h"
+#include "misc/typetraits.h"
 
 namespace swift::misc::private_ns
 {
@@ -51,6 +53,6 @@ namespace swift::misc::private_ns
     }
 
     //! \endcond
-}
+} // namespace swift::misc::private_ns
 
 #endif

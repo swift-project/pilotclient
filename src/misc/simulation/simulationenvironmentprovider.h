@@ -6,19 +6,19 @@
 #ifndef SWIFT_MISC_SIMULATION_SIMULATIONENVIRONMENTPROVIDER_H
 #define SWIFT_MISC_SIMULATION_SIMULATIONENVIRONMENTPROVIDER_H
 
-#include "misc/simulation/simulatorplugininfo.h"
-#include "misc/simulation/aircraftmodel.h"
-#include "misc/simulation/settings/simulatorsettings.h"
+#include <QHash>
+#include <QObject>
+#include <QPair>
+
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/percallsign.h"
 #include "misc/geo/coordinategeodeticlist.h"
 #include "misc/geo/elevationplane.h"
 #include "misc/pq/length.h"
 #include "misc/provider.h"
-
-#include <QHash>
-#include <QObject>
-#include <QPair>
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/settings/simulatorsettings.h"
+#include "misc/simulation/simulatorplugininfo.h"
 
 namespace swift::misc::simulation
 {
@@ -379,7 +379,7 @@ namespace swift::misc::simulation
         //! Constructor
         CSimulationEnvironmentAware(ISimulationEnvironmentProvider *simEnvProvider) : IProviderAware(simEnvProvider) { Q_ASSERT(simEnvProvider); }
     };
-} // namespace
+} // namespace swift::misc::simulation
 
 Q_DECLARE_INTERFACE(swift::misc::simulation::ISimulationEnvironmentProvider, "org.swift-project.misc::simulation::isimulationenvironmentprovider")
 

@@ -6,14 +6,15 @@
 #ifndef SWIFT_SOUND_SAMPLEPROVIDER_RESOURCESOUND_H
 #define SWIFT_SOUND_SAMPLEPROVIDER_RESOURCESOUND_H
 
-#include "sound/swiftsoundexport.h"
-#include "sound/wav/wavfile.h"
-#include "misc/worker.h"
+#include <atomic>
 
+#include <QExplicitlySharedDataPointer>
 #include <QString>
 #include <QVector>
-#include <QExplicitlySharedDataPointer>
-#include <atomic>
+
+#include "misc/worker.h"
+#include "sound/swiftsoundexport.h"
+#include "sound/wav/wavfile.h"
 
 namespace swift::sound::sample_provider
 {
@@ -53,6 +54,6 @@ namespace swift::sound::sample_provider
     private:
         QExplicitlySharedDataPointer<CResourceSoundData> m_data;
     };
-} // ns
+} // namespace swift::sound::sample_provider
 
 #endif // guard

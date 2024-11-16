@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "viewbaseproxystyle.h"
+
 #include "gui/views/viewbase.h"
 
 namespace swift::gui::views
@@ -26,4 +27,4 @@ namespace swift::gui::views
             }
         }
     }
-} // namespace
+} // namespace swift::gui::views

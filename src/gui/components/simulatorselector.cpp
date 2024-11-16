@@ -2,19 +2,21 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/simulatorselector.h"
-#include "gui/guiapplication.h"
-#include "gui/guiutility.h"
-#include "core/context/contextsimulator.h"
-#include "misc/icons.h"
-#include "misc/mixin/mixincompare.h"
-#include "config/buildconfig.h"
-#include "ui_simulatorselector.h"
 
 #include <QCheckBox>
+#include <QPointer>
 #include <QRadioButton>
 #include <QWidget>
 #include <QtGlobal>
-#include <QPointer>
+
+#include "ui_simulatorselector.h"
+
+#include "config/buildconfig.h"
+#include "core/context/contextsimulator.h"
+#include "gui/guiapplication.h"
+#include "gui/guiutility.h"
+#include "misc/icons.h"
+#include "misc/mixin/mixincompare.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -398,4 +400,4 @@ namespace swift::gui::components
         ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fg().toQString());
         ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::msfs().toQString());
     }
-} // ns
+} // namespace swift::gui::components

@@ -6,8 +6,6 @@
 #ifndef SWIFT_GUI_ENABLEFORSYSTEMTRAY_H
 #define SWIFT_GUI_ENABLEFORSYSTEMTRAY_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QFlag>
 #include <QFlags>
 #include <QIcon>
@@ -15,6 +13,8 @@
 #include <QObject>
 #include <QString>
 #include <QSystemTrayIcon>
+
+#include "gui/swiftguiexport.h"
 
 class QAction;
 class QCloseEvent;
@@ -82,7 +82,7 @@ namespace swift::gui
         QMenu *m_trayIconMenu = nullptr;
     };
 
-} // namespace
+} // namespace swift::gui
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::gui::CSystemTrayWindow::SystemTrayMode)
 

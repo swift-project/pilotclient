@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "visualpilotdataupdate.h"
-#include "visualpilotdataperiodic.h"
-#include "visualpilotdatastopped.h"
+
 #include "pbh.h"
 #include "serializer.h"
+#include "visualpilotdataperiodic.h"
+#include "visualpilotdatastopped.h"
 
 #include "misc/logmessage.h"
 
@@ -89,4 +90,4 @@ namespace swift::core::fsd
         return VisualPilotDataStopped(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading,
                                       m_noseGearAngle);
     }
-}
+} // namespace swift::core::fsd

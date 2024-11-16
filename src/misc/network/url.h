@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_NETWORK_URL_H
 #define SWIFT_MISC_NETWORK_URL_H
 
-#include "misc/metaclass.h"
-#include "misc/propertyindexref.h"
-#include "misc/valueobject.h"
-#include "misc/swiftmiscexport.h"
-
 #include <QJsonObject>
 #include <QMetaType>
 #include <QNetworkRequest>
 #include <QString>
 #include <QUrl>
+
+#include "misc/metaclass.h"
+#include "misc/propertyindexref.h"
+#include "misc/swiftmiscexport.h"
+#include "misc/valueobject.h"
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CUrl)
 
@@ -213,7 +213,7 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(query),
             SWIFT_METAMEMBER(fragment));
     };
-} // namespace
+} // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CUrl)
 

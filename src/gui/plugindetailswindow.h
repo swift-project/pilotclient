@@ -6,12 +6,12 @@
 #ifndef SWIFT_GUI_PLUGINDETAILSWINDOW_H
 #define SWIFT_GUI_PLUGINDETAILSWINDOW_H
 
-#include "gui/swiftguiexport.h"
-
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
 #include <QWidget>
+
+#include "gui/swiftguiexport.h"
 
 class QShowEvent;
 
@@ -50,6 +50,6 @@ namespace swift::gui
     private:
         QScopedPointer<Ui::CPluginDetailsWindow> ui;
     };
-} // namespace
+} // namespace swift::gui
 
 #endif // guard

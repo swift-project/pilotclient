@@ -2,6 +2,22 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "gui/components/mappingcomponent.h"
+
+#include <QCheckBox>
+#include <QCompleter>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPixmap>
+#include <QPointer>
+#include <QPushButton>
+#include <QStringListModel>
+#include <QtGlobal>
+
+#include "mappingcomponent.h"
+#include "ui_mappingcomponent.h"
+
+#include "core/context/contextnetwork.h"
+#include "core/context/contextsimulator.h"
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "gui/models/aircraftmodellistmodel.h"
@@ -10,30 +26,16 @@
 #include "gui/views/checkboxdelegate.h"
 #include "gui/views/simulatedaircraftview.h"
 #include "gui/views/viewbase.h"
-#include "core/context/contextnetwork.h"
-#include "core/context/contextsimulator.h"
-#include "misc/network/connectionstatus.h"
-#include "misc/simulation/simulatedaircraft.h"
-#include "misc/simulation/simulatedaircraftlist.h"
-#include "misc/simulation/aircraftmodel.h"
 #include "misc/aviation/callsign.h"
-#include "misc/network/server.h"
 #include "misc/icons.h"
 #include "misc/logmessage.h"
+#include "misc/network/connectionstatus.h"
+#include "misc/network/server.h"
 #include "misc/pixmap.h"
+#include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/simulatedaircraft.h"
+#include "misc/simulation/simulatedaircraftlist.h"
 #include "misc/statusmessage.h"
-#include "mappingcomponent.h"
-#include "ui_mappingcomponent.h"
-
-#include <QCheckBox>
-#include <QCompleter>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPixmap>
-#include <QPushButton>
-#include <QStringListModel>
-#include <QtGlobal>
-#include <QPointer>
 
 using namespace swift::misc;
 using namespace swift::misc::simulation;
@@ -569,4 +571,4 @@ namespace swift::gui::components
             m_updateTimer.start();
         }
     }
-} // namespace
+} // namespace swift::gui::components

@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 #include "misc/aviation/aircraftlights.h"
-#include "misc/stringutils.h"
-#include "misc/comparefunctions.h"
+
 #include <QStringBuilder>
+
+#include "misc/comparefunctions.h"
+#include "misc/stringutils.h"
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftLights)
 
@@ -128,4 +130,4 @@ namespace swift::misc::aviation
         m_recognition = false;
         m_cabin = false;
     }
-} // namespace
+} // namespace swift::misc::aviation

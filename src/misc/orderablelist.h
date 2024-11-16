@@ -6,8 +6,9 @@
 #ifndef SWIFT_MISC_ORDERABLELIST_H
 #define SWIFT_MISC_ORDERABLELIST_H
 
-#include "misc/swiftmiscexport.h"
 #include <QList>
+
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -184,6 +185,6 @@ namespace swift::misc
             return static_cast<CONTAINER &>(*this);
         }
     };
-} // namespace
+} // namespace swift::misc
 
 #endif // guard

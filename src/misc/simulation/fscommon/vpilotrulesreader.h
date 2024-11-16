@@ -6,16 +6,16 @@
 #ifndef SWIFT_MISC_SIMULATION_FSCOMMON_VPILOTRULESREADER_H
 #define SWIFT_MISC_SIMULATION_FSCOMMON_VPILOTRULESREADER_H
 
-#include "misc/swiftmiscexport.h"
-#include "misc/datacache.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/data/modelcaches.h"
-#include "misc/simulation/fscommon/vpilotmodelruleset.h"
-
 #include <QObject>
 #include <QReadWriteLock>
 #include <QString>
 #include <QStringList>
+
+#include "misc/datacache.h"
+#include "misc/simulation/aircraftmodellist.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/fscommon/vpilotmodelruleset.h"
+#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -122,7 +122,7 @@ namespace swift::misc
             //! \threadsafe
             bool loadFile(const QString &fileName, CVPilotModelRuleSet &ruleSet);
         };
-    } // namespace
-} // namespace
+    } // namespace simulation::fscommon
+} // namespace swift::misc
 
 #endif // guard

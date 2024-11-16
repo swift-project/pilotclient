@@ -69,4 +69,4 @@ namespace swift::core
     {
         return {};
     }
-} // namespace
+} // namespace swift::core
