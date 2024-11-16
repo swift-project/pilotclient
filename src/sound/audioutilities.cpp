@@ -219,7 +219,6 @@ namespace swift::sound
 
     void occupyAudioInputDevice()
     {
-        if (!CBuildConfig::isRunningOnWindows10()) { return; }
         static const QAudioInput input(QMediaDevices::defaultAudioInput());
     }
 

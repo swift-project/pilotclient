@@ -6,8 +6,6 @@
 #ifndef SWIFT_CONFIG_BUILDCONFIG_H
 #define SWIFT_CONFIG_BUILDCONFIG_H
 
-#include <QDateTime>
-#include <QList>
 #include <QStringList>
 #include <QVersionNumber>
 
@@ -17,15 +15,6 @@ namespace swift::config
     class CBuildConfig
     {
     public:
-        //! with Core?
-        static constexpr bool isCompiledWithCore(); // defined in buildconfig_gen.inc.in
-
-        //! with Sound?
-        static constexpr bool isCompiledWithSound(); // defined in buildconfig_gen.inc.in
-
-        //! with Input?
-        static constexpr bool isCompiledWithInput(); // defined in buildconfig_gen.inc.in
-
         //! with FS9 support?
         static constexpr bool isCompiledWithFs9Support(); // defined in buildconfig_gen.inc.in
 
@@ -53,9 +42,6 @@ namespace swift::config
         //! with any simulator libraries
         static constexpr bool isCompiledWithFlightSimulatorSupport();
 
-        //! with GUI?
-        static constexpr bool isCompiledWithGui(); // defined in buildconfig_gen.inc.in
-
         //! Debug build?
         static constexpr bool isDebugBuild();
 
@@ -67,9 +53,6 @@ namespace swift::config
 
         //! Running on Windows NT platform?
         static constexpr bool isRunningOnWindowsNtPlatform();
-
-        //! Windows 10
-        static bool isRunningOnWindows10();
 
         //! Running on MacOS platform?
         static constexpr bool isRunningOnMacOSPlatform();
@@ -83,8 +66,11 @@ namespace swift::config
         //! Info such as Win32, Win64, MacOs, Linux
         static const QString &getPlatformString();
 
-        //! Info string about compilation
-        static const QString &compiledWithInfo(bool shortVersion = true);
+        //! Info string about compilation (short version)
+        static const QString &compiledWithInfoShort();
+
+        //! Info string about compilation (long version)
+        static const QString &compiledWithInfoLong();
 
         //! Executable name for swift GUI, no(!) appendix
         static const QString &swiftGuiExecutableName();
@@ -94,9 +80,6 @@ namespace swift::config
 
         //! Executable name for swift data, no(!) appendix
         static const QString &swiftDataExecutableName();
-
-        //! Known executable
-        static bool isKnownExecutableName(const QString &executable);
 
 #ifdef SWIFT_VATSIM_SUPPORT
         //! VATSIM client id
@@ -157,4 +140,4 @@ namespace swift::config
 #include "buildconfig.inc"
 #undef IN_BUILDCONFIG_H
 
-#endif // guard
+#endif // SWIFT_CONFIG_BUILDCONFIG_H

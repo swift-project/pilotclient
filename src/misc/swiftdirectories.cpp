@@ -69,7 +69,6 @@ namespace swift::misc
     QString CSwiftDirectories::executableFilePath(const QString &executable)
     {
         Q_ASSERT_X(!executable.isEmpty(), Q_FUNC_INFO, "Missing executable file path");
-        Q_ASSERT_X(CBuildConfig::isKnownExecutableName(executable), Q_FUNC_INFO, "Unknown exectuable");
 
         QString s = CFileUtils::appendFilePaths(binDirectory(), executable);
         if (CBuildConfig::isRunningOnMacOSPlatform())

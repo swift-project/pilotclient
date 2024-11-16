@@ -521,8 +521,6 @@ namespace swift::core
             separator %
             u"Windows NT: " %
             boolToYesNo(CBuildConfig::isRunningOnWindowsNtPlatform()) %
-            u" Windows 10: " %
-            boolToYesNo(CBuildConfig::isRunningOnWindows10()) %
             separator %
             u"Linux: " %
             boolToYesNo(CBuildConfig::isRunningOnLinuxPlatform()) %
@@ -538,7 +536,7 @@ namespace swift::core
             u"Build CPU: " %
             QSysInfo::buildCpuArchitecture() %
             separator %
-            CBuildConfig::compiledWithInfo(false);
+            CBuildConfig::compiledWithInfoLong();
 
         if (this->supportsContexts())
         {

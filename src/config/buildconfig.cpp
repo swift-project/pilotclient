@@ -6,14 +6,8 @@
 #include "buildconfig.h"
 
 #include <QCoreApplication>
-#include <QDateTime>
-#include <QDir>
-#include <QFile>
-#include <QFileInfo>
 #include <QLocale>
 #include <QOperatingSystemVersion>
-#include <QStandardPaths>
-#include <QStringBuilder>
 #include <QStringList>
 #include <QSysInfo>
 #include <QtGlobal>
@@ -38,25 +32,12 @@ namespace swift::config
         return s;
     }
 
-    bool CBuildConfig::isKnownExecutableName(const QString &executable)
-    {
-        return executable == CBuildConfig::swiftCoreExecutableName() ||
-               executable == CBuildConfig::swiftDataExecutableName() ||
-               executable == CBuildConfig::swiftGuiExecutableName();
-    }
-
-    bool CBuildConfig::isRunningOnWindows10()
-    {
-        if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; }
-        return (QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10);
-    }
-
     const QString &CBuildConfig::getPlatformString()
     {
         static const QString p([] {
-            if (CBuildConfig::isRunningOnLinuxPlatform()) return QString("Linux");
-            if (CBuildConfig::isRunningOnMacOSPlatform()) return QString("MacOS");
-            if (CBuildConfig::isRunningOnWindowsNtPlatform())
+            if constexpr (CBuildConfig::isRunningOnLinuxPlatform()) return QString("Linux");
+            if constexpr (CBuildConfig::isRunningOnMacOSPlatform()) return QString("MacOS");
+            if constexpr (CBuildConfig::isRunningOnWindowsNtPlatform())
             {
                 if (CBuildConfig::buildWordSize() == 32) return QString("Win32");
                 if (CBuildConfig::buildWordSize() == 64) return QString("Win64");
@@ -70,7 +51,7 @@ namespace swift::config
     {
         bool isLocalDeveloperBuildImpl()
         {
-            if (!CBuildConfig::isDebugBuild()) { return false; }
+            if constexpr (!CBuildConfig::isDebugBuild()) { return false; }
             const QString p = QCoreApplication::applicationDirPath().toLower();
 
             // guessing, feel free to add path checks
@@ -91,46 +72,29 @@ namespace swift::config
         return v ? QStringLiteral("yes") : QStringLiteral("no");
     }
 
-    const QString &CBuildConfig::compiledWithInfo(bool shortVersion)
+    const QString &CBuildConfig::compiledWithInfoShort()
     {
-        if (shortVersion)
-        {
-            static QString infoShort;
-            if (infoShort.isEmpty())
-            {
-                QStringList sl;
-                if (CBuildConfig::isCompiledWithCore()) { sl << "Core"; }
-                if (CBuildConfig::isCompiledWithSound()) { sl << "Sound"; }
-                if (CBuildConfig::isCompiledWithInput()) { sl << "Input"; }
-                if (CBuildConfig::isCompiledWithGui()) { sl << "Gui"; }
-                if (CBuildConfig::isCompiledWithFs9Support()) { sl << "FS9"; }
-                if (CBuildConfig::isCompiledWithFsxSupport()) { sl << "FSX"; }
-                if (CBuildConfig::isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
-                if (CBuildConfig::isCompiledWithP3DSupport()) { sl << "P3D"; }
-                if (CBuildConfig::isCompiledWithFGSupport()) { sl << "FG"; }
-                infoShort = sl.join(", ");
-                if (infoShort.isEmpty()) { infoShort = "<none>"; }
-            }
-            return infoShort;
-        }
-        else
-        {
-            static QString infoLong;
-            if (infoLong.isEmpty())
-            {
-                infoLong = infoLong.append("Core: ").append(boolToYesNo(isCompiledWithCore()));
-                infoLong = infoLong.append(" Input: ").append(boolToYesNo(isCompiledWithInput()));
-                infoLong = infoLong.append(" Sound: ").append(boolToYesNo(isCompiledWithSound()));
-                infoLong = infoLong.append(" GUI: ").append(boolToYesNo(isCompiledWithGui()));
+        static QString infoShort;
+        QStringList sl;
+        if constexpr (CBuildConfig::isCompiledWithFs9Support()) { sl << "FS9"; }
+        if constexpr (CBuildConfig::isCompiledWithFsxSupport()) { sl << "FSX"; }
+        if constexpr (CBuildConfig::isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
+        if constexpr (CBuildConfig::isCompiledWithP3DSupport()) { sl << "P3D"; }
+        if constexpr (CBuildConfig::isCompiledWithFGSupport()) { sl << "FG"; }
+        infoShort = sl.join(", ");
+        if (infoShort.isEmpty()) { infoShort = "<none>"; }
+        return infoShort;
+    }
 
-                infoLong = infoLong.append(" FS9: ").append(boolToYesNo(isCompiledWithFs9Support()));
-                infoLong = infoLong.append(" FSX: ").append(boolToYesNo(isCompiledWithFsxSupport()));
-                infoLong = infoLong.append(" P3D: ").append(boolToYesNo(isCompiledWithP3DSupport()));
-                infoLong = infoLong.append(" XPlane: ").append(boolToYesNo(isCompiledWithXPlaneSupport()));
-                infoLong = infoLong.append(" FG: ").append(boolToYesNo(isCompiledWithFGSupport()));
-            }
-            return infoLong;
-        }
+    const QString &CBuildConfig::compiledWithInfoLong()
+    {
+        static QString infoLong;
+        infoLong = infoLong.append(" FS9: ").append(boolToYesNo(isCompiledWithFs9Support()));
+        infoLong = infoLong.append(" FSX: ").append(boolToYesNo(isCompiledWithFsxSupport()));
+        infoLong = infoLong.append(" P3D: ").append(boolToYesNo(isCompiledWithP3DSupport()));
+        infoLong = infoLong.append(" XPlane: ").append(boolToYesNo(isCompiledWithXPlaneSupport()));
+        infoLong = infoLong.append(" FG: ").append(boolToYesNo(isCompiledWithFGSupport()));
+        return infoLong;
     }
 
     const QString &CBuildConfig::gitHubRepoUrl()

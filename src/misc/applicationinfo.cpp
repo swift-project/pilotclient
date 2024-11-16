@@ -20,7 +20,7 @@ namespace swift::misc
                                                           m_wordSize(CBuildConfig::buildWordSize()),
                                                           m_exePath(QCoreApplication::applicationDirPath()),
                                                           m_version(CBuildConfig::getVersionString()),
-                                                          m_compileInfo(CBuildConfig::compiledWithInfo()),
+                                                          m_compileInfo(CBuildConfig::compiledWithInfoShort()),
                                                           m_platform(CBuildConfig::getPlatformString()),
                                                           m_process(CProcessInfo::currentProcess())
     {

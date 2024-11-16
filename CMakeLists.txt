@@ -46,11 +46,6 @@ option(SWIFT_BUILD_EMULATED_PLUGIN "Build Emulated plugin" ON)
 cmake_dependent_option(SWIFT_BUILD_MSFS_PLUGIN "Build MSFS plugin" ON WIN32 OFF)
 option(SWIFT_MINIFY_DEBUG_SYMBOLS "Minify debug symbols" OFF)
 
-option(SWIFT_BUILD_CORE "Build Core" ON)
-option(SWIFT_BUILD_SOUND "Build Sound" ON)
-option(SWIFT_BUILD_INPUT "Build Input" ON)
-option(SWIFT_BUILD_GUI "Build GUI" ON)
-
 option(SWIFT_USE_CRASHPAD "Use crashpad" OFF)
 
 # VATSIM related options
