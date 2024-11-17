@@ -12,6 +12,7 @@ add_library(xswiftbus SHARED
         command.h
         config.cpp
         config.h
+        custom_datarefs.h
         datarefs.h
         dbuscallbacks.h
         dbusconnection.cpp

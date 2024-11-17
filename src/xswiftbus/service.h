@@ -15,6 +15,7 @@
 #include "datarefs.h"
 #include "messages.h"
 #include "terrainprobe.h"
+#include "custom_datarefs.h"
 #include <XPLM/XPLMNavigation.h>
 #include <string>
 #include <chrono>
@@ -118,6 +119,9 @@ namespace XSwiftBus
 
         //! Reset the monitoring of total miles and minutes lost due to low frame rate.
         void resetFrameTotals();
+
+        //! Set the current connection state
+        void setFlightNetworkConnected(bool connected);
 
         //! Get aircraft latitude in degrees
         double getLatitudeDeg() const { return m_latitude.get(); }
@@ -349,6 +353,7 @@ namespace XSwiftBus
         DataRef<xplane::data::sim::graphics::scenery::async_scenery_load_in_progress> m_sceneryIsLoading;
         int m_sceneryWasLoading = 0;
 
+        CustomDataRef<TSwiftNetworkConnected> m_swiftNetworkConnected;
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;
         StringDataRef<xplane::data::sim::aircraft::view::acf_descrip> m_descrip;

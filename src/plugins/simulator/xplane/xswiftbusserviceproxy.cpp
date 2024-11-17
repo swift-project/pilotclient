@@ -358,6 +358,11 @@ namespace swift::simplugin::xplane
 
     void CXSwiftBusServiceProxy::resetFrameTotals() { m_dbusInterface->callDBus(QLatin1String("resetFrameTotals")); }
 
+    void CXSwiftBusServiceProxy::setFlightNetworkConnected(bool connected)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setFlightNetworkConnected"), connected);
+    }
+
     double CXSwiftBusServiceProxy::getLatitudeDeg() const
     {
         return m_dbusInterface->callDBusRet<double>(QLatin1String("getLatitudeDeg"));
