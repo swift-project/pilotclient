@@ -3,28 +3,6 @@
 
 #include "misc/dbus.h"
 
-#ifdef Q_OS_WIN
-#    include <qt_windows.h>
-
-#    include <QDBusConnection>
-
-// https://blogs.msdn.microsoft.com/oldnewthing/20131105-00/?p=2733
-// See https://bugreports.qt.io/browse/QTBUG-53031 for more details
-// why this is necessary.
-void preventQtDBusDllUnload()
-{
-    // Only Qt 5.8.0 is affected.
-    if (qVersion() != QByteArray("5.8.0")) { return; }
-
-    static HMODULE dbusDll;
-    GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_PIN,
-                      reinterpret_cast<LPCTSTR>(&QDBusConnection::staticMetaObject), &dbusDll);
-    Q_ASSERT(dbusDll);
-}
-#else
-void preventQtDBusDllUnload() {}
-#endif
-
 QDBusArgument &operator<<(QDBusArgument &arg, const std::string &s)
 {
     arg.beginStructure();

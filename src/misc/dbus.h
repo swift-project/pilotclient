@@ -78,11 +78,4 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, QFlags<T> &value)
     return arg;
 }
 
-// *INDENT-ON*
-
-//! Windows: prevents unloading of QtDBus shared library until the process is terminated.
-//! QtDBus must have been loaded already by the calling process.
-//! Does nothing on non-Windows platforms.
-SWIFT_MISC_EXPORT void preventQtDBusDllUnload();
-
-#endif // guard
+#endif // SWIFT_MISC_DBUS_H
