@@ -42,4 +42,4 @@ namespace swift::core::afv::model
     };
 } // namespace swift::core::afv::model
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_AFVMAPREADER_H

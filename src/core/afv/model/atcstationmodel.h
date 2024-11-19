@@ -5,9 +5,6 @@
 #define SWIFT_CORE_AFV_MODEL_ATCSTATIONMODEL_H
 
 #include <QAbstractListModel>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QObject>
 #include <QtGlobal>
 
@@ -21,7 +18,7 @@ namespace swift::core::afv::model
     {
     public:
         //! Ctor
-        CSampleAtcStation() {}
+        CSampleAtcStation() = default;
 
         //! Ctor
         CSampleAtcStation(const QString &callsign, const swift::core::afv::TransceiverDto &transceiver);
@@ -68,7 +65,7 @@ namespace swift::core::afv::model
         CSampleAtcStationModel(QObject *parent = nullptr);
 
         //! Dtor
-        virtual ~CSampleAtcStationModel() override;
+        ~CSampleAtcStationModel() override;
 
         //! Update the stations
         void updateAtcStations(const QVector<CSampleAtcStation> &atcStations);
@@ -91,4 +88,4 @@ namespace swift::core::afv::model
     };
 } // namespace swift::core::afv::model
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_MODEL_ATCSTATIONMODEL_H

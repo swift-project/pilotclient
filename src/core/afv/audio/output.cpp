@@ -5,7 +5,6 @@
 
 #include <cmath>
 
-#include <QDebug>
 #include <QStringBuilder>
 
 #include "misc/logmessage.h"

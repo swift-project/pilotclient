@@ -117,8 +117,8 @@ namespace swift::core::afv
     {
         //! @{
         //! Properties
-        quint16 id;
-        quint32 frequencyHz;
+        quint16 id {};
+        quint32 frequencyHz {};
         double LatDeg = 0.0;
         double LonDeg = 0.0;
         double HeightMslM = 0.0;
@@ -160,8 +160,8 @@ namespace swift::core::afv
         //! Properties
         QUuid id;
         QString name;
-        quint32 frequencyHz;
-        quint32 frequencyAliasHz;
+        quint32 frequencyHz {};
+        quint32 frequencyAliasHz {};
         //! @}
 
         //! From JSON
@@ -219,15 +219,15 @@ namespace swift::core::afv
     struct TxTransceiverDto
     {
         //! Ctor
-        TxTransceiverDto() {}
+        TxTransceiverDto() = default;
 
         //! Ctor
-        TxTransceiverDto(const TransceiverDto &dto) { id = dto.id; }
+        TxTransceiverDto(const TransceiverDto &dto) : id(dto.id) {}
 
         //! Ctor
-        TxTransceiverDto(uint16_t value) { id = value; }
+        TxTransceiverDto(uint16_t value) : id(value) {}
 
-        uint16_t id; //!< id
+        uint16_t id {}; //!< id
         MSGPACK_DEFINE(id)
     };
 
@@ -281,4 +281,4 @@ namespace swift::core::afv
     };
 } // namespace swift::core::afv
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_DTO_H

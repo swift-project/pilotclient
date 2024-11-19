@@ -35,7 +35,7 @@ namespace swift::core::afv::audio
         void pttUpdate(bool active, const QVector<TxTransceiverDto> &txTransceivers);
 
         //! \copydoc swift::sound::sample_provider::ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! Add OPUS samples
         void addOpusSamples(const IAudioDto &audioDto, const QVector<RxTransceiverDto> &rxTransceivers);
@@ -65,4 +65,4 @@ namespace swift::core::afv::audio
 
 } // namespace swift::core::afv::audio
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_AUDIO_SOUNDCARDSAMPLEPROVIDER_H

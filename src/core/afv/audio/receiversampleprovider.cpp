@@ -5,7 +5,6 @@
 
 #include "core/afv/audio/receiversampleprovider.h"
 
-#include <QDebug>
 #include <QStringBuilder>
 
 #include "misc/logmessage.h"
@@ -65,9 +64,8 @@ namespace swift::core::afv::audio
 
     int CReceiverSampleProvider::activeCallsigns() const
     {
-        const int numberOfCallsigns =
-            static_cast<int>(std::count_if(m_voiceInputs.begin(), m_voiceInputs.end(),
-                                           [](const CCallsignSampleProvider *p) { return p->inUse() == true; }));
+        const int numberOfCallsigns = static_cast<int>(std::count_if(
+            m_voiceInputs.begin(), m_voiceInputs.end(), [](const CCallsignSampleProvider *p) { return p->inUse(); }));
         return numberOfCallsigns;
     }
 
@@ -92,11 +90,9 @@ namespace swift::core::afv::audio
 
         if (m_doClickWhenAppropriate && numberOfInUseInputs == 0)
         {
-            CResourceSoundSampleProvider *resourceSound =
-                new CResourceSoundSampleProvider(Samples::instance().click(), m_mixer);
+            auto *resourceSound = new CResourceSoundSampleProvider(Samples::instance().click(), m_mixer);
             m_mixer->addMixerInput(resourceSound);
             m_doClickWhenAppropriate = false;
-            // CLogMessage(this).debug(u"AFV Click...");
         }
 
         //! \todo KB 2020-04 not entirely correct, as it can be the number is the same, but changed callsign
@@ -132,7 +128,7 @@ namespace swift::core::afv::audio
         if (!voiceInput)
         {
             it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
-                              [](const CCallsignSampleProvider *p) { return p->inUse() == false; });
+                              [](const CCallsignSampleProvider *p) { return !p->inUse(); });
             if (it != m_voiceInputs.end())
             {
                 voiceInput = *it;
@@ -162,7 +158,7 @@ namespace swift::core::afv::audio
         if (!voiceInput)
         {
             it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
-                              [](const CCallsignSampleProvider *p) { return p->inUse() == false; });
+                              [](const CCallsignSampleProvider *p) { return !p->inUse(); });
             if (it != m_voiceInputs.end())
             {
                 voiceInput = *it;

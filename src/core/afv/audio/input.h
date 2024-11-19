@@ -15,8 +15,6 @@
 #endif
 
 #include <QAudioSource>
-#include <QDateTime>
-#include <QSharedPointer>
 #include <QString>
 
 namespace swift::core::afv::audio

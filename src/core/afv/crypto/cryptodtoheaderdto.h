@@ -26,4 +26,4 @@ namespace swift::core::afv::crypto
     };
 } // namespace swift::core::afv::crypto
 
-#endif // gaurd
+#endif // SWIFT_CORE_AFV_CRYPTO_CRYPTODTOHEADERDTO_H
