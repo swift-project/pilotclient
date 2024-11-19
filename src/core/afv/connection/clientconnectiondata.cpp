@@ -3,8 +3,6 @@
 
 #include "core/afv/connection/clientconnectiondata.h"
 
-#include <QDebug>
-
 #include "misc/logmessage.h"
 
 using namespace swift::misc;

@@ -6,8 +6,6 @@
 #ifndef SWIFT_CORE_AFV_CONNECTION_APISERVERCONNECTION_H
 #define SWIFT_CORE_AFV_CONNECTION_APISERVERCONNECTION_H
 
-#include <QDebug>
-#include <QElapsedTimer>
 #include <QEventLoop>
 #include <QJsonDocument>
 #include <QNetworkAccessManager>

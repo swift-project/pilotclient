@@ -10,6 +10,7 @@
 #include <QString>
 #include <QTimer>
 #include <QUdpSocket>
+#include <QUuid>
 
 #include "core/afv/connection/apiserverconnection.h"
 #include "core/afv/connection/clientconnectiondata.h"
@@ -137,4 +138,4 @@ namespace swift::core::afv::connection
     };
 } // namespace swift::core::afv::connection
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_CONNECTION_CLIENTCONNECTION_H

@@ -5,7 +5,6 @@
 
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QMetaEnum>
 #include <QPointer>
 #include <QScopedPointer>
 #include <QUrl>

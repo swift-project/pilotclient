@@ -15,4 +15,4 @@ namespace swift::core::afv
     constexpr int c_sampleRate = 48000;
 } // namespace swift::core::afv
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_CONSTANTS_H

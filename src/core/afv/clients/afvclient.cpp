@@ -3,8 +3,6 @@
 
 #include "core/afv/clients/afvclient.h"
 
-#include <QDebug>
-
 #ifdef Q_OS_WIN
 #    include "comdef.h"
 #endif
@@ -33,15 +31,6 @@ using namespace swift::sound::sample_provider;
 
 namespace swift::core::afv::clients
 {
-    constexpr int CAfvClient::PositionUpdatesMs;
-    constexpr int CAfvClient::SampleRate;
-    constexpr int CAfvClient::FrameSize;
-    constexpr double CAfvClient::MinDbIn;
-    constexpr double CAfvClient::MaxDbIn;
-    constexpr double CAfvClient::MinDbOut;
-    constexpr double CAfvClient::MaxDbOut;
-    constexpr quint32 CAfvClient::UniCom;
-
     const QStringList &CAfvClient::getLogCategories()
     {
         static const QStringList cats { CLogCategories::audio(), CLogCategories::vatsimSpecific() };

@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef SWIFT_ORE_AFV_AUDIO_CALLSIGNDELAYCACHE_H
-#define SWIFT_ORE_AFV_AUDIO_CALLSIGNDELAYCACHE_H
+#ifndef SWIFT_CORE_AFV_AUDIO_CALLSIGNDELAYCACHE_H
+#define SWIFT_CORE_AFV_AUDIO_CALLSIGNDELAYCACHE_H
 
 #include <QHash>
 #include <QString>
@@ -46,9 +46,9 @@ namespace swift::core::afv::audio
         static constexpr int delayMax = 300;
 
         QHash<QString, int> m_delayCache;
-        QHash<QString, int> successfulTransmissionsCache;
+        QHash<QString, int> m_successfulTransmissionsCache;
     };
 
 } // namespace swift::core::afv::audio
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_AUDIO_CALLSIGNDELAYCACHE_H

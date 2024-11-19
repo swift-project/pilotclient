@@ -23,4 +23,4 @@ namespace swift::core::afv::crypto
 //! \private
 MSGPACK_ADD_ENUM(swift::core::afv::crypto::CryptoDtoMode);
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_CRYPTO_CRYPTODTOMODE_H

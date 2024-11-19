@@ -3,7 +3,6 @@
 
 #include "core/afv/audio/callsignsampleprovider.h"
 
-#include <QDebug>
 #include <QStringBuilder>
 #include <QStringLiteral>
 #include <QtMath>
@@ -205,8 +204,7 @@ namespace swift::core::afv::audio
             {
                 double crackleFactor = (((qExp(m_distanceRatio) * qPow(m_distanceRatio, -4.0)) / 350.0) - 0.00776652);
 
-                if (crackleFactor < 0.0) { crackleFactor = 0.0; }
-                if (crackleFactor > 0.20) { crackleFactor = 0.20; }
+                crackleFactor = std::clamp(crackleFactor, 0.0, 0.2);
 
                 m_crackleSoundProvider->setGain(crackleFactor * 2);
                 m_whiteNoise->setGain(m_whiteNoiseGainMin);

@@ -14,7 +14,6 @@
 #include "core/afv/connection/apiserverconnection.h"
 #include "core/afv/crypto/cryptodtochannel.h"
 #include "core/afv/dto.h"
-#include "misc/logcategories.h"
 
 namespace swift::core::afv::connection
 {
@@ -114,4 +113,4 @@ namespace swift::core::afv::connection
     };
 } // namespace swift::core::afv::connection
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_CONNECTION_CLIENTCONNECTIONDATA_H

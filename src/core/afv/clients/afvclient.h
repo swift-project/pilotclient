@@ -8,9 +8,6 @@
 
 #include <atomic>
 
-#include <QAudioInput>
-#include <QAudioOutput>
-#include <QDateTime>
 #include <QObject>
 #include <QString>
 #include <QVector>

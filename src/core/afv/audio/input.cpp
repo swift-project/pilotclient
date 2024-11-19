@@ -8,8 +8,6 @@
 #include <cmath>
 
 #include <QAudioDevice>
-#include <QDebug>
-#include <QStringBuilder>
 #include <QtGlobal>
 
 #include "misc/logmessage.h"
@@ -49,7 +47,6 @@ namespace swift::core::afv::audio
         const int byteCount = 1920 * m_format.channelCount();
         while (m_buffer.size() > byteCount)
         {
-            // qDebug() << QDateTime::currentMSecsSinceEpoch() << "CAudioInputBuffer::writeData " << m_buffer.size();
             emit frameAvailable(m_buffer.left(byteCount));
             m_buffer.remove(0, byteCount);
         }

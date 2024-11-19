@@ -30,7 +30,7 @@ namespace swift::core::afv::crypto
     class CryptoDtoSerializer
     {
     public:
-        CryptoDtoSerializer();
+        CryptoDtoSerializer() = default;
 
         //! Serialize a DTO
         template <typename T>
@@ -44,16 +44,16 @@ namespace swift::core::afv::crypto
             headerBuffer.open(QIODevice::WriteOnly);
             msgpack::pack(headerBuffer, header);
             headerBuffer.close();
-            const quint16 headerLength = static_cast<quint16>(headerBuffer.buffer().size());
+            const auto headerLength = static_cast<quint16>(headerBuffer.buffer().size());
 
             const QByteArray dtoShortName = T::getShortDtoName();
-            const quint16 dtoNameLength = static_cast<quint16>(dtoShortName.size());
+            const auto dtoNameLength = static_cast<quint16>(dtoShortName.size());
 
             QBuffer dtoBuffer;
             dtoBuffer.open(QIODevice::WriteOnly);
             msgpack::pack(dtoBuffer, dto);
             dtoBuffer.close();
-            const quint16 dtoLength = static_cast<quint16>(dtoBuffer.buffer().size());
+            const auto dtoLength = static_cast<quint16>(dtoBuffer.buffer().size());
 
             if (header.Mode == CryptoDtoMode::AEAD_ChaCha20Poly1305)
             {
@@ -80,7 +80,7 @@ namespace swift::core::afv::crypto
                 nonceBuffer.write(reinterpret_cast<const char *>(&header.Sequence), sizeof(header.Sequence));
                 nonceBuffer.close();
 
-                unsigned long long clen;
+                unsigned long long clen {};
                 QByteArray aeadPayload;
                 aeadPayload.fill(0,
                                  static_cast<int>(aePayloadBuffer.size() + crypto_aead_chacha20poly1305_IETF_ABYTES));
@@ -163,4 +163,4 @@ namespace swift::core::afv::crypto
     };
 } // namespace swift::core::afv::crypto
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_CRYPTO_CRYPTODTO_SERIALIZER_H

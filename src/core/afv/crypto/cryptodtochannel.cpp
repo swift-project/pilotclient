@@ -3,6 +3,8 @@
 
 #include "core/afv/crypto/cryptodtochannel.h"
 
+#include <algorithm>
+
 #include "sodium/crypto_aead_chacha20poly1305.h"
 
 #include "misc/verify.h"
@@ -28,7 +30,7 @@ namespace swift::core::afv::crypto
             throw std::invalid_argument("wrong receive key size");
         }
 
-        if (m_receiveSequenceSizeMaxSize < 1) { m_receiveSequenceSizeMaxSize = 1; }
+        m_receiveSequenceSizeMaxSize = std::max(m_receiveSequenceSizeMaxSize, 1);
         m_receiveSequenceHistory.fill(0, m_receiveSequenceSizeMaxSize);
         m_receiveSequenceHistoryDepth = 0;
     }
@@ -95,7 +97,7 @@ namespace swift::core::afv::crypto
         }
         else
         {
-            int minIndex;
+            int minIndex {};
             uint minValue = getMin(minIndex);
             if (sequenceReceived < minValue) { return false; } // Possible replay attack
             m_receiveSequenceHistory[minIndex] = sequenceReceived;

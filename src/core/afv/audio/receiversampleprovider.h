@@ -11,7 +11,6 @@
 #include "core/afv/audio/callsignsampleprovider.h"
 #include "misc/audio/audiosettings.h"
 #include "misc/aviation/callsignset.h"
-#include "misc/logcategories.h"
 #include "sound/sampleprovider/mixingsampleprovider.h"
 #include "sound/sampleprovider/sampleprovider.h"
 #include "sound/sampleprovider/sinusgenerator.h"
@@ -22,7 +21,7 @@ namespace swift::core::afv::audio
     //! Arguments
     struct TransceiverReceivingCallsignsChangedArgs
     {
-        quint16 transceiverID; //!< transceiver id
+        quint16 transceiverID {}; //!< transceiver id
         QStringList receivingCallsigns; //!< callsigns
     };
 
@@ -58,7 +57,7 @@ namespace swift::core::afv::audio
         //! @}
 
         //! \copydoc swift::sound::sample_provider::ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! @{
         //! Add samples
@@ -117,4 +116,4 @@ namespace swift::core::afv::audio
 
 Q_DECLARE_METATYPE(swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs)
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_AUDIO_RECEIVERSAMPLEPROVIDER_H

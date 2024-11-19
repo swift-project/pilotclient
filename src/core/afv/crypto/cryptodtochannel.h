@@ -6,8 +6,6 @@
 #ifndef SWIFT_CORE_AFV_CRYPTO_CRYPTODTOCHANNEL_H
 #define SWIFT_CORE_AFV_CRYPTO_CRYPTODTOCHANNEL_H
 
-#include <limits>
-
 #include <QByteArray>
 #include <QDateTime>
 #include <QVector>
@@ -58,4 +56,4 @@ namespace swift::core::afv::crypto
     };
 } // namespace swift::core::afv::crypto
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_CRYPTO_CRYPTODTOCHANNEL_H

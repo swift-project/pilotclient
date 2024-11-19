@@ -45,10 +45,10 @@ namespace swift::core::afv::audio
 #endif
 
         //! \copydoc QIODevice::readData
-        virtual qint64 readData(char *data, qint64 maxlen) override;
+        qint64 readData(char *data, qint64 maxlen) override;
 
         //! \copydoc QIODevice::writeData
-        virtual qint64 writeData(const char *data, qint64 len) override;
+        qint64 writeData(const char *data, qint64 len) override;
 
     private:
         swift::sound::sample_provider::ISampleProvider *m_sampleProvider = nullptr; //!< related provider
@@ -71,7 +71,7 @@ namespace swift::core::afv::audio
         COutput(QObject *parent = nullptr);
 
         //! Dtor
-        virtual ~COutput() override { this->stop(); }
+        ~COutput() override { this->stop(); }
 
         //! Start output
         void start(const swift::misc::audio::CAudioDeviceInfo &outputDevice,
@@ -103,4 +103,4 @@ namespace swift::core::afv::audio
     };
 } // namespace swift::core::afv::audio
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_AUDIO_OUTPUT_H
