@@ -143,6 +143,56 @@ namespace swift::misc::simulation::fscommon
         return dir;
     }
 
+  QString msfs2024DirImpl()
+    {
+        const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+        for (const QString &path : locations)
+        {
+            const QString msfs2024Package = CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path, "Packages"),
+                                                                    "Microsoft.Limitless_8wekyb3d8bbwe");
+            const QDir d(msfs2024Package);
+            if (!d.exists()) { continue; }
+            return msfs2024Package;
+        }
+        return {};
+    }
+
+    const QString &CFsDirectories::msfs2024Dir()
+    {
+        static const QString dir(msfs2024DirImpl());
+        return dir;
+    }
+
+    QString msfs2024PackagesDirImpl()
+    {
+        QString msfs2024Directory(CFsDirectories::msfs2024Dir());
+        const QString userCfg =
+            CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(msfs2024Directory, "LocalCache"), "UserCfg.opt");
+        QFile file(userCfg);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
+
+        QTextStream in(&file);
+        while (!in.atEnd())
+        {
+            QString line = in.readLine();
+            if (line.contains("InstalledPackagesPath"))
+            {
+                QStringList split = line.split(" ");
+                if (split.size() != 2) { return {}; }
+                QString packagePath = split[1].remove("\"");
+                const QDir dir(packagePath);
+                if (dir.exists()) { return packagePath; }
+            }
+        }
+        return {};
+    }
+
+    const QString &CFsDirectories::msfs2024PackagesDir()
+    {
+        static const QString dir(msfs2024PackagesDirImpl());
+        return dir;
+    }
+
     QString fsxSimObjectsDirFromRegistryImpl()
     {
         const QString fsxPath = CFileUtils::normalizeFilePathToQtStandard(CFsDirectories::fsxDirFromRegistry());

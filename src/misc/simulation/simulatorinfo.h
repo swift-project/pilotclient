@@ -50,14 +50,15 @@ namespace swift::misc::simulation
             P3D = 1 << 3,
             FG = 1 << 4,
             MSFS = 1 << 5,
+            MSFS2024 = 1 << 6,
             FSX_P3D = FSX | P3D,
-            AllFsFamily = FSX | FS9 | P3D | MSFS,
-            All = FSX | FS9 | XPLANE | P3D | FG | MSFS
+            AllFsFamily = FSX | FS9 | P3D | MSFS | MSFS2024,
+            All = FSX | FS9 | XPLANE | P3D | FG | MSFS | MSFS2024
         };
         Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
         //! Number of known individual simulators
-        static constexpr int NumberOfSimulators = 6;
+        static constexpr int NumberOfSimulators = 7;
 
         //! Default constructor
         CSimulatorInfo();
@@ -75,7 +76,7 @@ namespace swift::misc::simulation
         CSimulatorInfo(int flagsAsInt);
 
         //! Constructor
-        CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs);
+        CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs, bool msfs2024);
 
         //! Unspecified simulator
         bool isUnspecified() const;
@@ -97,6 +98,9 @@ namespace swift::misc::simulation
 
         //! MSFS?
         bool isMSFS() const;
+
+        //! MSFS2024?
+        bool isMSFS2024() const;
 
         //! Any simulator?
         bool isAnySimulator() const;
@@ -172,7 +176,7 @@ namespace swift::misc::simulation
         CStatusMessage validateSimulatorsForModel() const;
 
         //! Bool flags to enum
-        static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs);
+        static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs, bool msfs2024);
 
         //! Identifer, as provided by plugin
         static Simulator identifierToSimulator(const QString &identifier);
@@ -228,6 +232,11 @@ namespace swift::misc::simulation
         static const CSimulatorInfo &msfs()
         {
             static const CSimulatorInfo s(MSFS);
+            return s;
+        }
+        static const CSimulatorInfo &msfs2024()
+        {
+            static const CSimulatorInfo s(MSFS2024);
             return s;
         }
         //! @}

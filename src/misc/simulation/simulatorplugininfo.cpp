@@ -104,6 +104,12 @@ namespace swift::misc::simulation
         return s;
     }
 
+    const QString &CSimulatorPluginInfo::msfs2024PluginIdentifier()
+    {
+        static const QString s("org.swift-project.plugins.simulator.msfs2024");
+        return s;
+    }
+
     const QString &CSimulatorPluginInfo::emulatedPluginIdentifier()
     {
         static const QString s("org.swift-project.plugins.simulator.emulated");

@@ -90,6 +90,12 @@ namespace swift::misc::simulation::fscommon
         //! MSFS's packages dir
         static const QString &msfsPackagesDir();
 
+        //! MSFS directory from different sources
+        static const QString &msfs2024Dir();
+
+        //! MSFS's packages dir
+        static const QString &msfs2024PackagesDir();
+
         //! FS9 directory obtained from registry
         static const QString &fs9DirFromRegistry();
 

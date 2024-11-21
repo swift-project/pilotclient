@@ -1,0 +1,17 @@
+Library			|	Version
+---------------------------
+Boost			|	1.67.0 (used in vatlib implementation)
+crashpad		|	a35c2765ebc41ee508238662a0caabf3c520619a
+DirectInput		|	8
+FSUIPC			|	???
+libpng			|	1.6.28
+messagepack		|	3.2.0
+openssl			|	1.0.2j
+opus			|	1.3.1
+Portaudio		|	19.6.0
+SimConnect		|	???
+sodium			|	1.0.18
+SpeexDSP		|	1.2rc3
+vatlib			|	0.9.8
+X-Plane SDK		|	3.0.1 (2.1.2 for 32-bit libraries only)
+zlib			|	1.2.11
