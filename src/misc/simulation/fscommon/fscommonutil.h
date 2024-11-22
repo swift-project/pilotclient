@@ -68,13 +68,14 @@ namespace swift::misc::simulation::fscommon
                                                              bool ignoreEmptyFileNames, int stopAtFailedFiles,
                                                              std::atomic_bool &wasStopped, const QString &simulatorDir);
 
-         //! Validate if known SimObjects path are used
+        //! Validate if known SimObjects path are used
         //! \remark only for MSFS2024
         static CStatusMessageList validateMSFS2024SimObjectsPath(const CAircraftModelList &models,
-                                                             CAircraftModelList &validModels,
-                                                             CAircraftModelList &invalidModels,
-                                                             bool ignoreEmptyFileNames, int stopAtFailedFiles,
-                                                             std::atomic_bool &wasStopped, const QString &simulatorDir);
+                                                                 CAircraftModelList &validModels,
+                                                                 CAircraftModelList &invalidModels,
+                                                                 bool ignoreEmptyFileNames, int stopAtFailedFiles,
+                                                                 std::atomic_bool &wasStopped,
+                                                                 const QString &simulatorDir);
 
     private:
         //! Validate if known SimObjects path are used

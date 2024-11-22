@@ -843,7 +843,7 @@ namespace swift::misc::simulation::fscommon
         QSet<QString> paths;
         for (const QString &msfs2024File : msfs2024Files)
         {
-          //  paths.unite(CFsDirectories::msfs2024SimObjectsPaths(msfs2024File, checked));
+            //  paths.unite(CFsDirectories::msfs2024SimObjectsPaths(msfs2024File, checked));
         }
         return paths;
     }

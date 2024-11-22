@@ -311,7 +311,8 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::FG: return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.set(m_modelCacheMsfs.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.set(m_modelCacheMsfs2024.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::MSFS2024:
+            return m_modelCacheMsfs2024.set(m_modelCacheMsfs2024.get(), ts.toMSecsSinceEpoch());
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
         return CStatusMessage();
@@ -499,7 +500,8 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::FG: return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.set(m_modelCacheMsfs.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.set(m_modelCacheMsfs2024.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::MSFS2024:
+            return m_modelCacheMsfs2024.set(m_modelCacheMsfs2024.get(), ts.toMSecsSinceEpoch());
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
         return CStatusMessage();

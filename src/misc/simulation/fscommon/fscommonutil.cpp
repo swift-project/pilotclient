@@ -230,11 +230,9 @@ namespace swift::misc::simulation::fscommon
                                                      stopAtFailedFiles, stopped);
     }
 
-    CStatusMessageList CFsCommonUtil::validateMSFS2024SimObjectsPath(const CAircraftModelList &models,
-                                                                 CAircraftModelList &validModels,
-                                                                 CAircraftModelList &invalidModels,
-                                                                 bool ignoreEmptyFileNames, int stopAtFailedFiles,
-                                                                 std::atomic_bool &stopped, const QString &simulatorDir)
+    CStatusMessageList CFsCommonUtil::validateMSFS2024SimObjectsPath(
+        const CAircraftModelList &models, CAircraftModelList &validModels, CAircraftModelList &invalidModels,
+        bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped, const QString &simulatorDir)
     {
         Q_UNUSED(simulatorDir)
         const QStringList simObjectPaths = CFsDirectories::msfs2024SimObjectsDirPlusAddOnXmlSimObjectsPaths();

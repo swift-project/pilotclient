@@ -30,7 +30,7 @@ namespace swift::config
         //! with MSFS support?
         static constexpr bool isCompiledWithMSFSSupport(); // defined in buildconfig_gen.inc.in
 
-       //! with MSFS2024 support?
+        //! with MSFS2024 support?
         static constexpr bool isCompiledWithMSFS2024Support(); // defined in buildconfig_gen.inc.in
 
         //! with FSUIPC support?

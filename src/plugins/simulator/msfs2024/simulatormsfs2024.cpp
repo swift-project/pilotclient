@@ -18,8 +18,8 @@ using namespace swift::simplugin::fsxcommon;
 namespace swift::simplugin::msfs2024
 {
     CSimulatorMsFs2024::CSimulatorMsFs2024(const CSimulatorPluginInfo &info, IOwnAircraftProvider *ownAircraftProvider,
-                                   IRemoteAircraftProvider *remoteAircraftProvider, IClientProvider *clientProvider,
-                                   QObject *parent)
+                                           IRemoteAircraftProvider *remoteAircraftProvider,
+                                           IClientProvider *clientProvider, QObject *parent)
         : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         this->setDefaultModel({ "Airbus A320 Neo Asobo", CAircraftModel::TypeModelMatchingDefaultModel,
@@ -33,7 +33,7 @@ namespace swift::simplugin::msfs2024
     }
 
     void CSimulatorMsFs2024::setTrueAltitude(CAircraftSituation &aircraftSituation,
-                                         const DataDefinitionOwnAircraft &simulatorOwnAircraft)
+                                             const DataDefinitionOwnAircraft &simulatorOwnAircraft)
     {
         aircraftSituation.setAltitude(
             CAltitude(simulatorOwnAircraft.altitudeCalibratedFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));

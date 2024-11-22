@@ -14,9 +14,9 @@ using namespace swift::core;
 namespace swift::simplugin::msfs2024
 {
     ISimulator *CSimulatorMsFs2024Factory::create(const CSimulatorPluginInfo &info,
-                                              IOwnAircraftProvider *ownAircraftProvider,
-                                              IRemoteAircraftProvider *remoteAircraftProvider,
-                                              IClientProvider *clientProvider)
+                                                  IOwnAircraftProvider *ownAircraftProvider,
+                                                  IRemoteAircraftProvider *remoteAircraftProvider,
+                                                  IClientProvider *clientProvider)
     {
         Q_ASSERT(ownAircraftProvider);
         return new CSimulatorMsFs2024(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, this);

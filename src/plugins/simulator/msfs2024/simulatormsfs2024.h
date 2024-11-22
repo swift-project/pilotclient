@@ -18,9 +18,9 @@ namespace swift::simplugin::msfs2024
     public:
         //! Constructor, parameters as in \sa swift::core::ISimulatorFactory::create
         CSimulatorMsFs2024(const swift::misc::simulation::CSimulatorPluginInfo &info,
-                       swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-                       swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-                       swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
+                           swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                           swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                           swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! \name ISimulator implementations
         //! @{
