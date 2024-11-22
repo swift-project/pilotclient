@@ -5,19 +5,17 @@
 //! \file
 //! \ingroup testmisc
 
+#include <QDateTime>
+#include <QDebug>
+#include <QTest>
+
+#include "test.h"
+
 #include "config/buildconfig.h"
 #include "misc/aviation/aircraftsituationchange.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/cputime.h"
 #include "misc/network/fsdsetup.h"
-// #include "misc/math/mathutils.h"
-// #include "misc/stringutils.h"
-#include <QDateTime>
-#include <QDebug>
-#include <QTest>
-#include <QTimer>
-
-#include "test.h"
 
 using namespace swift::config;
 using namespace swift::misc;
@@ -35,6 +33,9 @@ namespace MiscTest
         Q_OBJECT
 
     private slots:
+        // Default constructor
+        void defaultConstructor();
+
         //! All GND flags
         void allGndFlagsAndTakeOff() const;
 
@@ -59,6 +60,14 @@ namespace MiscTest
         //! Using sort hint
         void sortHint();
 
+        void isGfLanding();
+
+        void isGfStarting();
+
+        void isGfEqualAirborne();
+
+        void isGfEqualOnGround();
+
     private:
         //! Test situations (ascending)
         static swift::misc::aviation::CAircraftSituationList testSituations();
@@ -74,6 +83,17 @@ namespace MiscTest
         //! CG
         static const swift::misc::physical_quantities::CLength &cg();
     };
+
+    void CTestAircraftSituation::defaultConstructor()
+    {
+        CAircraftSituation sit;
+
+        QVERIFY2(sit.isNull(), "Situation should be null");
+        QVERIFY2(!sit.isOnGround(), "Should not be on ground");
+        QVERIFY2(!sit.isOnGroundFromNetwork(), "Should not be on ground from network");
+        QVERIFY2(!sit.isOnGroundFromParts(), "Should not be on ground from network");
+        QVERIFY2(!sit.isOnGroundInfoAvailable(), "Should not be on ground from network");
+    }
 
     void CTestAircraftSituation::allGndFlagsAndTakeOff() const
     {
@@ -361,6 +381,39 @@ namespace MiscTest
         avg.addMsecs(1000); // make this the latest situation
         newSituations.push_front(avg); // first value is average pitch, so it will NOT be detected
         return newSituations;
+    }
+
+    void CTestAircraftSituation::isGfLanding()
+    {
+
+        QVERIFY2(CAircraftSituation::isGfLanding(1.0, 0.0), "Should be landing");
+        QVERIFY2(!CAircraftSituation::isGfLanding(0.0, 1.0), "Should be landing");
+        QVERIFY2(!CAircraftSituation::isGfLanding(1.0, 0.9), "Should be landing");
+        QVERIFY2(!CAircraftSituation::isGfLanding(0.5, 0.5), "Should be landing");
+    }
+
+    void CTestAircraftSituation::isGfStarting()
+    {
+        QVERIFY2(CAircraftSituation::isGfStarting(0.0, 1.0), "Should be starting");
+        QVERIFY2(!CAircraftSituation::isGfStarting(1.0, 0.0), "Should be starting");
+        QVERIFY2(!CAircraftSituation::isGfStarting(0.9, 1.0), "Should be starting");
+        QVERIFY2(!CAircraftSituation::isGfStarting(0.5, 0.5), "Should be starting");
+    }
+
+    void CTestAircraftSituation::isGfEqualAirborne()
+    {
+        QVERIFY2(CAircraftSituation::isGfEqualAirborne(0.0, 0.0), "Should be airborne");
+        QVERIFY2(!CAircraftSituation::isGfEqualAirborne(1.0, 1.0), "Should be airborne");
+        QVERIFY2(!CAircraftSituation::isGfEqualAirborne(0.0, 0.1), "Should be airborne");
+        QVERIFY2(!CAircraftSituation::isGfEqualAirborne(0.5, 0.5), "Should be airborne");
+    }
+
+    void CTestAircraftSituation::isGfEqualOnGround()
+    {
+        QVERIFY2(CAircraftSituation::isGfEqualOnGround(1.0, 1.0), "Should be ground");
+        QVERIFY2(!CAircraftSituation::isGfEqualOnGround(0.0, 0.0), "Should be ground");
+        QVERIFY2(!CAircraftSituation::isGfEqualOnGround(1.0, 0.9), "Should be ground");
+        QVERIFY2(!CAircraftSituation::isGfEqualOnGround(0.5, 0.5), "Should be on ground");
     }
 
     const CLength &CTestAircraftSituation::cg()
