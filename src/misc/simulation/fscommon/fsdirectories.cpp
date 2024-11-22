@@ -143,13 +143,13 @@ namespace swift::misc::simulation::fscommon
         return dir;
     }
 
-  QString msfs2024DirImpl()
+    QString msfs2024DirImpl()
     {
         const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
         for (const QString &path : locations)
         {
             const QString msfs2024Package = CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path, "Packages"),
-                                                                    "Microsoft.Limitless_8wekyb3d8bbwe");
+                                                                        "Microsoft.Limitless_8wekyb3d8bbwe");
             const QDir d(msfs2024Package);
             if (!d.exists()) { continue; }
             return msfs2024Package;
@@ -166,8 +166,8 @@ namespace swift::misc::simulation::fscommon
     QString msfs2024PackagesDirImpl()
     {
         QString msfs2024Directory(CFsDirectories::msfs2024Dir());
-        const QString userCfg =
-            CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(msfs2024Directory, "LocalCache"), "UserCfg.opt");
+        const QString userCfg = CFileUtils::appendFilePaths(
+            CFileUtils::appendFilePaths(msfs2024Directory, "LocalCache/Packages"), "UserCfg.opt");
         QFile file(userCfg);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
 
@@ -220,6 +220,13 @@ namespace swift::misc::simulation::fscommon
         return CFsDirectories::msfsSimObjectsDirFromSimDir(dir);
     }
 
+    QString msfs2024SimObjectsDirImpl()
+    {
+        QString dir(CFsDirectories::msfs2024Dir());
+        if (dir.isEmpty()) { return {}; }
+        return CFsDirectories::msfs2024SimObjectsDirFromSimDir(dir);
+    }
+
     const QString &CFsDirectories::fsxSimObjectsDir()
     {
         static const QString dir(fsxSimObjectsDirImpl());
@@ -229,6 +236,12 @@ namespace swift::misc::simulation::fscommon
     const QString &CFsDirectories::msfsSimObjectsDir()
     {
         static const QString dir(msfsSimObjectsDirImpl());
+        return dir;
+    }
+
+    const QString &CFsDirectories::msfs2024SimObjectsDir()
+    {
+        static const QString dir(msfs2024SimObjectsDirImpl());
         return dir;
     }
 
@@ -244,6 +257,12 @@ namespace swift::misc::simulation::fscommon
         return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(simDir), "SimObjects");
     }
 
+    QString CFsDirectories::msfs2024SimObjectsDirFromSimDir(const QString &simDir)
+    {
+        if (simDir.isEmpty()) { return {}; }
+        return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(simDir), "SimObjects");
+    }
+
     const QStringList &CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns()
     {
         static const QStringList exclude { "SimObjects/Animals", "SimObjects/Misc", "SimObjects/GroundVehicles",
@@ -252,6 +271,33 @@ namespace swift::misc::simulation::fscommon
     }
 
     const QStringList &CFsDirectories::msfs20SimObjectsExcludeDirectoryPatterns()
+    {
+        static const QStringList exclude {
+            "OneStore/asobo-discovery",
+            "OneStore/asobo-flight",
+            "OneStore/asobo-landingchallenge",
+            "OneStore/asobo-mission",
+            "OneStore/asobo-tutorials",
+            "OneStore/asobo-vcockpits",
+            "OneStore/asobo-simobjects",
+            "OneStore/asobo-services",
+            "OneStore/asobo-vcockpits",
+            "OneStore/asobo-l",
+            "OneStore/asobo-m",
+            "OneStore/asobo-vfx",
+            "OneStore/fs",
+            "OneStore/esd",
+            "OneStore/microsoft-airport",
+            "OneStore/microsoft-bushtrip",
+            "OneStore/microsoft-discovery",
+            "landingchallenge",
+            "tutorials",
+
+        };
+        return exclude;
+    }
+
+    const QStringList &CFsDirectories::msfs2024SimObjectsExcludeDirectoryPatterns()
     {
         static const QStringList exclude {
             "OneStore/asobo-discovery",
@@ -379,6 +425,24 @@ namespace swift::misc::simulation::fscommon
         QStringList allPaths = CFsDirectories::allMsfsSimObjectPaths().values();
         const QString sod = CFileUtils::normalizeFilePathToQtStandard(
             simObjectsDir.isEmpty() ? CFsDirectories::msfsSimObjectsDir() : simObjectsDir);
+        if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
+        {
+            // case insensitive is important here
+            allPaths.push_front(sod);
+        }
+
+        allPaths.removeAll({}); // remove all empty
+        allPaths.removeDuplicates();
+        allPaths.sort(Qt::CaseInsensitive);
+        return allPaths;
+    }
+
+    QStringList CFsDirectories::msfs2024SimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir)
+    {
+        // finding the user settings only works on P3D machine
+        QStringList allPaths = CFsDirectories::allMsfs2024SimObjectPaths().values();
+        const QString sod = CFileUtils::normalizeFilePathToQtStandard(
+            simObjectsDir.isEmpty() ? CFsDirectories::msfs2024SimObjectsDir() : simObjectsDir);
         if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
         {
             // case insensitive is important here
@@ -685,6 +749,11 @@ namespace swift::misc::simulation::fscommon
         return CFsDirectories::msfsSimObjectsPaths(CFsDirectories::findMsfsConfigFiles(), true);
     }
 
+    QSet<QString> CFsDirectories::allMsfs2024SimObjectPaths()
+    {
+        return CFsDirectories::msfs2024SimObjectsPaths(CFsDirectories::findMsfs2024ConfigFiles(), true);
+    }
+
     QStringList CFsDirectories::findFsxConfigFiles()
     {
         const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
@@ -728,6 +797,29 @@ namespace swift::misc::simulation::fscommon
         return files;
     }
 
+    // TODO TZ: that doesn't exist
+    QStringList CFsDirectories::findMsfs2024ConfigFiles()
+    {
+        const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
+        QStringList files;
+        for (const QString &path : locations)
+        {
+            // TODO this acts as a placeholder. the file msfs.cfg doesn't exist
+            const QString file = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Microsoft/MSFS/msfs.cfg");
+            const QFileInfo fi(file);
+            if (fi.exists())
+            {
+                files.push_back(fi.absoluteFilePath());
+                if (logConfigPathReading())
+                {
+                    CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS config file: '%1'")
+                        << fi.absoluteFilePath();
+                }
+            }
+        }
+        return files;
+    }
+
     QSet<QString> CFsDirectories::fsxSimObjectsPaths(const QStringList &fsxFiles, bool checked)
     {
         QSet<QString> paths;
@@ -741,6 +833,17 @@ namespace swift::misc::simulation::fscommon
         for (const QString &msfsFile : msfsFiles)
         {
             paths.unite(CFsDirectories::msfsSimObjectsPaths(msfsFile, checked));
+        }
+        return paths;
+    }
+
+    // TODO TZ
+    QSet<QString> CFsDirectories::msfs2024SimObjectsPaths(const QStringList &msfs2024Files, bool checked)
+    {
+        QSet<QString> paths;
+        for (const QString &msfs2024File : msfs2024Files)
+        {
+          //  paths.unite(CFsDirectories::msfs2024SimObjectsPaths(msfs2024File, checked));
         }
         return paths;
     }

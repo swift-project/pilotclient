@@ -315,6 +315,7 @@ namespace swift::simplugin::fscommon
                 pitchRaw = qRound(std::floor(pitchRaw * angleCorrectionFactor));
                 bankRaw = qRound(std::floor(bankRaw * angleCorrectionFactor));
 
+                // TODO TZ: should MSFS2024 use FSUIPC?
                 // MSFS has inverted pitch and bank angles
                 pitchRaw = ~pitchRaw;
                 bankRaw = ~bankRaw;

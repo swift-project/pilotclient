@@ -74,6 +74,13 @@ namespace swift::misc::simulation::data
         static const char *key() { return "modelcachemsfs"; }
     };
 
+    //! MSFS2024
+    struct TModelCacheMsfs2024 : public TModelCache
+    {
+        //! Key in data cache
+        static const char *key() { return "modelcachemsfs2024"; }
+    };
+
     //! Last selection
     struct TModelCacheLastSelection : public TDataTrait<CSimulatorInfo>
     {
@@ -131,6 +138,13 @@ namespace swift::misc::simulation::data
     {
         //! Key in data cache
         static const char *key() { return "modelsetmsfs"; }
+    };
+
+    //! MSFS2024
+    struct TModelSetCacheMsfs2024 : public TModelCache
+    {
+        //! Key in data cache
+        static const char *key() { return "modelsetmsfs2024"; }
     };
 
     //! Last selection
@@ -297,6 +311,7 @@ namespace swift::misc::simulation::data
         void changedXP() { this->emitCacheChanged(CSimulatorInfo::xplane()); }
         void changedFG() { this->emitCacheChanged(CSimulatorInfo::fg()); }
         void changedMsfs() { this->emitCacheChanged(CSimulatorInfo::msfs()); }
+        void changedMsfs2024() { this->emitCacheChanged(CSimulatorInfo::msfs2024()); }
         //! @}
 
         //! Is the cache already synchronized?
@@ -314,6 +329,7 @@ namespace swift::misc::simulation::data
         std::atomic_bool m_syncFG { false };
         std::atomic_bool m_syncXPlane { false };
         std::atomic_bool m_syncMsfs { false };
+        std::atomic_bool m_syncMsfs2024 { false };
         //! @}
     };
 
@@ -351,6 +367,7 @@ namespace swift::misc::simulation::data
         CData<TModelCacheXP> m_modelCacheXP { this, &CModelCaches::changedXP }; //!< XP cache
         CData<TModelCacheFG> m_modelCacheFG { this, &CModelCaches::changedFG }; //!< XP cache
         CData<TModelCacheMsfs> m_modelCacheMsfs { this, &CModelCaches::changedMsfs }; //!< MSFS cache
+        CData<TModelCacheMsfs2024> m_modelCacheMsfs2024 { this, &CModelCaches::changedMsfs2024 }; //!< MSFS2024 cache
 
         //! Non virtual version (can be used in ctor)
         void synchronizeCacheImpl(const CSimulatorInfo &simulator);
@@ -394,6 +411,8 @@ namespace swift::misc::simulation::data
         CData<TModelSetCacheXP> m_modelCacheXP { this, &CModelSetCaches::changedXP }; //!< XP cache
         CData<TModelSetCacheFG> m_modelCacheFG { this, &CModelSetCaches::changedFG }; //!< FG cache
         CData<TModelSetCacheMsfs> m_modelCacheMsfs { this, &CModelSetCaches::changedMsfs }; //!< MSFS cache
+        CData<TModelSetCacheMsfs2024> m_modelCacheMsfs2024 { this,
+                                                             &CModelSetCaches::changedMsfs2024 }; //!< MSFS2024 cache
 
         //! Non virtual version (can be used in ctor)
         void synchronizeCacheImpl(const CSimulatorInfo &simulator);

@@ -58,6 +58,7 @@ namespace swift::misc::simulation
         IAircraftModelLoader *m_loaderFS9 = nullptr;
         IAircraftModelLoader *m_loaderFG = nullptr;
         IAircraftModelLoader *m_loaderMsfs = nullptr;
+        IAircraftModelLoader *m_loaderMsfs2024 = nullptr;
 
         //! Init the loader
         IAircraftModelLoader *initLoader(const CSimulatorInfo &simulator);

@@ -221,6 +221,7 @@ namespace swift::misc::simulation
         this->insert("testModelString5", CSimulatorInfo::fsx());
         this->insert("testModelString6", CSimulatorInfo::fsx());
         this->insert("testModelString7", CSimulatorInfo::msfs());
+        this->insert("testModelString7", CSimulatorInfo::msfs2024());
     }
 
     const QString &CAutoPublishData::fileBaseName()

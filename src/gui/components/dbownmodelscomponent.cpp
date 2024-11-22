@@ -393,6 +393,19 @@ namespace swift::gui::components
                 }
                 menuActions.addAction(m_loadActions[5], CMenuAction::pathSimulator());
             }
+            if (sims.isMSFS2024())
+            {
+                if (!m_loadActions[5])
+                {
+                    m_loadActions[5] = new QAction(CIcons::appModels16(), "MSFS2024 models", this);
+                    connect(m_loadActions[6], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                        if (!ownModelsComp) { return; }
+                        Q_UNUSED(checked)
+                        ownModelsComp->setSimulator(CSimulatorInfo::msfs2024(), true);
+                    });
+                }
+                menuActions.addAction(m_loadActions[5], CMenuAction::pathSimulator());
+            }
 
             // with models loaded I allow a refresh reload
             // I need those models because I want to merge with DB data in the loader
@@ -571,6 +584,33 @@ namespace swift::gui::components
                     menuActions.addAction(m_reloadActions[10], CMenuAction::pathSimulatorModelsReload());
                     menuActions.addAction(m_reloadActions[11], CMenuAction::pathSimulatorModelsReload());
                 }
+                if (sims.isMSFS2024())
+                {
+                    if (!m_reloadActions[12])
+                    {
+                        m_reloadActions[10] = new QAction(CIcons::appModels16(), "MSFS2024 models", this);
+                        connect(m_reloadActions[10], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                            if (!ownModelsComp) { return; }
+                            Q_UNUSED(checked)
+                            ownModelsComp->requestSimulatorModels(CSimulatorInfo::msfs2024(),
+                                                                  IAircraftModelLoader::InBackgroundNoCache);
+                        });
+                        m_reloadActions[13] = new QAction(CIcons::appModels16(), "MSFS2024 models from directoy", this);
+                        connect(m_reloadActions[11], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                            if (!ownModelsComp) { return; }
+                            Q_UNUSED(checked)
+                            const CSimulatorInfo sim(CSimulatorInfo::MSFS2024);
+                            const QString dir = ownModelsComp->directorySelector(sim);
+                            if (!dir.isEmpty())
+                            {
+                                ownModelsComp->requestSimulatorModels(sim, IAircraftModelLoader::InBackgroundNoCache,
+                                                                      QStringList(dir));
+                            }
+                        });
+                    }
+                    menuActions.addAction(m_reloadActions[12], CMenuAction::pathSimulatorModelsReload());
+                    menuActions.addAction(m_reloadActions[13], CMenuAction::pathSimulatorModelsReload());
+                }
             }
             else
             {
@@ -659,6 +699,19 @@ namespace swift::gui::components
                         if (!ownModelsComp) { return; }
                         Q_UNUSED(checked)
                         ownModelsComp->clearSimulatorCache(CSimulatorInfo::msfs());
+                    });
+                }
+                menuActions.addAction(m_clearCacheActions[5], CMenuAction::pathSimulatorModelsClearCache());
+            }
+            if (sims.isMSFS2024())
+            {
+                if (!m_clearCacheActions[5])
+                {
+                    m_clearCacheActions[5] = new QAction(CIcons::appModels16(), "Clear MSFS2024 cache", this);
+                    connect(m_clearCacheActions[5], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                        if (!ownModelsComp) { return; }
+                        Q_UNUSED(checked)
+                        ownModelsComp->clearSimulatorCache(CSimulatorInfo::msfs2024());
                     });
                 }
                 menuActions.addAction(m_clearCacheActions[5], CMenuAction::pathSimulatorModelsClearCache());

@@ -153,6 +153,7 @@ namespace swift::misc::simulation::fscommon
         // set directory with name filters, get aircraft.cfg and sub directories
         static const QString NoNameFilter;
         QDir dir(directory, NoNameFilter, QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
+        // TODO TZ: still have to figure out how msfs2024 handles this
         // for MSFS we only need aircraft.cfg
         dir.setNameFilters(fileNameFilters(getSimulator().isMSFS()));
         if (!dir.exists())
@@ -464,6 +465,7 @@ namespace swift::misc::simulation::fscommon
         return content;
     }
 
+    // TODO TZ: still have to figure out how msfs2024 handles this
     const QStringList &CAircraftCfgParser::fileNameFilters(bool isMSFS)
     {
         if (CBuildConfig::buildWordSize() == 32 || isMSFS)

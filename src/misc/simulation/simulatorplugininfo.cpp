@@ -65,6 +65,8 @@ namespace swift::misc::simulation
         if (s.testFlag(CSimulatorInfo::XPLANE)) { return CSimulatorPluginInfo::xplanePluginIdentifier(); }
         if (s.testFlag(CSimulatorInfo::FG)) { return CSimulatorPluginInfo::fgPluginIdentifier(); }
         if (s.testFlag(CSimulatorInfo::MSFS)) { return CSimulatorPluginInfo::msfsPluginIdentifier(); }
+        if (s.testFlag(CSimulatorInfo::MSFS2024)) { return CSimulatorPluginInfo::msfs2024PluginIdentifier(); }
+
         return e;
     }
 
@@ -120,7 +122,7 @@ namespace swift::misc::simulation
     {
         static const QStringList identifiers({ fsxPluginIdentifier(), p3dPluginIdentifier(), xplanePluginIdentifier(),
                                                fs9PluginIdentifier(), emulatedPluginIdentifier(), fgPluginIdentifier(),
-                                               msfsPluginIdentifier() });
+                                               msfsPluginIdentifier(), msfs2024PluginIdentifier() });
         return identifiers;
     }
 
@@ -132,7 +134,9 @@ namespace swift::misc::simulation
             return QStringList { xplanePluginIdentifier(), fgPluginIdentifier() };
         }
 
-        return QStringList { fsxPluginIdentifier(), msfsPluginIdentifier(), p3dPluginIdentifier(),
-                             xplanePluginIdentifier(), fgPluginIdentifier() };
+        return QStringList {
+            fsxPluginIdentifier(),    msfsPluginIdentifier(), p3dPluginIdentifier(),
+            xplanePluginIdentifier(), fgPluginIdentifier(),   msfs2024PluginIdentifier(),
+        };
     }
 } // namespace swift::misc::simulation

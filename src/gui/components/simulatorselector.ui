@@ -95,6 +95,13 @@
         </property>
        </widget>
       </item>
+       <item>
+         <widget class="QCheckBox" name="cb_MSFS2024">
+           <property name="text">
+             <string>MSFS2024</string>
+           </property>
+         </widget>
+       </item>
      </layout>
     </widget>
    </item>
@@ -173,6 +180,13 @@
         </property>
        </widget>
       </item>
+       <item>
+         <widget class="QRadioButton" name="rb_MSFS2024">
+           <property name="text">
+             <string>MSFS2024</string>
+           </property>
+         </widget>
+       </item>
      </layout>
     </widget>
    </item>
