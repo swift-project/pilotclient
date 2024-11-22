@@ -29,10 +29,6 @@ namespace swift::gui::components
         //! Destructor
         virtual ~CInterpolationComponent() override;
 
-    signals:
-        //! Request redering restrictions widget
-        void requestRenderingRestrictionsWidget();
-
     private:
         QScopedPointer<Ui::CInterpolationComponent> ui;
 

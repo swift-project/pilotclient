@@ -41,10 +41,6 @@ namespace swift::gui::components
         //! Setup mode
         Mode getSetupMode() const;
 
-    signals:
-        //! Request restrictions UI
-        void requestRenderingRestrictionsWidget();
-
     private:
         QScopedPointer<Ui::CInterpolationSetupComponent> ui;
 

@@ -162,16 +162,6 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pb_RenderingSetup">
-        <property name="toolTip">
-         <string>goto rendering setup</string>
-        </property>
-        <property name="text">
-         <string> rendering</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="pb_DeleteOrReset">
         <property name="text">
          <string>delete/reset</string>
@@ -215,7 +205,6 @@
   <tabstop>rb_Global</tabstop>
   <tabstop>pb_Reload</tabstop>
   <tabstop>cb_IgnoreGlobal</tabstop>
-  <tabstop>pb_RenderingSetup</tabstop>
   <tabstop>pb_DeleteOrReset</tabstop>
   <tabstop>pb_Save</tabstop>
  </tabstops>
