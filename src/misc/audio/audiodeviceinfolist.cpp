@@ -157,27 +157,6 @@ namespace swift::misc::audio
         return i;
     }
 
-    CAudioDeviceInfoList CAudioDeviceInfoList::allInputDevicesPlusDefault()
-    {
-        CAudioDeviceInfoList i = allInputDevices();
-        i.push_back(CAudioDeviceInfoList::defaultInputDevice());
-        return i;
-    }
-
-    CAudioDeviceInfoList CAudioDeviceInfoList::allOutputDevicesPlusDefault()
-    {
-        CAudioDeviceInfoList o = allOutputDevices();
-        o.push_back(CAudioDeviceInfoList::defaultOutputDevice());
-        return o;
-    }
-
-    CAudioDeviceInfoList CAudioDeviceInfoList::allDevicesPlusDefault()
-    {
-        CAudioDeviceInfoList i = allInputDevicesPlusDefault();
-        i.push_back(allOutputDevicesPlusDefault());
-        return i;
-    }
-
     QList<QAudioDevice> CAudioDeviceInfoList::allQtInputDevices()
     {
         const QList<QAudioDevice> devices = QMediaDevices::audioInputs();

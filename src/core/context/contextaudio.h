@@ -154,9 +154,6 @@ namespace swift::core
             swift::misc::audio::CAudioDeviceInfoList getAudioDevices() const;
             swift::misc::audio::CAudioDeviceInfoList getAudioInputDevices() const;
             swift::misc::audio::CAudioDeviceInfoList getAudioOutputDevices() const;
-            swift::misc::audio::CAudioDeviceInfoList getAudioDevicesPlusDefault() const;
-            swift::misc::audio::CAudioDeviceInfoList getAudioInputDevicesPlusDefault() const;
-            swift::misc::audio::CAudioDeviceInfoList getAudioOutputDevicesPlusDefault() const;
             //! @}
 
             //! Get current audio device
