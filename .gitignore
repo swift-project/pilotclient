@@ -51,4 +51,4 @@ cmake-build-*/
 /out/
 /dist/
 CMakeUserPresets.json
-/third_party/externals/externals
+/third_party/externals
