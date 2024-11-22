@@ -73,7 +73,7 @@ namespace swift::misc::aviation
           m_onGroundFactor(interpolatedGndFactor)
     {
         // Clip small ground factor values
-        if (m_onGroundFactor < 0.0) { m_onGroundFactor = -1.0; }
+        if (m_onGroundFactor < -0.1) { m_onGroundFactor = -1.0; }
         else if (m_onGroundFactor < 0.001) { m_onGroundFactor = 0.0; }
         else if (m_onGroundFactor > 0.999) { m_onGroundFactor = 1.0; }
     }
