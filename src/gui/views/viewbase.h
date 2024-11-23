@@ -519,6 +519,9 @@ namespace swift::gui
             //! Settings have been changed
             void settingsChanged();
 
+            //! Select all rows
+            void selectAll() override;
+
             //! @{
             //! Change selection modes
             void setMultiSelection();
