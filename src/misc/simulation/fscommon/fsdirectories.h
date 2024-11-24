@@ -188,6 +188,10 @@ namespace swift::misc::simulation::fscommon
         // SimObjectPaths.0=SimObjects\Airplanes
         static QSet<QString> msfsSimObjectsPaths(const QString &msfsFile, bool checked);
 
+        //! Get all the SimObjects files from fsx.cfg
+        // SimObjectPaths.0=SimObjects\Airplanes
+        static QSet<QString> msfs2024SimObjectsPaths(const QString &msfsFile, bool checked);
+
         //! .air file filter
         static const QString &airFileFilter();
 
