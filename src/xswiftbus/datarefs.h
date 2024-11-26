@@ -223,6 +223,55 @@ namespace XSwiftBus
         XPLMDataRef m_ref;
     };
 
+    /*!
+     * Class providing a custom variable + dataref
+     * \tparam DataRefTraits The trait class representing the dataref.
+     */
+    template <class DataRefTraits>
+    class CustomDataRef
+    {
+    public:
+        //! Constructor
+        CustomDataRef()
+        {
+            if constexpr (std::is_same_v<typename DataRefTraits::type, int>)
+            {
+                m_ref = XPLMRegisterDataAccessor(DataRefTraits::name(), xplmType_Int, 0, read, NULL, NULL, NULL, NULL,
+                                                 NULL, NULL, NULL, NULL, NULL, NULL, NULL, this, NULL);
+            }
+            else { XPLMDebugString("Unsupported custom dataref type\n"); }
+            if (!m_ref)
+            {
+                XPLMDebugString("Missing dataref:");
+                XPLMDebugString(DataRefTraits::name());
+                XPLMDebugString("\n");
+            }
+        }
+
+        CustomDataRef(const CustomDataRef &) = delete;
+        CustomDataRef &operator=(const CustomDataRef &) = delete;
+        CustomDataRef(CustomDataRef &&other) = default;
+        CustomDataRef &operator=(CustomDataRef &&other) = default;
+        ~CustomDataRef() { XPLMUnregisterDataAccessor(m_ref); }
+
+        static typename DataRefTraits::type read(void *refcon)
+        {
+            return reinterpret_cast<CustomDataRef *>(refcon)->get();
+        }
+
+        //! True if the dataref exists
+        bool isValid() const { return m_ref != nullptr; }
+
+        //! Set the value
+        void set(typename DataRefTraits::type val) { m_datarefVal = val; }
+
+        //! Get the value
+        typename DataRefTraits::type get() const { return m_datarefVal; }
+
+        XPLMDataRef m_ref;
+        typename DataRefTraits::type m_datarefVal;
+    };
+
     template <>
     inline void DataRefImpl::implSet<int>(int d)
     {
