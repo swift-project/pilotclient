@@ -395,9 +395,9 @@ namespace swift::gui::components
             }
             if (sims.isMSFS2024())
             {
-                if (!m_loadActions[5])
+                if (!m_loadActions[6])
                 {
-                    m_loadActions[5] = new QAction(CIcons::appModels16(), "MSFS2024 models", this);
+                    m_loadActions[6] = new QAction(CIcons::appModels16(), "MSFS2024 models", this);
                     connect(m_loadActions[6], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                         if (!ownModelsComp) { return; }
                         Q_UNUSED(checked)
@@ -413,8 +413,9 @@ namespace swift::gui::components
             {
                 if (m_reloadActions.isEmpty())
                 {
-                    m_reloadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-                                                         nullptr, nullptr, nullptr, nullptr, nullptr });
+                    m_reloadActions =
+                        QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+                                           nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
                 }
                 menuActions.addMenu(CIcons::refresh16(), "Force model reload",
                                     CMenuAction::pathSimulatorModelsReload());
@@ -588,15 +589,15 @@ namespace swift::gui::components
                 {
                     if (!m_reloadActions[12])
                     {
-                        m_reloadActions[10] = new QAction(CIcons::appModels16(), "MSFS2024 models", this);
-                        connect(m_reloadActions[10], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                        m_reloadActions[12] = new QAction(CIcons::appModels16(), "MSFS2024 models", this);
+                        connect(m_reloadActions[12], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked)
                             ownModelsComp->requestSimulatorModels(CSimulatorInfo::msfs2024(),
                                                                   IAircraftModelLoader::InBackgroundNoCache);
                         });
                         m_reloadActions[13] = new QAction(CIcons::appModels16(), "MSFS2024 models from directoy", this);
-                        connect(m_reloadActions[11], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                        connect(m_reloadActions[13], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                             if (!ownModelsComp) { return; }
                             Q_UNUSED(checked)
                             const CSimulatorInfo sim(CSimulatorInfo::MSFS2024);
@@ -622,7 +623,8 @@ namespace swift::gui::components
 
             if (m_clearCacheActions.isEmpty())
             {
-                m_clearCacheActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
+                m_clearCacheActions =
+                    QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
             }
             menuActions.addMenu(CIcons::delete16(), "Clear model caches", CMenuAction::pathSimulatorModelsClearCache());
             if (sims.isFSX())
@@ -630,7 +632,7 @@ namespace swift::gui::components
                 if (!m_clearCacheActions[0])
                 {
                     m_clearCacheActions[0] = new QAction(CIcons::appModels16(), "Clear FSX cache", this);
-                    connect(m_loadActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                    connect(m_clearCacheActions[0], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                         if (!ownModelsComp) { return; }
                         Q_UNUSED(checked)
                         ownModelsComp->clearSimulatorCache(CSimulatorInfo::fsx());
@@ -705,16 +707,16 @@ namespace swift::gui::components
             }
             if (sims.isMSFS2024())
             {
-                if (!m_clearCacheActions[5])
+                if (!m_clearCacheActions[6])
                 {
-                    m_clearCacheActions[5] = new QAction(CIcons::appModels16(), "Clear MSFS2024 cache", this);
-                    connect(m_clearCacheActions[5], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
+                    m_clearCacheActions[6] = new QAction(CIcons::appModels16(), "Clear MSFS2024 cache", this);
+                    connect(m_clearCacheActions[6], &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
                         if (!ownModelsComp) { return; }
                         Q_UNUSED(checked)
                         ownModelsComp->clearSimulatorCache(CSimulatorInfo::msfs2024());
                     });
                 }
-                menuActions.addAction(m_clearCacheActions[5], CMenuAction::pathSimulatorModelsClearCache());
+                menuActions.addAction(m_clearCacheActions[6], CMenuAction::pathSimulatorModelsClearCache());
             }
 
             if (sims.isXPlane() && CBuildConfig::isRunningOnWindowsNtPlatform() && CBuildConfig::buildWordSize() == 64)
