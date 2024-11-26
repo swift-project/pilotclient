@@ -27,7 +27,7 @@ class Builder:
         self._specific_prepare()
 
         print('Updating from datastore ...')
-        host = 'https://datastore.swift-project.org'
+        host = 'https://datastore2.swift-project.org'
         datastore_version = '0.7.0'
         source_path = utils.get_swift_source_path()
         shared_path = os.path.abspath(os.path.join(source_path, 'resources', 'share'))

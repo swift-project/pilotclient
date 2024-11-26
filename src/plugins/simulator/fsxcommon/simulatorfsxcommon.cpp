@@ -509,7 +509,8 @@ namespace swift::simplugin::fsxcommon
         const CFsxP3DSettings settings = m_detailsSettings.getSettings(this->getSimulatorInfo());
         m_useAddSimulatedObj = settings.isAddingAsSimulatedObjectEnabled();
         m_useSbOffsets = settings.isSbOffsetsEnabled();
-        if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+        if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS() ||
+            this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
         {
             m_useSbOffsets = false; // Always disable SbOffsets for MSFS. Using new transponder mode property directly
         }
@@ -533,7 +534,9 @@ namespace swift::simplugin::fsxcommon
                                               SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
             "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+        // TODO TZ
+        if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS() &&
+            !this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
         {
             // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to
             // get/set this info ;) there was a bug with SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, see
@@ -3114,6 +3117,12 @@ namespace swift::simplugin::fsxcommon
         {
             // MSFS 2020 drivers only works with MSFS
             return connectedSimName.contains("kittyhawk");
+        }
+        else if (pluginSim.isMSFS2024())
+        {
+            // TODO TZ
+            // MSFS 2024 drivers only works with MSFS2024
+            return connectedSimName.contains("???");
         }
         return false;
     }
