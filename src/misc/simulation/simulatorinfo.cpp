@@ -83,7 +83,7 @@ namespace swift::misc::simulation
 
     bool CSimulatorInfo::isMicrosoftOrPrepare3DSimulator() const { return isMicrosoftSimulator() || isP3D(); }
 
-    bool CSimulatorInfo::isFsxP3DFamily() const { return isFSX() || isP3D() || isMSFS(); }
+    bool CSimulatorInfo::isFsxP3DFamily() const { return isFSX() || isP3D() || isMSFS() || isMSFS2024(); }
 
     int CSimulatorInfo::numberSimulators() const
     {
@@ -366,9 +366,14 @@ namespace swift::misc::simulation
 
     QString CCountPerSimulator::toQString() const
     {
-        return u"FSX: " % QString::number(m_counts[0]) % u" P3D: " % QString::number(m_counts[1]) % u" FS9: " %
-               QString::number(m_counts[2]) % u" XPlane: " % QString::number(m_counts[3]) % u" FG: " %
-               QString::number(m_counts[4]) % u" MSFS: " % QString::number(m_counts[5]);
+        return u"FSX: " % QString::number(m_counts[0]) % 
+               u" P3D: " % QString::number(m_counts[1]) % 
+               u" FS9: " % QString::number(m_counts[2]) % 
+               u" XPlane: " % QString::number(m_counts[3]) % 
+               u" FG: " % QString::number(m_counts[4]) % 
+               u" MSFS: " % QString::number(m_counts[5]) %
+               u" MSFS2024: " % QString::number(m_counts[6]) 
+            ;
     }
 
     void CCountPerSimulator::setCount(int count, const CSimulatorInfo &simulator)
@@ -390,6 +395,8 @@ namespace swift::misc::simulation
         if (simulator.isXPlane()) { m_counts[3]++; }
         if (simulator.isFG()) { m_counts[4]++; }
         if (simulator.isMSFS()) { m_counts[5]++; }
+        if (simulator.isMSFS2024()) { m_counts[6]++; }
+
     }
 
     int CCountPerSimulator::internalIndex(const CSimulatorInfo &simulator)
@@ -403,6 +410,7 @@ namespace swift::misc::simulation
         case CSimulatorInfo::XPLANE: return 3;
         case CSimulatorInfo::FG: return 4;
         case CSimulatorInfo::MSFS: return 5;
+        case CSimulatorInfo::MSFS2024: return 6;
         default: return CSimulatorInfo::NumberOfSimulators; // unknown
         }
     }
@@ -417,6 +425,7 @@ namespace swift::misc::simulation
         case 3: return CSimulatorInfo(CSimulatorInfo::XPLANE);
         case 4: return CSimulatorInfo(CSimulatorInfo::FG);
         case 5: return CSimulatorInfo(CSimulatorInfo::MSFS);
+        case 6: return CSimulatorInfo(CSimulatorInfo::MSFS2024);
         default: return CSimulatorInfo(CSimulatorInfo::None);
         }
     }
