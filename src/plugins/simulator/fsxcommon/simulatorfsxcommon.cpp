@@ -2704,8 +2704,6 @@ namespace swift::simplugin::fsxcommon
     void CSimulatorFsxCommon::initSimulatorInternals()
     {
         CSimulatorFsCommon::initSimulatorInternals();
-        m_simulatorInternals.setValue("fsx/simConnectCfgFilename",
-                                      CSimConnectUtilities::getSwiftLocalSimConnectCfgFilename());
         m_simulatorInternals.setValue("fsx/simConnectVersion", m_simConnectVersion);
     }
 
