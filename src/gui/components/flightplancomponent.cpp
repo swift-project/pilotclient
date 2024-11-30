@@ -87,7 +87,6 @@ namespace swift::gui::components
         this->setOverlaySizeFactors(0.8, 0.9);
         this->setReducedInfo(true);
         this->setForceSmall(true);
-        this->showKillButton(false);
 
         setupNavComContextMenu();
         setupSsrContextMenu();

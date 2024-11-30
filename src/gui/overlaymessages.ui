@@ -80,23 +80,6 @@
           </spacer>
          </item>
          <item>
-          <widget class="QToolButton" name="tb_Kill">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="toolTip">
-            <string>kill application</string>
-           </property>
-           <property name="text">
-            <string>kill application</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../misc/misc.qrc">
-             <normaloff>:/misc/icons/misc/skull64.png</normaloff>:/misc/icons/misc/skull64.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QToolButton" name="tb_Close">
            <property name="text">
             <string>close</string>

@@ -84,7 +84,6 @@ namespace swift::gui::components
         this->setOverlaySizeFactors(0.8, 0.5);
         this->setReducedInfo(true);
         this->setForceSmall(true);
-        this->showKillButton(false);
 
         // Stored data
         this->loadRememberedUserData();

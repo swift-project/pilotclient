@@ -112,7 +112,6 @@ namespace swift::gui::components
         // overlay
         this->setReducedInfo(true);
         this->setForceSmall(true);
-        this->showKillButton(false);
 
         // Aircraft previews
         connect(ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this,

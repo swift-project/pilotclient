@@ -49,7 +49,6 @@ namespace swift::gui
     COverlayMessages::COverlayMessages(int w, int h, QWidget *parent) : QFrame(parent), ui(new Ui::COverlayMessages)
     {
         this->init(w, h);
-        this->showKillButton(false);
 
         if (sGui)
         {
@@ -58,7 +57,6 @@ namespace swift::gui
         }
         connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::onOkClicked);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::onCancelClicked);
-        connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::onKillClicked);
 
         ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAlways);
         ui->tvp_StatusMessages->setForceColumnsToMaxSize(
@@ -119,27 +117,7 @@ namespace swift::gui
         this->close();
     }
 
-    void COverlayMessages::onKillClicked()
-    {
-        QMessageBox msgBox;
-        msgBox.setText("Shutdown the application.");
-        msgBox.setInformativeText(u"Do you want to terminate " % sGui->getApplicationNameAndVersion() % u"?");
-        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        msgBox.setDefaultButton(QMessageBox::Save);
-        if (QMessageBox::Ok == msgBox.exec() && sGui)
-        {
-            sGui->gracefulShutdown();
-            sGui->exit();
-        }
-    }
-
     bool COverlayMessages::useSmall() const { return (m_forceSmall || this->width() < 400 || this->height() < 300); }
-
-    void COverlayMessages::showKill(bool show)
-    {
-        ui->tb_Kill->setVisible(m_hasKillButton && show);
-        ui->tb_Kill->setEnabled(m_hasKillButton && show);
-    }
 
     bool COverlayMessages::displayTextMessage(const CTextMessage &textMessage) const
     {
@@ -177,7 +155,7 @@ namespace swift::gui
         ui->tvp_StatusMessages->rowsResizeModeBasedOnThreshold(newMsgs.size());
         ui->tvp_StatusMessages->updateContainerMaybeAsync(newMsgs);
 
-        this->setModeToMessages(false);
+        this->setModeToMessages();
         this->display(timeout);
     }
 
@@ -226,12 +204,12 @@ namespace swift::gui
 
         if (this->useSmall())
         {
-            this->setModeToMessageSmall(message.isFailure());
+            this->setModeToMessageSmall();
             ui->form_StatusMessageSmall->setValue(message);
         }
         else
         {
-            this->setModeToMessage(message.isFailure());
+            this->setModeToMessage();
             ui->form_StatusMessage->setValue(message);
         }
         this->display(timeout);
@@ -413,44 +391,33 @@ namespace swift::gui
         else { this->display(timeout); }
     }
 
-    void COverlayMessages::showKillButton(bool killButton)
-    {
-        m_hasKillButton = killButton;
-        this->showKill(killButton);
-    }
-
-    void COverlayMessages::setModeToMessages(bool withKillButton)
+    void COverlayMessages::setModeToMessages()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessages);
-        this->showKill(withKillButton);
         this->setHeader("Messages");
     }
 
-    void COverlayMessages::setModeToMessage(bool withKillButton)
+    void COverlayMessages::setModeToMessage()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessage);
-        this->showKill(withKillButton);
         this->setHeader("Message");
     }
 
-    void COverlayMessages::setModeToMessageSmall(bool withKillButton)
+    void COverlayMessages::setModeToMessageSmall()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessageSmall);
-        this->showKill(withKillButton);
         this->setHeader("Message");
     }
 
-    void COverlayMessages::setModeToHTMLMessage(bool withKillButton)
+    void COverlayMessages::setModeToHTMLMessage()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_HTMLMessage);
-        this->showKill(withKillButton);
         this->setHeader("Message");
     }
 
-    void COverlayMessages::setModeToProgressBar(bool withKillButton)
+    void COverlayMessages::setModeToProgressBar()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_ProgressBar);
-        this->showKill(withKillButton);
         this->setHeader("Progress bar");
     }
 
@@ -458,14 +425,12 @@ namespace swift::gui
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_TextMessage);
         this->setHeader("Text message");
-        this->showKill(false);
     }
 
     void COverlayMessages::setModeToOverlayTextMessage()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_OverlayTextMessage);
         this->setHeader("Text message");
-        this->showKill(false);
     }
 
     void COverlayMessages::activateTextMessages(bool activate)
@@ -479,7 +444,6 @@ namespace swift::gui
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_Image);
         this->setHeader("Image");
-        this->showKillButton(false);
     }
 
     void COverlayMessages::setConfirmationMessage(const QString &message)

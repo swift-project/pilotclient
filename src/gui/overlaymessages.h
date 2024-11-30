@@ -54,19 +54,19 @@ namespace swift::gui
         virtual ~COverlayMessages() override;
 
         //! Messages mode
-        void setModeToMessages(bool withKillButton = false);
+        void setModeToMessages();
 
         //! Single Message mode
-        void setModeToMessage(bool withKillButton = false);
+        void setModeToMessage();
 
         //! Single Message mode
-        void setModeToMessageSmall(bool withKillButton = false);
+        void setModeToMessageSmall();
 
         //! HTML message mode
-        void setModeToHTMLMessage(bool withKillButton = false);
+        void setModeToHTMLMessage();
 
         //! Progress bar
-        void setModeToProgressBar(bool withKillButton = false);
+        void setModeToProgressBar();
 
         //! Single text message mode
         void setModeToTextMessage();
@@ -165,9 +165,6 @@ namespace swift::gui
         void showProgressBar(int percentage, const QString &message,
                              std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
-        //! Allows to globally enable/disable kill button
-        void showKillButton(bool killButton);
-
         //! Close button clicked
         void close();
 
@@ -215,9 +212,6 @@ namespace swift::gui
         //! Cancel clicked (only when confirmation bar is active)
         void onCancelClicked();
 
-        //! Kill clicked (only when errors)
-        void onKillClicked();
-
         //! Init widget
         void init(int w, int h);
 
@@ -226,10 +220,6 @@ namespace swift::gui
 
         //! Small
         bool useSmall() const;
-
-        //! Show kill button?
-        //! \sa COverlayMessages::showKillButton globally enable/disable kill button
-        void showKill(bool show);
 
         //! Display this message (use settings to decide)
         bool displayTextMessage(const swift::misc::network::CTextMessage &textMessage) const;
