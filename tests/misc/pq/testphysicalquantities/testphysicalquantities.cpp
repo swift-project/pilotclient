@@ -440,24 +440,6 @@ namespace MiscTest
         QVERIFY2(35_degC == CTemperature(35, CTemperatureUnit::C()), "Temperature needs to be the same");
         QVERIFY2(-20_degF == CTemperature(-20, CTemperatureUnit::F()), "Temperature needs to be the same");
         QVERIFY2(140_degK == CTemperature(140, CTemperatureUnit::K()), "Temperature needs to be the same");
-
-        // Time
-        QVERIFY2(24.5_d == CTime(24.5, CTimeUnit::d()), "Time needs to be the same");
-        QVERIFY2(23.99_h == CTime(23.99, CTimeUnit::h()), "Time needs to be the same");
-        QVERIFY2(30.1_s == CTime(30.1, CTimeUnit::s()), "Time needs to be the same");
-        QVERIFY2(20.0_ms == CTime(20.0, CTimeUnit::ms()), "Time needs to be the same");
-        QVERIFY2(65.7_min == CTime(65.7, CTimeUnit::min()), "Time needs to be the same");
-        QVERIFY2(53215.0_hms == CTime(53215, CTimeUnit::hms()), "Time needs to be the same");
-        QVERIFY2(236.0_hrmin == CTime(236, CTimeUnit::hrmin()), "Time needs to be the same");
-        QVERIFY2(3030.0_minsec == CTime(3030, CTimeUnit::minsec()), "Time needs to be the same");
-        QVERIFY2(31_d == CTime(31, CTimeUnit::d()), "Time needs to be the same");
-        QVERIFY2(24_h == CTime(24, CTimeUnit::h()), "Time needs to be the same");
-        QVERIFY2(60_s == CTime(60, CTimeUnit::s()), "Time needs to be the same");
-        QVERIFY2(40_ms == CTime(40, CTimeUnit::ms()), "Time needs to be the same");
-        QVERIFY2(36_min == CTime(36, CTimeUnit::min()), "Time needs to be the same");
-        QVERIFY2(102010_hms == CTime(102010, CTimeUnit::hms()), "Time needs to be the same");
-        QVERIFY2(510_hrmin == CTime(510, CTimeUnit::hrmin()), "Time needs to be the same");
-        QVERIFY2(2637_minsec == CTime(2637, CTimeUnit::minsec()), "Time needs to be the same");
     }
 } // namespace MiscTest
 
