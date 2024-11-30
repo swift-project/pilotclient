@@ -44,9 +44,6 @@ namespace swift::misc::simulation::fscommon
         //! FSX aircraft dir, relative to simulator directory
         static QString fsxSimObjectsDirFromSimDir(const QString &simDir);
 
-        //! MSFS aircraft dir, relative to simulator directory
-        static QString msfsSimObjectsDirFromSimDir(const QString &simDir);
-
         //! Exclude directories for simObjects
         static const QStringList &fsxSimObjectsExcludeDirectoryPatterns();
 
@@ -57,7 +54,7 @@ namespace swift::misc::simulation::fscommon
         static QStringList fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
 
         //! MSFS's simObject dir and the add on dirs
-        static QStringList msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
+        static QStringList msfsSimObjectsDirPath(const QString &simObjectsDir = "");
 
         //! P3D's simObject dir and the add on dirs
         static QStringList p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir,
@@ -132,16 +129,18 @@ namespace swift::misc::simulation::fscommon
         //! Get all the SimObjects paths from all config files
         static QSet<QString> allFsxSimObjectPaths();
 
+        // TODO TZ
         //! Get all the SimObjects paths from all config files
-        static QSet<QString> allMsfsSimObjectPaths();
+        // static QSet<QString> allMsfsSimObjectPaths();
 
         //! Find the config files (fsx.cfg)
         // C:/Users/Joe Doe/AppData/Roaming/Microsoft/FSX/fsx.cfg
         static QStringList findFsxConfigFiles();
 
+        // TODO TZ
         //! Find the config files (fsx.cfg)
         // C:/Users/Joe Doe/AppData/Roaming/Microsoft/FSX/fsx.cfg
-        static QStringList findMsfsConfigFiles();
+        // static QStringList findMsfsConfigFiles();
 
         //! Get all the SimObjects paths from fsx.cfg
         // SimObjectPaths.0=SimObjects\Airplanes
