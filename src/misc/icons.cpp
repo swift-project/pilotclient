@@ -508,24 +508,6 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::preloader64()
-    {
-        static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing64.gif");
-        return pm;
-    }
-
-    const QPixmap &CIcons::preloader32()
-    {
-        static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing32.gif");
-        return pm;
-    }
-
-    const QPixmap &CIcons::preloader16()
-    {
-        static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing16.gif");
-        return pm;
-    }
-
     const QPixmap &CIcons::swift16()
     {
         static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-16.png");

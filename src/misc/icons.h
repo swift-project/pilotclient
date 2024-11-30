@@ -475,19 +475,6 @@ namespace swift::misc
         static const QPixmap &osWindows();
 
         // --------------------------------------------------
-        // -- Preloader icons
-        // --------------------------------------------------
-
-        //! Preloader
-        static const QPixmap &preloader64();
-
-        //! Preloader
-        static const QPixmap &preloader32();
-
-        //! Preloader
-        static const QPixmap &preloader16();
-
-        // --------------------------------------------------
         // -- swift
         // --------------------------------------------------
 

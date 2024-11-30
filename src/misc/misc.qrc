@@ -550,14 +550,6 @@
         <file>icons/textures/texture-inner.jpg</file>
         <file>icons/textures/texture-outer.jpg</file>
     </qresource>
-    <qresource prefix="/preloaders">
-        <file>icons/preloaders/FillingRing64.gif</file>
-        <file>icons/preloaders/FloatingRays64.gif</file>
-        <file>icons/preloaders/FillingRing16.gif</file>
-        <file>icons/preloaders/FillingRing32.gif</file>
-        <file>icons/preloaders/FloatingRays16.gif</file>
-        <file>icons/preloaders/FloatingRays32.gif</file>
-    </qresource>
     <qresource prefix="/misc">
         <file>icons/misc/skull64.png</file>
         <file>icons/misc/skull128.png</file>
