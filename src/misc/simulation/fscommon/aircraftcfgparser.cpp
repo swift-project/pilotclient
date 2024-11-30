@@ -154,8 +154,8 @@ namespace swift::misc::simulation::fscommon
         static const QString NoNameFilter;
         QDir dir(directory, NoNameFilter, QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
         // TODO TZ: still have to figure out how msfs2024 handles this
-        // for MSFS we only need aircraft.cfg
-        dir.setNameFilters(fileNameFilters(getSimulator().isMSFS()));
+        // for MSFS2020 and MSFS2024  we only need aircraft.cfg
+        dir.setNameFilters(fileNameFilters(getSimulator().isMSFS(), getSimulator().isMSFS2024()));
         if (!dir.exists())
         {
             return CAircraftCfgEntriesList(); // can happen if there are shortcuts or linked dirs not available
@@ -466,9 +466,9 @@ namespace swift::misc::simulation::fscommon
     }
 
     // TODO TZ: still have to figure out how msfs2024 handles this
-    const QStringList &CAircraftCfgParser::fileNameFilters(bool isMSFS)
+    const QStringList &CAircraftCfgParser::fileNameFilters(bool isMSFS, bool isMSFS2024)
     {
-        if (CBuildConfig::buildWordSize() == 32 || isMSFS)
+        if (CBuildConfig::buildWordSize() == 32 || isMSFS || isMSFS2024)
         {
             static const QStringList f({ "aircraft.cfg" });
             return f;
