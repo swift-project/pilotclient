@@ -324,7 +324,8 @@ namespace swift::misc::simulation::fscommon
     }
 
     // TODO TZ this function needs to be adjusted
-    // QStringList CFsDirectories::msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir)  // changed name
+    // QStringList CFsDirectories::msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir)  //
+    // changed name
     QStringList CFsDirectories::msfsSimObjectsDirPath(const QString &simObjectsDir)
     {
         static const QStringList Path { "F:/MSFSPackages" };
