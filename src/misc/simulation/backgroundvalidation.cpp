@@ -28,11 +28,13 @@ namespace swift::misc::simulation
         m_updateTimer.setInterval(60 * 1000);
     }
 
-    void CBackgroundValidation::setCurrentSimulator(const CSimulatorInfo &simulator, const QString &simDirectory)
+    void CBackgroundValidation::setCurrentSimulator(const CSimulatorInfo &simulator, const QString &simDirectory,
+                                                    const QStringList &modelDirList)
     {
         QWriteLocker l(&m_lock);
         m_simulator = simulator;
         m_simDirectory = simDirectory;
+        m_modelDirList = modelDirList;
     }
 
     bool CBackgroundValidation::wasAlreadyChecked(const CSimulatorInfo &simulator) const
