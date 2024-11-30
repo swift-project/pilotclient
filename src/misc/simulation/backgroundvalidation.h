@@ -35,7 +35,8 @@ namespace swift::misc::simulation
 
         //! Corresponding simulator
         //! \threadsafe
-        void setCurrentSimulator(const CSimulatorInfo &simulator, const QString &simDirectory);
+        void setCurrentSimulator(const CSimulatorInfo &simulator, const QString &simDirectory,
+                                 const QStringList &modelDirList);
 
         //! Was already checked for simulator?
         //! \threadsafe
@@ -80,7 +81,7 @@ namespace swift::misc::simulation
         std::atomic_bool m_wasStopped { false }; //!< has been stopped or should be stopped
         CSimulatorInfo m_simulator; //!< simulator
         QString m_simDirectory; //!< corresponding sim directory
-
+        QStringList m_modelDirList; //!< corresponding modeldirectory
         // last result values, mostly needed when running in the distributed swift system and we want to get the values
         CAircraftModelList m_lastResultValid;
         CAircraftModelList m_lastResultInvalid;

@@ -91,7 +91,7 @@ namespace swift::misc::simulation::fscommon
         return dir;
     }
 
-    QString msfsDirImpl()
+    static QString msfsDirImpl()
     {
         const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
         for (const QString &path : locations)
@@ -165,7 +165,7 @@ namespace swift::misc::simulation::fscommon
     {
         QString dir(CFsDirectories::msfsDir());
         if (dir.isEmpty()) { return {}; }
-        return CFsDirectories::msfsSimObjectsDirFromSimDir(dir);
+        return CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl());
     }
 
     const QString &CFsDirectories::fsxSimObjectsDir()
@@ -181,12 +181,6 @@ namespace swift::misc::simulation::fscommon
     }
 
     QString CFsDirectories::fsxSimObjectsDirFromSimDir(const QString &simDir)
-    {
-        if (simDir.isEmpty()) { return {}; }
-        return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(simDir), "SimObjects");
-    }
-
-    QString CFsDirectories::msfsSimObjectsDirFromSimDir(const QString &simDir)
     {
         if (simDir.isEmpty()) { return {}; }
         return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(simDir), "SimObjects");
@@ -321,22 +315,11 @@ namespace swift::misc::simulation::fscommon
         return allPaths;
     }
 
-    QStringList CFsDirectories::msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir)
+    QStringList CFsDirectories::msfsSimObjectsDirPath(const QString &simObjectsDir)
     {
-        // finding the user settings only works on P3D machine
-        QStringList allPaths = CFsDirectories::allMsfsSimObjectPaths().values();
-        const QString sod = CFileUtils::normalizeFilePathToQtStandard(
-            simObjectsDir.isEmpty() ? CFsDirectories::msfsSimObjectsDir() : simObjectsDir);
-        if (!sod.isEmpty() && !allPaths.contains(sod, Qt::CaseInsensitive))
-        {
-            // case insensitive is important here
-            allPaths.push_front(sod);
-        }
-
-        allPaths.removeAll({}); // remove all empty
-        allPaths.removeDuplicates();
-        allPaths.sort(Qt::CaseInsensitive);
-        return allPaths;
+        Q_UNUSED(simObjectsDir);
+        static const QStringList Path { CFsDirectories::msfsSimObjectsDir() };
+        return Path;
     }
 
     QStringList CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir,
@@ -628,11 +611,6 @@ namespace swift::misc::simulation::fscommon
         return CFsDirectories::fsxSimObjectsPaths(CFsDirectories::findFsxConfigFiles(), true);
     }
 
-    QSet<QString> CFsDirectories::allMsfsSimObjectPaths()
-    {
-        return CFsDirectories::msfsSimObjectsPaths(CFsDirectories::findMsfsConfigFiles(), true);
-    }
-
     QStringList CFsDirectories::findFsxConfigFiles()
     {
         const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
@@ -647,28 +625,6 @@ namespace swift::misc::simulation::fscommon
                 if (logConfigPathReading())
                 {
                     CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX config file: '%1'")
-                        << fi.absoluteFilePath();
-                }
-            }
-        }
-        return files;
-    }
-
-    QStringList CFsDirectories::findMsfsConfigFiles()
-    {
-        const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
-        QStringList files;
-        for (const QString &path : locations)
-        {
-            // TODO this acts as a placeholder. the file msfs.cfg doesn't exist
-            const QString file = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Microsoft/MSFS/msfs.cfg");
-            const QFileInfo fi(file);
-            if (fi.exists())
-            {
-                files.push_back(fi.absoluteFilePath());
-                if (logConfigPathReading())
-                {
-                    CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS config file: '%1'")
                         << fi.absoluteFilePath();
                 }
             }

@@ -93,14 +93,17 @@ namespace swift::core::context
         m_validator->startUpdating(60);
     }
 
+    // For validation we need simulator directory and model directory
+    // this function is called at start (simulator=0) and when there is an active connection to a simulator
     void CContextSimulator::setValidator(const CSimulatorInfo &simulator)
     {
         if (simulator.isSingleSimulator())
         {
             const QString simDir = m_multiSimulatorSettings.getSimulatorDirectoryOrDefault(simulator);
-            m_validator->setCurrentSimulator(simulator, simDir);
+            const QStringList modelDirList = m_multiSimulatorSettings.getModelDirectoriesOrDefault(simulator);
+            m_validator->setCurrentSimulator(simulator, simDir, modelDirList);
         }
-        else { m_validator->setCurrentSimulator(CSimulatorInfo::None, {}); }
+        else { m_validator->setCurrentSimulator(CSimulatorInfo::None, {}, {}); }
     }
 
     CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
