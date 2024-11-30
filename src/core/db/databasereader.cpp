@@ -243,7 +243,6 @@ namespace swift::core::db
         // ps_read is implemented in the derived classes
         if (entities == CEntityFlags::NoEntity) { return; }
 
-        //! https://dev.swift-project.org/T490
         QPointer<CDatabaseReader> myself(this);
         QTimer::singleShot(0, this, [=] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }

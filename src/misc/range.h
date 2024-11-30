@@ -227,8 +227,7 @@ namespace swift::misc
         //! Create a range from reverse iterators.
         CRange<const_reverse_iterator> reverse() const
         {
-            static_assert(std::is_same_v<decltype(*rbegin()), decltype(*begin())>,
-                          "see https://dev.swift-project.org/T700");
+            static_assert(std::is_same_v<decltype(*rbegin()), decltype(*begin())>, "");
             return { rbegin(), rend() };
         }
 

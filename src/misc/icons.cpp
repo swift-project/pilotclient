@@ -955,11 +955,7 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::modelExclude16()
-    {
-        // Alternative: static const QPixmap pm(":/diagona/icons/diagona/icons/paper-plane--minus.png");
-        return cross16();
-    }
+    const QPixmap &CIcons::modelExclude16() { return cross16(); }
 
     const QPixmap &CIcons::modelConverterX()
     {

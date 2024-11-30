@@ -40,7 +40,6 @@ namespace swift::misc::test
     CAtcStation CTesting::createStation(int index, bool byPropertyIndex)
     {
         // from WGS is slow, so static const (only 1 time init)
-        // https://dev.vatsim-germany.org/issues/322#note-2
         static const CCoordinateGeodetic geoPos =
             CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CAltitude(index, CLengthUnit::ft()));
         const QString cs = QStringLiteral("%1MI-SNO_TWR").arg(index);

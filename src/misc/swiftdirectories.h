@@ -26,7 +26,6 @@ namespace swift::misc
         //! Returns the bin directory. On Windows/Linux this is the same directory as
         //! QCoreApplication::applicationDirPath(), but on MacOS the exceutable is
         //! located deeper in the hierarchy of the bundles
-        //! \see https://dev.swift-project.org/w/dev/swiftpc/dirstructure/
         static const QString &binDirectory();
 
         //! Plugins directory

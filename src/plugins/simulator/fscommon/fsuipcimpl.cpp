@@ -191,25 +191,6 @@ namespace swift::simplugin::fscommon
         bool situationN = !situation;
         bool aircraftPartsN = !aircraftParts;
 
-        /**  KB 2019-03 disabled as this should be fixed the whole block can be removed as soon this has been tested
-        //! \todo KB 2018-11 BUG fix for broken connection, needs to go as soon as issue is fixed
-        //! Seems to be fixed with
-        //! a) https://dev.swift-project.org/T471
-        //! b) https://dev.swift-project.org/T444
-        //! Remove after 2019-03 if issue is resolved
-        if (!(FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) && FSUIPC_Process(&dwResult)))
-        {
-            FSUIPC_Close();
-            FSUIPC_Open(SIM_ANY, &dwResult);
-            m_closeCount++;
-            m_openCount++;
-            if (m_openCount < 10)
-            {
-                CLogMessage(this).warning(u"Used FSUIPC open/close workaround");
-            }
-        }
-        **/
-
         if (FSUIPC_Read(0x0238, 3, localFsTimeRaw, &dwResult) &&
 
             // COM settings

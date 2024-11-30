@@ -174,7 +174,7 @@ namespace swift::misc
         setStarted();
         auto *thread = new CRegularThread(m_owner);
 
-        Q_ASSERT(m_owner); // must not be null, see (9) https://dev.vatsim-germany.org/issues/402
+        Q_ASSERT(m_owner); // must not be null
         if (m_owner)
         {
             const QString ownerName =

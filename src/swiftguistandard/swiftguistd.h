@@ -337,6 +337,4 @@ private:
     //! @}
 };
 
-// #pragma pop_macro("interface")
-
 #endif // guard
