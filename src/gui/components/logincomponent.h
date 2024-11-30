@@ -186,8 +186,8 @@ namespace swift::gui::components
         bool m_updatePilotOnServerChanges = true;
         bool m_networkConnected = false;
         bool m_simulatorConnected = false;
-        const QIcon m_iconPlay { ":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png" };
-        const QIcon m_iconPause { ":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png" };
+        const QIcon m_iconPlay { ":/pastel/icons/pastel/16/control-play.png" };
+        const QIcon m_iconPause { ":/pastel/icons/pastel/16/control-pause.png" };
         std::chrono::seconds m_logoffIntervalSeconds = LogoffIntervalSeconds;
         QTimer m_logoffCountdownTimer; //!< timer for logoff countdown
 

@@ -32,6 +32,8 @@
         <file>icons/pastel/16/cancel.png</file>
         <file>icons/pastel/16/close.png</file>
         <file>icons/pastel/16/close-red.png</file>
+        <file>icons/pastel/16/control-play.png</file>
+        <file>icons/pastel/16/control-pause.png</file>
         <file>icons/pastel/16/exclamation.png</file>
         <file>icons/pastel/16/bullet-error.png</file>
         <file>icons/pastel/16/infomation.png</file>
@@ -555,32 +557,6 @@
         <file>icons/misc/toolWizard128.png</file>
         <file>icons/misc/cn.png</file>
         <file>icons/misc/ru.png</file>
-    </qresource>
-    <qresource prefix="/famfamfam">
-        <file>icons/famfamfam/icons/silk/control_eject.png</file>
-        <file>icons/famfamfam/icons/silk/control_eject_blue.png</file>
-        <file>icons/famfamfam/icons/silk/control_end.png</file>
-        <file>icons/famfamfam/icons/silk/control_end_blue.png</file>
-        <file>icons/famfamfam/icons/silk/control_equalizer.png</file>
-        <file>icons/famfamfam/icons/silk/control_equalizer_blue.png</file>
-        <file>icons/famfamfam/icons/silk/control_fastforward.png</file>
-        <file>icons/famfamfam/icons/silk/control_fastforward_blue.png</file>
-        <file>icons/famfamfam/icons/silk/control_pause.png</file>
-        <file>icons/famfamfam/icons/silk/control_pause_blue.png</file>
-        <file>icons/famfamfam/icons/silk/control_play.png</file>
-        <file>icons/famfamfam/icons/silk/control_play_blue.png</file>
-        <file>icons/famfamfam/icons/silk/control_repeat.png</file>
-        <file>icons/famfamfam/icons/silk/control_repeat_blue.png</file>
-        <file>icons/famfamfam/icons/silk/control_rewind.png</file>
-        <file>icons/famfamfam/icons/silk/control_rewind_blue.png</file>
-        <file>icons/famfamfam/icons/silk/control_start.png</file>
-        <file>icons/famfamfam/icons/silk/control_start_blue.png</file>
-        <file>icons/famfamfam/icons/silk/control_stop.png</file>
-        <file>icons/famfamfam/icons/silk/control_stop_blue.png</file>
-        <file>icons/famfamfam/icons/silk/controller.png</file>
-        <file>icons/famfamfam/icons/silk/controller_add.png</file>
-        <file>icons/famfamfam/icons/silk/controller_delete.png</file>
-        <file>icons/famfamfam/icons/silk/controller_error.png</file>
     </qresource>
     <qresource prefix="/os">
         <file>icons/os/linux_24.png</file>
