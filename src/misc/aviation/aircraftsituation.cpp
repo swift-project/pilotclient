@@ -831,25 +831,14 @@ namespace swift::misc::aviation
         return false;
     }
 
-    CLength CAircraftSituation::getDistancePerTime(const CTime &time, const CLength &min) const
+    CLength CAircraftSituation::getDistancePerTime(std::chrono::milliseconds ms, const CLength &min) const
     {
         if (this->getGroundSpeed().isNull())
         {
             if (!min.isNull()) { return min; }
             return CLength(0, CLengthUnit::nullUnit());
         }
-        const int ms = time.valueInteger(CTimeUnit::ms());
-        return this->getDistancePerTime(ms, min);
-    }
-
-    CLength CAircraftSituation::getDistancePerTime(int milliseconds, const CLength &min) const
-    {
-        if (this->getGroundSpeed().isNull())
-        {
-            if (!min.isNull()) { return min; }
-            return CLength(0, CLengthUnit::nullUnit());
-        }
-        const double seconds = milliseconds / 1000.0;
+        const double seconds = ms.count() / 1000.0;
         const double gsMeterSecond = this->getGroundSpeed().value(CSpeedUnit::m_s());
         const CLength d(seconds * gsMeterSecond, CLengthUnit::m());
         if (!min.isNull() && d < min) { return min; }
@@ -858,7 +847,8 @@ namespace swift::misc::aviation
 
     CLength CAircraftSituation::getDistancePerTime250ms(const CLength &min) const
     {
-        return this->getDistancePerTime(250, min);
+        using namespace std::chrono_literals;
+        return this->getDistancePerTime(250ms, min);
     }
 
     void CAircraftSituation::setCallsign(const CCallsign &callsign)

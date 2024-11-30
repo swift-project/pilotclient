@@ -84,7 +84,8 @@ namespace swift::gui::editors
     private:
         QScopedPointer<Ui::CAirlineIcaoForm> ui;
         swift::misc::CDigestSignal m_digestChanges { this, &CAirlineIcaoForm::airlineChanged,
-                                                     &CAirlineIcaoForm::emitAirlineChangedDigest, 500, 3 };
+                                                     &CAirlineIcaoForm::emitAirlineChangedDigest,
+                                                     std::chrono::milliseconds(500), 3 };
         swift::misc::aviation::CAirlineIcaoCode m_currentCode; //!< object allowing to override values
     };
 } // namespace swift::gui::editors

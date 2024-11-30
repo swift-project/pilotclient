@@ -40,6 +40,8 @@ namespace swift::gui::components
 
     void CCopyModelsFromOtherSwiftVersionsComponent::copy()
     {
+        using namespace std::chrono_literals;
+
         const CSimulatorInfo selectedSimulators = ui->comp_SimulatorSelector->getValue();
         const QSet<CSimulatorInfo> simulators = selectedSimulators.asSingleSimulatorSet();
         if (simulators.isEmpty())
@@ -117,7 +119,7 @@ namespace swift::gui::components
         {
             const CStatusMessage m = CStatusMessage(this).validationInfo(u"Copied %1 sets and %2 caches for '%3'")
                                      << sets << caches << selectedSimulators.toQString(true);
-            this->showOverlayHTMLMessage(m, 7500);
+            this->showOverlayHTMLMessage(m, 7500ms);
         }
     }
 

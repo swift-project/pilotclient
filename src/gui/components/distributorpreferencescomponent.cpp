@@ -124,13 +124,14 @@ namespace swift::gui::components
 
     void CDistributorPreferencesComponent::save()
     {
+        using namespace std::chrono_literals;
         const CDistributorList distributors(ui->tvp_Distributors->container());
         const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
         CDistributorListPreferences preferences = m_distributorPreferences.getThreadLocal();
         preferences.setDistributors(distributors, simulator);
         const CStatusMessage m = m_distributorPreferences.setAndSave(preferences);
         CLogMessage::preformatted(m);
-        if (m.isSuccess()) { this->showOverlayHTMLMessage("Saved settings", 5000); }
+        if (m.isSuccess()) { this->showOverlayHTMLMessage("Saved settings", 5s); }
         else { this->showOverlayMessage(m); }
     }
 

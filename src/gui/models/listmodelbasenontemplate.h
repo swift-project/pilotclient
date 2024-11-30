@@ -190,7 +190,8 @@ namespace swift::gui::models
 
     private:
         swift::misc::CDigestSignal m_dsModelsChanged { this, &CListModelBaseNonTemplate::changed,
-                                                       &CListModelBaseNonTemplate::onChangedDigest, 500, 10 };
+                                                       &CListModelBaseNonTemplate::onChangedDigest,
+                                                       std::chrono::milliseconds(500), 10 };
     };
 
 } // namespace swift::gui::models

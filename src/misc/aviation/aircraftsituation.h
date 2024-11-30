@@ -385,14 +385,9 @@ namespace swift::misc
             //! Situation looks like an aircraft not near ground
             bool canLikelySkipNearGroundInterpolation() const;
 
-            //! Distance per time
-            physical_quantities::CLength
-            getDistancePerTime(const physical_quantities::CTime &time,
-                               const physical_quantities::CLength &min = physical_quantities::CLength::null()) const;
-
             //! Distance per milliseconds
             physical_quantities::CLength
-            getDistancePerTime(int milliseconds,
+            getDistancePerTime(std::chrono::milliseconds,
                                const physical_quantities::CLength &min = physical_quantities::CLength::null()) const;
 
             //! Distance per milliseconds (250ms)

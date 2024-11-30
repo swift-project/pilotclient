@@ -82,7 +82,7 @@ namespace swift::gui::components
         void allDownloadsCompleted();
 
     private:
-        static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
+        static constexpr std::chrono::milliseconds OverlayMsgTimeout { 5000 }; //!< how long overlay is displayed
         QScopedPointer<Ui::CDownloadComponent> ui;
         const QFileDialog::Options m_fileDialogOptions { QFileDialog::ShowDirsOnly | QFileDialog::ReadOnly |
                                                          QFileDialog::DontResolveSymlinks };

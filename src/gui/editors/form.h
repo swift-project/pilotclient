@@ -46,8 +46,9 @@ namespace swift::gui::editors
 
         //! Validate as overlay message
         //! \note uses CForm::validate and displays the messages as overlay messages
-        swift::misc::CStatusMessageList validateAsOverlayMessage(bool withNestedObjects = true,
-                                                                 bool appendOldMessages = false, int timeOutMs = -1);
+        swift::misc::CStatusMessageList
+        validateAsOverlayMessage(bool withNestedObjects = true, bool appendOldMessages = false,
+                                 std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Is read only?
         bool isReadOnly() const { return m_readOnly; }

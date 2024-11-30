@@ -482,12 +482,12 @@ namespace swift::core
             swift::misc::simulation::CSimulatorInfo m_lastConnectedSim; //!< last connected sim.
 
             // Digest signals, only sending after some time
-            swift::misc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline,
-                                                                      &IContextNetwork::changedAtcStationsOnlineDigest,
-                                                                      1000, 4 };
-            swift::misc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftInRange,
-                                                                     &IContextNetwork::changedAircraftInRangeDigest,
-                                                                     1000, 4 };
+            misc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline,
+                                                               &IContextNetwork::changedAtcStationsOnlineDigest,
+                                                               std::chrono::milliseconds(1000), 4 };
+            misc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftInRange,
+                                                              &IContextNetwork::changedAircraftInRangeDigest,
+                                                              std::chrono::milliseconds(1000), 4 };
 
             QQueue<swift::misc::simulation::CSimulatedAircraft> m_readyForModelMatching; //!< ready for matching
 

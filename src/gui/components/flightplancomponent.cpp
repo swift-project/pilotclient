@@ -533,10 +533,10 @@ namespace swift::gui::components
             ui->le_LastSent->setText(lastSent);
             if (m.isSeverityInfoOrLess())
             {
-                this->showOverlayHTMLMessage(m, OverlayTimeoutMs);
+                this->showOverlayHTMLMessage(m, OverlayTimeout);
                 this->updateRemarksHistories(); // all OK, we keep that in history
             }
-            else { this->showOverlayMessage(m, OverlayTimeoutMs); }
+            else { this->showOverlayMessage(m, OverlayTimeout); }
             m_sentFlightPlan = flightPlan; // last valid FP
         }
         else { this->showOverlayMessages(messages); }
@@ -575,7 +575,7 @@ namespace swift::gui::components
             this->fillWithFlightPlanData(fp);
             this->updateDirectorySettings(fileName);
         }
-        else { this->showOverlayMessages(msgs, OverlayTimeoutMs); }
+        else { this->showOverlayMessages(msgs, true, OverlayTimeout); }
     }
 
     void CFlightPlanComponent::loadTemplateFromDisk()
@@ -678,7 +678,7 @@ namespace swift::gui::components
         {
             const CStatusMessage m =
                 CLogMessage(this).validationWarning(u"Cannot load network flight plan, network not connected");
-            this->showOverlayHTMLMessage(m, OverlayTimeoutMs);
+            this->showOverlayHTMLMessage(m, OverlayTimeout);
             return;
         }
 
@@ -695,7 +695,7 @@ namespace swift::gui::components
         else
         {
             const CStatusMessage m = CLogMessage(this).warning(u"No flight plan data in loaded plan");
-            this->showOverlayHTMLMessage(m, OverlayTimeoutMs);
+            this->showOverlayHTMLMessage(m, OverlayTimeout);
         }
     }
 

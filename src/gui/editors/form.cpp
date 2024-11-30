@@ -26,10 +26,11 @@ namespace swift::gui::editors
         return CStatusMessageList();
     }
 
-    CStatusMessageList CForm::validateAsOverlayMessage(bool withNestedObjects, bool appendOldMessages, int timeOutMs)
+    CStatusMessageList CForm::validateAsOverlayMessage(bool withNestedObjects, bool appendOldMessages,
+                                                       std::chrono::milliseconds timeout)
     {
         const CStatusMessageList msgs = this->validate(withNestedObjects);
-        this->showOverlayMessages(msgs, appendOldMessages, timeOutMs);
+        this->showOverlayMessages(msgs, appendOldMessages, timeout);
         return msgs;
     }
 

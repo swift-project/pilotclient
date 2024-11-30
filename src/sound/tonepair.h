@@ -6,6 +6,7 @@
 #ifndef SWIFT_SOUND_TONEPAIR_H
 #define SWIFT_SOUND_TONEPAIR_H
 
+#include <chrono>
 #include <tuple>
 
 #include "misc/pq/frequency.h"
@@ -21,7 +22,7 @@ namespace swift::sound
         //! Play two tones with frequencies f for t milliseconds
         CTonePair(const swift::misc::physical_quantities::CFrequency &frequency,
                   const swift::misc::physical_quantities::CFrequency &secondaryFrequency,
-                  const swift::misc::physical_quantities::CTime &duration);
+                  std::chrono::milliseconds duration);
 
         //! Get frequency of the first tone
         int getFirstFrequencyHz() const { return m_firstFrequencyHz; }
@@ -30,7 +31,7 @@ namespace swift::sound
         int getSecondFrequencyHz() const { return m_secondFrequencyHz; }
 
         //! Get play duration
-        qint64 getDurationMs() const { return m_durationMs; }
+        std::chrono::milliseconds getDurationMs() const { return m_durationMs; }
 
         //! Comparison operator
         friend bool operator<(const CTonePair &lhs, const CTonePair &rhs)
@@ -42,7 +43,7 @@ namespace swift::sound
     private:
         int m_firstFrequencyHz; //!< first tone's frequency, use 0 for silence
         int m_secondFrequencyHz; //!< second tone's frequency, or 0
-        qint64 m_durationMs; //!< How long to play (duration)
+        std::chrono::milliseconds m_durationMs; //!< How long to play (duration)
     };
 } // namespace swift::sound
 

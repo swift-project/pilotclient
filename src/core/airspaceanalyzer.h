@@ -7,6 +7,7 @@
 #define SWIFT_CORE_AIRSPACE_ANALYZER_H
 
 #include <atomic>
+#include <chrono>
 
 #include <QHash>
 #include <QObject>
@@ -21,7 +22,6 @@
 #include "misc/network/connectionstatus.h"
 #include "misc/pq/frequency.h"
 #include "misc/pq/length.h"
-#include "misc/pq/time.h"
 #include "misc/pq/units.h"
 #include "misc/simulation/airspaceaircraftsnapshot.h"
 #include "misc/simulation/ownaircraftprovider.h"
@@ -131,12 +131,8 @@ namespace swift::core
         // watchdog
         CCallsignTimestampSet m_aircraftCallsignTimestamps; //!< for watchdog (pilots)
         CCallsignTimestampSet m_atcCallsignTimestamps; //!< for watchdog (ATC)
-        swift::misc::physical_quantities::CTime m_timeoutAircraft = {
-            15, swift::misc::physical_quantities::CTimeUnit::s()
-        }; //!< Timeout value for watchdog functionality
-        swift::misc::physical_quantities::CTime m_timeoutAtc = {
-            50, swift::misc::physical_quantities::CTimeUnit::s()
-        }; //!< Timeout value for watchdog functionality
+        std::chrono::seconds m_timeoutAircraft { 15 }; //!< Timeout value for watchdog functionality
+        std::chrono::seconds m_timeoutAtc { 50 }; //!< Timeout value for watchdog functionality
         qint64 m_lastWatchdogCallMsSinceEpoch; //!< when last called
         qint64 m_doNotRunAgainBefore = -1; //!< do not run again before, also used to detect debugging
         std::atomic_bool m_enabledWatchdog { true }; //!< watchdog enabled

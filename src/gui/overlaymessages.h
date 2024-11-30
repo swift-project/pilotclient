@@ -6,6 +6,7 @@
 #ifndef SWIFT_GUI_OVERLAYMESSAGES_H
 #define SWIFT_GUI_OVERLAYMESSAGES_H
 
+#include <chrono>
 #include <functional>
 
 #include <QFrame>
@@ -96,22 +97,24 @@ namespace swift::gui
                                                  bool appendOldMessages, const QString &confirmationMessage,
                                                  std::function<void()> okLambda,
                                                  QMessageBox::StandardButton defaultButton = QMessageBox::Cancel,
-                                                 int timeOutMs = -1);
+                                                 std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Clear the overlay messages
         void clearOverlayMessages();
 
         //! Show multiple messages
         void showOverlayMessages(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false,
-                                 int timeOutMs = -1);
+                                 std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Show multiple messages or a single message
         void showOverlayMessagesOrSingleMessage(const swift::misc::CStatusMessageList &messages,
-                                                bool appendOldMessages = false, int timeOutMs = -1);
+                                                bool appendOldMessages = false,
+                                                std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Show multiple messages or a single message (HTML)
         void showOverlayMessagesOrHTMLMessage(const swift::misc::CStatusMessageList &messages,
-                                              bool appendOldMessages = false, int timeOutMs = -1);
+                                              bool appendOldMessages = false,
+                                              std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Sort of overlay messages
         void sortOverlayMessages(const swift::misc::CPropertyIndex &propertyIndex,
@@ -122,10 +125,12 @@ namespace swift::gui
                                        Qt::SortOrder order = Qt::AscendingOrder);
 
         //! Show single message
-        void showOverlayMessage(const swift::misc::CStatusMessage &message, int timeOutMs = -1);
+        void showOverlayMessage(const swift::misc::CStatusMessage &message,
+                                std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Info message, based on text message
-        void showOverlayTextMessage(const swift::misc::network::CTextMessage &textMessage, int timeOutMs = -1);
+        void showOverlayTextMessage(const swift::misc::network::CTextMessage &textMessage,
+                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Inline text message
         void showOverlayInlineTextMessage(components::TextMessageTab tab);
@@ -134,25 +139,31 @@ namespace swift::gui
         void showOverlayInlineTextMessage(const swift::misc::aviation::CCallsign &callsign);
 
         //! Image
-        void showOverlayImage(const swift::misc::CPixmap &image, int timeOutMs = -1);
+        void showOverlayImage(const swift::misc::CPixmap &image,
+                              std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Image
-        void showOverlayImage(const QPixmap &image, int timeOutMs = -1);
+        void showOverlayImage(const QPixmap &image, std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Display one of the supported types
-        void showOverlayVariant(const swift::misc::CVariant &variant, int timeOutMs = -1);
+        void showOverlayVariant(const swift::misc::CVariant &variant,
+                                std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! HTML message
-        void showHTMLMessage(const swift::misc::CStatusMessage &message, int timeOutMs = -1);
+        void showHTMLMessage(const swift::misc::CStatusMessage &message,
+                             std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! HTML message
-        void showHTMLMessage(const QString &htmlMessage, int timeOutMs = -1);
+        void showHTMLMessage(const QString &htmlMessage,
+                             std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Download progress
-        void showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url, int timeOutMs = -1);
+        void showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url,
+                                  std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Progress bar
-        void showProgressBar(int percentage, const QString &message, int timeOutMs = -1);
+        void showProgressBar(int percentage, const QString &message,
+                             std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Allows to globally enable/disable kill button
         void showKillButton(bool killButton);
@@ -178,7 +189,7 @@ namespace swift::gui
 
     protected:
         //! Show message
-        void display(int timeOutMs = -1);
+        void display(std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! \copydoc QFrame::keyPressEvent
         virtual void keyPressEvent(QKeyEvent *event) override;

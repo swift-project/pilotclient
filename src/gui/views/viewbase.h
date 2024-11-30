@@ -399,13 +399,13 @@ namespace swift::gui
             //! \param containerSizeDependent check against resize threshold if indicator makes sense
             //! \param timeoutMs timeout the loading indicator
             //! \param processEvents force event processing to display indicator by updating GUI
-            int showLoadIndicator(int containerSizeDependent = -1, int timeoutMs = -1, bool processEvents = true);
+            int showLoadIndicator(int containerSizeDependent = -1,
+                                  std::chrono::milliseconds timeout = std::chrono::milliseconds { 0 },
+                                  bool processEvents = true);
 
             //! Show loading indicator which can time out
-            int showLoadIndicatorWithTimeout(int timeoutMs = -1, bool processEvents = true);
-
-            //! Load indicator's default time (ms)
-            void setLoadIndicatorTimeoutDefaultTime(int timeoutMs) { m_loadIndicatorTimeoutMsDefault = timeoutMs; }
+            int showLoadIndicatorWithTimeout(std::chrono::milliseconds timeout = std::chrono::milliseconds { 0 },
+                                             bool processEvents = true);
 
             //! Underlying model changed
             void onModelChanged();
@@ -586,7 +586,7 @@ namespace swift::gui
             int m_resizeCount = 0; //!< flag / counter, how many resize activities
             int m_skipResizeThreshold = 40; //!< when to skip resize (rows count)
             int m_resizeAutoNthTime = 1; //!< with ResizeAuto, resize every n-th time
-            int m_loadIndicatorTimeoutMsDefault = 30 * 1000; //!< default time for timeout
+            std::chrono::milliseconds m_loadIndicatorTimeoutDefault { 30 * 1000 }; //!< default time for timeout
             bool m_forceStretchLastColumnWhenResized =
                 true; //!< a small table might (few columns) fail stretching, force again
             bool m_showingLoadIndicator = false; //!< showing loading indicator

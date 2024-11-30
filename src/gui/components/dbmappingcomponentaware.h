@@ -40,8 +40,10 @@ namespace swift::gui::components
 
         //! @{
         //! Overlay messages
-        bool showMappingComponentOverlayMessage(const swift::misc::CStatusMessage &message, int timeoutMs = -1);
-        bool showMappingComponentOverlayHtmlMessage(const swift::misc::CStatusMessage &message, int timeoutMs = -1);
+        bool showMappingComponentOverlayMessage(const swift::misc::CStatusMessage &message,
+                                                std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
+        bool showMappingComponentOverlayHtmlMessage(const swift::misc::CStatusMessage &message,
+                                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
         //! @}
 
     private:

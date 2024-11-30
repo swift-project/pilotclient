@@ -81,10 +81,11 @@ namespace swift::gui::components
 
         QScopedPointer<Ui::CCallsignCompleter> ui;
         swift::misc::CDigestSignal m_dsAircraftsInRangeChanged { this, &CCallsignCompleter::onChangedAircraftInRange,
-                                                                 5000, 5 };
-        swift::misc::CDigestSignal m_dsEditingFinished { this, &CCallsignCompleter::editingFinishedDigest, 500, 3 };
+                                                                 std::chrono::milliseconds(5000), 5 };
+        swift::misc::CDigestSignal m_dsEditingFinished { this, &CCallsignCompleter::editingFinishedDigest,
+                                                         std::chrono::milliseconds(500), 3 };
         swift::misc::CDigestSignal m_dsValidCallsignEntered { this, &CCallsignCompleter::validCallsignEnteredDigest,
-                                                              500, 3 };
+                                                              std::chrono::milliseconds(500), 3 };
         QString m_lastValue;
 
         bool m_addOwnCallsign = false;

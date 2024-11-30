@@ -69,7 +69,7 @@ namespace swift::gui::components
         Q_UNUSED(simulator)
         Q_UNUSED(valid)
 
-        constexpr int MsgTimeout = 15000;
+        constexpr std::chrono::seconds MsgTimeout { 15000 };
         m_lastResults = QDateTime::currentMSecsSinceEpoch();
         ui->tvp_InvalidModels->updateContainerMaybeAsync(invalid);
         ui->comp_Simulator->setValue(simulator);
@@ -138,11 +138,12 @@ namespace swift::gui::components
 
     void CAircraftModelValidationComponent::triggerValidation()
     {
+        using namespace std::chrono_literals;
         if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
         if (!sGui->getIContextSimulator()) { return; }
         if (sGui->getIContextSimulator()->isValidationInProgress())
         {
-            this->showOverlayHTMLMessage("Validation in progress", 5000);
+            this->showOverlayHTMLMessage("Validation in progress", 5s);
             return;
         }
 
@@ -150,22 +151,24 @@ namespace swift::gui::components
         if (sGui->getIContextSimulator()->triggerModelSetValidation(simulator))
         {
             this->showOverlayHTMLMessage(QStringLiteral("Triggered validation for '%1'").arg(simulator.toQString(true)),
-                                         5000);
+                                         5s);
         }
         else
         {
             this->showOverlayHTMLMessage(
-                QStringLiteral("Cannot trigger validation for '%1'").arg(simulator.toQString(true)), 5000);
+                QStringLiteral("Cannot trigger validation for '%1'").arg(simulator.toQString(true)), 5s);
         }
     }
 
     void CAircraftModelValidationComponent::requestLastResults()
     {
+        using namespace std::chrono_literals;
+
         if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
         if (!sGui->getIContextSimulator()) { return; }
         if (sGui->getIContextSimulator()->isValidationInProgress())
         {
-            this->showOverlayHTMLMessage("Validation in progress", 5000);
+            this->showOverlayHTMLMessage("Validation in progress", 5s);
             return;
         }
         sGui->getIContextSimulator()->triggerModelSetValidation(CSimulatorInfo());
@@ -173,6 +176,8 @@ namespace swift::gui::components
 
     void CAircraftModelValidationComponent::onTempDisabledButtonClicked()
     {
+        using namespace std::chrono_literals;
+
         if (!sGui || sGui->isShuttingDown()) { return; }
 
         CAircraftModelList disableModels;
@@ -180,7 +185,7 @@ namespace swift::gui::components
         if (sender == ui->pb_TempDisableInvalid) { disableModels = ui->tvp_InvalidModels->container(); }
         else if (sender == ui->pb_TempDisableSelected) { disableModels = ui->tvp_InvalidModels->selectedObjects(); }
 
-        if (disableModels.isEmpty()) { this->showOverlayHTMLMessage("No models disabled", 4000); }
+        if (disableModels.isEmpty()) { this->showOverlayHTMLMessage("No models disabled", 4s); }
         else
         {
             this->tempDisableModels(disableModels);
@@ -190,6 +195,8 @@ namespace swift::gui::components
 
     void CAircraftModelValidationComponent::onRemoveButtonClicked()
     {
+        using namespace std::chrono_literals;
+
         if (!sGui || sGui->isShuttingDown()) { return; }
         if (!sGui->getIContextSimulator()) { return; }
 
@@ -198,7 +205,7 @@ namespace swift::gui::components
         if (sender == ui->pb_RemoveInvalid) { removeModels = ui->tvp_InvalidModels->container(); }
         else if (sender == ui->pb_RemoveSelected) { removeModels = ui->tvp_InvalidModels->selectedObjects(); }
 
-        if (removeModels.isEmpty()) { this->showOverlayHTMLMessage("No models removed", 4000); }
+        if (removeModels.isEmpty()) { this->showOverlayHTMLMessage("No models removed", 4s); }
         else
         {
             const QMessageBox::StandardButton ret = QMessageBox::question(

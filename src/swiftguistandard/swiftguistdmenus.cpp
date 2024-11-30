@@ -37,6 +37,7 @@ using namespace swift::misc::simulation;
 
 void SwiftGuiStd::onMenuClicked()
 {
+    using namespace std::chrono_literals;
     QObject *sender = QObject::sender();
     if (sender == ui->menu_TestLocationsEDRY)
     {
@@ -80,7 +81,7 @@ void SwiftGuiStd::onMenuClicked()
         {
             sGui->toggleIncognito();
             this->displayInOverlayWindow(QStringLiteral("Incognito mode is %1").arg(boolToOnOff(sGui->isIncognito())),
-                                         5000);
+                                         5s);
         }
     }
 }

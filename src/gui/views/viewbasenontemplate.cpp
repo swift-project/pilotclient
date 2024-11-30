@@ -660,13 +660,13 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::triggerReload()
     {
-        this->showLoadIndicatorWithTimeout(m_loadIndicatorTimeoutMsDefault);
+        this->showLoadIndicatorWithTimeout(m_loadIndicatorTimeoutDefault);
         emit this->requestUpdate();
     }
 
     void CViewBaseNonTemplate::triggerReloadFromBackend()
     {
-        this->showLoadIndicatorWithTimeout(m_loadIndicatorTimeoutMsDefault);
+        this->showLoadIndicatorWithTimeout(m_loadIndicatorTimeoutDefault);
         emit this->requestNewBackendData();
     }
 
@@ -705,8 +705,10 @@ namespace swift::gui::views
         else { this->rowsResizeModeToContent(); }
     }
 
-    int CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, int timeoutMs, bool processEvents)
+    int CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, std::chrono::milliseconds timeout,
+                                                bool processEvents)
     {
+        using namespace std::chrono_literals;
         if (!m_enabledLoadIndicator) { return -1; }
         if (m_showingLoadIndicator) { return -1; }
 
@@ -729,13 +731,12 @@ namespace swift::gui::views
             connect(m_loadIndicator, &CLoadIndicator::timedOut, this, &CViewBaseNonTemplate::onLoadIndicatorTimedOut);
         }
         this->centerLoadIndicator();
-        return m_loadIndicator->startAnimation(timeoutMs > 0 ? timeoutMs : m_loadIndicatorTimeoutMsDefault,
-                                               processEvents);
+        return m_loadIndicator->startAnimation(timeout > 0ms ? timeout : m_loadIndicatorTimeoutDefault, processEvents);
     }
 
-    int CViewBaseNonTemplate::showLoadIndicatorWithTimeout(int timeoutMs, bool processEvents)
+    int CViewBaseNonTemplate::showLoadIndicatorWithTimeout(std::chrono::milliseconds timeout, bool processEvents)
     {
-        return this->showLoadIndicator(-1, timeoutMs, processEvents);
+        return this->showLoadIndicator(-1, timeout, processEvents);
     }
 
     void CViewBaseNonTemplate::centerLoadIndicator()

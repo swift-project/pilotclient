@@ -73,7 +73,8 @@ namespace swift::gui
     public slots:
         //! Starts the spin animation.
         //! \sa stopAnimation isAnimated
-        int startAnimation(int timeoutMs = -1, bool processEvents = false);
+        int startAnimation(std::chrono::milliseconds timeout = std::chrono::milliseconds(0),
+                           bool processEvents = false);
 
         //! Stops the spin animation.
         //! \sa startAnimation isAnimated
@@ -135,7 +136,7 @@ namespace swift::gui
         bool isShowingLoadIndicator() const;
 
         //! Show load indicator
-        void showLoading(int timeoutMs = -1, bool processEvents = true);
+        void showLoading(std::chrono::milliseconds timeout = std::chrono::milliseconds(0), bool processEvents = true);
 
         //! Hide load indicator
         void hideLoading();

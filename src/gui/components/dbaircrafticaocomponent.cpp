@@ -58,29 +58,32 @@ namespace swift::gui::components
 
     void CDbAircraftIcaoComponent::onIcaoRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count)
     {
+        using namespace std::chrono_literals;
+
         Q_UNUSED(count);
         if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
         if (!entity.testFlag(CEntityFlags::AircraftIcaoEntity)) { return; }
 
         if (CEntityFlags::isFinishedReadState(readState))
         {
-            this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)),
-                                         2000);
+            this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)), 2s);
             ui->tvp_AircraftIcao->updateContainerMaybeAsync(sGui->getWebDataServices()->getAircraftIcaoCodes());
         }
         else
         {
             this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::entitiesToString(entity) % u" " %
                                              CEntityFlags::stateToString(readState),
-                                         10000);
+                                         10s);
         }
     }
 
     void CDbAircraftIcaoComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress,
                                                             qint64 current, qint64 max, const QUrl &url)
     {
+        using namespace std::chrono_literals;
+
         if (CEntityFlags::AircraftIcaoEntity != entity) { return; }
-        this->showDownloadProgress(progress, current, max, url, 5000);
+        this->showDownloadProgress(progress, current, max, url, 5s);
         Q_UNUSED(logId);
     }
 

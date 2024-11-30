@@ -449,9 +449,9 @@ namespace swift::core::context
 
     void CContextAudioBase::playSelcalTone(const CSelcal &selcal)
     {
-        const CTime t = m_selcalPlayer->play(90, selcal);
-        const int ms = t.toMs();
-        if (ms > 10)
+        using namespace std::chrono_literals;
+        const std::chrono::milliseconds ms = m_selcalPlayer->play(90, selcal);
+        if (ms > 10ms)
         {
             // Play additional notification
             const QPointer<const CContextAudioBase> myself(this);

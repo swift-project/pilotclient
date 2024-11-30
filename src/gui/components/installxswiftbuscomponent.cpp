@@ -75,7 +75,7 @@ namespace swift::gui::components
             const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation())
                                            .warning(u"'%1' is not a valid X-Plane plugin directory")
                                        << xPlanePluginDir;
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
             return;
         }
         ui->le_XSwiftBusPluginDir->setText(xPlanePluginDir);
@@ -93,7 +93,7 @@ namespace swift::gui::components
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid download directory")
                 << downloadDir;
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
             return;
         }
         ui->le_DownloadDir->setText(downloadDir);
@@ -111,7 +111,7 @@ namespace swift::gui::components
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"Cannot read downloaded file '%1'")
                 << downloadFileName;
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
             return;
         }
 
@@ -120,7 +120,7 @@ namespace swift::gui::components
         {
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"No directory to install to'");
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
             return;
         }
 
@@ -130,7 +130,7 @@ namespace swift::gui::components
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"Directory '%1' does not exist")
                 << xSwiftBusDirectory;
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
             return;
         }
 
@@ -144,7 +144,7 @@ namespace swift::gui::components
                 {
                     const CStatusMessage msg =
                         CStatusMessage(this, CLogCategories::validation()).error(u"Cannot remove '%1'") << destFileName;
-                    this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+                    this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
                     return;
                 }
             }
@@ -156,7 +156,7 @@ namespace swift::gui::components
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"Cannot copy '%1' to '%2'")
                 << downloadFileName << destFileName;
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
             return;
         }
 
@@ -167,7 +167,7 @@ namespace swift::gui::components
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"xswiftbus file '%1' does not exist")
                 << destFileName;
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
             return;
         }
 
@@ -208,6 +208,7 @@ namespace swift::gui::components
 
     void CInstallXSwiftBusComponent::triggerDownloadingOfXSwiftBusFile()
     {
+        using namespace std::chrono_literals;
         if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return; }
         const CRemoteFile rf = this->getRemoteFileSelected();
         if (!rf.getBaseName().contains(CBuildConfig::getVersionString()))
@@ -227,7 +228,7 @@ namespace swift::gui::components
         {
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"Invalid download directory");
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
             return;
         }
 
@@ -237,7 +238,7 @@ namespace swift::gui::components
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"No download URL for file name '%1'")
                 << rf.getBaseNameAndSize();
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
             return;
         }
 
@@ -266,14 +267,14 @@ namespace swift::gui::components
         if (r)
         {
             CLogMessage(this).info(u"Triggered downloading of xswiftbus file from '%1'") << download.getHost();
-            this->showLoading(120 * 1000); // timeout in any case
+            this->showLoading(120s); // timeout in any case
         }
         else
         {
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"Starting download for '%1' failed")
                 << download.getFullUrl();
-            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CInstallXSwiftBusComponent::OverlayMsgTimeout);
         }
     }
 

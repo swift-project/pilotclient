@@ -108,13 +108,13 @@ namespace swift::gui
                                                  bool appendOldMessages, const QString &confirmationMessage,
                                                  std::function<void()> okLambda,
                                                  QMessageBox::StandardButton defaultButton = QMessageBox::Cancel,
-                                                 int timeOutMs = -1)
+                                                 std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
             if (!this->hasMinimumSize(150, 150)) { return; }
             m_overlayMessages->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage,
-                                                                   okLambda, defaultButton, timeOutMs);
+                                                                   okLambda, defaultButton, timeout);
             WIDGET::repaint();
         }
 
@@ -134,31 +134,33 @@ namespace swift::gui
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayMessages
         void showOverlayMessages(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false,
-                                 int timeOutMs = -1)
+                                 std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
-            m_overlayMessages->showOverlayMessages(messages, appendOldMessages, timeOutMs);
+            m_overlayMessages->showOverlayMessages(messages, appendOldMessages, timeout);
             WIDGET::repaint();
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayMessagesOrSingleMessage
         void showOverlayMessagesOrSingleMessage(const swift::misc::CStatusMessageList &messages,
-                                                bool appendOldMessages = false, int timeOutMs = -1)
+                                                bool appendOldMessages = false,
+                                                std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
-            m_overlayMessages->showOverlayMessagesOrSingleMessage(messages, appendOldMessages, timeOutMs);
+            m_overlayMessages->showOverlayMessagesOrSingleMessage(messages, appendOldMessages, timeout);
             WIDGET::repaint();
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayMessagesOrHTMLMessage
         void showOverlayMessagesOrHTMLMessage(const swift::misc::CStatusMessageList &messages,
-                                              bool appendOldMessages = false, int timeOutMs = -1)
+                                              bool appendOldMessages = false,
+                                              std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             if (messages.isEmpty()) { return; }
             this->initInnerFrame();
-            m_overlayMessages->showOverlayMessagesOrHTMLMessage(messages, appendOldMessages, timeOutMs);
+            m_overlayMessages->showOverlayMessagesOrHTMLMessage(messages, appendOldMessages, timeout);
             WIDGET::repaint();
         }
 
@@ -175,27 +177,30 @@ namespace swift::gui
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayMessage
-        bool showOverlayMessage(const swift::misc::CStatusMessage &message, int timeOutMs = -1)
+        bool showOverlayMessage(const swift::misc::CStatusMessage &message,
+                                std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             if (message.isEmpty()) { return false; }
             this->initInnerFrame();
-            m_overlayMessages->showOverlayMessage(message, timeOutMs);
+            m_overlayMessages->showOverlayMessage(message, timeout);
             WIDGET::repaint();
             return true;
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayTextMessage
-        bool showOverlayTextMessage(const swift::misc::network::CTextMessage &textMessage, int timeOutMs = -1)
+        bool showOverlayTextMessage(const swift::misc::network::CTextMessage &textMessage,
+                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             if (textMessage.isEmpty()) { return false; }
             this->initInnerFrame();
-            m_overlayMessages->showOverlayTextMessage(textMessage, timeOutMs);
+            m_overlayMessages->showOverlayTextMessage(textMessage, timeout);
             WIDGET::repaint();
             return true;
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayVariant
-        void showOverlayVariant(const swift::misc::CVariant &variant, int timeOutMs = -1)
+        void showOverlayVariant(const swift::misc::CVariant &variant,
+                                std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             if (m_overlayMessages->isTextMessagesActivated() &&
                 variant.canConvert<swift::misc::network::CTextMessage>())
@@ -205,41 +210,45 @@ namespace swift::gui
             }
             else { this->initInnerFrame(); }
 
-            m_overlayMessages->showOverlayVariant(variant, timeOutMs);
+            m_overlayMessages->showOverlayVariant(variant, timeout);
             WIDGET::repaint();
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayImage
-        void showOverlayImage(const swift::misc::CPixmap &pixmap, int timeOutMs = -1)
+        void showOverlayImage(const swift::misc::CPixmap &pixmap,
+                              std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             this->initInnerFrame();
-            m_overlayMessages->showOverlayImage(pixmap, timeOutMs);
+            m_overlayMessages->showOverlayImage(pixmap, timeout);
             WIDGET::repaint();
         }
 
         //! \copydoc swift::gui::COverlayMessages::showHTMLMessage
-        bool showOverlayHTMLMessage(const QString &htmlMessage, int timeOutMs = -1)
+        bool showOverlayHTMLMessage(const QString &htmlMessage,
+                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             this->initMinimalFrame();
-            m_overlayMessages->showHTMLMessage(htmlMessage, timeOutMs);
+            m_overlayMessages->showHTMLMessage(htmlMessage, timeout);
             WIDGET::repaint();
             return true;
         }
 
         //! \copydoc swift::gui::COverlayMessages::showHTMLMessage
-        bool showOverlayHTMLMessage(const swift::misc::CStatusMessage &message, int timeOutMs = -1)
+        bool showOverlayHTMLMessage(const swift::misc::CStatusMessage &message,
+                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             this->initMinimalFrame();
-            m_overlayMessages->showHTMLMessage(message, timeOutMs);
+            m_overlayMessages->showHTMLMessage(message, timeout);
             WIDGET::repaint();
             return true;
         }
 
         //! \copydoc swift::gui::COverlayMessages::showDownloadProgress
-        void showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url, int timeOutMs = -1)
+        void showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url,
+                                  std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
             this->initMinimalFrame();
-            m_overlayMessages->showDownloadProgress(progress, current, max, url, timeOutMs);
+            m_overlayMessages->showDownloadProgress(progress, current, max, url, timeout);
             WIDGET::repaint();
         }
 

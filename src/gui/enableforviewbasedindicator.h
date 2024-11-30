@@ -25,7 +25,7 @@ namespace swift::gui
         bool isShowingLoadIndicator() const;
 
         //! Show loading indicator
-        int showLoadIndicator(int timeoutMs = -1);
+        int showLoadIndicator(std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Hide loading indicator
         void hideLoadIndicator();

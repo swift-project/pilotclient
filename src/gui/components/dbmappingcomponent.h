@@ -335,7 +335,7 @@ namespace swift::gui
             swift::misc::simulation::fscommon::CVPilotRulesReader m_vPilotReader; //!< read vPilot rules
             swift::misc::CDigestSignal m_dsStashedModelsChanged { this,
                                                                   &CDbMappingComponent::onStashedModelsChangedDigest,
-                                                                  750, 25 };
+                                                                  std::chrono::milliseconds(750), 25 };
             swift::misc::CDataReadOnly<swift::core::data::TAuthenticatedDbUser> m_swiftDbUser {
                 this, &CDbMappingComponent::onUserChanged
             };

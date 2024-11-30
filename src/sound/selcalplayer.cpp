@@ -22,21 +22,21 @@ namespace swift::sound
 
     void CSelcalPlayer::gracefulShutdown() { m_threadedPlayer->quitAndWait(); }
 
-    CTime CSelcalPlayer::play(int volume, const CSelcal &selcal)
+    std::chrono::milliseconds CSelcalPlayer::play(int volume, const CSelcal &selcal)
     {
-        CTime duration = CTime::null();
+        std::chrono::milliseconds duration {};
         if (selcal.isValid())
         {
             const QList<CFrequency> frequencies = selcal.getFrequencies();
             Q_ASSERT(frequencies.size() == 4);
-            const CTime oneSec(1000.0, CTimeUnit::ms());
+            const std::chrono::milliseconds oneSec(1000);
             const CTonePair t1(frequencies.at(0), frequencies.at(1), oneSec);
-            const CTonePair t2({}, {}, oneSec / 5.0);
+            const CTonePair t2({}, {}, oneSec / 5);
             const CTonePair t3(frequencies.at(2), frequencies.at(3), oneSec);
             QList<CTonePair> tonePairs;
             tonePairs << t1 << t2 << t3;
             m_threadedPlayer->play(volume, tonePairs);
-            duration = oneSec * 2.5;
+            duration = std::chrono::milliseconds(2500);
         }
         return duration;
     }

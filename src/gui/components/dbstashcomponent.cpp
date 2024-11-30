@@ -482,14 +482,14 @@ namespace swift::gui::components
     }
 
     bool CDbStashComponent::showOverlayMessages(const CStatusMessageList &msgs, bool onlyErrors, bool appendOldMessages,
-                                                int timeoutMs)
+                                                std::chrono::milliseconds timeout)
     {
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
         SWIFT_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
         if (!this->getMappingComponent()) { return false; }
 
-        this->getMappingComponent()->showOverlayMessages(msgs, appendOldMessages, timeoutMs);
+        this->getMappingComponent()->showOverlayMessages(msgs, appendOldMessages, timeout);
         return true;
     }
 
@@ -497,23 +497,23 @@ namespace swift::gui::components
                                                                 const QString &confirmation,
                                                                 std::function<void()> okLambda,
                                                                 QMessageBox::StandardButton defaultButton,
-                                                                bool onlyErrors, int timeoutMs)
+                                                                bool onlyErrors, std::chrono::milliseconds timeout)
     {
         if (msgs.isEmpty()) { return false; }
         if (!msgs.hasErrorMessages() && onlyErrors) { return false; }
         SWIFT_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
         if (!this->getMappingComponent()) { return false; }
         this->getMappingComponent()->showOverlayMessagesWithConfirmation(msgs, appendOldMessages, confirmation,
-                                                                         okLambda, defaultButton, timeoutMs);
+                                                                         okLambda, defaultButton, timeout);
         return true;
     }
 
-    bool CDbStashComponent::showOverlayMessage(const CStatusMessage &msg, int timeoutMs)
+    bool CDbStashComponent::showOverlayMessage(const CStatusMessage &msg, std::chrono::milliseconds timeout)
     {
         if (msg.isEmpty()) { return false; }
         SWIFT_VERIFY_X(this->getMappingComponent(), Q_FUNC_INFO, "missing mapping component");
         if (!this->getMappingComponent()) { return false; }
-        this->getMappingComponent()->showOverlayMessage(msg, timeoutMs);
+        this->getMappingComponent()->showOverlayMessage(msg, timeout);
         return true;
     }
 

@@ -72,7 +72,7 @@ namespace swift::gui::components
         void mainInfoAreaChanged(const QWidget *currentWidget);
 
         //! Set a logoff time
-        void setLogoffCountdown(int timeoutSeconds = -1);
+        void setLogoffCountdown(std::chrono::seconds timeout = LogoffIntervalSeconds);
 
         //! Login requested
         void toggleNetworkConnection();
@@ -177,18 +177,18 @@ namespace swift::gui::components
         //! Has contexts?
         bool hasValidContexts() const;
 
-        static constexpr int OverlayMessageMs = 5000;
-        static constexpr int LogoffIntervalSeconds = 20; //!< time before logoff
+        static constexpr std::chrono::milliseconds OverlayMessageMs { 5000 };
+        static constexpr std::chrono::seconds LogoffIntervalSeconds { 20 }; //!< time before logoff
 
         QScopedPointer<Ui::CLoginComponent> ui;
         swift::misc::CDigestSignal m_changedLoginDataDigestSignal { this, &CLoginComponent::loginDataChangedDigest,
-                                                                    1500, 10 };
+                                                                    std::chrono::milliseconds { 1500 }, 10 };
         bool m_updatePilotOnServerChanges = true;
         bool m_networkConnected = false;
         bool m_simulatorConnected = false;
         const QIcon m_iconPlay { ":/famfamfam/icons/famfamfam/icons/silk/control_play_blue.png" };
         const QIcon m_iconPause { ":/famfamfam/icons/famfamfam/icons/silk/control_pause_blue.png" };
-        int m_logoffIntervalSeconds = LogoffIntervalSeconds;
+        std::chrono::seconds m_logoffIntervalSeconds = LogoffIntervalSeconds;
         QTimer m_logoffCountdownTimer; //!< timer for logoff countdown
 
         swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel {

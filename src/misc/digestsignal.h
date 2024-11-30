@@ -21,21 +21,23 @@ namespace swift::misc
     public:
         //! Constructor
         template <class T, class F1, class F2>
-        CDigestSignal(T *sender, F1 inputSignal, F2 digestSignal, int maxDelayMs = 500, int maxInputsPerDigest = 3)
+        CDigestSignal(T *sender, F1 inputSignal, F2 digestSignal,
+                      std::chrono::milliseconds maxDelay = std::chrono::milliseconds(500), int maxInputsPerDigest = 3)
             : m_maxInputsPerDigest(maxInputsPerDigest)
         {
             QObject::connect(sender, inputSignal, this, &CDigestSignal::inputSignal);
             QObject::connect(this, &CDigestSignal::digestSignal, sender, digestSignal);
-            init(maxDelayMs);
+            init(maxDelay);
         }
 
         //! Constructor without input signal, can be manually triggered
         template <class T, class F2>
-        CDigestSignal(T *sender, F2 digestSignal, int maxDelayMs = 500, int maxInputsPerDigest = 3)
+        CDigestSignal(T *sender, F2 digestSignal, std::chrono::milliseconds maxDelay = std::chrono::milliseconds(500),
+                      int maxInputsPerDigest = 3)
             : m_maxInputsPerDigest(maxInputsPerDigest)
         {
             QObject::connect(this, &CDigestSignal::digestSignal, sender, digestSignal);
-            init(maxDelayMs);
+            init(maxDelay);
         }
 
         //! Destructor
@@ -54,7 +56,7 @@ namespace swift::misc
         void timerTimeout();
 
         //! Init in ctor
-        void init(int maxDelayMs);
+        void init(std::chrono::milliseconds maxDelay);
 
         QTimer m_timer;
         const int m_maxInputsPerDigest = 3;

@@ -151,13 +151,11 @@ namespace swift::gui::components
         }
     }
 
-    void CLoginComponent::setLogoffCountdown(int timeoutSeconds)
+    void CLoginComponent::setLogoffCountdown(std::chrono::seconds timeout)
     {
-        if (timeoutSeconds < 0) { timeoutSeconds = LogoffIntervalSeconds; }
-
-        ui->pb_LogoffTimeout->setMaximum(timeoutSeconds);
-        ui->pb_LogoffTimeout->setValue(timeoutSeconds);
-        m_logoffIntervalSeconds = timeoutSeconds;
+        ui->pb_LogoffTimeout->setMaximum(timeout.count());
+        ui->pb_LogoffTimeout->setValue(timeout.count());
+        m_logoffIntervalSeconds = timeout;
     }
 
     void CLoginComponent::loginCancelled()
@@ -377,7 +375,7 @@ namespace swift::gui::components
 
     void CLoginComponent::startLogoffTimerCountdown()
     {
-        ui->pb_LogoffTimeout->setValue(m_logoffIntervalSeconds);
+        ui->pb_LogoffTimeout->setValue(m_logoffIntervalSeconds.count());
         m_logoffCountdownTimer.setInterval(1000);
         m_logoffCountdownTimer.start();
         ui->fr_TimeoutConnected->show();
@@ -411,15 +409,16 @@ namespace swift::gui::components
 
     void CLoginComponent::autoLogoffDetection()
     {
+        using namespace std::chrono_literals;
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
 
         const CStatusMessage m =
             CStatusMessage(this, CStatusMessage::SeverityInfo,
                            u"Auto logoff in progress (could be simulator shutdown, crash, closing simulator)");
-        const int delaySecs = 20;
-        this->showOverlayHTMLMessage(m, qRound(1000 * delaySecs * 0.8));
-        this->setLogoffCountdown(delaySecs);
+        const auto delay = 20s;
+        this->showOverlayHTMLMessage(m, 800 * delay);
+        this->setLogoffCountdown(delay);
         this->startLogoffTimerCountdown();
 
         emit this->requestLoginPage();
@@ -427,6 +426,7 @@ namespace swift::gui::components
 
     void CLoginComponent::autoLogoffFrameRate(bool fatal)
     {
+        using namespace std::chrono_literals;
         //! \fixme code duplication with function above
         if (!this->hasValidContexts()) { return; }
         if (!sGui->getIContextNetwork()->isConnected()) { return; }
@@ -437,11 +437,11 @@ namespace swift::gui::components
                                  CStatusMessage(this, CStatusMessage::SeverityWarning,
                                                 u"Sim frame rate too low to maintain constant simulation rate. Reduce "
                                                 u"graphics quality to avoid disconnection.");
-        const int delaySecs = 20;
-        this->showOverlayHTMLMessage(msg, qRound(1000 * delaySecs * 0.8));
+        const auto delay = 20s;
+        this->showOverlayHTMLMessage(msg, 800 * delay);
         if (fatal)
         {
-            this->setLogoffCountdown(delaySecs);
+            this->setLogoffCountdown(delay);
             this->startLogoffTimerCountdown();
         }
 

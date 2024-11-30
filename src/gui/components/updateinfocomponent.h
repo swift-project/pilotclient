@@ -73,8 +73,8 @@ namespace swift::gui::components
         swift::misc::CSetting<swift::core::application::TUpdatePreferences> m_updateSettings {
             this
         }; //!< channel/platform selected
-        swift::misc::CDigestSignal m_dsDistributionAvailable { this, &CUpdateInfoComponent::updateInfoAvailable, 15000,
-                                                               2 };
+        swift::misc::CDigestSignal m_dsDistributionAvailable { this, &CUpdateInfoComponent::updateInfoAvailable,
+                                                               std::chrono::milliseconds(15000), 2 };
 
         //! Load latest version
         void requestLoadOfSetup();

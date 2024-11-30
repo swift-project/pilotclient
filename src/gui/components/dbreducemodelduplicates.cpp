@@ -72,6 +72,7 @@ namespace swift::gui::components
 
     void CDbReduceModelDuplicates::process()
     {
+        using namespace std::chrono_literals;
         if (!sGui || sGui->isShuttingDown()) { return; }
 
         this->clearProgressBar();
@@ -80,14 +81,14 @@ namespace swift::gui::components
         if (m_models.isEmpty())
         {
             const CStatusMessage m = CStatusMessage(this).validationError(u"No models");
-            ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
+            ui->fr_Overlay->showOverlayHTMLMessage(m, 5s);
             return;
         }
 
         if (ui->le_Distributor->text().isEmpty())
         {
             const CStatusMessage m = CStatusMessage(this).validationError(u"No distributor");
-            ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
+            ui->fr_Overlay->showOverlayHTMLMessage(m, 5s);
             return;
         }
 
@@ -96,7 +97,7 @@ namespace swift::gui::components
         {
             const CStatusMessage m = CStatusMessage(this).validationError(u"Found %1 key duplicates")
                                      << keyDuplicates.size();
-            ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
+            ui->fr_Overlay->showOverlayHTMLMessage(m, 5s);
             return;
         }
 
@@ -105,7 +106,7 @@ namespace swift::gui::components
         if (!distributor.hasValidDbKey())
         {
             const CStatusMessage m = CStatusMessage(this).validationError(u"Invalid distributor");
-            ui->fr_Overlay->showOverlayHTMLMessage(m, 5000);
+            ui->fr_Overlay->showOverlayHTMLMessage(m, 5s);
             return;
         }
 
@@ -154,7 +155,7 @@ namespace swift::gui::components
                 CStatusMessage(this).info(u"No duplicates to be removed!") :
                 CStatusMessage(this).info(u"You can remove %1 models of the following distributors: '%2'.")
                     << removeModels.size() << distKeys;
-        ui->fr_Overlay->showOverlayHTMLMessage(msg, 5000);
+        ui->fr_Overlay->showOverlayHTMLMessage(msg, 5s);
         ui->bb_ReduceModelDuplicates->button(QDialogButtonBox::Ok)->setEnabled(true);
     }
 

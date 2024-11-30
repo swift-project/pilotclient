@@ -600,7 +600,8 @@ namespace swift::core::fsd
         swift::misc::CTokenBucket m_tokenBucket; //!< used with aircraft parts messages
         swift::misc::aviation::CCallsignSet m_interimPositionReceivers; //!< all aircraft receiving interim positions
         swift::misc::network::CTextMessageList m_textMessagesToConsolidate; //!< waiting for new messages
-        swift::misc::CDigestSignal m_dsSendTextMessage { this, &CFSDClient::emitConsolidatedTextMessages, 250, 10 };
+        misc::CDigestSignal m_dsSendTextMessage { this, &CFSDClient::emitConsolidatedTextMessages,
+                                                  std::chrono::milliseconds(250), 10 };
 
         //! ATIS message
         struct AtisMessage

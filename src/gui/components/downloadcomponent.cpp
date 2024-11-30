@@ -87,7 +87,7 @@ namespace swift::gui::components
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).warning(u"'%1' is not a valid download directory")
                 << downloadDir;
-            this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeout);
             return;
         }
         ui->le_DownloadDir->setText(downloadDir);
@@ -174,7 +174,7 @@ namespace swift::gui::components
         {
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"Invalid download directory");
-            this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeout);
             return false;
         }
 
@@ -184,7 +184,7 @@ namespace swift::gui::components
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"No download URL for file name '%1'")
                 << remoteFile.getBaseNameAndSize();
-            this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeout);
             return false;
         }
 
@@ -226,7 +226,7 @@ namespace swift::gui::components
             const CStatusMessage msg =
                 CStatusMessage(this, CLogCategories::validation()).error(u"Starting download for '%1' failed")
                 << download.getFullUrl();
-            this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(msg, CDownloadComponent::OverlayMsgTimeout);
         }
         return success;
     }
@@ -243,7 +243,7 @@ namespace swift::gui::components
         if (sGui && sGui->isShuttingDown()) { return; }
         if (status.isWarningOrAbove())
         {
-            this->showOverlayMessage(status, CDownloadComponent::OverlayMsgTimeoutMs);
+            this->showOverlayMessage(status, CDownloadComponent::OverlayMsgTimeout);
             this->clear();
             return;
         }
