@@ -939,12 +939,6 @@ namespace swift::misc
 
     const QPixmap &CIcons::modelExclude16() { return cross16(); }
 
-    const QPixmap &CIcons::modelConverterX()
-    {
-        static const QPixmap pm(":/misc/icons/misc/mcx.png");
-        return pm;
-    }
-
     const QPixmap &CIcons::pixmapByIndex(CIcons::IconIndex index)
     {
         switch (index)

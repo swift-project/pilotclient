@@ -92,9 +92,9 @@ namespace swift::gui::menus
                 added = true;
                 if (CModelConverterX::supportsModelConverterX())
                 {
-                    m_modelConverterX = menuActions.addAction(m_modelConverterX, CIcons::modelConverterX(),
-                                                              "ModelConverterX", CMenuAction::pathSimulator(),
-                                                              { this, &CShowSimulatorFileMenu::startModelConverterX });
+                    m_modelConverterX =
+                        menuActions.addAction(m_modelConverterX, "ModelConverterX", CMenuAction::pathSimulator(),
+                                              { this, &CShowSimulatorFileMenu::startModelConverterX });
                 }
             }
 
