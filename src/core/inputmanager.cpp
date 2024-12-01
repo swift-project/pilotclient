@@ -21,7 +21,7 @@ namespace swift::core
 {
     CInputManager::CInputManager(QObject *parent) : QObject(parent) { reloadHotkeySettings(); }
 
-    void CInputManager::registerAction(const QString &action, swift::misc::CIcons::IconIndex icon)
+    void CInputManager::registerAction(const QString &action, CIcons::IconIndex icon)
     {
         if (!m_availableActions.contains(action))
         {

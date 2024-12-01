@@ -159,7 +159,7 @@ namespace swift::misc
         //! Latest timestamp
         QDateTime latestTimestamp() const
         {
-            if (this->container().isEmpty()) { return QDateTime(); }
+            if (this->container().isEmpty()) { return {}; }
             return this->latestObject().getUtcTimestamp();
         }
 

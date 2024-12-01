@@ -28,7 +28,7 @@ namespace swift::misc
         CFileLogger(QObject *parent = nullptr);
 
         //! Destructor.
-        virtual ~CFileLogger();
+        ~CFileLogger() override;
 
         //! Change the log pattern. Default is to log all messages.
         void changeLogPattern(const CLogPattern &pattern) { m_logPattern = pattern; }

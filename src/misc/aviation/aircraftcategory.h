@@ -42,7 +42,7 @@ namespace swift::misc::aviation
         };
 
         //! Default constructor.
-        CAircraftCategory() {}
+        CAircraftCategory() = default;
 
         //! Constructor.
         CAircraftCategory(const QString &name, const QString &description, const QString &path, bool assignable);
@@ -123,10 +123,10 @@ namespace swift::misc::aviation
         void setAssignable(bool assignable) { m_assignable = assignable; }
 
         //! \copydoc swift::misc::mixin::Index::propertyByIndex
-        QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
+        QVariant propertyByIndex(CPropertyIndexRef index) const;
 
         //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
-        void setPropertyByIndex(swift::misc::CPropertyIndexRef index, const QVariant &variant);
+        void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
         //! \copydoc swift::misc::mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(CPropertyIndexRef index, const CAircraftCategory &compareValue) const;

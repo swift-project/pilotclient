@@ -116,7 +116,7 @@ namespace swift::misc::db
         //! \note requires distributions
         network::CRemoteFile asRemoteFile() const;
 
-        //! Newer tahn the current build
+        //! Newer than the current build
         bool isNewerThanCurrentBuild() const;
 
         //! \copydoc swift::misc::mixin::String::toQString
@@ -158,7 +158,7 @@ namespace swift::misc::db
         //! Trim the 4th segment of a version string
         static QString trimVersionString(const QString &version);
 
-        //! Trim a strin representing 4th segment
+        //! Trim a string representing 4th segment
         static QString trim4thSegment(const QString &seg);
 
         SWIFT_METACLASS(

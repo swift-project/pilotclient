@@ -40,7 +40,7 @@ namespace swift::misc
         };
 
         //! Constructor
-        CCountry() {}
+        CCountry() = default;
 
         //! Constructor
         CCountry(const QString &iso, const QString &name);

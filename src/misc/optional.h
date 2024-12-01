@@ -23,7 +23,7 @@ namespace swift::misc
     {
     public:
         //! Default constructor.
-        Optional() noexcept {}
+        Optional() noexcept = default;
 
         //! Construct from a value.
         Optional(T value) noexcept(std::is_nothrow_move_constructible_v<T>)

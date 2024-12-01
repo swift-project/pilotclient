@@ -49,6 +49,7 @@ using namespace swift::misc::weather;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::settings;
 using namespace swift::misc::simulation::data;
+using namespace std::chrono_literals;
 
 namespace swift::core::context
 {
@@ -71,7 +72,7 @@ namespace swift::core::context
 
         // deferred init of last model set, if no other data are set in meantime
         const QPointer<CContextSimulator> myself(this);
-        QTimer::singleShot(2500, this, [=] {
+        QTimer::singleShot(2500ms, this, [=] {
             if (!myself) { return; }
             this->initByLastUsedModelSet();
             m_aircraftMatcher.setSetup(m_matchingSettings.get());

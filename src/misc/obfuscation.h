@@ -19,7 +19,7 @@ namespace swift::misc
     {
     public:
         //! Constructor
-        CObfuscation() {}
+        CObfuscation() = default;
 
         //! Decode string if it has the prefix, otherwise do nothing with it
         static QString decode(const QString &inString, bool trimmed = true);

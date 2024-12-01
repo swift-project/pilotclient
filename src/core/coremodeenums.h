@@ -13,7 +13,6 @@ namespace swift::core
     //! Modes, how GUI can be started (core/GUI)
     struct CoreModes
     {
-    public:
         //! Core runs how and where?
         enum CoreMode
         {

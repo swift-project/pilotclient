@@ -29,7 +29,7 @@ namespace swift::misc::weather
         CMetarDecoder();
 
         //! Default destructor
-        virtual ~CMetarDecoder() override;
+        ~CMetarDecoder() override;
 
         //! Decode metar
         CMetar decode(const QString &metarString) const;

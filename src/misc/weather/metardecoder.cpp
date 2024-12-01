@@ -42,7 +42,7 @@ namespace swift::misc::weather
     {
     public:
         //! Destructor
-        virtual ~IMetarDecoderPart() {}
+        virtual ~IMetarDecoderPart() = default;
 
         //! Decoder type ("name")
         virtual QString getDecoderType() const = 0;
@@ -98,7 +98,7 @@ namespace swift::misc::weather
     class CMetarDecoderReportType : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "ReportType"; }
+        QString getDecoderType() const override { return "ReportType"; }
 
     protected:
         const QRegularExpression &getRegExp() const override
@@ -116,7 +116,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         const QHash<QString, CMetar::ReportType> &getReportTypeHash() const
@@ -130,7 +130,7 @@ namespace swift::misc::weather
     class CMetarDecoderAirport : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "Airport"; }
+        QString getDecoderType() const override { return "Airport"; }
 
     protected:
         const QRegularExpression &getRegExp() const override
@@ -147,13 +147,13 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return true; }
+        bool isMandatory() const override { return true; }
     };
 
     class CMetarDecoderDayTime : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "DayTime"; }
+        QString getDecoderType() const override { return "DayTime"; }
 
     protected:
         const QRegularExpression &getRegExp() const override
@@ -179,13 +179,13 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return true; }
+        bool isMandatory() const override { return true; }
     };
 
     class CMetarDecoderStatus : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "Status"; }
+        QString getDecoderType() const override { return "Status"; }
 
     protected:
         // Possible matches:
@@ -210,13 +210,13 @@ namespace swift::misc::weather
             else { return false; }
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
     };
 
     class CMetarDecoderWind : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "Wind"; }
+        QString getDecoderType() const override { return "Wind"; }
 
     protected:
         const QHash<QString, CSpeedUnit> &getWindUnitHash() const
@@ -271,7 +271,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -293,7 +293,7 @@ namespace swift::misc::weather
     class CMetarDecoderVariationsWindDirection : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "WindDirection"; }
+        QString getDecoderType() const override { return "WindDirection"; }
 
     protected:
         const QRegularExpression &getRegExp() const override
@@ -321,7 +321,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -339,7 +339,7 @@ namespace swift::misc::weather
     class CMetarDecoderVisibility : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "Visibility"; }
+        QString getDecoderType() const override { return "Visibility"; }
 
     protected:
         const QHash<QString, QString> &getCardinalDirections() const
@@ -406,7 +406,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -436,7 +436,7 @@ namespace swift::misc::weather
     class CMetarDecoderRunwayVisualRange : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "RunwayVisualRange"; }
+        QString getDecoderType() const override { return "RunwayVisualRange"; }
 
     protected:
         const QRegularExpression &getRegExp() const override
@@ -464,7 +464,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -493,7 +493,7 @@ namespace swift::misc::weather
     class CMetarDecoderPresentWeather : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "PresentWeather"; }
+        QString getDecoderType() const override { return "PresentWeather"; }
 
     protected:
         const QHash<QString, CPresentWeather::Intensity> &getIntensityHash() const
@@ -545,7 +545,7 @@ namespace swift::misc::weather
             return hash;
         }
 
-        virtual bool isRepeatable() const override { return true; }
+        bool isRepeatable() const override { return true; }
 
         const QRegularExpression &getRegExp() const override
         {
@@ -575,7 +575,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -604,7 +604,7 @@ namespace swift::misc::weather
     class CMetarDecoderCloud : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "Cloud"; }
+        QString getDecoderType() const override { return "Cloud"; }
 
     protected:
         const QStringList &getClearSkyTokens() const
@@ -623,7 +623,7 @@ namespace swift::misc::weather
             return hash;
         }
 
-        virtual bool isRepeatable() const override { return true; }
+        bool isRepeatable() const override { return true; }
 
         const QRegularExpression &getRegExp() const override
         {
@@ -660,7 +660,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -683,7 +683,7 @@ namespace swift::misc::weather
     class CMetarDecoderVerticalVisibility : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "VerticalVisibility"; }
+        QString getDecoderType() const override { return "VerticalVisibility"; }
 
     protected:
         const QRegularExpression &getRegExp() const override
@@ -698,7 +698,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -713,7 +713,7 @@ namespace swift::misc::weather
     class CMetarDecoderTemperature : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "Temperature"; }
+        QString getDecoderType() const override { return "Temperature"; }
 
     protected:
         const QRegularExpression &getRegExp() const override
@@ -756,7 +756,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -776,7 +776,7 @@ namespace swift::misc::weather
     class CMetarDecoderPressure : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "Pressure"; }
+        QString getDecoderType() const override { return "Pressure"; }
 
     protected:
         const QHash<QString, CPressureUnit> &getPressureUnits() const
@@ -822,7 +822,7 @@ namespace swift::misc::weather
             return false;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -842,7 +842,7 @@ namespace swift::misc::weather
     class CMetarDecoderRecentWeather : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "RecentWeather"; }
+        QString getDecoderType() const override { return "RecentWeather"; }
 
     protected:
         const QRegularExpression &getRegExp() const override
@@ -857,7 +857,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -884,7 +884,7 @@ namespace swift::misc::weather
     class CMetarDecoderWindShear : public IMetarDecoderPart
     {
     public:
-        virtual QString getDecoderType() const override { return "WindShear"; }
+        QString getDecoderType() const override { return "WindShear"; }
 
     protected:
         const QRegularExpression &getRegExp() const override
@@ -906,7 +906,7 @@ namespace swift::misc::weather
             return true;
         }
 
-        virtual bool isMandatory() const override { return false; }
+        bool isMandatory() const override { return false; }
 
     private:
         QString getRegExpImpl() const
@@ -935,7 +935,7 @@ namespace swift::misc::weather
             {
                 const QString type = decoder->getDecoderType();
                 CLogMessage(this).debug() << "Invalid METAR:" << metarString << type;
-                return CMetar();
+                return {};
             }
         }
 

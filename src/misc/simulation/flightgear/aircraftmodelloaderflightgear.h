@@ -11,7 +11,7 @@
 namespace swift::misc::simulation::flightgear
 {
     //! Flightgear aircraft model loader
-    class CAircraftModelLoaderFlightgear : public simulation::IAircraftModelLoader
+    class CAircraftModelLoaderFlightgear : public IAircraftModelLoader
     {
         Q_OBJECT
 
@@ -20,25 +20,23 @@ namespace swift::misc::simulation::flightgear
         CAircraftModelLoaderFlightgear(QObject *parent = nullptr);
 
         //! Virtual destructor
-        virtual ~CAircraftModelLoaderFlightgear() override;
+        ~CAircraftModelLoaderFlightgear() override;
 
         //! Parsed or injected models
         void updateInstalledModels(const CAircraftModelList &models);
 
         //! \copydoc IAircraftModelLoader::isLoadingFinished
-        virtual bool isLoadingFinished() const override;
+        bool isLoadingFinished() const override;
 
     protected:
         //! \copydoc IAircraftModelLoader::startLoadingFromDisk
-        virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
-                                          const QStringList &modelDirectories) override;
+        void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                  const QStringList &modelDirectories) override;
 
     private:
         QString getModelString(const QString &filePath, bool ai);
-        simulation::CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory,
-                                                             const QStringList &excludeDirectories);
-        simulation::CAircraftModelList parseAIAirplanes(const QString &rootDirectory,
-                                                        const QStringList &excludeDirectories);
+        CAircraftModelList parseFlyableAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
+        CAircraftModelList parseAIAirplanes(const QString &rootDirectory, const QStringList &excludeDirectories);
         void addUniqueModel(const CAircraftModel &model, CAircraftModelList &models);
         QPointer<CWorker> m_parserWorker;
         CAircraftModelList performParsing(const QStringList &rootDirectories, const QStringList &excludeDirectories);

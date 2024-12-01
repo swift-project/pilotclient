@@ -12,7 +12,7 @@
 namespace swift::misc::simulation::data
 {
     //! Last model used
-    struct TLastModel : public swift::misc::TDataTrait<CAircraftModel>
+    struct TLastModel : TDataTrait<CAircraftModel>
     {
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "lastaircraftmodel"; }

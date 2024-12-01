@@ -65,23 +65,23 @@ namespace swift::core::context
         static const QString &ObjectPath();
 
         //! \copydoc IContext::getPathAndContextId()
-        virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
+        QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
         static IContextSimulator *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode,
                                          swift::misc::CDBusServer *server, QDBusConnection &connection);
 
         //! Destructor
-        virtual ~IContextSimulator() override {}
+        ~IContextSimulator() override {}
 
         //! Get simulator status as enum
         //! \fixme To be removed with Qt 5.5 when getSimualtorStatus directly provides the enum
-        swift::core::ISimulator::SimulatorStatus getSimulatorStatusEnum() const;
+        ISimulator::SimulatorStatus getSimulatorStatusEnum() const;
 
         // ---- some convenienc functions implemented on interface level
 
         //! Current simulator
-        swift::misc::simulation::CSimulatorInfo getSimulatorInfo() const;
+        misc::simulation::CSimulatorInfo getSimulatorInfo() const;
 
     signals:
         //! Simulator combined status

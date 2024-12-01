@@ -50,7 +50,7 @@ namespace swift::core
         //! @}
 
         //! Destructor
-        virtual ~CActionBind();
+        ~CActionBind() override;
 
         //! Unbind from swift::core::CInputManager
         void unbind();

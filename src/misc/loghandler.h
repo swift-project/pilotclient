@@ -42,7 +42,7 @@ namespace swift::misc
         CLogHandler();
 
         //! \private Destructor.
-        virtual ~CLogHandler();
+        ~CLogHandler() override;
 
         //! Return pointer to the CLogHandler singleton.
         //! \warning This can not be called from within a plugin, because the returned instance will be wrong.
@@ -150,7 +150,7 @@ namespace swift::misc
          *
          * When all slots are disconnected from this signal, the CLogPatternHandler could be deleted.
          *
-         * Note that if a message matches more that one handler's pattern, then this signal will be emitted for all of
+         * Note that if a message matches more than one handler's pattern, then this signal will be emitted for all of
          * those handlers, so if a slot is connected to all of them then it will be called multiple times. Use the
          * methods CStatusMessage::markAsHandledBy() and CStatusMessage::wasHandledBy() to detect this case in the slot
          * and avoid multiple handlings of the same message. Caveat: for this to work, the slot must take its argument
@@ -180,7 +180,7 @@ namespace swift::misc
 
     protected:
         //! \copydoc QObject::connectNotify
-        virtual void connectNotify(const QMetaMethod &signal) override
+        void connectNotify(const QMetaMethod &signal) override
         {
             if (signal == QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged))
             {
@@ -189,7 +189,7 @@ namespace swift::misc
         }
 
         //! \copydoc QObject::disconnectNotify
-        virtual void disconnectNotify(const QMetaMethod &signal) override
+        void disconnectNotify(const QMetaMethod &signal) override
         {
             if (signal == QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged))
             {

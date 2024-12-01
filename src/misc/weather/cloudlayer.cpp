@@ -12,15 +12,13 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CCloudLayer)
 namespace swift::misc::weather
 {
 
-    CCloudLayer::CCloudLayer(const swift::misc::aviation::CAltitude &base, const swift::misc::aviation::CAltitude &top,
-                             Coverage coverage)
-        : m_base(base), m_top(top)
+    CCloudLayer::CCloudLayer(const CAltitude &base, const CAltitude &top, Coverage coverage) : m_base(base), m_top(top)
     {
         setCoverage(coverage);
     }
 
-    CCloudLayer::CCloudLayer(const swift::misc::aviation::CAltitude &base, const swift::misc::aviation::CAltitude &top,
-                             double precipitationRate, Precipitation precipitation, Clouds clouds, Coverage coverage)
+    CCloudLayer::CCloudLayer(const CAltitude &base, const CAltitude &top, double precipitationRate,
+                             Precipitation precipitation, Clouds clouds, Coverage coverage)
         : m_base(base), m_top(top), m_precipitationRate(precipitationRate), m_precipitation(precipitation),
           m_clouds(clouds)
     {
@@ -38,11 +36,10 @@ namespace swift::misc::weather
         return None;
     }
 
-    QVariant CCloudLayer::propertyByIndex(swift::misc::CPropertyIndexRef index) const
+    QVariant CCloudLayer::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
+        switch (index.frontCasted<ColumnIndex>())
         {
         case IndexBase: return QVariant::fromValue(m_base);
         case IndexTop: return QVariant::fromValue(m_top);
@@ -61,8 +58,7 @@ namespace swift::misc::weather
             (*this) = variant.value<CCloudLayer>();
             return;
         }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
-        switch (i)
+        switch (index.frontCasted<ColumnIndex>())
         {
         case IndexBase: setBase(variant.value<CAltitude>()); break;
         case IndexTop: setTop(variant.value<CAltitude>()); break;

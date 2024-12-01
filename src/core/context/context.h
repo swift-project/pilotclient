@@ -36,7 +36,7 @@ namespace swift::core::context
 
     public:
         //! Destructor
-        virtual ~IContext() override {}
+        ~IContext() override = default;
 
         //! Log categories
         static const QStringList &getLogCategories();
@@ -144,7 +144,7 @@ namespace swift::core::context
         //! Empty context called
         void logEmptyContextWarning(const QString &functionName) const
         {
-            swift::misc::CLogMessage(this, swift::misc::CLogCategories::contextSlot())
+            misc::CLogMessage(this, swift::misc::CLogCategories::contextSlot())
                     .warning(u"Empty context called, details: %1")
                 << functionName;
         }
@@ -153,7 +153,7 @@ namespace swift::core::context
         virtual void onAboutToShutdown() {}
 
         //! Standard message when status message is returned in empty context
-        static const swift::misc::CStatusMessage &statusMessageEmptyContext();
+        static const misc::CStatusMessage &statusMessageEmptyContext();
 
     private:
         CCoreFacadeConfig::ContextMode m_mode; //!< How context is used

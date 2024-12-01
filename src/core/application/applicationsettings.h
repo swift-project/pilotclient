@@ -15,7 +15,7 @@
 namespace swift::core::application
 {
     //! User configured hotkeys
-    struct TActionHotkeys : public swift::misc::TSettingTrait<swift::misc::input::CActionHotkeyList>
+    struct TActionHotkeys : misc::TSettingTrait<misc::input::CActionHotkeyList>
     {
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "application/actionhotkeys"; }
@@ -28,7 +28,7 @@ namespace swift::core::application
         }
 
         //! \copydoc swift::misc::TSettingTrait::isValid
-        static bool isValid(const swift::misc::input::CActionHotkeyList &value, QString &)
+        static bool isValid(const misc::input::CActionHotkeyList &value, QString &)
         {
             for (const auto &actionHotkey : value)
             {
@@ -43,7 +43,7 @@ namespace swift::core::application
     };
 
     //! Selected simulator plugins
-    struct TEnabledSimulators : public swift::misc::TSettingTrait<QStringList>
+    struct TEnabledSimulators : misc::TSettingTrait<QStringList>
     {
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "application/enabledsimulators"; }
@@ -59,8 +59,7 @@ namespace swift::core::application
         static const QStringList &defaultValue()
         {
             // All default simulators
-            static const QStringList enabledSimulators(
-                swift::misc::simulation::CSimulatorPluginInfo::guessDefaultPlugins());
+            static const QStringList enabledSimulators(misc::simulation::CSimulatorPluginInfo::guessDefaultPlugins());
             return enabledSimulators;
         }
 
@@ -69,7 +68,7 @@ namespace swift::core::application
         {
             for (const QString &pluginIdentifier : pluginIdentifiers)
             {
-                if (!swift::misc::simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier))
+                if (!misc::simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier))
                 {
                     return false;
                 }
@@ -79,7 +78,7 @@ namespace swift::core::application
     };
 
     //! Uploading of crash dumps is enabled or disabled
-    struct TCrashDumpUploadEnabled : public swift::misc::TSettingTrait<bool>
+    struct TCrashDumpUploadEnabled : misc::TSettingTrait<bool>
     {
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "application/crashdumpuploadenabled"; }

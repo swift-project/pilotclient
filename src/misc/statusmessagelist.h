@@ -36,7 +36,7 @@ namespace swift::misc
         using CSequence::CSequence;
 
         //! Constructor
-        CStatusMessageList() {}
+        CStatusMessageList() = default;
 
         //! Construct from a base class object.
         CStatusMessageList(const CSequence<CStatusMessage> &other);
