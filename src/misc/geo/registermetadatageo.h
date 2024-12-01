@@ -14,4 +14,4 @@ namespace swift::misc::geo
     SWIFT_MISC_EXPORT void registerMetadata();
 } // namespace swift::misc::geo
 
-#endif // guard
+#endif // SWIFT_MISC_GEO_REGISTERMETAGEO_H

@@ -35,4 +35,4 @@ namespace swift::simplugin::p3d
     };
 } // namespace swift::simplugin::p3d
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_SIMULATOR_P3DFACTORY_H

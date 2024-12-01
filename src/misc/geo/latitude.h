@@ -56,4 +56,4 @@ namespace swift::misc::geo
 
 Q_DECLARE_METATYPE(swift::misc::geo::CLatitude)
 
-#endif // guard
+#endif // SWIFT_MISC_GEO_LATITUDE_H

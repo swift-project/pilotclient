@@ -87,4 +87,4 @@ namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CSelcal)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_SELCAL_H

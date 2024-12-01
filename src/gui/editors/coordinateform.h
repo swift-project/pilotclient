@@ -67,4 +67,4 @@ namespace swift::gui::editors
         swift::misc::geo::CCoordinateGeodetic m_coordinate;
     };
 } // namespace swift::gui::editors
-#endif // guard
+#endif // SWIFT_GUI_EDITORS_COORDINATEFORM_H

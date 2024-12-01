@@ -117,4 +117,4 @@ namespace swift::misc::network
 Q_DECLARE_METATYPE(swift::misc::network::CTextMessageList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CTextMessage>)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_TEXTMESSAGELIST_H

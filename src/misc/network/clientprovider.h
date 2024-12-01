@@ -175,4 +175,4 @@ namespace swift::misc
 
 Q_DECLARE_INTERFACE(swift::misc::network::IClientProvider, "org.swift-project.misc::network::iclientprovider")
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_CLIENTPROVIDER_H

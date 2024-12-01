@@ -397,4 +397,4 @@ namespace swift::core::context
         IContextNetwork(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime) : IContext(mode, runtime) {}
     };
 } // namespace swift::core::context
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXTNETWORK_H

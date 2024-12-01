@@ -50,4 +50,4 @@ namespace swift::gui::models
         QStringList m_suffixes;
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_ATCTREEMODEL_H

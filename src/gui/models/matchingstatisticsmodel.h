@@ -42,4 +42,4 @@ namespace swift::gui::models
         MatchingStatisticsMode m_mode = NoSet;
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MATCHINGSTATISTICSMODEL_H

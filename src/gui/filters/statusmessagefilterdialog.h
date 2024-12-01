@@ -52,4 +52,4 @@ namespace swift::gui::filters
 
 } // namespace swift::gui::filters
 
-#endif // guard
+#endif // SWIFT_GUI_FILTERS_STATUSMESSAGEFILTERDIALOG_H

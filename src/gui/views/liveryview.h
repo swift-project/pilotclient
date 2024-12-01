@@ -22,4 +22,4 @@ namespace swift::gui::views
         explicit CLiveryView(QWidget *parent = nullptr);
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_LIVERYVIEW_H

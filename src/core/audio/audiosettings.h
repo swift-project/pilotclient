@@ -55,4 +55,4 @@ namespace swift::core::audio
     };
 } // namespace swift::core::audio
 
-#endif
+#endif // SWIFT_CORE_AUDIO_SETTINGS_H

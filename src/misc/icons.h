@@ -753,4 +753,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIcons::IconIndex)
 
-#endif // guard
+#endif // SWIFT_MISC_ICONS_H

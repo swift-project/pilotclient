@@ -19,4 +19,4 @@ namespace swift::misc::math
 
 } // namespace swift::misc::math
 
-#endif // guard
+#endif // SWIFT_MISC_MATH_CONSTANTS_H

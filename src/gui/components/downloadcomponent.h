@@ -136,4 +136,4 @@ Q_DECLARE_METATYPE(swift::gui::components::CDownloadComponent::Mode)
 Q_DECLARE_METATYPE(swift::gui::components::CDownloadComponent::ModeFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::gui::components::CDownloadComponent::Mode)
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_DOWNLOADCOMPONENT_H

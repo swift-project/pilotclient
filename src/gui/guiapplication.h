@@ -374,4 +374,4 @@ namespace swift::gui
 //! Single instance of GUI application object
 extern SWIFT_GUI_EXPORT swift::gui::CGuiApplication *sGui;
 
-#endif // guard
+#endif // SWIFT_GUI_GUIAPPLICATION_H

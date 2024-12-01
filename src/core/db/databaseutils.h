@@ -139,4 +139,4 @@ namespace swift::core::db
                                const swift::misc::simulation::CSimulatorInfo &simulator);
     };
 } // namespace swift::core::db
-#endif // guard
+#endif // SWIFT_CORE_DB_DATABASEUTILS_H

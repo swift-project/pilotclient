@@ -26,4 +26,4 @@ namespace swift::gui::models
         virtual ~CIdentifierListModel() {}
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_IDENTIFIERLISTMODEL_H

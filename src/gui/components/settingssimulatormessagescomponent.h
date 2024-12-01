@@ -45,4 +45,4 @@ namespace swift::gui::components
         }; //!< settings for messages
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_SETTINGSSIMULATORMESSAGESCOMPONENT_H

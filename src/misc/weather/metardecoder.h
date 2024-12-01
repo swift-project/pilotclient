@@ -41,4 +41,4 @@ namespace swift::misc::weather
 
 } // namespace swift::misc::weather
 
-#endif // guard
+#endif // SWIFT_MISC_WEATHER_METARDECODER_H

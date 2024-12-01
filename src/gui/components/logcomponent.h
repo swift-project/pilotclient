@@ -94,4 +94,4 @@ namespace swift::gui::components
         swift::misc::CLogHistoryReplica m_history;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_LOGCOMPONENT_H

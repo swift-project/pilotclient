@@ -105,4 +105,4 @@ namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CHotkeyCombination)
 
-#endif // guard
+#endif // SWIFT_MISC_INPUT_HOTKEYCOMBINATION_H

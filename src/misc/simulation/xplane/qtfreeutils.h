@@ -275,4 +275,4 @@ namespace swift::misc::simulation::xplane::qtfreeutils
     };
 } // namespace swift::misc::simulation::xplane::qtfreeutils
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_XPLANE_XPLANQTFREEUTILS_H

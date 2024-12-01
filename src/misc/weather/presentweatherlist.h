@@ -38,4 +38,4 @@ namespace swift::misc::weather
 
 Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeatherList)
 
-#endif // guard
+#endif // SWIFT_MISC_WEATHER_PRESENTWEATHERLIST_H

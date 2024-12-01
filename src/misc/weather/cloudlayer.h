@@ -154,4 +154,4 @@ Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayer::Coverage)
 Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayer::Clouds)
 Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayer::Precipitation)
 
-#endif // guard
+#endif // SWIFT_MISC_WEATHER_CLOUDLAYER_H

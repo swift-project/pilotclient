@@ -26,4 +26,4 @@ namespace swift::misc::simulation::data
     };
 } // namespace swift::misc::simulation::data
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_DATA_LASTMODEL_H

@@ -202,4 +202,4 @@ namespace swift::misc::simulation::settings
     };
 } // namespace swift::misc::simulation::settings
 
-#endif
+#endif // SWIFT_MISC_SIMULATION_SETTINGS_CXSWIFTBUSSETTINGSQTFREE_H

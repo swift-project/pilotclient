@@ -28,4 +28,4 @@ namespace swift::misc::aviation
 
 } // namespace swift::misc::aviation
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_PERCALLSIGN_H

@@ -68,4 +68,4 @@ namespace swift::gui::filters
 
 Q_DECLARE_METATYPE(swift::gui::filters::CFilterBarButtons::FilterButton)
 
-#endif // guard
+#endif // SWIFT_GUI_FILTERS_FILTERBARBUTTONS_H

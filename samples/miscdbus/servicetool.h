@@ -46,4 +46,4 @@ namespace swift::sample
     };
 } // namespace swift::sample
 
-#endif // guard
+#endif // SWIFT_SAMPLE_SERVICETOOL_H

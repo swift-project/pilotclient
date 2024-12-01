@@ -541,4 +541,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CValueCachePacket)
 
-#endif
+#endif // SWIFT_MISC_VALUECACHE_H

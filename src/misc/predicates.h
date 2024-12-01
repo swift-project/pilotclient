@@ -102,4 +102,4 @@ namespace swift::misc
     } // namespace predicates
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_PREDICATES_H

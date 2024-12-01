@@ -143,4 +143,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CStatusMessageList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CStatusMessage>)
 
-#endif // guard
+#endif // SWIFT_MISC_STATUSMESSAGELIST_H

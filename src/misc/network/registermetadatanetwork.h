@@ -14,4 +14,4 @@ namespace swift::misc::network
     SWIFT_MISC_EXPORT void registerMetadata();
 } // namespace swift::misc::network
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_REGISTERMETADATANETWORK_H

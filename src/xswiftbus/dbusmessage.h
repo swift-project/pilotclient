@@ -97,4 +97,4 @@ namespace XSwiftBus
 
 } // namespace XSwiftBus
 
-#endif // guard
+#endif // SWIFT_SIM_XSWIFTBUS_DBUSMESSAGE_H

@@ -106,4 +106,4 @@ namespace swift::gui::editors
         QScopedPointer<Ui::CSituationForm> ui;
     };
 } // namespace swift::gui::editors
-#endif // guard
+#endif // SWIFT_GUI_EDITORS_SITUATIONSFORM_H

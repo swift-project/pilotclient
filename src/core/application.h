@@ -680,4 +680,4 @@ namespace swift::core
 //! Single instance of application object
 extern SWIFT_CORE_EXPORT swift::core::CApplication *sApp;
 
-#endif // guard
+#endif // SWIFT_CORE_APPLICATION_H

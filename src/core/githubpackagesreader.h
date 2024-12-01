@@ -38,4 +38,4 @@ namespace swift::core
     };
 } // namespace swift::core
 
-#endif
+#endif // SWIFT_CORE_GITHUBPACKAGESREADER_H

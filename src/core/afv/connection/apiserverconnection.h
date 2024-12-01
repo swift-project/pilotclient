@@ -180,4 +180,4 @@ namespace swift::core::afv::connection
     };
 } // namespace swift::core::afv::connection
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_CONNECTION_APISERVERCONNECTION_H

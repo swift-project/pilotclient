@@ -256,4 +256,4 @@ Q_DECLARE_METATYPE(swift::misc::aviation::CAltitude::ReferenceDatum)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAltitude::AltitudeType)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAltitudePair)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_ALTITUDE_H

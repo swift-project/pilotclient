@@ -748,4 +748,4 @@ Q_DECLARE_INTERFACE(swift::core::ISimulator, "org.swift-project.swift_core.simul
 Q_DECLARE_INTERFACE(swift::core::ISimulatorFactory, "org.swift-project.swift_core.simulatorfactory")
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::core::ISimulator::SimulatorStatus)
 
-#endif // guard
+#endif // SWIFT_CORE_SIMULATOR_H

@@ -91,4 +91,4 @@ namespace swift::misc
 
 Q_DECLARE_INTERFACE(swift::misc::IProvider, "org.swift-project.misc.iprovider")
 
-#endif // guard
+#endif // SWIFT_MISC_PROVIDER_H

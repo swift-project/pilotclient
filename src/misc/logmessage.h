@@ -61,4 +61,4 @@ namespace swift::misc
  */
 #define SWIFT_LOG (swift::misc::CLogMessage { __FILE__, __LINE__, Q_FUNC_INFO })
 
-#endif
+#endif // SWIFT_MISC_LOGMESSAGE_H

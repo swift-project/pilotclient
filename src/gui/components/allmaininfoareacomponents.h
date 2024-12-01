@@ -15,4 +15,4 @@
 #include "gui/components/textmessagecomponent.h"
 #include "gui/components/usercomponent.h"
 
-#endif
+#endif // SWIFT_GUI_COMPONENTS_ALLMAININFOAREACOMPONENTS_H

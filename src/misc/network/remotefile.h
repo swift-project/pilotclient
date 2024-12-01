@@ -140,4 +140,4 @@ namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CRemoteFile)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_REMOTEFILE_H

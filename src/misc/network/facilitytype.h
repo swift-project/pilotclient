@@ -56,4 +56,4 @@ namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CFacilityType)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_FACILITYTYPE_H

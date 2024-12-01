@@ -87,4 +87,4 @@ namespace swift::gui
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::gui::CSystemTrayWindow::SystemTrayMode)
 
-#endif // guard
+#endif // SWIFT_GUI_ENABLEFORSYSTEMTRAY_H

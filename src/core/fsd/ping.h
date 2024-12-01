@@ -42,4 +42,4 @@ namespace swift::core::fsd
     inline bool operator!=(const Ping &lhs, const Ping &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_PING_H

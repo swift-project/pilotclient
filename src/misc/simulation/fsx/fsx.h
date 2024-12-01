@@ -12,4 +12,4 @@
  * \brief Utility classes for FSX, OS and driver independent code
  */
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSX_NAMESPACES_H

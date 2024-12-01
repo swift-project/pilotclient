@@ -435,4 +435,4 @@ namespace swift::misc
     //! \endcond
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_STRINGUTILS_H

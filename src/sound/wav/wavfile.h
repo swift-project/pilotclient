@@ -43,4 +43,4 @@ namespace swift::sound::wav
     };
 } // namespace swift::sound::wav
 
-#endif // guard
+#endif // WAVFILE_H

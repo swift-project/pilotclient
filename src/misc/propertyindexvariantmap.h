@@ -169,4 +169,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CPropertyIndexVariantMap)
 
-#endif // guard
+#endif // SWIFT_MISC_PROPERTYINDEXVARIANTMAP_H

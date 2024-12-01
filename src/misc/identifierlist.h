@@ -50,4 +50,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CIdentifierList)
 // in set: Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CIdentifier>)
 
-#endif // guard
+#endif // SWIFT_MISC_IDENTIFIERLIST_H

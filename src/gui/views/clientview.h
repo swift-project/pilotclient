@@ -27,4 +27,4 @@ namespace swift::gui::views
         explicit CClientView(QWidget *parent = nullptr);
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_CLIENTVIEW_H

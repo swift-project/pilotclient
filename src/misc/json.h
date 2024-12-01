@@ -332,4 +332,4 @@ namespace swift::misc::json
     }
 } // namespace swift::misc::json
 
-#endif // guard
+#endif // SWIFT_MISC_JSON_H

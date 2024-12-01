@@ -74,4 +74,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CPixmap)
 
-#endif // guard
+#endif // SWIFT_MISC_PIXMAP_H

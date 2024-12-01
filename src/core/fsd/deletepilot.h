@@ -44,4 +44,4 @@ namespace swift::core::fsd
     inline bool operator!=(const DeletePilot &lhs, const DeletePilot &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_DELETEPILOT_H

@@ -70,4 +70,4 @@ namespace swift::misc::simulation::fscommon
 Q_DECLARE_METATYPE(swift::misc::simulation::fscommon::CVPilotModelRuleSet)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::fscommon::CVPilotModelRule>)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSCOMMON_VPILOTMODELRULELIST_H

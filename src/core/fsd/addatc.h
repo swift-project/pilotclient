@@ -68,4 +68,4 @@ namespace swift::core::fsd
     inline bool operator!=(const AddAtc &lhs, const AddAtc &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_ADDATC_H

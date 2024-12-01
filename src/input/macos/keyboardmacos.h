@@ -52,4 +52,4 @@ namespace swift::input
     };
 } // namespace swift::input
 
-#endif // guard
+#endif // SWIFT_INPUT_KEYBOARDMACOS_H

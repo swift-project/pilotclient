@@ -371,4 +371,4 @@ Q_DECLARE_METATYPE(swift::misc::CCollection<qlonglong>)
 Q_DECLARE_METATYPE(swift::misc::CCollection<qulonglong>)
 // CCollection<double> not instantiated due to it being a dumb idea because of rounding issues
 
-#endif // guard
+#endif // SWIFT_MISC_COLLECTION_H

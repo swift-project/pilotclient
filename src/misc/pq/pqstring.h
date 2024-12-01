@@ -78,4 +78,4 @@ namespace swift::misc::physical_quantities
 
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CPqString)
 
-#endif // guard
+#endif // SWIFT_MISC_PQ_PQSTRING_H

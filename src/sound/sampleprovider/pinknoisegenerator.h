@@ -38,4 +38,4 @@ namespace swift::sound::sample_provider
     };
 } // namespace swift::sound::sample_provider
 
-#endif // guard
+#endif // PINKNOISEGENERATOR_H

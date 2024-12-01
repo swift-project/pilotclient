@@ -18,4 +18,4 @@
 
 //! \endcond
 
-#endif // guard
+#endif // SWIFT_MISCTEST_H

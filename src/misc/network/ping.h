@@ -22,4 +22,4 @@ namespace swift::misc::network
     SWIFT_MISC_EXPORT bool canPing(const QUrl &url);
 } // namespace swift::misc::network
 
-#endif
+#endif // SWIFT_MISC_NETWORK_PING_H

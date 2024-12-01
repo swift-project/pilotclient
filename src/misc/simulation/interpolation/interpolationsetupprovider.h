@@ -131,4 +131,4 @@ namespace swift::misc::simulation
 Q_DECLARE_INTERFACE(swift::misc::simulation::IInterpolationSetupProvider,
                     "org.swift-project.misc::network::iinterpolationsetupprovider")
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPPROVIDER_H

@@ -37,4 +37,4 @@ namespace swift::misc::simulation::flightgear
     };
 } // namespace swift::misc::simulation::flightgear
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FLIGHTGEAR_FLIGHTGEARUTIL_H

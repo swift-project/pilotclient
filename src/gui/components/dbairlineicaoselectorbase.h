@@ -89,4 +89,4 @@ namespace swift::gui::components
         void onCompleterActivated(const QString &icaoString);
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_DBAIRLINEICAOSELECTORBASE_H

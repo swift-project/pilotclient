@@ -128,4 +128,4 @@ namespace swift::gui::components
         static void admitCaches();
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_DBLOADOVERVIEWCOMPONENT_H

@@ -77,4 +77,4 @@ namespace swift::gui::components
         bool m_skipped = false;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_CONFIGURATIONWIZARD_H

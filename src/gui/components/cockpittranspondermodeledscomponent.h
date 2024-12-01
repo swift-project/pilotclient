@@ -57,4 +57,4 @@ namespace swift::gui::components
     };
 } // namespace swift::gui::components
 
-#endif // guard
+#endif // SWIFT_MISC_COCKPITTRANSPONDERMODELEDSCOMPONENT_H

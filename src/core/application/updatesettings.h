@@ -40,4 +40,4 @@ namespace swift::core::application
     };
 } // namespace swift::core::application
 
-#endif // guard
+#endif // SWIFT_CORE_APPLICATION_UPDATESETTINGS_H

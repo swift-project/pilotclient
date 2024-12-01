@@ -92,4 +92,4 @@ namespace swift::misc
     } // namespace shared_state
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_SHAREDSTATE_DATALINKDBUS_H

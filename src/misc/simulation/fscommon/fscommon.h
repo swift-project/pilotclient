@@ -12,4 +12,4 @@
  * \brief Utility classes for FSX, P3D, MSFS and FS9, OS and driver independent code
  */
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSCOMMON_NAMESPACES_H

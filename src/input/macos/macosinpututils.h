@@ -27,4 +27,4 @@ namespace swift::input
     };
 } // namespace swift::input
 
-#endif
+#endif // SWIFT_INPUT_MACOSINPUTUTILS_H

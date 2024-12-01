@@ -29,4 +29,4 @@ namespace swift::gui::views
         explicit CCloudLayerView(QWidget *parent = nullptr);
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_CLOUDLAYERVIEW_H

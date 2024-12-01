@@ -26,4 +26,4 @@ namespace swift::misc::simulation::settings
     };
 } // namespace swift::misc::simulation::settings
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SETTINGS_INTERPOLATIONRENDERINGSETUP_H

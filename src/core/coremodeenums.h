@@ -49,4 +49,4 @@ namespace swift::core
         }
     };
 } // namespace swift::core
-#endif // guard
+#endif // SWIFT_GUI_GUIMODEENUMS_H

@@ -115,4 +115,4 @@ namespace swift::gui::components
     };
 } // namespace swift::gui::components
 
-#endif
+#endif // SWIFT_GUI_COMPONENTS_HOTKEYDIALOG_H

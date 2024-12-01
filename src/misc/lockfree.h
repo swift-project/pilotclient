@@ -392,4 +392,4 @@ namespace swift::misc
 
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_LOCKFREE_H

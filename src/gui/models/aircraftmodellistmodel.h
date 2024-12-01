@@ -95,4 +95,4 @@ namespace swift::gui::models
         QBrush m_highlightColor { Qt::yellow }; //!< how to highlight
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_AIRCRAFTMODELLISTMODEL_H

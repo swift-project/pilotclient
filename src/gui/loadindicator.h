@@ -159,4 +159,4 @@ namespace swift::gui
     };
 } // namespace swift::gui
 
-#endif
+#endif // SWIFT_GUI_LOADINDICATOR_H

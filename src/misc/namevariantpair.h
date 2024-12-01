@@ -81,4 +81,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CNameVariantPair)
 
-#endif // guard
+#endif // SWIFT_MISC_NAMEVARIANTPAIR_H

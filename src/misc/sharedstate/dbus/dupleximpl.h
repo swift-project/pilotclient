@@ -69,4 +69,4 @@ namespace swift::misc
     } // namespace shared_state::dbus
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_SHAREDSTATE_DBUS_DUPLEXIMPL_H

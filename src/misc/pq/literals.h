@@ -240,4 +240,4 @@ namespace swift::misc::physical_quantities
 
 } // namespace swift::misc::physical_quantities
 
-#endif
+#endif // SWIFT_MISC_PQ_LITERALS_H

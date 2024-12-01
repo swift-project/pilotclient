@@ -22,4 +22,4 @@ namespace swift::gui
                                                   QWidget *parent = nullptr);
     };
 } // namespace swift::gui
-#endif
+#endif // SWIFT_GUI_COPYXSWIFTBUSDIALOG_H

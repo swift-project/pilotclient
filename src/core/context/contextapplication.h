@@ -161,4 +161,4 @@ namespace swift::core
 
 Q_DECLARE_METATYPE(swift::core::context::CSettingsDictionary)
 
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXTAPPLICATION_H

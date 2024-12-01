@@ -262,4 +262,4 @@ namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAtcStation)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_ATCSTATION_H

@@ -50,4 +50,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayerList)
 
-#endif // guard
+#endif // SWIFT_MISC_WEATHER_CLOUDLAYERLIST_H

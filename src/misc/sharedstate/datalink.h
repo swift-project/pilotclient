@@ -103,4 +103,4 @@ namespace swift::misc::shared_state
 Q_DECLARE_INTERFACE(swift::misc::shared_state::IDataLink, "swift::misc::shared_state::IDataLink")
 Q_DECLARE_METATYPE(swift::misc::CPromise<swift::misc::CVariant>)
 
-#endif
+#endif // SWIFT_MISC_SHAREDSTATE_DATALINK_H

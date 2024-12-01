@@ -41,4 +41,4 @@ namespace swift::misc::weather
 Q_DECLARE_METATYPE(swift::misc::weather::CMetarList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::weather::CMetar>)
 
-#endif
+#endif // SWIFT_MISC_WEATHER_METARLIST_H

@@ -29,4 +29,4 @@ namespace swift::core::data
     };
 } // namespace swift::core::data
 
-#endif // guard
+#endif // SWIFT_CORE_DATA_AUTHENTICATEDUSER_H

@@ -53,4 +53,4 @@ namespace swift::misc::simulation
         bool m_recalculated = false; //!< recalculated interpolant
     };
 } // namespace swift::misc::simulation
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLANT_H

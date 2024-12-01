@@ -22,4 +22,4 @@ namespace swift::misc
     SWIFT_MISC_EXPORT int getThreadCpuTimeMs();
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_CPUTIME_H

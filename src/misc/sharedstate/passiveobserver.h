@@ -89,4 +89,4 @@ namespace swift::misc::shared_state
 
 Q_DECLARE_METATYPE(swift::misc::shared_state::CAnyMatch)
 
-#endif
+#endif // SWIFT_MISC_SHAREDSTATE_PASSIVEOBSERVER_H

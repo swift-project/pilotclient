@@ -80,4 +80,4 @@ namespace swift::core::fsd
     inline bool operator!=(const VisualPilotDataUpdate &lhs, const VisualPilotDataUpdate &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_VISUALPILOTDATAUPDATE_H

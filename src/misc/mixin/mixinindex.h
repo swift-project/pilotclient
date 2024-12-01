@@ -208,4 +208,4 @@ namespace swift::misc
     } // namespace mixin
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_MIXIN_MIXININDEX_H

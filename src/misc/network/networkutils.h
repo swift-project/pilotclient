@@ -142,4 +142,4 @@ namespace swift::misc::network
     };
 } // namespace swift::misc::network
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORKUTILS_H

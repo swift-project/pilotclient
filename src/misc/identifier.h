@@ -173,4 +173,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIdentifier)
 
-#endif // guard
+#endif // SWIFT_MISC_IDENTIFIER_H

@@ -63,4 +63,4 @@ namespace swift::core::fsd
     inline bool operator!=(const AtcDataUpdate &lhs, const AtcDataUpdate &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_ATCPOSITION_H

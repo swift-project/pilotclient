@@ -38,4 +38,4 @@ namespace swift::gui::views
         swift::gui::models::CDistributorListModel::DistributorMode getDistributorMode() const;
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_DISTRIBUTORVIEW_H

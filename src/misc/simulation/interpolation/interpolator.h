@@ -198,4 +198,4 @@ namespace swift::misc::simulation
     };
 } // namespace swift::misc::simulation
 // namespace
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATOR_H

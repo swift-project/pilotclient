@@ -54,4 +54,4 @@ namespace swift::misc::simulation
 Q_DECLARE_INTERFACE(swift::misc::simulation::IAircraftModelSetProvider,
                     "org.swift-project.misc.simulation.iaircraftmodelsetprovider")
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_AIRCRAFTMODELSETPROVIDER_H

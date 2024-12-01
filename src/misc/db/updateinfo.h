@@ -121,4 +121,4 @@ namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CUpdateInfo)
 
-#endif // guard
+#endif // SWIFT_MISC_DB_UPDATEINFO_H

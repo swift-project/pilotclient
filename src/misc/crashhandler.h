@@ -84,4 +84,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_CRASHHANDLER_H

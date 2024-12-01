@@ -84,4 +84,4 @@ namespace swift::misc
     using TIndexBaseOfT = typename TIndexBaseOf<T>::type;
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_INHERITANCE_TRAITS_H

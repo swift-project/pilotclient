@@ -136,4 +136,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatedAircraftList)
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatedAircraftPerCallsign)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CSimulatedAircraft>)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SIMULATEDNAIRCRAFTLIST_H

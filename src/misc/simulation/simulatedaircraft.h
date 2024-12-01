@@ -536,4 +536,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatedAircraft)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SIMULATEDAIRCRAFT_H

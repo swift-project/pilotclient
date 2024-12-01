@@ -28,4 +28,4 @@ namespace swift::gui::models
         virtual ~CInterpolationSetupListModel() override {}
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_INTERPOLATIONSETUPMODEL_H

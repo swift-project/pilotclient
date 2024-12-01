@@ -459,4 +459,4 @@ namespace swift::core::db
     };
 } // namespace swift::core::db
 
-#endif // guard
+#endif // SWIFT_CORE_DB_DATABASEREADER_H

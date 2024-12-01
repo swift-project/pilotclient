@@ -56,4 +56,4 @@ namespace swift::simplugin::fs9
 
 Q_DECLARE_METATYPE(swift::simplugin::fs9::CFs9Host::HostStatus)
 
-#endif // guard
+#endif // DIRECTPLAY_HOST_H

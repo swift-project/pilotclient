@@ -129,4 +129,4 @@ private:
     swift::core::afv::clients::CAfvClient *m_afvClient = nullptr;
 };
 
-#endif // guard
+#endif // SAMPLES_AFVCLIENTBRIDGE_H

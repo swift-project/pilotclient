@@ -699,4 +699,4 @@ namespace swift::misc
 
 Q_DECLARE_SEQUENTIAL_CONTAINER_METATYPE(swift::misc::CSequence)
 
-#endif // guard
+#endif // SWIFT_MISC_SEQUENCE_H

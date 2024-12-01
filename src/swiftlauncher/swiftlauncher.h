@@ -210,4 +210,4 @@ private:
     static QString toCmdLine(const QString &exe, const QStringList &exeArgs);
 };
 
-#endif // guard
+#endif // SWIFTLAUNCHER_H

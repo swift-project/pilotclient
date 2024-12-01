@@ -487,4 +487,4 @@ namespace swift::core
 Q_DECLARE_METATYPE(swift::core::CAirspaceMonitor::MatchingReadinessFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::core::CAirspaceMonitor::MatchingReadiness)
 
-#endif // guard
+#endif // SWIFT_CORE_AIRSPACE_MONITOR_H

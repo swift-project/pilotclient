@@ -153,4 +153,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CCountry)
 
-#endif // guard
+#endif // SWIFT_MISC_COUNTRY_H

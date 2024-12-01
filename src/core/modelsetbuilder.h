@@ -54,4 +54,4 @@ Q_DECLARE_METATYPE(swift::core::CModelSetBuilder::BuilderFlag)
 Q_DECLARE_METATYPE(swift::core::CModelSetBuilder::Builder)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::core::CModelSetBuilder::Builder)
 
-#endif // guard
+#endif // SWIFT_CORE_CMODELSETBUILDER_H

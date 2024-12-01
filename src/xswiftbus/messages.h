@@ -174,4 +174,4 @@ namespace XSwiftBus
     };
 } // namespace XSwiftBus
 
-#endif
+#endif // SWIFT_SIM_XSWIFTBUS_MESSAGES_H

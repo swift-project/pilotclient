@@ -128,4 +128,4 @@ namespace swift::misc
     } // namespace simulation::xplane
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_XPLANE_AIRCRAFTMODELLOADERXPLANE_H

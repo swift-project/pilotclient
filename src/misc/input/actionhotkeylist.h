@@ -58,4 +58,4 @@ namespace swift::misc::input
 Q_DECLARE_METATYPE(swift::misc::input::CActionHotkeyList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::input::CActionHotkey>)
 
-#endif // guard
+#endif // SWIFT_MISC_INPUT_ACTIONHOTKEYLIST_H

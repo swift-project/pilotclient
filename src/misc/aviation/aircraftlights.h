@@ -155,4 +155,4 @@ namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftLights)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTLIGHTS_H

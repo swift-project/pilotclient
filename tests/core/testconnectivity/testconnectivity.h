@@ -13,4 +13,4 @@ namespace swiftcoretest
 
 //! \endcond
 
-#endif // guard
+#endif // SWIFT_CORETEST_TESTCONNECTIVITY_H

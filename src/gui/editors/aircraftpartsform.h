@@ -78,4 +78,4 @@ namespace swift::gui::editors
         void setAllEngines();
     };
 } // namespace swift::gui::editors
-#endif // guard
+#endif // SWIFT_GUI_EDITORS_AIRCRAFTPARTSFORM_H

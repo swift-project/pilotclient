@@ -44,4 +44,4 @@ namespace swift::core::fsd
     inline bool operator!=(const AuthChallenge &lhs, const AuthChallenge &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_AUTHCHALLENGE_H

@@ -193,4 +193,4 @@ namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CUser)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_USER_H

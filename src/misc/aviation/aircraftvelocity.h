@@ -103,4 +103,4 @@ namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftVelocity)
 
-#endif
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTVELOCITY_H

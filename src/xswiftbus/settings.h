@@ -82,4 +82,4 @@ namespace XSwiftBus
     };
 } // namespace XSwiftBus
 
-#endif
+#endif // SWIFT_MISC_XSWIFTBUS_CSETTINGS_H

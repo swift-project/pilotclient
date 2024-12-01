@@ -180,4 +180,4 @@ namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftCategory)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTCATEGORY_H

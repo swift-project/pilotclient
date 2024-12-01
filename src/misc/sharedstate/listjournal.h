@@ -57,4 +57,4 @@ namespace swift::misc::shared_state
     };
 } // namespace swift::misc::shared_state
 
-#endif
+#endif // SWIFT_MISC_SHAREDSTATE_LISTJOURNAL_H

@@ -149,4 +149,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftIcaoCodeList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAircraftIcaoCode>)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTICAOCODELIST_H

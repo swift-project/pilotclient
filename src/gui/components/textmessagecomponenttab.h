@@ -22,4 +22,4 @@ namespace swift::gui::components
 
 Q_DECLARE_METATYPE(swift::gui::components::TextMessageTab)
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_TEXTMESSAGECOMPONENT_TAB_H

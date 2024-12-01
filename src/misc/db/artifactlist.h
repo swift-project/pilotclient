@@ -116,4 +116,4 @@ namespace swift::misc::db
 Q_DECLARE_METATYPE(swift::misc::db::CArtifactList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::db::CArtifact>)
 
-#endif // guard
+#endif // SWIFT_MISC_DB_ARTIFACTLIST_H

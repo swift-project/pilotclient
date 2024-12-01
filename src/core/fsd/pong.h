@@ -42,4 +42,4 @@ namespace swift::core::fsd
     inline bool operator!=(const Pong &lhs, const Pong &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_PONG_H

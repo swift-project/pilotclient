@@ -30,4 +30,4 @@ namespace swift::gui::models
     };
 } // namespace swift::gui::models
 
-#endif // guard
+#endif // SWIFT_GUI_MODELS_COUNTRYFILTER_H

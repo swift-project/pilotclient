@@ -551,4 +551,4 @@ Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituation)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituation::AltitudeCorrection)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituation::GndElevationInfo)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTSITUATION_H

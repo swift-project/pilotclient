@@ -106,4 +106,4 @@ namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CTrack)
 
-#endif
+#endif // SWIFT_MISC_AVIATION_TRACK_H

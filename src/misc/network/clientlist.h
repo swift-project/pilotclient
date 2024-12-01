@@ -44,4 +44,4 @@ Q_DECLARE_METATYPE(swift::misc::network::CClientList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CClient>)
 Q_DECLARE_METATYPE(swift::misc::network::CClientPerCallsign)
 
-#endif
+#endif // SWIFT_MISC_NETWORK_CLIENTLIST_H

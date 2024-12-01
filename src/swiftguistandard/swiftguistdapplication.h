@@ -41,4 +41,4 @@ private:
                                          "coremode" }; //!< Facade startup mode
 };
 
-#endif // guard
+#endif // SWIFTGUISTDAPPLICATION_H

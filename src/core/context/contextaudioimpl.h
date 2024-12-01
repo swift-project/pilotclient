@@ -69,4 +69,4 @@ namespace swift::core
     } // namespace context
 } // namespace swift::core
 
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXTAUDIO_IMPL_H

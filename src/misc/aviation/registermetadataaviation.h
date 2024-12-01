@@ -14,4 +14,4 @@ namespace swift::misc::aviation
     SWIFT_MISC_EXPORT void registerMetadata();
 } // namespace swift::misc::aviation
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_REGISTERMETADATAAVIATION_H

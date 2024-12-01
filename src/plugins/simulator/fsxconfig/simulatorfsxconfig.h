@@ -32,4 +32,4 @@ namespace swift::simplugin::fsx
     };
 } // namespace swift::simplugin::fsx
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_SIMULATOR_FSX_CONFIG_H

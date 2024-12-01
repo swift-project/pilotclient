@@ -134,4 +134,4 @@ namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::KeyCode)
 
-#endif // guard
+#endif // SWIFT_MISC_INPUT_KEYCODES_H

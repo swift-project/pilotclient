@@ -62,4 +62,4 @@ namespace swift::gui::filters
         swift::misc::CStatusMessage::StatusSeverity getSelectedSeverity() const;
     };
 } // namespace swift::gui::filters
-#endif // guard
+#endif // SWIFT_GUI_FILTERS_STATUSMESSAGEFILTERBAR_H

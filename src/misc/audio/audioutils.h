@@ -18,4 +18,4 @@ namespace swift::misc::audio
     SWIFT_MISC_EXPORT void initWindowsAudioDevices();
 } // namespace swift::misc::audio
 
-#endif // guard
+#endif // SWIFT_MISC_AUDIO_UTILS_H

@@ -56,4 +56,4 @@ namespace swift::gui::components
         swift::misc::CSetting<settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_SETTINGSGUICOMPONENT_H

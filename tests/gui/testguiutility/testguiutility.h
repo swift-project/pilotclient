@@ -18,4 +18,4 @@ namespace SwiftGuiTest
 
 //! \endcond
 
-#endif // guard
+#endif // SWIFT_GUITEST_TESTUTILS_H

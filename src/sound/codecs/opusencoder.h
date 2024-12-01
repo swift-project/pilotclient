@@ -44,4 +44,4 @@ namespace swift::sound::codecs
     };
 } // namespace swift::sound::codecs
 
-#endif // guard
+#endif // SWIFT_SOUND_CODECS_OPUSENCODER_H

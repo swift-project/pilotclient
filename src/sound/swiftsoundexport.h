@@ -23,4 +23,4 @@
 #    define SWIFT_SOUND_EXPORT
 #endif
 
-#endif // guard
+#endif // SWIFT_SOUND_SWIFT_SOUNDEXPORT_H

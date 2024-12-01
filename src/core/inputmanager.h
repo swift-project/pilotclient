@@ -150,4 +150,4 @@ namespace swift::core
     };
 } // namespace swift::core
 
-#endif // guard
+#endif // SWIFT_CORE_INPUTMANAGER_H

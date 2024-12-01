@@ -69,4 +69,4 @@ namespace swift::core::fsd
     inline bool operator!=(const EuroscopeSimData &lhs, const EuroscopeSimData &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_EUROSCOPESIMDATA_H

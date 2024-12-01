@@ -56,4 +56,4 @@ namespace swift::gui::models
         int getRowIndexForName(const QString &name) const;
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_NAMEVARIANTLISTMODEL_H

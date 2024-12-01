@@ -76,4 +76,4 @@ namespace swift::sound
     };
 } // namespace swift::sound
 
-#endif // guard
+#endif // SWIFT_SOUND_THREADEDTONEPAIRPLAYER_H

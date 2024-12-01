@@ -130,4 +130,4 @@ namespace swift::misc::weather
 
 Q_DECLARE_METATYPE(swift::misc::weather::CWindLayer)
 
-#endif
+#endif // SWIFT_MISC_WEATHER_WINDLAYER_H

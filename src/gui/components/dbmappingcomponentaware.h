@@ -54,4 +54,4 @@ namespace swift::gui::components
 Q_DECLARE_INTERFACE(swift::gui::components::CDbMappingComponentAware,
                     "org.swift-project.swiftgui.components.dbmappingcomponentaware")
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H

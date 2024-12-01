@@ -62,4 +62,4 @@ namespace swift::misc::db
 Q_DECLARE_METATYPE(swift::misc::db::CDbFlags::DataRetrievalModeFlag)
 Q_DECLARE_METATYPE(swift::misc::db::CDbFlags::DataRetrievalMode)
 
-#endif // guard
+#endif // SWIFT_MISC_DB_DBFLAGS_H

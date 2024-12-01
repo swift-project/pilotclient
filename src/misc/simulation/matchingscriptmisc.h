@@ -43,4 +43,4 @@ namespace swift::misc::simulation
     };
 } // namespace swift::misc::simulation
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_MATCHINGSCRIPTMISC_H

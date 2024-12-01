@@ -82,4 +82,4 @@ namespace swift::core::db
         void addHistory(const swift::misc::CStatusMessage &msg);
     };
 } // namespace swift::core::db
-#endif // guard
+#endif // SWIFT_CORE_DB_BACKGROUNDDATAUPDATER_H

@@ -38,4 +38,4 @@ namespace swift::misc::private_ns
     //! \endcond
 } // namespace swift::misc::private_ns
 
-#endif // guard
+#endif // SWIFT_MISC_INTEGERSEQUENCE_H

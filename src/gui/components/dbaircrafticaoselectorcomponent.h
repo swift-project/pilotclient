@@ -117,4 +117,4 @@ namespace swift::gui::components
         QStringList m_completerStrings; //!< the completer strings
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_DBAIRCRAFTICAOSELECTORCOMPONENT_H

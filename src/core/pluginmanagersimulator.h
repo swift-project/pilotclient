@@ -74,4 +74,4 @@ namespace swift::core
     };
 } // namespace swift::core
 
-#endif // guard
+#endif // SWIFT_CORE_PLUGIN_MANAGER_SIMULATOR_H

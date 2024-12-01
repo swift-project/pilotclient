@@ -331,4 +331,4 @@ namespace swift::core::context
     };
 } // namespace swift::core::context
 
-#endif // guard
+#endif // SWIFT_CORE_CONTEXTSIMULATOR_H

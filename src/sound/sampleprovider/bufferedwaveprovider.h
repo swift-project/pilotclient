@@ -42,4 +42,4 @@ namespace swift::sound::sample_provider
     };
 } // namespace swift::sound::sample_provider
 
-#endif // guard
+#endif // SWIFT_SOUND_BUFFEREDWAVEPROVIDER_H

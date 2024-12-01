@@ -41,4 +41,4 @@ namespace swift::gui::components
         QScopedPointer<Ui::CTextEditDialog> ui;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_TEXTEDITDIALOG_H

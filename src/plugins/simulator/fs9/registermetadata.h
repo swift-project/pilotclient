@@ -12,4 +12,4 @@ namespace swift::simplugin::fs9
     void registerMetadata();
 } // namespace swift::simplugin::fs9
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_REGISTERMETADATA_H

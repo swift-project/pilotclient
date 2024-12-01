@@ -237,4 +237,4 @@ namespace swift::misc::network
 Q_DECLARE_METATYPE(swift::misc::network::CServer)
 Q_DECLARE_METATYPE(swift::misc::network::CServer::ServerType)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_SERVER_H

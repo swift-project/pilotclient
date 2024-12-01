@@ -53,4 +53,4 @@ Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAircraftPart
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftPartsPerCallsign)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftPartsListPerCallsign)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTPARTSLIST_H

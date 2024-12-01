@@ -48,4 +48,4 @@ FSXCOMMON_EXPORT bool loadAndResolveFsxSimConnect(bool manifestProbing);
 
 #endif
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTSYMBOLS_H

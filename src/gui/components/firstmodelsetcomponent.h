@@ -105,4 +105,4 @@ namespace swift::gui::components
         CFirstModelSetComponent *m_firstModelSet = nullptr;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_FIRSTMODELSETCOMPONENT_H

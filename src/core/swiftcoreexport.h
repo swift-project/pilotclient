@@ -23,4 +23,4 @@
 #    define SWIFT_CORE_EXPORT
 #endif
 
-#endif // guard
+#endif // SWIFT_CORE_SWIFT_COREEXPORT_H

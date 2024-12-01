@@ -78,4 +78,4 @@ namespace swift::misc::simulation::fscommon
     };
 } // namespace swift::misc::simulation::fscommon
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSCOMMONUTIL_H

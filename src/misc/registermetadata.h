@@ -15,4 +15,4 @@ namespace swift::misc
     SWIFT_MISC_EXPORT void registerMetadata();
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_REGISTERMETADATA_H

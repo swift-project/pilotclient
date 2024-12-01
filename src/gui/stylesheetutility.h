@@ -174,4 +174,4 @@ namespace swift::gui
         QFileSystemWatcher m_fileWatcher { this }; //!< monitor my qss files
     };
 } // namespace swift::gui
-#endif // guard
+#endif // SWIFT_GUI_STYLESHEETUTILITY_H

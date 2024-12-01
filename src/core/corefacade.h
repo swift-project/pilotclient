@@ -203,4 +203,4 @@ namespace swift::core
         void initPostSetup(QMap<QString, qint64> &times);
     };
 } // namespace swift::core
-#endif // guard
+#endif // SWIFT_CORE_COREFACADE_H

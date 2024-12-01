@@ -307,4 +307,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftMatcherSetup::ForceModeFlag
 Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftMatcherSetup::PickSimilarStrategy)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::simulation::CAircraftMatcherSetup::MatchingMode)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_AIRCRAFTMATCHERSETUP_H

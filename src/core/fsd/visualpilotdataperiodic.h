@@ -79,4 +79,4 @@ namespace swift::core::fsd
     }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_VISUALPILOTDATAPERIODIC_H

@@ -66,4 +66,4 @@ namespace swift::gui::components
                                                         std::chrono::seconds(5), 2 };
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_COMMANDINPUT_H

@@ -622,4 +622,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftModel::ModelMode)
 Q_DECLARE_METATYPE(swift::misc::simulation::CAircraftModel::ModelModeFilter)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::simulation::CAircraftModel::ModelModeFilter)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_AIRCRAFTMODEL_H

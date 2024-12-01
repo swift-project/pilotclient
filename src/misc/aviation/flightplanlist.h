@@ -39,4 +39,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CFlightPlanList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CFlightPlan>)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_FLIGHTPLANLIST_H

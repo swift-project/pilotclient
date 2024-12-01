@@ -337,4 +337,4 @@ private:
     //! @}
 };
 
-#endif // guard
+#endif // STDGUI_SWIFTGUISTD_H

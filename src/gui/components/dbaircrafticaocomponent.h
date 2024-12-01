@@ -75,4 +75,4 @@ namespace swift::gui
     } // namespace components
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_DBAIRCRAFTICAOCOMPONENT_H

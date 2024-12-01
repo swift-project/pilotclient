@@ -201,4 +201,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::fsx::CSimConnectUtilities::SIMCONNEC
 Q_DECLARE_METATYPE(swift::misc::simulation::fsx::CSimConnectUtilities::SIMCONNECT_SURFACE)
 Q_DECLARE_METATYPE(swift::misc::simulation::fsx::CSimConnectUtilities::SIMCONNECT_RECV_ID)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSX_SIMCONNECTUTILITIES_H

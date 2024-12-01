@@ -168,4 +168,4 @@ namespace swift::gui::settings
 Q_DECLARE_METATYPE(swift::gui::settings::CTextMessageSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::gui::settings::CTextMessageSettings>)
 
-#endif // guard
+#endif // SWIFT_GUI_SETTINGS_TEXTMESSAGESETTINGS_H

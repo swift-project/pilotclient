@@ -53,4 +53,4 @@ namespace XSwiftBus
 // *INDENT-ON*
 //! @}
 
-#endif // guard
+#endif // SWIFT_SIM_XSWIFTBUS_UTILS_H

@@ -475,4 +475,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CFlightPlanRemarks)
 Q_DECLARE_METATYPE(swift::misc::aviation::CFlightPlan)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_FLIGHTPLAN_H

@@ -390,4 +390,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::geo::CCoordinateGeodetic)
 
-#endif // guard
+#endif // SWIFT_MISC_GEO_COORDINATEGEODETIC_H

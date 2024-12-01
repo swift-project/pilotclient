@@ -96,4 +96,4 @@ namespace swift::core::application
     };
 } // namespace swift::core::application
 
-#endif
+#endif // SWIFT_CORE_APPLICATION_APPLICATIONSETTINGS_H

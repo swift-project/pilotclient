@@ -76,4 +76,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CAirportList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAirport>)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRPORTLIST_H

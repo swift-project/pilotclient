@@ -28,4 +28,4 @@ namespace swift::gui::models
         virtual ~CWindLayerListModel() {}
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_WINDLAYERLISTMODEL_H

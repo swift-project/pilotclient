@@ -38,4 +38,4 @@ namespace swift::misc
     SWIFT_MISC_EXPORT QPixmap iconToPixmap(const QIcon &icon);
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_IMAGEUTILS_H

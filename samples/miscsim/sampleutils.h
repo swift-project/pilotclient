@@ -26,4 +26,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_SAMPLE_SAMPLEUTILS_H

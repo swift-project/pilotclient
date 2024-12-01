@@ -39,4 +39,4 @@ namespace swift::misc::physical_quantities
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CLength)
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CLengthPair)
 
-#endif // guard
+#endif // SWIFT_MISC_PQ_LENGTH_H

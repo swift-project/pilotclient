@@ -41,4 +41,4 @@ namespace swift::simplugin::xplane
     };
 } // namespace swift::simplugin::xplane
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_SIMULATOR_XPLANE_CONFIG_H

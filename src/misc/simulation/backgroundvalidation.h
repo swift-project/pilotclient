@@ -99,4 +99,4 @@ namespace swift::misc::simulation
         void doWork();
     };
 } // namespace swift::misc::simulation
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_BACKGROUNDVALIDATION_H

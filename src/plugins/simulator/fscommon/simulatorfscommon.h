@@ -74,4 +74,4 @@ namespace swift::simplugin::fscommon
     };
 } // namespace swift::simplugin::fscommon
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_H

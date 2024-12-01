@@ -60,4 +60,4 @@ namespace swift::misc::network
 Q_DECLARE_METATYPE(swift::misc::network::CServerList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CServer>)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_SERVERLIST_H

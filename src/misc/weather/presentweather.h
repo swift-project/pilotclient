@@ -139,4 +139,4 @@ Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeather)
 Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeather::Intensity)
 Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeather::Descriptor)
 
-#endif // guard
+#endif // SWIFT_MISC_WEATHER_PRESENTWEATHER_H

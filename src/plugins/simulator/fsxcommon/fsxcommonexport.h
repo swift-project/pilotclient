@@ -23,4 +23,4 @@
 #    define FSXCOMMON_EXPORT
 #endif
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FSXCOMMON_SIMULATORFSXCOMMON_MACROS_H

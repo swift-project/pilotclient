@@ -41,4 +41,4 @@ namespace swift::misc::simulation
 Q_DECLARE_METATYPE(swift::misc::simulation::CInterpolationSetupList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign>)
 
-#endif
+#endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONSETUPLIST_H

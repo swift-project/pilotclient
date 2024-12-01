@@ -67,4 +67,4 @@ namespace swift::core::vatsim
     };
 } // namespace swift::core::vatsim
 
-#endif // guard
+#endif // SWIFT_CORE_VATSIM_VATSIMSERVERFILEREADER_H

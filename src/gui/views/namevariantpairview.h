@@ -45,4 +45,4 @@ namespace swift::gui::views
         bool containsName(const QString &name);
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_NAMEVARIANTPAIRVIEW_H

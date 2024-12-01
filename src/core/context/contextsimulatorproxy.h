@@ -253,4 +253,4 @@ namespace swift::core
         };
     } // namespace context
 } // namespace swift::core
-#endif // guard
+#endif // SWIFT_CORE_CONTEXTSIMULATOR_PROXY_H

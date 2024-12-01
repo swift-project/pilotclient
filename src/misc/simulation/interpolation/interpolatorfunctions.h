@@ -22,4 +22,4 @@ namespace swift::misc::simulation
         return timeFraction;
     }
 } // namespace swift::misc::simulation
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATORFUNCTIONS_H

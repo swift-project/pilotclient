@@ -159,4 +159,4 @@ Q_DECLARE_METATYPE(swift::misc::network::CFsdSetup::SendReceiveDetails)
 Q_DECLARE_METATYPE(swift::misc::network::CFsdSetup::SendReceiveDetailsFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::network::CFsdSetup::SendReceiveDetails)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_FSDSETUP_H

@@ -31,4 +31,4 @@ namespace swift::simplugin::msfs
     };
 } // namespace swift::simplugin::msfs
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_MSFS_SIMULATORMSFSCONFIG_H

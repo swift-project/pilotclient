@@ -72,4 +72,4 @@ namespace swift::gui
     };
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_DROPSITE_H

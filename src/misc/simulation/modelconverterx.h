@@ -56,4 +56,4 @@ namespace swift::misc::simulation
     } // namespace settings
 } // namespace swift::misc::simulation
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_MODELCONVERTERX_H

@@ -161,4 +161,4 @@ namespace swift::core::context
         bool m_debugEnabled = false; //!< debug messages enabled
     };
 } // namespace swift::core::context
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXT_H

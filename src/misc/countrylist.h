@@ -72,4 +72,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CCountryList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CCountry>)
 
-#endif // guard
+#endif // SWIFT_MISC_COUNTRYLIST_H

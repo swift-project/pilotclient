@@ -81,4 +81,4 @@ namespace swift::core
     using CActionBindings = QList<CActionBinding>;
 } // namespace swift::core
 
-#endif
+#endif // SWIFT_CORE_ACTIONBIND_H

@@ -146,4 +146,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CLogCategoryList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CLogCategory>)
 
-#endif
+#endif // SWIFT_MISC_LOGCATEGORYLIST_H

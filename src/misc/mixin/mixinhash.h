@@ -92,4 +92,4 @@ namespace swift::misc
     } // namespace mixin
 } // namespace swift::misc
 
-#endif // SWIFT_MISC_DICTIONARY_H
+#endif // SWIFT_MISC_MIXIN_MIXINHASH_H

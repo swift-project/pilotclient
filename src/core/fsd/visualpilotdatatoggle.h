@@ -47,4 +47,4 @@ namespace swift::core::fsd
     inline bool operator!=(const VisualPilotDataToggle &lhs, const VisualPilotDataToggle &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_VISUALPILOTDATATOGGLE_H

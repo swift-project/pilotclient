@@ -43,4 +43,4 @@ namespace swift::core::fsd
     inline bool operator!=(const Rehost &lhs, const Rehost &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_REHOST_H

@@ -33,4 +33,4 @@ namespace swift::gui::components
         QScopedPointer<Ui::CFirstModelSetDialog> ui;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_FIRSTMODELSETDIALOG_H

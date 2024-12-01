@@ -35,4 +35,4 @@ namespace swift::misc::physical_quantities
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CSpeed)
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CSpeedPair)
 
-#endif // guard
+#endif // SWIFT_MISC_PQ_SPEED_H

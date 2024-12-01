@@ -117,4 +117,4 @@ namespace swift::simplugin::fs9
 
 Q_DECLARE_METATYPE(swift::simplugin::fs9::CFs9Client::ClientStatus)
 
-#endif // guard
+#endif // DIRECTPLAY_CLIENT_H

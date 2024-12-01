@@ -61,4 +61,4 @@ namespace swift::gui
 
 Q_DECLARE_INTERFACE(swift::gui::IMainWindowAccess, "org.swift-project.swiftgui.mainwindowaccess")
 
-#endif // guard
+#endif // SWIFT_GUI_MAINWINDOWACCESS_H

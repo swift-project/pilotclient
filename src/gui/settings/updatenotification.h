@@ -33,4 +33,4 @@ namespace swift::gui::settings
     };
 } // namespace swift::gui::settings
 
-#endif // guard
+#endif // SWIFT_GUI_SETTINGS_UPDATENOTIFICATIONSETTINGS_H

@@ -143,4 +143,4 @@ namespace swift::misc
     } // namespace test
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_TEST_TESTDATA_H

@@ -168,4 +168,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CTransponder)
 Q_DECLARE_METATYPE(swift::misc::aviation::CTransponder::TransponderMode)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_TRANSPONDER_H

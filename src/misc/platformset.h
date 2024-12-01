@@ -53,4 +53,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CPlatformSet)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CPlatform>)
 
-#endif // guard
+#endif // SWIFT_MISC_PLATFORMSET_H

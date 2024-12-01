@@ -31,4 +31,4 @@ namespace swift::simplugin::p3d
     };
 } // namespace swift::simplugin::p3d
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_P3D_SIMULATORP3DCONFIG_H

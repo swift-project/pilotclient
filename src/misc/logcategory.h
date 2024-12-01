@@ -59,4 +59,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CLogCategory)
 
-#endif
+#endif // SWIFT_MISC_LOGCATEGORY_H

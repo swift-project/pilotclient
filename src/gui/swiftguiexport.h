@@ -32,4 +32,4 @@
 #    define SWIFT_GUI_EXPORT_DECLARE_TEMPLATE
 #endif
 
-#endif // guard
+#endif // SWIFT_GUI_SWIFT_GUIEXPORT_H

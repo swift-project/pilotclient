@@ -107,4 +107,4 @@ namespace swift::gui::components
         swift::misc::db::CDistribution getSelectedOrDefaultDistribution() const;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_UPDATEINFOCOMPONENT_H

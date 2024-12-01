@@ -512,4 +512,4 @@ namespace swift::simplugin::xplane
     };
 } // namespace swift::simplugin::xplane
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_XSWIFTBUS_SERVICE_PROXY_H

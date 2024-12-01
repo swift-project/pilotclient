@@ -92,4 +92,4 @@ namespace swift::gui::components
         bool m_onlyWithParts = false;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_CALLSIGNCOMPLETER_H

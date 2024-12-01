@@ -35,4 +35,4 @@ namespace swift::misc::simulation
     };
 } // namespace swift::misc::simulation
 
-#endif
+#endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATORPBH_H

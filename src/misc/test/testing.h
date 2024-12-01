@@ -38,4 +38,4 @@ namespace swift::misc::test
     };
 } // namespace swift::misc::test
 
-#endif
+#endif // SWIFT_MISC_TEST_TESTING_H

@@ -212,4 +212,4 @@ namespace swift::gui
         static const QString &colorString(LedColor color); //!< Color string
     };
 } // namespace swift::gui
-#endif
+#endif // SWIFT_GUI_LEDWIDGET_H

@@ -63,4 +63,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CProcessInfo)
 
-#endif
+#endif // SWIFT_MISC_PROCESSINFO_H

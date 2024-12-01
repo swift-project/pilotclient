@@ -60,4 +60,4 @@ namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CConnectionStatus)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_CONNECTIONSTATUS_H

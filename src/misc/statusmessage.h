@@ -675,4 +675,4 @@ Q_DECLARE_METATYPE(swift::misc::CStrongStringView)
 Q_DECLARE_METATYPE(swift::misc::CStatusMessage)
 Q_DECLARE_METATYPE(swift::misc::CStatusMessage::StatusSeverity)
 
-#endif // guard
+#endif // SWIFT_MISC_STATUSMESSAGE_H

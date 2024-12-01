@@ -175,4 +175,4 @@ namespace swift::misc::weather
 
 Q_DECLARE_METATYPE(swift::misc::weather::CMetar)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_METAR_H

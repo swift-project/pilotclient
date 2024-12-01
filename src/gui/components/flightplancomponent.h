@@ -306,4 +306,4 @@ namespace swift::gui::components
         static bool consolidateRemarks(QStringList &remarks, const QString &newRemarks);
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_FLIGHTPLANCOMPONENT_H

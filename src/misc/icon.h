@@ -125,4 +125,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIcon)
 
-#endif // guard
+#endif // SWIFT_MISC_ICON_H

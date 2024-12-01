@@ -28,4 +28,4 @@ namespace swift::gui::views
         void setStatisticsModelMode(models::CMatchingStatisticsModel::MatchingStatisticsMode mode);
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_MATCHINGSTATISTICSVIEW_H

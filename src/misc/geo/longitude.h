@@ -56,4 +56,4 @@ namespace swift::misc::geo
 
 Q_DECLARE_METATYPE(swift::misc::geo::CLongitude)
 
-#endif // guard
+#endif // SWIFT_MISC_GEO_LONGITUDE_H

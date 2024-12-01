@@ -163,4 +163,4 @@ namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CDistributor)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_DISTRIBUTOR_H
