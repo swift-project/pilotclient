@@ -15,7 +15,6 @@
 #include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/aircraftsituationchange.h"
 #include "misc/aviation/callsign.h"
-#include "misc/logcategories.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/interpolation/interpolant.h"
 #include "misc/simulation/interpolation/interpolationlogger.h"

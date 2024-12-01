@@ -15,7 +15,6 @@
 #include <QMap>
 
 #include "misc/range.h"
-#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {

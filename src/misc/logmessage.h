@@ -6,13 +6,8 @@
 
 //! \file
 
-#include <type_traits>
-
 #include <QDebug>
-#include <QList>
-#include <QLoggingCategory>
 
-#include "misc/integersequence.h"
 #include "misc/statusmessage.h"
 #include "misc/statusmessagelist.h"
 #include "misc/swiftmiscexport.h"

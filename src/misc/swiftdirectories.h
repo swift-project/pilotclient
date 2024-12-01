@@ -6,11 +6,7 @@
 #ifndef SWIFT_MISC_SWIFTDIRECTORIES_H
 #define SWIFT_MISC_SWIFTDIRECTORIES_H
 
-#include <QDateTime>
-#include <QDir>
 #include <QFileInfoList>
-#include <QMap>
-#include <QSet>
 #include <QString>
 
 #include "misc/swiftmiscexport.h"

@@ -6,7 +6,6 @@
 #ifndef SWIFT_CORE_CONTEXTSIMULATOR_PROXY_H
 #define SWIFT_CORE_CONTEXTSIMULATOR_PROXY_H
 
-#include <QObject>
 #include <QString>
 
 #include "core/context/contextsimulator.h"

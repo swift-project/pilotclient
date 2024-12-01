@@ -44,7 +44,6 @@ using namespace swift::gui::components;
 using namespace swift::core;
 using namespace swift::core::context;
 using namespace swift::core::data;
-using namespace swift::core::vatsim;
 using namespace swift::sound;
 using namespace swift::misc;
 using namespace swift::misc::db;

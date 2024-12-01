@@ -6,7 +6,6 @@
 #ifndef SWIFT_CORE_CONTEXT_OWNAIRCRAFT_PROXY_H
 #define SWIFT_CORE_CONTEXT_OWNAIRCRAFT_PROXY_H
 
-#include <QObject>
 #include <QString>
 
 #include "core/context/contextownaircraft.h"

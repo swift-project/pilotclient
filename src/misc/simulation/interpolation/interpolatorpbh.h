@@ -6,10 +6,14 @@
 #ifndef SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATORPBH_H
 #define SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATORPBH_H
 
-#include "misc/aviation/aircraftsituation.h"
 #include "misc/aviation/heading.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/speed.h"
+
+namespace swift::misc::aviation
+{
+    class CAircraftSituation;
+}
 
 namespace swift::misc::simulation
 {

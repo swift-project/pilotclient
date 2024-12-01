@@ -11,6 +11,7 @@
 #include <QStringList>
 
 #include "misc/json.h"
+#include "misc/jsonexception.h"
 #include "misc/mixin/mixindbus.h"
 #include "misc/mixin/mixinjson.h"
 #include "misc/mixin/mixinmetatype.h"

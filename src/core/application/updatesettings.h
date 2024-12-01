@@ -8,7 +8,6 @@
 
 #include <QStringList>
 
-#include "config/buildconfig.h"
 #include "core/application.h"
 #include "misc/platform.h"
 #include "misc/settingscache.h"

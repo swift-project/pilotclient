@@ -6,56 +6,39 @@
 # For example "core" uses the same PCH as "misc" but with additional headers included.
 
 set(SWIFT_MISC_PCH
-    <QAudioDevice>
     [["misc/collection.h"]]
-    [["misc/containerbase.h"]]
     [["misc/dbus.h"]]
     [["misc/dictionary.h"]]
-    [["misc/iterator.h"]]
     [["misc/json.h"]]
     [["misc/metaclass.h"]]
-    [["misc/range.h"]]
     [["misc/sequence.h"]]
     [["misc/valueobject.h"]]
     [["misc/verify.h"]]
-    [["misc/worker.h"]]
 
     <QByteArray>
-    <QChar>
-    <QCoreApplication>
     <QDBusArgument>
     <QDBusMetaType>
-    <QDate>
     <QDateTime>
-    <QDebug>
     <QDir>
     <QFile>
-    <QFlag>
     <QFlags>
-    <QFutureWatcher>
-    <QGlobalStatic>
     <QHash>
-    <QIODevice>
     <QIcon>
     <QJsonArray>
     <QJsonObject>
     <QJsonValue>
     <QJsonValueRef>
-    <QLatin1Char>
     <QLatin1String>
     <QList>
     <QLoggingCategory>
     <QMap>
     <QMessageLogContext>
-    <QMetaMethod>
     <QMetaObject>
     <QMetaType>
     <QMutex>
-    <QMutexLocker>
     <QObject>
     <QPair>
     <QPixmap>
-    <QReadLocker>
     <QReadWriteLock>
     <QScopedPointer>
     <QSet>
@@ -68,37 +51,23 @@ set(SWIFT_MISC_PCH
     <QTime>
     <QTimer>
     <QVariant>
-    <QVariantList>
     <QVector>
-    <QWeakPointer>
-    <QWriteLocker>
     <QtGlobal>
 
     <algorithm>
-    <array>
-    <cctype>
     <cmath>
-    <cstddef>
-    <cstdio>
-    <cstdlib>
-    <cstring>
     <exception>
     <functional>
     <future>
     <initializer_list>
-    <iostream>
     <iterator>
     <map>
     <memory>
-    <numeric>
-    <random>
     <set>
-    <stdexcept>
     <string>
     <tuple>
     <type_traits>
     <typeindex>
-    <unordered_map>
     <utility>
     <vector>
 )

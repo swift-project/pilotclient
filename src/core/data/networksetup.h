@@ -6,14 +6,12 @@
 #ifndef SWIFT_CORE_DATA_NETWORKSETUP_H
 #define SWIFT_CORE_DATA_NETWORKSETUP_H
 
-#include <QMetaType>
 #include <QObject>
 #include <QString>
 
 #include "core/data/vatsimsetup.h"
 #include "core/swiftcoreexport.h"
 #include "core/vatsim/vatsimsettings.h"
-#include "misc/metaclass.h"
 #include "misc/network/data/lastserver.h"
 #include "misc/network/serverlist.h"
 #include "misc/network/settings/serversettings.h"

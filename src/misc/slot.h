@@ -13,6 +13,7 @@
 
 #include <QObject>
 #include <QPointer>
+#include <QTimer>
 #include <QtGlobal>
 
 #include "misc/invoke.h"

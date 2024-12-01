@@ -11,7 +11,6 @@
 #include <QStringList>
 
 #include "misc/collection.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/sequence.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/fscommon/vpilotmodelrule.h"

@@ -6,10 +6,8 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXT_H
 #define SWIFT_CORE_CONTEXT_CONTEXT_H
 
-#include <QDateTime>
 #include <QObject>
 #include <QString>
-#include <QStringBuilder>
 #include <QtGlobal>
 
 #include "core/corefacade.h"

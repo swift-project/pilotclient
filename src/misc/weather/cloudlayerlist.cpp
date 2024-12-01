@@ -4,7 +4,6 @@
 #include "misc/weather/cloudlayerlist.h"
 
 #include "misc/aviation/altitude.h"
-#include "misc/mixin/mixincompare.h"
 
 using namespace swift::misc::aviation;
 

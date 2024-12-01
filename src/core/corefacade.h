@@ -14,7 +14,6 @@
 #include "core/corefacadeconfig.h"
 #include "core/data/launchersetup.h"
 #include "core/swiftcoreexport.h"
-#include "core/vatsim/vatsimsettings.h"
 #include "misc/identifier.h"
 #include "misc/settingscache.h"
 

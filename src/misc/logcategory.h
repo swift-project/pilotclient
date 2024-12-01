@@ -10,7 +10,6 @@
 #include <QMetaType>
 #include <QString>
 
-#include "misc/logcategories.h"
 #include "misc/metaclass.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/valueobject.h"

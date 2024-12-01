@@ -3,16 +3,10 @@
 
 #include "misc/simulation/fsx/simconnectutilities.h"
 
-#include <QCoreApplication>
-#include <QFile>
 #include <QFlags>
-#include <QIODevice>
 #include <QLatin1String>
 #include <QMetaEnum>
 #include <QMetaObject>
-#include <QStandardPaths>
-#include <QStringBuilder>
-#include <QTextStream>
 
 #include "misc/stringutils.h"
 

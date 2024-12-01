@@ -7,7 +7,6 @@
 #define SWIFT_MISC_VALUECACHE_PRIVATE_H
 
 #include <QMap>
-#include <QMutex>
 #include <QObject>
 
 #include "misc/statusmessage.h"

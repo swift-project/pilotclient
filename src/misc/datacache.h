@@ -25,7 +25,6 @@
 #include <QString>
 #include <QStringList>
 #include <QUuid>
-#include <QtDebug>
 #include <QtGlobal>
 
 #include "misc/identifier.h"

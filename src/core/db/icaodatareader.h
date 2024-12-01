@@ -9,7 +9,6 @@
 #include <atomic>
 
 #include <QObject>
-#include <QReadWriteLock>
 #include <QString>
 
 #include "core/data/dbcaches.h"

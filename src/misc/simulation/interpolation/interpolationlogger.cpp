@@ -8,13 +8,11 @@
 
 #include "config/buildconfig.h"
 #include "misc/aviation/callsign.h"
-#include "misc/aviation/heading.h"
 #include "misc/directoryutils.h"
 #include "misc/geo/kmlutils.h"
 #include "misc/logmessage.h"
 #include "misc/pq/angle.h"
 #include "misc/pq/length.h"
-#include "misc/pq/speed.h"
 #include "misc/pq/units.h"
 #include "misc/stringutils.h"
 #include "misc/swiftdirectories.h"

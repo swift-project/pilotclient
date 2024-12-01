@@ -8,7 +8,6 @@
 
 #include <QStringList>
 
-#include "config/buildconfig.h"
 #include "misc/input/actionhotkeylist.h"
 #include "misc/settingscache.h"
 #include "misc/simulation/simulatorplugininfo.h"

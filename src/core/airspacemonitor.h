@@ -6,15 +6,11 @@
 #ifndef SWIFT_CORE_AIRSPACE_MONITOR_H
 #define SWIFT_CORE_AIRSPACE_MONITOR_H
 
-#include <functional>
-
 #include <QHash>
 #include <QJsonObject>
-#include <QList>
 #include <QMetaObject>
 #include <QObject>
 #include <QQueue>
-#include <QReadWriteLock>
 #include <QString>
 #include <QTimer>
 #include <QtGlobal>

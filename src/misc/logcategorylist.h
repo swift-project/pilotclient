@@ -15,12 +15,11 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QThreadStorage>
 #include <QtGlobal>
 
 #include "misc/collection.h"
+#include "misc/logcategories.h"
 #include "misc/logcategory.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/typetraits.h"

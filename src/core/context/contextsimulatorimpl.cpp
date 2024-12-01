@@ -5,7 +5,6 @@
 
 #include <QMetaObject>
 #include <QPointer>
-#include <QStringBuilder>
 #include <QStringList>
 #include <QThread>
 #include <Qt>

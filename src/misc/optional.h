@@ -10,8 +10,6 @@
 
 #include <QtGlobal>
 
-#include "misc/typetraits.h"
-
 namespace swift::misc
 {
 

@@ -6,7 +6,6 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTVOICE_PROXY_H
 #define SWIFT_CORE_CONTEXT_CONTEXTVOICE_PROXY_H
 
-#include <QObject>
 #include <QString>
 
 #include "core/context/contextaudio.h"
@@ -16,7 +15,6 @@
 #include "misc/audio/notificationsounds.h"
 #include "misc/aviation/callsignset.h"
 #include "misc/aviation/comsystem.h"
-#include "misc/aviation/selcal.h"
 #include "misc/identifier.h"
 #include "misc/network/userlist.h"
 

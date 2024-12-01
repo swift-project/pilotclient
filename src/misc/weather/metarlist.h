@@ -11,7 +11,6 @@
 
 #include "misc/aviation/airporticaocode.h"
 #include "misc/collection.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/weather/metar.h"

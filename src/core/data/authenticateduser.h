@@ -6,7 +6,6 @@
 #ifndef SWIFT_CORE_DATA_AUTHENTICATEDUSER_H
 #define SWIFT_CORE_DATA_AUTHENTICATEDUSER_H
 
-#include "core/swiftcoreexport.h"
 #include "misc/datacache.h"
 #include "misc/network/authenticateduser.h"
 

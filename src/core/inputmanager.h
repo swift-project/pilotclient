@@ -6,7 +6,6 @@
 #ifndef SWIFT_CORE_INPUTMANAGER_H
 #define SWIFT_CORE_INPUTMANAGER_H
 
-#include <algorithm>
 #include <functional>
 #include <memory>
 

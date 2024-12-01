@@ -8,6 +8,7 @@
 #include <QStringList>
 
 #include "misc/imageutils.h"
+#include "misc/jsonexception.h"
 #include "misc/stringutils.h"
 
 using namespace swift::misc;

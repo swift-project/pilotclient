@@ -6,13 +6,7 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTAUDIO_IMPL_H
 #define SWIFT_CORE_CONTEXT_CONTEXTAUDIO_IMPL_H
 
-#include <memory>
-
-#include <QHash>
-#include <QList>
 #include <QMap>
-#include <QObject>
-#include <QSharedPointer>
 #include <QString>
 
 #include "core/context/contextaudio.h"

@@ -9,7 +9,6 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QtDebug>
 
 #include "misc/statusmessage.h"
 #include "misc/swiftmiscexport.h"

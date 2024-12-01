@@ -17,7 +17,6 @@
 #include "core/context/contextownaircraft.h"
 #include "core/corefacadeconfig.h"
 #include "core/swiftcoreexport.h"
-#include "core/vatsim/vatsimsettings.h"
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/airlineicaocode.h"

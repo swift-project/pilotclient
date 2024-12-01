@@ -7,8 +7,6 @@
 #define SWIFT_MISC_INTEGERSEQUENCE_H
 
 #include <cstddef>
-#include <tuple>
-#include <type_traits>
 
 namespace swift::misc::private_ns
 {

@@ -3,6 +3,8 @@
 
 #include "misc/simulation/interpolation/interpolationstatus.h"
 
+#include "misc/aviation/aircraftsituation.h"
+
 using namespace swift::misc::aviation;
 
 namespace swift::misc::simulation

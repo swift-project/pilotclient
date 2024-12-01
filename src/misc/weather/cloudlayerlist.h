@@ -6,9 +6,6 @@
 #ifndef SWIFT_MISC_WEATHER_CLOUDLAYERLIST_H
 #define SWIFT_MISC_WEATHER_CLOUDLAYERLIST_H
 
-#include <initializer_list>
-#include <tuple>
-
 #include <QMetaType>
 
 #include "misc/sequence.h"

@@ -8,7 +8,6 @@
 
 #include "core/swiftcoreexport.h"
 #include "misc/directoryutils.h"
-#include "misc/fileutils.h"
 #include "misc/network/serverlist.h"
 #include "misc/pq/time.h"
 #include "misc/settingscache.h"

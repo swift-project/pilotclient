@@ -9,7 +9,6 @@
 #include <QObject>
 #include <QString>
 
-#include "config/buildconfig.h"
 #include "core/context/context.h"
 #include "core/corefacade.h"
 #include "core/corefacadeconfig.h"
@@ -17,7 +16,6 @@
 #include "core/swiftcoreexport.h"
 #include "misc/aviation/airportlist.h"
 #include "misc/geo/elevationplane.h"
-#include "misc/identifier.h"
 #include "misc/pixmap.h"
 #include "misc/pq/length.h"
 #include "misc/pq/time.h"

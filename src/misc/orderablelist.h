@@ -8,8 +8,6 @@
 
 #include <QList>
 
-#include "misc/swiftmiscexport.h"
-
 namespace swift::misc
 {
     class IOrderable;

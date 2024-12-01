@@ -6,7 +6,6 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 #define SWIFT_CORE_CONTEXT_CONTEXTSIMULATOR_IMPL_H
 
-#include <QObject>
 #include <QPair>
 #include <QPointer>
 #include <QString>

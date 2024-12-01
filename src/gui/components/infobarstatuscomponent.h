@@ -14,6 +14,7 @@
 #include "core/actionbind.h"
 #include "gui/swiftguiexport.h"
 #include "misc/audio/audiodeviceinfo.h"
+#include "misc/digestsignal.h"
 #include "misc/input/actionhotkeydefs.h"
 #include "misc/network/connectionstatus.h"
 

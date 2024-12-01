@@ -6,7 +6,6 @@
 #ifndef SWIFT_MISC_DB_ARTIFACTLIST_H
 #define SWIFT_MISC_DB_ARTIFACTLIST_H
 
-#include <QSet>
 #include <QString>
 
 #include "misc/collection.h"

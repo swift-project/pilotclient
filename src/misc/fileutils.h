@@ -14,7 +14,6 @@
 #include <QLockFile>
 #include <QString>
 #include <QStringList>
-#include <QUrl>
 #include <Qt>
 
 #include "misc/swiftmiscexport.h"

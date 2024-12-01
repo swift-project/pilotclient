@@ -6,8 +6,6 @@
 #ifndef SWIFT_MISC_ICONLIST_H
 #define SWIFT_MISC_ICONLIST_H
 
-#include <tuple>
-
 #include <QJsonObject>
 #include <QMetaType>
 #include <QString>
@@ -16,7 +14,6 @@
 #include "misc/collection.h"
 #include "misc/icon.h"
 #include "misc/icons.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
 

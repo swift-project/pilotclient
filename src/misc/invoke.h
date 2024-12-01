@@ -9,8 +9,6 @@
 #include <tuple>
 
 #include <QMetaObject>
-#include <QThread>
-#include <QTimer>
 #include <QtGlobal>
 
 #include "misc/integersequence.h"

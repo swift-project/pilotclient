@@ -7,9 +7,7 @@
 
 #include <QtGlobal>
 
-#include "misc/dictionary.h"
 #include "misc/input/actionhotkey.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/range.h"
 #include "misc/sequence.h"
 

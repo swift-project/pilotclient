@@ -8,7 +8,6 @@
 #include <QList>
 #include <QSet>
 #include <QStringList>
-#include <Qt>
 
 #include "misc/range.h"
 #include "misc/simulation/aircraftmodel.h"

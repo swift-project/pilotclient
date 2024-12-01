@@ -10,9 +10,7 @@
 #include <chrono>
 
 #include <QHash>
-#include <QObject>
 #include <QReadWriteLock>
-#include <QTimer>
 #include <QtGlobal>
 
 #include "core/fsd/fsdclient.h"

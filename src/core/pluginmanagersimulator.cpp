@@ -5,12 +5,10 @@
 
 #include <QJsonObject>
 #include <QJsonValue>
-#include <QStringBuilder>
 #include <QtGlobal>
 
 #include "core/application.h"
 #include "core/simulator.h"
-#include "misc/directoryutils.h"
 #include "misc/logmessage.h"
 #include "misc/swiftdirectories.h"
 

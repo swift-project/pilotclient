@@ -8,7 +8,6 @@
 
 #include "core/context/contextownaircraft.h"
 #include "core/swiftcoreexport.h"
-#include "misc/logmessage.h"
 
 // clazy:excludeall=const-signal-or-slot
 

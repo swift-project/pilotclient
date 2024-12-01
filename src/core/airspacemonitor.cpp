@@ -3,14 +3,9 @@
 
 #include "core/airspacemonitor.h"
 
-#include <QCoreApplication>
 #include <QDateTime>
-#include <QEventLoop>
-#include <QReadLocker>
-#include <QThread>
 #include <QTime>
 #include <QVariant>
-#include <QWriteLocker>
 #include <Qt>
 
 #include "config/buildconfig.h"

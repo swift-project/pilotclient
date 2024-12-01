@@ -5,8 +5,6 @@
 
 #include <QHash>
 
-#include "misc/propertyindexref.h"
-
 using namespace swift::misc::aviation;
 
 SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::weather, CCloudLayer)

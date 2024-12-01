@@ -6,12 +6,9 @@
 #ifndef SWIFT_MISC_SIMULATION_FSDIRECTORIES_H
 #define SWIFT_MISC_SIMULATION_FSDIRECTORIES_H
 
-#include <atomic>
-
 #include <QSet>
 #include <QStringList>
 
-#include "misc/logcategories.h"
 #include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation::fscommon

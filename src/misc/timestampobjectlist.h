@@ -6,7 +6,6 @@
 #ifndef SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 #define SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 
-#include <QList>
 #include <QtGlobal>
 
 #include "config/buildconfig.h"

@@ -3,6 +3,7 @@
 
 #include "misc/audio/audioutils.h"
 
+#include <QAudioDevice>
 #include <QMediaDevices>
 #include <QProcess>
 

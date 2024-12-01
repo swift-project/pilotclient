@@ -11,7 +11,6 @@
 #include <QSet>
 #include <QStringList>
 
-#include "misc/logcategories.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/swiftmiscexport.h"
 

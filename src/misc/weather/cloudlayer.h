@@ -8,6 +8,7 @@
 
 #include <QMetaType>
 #include <QString>
+#include <QVariant>
 
 #include "misc/aviation/altitude.h"
 #include "misc/metaclass.h"

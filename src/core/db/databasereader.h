@@ -21,7 +21,6 @@
 #include "misc/db/dbinfolist.h"
 #include "misc/network/url.h"
 #include "misc/pq/time.h"
-#include "misc/sequence.h"
 #include "misc/statusmessage.h"
 #include "misc/valueobject.h"
 

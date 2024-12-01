@@ -7,11 +7,8 @@
 #define SWIFT_CORE_CONTEXT_CONTEXTAPPLICATION_H
 
 #include <QDBusArgument>
-#include <QHash>
 #include <QList>
 #include <QMetaType>
-#include <QObject>
-#include <QPair>
 #include <QString>
 #include <QStringList>
 #include <QtGlobal>
@@ -22,7 +19,6 @@
 #include "misc/dictionary.h"
 #include "misc/identifier.h"
 #include "misc/identifierlist.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/statusmessage.h"
 #include "misc/valuecache.h"
 

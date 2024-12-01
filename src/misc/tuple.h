@@ -6,8 +6,6 @@
 #ifndef SWIFT_MISC_TUPLE_H
 #define SWIFT_MISC_TUPLE_H
 
-#include <stddef.h>
-
 #include <utility>
 
 //! \cond

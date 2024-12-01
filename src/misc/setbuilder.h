@@ -14,9 +14,6 @@
 #include <QList>
 #include <QSet>
 #include <QStringList>
-#include <QVector>
-
-#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {

@@ -7,7 +7,6 @@
 #define SWIFT_CORE_CONTEXT_CONTEXTAUDIO_H
 
 #include <QCommandLineOption>
-#include <QObject>
 #include <QString>
 
 #include "core/actionbind.h"

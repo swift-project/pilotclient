@@ -12,7 +12,6 @@
 #include "core/data/authenticateduser.h"
 #include "core/swiftcoreexport.h"
 #include "misc/datacache.h"
-#include "misc/logcategories.h"
 #include "misc/statusmessagelist.h"
 
 class QNetworkReply;

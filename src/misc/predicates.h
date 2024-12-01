@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_PREDICATES_H
 #define SWIFT_MISC_PREDICATES_H
 
-#include <algorithm>
 #include <functional>
+#include <tuple>
 
 #include "misc/algorithm.h"
 

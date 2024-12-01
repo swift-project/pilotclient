@@ -6,7 +6,6 @@
 #ifndef SWIFT_CORE_PLUGIN_MANAGER_SIMULATOR_H
 #define SWIFT_CORE_PLUGIN_MANAGER_SIMULATOR_H
 
-#include <QHash>
 #include <QMap>
 #include <QObject>
 #include <QString>
@@ -16,7 +15,6 @@
 #include "misc/sequence.h"
 #include "misc/simulation/simulatorplugininfo.h"
 #include "misc/simulation/simulatorplugininfolist.h"
-#include "misc/variant.h"
 
 namespace swift::core
 {

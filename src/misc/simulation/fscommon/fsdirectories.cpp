@@ -11,7 +11,6 @@
 #include <QPair>
 #include <QSettings>
 #include <QStandardPaths>
-#include <QStringBuilder>
 #include <QStringList>
 #include <QTextStream>
 #include <QVariant>
@@ -21,7 +20,6 @@
 #include "misc/fileutils.h"
 #include "misc/logmessage.h"
 #include "misc/stringutils.h"
-#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 

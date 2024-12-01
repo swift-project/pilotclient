@@ -6,9 +6,6 @@
 #ifndef SWIFT_CORE_DATA_DBCACHES
 #define SWIFT_CORE_DATA_DBCACHES
 
-#include <QDateTime>
-#include <QObject>
-
 #include "misc/aviation/aircraftcategorylist.h"
 #include "misc/aviation/aircrafticaocodelist.h"
 #include "misc/aviation/airlineicaocodelist.h"

@@ -7,7 +7,6 @@
 #define SWIFT_MISC_GENERICDBUSINTERFACE_H
 
 #include <QDBusAbstractInterface>
-#include <QDBusError>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
 #include <QMetaMethod>

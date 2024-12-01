@@ -6,8 +6,6 @@
 #ifndef SWIFT_MISC_METADATAUTILS_H
 #define SWIFT_MISC_METADATAUTILS_H
 
-#include <stddef.h>
-
 #include <QString>
 
 #include "misc/swiftmiscexport.h"

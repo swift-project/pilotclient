@@ -19,8 +19,6 @@
 #include <QtGlobal>
 
 #include "misc/fileutils.h"
-#include "misc/inheritancetraits.h"
-#include "misc/jsonexception.h"
 #include "misc/metaclass.h"
 #include "misc/swiftmiscexport.h"
 

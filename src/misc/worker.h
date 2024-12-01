@@ -13,26 +13,20 @@
 #include <memory>
 #include <type_traits>
 
-#include <QFuture>
 #include <QMetaObject>
 #include <QMetaType>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QObject>
 #include <QPointer>
-#include <QSharedPointer>
 #include <QString>
 #include <QThread>
 #include <QTimer>
 #include <QVariant>
-#include <QWeakPointer>
 #include <QtGlobal>
 
-#include "misc/connectionguard.h"
 #include "misc/invoke.h"
-#include "misc/logcategories.h"
 #include "misc/promise.h"
-#include "misc/stacktrace.h"
 #include "misc/swiftmiscexport.h"
 
 namespace swift::misc

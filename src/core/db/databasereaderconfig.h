@@ -9,9 +9,7 @@
 #include <QDateTime>
 #include <QJsonArray>
 #include <QObject>
-#include <QReadWriteLock>
 #include <QString>
-#include <QTimer>
 #include <QtGlobal>
 
 #include "core/swiftcoreexport.h"

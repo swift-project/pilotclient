@@ -6,8 +6,6 @@
 #ifndef SWIFT_MISC_PLATFORMSET_H
 #define SWIFT_MISC_PLATFORMSET_H
 
-#include <tuple>
-
 #include <QMetaType>
 
 #include "misc/collection.h"

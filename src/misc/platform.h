@@ -6,7 +6,6 @@
 #ifndef SWIFT_MISC_PLATFORM_H
 #define SWIFT_MISC_PLATFORM_H
 
-#include <QMetaEnum>
 #include <QString>
 
 #include "misc/metaclass.h"

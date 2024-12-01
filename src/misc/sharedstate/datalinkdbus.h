@@ -7,6 +7,7 @@
 #define SWIFT_MISC_SHAREDSTATE_DATALINKDBUS_H
 
 #include <QSharedPointer>
+#include <QTimer>
 
 #include "misc/identifier.h"
 #include "misc/sharedstate/datalink.h"

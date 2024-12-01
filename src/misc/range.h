@@ -7,7 +7,6 @@
 #define SWIFT_MISC_RANGE_H
 
 #include <algorithm>
-#include <initializer_list>
 #include <iterator>
 #include <type_traits>
 
@@ -17,7 +16,6 @@
 #include "misc/algorithm.h"
 #include "misc/iterator.h"
 #include "misc/predicates.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/typetraits.h"
 
 namespace swift::misc

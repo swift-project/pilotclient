@@ -11,8 +11,6 @@
 #include <QPointer>
 #include <QTimer>
 
-#include "misc/swiftmiscexport.h"
-
 namespace swift::misc
 {
     /*!

@@ -14,16 +14,12 @@
 #include <QMetaType>
 #include <QString>
 #include <QVariant>
-#include <QtDebug>
 #include <QtGlobal>
 
-#include "misc/inheritancetraits.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/mixin/mixindbus.h"
 #include "misc/mixin/mixinindex.h"
 #include "misc/mixin/mixinmetatype.h"
 #include "misc/mixin/mixinstring.h"
-#include "misc/predicates.h"
 #include "misc/propertyindex.h"
 #include "misc/propertyindexlist.h"
 #include "misc/swiftmiscexport.h"

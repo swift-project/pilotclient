@@ -4,8 +4,8 @@
 #include "core/fsd/fsdclient.h"
 
 #include <QHostAddress>
+#include <QMetaEnum>
 #include <QNetworkReply>
-#include <QStringBuilder>
 #include <QStringView>
 
 #include "config/buildconfig.h"

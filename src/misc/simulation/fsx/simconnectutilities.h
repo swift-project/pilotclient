@@ -9,7 +9,6 @@
 #include <QMetaType>
 #include <QObject>
 #include <QSettings>
-#include <QSharedPointer>
 #include <QString>
 
 #include "misc/aviation/aircraftlights.h"

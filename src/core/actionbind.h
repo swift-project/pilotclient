@@ -6,8 +6,6 @@
 #ifndef SWIFT_CORE_ACTIONBIND_H
 #define SWIFT_CORE_ACTIONBIND_H
 
-#include <QPixmap>
-
 #include "core/application.h"
 #include "core/swiftcoreexport.h"
 
