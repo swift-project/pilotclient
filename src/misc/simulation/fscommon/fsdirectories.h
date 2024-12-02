@@ -41,6 +41,9 @@ namespace swift::misc::simulation::fscommon
         //! MSFS's simobject dir, resolved from multiple sources
         static const QString &msfsSimObjectsDir();
 
+         //! MSFS's simobject dir, resolved from multiple sources
+        static const QString &msfs2024SimObjectsDir();
+
         //! FSX aircraft dir, relative to simulator directory
         static QString fsxSimObjectsDirFromSimDir(const QString &simDir);
 
@@ -50,11 +53,17 @@ namespace swift::misc::simulation::fscommon
         //! Exclude directories for simObjects
         static const QStringList &msfs20SimObjectsExcludeDirectoryPatterns();
 
+       //! Exclude directories for simObjects
+        static const QStringList &msfs2024SimObjectsExcludeDirectoryPatterns();
+
         //! FSX's simObject dir and the add on dirs
         static QStringList fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
 
         //! MSFS's simObject dir and the add on dirs
         static QStringList msfsSimObjectsDirPath(const QString &simObjectsDir = "");
+
+        //! MSFS2024's simObject dir and the add on dirs
+        static QStringList msfs2024SimObjectsDirPath(const QString &simObjectsDir = "");
 
         //! P3D's simObject dir and the add on dirs
         static QStringList p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir,
@@ -86,6 +95,12 @@ namespace swift::misc::simulation::fscommon
 
         //! MSFS's packages dir
         static const QString &msfsPackagesDir();
+
+        //! MSFS directory from different sources
+        static const QString &msfs2024Dir();
+
+        //! MSFS's packages dir
+        static const QString &msfs2024PackagesDir();
 
         //! FS9 directory obtained from registry
         static const QString &fs9DirFromRegistry();

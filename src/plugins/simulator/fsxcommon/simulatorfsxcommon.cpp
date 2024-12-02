@@ -3122,7 +3122,7 @@ namespace swift::simplugin::fsxcommon
         {
             // TODO TZ
             // MSFS 2024 drivers only works with MSFS2024
-            return connectedSimName.contains("limitless");
+            return connectedSimName.contains("sunrise");
         }
         return false;
     }

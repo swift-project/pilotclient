@@ -685,14 +685,14 @@ namespace swift::misc::simulation::settings
         }
         case CSimulatorInfo::MSFS:
         {
-            static const QString msfs = CFsDirectories::msfsPackagesDir();
+            static const QString msfs = CFileUtils::normalizeFilePathToQtStandard(CFsDirectories::msfsPackagesDir());
             if (msfs.isEmpty()) { return e; }
             static const QStringList md { msfs };
             return md;
         }
         case CSimulatorInfo::MSFS2024:
         {
-            static const QString msfs2024 = CFsDirectories::msfs2024PackagesDir();
+            static const QString msfs2024 = CFileUtils::normalizeFilePathToQtStandard(CFsDirectories::msfs2024PackagesDir());
             if (msfs2024.isEmpty()) { return e; }
             static const QStringList md { msfs2024 };
             return md;

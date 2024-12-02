@@ -207,8 +207,12 @@ namespace swift::misc::simulation
         {
             s |= P3D;
         }
-        if (i.contains("msfs2024")) { s |= MSFS2024; }
-        return s;
+        if (i.contains("msfs2024"))
+        {
+            s |= MSFS2024;
+            return s;
+        }
+
         if (i.contains("msfs")) { s |= MSFS; }
         return s;
     }
@@ -366,14 +370,10 @@ namespace swift::misc::simulation
 
     QString CCountPerSimulator::toQString() const
     {
-        return u"FSX: " % QString::number(m_counts[0]) % 
-               u" P3D: " % QString::number(m_counts[1]) % 
-               u" FS9: " % QString::number(m_counts[2]) % 
-               u" XPlane: " % QString::number(m_counts[3]) % 
-               u" FG: " % QString::number(m_counts[4]) % 
-               u" MSFS: " % QString::number(m_counts[5]) %
-               u" MSFS2024: " % QString::number(m_counts[6]) 
-            ;
+        return u"FSX: " % QString::number(m_counts[0]) % u" P3D: " % QString::number(m_counts[1]) % u" FS9: " %
+               QString::number(m_counts[2]) % u" XPlane: " % QString::number(m_counts[3]) % u" FG: " %
+               QString::number(m_counts[4]) % u" MSFS: " % QString::number(m_counts[5]) % u" MSFS2024: " %
+               QString::number(m_counts[6]);
     }
 
     void CCountPerSimulator::setCount(int count, const CSimulatorInfo &simulator)
@@ -396,7 +396,6 @@ namespace swift::misc::simulation
         if (simulator.isFG()) { m_counts[4]++; }
         if (simulator.isMSFS()) { m_counts[5]++; }
         if (simulator.isMSFS2024()) { m_counts[6]++; }
-
     }
 
     int CCountPerSimulator::internalIndex(const CSimulatorInfo &simulator)

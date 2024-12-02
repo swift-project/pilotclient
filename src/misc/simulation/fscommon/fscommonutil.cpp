@@ -235,7 +235,7 @@ namespace swift::misc::simulation::fscommon
         bool ignoreEmptyFileNames, int stopAtFailedFiles, std::atomic_bool &stopped, const QString &simulatorDir)
     {
         Q_UNUSED(simulatorDir)
-        const QStringList simObjectPaths = CFsDirectories::msfs2024SimObjectsDirPlusAddOnXmlSimObjectsPaths();
+        const QStringList simObjectPaths = CFsDirectories::msfs2024SimObjectsDirPath();
         return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()),
                                                      models, validModels, invalidModels, ignoreEmptyFileNames,
                                                      stopAtFailedFiles, stopped);
