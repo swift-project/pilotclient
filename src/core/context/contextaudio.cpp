@@ -321,29 +321,14 @@ namespace swift::core::context
         return this->getAudioDevices().getOutputDevices();
     }
 
-    CAudioDeviceInfoList CContextAudioBase::getAudioDevicesPlusDefault() const
-    {
-        return CAudioDeviceInfoList::allDevicesPlusDefault();
-    }
-
-    CAudioDeviceInfoList CContextAudioBase::getAudioInputDevicesPlusDefault() const
-    {
-        return this->getAudioDevicesPlusDefault().getInputDevices();
-    }
-
-    CAudioDeviceInfoList CContextAudioBase::getAudioOutputDevicesPlusDefault() const
-    {
-        return this->getAudioDevicesPlusDefault().getOutputDevices();
-    }
-
     CAudioDeviceInfoList CContextAudioBase::getCurrentAudioDevices() const
     {
         const QString inputDeviceName = m_inputDeviceSetting.get();
-        const CAudioDeviceInfo inputDevice = this->getAudioInputDevicesPlusDefault().findByNameOrDefault(
+        const CAudioDeviceInfo inputDevice = this->getAudioInputDevices().findByNameOrDefault(
             inputDeviceName, CAudioDeviceInfo::getDefaultInputDevice());
 
         const QString outputDeviceName = m_outputDeviceSetting.get();
-        const CAudioDeviceInfo outputDevice = this->getAudioOutputDevicesPlusDefault().findByNameOrDefault(
+        const CAudioDeviceInfo outputDevice = this->getAudioOutputDevices().findByNameOrDefault(
             outputDeviceName, CAudioDeviceInfo::getDefaultOutputDevice());
 
         CAudioDeviceInfoList devices;

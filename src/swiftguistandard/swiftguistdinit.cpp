@@ -317,9 +317,6 @@ void SwiftGuiStd::initGuiSignals()
     // interpolation and validation
     connect(ui->comp_MainInfoArea->getMappingComponent(), &CMappingComponent::requestValidationDialog, this,
             &SwiftGuiStd::displayValidationDialog);
-    connect(ui->comp_MainInfoArea->getInterpolationComponent(),
-            &CInterpolationComponent::requestRenderingRestrictionsWidget,
-            [=] { this->setSettingsPage(CSettingsComponent::SettingTabSimulator); });
 
     // on top
     connect(sGui, &CGuiApplication::alwaysOnTop, this, &SwiftGuiStd::onToggledWindowsOnTop, Qt::QueuedConnection);

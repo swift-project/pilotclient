@@ -382,7 +382,7 @@ namespace swift::gui::components
     void CAudioDeviceVolumeSetupComponent::initAudioDeviceLists()
     {
         if (!this->hasAudio()) { return; }
-        const bool changed = this->onAudioDevicesChanged(sGui->getCContextAudioBase()->getAudioDevicesPlusDefault());
+        const bool changed = this->onAudioDevicesChanged(sGui->getCContextAudioBase()->getAudioDevices());
         if (!changed) { return; }
         const CAudioDeviceInfoList currentDevices = sGui->getCContextAudioBase()->getCurrentAudioDevices();
         this->onAudioStarted(currentDevices.getInputDevices().frontOrDefault(),
@@ -525,14 +525,14 @@ namespace swift::gui::components
     CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedInputDevice() const
     {
         if (!hasAudio()) { return CAudioDeviceInfo(); }
-        const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioInputDevicesPlusDefault();
+        const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioInputDevices();
         return devices.findByName(ui->cb_SetupAudioInputDevice->currentText());
     }
 
     CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedOutputDevice() const
     {
         if (!hasAudio()) { return CAudioDeviceInfo(); }
-        const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioOutputDevicesPlusDefault();
+        const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioOutputDevices();
         return devices.findByName(ui->cb_SetupAudioOutputDevice->currentText());
     }
 

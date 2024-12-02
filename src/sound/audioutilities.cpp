@@ -90,8 +90,6 @@ namespace swift::sound
         if (supportedDevices.isEmpty()) { return {}; }
 
         QAudioDevice deviceWithLowestLatency = supportedDevices.at(0);
-        deviceWithLowestLatency =
-            device.isInputDevice() ? QMediaDevices::defaultAudioInput() : QMediaDevices::defaultAudioOutput();
 
         if (supportedDevices.size() > 1)
         {

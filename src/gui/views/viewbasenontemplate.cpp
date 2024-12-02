@@ -877,6 +877,18 @@ namespace swift::gui::views
         m_displayAutomatically = a->isChecked();
     }
 
+    void CViewBaseNonTemplate::selectAll()
+    {
+        // FIXME: Workaround to implement the logic on our own because the default selectAll() implementation does not
+        // seem to work
+        this->clearSelection();
+        QItemSelection selectedItems;
+        const int columns = this->model()->columnCount() - 1;
+        const int rows = this->model()->rowCount() - 1;
+        selectedItems.select(this->model()->index(0, 0), this->model()->index(rows, columns));
+        this->selectionModel()->select(selectedItems, QItemSelectionModel::Select);
+    }
+
     void CViewBaseNonTemplate::setSingleSelection() { this->setSelectionMode(SingleSelection); }
 
     void CViewBaseNonTemplate::setExtendedSelection()

@@ -21,8 +21,6 @@ namespace swift::gui::components
         ui->setupUi(this);
         ui->tw_InterpolationSetup->setCurrentIndex(0);
 
-        connect(ui->comp_InterpolationSetup, &CInterpolationSetupComponent::requestRenderingRestrictionsWidget, this,
-                &CInterpolationComponent::requestRenderingRestrictionsWidget);
         connect(ui->comp_CallsignCompleter, &CCallsignCompleter::validChangedCallsignEntered, this,
                 &CInterpolationComponent::displayInterpolationMessages);
         connect(ui->pb_ReloadInterpolationMessages, &QPushButton::released, this,

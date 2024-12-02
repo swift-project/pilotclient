@@ -29,7 +29,7 @@ namespace swift::misc::aviation
         //! Reliability of on ground information
         enum OnGroundDetails
         {
-            NotSetGroundDetails,
+            NotSetGroundDetails, //!< not set or unknown if correct (e.g. FSD might or might not use the flag)
             // interpolated situation
             OnGroundByInterpolation, //!< strongest for remote aircraft
             OnGroundByElevationAndCG,

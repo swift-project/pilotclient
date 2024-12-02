@@ -327,16 +327,16 @@ namespace swift::misc::simulation::settings
         return s.getSimulatorDirectoryOrDefault();
     }
 
-    QStringList CMultiSimulatorSettings::getModelDirectoriesIfNotDefault(const CSimulatorInfo &simulator) const
-    {
-        const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
-        return s.getModelDirectoriesIfNotDefault();
-    }
-
     QStringList CMultiSimulatorSettings::getModelDirectoriesOrDefault(const CSimulatorInfo &simulator) const
     {
         const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
         return s.getModelDirectoriesOrDefault();
+    }
+
+    QStringList CMultiSimulatorSettings::getModelDirectoriesIfNotDefault(const CSimulatorInfo &simulator) const
+    {
+        const CSpecializedSimulatorSettings s = this->getSpecializedSettings(simulator);
+        return s.getModelDirectoriesIfNotDefault();
     }
 
     QString CMultiSimulatorSettings::getFirstModelDirectoryOrDefault(const CSimulatorInfo &simulator) const

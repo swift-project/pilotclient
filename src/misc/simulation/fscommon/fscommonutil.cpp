@@ -224,7 +224,7 @@ namespace swift::misc::simulation::fscommon
                                                                  std::atomic_bool &stopped, const QString &simulatorDir)
     {
         Q_UNUSED(simulatorDir)
-        const QStringList simObjectPaths = CFsDirectories::msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths();
+        const QStringList simObjectPaths = CFsDirectories::msfsSimObjectsDirPath();
         return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()),
                                                      models, validModels, invalidModels, ignoreEmptyFileNames,
                                                      stopAtFailedFiles, stopped);
@@ -294,7 +294,7 @@ namespace swift::misc::simulation::fscommon
             if (!ok)
             {
                 msgs.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr))
-                                   .validationWarning(u"Model '%1' '%2' in none of the %3 SimObjects path(s)")
+                                   .validationWarning(u"Model '%1' '%2' in none of the %3 SimObjects path(s) %3 ")
                                << model.getModelString() << model.getFileName() << simObjectDirs.size());
                 failed++;
             }

@@ -28,8 +28,6 @@ namespace swift::gui::components
         ui->cb_IgnoreGlobal->setChecked(true);
         ui->tvp_InterpolationSetup->menuAddItems(CInterpolationSetupView::MenuRemoveSelectedRows);
 
-        connect(ui->pb_RenderingSetup, &QPushButton::clicked, this,
-                &CInterpolationSetupComponent::requestRenderingRestrictionsWidget);
         connect(ui->pb_Save, &QPushButton::clicked, this, &CInterpolationSetupComponent::saveSetup);
         connect(ui->pb_DeleteOrReset, &QPushButton::clicked, this, &CInterpolationSetupComponent::removeOrResetSetup);
         connect(ui->pb_Reload, &QPushButton::clicked, this, &CInterpolationSetupComponent::reloadSetup,

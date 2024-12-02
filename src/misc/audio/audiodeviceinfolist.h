@@ -86,9 +86,6 @@ namespace swift::misc::audio
         static CAudioDeviceInfoList allInputDevices();
         static CAudioDeviceInfoList allOutputDevices();
         static CAudioDeviceInfoList allDevices();
-        static CAudioDeviceInfoList allInputDevicesPlusDefault();
-        static CAudioDeviceInfoList allOutputDevicesPlusDefault();
-        static CAudioDeviceInfoList allDevicesPlusDefault();
         static QList<QAudioDevice> allQtInputDevices();
         static QList<QAudioDevice> allQtOutputDevices();
         static QAudioDevice defaultQtInputDevice();
