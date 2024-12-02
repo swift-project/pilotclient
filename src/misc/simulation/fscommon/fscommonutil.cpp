@@ -224,6 +224,7 @@ namespace swift::misc::simulation::fscommon
                                                                  std::atomic_bool &stopped, const QString &simulatorDir)
     {
         Q_UNUSED(simulatorDir)
+        // TODO TZ a static value is currently returned here
         const QStringList simObjectPaths = CFsDirectories::msfsSimObjectsDirPath();
         return CFsCommonUtil::validateSimObjectsPath(QSet<QString>(simObjectPaths.begin(), simObjectPaths.end()),
                                                      models, validModels, invalidModels, ignoreEmptyFileNames,

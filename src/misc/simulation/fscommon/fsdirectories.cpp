@@ -130,7 +130,7 @@ namespace swift::misc::simulation::fscommon
                 QStringList split = line.split(" ");
                 if (split.size() != 2) { return {}; }
                 QString packagePath = split[1].remove("\"");
-                const QDir dir(packagePath);
+                const QDir dir(packagePath.replace("\\", "/"));
                 if (dir.exists()) { return packagePath; }
             }
         }
@@ -328,7 +328,8 @@ namespace swift::misc::simulation::fscommon
     // changed name
     QStringList CFsDirectories::msfsSimObjectsDirPath(const QString &simObjectsDir)
     {
-        static const QStringList Path { "F:/MSFSPackages" };
+        //static const QStringList Path { "F:/MSFSPackages" };
+        static const QStringList Path { CFsDirectories::msfsPackagesDir() };
         return Path;
     }
 
