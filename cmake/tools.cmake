@@ -29,7 +29,7 @@ macro(load_vatsim_key)
     set(SWIFT_VATSIM_ID "0")
     set(SWIFT_VATSIM_KEY "00000000000000000000000000000000")
 
-    if(SWIFT_VATSIM_SUPPORT)
+    if(VATSIM_KEY_JSON)
         file(READ ${PROJECT_SOURCE_DIR}/${VATSIM_KEY_JSON} KEY_FILE)
         string(JSON SWIFT_VATSIM_ID GET ${KEY_FILE} vatsim id)
         string(JSON SWIFT_VATSIM_KEY GET ${KEY_FILE} vatsim key)

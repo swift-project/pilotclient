@@ -130,7 +130,6 @@ namespace swift::misc::simulation::fscommon
                 QStringList split = line.split(" ");
                 if (split.size() != 2) { return {}; }
                 QString packagePath = split[1].remove("\"");
-                // const QDir dir(packagePath.replace("\\", "/"));
                 const QDir dir(packagePath);
                 if (dir.exists()) { return packagePath; }
             }
@@ -164,13 +163,11 @@ namespace swift::misc::simulation::fscommon
         return CFsDirectories::fsxSimObjectsDirFromSimDir(dir);
     }
 
-    // TODO TZ
     QString msfsSimObjectsDirImpl()
     {
         QString dir(CFsDirectories::msfsDir());
         if (dir.isEmpty()) { return {}; }
         return CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl());
-        // return CFsDirectories::msfsSimObjectsDirFromSimDir(dir);
     }
 
     const QString &CFsDirectories::fsxSimObjectsDir()
@@ -190,17 +187,6 @@ namespace swift::misc::simulation::fscommon
         if (simDir.isEmpty()) { return {}; }
         return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(simDir), "SimObjects");
     }
-
-    // TODO TZ MSFS has no subdirectory
-    // // still to remove
-    // QString CFsDirectories::msfsSimObjectsDirFromSimDir(const QString &simDir)
-    // {
-    //     if (simDir.isEmpty()) { return {}; }
-    //     return CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl());
-    //
-    //     // return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl()),
-    //     //                                    "SimObjects");
-    // }
 
     const QStringList &CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns()
     {
@@ -331,12 +317,9 @@ namespace swift::misc::simulation::fscommon
         return allPaths;
     }
 
-    // TODO TZ this function needs to be adjusted
-    // QStringList CFsDirectories::msfsSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir)  //
-    // changed name
     QStringList CFsDirectories::msfsSimObjectsDirPath(const QString &simObjectsDir)
     {
-        // static const QStringList Path { "F:/MSFSPackages" };
+        Q_UNUSED(simObjectsDir);
         static const QStringList Path { CFsDirectories::msfsSimObjectsDir() };
         return Path;
     }
