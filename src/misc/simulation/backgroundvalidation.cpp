@@ -35,7 +35,6 @@ namespace swift::misc::simulation
         m_simulator = simulator;
         m_simDirectory = simDirectory;
         m_modelDirList = modelDirList;
-
     }
 
     bool CBackgroundValidation::wasAlreadyChecked(const CSimulatorInfo &simulator) const
