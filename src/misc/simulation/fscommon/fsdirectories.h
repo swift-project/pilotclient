@@ -41,7 +41,7 @@ namespace swift::misc::simulation::fscommon
         //! MSFS's simobject dir, resolved from multiple sources
         static const QString &msfsSimObjectsDir();
 
-         //! MSFS's simobject dir, resolved from multiple sources
+        //! MSFS's simobject dir, resolved from multiple sources
         static const QString &msfs2024SimObjectsDir();
 
         //! FSX aircraft dir, relative to simulator directory
@@ -53,7 +53,7 @@ namespace swift::misc::simulation::fscommon
         //! Exclude directories for simObjects
         static const QStringList &msfs20SimObjectsExcludeDirectoryPatterns();
 
-       //! Exclude directories for simObjects
+        //! Exclude directories for simObjects
         static const QStringList &msfs2024SimObjectsExcludeDirectoryPatterns();
 
         //! FSX's simObject dir and the add on dirs

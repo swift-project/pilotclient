@@ -692,7 +692,8 @@ namespace swift::misc::simulation::settings
         }
         case CSimulatorInfo::MSFS2024:
         {
-            static const QString msfs2024 = CFileUtils::normalizeFilePathToQtStandard(CFsDirectories::msfs2024PackagesDir());
+            static const QString msfs2024 =
+                CFileUtils::normalizeFilePathToQtStandard(CFsDirectories::msfs2024PackagesDir());
             if (msfs2024.isEmpty()) { return e; }
             static const QStringList md { msfs2024 };
             return md;
