@@ -164,11 +164,13 @@ namespace swift::misc::simulation::fscommon
         return CFsDirectories::fsxSimObjectsDirFromSimDir(dir);
     }
 
+    // TODO TZ
     QString msfsSimObjectsDirImpl()
     {
         QString dir(CFsDirectories::msfsDir());
         if (dir.isEmpty()) { return {}; }
-        return CFsDirectories::msfsSimObjectsDirFromSimDir(dir);
+        return CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl());
+        // return CFsDirectories::msfsSimObjectsDirFromSimDir(dir);
     }
 
     const QString &CFsDirectories::fsxSimObjectsDir()
@@ -190,14 +192,15 @@ namespace swift::misc::simulation::fscommon
     }
 
     // TODO TZ MSFS has no subdirectory
-    QString CFsDirectories::msfsSimObjectsDirFromSimDir(const QString &simDir)
-    {
-        if (simDir.isEmpty()) { return {}; }
-        return CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl());
-
-        // return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl()),
-        //                                    "SimObjects");
-    }
+    // // still to remove
+    // QString CFsDirectories::msfsSimObjectsDirFromSimDir(const QString &simDir)
+    // {
+    //     if (simDir.isEmpty()) { return {}; }
+    //     return CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl());
+    //
+    //     // return CFileUtils::appendFilePaths(CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl()),
+    //     //                                    "SimObjects");
+    // }
 
     const QStringList &CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns()
     {

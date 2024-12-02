@@ -44,8 +44,9 @@ namespace swift::misc::simulation::fscommon
         //! FSX aircraft dir, relative to simulator directory
         static QString fsxSimObjectsDirFromSimDir(const QString &simDir);
 
+        // TODO TZ still to remove
         //! MSFS aircraft dir, relative to simulator directory
-        static QString msfsSimObjectsDirFromSimDir(const QString &simDir);
+        // static QString msfsSimObjectsDirFromSimDir(const QString &simDir);
 
         //! Exclude directories for simObjects
         static const QStringList &fsxSimObjectsExcludeDirectoryPatterns();
