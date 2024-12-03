@@ -85,10 +85,6 @@ namespace swift::misc
             NetworkRoleTower,
             NetworkRoleUnknown,
             NotSet,
-            OSAll,
-            OSLinux,
-            OSMacOs,
-            OSWindows,
             StandardIconAppAircraft16,
             StandardIconAppAtc16,
             StandardIconAppFlightPlan16,
@@ -457,22 +453,6 @@ namespace swift::misc
 
         //! Database table
         static const QPixmap &databaseTable16();
-
-        // --------------------------------------------------
-        // -- OS icons
-        // --------------------------------------------------
-
-        //! All OS
-        static const QPixmap &osAll();
-
-        //! Linux
-        static const QPixmap &osLinux();
-
-        //! MacOS
-        static const QPixmap &osMac();
-
-        //! Windows
-        static const QPixmap &osWindows();
 
         // --------------------------------------------------
         // -- swift

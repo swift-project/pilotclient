@@ -488,26 +488,6 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::osAll() { return empty16(); }
-
-    const QPixmap &CIcons::osLinux()
-    {
-        static const QPixmap pm(":/os/icons/os/linux_24.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::osMac()
-    {
-        static const QPixmap pm(":/os/icons/os/macos_24.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::osWindows()
-    {
-        static const QPixmap pm(":/os/icons/os/windows_24.png");
-        return pm;
-    }
-
     const QPixmap &CIcons::swift16()
     {
         static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-16.png");
@@ -996,10 +976,6 @@ namespace swift::misc
         case NetworkRoleTower: return roleTower();
         case NetworkRoleUnknown: return roleUnknown();
         case NotSet: return empty();
-        case OSAll: return osAll();
-        case OSLinux: return osLinux();
-        case OSMacOs: return osMac();
-        case OSWindows: return osWindows();
         case StandardIconAppAircraft16: return appAircraft16();
         case StandardIconAppAtc16: return appAtc16();
         case StandardIconAppFlightPlan16: return appFlightPlan16();

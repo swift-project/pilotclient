@@ -670,11 +670,7 @@
             <item row="1" column="3">
              <widget class="QToolButton" name="tb_ConfigurationWizard">
               <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../misc/misc.qrc">
-                <normaloff>:/misc/icons/misc/toolWizard128.png</normaloff>:/misc/icons/misc/toolWizard128.png</iconset>
+               <string>Config</string>
               </property>
               <property name="iconSize">
                <size>

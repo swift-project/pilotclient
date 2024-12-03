@@ -52,19 +52,7 @@ namespace swift::misc
 
     QString CPlatform::getPlatformName() const { return this->convertToQString(true); }
 
-    CIcons::IconIndex CPlatform::toIcon() const
-    {
-        if (this->getPlatform() == All) { return CIcons::OSAll; }
-        switch (this->getPlatformFlag())
-        {
-        case Win32:
-        case Win64: return CIcons::OSWindows;
-        case Linux: return CIcons::OSLinux;
-        case MacOS: return CIcons::OSMacOs;
-        default: break;
-        }
-        return CIcons::StandardIconEmpty;
-    }
+    CIcons::IconIndex CPlatform::toIcon() const { return CIcons::StandardIconEmpty; }
 
     QString CPlatform::convertToQString(bool i18n) const
     {

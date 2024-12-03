@@ -552,15 +552,4 @@
         <file>icons/textures/texture-inner.jpg</file>
         <file>icons/textures/texture-outer.jpg</file>
     </qresource>
-    <qresource prefix="/misc">
-        <file>icons/misc/toolWizard64.png</file>
-        <file>icons/misc/toolWizard128.png</file>
-        <file>icons/misc/cn.png</file>
-        <file>icons/misc/ru.png</file>
-    </qresource>
-    <qresource prefix="/os">
-        <file>icons/os/linux_24.png</file>
-        <file>icons/os/macos_24.png</file>
-        <file>icons/os/windows_24.png</file>
-    </qresource>
 </RCC>
