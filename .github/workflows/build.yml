@@ -59,6 +59,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Install REUSE
+        run: |
+          pip install reuse==4.0.3
+      - name: Run REUSE lint
+        run: reuse lint
       - name: Run clang-format
         run: |
           scripts/run_clang_format.py
