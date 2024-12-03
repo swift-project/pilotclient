@@ -59,6 +59,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+      - name: Install gitlint
+        run: |
+          pip install gitlint==0.19.1
+      - name: Run gitlint
+        run: gitlint --commits d789f61044e63e1a00d8e9f1d4d49c8d9ffc42a9..HEAD
       - name: Install REUSE
         run: |
           pip install reuse==4.0.3
