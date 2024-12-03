@@ -294,7 +294,7 @@ namespace swift::misc::simulation::fscommon
             if (!ok)
             {
                 msgs.push_back(CStatusMessage(static_cast<CFsCommonUtil *>(nullptr))
-                                   .validationWarning(u"Model '%1' '%2' in none of the %3 SimObjects path(s) %3 ")
+                                   .validationWarning(u"Model '%1' '%2' in none of the %3 SimObjects path(s)")
                                << model.getModelString() << model.getFileName() << simObjectDirs.size());
                 failed++;
             }
