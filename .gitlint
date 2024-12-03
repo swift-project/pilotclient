@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
+[general]
+ignore=B6,B7
+contrib=contrib-title-conventional-commits
+
+### Configuring rules ###
+[title-max-length]
+line-length=100
