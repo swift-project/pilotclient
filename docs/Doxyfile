@@ -2199,16 +2199,6 @@ SKIP_FUNCTION_MACROS   = YES
 # the path). If a tag file is not located in the directory in which doxygen is
 # run, you must also specify the path to the tagfile here.
 
-# http://stackoverflow.com/questions/22244779/doxygen-generated-documentation-with-auto-generated-links-to-qt-project
-# https://blog.qt.io/blog/2014/08/13/qt-weekly-17-linking-qt-classes-in-documentation-generated-with-doxygen/
-
-TAGFILES               = $(DOXY_SRC_ROOT)/docs/tags/qtcore.tags=http://doc.qt.io/qt-5/ \
-                         $(DOXY_SRC_ROOT)/docs/tags/qtgui.tags=http://doc.qt.io/qt-5/ \
-                         $(DOXY_SRC_ROOT)/docs/tags/qtdbus.tags=http://doc.qt.io/qt-5/ \
-                         $(DOXY_SRC_ROOT)/docs/tags/qtwidgets.tags=http://doc.qt.io/qt-5/ \
-                         $(DOXY_SRC_ROOT)/docs/tags/qtxml.tags=http://doc.qt.io/qt-5/ \
-                         $(DOXY_SRC_ROOT)/docs/tags/qtnetwork.tags=http://doc.qt.io/qt-5/
-
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create a
 # tag file that is based on the input files it reads. See section "Linking to
 # external documentation" for more information about the usage of tag files.
