@@ -14,7 +14,6 @@
 #include <QtGlobal>
 
 #include "samplesfscommon.h"
-#include "samplesfsuipc.h"
 #include "samplesfsx.h"
 #include "samplesmodelmapping.h"
 #include "samplesp3d.h"
@@ -47,7 +46,6 @@ int main(int argc, char *argv[])
         streamOut << "3 .. Mappings" << Qt::endl;
         streamOut << "4 .. vPilot rules" << Qt::endl;
         streamOut << "5 .. P3D cfg files" << Qt::endl;
-        streamOut << "6 .. FSUIPC read" << Qt::endl;
         streamOut << "x .. exit" << Qt::endl;
         QString i = streamIn.readLine().toLower().trimmed();
 
@@ -57,7 +55,6 @@ int main(int argc, char *argv[])
         else if (i.startsWith("3")) { CSamplesModelMapping::samples(streamOut, streamIn); }
         else if (i.startsWith("4")) { CSamplesVPilotRules::samples(streamOut, streamIn); }
         else if (i.startsWith("5")) { CSamplesP3D::samplesMisc(streamOut); }
-        else if (i.startsWith("6")) { CSamplesFsuipc::samplesFsuipc(streamOut); }
         else if (i.startsWith("x"))
         {
             run = false;

@@ -26,14 +26,6 @@ if(SWIFT_BUILD_FSX_PLUGIN OR SWIFT_BUILD_P3D_PLUGIN OR SWIFT_BUILD_MSFS_PLUGIN)
     add_subdirectory(fsxcommon)
 endif()
 
-if(SWIFT_WIN32 AND (SWIFT_BUILD_FS9_PLUGIN OR SWIFT_BUILD_FSX_PLUGIN OR SWIFT_BUILD_P3D_PLUGIN))
-    add_subdirectory(fsuipc32)
-endif()
-
-if(SWIFT_WIN64 AND (SWIFT_BUILD_P3D_PLUGIN OR SWIFT_BUILD_MSFS_PLUGIN))
-    add_subdirectory(fsuipc64)
-endif()
-
 if(SWIFT_BUILD_FS9_PLUGIN)
     add_subdirectory(fs9)
 endif()
