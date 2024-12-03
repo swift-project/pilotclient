@@ -196,3 +196,45 @@ path = "src/xswiftbus/org.swift_project.xswiftbus.traffic.xml"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Copyright (C) swift Project Community / Contributors"
 SPDX-License-Identifier = "GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1"
+
+[[annotations]]
+path = "src/sound/share/sounds/callsignmentioned.wav"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Notification 6.ogg by melokacool -- https://freesound.org/s/616698/ -- License: Creative Commons 0; Modified by swift contributors"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/sound/share/sounds/frequencymessage.wav"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Notification 6.ogg by melokacool -- https://freesound.org/s/616698/ -- License: Creative Commons 0; Modified by swift contributors"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/sound/share/sounds/login.wav"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Beep Select.wav by IndigoRay -- https://freesound.org/s/339129/ -- License: Creative Commons 0; Modified by swift contributors"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/sound/share/sounds/logoff.wav"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Beep Select.wav by IndigoRay -- https://freesound.org/s/339129/ -- License: Creative Commons 0; Modified by swift contributors"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/sound/share/sounds/privatemessage.wav"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Notification.wav by finn.appleton -- https://freesound.org/s/560880/ -- License: Creative Commons 0; Modified by swift contributors"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/sound/share/sounds/pttclick.wav"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Clicking 4 by bernhoftbret -- https://freesound.org/s/655157/ -- License: Creative Commons 0; Modified by swift contributors"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/sound/share/sounds/supervisormessage.wav"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Notification.wav by finn.appleton -- https://freesound.org/s/560880/ -- License: Creative Commons 0; Modified by swift contributors"
+SPDX-License-Identifier = "CC0-1.0"
