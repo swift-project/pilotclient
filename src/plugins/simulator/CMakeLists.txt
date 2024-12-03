@@ -45,12 +45,10 @@ endif()
 
 if(SWIFT_BUILD_MSFS_PLUGIN)
     add_subdirectory(msfs)
-    add_subdirectory(msfsconfig)
-endif()
+ endif()
 
 if(SWIFT_BUILD_MSFS2024_PLUGIN)
     add_subdirectory(msfs2024)
-    add_subdirectory(msfs2024config)
 endif()
 
 if(SWIFT_BUILD_FSX_PLUGIN)

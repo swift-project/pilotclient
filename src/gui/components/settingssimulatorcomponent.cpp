@@ -97,12 +97,16 @@ namespace swift::gui::components
         connect(ui->le_MaxDistance, &QLineEdit::returnPressed, this,
                 &CSettingsSimulatorComponent::onApplyMaxRenderedDistance);
 
+        // TODO TZ
         // list all available simulators
         const CSimulatorPluginInfoList plugins = CSettingsSimulatorComponent::getAvailablePlugins();
         for (const auto &p : plugins)
         {
             const QString config = m_plugins->getPluginConfigId(p.getIdentifier());
-            ui->pluginSelector_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), !config.isEmpty(), false);
+
+            // ui->pluginSelector_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), !config.isEmpty(),
+            // false);
+            ui->pluginSelector_EnabledSimulators->addPlugin(p.getIdentifier(), p.getName(), false, false);
         }
 
         const int h = qRound(1.3 * plugins.size() * CGuiUtility::fontMetricsLazyDog43Chars().height());

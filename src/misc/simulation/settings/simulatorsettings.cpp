@@ -591,6 +591,8 @@ namespace swift::misc::simulation::settings
         }
         break;
         case CSimulatorInfo::XPLANE: dirs = QStringList({ CXPlaneUtil::modelDirectoriesFromSimDir(s) }); break;
+        case CSimulatorInfo::MSFS: dirs = QStringList({ CFsDirectories::msfsSimObjectsDir() }); break;
+        case CSimulatorInfo::MSFS2024: dirs = QStringList({ CFsDirectories::msfs2024SimObjectsDir() }); break;
         default: break;
         }
 
