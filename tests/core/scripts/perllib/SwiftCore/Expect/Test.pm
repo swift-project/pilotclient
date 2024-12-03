@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Copyright (C) 2013 VATSIM Community / authors
+# SPDX-License-Identifier: MPL-2.0
 #
 # Copyright (C) 2013 VATSIM Community / authors
 # This Source Code Form is subject to the terms of the Mozilla Public License,
