@@ -12,7 +12,6 @@ namespace swift::misc::audio
     const QString &CNotificationSounds::flagToString(CNotificationSounds::NotificationFlag notification)
     {
         static const QString unknown("unknown");
-        static const QString error("error");
         static const QString login("login");
         static const QString logoff("logoff");
         static const QString freqMsg("frequency msg.");
@@ -27,7 +26,6 @@ namespace swift::misc::audio
 
         switch (notification)
         {
-        case NotificationError: return error;
         case NotificationLogin: return login;
         case NotificationLogoff: return logoff;
         case NotificationTextMessageFrequency: return freqMsg;
@@ -48,7 +46,6 @@ namespace swift::misc::audio
     QString CNotificationSounds::toString(Notification notification)
     {
         QStringList n;
-        if (notification.testFlag(NotificationError)) n << flagToString(NotificationError);
         if (notification.testFlag(NotificationLogin)) n << flagToString(NotificationLogin);
         if (notification.testFlag(NotificationLogoff)) n << flagToString(NotificationLogoff);
         if (notification.testFlag(NotificationTextMessageFrequency))

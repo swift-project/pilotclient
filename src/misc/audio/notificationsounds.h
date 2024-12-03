@@ -23,7 +23,7 @@ namespace swift::misc::audio
         enum NotificationFlag
         {
             NoNotifications = 0,
-            NotificationError = 1 << 0,
+            // 1 << 0 previously used for NotificationError
             NotificationLogin = 1 << 1,
             NotificationLogoff = 1 << 2,
             NotificationTextMessageFrequency = 1 << 12,
@@ -61,8 +61,8 @@ namespace swift::misc::audio
         constexpr static Notification AllAfv = Notification(AFVClicked | AFVBlocked);
 
         //! All notification flags
-        constexpr static Notification AllNotifications = Notification(
-            NotificationError | AllTextNotifications | AllLoginNotifications | AllPTTNotifications | AllAfv);
+        constexpr static Notification AllNotifications =
+            Notification(AllTextNotifications | AllLoginNotifications | AllPTTNotifications | AllAfv);
 
         //! Default notification flags
         constexpr static Notification DefaultNotifications =

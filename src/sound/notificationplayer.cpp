@@ -52,7 +52,6 @@ namespace swift::sound
         const QStringList types = QSoundEffect::supportedMimeTypes();
         CLogMessage(this).info(u"Notification mime types: %1") << types.join(", ");
 
-        this->updateEffect(CNotificationSounds::NotificationError, directory, "error.wav");
         this->updateEffect(CNotificationSounds::NotificationLogin, directory, "login.wav");
         this->updateEffect(CNotificationSounds::NotificationLogoff, directory, "logoff.wav");
         this->updateEffect(CNotificationSounds::NotificationTextMessageFrequency, directory, "frequencymessage.wav");
