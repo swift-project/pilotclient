@@ -68,4 +68,4 @@ namespace swift::gui
         static QString toParenthesisString(const QKeySequence &sequence);
     };
 } // namespace swift::gui
-#endif // guard
+#endif // SWIFT_GUI_SHORTCUT_H

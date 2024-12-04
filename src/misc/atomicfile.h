@@ -6,11 +6,8 @@
 #ifndef SWIFT_MISC_ATOMICFILE_H
 #define SWIFT_MISC_ATOMICFILE_H
 
-#include <exception>
-
 #include <QFile>
 #include <QFileDevice>
-#include <QIODevice>
 #include <QString>
 
 #include "misc/swiftmiscexport.h"
@@ -66,4 +63,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_ATOMICFILE_H

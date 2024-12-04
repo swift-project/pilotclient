@@ -26,4 +26,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::ReverseLookupLogging)
 Q_DECLARE_METATYPE(swift::misc::simulation::ReverseLookupLoggingFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::simulation::ReverseLookupLogging)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_REVERSELOOKUP_H

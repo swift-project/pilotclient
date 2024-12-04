@@ -8,12 +8,9 @@
 
 #include <string>
 #include <type_traits>
-#include <utility>
 
 #include <QDBusArgument>
 #include <QFlags>
-
-#include "misc/swiftmiscexport.h"
 
 /*!
  * Non member non-friend streaming for std::string

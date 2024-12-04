@@ -40,4 +40,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CPropertyIndexList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CPropertyIndex>)
 
-#endif // guard
+#endif // SWIFT_MISC_PROPERTYINDEXLIST_H

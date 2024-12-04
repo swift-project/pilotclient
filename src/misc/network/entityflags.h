@@ -128,4 +128,4 @@ Q_DECLARE_METATYPE(swift::misc::network::CEntityFlags::Entity)
 Q_DECLARE_METATYPE(swift::misc::network::CEntityFlags::ReadState)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::network::CEntityFlags::Entity)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_ENTITRFLAGS_H

@@ -33,4 +33,4 @@
 #include "misc/weather/presentweatherlist.h"
 #include "misc/weather/windlayerlist.h"
 
-#endif // guard
+#endif // SWIFT_GUI_MODELS_ALLMODELCONTAINERS_H

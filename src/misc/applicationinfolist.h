@@ -60,4 +60,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CApplicationInfoList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CApplicationInfo>)
 
-#endif
+#endif // SWIFT_MISC_APPLICATIONINFOLIST_H

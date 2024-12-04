@@ -115,4 +115,4 @@ Q_DECLARE_METATYPE(swift::core::data::CLauncherSetup::AudioModeFlag)
 Q_DECLARE_METATYPE(swift::core::data::CLauncherSetup::AudioMode)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::core::data::CLauncherSetup::AudioMode)
 
-#endif // guard
+#endif // SWIFT_CORE_DATA_LAUNCHERSETUP

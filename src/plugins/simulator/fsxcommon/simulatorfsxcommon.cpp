@@ -534,7 +534,7 @@ namespace swift::simplugin::fsxcommon
                                               SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
             "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        // TODO TZ
+        // TODO TZ use MSFS2024 FSUIPC?
         if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS() &&
             !this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
         {
@@ -2707,8 +2707,6 @@ namespace swift::simplugin::fsxcommon
     void CSimulatorFsxCommon::initSimulatorInternals()
     {
         CSimulatorFsCommon::initSimulatorInternals();
-        m_simulatorInternals.setValue("fsx/simConnectCfgFilename",
-                                      CSimConnectUtilities::getSwiftLocalSimConnectCfgFilename());
         m_simulatorInternals.setValue("fsx/simConnectVersion", m_simConnectVersion);
     }
 
@@ -3120,8 +3118,7 @@ namespace swift::simplugin::fsxcommon
         }
         else if (pluginSim.isMSFS2024())
         {
-            // TODO TZ
-            // MSFS 2024 drivers only works with MSFS2024
+            // MSFS2024 drivers only works with MSFS2024
             return connectedSimName.contains("sunrise");
         }
         return false;

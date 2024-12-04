@@ -46,4 +46,4 @@ namespace swift::misc::simulation
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorInfoList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CSimulatorInfo>)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SIMULATORINFOLIST_H

@@ -182,9 +182,6 @@ void SwiftGuiStd::init()
     connect(ui->comp_InfoBarStatus, &CInfoBarStatusComponent::transponderModeChanged, ui->dw_InfoBarStatus,
             &CDockWidgetInfoBar::reloadStyleSheet, Qt::QueuedConnection);
 
-    // Show kill button
-    ui->fr_CentralFrameInside->showKillButton(true);
-
     // do this as last statement, so it can be used as flag
     // whether init has been completed
     this->setVisible(true);

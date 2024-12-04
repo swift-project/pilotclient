@@ -7,7 +7,6 @@
 #define SWIFT_MISC_RANGE_H
 
 #include <algorithm>
-#include <initializer_list>
 #include <iterator>
 #include <type_traits>
 
@@ -17,7 +16,6 @@
 #include "misc/algorithm.h"
 #include "misc/iterator.h"
 #include "misc/predicates.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/typetraits.h"
 
 namespace swift::misc
@@ -227,8 +225,7 @@ namespace swift::misc
         //! Create a range from reverse iterators.
         CRange<const_reverse_iterator> reverse() const
         {
-            static_assert(std::is_same_v<decltype(*rbegin()), decltype(*begin())>,
-                          "see https://dev.swift-project.org/T700");
+            static_assert(std::is_same_v<decltype(*rbegin()), decltype(*begin())>, "");
             return { rbegin(), rend() };
         }
 
@@ -424,4 +421,4 @@ namespace swift::misc
 
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_RANGE_H

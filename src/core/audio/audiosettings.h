@@ -13,7 +13,7 @@
 namespace swift::core::audio
 {
     //! Audio input device settings
-    struct TInputDevice : public swift::misc::TSettingTrait<QString>
+    struct TInputDevice : misc::TSettingTrait<QString>
     {
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "audio/%Application%/inputdevice"; }
@@ -34,7 +34,7 @@ namespace swift::core::audio
     };
 
     //! Audio input device settings
-    struct TOutputDevice : public swift::misc::TSettingTrait<QString>
+    struct TOutputDevice : misc::TSettingTrait<QString>
     {
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "audio/%Application%/outputdevice"; }
@@ -55,4 +55,4 @@ namespace swift::core::audio
     };
 } // namespace swift::core::audio
 
-#endif
+#endif // SWIFT_CORE_AUDIO_SETTINGS_H

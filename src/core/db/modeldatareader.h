@@ -9,7 +9,6 @@
 #include <QDateTime>
 #include <QList>
 #include <QObject>
-#include <QReadWriteLock>
 #include <QSet>
 #include <QString>
 #include <QStringList>
@@ -228,4 +227,4 @@ namespace swift::core::db
     };
 } // namespace swift::core::db
 
-#endif // guard
+#endif // SWIFT_CORE_MODELDATAREADER_H

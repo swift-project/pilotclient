@@ -97,7 +97,7 @@ namespace swift::misc::simulation::data
 
     CSimulatorInfo IMultiSimulatorModelCaches::otherVersionSimulatorsWithFile(const CApplicationInfo &info) const
     {
-        CSimulatorInfo sim = CSimulatorInfo(CSimulatorInfo::None);
+        CSimulatorInfo sim(CSimulatorInfo::None);
         if (this->hasOtherVersionFile(info, CSimulatorInfo::fsx())) { sim.addSimulator(CSimulatorInfo::fsx()); }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::p3d())) { sim.addSimulator(CSimulatorInfo::p3d()); }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::fs9())) { sim.addSimulator(CSimulatorInfo::fs9()); }
@@ -126,7 +126,7 @@ namespace swift::misc::simulation::data
 
     CSimulatorInfo IMultiSimulatorModelCaches::getSimulatorForFilename(const QString &filename) const
     {
-        if (filename.isEmpty()) { return CSimulatorInfo(); }
+        if (filename.isEmpty()) { return {}; }
         CSimulatorInfo sims;
         const QString compareFileName(QFileInfo(filename).fileName());
         for (const CSimulatorInfo &singleSim : CSimulatorInfo::allSimulatorsSet())

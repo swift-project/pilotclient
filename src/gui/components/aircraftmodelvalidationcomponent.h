@@ -85,4 +85,4 @@ namespace swift::gui::components
         void saveInvalidModels(const swift::misc::simulation::CAircraftModelList &models) const;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_AIRCRAFTMODELVALIDATIONCOMPONENT_H

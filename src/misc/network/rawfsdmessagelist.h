@@ -47,4 +47,4 @@ namespace swift::misc::network
 Q_DECLARE_METATYPE(swift::misc::network::CRawFsdMessageList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CRawFsdMessage>)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_RAWFSDMESSAGELIST_H

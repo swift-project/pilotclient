@@ -39,7 +39,7 @@ namespace swift::misc
         };
 
         //! Constructor
-        CDirectories() {}
+        CDirectories() = default;
 
         //! Flight plan directory
         const QString &getFlightPlanDirectory() const { return m_dirFlightPlan; }
@@ -140,4 +140,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CDirectories)
 
-#endif // guard
+#endif // SWIFT_MISC_DIRECTORIES_H

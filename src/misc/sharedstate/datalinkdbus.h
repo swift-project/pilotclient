@@ -7,6 +7,7 @@
 #define SWIFT_MISC_SHAREDSTATE_DATALINKDBUS_H
 
 #include <QSharedPointer>
+#include <QTimer>
 
 #include "misc/identifier.h"
 #include "misc/sharedstate/datalink.h"
@@ -91,4 +92,4 @@ namespace swift::misc
     } // namespace shared_state
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_SHAREDSTATE_DATALINKDBUS_H

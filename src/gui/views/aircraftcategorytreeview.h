@@ -69,10 +69,10 @@ namespace swift::gui
             //! Custom menu
             void customMenu(const QPoint &point);
 
-            swift::misc::CDigestSignal m_dsFullResize { this, &CAircraftCategoryTreeView::fullResizeToContentsImpl,
-                                                        1000, 25 };
+            misc::CDigestSignal m_dsFullResize { this, &CAircraftCategoryTreeView::fullResizeToContentsImpl,
+                                                 std::chrono::milliseconds(1000), 25 };
         };
     } // namespace views
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_AIRCRAFTCATEGORYTREEVIEW_H

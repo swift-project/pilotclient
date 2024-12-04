@@ -41,4 +41,4 @@ namespace swift::gui::models
         UserMode m_userMode = NotSet;
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_USERLISTMODEL_H

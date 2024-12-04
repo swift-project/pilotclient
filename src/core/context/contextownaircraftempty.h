@@ -8,7 +8,6 @@
 
 #include "core/context/contextownaircraft.h"
 #include "core/swiftcoreexport.h"
-#include "misc/logmessage.h"
 
 // clazy:excludeall=const-signal-or-slot
 
@@ -159,4 +158,4 @@ namespace swift::core::context
         }
     };
 } // namespace swift::core::context
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXTOWNAIRCRAFT_EMPTY_H

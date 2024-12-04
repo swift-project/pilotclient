@@ -77,4 +77,4 @@ namespace swift::misc::db
 Q_DECLARE_METATYPE(swift::misc::db::CDistributionList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::db::CDistribution>)
 
-#endif // guard
+#endif // SWIFT_MISC_DB_DISTRIBUTIONLIST_H

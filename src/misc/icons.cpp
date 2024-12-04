@@ -488,44 +488,6 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::osAll() { return empty16(); }
-
-    const QPixmap &CIcons::osLinux()
-    {
-        static const QPixmap pm(":/os/icons/os/linux_24.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::osMac()
-    {
-        static const QPixmap pm(":/os/icons/os/macos_24.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::osWindows()
-    {
-        static const QPixmap pm(":/os/icons/os/windows_24.png");
-        return pm;
-    }
-
-    const QPixmap &CIcons::preloader64()
-    {
-        static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing64.gif");
-        return pm;
-    }
-
-    const QPixmap &CIcons::preloader32()
-    {
-        static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing32.gif");
-        return pm;
-    }
-
-    const QPixmap &CIcons::preloader16()
-    {
-        static const QPixmap pm(":/preloaders/icons/preloaders/FillingRing16.gif");
-        return pm;
-    }
-
     const QPixmap &CIcons::swift16()
     {
         static const QPixmap pm(":/own/icons/own/swift3D/sw3DBlue-16.png");
@@ -955,17 +917,7 @@ namespace swift::misc
         return pm;
     }
 
-    const QPixmap &CIcons::modelExclude16()
-    {
-        // Alternative: static const QPixmap pm(":/diagona/icons/diagona/icons/paper-plane--minus.png");
-        return cross16();
-    }
-
-    const QPixmap &CIcons::modelConverterX()
-    {
-        static const QPixmap pm(":/misc/icons/misc/mcx.png");
-        return pm;
-    }
+    const QPixmap &CIcons::modelExclude16() { return cross16(); }
 
     const QPixmap &CIcons::pixmapByIndex(CIcons::IconIndex index)
     {
@@ -1024,10 +976,6 @@ namespace swift::misc
         case NetworkRoleTower: return roleTower();
         case NetworkRoleUnknown: return roleUnknown();
         case NotSet: return empty();
-        case OSAll: return osAll();
-        case OSLinux: return osLinux();
-        case OSMacOs: return osMac();
-        case OSWindows: return osWindows();
         case StandardIconAppAircraft16: return appAircraft16();
         case StandardIconAppAtc16: return appAtc16();
         case StandardIconAppFlightPlan16: return appFlightPlan16();
@@ -1146,23 +1094,6 @@ namespace swift::misc
     {
         if (rotateDegrees == 0) { return pixmapByIndex(index); }
         return rotate(rotateDegrees, pixmapByIndex(index));
-    }
-
-    const QPixmap &CIcons::pixmapByResourceFileName(const QString &relativeFileName, QString &fullFilePath)
-    {
-        //! \fixme KB 20170701 noticed the "cache" is not threadsafe. However, there has never be an issue so far. Added
-        //! thread assert.
-        Q_ASSERT_X(!relativeFileName.isEmpty(), Q_FUNC_INFO, "missing filename");
-        Q_ASSERT_X(CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "not thread safe");
-
-        fullFilePath = CFileUtils::appendFilePaths(CSwiftDirectories::imagesDirectory(), relativeFileName);
-        if (!getResourceFileCache().contains(relativeFileName))
-        {
-            QPixmap pm;
-            const bool s = pm.load(fullFilePath);
-            CIcons::getResourceFileCache().insert(relativeFileName, s ? pm : CIcons::empty());
-        }
-        return CIcons::getResourceFileCache()[relativeFileName];
     }
 
     QImage CIcons::changeImageBackgroundColor(const QImage &imgSource, Qt::GlobalColor backgroundColor)

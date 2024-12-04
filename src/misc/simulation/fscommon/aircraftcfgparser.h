@@ -6,8 +6,6 @@
 #ifndef SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGPARSER_H
 #define SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGPARSER_H
 
-#include <memory>
-
 #include <QObject>
 #include <QPointer>
 #include <QString>
@@ -102,4 +100,4 @@ namespace swift::misc
     } // namespace simulation::fscommon
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGPARSER_H

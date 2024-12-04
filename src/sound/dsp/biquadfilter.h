@@ -50,4 +50,4 @@ namespace swift::sound::dsp
     };
 } // ns
 
-#endif // guard
+#endif // SWIFT_SOUND_DSP_BIQUADFILTER_H

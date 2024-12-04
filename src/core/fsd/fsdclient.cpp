@@ -4,8 +4,8 @@
 #include "core/fsd/fsdclient.h"
 
 #include <QHostAddress>
+#include <QMetaEnum>
 #include <QNetworkReply>
-#include <QStringBuilder>
 #include <QStringView>
 
 #include "config/buildconfig.h"
@@ -1083,7 +1083,7 @@ namespace swift::core::fsd
 
         // IVAO parts
         // https://discordapp.com/channels/539048679160676382/695961646992195644/707915838845485187
-        // https://dev.swift-project.org/w/knowhow/simandinterpolation/ivaoparts/
+        // https://github.com/swift-project/pilotclient/wiki/Knowledgebase-Simulation:-IVAO-parts
     }
 
     void CFSDClient::handleAtcDataUpdate(const QStringList &tokens)

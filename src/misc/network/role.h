@@ -78,4 +78,4 @@ namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CRole)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_ROLE_H

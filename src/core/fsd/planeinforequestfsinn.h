@@ -53,4 +53,4 @@ namespace swift::core::fsd
     inline bool operator!=(const PlaneInfoRequestFsinn &lhs, const PlaneInfoRequestFsinn &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_PLANEINFOREQUESTFSINN_H

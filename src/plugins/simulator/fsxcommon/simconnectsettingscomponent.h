@@ -35,27 +35,6 @@ namespace swift::simplugin::fsxcommon
         virtual ~CSimConnectSettingsComponent();
 
     private:
-        //! Open simConnect.cfg using default application
-        void openSwiftSimConnectCfgFile();
-
-        //! Open simConnect.cfg using default application
-        void openUserSimConnectCfgFile();
-
-        //! Delete simConnect.cfg file
-        void deleteSwiftSimConnectCfgFile();
-
-        //! Check whether the simConnect.cfg file exists
-        void checkSwiftSimConnectCfgFile();
-
-        //! Test the SimConnect connectivity
-        void testSwiftSimConnectConnection();
-
-        //! Save a SimConnect.cfg file for FSX/P3D
-        void saveSimConnectCfgFile();
-
-        //! Save dialog for a SimConnect.ini file
-        void saveSimConnectIniFileDialog();
-
         //! Set the simconnect info
         void setSimConnectInfo();
 
@@ -72,4 +51,4 @@ namespace swift::simplugin::fsxcommon
     };
 } // namespace swift::simplugin::fsxcommon
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECTSETTINGSCOMPONENT_H

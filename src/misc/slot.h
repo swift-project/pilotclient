@@ -13,6 +13,7 @@
 
 #include <QObject>
 #include <QPointer>
+#include <QTimer>
 #include <QtGlobal>
 
 #include "misc/invoke.h"
@@ -130,4 +131,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_SLOT_H

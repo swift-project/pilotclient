@@ -39,8 +39,9 @@ namespace swift::gui
 
     bool CLoadIndicator::isDisplayedWhenStopped() const { return m_displayedWhenStopped; }
 
-    int CLoadIndicator::startAnimation(int timeoutMs, bool processEvents)
+    int CLoadIndicator::startAnimation(std::chrono::milliseconds timeout, bool processEvents)
     {
+        using namespace std::chrono_literals;
         m_angle = 0;
         this->show();
         this->setEnabled(true);
@@ -57,9 +58,9 @@ namespace swift::gui
         }
 
         const int stopId = m_currentId++; // copy
-        if (timeoutMs > 0)
+        if (timeout > 0ms)
         {
-            QTimer::singleShot(timeoutMs, this, [=] {
+            QTimer::singleShot(timeout, this, [=] {
                 if (!myself) { return; }
 
                 // only timeout myself id
@@ -187,7 +188,7 @@ namespace swift::gui
 
     bool CLoadIndicatorEnabled::isLoadInProgress() const { return m_loadInProgress; }
 
-    void CLoadIndicatorEnabled::showLoading(int timeoutMs, bool processEvents)
+    void CLoadIndicatorEnabled::showLoading(std::chrono::milliseconds timeout, bool processEvents)
     {
         if (!m_loadIndicator)
         {
@@ -196,7 +197,7 @@ namespace swift::gui
         }
 
         this->centerLoadIndicator();
-        m_indicatorId = m_loadIndicator->startAnimation(timeoutMs, processEvents);
+        m_indicatorId = m_loadIndicator->startAnimation(timeout, processEvents);
     }
 
     void CLoadIndicatorEnabled::hideLoading()

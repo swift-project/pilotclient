@@ -41,13 +41,16 @@ namespace swift::gui
         virtual bool displayInStatusBar(const swift::misc::CStatusMessage &message);
 
         //! Display in overlay window
-        virtual bool displayInOverlayWindow(const swift::misc::CStatusMessage &message, int timeOutMs = -1);
+        virtual bool displayInOverlayWindow(const swift::misc::CStatusMessage &message,
+                                            std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Display in overlay window
-        virtual bool displayInOverlayWindow(const swift::misc::CStatusMessageList &messages, int timeOutMs = -1);
+        virtual bool displayInOverlayWindow(const swift::misc::CStatusMessageList &messages,
+                                            std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! Display in overlay window
-        virtual bool displayInOverlayWindow(const QString &html, int timeOutMs = -1);
+        virtual bool displayInOverlayWindow(const QString &html,
+                                            std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
     protected:
         components::CLogComponent *m_mwaLogComponent = nullptr; //!< the log component if any
@@ -58,4 +61,4 @@ namespace swift::gui
 
 Q_DECLARE_INTERFACE(swift::gui::IMainWindowAccess, "org.swift-project.swiftgui.mainwindowaccess")
 
-#endif // guard
+#endif // SWIFT_GUI_MAINWINDOWACCESS_H

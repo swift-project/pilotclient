@@ -85,10 +85,6 @@ namespace swift::misc
             NetworkRoleTower,
             NetworkRoleUnknown,
             NotSet,
-            OSAll,
-            OSLinux,
-            OSMacOs,
-            OSWindows,
             StandardIconAppAircraft16,
             StandardIconAppAtc16,
             StandardIconAppFlightPlan16,
@@ -459,35 +455,6 @@ namespace swift::misc
         static const QPixmap &databaseTable16();
 
         // --------------------------------------------------
-        // -- OS icons
-        // --------------------------------------------------
-
-        //! All OS
-        static const QPixmap &osAll();
-
-        //! Linux
-        static const QPixmap &osLinux();
-
-        //! MacOS
-        static const QPixmap &osMac();
-
-        //! Windows
-        static const QPixmap &osWindows();
-
-        // --------------------------------------------------
-        // -- Preloader icons
-        // --------------------------------------------------
-
-        //! Preloader
-        static const QPixmap &preloader64();
-
-        //! Preloader
-        static const QPixmap &preloader32();
-
-        //! Preloader
-        static const QPixmap &preloader16();
-
-        // --------------------------------------------------
         // -- swift
         // --------------------------------------------------
 
@@ -714,9 +681,6 @@ namespace swift::misc
         //! Model exclude
         static const QPixmap &modelExclude16();
 
-        //! Model Converter X
-        static const QPixmap &modelConverterX();
-
         // -------------------------------------------------------------
         // By index
         // -------------------------------------------------------------
@@ -726,13 +690,6 @@ namespace swift::misc
 
         //! Pixmap by given index rotated
         static QPixmap pixmapByIndex(IconIndex index, int rotateDegrees);
-
-        // -------------------------------------------------------------
-        // By file from swift resource directory
-        // -------------------------------------------------------------
-
-        //! Pixmap by given index
-        static const QPixmap &pixmapByResourceFileName(const QString &relativeFileName, QString &fullFilePath);
 
         // -------------------------------------------------------------
         // Utility functions
@@ -769,4 +726,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIcons::IconIndex)
 
-#endif // guard
+#endif // SWIFT_MISC_ICONS_H

@@ -58,4 +58,4 @@ namespace swift::gui::models
         Mode m_mode; //!< used mode
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_STATUSMESSAGELISTMODEL_H

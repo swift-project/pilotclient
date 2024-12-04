@@ -91,4 +91,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CLiveryList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CLivery>)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_LIVERYLIST_H

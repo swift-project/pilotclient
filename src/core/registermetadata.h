@@ -14,4 +14,4 @@ namespace swift::core
     SWIFT_CORE_EXPORT void registerMetadata();
 } // namespace swift::core
 
-#endif // guard
+#endif // SWIFT_CORE_REGISTERMETADATA_H

@@ -21,7 +21,6 @@
 #include "misc/db/dbinfolist.h"
 #include "misc/network/url.h"
 #include "misc/pq/time.h"
-#include "misc/sequence.h"
 #include "misc/statusmessage.h"
 #include "misc/valueobject.h"
 
@@ -460,4 +459,4 @@ namespace swift::core::db
     };
 } // namespace swift::core::db
 
-#endif // guard
+#endif // SWIFT_CORE_DB_DATABASEREADER_H

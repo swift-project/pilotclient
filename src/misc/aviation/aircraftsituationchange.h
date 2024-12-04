@@ -261,4 +261,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituationChange)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituationChange::GuessedSceneryDeviation)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTSITUATIONCHANGE_H

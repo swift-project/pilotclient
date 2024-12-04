@@ -93,4 +93,4 @@ private:
     swift::gui::components::CAutoPublishDialog *m_autoPublishDialog = nullptr; //!< auto publishing dialog
 };
 
-#endif // guard
+#endif // SWIFTDATA_H

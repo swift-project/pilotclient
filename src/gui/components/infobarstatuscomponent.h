@@ -14,6 +14,7 @@
 #include "core/actionbind.h"
 #include "gui/swiftguiexport.h"
 #include "misc/audio/audiodeviceinfo.h"
+#include "misc/digestsignal.h"
 #include "misc/input/actionhotkeydefs.h"
 #include "misc/network/connectionstatus.h"
 
@@ -60,7 +61,8 @@ namespace swift::gui::components
                                                swift::misc::input::pttHotkeyIcon(), this,
                                                &CInfoBarStatusComponent::onPttChanged };
 
-        swift::misc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize, 1000, 50 };
+        swift::misc::CDigestSignal m_dsResize { this, &CInfoBarStatusComponent::adjustTextSize,
+                                                std::chrono::seconds { 1 }, 50 };
 
         //! Audio available and NOT muted
         static bool isAudioAvailableAndNotMuted();
@@ -105,4 +107,4 @@ namespace swift::gui::components
     };
 } // namespace swift::gui::components
 
-#endif // guard
+#endif // SWIFT_GUI_INFOBARSTATUSCOMPONENT_H

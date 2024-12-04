@@ -107,4 +107,4 @@ namespace swift::misc::simulation
 
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorInternals)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SIMULATORINTERNALS_H

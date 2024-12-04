@@ -6,9 +6,6 @@
 #ifndef SWIFT_MISC_WEATHER_CLOUDLAYERLIST_H
 #define SWIFT_MISC_WEATHER_CLOUDLAYERLIST_H
 
-#include <initializer_list>
-#include <tuple>
-
 #include <QMetaType>
 
 #include "misc/sequence.h"
@@ -42,10 +39,10 @@ namespace swift::misc
             CCloudLayerList(const CSequence<CCloudLayer> &other);
 
             //! Contains cloud layer with base?
-            bool containsBase(const swift::misc::aviation::CAltitude &base) const;
+            bool containsBase(const aviation::CAltitude &base) const;
 
             //! Find cloud layer by base
-            CCloudLayer findByBase(const swift::misc::aviation::CAltitude &base) const;
+            CCloudLayer findByBase(const aviation::CAltitude &base) const;
         };
 
     } // namespace weather
@@ -53,4 +50,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayerList)
 
-#endif // guard
+#endif // SWIFT_MISC_WEATHER_CLOUDLAYERLIST_H

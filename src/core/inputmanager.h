@@ -6,7 +6,6 @@
 #ifndef SWIFT_CORE_INPUTMANAGER_H
 #define SWIFT_CORE_INPUTMANAGER_H
 
-#include <algorithm>
 #include <functional>
 #include <memory>
 
@@ -151,4 +150,4 @@ namespace swift::core
     };
 } // namespace swift::core
 
-#endif // guard
+#endif // SWIFT_CORE_INPUTMANAGER_H

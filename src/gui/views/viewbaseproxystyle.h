@@ -38,4 +38,4 @@ namespace swift::gui::views
         CViewBaseNonTemplate *m_view = nullptr; //!< "parent view"
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_VIEWBASE_PROXYSTYLE_H

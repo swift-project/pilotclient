@@ -7,7 +7,6 @@
 #define SWIFT_CORE_CONTEXT_CONTEXTAUDIO_H
 
 #include <QCommandLineOption>
-#include <QObject>
 #include <QString>
 
 #include "core/actionbind.h"
@@ -387,4 +386,4 @@ namespace swift::core
     } // namespace context
 } // namespace swift::core
 
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXTAUDIO_H

@@ -110,4 +110,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CHeading)
 Q_DECLARE_METATYPE(swift::misc::aviation::CHeading::ReferenceNorth)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_HEADING_H

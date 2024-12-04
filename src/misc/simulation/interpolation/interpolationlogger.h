@@ -13,7 +13,6 @@
 #include "misc/aviation/aircraftpartslist.h"
 #include "misc/aviation/aircraftsituationchange.h"
 #include "misc/aviation/aircraftsituationlist.h"
-#include "misc/logcategories.h"
 #include "misc/simulation/interpolation/interpolationrenderingsetup.h"
 #include "misc/simulation/remoteaircraftprovider.h"
 
@@ -221,4 +220,4 @@ namespace swift::misc
         };
     } // namespace simulation
 } // namespace swift::misc
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONLOGGER_H

@@ -69,4 +69,4 @@ namespace swift::misc::input
 
 } // namespace swift::misc::input
 
-#endif
+#endif // SWIFT_MISC_INPUT_ACTIONHOTKEYDEFS_H

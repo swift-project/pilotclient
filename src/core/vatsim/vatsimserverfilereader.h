@@ -6,24 +6,17 @@
 #ifndef SWIFT_CORE_VATSIM_VATSIMSERVERFILEREADER_H
 #define SWIFT_CORE_VATSIM_VATSIMSERVERFILEREADER_H
 
-#include <QMap>
 #include <QObject>
 #include <QString>
-#include <QStringList>
 
 #include "core/data/vatsimsetup.h"
 #include "core/swiftcoreexport.h"
 #include "core/threadedreader.h"
 #include "misc/aviation/aircrafticaocode.h"
-#include "misc/aviation/airlineicaocode.h"
-#include "misc/aviation/atcstationlist.h"
-#include "misc/aviation/callsignset.h"
 #include "misc/aviation/flightplan.h"
 #include "misc/datacache.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/serverlist.h"
-#include "misc/network/userlist.h"
-#include "misc/network/voicecapabilities.h"
 #include "misc/simulation/simulatedaircraftlist.h"
 
 class QNetworkReply;
@@ -74,4 +67,4 @@ namespace swift::core::vatsim
     };
 } // namespace swift::core::vatsim
 
-#endif // guard
+#endif // SWIFT_CORE_VATSIM_VATSIMSERVERFILEREADER_H

@@ -65,4 +65,4 @@ namespace swift::misc
         static QList<ProcessModule> getModules(qint64 processId = -1, const QString &nameFilter = {});
     };
 } // namespace swift::misc
-#endif // guard
+#endif // SWIFT_MISC_WINDLLUTILS_H

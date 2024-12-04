@@ -121,4 +121,4 @@ namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CNavSystem)
 
-#endif
+#endif // SWIFT_MISC_AVIATION_NAVSYSTEM_H

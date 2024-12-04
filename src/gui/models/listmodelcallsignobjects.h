@@ -71,4 +71,4 @@ namespace swift::gui::models
         QColor m_highlightColor = Qt::green;
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_LISTMODELCALLSIGNOBJECTS_H

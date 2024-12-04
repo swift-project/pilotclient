@@ -6,8 +6,6 @@
 #ifndef SWIFT_MISC_PLATFORMSET_H
 #define SWIFT_MISC_PLATFORMSET_H
 
-#include <tuple>
-
 #include <QMetaType>
 
 #include "misc/collection.h"
@@ -55,4 +53,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CPlatformSet)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CPlatform>)
 
-#endif // guard
+#endif // SWIFT_MISC_PLATFORMSET_H

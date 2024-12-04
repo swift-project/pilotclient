@@ -26,10 +26,10 @@ namespace swift::gui
         return false;
     }
 
-    int CEnableForViewBasedIndicator::showLoadIndicator(int timeoutMs)
+    int CEnableForViewBasedIndicator::showLoadIndicator(std::chrono::milliseconds timeout)
     {
         Q_ASSERT_X(m_viewWithIndicator, Q_FUNC_INFO, "Missing view to display indicator");
-        if (m_viewWithIndicator) { return m_viewWithIndicator->showLoadIndicatorWithTimeout(timeoutMs); }
+        if (m_viewWithIndicator) { return m_viewWithIndicator->showLoadIndicatorWithTimeout(timeout); }
         return -1;
     }
 

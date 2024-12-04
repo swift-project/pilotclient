@@ -78,4 +78,4 @@ namespace swift::gui::components
         CConfigSimulatorComponent *m_config = nullptr;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_CONFIGSIMULATORCOMPONENT_H

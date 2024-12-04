@@ -187,17 +187,19 @@ namespace swift::gui
 
             //! Display messages
             bool showOverlayMessages(const swift::misc::CStatusMessageList &msgs, bool onlyErrors = false,
-                                     bool appendOldMessages = false, int timeoutMs = -1);
+                                     bool appendOldMessages = false,
+                                     std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
             //! Display messages with confirmation
             bool showOverlayMessagesWithConfirmation(const swift::misc::CStatusMessageList &msgs,
                                                      bool appendOldMessages, const QString &confirmation,
                                                      std::function<void()> okLambda,
                                                      QMessageBox::StandardButton defaultButton, bool onlyErrors = false,
-                                                     int timeoutMs = -1);
+                                                     std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
             //! Display message
-            bool showOverlayMessage(const swift::misc::CStatusMessage &msg, int timeoutMs = -1);
+            bool showOverlayMessage(const swift::misc::CStatusMessage &msg,
+                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
             //! Clear messages
             void clearOverlayMessages();
@@ -234,4 +236,4 @@ namespace swift::gui
     } // namespace components
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_DBSTASHCOMPONENT_H

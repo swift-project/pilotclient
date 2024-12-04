@@ -52,4 +52,4 @@ namespace swift::misc::network::settings
     };
 } // namespace swift::misc::network::settings
 
-#endif
+#endif // SWIFT_MISC_NETWORK_SETTINGS_SERVERSSETTINGS_H

@@ -76,4 +76,4 @@ namespace swift::core::fsd
     //! \endcond
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_SERIALIZER_H

@@ -216,7 +216,7 @@ def update_shared(host, version, target_path):
 
 
 def main():
-    host = 'https://datastore2.swift-project.org'
+    host = 'https://datastore.swift-project.org'
     version = '0.7.0'
     target_path = os.path.abspath(os.curdir)
 

@@ -104,4 +104,4 @@ namespace swift::misc::simulation::xplane
     };
 } // namespace swift::misc::simulation::xplane
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_XPLANE_XPLANEUTIL_H

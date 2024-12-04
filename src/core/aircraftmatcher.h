@@ -6,14 +6,10 @@
 #ifndef SWIFT_CORE_AIRCRAFTMATCHER_H
 #define SWIFT_CORE_AIRCRAFTMATCHER_H
 
-#include <QFlags>
 #include <QObject>
-#include <QPair>
-#include <QSet>
 #include <QString>
 
 #include "core/swiftcoreexport.h"
-#include "core/webdataservicesms.h"
 #include "misc/simulation/aircraftmatchersetup.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/aircraftmodelsetprovider.h"
@@ -21,9 +17,6 @@
 #include "misc/simulation/matchinglog.h"
 #include "misc/simulation/matchingscriptmisc.h"
 #include "misc/simulation/matchingstatistics.h"
-#include "misc/statusmessage.h"
-#include "misc/valueobject.h"
-#include "misc/variant.h"
 
 namespace swift::misc
 {
@@ -490,4 +483,4 @@ namespace swift::core
     };
 } // namespace swift::core
 
-#endif // guard
+#endif // SWIFT_CORE_AIRCRAFTMATCHER_H

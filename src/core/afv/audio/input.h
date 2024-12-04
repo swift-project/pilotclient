@@ -157,4 +157,4 @@ namespace swift::core::afv::audio
     };
 } // namespace swift::core::afv::audio
 
-#endif // guard
+#endif // SWIFT_CORE_AFV_AUDIO_AUDIO_INPUT_H

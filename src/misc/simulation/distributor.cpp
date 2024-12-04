@@ -227,7 +227,6 @@ namespace swift::misc::simulation
         return k;
     }
 
-    // TODO TZ: still determine whether msfs2024 matches FsFamily
     const QSet<QString> &CDistributor::standardAllFsFamily()
     {
         static const QSet<QString> fsFamily(

@@ -62,7 +62,8 @@ namespace swift::gui::components
         void onConnectedServerChanged(const swift::misc::network::CServer &server);
 
         bool m_showToolTip = true;
-        swift::misc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandToolTip, 5000, 2 };
+        swift::misc::CDigestSignal m_dsCommandTooltip { this, &CCommandInput::setCommandToolTip,
+                                                        std::chrono::seconds(5), 2 };
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_COMMANDINPUT_H

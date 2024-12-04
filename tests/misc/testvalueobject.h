@@ -156,4 +156,4 @@ static_assert(std::is_same<CNotHashableDictionary::impl_type, CNotHashableMapDic
 
 //! \endcond
 
-#endif // guard
+#endif // SWIFT_MISC_TESTVALUEOBJECT_H

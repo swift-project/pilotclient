@@ -14,9 +14,6 @@
 #include <QList>
 #include <QSet>
 #include <QStringList>
-#include <QVector>
-
-#include "misc/swiftmiscexport.h"
 
 namespace swift::misc
 {
@@ -76,4 +73,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_SETBUILDER_H

@@ -114,4 +114,4 @@ namespace swift::misc::mixin
     // *INDENT-ON*
 } // namespace swift::misc::mixin
 
-#endif // guard
+#endif // SWIFT_MISC_MIXIN_MIXINSTRING_H

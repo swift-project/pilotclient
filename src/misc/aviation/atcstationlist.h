@@ -83,4 +83,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CAtcStationList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAtcStation>)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_ATCSTATIONLIST_H

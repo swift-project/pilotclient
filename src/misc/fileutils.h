@@ -14,7 +14,6 @@
 #include <QLockFile>
 #include <QString>
 #include <QStringList>
-#include <QUrl>
 #include <Qt>
 
 #include "misc/swiftmiscexport.h"
@@ -216,4 +215,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_CFILEUTILS_H

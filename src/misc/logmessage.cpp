@@ -5,6 +5,8 @@
 
 #include "misc/logmessage.h"
 
+#include <QLoggingCategory>
+
 namespace swift::misc
 {
 

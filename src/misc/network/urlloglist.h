@@ -90,4 +90,4 @@ namespace swift::misc::network
 Q_DECLARE_METATYPE(swift::misc::network::CUrlLogList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CUrlLog>)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_URLLOGLIST_H

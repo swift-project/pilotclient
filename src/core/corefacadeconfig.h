@@ -102,4 +102,4 @@ namespace swift::core
         static CCoreFacadeConfig allEmpty();
     };
 } // namespace swift::core
-#endif // guard
+#endif // SWIFT_CORE_COREFACADECONFIG_H

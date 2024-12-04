@@ -139,4 +139,4 @@ namespace swift::misc::simulation::settings
 
 Q_DECLARE_METATYPE(swift::misc::simulation::settings::CXSwiftBusSettings)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SETTINGS_XSWIFTBUSSETTINGS_H

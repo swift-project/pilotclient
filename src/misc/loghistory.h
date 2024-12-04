@@ -63,9 +63,9 @@ namespace swift::misc
         void elementsReplaced(const swift::misc::CStatusMessageList &msgs);
 
     private:
-        virtual void onElementAdded(const CStatusMessage &msg) override final;
-        virtual void onElementsReplaced(const CStatusMessageList &msgs) override final;
+        void onElementAdded(const CStatusMessage &msg) final;
+        void onElementsReplaced(const CStatusMessageList &msgs) final;
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_LOGHISTORY_H

@@ -23,4 +23,4 @@
 #    define FSCOMMON_EXPORT
 #endif
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FSCOMMON_SIMULATORFSCOMMON_MACROS_H

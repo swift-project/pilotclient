@@ -15,12 +15,11 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QThreadStorage>
 #include <QtGlobal>
 
 #include "misc/collection.h"
+#include "misc/logcategories.h"
 #include "misc/logcategory.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/typetraits.h"
@@ -147,4 +146,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CLogCategoryList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CLogCategory>)
 
-#endif
+#endif // SWIFT_MISC_LOGCATEGORYLIST_H

@@ -100,4 +100,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::xplane::CNavDataReference)
 Q_DECLARE_METATYPE(swift::misc::simulation::xplane::CNavDataReferenceList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::xplane::CNavDataReference>)
 
-#endif
+#endif // SWIFT_MISC_SIMULATION_XPLANE_NAVDATAREFERENCE_H

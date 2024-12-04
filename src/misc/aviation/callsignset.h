@@ -57,4 +57,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CCallsignSet)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CCallsign>)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_CALLSIGNSET_H

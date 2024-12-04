@@ -12,7 +12,6 @@
 #include "core/data/authenticateduser.h"
 #include "core/swiftcoreexport.h"
 #include "misc/datacache.h"
-#include "misc/logcategories.h"
 #include "misc/statusmessagelist.h"
 
 class QNetworkReply;
@@ -72,4 +71,4 @@ namespace swift::core::db
     };
 } // namespace swift::core::db
 
-#endif // guard
+#endif // SWIFT_CORE_DATABASE_CDATABASEUATHENTICATIONSERVICE_H

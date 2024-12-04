@@ -52,4 +52,4 @@ namespace swift::core::fsd
     inline bool operator!=(const ClientResponse &lhs, const ClientResponse &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_ClientResponse_H

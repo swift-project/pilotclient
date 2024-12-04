@@ -65,4 +65,4 @@ namespace swift::gui::menus
     };
 } // namespace swift::gui::menus
 
-#endif // guard
+#endif // SWIFT_GUI_MENUS_MENUDELEGATE_H

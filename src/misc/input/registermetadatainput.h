@@ -14,4 +14,4 @@ namespace swift::misc::input
     SWIFT_MISC_EXPORT void registerMetadata();
 } // namespace swift::misc::input
 
-#endif // guard
+#endif // SWIFT_MISC_INPUT_REGISTERMETADATAINPUT_H

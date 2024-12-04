@@ -361,4 +361,4 @@ namespace swift::simplugin::fsxcommon
     };
 } // namespace swift::simplugin::fsxcommon
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H

@@ -6,7 +6,6 @@
 #ifndef SWIFT_MISC_LOGCATEGORIES_H
 #define SWIFT_MISC_LOGCATEGORIES_H
 
-#include <QList>
 #include <QString>
 
 #include "misc/swiftmiscexport.h"
@@ -326,4 +325,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_LOGCATEGORIES_H

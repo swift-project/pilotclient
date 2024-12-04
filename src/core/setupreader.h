@@ -8,11 +8,6 @@
 
 #include <atomic>
 
-#include <QCommandLineOption>
-#include <QCoreApplication>
-#include <QJsonObject>
-#include <QList>
-#include <QNetworkReply>
 #include <QObject>
 #include <QString>
 
@@ -70,4 +65,4 @@ namespace swift::core
     };
 } // namespace swift::core
 
-#endif // guard
+#endif // SWIFT_CORE_SETUPREADER_H

@@ -69,4 +69,4 @@ namespace swift::misc::simulation
 Q_DECLARE_METATYPE(swift::misc::simulation::CMatchingStatistics)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CMatchingStatisticsEntry>)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_MATCHINGSTATISTICS_H

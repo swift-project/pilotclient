@@ -51,11 +51,12 @@ namespace swift::gui::components
 
     void CInstallFsxTerrainProbeComponent::copyProbe()
     {
+        using namespace std::chrono_literals;
         if (ui->le_Target->text().isEmpty()) { return; }
         CStatusMessageList msgs;
         const int copied = CFsCommonUtil::copyFsxTerrainProbeFiles(ui->le_Target->text(), msgs);
         COverlayMessagesWizardPage *mf = CGuiUtility::nextOverlayMessageWizardPage(this);
-        if (mf) { mf->showOverlayMessages(msgs, false, 5000); }
+        if (mf) { mf->showOverlayMessages(msgs, false, 5s); }
         Q_UNUSED(copied);
     }
 

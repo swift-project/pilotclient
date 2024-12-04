@@ -213,6 +213,8 @@ namespace swift::gui::components
 
     void CFirstModelSetComponent::changeModelDirectory()
     {
+        using namespace std::chrono_literals;
+
         if (!sGui || sGui->isShuttingDown()) { return; }
         const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
         CSpecializedSimulatorSettings settings = m_simulatorSettings.getSpecializedSettings(simulator);
@@ -231,18 +233,19 @@ namespace swift::gui::components
 
         const CStatusMessage msg = m_simulatorSettings.setAndSaveSettings(settings, simulator);
         if (msg.isSuccess()) { this->triggerSettingsChanged(simulator); }
-        else { this->showOverlayMessage(msg, 4000); }
+        else { this->showOverlayMessage(msg, 4s); }
     }
 
     void CFirstModelSetComponent::createModelSet()
     {
+        using namespace std::chrono_literals;
         const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
         const int modelsCount = this->modelLoader()->getCachedModelsCount(simulator);
         if (modelsCount < 1)
         {
             static const CStatusMessage msg =
                 CStatusMessage(this).validationError(u"No models indexed so far. Try 'reload'!");
-            this->showOverlayMessage(msg, 4000);
+            this->showOverlayMessage(msg, 4s);
             return;
         }
 
@@ -256,7 +259,7 @@ namespace swift::gui::components
             else
             {
                 static const CStatusMessage msg = CStatusMessage(this).validationError(u"No distributors selected");
-                this->showOverlayMessage(msg, 4000);
+                this->showOverlayMessage(msg, 4s);
                 return;
             }
         }

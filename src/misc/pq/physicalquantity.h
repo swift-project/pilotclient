@@ -402,4 +402,4 @@ namespace swift::misc::physical_quantities
     //! \endcond
 } // namespace swift::misc::physical_quantities
 
-#endif // guard
+#endif // SWIFT_MISC_PQ_PHYSICALQUANTITY_H

@@ -6,20 +6,10 @@
 #ifndef SWIFT_MISC_VALUEOBJECT_H
 #define SWIFT_MISC_VALUEOBJECT_H
 
-#include <iostream>
 #include <type_traits>
 
-#include <QDataStream>
-#include <QDebug>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QJsonValueRef>
-#include <QPixmap>
-#include <QString>
-#include <QtDBus/QDBusMetaType>
 #include <QtGlobal>
 
-#include "misc/metaclass.h"
 #include "misc/mixin/mixincompare.h"
 #include "misc/mixin/mixindatastream.h"
 #include "misc/mixin/mixindbus.h"
@@ -203,4 +193,4 @@ namespace swift::misc
 
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_VALUEOBJECT_H

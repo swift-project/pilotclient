@@ -12,4 +12,4 @@ namespace swift::gui
     SWIFT_GUI_EXPORT void registerMetadata();
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_REGISTERMETADATA_H

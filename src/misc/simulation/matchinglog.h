@@ -40,4 +40,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::MatchingLog)
 Q_DECLARE_METATYPE(swift::misc::simulation::MatchingLogFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::simulation::MatchingLog)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_MATCHINGLOG_H

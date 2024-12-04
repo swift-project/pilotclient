@@ -18,4 +18,4 @@ namespace swift::simplugin::fs9
     HRESULT logDirectPlayError(HRESULT error);
 } // namespace swift::simplugin::fs9
 
-#endif
+#endif // SWIFT_SIMPLUGIN_FS9_DIRECTPLAYERROR_H

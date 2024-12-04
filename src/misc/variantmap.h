@@ -110,4 +110,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CVariantMap)
 
-#endif
+#endif // SWIFT_MISC_VARIANTMAP_H

@@ -101,4 +101,4 @@ namespace swift::misc::simulation::fscommon
 
 Q_DECLARE_METATYPE(swift::misc::simulation::fscommon::CVPilotModelRule)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSCOMMON_VPILOTMODELRULE_H

@@ -441,4 +441,4 @@ namespace swift::misc::test
         static const QString &errorInfo(bool ok);
     };
 } // namespace swift::misc::test
-#endif
+#endif // SWIFT_MISC_TEST_TESTSERVICEINTERFACE_H

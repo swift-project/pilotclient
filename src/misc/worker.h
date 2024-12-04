@@ -13,26 +13,20 @@
 #include <memory>
 #include <type_traits>
 
-#include <QFuture>
 #include <QMetaObject>
 #include <QMetaType>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QObject>
 #include <QPointer>
-#include <QSharedPointer>
 #include <QString>
 #include <QThread>
 #include <QTimer>
 #include <QVariant>
-#include <QWeakPointer>
 #include <QtGlobal>
 
-#include "misc/connectionguard.h"
 #include "misc/invoke.h"
-#include "misc/logcategories.h"
 #include "misc/promise.h"
-#include "misc/stacktrace.h"
 #include "misc/swiftmiscexport.h"
 
 namespace swift::misc
@@ -49,11 +43,11 @@ namespace swift::misc
         CRegularThread(QObject *parent = nullptr) : QThread(parent) {}
 
         //! Destructor
-        virtual ~CRegularThread() override;
+        ~CRegularThread() override;
 
     protected:
         //! \copydoc QThread::run
-        virtual void run() override;
+        void run() override;
 
     private:
         std::atomic<void *> m_handle { nullptr };
@@ -154,7 +148,7 @@ namespace swift::misc
         CWorkerBase();
 
         //! Destructor.
-        virtual ~CWorkerBase() override;
+        ~CWorkerBase() override;
 
         //! For the task to check whether it can finish early.
         //! \threadsafe
@@ -295,11 +289,11 @@ namespace swift::misc
         //! Stops the thread the next time around its event loop.
         //! The thread and the worker will then be deleted.
         //! \threadsafe
-        virtual void quit() noexcept final override;
+        void quit() noexcept final;
 
         //! Calls quit() and blocks until the thread is finished.
         //! \threadsafe Will deadlock if called by the worker thread.
-        virtual void quitAndWait() noexcept final override;
+        void quitAndWait() noexcept final;
 
         //! Enabled (running)?
         //! \threadsafe
@@ -352,4 +346,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_WORKER_H

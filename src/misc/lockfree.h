@@ -6,21 +6,14 @@
 #ifndef SWIFT_MISC_LOCKFREE_H
 #define SWIFT_MISC_LOCKFREE_H
 
-#include <stddef.h>
-
 #include <memory>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 
-#include <QMetaType>
-#include <QMutex>
-#include <QMutexLocker>
 #include <QString>
 #include <QThread>
 #include <QtGlobal>
-
-#include "misc/swiftmiscexport.h"
 
 // http://www.drdobbs.com/lock-free-data-structures/184401865
 // http://en.cppreference.com/w/cpp/memory/shared_ptr/atomic
@@ -399,4 +392,4 @@ namespace swift::misc
 
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_LOCKFREE_H

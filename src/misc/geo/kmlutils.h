@@ -57,4 +57,4 @@ namespace swift::misc::geo
     };
 } // namespace swift::misc::geo
 
-#endif // guard
+#endif // SWIFT_MISC_GEO_KMLUTILS_H

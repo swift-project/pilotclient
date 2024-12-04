@@ -101,4 +101,4 @@ Q_DECLARE_INTERFACE(swift::misc::simulation::IModelsForSimulatorUpdatable,
 Q_DECLARE_INTERFACE(swift::misc::simulation::ISimulatorSelectable,
                     "org.swift-project.misc.simulation.isimulatorselectable")
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_AIRCRAFTMODELINTERFACES_H

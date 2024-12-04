@@ -62,4 +62,4 @@ namespace swift::simplugin::common
     };
 } // namespace swift::simplugin::common
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_COMMON_SIMULATORPLUGINCOMMON_H

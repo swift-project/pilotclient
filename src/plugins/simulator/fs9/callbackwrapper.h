@@ -39,4 +39,4 @@ namespace swift::simplugin::fs9
     };
 } // namespace swift::simplugin::fs9
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FS9_CALLBACK_WRAPPER_H

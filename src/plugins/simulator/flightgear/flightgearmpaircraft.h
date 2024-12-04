@@ -98,4 +98,4 @@ namespace swift::simplugin::flightgear
     };
 } // namespace swift::simplugin::flightgear
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FLIGHTGEAR_FGPLANEMPAIRCRAFT_H

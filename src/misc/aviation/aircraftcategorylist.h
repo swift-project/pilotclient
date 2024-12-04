@@ -97,4 +97,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftCategoryList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAircraftCategory>)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTCATEGORYLIST_H

@@ -83,4 +83,4 @@ namespace swift::misc
     } // namespace simulation
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATORLINEAR_H

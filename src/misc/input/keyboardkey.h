@@ -87,4 +87,4 @@ namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CKeyboardKey)
 
-#endif // guard
+#endif // SWIFT_MISC_INPUT_KEYBOARDKEY_H

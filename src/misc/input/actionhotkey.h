@@ -111,4 +111,4 @@ namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CActionHotkey)
 
-#endif // guard
+#endif // SWIFT_MISC_INPUT_ACTIONHOTKEY_H

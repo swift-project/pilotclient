@@ -33,4 +33,4 @@ namespace swift::gui
     };
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_SINGLEAPPLICATIONUI_H

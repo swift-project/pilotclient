@@ -94,4 +94,4 @@ namespace swift::gui::components
         swift::misc::CCountry m_currentCountry;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_DBCOUNTRYSELECTORCOMPONENT_H

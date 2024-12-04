@@ -357,4 +357,4 @@ namespace swift::simplugin::flightgear
     };
 } // namespace swift::simplugin::flightgear
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FLIGHTGEAR_SERVICE_PROXY_H

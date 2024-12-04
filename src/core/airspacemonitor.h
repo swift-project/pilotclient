@@ -6,15 +6,11 @@
 #ifndef SWIFT_CORE_AIRSPACE_MONITOR_H
 #define SWIFT_CORE_AIRSPACE_MONITOR_H
 
-#include <functional>
-
 #include <QHash>
 #include <QJsonObject>
-#include <QList>
 #include <QMetaObject>
 #include <QObject>
 #include <QQueue>
-#include <QReadWriteLock>
 #include <QString>
 #include <QTimer>
 #include <QtGlobal>
@@ -82,39 +78,36 @@ namespace swift::core
         //! @{
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
         //! \ingroup remoteaircraftprovider
-        virtual QObject *asQObject() override { return this; }
-        virtual swift::misc::simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
-        virtual bool updateFastPositionEnabled(const swift::misc::aviation::CCallsign &callsign,
-                                               bool enableFastPositonUpdates) override;
+        QObject *asQObject() override { return this; }
+        misc::simulation::CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+        bool updateFastPositionEnabled(const misc::aviation::CCallsign &callsign,
+                                       bool enableFastPositonUpdates) override;
         //! @}
 
         //! Returns the list of users we know about
-        swift::misc::network::CUserList getUsers() const;
+        misc::network::CUserList getUsers() const;
 
         //! Returns a list of the users corresponding to the given callsigns
-        swift::misc::network::CUserList
-        getUsersForCallsigns(const swift::misc::aviation::CCallsignSet &callsigns) const;
+        misc::network::CUserList getUsersForCallsigns(const misc::aviation::CCallsignSet &callsigns) const;
 
         //! Returns the loaded flight plan for the given callsign
         //! \remarks only use this if a network loaded flight plan is directly needed
         //! \remarks pseudo synchronous, call the async functions and waits for result
-        swift::misc::aviation::CFlightPlan loadFlightPlanFromNetwork(const swift::misc::aviation::CCallsign &callsign);
+        misc::aviation::CFlightPlan loadFlightPlanFromNetwork(const misc::aviation::CCallsign &callsign);
 
         //! Try to get flight plan remarks
         //! \remarks returns a value only if the flight plan is already cached or can be obtained from VATSIM reader
         //! \threadsafe
-        swift::misc::aviation::CFlightPlanRemarks
-        tryToGetFlightPlanRemarks(const swift::misc::aviation::CCallsign &callsign) const;
+        misc::aviation::CFlightPlanRemarks tryToGetFlightPlanRemarks(const misc::aviation::CCallsign &callsign) const;
 
         //! Returns the current online ATC stations
-        swift::misc::aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
+        misc::aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
 
         //! Recalculate distance to own aircraft
-        swift::misc::aviation::CAtcStationList getAtcStationsOnlineRecalculated();
+        misc::aviation::CAtcStationList getAtcStationsOnlineRecalculated();
 
         //! Returns the closest ATC station operating on the given frequency, if any
-        swift::misc::aviation::CAtcStation
-        getAtcStationForComUnit(const swift::misc::aviation::CComSystem &comSystem) const;
+        misc::aviation::CAtcStation getAtcStationForComUnit(const misc::aviation::CComSystem &comSystem) const;
 
         //! Clear the contents
         void clear();
@@ -491,4 +484,4 @@ namespace swift::core
 Q_DECLARE_METATYPE(swift::core::CAirspaceMonitor::MatchingReadinessFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::core::CAirspaceMonitor::MatchingReadiness)
 
-#endif // guard
+#endif // SWIFT_CORE_AIRSPACE_MONITOR_H

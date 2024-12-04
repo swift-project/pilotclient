@@ -300,4 +300,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorInfo)
 Q_DECLARE_METATYPE(swift::misc::simulation::CSimulatorInfo::SimulatorFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::simulation::CSimulatorInfo::Simulator)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SIMULATORINFO_H

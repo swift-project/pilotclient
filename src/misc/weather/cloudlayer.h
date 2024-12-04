@@ -8,6 +8,7 @@
 
 #include <QMetaType>
 #include <QString>
+#include <QVariant>
 
 #include "misc/aviation/altitude.h"
 #include "misc/metaclass.h"
@@ -71,24 +72,23 @@ namespace swift::misc::weather
         CCloudLayer() = default;
 
         //! Constructor
-        CCloudLayer(const swift::misc::aviation::CAltitude &base, const swift::misc::aviation::CAltitude &top,
-                    Coverage coverage);
+        CCloudLayer(const misc::aviation::CAltitude &base, const misc::aviation::CAltitude &top, Coverage coverage);
 
         //! Constructor
-        CCloudLayer(const swift::misc::aviation::CAltitude &base, const swift::misc::aviation::CAltitude &top,
+        CCloudLayer(const misc::aviation::CAltitude &base, const misc::aviation::CAltitude &top,
                     double precipitationRate, Precipitation precipitation, Clouds clouds, Coverage coverage);
 
         //! Set base
-        void setBase(const swift::misc::aviation::CAltitude &base) { m_base = base; }
+        void setBase(const misc::aviation::CAltitude &base) { m_base = base; }
 
         //! Get base
-        swift::misc::aviation::CAltitude getBase() const { return m_base; }
+        misc::aviation::CAltitude getBase() const { return m_base; }
 
         //! Set layer top
-        void setTop(const swift::misc::aviation::CAltitude &top) { m_top = top; }
+        void setTop(const misc::aviation::CAltitude &top) { m_top = top; }
 
         //! Get layer top
-        swift::misc::aviation::CAltitude getTop() const { return m_top; }
+        misc::aviation::CAltitude getTop() const { return m_top; }
 
         //! Set precipitation rate in mm/h
         void setPrecipitationRate(double rate) { m_precipitationRate = rate; }
@@ -130,12 +130,12 @@ namespace swift::misc::weather
         QString convertToQString(bool i18n = false) const;
 
     private:
-        swift::misc::aviation::CAltitude m_base;
-        swift::misc::aviation::CAltitude m_top;
+        aviation::CAltitude m_base;
+        aviation::CAltitude m_top;
         double m_precipitationRate = 0; //!< Unit mm/h
         Precipitation m_precipitation = NoPrecipitation;
         Clouds m_clouds = NoClouds;
-        int m_coveragePercent;
+        int m_coveragePercent {};
 
         SWIFT_METACLASS(
             CCloudLayer,
@@ -153,4 +153,4 @@ Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayer::Coverage)
 Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayer::Clouds)
 Q_DECLARE_METATYPE(swift::misc::weather::CCloudLayer::Precipitation)
 
-#endif // guard
+#endif // SWIFT_MISC_WEATHER_CLOUDLAYER_H

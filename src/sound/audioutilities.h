@@ -43,4 +43,4 @@ namespace swift::sound
     SWIFT_SOUND_EXPORT void occupyAudioInputDevice();
 } // namespace swift::sound
 
-#endif
+#endif // SWIFT_SOUND_AUDIOUTILITIES_H

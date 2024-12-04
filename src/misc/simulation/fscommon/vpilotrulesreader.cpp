@@ -13,7 +13,6 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QFileInfoList>
-#include <QFlags>
 #include <QIODevice>
 #include <QReadLocker>
 #include <QStandardPaths>

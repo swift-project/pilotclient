@@ -238,4 +238,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::aviation::CCallsign)
 Q_DECLARE_METATYPE(swift::misc::aviation::CCallsign::TypeHint)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_CALLSIGN_H

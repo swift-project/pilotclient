@@ -33,4 +33,4 @@ namespace swift::simplugin::fs9
     }
 } // namespace swift::simplugin::fs9
 
-#endif
+#endif // SWIFT_SIMPLUGIN_FS9_DIRECTPLAYUTILS_H

@@ -45,4 +45,4 @@ namespace swift::misc::input
 Q_DECLARE_METATYPE(swift::misc::input::CKeyboardKeyList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::input::CKeyboardKey>)
 
-#endif // guard
+#endif // SWIFT_MISC_INPUT_KEYBOARDKEYLIST_H

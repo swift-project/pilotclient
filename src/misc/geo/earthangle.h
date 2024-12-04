@@ -79,4 +79,4 @@ namespace swift::misc::geo
     //! \endcond
 } // namespace swift::misc::geo
 
-#endif // guard
+#endif // SWIFT_MISC_GEO_EARTHANGLE_H

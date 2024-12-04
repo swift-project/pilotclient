@@ -180,4 +180,4 @@ Q_DECLARE_METATYPE(swift::misc::network::CClient)
 Q_DECLARE_METATYPE(swift::misc::network::CClient::Capability)
 Q_DECLARE_METATYPE(swift::misc::network::CClient::Capabilities)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_CLIENT_H

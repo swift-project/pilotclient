@@ -445,6 +445,7 @@ void SwiftGuiStd::verifyPrerequisites()
 void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid,
                                       const CAircraftModelList &invalid, bool stopped, const CStatusMessageList &msgs)
 {
+    using namespace std::chrono_literals;
     // will NOT be called if no errors and setting is "only on errors"
     if (!sGui || sGui->isShuttingDown()) { return; }
     if (QApplication::activeModalWidget())
@@ -455,7 +456,7 @@ void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAi
             CLogMessage(this).validationWarning(
                 u"Model set validation has found %1 invalid models for '%2', check the model validation")
             << invalid.size() << simulator.toQString(true);
-        this->displayInOverlayWindow(m, 5000);
+        this->displayInOverlayWindow(m, 5s);
         return;
     }
 
@@ -545,10 +546,10 @@ void SwiftGuiStd::displayDBusReconnectDialog()
     CLogMessage::preformatted(msg);
 }
 
-void SwiftGuiStd::onShowOverlayVariant(const CVariant &variant, int durationMs)
+void SwiftGuiStd::onShowOverlayVariant(const CVariant &variant, std::chrono::milliseconds duration)
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
-    ui->fr_CentralFrameInside->showOverlayVariant(variant, durationMs);
+    ui->fr_CentralFrameInside->showOverlayVariant(variant, duration);
 }
 
 void SwiftGuiStd::onShowOverlayInlineTextMessageTab(components::TextMessageTab tab)

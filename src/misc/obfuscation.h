@@ -19,7 +19,7 @@ namespace swift::misc
     {
     public:
         //! Constructor
-        CObfuscation() {}
+        CObfuscation() = default;
 
         //! Decode string if it has the prefix, otherwise do nothing with it
         static QString decode(const QString &inString, bool trimmed = true);
@@ -34,4 +34,4 @@ namespace swift::misc
         static constexpr quint64 Key = 7234623562;
     };
 } // namespace swift::misc
-#endif // guard
+#endif // SWIFT_MISC_OBFUSCATION_H

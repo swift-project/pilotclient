@@ -75,4 +75,4 @@ namespace swift::gui::components
     };
 } // namespace swift::gui::components
 
-#endif // guard
+#endif // SWIFT_UI_COMPONENTS_DBMODELCOMPONENT_H

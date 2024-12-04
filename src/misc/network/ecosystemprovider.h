@@ -95,4 +95,4 @@ namespace swift::misc::network
 
 Q_DECLARE_INTERFACE(swift::misc::network::IEcosystemProvider, "org.swift-project.misc::network::iecosystemprovider")
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_ECOSYSTEMPROVIDER_H

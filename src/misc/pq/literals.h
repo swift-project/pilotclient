@@ -236,56 +236,8 @@ namespace swift::misc::physical_quantities
         SWIFT_MISC_EXPORT CTemperature operator""_degK(long double);
         SWIFT_MISC_EXPORT CTemperature operator""_degK(unsigned long long);
         //! @}
-
-        //! @{
-        //! User-defined literal for days
-        SWIFT_MISC_EXPORT CTime operator""_d(long double);
-        SWIFT_MISC_EXPORT CTime operator""_d(unsigned long long);
-        //! @}
-
-        //! @{
-        //! User-defined literal for hours
-        SWIFT_MISC_EXPORT CTime operator""_h(long double);
-        SWIFT_MISC_EXPORT CTime operator""_h(unsigned long long);
-        //! @}
-
-        //! @{
-        //! User-defined literal for seconds
-        SWIFT_MISC_EXPORT CTime operator""_s(long double);
-        SWIFT_MISC_EXPORT CTime operator""_s(unsigned long long);
-        //! @}
-
-        //! @{
-        //! User-defined literal for miliseconds
-        SWIFT_MISC_EXPORT CTime operator""_ms(long double);
-        SWIFT_MISC_EXPORT CTime operator""_ms(unsigned long long);
-        //! @}
-
-        //! @{
-        //! User-defined literal for minutes
-        SWIFT_MISC_EXPORT CTime operator""_min(long double);
-        SWIFT_MISC_EXPORT CTime operator""_min(unsigned long long);
-        //! @}
-
-        //! @{
-        //! User-defined literal for hours/minutes/seconds
-        SWIFT_MISC_EXPORT CTime operator""_hms(long double);
-        SWIFT_MISC_EXPORT CTime operator""_hms(unsigned long long);
-        //! @}
-
-        //! @{
-        //! User-defined literal for hours/minutes
-        SWIFT_MISC_EXPORT CTime operator""_hrmin(long double);
-        SWIFT_MISC_EXPORT CTime operator""_hrmin(unsigned long long);
-        //! @}
-
-        //! @{
-        //! User-defined literal for minutes/seconds
-        SWIFT_MISC_EXPORT CTime operator""_minsec(long double);
-        SWIFT_MISC_EXPORT CTime operator""_minsec(unsigned long long);
-        //! @}
     } // namespace Literals
 
 } // namespace swift::misc::physical_quantities
 
-#endif
+#endif // SWIFT_MISC_PQ_LITERALS_H

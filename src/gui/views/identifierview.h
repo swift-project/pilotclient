@@ -27,4 +27,4 @@ namespace swift::gui::views
         explicit CIdentifierView(QWidget *parent = nullptr);
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_IDENTIFIERVIEW_H

@@ -30,4 +30,4 @@ namespace swift::misc::network::data
     };
 } // namespace swift::misc::network::data
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_DATA_LASTSERVER_H

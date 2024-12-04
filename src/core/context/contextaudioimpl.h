@@ -6,13 +6,7 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTAUDIO_IMPL_H
 #define SWIFT_CORE_CONTEXT_CONTEXTAUDIO_IMPL_H
 
-#include <memory>
-
-#include <QHash>
-#include <QList>
 #include <QMap>
-#include <QObject>
-#include <QSharedPointer>
 #include <QString>
 
 #include "core/context/contextaudio.h"
@@ -39,40 +33,40 @@ namespace swift::core
 
         public slots:
             //! \copydoc swift::core::context::CContextAudioBase::getRegisteredDevices
-            virtual swift::misc::audio::CAudioDeviceInfoList getRegisteredDevices() const override;
+            misc::audio::CAudioDeviceInfoList getRegisteredDevices() const override;
 
             //! \copydoc swift::core::context::CContextAudioBase::registerDevices
-            virtual void registerDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) override;
+            void registerDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::unRegisterDevices
-            virtual void unRegisterDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) override;
+            void unRegisterDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::unRegisterDevicesFor
-            virtual void unRegisterDevicesFor(const swift::misc::CIdentifier &identifier) override;
+            void unRegisterDevicesFor(const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::registerAudioCallsign
-            virtual void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
-                                               const swift::misc::CIdentifier &identifier) override;
+            void registerAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                       const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::unRegisterAudioCallsign
-            virtual void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
-                                                 const swift::misc::CIdentifier &identifier) override;
+            void unRegisterAudioCallsign(const swift::misc::aviation::CCallsign &callsign,
+                                         const swift::misc::CIdentifier &identifier) override;
 
             //! \copydoc swift::core::context::CContextAudioBase::hasRegisteredAudioCallsign
-            virtual bool hasRegisteredAudioCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
+            bool hasRegisteredAudioCallsign(const swift::misc::aviation::CCallsign &callsign) const override;
 
         protected:
             //! Constructor
             CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
             //! Register myself in DBus
-            CContextAudio *registerWithDBus(swift::misc::CDBusServer *server);
+            CContextAudio *registerWithDBus(misc::CDBusServer *server);
 
         private:
-            swift::misc::audio::CAudioDeviceInfoList m_registeredDevices;
-            QMap<swift::misc::CIdentifier, swift::misc::aviation::CCallsign> m_registeredCallsigns;
+            misc::audio::CAudioDeviceInfoList m_registeredDevices;
+            QMap<misc::CIdentifier, misc::aviation::CCallsign> m_registeredCallsigns;
         };
     } // namespace context
 } // namespace swift::core
 
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXTAUDIO_IMPL_H

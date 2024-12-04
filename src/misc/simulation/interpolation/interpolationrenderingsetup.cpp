@@ -3,8 +3,6 @@
 
 #include "misc/simulation/interpolation/interpolationrenderingsetup.h"
 
-#include <QStringBuilder>
-
 #include "config/buildconfig.h"
 #include "misc/network/client.h"
 #include "misc/propertyindexvariantmap.h" // needed for mixin::Index::apply

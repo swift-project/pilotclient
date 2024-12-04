@@ -126,9 +126,12 @@ namespace swift::gui
         //! @{
         //! direct access to main application window
         bool displayInStatusBar(const swift::misc::CStatusMessage &message) override;
-        bool displayInOverlayWindow(const swift::misc::CStatusMessage &message, int timeOutMs = -1) override;
-        bool displayInOverlayWindow(const swift::misc::CStatusMessageList &messages, int timeOutMs = -1) override;
-        bool displayInOverlayWindow(const QString &html, int timeOutMs = -1) override;
+        bool displayInOverlayWindow(const swift::misc::CStatusMessage &message,
+                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0)) override;
+        bool displayInOverlayWindow(const swift::misc::CStatusMessageList &messages,
+                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0)) override;
+        bool displayInOverlayWindow(const QString &html,
+                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0)) override;
         //! @}
 
         // -------- Splash screen related ---------
@@ -371,4 +374,4 @@ namespace swift::gui
 //! Single instance of GUI application object
 extern SWIFT_GUI_EXPORT swift::gui::CGuiApplication *sGui;
 
-#endif // guard
+#endif // SWIFT_GUI_GUIAPPLICATION_H

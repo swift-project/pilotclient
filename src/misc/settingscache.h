@@ -9,7 +9,6 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QtDebug>
 
 #include "misc/statusmessage.h"
 #include "misc/swiftmiscexport.h"
@@ -178,4 +177,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_SETTINGSCACHE_H

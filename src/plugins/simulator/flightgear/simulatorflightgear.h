@@ -320,4 +320,4 @@ namespace swift::simplugin::flightgear
     };
 } // namespace swift::simplugin::flightgear
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_SIMULATOR_FLIGHTGEAR_H

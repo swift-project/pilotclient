@@ -103,4 +103,4 @@ namespace swift::misc::simulation::settings
 Q_DECLARE_METATYPE(swift::misc::simulation::settings::CSwiftPluginSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::settings::CSwiftPluginSettings>)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SETTINGS_SWIFTPLUGINSETTINGS_H

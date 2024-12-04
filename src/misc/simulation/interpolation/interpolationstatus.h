@@ -8,8 +8,12 @@
 
 #include <QString>
 
-#include "misc/aviation/aircraftsituation.h"
 #include "misc/swiftmiscexport.h"
+
+namespace swift::misc::aviation
+{
+    class CAircraftSituation;
+}
 
 namespace swift::misc::simulation
 {

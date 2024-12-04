@@ -97,7 +97,7 @@ namespace swift::gui::components
         static const QStringList &getLogCategories();
 
     private:
-        static constexpr int OverlayTimeoutMs = 5000;
+        static constexpr std::chrono::milliseconds OverlayTimeout { 5000 };
         QScopedPointer<Ui::CFlightPlanComponent> ui;
         CAltitudeDialog *m_altitudeDialog = nullptr;
         CStringListDialog *m_fpRemarksDialog = nullptr;
@@ -306,4 +306,4 @@ namespace swift::gui::components
         static bool consolidateRemarks(QStringList &remarks, const QString &newRemarks);
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_FLIGHTPLANCOMPONENT_H

@@ -34,4 +34,4 @@ struct SIMCONNECT_DATA_PBH
 };
 #endif
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_FSX_SIMCONNECTWINDOWS_H

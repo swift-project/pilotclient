@@ -64,4 +64,4 @@ namespace swift::gui::components
     };
 
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COCKPITINFOAREACOMPONENT_H

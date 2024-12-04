@@ -109,4 +109,4 @@ namespace swift::gui::models
         COrderableListModelDbObjects(const QString &translationContext, QObject *parent = nullptr);
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_LISTMODELDBOBJECTS_H

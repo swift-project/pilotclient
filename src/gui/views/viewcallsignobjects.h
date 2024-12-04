@@ -70,4 +70,4 @@ namespace swift::gui
         };
     } // namespace views
 } // namespace swift::gui
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_VIEWCALLSIGNOBJECTS_H

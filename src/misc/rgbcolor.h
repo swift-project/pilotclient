@@ -6,8 +6,6 @@
 #ifndef SWIFT_MISC_RGBCOLOR_H
 #define SWIFT_MISC_RGBCOLOR_H
 
-#include <tuple>
-
 #include <QColor>
 #include <QMetaType>
 #include <QPixmap>
@@ -145,4 +143,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CRgbColor)
 
-#endif // guard
+#endif // SWIFT_MISC_RGBCOLOR_H

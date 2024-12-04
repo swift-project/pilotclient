@@ -8,7 +8,6 @@
 
 #include <QStringList>
 
-#include "config/buildconfig.h"
 #include "core/application.h"
 #include "misc/platform.h"
 #include "misc/settingscache.h"
@@ -16,7 +15,7 @@
 namespace swift::core::application
 {
     //! Update info settings, QStringList with 2 values: channel/platform
-    struct TUpdatePreferences : public swift::misc::TSettingTrait<QStringList>
+    struct TUpdatePreferences : misc::TSettingTrait<QStringList>
     {
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "updatepreferences"; }
@@ -28,7 +27,7 @@ namespace swift::core::application
             static const QStringList d =
                 (sApp && !sApp->getUpdateInfo().isEmpty()) ?
                     sApp->getUpdateInfo().anticipateMyDefaultChannelAndPlatform() : // from cached or loaded update info
-                    QStringList({ "STABLE", swift::misc::CPlatform::currentPlatform().getPlatformName() });
+                    QStringList({ "STABLE", misc::CPlatform::currentPlatform().getPlatformName() });
             return d;
         }
 
@@ -41,4 +40,4 @@ namespace swift::core::application
     };
 } // namespace swift::core::application
 
-#endif // guard
+#endif // SWIFT_CORE_APPLICATION_UPDATESETTINGS_H

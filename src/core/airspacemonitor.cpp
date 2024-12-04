@@ -3,14 +3,9 @@
 
 #include "core/airspacemonitor.h"
 
-#include <QCoreApplication>
 #include <QDateTime>
-#include <QEventLoop>
-#include <QReadLocker>
-#include <QThread>
 #include <QTime>
 #include <QVariant>
-#include <QWriteLocker>
 #include <Qt>
 
 #include "config/buildconfig.h"
@@ -1598,7 +1593,8 @@ namespace swift::core
 
             // we NEED elevation
             // actually distance of 200k/h 100ms is just 6.1 meters
-            const CLength dpt = correctedSituation.getDistancePerTime(100, CElevationPlane::singlePointRadius());
+            using namespace std::chrono_literals;
+            const CLength dpt = correctedSituation.getDistancePerTime(100ms, CElevationPlane::singlePointRadius());
             const CAircraftSituationList situationsBeforeStoring = this->remoteAircraftSituations(callsign);
             const CAircraftSituation situationWithElvBeforeStoring =
                 situationsBeforeStoring.findClosestElevationWithinRange(correctedSituation, dpt);

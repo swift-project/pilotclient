@@ -51,4 +51,4 @@ namespace swift::gui
         QStringList m_restrictions; //!< list of allowed strings
     };
 } // namespace swift::gui
-#endif // guard
+#endif // SWIFT_GUI_UPPERCASEVALIDATOR_H

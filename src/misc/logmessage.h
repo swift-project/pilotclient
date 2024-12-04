@@ -6,13 +6,8 @@
 
 //! \file
 
-#include <type_traits>
-
 #include <QDebug>
-#include <QList>
-#include <QLoggingCategory>
 
-#include "misc/integersequence.h"
 #include "misc/statusmessage.h"
 #include "misc/statusmessagelist.h"
 #include "misc/swiftmiscexport.h"
@@ -66,4 +61,4 @@ namespace swift::misc
  */
 #define SWIFT_LOG (swift::misc::CLogMessage { __FILE__, __LINE__, Q_FUNC_INFO })
 
-#endif
+#endif // SWIFT_MISC_LOGMESSAGE_H

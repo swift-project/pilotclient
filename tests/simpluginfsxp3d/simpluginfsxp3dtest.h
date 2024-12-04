@@ -17,4 +17,4 @@
 
 //! \endcond
 
-#endif // guard
+#endif // SWIFT_SIMPLUGINFSXP3DTEST_H

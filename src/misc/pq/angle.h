@@ -118,4 +118,4 @@ namespace swift::misc::physical_quantities
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CAngle)
 Q_DECLARE_METATYPE(swift::misc::physical_quantities::CAnglePair)
 
-#endif // guard
+#endif // SWIFT_MISC_PQ_ANGLE_H

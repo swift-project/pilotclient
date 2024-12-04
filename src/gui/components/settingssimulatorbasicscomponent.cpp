@@ -126,6 +126,7 @@ namespace swift::gui::components
 
     void CSettingsSimulatorBasicsComponent::save()
     {
+        using namespace std::chrono_literals;
         const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
         CSimulatorSettings s = this->getSettings(simulator).getGenericSettings();
         const QString simulatorDir(ui->le_SimulatorDirectory->text().trimmed());
@@ -142,7 +143,7 @@ namespace swift::gui::components
         {
             const CStatusMessage m = m_settings.setAndSaveSettings(s, simulator);
             if (!m.isEmpty()) { CLogMessage::preformatted(m); }
-            if (m.isSuccess()) { this->showOverlayHTMLMessage("Saved settings", 5000); }
+            if (m.isSuccess()) { this->showOverlayHTMLMessage("Saved settings", 5s); }
             else { this->showOverlayMessage(m); }
             m_unsavedChanges = m_unsavedChanges && !m.isSuccess(); // reset if success, but only if there were changes
 

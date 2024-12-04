@@ -706,4 +706,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::settings::CSimulatorMessagesSettings
 Q_DECLARE_METATYPE(swift::misc::simulation::settings::CSimulatorMessagesSettings::TextMessageType)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::simulation::settings::CSimulatorMessagesSettings::TextMessageType)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SETTINGS_SIMULATORSETTINGS_H

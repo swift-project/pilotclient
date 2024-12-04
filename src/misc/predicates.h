@@ -6,8 +6,8 @@
 #ifndef SWIFT_MISC_PREDICATES_H
 #define SWIFT_MISC_PREDICATES_H
 
-#include <algorithm>
 #include <functional>
+#include <tuple>
 
 #include "misc/algorithm.h"
 
@@ -102,4 +102,4 @@ namespace swift::misc
     } // namespace predicates
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_PREDICATES_H

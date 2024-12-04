@@ -28,4 +28,4 @@ namespace swift::gui::views
         explicit CWindLayerView(QWidget *parent = nullptr);
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_WINDLAYERVIEW_H

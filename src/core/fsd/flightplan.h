@@ -72,4 +72,4 @@ namespace swift::core::fsd
     inline bool operator!=(const FlightPlan &lhs, const FlightPlan &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_FLIGHTPLAN_H

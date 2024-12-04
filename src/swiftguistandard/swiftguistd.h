@@ -331,12 +331,10 @@ private:
 
     //! @{
     //! Request overlay inline text message
-    void onShowOverlayVariant(const swift::misc::CVariant &variant, int durationMs);
+    void onShowOverlayVariant(const swift::misc::CVariant &variant, std::chrono::milliseconds duration);
     void onShowOverlayInlineTextMessageTab(swift::gui::components::TextMessageTab tab);
     void onShowOverlayInlineTextMessageCallsign(const swift::misc::aviation::CCallsign &callsign);
     //! @}
 };
 
-// #pragma pop_macro("interface")
-
-#endif // guard
+#endif // STDGUI_SWIFTGUISTD_H

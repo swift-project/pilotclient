@@ -61,4 +61,4 @@ namespace swift::misc
     } // namespace simulation
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_CATEGORYMATCHER_H

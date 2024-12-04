@@ -53,4 +53,4 @@ namespace swift::gui::views
         QAction *m_menuActionDeleteDirectory = nullptr; //!< action to delete menu
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_APPLICATIONINFOVIEW_H

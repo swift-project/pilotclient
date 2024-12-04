@@ -96,4 +96,4 @@ namespace swift::core::db
         mutable QReadWriteLock m_lockInfoObjects;
     };
 } // namespace swift::core::db
-#endif // guard
+#endif // SWIFT_CORE_DB_INFODATAREADER_H

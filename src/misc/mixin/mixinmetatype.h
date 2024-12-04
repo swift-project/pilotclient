@@ -118,4 +118,4 @@ namespace swift::misc
     } // namespace mixin
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_MIXIN_MIXINMETATYPE_H

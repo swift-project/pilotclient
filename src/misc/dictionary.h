@@ -17,24 +17,19 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonValueRef>
-#include <QList>
 #include <QMap>
 #include <QString>
-#include <QtDebug>
 #include <QtGlobal>
 
 #include "misc/containerbase.h"
-#include "misc/inheritancetraits.h"
 #include "misc/iterator.h"
-#include "misc/metaclass.h"
+#include "misc/jsonexception.h"
 #include "misc/mixin/mixindatastream.h"
 #include "misc/mixin/mixindbus.h"
-#include "misc/mixin/mixinhash.h"
 #include "misc/mixin/mixinjson.h"
 #include "misc/mixin/mixinstring.h"
 #include "misc/predicates.h"
 #include "misc/range.h"
-#include "misc/swiftmiscexport.h"
 #include "misc/typetraits.h"
 
 namespace swift::misc

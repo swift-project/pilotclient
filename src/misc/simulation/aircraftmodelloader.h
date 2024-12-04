@@ -209,4 +209,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::IAircraftModelLoader::LoadModeFlag)
 Q_DECLARE_METATYPE(swift::misc::simulation::IAircraftModelLoader::LoadFinishedInfo)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::simulation::IAircraftModelLoader::LoadMode)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_IAIRCRAFTMODELLOADER_H

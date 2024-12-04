@@ -80,4 +80,4 @@ namespace swift::gui::models
         virtual std::unique_ptr<IModelFilter<ContainerType>> createModelFilter() const = 0;
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_LISTMODELFILTER_H

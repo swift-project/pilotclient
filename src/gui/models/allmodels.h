@@ -32,4 +32,4 @@
 #include "gui/models/userlistmodel.h"
 #include "gui/models/windlayerlistmodel.h"
 
-#endif
+#endif // SWIFT_GUI_MODELS_ALLMODELS_H

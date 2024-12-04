@@ -179,7 +179,7 @@ namespace swift::misc::simulation::fscommon
         QString convertToQString(bool i18n = false) const;
 
     private:
-        int m_index; //!< current index in given config
+        int m_index {}; //!< current index in given config
         QString m_fileName; //!< file name of .cfg
         QString m_title; //!< Title in .cfg
         QString m_atcType; //!< ATC type
@@ -219,4 +219,4 @@ namespace swift::misc::simulation::fscommon
 
 Q_DECLARE_METATYPE(swift::misc::simulation::fscommon::CAircraftCfgEntries)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGENTRY_H

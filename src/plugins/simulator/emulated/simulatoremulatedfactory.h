@@ -35,4 +35,4 @@ namespace swift::simplugin::emulated
     };
 } // namespace swift::simplugin::emulated
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_EMULATED_SIMULATOREMULATEDFACTORY_H

@@ -47,7 +47,7 @@ namespace swift::simplugin::p3d
 
         //! \copydoc swift::core::ISimulator::followAircraft
         virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override;
-#endif // guard
+#endif
 
     protected:
         //! \copydoc fsxcommon::CSimulatorFsxCommon::initEventsP3D
@@ -93,4 +93,4 @@ namespace swift::simplugin::p3d
     };
 } // namespace swift::simplugin::p3d
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_SIMULATOR_P3D_H

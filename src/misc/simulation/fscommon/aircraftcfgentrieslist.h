@@ -85,4 +85,4 @@ namespace swift::misc::simulation::fscommon
 Q_DECLARE_METATYPE(swift::misc::simulation::fscommon::CAircraftCfgEntriesList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::fscommon::CAircraftCfgEntries>)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSCOMMON_AIRCRAFTCFGLIST_H

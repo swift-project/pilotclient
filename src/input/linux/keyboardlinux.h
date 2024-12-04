@@ -66,4 +66,4 @@ namespace swift::input
     };
 } // namespace swift::input
 
-#endif // guard
+#endif // SWIFT_INPUT_KEYBOARD_LINUX_H

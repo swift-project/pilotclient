@@ -73,8 +73,9 @@ namespace swift::gui::components
         QString m_currentText;
         bool m_showPartsEnabled = false;
         swift::misc::simulation::CSimulatedAircraftList m_aircraft;
-        swift::misc::CDigestSignal m_dsFillComboBox { this, &CRemoteAircraftSelector::fillComboBox, 3000, 5 };
+        swift::misc::CDigestSignal m_dsFillComboBox { this, &CRemoteAircraftSelector::fillComboBox,
+                                                      std::chrono::seconds(3), 5 };
     };
 } // namespace swift::gui::components
 
-#endif // guard
+#endif // SWIFT_GUI_REMOTEAIRCRAFTSELECTOR_H

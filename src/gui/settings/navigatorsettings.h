@@ -108,4 +108,4 @@ namespace swift::gui::settings
 Q_DECLARE_METATYPE(swift::gui::settings::CNavigatorSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::gui::settings::CNavigatorSettings>)
 
-#endif // guard
+#endif // SWIFT_GUI_SETTINGS_NAVIGATOR_H

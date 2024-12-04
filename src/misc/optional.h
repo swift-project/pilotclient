@@ -10,8 +10,6 @@
 
 #include <QtGlobal>
 
-#include "misc/typetraits.h"
-
 namespace swift::misc
 {
 
@@ -25,7 +23,7 @@ namespace swift::misc
     {
     public:
         //! Default constructor.
-        Optional() noexcept {}
+        Optional() noexcept = default;
 
         //! Construct from a value.
         Optional(T value) noexcept(std::is_nothrow_move_constructible_v<T>)
@@ -155,4 +153,4 @@ namespace swift::misc
 
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_OPTIONAL_H

@@ -40,7 +40,7 @@ namespace swift::gui::editors
         swift::misc::network::CUser getUser() const;
 
         //! Set user values
-        bool setUser(const swift::misc::network::CUser &user, bool ignoreEmptyUser = false);
+        void setUser(const swift::misc::network::CUser &user);
 
         //! Clear values
         void clear();
@@ -64,4 +64,4 @@ namespace swift::gui::editors
     };
 } // namespace swift::gui::editors
 
-#endif // guard
+#endif // SWIFT_GUI_EDITORS_PILOTFORM_H

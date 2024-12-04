@@ -256,4 +256,4 @@ namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CLivery)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_LIVERY_H

@@ -19,8 +19,6 @@
 #include <QtGlobal>
 
 #include "misc/fileutils.h"
-#include "misc/inheritancetraits.h"
-#include "misc/jsonexception.h"
 #include "misc/metaclass.h"
 #include "misc/swiftmiscexport.h"
 
@@ -334,4 +332,4 @@ namespace swift::misc::json
     }
 } // namespace swift::misc::json
 
-#endif // guard
+#endif // SWIFT_MISC_JSON_H

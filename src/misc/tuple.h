@@ -6,8 +6,6 @@
 #ifndef SWIFT_MISC_TUPLE_H
 #define SWIFT_MISC_TUPLE_H
 
-#include <stddef.h>
-
 #include <utility>
 
 //! \cond
@@ -43,4 +41,4 @@ namespace swift::misc::private_ns
 } // namespace swift::misc::private_ns
 //! \endcond
 
-#endif
+#endif // SWIFT_MISC_TUPLE_H

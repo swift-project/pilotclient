@@ -27,4 +27,4 @@ namespace swift::gui::views
     };
 } // namespace swift::gui::views
 
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_AIRCRAFTSITUATIONCHANGEVIEW_H

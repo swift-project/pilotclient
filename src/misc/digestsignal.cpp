@@ -34,10 +34,10 @@ namespace swift::misc
         emit this->digestSignal();
     }
 
-    void CDigestSignal::init(int maxDelayMs)
+    void CDigestSignal::init(std::chrono::milliseconds maxDelay)
     {
         QObject::connect(&m_timer, &QTimer::timeout, this, &CDigestSignal::timerTimeout);
         m_timer.setSingleShot(true);
-        m_timer.setInterval(maxDelayMs);
+        m_timer.setInterval(maxDelay);
     }
 } // namespace swift::misc

@@ -29,9 +29,7 @@
 #include "core/swiftcoreexport.h"
 #include "core/webreaderflags.h"
 #include "misc/applicationinfolist.h"
-#include "misc/crashinfo.h"
 #include "misc/db/updateinfo.h"
-#include "misc/digestsignal.h"
 #include "misc/identifiable.h"
 #include "misc/network/networkutils.h"
 #include "misc/network/url.h"
@@ -682,4 +680,4 @@ namespace swift::core
 //! Single instance of application object
 extern SWIFT_CORE_EXPORT swift::core::CApplication *sApp;
 
-#endif // guard
+#endif // SWIFT_CORE_APPLICATION_H

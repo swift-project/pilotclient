@@ -56,25 +56,13 @@ namespace swift::gui::editors
         return user;
     }
 
-    bool CPilotForm::setUser(const CUser &user, bool ignoreEmptyUser)
+    void CPilotForm::setUser(const CUser &user)
     {
-        if (ignoreEmptyUser && user.isNull()) { return false; }
-        if (user.isValid())
-        {
-            ui->le_Id->setText(user.getId());
-            ui->le_Password->setText(user.getPassword());
-            ui->le_RealName->setText(user.getRealName());
-            if (user.hasHomeBase()) { ui->comp_HomeAirport->setAirportIcaoCode(user.getHomeBase()); }
-        }
-        else if (CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            ui->le_Id->setText("1288459");
-            ui->le_Password->setText("4769");
-            ui->comp_HomeAirport->setAirportIcaoCode("LOWI");
-            ui->le_RealName->setText("Swift Project");
-        }
+        ui->le_Id->setText(user.getId());
+        ui->le_Password->setText(user.getPassword());
+        ui->le_RealName->setText(user.getRealName());
+        if (user.hasHomeBase()) { ui->comp_HomeAirport->setAirportIcaoCode(user.getHomeBase()); }
         this->validate();
-        return true;
     }
 
     void CPilotForm::clear()

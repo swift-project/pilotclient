@@ -8,13 +8,9 @@
 
 #include <algorithm>
 #include <atomic>
-#include <iosfwd>
-#include <string>
 
 #include <QByteArray>
-#include <QDataStream>
 #include <QDateTime>
-#include <QDebug>
 #include <QFlags>
 #include <QList>
 #include <QMap>
@@ -23,7 +19,6 @@
 #include <QString>
 #include <QStringRef>
 #include <QStringView>
-#include <QTextStream>
 #include <QtGlobal>
 
 #include "misc/range.h"
@@ -440,4 +435,4 @@ namespace swift::misc
     //! \endcond
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_STRINGUTILS_H

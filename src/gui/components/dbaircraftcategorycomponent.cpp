@@ -43,14 +43,14 @@ namespace swift::gui::components
     void CDbAircraftCategoryComponent::onCategoryRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState,
                                                       int count)
     {
+        using namespace std::chrono_literals;
         Q_UNUSED(count);
         if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
         if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity)) { return; }
 
         if (CEntityFlags::isFinishedReadState(readState))
         {
-            this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)),
-                                         2000);
+            this->showOverlayHTMLMessage(QStringLiteral("Updating %1").arg(CEntityFlags::entitiesToString(entity)), 2s);
             const CAircraftCategoryList categories = sGui->getWebDataServices()->getAircraftCategories();
             ui->tvp_AircraftCategoryView->updateContainerMaybeAsync(categories);
             ui->tvp_AircraftCategoryTree->updateContainer(categories);
@@ -59,15 +59,17 @@ namespace swift::gui::components
         {
             this->showOverlayHTMLMessage(u"Current state: " % CEntityFlags::entitiesToString(entity) % u" " %
                                              CEntityFlags::stateToString(readState),
-                                         10000);
+                                         10s);
         }
     }
 
     void CDbAircraftCategoryComponent::onEntityDownloadProgress(CEntityFlags::Entity entity, int logId, int progress,
                                                                 qint64 current, qint64 max, const QUrl &url)
     {
+        using namespace std::chrono_literals;
+
         if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity)) { return; }
-        this->showDownloadProgress(progress, current, max, url, 5000);
+        this->showDownloadProgress(progress, current, max, url, 5s);
         Q_UNUSED(logId);
     }
 

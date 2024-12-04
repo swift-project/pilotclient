@@ -451,4 +451,4 @@ namespace swift::core::afv::clients
     };
 } // namespace swift::core::afv::clients
 
-#endif
+#endif // SWIFT_CORE_AFV_CLIENTS_AFVCLIENT_H

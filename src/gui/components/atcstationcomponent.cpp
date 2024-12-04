@@ -180,6 +180,7 @@ namespace swift::gui::components
 
     void CAtcStationComponent::update()
     {
+        using namespace std::chrono_literals;
         if (!this->canAccessContext()) { return; }
         Q_ASSERT(ui->tvp_AtcStationsOnline);
 
@@ -210,8 +211,8 @@ namespace swift::gui::components
                 if (stationsCount < 1 && allStationsCount > 0)
                 {
                     const QString msg = QStringLiteral("All %1 ATC stations are filtered").arg(allStationsCount);
-                    ui->tvp_AtcStationsOnline->showOverlayHTMLMessage(msg, 5000);
-                    ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage(msg, 5000);
+                    ui->tvp_AtcStationsOnline->showOverlayHTMLMessage(msg, 5s);
+                    ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage(msg, 5s);
                 }
 
                 if (stationsCount < 1) { m_selectedCallsign.clear(); }
@@ -405,13 +406,15 @@ namespace swift::gui::components
 
     void CAtcStationComponent::requestAtisUpdates()
     {
+        using namespace std::chrono_literals;
+
         if (!this->canAccessContext()) { return; }
         sGui->getIContextNetwork()->requestAtisUpdates();
         if (ui->tw_Atc->currentIndex() == TabAtcOnline)
         {
-            ui->tvp_AtcStationsOnline->showOverlayHTMLMessage("Requested ATIS update", 5000);
+            ui->tvp_AtcStationsOnline->showOverlayHTMLMessage("Requested ATIS update", 5s);
         }
-        else { ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage("Requested ATIS update", 5000); }
+        else { ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage("Requested ATIS update", 5s); }
     }
 
     bool CAtcStationComponent::canAccessContext() const

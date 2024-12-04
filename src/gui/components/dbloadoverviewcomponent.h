@@ -64,7 +64,8 @@ namespace swift::gui::components
 
     private:
         QScopedPointer<Ui::CDbLoadOverviewComponent> ui;
-        swift::misc::CDigestSignal m_dsTriggerGuiUpdate { this, &CDbLoadOverviewComponent::setGuiValues, 2500, 5 };
+        swift::misc::CDigestSignal m_dsTriggerGuiUpdate { this, &CDbLoadOverviewComponent::setGuiValues,
+                                                          std::chrono::milliseconds(2500), 5 };
         qint64 m_sharedLastCheck = -1; //!< when shared URLs were last checked
         bool m_sharedValueCheckInProgress = false; //!< setting values in progress, needed because of
                                                    //!< CNetworkUtils::canConnect check (processing events)
@@ -127,4 +128,4 @@ namespace swift::gui::components
         static void admitCaches();
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_DBLOADOVERVIEWCOMPONENT_H

@@ -156,4 +156,4 @@ namespace swift::gui
     } // namespace menus
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_MENUS_AIRCRAFTMODELMENUS_H

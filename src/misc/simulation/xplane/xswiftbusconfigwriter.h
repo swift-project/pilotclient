@@ -54,4 +54,4 @@ namespace swift::misc::simulation::xplane
     };
 } // namespace swift::misc::simulation::xplane
 
-#endif
+#endif // SWIFT_MISC_SIMULATION_XPLANE_XSWIFTBUSCONFIGWRITER_H

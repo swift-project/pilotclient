@@ -201,36 +201,4 @@ namespace swift::misc::physical_quantities::Literals
     {
         return { static_cast<double>(value), CTemperatureUnit::K() };
     }
-
-    CTime operator""_d(long double value) { return { static_cast<double>(value), CTimeUnit::d() }; }
-
-    CTime operator""_d(unsigned long long value) { return { static_cast<double>(value), CTimeUnit::d() }; }
-
-    CTime operator""_h(long double value) { return { static_cast<double>(value), CTimeUnit::h() }; }
-
-    CTime operator""_h(unsigned long long value) { return { static_cast<double>(value), CTimeUnit::h() }; }
-
-    CTime operator""_s(long double value) { return { static_cast<double>(value), CTimeUnit::s() }; }
-
-    CTime operator""_s(unsigned long long value) { return { static_cast<double>(value), CTimeUnit::s() }; }
-
-    CTime operator""_ms(long double value) { return { static_cast<double>(value), CTimeUnit::ms() }; }
-
-    CTime operator""_ms(unsigned long long value) { return { static_cast<double>(value), CTimeUnit::ms() }; }
-
-    CTime operator""_min(long double value) { return { static_cast<double>(value), CTimeUnit::min() }; }
-
-    CTime operator""_min(unsigned long long value) { return { static_cast<double>(value), CTimeUnit::min() }; }
-
-    CTime operator""_hms(long double value) { return { static_cast<double>(value), CTimeUnit::hms() }; }
-
-    CTime operator""_hms(unsigned long long value) { return { static_cast<double>(value), CTimeUnit::hms() }; }
-
-    CTime operator""_hrmin(long double value) { return { static_cast<double>(value), CTimeUnit::hrmin() }; }
-
-    CTime operator""_hrmin(unsigned long long value) { return { static_cast<double>(value), CTimeUnit::hrmin() }; }
-
-    CTime operator""_minsec(long double value) { return { static_cast<double>(value), CTimeUnit::minsec() }; }
-
-    CTime operator""_minsec(unsigned long long value) { return { static_cast<double>(value), CTimeUnit::minsec() }; }
 } // namespace swift::misc::physical_quantities::Literals

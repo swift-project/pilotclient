@@ -211,4 +211,4 @@ Q_DECLARE_METATYPE(swift::core::fsd::ServerErrorCode)
 Q_DECLARE_METATYPE(swift::core::fsd::ServerType)
 Q_DECLARE_METATYPE(swift::core::fsd::Capabilities)
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_ENUMS_H

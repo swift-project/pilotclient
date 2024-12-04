@@ -14,4 +14,4 @@ namespace swift::misc::simulation
     SWIFT_MISC_EXPORT void registerMetadata();
 } // namespace swift::misc::simulation
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_REGISTERMETADATASIMULATION_H

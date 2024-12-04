@@ -40,4 +40,4 @@ namespace swift::gui::views
         bool m_withMenuRequestElevation = false;
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_AIRCRAFTSITUATIONVIEW_H

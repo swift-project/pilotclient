@@ -350,4 +350,4 @@ namespace swift::misc::db
     };
 } // namespace swift::misc::db
 
-#endif // guard
+#endif // SWIFT_MISC_DB_DATABASEOBJECTLIST_H

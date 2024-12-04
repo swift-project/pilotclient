@@ -23,4 +23,4 @@ namespace swift::gui::views
         explicit CCountryView(QWidget *parent = nullptr);
     };
 } // namespace swift::gui::views
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_COUNTRYVIEW_H

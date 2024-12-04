@@ -27,4 +27,4 @@ namespace swift::gui::models
         virtual ~CAircraftCategoryListModel() {}
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_AIRCRAFTCATEGORYLISTMODEL_H

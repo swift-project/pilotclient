@@ -41,4 +41,4 @@ namespace swift::gui::components
         CInstallFsxTerrainProbeComponent *m_fsxTerrainProbe = nullptr;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_INSTALLSIMULATORSPECIFICCOMPONENT_H

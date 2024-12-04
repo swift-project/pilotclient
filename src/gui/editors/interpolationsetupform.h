@@ -74,4 +74,4 @@ namespace swift::gui::editors
         void setInterpolatorMode(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode mode);
     };
 } // namespace swift::gui::editors
-#endif // guard
+#endif // SWIFT_GUI_EDITORS_INTERPOLATIONSETUPFORM_H

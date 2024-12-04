@@ -259,4 +259,4 @@ Q_DECLARE_METATYPE(swift::misc::db::DbKeyState)
 Q_DECLARE_METATYPE(swift::misc::db::DbKeyStateFilter)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::db::DbKeyStateFilter)
 
-#endif // guard
+#endif // SWIFT_MISC_DB_DATASTORE_H

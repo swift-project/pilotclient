@@ -26,15 +26,17 @@ namespace swift::gui::components
         m_mappingComponent = m;
     }
 
-    bool CDbMappingComponentAware::showMappingComponentOverlayMessage(const CStatusMessage &message, int timeoutMs)
+    bool CDbMappingComponentAware::showMappingComponentOverlayMessage(const CStatusMessage &message,
+                                                                      std::chrono::milliseconds timeout)
     {
         if (!m_mappingComponent) { return false; }
-        return m_mappingComponent->showOverlayMessage(message, timeoutMs);
+        return m_mappingComponent->showOverlayMessage(message, timeout);
     }
 
-    bool CDbMappingComponentAware::showMappingComponentOverlayHtmlMessage(const CStatusMessage &message, int timeoutMs)
+    bool CDbMappingComponentAware::showMappingComponentOverlayHtmlMessage(const CStatusMessage &message,
+                                                                          std::chrono::milliseconds timeout)
     {
         if (!m_mappingComponent) { return false; }
-        return m_mappingComponent->showOverlayHTMLMessage(message, timeoutMs);
+        return m_mappingComponent->showOverlayHTMLMessage(message, timeout);
     }
 } // namespace swift::gui::components

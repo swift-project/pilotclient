@@ -41,4 +41,4 @@ namespace swift::misc::private_ns
 #define SWIFT_AUDIT(COND) SWIFT_AUDIT_X(COND, nullptr, nullptr)
 //! @}
 
-#endif
+#endif // SWIFT_MISC_VERIFY_H

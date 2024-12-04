@@ -90,4 +90,4 @@ private:
     QScopedPointer<Ui::CSwiftCore> ui;
 };
 
-#endif // guard
+#endif // SWIFTCORE_H

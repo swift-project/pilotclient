@@ -89,6 +89,7 @@ namespace swift::gui::components
 
     void CDbLoginComponent::onLoginClicked()
     {
+        using namespace std::chrono_literals;
         const QString un(ui->le_Username->text().trimmed());
         const QString pw(ui->le_Password->text().trimmed());
         const CStatusMessageList msgs = m_loginService.login(un, pw);
@@ -100,7 +101,7 @@ namespace swift::gui::components
             return;
         }
         else if (!msgs.isEmpty()) { CLogMessage::preformatted(msgs); }
-        this->showLoading(5000);
+        this->showLoading(5s);
     }
 
     void CDbLoginComponent::onLogoffClicked()

@@ -3,7 +3,6 @@
 
 #include "misc/weather/metar.h"
 
-#include <QStringBuilder>
 #include <QtGlobal>
 
 #include "misc/pq/units.h"

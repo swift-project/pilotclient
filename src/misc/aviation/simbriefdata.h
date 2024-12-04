@@ -89,4 +89,4 @@ namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CSimBriefData)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_SIMBRIEFDATA_H

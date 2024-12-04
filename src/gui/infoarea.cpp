@@ -532,11 +532,7 @@ namespace swift::gui
             // this->setParent(m_originalParent, this->windowFlags() & ~Qt::Window);
             this->setWindowFlags(this->windowFlags() & ~Qt::Window);
 
-            // RW: The line below is commented to prevent making this widget visible as a top window
-            // in case it is constructed without parent or anchestor widget. Contrary to the comment,
-            // it does not seem to be necessary https://dev.vatsim-germany.org/issues/738
-            // KB 2018-12 with T447 T452 re-eanled the line again, but with parent condition
-            if (this->parentWidget()) // this line
+            if (this->parentWidget())
             {
                 this->setVisible(true); // after redocking this is required
             }

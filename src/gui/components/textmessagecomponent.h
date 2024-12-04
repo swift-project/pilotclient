@@ -111,7 +111,7 @@ namespace swift::gui
         signals:
             //! Message to be displayed in central info window
             //! \remark do not emit in overlay messages
-            void displayInInfoWindow(const swift::misc::CVariant &message, int displayDurationMs);
+            void displayInInfoWindow(const swift::misc::CVariant &message, std::chrono::milliseconds displayDuration);
 
             //! Command line was entered
             void commandEntered(const QString &commandLine, const swift::misc::CIdentifier &originator);
@@ -248,7 +248,7 @@ namespace swift::gui
             swift::misc::aviation::CCallsign getCallsignPropertyForTab(int tabIndex, bool validated) const;
 
             //! Emit the display in info window signal
-            void emitDisplayInInfoWindow(const swift::misc::CVariant &message, int displayDurationMs);
+            void emitDisplayInInfoWindow(const misc::CVariant &message, std::chrono::milliseconds displayDuration);
 
             //! Get the 1st part of the tab text, "DAMBZ: Joe Doe" -> "DAMBZ", "123.45 Foo" -> "123.45"
             static QString firstPartOfTabText(const QString &tabText);
@@ -256,4 +256,4 @@ namespace swift::gui
     } // namespace components
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_TEXTMESSAGECOMPONENT_H

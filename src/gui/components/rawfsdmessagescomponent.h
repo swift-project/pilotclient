@@ -62,4 +62,4 @@ namespace swift::gui::components
         int m_maxBufferSize = 1000;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_RAWFSDMESSAGESCOMPONENT_H

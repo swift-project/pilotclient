@@ -98,4 +98,4 @@ namespace swift::misc::network
 Q_DECLARE_METATYPE(swift::misc::network::CEcosystem)
 Q_DECLARE_METATYPE(swift::misc::network::CEcosystem::System)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_ECOSYSTEM_H

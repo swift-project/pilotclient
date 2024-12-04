@@ -34,4 +34,4 @@ namespace SwiftSimPluginFsxP3D
 
 //! \endcond
 
-#endif // guard
+#endif // SWIFT_SIMPLUGINFSXP3D_TESTFSXP3DCOMMON_H

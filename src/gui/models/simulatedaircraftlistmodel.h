@@ -44,4 +44,4 @@ namespace swift::gui::models
         AircraftMode m_mode = NotSet;
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_SIMULATEDAIRCRAFTLISTMODEL_H

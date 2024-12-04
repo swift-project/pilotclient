@@ -51,4 +51,4 @@ namespace swift::misc
     } // namespace db
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_DB_DATASTOREUTILITY_H

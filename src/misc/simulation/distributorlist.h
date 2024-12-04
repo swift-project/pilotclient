@@ -81,4 +81,4 @@ namespace swift::misc::simulation
 Q_DECLARE_METATYPE(swift::misc::simulation::CDistributorList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::simulation::CDistributor>)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_DISTRIBUTORLIST_H

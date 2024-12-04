@@ -6,8 +6,8 @@ add_executable(samples_miscsim
         samplemiscsim.h
         samplesfscommon.cpp
         samplesfscommon.h
-        samplesfsuipc.cpp
-        samplesfsuipc.h
+#        samplesfsuipc.cpp
+#        samplesfsuipc.h
         samplesfsx.cpp
         samplesfsx.h
         samplesmodelmapping.cpp
@@ -23,10 +23,4 @@ target_link_libraries(samples_miscsim core misc Qt::Core)
 
 if(WIN32)
         target_link_libraries(samples_miscsim fscommon)
-endif()
-
-if(SWIFT_WIN32)
-        target_link_libraries(samples_miscsim fsuipc_32)
-elseif(SWIFT_WIN64)
-        target_link_libraries(samples_miscsim fsuipc_64)
 endif()

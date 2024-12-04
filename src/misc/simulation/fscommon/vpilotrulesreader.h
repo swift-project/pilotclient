@@ -34,7 +34,7 @@ namespace swift::misc
             CVPilotRulesReader(bool standardDirectory = true, QObject *parent = nullptr);
 
             //! Destructor
-            virtual ~CVPilotRulesReader();
+            ~CVPilotRulesReader() override;
 
             //! Files
             //! \threadsafe
@@ -97,7 +97,7 @@ namespace swift::misc
             swift::misc::CWorker *readInBackground(bool convertToModels);
 
         private slots:
-            //! Asyncronous read finished
+            //! Asynchronous read finished
             //! \threadsafe
             void ps_readInBackgroundFinished();
 
@@ -127,4 +127,4 @@ namespace swift::misc
     } // namespace simulation::fscommon
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSCOMMON_VPILOTRULESREADER_H

@@ -99,4 +99,4 @@ namespace swift::gui::components
         swift::misc::simulation::CDistributor m_currentDistributor;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_DBDISTRIBUTORSELECTORCOMPONENT_H

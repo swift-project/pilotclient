@@ -28,4 +28,4 @@ namespace swift::gui::models
         virtual ~CAirportListModel() override {}
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_AIRPORTLISTMODEL_H

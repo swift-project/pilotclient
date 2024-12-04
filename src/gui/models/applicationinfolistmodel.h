@@ -32,4 +32,4 @@ namespace swift::gui::models
         void otherSwiftVersionsFromDataDirectories(bool reinit);
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_APPLICATIONINFOLISTMODEL_H

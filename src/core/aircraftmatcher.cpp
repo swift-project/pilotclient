@@ -12,11 +12,11 @@
 
 #include "core/application.h"
 #include "core/webdataservices.h"
+#include "core/webdataservicesms.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/callsign.h"
 #include "misc/aviation/livery.h"
-#include "misc/directoryutils.h"
 #include "misc/fileutils.h"
 #include "misc/logcategories.h"
 #include "misc/logmessage.h"

@@ -46,4 +46,4 @@ namespace swift::misc::db
 Q_DECLARE_METATYPE(swift::misc::db::CDbInfoList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::db::CDbInfo>)
 
-#endif
+#endif // SWIFT_MISC_DB_DBINFOLIST_H

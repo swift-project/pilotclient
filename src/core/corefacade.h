@@ -14,7 +14,6 @@
 #include "core/corefacadeconfig.h"
 #include "core/data/launchersetup.h"
 #include "core/swiftcoreexport.h"
-#include "core/vatsim/vatsimsettings.h"
 #include "misc/identifier.h"
 #include "misc/settingscache.h"
 
@@ -204,4 +203,4 @@ namespace swift::core
         void initPostSetup(QMap<QString, qint64> &times);
     };
 } // namespace swift::core
-#endif // guard
+#endif // SWIFT_CORE_COREFACADE_H

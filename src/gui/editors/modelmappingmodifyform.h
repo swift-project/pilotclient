@@ -70,4 +70,4 @@ namespace swift::gui::editors
     };
 } // namespace swift::gui::editors
 
-#endif // guard
+#endif // SWIFT_GUI_EDITORS_MODELMAPPINGMODIFYFORM_H

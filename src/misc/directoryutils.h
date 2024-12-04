@@ -6,10 +6,8 @@
 #ifndef SWIFT_MISC_DIRECTORYUTILS_H
 #define SWIFT_MISC_DIRECTORYUTILS_H
 
-#include <QDateTime>
 #include <QDir>
 #include <QFileInfoList>
-#include <QMap>
 #include <QSet>
 #include <QString>
 
@@ -111,4 +109,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_DIRECTORYUTILS_H

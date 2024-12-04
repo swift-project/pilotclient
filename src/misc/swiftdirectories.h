@@ -6,11 +6,7 @@
 #ifndef SWIFT_MISC_SWIFTDIRECTORIES_H
 #define SWIFT_MISC_SWIFTDIRECTORIES_H
 
-#include <QDateTime>
-#include <QDir>
 #include <QFileInfoList>
-#include <QMap>
-#include <QSet>
 #include <QString>
 
 #include "misc/swiftmiscexport.h"
@@ -26,7 +22,6 @@ namespace swift::misc
         //! Returns the bin directory. On Windows/Linux this is the same directory as
         //! QCoreApplication::applicationDirPath(), but on MacOS the exceutable is
         //! located deeper in the hierarchy of the bundles
-        //! \see https://dev.swift-project.org/w/dev/swiftpc/dirstructure/
         static const QString &binDirectory();
 
         //! Plugins directory
@@ -91,15 +86,6 @@ namespace swift::misc
         //! Where qss files are located
         static const QString &stylesheetsDirectory();
 
-        //! Where images are located
-        static const QString &imagesDirectory();
-
-        //! Where airline images are located
-        static const QString &imagesAirlinesDirectory();
-
-        //! Where flags images are located
-        static const QString &imagesFlagsDirectory();
-
         //! Where HTML files are located
         static const QString &htmlDirectory();
 
@@ -145,4 +131,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_SWIFTDIRECTORIES_H

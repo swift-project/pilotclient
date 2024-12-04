@@ -131,7 +131,8 @@ namespace swift::sound
         const int bytesForAllChannels = m_audioFormat.bytesPerFrame();
 
         QByteArray bufferData;
-        qint64 bytesPerTonePair = m_audioFormat.sampleRate() * bytesForAllChannels * tonePair.getDurationMs() / 1000;
+        qint64 bytesPerTonePair =
+            m_audioFormat.sampleRate() * bytesForAllChannels * tonePair.getDurationMs().count() / 1000;
         bufferData.resize(static_cast<int>(bytesPerTonePair));
         unsigned char *bufferPointer = reinterpret_cast<unsigned char *>(bufferData.data());
 

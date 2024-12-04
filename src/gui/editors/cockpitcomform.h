@@ -112,4 +112,4 @@ namespace swift::gui::editors
         QScopedPointer<Ui::CCockpitComForm> ui;
     };
 } // namespace swift::gui::editors
-#endif // guard
+#endif // SWIFT_GUI_EDITORS_COCKPITCOMFORM_H

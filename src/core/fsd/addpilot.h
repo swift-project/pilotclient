@@ -73,4 +73,4 @@ namespace swift::core::fsd
     inline bool operator!=(const AddPilot &lhs, const AddPilot &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_ADDPILOT_H

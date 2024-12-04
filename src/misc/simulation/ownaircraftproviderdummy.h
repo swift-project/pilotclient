@@ -116,4 +116,4 @@ namespace swift::misc
     } // namespace simulation
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_SIMULATION_OWNAIRCRAFTPROVIDERDUMMY_H

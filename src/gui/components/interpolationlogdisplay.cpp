@@ -504,6 +504,7 @@ namespace swift::gui::components
 
     bool CInterpolationLogDisplay::checkLogPrerequisites()
     {
+        using namespace std::chrono_literals;
         CStatusMessage m;
         do {
             if (!this->isVisible()) { return false; } // silently return
@@ -535,7 +536,7 @@ namespace swift::gui::components
         while (false);
 
         this->stop();
-        if (!m.isEmpty()) { this->showOverlayMessage(m, 5000); }
+        if (!m.isEmpty()) { this->showOverlayMessage(m, 5s); }
         return false;
     }
 

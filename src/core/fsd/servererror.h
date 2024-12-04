@@ -69,4 +69,4 @@ namespace swift::core::fsd
     inline bool operator!=(const ServerError &lhs, const ServerError &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_SERVERERROR_H

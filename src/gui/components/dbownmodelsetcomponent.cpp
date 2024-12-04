@@ -116,6 +116,8 @@ namespace swift::gui::components
 
     void CDbOwnModelSetComponent::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
     {
+        using namespace std::chrono_literals;
+
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
         this->setSimulator(simulator);
         if (models.isEmpty())
@@ -132,7 +134,7 @@ namespace swift::gui::components
             const CStatusMessage m =
                 CStatusMessage(this).warning(u"Removed %1 models from set, because not matching %2")
                 << diff << simulator.toQString(true);
-            this->showMappingComponentOverlayHtmlMessage(m, 5000);
+            this->showMappingComponentOverlayHtmlMessage(m, 5s);
         }
         cleanModelList.resetOrder();
         ui->tvp_OwnModelSet->updateContainerMaybeAsync(cleanModelList);
@@ -140,6 +142,8 @@ namespace swift::gui::components
 
     int CDbOwnModelSetComponent::replaceOrAddModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator)
     {
+        using namespace std::chrono_literals;
+
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
         if (models.isEmpty()) { return 0; }
         CAircraftModelList cleanModelList(
@@ -150,7 +154,7 @@ namespace swift::gui::components
             const CStatusMessage m =
                 CStatusMessage(this).warning(u"Removed %1 models from set, because not matching %2")
                 << diff << simulator.toQString(true);
-            this->showMappingComponentOverlayHtmlMessage(m, 5000);
+            this->showMappingComponentOverlayHtmlMessage(m, 5s);
         }
         if (cleanModelList.isEmpty()) { return 0; }
         CAircraftModelList updatedModels(ui->tvp_OwnModelSet->container());
@@ -227,6 +231,8 @@ namespace swift::gui::components
 
     void CDbOwnModelSetComponent::buttonClicked()
     {
+        using namespace std::chrono_literals;
+
         const QObject *sender = QObject::sender();
         if (!sender) { return; }
 
@@ -255,9 +261,9 @@ namespace swift::gui::components
                     const QString msg = QStringLiteral("Saved model set for '%1'").arg(sim.toQString(true));
 
                     // display either as overlay of componet or view
-                    if (!this->showMappingComponentOverlayHtmlMessage(msg, 5000))
+                    if (!this->showMappingComponentOverlayHtmlMessage(msg, 5s))
                     {
-                        ui->tvp_OwnModelSet->showOverlayHTMLMessage(msg, 5000);
+                        ui->tvp_OwnModelSet->showOverlayHTMLMessage(msg, 5s);
                     }
                 }
                 else

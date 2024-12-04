@@ -42,4 +42,4 @@
 #    define SWIFT_NO_INLINE __attribute__((noinline))
 #endif
 
-#endif // guard
+#endif // SWIFT_MISC_SWIFT_MISCEXPORT_H

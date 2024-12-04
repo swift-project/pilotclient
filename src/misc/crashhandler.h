@@ -74,7 +74,8 @@ namespace swift::misc
         void triggerCrashInfoWrite();
 
         swift::misc::CCrashInfo m_crashAndLogInfo; //!< info representing details
-        swift::misc::CDigestSignal m_dsCrashAndLogInfo { this, &CCrashHandler::triggerCrashInfoWrite, 10000, 5 };
+        CDigestSignal m_dsCrashAndLogInfo { this, &CCrashHandler::triggerCrashInfoWrite,
+                                            std::chrono::milliseconds(10000), 5 };
 
 #ifdef SWIFT_USE_CRASHPAD
         std::unique_ptr<crashpad::CrashpadClient> m_crashpadClient;
@@ -83,4 +84,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_CRASHHANDLER_H

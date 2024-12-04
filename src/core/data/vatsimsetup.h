@@ -147,4 +147,4 @@ namespace swift::core::data
 
 Q_DECLARE_METATYPE(swift::core::data::CVatsimSetup)
 
-#endif // guard
+#endif // SWIFT_CORE_DATA_VATSIMDATA_H

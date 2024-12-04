@@ -115,10 +115,7 @@ namespace swift::gui::settings
     struct TDockWidget : public swift::misc::TSettingTrait<CDockWidgetSettings>
     {
         //! \copydoc swift::misc::TSettingTrait::key
-        static const char *key()
-        {
-            return "guidockwidget/%Application%/%OwnerName%";
-        } // Key in data cache https://dev.vatsim-germany.org/issues/776
+        static const char *key() { return "guidockwidget/%Application%/%OwnerName%"; } // Key in data cache
 
         //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
@@ -132,4 +129,4 @@ namespace swift::gui::settings
 Q_DECLARE_METATYPE(swift::gui::settings::CDockWidgetSettings)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::gui::settings::CDockWidgetSettings>)
 
-#endif // guard
+#endif // SWIFT_GUI_SETTINGS_DOCKWIDGET_H

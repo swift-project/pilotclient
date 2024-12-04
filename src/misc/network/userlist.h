@@ -39,4 +39,4 @@ namespace swift::misc::network
 Q_DECLARE_METATYPE(swift::misc::network::CUserList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CUser>)
 
-#endif
+#endif // SWIFT_MISC_NETWORK_USERLIST_H

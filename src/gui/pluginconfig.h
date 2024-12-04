@@ -36,4 +36,4 @@ namespace swift::gui
 
 Q_DECLARE_INTERFACE(swift::gui::IPluginConfig, "org.swift-project.swiftgui.pluginconfiginterface")
 
-#endif // guard
+#endif // SWIFT_GUI_PLUGINCONFIG_H

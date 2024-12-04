@@ -6,14 +6,11 @@
 #ifndef SWIFT_MISC_ICON_H
 #define SWIFT_MISC_ICON_H
 
-#include <tuple>
-
 #include <QIcon>
 #include <QMetaType>
 #include <QPixmap>
 #include <QString>
 
-#include "misc/dbus.h"
 #include "misc/icons.h"
 #include "misc/metaclass.h"
 #include "misc/mixin/mixincompare.h"
@@ -128,4 +125,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CIcon)
 
-#endif // guard
+#endif // SWIFT_MISC_ICON_H

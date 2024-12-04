@@ -6,12 +6,9 @@
 #ifndef SWIFT_MISC_SIMULATION_FSDIRECTORIES_H
 #define SWIFT_MISC_SIMULATION_FSDIRECTORIES_H
 
-#include <atomic>
-
 #include <QSet>
 #include <QStringList>
 
-#include "misc/logcategories.h"
 #include "misc/swiftmiscexport.h"
 
 namespace swift::misc::simulation::fscommon
@@ -144,18 +141,9 @@ namespace swift::misc::simulation::fscommon
         //! Get all the SimObjects paths from all config files
         static QSet<QString> allFsxSimObjectPaths();
 
-        // TODO TZ
-        //! Get all the SimObjects paths from all config files
-        // static QSet<QString> allMsfsSimObjectPaths();
-
         //! Find the config files (fsx.cfg)
         // C:/Users/Joe Doe/AppData/Roaming/Microsoft/FSX/fsx.cfg
         static QStringList findFsxConfigFiles();
-
-        // TODO TZ
-        //! Find the config files (fsx.cfg)
-        // C:/Users/Joe Doe/AppData/Roaming/Microsoft/FSX/fsx.cfg
-        // static QStringList findMsfsConfigFiles();
 
         //! Get all the SimObjects paths from fsx.cfg
         // SimObjectPaths.0=SimObjects\Airplanes
@@ -187,4 +175,4 @@ namespace swift::misc::simulation::fscommon
     };
 } // namespace swift::misc::simulation::fscommon
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_FSDIRECTORIES_H

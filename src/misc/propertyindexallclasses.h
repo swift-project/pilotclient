@@ -9,4 +9,4 @@
 #include "misc/propertyindexref.h"
 #include "misc/propertyindexvariantmap.h"
 
-#endif // guard
+#endif // SWIFT_MISC_PROPERTYINDEXALLCLASSES_H

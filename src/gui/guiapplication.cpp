@@ -539,31 +539,31 @@ namespace swift::gui
         return m->displayInStatusBar(message);
     }
 
-    bool CGuiApplication::displayInOverlayWindow(const CStatusMessage &message, int timeOutMs)
+    bool CGuiApplication::displayInOverlayWindow(const CStatusMessage &message, std::chrono::milliseconds timeout)
     {
         if (message.isEmpty()) { return false; }
         IMainWindowAccess *m = mainWindowAccess();
         SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return IMainWindowAccess::displayInOverlayWindow(message, timeOutMs); }
-        return m->displayInOverlayWindow(message, timeOutMs);
+        if (!m) { return IMainWindowAccess::displayInOverlayWindow(message, timeout); }
+        return m->displayInOverlayWindow(message, timeout);
     }
 
-    bool CGuiApplication::displayInOverlayWindow(const CStatusMessageList &messages, int timeOutMs)
+    bool CGuiApplication::displayInOverlayWindow(const CStatusMessageList &messages, std::chrono::milliseconds timeout)
     {
         if (messages.isEmpty()) { return false; }
         IMainWindowAccess *m = mainWindowAccess();
         SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return IMainWindowAccess::displayInOverlayWindow(messages, timeOutMs); }
-        return m->displayInOverlayWindow(messages, timeOutMs);
+        if (!m) { return IMainWindowAccess::displayInOverlayWindow(messages, timeout); }
+        return m->displayInOverlayWindow(messages, timeout);
     }
 
-    bool CGuiApplication::displayInOverlayWindow(const QString &html, int timeOutMs)
+    bool CGuiApplication::displayInOverlayWindow(const QString &html, std::chrono::milliseconds timeout)
     {
         if (html.isEmpty()) { return false; }
         IMainWindowAccess *m = mainWindowAccess();
         SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return IMainWindowAccess::displayInOverlayWindow(html, timeOutMs); }
-        return m->displayInOverlayWindow(html, timeOutMs);
+        if (!m) { return IMainWindowAccess::displayInOverlayWindow(html, timeout); }
+        return m->displayInOverlayWindow(html, timeout);
     }
 
     void CGuiApplication::addMenuForSettingsAndCache(QMenu &menu)

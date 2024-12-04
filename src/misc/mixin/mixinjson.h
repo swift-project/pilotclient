@@ -6,20 +6,18 @@
 #ifndef SWIFT_MISC_MIXIN_MIXINJSON_H
 #define SWIFT_MISC_MIXIN_MIXINJSON_H
 
-#include <type_traits>
 #include <utility>
 
-#include <QByteArray>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonValueRef>
-#include <QStringList>
 #include <QtGlobal>
 
 #include "misc/inheritancetraits.h"
 #include "misc/json.h"
+#include "misc/jsonexception.h"
 
 namespace swift::misc
 {
@@ -286,4 +284,4 @@ namespace swift::misc
     } // namespace mixin
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_MIXIN_MIXINJSON_H

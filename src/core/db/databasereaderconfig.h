@@ -9,9 +9,7 @@
 #include <QDateTime>
 #include <QJsonArray>
 #include <QObject>
-#include <QReadWriteLock>
 #include <QString>
-#include <QTimer>
 #include <QtGlobal>
 
 #include "core/swiftcoreexport.h"
@@ -153,4 +151,4 @@ Q_DECLARE_METATYPE(swift::core::db::CDatabaseReaderConfig)
 Q_DECLARE_METATYPE(swift::core::db::CDatabaseReaderConfigList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::core::db::CDatabaseReaderConfig>)
 
-#endif // guard
+#endif // SWIFT_CORE_DB_DATABASE_READERCONFIG_H

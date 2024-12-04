@@ -25,4 +25,4 @@ namespace swift::misc
     SWIFT_MISC_EXPORT QStringList getStackTraceAlways();
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_STACKTRACE_H

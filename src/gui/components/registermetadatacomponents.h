@@ -14,4 +14,4 @@ namespace swift::gui::components
     SWIFT_GUI_EXPORT void registerMetadata();
 } // namespace swift::gui::components
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_REGISTERMETADATASIMULATION_H

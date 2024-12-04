@@ -44,7 +44,6 @@ using namespace swift::gui::components;
 using namespace swift::core;
 using namespace swift::core::context;
 using namespace swift::core::data;
-using namespace swift::core::vatsim;
 using namespace swift::sound;
 using namespace swift::misc;
 using namespace swift::misc::db;
@@ -477,12 +476,14 @@ void CSwiftLauncher::dbusServerModeSelected(bool selected)
 
 void CSwiftLauncher::showStatusMessage(const CStatusMessage &msg)
 {
-    ui->fr_SwiftLauncherMain->showOverlayMessage(msg, 5000);
+    using namespace std::chrono_literals;
+    ui->fr_SwiftLauncherMain->showOverlayMessage(msg, 5s);
 }
 
 void CSwiftLauncher::showStatusMessage(const QString &htmlMsg)
 {
-    ui->fr_SwiftLauncherMain->showOverlayMessage(htmlMsg, 5000);
+    using namespace std::chrono_literals;
+    ui->fr_SwiftLauncherMain->showOverlayMessage(htmlMsg, 5s);
 }
 
 void CSwiftLauncher::showMainPage() { ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherMain); }

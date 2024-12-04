@@ -55,4 +55,4 @@ namespace swift::misc::network
 Q_DECLARE_METATYPE(swift::misc::network::CRoleList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CRole>)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_ROLELIST_H

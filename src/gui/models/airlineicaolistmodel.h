@@ -33,4 +33,4 @@ namespace swift::gui::models
         virtual ~CAirlineIcaoCodeListModel() {}
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_AIRLINEICAOLISTMODEL_H

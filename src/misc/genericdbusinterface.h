@@ -7,7 +7,6 @@
 #define SWIFT_MISC_GENERICDBUSINTERFACE_H
 
 #include <QDBusAbstractInterface>
-#include <QDBusError>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
 #include <QMetaMethod>
@@ -123,4 +122,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_GENERICDBUSINTERFACE_H

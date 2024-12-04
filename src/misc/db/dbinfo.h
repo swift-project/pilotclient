@@ -111,4 +111,4 @@ namespace swift::misc::db
 
 Q_DECLARE_METATYPE(swift::misc::db::CDbInfo)
 
-#endif // guard
+#endif // SWIFT_MISC_DB_DBINFO_H

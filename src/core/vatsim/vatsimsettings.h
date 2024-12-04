@@ -8,7 +8,6 @@
 
 #include "core/swiftcoreexport.h"
 #include "misc/directoryutils.h"
-#include "misc/fileutils.h"
 #include "misc/network/serverlist.h"
 #include "misc/pq/time.h"
 #include "misc/settingscache.h"
@@ -222,4 +221,4 @@ Q_DECLARE_METATYPE(swift::misc::CCollection<swift::core::vatsim::CReaderSettings
 Q_DECLARE_METATYPE(swift::core::vatsim::CRawFsdMessageSettings)
 Q_DECLARE_METATYPE(swift::core::vatsim::CRawFsdMessageSettings::FileWriteMode)
 
-#endif
+#endif // SWIFT_CORE_VATSIM_SETTINGS_H

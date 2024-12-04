@@ -791,18 +791,21 @@ namespace swift::gui::components
     void CDbOwnModelsComponent::onModelLoaderDiskLoadingStarted(const CSimulatorInfo &simulator,
                                                                 IAircraftModelLoader::LoadMode mode)
     {
+        using namespace std::chrono_literals;
         const CStatusMessage msg = CLogMessage(this).info(u"Started disk loading for '%1' in mode '%2'")
                                    << simulator.toQString(true) << IAircraftModelLoader::enumToString(mode);
-        this->showOverlayHTMLMessage(msg, 5000);
+        this->showOverlayHTMLMessage(msg, 5s);
     }
 
     void CDbOwnModelsComponent::onModelLoadingProgress(const CSimulatorInfo &simulator, const QString &message,
                                                        int progress)
     {
+        using namespace std::chrono_literals;
+
         const CStatusMessage loadingMsg = CStatusMessage(this).info(u"%1 loading: %2")
                                           << simulator.toQString(true) << message;
-        this->showOverlayHTMLMessage(loadingMsg, 5000);
-        ui->tvp_OwnAircraftModels->showLoadIndicatorWithTimeout(5000); // trigger new load indicator
+        this->showOverlayHTMLMessage(loadingMsg, 5s);
+        ui->tvp_OwnAircraftModels->showLoadIndicatorWithTimeout(5s); // trigger new load indicator
         Q_UNUSED(progress)
     }
 
@@ -810,6 +813,7 @@ namespace swift::gui::components
                                                              const CSimulatorInfo &simulator,
                                                              IAircraftModelLoader::LoadFinishedInfo info)
     {
+        using namespace std::chrono_literals;
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Expect single simulator");
 
         bool hideIndicator = false; // hide in case loading failed
@@ -837,7 +841,7 @@ namespace swift::gui::components
             // overlay
             if (!summaryMsg.isEmpty() && info == IAircraftModelLoader::ParsedData)
             {
-                this->showOverlayHTMLMessage(summaryMsg, 5000);
+                this->showOverlayHTMLMessage(summaryMsg, 5s);
             }
 
             // signal
@@ -859,16 +863,16 @@ namespace swift::gui::components
         if (statusMessages.hasErrorMessages())
         {
             this->setOverlayMessagesSorting(CStatusMessage::IndexSeverityAsIcon, Qt::DescendingOrder);
-            this->showOverlayMessagesOrHTMLMessage(statusMessages, false, -1);
+            this->showOverlayMessagesOrHTMLMessage(statusMessages, false, 0s);
         }
         else
         {
             // no issues, directly hide
-            const int timeoutMs = statusMessages.hasWarningOrErrorMessages() ? -1 : 7500;
+            const std::chrono::milliseconds timeout { statusMessages.hasWarningOrErrorMessages() ? 0 : 7500 };
             if (statusMessages.size() < 50)
             {
                 // small number of messages
-                this->showOverlayMessagesOrHTMLMessage(statusMessages, false, timeoutMs);
+                this->showOverlayMessagesOrHTMLMessage(statusMessages, false, timeout);
             }
             else
             {

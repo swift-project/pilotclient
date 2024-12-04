@@ -139,8 +139,7 @@ namespace swift::misc::simulation
         if (latest.isNewerThanAdjusted(m_s[1])) { m_s[2] = latest; }
         const qint64 currentAdjusted = m_s[1].getAdjustedMSecsSinceEpoch();
 
-        // with https://dev.swift-project.org/T668#15841 avoid 2 very close positions
-        // currently done by time, maybe we can also choose distance
+        // avoid 2 very close positions currently done by time, maybe we can also choose distance
         const qint64 osNotTooClose = qRound64(0.8 * os);
         const CAircraftSituation older =
             m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted - osNotTooClose);

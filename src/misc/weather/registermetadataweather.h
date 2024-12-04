@@ -14,4 +14,4 @@ namespace swift::misc::weather
     SWIFT_MISC_EXPORT void registerMetadata();
 } // namespace swift::misc::weather
 
-#endif // guard
+#endif // SWIFT_MISC_WEATHER_REGISTERMETADATAWEATHER_H

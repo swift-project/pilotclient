@@ -92,9 +92,9 @@ namespace swift::gui::menus
                 added = true;
                 if (CModelConverterX::supportsModelConverterX())
                 {
-                    m_modelConverterX = menuActions.addAction(m_modelConverterX, CIcons::modelConverterX(),
-                                                              "ModelConverterX", CMenuAction::pathSimulator(),
-                                                              { this, &CShowSimulatorFileMenu::startModelConverterX });
+                    m_modelConverterX =
+                        menuActions.addAction(m_modelConverterX, "ModelConverterX", CMenuAction::pathSimulator(),
+                                              { this, &CShowSimulatorFileMenu::startModelConverterX });
                 }
             }
 
@@ -334,6 +334,8 @@ namespace swift::gui::menus
 
     void CConsolidateWithSimulatorModels::consolidateData()
     {
+        using namespace std::chrono_literals;
+
         bool filtered = false;
         const CAircraftModelList models(this->getAllOrAllFilteredAircraftModels(&filtered));
         if (models.isEmpty()) { return; }
@@ -353,12 +355,14 @@ namespace swift::gui::menus
         if (!removedModelStrings.isEmpty() && this->getMappingComponent())
         {
             const CStatusMessage m = CStatusMessage(this).info(u"Removed %1 model(s)") << removedModelStrings.size();
-            this->getMappingComponent()->showOverlayMessage(m, 5000);
+            this->getMappingComponent()->showOverlayMessage(m, 5s);
         }
     }
 
     void CConsolidateWithSimulatorModels::consolidateSelectedData()
     {
+        using namespace std::chrono_literals;
+
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         const CAircraftModelList models(this->getSelectedAircraftModels());
         if (models.isEmpty()) { return; }
@@ -379,12 +383,14 @@ namespace swift::gui::menus
         if (!removedModelStrings.isEmpty() && this->getMappingComponent())
         {
             const CStatusMessage m = CStatusMessage(this).info(u"Removed %1 model(s)") << removedModelStrings.size();
-            this->getMappingComponent()->showOverlayMessage(m, 5000);
+            this->getMappingComponent()->showOverlayMessage(m, 5s);
         }
     }
 
     void CConsolidateWithSimulatorModels::updateDirectoryData()
     {
+        using namespace std::chrono_literals;
+
         bool filtered = false;
         const CAircraftModelList models(this->getAllOrAllFilteredAircraftModels(&filtered));
         if (models.isEmpty()) { return; }
@@ -404,12 +410,14 @@ namespace swift::gui::menus
         if (!removedModelStrings.isEmpty() && this->getMappingComponent())
         {
             const CStatusMessage m = CStatusMessage(this).info(u"Removed %1 model(s)") << removedModelStrings.size();
-            this->getMappingComponent()->showOverlayMessage(m, 5000);
+            this->getMappingComponent()->showOverlayMessage(m, 5s);
         }
     }
 
     void CConsolidateWithSimulatorModels::updateDirectorySelectedData()
     {
+        using namespace std::chrono_literals;
+
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         const CAircraftModelList models(this->getSelectedAircraftModels());
         if (models.isEmpty()) { return; }
@@ -430,7 +438,7 @@ namespace swift::gui::menus
         if (!removedModelStrings.isEmpty() && this->getMappingComponent())
         {
             const CStatusMessage m = CStatusMessage(this).info(u"Removed %1 model(s)") << removedModelStrings.size();
-            this->getMappingComponent()->showOverlayMessage(m, 5000);
+            this->getMappingComponent()->showOverlayMessage(m, 5s);
         }
     }
 

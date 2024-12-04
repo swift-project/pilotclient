@@ -179,6 +179,7 @@ namespace swift::gui::components
 
     void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
     {
+        using namespace std::chrono_literals;
         if (messages.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
         const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
@@ -202,7 +203,7 @@ namespace swift::gui::components
                 if (msgSettings.popupSelcalMessages())
                 {
                     CStatusMessage msg = CLogMessage(this).info(u"SELCAL received");
-                    this->emitDisplayInInfoWindow(CVariant::from(msg), 3 * 1000);
+                    this->emitDisplayInInfoWindow(CVariant::from(msg), 3s);
                 }
                 continue;
             }
@@ -299,7 +300,7 @@ namespace swift::gui::components
                 {
                     if (msgSettings.popup(message, ownAircraft))
                     {
-                        this->emitDisplayInInfoWindow(CVariant::from(message), 15 * 1000);
+                        this->emitDisplayInInfoWindow(CVariant::from(message), 15s);
                     }
                 }
             } // message
@@ -708,10 +709,11 @@ namespace swift::gui::components
         return {};
     }
 
-    void CTextMessageComponent::emitDisplayInInfoWindow(const CVariant &message, int displayDurationMs)
+    void CTextMessageComponent::emitDisplayInInfoWindow(const CVariant &message,
+                                                        std::chrono::milliseconds displayDuration)
     {
         if (m_usedAsOverlayWidget) { return; }
-        emit this->displayInInfoWindow(message, displayDurationMs);
+        emit this->displayInInfoWindow(message, displayDuration);
     }
 
     void CTextMessageComponent::handleEnteredTextMessage(const QString &textMessage)

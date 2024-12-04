@@ -6,8 +6,6 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXTNETWORK_PROXY_H
 #define SWIFT_CORE_CONTEXT_CONTEXTNETWORK_PROXY_H
 
-#include <stdbool.h>
-
 #include <QObject>
 #include <QString>
 
@@ -300,4 +298,4 @@ namespace swift::core
         };
     } // namespace context
 } // namespace swift::core
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXTNETWORK_PROXY_H

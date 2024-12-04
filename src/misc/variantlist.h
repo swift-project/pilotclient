@@ -68,4 +68,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CVariantList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CVariant>)
 
-#endif
+#endif // SWIFT_MISC_VARIANTLIST_H

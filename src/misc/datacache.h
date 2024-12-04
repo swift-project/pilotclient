@@ -25,7 +25,6 @@
 #include <QString>
 #include <QStringList>
 #include <QUuid>
-#include <QtDebug>
 #include <QtGlobal>
 
 #include "misc/identifier.h"
@@ -520,4 +519,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif
+#endif // SWIFT_MISC_DATACACHE_H

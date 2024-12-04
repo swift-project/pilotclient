@@ -6,8 +6,6 @@
 #ifndef SWIFT_CORE_ACTIONBIND_H
 #define SWIFT_CORE_ACTIONBIND_H
 
-#include <QPixmap>
-
 #include "core/application.h"
 #include "core/swiftcoreexport.h"
 
@@ -52,7 +50,7 @@ namespace swift::core
         //! @}
 
         //! Destructor
-        virtual ~CActionBind();
+        ~CActionBind() override;
 
         //! Unbind from swift::core::CInputManager
         void unbind();
@@ -83,4 +81,4 @@ namespace swift::core
     using CActionBindings = QList<CActionBinding>;
 } // namespace swift::core
 
-#endif
+#endif // SWIFT_CORE_ACTIONBIND_H

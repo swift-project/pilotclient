@@ -210,4 +210,4 @@ namespace swift::misc
 Q_DECLARE_INTERFACE(swift::misc::simulation::IOwnAircraftProvider,
                     "org.swift-project.misc::simulation::iownaircraftprovider")
 
-#endif
+#endif // SWIFT_MISC_SIMULATION_OWNAIRCRAFTPROVIDER_H

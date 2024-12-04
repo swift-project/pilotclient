@@ -145,7 +145,8 @@ namespace swift::gui::components
         Mode m_mode = CheckBoxes;
         bool m_noSelectionMeansAll = false; //!< for filters, no selection means all
         bool m_rememberSelection = false; //!< remember last selection
-        swift::misc::CDigestSignal m_digestButtonsChanged { this, &CSimulatorSelector::emitChangedSignal, 250, 3 };
+        misc::CDigestSignal m_digestButtonsChanged { this, &CSimulatorSelector::emitChangedSignal,
+                                                     std::chrono::milliseconds(250), 3 };
         swift::misc::CData<swift::misc::simulation::data::TSimulatorLastSelection> m_currentSimulator {
             this, &CSimulatorSelector::changedLastSelectionRb
         }; //!< current simulator (used with radio buttons)
@@ -155,4 +156,4 @@ namespace swift::gui::components
     };
 } // namespace swift::gui::components
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_SIMULATORSELECTOR_H

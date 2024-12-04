@@ -35,7 +35,6 @@
 #include "misc/mixin/mixincompare.h"
 #include "misc/mixin/mixindatastream.h"
 #include "misc/mixin/mixindbus.h"
-#include "misc/mixin/mixinhash.h"
 #include "misc/mixin/mixinmetatype.h"
 #include "misc/propertyindexref.h"
 #include "misc/range.h"
@@ -542,4 +541,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CValueCachePacket)
 
-#endif
+#endif // SWIFT_MISC_VALUECACHE_H

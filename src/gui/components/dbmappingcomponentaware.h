@@ -40,8 +40,10 @@ namespace swift::gui::components
 
         //! @{
         //! Overlay messages
-        bool showMappingComponentOverlayMessage(const swift::misc::CStatusMessage &message, int timeoutMs = -1);
-        bool showMappingComponentOverlayHtmlMessage(const swift::misc::CStatusMessage &message, int timeoutMs = -1);
+        bool showMappingComponentOverlayMessage(const swift::misc::CStatusMessage &message,
+                                                std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
+        bool showMappingComponentOverlayHtmlMessage(const swift::misc::CStatusMessage &message,
+                                                    std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
         //! @}
 
     private:
@@ -52,4 +54,4 @@ namespace swift::gui::components
 Q_DECLARE_INTERFACE(swift::gui::components::CDbMappingComponentAware,
                     "org.swift-project.swiftgui.components.dbmappingcomponentaware")
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_DBMAPPINGCOMPONENTAWARE_H

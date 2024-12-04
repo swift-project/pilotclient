@@ -439,9 +439,6 @@ namespace swift::core::context
 
         m_voiceClient->setOutputMuted(muted);
         if (!muted) { m_voiceClient->setNormalizedMasterOutputVolume(m_outMasterVolumeBeforeMute); }
-
-        // signal no longer need, signaled by m_voiceClient->setMuted
-        // emit this->changedMute(muted);
     }
 
     bool CContextAudioBase::isOutputMuted() const
@@ -452,11 +449,11 @@ namespace swift::core::context
 
     void CContextAudioBase::playSelcalTone(const CSelcal &selcal)
     {
-        const CTime t = m_selcalPlayer->play(90, selcal);
-        const int ms = t.toMs();
-        if (ms > 10)
+        using namespace std::chrono_literals;
+        const std::chrono::milliseconds ms = m_selcalPlayer->play(90, selcal);
+        if (ms > 10ms)
         {
-            // As of https://dev.swift-project.org/T558 play additional notification
+            // Play additional notification
             const QPointer<const CContextAudioBase> myself(this);
             QTimer::singleShot(ms, this, [=] {
                 if (!sApp || sApp->isShuttingDown() || !myself) { return; }

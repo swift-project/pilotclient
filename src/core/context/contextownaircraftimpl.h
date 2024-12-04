@@ -17,7 +17,6 @@
 #include "core/context/contextownaircraft.h"
 #include "core/corefacadeconfig.h"
 #include "core/swiftcoreexport.h"
-#include "core/vatsim/vatsimsettings.h"
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/airlineicaocode.h"
@@ -274,4 +273,4 @@ namespace swift::core
         };
     } // namespace context
 } // namespace swift::core
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXTOWNAIRCRAFT_IMPL_H

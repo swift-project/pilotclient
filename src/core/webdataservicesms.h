@@ -37,4 +37,4 @@ namespace swift::core
     };
 } // namespace swift::core
 
-#endif
+#endif // SWIFT_CORE_WEBDATASERVICES_MATCHINGSCRIPT_H

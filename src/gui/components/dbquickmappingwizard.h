@@ -122,4 +122,4 @@ namespace swift::gui::components
         void onAircraftSelected(const swift::misc::aviation::CAircraftIcaoCode &icao);
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_DBQUICKMAPPINGWIZARD_H

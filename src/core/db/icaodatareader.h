@@ -9,7 +9,6 @@
 #include <atomic>
 
 #include <QObject>
-#include <QReadWriteLock>
 #include <QString>
 
 #include "core/data/dbcaches.h"
@@ -237,4 +236,4 @@ namespace swift::core::db
     };
 } // namespace swift::core::db
 
-#endif // guard
+#endif // SWIFT_CORE_ICAODATAREADER_H

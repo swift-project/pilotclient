@@ -193,11 +193,10 @@ namespace swift::misc::simulation::data
 
     public:
         //! \copydoc IModelsForSimulatorSetable::setModelsForSimulator
-        virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
+        void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
 
         //! \copydoc IModelsForSimulatorUpdatable::updateModelsForSimulator
-        virtual int updateModelsForSimulator(const CAircraftModelList &models,
-                                             const CSimulatorInfo &simulator) override;
+        int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
 
         //! Models for simulator
         //! \threadsafe
@@ -321,6 +320,7 @@ namespace swift::misc::simulation::data
         //! Emit cacheChanged() utility function (allows breakpoint)
         void emitCacheChanged(const CSimulatorInfo &simulator);
 
+    private:
         //! @{
         //! Cache synchronized flag
         std::atomic_bool m_syncFsx { false };
@@ -348,16 +348,15 @@ namespace swift::misc::simulation::data
 
         //! \name Interface implementations
         //! @{
-        virtual CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const override;
-        virtual CStatusMessage setCachedModels(const CAircraftModelList &models,
-                                               const CSimulatorInfo &simulator) override;
-        virtual QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const override;
-        virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override;
-        virtual void synchronizeCache(const CSimulatorInfo &simulator) override;
-        virtual void admitCache(const CSimulatorInfo &simulator) override;
-        virtual QString getFilename(const CSimulatorInfo &simulator) const override;
-        virtual bool isSaved(const CSimulatorInfo &simulator) const override;
-        virtual QString getDescription() const override { return "Model caches"; }
+        CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const override;
+        CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
+        QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const override;
+        CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override;
+        void synchronizeCache(const CSimulatorInfo &simulator) override;
+        void admitCache(const CSimulatorInfo &simulator) override;
+        QString getFilename(const CSimulatorInfo &simulator) const override;
+        bool isSaved(const CSimulatorInfo &simulator) const override;
+        QString getDescription() const override { return "Model caches"; }
         //! @}
 
     private:
@@ -392,16 +391,15 @@ namespace swift::misc::simulation::data
 
         //! \name Interface implementations
         //! @{
-        virtual CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const override;
-        virtual CStatusMessage setCachedModels(const CAircraftModelList &models,
-                                               const CSimulatorInfo &simulator) override;
-        virtual QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const override;
-        virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override;
-        virtual void synchronizeCache(const CSimulatorInfo &simulator) override;
-        virtual void admitCache(const CSimulatorInfo &simulator) override;
-        virtual QString getFilename(const CSimulatorInfo &simulator) const override;
-        virtual bool isSaved(const CSimulatorInfo &simulator) const override;
-        virtual QString getDescription() const override { return "Model sets"; }
+        CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const override;
+        CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override;
+        QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const override;
+        CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override;
+        void synchronizeCache(const CSimulatorInfo &simulator) override;
+        void admitCache(const CSimulatorInfo &simulator) override;
+        QString getFilename(const CSimulatorInfo &simulator) const override;
+        bool isSaved(const CSimulatorInfo &simulator) const override;
+        QString getDescription() const override { return "Model sets"; }
         //! @}
 
     private:
@@ -431,56 +429,49 @@ namespace swift::misc::simulation::data
         //! @{
 
         //! \copydoc swift::misc::simulation::data::IMultiSimulatorModelCaches::getCachedModels
-        virtual CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const override
+        CAircraftModelList getCachedModels(const CSimulatorInfo &simulator) const override
         {
             return instanceCaches().getCachedModels(simulator);
         }
 
         //! \copydoc swift::misc::simulation::data::IMultiSimulatorModelCaches::setCachedModels
-        virtual CStatusMessage setCachedModels(const CAircraftModelList &models,
-                                               const CSimulatorInfo &simulator) override
+        CStatusMessage setCachedModels(const CAircraftModelList &models, const CSimulatorInfo &simulator) override
         {
             return instanceCaches().setCachedModels(models, simulator);
         }
 
         //! \copydoc swift::misc::simulation::data::IMultiSimulatorModelCaches::getCacheTimestamp
-        virtual QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const override
+        QDateTime getCacheTimestamp(const CSimulatorInfo &simulator) const override
         {
             return instanceCaches().getCacheTimestamp(simulator);
         }
 
         //! \copydoc swift::misc::simulation::data::IMultiSimulatorModelCaches::setCacheTimestamp
-        virtual CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override
+        CStatusMessage setCacheTimestamp(const QDateTime &ts, const CSimulatorInfo &simulator) override
         {
             return instanceCaches().setCacheTimestamp(ts, simulator);
         }
 
         //! \copydoc swift::misc::simulation::data::IMultiSimulatorModelCaches::synchronizeCache
-        virtual void synchronizeCache(const CSimulatorInfo &simulator) override
+        void synchronizeCache(const CSimulatorInfo &simulator) override
         {
             return instanceCaches().synchronizeCache(simulator);
         }
 
         //! \copydoc swift::misc::simulation::data::IMultiSimulatorModelCaches::admitCache
-        virtual void admitCache(const CSimulatorInfo &simulator) override
-        {
-            return instanceCaches().admitCache(simulator);
-        }
+        void admitCache(const CSimulatorInfo &simulator) override { return instanceCaches().admitCache(simulator); }
 
         //! \copydoc swift::misc::simulation::data::IMultiSimulatorModelCaches::getFilename
-        virtual QString getFilename(const CSimulatorInfo &simulator) const override
+        QString getFilename(const CSimulatorInfo &simulator) const override
         {
             return instanceCaches().getFilename(simulator);
         }
 
         //! \copydoc swift::misc::simulation::data::IMultiSimulatorModelCaches::isSaved
-        virtual bool isSaved(const CSimulatorInfo &simulator) const override
-        {
-            return instanceCaches().isSaved(simulator);
-        }
+        bool isSaved(const CSimulatorInfo &simulator) const override { return instanceCaches().isSaved(simulator); }
 
         //! \copydoc swift::misc::simulation::data::IMultiSimulatorModelCaches::getDescription
-        virtual QString getDescription() const override { return instanceCaches().getDescription(); }
+        QString getDescription() const override { return instanceCaches().getDescription(); }
         //! @}
 
     protected:
@@ -603,13 +594,13 @@ namespace swift::misc::simulation::data
         //! @}
 
         //! \copydoc IModelsForSimulatorSetable::setModelsForSimulator
-        virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override
+        void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override
         {
             CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().setModelsForSimulator(models, simulator);
         }
 
         //! \copydoc IModelsForSimulatorUpdatable::updateModelsForSimulator
-        virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override
+        int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override
         {
             return CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().updateModelsForSimulator(models,
                                                                                                              simulator);
@@ -711,14 +702,14 @@ namespace swift::misc::simulation::data
         //! @}
 
         //! \copydoc IModelsForSimulatorSetable::setModelsForSimulator
-        virtual void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override
+        void setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override
         {
             CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setModelsForSimulator(models,
                                                                                                       simulator);
         }
 
         //! \copydoc IModelsForSimulatorUpdatable::updateModelsForSimulator
-        virtual int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override
+        int updateModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator) override
         {
             return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().updateModelsForSimulator(
                 models, simulator);
@@ -727,4 +718,4 @@ namespace swift::misc::simulation::data
 
 } // namespace swift::misc::simulation::data
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_DATA_MODELCACHES

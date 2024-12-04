@@ -62,16 +62,18 @@ namespace swift::gui::components
 
     void CAutoPublishComponent::sendToDb()
     {
+        using namespace std::chrono_literals;
+
         if (!sGui || sGui->isShuttingDown()) { return; }
         if (m_data.isEmpty())
         {
-            this->showOverlayHTMLMessage("No data!", 5000);
+            this->showOverlayHTMLMessage("No data!", 5s);
             return;
         }
 
         if (!sGui->hasWebDataServices())
         {
-            this->showOverlayHTMLMessage("No publishing web service!", 5000);
+            this->showOverlayHTMLMessage("No publishing web service!", 5s);
             return;
         }
 
@@ -100,6 +102,8 @@ namespace swift::gui::components
 
     void CAutoPublishComponent::onAutoPublished(bool success, const QString &url, const CStatusMessageList &msgs)
     {
+        using namespace std::chrono_literals;
+
         Q_UNUSED(url)
         Q_UNUSED(success)
 
@@ -108,11 +112,11 @@ namespace swift::gui::components
             QPointer<CAutoPublishComponent> myself(this);
             this->showOverlayMessagesWithConfirmation(msgs, true, "Clean up auto publish files?", [=] {
                 if (!myself) { return; }
-                const int timeoutMs = 5000;
+                const auto timeout = 5000ms;
                 myself->deleteAllFiles();
-                myself->showOverlayHTMLMessage("Cleaned auto publish files after uploading them to DB", timeoutMs);
+                myself->showOverlayHTMLMessage("Cleaned auto publish files after uploading them to DB", timeout);
 
-                QTimer::singleShot(timeoutMs * 1.2, this, [=] {
+                QTimer::singleShot(timeout * 2, this, [=] {
                     if (!myself) { return; }
                     myself->closeParentDialog();
                 });

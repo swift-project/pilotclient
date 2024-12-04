@@ -499,4 +499,4 @@ namespace swift::core::context
         }
     };
 } // namespace swift::core::context
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXTNETWORK_EMPTY_H

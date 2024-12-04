@@ -27,8 +27,8 @@ namespace swift::misc
     //! \remark: I do not use CCollection as I want to sort per column
     class SWIFT_MISC_EXPORT CCountryList :
         public CSequence<CCountry>,
-        public swift::misc::db::IDatastoreObjectList<CCountry, CCountryList, QString>,
-        public swift::misc::mixin::MetaType<CCountryList>
+        public db::IDatastoreObjectList<CCountry, CCountryList, QString>,
+        public mixin::MetaType<CCountryList>
     {
     public:
         SWIFT_MISC_DECLARE_USING_MIXIN_METATYPE(CCountryList)
@@ -72,4 +72,4 @@ namespace swift::misc
 Q_DECLARE_METATYPE(swift::misc::CCountryList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::CCountry>)
 
-#endif // guard
+#endif // SWIFT_MISC_COUNTRYLIST_H

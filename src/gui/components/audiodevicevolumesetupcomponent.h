@@ -162,8 +162,8 @@ namespace swift::gui::components
         swift::misc::CConnectionGuard m_afvConnections;
         QScopedPointer<Ui::CAudioDeviceVolumeSetupComponent> ui;
         swift::misc::audio::CAudioDeviceInfoList m_cbDevices; //!< devices to be displayed in the checkbox
-        swift::misc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes, 1000,
-                                                           10 };
+        swift::misc::CDigestSignal m_volumeSliderChanged { this, &CAudioDeviceVolumeSetupComponent::saveVolumes,
+                                                           std::chrono::milliseconds(1000), 10 };
         swift::misc::CSetting<swift::misc::audio::TSettings> m_audioSettings {
             this, &CAudioDeviceVolumeSetupComponent::reloadSettings
         };
@@ -173,4 +173,4 @@ namespace swift::gui::components
     };
 } // namespace swift::gui::components
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_AUDIODEVICEVOLUMESETUPCOMPONENT_H

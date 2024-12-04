@@ -43,4 +43,4 @@ namespace swift::gui
         swift::misc::network::CEcosystemList m_systems { swift::misc::network::CEcosystemList::allKnownSystems() };
     };
 } // namespace swift::gui
-#endif // guard
+#endif // SWIFT_GUI_ECOSYSTEMCOMBOBOX_H

@@ -245,4 +245,4 @@ namespace swift::misc::test
 
 #pragma pop_macro("interface")
 
-#endif
+#endif // SWIFT_MISC_TEST_TESTSERVICE_H

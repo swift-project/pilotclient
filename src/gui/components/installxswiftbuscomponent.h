@@ -43,7 +43,7 @@ namespace swift::gui::components
         void setDefaultDownloadName(const QString &defaultDownload);
 
     private:
-        static constexpr int OverlayMsgTimeoutMs = 5000; //!< how long overlay is displayed
+        static constexpr std::chrono::milliseconds OverlayMsgTimeout { 5000 }; //!< how long overlay is displayed
 
         QScopedPointer<Ui::CInstallXSwiftBusComponent> ui;
         swift::misc::simulation::settings::CMultiSimulatorSettings m_simulatorSettings {
@@ -126,4 +126,4 @@ namespace swift::gui::components
         CInstallXSwiftBusComponent *m_config = nullptr;
     };
 } // namespace swift::gui::components
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_INSTALLXSWIFTBUSCOMPONENT_H

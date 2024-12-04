@@ -207,4 +207,4 @@ namespace swift::core::data
 
 Q_DECLARE_METATYPE(swift::core::data::CGlobalSetup)
 
-#endif // guard
+#endif // SWIFT_CORE_DATA_GLOBALSETUP_H

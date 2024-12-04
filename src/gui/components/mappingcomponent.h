@@ -189,7 +189,7 @@ namespace swift::gui
             //! Do re-matching
             void doMatchingsAgain();
 
-            static constexpr int OverlayMessageMs = 5000;
+            static constexpr std::chrono::milliseconds OverlayMessageMs { 5000 };
             QScopedPointer<Ui::CMappingComponent> ui;
             QTimer m_updateTimer;
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
@@ -202,4 +202,4 @@ namespace swift::gui
     } // namespace components
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_MAPPINGCOMPONENT_H

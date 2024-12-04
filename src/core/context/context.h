@@ -6,10 +6,8 @@
 #ifndef SWIFT_CORE_CONTEXT_CONTEXT_H
 #define SWIFT_CORE_CONTEXT_CONTEXT_H
 
-#include <QDateTime>
 #include <QObject>
 #include <QString>
-#include <QStringBuilder>
 #include <QtGlobal>
 
 #include "core/corefacade.h"
@@ -38,7 +36,7 @@ namespace swift::core::context
 
     public:
         //! Destructor
-        virtual ~IContext() override {}
+        ~IContext() override = default;
 
         //! Log categories
         static const QStringList &getLogCategories();
@@ -146,7 +144,7 @@ namespace swift::core::context
         //! Empty context called
         void logEmptyContextWarning(const QString &functionName) const
         {
-            swift::misc::CLogMessage(this, swift::misc::CLogCategories::contextSlot())
+            misc::CLogMessage(this, swift::misc::CLogCategories::contextSlot())
                     .warning(u"Empty context called, details: %1")
                 << functionName;
         }
@@ -155,7 +153,7 @@ namespace swift::core::context
         virtual void onAboutToShutdown() {}
 
         //! Standard message when status message is returned in empty context
-        static const swift::misc::CStatusMessage &statusMessageEmptyContext();
+        static const misc::CStatusMessage &statusMessageEmptyContext();
 
     private:
         CCoreFacadeConfig::ContextMode m_mode; //!< How context is used
@@ -163,4 +161,4 @@ namespace swift::core::context
         bool m_debugEnabled = false; //!< debug messages enabled
     };
 } // namespace swift::core::context
-#endif // guard
+#endif // SWIFT_CORE_CONTEXT_CONTEXT_H

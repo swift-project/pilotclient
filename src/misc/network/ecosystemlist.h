@@ -44,4 +44,4 @@ namespace swift::misc::network
 Q_DECLARE_METATYPE(swift::misc::network::CEcosystemList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::network::CEcosystem>)
 
-#endif // guard
+#endif // SWIFT_MISC_NETWORK_ECOSYSTEMLIST_H

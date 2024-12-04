@@ -290,4 +290,4 @@ Q_DECLARE_METATYPE(swift::misc::simulation::CInterpolationAndRenderingSetupPerCa
 Q_DECLARE_METATYPE(swift::misc::simulation::CInterpolationAndRenderingSetupGlobal)
 Q_DECLARE_METATYPE(swift::misc::simulation::CInterpolationAndRenderingSetupBase::InterpolatorMode)
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_INTERPOLATION_INTERPOLATIONRENDERINGSETUP_H

@@ -33,4 +33,4 @@ namespace swift::gui::models
         virtual QVariant data(const QModelIndex &index, int role) const override;
     };
 } // namespace swift::gui::models
-#endif // guard
+#endif // SWIFT_GUI_MODELS_CLIENTLISTMODEL_H

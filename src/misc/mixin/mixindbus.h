@@ -10,6 +10,7 @@
 
 #include <QDBusArgument>
 
+#include "misc/dbus.h"
 #include "misc/inheritancetraits.h"
 #include "misc/metaclass.h"
 #include "misc/typetraits.h"
@@ -186,4 +187,4 @@ namespace swift::misc
     } // namespace mixin
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_MIXIN_MIXINDBUS_H

@@ -66,4 +66,4 @@ Q_DECLARE_METATYPE(swift::core::CWebReaderFlags::WebReaderFlag)
 Q_DECLARE_METATYPE(swift::core::CWebReaderFlags::WebReader)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::core::CWebReaderFlags::WebReader)
 
-#endif
+#endif // SWIFT_CORE_CWEBREADERFLAGS_H

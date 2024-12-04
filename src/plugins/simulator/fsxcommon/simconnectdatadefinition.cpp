@@ -425,7 +425,7 @@ namespace swift::simplugin::fsxcommon
         return hr;
     }
 
-    // TODO TZ: are there any changes in MSFS2024
+    // TODO TZ: are there any changes in MSFS2024 ?
     HRESULT CSimConnectDefinitions::initMSFS2024Transponder(const HANDLE hSimConnect)
     {
         HRESULT hr = s_ok();

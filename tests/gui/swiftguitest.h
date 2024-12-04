@@ -17,4 +17,4 @@
 
 //! \endcond
 
-#endif // guard
+#endif // SWIFT_GUITEST_H

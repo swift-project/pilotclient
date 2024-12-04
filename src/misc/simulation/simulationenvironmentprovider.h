@@ -417,4 +417,4 @@ namespace swift::misc::simulation
 Q_DECLARE_INTERFACE(swift::misc::simulation::ISimulationEnvironmentProvider,
                     "org.swift-project.misc::simulation::isimulationenvironmentprovider")
 
-#endif // guard
+#endif // SWIFT_MISC_SIMULATION_SIMULATIONENVIRONMENTPROVIDER_H

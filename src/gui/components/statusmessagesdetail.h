@@ -82,7 +82,8 @@ namespace swift::gui::components
         int m_maxLogMessages = -1;
         swift::misc::CStatusMessageList
             m_pending; //!< pending messages which will be added with next CStatusMessagesDetail::deferredUpdate
-        swift::misc::CDigestSignal m_dsDeferredUpdate { this, &CStatusMessagesDetail::deferredUpdate, 2000, 25 };
+        swift::misc::CDigestSignal m_dsDeferredUpdate { this, &CStatusMessagesDetail::deferredUpdate,
+                                                        std::chrono::milliseconds(2000), 25 };
 
         //! Do not update each message, but deferred
         void deferredUpdate();
@@ -104,4 +105,4 @@ namespace swift::gui::components
     };
 } // namespace swift::gui::components
 
-#endif // guard
+#endif // SWIFT_GUI_COMPONENTS_STATUSMESSAGESDETAIL_H

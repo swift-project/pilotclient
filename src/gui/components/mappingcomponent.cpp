@@ -112,7 +112,6 @@ namespace swift::gui::components
         // overlay
         this->setReducedInfo(true);
         this->setForceSmall(true);
-        this->showKillButton(false);
 
         // Aircraft previews
         connect(ui->cb_AircraftIconDisplayed, &QCheckBox::stateChanged, this,
@@ -324,12 +323,14 @@ namespace swift::gui::components
 
     void CMappingComponent::doMatchingsAgain()
     {
+        using namespace std::chrono_literals;
+
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
         if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
         const int rematchedNumber = sGui->getIContextSimulator()->doMatchingsAgain();
 
         const QString info = QStringLiteral("Triggered re-matching of %1 aircraft").arg(rematchedNumber);
-        this->showOverlayHTMLMessage(info, 5000);
+        this->showOverlayHTMLMessage(info, 5s);
         CLogMessage(this).info(info);
     }
 
@@ -417,6 +418,8 @@ namespace swift::gui::components
 
     void CMappingComponent::onResetAircraft()
     {
+        using namespace std::chrono_literals;
+
         if (!sGui || !sGui->getIContextSimulator() || !sGui->getIContextSimulator()->isSimulatorSimulating())
         {
             return;
@@ -426,7 +429,7 @@ namespace swift::gui::components
         const bool reset = sGui->getIContextSimulator()->resetToModelMatchingAircraft(callsign);
         const CStatusMessage msg = reset ? CStatusMessage(this).info(u"Model reset for '%1'") << callsign.toQString() :
                                            CStatusMessage(this).info(u"Reset failed for '%1'") << callsign.toQString();
-        this->showOverlayHTMLMessage(msg, 3000);
+        this->showOverlayHTMLMessage(msg, 3s);
     }
 
     void CMappingComponent::onModelPreviewChanged(int state)

@@ -6,13 +6,10 @@
 #ifndef SWIFT_MISC_WEATHER_PRESENTWEATHER_H
 #define SWIFT_MISC_WEATHER_PRESENTWEATHER_H
 
-#include <tuple>
-
 #include <QHash>
 #include <QMetaType>
 #include <QString>
 
-#include "misc/dictionary.h"
 #include "misc/metaclass.h"
 #include "misc/propertyindexref.h"
 #include "misc/swiftmiscexport.h"
@@ -142,4 +139,4 @@ Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeather)
 Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeather::Intensity)
 Q_DECLARE_METATYPE(swift::misc::weather::CPresentWeather::Descriptor)
 
-#endif // guard
+#endif // SWIFT_MISC_WEATHER_PRESENTWEATHER_H

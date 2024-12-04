@@ -42,4 +42,4 @@ namespace swift::core::fsd
     inline bool operator!=(const DeleteAtc &lhs, const DeleteAtc &rhs) { return !(lhs == rhs); }
 } // namespace swift::core::fsd
 
-#endif // guard
+#endif // SWIFT_CORE_FSD_DELETEATC_H

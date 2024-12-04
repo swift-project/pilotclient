@@ -1148,4 +1148,4 @@ Q_DECLARE_METATYPE(swift::misc::physical_quantities::CAccelerationUnit)
 
 #pragma pop_macro("min")
 
-#endif // guard
+#endif // SWIFT_MISC_PQ_UNITS_H

@@ -169,4 +169,4 @@ Q_DECLARE_METATYPE(swift::misc::aviation::CComSystem)
 Q_DECLARE_METATYPE(swift::misc::aviation::CComSystem::ChannelSpacing)
 Q_DECLARE_METATYPE(swift::misc::aviation::CComSystem::ComUnit)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_COMSYSTEM_H

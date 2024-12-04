@@ -51,4 +51,4 @@ namespace swift::misc::geo
 Q_DECLARE_METATYPE(swift::misc::geo::CCoordinateGeodeticList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::geo::CCoordinateGeodetic>)
 
-#endif
+#endif // SWIFT_MISC_GEO_COORDINATEGEODETICLIST_H

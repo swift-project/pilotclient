@@ -112,11 +112,11 @@ namespace swift::gui
             void requestTextMessage();
             //! @}
 
-            swift::misc::CDigestSignal m_dsFullResize { this, &CAtcStationTreeView::fullResizeToContentsImpl, 1000,
-                                                        25 };
+            swift::misc::CDigestSignal m_dsFullResize { this, &CAtcStationTreeView::fullResizeToContentsImpl,
+                                                        std::chrono::milliseconds(1000), 25 };
             QMap<QString, bool> m_expanded; //!< suffix/expanded
         };
     } // namespace views
 } // namespace swift::gui
 
-#endif // guard
+#endif // SWIFT_GUI_VIEWS_ATCSTATIONTREEVIEW_H

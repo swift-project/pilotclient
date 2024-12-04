@@ -35,4 +35,4 @@ namespace swift::simplugin::fsx
     };
 } // namespace swift::simplugin::fsx
 
-#endif // guard
+#endif // SWIFT_SIMPLUGIN_SIMULATOR_FSXFACTORY_H

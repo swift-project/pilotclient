@@ -11,7 +11,6 @@
 
 #include "misc/aviation/airporticaocode.h"
 #include "misc/collection.h"
-#include "misc/mixin/mixincompare.h"
 #include "misc/sequence.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/weather/metar.h"
@@ -42,4 +41,4 @@ namespace swift::misc::weather
 Q_DECLARE_METATYPE(swift::misc::weather::CMetarList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::weather::CMetar>)
 
-#endif
+#endif // SWIFT_MISC_WEATHER_METARLIST_H

@@ -165,4 +165,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::CPropertyIndex)
 
-#endif // guard
+#endif // SWIFT_MISC_PROPERTYINDEX_H

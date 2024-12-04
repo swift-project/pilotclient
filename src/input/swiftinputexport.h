@@ -23,4 +23,4 @@
 #    define SWIFT_INPUT_EXPORT
 #endif
 
-#endif // guard
+#endif // SWIFT_INPUT_SWIFT_INPUTEXPORT_H

@@ -182,10 +182,10 @@ namespace swift::core
         m_doNotRunAgainBefore = -1;
 
         // checks
-        const qint64 aircraftTimeoutMs = m_timeoutAircraft.valueInteger(CTimeUnit::ms());
-        const qint64 atcTimeoutMs = m_timeoutAtc.valueInteger(CTimeUnit::ms());
-        const qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs;
-        const qint64 timeoutAtcEpochMs = currentTimeMsEpoch - atcTimeoutMs;
+        const std::chrono::milliseconds aircraftTimeoutMs = m_timeoutAircraft;
+        const std::chrono::milliseconds atcTimeoutMs = m_timeoutAtc;
+        const qint64 timeoutAircraftEpochMs = currentTimeMsEpoch - aircraftTimeoutMs.count();
+        const qint64 timeoutAtcEpochMs = currentTimeMsEpoch - atcTimeoutMs.count();
         const bool enabled = m_enabledWatchdog;
 
         const QList<CCallsign> callsignsAircraft = m_aircraftCallsignTimestamps.keys();

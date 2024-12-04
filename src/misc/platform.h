@@ -6,7 +6,6 @@
 #ifndef SWIFT_MISC_PLATFORM_H
 #define SWIFT_MISC_PLATFORM_H
 
-#include <QMetaEnum>
 #include <QString>
 
 #include "misc/metaclass.h"
@@ -156,4 +155,4 @@ Q_DECLARE_METATYPE(swift::misc::CPlatform::Platform)
 Q_DECLARE_METATYPE(swift::misc::CPlatform::PlatformFlag)
 Q_DECLARE_OPERATORS_FOR_FLAGS(swift::misc::CPlatform::Platform)
 
-#endif // guard
+#endif // SWIFT_MISC_PLATFORM_H

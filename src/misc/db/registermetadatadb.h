@@ -14,4 +14,4 @@ namespace swift::misc::db
     SWIFT_MISC_EXPORT void registerMetadata();
 } // namespace swift::misc::db
 
-#endif // guard
+#endif // SWIFT_MISC_DB_REGISTERMETADATADB_H

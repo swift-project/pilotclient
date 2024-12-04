@@ -95,4 +95,4 @@ namespace XSwiftBus
     };
 } // namespace XSwiftBus
 
-#endif
+#endif // SWIFT_SIM_XSWIFTBUS_DBUSDISPATCHER_H

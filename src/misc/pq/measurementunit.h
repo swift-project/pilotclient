@@ -493,4 +493,4 @@ namespace swift::misc::physical_quantities
     };
 } // namespace swift::misc::physical_quantities
 
-#endif // guard
+#endif // SWIFT_MISC_PQ_MEASUREMENTUNIT_H

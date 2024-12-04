@@ -100,4 +100,4 @@ namespace swift::misc::input
 
 Q_DECLARE_METATYPE(swift::misc::input::CJoystickButton)
 
-#endif // guard
+#endif // SWIFT_MISC_INPUT_JOYSTICKBUTTON_H

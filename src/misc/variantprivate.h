@@ -423,4 +423,4 @@ namespace swift::misc
 
 Q_DECLARE_METATYPE(swift::misc::private_ns::IValueObjectMetaInfo *)
 
-#endif
+#endif // SWIFT_MISC_VARIANT_PRIVATE_H

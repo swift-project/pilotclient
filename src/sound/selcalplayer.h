@@ -6,6 +6,8 @@
 #ifndef SWIFT_SOUND_SELCALPLAYER_H
 #define SWIFT_SOUND_SELCALPLAYER_H
 
+#include <chrono>
+
 #include "misc/audio/audiodeviceinfo.h"
 #include "misc/aviation/selcal.h"
 #include "misc/worker.h"
@@ -32,11 +34,11 @@ namespace swift::sound
 
         //! Play SELCAL
         //! \return Time of the played tone
-        swift::misc::physical_quantities::CTime play(int volume, const swift::misc::aviation::CSelcal &selcal);
+        std::chrono::milliseconds play(int volume, const swift::misc::aviation::CSelcal &selcal);
 
     private:
         CThreadedTonePairPlayer *m_threadedPlayer = nullptr;
     };
 } // namespace swift::sound
 
-#endif // guard
+#endif // SWIFT_SOUND_SELCALPLAYER_H

@@ -73,4 +73,4 @@ namespace swift::misc::aviation
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftEngineList)
 Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAircraftEngine>)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTENGINELIST_H

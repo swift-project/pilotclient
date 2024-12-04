@@ -6,7 +6,6 @@
 #ifndef SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 #define SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 
-#include <QList>
 #include <QtGlobal>
 
 #include "config/buildconfig.h"
@@ -160,7 +159,7 @@ namespace swift::misc
         //! Latest timestamp
         QDateTime latestTimestamp() const
         {
-            if (this->container().isEmpty()) { return QDateTime(); }
+            if (this->container().isEmpty()) { return {}; }
             return this->latestObject().getUtcTimestamp();
         }
 
@@ -741,4 +740,4 @@ namespace swift::misc
     };
 } // namespace swift::misc
 
-#endif // guard
+#endif // SWIFT_MISC_TIMESTAMPOBJECTLIST_H

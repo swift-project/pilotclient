@@ -180,4 +180,4 @@ Q_DECLARE_METATYPE(swift::misc::CCollection<swift::misc::aviation::CAircraftSitu
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituationPerCallsign)
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftSituationListPerCallsign)
 
-#endif // guard
+#endif // SWIFT_MISC_AVIATION_AIRCRAFTSITUATIONLIST_H

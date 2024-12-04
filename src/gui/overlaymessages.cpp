@@ -49,7 +49,6 @@ namespace swift::gui
     COverlayMessages::COverlayMessages(int w, int h, QWidget *parent) : QFrame(parent), ui(new Ui::COverlayMessages)
     {
         this->init(w, h);
-        this->showKillButton(false);
 
         if (sGui)
         {
@@ -58,7 +57,6 @@ namespace swift::gui
         }
         connect(ui->pb_Ok, &QPushButton::clicked, this, &COverlayMessages::onOkClicked);
         connect(ui->pb_Cancel, &QPushButton::clicked, this, &COverlayMessages::onCancelClicked);
-        connect(ui->tb_Kill, &QPushButton::clicked, this, &COverlayMessages::onKillClicked);
 
         ui->tvp_StatusMessages->setResizeMode(CStatusMessageView::ResizingAlways);
         ui->tvp_StatusMessages->setForceColumnsToMaxSize(
@@ -119,27 +117,7 @@ namespace swift::gui
         this->close();
     }
 
-    void COverlayMessages::onKillClicked()
-    {
-        QMessageBox msgBox;
-        msgBox.setText("Shutdown the application.");
-        msgBox.setInformativeText(u"Do you want to terminate " % sGui->getApplicationNameAndVersion() % u"?");
-        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        msgBox.setDefaultButton(QMessageBox::Save);
-        if (QMessageBox::Ok == msgBox.exec() && sGui)
-        {
-            sGui->gracefulShutdown();
-            sGui->exit();
-        }
-    }
-
     bool COverlayMessages::useSmall() const { return (m_forceSmall || this->width() < 400 || this->height() < 300); }
-
-    void COverlayMessages::showKill(bool show)
-    {
-        ui->tb_Kill->setVisible(m_hasKillButton && show);
-        ui->tb_Kill->setEnabled(m_hasKillButton && show);
-    }
 
     bool COverlayMessages::displayTextMessage(const CTextMessage &textMessage) const
     {
@@ -151,7 +129,7 @@ namespace swift::gui
     }
 
     void COverlayMessages::showOverlayMessages(const CStatusMessageList &messages, bool appendOldMessages,
-                                               int timeOutMs)
+                                               std::chrono::milliseconds timeout)
     {
         if (messages.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
@@ -161,7 +139,7 @@ namespace swift::gui
             QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
-                myself->showOverlayMessages(messages, timeOutMs);
+                myself->showOverlayMessages(messages, true, timeout);
             });
             return;
         }
@@ -177,26 +155,26 @@ namespace swift::gui
         ui->tvp_StatusMessages->rowsResizeModeBasedOnThreshold(newMsgs.size());
         ui->tvp_StatusMessages->updateContainerMaybeAsync(newMsgs);
 
-        this->setModeToMessages(false);
-        this->display(timeOutMs);
+        this->setModeToMessages();
+        this->display(timeout);
     }
 
     void COverlayMessages::showOverlayMessagesOrSingleMessage(const CStatusMessageList &messages,
-                                                              bool appendOldMessages, int timeOutMs)
+                                                              bool appendOldMessages, std::chrono::milliseconds timeout)
     {
         if (messages.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
-        if (messages.size() > 1) { this->showOverlayMessages(messages, appendOldMessages, timeOutMs); }
-        else { this->showOverlayMessage(messages.front(), timeOutMs); }
+        if (messages.size() > 1) { this->showOverlayMessages(messages, appendOldMessages, timeout); }
+        else { this->showOverlayMessage(messages.front(), timeout); }
     }
 
     void COverlayMessages::showOverlayMessagesOrHTMLMessage(const CStatusMessageList &messages, bool appendOldMessages,
-                                                            int timeOutMs)
+                                                            std::chrono::milliseconds timeout)
     {
         if (messages.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
-        if (messages.size() > 1) { this->showOverlayMessages(messages, appendOldMessages, timeOutMs); }
-        else { this->showHTMLMessage(messages.front(), timeOutMs); }
+        if (messages.size() > 1) { this->showOverlayMessages(messages, appendOldMessages, timeout); }
+        else { this->showHTMLMessage(messages.front(), timeout); }
     }
 
     void COverlayMessages::sortOverlayMessages(const CPropertyIndex &propertyIndex, Qt::SortOrder order)
@@ -209,7 +187,7 @@ namespace swift::gui
         ui->tvp_StatusMessages->setSorting(propertyIndex, order);
     }
 
-    void COverlayMessages::showOverlayMessage(const CStatusMessage &message, int timeOutMs)
+    void COverlayMessages::showOverlayMessage(const CStatusMessage &message, std::chrono::milliseconds timeout)
     {
         if (message.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
@@ -219,25 +197,25 @@ namespace swift::gui
             QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
-                myself->showOverlayMessage(message, timeOutMs);
+                myself->showOverlayMessage(message, timeout);
             });
             return;
         }
 
         if (this->useSmall())
         {
-            this->setModeToMessageSmall(message.isFailure());
+            this->setModeToMessageSmall();
             ui->form_StatusMessageSmall->setValue(message);
         }
         else
         {
-            this->setModeToMessage(message.isFailure());
+            this->setModeToMessage();
             ui->form_StatusMessage->setValue(message);
         }
-        this->display(timeOutMs);
+        this->display(timeout);
     }
 
-    void COverlayMessages::showOverlayTextMessage(const CTextMessage &textMessage, int timeOutMs)
+    void COverlayMessages::showOverlayTextMessage(const CTextMessage &textMessage, std::chrono::milliseconds timeout)
     {
         if (textMessage.isEmpty()) { return; }
         if (!this->displayTextMessage(textMessage)) { return; }
@@ -249,7 +227,7 @@ namespace swift::gui
             QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
-                myself->showOverlayTextMessage(textMessage, timeOutMs);
+                myself->showOverlayTextMessage(textMessage, timeout);
             });
             return;
         }
@@ -277,7 +255,7 @@ namespace swift::gui
             ui->wi_TmSupervisor->setStyleSheet("background-color: red;");
 
             this->setModeToTextMessage();
-            this->display(timeOutMs);
+            this->display(timeout);
         }
     }
 
@@ -297,12 +275,12 @@ namespace swift::gui
         ui->comp_OverlayTextMessage->showCorrespondingTab(callsign);
     }
 
-    void COverlayMessages::showOverlayImage(const CPixmap &image, int timeOutMs)
+    void COverlayMessages::showOverlayImage(const CPixmap &image, std::chrono::milliseconds timeout)
     {
-        this->showOverlayImage(image.toPixmap(), timeOutMs);
+        this->showOverlayImage(image.toPixmap(), timeout);
     }
 
-    void COverlayMessages::showOverlayImage(const QPixmap &image, int timeOutMs)
+    void COverlayMessages::showOverlayImage(const QPixmap &image, std::chrono::milliseconds timeout)
     {
         if (this->hasPendingConfirmation())
         {
@@ -310,7 +288,7 @@ namespace swift::gui
             QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
-                myself->showOverlayImage(image, timeOutMs);
+                myself->showOverlayImage(image, timeout);
             });
             return;
         }
@@ -330,36 +308,36 @@ namespace swift::gui
             ui->lbl_Image->setPixmap(e);
         }
         else { ui->lbl_Image->setPixmap(image.scaled(sizeAvailable, Qt::KeepAspectRatio, Qt::FastTransformation)); }
-        this->display(timeOutMs);
+        this->display(timeout);
     }
 
-    void COverlayMessages::showOverlayVariant(const CVariant &variant, int timeOutMs)
+    void COverlayMessages::showOverlayVariant(const CVariant &variant, std::chrono::milliseconds timeout)
     {
         if (variant.canConvert<CStatusMessageList>())
         {
-            this->showOverlayMessages(variant.value<CStatusMessageList>(), timeOutMs);
+            this->showOverlayMessages(variant.value<CStatusMessageList>(), true, timeout);
         }
         else if (variant.canConvert<CStatusMessage>())
         {
-            this->showOverlayMessage(variant.value<CStatusMessage>(), timeOutMs);
+            this->showOverlayMessage(variant.value<CStatusMessage>(), timeout);
         }
         else if (variant.canConvert<CTextMessage>())
         {
-            this->showOverlayTextMessage(variant.value<CTextMessage>(), timeOutMs);
+            this->showOverlayTextMessage(variant.value<CTextMessage>(), timeout);
         }
-        else if (variant.canConvert<QPixmap>()) { this->showOverlayImage(variant.value<QPixmap>(), timeOutMs); }
-        else if (variant.canConvert<CPixmap>()) { this->showOverlayImage(variant.value<CPixmap>(), timeOutMs); }
+        else if (variant.canConvert<QPixmap>()) { this->showOverlayImage(variant.value<QPixmap>(), timeout); }
+        else if (variant.canConvert<CPixmap>()) { this->showOverlayImage(variant.value<CPixmap>(), timeout); }
         else { Q_ASSERT_X(false, Q_FUNC_INFO, "Unsupported type"); }
     }
 
-    void COverlayMessages::showHTMLMessage(const CStatusMessage &message, int timeOutMs)
+    void COverlayMessages::showHTMLMessage(const CStatusMessage &message, std::chrono::milliseconds timeout)
     {
         if (message.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
-        this->showHTMLMessage(message.toHtml(true, true), timeOutMs);
+        this->showHTMLMessage(message.toHtml(true, true), timeout);
     }
 
-    void COverlayMessages::showHTMLMessage(const QString &htmlMessage, int timeOutMs)
+    void COverlayMessages::showHTMLMessage(const QString &htmlMessage, std::chrono::milliseconds timeout)
     {
         if (htmlMessage.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
@@ -370,7 +348,7 @@ namespace swift::gui
             QPointer<COverlayMessages> myself(this);
             m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
-                myself->showHTMLMessage(htmlMessage, timeOutMs);
+                myself->showHTMLMessage(htmlMessage, timeout);
             });
             return;
         }
@@ -379,25 +357,25 @@ namespace swift::gui
         ui->te_HTMLMessage->setTextColor(QColor(Qt::white)); // hardcoded color
         ui->te_HTMLMessage->setReadOnly(true);
         ui->te_HTMLMessage->setText(htmlMessage);
-        this->display(timeOutMs);
+        this->display(timeout);
     }
 
     void COverlayMessages::showDownloadProgress(int progress, qint64 current, qint64 max, const QUrl &url,
-                                                int timeOutMs)
+                                                std::chrono::milliseconds timeout)
     {
         if (progress >= 0 && max >= 0)
         {
             static const QString m("%1 of %2 from '%3'");
-            this->showProgressBar(progress, m.arg(current).arg(max).arg(url.toString()), timeOutMs);
+            this->showProgressBar(progress, m.arg(current).arg(max).arg(url.toString()), timeout);
         }
         else
         {
             static const QString m("%1 from '%2'");
-            this->showHTMLMessage(m.arg(current).arg(url.toString()), timeOutMs);
+            this->showHTMLMessage(m.arg(current).arg(url.toString()), timeout);
         }
     }
 
-    void COverlayMessages::showProgressBar(int percentage, const QString &message, int timeOutMs)
+    void COverlayMessages::showProgressBar(int percentage, const QString &message, std::chrono::milliseconds timeout)
     {
         if (message.isEmpty()) { return; }
         if (!sGui || sGui->isShuttingDown()) { return; }
@@ -410,47 +388,36 @@ namespace swift::gui
         this->setModeToProgressBar();
 
         if (p >= 100) { this->close(); }
-        else { this->display(timeOutMs); }
+        else { this->display(timeout); }
     }
 
-    void COverlayMessages::showKillButton(bool killButton)
-    {
-        m_hasKillButton = killButton;
-        this->showKill(killButton);
-    }
-
-    void COverlayMessages::setModeToMessages(bool withKillButton)
+    void COverlayMessages::setModeToMessages()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessages);
-        this->showKill(withKillButton);
         this->setHeader("Messages");
     }
 
-    void COverlayMessages::setModeToMessage(bool withKillButton)
+    void COverlayMessages::setModeToMessage()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessage);
-        this->showKill(withKillButton);
         this->setHeader("Message");
     }
 
-    void COverlayMessages::setModeToMessageSmall(bool withKillButton)
+    void COverlayMessages::setModeToMessageSmall()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_StatusMessageSmall);
-        this->showKill(withKillButton);
         this->setHeader("Message");
     }
 
-    void COverlayMessages::setModeToHTMLMessage(bool withKillButton)
+    void COverlayMessages::setModeToHTMLMessage()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_HTMLMessage);
-        this->showKill(withKillButton);
         this->setHeader("Message");
     }
 
-    void COverlayMessages::setModeToProgressBar(bool withKillButton)
+    void COverlayMessages::setModeToProgressBar()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_ProgressBar);
-        this->showKill(withKillButton);
         this->setHeader("Progress bar");
     }
 
@@ -458,14 +425,12 @@ namespace swift::gui
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_TextMessage);
         this->setHeader("Text message");
-        this->showKill(false);
     }
 
     void COverlayMessages::setModeToOverlayTextMessage()
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_OverlayTextMessage);
         this->setHeader("Text message");
-        this->showKill(false);
     }
 
     void COverlayMessages::activateTextMessages(bool activate)
@@ -479,7 +444,6 @@ namespace swift::gui
     {
         ui->sw_StatusMessagesComponent->setCurrentWidget(ui->pg_Image);
         this->setHeader("Image");
-        this->showKillButton(false);
     }
 
     void COverlayMessages::setConfirmationMessage(const QString &message)
@@ -492,11 +456,9 @@ namespace swift::gui
         }
     }
 
-    void COverlayMessages::showOverlayMessagesWithConfirmation(const CStatusMessageList &messages,
-                                                               bool appendOldMessages,
-                                                               const QString &confirmationMessage,
-                                                               std::function<void()> okLambda,
-                                                               QMessageBox::StandardButton defaultButton, int timeOutMs)
+    void COverlayMessages::showOverlayMessagesWithConfirmation(
+        const CStatusMessageList &messages, bool appendOldMessages, const QString &confirmationMessage,
+        std::function<void()> okLambda, QMessageBox::StandardButton defaultButton, std::chrono::milliseconds timeout)
     {
         if (this->hasPendingConfirmation())
         {
@@ -505,13 +467,13 @@ namespace swift::gui
             m_pendingMessageCalls.push_back([=]() {
                 if (!myself) { return; }
                 this->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda,
-                                                          defaultButton, timeOutMs);
+                                                          defaultButton, timeout);
             });
             return;
         }
         this->setConfirmationMessage(confirmationMessage);
         this->setDefaultConfirmationButton(defaultButton);
-        this->showOverlayMessages(messages, appendOldMessages, timeOutMs);
+        this->showOverlayMessages(messages, appendOldMessages, timeout);
         m_awaitingConfirmation = true; // needs to be after showOverlayMessages
         m_okLambda = okLambda;
     }
@@ -592,12 +554,13 @@ namespace swift::gui
         }
     }
 
-    void COverlayMessages::display(int timeOutMs)
+    void COverlayMessages::display(std::chrono::milliseconds timeout)
     {
+        using namespace std::chrono_literals;
         this->show();
         this->raise();
         this->setEnabled(true);
-        if (timeOutMs > 250) { m_autoCloseTimer.start(timeOutMs); }
+        if (timeout > 250ms) { m_autoCloseTimer.start(timeout); }
         else { m_autoCloseTimer.stop(); }
     }
 } // namespace swift::gui
