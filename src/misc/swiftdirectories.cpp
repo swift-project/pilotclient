@@ -247,32 +247,6 @@ namespace swift::misc
         return s;
     }
 
-    QString getImagesDirImpl()
-    {
-        const QString d(CSwiftDirectories::shareDirectory());
-        const QDir dir(QDir::cleanPath(d + QDir::separator() + "images"));
-        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
-        return dir.absolutePath();
-    }
-
-    const QString &CSwiftDirectories::imagesDirectory()
-    {
-        static const QString s(getImagesDirImpl());
-        return s;
-    }
-
-    const QString &CSwiftDirectories::imagesAirlinesDirectory()
-    {
-        static const QString s(QDir::cleanPath(imagesDirectory() + QDir::separator() + "airlines"));
-        return s;
-    }
-
-    const QString &CSwiftDirectories::imagesFlagsDirectory()
-    {
-        static const QString s(QDir::cleanPath(imagesDirectory() + QDir::separator() + "flags"));
-        return s;
-    }
-
     QString getHtmlDirImpl()
     {
         const QString d(CSwiftDirectories::shareDirectory());
@@ -366,9 +340,6 @@ namespace swift::misc
     {
         QStringList failed;
         QDir d(binDirectory());
-        if (!d.isReadable()) { failed.append(d.absolutePath()); }
-
-        d = QDir(imagesDirectory());
         if (!d.isReadable()) { failed.append(d.absolutePath()); }
 
         d = QDir(stylesheetsDirectory());
