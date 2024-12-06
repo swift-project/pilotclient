@@ -86,15 +86,6 @@ namespace swift::misc
         //! Where qss files are located
         static const QString &stylesheetsDirectory();
 
-        //! Where images are located
-        static const QString &imagesDirectory();
-
-        //! Where airline images are located
-        static const QString &imagesAirlinesDirectory();
-
-        //! Where flags images are located
-        static const QString &imagesFlagsDirectory();
-
         //! Where HTML files are located
         static const QString &htmlDirectory();
 

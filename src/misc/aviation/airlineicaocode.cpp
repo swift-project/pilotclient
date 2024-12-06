@@ -161,26 +161,6 @@ namespace swift::misc::aviation
         return CIcons::StandardIconEmpty;
     }
 
-    QString CAirlineIcaoCode::getIconResourcePath() const
-    {
-        if (this->hasValidDbKey() && CAirlineIcaoCode::iconIds().contains(this->getDbKey()))
-        {
-            static const QString p("airlines/%1_%2.png");
-            const QString n(p.arg(this->getDbKey(), 5, 10, QChar('0')).arg(this->getDesignator()));
-            return CFileUtils::appendFilePaths(CSwiftDirectories::imagesDirectory(), n);
-        }
-        return {};
-    }
-
-    QString CAirlineIcaoCode::getIconAsHTMLImage() const
-    {
-        if (this->hasValidDbKey() && CAirlineIcaoCode::iconIds().contains(this->getDbKey()))
-        {
-            return u"<img src=\"" % this->getIconResourcePath() % u"\">";
-        }
-        return {};
-    }
-
     QString CAirlineIcaoCode::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
@@ -205,7 +185,6 @@ namespace swift::misc::aviation
         case IndexAirlineCountryIso: return QVariant::fromValue(this->getCountryIso());
         case IndexAirlineCountry: return m_country.propertyByIndex(index.copyFrontRemoved());
         case IndexAirlineName: return QVariant::fromValue(m_name);
-        case IndexAirlineIconHTML: return QVariant::fromValue(this->getIconAsHTMLImage());
         case IndexTelephonyDesignator: return QVariant::fromValue(m_telephonyDesignator);
         case IndexIsVirtualAirline: return QVariant::fromValue(m_isVa);
         case IndexIsOperating: return QVariant::fromValue(m_isOperating);
@@ -258,7 +237,6 @@ namespace swift::misc::aviation
         const ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexAirlineIconHTML:
         case IndexAirlineDesignator: return m_designator.compare(compareValue.getDesignator());
         case IndexIataCode: return m_iataCode.compare(compareValue.getIataCode());
         case IndexAirlineCountry:
@@ -495,34 +473,5 @@ namespace swift::misc::aviation
         code.setGroupName(groupName);
         code.setKeyVersionTimestampFromDatabaseJson(json, prefix);
         return code;
-    }
-
-    //! \private
-    QSet<int> iconIdsImpl()
-    {
-        QDir dir(CSwiftDirectories::imagesAirlinesDirectory());
-        Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "image directory missing");
-
-        CSetBuilder<int> ids;
-        dir.setFilter(QDir::Files | QDir::NoSymLinks);
-        dir.setSorting(QDir::Name);
-        for (const QFileInfo &fileInfo : dir.entryInfoList())
-        {
-            const QString fn(fileInfo.fileName());
-            bool ok = fn.size() > 5;
-            if (!ok) { continue; }
-            SWIFT_VERIFY_X(ok, Q_FUNC_INFO, "wrong file name");
-            const int id = QStringView { fn }.left(5).toInt(&ok);
-            SWIFT_VERIFY_X(ok, Q_FUNC_INFO, "wrong id format");
-            if (!ok) { continue; }
-            ids.insert(id);
-        }
-        return ids;
-    }
-
-    const QSet<int> &CAirlineIcaoCode::iconIds()
-    {
-        static const QSet<int> ids = iconIdsImpl();
-        return ids;
     }
 } // namespace swift::misc::aviation

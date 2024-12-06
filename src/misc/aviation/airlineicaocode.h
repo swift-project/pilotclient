@@ -40,7 +40,6 @@ namespace swift::misc::aviation
             IndexAirlineName,
             IndexAirlineCountryIso,
             IndexAirlineCountry,
-            IndexAirlineIconHTML,
             IndexTelephonyDesignator,
             IndexGroupId,
             IndexGroupName,
@@ -216,12 +215,6 @@ namespace swift::misc::aviation
 
         //! \copydoc mixin::Index::comparePropertyByIndex
         int comparePropertyByIndex(CPropertyIndexRef index, const CAirlineIcaoCode &compareValue) const;
-
-        //! Get icon resource path
-        QString getIconResourcePath() const;
-
-        //! Icon has HTML img
-        QString getIconAsHTMLImage() const;
 
         //! Validate data
         CStatusMessageList validate() const;

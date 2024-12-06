@@ -692,13 +692,6 @@ namespace swift::misc
         static QPixmap pixmapByIndex(IconIndex index, int rotateDegrees);
 
         // -------------------------------------------------------------
-        // By file from swift resource directory
-        // -------------------------------------------------------------
-
-        //! Pixmap by given index
-        static const QPixmap &pixmapByResourceFileName(const QString &relativeFileName, QString &fullFilePath);
-
-        // -------------------------------------------------------------
         // Utility functions
         // -------------------------------------------------------------
 

@@ -21,14 +21,6 @@ namespace swift::misc
     //     m_index(CIcons::IconIsGenerated), m_descriptiveText(descriptiveText), m_pixmap(pixmap)
     //{ }
 
-    // CIcon::CIcon(const QString &resourceFilePath, const QString &descriptiveText) :
-    //     m_index(CIcons::IconIsFile), m_descriptiveText(descriptiveText)
-    //{
-    //     QString fullPath;
-    //     m_pixmap = CIcons::pixmapByResourceFileName(QDir::cleanPath(resourceFilePath), fullPath);
-    //     m_fileResourcePath = fullPath;
-    // }
-
     CIcons::IconIndex CIcon::getIndex() const { return m_index; }
 
     bool CIcon::isIndexBased() const { return m_index < CIcons::IconIsGenerated; }
