@@ -4,6 +4,7 @@
     {
       "name": "ci-base",
       "hidden": true,
+      "toolchainFile": "build_conan/build/RelWithDebInfo/generators/conan_toolchain.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "SWIFT_MINIFY_DEBUG_SYMBOLS": "ON",

@@ -29,10 +29,6 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*opus*.dll</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/*7za.exe</origin>
                 </distributionFile>
             </distributionFileList>
@@ -82,9 +78,6 @@
             <distributionFileList>
                 <distributionFile>
                     <origin>../../dist/lib/libsodium.23.dylib</origin>
-                </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/lib/libopus.0.dylib</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/lib/libvatsimauth.dylib</origin>

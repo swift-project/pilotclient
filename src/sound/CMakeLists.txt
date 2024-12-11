@@ -75,7 +75,7 @@ target_link_libraries(sound
         config
         Qt::Multimedia
         misc
-        externals_opus
+        Opus::opus
 )
 
 install(TARGETS sound

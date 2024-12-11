@@ -87,6 +87,7 @@ endif()
 
 # Find dependencies
 find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test Core5Compat)
+find_package(Opus REQUIRED)
 
 # Global compiler options
 if(MSVC)
@@ -138,7 +139,6 @@ endif()
 add_subdirectory(cmake/vatsimauth)
 add_subdirectory(cmake/dbus)
 add_subdirectory(cmake/sodium)
-add_subdirectory(cmake/opus)
 add_subdirectory(cmake/simconnect)
 add_subdirectory(cmake/dplay)
 add_subdirectory(third_party)
