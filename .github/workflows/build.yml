@@ -215,7 +215,7 @@ jobs:
       - name: Install conan dependencies
         run: |
           conan profile detect --force
-          conan install . --output-folder=build_conan --settings=build_type=RelWithDebInfo --build=missing
+          conan install . --output-folder=build_conan --settings=build_type=RelWithDebInfo --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
