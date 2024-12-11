@@ -7,7 +7,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "SWIFT_MINIFY_DEBUG_SYMBOLS": "ON",
-        "SWIFT_USE_CRASHPAD": "ON",
+        "SWIFT_USE_CRASHPAD": "OFF",
         "SWIFT_BUILD_SAMPLES": "OFF",
         "VATSIM_KEY_JSON": "vatsim.json",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist"
@@ -24,7 +24,7 @@
         "rhs": "Windows"
       },
       "cacheVariables": {
-        "SWIFT_USE_CRASHPAD": "ON"
+        "SWIFT_USE_CRASHPAD": "OFF"
       }
     },
     {
@@ -38,7 +38,7 @@
         "rhs": "Darwin"
       },
       "cacheVariables": {
-        "SWIFT_USE_CRASHPAD": "ON"
+        "SWIFT_USE_CRASHPAD": "OFF"
       }
     },
     {
