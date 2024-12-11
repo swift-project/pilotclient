@@ -16,6 +16,7 @@
       "name": "ci-build-windows",
       "displayName": "CI Build Windows",
       "inherits": "ci-base",
+      "generator": "Ninja",
       "toolchainFile": "build_conan\\build\\generators\\conan_toolchain.cmake",
       "condition": {
         "type": "equals",
