@@ -196,7 +196,7 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          pip install requests PyInstaller
+          pip install requests PyInstaller conan
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -212,6 +212,10 @@ jobs:
           ref: ${{ env.externals_sha }}
           token: ${{ env.EXTERNALS_PAT }}
           path: 'third_party/externals'
+      - name: Install conan dependencies
+        run: |
+          conan profile detect --force
+          conan install . --output-folder=build_conan --settings=build_type=RelWithDebInfo --build=missing
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
@@ -289,7 +293,7 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          pip3 install requests
+          pip3 install requests conan
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -305,6 +309,10 @@ jobs:
           ref: ${{ env.externals_sha }}
           token: ${{ env.EXTERNALS_PAT }}
           path: 'third_party/externals'
+      - name: Install conan dependencies
+        run: |
+          conan profile detect --force
+          conan install . --output-folder=build_conan --settings=build_type=RelWithDebInfo --build=missing
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
