@@ -6,11 +6,6 @@
     <name>externals</name>
     <description>Externals</description>
     <canBeEdited>1</canBeEdited>
-    <detailedDescription>External libraries:
-- vatlib
-- speex
-- speexdsp
-- portaudio</detailedDescription>
     <selected>1</selected>
     <show>1</show>
     <folderList>
