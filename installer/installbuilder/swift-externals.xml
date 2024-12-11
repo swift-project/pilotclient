@@ -29,10 +29,6 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*swift_crashpad_handler.exe</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/*7za.exe</origin>
                 </distributionFile>
             </distributionFileList>
