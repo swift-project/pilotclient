@@ -38,10 +38,6 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*swift_crashpad_handler.exe</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/*7za.exe</origin>
                 </distributionFile>
             </distributionFileList>
@@ -52,9 +48,6 @@
             <name>bin_linux</name>
             <platforms>linux linux-x64</platforms>
             <distributionFileList>
-                <distributionFile>
-                    <origin>../../dist/bin/swift_crashpad_handler</origin>
-                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
@@ -63,9 +56,6 @@
             <name>bin_osx</name>
             <platforms>osx</platforms>
             <distributionFileList>
-                <distributionFile>
-                    <origin>../../dist/bin/swift_crashpad_handler</origin>
-                </distributionFile>
                 <distributionFile>
                     <origin>../../dist/bin/7za</origin>
                 </distributionFile>
