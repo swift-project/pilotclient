@@ -4,6 +4,7 @@
     {
       "name": "ci-base",
       "hidden": true,
+      "toolchainFile": "build_conan/build/RelWithDebInfo/generators/conan_toolchain.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "SWIFT_MINIFY_DEBUG_SYMBOLS": "ON",
@@ -17,7 +18,6 @@
       "displayName": "CI Build Windows",
       "inherits": "ci-base",
       "generator": "Ninja",
-      "toolchainFile": "build_conan\\build\\generators\\conan_toolchain.cmake",
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
@@ -32,7 +32,6 @@
       "displayName": "CI Build macOS",
       "inherits": "ci-base",
       "generator": "Unix Makefiles",
-      "toolchainFile": "build_conan/build/RelWithDebInfo/generators/conan_toolchain.cmake",
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
@@ -47,7 +46,6 @@
       "displayName": "CI Build Linux",
       "inherits": "ci-base",
       "generator": "Ninja",
-      "toolchainFile": "build_conan/build/RelWithDebInfo/generators/conan_toolchain.cmake",
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
