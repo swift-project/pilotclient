@@ -131,8 +131,8 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          sudo apt-get -y install dbus-x11 libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev libpng-dev ninja-build
-          pip3 install requests
+          sudo apt-get -y install dbus-x11 libglu1-mesa-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev libpng-dev ninja-build
+          pip3 install requests conan
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -148,6 +148,10 @@ jobs:
           ref: ${{ env.externals_sha }}
           token: ${{ env.EXTERNALS_PAT }}
           path: 'third_party/externals'
+      - name: Install conan dependencies
+        run: |
+          conan profile detect --force
+          conan install . --output-folder=build_conan --settings=build_type=RelWithDebInfo --build=missing
       - name: Start DBus session bus
         run: |
           dbus-launch --sh-syntax | tee session.sh

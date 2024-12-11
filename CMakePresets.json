@@ -46,6 +46,7 @@
       "displayName": "CI Build Linux",
       "inherits": "ci-base",
       "generator": "Ninja",
+      "toolchainFile": "build_conan/build/RelWithDebInfo/generators/conan_toolchain.cmake",
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
