@@ -131,7 +131,7 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          sudo apt-get -y install dbus-x11 libglu1-mesa-dev libsodium-dev libpulse-dev libdbus-1-dev libpng-dev ninja-build
+          sudo apt-get -y install dbus-x11 libglu1-mesa-dev libpulse-dev libdbus-1-dev libpng-dev ninja-build
           pip3 install requests conan
       - name: Checkout repository
         uses: actions/checkout@v4

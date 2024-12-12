@@ -21,10 +21,6 @@
                 </distributionFile>
                 <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/libsodium*.dll</origin>
-                </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/SimConnect*.dll</origin>
                 </distributionFile>
                 <distributionFile>
@@ -64,10 +60,6 @@
                 <distributionFile>
                     <origin>../../dist/lib/libvatsimauth.so</origin>
                 </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libsodium.so.*</origin>
-                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
@@ -76,9 +68,6 @@
             <name>lib_osx</name>
             <platforms>osx</platforms>
             <distributionFileList>
-                <distributionFile>
-                    <origin>../../dist/lib/libsodium.23.dylib</origin>
-                </distributionFile>
                 <distributionFile>
                     <origin>../../dist/lib/libvatsimauth.dylib</origin>
                 </distributionFile>
