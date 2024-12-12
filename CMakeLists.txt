@@ -89,6 +89,7 @@ endif()
 find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test Core5Compat)
 find_package(Opus REQUIRED)
 find_package(libsodium REQUIRED)
+find_package(DBus1 REQUIRED)
 
 # Global compiler options
 if(MSVC)
@@ -138,7 +139,6 @@ endif()
 
 # Add external folders
 add_subdirectory(cmake/vatsimauth)
-add_subdirectory(cmake/dbus)
 add_subdirectory(cmake/simconnect)
 add_subdirectory(third_party)
 

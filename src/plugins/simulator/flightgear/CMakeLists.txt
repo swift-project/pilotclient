@@ -20,7 +20,7 @@ target_include_directories(simulatorflightgear PUBLIC ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(simulatorflightgear
         PUBLIC
         misc
-        externals_dbus
+        dbus-1
         plugincommon
         )
 

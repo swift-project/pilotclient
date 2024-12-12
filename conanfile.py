@@ -13,6 +13,7 @@ class SwiftRecipe(ConanFile):
         self.requires("opus/1.3.1")
         self.requires("libevent/2.1.12")
         self.requires("libsodium/1.0.18")
+        self.requires("dbus/1.15.8")
 
     def configure(self):
         self.options["libevent"].with_openssl = False

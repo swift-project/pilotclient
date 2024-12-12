@@ -50,9 +50,6 @@
                     <origin>../../dist/bin/Qt6Xml.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/dbus-1-3.dll</origin>
-                </distributionFile>
-                <distributionFile>
                     <origin>../../dist/bin/dbus-daemon.exe</origin>
                 </distributionFile>
             </distributionFileList>
