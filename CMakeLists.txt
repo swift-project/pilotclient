@@ -146,7 +146,7 @@ add_subdirectory(third_party)
 
 if(SWIFT_BUILD_XSWIFTBUS)
     add_subdirectory(cmake/xp)
-    add_subdirectory(cmake/event)
+    find_package(Libevent REQUIRED)
 endif()
 
 # Add source folders
