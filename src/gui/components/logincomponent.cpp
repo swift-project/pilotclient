@@ -79,6 +79,8 @@ namespace swift::gui::components
                 Qt::QueuedConnection);
         connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::requestNetworkSettings, this,
                 &CLoginComponent::requestNetworkSettings, Qt::QueuedConnection);
+        connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::currentServerChanged, this,
+                &CLoginComponent::onSelectedServerChanged, Qt::QueuedConnection);
 
         // overlay
         this->setOverlaySizeFactors(0.8, 0.5);
@@ -298,7 +300,7 @@ namespace swift::gui::components
         if (!m_updatePilotOnServerChanges) { return; }
         const bool vatsim = this->isVatsimNetworkTabSelected();
         const CUser user = vatsim ? this->getCurrentVatsimServer().getUser() : server.getUser();
-        ui->form_Pilot->setUser(user, true);
+        ui->form_Pilot->setUser(user);
     }
 
     void CLoginComponent::onSimulatorStatusChanged(int status)
@@ -333,7 +335,7 @@ namespace swift::gui::components
         if (!m_updatePilotOnServerChanges) { return; }
         const bool vatsim = this->isVatsimNetworkTabSelected();
         const CServer server = vatsim ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
-        ui->form_Pilot->setUser(server.getUser(), true);
+        ui->form_Pilot->setUser(server.getUser());
     }
 
     bool CLoginComponent::hasValidContexts() const

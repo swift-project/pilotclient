@@ -190,7 +190,6 @@ if(WIN32)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/session.conf DESTINATION xswiftbus/64/share/dbus-1/)
 
     install(FILES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/bin/dbus-daemon.exe DESTINATION xswiftbus/64/)
-    install(FILES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/expat.dll DESTINATION xswiftbus/64/)
 endif()
 
 install(DIRECTORY LegacyData DESTINATION xswiftbus)
