@@ -11,6 +11,7 @@
 #include <QPair>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QStringBuilder>
 #include <QStringList>
 #include <QTextStream>
 #include <QVariant>
@@ -20,6 +21,7 @@
 #include "misc/fileutils.h"
 #include "misc/logmessage.h"
 #include "misc/stringutils.h"
+#include "misc/swiftdirectories.h"
 
 using namespace swift::config;
 
@@ -93,6 +95,7 @@ namespace swift::misc::simulation::fscommon
 
     static QString msfsDirImpl()
     {
+        // first we look for a standard installation
         const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
         for (const QString &path : locations)
         {
@@ -100,6 +103,17 @@ namespace swift::misc::simulation::fscommon
                                                                     "Microsoft.FlightSimulator_8wekyb3d8bbwe");
             const QDir d(msfsPackage);
             if (!d.exists()) { continue; }
+            return msfsPackage;
+        }
+        // then we look for Steam-Edition
+        for (QString path : locations)
+        {
+            path.replace("Local", "Roaming");
+            const QString msfsPackage =
+                CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path, "Microsoft Flight Simulator"), "");
+            const QString fileName = CFileUtils::appendFilePaths(msfsPackage, "UserCfg.opt");
+            const QFileInfo fi(fileName);
+            if (!fi.exists()) { continue; }
             return msfsPackage;
         }
         return {};
@@ -113,10 +127,22 @@ namespace swift::misc::simulation::fscommon
 
     QString msfsPackagesDirImpl()
     {
+        QString userCfg = "";
+
         QString msfsDirectory(CFsDirectories::msfsDir());
-        const QString userCfg =
-            CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(msfsDirectory, "LocalCache"), "UserCfg.opt");
-        QFile file(userCfg);
+
+        // for Steam edition
+        if (msfsDirectory.contains("Roaming", Qt::CaseInsensitive))
+        {
+            userCfg = CFileUtils::appendFilePaths(msfsDirectory, "UserCfg.opt");
+        }
+        else
+        {
+            userCfg =
+                CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(msfsDirectory, "LocalCache"), "UserCfg.opt");
+        }
+
+        QFile file(CFileUtils::normalizeFilePathToQtStandard(userCfg));
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
 
         QTextStream in(&file);
@@ -125,8 +151,10 @@ namespace swift::misc::simulation::fscommon
             QString line = in.readLine();
             if (line.contains("InstalledPackagesPath"))
             {
-                QStringList split = line.split(" ");
-                if (split.size() != 2) { return {}; }
+                // change the split separator because of path names with multiple spaces in Steamedition
+                QStringList split = line.split("\"");
+                // we have 2 quotation marks in the line so 3 parts
+                if (split.size() != 3) { return {}; }
                 QString packagePath = split[1].remove("\"");
                 const QDir dir(packagePath);
                 if (dir.exists()) { return packagePath; }
@@ -139,6 +167,20 @@ namespace swift::misc::simulation::fscommon
     {
         static const QString dir(msfsPackagesDirImpl());
         return dir;
+    }
+
+    static QString msfs2024DirImpl()
+    {
+        const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+        for (const QString &path : locations)
+        {
+            const QString msfs2024Package = CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path, "Packages"),
+                                                                        "Microsoft.Limitless_8wekyb3d8bbwe");
+            const QDir d(msfs2024Package);
+            if (!d.exists()) { continue; }
+            return msfs2024Package;
+        }
+        return {};
     }
 
     QString fsxSimObjectsDirFromRegistryImpl()
