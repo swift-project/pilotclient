@@ -105,9 +105,11 @@ namespace swift::misc::simulation::fscommon
             if (!d.exists()) { continue; }
             return msfsPackage;
         }
-        // then we look for Steam-Edition
+        // then we look for steam-edition
         for (QString path : locations)
         {
+            // there seems to be no constant for the roaming directory, so we have to do some magic
+            // https://doc.qt.io/qt-6/qstandardpaths.html
             path.replace("Local", "Roaming");
             const QString msfsPackage =
                 CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(path, "Microsoft Flight Simulator"), "");
