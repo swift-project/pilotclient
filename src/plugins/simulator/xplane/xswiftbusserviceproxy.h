@@ -219,6 +219,9 @@ namespace swift::simplugin::xplane
         //! \copydoc XSwiftBus::CService::resetFrameTotals
         void resetFrameTotals();
 
+        //! \copydoc XSwiftBus::CService::setFlightNetworkConnected
+        void setFlightNetworkConnected(bool connected);
+
         //! @{
         //! \copydoc XSwiftBus::CService::getLatitudeDeg
         double getLatitudeDeg() const;
