@@ -10,13 +10,9 @@
 #include <QScopedPointer>
 
 #include "core/data/networksetup.h"
-#include "misc/datacache.h"
-#include "misc/network/connectionstatus.h"
 #include "misc/network/data/lastserver.h"
 #include "misc/network/entityflags.h"
-#include "misc/network/fsdsetup.h"
 #include "misc/network/loginmode.h"
-#include "misc/settingscache.h"
 
 namespace Ui
 {
@@ -76,6 +72,9 @@ namespace swift::gui::components
 
         //! Request network settings
         void requestNetworkSettings();
+
+        //! Current selected server changed
+        void currentServerChanged(const misc::network::CServer &server);
 
     private:
         //! Settings have been changed

@@ -52,6 +52,14 @@ namespace swift::gui::components
         const int tab = m_networkSetup.wasLastUsedWithOtherServer() ? LoginOthers : LoginVATSIM;
         ui->tw_Network->setCurrentIndex(tab);
 
+        connect(
+            ui->tw_Network, &QTabWidget::currentChanged, this,
+            [this](int) { emit this->currentServerChanged(getCurrentServer()); }, Qt::QueuedConnection);
+        connect(ui->comp_OtherServers, &CServerListSelector::serverChanged, this,
+                &CNetworkDetailsComponent::currentServerChanged, Qt::QueuedConnection);
+        connect(ui->comp_VatsimServers, &CServerListSelector::serverChanged, this,
+                &CNetworkDetailsComponent::currentServerChanged, Qt::QueuedConnection);
+
         this->reloadOtherServersSetup();
         this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
     }
