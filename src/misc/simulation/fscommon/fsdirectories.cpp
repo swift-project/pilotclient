@@ -181,7 +181,68 @@ namespace swift::misc::simulation::fscommon
             if (!d.exists()) { continue; }
             return msfs2024Package;
         }
+        // then we look for steam-edition
+        for (QString path : locations)
+        {
+            // there seems to be no constant for the roaming directory, so we have to do some magic
+            // https://doc.qt.io/qt-6/qstandardpaths.html
+            path.replace("Local", "Roaming");
+            const QString msfsPackage = CFileUtils::appendFilePaths(path, "Microsoft Flight Simulator 2024");
+            const QString fileName = CFileUtils::appendFilePaths(msfsPackage, "UserCfg.opt");
+            const QFileInfo fi(fileName);
+            if (!fi.exists()) { continue; }
+            return msfsPackage;
+        }
         return {};
+    }
+
+    const QString &CFsDirectories::msfs2024Dir()
+    {
+        static const QString dir(msfs2024DirImpl());
+        return dir;
+    }
+
+    QString msfs2024PackagesDirImpl()
+    {
+        QString userCfg = "";
+
+        QString msfs2024Directory(CFsDirectories::msfs2024Dir());
+        // for Steam edition
+        if (msfs2024Directory.contains("Roaming", Qt::CaseInsensitive))
+        {
+            userCfg = CFileUtils::appendFilePaths(msfs2024Directory, "UserCfg.opt");
+        }
+        else
+        {
+            userCfg = CFileUtils::appendFilePaths(CFileUtils::appendFilePaths(msfs2024Directory, "LocalCache"),
+                                                  "UserCfg.opt");
+        }
+
+        QFile file(userCfg);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
+
+        QTextStream in(&file);
+        while (!in.atEnd())
+        {
+            QString line = in.readLine();
+            if (line.contains("InstalledPackagesPath"))
+            {
+                // change the split separator because of path names with multiple spaces in Steamedition
+                QStringList split = line.split("\"");
+                // we have 2 quotation marks in the line so 3 parts
+                if (split.size() != 3) { return {}; }
+                QString packagePath = split[1].remove("\"");
+                const QDir dir(packagePath);
+                if (dir.exists()) { return packagePath; }
+            }
+        }
+        return {};
+    }
+
+    const QString &CFsDirectories::msfs2024PackagesDir()
+    {
+        static const QString dir(msfs2024PackagesDirImpl());
+        return dir;
     }
 
     QString fsxSimObjectsDirFromRegistryImpl()
@@ -211,6 +272,13 @@ namespace swift::misc::simulation::fscommon
         return CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl());
     }
 
+    QString msfs2024SimObjectsDirImpl()
+    {
+        QString dir(CFsDirectories::msfs2024Dir());
+        if (dir.isEmpty()) { return {}; }
+        return CFileUtils::normalizeFilePathToQtStandard(msfs2024PackagesDirImpl());
+    }
+
     const QString &CFsDirectories::fsxSimObjectsDir()
     {
         static const QString dir(fsxSimObjectsDirImpl());
@@ -223,6 +291,11 @@ namespace swift::misc::simulation::fscommon
         return dir;
     }
 
+    const QString &CFsDirectories::msfs2024SimObjectsDir()
+    {
+        static const QString dir(msfs2024SimObjectsDirImpl());
+        return dir;
+    }
     QString CFsDirectories::fsxSimObjectsDirFromSimDir(const QString &simDir)
     {
         if (simDir.isEmpty()) { return {}; }
@@ -256,6 +329,35 @@ namespace swift::misc::simulation::fscommon
             "OneStore/microsoft-airport",
             "OneStore/microsoft-bushtrip",
             "OneStore/microsoft-discovery",
+            "landingchallenge",
+            "tutorials",
+
+        };
+        return exclude;
+    }
+
+    const QStringList &CFsDirectories::msfs2024SimObjectsExcludeDirectoryPatterns()
+    {
+        static const QStringList exclude {
+            /*
+            "OneStore/asobo-discovery",
+            "OneStore/asobo-flight",
+            "OneStore/asobo-landingchallenge",
+            "OneStore/asobo-mission",
+            "OneStore/asobo-tutorials",
+            "OneStore/asobo-vcockpits",
+            "OneStore/asobo-simobjects",
+            "OneStore/asobo-services",
+            "OneStore/asobo-vcockpits",
+            "OneStore/asobo-l",
+            "OneStore/asobo-m",
+            "OneStore/asobo-vfx",
+            "OneStore/fs",
+            "OneStore/esd",
+            "OneStore/microsoft-airport",
+            "OneStore/microsoft-bushtrip",
+            "OneStore/microsoft-discovery",
+            */
             "landingchallenge",
             "tutorials",
 
@@ -365,6 +467,12 @@ namespace swift::misc::simulation::fscommon
         return Path;
     }
 
+    QStringList CFsDirectories::msfs2024SimObjectsDirPath(const QString &simObjectsDir)
+    {
+        Q_UNUSED(simObjectsDir);
+        static const QStringList Path { CFsDirectories::msfs2024SimObjectsDir() };
+        return Path;
+    }
     QStringList CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir,
                                                                             const QString &versionHint)
     {

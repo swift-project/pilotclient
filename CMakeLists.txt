@@ -32,8 +32,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/lib)
 
 # Build related options
-option(SWIFT_BUILD_SAMPLES "Build samples" ON)
-option(SWIFT_BUILD_UNIT_TESTS "Build unit tests" ON)
+option(SWIFT_BUILD_SAMPLES "Build samples" OFF)
+option(SWIFT_BUILD_UNIT_TESTS "Build unit tests" OFF)
 option(SWIFT_BUILD_DOCUMENTATION "Build documentation" ON)
 
 cmake_dependent_option(SWIFT_BUILD_FS9_PLUGIN "Build FS9 plugin" ON SWIFT_WIN32 OFF)
@@ -44,6 +44,7 @@ cmake_dependent_option(SWIFT_BUILD_XSWIFTBUS "Build xswiftbus" ON "NOT SWIFT_WIN
 option(SWIFT_BUILD_FLIGHTGEAR_PLUGIN "Build Flightgear plugin" ON)
 option(SWIFT_BUILD_EMULATED_PLUGIN "Build Emulated plugin" ON)
 cmake_dependent_option(SWIFT_BUILD_MSFS_PLUGIN "Build MSFS plugin" ON WIN32 OFF)
+cmake_dependent_option(SWIFT_BUILD_MSFS2024_PLUGIN "Build MSFS2024 plugin" ON WIN32 OFF)
 option(SWIFT_MINIFY_DEBUG_SYMBOLS "Minify debug symbols" OFF)
 
 option(SWIFT_USE_CRASHPAD "Use crashpad" OFF)
@@ -197,6 +198,7 @@ message(STATUS "\t FS9: ${SWIFT_BUILD_FS9_PLUGIN}")
 message(STATUS "\t FSX: ${SWIFT_BUILD_FSX_PLUGIN}")
 message(STATUS "\t P3D: ${SWIFT_BUILD_P3D_PLUGIN}")
 message(STATUS "\t MSFS: ${SWIFT_BUILD_MSFS_PLUGIN}")
+message(STATUS "\t MSFS2024: ${SWIFT_BUILD_MSFS2024_PLUGIN}")
 message(STATUS "\t XPLANE: ${SWIFT_BUILD_XPLANE_PLUGIN}")
 message(STATUS "\t XSWIFTBUS: ${SWIFT_BUILD_XPLANE_PLUGIN}")
 message(STATUS "\t FLIGHTGEAR: ${SWIFT_BUILD_FLIGHTGEAR_PLUGIN}")
