@@ -604,6 +604,22 @@ namespace swift::gui::components
                     });
                     m_setNewActions.append(a);
                 }
+                if (sims.isMSFS2024())
+                {
+                    QAction *a = new QAction(CIcons::appModels16(), "MSFS2024 models", this);
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
+                        Q_UNUSED(checked)
+                        ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS2024));
+                    });
+                    m_setActions.append(a);
+
+                    a = new QAction(CIcons::appModels16(), "New set MSFS2024 models", this);
+                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
+                        Q_UNUSED(checked)
+                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::MSFS2024));
+                    });
+                    m_setNewActions.append(a);
+                }
 
                 QAction *a = new QAction(CIcons::appDistributors16(), "Apply distributor preferences", this);
                 connect(a, &QAction::triggered, ownModelSetComp,

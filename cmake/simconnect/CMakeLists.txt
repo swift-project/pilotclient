@@ -4,7 +4,7 @@
 # Checks if variable for SDK path is set and SimConnect.h does exist in the include path.
 # If not, disable building the simulator plugin and emit warning message
 
-if(SWIFT_BUILD_FSX_PLUGIN OR SWIFT_BUILD_P3D_PLUGIN OR SWIFT_BUILD_MSFS_PLUGIN)
+if(SWIFT_BUILD_FSX_PLUGIN OR SWIFT_BUILD_P3D_PLUGIN OR SWIFT_BUILD_MSFS_PLUGIN OR SWIFT_BUILD_MSFS2024_PLUGIN)
     add_library(externals_simconnect INTERFACE IMPORTED GLOBAL)
     target_compile_definitions(externals_simconnect INTERFACE SIMCONNECT_H_NOMANIFEST)
     target_compile_definitions(externals_simconnect INTERFACE BUID_SIMCONNECT_LIB)
@@ -30,6 +30,7 @@ if(SWIFT_BUILD_FSX_PLUGIN OR SWIFT_BUILD_P3D_PLUGIN OR SWIFT_BUILD_MSFS_PLUGIN)
         add_install_command(${PROJECT_SOURCE_DIR}/third_party/externals/win32-msvc/32/lib/SimConnect.dll)
     elseif(SWIFT_WIN64)
         list(APPEND LIBS SimConnect.MSFS.dll)
+        list(APPEND LIBS SimConnect.MSFS2024.dll)
         list(APPEND LIBS SimConnect.P3D-v4.0.dll)
         list(APPEND LIBS SimConnect.P3D-v4.1.dll)
         list(APPEND LIBS SimConnect.P3D-v4.2.dll)

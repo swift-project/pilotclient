@@ -50,6 +50,7 @@ namespace swift::misc::simulation
         if (sim.isFSX()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::FSX)); }
         if (sim.isP3D()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::P3D)); }
         if (sim.isMSFS()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::MSFS)); }
+        if (sim.isMSFS2024()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::MSFS2024)); }
         if (sim.isXPlane()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
         return sims;
     }
