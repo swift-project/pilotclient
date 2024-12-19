@@ -271,6 +271,7 @@ namespace swift::simplugin::fsxcommon
         ClientAreaSquawkBox
     };
 
+    // TODO TZ: are there any changes in MSFS2024
     //! Handles SimConnect data definitions
     class FSXCOMMON_EXPORT CSimConnectDefinitions
     {
@@ -354,6 +355,9 @@ namespace swift::simplugin::fsxcommon
 
         //! Initialize data definition for MSFS transponder
         static HRESULT initMSFSTransponder(const HANDLE hSimConnect);
+
+        //! Initialize data definition for MSFS transponder
+        static HRESULT initMSFS2024Transponder(const HANDLE hSimConnect);
     };
 } // namespace swift::simplugin::fsxcommon
 

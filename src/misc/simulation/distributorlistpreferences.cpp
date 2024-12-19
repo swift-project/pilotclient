@@ -22,6 +22,7 @@ namespace swift::misc::simulation
         case CSimulatorInfo::FG: return m_distributorsFG;
         case CSimulatorInfo::XPLANE: return m_distributorsXPlane;
         case CSimulatorInfo::MSFS: return m_distributorsMsfs;
+        case CSimulatorInfo::MSFS2024: return m_distributorsMsfs2024;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
 
@@ -50,6 +51,7 @@ namespace swift::misc::simulation
         case CSimulatorInfo::FG: m_distributorsFG = d; break;
         case CSimulatorInfo::XPLANE: m_distributorsXPlane = d; break;
         case CSimulatorInfo::MSFS: m_distributorsMsfs = d; break;
+        case CSimulatorInfo::MSFS2024: m_distributorsMsfs2024 = d; break;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
     }

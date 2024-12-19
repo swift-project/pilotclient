@@ -106,6 +106,8 @@ namespace swift::misc::simulation
         obj.insert("simfs9", QJsonValue(flag));
         flag = CDatastoreUtility::boolToDbYN(sim.isMSFS());
         obj.insert("simmsfs", QJsonValue(flag));
+        flag = CDatastoreUtility::boolToDbYN(sim.isMSFS2024());
+        obj.insert("simmsfs2024", QJsonValue(flag));
         flag = CDatastoreUtility::boolToDbYN(sim.isXPlane());
         obj.insert("simxplane", QJsonValue(flag));
         flag = CDatastoreUtility::boolToDbYN(sim.isFG());

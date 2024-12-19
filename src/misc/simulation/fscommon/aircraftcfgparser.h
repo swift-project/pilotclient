@@ -89,7 +89,7 @@ namespace swift::misc
             static QString getFixedIniLineContent(const QString &line);
 
             //! Files to be used
-            static const QStringList &fileNameFilters(bool isMSFS);
+            static const QStringList &fileNameFilters(bool isMSFS, bool isMSFS2024);
 
             //! Exclude the sub directories not to be parsed
             static bool isExcludedSubDirectory(const QString &excludeDirectory);

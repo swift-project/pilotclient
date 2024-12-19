@@ -354,6 +354,20 @@ namespace swift::misc::simulation::settings
         }
     };
 
+    //! Trait for simulator settings
+    struct TSimulatorMsfs2024 : public TSettingTrait<CSimulatorSettings>
+    {
+        //! \copydoc swift::misc::TSettingTrait::key
+        static const char *key() { return "settingssimulatormsfs2024"; }
+
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
+        static const QString &humanReadable()
+        {
+            static const QString name("MSFS2024 settings");
+            return name;
+        }
+    };
+
     //! Selected P3D version (64bit)
     struct TP3DVersion : public TSettingTrait<QString>
     {
@@ -545,6 +559,9 @@ namespace swift::misc::simulation::settings
         CSetting<TSimulatorMsfs> m_simSettingsMsfs {
             this, &CMultiSimulatorSettings::onMsfsSettingsChanged
         }; //!< MSFS settings
+        CSetting<TSimulatorMsfs2024> m_simSettingsMsfs2024 {
+            this, &CMultiSimulatorSettings::onMsfs2024SettingsChanged
+        }; //!< MSFS settings
         CSetting<TSimulatorXP> m_simSettingsXP { this, &CMultiSimulatorSettings::onXPSettingsChanged }; //!< XP settings
         CSetting<TSimulatorFG> m_simSettingsFG { this, &CMultiSimulatorSettings::onFGSettingsChanged }; //!< FG settings
 
@@ -554,6 +571,7 @@ namespace swift::misc::simulation::settings
         void onFs9SettingsChanged();
         void onP3DSettingsChanged();
         void onMsfsSettingsChanged();
+        void onMsfs2024SettingsChanged();
         void onXPSettingsChanged();
         void onFGSettingsChanged();
         //! @}
