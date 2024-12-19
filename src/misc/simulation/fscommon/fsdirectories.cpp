@@ -346,6 +346,16 @@ namespace swift::misc::simulation::fscommon
         return exclude;
     }
 
+    const QStringList &CFsDirectories::msfs2024SimObjectsExcludeDirectoryPatterns()
+    {
+        static const QStringList exclude {
+            "landingchallenge",
+            "tutorials",
+
+        };
+        return exclude;
+    }
+
     QString p3dDirFromRegistryImpl()
     {
         QString p3dPath;
