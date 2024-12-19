@@ -1,0 +1,7 @@
+{
+    "identifier" : "org.swift-project.plugins.simulator.msfs2024",
+    "name" : "Flight Simulator 2024",
+    "simulator" : "msfs2024",
+    "description" : "Microsoft Flight Simulator 2024",
+    "config" : "org.swift-project.plugins.simulator.msfs2024.config"
+}

@@ -153,8 +153,11 @@ namespace swift::misc::simulation::fscommon
         // set directory with name filters, get aircraft.cfg and sub directories
         static const QString NoNameFilter;
         QDir dir(directory, NoNameFilter, QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
-        // for MSFS we only need aircraft.cfg
-        dir.setNameFilters(fileNameFilters(getSimulator().isMSFS()));
+        // TODO TZ: still have to figure out how msfs2024 handles this
+        // for MSFS2020   we only need aircraft.cfg
+        // MSFS2024 has aircraft.cfg only in communityfolder
+        // a solution for the aircraft from the marketplace may be prepared by ASOBO
+        dir.setNameFilters(fileNameFilters(getSimulator().isMSFS(), getSimulator().isMSFS2024()));
         if (!dir.exists())
         {
             return CAircraftCfgEntriesList(); // can happen if there are shortcuts or linked dirs not available
@@ -464,9 +467,10 @@ namespace swift::misc::simulation::fscommon
         return content;
     }
 
-    const QStringList &CAircraftCfgParser::fileNameFilters(bool isMSFS)
+    // TODO TZ: MSFS2024 currently has aircraft.cfg only in the community folder
+    const QStringList &CAircraftCfgParser::fileNameFilters(bool isMSFS, bool isMSFS2024)
     {
-        if (CBuildConfig::buildWordSize() == 32 || isMSFS)
+        if (CBuildConfig::buildWordSize() == 32 || isMSFS || isMSFS2024)
         {
             static const QStringList f({ "aircraft.cfg" });
             return f;

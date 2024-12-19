@@ -193,6 +193,12 @@ namespace swift::misc::simulation
                     models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
                 specificTests.push_back(specificTests2);
             }
+            else if (simulator.isMSFS2024())
+            {
+                const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateMSFS2024SimObjectsPath(
+                    models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
+                specificTests.push_back(specificTests2);
+            }
         }
         else if (simulator.isXPlane() || models.isLikelyXPlaneModelList())
         {
