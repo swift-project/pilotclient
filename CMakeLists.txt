@@ -32,8 +32,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/lib)
 
 # Build related options
-option(SWIFT_BUILD_SAMPLES "Build samples" OFF)
-option(SWIFT_BUILD_UNIT_TESTS "Build unit tests" OFF)
+option(SWIFT_BUILD_SAMPLES "Build samples" ON)
+option(SWIFT_BUILD_UNIT_TESTS "Build unit tests" ON)
 option(SWIFT_BUILD_DOCUMENTATION "Build documentation" ON)
 
 cmake_dependent_option(SWIFT_BUILD_FS9_PLUGIN "Build FS9 plugin" ON SWIFT_WIN32 OFF)

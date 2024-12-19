@@ -404,7 +404,7 @@ namespace swift::gui::components
                         ownModelsComp->setSimulator(CSimulatorInfo::msfs2024(), true);
                     });
                 }
-                menuActions.addAction(m_loadActions[5], CMenuAction::pathSimulator());
+                menuActions.addAction(m_loadActions[6], CMenuAction::pathSimulator());
             }
 
             // with models loaded I allow a refresh reload
