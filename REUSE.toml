@@ -230,7 +230,7 @@ SPDX-License-Identifier = "CC0-1.0"
 [[annotations]]
 path = "src/sound/share/sounds/pttclick.wav"
 precedence = "aggregate"
-SPDX-FileCopyrightText = "Clicking 4 by bernhoftbret -- https://freesound.org/s/655157/ -- License: Creative Commons 0; Modified by swift contributors"
+SPDX-FileCopyrightText = "Copyright (C) swift Project Community / Contributors"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
