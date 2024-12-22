@@ -34,11 +34,9 @@ add_library(gui SHARED
         models/distributorfilter.cpp
         models/columns.h
         models/aircraftsituationchangelistmodel.h
-        models/windlayerlistmodel.h
         models/actionhotkeylistmodel.cpp
         models/listmodelbaseaviation.cpp
         models/interpolationsetupmodel.cpp
-        models/windlayerlistmodel.cpp
         models/matchingstatisticsmodel.h
         models/modelfilter.cpp
         models/aircrafticaolistmodel.cpp
@@ -82,7 +80,6 @@ add_library(gui SHARED
         models/clientlistmodel.cpp
         models/aircrafticaofilter.h
         models/atcstationlistmodel.cpp
-        models/cloudlayerlistmodel.cpp
         models/simulatedaircraftlistmodel.h
         models/statusmessagelistmodel.h
         models/aircraftcategorytreemodel.cpp
@@ -105,7 +102,6 @@ add_library(gui SHARED
         models/applicationinfolistmodel.h
         models/identifierlistmodel.h
         models/modelfilter.h
-        models/cloudlayerlistmodel.h
         models/userlistmodel.cpp
         models/airportlistmodel.cpp
         models/actionhotkeylistmodel.h
@@ -116,16 +112,13 @@ add_library(gui SHARED
         models/atcstationlistmodel.h
         enableforviewbasedindicator.h
         pluginconfigwindow.h
-        views/cloudlayerview.cpp
         views/interpolationsetupview.cpp
         views/userview.h
         views/aircraftcategorytreeview.h
-        views/windlayerview.h
         views/viewtimestampobjects.cpp
         views/aircrafticaoview.h
         views/viewbase.h
         views/viewbasemisc.cpp
-        views/windlayerview.cpp
         views/distributorview.h
         views/checkboxdelegate.cpp
         views/viewbaseproxystyle.cpp
@@ -171,7 +164,6 @@ add_library(gui SHARED
         views/aircraftmodelstatisticsdialog.ui
         views/aircraftmodelstatisticsdialog.h
         views/audiodeviceinfoview.cpp
-        views/viewbaseweather.cpp
         views/clientview.cpp
         views/viewbaseitemdelegate.cpp
         views/aircraftsituationchangeview.cpp
@@ -199,7 +191,6 @@ add_library(gui SHARED
         views/radarview.cpp
         views/liveryview.cpp
         views/viewbasesimulation.cpp
-        views/cloudlayerview.h
         views/countryview.cpp
         views/liveryview.h
         views/flightplandialog.cpp
