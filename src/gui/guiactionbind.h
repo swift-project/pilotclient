@@ -9,7 +9,6 @@
 #include <QList>
 #include <QMenu>
 #include <QPushButton>
-#include <QScopedPointer>
 #include <QToolButton>
 
 #include "core/actionbind.h"

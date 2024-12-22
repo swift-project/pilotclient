@@ -8,7 +8,6 @@
 
 #include "gui/models/listmodelbase.h"
 #include "gui/swiftguiexport.h"
-#include "misc/identifier.h"
 #include "misc/identifierlist.h"
 
 namespace swift::gui::models

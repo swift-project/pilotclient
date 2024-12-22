@@ -13,7 +13,6 @@
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewcallsignobjects.h"
 #include "misc/aviation/atcstation.h"
-#include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/pq/frequency.h"
 

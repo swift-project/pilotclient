@@ -6,8 +6,6 @@
 #ifndef SWIFT_GUI_FILTERS_STATUSMESSAGEFILTERBAR_H
 #define SWIFT_GUI_FILTERS_STATUSMESSAGEFILTERBAR_H
 
-#include <QFrame>
-
 #include "gui/filters/filterwidget.h"
 #include "gui/models/modelfilter.h"
 #include "misc/statusmessagelist.h"

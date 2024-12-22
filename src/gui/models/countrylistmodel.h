@@ -10,14 +10,9 @@
 
 #include "gui/models/listmodeldbobjects.h"
 #include "gui/swiftguiexport.h"
+#include "misc/countrylist.h"
 
 class QObject;
-
-namespace swift::misc
-{
-    class CCountry;
-    class CCountryList;
-} // namespace swift::misc
 
 namespace swift::gui::models
 {

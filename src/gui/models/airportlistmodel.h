@@ -8,7 +8,6 @@
 
 #include "gui/models/listmodelbase.h"
 #include "gui/swiftguiexport.h"
-#include "misc/aviation/airport.h"
 #include "misc/aviation/airportlist.h"
 
 class QObject;

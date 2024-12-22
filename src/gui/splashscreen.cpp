@@ -3,6 +3,7 @@
 
 #include "splashscreen.h"
 
+#include <QPainter>
 #include <QtMath>
 
 using namespace swift::misc;

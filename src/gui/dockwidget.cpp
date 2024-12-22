@@ -12,7 +12,6 @@
 #include <QPointer>
 #include <QScopedPointer>
 #include <QScreen>
-#include <QSettings>
 #include <QSizePolicy>
 #include <QStatusBar>
 #include <QStyle>

@@ -3,11 +3,9 @@
 
 #include "gui/plugindetailswindow.h"
 
-#include <QApplication>
 #include <QFont>
 #include <QLabel>
 #include <QPushButton>
-#include <QStyle>
 #include <Qt>
 #include <QtGlobal>
 

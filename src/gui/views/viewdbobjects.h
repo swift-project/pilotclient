@@ -6,10 +6,7 @@
 #ifndef SWIFT_GUI_VIEWS_VIEWDBOBJECTS_H
 #define SWIFT_GUI_VIEWS_VIEWDBOBJECTS_H
 
-#include <QObject>
 #include <QSet>
-#include <QString>
-#include <QtGlobal>
 
 #include "gui/views/viewbase.h"
 

@@ -12,7 +12,6 @@
 #include <QPushButton>
 #include <QSize>
 #include <QStackedWidget>
-#include <QStyle>
 #include <QTextEdit>
 #include <QToolButton>
 #include <Qt>

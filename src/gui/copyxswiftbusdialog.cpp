@@ -8,7 +8,6 @@
 #include "config/buildconfig.h"
 #include "core/context/contextsimulator.h"
 #include "gui/guiapplication.h"
-#include "misc/directoryutils.h"
 #include "misc/simulation/xplane/xplaneutil.h"
 #include "misc/swiftdirectories.h"
 

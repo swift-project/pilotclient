@@ -7,7 +7,6 @@
 #define SWIFT_GUI_AIRCRAFTMODELVIEW_H
 
 #include <QBrush>
-#include <QFlags>
 #include <QMetaType>
 #include <QObject>
 #include <QStringList>
@@ -17,7 +16,6 @@
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewdbobjects.h"
 #include "misc/aviation/airlineicaocode.h"
-#include "misc/propertyindexvariantmap.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/distributor.h"
 #include "misc/simulation/simulatorinfo.h"

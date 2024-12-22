@@ -9,8 +9,6 @@
 #include "gui/components/settingsfontdialog.h"
 #include "gui/menus/menudelegate.h"
 #include "gui/overlaymessagesframe.h"
-#include "gui/views/aircraftmodelview.h"
-#include "misc/simulation/aircraftmodelinterfaces.h"
 
 class QAction;
 class QShortcut;

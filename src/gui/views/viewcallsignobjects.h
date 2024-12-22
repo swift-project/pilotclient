@@ -6,11 +6,6 @@
 #ifndef SWIFT_GUI_VIEWS_VIEWCALLSIGNOBJECTS_H
 #define SWIFT_GUI_VIEWS_VIEWCALLSIGNOBJECTS_H
 
-#include <QObject>
-#include <QSet>
-#include <QString>
-#include <QtGlobal>
-
 #include "gui/views/viewbase.h"
 
 class QAction;

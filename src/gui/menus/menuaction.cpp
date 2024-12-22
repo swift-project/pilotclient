@@ -15,7 +15,6 @@
 #include "gui/guiapplication.h"
 #include "misc/icons.h"
 #include "misc/slot.h"
-#include "misc/verify.h"
 
 using namespace swift::misc;
 

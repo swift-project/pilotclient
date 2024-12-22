@@ -7,8 +7,6 @@
 #define SWIFT_GUI_SPLASHSCREEN_H
 
 #include <QFont>
-#include <QLabel>
-#include <QPainter>
 #include <QPixmap>
 #include <QSplashScreen>
 #include <QTimer>

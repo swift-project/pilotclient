@@ -9,7 +9,6 @@
 #include "gui/models/matchingstatisticsmodel.h"
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
-#include "misc/network/serverlist.h"
 
 class QWidget;
 

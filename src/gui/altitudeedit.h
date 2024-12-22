@@ -7,7 +7,6 @@
 #define SWIFT_GUI_ALTITUDEEDIT_H
 
 #include <QLineEdit>
-#include <QRegularExpression>
 
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/altitude.h"

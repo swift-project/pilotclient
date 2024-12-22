@@ -4,8 +4,6 @@
 
 #include "gui/levelmeter.h"
 
-#include <math.h>
-
 #include <QPainter>
 #include <QRect>
 #include <QSizePolicy>

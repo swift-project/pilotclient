@@ -3,8 +3,6 @@
 
 #include "gui/pluginconfigwindow.h"
 
-#include <QApplication>
-#include <QStyle>
 #include <Qt>
 #include <QtGlobal>
 

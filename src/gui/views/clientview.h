@@ -9,7 +9,6 @@
 #include "gui/models/clientlistmodel.h"
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
-#include "misc/network/clientlist.h"
 
 namespace swift::misc::network
 {

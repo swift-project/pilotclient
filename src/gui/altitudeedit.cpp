@@ -3,7 +3,6 @@
 
 #include "altitudeedit.h"
 
-#include <QMessageBox>
 #include <QRegularExpressionValidator>
 
 using namespace swift::misc;

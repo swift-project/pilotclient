@@ -9,15 +9,11 @@
 #include <QFileSystemWatcher>
 #include <QMap>
 #include <QObject>
-#include <QScopedPointer>
-#include <QSettings>
 #include <QString>
 #include <QStringList>
 #include <QStyle>
 
 #include "gui/swiftguiexport.h"
-#include "misc/digestsignal.h"
-#include "misc/logcategories.h"
 
 class QFont;
 class QWidget;

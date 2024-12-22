@@ -4,12 +4,9 @@
 #include "gui/views/aircraftcategorytreeview.h"
 
 #include <QAction>
-#include <QFlags>
 #include <QMenu>
 #include <QModelIndex>
-#include <QtGlobal>
 
-#include "config/buildconfig.h"
 #include "gui/menus/menuaction.h"
 #include "gui/models/aircraftcategorytreemodel.h"
 #include "misc/icons.h"

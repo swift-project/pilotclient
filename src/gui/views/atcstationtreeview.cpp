@@ -4,12 +4,10 @@
 #include "gui/views/atcstationtreeview.h"
 
 #include <QAction>
-#include <QFlags>
 #include <QMenu>
 #include <QModelIndex>
 #include <QtGlobal>
 
-#include "config/buildconfig.h"
 #include "gui/menus/menuaction.h"
 #include "gui/models/atcstationtreemodel.h"
 #include "misc/aviation/atcstationlist.h"

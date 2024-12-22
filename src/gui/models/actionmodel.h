@@ -7,13 +7,14 @@
 #define SWIFT_GUI_MODELS_ACTIONMODEL_H
 
 #include <QAbstractItemModel>
-#include <QModelIndex>
 #include <QObject>
 #include <QScopedPointer>
 #include <QVariant>
 #include <Qt>
 
 #include "gui/swiftguiexport.h"
+
+class QModelIndex;
 
 namespace swift::gui::models
 {

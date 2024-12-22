@@ -4,7 +4,6 @@
 #ifndef SWIFT_GUI_DROPBASE_H
 #define SWIFT_GUI_DROPBASE_H
 
-#include <QFileInfo>
 #include <QList>
 #include <QMimeData>
 

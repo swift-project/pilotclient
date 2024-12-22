@@ -6,8 +6,6 @@
 #ifndef SWIFT_GUI_MODELS_AIRCRAFTSITUATIONCHANGELISTMODEL_H
 #define SWIFT_GUI_MODELS_AIRCRAFTSITUATIONCHANGELISTMODEL_H
 
-#include <QVariant>
-
 #include "gui/models/listmodeltimestampobjects.h"
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/aircraftsituationchangelist.h"

@@ -17,7 +17,6 @@
 #include "gui/models/atcstationlistmodel.h"
 #include "gui/models/audiodeviceinfolistmodel.h"
 #include "gui/models/clientlistmodel.h"
-#include "gui/models/cloudlayerlistmodel.h"
 #include "gui/models/countrylistmodel.h"
 #include "gui/models/distributorlistmodel.h"
 #include "gui/models/identifierlistmodel.h"
@@ -30,6 +29,5 @@
 #include "gui/models/statusmessagelistmodel.h"
 #include "gui/models/textmessagelistmodel.h"
 #include "gui/models/userlistmodel.h"
-#include "gui/models/windlayerlistmodel.h"
 
 #endif // SWIFT_GUI_MODELS_ALLMODELS_H

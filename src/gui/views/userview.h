@@ -9,7 +9,6 @@
 #include "gui/models/userlistmodel.h"
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
-#include "misc/network/userlist.h"
 
 namespace swift::misc::network
 {

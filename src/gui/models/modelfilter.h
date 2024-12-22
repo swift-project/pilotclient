@@ -11,22 +11,6 @@
 #include <QString>
 #include <Qt>
 
-#include "misc/aviation/aircrafticaocodelist.h"
-#include "misc/aviation/airlineicaocodelist.h"
-#include "misc/aviation/airportlist.h"
-#include "misc/aviation/atcstationlist.h"
-#include "misc/aviation/liverylist.h"
-#include "misc/countrylist.h"
-#include "misc/identifierlist.h"
-#include "misc/namevariantpairlist.h"
-#include "misc/network/clientlist.h"
-#include "misc/network/serverlist.h"
-#include "misc/network/textmessagelist.h"
-#include "misc/network/userlist.h"
-#include "misc/simulation/aircraftmodellist.h"
-#include "misc/simulation/distributorlist.h"
-#include "misc/simulation/simulatedaircraftlist.h"
-#include "misc/statusmessagelist.h"
 #include "misc/variant.h"
 
 namespace swift::gui::models

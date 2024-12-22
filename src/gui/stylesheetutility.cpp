@@ -4,7 +4,6 @@
 #include "gui/stylesheetutility.h"
 
 #include <QAbstractScrollArea>
-#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -21,7 +20,6 @@
 #include <QtGlobal>
 
 #include "config/buildconfig.h"
-#include "misc/directoryutils.h"
 #include "misc/fileutils.h"
 #include "misc/logmessage.h"
 #include "misc/swiftdirectories.h"

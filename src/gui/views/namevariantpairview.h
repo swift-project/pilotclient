@@ -12,7 +12,6 @@
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
 #include "misc/icon.h"
-#include "misc/namevariantpairlist.h"
 #include "misc/variant.h"
 
 namespace swift::misc

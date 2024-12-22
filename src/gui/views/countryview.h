@@ -9,7 +9,6 @@
 #include "gui/models/countrylistmodel.h"
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
-#include "misc/countrylist.h"
 
 namespace swift::gui::views
 {

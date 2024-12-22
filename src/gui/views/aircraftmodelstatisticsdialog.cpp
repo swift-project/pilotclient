@@ -6,13 +6,11 @@
 #include <QDesktopServices>
 #include <QPushButton>
 #include <QStringBuilder>
-#include <QStringList>
 #include <QUrl>
 
 #include "ui_aircraftmodelstatisticsdialog.h"
 
 #include "gui/guiapplication.h"
-#include "misc/aviation/aircrafticaocodelist.h"
 #include "misc/simulation/aircraftmodelutils.h"
 
 using namespace swift::misc::aviation;

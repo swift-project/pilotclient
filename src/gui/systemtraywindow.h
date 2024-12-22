@@ -7,7 +7,6 @@
 #define SWIFT_GUI_ENABLEFORSYSTEMTRAY_H
 
 #include <QFlag>
-#include <QFlags>
 #include <QIcon>
 #include <QMainWindow>
 #include <QObject>

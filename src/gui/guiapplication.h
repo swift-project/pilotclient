@@ -25,7 +25,6 @@
 #include "gui/stylesheetutility.h"
 #include "gui/swiftguiexport.h"
 #include "misc/icons.h"
-#include "misc/network/networkutils.h"
 #include "misc/statusmessage.h"
 
 class QMenu;

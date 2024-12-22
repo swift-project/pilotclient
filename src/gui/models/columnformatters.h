@@ -8,7 +8,6 @@
 
 #include <QFlags>
 #include <QList>
-#include <QPixmap>
 #include <QString>
 #include <Qt>
 #include <QtGlobal>

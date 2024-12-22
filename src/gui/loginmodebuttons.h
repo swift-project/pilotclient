@@ -11,7 +11,6 @@
 #include <QScopedPointer>
 
 #include "gui/swiftguiexport.h"
-#include "misc/network/connectionstatus.h"
 #include "misc/network/loginmode.h"
 
 namespace Ui

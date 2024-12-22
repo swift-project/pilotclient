@@ -7,8 +7,6 @@
 #define SWIFT_GUI_MODELS_LISTMODELTIMESTAMPOBJECTS_H
 
 #include <QString>
-#include <QVariant>
-#include <Qt>
 
 #include "gui/models/listmodelbase.h"
 

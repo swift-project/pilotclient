@@ -7,7 +7,6 @@
 #define SWIFT_GUI_MODELS_ACTIONHOTKEYLISTMODEL_H
 
 #include <QAbstractTableModel>
-#include <QModelIndex>
 #include <QObject>
 #include <QVariant>
 #include <Qt>

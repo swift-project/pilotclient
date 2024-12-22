@@ -9,7 +9,6 @@
 #include "gui/models/identifierlistmodel.h"
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewbase.h"
-#include "misc/identifierlist.h"
 
 namespace swift::misc
 {

@@ -7,9 +7,7 @@
 #define SWIFT_GUI_VIEWBASE_PROXYSTYLE_H
 
 #include <QPainter>
-#include <QPen>
 #include <QProxyStyle>
-#include <QStyleOptionViewItem>
 
 namespace swift::gui::views
 {

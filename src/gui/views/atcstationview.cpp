@@ -9,7 +9,6 @@
 #include "config/buildconfig.h"
 #include "gui/menus/menuaction.h"
 #include "gui/models/atcstationlistmodel.h"
-#include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsign.h"
 #include "misc/icons.h"
 

@@ -13,9 +13,7 @@
 #include "gui/guiapplication.h"
 #include "misc/icons.h"
 #include "misc/logmessage.h"
-#include "misc/simulation/aircraftmodelutils.h"
 #include "misc/simulation/modelconverterx.h"
-#include "misc/verify.h"
 
 using namespace swift::config;
 using namespace swift::misc;

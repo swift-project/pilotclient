@@ -7,7 +7,6 @@
 #define SWIFT_GUI_MODELS_LISTMODELCALLSIGNOBJECTS_H
 
 #include <QColor>
-#include <QList>
 #include <QString>
 #include <QVariant>
 #include <Qt>

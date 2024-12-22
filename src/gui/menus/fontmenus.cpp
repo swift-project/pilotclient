@@ -7,7 +7,6 @@
 
 #include "gui/guiapplication.h"
 #include "gui/shortcut.h"
-#include "misc/verify.h"
 
 using namespace swift::misc;
 using namespace swift::gui::components;

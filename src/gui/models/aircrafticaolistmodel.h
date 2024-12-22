@@ -8,7 +8,6 @@
 
 #include "gui/models/listmodeldbobjects.h"
 #include "gui/swiftguiexport.h"
-#include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/aircrafticaocodelist.h"
 
 namespace swift::gui::models

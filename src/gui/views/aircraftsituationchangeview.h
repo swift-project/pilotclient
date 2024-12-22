@@ -9,7 +9,6 @@
 #include "gui/models/aircraftsituationchangelistmodel.h"
 #include "gui/swiftguiexport.h"
 #include "gui/views/viewtimestampobjects.h"
-#include "misc/aviation/aircraftsituationchangelist.h"
 
 class QWidget;
 

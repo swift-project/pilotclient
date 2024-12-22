@@ -4,7 +4,6 @@
 #ifndef SWIFT_GUI_MENUS_AIRCRAFTMODELMENUS_H
 #define SWIFT_GUI_MENUS_AIRCRAFTMODELMENUS_H
 
-#include <QMenu>
 #include <QObject>
 
 #include "gui/menus/menudelegate.h"
