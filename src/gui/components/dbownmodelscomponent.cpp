@@ -310,10 +310,7 @@ namespace swift::gui::components
             QPointer<CDbOwnModelsComponent> ownModelsComp(qobject_cast<CDbOwnModelsComponent *>(this->parent()));
             Q_ASSERT_X(ownModelsComp, Q_FUNC_INFO, "Cannot access parent");
 
-            if (m_loadActions.isEmpty())
-            {
-                m_loadActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
-            }
+            if (m_loadActions.isEmpty()) { m_loadActions = QList<QAction *>(sims.numberSimulators(), nullptr); }
             menuActions.addMenuSimulator();
             if (sims.isFSX())
             {
@@ -413,9 +410,8 @@ namespace swift::gui::components
             {
                 if (m_reloadActions.isEmpty())
                 {
-                    m_reloadActions =
-                        QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-                                           nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
+                    // Two reload actions per simulator
+                    m_reloadActions = QList<QAction *>(sims.numberSimulators() * 2, nullptr);
                 }
                 menuActions.addMenu(CIcons::refresh16(), "Force model reload",
                                     CMenuAction::pathSimulatorModelsReload());
@@ -623,8 +619,7 @@ namespace swift::gui::components
 
             if (m_clearCacheActions.isEmpty())
             {
-                m_clearCacheActions =
-                    QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr });
+                m_clearCacheActions = QList<QAction *>(sims.numberSimulators(), nullptr);
             }
             menuActions.addMenu(CIcons::delete16(), "Clear model caches", CMenuAction::pathSimulatorModelsClearCache());
             if (sims.isFSX())
