@@ -159,12 +159,6 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
             return;
         }
 
-        if (this->triggerAutoPublishDialog())
-        {
-            event->ignore();
-            return;
-        }
-
         // save settings
         if (sGui->showCloseDialog(this, event) == QDialog::Rejected)
         {
@@ -562,30 +556,6 @@ void SwiftGuiStd::onShowOverlayInlineTextMessageCallsign(const CCallsign &callsi
 {
     if (!sGui || sGui->isShuttingDown()) { return; }
     ui->fr_CentralFrameInside->showOverlayInlineTextMessage(callsign);
-}
-
-bool SwiftGuiStd::triggerAutoPublishDialog()
-{
-    if (!CAutoPublishData::existAutoPublishFiles()) { return false; }
-
-    constexpr qint64 deltaT = 48 * 60 * 60 * 1000;
-    const qint64 lastDialogTs = m_lastAutoPublish.get();
-    bool showAutoPublish = lastDialogTs < 0 || (QDateTime::currentMSecsSinceEpoch() - lastDialogTs) > deltaT;
-    if (!showAutoPublish) { return false; }
-
-    const QMessageBox::StandardButton reply =
-        QMessageBox::question(this, QStringLiteral("Upload data?"),
-                              QStringLiteral("Do you want to help improving swift by uploading anonymized data?"),
-                              QMessageBox::Yes | QMessageBox::No);
-
-    if (reply != QMessageBox::Yes)
-    {
-        m_lastAutoPublish.set(QDateTime::currentMSecsSinceEpoch());
-        return false;
-    }
-
-    this->autoPublishDialog(); // updates m_lastAutoPublish
-    return true;
 }
 
 bool SwiftGuiStd::startModelBrowser()

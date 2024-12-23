@@ -311,12 +311,6 @@ private:
     //! Copy the xswiftbus files from build directory
     void copyXSwiftBusDialog(bool checkFileTimestamp);
 
-    //! Auto publish diloag
-    int autoPublishDialog();
-
-    //! Show auto publish dialog if appropriate
-    bool triggerAutoPublishDialog();
-
     //! Start the model browser
     bool startModelBrowser();
 
