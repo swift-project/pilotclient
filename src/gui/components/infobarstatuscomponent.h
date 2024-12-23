@@ -80,9 +80,6 @@ namespace swift::gui::components
         void onNetworkConnectionChanged(const swift::misc::network::CConnectionStatus &from,
                                         const swift::misc::network::CConnectionStatus &to);
 
-        //! Context menu requested
-        void onCustomAudioContextMenuRequested(const QPoint &position);
-
         //! Output mute changed
         void onOutputMuteChanged(bool muted);
 

@@ -11,8 +11,6 @@ add_library(misc SHARED
         audio/audiodeviceinfolist.h
         audio/audiosettings.cpp
         audio/audiosettings.h
-        audio/audioutils.cpp
-        audio/audioutils.h
         audio/notificationsounds.cpp
         audio/notificationsounds.h
         audio/registermetadataaudio.cpp

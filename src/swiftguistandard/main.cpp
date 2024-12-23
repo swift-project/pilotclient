@@ -11,7 +11,6 @@
 #include "gui/enableforframelesswindow.h"
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
-#include "misc/audio/audioutils.h"
 #include "misc/crashhandler.h"
 
 using namespace swift::gui;
