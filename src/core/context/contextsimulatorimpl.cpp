@@ -106,11 +106,10 @@ namespace swift::core::context
         else { m_validator->setCurrentSimulator(CSimulatorInfo::None, {}, {}); }
     }
 
-    CContextSimulator *CContextSimulator::registerWithDBus(CDBusServer *server)
+    void CContextSimulator::registerWithDBus(CDBusServer *server)
     {
-        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return this; }
+        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return; }
         server->addObject(CContextSimulator::ObjectPath(), this);
-        return this;
     }
 
     bool CContextSimulator::isSimulatorPluginAvailable() const

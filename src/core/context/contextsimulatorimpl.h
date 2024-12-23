@@ -290,7 +290,7 @@ namespace swift::core
             CContextSimulator(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
             //! Register myself in DBus
-            CContextSimulator *registerWithDBus(swift::misc::CDBusServer *server);
+            void registerWithDBus(swift::misc::CDBusServer *server);
 
             //! Simulator plugin available?
             bool isSimulatorPluginAvailable() const;

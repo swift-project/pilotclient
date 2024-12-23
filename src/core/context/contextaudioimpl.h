@@ -60,7 +60,7 @@ namespace swift::core
             CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
             //! Register myself in DBus
-            CContextAudio *registerWithDBus(misc::CDBusServer *server);
+            void registerWithDBus(misc::CDBusServer *server);
 
         private:
             misc::audio::CAudioDeviceInfoList m_registeredDevices;

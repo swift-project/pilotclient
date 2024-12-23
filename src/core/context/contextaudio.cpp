@@ -60,14 +60,19 @@ namespace swift::core::context
         // ContextAudioEmpty would cause issue, as it is initializing "common parts" during shutdown
         switch (mode)
         {
-        case CCoreFacadeConfig::Local:
+        case CCoreFacadeConfig::Local: return new CContextAudio(mode, runtime);
         case CCoreFacadeConfig::LocalInDBusServer:
-        default: return (new CContextAudio(mode, runtime))->registerWithDBus(server);
+        {
+            auto *context = new CContextAudio(mode, runtime);
+            context->registerWithDBus(server);
+            return context;
+        }
         case CCoreFacadeConfig::Remote:
             return new CContextAudioProxy(CDBusServer::coreServiceName(connection), connection, mode, runtime);
         case CCoreFacadeConfig::NotUsed:
             SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Empty context not supported for audio (since AFV)");
             return nullptr;
+        default: SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Unknown context mode"); return nullptr;
         }
     }
 

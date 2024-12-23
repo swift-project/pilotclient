@@ -85,18 +85,6 @@ namespace swift::core::context
                                "voiceClientFailure", this, SIGNAL(voiceClientFailure(swift::misc::CStatusMessage)));
         Q_ASSERT(s);
 
-        /**
-        s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                    "changedAudioVolume", this, SIGNAL(changedAudioVolume(int)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                "changedOutputMute", this, SIGNAL(changedOutputMute(bool)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                "changedLocalAudioDevices", this,
-        SIGNAL(changedLocalAudioDevices(swift::misc::audio::CAudioDeviceInfoList)));
-        **/
-
         this->relayBaseClassSignals(serviceName, connection, IContextAudio::ObjectPath(),
                                     IContextAudio::InterfaceName());
     }
