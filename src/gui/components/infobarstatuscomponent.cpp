@@ -26,7 +26,6 @@
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "gui/led.h"
-#include "misc/audio/audioutils.h"
 #include "misc/network/server.h"
 #include "misc/simulation/simulatorplugininfo.h"
 
@@ -47,9 +46,6 @@ namespace swift::gui::components
         this->initLeds();
         this->adjustTextSize();
 
-        ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(ui->lbl_Audio, &QLabel::customContextMenuRequested, this,
-                &CInfoBarStatusComponent::onCustomAudioContextMenuRequested);
         connect(ui->comp_XpdrMode, &CTransponderModeComponent::changed, this,
                 &CInfoBarStatusComponent::transponderModeChanged);
 
@@ -190,31 +186,6 @@ namespace swift::gui::components
             break;
         case CConnectionStatus::Connecting: ui->led_Network->setTriStateColor(CLedWidget::Yellow); break;
         default: ui->led_Network->setOn(false); break;
-        }
-    }
-
-    void CInfoBarStatusComponent::onCustomAudioContextMenuRequested(const QPoint &position)
-    {
-        const QWidget *sender = qobject_cast<QWidget *>(QWidget::sender());
-        Q_ASSERT_X(sender, Q_FUNC_INFO, "Missing sender");
-        const QPoint globalPosition = sender->mapToGlobal(position);
-
-        QMenu menuAudio(this);
-        menuAudio.addAction("Toogle mute");
-
-        if (CBuildConfig::isRunningOnWindowsNtPlatform()) { menuAudio.addAction("Mixer"); }
-
-        const QAction *selectedItem = menuAudio.exec(globalPosition);
-        if (selectedItem)
-        {
-            // http://forum.technical-assistance.co.uk/sndvol32exe-command-line-parameters-vt1348.html
-            const QList<QAction *> actions = menuAudio.actions();
-            if (selectedItem == actions.at(0))
-            {
-                // toggle MUTED
-                sGui->getCContextAudioBase()->setOutputMute(!sGui->getCContextAudioBase()->isOutputMuted());
-            }
-            else if (actions.size() > 1 && selectedItem == actions.at(1)) { startWindowsMixer(); }
         }
     }
 
