@@ -462,7 +462,7 @@ namespace swift::core
             CContextNetwork(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
             //! Register myself in DBus
-            CContextNetwork *registerWithDBus(swift::misc::CDBusServer *server);
+            void registerWithDBus(swift::misc::CDBusServer *server);
 
             //! Set the provider
             void setSimulationEnvironmentProvider(swift::misc::simulation::ISimulationEnvironmentProvider *provider);

@@ -24,9 +24,13 @@ namespace swift::core::context
     {
         switch (mode)
         {
-        case CCoreFacadeConfig::Local:
+        case CCoreFacadeConfig::Local: return new CContextOwnAircraft(mode, parent);
         case CCoreFacadeConfig::LocalInDBusServer:
-            return (new CContextOwnAircraft(mode, parent))->registerWithDBus(server);
+        {
+            auto *context = new CContextOwnAircraft(mode, parent);
+            context->registerWithDBus(server);
+            return context;
+        }
         case CCoreFacadeConfig::Remote:
             return new CContextOwnAircraftProxy(CDBusServer::coreServiceName(connection), connection, mode, parent);
         case CCoreFacadeConfig::NotUsed:

@@ -24,13 +24,12 @@ namespace swift::core::context
                 Qt::QueuedConnection);
     }
 
-    CContextAudio *CContextAudio::registerWithDBus(CDBusServer *server)
+    void CContextAudio::registerWithDBus(CDBusServer *server)
     {
-        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return this; }
+        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return; }
 
         // remark that registers all SIGNALS, not only the interface ons
         server->addObject(IContextAudio::ObjectPath(), this);
-        return this;
     }
 
     void CContextAudio::registerDevices(const CAudioDeviceInfoList &devices)

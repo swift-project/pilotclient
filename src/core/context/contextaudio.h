@@ -123,7 +123,7 @@ namespace swift::core
             void onChangedLocalDevices(const swift::misc::audio::CAudioDeviceInfoList &devices);
         };
 
-        //! Audio context interface
+        //! Audio context base class
         class SWIFT_CORE_EXPORT CContextAudioBase : public IContextAudio, public swift::misc::CIdentifiable
         {
             Q_OBJECT

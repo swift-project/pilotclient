@@ -216,7 +216,7 @@ namespace swift::core
             CContextOwnAircraft(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
             //! Register myself in DBus
-            CContextOwnAircraft *registerWithDBus(swift::misc::CDBusServer *server);
+            void registerWithDBus(swift::misc::CDBusServer *server);
 
         private:
             swift::misc::simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
