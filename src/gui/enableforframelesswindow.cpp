@@ -21,7 +21,6 @@
 #include <QWidget>
 #include <QtGlobal>
 
-#include "gui/foreignwindows.h"
 #include "gui/guiutility.h"
 #include "misc/icons.h"
 #include "misc/stringutils.h"

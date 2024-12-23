@@ -18,7 +18,6 @@
 #include "gui/components/maininfoareacomponent.h"
 #include "gui/components/settingscomponent.h"
 #include "gui/copyxswiftbusdialog.h"
-#include "gui/foreignwindows.h"
 #include "gui/guiactionbind.h"
 #include "gui/guiapplication.h"
 #include "misc/aviation/altitude.h"
@@ -86,26 +85,6 @@ void SwiftGuiStd::onMenuClicked()
     }
 }
 
-void SwiftGuiStd::attachSimulatorWindow()
-{
-    this->activateWindow(); // attaching requires active window
-    QWindow *w = CForeignWindows::getFirstFoundSimulatorWindow();
-    if (!w)
-    {
-        CLogMessage(this).warning(u"No simulator window found");
-        return;
-    }
-    const bool a = CForeignWindows::setSimulatorAsParent(w, this);
-    if (a) { CLogMessage(this).info(u"Attached to simulator"); }
-    else { CLogMessage(this).warning(u"No simulator window found"); }
-}
-
-void SwiftGuiStd::detachSimulatorWindow()
-{
-    if (CForeignWindows::unsetSimulatorAsParent(this)) { CLogMessage(this).info(u"Detached simulator window"); }
-    else { CLogMessage(this).info(u"No simulator window to detach"); }
-}
-
 void SwiftGuiStd::initMenus()
 {
     Q_ASSERT_X(ui->menu_InfoAreas, Q_FUNC_INFO, "No menu");
@@ -114,13 +93,6 @@ void SwiftGuiStd::initMenus()
     sGui->addMenuFile(*ui->menu_File);
     sGui->addMenuInternals(*ui->menu_Internals);
     sGui->addMenuWindow(*ui->menu_Window);
-    ui->menu_Window->addSeparator();
-    QAction *a = ui->menu_Window->addAction("Attach simulator window");
-    bool c = connect(a, &QAction::triggered, this, &SwiftGuiStd::attachSimulatorWindow);
-    Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
-    a = ui->menu_Window->addAction("Detach simulator window");
-    c = connect(a, &QAction::triggered, this, &SwiftGuiStd::detachSimulatorWindow);
-    Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
 
     sGui->addMenuHelp(*ui->menu_Help);
     ui->menu_InfoAreas->addActions(ui->comp_MainInfoArea->getInfoAreaSelectActions(true, ui->menu_InfoAreas));
@@ -130,7 +102,7 @@ void SwiftGuiStd::initMenus()
         QAction *act = new QAction(CIcons::swift16(), "Copy xswiftbus dialog");
         ui->menu_File->insertAction(ui->menu_File->actions().at(5), act);
         // clang-format off
-        c = connect(act, &QAction::triggered, this,
+        bool c = connect(act, &QAction::triggered, this,
             [=] { this->copyXSwiftBusDialog(false); }, Qt::QueuedConnection);
         // clang-format on
         Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");

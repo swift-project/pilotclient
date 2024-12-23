@@ -3,7 +3,6 @@
 
 add_library(gui SHARED
         showhidebar.cpp
-        foreignwindows.h
         dockwidget.cpp
         labelandicon.cpp
         altitudeedit.cpp
@@ -794,7 +793,6 @@ add_library(gui SHARED
         elidedpushbutton.h
         enableforframelesswindow.cpp
         overlaymessages.cpp
-        foreignwindows.cpp
         stylesheetutility.cpp
         dropbase.h
         eventfilter.cpp
