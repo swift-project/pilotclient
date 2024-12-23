@@ -40,13 +40,6 @@ namespace swift::core
               m_simulator(allTheSame), m_dbusAddress(dbusBootstrapAddress)
         {}
 
-        //! Constructor
-        CCoreFacadeConfig(ContextMode application, ContextMode audio, ContextMode network, ContextMode ownAircraft,
-                          ContextMode simulator, const QString &dbusBootstrapAddress = "")
-            : m_application(application), m_audio(audio), m_network(network), m_ownAircraft(ownAircraft),
-              m_simulator(simulator), m_dbusAddress(dbusBootstrapAddress)
-        {}
-
         //! Application mode
         ContextMode getModeApplication() const { return m_application; }
 
