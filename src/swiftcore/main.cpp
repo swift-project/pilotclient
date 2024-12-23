@@ -24,7 +24,6 @@ int main(int argc, char *argv[])
     QApplication qa(argc, argv);
     Q_UNUSED(qa) // init of qa is required, but qa not used
 
-    // initWindowsAudioDevices();
     CCrashHandler::instance()->init();
     CGuiApplication a(CApplicationInfo::swiftCore(), CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
     a.addWindowStateOption();

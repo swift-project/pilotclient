@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
     QApplication qa(argc, argv);
     Q_UNUSED(qa) // application init needed
 
-    // initWindowsAudioDevices();
     CCrashHandler::instance()->init();
 
     // at shutdown the whole application will be "deleted" outside the block
