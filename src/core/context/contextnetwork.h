@@ -337,9 +337,6 @@ namespace swift::core::context
         //! Enable storing of aircraft parts
         virtual void enableAircraftPartsHistory(bool enabled) = 0;
 
-        //! Version of the underlying library (e.g. VATLIB)
-        virtual QString getLibraryInfo(bool detailed) const = 0;
-
         //! Statistics info
         virtual QString getNetworkStatistics(bool reset, const QString &separator) = 0;
 

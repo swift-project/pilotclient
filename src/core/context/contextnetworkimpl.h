@@ -439,9 +439,6 @@ namespace swift::core
             //! \copydoc swift::core::context::IContextNetwork::getFastPositionEnabledCallsigns
             virtual swift::misc::aviation::CCallsignSet getFastPositionEnabledCallsigns() const override;
 
-            //! \copydoc swift::core::context::IContextNetwork::getLibraryInfo
-            virtual QString getLibraryInfo(bool detailed) const override;
-
             //! \copydoc swift::core::context::IContextNetwork::testCreateDummyOnlineAtcStations
             virtual void testCreateDummyOnlineAtcStations(int number) override;
 

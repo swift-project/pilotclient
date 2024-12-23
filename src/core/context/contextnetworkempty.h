@@ -251,14 +251,6 @@ namespace swift::core::context
         //! \copydoc IContextNetwork::requestAtisUpdates
         virtual void requestAtisUpdates() override { logEmptyContextWarning(Q_FUNC_INFO); }
 
-        //! \copydoc IContextNetwork::getLibraryInfo
-        virtual QString getLibraryInfo(bool detailed) const override
-        {
-            Q_UNUSED(detailed)
-            logEmptyContextWarning(Q_FUNC_INFO);
-            return QString("N/A");
-        }
-
         //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
         virtual void testCreateDummyOnlineAtcStations(int number) override
         {

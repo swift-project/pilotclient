@@ -1380,16 +1380,6 @@ namespace swift::core::context
         return m_fsdClient->getInterimPositionReceivers();
     }
 
-    QString CContextNetwork::getLibraryInfo(bool detailed) const
-    {
-        if (!this->canUseFsd()) { return QString(); }
-        if (this->isDebugEnabled())
-        {
-            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << detailed;
-        }
-        return "";
-    }
-
     void CContextNetwork::testRequestAircraftConfig(const CCallsign &callsign)
     {
         if (!this->canUseFsd()) { return; }

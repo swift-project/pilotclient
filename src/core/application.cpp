@@ -509,11 +509,7 @@ namespace swift::core
                       QSysInfo::buildAbi() % separator % u"Build CPU: " % QSysInfo::buildCpuArchitecture() % separator %
                       CBuildConfig::compiledWithInfoLong();
 
-        if (this->supportsContexts())
-        {
-            str += (separator % u"Supporting contexts");
-            if (this->getIContextNetwork()) { str += (separator % this->getIContextNetwork()->getLibraryInfo(true)); }
-        }
+        if (this->supportsContexts()) { str += (separator % u"Supporting contexts"); }
 
         return str;
     }

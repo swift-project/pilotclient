@@ -226,9 +226,6 @@ namespace swift::core
             virtual swift::misc::aviation::CAircraftPartsList
             getRemoteAircraftParts(const swift::misc::aviation::CCallsign &callsign) const override;
 
-            //! \copydoc swift::core::context::IContextNetwork::getLibraryInfo
-            virtual QString getLibraryInfo(bool detailed) const override;
-
             //! \copydoc swift::core::context::IContextNetwork::isAircraftPartsHistoryEnabled
             virtual bool isAircraftPartsHistoryEnabled() const override;
 
