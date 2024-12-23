@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
 
     const QString dBusAddress(a.getCmdDBusAddressValue());
-    a.initContextsAndStartCoreFacade(CCoreFacadeConfig::forCoreAllLocalInDBus(dBusAddress));
+    a.initContextsAndStartCoreFacade(CCoreFacadeConfig(CCoreFacadeConfig::LocalInDBusServer, dBusAddress));
     if (!a.start())
     {
         a.gracefulShutdown();

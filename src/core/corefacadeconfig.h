@@ -12,7 +12,7 @@
 
 namespace swift::core
 {
-    //! Helper to correctly run a context
+    //! Configuration object for the contexts
     class SWIFT_CORE_EXPORT CCoreFacadeConfig
     {
     public:
@@ -20,43 +20,24 @@ namespace swift::core
         enum ContextMode
         {
             NotUsed, //!< during shutdown or not used at all
-            Local, //!< in same process
-            LocalInDBusServer, //!< in same process, also registered in DBus, will be accessed by proxy objects too
-            Remote //!< proxy object
+            Local, //!< context runs in same process
+            LocalInDBusServer, //!< context runs in same process. It is also registered in DBus to be accessed by proxy
+                               //!< objects
+            Remote //!< context runs in a different process. Access will happen via proxy object
         };
 
     private:
-        ContextMode m_application;
-        ContextMode m_audio;
-        ContextMode m_network;
-        ContextMode m_ownAircraft;
-        ContextMode m_simulator;
+        ContextMode m_contextMode; // All contexts run in the same mode
         QString m_dbusAddress; //!< for boot strapping
 
     public:
         //! Constructor
-        CCoreFacadeConfig(ContextMode allTheSame = NotUsed, const QString &dbusBootstrapAddress = "")
-            : m_application(allTheSame), m_audio(allTheSame), m_network(allTheSame), m_ownAircraft(allTheSame),
-              m_simulator(allTheSame), m_dbusAddress(dbusBootstrapAddress)
+        explicit CCoreFacadeConfig(ContextMode contextMode, const QString &dbusBootstrapAddress = "")
+            : m_contextMode(contextMode), m_dbusAddress(dbusBootstrapAddress)
         {}
 
-        //! Application mode
-        ContextMode getModeApplication() const { return m_application; }
-
-        //! Audio mode
-        ContextMode getModeAudio() const { return m_audio; }
-
-        //! Network mode
-        ContextMode getModeNetwork() const { return m_network; }
-
-        //! Own aircraft
-        ContextMode getModeOwnAircraft() const { return m_ownAircraft; }
-
-        //! Simulator mode
-        ContextMode getModeSimulator() const { return m_simulator; }
-
-        //! Local core?
-        bool hasLocalCore() const { return m_application == Local || m_application == LocalInDBusServer; }
+        //! Mode
+        ContextMode getMode() const { return m_contextMode; }
 
         //! Requires server (at least one in server)?
         bool requiresDBusSever() const;
@@ -69,30 +50,6 @@ namespace swift::core
 
         //! DBus address?
         bool hasDBusAddress() const { return !m_dbusAddress.isEmpty(); }
-
-        //! Any context in given mode
-        bool any(ContextMode mode) const;
-
-        //! All contexts in given mode
-        bool all(ContextMode mode) const;
-
-        //! Any remote context?
-        bool anyRemote() const;
-
-        //! Any local in DBus context?
-        bool anyLocalInDBusServer() const;
-
-        //! Predefined for Core
-        static CCoreFacadeConfig forCoreAllLocalInDBus(const QString &dbusBootstrapAddress = "");
-
-        //! Predefined, completely local (e.g. for unit tests)
-        static CCoreFacadeConfig local(const QString &dbusBootstrapAddress = "");
-
-        //! Predefined, completely remote
-        static CCoreFacadeConfig remote(const QString &dbusBootstrapAddress = "");
-
-        //! Predefined, all empty configs (normally used when the real config can only be determined later)
-        static CCoreFacadeConfig allEmpty();
     };
 } // namespace swift::core
 #endif // SWIFT_CORE_COREFACADECONFIG_H

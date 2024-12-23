@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QString>
 
+#include "core/coremodeenums.h"
 #include "gui/guiapplication.h"
 
 /*!
@@ -36,6 +37,9 @@ protected:
     virtual swift::misc::CStatusMessageList startHookIn() override;
 
 private:
+    static swift::core::CCoreFacadeConfig coreModeToCoreFacadeConfig(swift::core::CoreModes::CoreMode,
+                                                                     const QString &dBusAddress);
+
     QCommandLineOption m_cmdFacadeMode { { "c", "core" },
                                          QCoreApplication::translate("main", "Core mode: (d)istributed, (s)tandalone."),
                                          "coremode" }; //!< Facade startup mode

@@ -62,14 +62,7 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
         msgs.push_back(m);
     }
 
-    CCoreFacadeConfig runtimeConfig;
-    switch (coreMode)
-    {
-    case CoreModes::Distributed: runtimeConfig = CCoreFacadeConfig::remote(dBusAddress); break;
-    default:
-    case CoreModes::Standalone: runtimeConfig = CCoreFacadeConfig::local(dBusAddress); break;
-    }
-
+    CCoreFacadeConfig runtimeConfig = coreModeToCoreFacadeConfig(coreMode, dBusAddress);
     const CStatusMessageList contextMsgs = this->initContextsAndStartCoreFacade(runtimeConfig);
     msgs.push_back(contextMsgs);
     return contextMsgs;
@@ -94,4 +87,15 @@ bool CSwiftGuiStdApplication::parsingHookIn()
 CSwiftGuiStdApplication *CSwiftGuiStdApplication::instance()
 {
     return qobject_cast<CSwiftGuiStdApplication *>(CApplication::instance());
+}
+
+CCoreFacadeConfig CSwiftGuiStdApplication::coreModeToCoreFacadeConfig(CoreModes::CoreMode coreMode,
+                                                                      const QString &dBusAddress)
+{
+    switch (coreMode)
+    {
+    case CoreModes::Distributed: return CCoreFacadeConfig(CCoreFacadeConfig::Remote, dBusAddress);
+    case CoreModes::Standalone: return CCoreFacadeConfig(CCoreFacadeConfig::Local, dBusAddress); break;
+    default: Q_ASSERT_X(false, Q_FUNC_INFO, "Not handled core mode");
+    }
 }

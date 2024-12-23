@@ -106,7 +106,7 @@ namespace swift::core
 
         // shared state infrastructure
         m_dataLinkDBus = new shared_state::CDataLinkDBus(this);
-        switch (m_config.getModeApplication())
+        switch (m_config.getMode())
         {
         case CCoreFacadeConfig::NotUsed:
         case CCoreFacadeConfig::Local: m_dataLinkDBus->initializeLocal(nullptr); break;
@@ -120,13 +120,14 @@ namespace swift::core
         // shared log history
         m_logHistorySource = new CLogHistorySource(this);
         m_logHistorySource->initialize(m_dataLinkDBus);
-        if (m_config.hasLocalCore())
+        if (m_config.getMode() == CCoreFacadeConfig::Local ||
+            m_config.getMode() == CCoreFacadeConfig::LocalInDBusServer)
         {
             m_logHistory = new CLogHistory(this);
             m_logHistory->initialize(m_dataLinkDBus);
         }
 
-        if (m_config.all(CCoreFacadeConfig::NotUsed))
+        if (m_config.getMode() == CCoreFacadeConfig::NotUsed)
         {
             m_initalized = true;
             return;
@@ -134,28 +135,25 @@ namespace swift::core
 
         // contexts
         if (m_contextApplication) { m_contextApplication->deleteLater(); }
-        m_contextApplication =
-            IContextApplication::create(this, m_config.getModeApplication(), m_dbusServer, m_dbusConnection);
+        m_contextApplication = IContextApplication::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection);
         times.insert("Application", time.restart());
 
         if (m_contextAudio) { m_contextAudio->deleteLater(); }
         m_contextAudio = qobject_cast<CContextAudioBase *>(
-            IContextAudio::create(this, m_config.getModeAudio(), m_dbusServer, m_dbusConnection));
+            IContextAudio::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection));
         times.insert("Audio", time.restart());
 
         if (m_contextOwnAircraft) { m_contextOwnAircraft->deleteLater(); }
-        m_contextOwnAircraft =
-            IContextOwnAircraft::create(this, m_config.getModeOwnAircraft(), m_dbusServer, m_dbusConnection);
+        m_contextOwnAircraft = IContextOwnAircraft::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection);
         times.insert("Own aircraft", time.restart());
 
         if (m_contextSimulator) { m_contextSimulator->deleteLater(); }
-        m_contextSimulator =
-            IContextSimulator::create(this, m_config.getModeSimulator(), m_dbusServer, m_dbusConnection);
+        m_contextSimulator = IContextSimulator::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection);
         times.insert("Simulator", time.restart());
 
         // depends on own aircraft and simulator context, which is bad style
         if (m_contextNetwork) { m_contextNetwork->deleteLater(); }
-        m_contextNetwork = IContextNetwork::create(this, m_config.getModeNetwork(), m_dbusServer, m_dbusConnection);
+        m_contextNetwork = IContextNetwork::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection);
         times.insert("Network", time.restart());
 
         // checks --------------

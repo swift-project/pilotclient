@@ -86,7 +86,7 @@ namespace swift::core
 
     CApplication::CApplication(const QString &applicationName, CApplicationInfo::Application application, bool init)
         : CIdentifiable(this), m_accessManager(new QNetworkAccessManager(this)), m_applicationInfo(application),
-          m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::allEmpty())
+          m_applicationName(applicationName), m_coreFacadeConfig(CCoreFacadeConfig::NotUsed)
     {
         Q_ASSERT_X(!sApp, Q_FUNC_INFO, "already initialized");
         Q_ASSERT_X(QCoreApplication::instance(), Q_FUNC_INFO, "no application object");
@@ -457,7 +457,7 @@ namespace swift::core
         m_localSettingsLoaded = true;
 
         // trigger loading and saving of settings in appropriate scenarios
-        if (m_coreFacadeConfig.getModeApplication() != CCoreFacadeConfig::Remote)
+        if (m_coreFacadeConfig.getMode() != CCoreFacadeConfig::Remote)
         {
             // facade running here locally
             const CStatusMessage msg = CSettingsCache::instance()->loadFromStore();
@@ -727,7 +727,7 @@ namespace swift::core
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
         m_useContexts = true; // otherwise startCoreFacade will early-return
-        m_coreFacadeConfig = CCoreFacadeConfig::allEmpty();
+        m_coreFacadeConfig = CCoreFacadeConfig(CCoreFacadeConfig::NotUsed);
         const CStatusMessage msg = this->initLocalSettings();
         if (msg.isFailure()) { return msg; }
 
