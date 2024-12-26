@@ -33,7 +33,7 @@ namespace swift::misc::simulation
 
     public:
         //! Set the provider
-        void setOwnAircraftProvider(IAircraftModelSetProvider *provider) { this->setProvider(provider); }
+        void setAircraftModelSetProvider(IAircraftModelSetProvider *provider) { this->setProvider(provider); }
 
         //! \copydoc IAircraftModelSetProvider::getModelSet
         CAircraftModelList getModelSet() const;
