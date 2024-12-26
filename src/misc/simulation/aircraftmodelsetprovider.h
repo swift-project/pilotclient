@@ -15,6 +15,8 @@ namespace swift::misc::simulation
     //! Value object encapsulating a list of aircraft models
     class SWIFT_MISC_EXPORT IAircraftModelSetProvider : public IProvider
     {
+        virtual void anchor();
+
     public:
         //! Get the model set models
         virtual CAircraftModelList getModelSet() const = 0;
@@ -24,29 +26,6 @@ namespace swift::misc::simulation
 
         //! Constructor
         IAircraftModelSetProvider() = default;
-    };
-
-    //! Delegating class which can be directly used to access an \sa IAircraftModelSetProvider instance
-    class SWIFT_MISC_EXPORT CAircraftModelSetAware : public IProviderAware<IAircraftModelSetProvider>
-    {
-        virtual void anchor();
-
-    public:
-        //! Set the provider
-        void setAircraftModelSetProvider(IAircraftModelSetProvider *provider) { this->setProvider(provider); }
-
-        //! \copydoc IAircraftModelSetProvider::getModelSet
-        CAircraftModelList getModelSet() const;
-
-        //! \copydoc IAircraftModelSetProvider::getModelSetCount
-        int getModelSetCount() const;
-
-    protected:
-        //! Constructor
-        CAircraftModelSetAware(IAircraftModelSetProvider *modelSetProvider) : IProviderAware(modelSetProvider)
-        {
-            Q_ASSERT(modelSetProvider);
-        }
     };
 
 } // namespace swift::misc::simulation

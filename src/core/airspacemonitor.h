@@ -58,8 +58,7 @@ namespace swift::core
                                                                  // CAirspaceMonitor
         public swift::misc::network::CClientProvider, // those data will be provided from the class CAirspaceMonitor
         public swift::misc::simulation::COwnAircraftAware, // used to obtain in memory information about own aircraft
-        public swift::misc::simulation::CSimulationEnvironmentAware, // elevation info etc. from simulator
-        public swift::misc::simulation::CAircraftModelSetAware // model set for reverse lookup
+        public swift::misc::simulation::CSimulationEnvironmentAware // elevation info etc. from simulator
     {
         // CRemoteAircraftProvider is QObject
         Q_OBJECT
@@ -279,6 +278,7 @@ namespace swift::core
         }; //!< settings
         QQueue<swift::misc::aviation::CCallsign> m_queryAtis; //!< query the ATIS
         QQueue<swift::misc::aviation::CCallsign> m_queryPilot; //!< query the pilot data
+        misc::simulation::IAircraftModelSetProvider *m_modelSetProvider = nullptr; //!< model set for reverse lookup
         fsd::CFSDClient *m_fsdClient = nullptr; //!< corresponding network interface
         CAirspaceAnalyzer *m_analyzer = nullptr; //!< owned analyzer
         int m_maxDistanceNM = 125; //!< position range / FSD range

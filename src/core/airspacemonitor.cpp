@@ -57,9 +57,8 @@ namespace swift::core
     CAirspaceMonitor::CAirspaceMonitor(IOwnAircraftProvider *ownAircraftProvider,
                                        IAircraftModelSetProvider *modelSetProvider, CFSDClient *fsdClient,
                                        QObject *parent)
-        : CRemoteAircraftProvider(parent), COwnAircraftAware(ownAircraftProvider),
-          CAircraftModelSetAware(modelSetProvider), m_fsdClient(fsdClient),
-          m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, m_fsdClient, this))
+        : CRemoteAircraftProvider(parent), COwnAircraftAware(ownAircraftProvider), m_modelSetProvider(modelSetProvider),
+          m_fsdClient(fsdClient), m_analyzer(new CAirspaceAnalyzer(ownAircraftProvider, m_fsdClient, this))
     {
         this->setObjectName("CAirspaceMonitor");
         this->enableReverseLookupMessages(sApp->isDeveloperFlagSet() || CBuildConfig::isLocalDeveloperDebugBuild() ?
@@ -891,7 +890,7 @@ namespace swift::core
         const QString &liveryString, const QString &modelString, CAircraftModel::ModelType type,
         CStatusMessageList *log, bool runMatchinScript)
     {
-        const int modelSetCount = this->getModelSetCount();
+        const int modelSetCount = m_modelSetProvider->getModelSetCount();
         CCallsign::addLogDetailsToList(
             log, callsign, QStringLiteral("Reverse lookup (with FP data), model set count: %1").arg(modelSetCount),
             CAirspaceMonitor::getLogCategories());
@@ -901,7 +900,7 @@ namespace swift::core
         if (hasAnyId) { this->markAsSwiftClient(callsign); }
 
         CAircraftModel lookupModel; // result
-        const CAircraftModelList modelSet = this->getModelSet();
+        const CAircraftModelList modelSet = m_modelSetProvider->getModelSet();
         const CAircraftMatcherSetup setup = m_matchingSettings.get();
         do {
             // directly check model string
