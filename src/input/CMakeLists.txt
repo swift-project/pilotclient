@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 add_library(input SHARED
-        swiftinputexport.h
         joystick.cpp
         joystick.h
         keyboard.cpp
         keyboard.h
+        swiftinputexport.h
 )
 
 if(WIN32)
@@ -20,10 +20,10 @@ if(WIN32)
     target_link_libraries(input PUBLIC dxguid ole32 dinput8 User32)
 elseif(APPLE)
     target_sources(input PRIVATE
-        macos/joystickmacos.mm
         macos/joystickmacos.h
-        macos/keyboardmacos.mm
+        macos/joystickmacos.mm
         macos/keyboardmacos.h
+        macos/keyboardmacos.mm
         macos/macosinpututils.h
         macos/macosinpututils.mm
     )

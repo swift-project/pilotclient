@@ -87,9 +87,9 @@ add_library(misc SHARED
         aviation/modulator.cpp
         aviation/modulator.h
         aviation/navsystem.h
-        aviation/percallsign.h
         aviation/ongroundinfo.cpp
         aviation/ongroundinfo.h
+        aviation/percallsign.h
         aviation/registermetadataaviation.cpp
         aviation/registermetadataaviation.h
         aviation/selcal.cpp
@@ -170,13 +170,12 @@ add_library(misc SHARED
 
         # Main
         algorithm.h
-        applicationinfo.h
         applicationinfo.cpp
+        applicationinfo.h
         applicationinfolist.cpp
         applicationinfolist.h
         atomicfile.cpp
         atomicfile.h
-        swiftmiscexport.h
         cachesettingsutils.cpp
         cachesettingsutils.h
         collection.h
@@ -260,6 +259,7 @@ add_library(misc SHARED
         metaclass.h
         metadatautils.cpp
         metadatautils.h
+        misc.qrc
         namevariantpair.cpp
         namevariantpair.h
         namevariantpairlist.cpp
@@ -318,6 +318,7 @@ add_library(misc SHARED
         stringutils.h
         swiftdirectories.cpp
         swiftdirectories.h
+        swiftmiscexport.h
         threadutils.cpp
         threadutils.h
         timestampbased.cpp
@@ -344,7 +345,6 @@ add_library(misc SHARED
         windllutils.h
         worker.cpp
         worker.h
-        misc.qrc
 
         # Math
         math/constants.h
@@ -363,8 +363,6 @@ add_library(misc SHARED
         mixin/mixinstring.h
 
         # Network
-        network/data/lastserver.h
-        network/settings/serversettings.h
         network/authenticateduser.cpp
         network/authenticateduser.h
         network/client.cpp
@@ -375,6 +373,7 @@ add_library(misc SHARED
         network/clientprovider.h
         network/connectionstatus.cpp
         network/connectionstatus.h
+        network/data/lastserver.h
         network/ecosystem.cpp
         network/ecosystem.h
         network/ecosystemlist.cpp
@@ -411,6 +410,7 @@ add_library(misc SHARED
         network/server.h
         network/serverlist.cpp
         network/serverlist.h
+        network/settings/serversettings.h
         network/textmessage.cpp
         network/textmessage.h
         network/textmessagelist.cpp
@@ -455,6 +455,16 @@ add_library(misc SHARED
         pq/units.h
 
         # Shared state
+        sharedstate/activemutator.cpp
+        sharedstate/activemutator.h
+        sharedstate/activeobserver.cpp
+        sharedstate/activeobserver.h
+        sharedstate/datalink.cpp
+        sharedstate/datalink.h
+        sharedstate/datalinkdbus.cpp
+        sharedstate/datalinkdbus.h
+        sharedstate/datalinklocal.cpp
+        sharedstate/datalinklocal.h
         sharedstate/dbus/duplex.cpp
         sharedstate/dbus/duplex.h
         sharedstate/dbus/dupleximpl.cpp
@@ -467,16 +477,6 @@ add_library(misc SHARED
         sharedstate/dbus/hubimpl.h
         sharedstate/dbus/hubproxy.cpp
         sharedstate/dbus/hubproxy.h
-        sharedstate/activemutator.cpp
-        sharedstate/activemutator.h
-        sharedstate/activeobserver.cpp
-        sharedstate/activeobserver.h
-        sharedstate/datalink.cpp
-        sharedstate/datalink.h
-        sharedstate/datalinkdbus.cpp
-        sharedstate/datalinkdbus.h
-        sharedstate/datalinklocal.cpp
-        sharedstate/datalinklocal.h
         sharedstate/listjournal.cpp
         sharedstate/listjournal.h
         sharedstate/listmutator.cpp
@@ -495,156 +495,156 @@ add_library(misc SHARED
         sharedstate/scalarobserver.h
 
         # Simulation
-        simulation/distributorlistpreferences.h
+        simulation/aircraftmatchersetup.cpp
         simulation/aircraftmatchersetup.h
-        simulation/simulatorplugininfo.cpp
-        simulation/matchingutils.cpp
-        simulation/categorymatcher.cpp
-        simulation/matchingstatisticsentry.cpp
-        simulation/matchinglog.cpp
-        simulation/simulatorinfo.h
-        simulation/simulatedaircraftlist.h
-        simulation/ownaircraftproviderdummy.h
-        simulation/matchingscript.cpp
+        simulation/aircraftmodel.cpp
+        simulation/aircraftmodel.h
+        simulation/aircraftmodelinterfaces.h
+        simulation/aircraftmodellist.cpp
+        simulation/aircraftmodellist.h
+        simulation/aircraftmodelloader.cpp
+        simulation/aircraftmodelloader.h
+        simulation/aircraftmodelloaderprovider.cpp
         simulation/aircraftmodelloaderprovider.h
         simulation/aircraftmodelsetprovider.cpp
-        simulation/simulatorinternals.cpp
-        simulation/fscommon/vpilotrulesreader.h
-        simulation/fscommon/vpilotmodelruleset.cpp
-        simulation/fscommon/aircraftcfgparser.cpp
-        simulation/fscommon/vpilotrulesreader.cpp
-        simulation/fscommon/aircraftcfgentries.h
-        simulation/fscommon/fscommonutil.h
-        simulation/fscommon/bcdconversions.h
-        simulation/fscommon/fscommonutil.cpp
-        simulation/fscommon/fsdirectories.cpp
-        simulation/fscommon/aircraftcfgentrieslist.cpp
-        simulation/fscommon/fsdirectories.h
-        simulation/fscommon/bcdconversions.cpp
-        simulation/fscommon/aircraftcfgentrieslist.h
+        simulation/aircraftmodelsetprovider.h
+        simulation/aircraftmodelutils.cpp
+        simulation/aircraftmodelutils.h
+        simulation/airspaceaircraftsnapshot.cpp
+        simulation/airspaceaircraftsnapshot.h
+        simulation/autopublishdata.cpp
+        simulation/autopublishdata.h
+        simulation/backgroundvalidation.cpp
+        simulation/backgroundvalidation.h
+        simulation/categorymatcher.cpp
+        simulation/categorymatcher.h
+        simulation/data/lastmodel.h
+        simulation/data/modelcaches.cpp
+        simulation/data/modelcaches.h
+        simulation/distributor.cpp
+        simulation/distributor.h
+        simulation/distributorlist.cpp
+        simulation/distributorlist.h
+        simulation/distributorlistpreferences.cpp
+        simulation/distributorlistpreferences.h
+        simulation/flightgear/aircraftmodelloaderflightgear.cpp
+        simulation/flightgear/aircraftmodelloaderflightgear.h
+        simulation/flightgear/flightgearutil.cpp
+        simulation/flightgear/flightgearutil.h
         simulation/fscommon/aircraftcfgentries.cpp
+        simulation/fscommon/aircraftcfgentries.h
+        simulation/fscommon/aircraftcfgentrieslist.cpp
+        simulation/fscommon/aircraftcfgentrieslist.h
+        simulation/fscommon/aircraftcfgparser.cpp
+        simulation/fscommon/aircraftcfgparser.h
+        simulation/fscommon/bcdconversions.cpp
+        simulation/fscommon/bcdconversions.h
+        simulation/fscommon/fscommon.h
+        simulation/fscommon/fscommonutil.cpp
+        simulation/fscommon/fscommonutil.h
+        simulation/fscommon/fsdirectories.cpp
+        simulation/fscommon/fsdirectories.h
         simulation/fscommon/vpilotmodelrule.cpp
         simulation/fscommon/vpilotmodelrule.h
-        simulation/fscommon/fscommon.h
-        simulation/fscommon/aircraftcfgparser.h
+        simulation/fscommon/vpilotmodelruleset.cpp
         simulation/fscommon/vpilotmodelruleset.h
-        simulation/aircraftmodel.cpp
-        simulation/distributor.cpp
-        simulation/interpolation/interpolatorspline.h
-        simulation/distributorlist.cpp
-        simulation/registermetadatasimulation.cpp
-        simulation/interpolation/interpolatormulti.h
-        simulation/interpolation/interpolationsetupprovider.h
-        simulation/aircraftmodellist.h
-        simulation/interpolation/interpolationsetupprovider.cpp
-        simulation/interpolation/interpolationstatus.cpp
-        simulation/interpolation/interpolationstatus.h
-        simulation/interpolation/interpolatorlinear.h
-        simulation/backgroundvalidation.cpp
-        simulation/airspaceaircraftsnapshot.cpp
-        simulation/autopublishdata.h
+        simulation/fscommon/vpilotrulesreader.cpp
+        simulation/fscommon/vpilotrulesreader.h
+        simulation/fsx/fsx.h
+        simulation/fsx/simconnectutilities.cpp
+        simulation/fsx/simconnectutilities.h
+        simulation/interpolation/interpolant.h
+        simulation/interpolation/interpolationlogger.cpp
+        simulation/interpolation/interpolationlogger.h
+        simulation/interpolation/interpolationrenderingsetup.cpp
         simulation/interpolation/interpolationrenderingsetup.h
         simulation/interpolation/interpolationresult.cpp
         simulation/interpolation/interpolationresult.h
-        simulation/matchingscriptmisc.h
         simulation/interpolation/interpolationsetuplist.cpp
-        simulation/remoteaircraftprovider.h
-        simulation/interpolation/interpolant.h
-        simulation/ownaircraftprovider.cpp
-        simulation/backgroundvalidation.h
-        simulation/xplane/xswiftbusconfigwriter.cpp
-        simulation/xplane/navdatareference.h
-        simulation/xplane/navdatareference.cpp
-        simulation/xplane/xplaneutil.h
-        simulation/xplane/aircraftmodelloaderxplane.h
-        simulation/xplane/xplaneutil.cpp
-        simulation/xplane/qtfreeutils.h
-        simulation/xplane/aircraftmodelloaderxplane.cpp
-        simulation/xplane/xswiftbusconfigwriter.h
-        simulation/matchingutils.h
-        simulation/registermetadatasimulation.h
-        simulation/interpolation/interpolatorlinearpbh.h
-        simulation/fsx/simconnectutilities.h
-        simulation/fsx/simconnectutilities.cpp
-        simulation/fsx/fsx.h
-        simulation/aircraftmodelinterfaces.h
-        simulation/interpolation/interpolationlogger.h
-        simulation/interpolation/interpolatormulti.cpp
-        simulation/remoteaircraftprovider.cpp
-        simulation/modelconverterx.cpp
-        simulation/simulatorinfolist.h
-        simulation/simulationenvironmentprovider.cpp
+        simulation/interpolation/interpolationsetuplist.h
+        simulation/interpolation/interpolationsetupprovider.cpp
+        simulation/interpolation/interpolationsetupprovider.h
+        simulation/interpolation/interpolationstatus.cpp
+        simulation/interpolation/interpolationstatus.h
+        simulation/interpolation/interpolator.cpp
         simulation/interpolation/interpolator.h
-        simulation/interpolation/interpolatorspline.cpp
-        simulation/aircraftmodelloaderprovider.cpp
-        simulation/simulatorplugininfolist.h
-        simulation/remoteaircraftproviderdummy.cpp
-        simulation/interpolation/interpolationlogger.cpp
-        simulation/matchingscript.h
-        simulation/categorymatcher.h
-        simulation/flightgear/flightgearutil.h
-        simulation/flightgear/aircraftmodelloaderflightgear.h
-        simulation/flightgear/aircraftmodelloaderflightgear.cpp
-        simulation/flightgear/flightgearutil.cpp
-        simulation/aircraftmodelloader.h
-        simulation/simulatedaircraft.cpp
-        simulation/aircraftmodellist.cpp
-        simulation/aircraftmodel.h
-        simulation/interpolation/interpolatorlinear.cpp
-        simulation/data/lastmodel.h
-        simulation/data/modelcaches.h
-        simulation/data/modelcaches.cpp
-        simulation/airspaceaircraftsnapshot.h
         simulation/interpolation/interpolatorfunctions.h
-        simulation/ownaircraftprovider.h
-        simulation/distributorlistpreferences.cpp
+        simulation/interpolation/interpolatorlinear.cpp
+        simulation/interpolation/interpolatorlinear.h
         simulation/interpolation/interpolatorlinearpbh.cpp
-        simulation/reverselookup.h
-        simulation/autopublishdata.cpp
-        simulation/simulationenvironmentprovider.h
-        simulation/simulatorplugininfo.h
-        simulation/interpolation/interpolationrenderingsetup.cpp
-        simulation/simulatorinfo.cpp
+        simulation/interpolation/interpolatorlinearpbh.h
+        simulation/interpolation/interpolatormulti.cpp
+        simulation/interpolation/interpolatormulti.h
+        simulation/interpolation/interpolatorpbh.h
+        simulation/interpolation/interpolatorspline.cpp
+        simulation/interpolation/interpolatorspline.h
+        simulation/matchinglog.cpp
+        simulation/matchinglog.h
+        simulation/matchingscript.cpp
+        simulation/matchingscript.h
+        simulation/matchingscriptmisc.cpp
+        simulation/matchingscriptmisc.h
         simulation/matchingstatistics.cpp
+        simulation/matchingstatistics.h
+        simulation/matchingstatisticsentry.cpp
+        simulation/matchingstatisticsentry.h
+        simulation/matchingutils.cpp
+        simulation/matchingutils.h
+        simulation/modelconverterx.cpp
+        simulation/modelconverterx.h
+        simulation/ownaircraftprovider.cpp
+        simulation/ownaircraftprovider.h
         simulation/ownaircraftproviderdummy.cpp
+        simulation/ownaircraftproviderdummy.h
         simulation/partsstatus.cpp
         simulation/partsstatus.h
-        simulation/simulatorinfolist.cpp
-        simulation/aircraftmodelloader.cpp
-        simulation/distributor.h
-        simulation/matchinglog.h
+        simulation/registermetadatasimulation.cpp
+        simulation/registermetadatasimulation.h
+        simulation/remoteaircraftprovider.cpp
+        simulation/remoteaircraftprovider.h
+        simulation/remoteaircraftproviderdummy.cpp
         simulation/remoteaircraftproviderdummy.h
-        simulation/simulatorplugininfolist.cpp
-        simulation/aircraftmodelsetprovider.h
-        simulation/simulatorinternals.h
-        simulation/distributorlist.h
-        simulation/aircraftmodelutils.h
-        simulation/interpolation/interpolator.cpp
-        simulation/matchingstatistics.h
-        simulation/modelconverterx.h
+        simulation/reverselookup.h
+        simulation/settings/fgswiftbussettings.cpp
+        simulation/settings/fgswiftbussettings.h
+        simulation/settings/fgswiftbussettings.h
+        simulation/settings/interpolationrenderingsetupsettings.h
+        simulation/settings/modelmatchersettings.h
         simulation/settings/modelsettings.cpp
+        simulation/settings/modelsettings.h
         simulation/settings/simulatorsettings.cpp
+        simulation/settings/simulatorsettings.h
+        simulation/settings/swiftpluginsettings.cpp
+        simulation/settings/swiftpluginsettings.h
         simulation/settings/xswiftbussettings.cpp
         simulation/settings/xswiftbussettings.h
-        simulation/settings/fgswiftbussettings.h
         simulation/settings/xswiftbussettingsqtfree.h
-        simulation/settings/modelsettings.h
         simulation/settings/xswiftbussettingsqtfree.inc
-        simulation/settings/fgswiftbussettings.h
-        simulation/settings/fgswiftbussettings.cpp
-        simulation/settings/modelmatchersettings.h
-        simulation/settings/swiftpluginsettings.cpp
-        simulation/settings/interpolationrenderingsetupsettings.h
-        simulation/settings/simulatorsettings.h
-        simulation/settings/swiftpluginsettings.h
-        simulation/aircraftmatchersetup.cpp
-        simulation/matchingscriptmisc.cpp
+        simulation/simulatedaircraft.cpp
         simulation/simulatedaircraft.h
-        simulation/aircraftmodelutils.cpp
         simulation/simulatedaircraftlist.cpp
-        simulation/matchingstatisticsentry.h
-        simulation/interpolation/interpolationsetuplist.h
-        simulation/interpolation/interpolatorpbh.h
+        simulation/simulatedaircraftlist.h
+        simulation/simulationenvironmentprovider.cpp
+        simulation/simulationenvironmentprovider.h
+        simulation/simulatorinfo.cpp
+        simulation/simulatorinfo.h
+        simulation/simulatorinfolist.cpp
+        simulation/simulatorinfolist.h
+        simulation/simulatorinternals.cpp
+        simulation/simulatorinternals.h
+        simulation/simulatorplugininfo.cpp
+        simulation/simulatorplugininfo.h
+        simulation/simulatorplugininfolist.cpp
+        simulation/simulatorplugininfolist.h
+        simulation/xplane/aircraftmodelloaderxplane.cpp
+        simulation/xplane/aircraftmodelloaderxplane.h
+        simulation/xplane/navdatareference.cpp
+        simulation/xplane/navdatareference.h
+        simulation/xplane/qtfreeutils.h
+        simulation/xplane/xplaneutil.cpp
+        simulation/xplane/xplaneutil.h
+        simulation/xplane/xswiftbusconfigwriter.cpp
+        simulation/xplane/xswiftbusconfigwriter.h
 
         # Test
         test/testdata.cpp
