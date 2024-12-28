@@ -296,13 +296,6 @@ namespace swift::gui::components
         // add some space for frameless navigators where I can move the navigator
         QAction *a = nullptr; // new QAction(CIcons::empty16(), "move navigator here", this);
         bool c = false;
-        if (sGui)
-        {
-            a = new QAction(CIcons::swiftLauncher16(), "Start launcher", this);
-            c = connect(a, &QAction::triggered, sGui, &CGuiApplication::startLauncher);
-            Q_ASSERT(c);
-            this->addAction(a);
-        }
 
         // save
         a = new QAction(CIcons::save16(), "Save state", this);

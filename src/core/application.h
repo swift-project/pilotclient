@@ -146,15 +146,6 @@ namespace swift::core
         //! Version, name beta and dev info
         const QString &getApplicationNameVersionDetailed() const;
 
-        //! Executable names for the given applications
-        QString getExecutableForApplication(swift::misc::CApplicationInfo::Application application) const;
-
-        //! Start the launcher
-        bool startLauncher();
-
-        //! Start the launcher and quit
-        bool startLauncherAndQuit();
-
         //! Global setup
         //! \threadsafe
         data::CGlobalSetup getGlobalSetup() const;
