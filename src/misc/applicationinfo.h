@@ -29,10 +29,7 @@ namespace swift::misc
         enum Application
         {
             Unknown,
-            Launcher,
-            PilotClientCore,
-            PilotClientGui,
-            MappingTool,
+            PilotClient,
             UnitTest,
             Sample
         };

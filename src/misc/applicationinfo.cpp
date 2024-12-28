@@ -27,19 +27,13 @@ namespace swift::misc
     const QString &CApplicationInfo::getApplicationAsString() const
     {
         static const QString unknown("unknown");
-        static const QString launcher("launcher");
-        static const QString core("core");
-        static const QString gui("gui");
-        static const QString mapping("mapping tool");
+        static const QString pilotClient("swift");
         static const QString unitTest("unit test");
         static const QString sample("sample");
 
         switch (getApplication())
         {
-        case Launcher: return launcher;
-        case PilotClientCore: return core;
-        case PilotClientGui: return gui;
-        case MappingTool: return mapping;
+        case PilotClient: return pilotClient;
         case UnitTest: return unitTest;
         case Sample: return sample;
         default: break;
@@ -84,10 +78,7 @@ namespace swift::misc
     {
         switch (getApplication())
         {
-        case Launcher: return CIcons::SwiftLauncher16;
-        case PilotClientCore: return CIcons::SwiftCore16;
-        case PilotClientGui: return CIcons::Swift16;
-        case MappingTool: return CIcons::SwiftDatabase16;
+        case PilotClient: return CIcons::Swift16;
         default: break;
         }
         return CIcons::StandardIconUnknown16;
@@ -209,10 +200,7 @@ namespace swift::misc
         const QString a(QCoreApplication::instance()->applicationName().toLower());
         if (a.contains("test")) { return CApplicationInfo::UnitTest; } // names like testcore
         if (a.contains("sample")) { return CApplicationInfo::Sample; }
-        if (a.contains("core")) { return CApplicationInfo::PilotClientCore; }
-        if (a.contains("launcher")) { return CApplicationInfo::Launcher; }
-        if (a.contains("gui")) { return CApplicationInfo::PilotClientGui; }
-        if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
+        if (a.contains("swift")) { return CApplicationInfo::PilotClient; }
         return CApplicationInfo::Unknown;
     }
 } // namespace swift::misc
