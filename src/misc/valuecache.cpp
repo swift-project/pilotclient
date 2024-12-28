@@ -585,7 +585,7 @@ namespace swift::misc
         auto it =
             std::find_if(pages.cbegin(), pages.cend(), [cache](CValuePage *page) { return page->m_cache == cache; });
         if (it == pages.cend()) { return *new CValuePage(parent, cache); }
-        else { return **it; }
+        return **it;
     }
 
     struct CValuePage::Element

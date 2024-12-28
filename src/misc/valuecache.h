@@ -303,7 +303,6 @@ namespace swift::misc
         //! Mutex protecting operations which are critical on m_elements.
         mutable QRecursiveMutex m_mutex;
 
-    protected:
         //! Synchronously return a current value.
         //! \threadsafe
         CVariant getValueSync(const QString &key) { return std::get<0>(getValue(key)); }
