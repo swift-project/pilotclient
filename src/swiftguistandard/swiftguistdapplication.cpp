@@ -96,6 +96,8 @@ CCoreFacadeConfig CSwiftGuiStdApplication::coreModeToCoreFacadeConfig(CoreModes:
     {
     case CoreModes::Distributed: return CCoreFacadeConfig(CCoreFacadeConfig::Remote, dBusAddress);
     case CoreModes::Standalone: return CCoreFacadeConfig(CCoreFacadeConfig::Local, dBusAddress); break;
-    default: Q_ASSERT_X(false, Q_FUNC_INFO, "Not handled core mode");
+    default:
+        Q_ASSERT_X(false, Q_FUNC_INFO, "Not handled core mode");
+        return CCoreFacadeConfig(CCoreFacadeConfig::NotUsed, dBusAddress);
     }
 }
