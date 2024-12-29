@@ -98,7 +98,7 @@ namespace swift::core
             virtual int checkListeners() override;
 
             //! \copydoc swift::core::context::IContextSimulator::getSimulatorStatus
-            virtual int getSimulatorStatus() const override;
+            virtual ISimulator::SimulatorStatus getSimulatorStatus() const override;
 
             //! \copydoc swift::core::context::IContextSimulator::getSimulatorInternals
             virtual swift::misc::simulation::CSimulatorInternals getSimulatorInternals() const override;

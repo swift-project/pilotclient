@@ -188,10 +188,10 @@ namespace swift::core::context
         return m_plugins->checkAvailableListeners();
     }
 
-    int CContextSimulator::getSimulatorStatus() const
+    ISimulator::SimulatorStatus CContextSimulator::getSimulatorStatus() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return 0; }
+        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return ISimulator::Unspecified; }
         return m_simulatorPlugin.second->getSimulatorStatus();
     }
 

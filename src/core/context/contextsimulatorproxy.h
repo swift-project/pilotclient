@@ -81,7 +81,7 @@ namespace swift::core
             virtual int checkListeners() override;
 
             //! \copydoc swift::core::context::IContextSimulator::getSimulatorStatus
-            virtual int getSimulatorStatus() const override;
+            virtual ISimulator::SimulatorStatus getSimulatorStatus() const override;
 
             //! \copydoc swift::core::context::IContextSimulator::getAirportsInRange
             virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculatePosition) const override;

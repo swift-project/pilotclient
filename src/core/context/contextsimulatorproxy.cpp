@@ -131,9 +131,9 @@ namespace swift::core::context
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("setSimulatorSettings"), settings, simulatorInfo);
     }
 
-    int CContextSimulatorProxy::getSimulatorStatus() const
+    ISimulator::SimulatorStatus CContextSimulatorProxy::getSimulatorStatus() const
     {
-        return m_dBusInterface->callDBusRet<int>(QLatin1String("getSimulatorStatus"));
+        return m_dBusInterface->callDBusRet<ISimulator::SimulatorStatus>(QLatin1String("getSimulatorStatus"));
     }
 
     CAirportList CContextSimulatorProxy::getAirportsInRange(bool recalculatePosition) const

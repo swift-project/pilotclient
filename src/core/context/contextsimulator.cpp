@@ -49,11 +49,6 @@ namespace swift::core::context
         }
     }
 
-    ISimulator::SimulatorStatus IContextSimulator::getSimulatorStatusEnum() const
-    {
-        return static_cast<ISimulator::SimulatorStatus>(this->getSimulatorStatus());
-    }
-
     CSimulatorInfo IContextSimulator::getSimulatorInfo() const
     {
         return this->getSimulatorPluginInfo().getSimulatorInfo();
@@ -66,7 +61,7 @@ namespace swift::core::context
 
     bool IContextSimulator::isSimulatorSimulating() const
     {
-        if (!isSimulatorAvailable() || !getSimulatorStatusEnum().testFlag(ISimulator::Simulating)) { return false; }
+        if (!isSimulatorAvailable() || !getSimulatorStatus().testFlag(ISimulator::Simulating)) { return false; }
         return true;
     }
 } // namespace swift::core::context

@@ -67,10 +67,10 @@ namespace swift::core::context
         virtual int checkListeners() override { return 0; }
 
         //! \copydoc IContextSimulator::getSimulatorStatus
-        virtual int getSimulatorStatus() const override
+        virtual ISimulator::SimulatorStatus getSimulatorStatus() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return 0;
+            return ISimulator::Unspecified;
         }
 
         //! \copydoc IContextSimulator::stopSimulatorPlugin

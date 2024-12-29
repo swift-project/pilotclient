@@ -74,10 +74,6 @@ namespace swift::core::context
         //! Destructor
         ~IContextSimulator() override {}
 
-        //! Get simulator status as enum
-        //! \fixme To be removed with Qt 5.5 when getSimualtorStatus directly provides the enum
-        ISimulator::SimulatorStatus getSimulatorStatusEnum() const;
-
         // ---- some convenienc functions implemented on interface level
 
         //! Current simulator
@@ -169,7 +165,7 @@ namespace swift::core::context
         virtual void stopSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
 
         //! Simulator combined status
-        virtual int getSimulatorStatus() const = 0;
+        virtual ISimulator::SimulatorStatus getSimulatorStatus() const = 0;
 
         //! Simulator setup
         virtual swift::misc::simulation::CSimulatorInternals getSimulatorInternals() const = 0;
