@@ -73,6 +73,8 @@ namespace swift::config
         QStringList sl;
         if constexpr (CBuildConfig::isCompiledWithFs9Support()) { sl << "FS9"; }
         if constexpr (CBuildConfig::isCompiledWithFsxSupport()) { sl << "FSX"; }
+        if constexpr (CBuildConfig::isCompiledWithMSFSSupport()) { sl << "MSFS2020"; }
+        if constexpr (CBuildConfig::isCompiledWithMSFS2024Support()) { sl << "MSFS2024"; }
         if constexpr (CBuildConfig::isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
         if constexpr (CBuildConfig::isCompiledWithP3DSupport()) { sl << "P3D"; }
         if constexpr (CBuildConfig::isCompiledWithFGSupport()) { sl << "FG"; }
