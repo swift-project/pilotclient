@@ -99,12 +99,6 @@ namespace swift::core::context
         //! Aircraft has been moved from one location to another (changed scenery)
         void movedAircraft(const swift::misc::physical_quantities::CLength &distance);
 
-        //! Just airborne
-        void isTakingOff();
-
-        //! Just landed
-        void isTouchingDown();
-
     public slots:
         //! Get own aircraft
         virtual swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const = 0;

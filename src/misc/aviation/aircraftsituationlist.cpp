@@ -232,18 +232,6 @@ namespace swift::misc::aviation
         return this->size() - 1 == c; // all others not on ground
     }
 
-    bool CAircraftSituationList::isTakingOff(bool alreadySortedLatestFirst) const
-    {
-        const QPair<bool, COnGroundInfo::IsOnGround> r = this->isGndFlagStableChanging(alreadySortedLatestFirst);
-        return r.first && r.second == COnGroundInfo::NotOnGround;
-    }
-
-    bool CAircraftSituationList::isTouchingDown(bool alreadySortedLatestFirst) const
-    {
-        const QPair<bool, COnGroundInfo::IsOnGround> r = this->isGndFlagStableChanging(alreadySortedLatestFirst);
-        return r.first && r.second == COnGroundInfo::OnGround;
-    }
-
     bool CAircraftSituationList::isRotatingUp(bool alreadySortedLatestFirst) const
     {
         if (this->size() < 2) { return false; }

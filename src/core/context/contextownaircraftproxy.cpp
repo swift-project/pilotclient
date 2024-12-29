@@ -53,12 +53,6 @@ namespace swift::core::context
         s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                "movedAircraft", this, SIGNAL(movedAircraft(swift::misc::physical_quantities::CLength)));
         Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                               "isTakingOff", this, SIGNAL(isTakingOff()));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-                               "isTouchingDown", this, SIGNAL(isTouchingDown()));
-        Q_ASSERT(s);
 
         this->relayBaseClassSignals(serviceName, connection, IContextOwnAircraft::ObjectPath(),
                                     IContextOwnAircraft::InterfaceName());

@@ -196,16 +196,6 @@ namespace swift::core::context
             }
             emit this->movedAircraft(distance);
         }
-        else
-        {
-            const bool to = situations.isTakingOff(true);
-            if (to) { emit this->isTakingOff(); }
-            else
-            {
-                const bool td = situations.isTouchingDown(true);
-                if (td) { emit this->isTouchingDown(); }
-            }
-        }
     }
 
     CAircraftModel CContextOwnAircraft::reverseLookupModel(const CAircraftModel &model)

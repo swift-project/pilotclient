@@ -103,12 +103,6 @@ namespace swift::misc
             //! Is just touching down?
             bool isJustTouchingDown(bool alreadySortedLatestFirst = false) const;
 
-            //! Is taking off?
-            bool isTakingOff(bool alreadySortedLatestFirst = false) const;
-
-            //! Is touching down?
-            bool isTouchingDown(bool alreadySortedLatestFirst = false) const;
-
             //! Is rotating up?
             bool isRotatingUp(bool alreadySortedLatestFirst = false) const;
 
