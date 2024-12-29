@@ -67,9 +67,7 @@ namespace swift::config
         return devBuild;
     }
 
-    static QString boolToYesNo(bool v) { return v ? QStringLiteral("yes") : QStringLiteral("no"); }
-
-    const QString &CBuildConfig::compiledWithInfoShort()
+    const QString &CBuildConfig::compiledWithInfo()
     {
         static QString infoShort;
         QStringList sl;
@@ -81,17 +79,6 @@ namespace swift::config
         infoShort = sl.join(", ");
         if (infoShort.isEmpty()) { infoShort = "<none>"; }
         return infoShort;
-    }
-
-    const QString &CBuildConfig::compiledWithInfoLong()
-    {
-        static QString infoLong;
-        infoLong = infoLong.append(" FS9: ").append(boolToYesNo(isCompiledWithFs9Support()));
-        infoLong = infoLong.append(" FSX: ").append(boolToYesNo(isCompiledWithFsxSupport()));
-        infoLong = infoLong.append(" P3D: ").append(boolToYesNo(isCompiledWithP3DSupport()));
-        infoLong = infoLong.append(" XPlane: ").append(boolToYesNo(isCompiledWithXPlaneSupport()));
-        infoLong = infoLong.append(" FG: ").append(boolToYesNo(isCompiledWithFGSupport()));
-        return infoLong;
     }
 
     const QString &CBuildConfig::gitHubRepoUrl()

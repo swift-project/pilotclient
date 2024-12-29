@@ -466,7 +466,7 @@ namespace swift::core
                       boolToYesNo(CBuildConfig::isRunningOnUnixPlatform()) % separator % u"MacOS: " %
                       boolToYesNo(CBuildConfig::isRunningOnMacOSPlatform()) % separator % "Build Abi: " %
                       QSysInfo::buildAbi() % separator % u"Build CPU: " % QSysInfo::buildCpuArchitecture() % separator %
-                      CBuildConfig::compiledWithInfoLong();
+                      CBuildConfig::compiledWithInfo();
 
         if (this->supportsContexts()) { str += (separator % u"Supporting contexts"); }
 

@@ -63,14 +63,11 @@ namespace swift::config
         //! Running on Unix (Linux or Mac OS X) platform
         static constexpr bool isRunningOnUnixPlatform();
 
-        //! Info such as Win32, Win64, MacOs, Linux
+        //! Info such as Win32, Win64, macOS, Linux
         static const QString &getPlatformString();
 
-        //! Info string about compilation (short version)
-        static const QString &compiledWithInfoShort();
-
-        //! Info string about compilation (long version)
-        static const QString &compiledWithInfoLong();
+        //! Info string about compilation
+        static const QString &compiledWithInfo();
 
         //! Executable name for swift GUI, no(!) appendix
         static const QString &swiftGuiExecutableName();

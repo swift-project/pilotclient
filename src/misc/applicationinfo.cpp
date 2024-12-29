@@ -18,7 +18,7 @@ namespace swift::misc
 {
     CApplicationInfo::CApplicationInfo(Application app)
         : m_app(app), m_wordSize(CBuildConfig::buildWordSize()), m_exePath(QCoreApplication::applicationDirPath()),
-          m_version(CBuildConfig::getVersionString()), m_compileInfo(CBuildConfig::compiledWithInfoShort()),
+          m_version(CBuildConfig::getVersionString()), m_compileInfo(CBuildConfig::compiledWithInfo()),
           m_platform(CBuildConfig::getPlatformString()), m_process(CProcessInfo::currentProcess())
     {
         if (app == CApplicationInfo::Unknown) { m_app = guessApplication(); }
