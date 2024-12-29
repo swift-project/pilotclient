@@ -559,20 +559,6 @@ namespace swift::misc::simulation
         return ac.key(max);
     }
 
-    QString CAircraftModelList::findModelIconPathByModelString(const QString &modelString) const
-    {
-        if (modelString.isEmpty()) { return {}; }
-        const CAircraftModel m(findFirstByModelStringOrDefault(modelString, Qt::CaseInsensitive));
-        return m.getIconFile();
-    }
-
-    QString CAircraftModelList::findModelIconPathByCallsign(const CCallsign &callsign) const
-    {
-        if (callsign.isEmpty()) { return {}; }
-        const CAircraftModel m(findFirstByCallsignOrDefault(callsign));
-        return m.getIconFile();
-    }
-
     CAircraftModelList CAircraftModelList::findModelsWithoutExistingFile() const
     {
         return this->findBy([](const CAircraftModel &model) { return !model.hasExistingCorrespondingFile(); });

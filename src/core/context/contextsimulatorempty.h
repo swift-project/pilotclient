@@ -288,14 +288,6 @@ namespace swift::core::context
             return swift::misc::physical_quantities::CTime();
         }
 
-        //! \copydoc IContextSimulator::iconForModel
-        virtual swift::misc::CPixmap iconForModel(const QString &modelString) const override
-        {
-            Q_UNUSED(modelString)
-            logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::CPixmap();
-        }
-
         //! \copydoc IContextSimulator::followAircraft
         virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override
         {

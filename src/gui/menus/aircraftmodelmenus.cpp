@@ -96,15 +96,6 @@ namespace swift::gui::menus
                 }
             }
 
-            if (m_messageFrame && !model.getIconFile().isEmpty())
-            {
-                added = true;
-                menuActions.addMenuSimulator();
-                m_iconAction =
-                    menuActions.addAction(m_iconAction, CIcons::appAircraft16(), "Display icon",
-                                          CMenuAction::pathSimulator(), { this, &CShowSimulatorFileMenu::displayIcon });
-            }
-
             if (added) { menuActions.addSeparator(CMenuAction::pathSimulator()); }
         }
         this->nestedCustomMenu(menuActions);
@@ -129,18 +120,6 @@ namespace swift::gui::menus
             if (m_messageFrame) { m_messageFrame->showOverlayHTMLMessage(m); }
             CLogMessage::preformatted(m);
         }
-    }
-
-    void CShowSimulatorFileMenu::displayIcon()
-    {
-        const CAircraftModelView *mv = modelView();
-        if (!mv->hasSingleSelectedRow()) { return; }
-        const CAircraftModel model(mv->selectedObject());
-        if (model.getIconFile().isEmpty()) { return; }
-        CStatusMessage msg(this);
-        const CPixmap pm(model.loadIcon(msg));
-        if (msg.isSuccess()) { m_messageFrame->showOverlayImage(pm); }
-        else { CLogMessage::preformatted(msg); }
     }
 
     void CShowSimulatorFileMenu::startModelConverterX()

@@ -113,9 +113,6 @@ namespace swift::gui
             //! Aircraft selected (in view)
             void onAircraftSelectedInView(const QModelIndex &index);
 
-            //! Model selected (in view)
-            void onModelSelectedInView(const QModelIndex &index);
-
             //! Save changed aircraft
             void onSaveAircraft();
 

@@ -162,13 +162,6 @@ namespace swift::misc::simulation::fscommon
         //! To aircraft model
         swift::misc::simulation::CAircraftModel toAircraftModel() const;
 
-        //! Thumbnail.jpg path if possible
-        QString getThumbnailFileNameGuess() const;
-
-        //! Thumbnail.jpg path if possible, and checked if file exists
-        //! \remark checks file existence, consider I/O load
-        QString getThumbnailFileNameChecked() const;
-
         //! \copydoc swift::misc::mixin::Index::propertyByIndex
         QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
 

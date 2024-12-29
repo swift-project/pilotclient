@@ -120,7 +120,6 @@ namespace swift::gui::models
             m_columns.addColumn(CColumn::standardString("filename", CAircraftModel::IndexFileName));
             m_columns.addColumn(CColumn::standardString("file ts.", "file timestamp",
                                                         CAircraftModel::IndexFileTimestampFormattedYmdhms));
-            m_columns.addColumn(CColumn::standardString("icon", CAircraftModel::IndexIconPath));
             m_columns.addColumn(CColumn::standardString("version", CAircraftModel::IndexVersion));
             m_columns.addColumn(CColumn::standardString("changed", CAircraftModel::IndexUtcTimestampFormattedYmdhms));
 

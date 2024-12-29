@@ -263,9 +263,6 @@ namespace swift::core::context
         //! Is available simulator simulating? Returns false if no simulator is available
         bool isSimulatorSimulating() const;
 
-        //! Icon representing the model
-        virtual swift::misc::CPixmap iconForModel(const QString &modelString) const = 0;
-
         //! Get mapping messages
         virtual swift::misc::CStatusMessageList
         getMatchingMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;

@@ -406,9 +406,6 @@ namespace swift::misc
             //! Difference of network and (rendered) livery code
             QString getNetworkModelLiveryDifference() const;
 
-            //! \copydoc swift::misc::simulation::CAircraftModel::getIconFile
-            const QString &getIconFile() const { return m_models[CurrentModel].getIconFile(); }
-
             //! Get model string
             const QString &getModelString() const { return m_models[CurrentModel].getModelString(); }
 

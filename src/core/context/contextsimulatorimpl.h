@@ -185,9 +185,6 @@ namespace swift::core
             virtual swift::misc::CStatusMessageList
             getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
 
-            //! \copydoc swift::core::context::IContextSimulator::iconForModel
-            virtual swift::misc::CPixmap iconForModel(const QString &modelString) const override;
-
             //! \copydoc swift::core::context::IContextSimulator::followAircraft
             virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override;
 

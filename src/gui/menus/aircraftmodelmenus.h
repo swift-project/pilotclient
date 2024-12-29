@@ -67,7 +67,6 @@ namespace swift::gui
 
         private:
             void showSimulatorFile(); //!< simulator file
-            void displayIcon(); //!< aircraft icon if any
             void startModelConverterX(); //!< show in model converter X
 
             swift::gui::COverlayMessagesFrame *m_messageFrame = nullptr;

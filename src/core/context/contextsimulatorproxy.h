@@ -174,9 +174,6 @@ namespace swift::core
             //! \copydoc swift::core::context::IContextSimulator::getTimeSynchronizationOffset
             virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override;
 
-            //! \copydoc swift::core::context::IContextSimulator::iconForModel
-            virtual swift::misc::CPixmap iconForModel(const QString &modelString) const override;
-
             //! \copydoc swift::core::context::IContextSimulator::followAircraft
             virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override;
 

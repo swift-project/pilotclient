@@ -99,7 +99,6 @@ namespace swift::misc::simulation::fscommon
         model.setName(this->getSimName());
         model.setMSecsSinceEpoch(m_timestampMSecsSinceEpoch); // aircraft.cfg file timestamp
         model.setFileTimestamp(m_timestampMSecsSinceEpoch);
-        model.setIconFile(this->getThumbnailFileNameChecked());
 
         const QString designator(CAircraftIcaoCode::normalizeDesignator(this->getAtcModel()));
         CAircraftIcaoCode aircraft(CAircraftIcaoCode::isValidDesignator(designator) ?
@@ -123,23 +122,6 @@ namespace swift::misc::simulation::fscommon
         const CDistributor distributor(this->getCreatedBy());
         model.setDistributor(distributor);
         return model;
-    }
-
-    QString CAircraftCfgEntries::getThumbnailFileNameGuess() const
-    {
-        if (m_texture.isEmpty()) { return {}; }
-        if (m_fileName.isEmpty()) { return {}; }
-        QString fn = QDir::cleanPath(this->getFileDirectory() + QDir::separator() + "texture." + m_texture +
-                                     QDir::separator() + "thumbnail.jpg");
-        return fn;
-    }
-
-    QString CAircraftCfgEntries::getThumbnailFileNameChecked() const
-    {
-        const QString f(getThumbnailFileNameGuess());
-        if (f.isEmpty()) { return {}; }
-        if (QFile(f).exists()) { return f; }
-        return {};
     }
 
     QVariant CAircraftCfgEntries::propertyByIndex(swift::misc::CPropertyIndexRef index) const

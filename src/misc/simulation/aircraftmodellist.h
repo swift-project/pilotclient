@@ -261,12 +261,6 @@ namespace swift::misc
             //! Find by categories
             CAircraftModelList findByCategories(const aviation::CAircraftCategoryList &categories) const;
 
-            //! Model icon path
-            QString findModelIconPathByModelString(const QString &modelString) const;
-
-            //! Model icon path
-            QString findModelIconPathByCallsign(const aviation::CCallsign &callsign) const;
-
             //! Find models where the filename is not set or the file no longer exists
             CAircraftModelList findModelsWithoutExistingFile() const;
 

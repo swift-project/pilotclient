@@ -117,7 +117,6 @@ namespace swift::misc
                 IndexFileName,
                 IndexFileTimestamp,
                 IndexFileTimestampFormattedYmdhms,
-                IndexIconPath,
                 IndexModelType,
                 IndexModelTypeAsString,
                 IndexModelMode,
@@ -481,15 +480,6 @@ namespace swift::misc
             //! File name
             void setFileName(const QString &fileName) { m_fileName = fileName; }
 
-            //! Icon file representing model
-            const QString &getIconFile() const { return m_iconFile; }
-
-            //! Icon file representing model
-            void setIconFile(const QString &iconFile) { m_iconFile = iconFile; }
-
-            //! Is the icon file existing?
-            bool hasExistingIconFile() const;
-
             //! Get timestamp
             QDateTime getFileTimestamp() const;
 
@@ -507,9 +497,6 @@ namespace swift::misc
 
             //! Set file timestamp, timestamp and file name
             void setFileDetailsAndTimestamp(const QFileInfo &fileInfo);
-
-            //! Load icon from disk
-            CPixmap loadIcon(CStatusMessage &success) const;
 
             //! File path for DB (absolute paths make no sense in DB)
             void normalizeFileNameForDb();
@@ -584,7 +571,6 @@ namespace swift::misc
             QString m_name; //!< Model name
             QString m_description; //!< descriptive text
             QString m_fileName; //!< file name
-            QString m_iconFile; //!< a file representing the aircraft as icon
             QString m_supportedParts; //!< supported parts
             qint64 m_fileTimestamp = -1; //!< file timestamp of originating file (if applicable)
             ModelType m_modelType = TypeUnknown; //!< model string is coming representing ...?
@@ -608,7 +594,6 @@ namespace swift::misc
                 SWIFT_METAMEMBER(name),
                 SWIFT_METAMEMBER(description, 0, DisabledForComparison),
                 SWIFT_METAMEMBER(fileName, 0, DisabledForComparison),
-                SWIFT_METAMEMBER(iconFile, 0, DisabledForComparison),
                 SWIFT_METAMEMBER(fileTimestamp, 0, DisabledForComparison),
                 SWIFT_METAMEMBER(modelType),
                 SWIFT_METAMEMBER(modelMode));

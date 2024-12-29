@@ -270,7 +270,6 @@ namespace swift::misc::simulation
         case IndexSupportedParts: return QVariant(m_supportedParts);
         case IndexFileTimestamp: return QVariant::fromValue(this->getFileTimestamp());
         case IndexFileTimestampFormattedYmdhms: return QVariant::fromValue(this->getFormattedFileTimestampYmdhms());
-        case IndexIconPath: return QVariant(m_iconFile);
         case IndexAircraftIcaoCode: return m_aircraftIcao.propertyByIndex(index.copyFrontRemoved());
         case IndexLivery: return m_livery.propertyByIndex(index.copyFrontRemoved());
         case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
@@ -308,7 +307,6 @@ namespace swift::misc::simulation
         case IndexDescription: m_description = variant.toString(); break;
         case IndexSimulatorInfo: m_simulator.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexName: m_name = variant.toString(); break;
-        case IndexIconPath: m_iconFile = variant.toString(); break;
         case IndexCG: m_cg.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexSupportedParts: this->setSupportedParts(variant.toString()); break;
         case IndexModelType: m_modelType = variant.value<ModelType>(); break;
@@ -370,7 +368,6 @@ namespace swift::misc::simulation
         case IndexCallsign:
             return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
         case IndexFileName: return m_fileName.compare(compareValue.getFileName(), Qt::CaseInsensitive);
-        case IndexIconPath: return m_iconFile.compare(compareValue.getIconFile(), Qt::CaseInsensitive);
         case IndexCG: return m_cg.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCG());
         case IndexSupportedParts: return m_supportedParts.compare(compareValue.getSupportedParts());
         case IndexModelTypeAsString:
@@ -556,31 +553,6 @@ namespace swift::misc::simulation
         }
     }
 
-    CPixmap CAircraftModel::loadIcon(CStatusMessage &success) const
-    {
-        static const CStatusMessage noIcon(this, CStatusMessage::SeverityInfo, u"no icon");
-        static const CStatusMessage loaded(this, CStatusMessage::SeverityInfo, u"icon loaded");
-        if (m_iconFile.isEmpty())
-        {
-            success = noIcon;
-            return CPixmap();
-        }
-        if (!QFile(m_iconFile).exists())
-        {
-            success = noIcon;
-            return CPixmap();
-        }
-
-        QPixmap pm;
-        if (!pm.load(m_iconFile))
-        {
-            success = noIcon;
-            return CPixmap();
-        }
-        success = loaded;
-        return pm;
-    }
-
     const QString &CAircraftModel::liveryStringPrefix()
     {
         static const QString p("swift_");
@@ -688,7 +660,6 @@ namespace swift::misc::simulation
     void CAircraftModel::updateByExistingDirectories(const CAircraftModel &otherModel)
     {
         if (otherModel.hasExistingCorrespondingFile()) { this->setFileName(otherModel.getFileName()); }
-        if (otherModel.hasExistingIconFile()) { this->setIconFile(otherModel.getIconFile()); }
     }
 
     bool CAircraftModel::hasQueriedModelString() const
@@ -736,13 +707,11 @@ namespace swift::misc::simulation
         {
             // other local, priority
             this->setFileName(model.getFileName());
-            this->setIconFile(model.getIconFile());
             return;
         }
 
         // both not local, override empty values
         if (m_fileName.isEmpty()) { this->setFileName(model.getFileName()); }
-        if (m_iconFile.isEmpty()) { this->setIconFile(model.getIconFile()); }
     }
 
     bool CAircraftModel::adjustLocalFileNames(const QString &newModelDir, const QString &stripModelDirIndicator)
@@ -794,13 +763,6 @@ namespace swift::misc::simulation
         }
         if (path.endsWith('/')) { return p.contains(path.left(path.length() - 1), cs); }
         return (p.contains(path, cs));
-    }
-
-    bool CAircraftModel::hasExistingIconFile() const
-    {
-        if (m_iconFile.isEmpty()) { return false; }
-        const QFileInfo fi(m_iconFile);
-        return fi.exists();
     }
 
     bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const

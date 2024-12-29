@@ -967,18 +967,6 @@ namespace swift::core::context
         }
     }
 
-    CPixmap CContextSimulator::iconForModel(const QString &modelString) const
-    {
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CPixmap(); }
-
-        // load from file
-        CStatusMessage msg;
-        const CAircraftModel model(this->getModelSet().findFirstByModelStringAliasOrDefault(modelString));
-        const CPixmap pm(model.loadIcon(msg));
-        if (!msg.isEmpty()) { CLogMessage::preformatted(msg); }
-        return pm;
-    }
-
     CStatusMessageList CContextSimulator::getMatchingMessages(const CCallsign &callsign) const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << callsign; }
