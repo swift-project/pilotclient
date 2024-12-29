@@ -498,8 +498,6 @@ namespace swift::simplugin::xplane
         setSimulatorDetails("X-Plane", {}, xplaneVersion);
         connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged, this,
                 &CSimulatorXPlane::emitOwnAircraftModelChanged);
-        connect(m_serviceProxy, &CXSwiftBusServiceProxy::airportsInRangeUpdated, this,
-                &CSimulatorXPlane::setAirportsInRange);
         m_serviceProxy->updateAirportsInRange();
         connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
         connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this,
@@ -604,36 +602,6 @@ namespace swift::simplugin::xplane
 
         m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(),
                                        color.redF(), color.greenF(), color.blueF());
-    }
-
-    void CSimulatorXPlane::setAirportsInRange(const QStringList &icaos, const QStringList &names,
-                                              const CSequence<double> &lats, const CSequence<double> &lons,
-                                              const CSequence<double> &alts)
-    {
-        //! \todo restrict to maxAirportsInRange()
-        m_airportsInRange.clear();
-        auto icaoIt = icaos.begin();
-        auto nameIt = names.begin();
-        auto latIt = lats.begin();
-        auto lonIt = lons.begin();
-        auto altIt = alts.begin();
-        for (; icaoIt != icaos.end() && nameIt != names.end() && latIt != lats.end() && lonIt != lons.end() &&
-               altIt != alts.end();
-             ++icaoIt, ++nameIt, ++latIt, ++lonIt, ++altIt)
-        {
-            m_airportsInRange.push_back({ *icaoIt,
-                                          { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()),
-                                            CAltitude(*altIt, CLengthUnit::m()) },
-                                          *nameIt });
-        }
-    }
-
-    CAirportList CSimulatorXPlane::getAirportsInRange(bool recalculateDistance) const
-    {
-        if (!recalculateDistance) { return m_airportsInRange; }
-        CAirportList airports(m_airportsInRange);
-        airports.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition());
-        return airports;
     }
 
     bool CSimulatorXPlane::isPhysicallyRenderedAircraft(const CCallsign &callsign) const

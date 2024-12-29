@@ -675,8 +675,6 @@ add_library(gui SHARED
         models/airlineicaofilter.h
         models/airlineicaolistmodel.cpp
         models/airlineicaolistmodel.h
-        models/airportlistmodel.cpp
-        models/airportlistmodel.h
         models/allmodelcontainers.h
         models/allmodels.h
         models/applicationinfolistmodel.cpp
@@ -818,8 +816,6 @@ add_library(gui SHARED
         views/aircraftsituationview.h
         views/airlineicaoview.cpp
         views/airlineicaoview.h
-        views/airportview.cpp
-        views/airportview.h
         views/applicationinfoview.cpp
         views/applicationinfoview.h
         views/atcstationtreeview.cpp

@@ -214,14 +214,6 @@ namespace swift::core::context
         return m_simulatorPlugin.second->getSimulatorInternals();
     }
 
-    CAirportList CContextSimulator::getAirportsInRange(bool recalculateDistance) const
-    {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        // If no ISimulator object is available, return a dummy.
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CAirportList(); }
-        return m_simulatorPlugin.second->getAirportsInRange(recalculateDistance);
-    }
-
     CAircraftModelList CContextSimulator::getModelSet() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }

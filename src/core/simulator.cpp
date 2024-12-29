@@ -634,8 +634,6 @@ namespace swift::core
         {
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAllDataRead, this,
                     &ISimulator::onSwiftDbAllDataRead, Qt::QueuedConnection);
-            connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbAirportsRead, this,
-                    &ISimulator::onSwiftDbAirportsRead, Qt::QueuedConnection);
             connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this,
                     &ISimulator::onSwiftDbModelMatchingEntitiesRead, Qt::QueuedConnection);
         }
@@ -751,37 +749,12 @@ namespace swift::core
         return r;
     }
 
-    CAirportList ISimulator::getWebServiceAirports() const
-    {
-        if (this->isShuttingDown()) { return {}; }
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
-        return sApp->getWebDataServices()->getAirports();
-    }
-
-    CAirport ISimulator::getWebServiceAirport(const CAirportIcaoCode &icao) const
-    {
-        if (this->isShuttingDown()) { return {}; }
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
-        return sApp->getWebDataServices()->getAirports().findFirstByIcao(icao);
-    }
-
-    int ISimulator::maxAirportsInRange() const
-    {
-        // might change in future or become a setting or such
-        return 20;
-    }
-
     void ISimulator::onSwiftDbAllDataRead()
     {
         // void, can be overridden in specialized drivers
     }
 
     void ISimulator::onSwiftDbModelMatchingEntitiesRead()
-    {
-        // void, can be overridden in specialized drivers
-    }
-
-    void ISimulator::onSwiftDbAirportsRead()
     {
         // void, can be overridden in specialized drivers
     }
@@ -885,23 +858,6 @@ namespace swift::core
     CAircraftSituationList ISimulator::getLoopbackSituations(const CCallsign &callsign) const
     {
         return m_loopbackSituations.value(callsign);
-    }
-
-    CAirportList ISimulator::getAirportsInRange(bool recalculateDistance) const
-    {
-        // default implementation
-        if (this->isShuttingDown()) { return {}; }
-        if (!sApp || !sApp->hasWebDataServices()) { return {}; }
-
-        const CAirportList airports = sApp->getWebDataServices()->getAirports();
-        if (airports.isEmpty()) { return airports; }
-        const CCoordinateGeodetic ownPosition = this->getOwnAircraftPosition();
-        CAirportList airportsInRange = airports.findClosest(maxAirportsInRange(), ownPosition);
-        if (recalculateDistance)
-        {
-            airportsInRange.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition());
-        }
-        return airportsInRange;
     }
 
     CAircraftModel ISimulator::reverseLookupModel(const CAircraftModel &model)

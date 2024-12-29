@@ -135,7 +135,6 @@ namespace swift::simplugin::xplane
                                               const swift::misc::CIdentifier &originator) override;
         virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
         virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
-        virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
         virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
         virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
         virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override;
@@ -188,9 +187,6 @@ namespace swift::simplugin::xplane
         using QDoubleList = QList<double>;
         using QBoolList = QList<bool>;
 
-        void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names,
-                                const swift::misc::CSequence<double> &lats, const swift::misc::CSequence<double> &lons,
-                                const swift::misc::CSequence<double> &alts);
         void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
                                          const QString &icao, const QString &modelString, const QString &name,
                                          const QString &description);
@@ -284,7 +280,6 @@ namespace swift::simplugin::xplane
         unsigned int m_fastTimerCalls = 0; //!< how often called
         unsigned int m_slowTimerCalls = 0; //!< how often called
 
-        swift::misc::aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
         CXPlaneMPAircraftObjects m_xplaneAircraftObjects; //!< XPlane multiplayer aircraft
 
         swift::misc::simulation::CSimulatedAircraftList m_pendingToBeAddedAircraft; //!< aircraft to be added

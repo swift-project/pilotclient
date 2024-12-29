@@ -61,9 +61,6 @@ namespace swift::gui
             //! Aircraft in range
             int countAircraftInView() const;
 
-            //! Airports in range
-            int countAirportsInRangeInView() const;
-
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
             virtual bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
 

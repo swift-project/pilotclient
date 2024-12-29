@@ -32,8 +32,6 @@ add_library(xswiftbus SHARED
         menus.h
         messages.cpp
         messages.h
-        navdatareference.cpp
-        navdatareference.h
         plugin.cpp
         plugin.h
         service.cpp

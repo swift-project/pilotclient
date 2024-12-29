@@ -17,7 +17,6 @@
 #include "gui/guiutility.h"
 #include "gui/infoarea.h"
 #include "gui/models/simulatedaircraftlistmodel.h"
-#include "gui/views/airportview.h"
 #include "gui/views/simulatedaircraftview.h"
 #include "gui/views/viewbase.h"
 #include "misc/network/fsdsetup.h"
@@ -46,7 +45,6 @@ namespace swift::gui::components
         this->setCurrentIndex(0);
         this->tabBar()->setExpanding(false);
         this->tabBar()->setUsesScrollButtons(true);
-        ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
         ui->tvp_AircraftInRange->setAircraftMode(CSimulatedAircraftListModel::NetworkMode);
         ui->tvp_AircraftInRange->configureMenu(true, true, false, true, true, true);
 
@@ -54,8 +52,6 @@ namespace swift::gui::components
                 &CAircraftComponent::onRowCountChanged);
         connect(ui->tvp_AircraftInRange, &CSimulatedAircraftView::requestTextMessageWidget, this,
                 &CAircraftComponent::requestTextMessageWidget);
-        connect(ui->tvp_AirportsInRange, &CSimulatedAircraftView::modelDataChangedDigest, this,
-                &CAircraftComponent::onRowCountChanged);
         connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
                 &CAircraftComponent::onConnectionStatusChanged, Qt::QueuedConnection);
         connect(sGui->getIContextOwnAircraft(), &IContextOwnAircraft::movedAircraft, this,
@@ -72,12 +68,6 @@ namespace swift::gui::components
     {
         Q_ASSERT(ui->tvp_AircraftInRange);
         return ui->tvp_AircraftInRange->rowCount();
-    }
-
-    int CAircraftComponent::countAirportsInRangeInView() const
-    {
-        Q_ASSERT(ui->tvp_AirportsInRange);
-        return ui->tvp_AirportsInRange->rowCount();
     }
 
     bool CAircraftComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
@@ -103,16 +93,6 @@ namespace swift::gui::components
                 ui->tvp_AircraftInRange->updateContainerMaybeAsync(sGui->getIContextNetwork()->getAircraftInRange());
             }
         }
-        if (sGui->getIContextSimulator()->getSimulatorStatus() > 0)
-        {
-            const bool visible = (this->isVisibleWidget() && this->currentWidget() == ui->tb_AirportsInRange);
-            const bool counter = ((m_updateCounter % 5) == 0); // less frequent than aircraft
-            if (this->countAirportsInRangeInView() < 1 || (visible && counter))
-            {
-                ui->tvp_AirportsInRange->updateContainerMaybeAsync(
-                    sGui->getIContextSimulator()->getAirportsInRange(true));
-            }
-        }
 
         m_updateCounter++;
     }
@@ -127,7 +107,6 @@ namespace swift::gui::components
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork() || !sGui->getIContextSimulator()) { return; }
         ui->tvp_AircraftInRange->updateContainerMaybeAsync(sGui->getIContextNetwork()->getAircraftInRange());
-        ui->tvp_AirportsInRange->updateContainerMaybeAsync(sGui->getIContextSimulator()->getAirportsInRange(true));
     }
 
     void CAircraftComponent::onInfoAreaTabBarChanged(int index)
@@ -151,13 +130,8 @@ namespace swift::gui::components
         Q_UNUSED(count)
         Q_UNUSED(withFilter)
         const int ac = this->indexOf(ui->tb_AircraftInRange);
-        const int ap = this->indexOf(ui->tb_AirportsInRange);
         QString acs = this->tabBar()->tabText(ac);
-        QString aps = this->tabBar()->tabText(ap);
         acs = CGuiUtility::replaceTabCountValue(acs, this->countAircraftInView());
-        aps = CGuiUtility::replaceTabCountValue(aps, this->countAirportsInRangeInView());
-        this->tabBar()->setTabText(ac, acs);
-        this->tabBar()->setTabText(ap, aps);
     }
 
     void CAircraftComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)

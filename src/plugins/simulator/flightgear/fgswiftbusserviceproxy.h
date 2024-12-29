@@ -103,10 +103,6 @@ namespace swift::simplugin::flightgear
                                   const QString &icao, const QString &modelString, const QString &name,
                                   const QString &description);
 
-        //! Airports in range are updated
-        void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QList<double> &lats,
-                                    const QList<double> &lons, const QList<double> &alts);
-
     public slots:
         //! Get Flightgear version number
         int getVersionNumber();

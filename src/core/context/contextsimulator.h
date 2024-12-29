@@ -164,9 +164,6 @@ namespace swift::core::context
         //! Simulator setup
         virtual swift::misc::simulation::CSimulatorInternals getSimulatorInternals() const = 0;
 
-        //! Airports in range
-        virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const = 0;
-
         //! Installed models in simulator eco system
         //! \note might be slow since list can be big
         virtual swift::misc::simulation::CAircraftModelList getModelSet() const = 0;

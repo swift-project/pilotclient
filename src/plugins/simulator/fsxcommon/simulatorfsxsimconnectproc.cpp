@@ -368,32 +368,6 @@ namespace swift::simplugin::fsxcommon
             }
             break; // SIMCONNECT_RECV_ID_SIMOBJECT_DATA
         }
-        case SIMCONNECT_RECV_ID_AIRPORT_LIST:
-        {
-            const SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = static_cast<SIMCONNECT_RECV_AIRPORT_LIST *>(pData);
-            CAirportList simAirports;
-            for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
-            {
-                const SIMCONNECT_DATA_FACILITY_AIRPORT *pFacilityAirport = pAirportList->rgData + i;
-                if (!pFacilityAirport) { break; }
-                const QString icao(pFacilityAirport->Icao);
-                if (icao.isEmpty()) { continue; } // airfield without ICAO code
-                if (!CAirportIcaoCode::isValidIcaoDesignator(icao, true))
-                {
-                    continue;
-                } // tiny airfields/strips in simulator
-                if (CAirportIcaoCode::containsNumbers(icao)) { continue; } // tiny airfields/strips in simulator
-                const CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude,
-                                              pFacilityAirport->Altitude);
-                const CAirport airport(CAirportIcaoCode(icao), pos);
-                simAirports.push_back(airport);
-            }
-            if (!simAirports.isEmpty())
-            {
-                simulatorFsxP3D->triggerUpdateAirports(simAirports); // real "work" outside SimConnectProc
-            }
-            break; // SIMCONNECT_RECV_ID_AIRPORT_LIST
-        }
         case SIMCONNECT_RECV_ID_CLIENT_DATA:
         {
             if (!simulatorFsxP3D->m_useSbOffsets) { break; }

@@ -80,14 +80,6 @@ namespace swift::core::context
             logEmptyContextWarning(Q_FUNC_INFO);
         }
 
-        //! \copydoc IContextSimulator::getAirportsInRange
-        virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculatePosition) const override
-        {
-            Q_UNUSED(recalculatePosition)
-            logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CAirportList();
-        }
-
         //! \copydoc IContextSimulator::getModelSet
         virtual swift::misc::simulation::CAircraftModelList getModelSet() const override
         {

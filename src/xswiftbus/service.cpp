@@ -91,7 +91,6 @@ namespace XSwiftBus
     CService::CService(CSettingsProvider *settingsProvider)
         : CDBusObject(settingsProvider), m_framePeriodSampler(std::make_unique<FramePeriodSampler>())
     {
-        this->updateAirportsInRange();
         this->updateMessageBoxFromSettings();
         m_framePeriodSampler->show();
     }
@@ -257,42 +256,6 @@ namespace XSwiftBus
         this->updateMessageBoxFromSettings();
         INFO_LOG("Received settings " + s.convertToString());
         if (w) { INFO_LOG("Written new config file"); }
-    }
-
-    void CService::readAirportsDatabase()
-    {
-        auto first = XPLMFindFirstNavAidOfType(xplm_Nav_Airport);
-        auto last = XPLMFindLastNavAidOfType(xplm_Nav_Airport);
-        if (first != XPLM_NAV_NOT_FOUND)
-        {
-            for (auto i = first; i <= last; ++i)
-            {
-                float lat, lon;
-                char icao[32];
-                XPLMGetNavAidInfo(i, nullptr, &lat, &lon, nullptr, nullptr, nullptr, icao, nullptr, nullptr);
-                if (icao[0] != 0) { m_airports.emplace_back(i, lat, lon); }
-            }
-        }
-    }
-
-    void CService::updateAirportsInRange()
-    {
-        if (m_airports.empty()) { readAirportsDatabase(); }
-        std::vector<std::string> icaos, names;
-        std::vector<double> lats, lons, alts;
-        std::vector<CNavDataReference> closestAirports = findClosestAirports(20, getLatitudeDeg(), getLongitudeDeg());
-        for (const auto &navref : closestAirports)
-        {
-            float lat, lon, alt;
-            char icao[32], name[256];
-            XPLMGetNavAidInfo(navref.id(), nullptr, &lat, &lon, &alt, nullptr, nullptr, icao, name, nullptr);
-            icaos.emplace_back(icao);
-            names.emplace_back(name);
-            lats.push_back(lat);
-            lons.push_back(lon);
-            alts.push_back(alt);
-        }
-        emitAirportsInRangeUpdated(icaos, names, lats, lons, alts);
     }
 
     static const char *introspection_service = DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
@@ -474,11 +437,6 @@ namespace XSwiftBus
                     reply.appendArgument(aircraftIcaoCode);
                     sendDBusMessage(reply);
                 });
-            }
-            else if (message.getMethodName() == "updateAirportsInRange")
-            {
-                maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                queueDBusCall([=]() { updateAirportsInRange(); });
             }
             else if (message.getMethodName() == "getAircraftModelPath")
             {
@@ -836,42 +794,11 @@ namespace XSwiftBus
         sendDBusMessage(signalAircraftModelChanged);
     }
 
-    void CService::emitAirportsInRangeUpdated(const std::vector<std::string> &icaoCodes,
-                                              const std::vector<std::string> &names, const std::vector<double> &lats,
-                                              const std::vector<double> &lons, const std::vector<double> &alts)
-    {
-        CDBusMessage signalAirportsInRangeUpdated = CDBusMessage::createSignal(
-            XSWIFTBUS_SERVICE_OBJECTPATH, XSWIFTBUS_SERVICE_INTERFACENAME, "airportsInRangeUpdated");
-        signalAirportsInRangeUpdated.beginArgumentWrite();
-        signalAirportsInRangeUpdated.appendArgument(icaoCodes);
-        signalAirportsInRangeUpdated.appendArgument(names);
-        signalAirportsInRangeUpdated.appendArgument(lats);
-        signalAirportsInRangeUpdated.appendArgument(lons);
-        signalAirportsInRangeUpdated.appendArgument(alts);
-        sendDBusMessage(signalAirportsInRangeUpdated);
-    }
-
     void CService::emitSceneryLoaded()
     {
         CDBusMessage signal =
             CDBusMessage::createSignal(XSWIFTBUS_SERVICE_OBJECTPATH, XSWIFTBUS_SERVICE_INTERFACENAME, "sceneryLoaded");
         sendDBusMessage(signal);
-    }
-
-    std::vector<CNavDataReference> CService::findClosestAirports(int number, double latitude, double longitude)
-    {
-        CNavDataReference ref(0, latitude, longitude);
-        auto compareFunction = [&](const CNavDataReference &a, const CNavDataReference &b) {
-            return calculateGreatCircleDistance(a, ref) < calculateGreatCircleDistance(b, ref);
-        };
-
-        number = std::min(static_cast<int>(m_airports.size()), number);
-
-        std::vector<CNavDataReference> closestAirports = m_airports;
-        std::partial_sort(closestAirports.begin(), closestAirports.begin() + number, closestAirports.end(),
-                          compareFunction);
-        closestAirports.resize(static_cast<std::vector<CNavDataReference>::size_type>(number));
-        return closestAirports;
     }
 
     void CService::updateMessageBoxFromSettings()

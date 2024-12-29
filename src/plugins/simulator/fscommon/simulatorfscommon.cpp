@@ -58,25 +58,4 @@ namespace swift::simplugin::fscommon
         this->emitSimulatorCombinedStatus();
         return r;
     }
-
-    CAirportList CSimulatorFsCommon::getAirportsInRange(bool recalculateDistance) const
-    {
-        if (!m_airportsInRangeFromSimulator.isEmpty())
-        {
-            CAirportList airports = m_airportsInRangeFromSimulator;
-            if (recalculateDistance)
-            {
-                airports.calculcateAndUpdateRelativeDistanceAndBearing(this->getOwnAircraftPosition());
-            }
-            return airports;
-        }
-        return ISimulator::getAirportsInRange(recalculateDistance);
-    }
-
-    void CSimulatorFsCommon::onSwiftDbAirportsRead()
-    {
-        const CAirportList webServiceAirports = this->getWebServiceAirports();
-        if (!webServiceAirports.isEmpty()) { m_airportsInRangeFromSimulator.updateMissingParts(webServiceAirports); }
-        ISimulator::onSwiftDbAirportsRead();
-    }
 } // namespace swift::simplugin::fscommon

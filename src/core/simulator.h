@@ -133,9 +133,6 @@ namespace swift::core
         //! Display a text message
         virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const = 0;
 
-        //! Airports in range from simulator, or if not available from web service
-        virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const;
-
         //! Is the aircraft rendered (displayed in simulator)?
         //! This shall only return true if the aircraft is really visible in the simulator
         virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const = 0;
@@ -407,7 +404,6 @@ namespace swift::core
         //! When swift DB data are read
         virtual void onSwiftDbAllDataRead();
         virtual void onSwiftDbModelMatchingEntitiesRead();
-        virtual void onSwiftDbAirportsRead();
         //! @}
 
         //! Init the internals info from the simulator
@@ -415,15 +411,6 @@ namespace swift::core
 
         //! Parsed in derived classes
         virtual bool parseDetails(const swift::misc::CSimpleCommandParser &parser) = 0;
-
-        //! Airports from web services
-        swift::misc::aviation::CAirportList getWebServiceAirports() const;
-
-        //! Airport from web services by ICAO code
-        swift::misc::aviation::CAirport getWebServiceAirport(const swift::misc::aviation::CAirportIcaoCode &icao) const;
-
-        //! Max.airports in range
-        int maxAirportsInRange() const;
 
         //! Recalculate the rendered aircraft, this happens when restrictions are applied (max. aircraft, range)
         virtual void onRecalculatedRenderedAircraft(const swift::misc::simulation::CAirspaceAircraftSnapshot &snapshot);

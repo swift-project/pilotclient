@@ -32,7 +32,6 @@ namespace swift::simplugin::fscommon
         // ---------------------- ISimulator ------------------
         virtual bool disconnectFrom() override;
         virtual bool isPaused() const override { return m_simPaused; }
-        virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
         // ---------------------- ISimulator ------------------
 
     protected:
@@ -45,9 +44,6 @@ namespace swift::simplugin::fscommon
         //! Init the internal objects
         virtual void initSimulatorInternals() override;
 
-        //! When swift DB data are read
-        virtual void onSwiftDbAirportsRead() override;
-
         //! \copydoc swift::core::ISimulator::reset
         virtual void reset() override;
 
@@ -58,7 +54,6 @@ namespace swift::simplugin::fscommon
             0; //!< own aircraft updates, even with 50 updates/sec long enough even for 32bit
         int m_skipCockpitUpdateCycles = 0; //!< skip some update cycles to allow changes in simulator cockpit to be set
         bool m_simPaused = false; //!< simulator paused?
-        swift::misc::aviation::CAirportList m_airportsInRangeFromSimulator; //!< airports in range of own aircraft
 
         // cockpit as set in SIM
         swift::misc::aviation::CComSystem m_simCom1; //!< cockpit COM1 state in simulator

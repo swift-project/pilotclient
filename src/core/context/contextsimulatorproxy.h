@@ -83,9 +83,6 @@ namespace swift::core
             //! \copydoc swift::core::context::IContextSimulator::getSimulatorStatus
             virtual ISimulator::SimulatorStatus getSimulatorStatus() const override;
 
-            //! \copydoc swift::core::context::IContextSimulator::getAirportsInRange
-            virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculatePosition) const override;
-
             //! \copydoc swift::core::context::IContextSimulator::getModelSet
             virtual swift::misc::simulation::CAircraftModelList getModelSet() const override;
 

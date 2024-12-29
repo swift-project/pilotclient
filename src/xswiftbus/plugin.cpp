@@ -150,11 +150,7 @@ namespace XSwiftBus
 
     void CPlugin::onAircraftRepositioned()
     {
-        if (m_service)
-        {
-            m_service->updateAirportsInRange();
-            m_service->resetFrameTotals();
-        }
+        if (m_service) { m_service->resetFrameTotals(); }
     }
 
     void CPlugin::onSceneryLoaded()

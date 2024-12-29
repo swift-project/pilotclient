@@ -12,7 +12,6 @@
 #include "gui/models/aircraftsituationchangelistmodel.h"
 #include "gui/models/aircraftsituationlistmodel.h"
 #include "gui/models/airlineicaolistmodel.h"
-#include "gui/models/airportlistmodel.h"
 #include "gui/models/applicationinfolistmodel.h"
 #include "gui/models/atcstationlistmodel.h"
 #include "gui/models/audiodeviceinfolistmodel.h"

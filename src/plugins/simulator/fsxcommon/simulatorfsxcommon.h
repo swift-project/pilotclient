@@ -461,12 +461,6 @@ namespace swift::simplugin::fsxcommon
         bool updateRemoteAircraftParts(const CSimConnectObject &simObject,
                                        const swift::misc::simulation::CInterpolationResult &result, bool forcedUpdate);
 
-        //! Calling CSimulatorFsxCommon::updateAirports
-        void triggerUpdateAirports(const swift::misc::aviation::CAirportList &airports);
-
-        //! Update airports from simulator
-        void updateAirports(const swift::misc::aviation::CAirportList &airports);
-
         //! Send parts to simulator
         //! \remark does not send if there is no change
         bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject,

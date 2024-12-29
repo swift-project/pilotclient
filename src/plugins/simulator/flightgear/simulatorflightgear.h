@@ -131,7 +131,6 @@ namespace swift::simplugin::flightgear
                                               const swift::misc::CIdentifier &originator) override;
         virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
         virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
-        virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
         virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
         virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
         virtual void unload() override;
@@ -171,9 +170,6 @@ namespace swift::simplugin::flightgear
 
         using QDoubleList = QList<double>;
 
-        void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names,
-                                const swift::misc::CSequence<double> &lats, const swift::misc::CSequence<double> &lons,
-                                const swift::misc::CSequence<double> &alts);
         void emitOwnAircraftModelChanged(const QString &path, const QString &filename, const QString &livery,
                                          const QString &icao, const QString &modelString, const QString &name,
                                          const QString &description);
@@ -234,7 +230,6 @@ namespace swift::simplugin::flightgear
         QTimer m_slowTimer;
         QTimer m_airportUpdater;
         QTimer m_pendingAddedTimer;
-        swift::misc::aviation::CAirportList m_airportsInRange; //!< aiports in range of own aircraft
         swift::misc::CData<swift::misc::simulation::data::TModelSetCacheFG> m_modelSet {
             this
         }; //!< Flightgear model set

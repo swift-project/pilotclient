@@ -14,7 +14,6 @@
 #include "dbusobject.h"
 #include "datarefs.h"
 #include "messages.h"
-#include "navdatareference.h"
 #include "terrainprobe.h"
 #include <XPLM/XPLMNavigation.h>
 #include <string>
@@ -69,9 +68,6 @@ namespace XSwiftBus
 
         //! Add a text message to the on-screen display, with RGB components in the range [0,1]
         void addTextMessage(const std::string &text, double red, double green, double blue);
-
-        //! Called by newly connected client to cause airportsInRangeUpdated to be emitted.
-        void updateAirportsInRange();
 
         //! Get full path to current aircraft model
         std::string getAircraftModelPath() const;
@@ -335,10 +331,6 @@ namespace XSwiftBus
                                       const std::string &icao, const std::string &modelString, const std::string &name,
                                       const std::string &description);
 
-        void emitAirportsInRangeUpdated(const std::vector<std::string> &icaoCodes,
-                                        const std::vector<std::string> &names, const std::vector<double> &lats,
-                                        const std::vector<double> &lons, const std::vector<double> &alts);
-
         void emitSceneryLoaded();
 
         CMessageBoxControl m_messages { 16, 16, 16 };
@@ -346,11 +338,7 @@ namespace XSwiftBus
         bool m_disappearMessageWindow = true;
         int m_disapperMessageWindowTimeMs = 5000;
         std::chrono::system_clock::time_point m_disappearMessageWindowTime;
-        std::vector<CNavDataReference> m_airports;
         CTerrainProbe m_terrainProbe;
-
-        void readAirportsDatabase();
-        std::vector<CNavDataReference> findClosestAirports(int number, double latitude, double longitude);
 
         //! Redraw message box after reading from the settings
         void updateMessageBoxFromSettings();

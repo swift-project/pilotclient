@@ -2211,39 +2211,6 @@ namespace swift::simplugin::fsxcommon
         return ok;
     }
 
-    void CSimulatorFsxCommon::triggerUpdateAirports(const CAirportList &airports)
-    {
-        if (this->isShuttingDownOrDisconnected()) { return; }
-        if (airports.isEmpty()) { return; }
-        QPointer<CSimulatorFsxCommon> myself(this);
-        QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
-            this->updateAirports(airports);
-        });
-    }
-
-    void CSimulatorFsxCommon::updateAirports(const CAirportList &airports)
-    {
-        if (airports.isEmpty()) { return; }
-
-        static const CLength maxDistance(200.0, CLengthUnit::NM());
-        const CCoordinateGeodetic posAircraft(this->getOwnAircraftPosition());
-
-        for (const CAirport &airport : airports)
-        {
-            CAirport consolidatedAirport(airport);
-            const CLength d = consolidatedAirport.calculcateAndUpdateRelativeDistanceAndBearing(posAircraft);
-            if (d > maxDistance) { continue; }
-            consolidatedAirport.updateMissingParts(this->getWebServiceAirport(airport.getIcao()));
-            m_airportsInRangeFromSimulator.replaceOrAddByIcao(consolidatedAirport);
-            if (m_airportsInRangeFromSimulator.size() > this->maxAirportsInRange())
-            {
-                m_airportsInRangeFromSimulator.sortByDistanceToReferencePosition();
-                m_airportsInRangeFromSimulator.truncate(this->maxAirportsInRange());
-            }
-        }
-    }
-
     bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject,
                                                                  const CAircraftParts &parts)
     {
