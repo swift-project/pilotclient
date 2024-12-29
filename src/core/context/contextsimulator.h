@@ -74,11 +74,6 @@ namespace swift::core::context
         //! Destructor
         ~IContextSimulator() override {}
 
-        // ---- some convenienc functions implemented on interface level
-
-        //! Current simulator
-        misc::simulation::CSimulatorInfo getSimulatorInfo() const;
-
     signals:
         //! Simulator combined status
         //! \sa ISimulator::SimulatorStatus
