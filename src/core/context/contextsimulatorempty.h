@@ -211,22 +211,6 @@ namespace swift::core::context
             return swift::misc::simulation::CSimulatorInternals();
         }
 
-        //! \copydoc IContextSimulator::setTimeSynchronization
-        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) override
-        {
-            Q_UNUSED(enable)
-            Q_UNUSED(offset)
-            logEmptyContextWarning(Q_FUNC_INFO);
-            return false;
-        }
-
-        //! \copydoc IContextSimulator::isTimeSynchronized
-        virtual bool isTimeSynchronized() const override
-        {
-            logEmptyContextWarning(Q_FUNC_INFO);
-            return false;
-        }
-
         //! \copydoc ISimulator::getInterpolationSetupGlobal
         virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal
         getInterpolationAndRenderingSetupGlobal() const override
@@ -279,13 +263,6 @@ namespace swift::core::context
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
             return swift::misc::CStatusMessageList();
-        }
-
-        //! \copydoc IContextSimulator::getTimeSynchronizationOffset
-        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override
-        {
-            logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::physical_quantities::CTime();
         }
 
         //! \copydoc IContextSimulator::followAircraft

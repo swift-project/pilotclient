@@ -260,13 +260,6 @@ namespace swift::simplugin::fsxcommon
                 simulatorFsxP3D->reverseLookupAndUpdateOwnAircraftModel(model);
                 break;
             }
-            case CSimConnectDefinitions::RequestSimEnvironment:
-            {
-                const DataDefinitionSimEnvironment *simEnv =
-                    reinterpret_cast<const DataDefinitionSimEnvironment *>(&pObjData->dwData);
-                simulatorFsxP3D->synchronizeTime(simEnv);
-                break;
-            }
             case CSimConnectDefinitions::RequestMSFSTransponder:
             {
                 const DataDefinitionMSFSTransponderMode *transponderMode =

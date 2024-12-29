@@ -56,9 +56,6 @@ namespace swift::gui::components
         //! Apply disable rendering
         void onApplyDisableRendering();
 
-        //! Apply time synchronization
-        void onApplyTimeSync();
-
         //! Apply COM sync
         void onApplyComSync();
 

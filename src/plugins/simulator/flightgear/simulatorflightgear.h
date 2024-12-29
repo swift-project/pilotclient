@@ -123,7 +123,6 @@ namespace swift::simplugin::flightgear
 
         //! \name ISimulator implementations
         //! @{
-        virtual bool isTimeSynchronized() const override { return false; }
         virtual bool connectTo() override;
         virtual bool disconnectFrom() override;
         virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
@@ -133,12 +132,6 @@ namespace swift::simplugin::flightgear
         virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
         virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
         virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const override;
-        virtual bool setTimeSynchronization(bool enable,
-                                            const swift::misc::physical_quantities::CTime &offset) override;
-        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override
-        {
-            return swift::misc::physical_quantities::CTime(0, swift::misc::physical_quantities::CTimeUnit::hrmin());
-        }
         virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
         virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
         virtual void unload() override;

@@ -83,9 +83,6 @@ namespace swift::core
         //! Combined status
         virtual SimulatorStatus getSimulatorStatus() const;
 
-        //! Is time synchronization on?
-        virtual bool isTimeSynchronized() const = 0;
-
         //! Get the simulator current internal state
         virtual const swift::misc::simulation::CSimulatorInternals &getSimulatorInternals() const
         {
@@ -138,13 +135,6 @@ namespace swift::core
 
         //! Airports in range from simulator, or if not available from web service
         virtual swift::misc::aviation::CAirportList getAirportsInRange(bool recalculateDistance) const;
-
-        //! Set time synchronization between simulator and user's computer time
-        //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
-        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) = 0;
-
-        //! Time synchronization offset
-        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const = 0;
 
         //! Is the aircraft rendered (displayed in simulator)?
         //! This shall only return true if the aircraft is really visible in the simulator

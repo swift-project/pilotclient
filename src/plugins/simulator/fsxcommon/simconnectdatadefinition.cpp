@@ -25,7 +25,6 @@ namespace swift::simplugin::fsxcommon
     {
         static const QString ownAircraft("RequestOwnAircraft");
         static const QString title("RequestOwnAircraftTitle");
-        static const QString simEnv("RequestSimEnvironment");
         static const QString sbData("RequestSbData");
         static const QString facility("RequestFacility");
         static const QString end("<end>");
@@ -35,7 +34,6 @@ namespace swift::simplugin::fsxcommon
         {
         case RequestOwnAircraft: return ownAircraft;
         case RequestOwnAircraftTitle: return title;
-        case RequestSimEnvironment: return simEnv;
         case RequestSbData: return sbData;
         case RequestFacility: return facility;
         case RequestEndMarker: return end;

@@ -59,8 +59,6 @@ namespace swift::simplugin::emulated
         }
     }
 
-    bool CSimulatorEmulated::isTimeSynchronized() const { return m_timeSyncronized; }
-
     bool CSimulatorEmulated::connectTo()
     {
         const QPointer<CSimulatorEmulated> myself(this);
@@ -166,23 +164,6 @@ namespace swift::simplugin::emulated
         if (!canDisplay()) { return; }
         if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, message.toQString());
         m_monitorWidget->displayTextMessage(message);
-    }
-
-    bool CSimulatorEmulated::setTimeSynchronization(bool enable, const CTime &offset)
-    {
-        if (canLog())
-        {
-            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, boolToTrueFalse(enable), offset.toQString());
-        }
-        m_timeSyncronized = enable;
-        m_offsetTime = offset;
-        return enable;
-    }
-
-    CTime CSimulatorEmulated::getTimeSynchronizationOffset() const
-    {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
-        return m_offsetTime;
     }
 
     bool CSimulatorEmulated::isPhysicallyRenderedAircraft(const CCallsign &callsign) const

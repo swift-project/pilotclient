@@ -18,7 +18,6 @@
 #include "misc/geo/elevationplane.h"
 #include "misc/pixmap.h"
 #include "misc/pq/length.h"
-#include "misc/pq/time.h"
 #include "misc/simulation/aircraftmatchersetup.h"
 #include "misc/simulation/aircraftmodellist.h"
 #include "misc/simulation/interpolation/interpolationrenderingsetup.h"
@@ -221,13 +220,6 @@ namespace swift::core::context
         //! Known model?
         virtual bool isKnownModelInSet(const QString &modelstring) const = 0;
 
-        //! Set time synchronization between simulator and user's computer time
-        //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
-        virtual bool setTimeSynchronization(bool enable, const swift::misc::physical_quantities::CTime &offset) = 0;
-
-        //! Is time synchronization on?
-        virtual bool isTimeSynchronized() const = 0;
-
         //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::getInterpolationSetupGlobal
         virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal
         getInterpolationAndRenderingSetupGlobal() const = 0;
@@ -253,9 +245,6 @@ namespace swift::core::context
         //! Interpolation messages
         virtual swift::misc::CStatusMessageList
         getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
-
-        //! Time synchronization offset
-        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const = 0;
 
         //! Simulator avialable (driver available)?
         bool isSimulatorAvailable() const;

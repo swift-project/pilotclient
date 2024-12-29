@@ -232,16 +232,6 @@ namespace swift::core::context
         m_dBusInterface->callDBus(QLatin1String("restoreDisabledModels"));
     }
 
-    bool CContextSimulatorProxy::setTimeSynchronization(bool enable, const CTime &offset)
-    {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("setTimeSynchronization"), enable, offset);
-    }
-
-    bool CContextSimulatorProxy::isTimeSynchronized() const
-    {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("isTimeSynchronized"));
-    }
-
     CInterpolationAndRenderingSetupGlobal CContextSimulatorProxy::getInterpolationAndRenderingSetupGlobal() const
     {
         return m_dBusInterface->callDBusRet<CInterpolationAndRenderingSetupGlobal>(
@@ -277,12 +267,6 @@ namespace swift::core::context
     CContextSimulatorProxy::setInterpolationAndRenderingSetupGlobal(const CInterpolationAndRenderingSetupGlobal &setup)
     {
         m_dBusInterface->callDBus(QLatin1String("setInterpolationAndRenderingSetupGlobal"), setup);
-    }
-
-    CTime CContextSimulatorProxy::getTimeSynchronizationOffset() const
-    {
-        return m_dBusInterface->callDBusRet<swift::misc::physical_quantities::CTime>(
-            QLatin1String("getTimeSynchronizationOffset"));
     }
 
     bool CContextSimulatorProxy::startSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)

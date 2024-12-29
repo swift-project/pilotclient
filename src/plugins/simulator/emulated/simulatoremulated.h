@@ -46,7 +46,6 @@ namespace swift::simplugin::emulated
         virtual ~CSimulatorEmulated() override;
 
         // functions implemented
-        virtual bool isTimeSynchronized() const override;
         virtual bool connectTo() override;
         virtual bool disconnectFrom() override;
         virtual void unload() override;
@@ -61,9 +60,6 @@ namespace swift::simplugin::emulated
                                               const swift::misc::CIdentifier &originator) override;
         virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
         virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
-        virtual bool setTimeSynchronization(bool enable,
-                                            const swift::misc::physical_quantities::CTime &offset) override;
-        virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override;
         virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
         virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
         virtual swift::misc::CStatusMessageList
@@ -173,11 +169,9 @@ namespace swift::simplugin::emulated
         bool m_paused = false;
         bool m_connected = true;
         bool m_simulating = true;
-        bool m_timeSyncronized = false;
         int m_countInterpolatedSituations = 0;
         int m_countInterpolatedParts = 0;
         QTimer m_interpolatorFetchTimer; //!< fetch data from interpolator
-        swift::misc::physical_quantities::CTime m_offsetTime;
         swift::misc::simulation::CSimulatedAircraft m_myAircraft; //!< represents own aircraft of simulator
         swift::misc::simulation::CSimulatedAircraftList m_renderedAircraft; //!< represents remote aircraft in simulator
         QPointer<CSimulatorEmulatedMonitorDialog>

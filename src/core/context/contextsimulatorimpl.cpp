@@ -372,26 +372,6 @@ namespace swift::core::context
         return this->getModelSet().findModelsStartingWith(modelString);
     }
 
-    bool CContextSimulator::setTimeSynchronization(bool enable, const CTime &offset)
-    {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return false; }
-
-        const bool c = m_simulatorPlugin.second->setTimeSynchronization(enable, offset);
-        if (!c) { return false; }
-
-        CLogMessage(this).info(enable ? QStringLiteral("Set time synchronization to %1").arg(offset.toQString()) :
-                                        QStringLiteral("Disabled time syncrhonization"));
-        return true;
-    }
-
-    bool CContextSimulator::isTimeSynchronized() const
-    {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return false; }
-        return m_simulatorPlugin.second->isTimeSynchronized();
-    }
-
     CInterpolationAndRenderingSetupGlobal CContextSimulator::getInterpolationAndRenderingSetupGlobal() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
@@ -444,16 +424,6 @@ namespace swift::core::context
         if (callsign.isEmpty()) { return CStatusMessageList(); }
         if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CStatusMessageList(); }
         return m_simulatorPlugin.second->getInterpolationMessages(callsign);
-    }
-
-    CTime CContextSimulator::getTimeSynchronizationOffset() const
-    {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified())
-        {
-            return CTime(0, CTimeUnit::hrmin());
-        }
-        return m_simulatorPlugin.second->getTimeSynchronizationOffset();
     }
 
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorPluginInfo &simulatorPluginInfo)

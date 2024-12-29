@@ -118,95 +118,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QWidget" name="wi_TimeSync" native="true">
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <property name="spacing">
-           <number>3</number>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QCheckBox" name="cb_TimeSync">
-            <property name="toolTip">
-             <string>Enable time syncronization</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="le_TimeSyncOffset">
-            <property name="maximumSize">
-             <size>
-              <width>75</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>offset +/-hh:mm</string>
-            </property>
-            <property name="inputMask">
-             <string>#99:99</string>
-            </property>
-            <property name="text">
-             <string>+00:00</string>
-            </property>
-            <property name="maxLength">
-             <number>6</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="hs_TimeSync">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="lbl_TimeSync">
-         <property name="toolTip">
-          <string>Time synchronization</string>
-         </property>
-         <property name="text">
-          <string>Time synch.</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QPushButton" name="pb_ApplyTimeSync">
-         <property name="minimumSize">
-          <size>
-           <width>125</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>apply</string>
-         </property>
-        </widget>
-       </item>
        <item row="6" column="2">
         <widget class="QPushButton" name="pb_ClearRestrictedRendering">
          <property name="minimumSize">
@@ -488,9 +399,6 @@
  <tabstops>
   <tabstop>pb_Check</tabstop>
   <tabstop>sa_Settings</tabstop>
-  <tabstop>cb_TimeSync</tabstop>
-  <tabstop>le_TimeSyncOffset</tabstop>
-  <tabstop>pb_ApplyTimeSync</tabstop>
   <tabstop>pb_ApplyCGSource</tabstop>
   <tabstop>cb_ComSync</tabstop>
   <tabstop>pb_ApplyComSync</tabstop>

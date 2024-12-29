@@ -636,13 +636,6 @@ namespace swift::simplugin::xplane
         return airports;
     }
 
-    bool CSimulatorXPlane::setTimeSynchronization(bool enable, const physical_quantities::CTime &offset)
-    {
-        Q_UNUSED(offset)
-        if (enable) { CLogMessage(this).info(u"X-Plane provides real time synchronization, use this one"); }
-        return false;
-    }
-
     bool CSimulatorXPlane::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
     {
         return m_xplaneAircraftObjects.contains(callsign);

@@ -462,13 +462,6 @@ namespace swift::simplugin::flightgear
         return airports;
     }
 
-    bool CSimulatorFlightgear::setTimeSynchronization(bool enable, const physical_quantities::CTime &offset)
-    {
-        Q_UNUSED(offset)
-        if (enable) { CLogMessage(this).info(u"Flightgear provides real time synchronization, use this one"); }
-        return false;
-    }
-
     bool CSimulatorFlightgear::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
     {
         return m_flightgearAircraftObjects.contains(callsign);

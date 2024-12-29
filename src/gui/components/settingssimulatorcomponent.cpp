@@ -72,8 +72,6 @@ namespace swift::gui::components
         connect(ui->pb_Reload, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onReload, Qt::QueuedConnection);
         connect(ui->pb_ApplyMaxAircraft, &QCheckBox::pressed, this,
                 &CSettingsSimulatorComponent::onApplyMaxRenderedAircraft, Qt::QueuedConnection);
-        connect(ui->pb_ApplyTimeSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyTimeSync,
-                Qt::QueuedConnection);
         connect(ui->pb_ApplyMaxDistance, &QCheckBox::pressed, this,
                 &CSettingsSimulatorComponent::onApplyMaxRenderedDistance, Qt::QueuedConnection);
         connect(ui->pb_ApplyComSync, &QCheckBox::pressed, this, &CSettingsSimulatorComponent::onApplyComSync,
@@ -130,11 +128,6 @@ namespace swift::gui::components
         const CInterpolationAndRenderingSetupGlobal setup =
             sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
 
-        // time sync
-        ui->cb_TimeSync->setEnabled(m_pluginLoaded);
-        ui->le_TimeSyncOffset->setEnabled(m_pluginLoaded);
-        ui->pb_ApplyTimeSync->setEnabled(m_pluginLoaded);
-
         // COM unit
         ui->pb_ApplyComSync->setEnabled(m_pluginLoaded);
         ui->cb_ComSync->setEnabled(m_pluginLoaded);
@@ -164,10 +157,6 @@ namespace swift::gui::components
         if (m_pluginLoaded)
         {
             const IContextSimulator *sim = sGui->getIContextSimulator();
-            const bool timeSynced = sim->isTimeSynchronized();
-            ui->cb_TimeSync->setChecked(timeSynced);
-            const CTime timeOffset = sim->getTimeSynchronizationOffset();
-            ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
 
             // settings
             const CSimulatorSettings settings = sim->getSimulatorSettings();
@@ -285,18 +274,6 @@ namespace swift::gui::components
         setup.disableRendering();
         sGui->getIContextSimulator()->setInterpolationAndRenderingSetupGlobal(setup);
         this->setGuiValues();
-    }
-
-    void CSettingsSimulatorComponent::onApplyTimeSync()
-    {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
-
-        const bool timeSync = ui->cb_TimeSync->isChecked();
-        const QString os = ui->le_TimeSyncOffset->text();
-        CTime ost(0, CTimeUnit::hrmin());
-        if (!os.isEmpty()) { ost.parseFromString(os); }
-        if (ost.isNull()) { CLogMessage().validationWarning(u"Invalid offset time"); }
-        else { sGui->getIContextSimulator()->setTimeSynchronization(timeSync, ost); }
     }
 
     CSimulatorSettings CSettingsSimulatorComponent::getSimulatorSettings(bool &ok)

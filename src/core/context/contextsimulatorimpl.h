@@ -150,16 +150,6 @@ namespace swift::core
             virtual swift::misc::simulation::CAircraftModelList
             getModelSetModelsStartingWith(const QString &modelString) const override;
 
-            //! \copydoc swift::core::context::IContextSimulator::getTimeSynchronizationOffset
-            virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override;
-
-            //! \copydoc swift::core::context::IContextSimulator::setTimeSynchronization
-            virtual bool setTimeSynchronization(bool enable,
-                                                const swift::misc::physical_quantities::CTime &offset) override;
-
-            //! \copydoc swift::core::context::IContextSimulator::isTimeSynchronized
-            virtual bool isTimeSynchronized() const override;
-
             //! \copydoc swift::core::context::IContextSimulator::getInterpolationAndRenderingSetupGlobal
             virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal
             getInterpolationAndRenderingSetupGlobal() const override;

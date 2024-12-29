@@ -528,12 +528,6 @@ namespace swift::simplugin::fsxcommon
                                               SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
             "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        hr += this->logAndTraceSendId(
-            SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestSimEnvironment,
-                                              CSimConnectDefinitions::DataSimEnvironment, SIMCONNECT_OBJECT_ID_USER,
-                                              SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-            "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
-
         // TODO TZ use MSFS2024 FSUIPC?
         if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS() &&
             !this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
@@ -2553,61 +2547,6 @@ namespace swift::simplugin::fsxcommon
         return true;
     }
 
-    void CSimulatorFsxCommon::synchronizeTime(const DataDefinitionSimEnvironment *simEnv)
-    {
-        if (!m_simTimeSynced) { return; }
-        if (!this->isConnected()) { return; }
-        if (m_syncTimeDeferredCounter > 0)
-        {
-            --m_syncTimeDeferredCounter;
-            return; // wait some time before we snyc again
-        }
-
-        const int zh = simEnv->zuluTimeSeconds / 3600;
-        const int zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
-        const QDateTime simDateTime({ simEnv->zuluYear, simEnv->zuluMonth, simEnv->zuluDayOfMonth }, { zh, zm },
-                                    Qt::UTC);
-
-        QDateTime currentDateTime = QDateTime::currentDateTimeUtc();
-        if (!m_syncTimeOffset.isZeroEpsilonConsidered())
-        {
-            int offsetSeconds = m_syncTimeOffset.valueInteger(CTimeUnit::s());
-            currentDateTime = currentDateTime.addSecs(offsetSeconds);
-        }
-
-        if (qAbs(simDateTime.secsTo(currentDateTime)) < 120)
-        {
-            // checked and no relevant difference
-            m_syncTimeDeferredCounter = 10; // wait some time to check again
-            return;
-        }
-
-        const DWORD h = static_cast<DWORD>(currentDateTime.time().hour());
-        const DWORD m = static_cast<DWORD>(currentDateTime.time().minute());
-        const DWORD y = static_cast<DWORD>(currentDateTime.date().year());
-        const DWORD d = static_cast<DWORD>(currentDateTime.date().dayOfYear());
-
-        const HRESULT hr1 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluHours, h,
-                                                           SIMCONNECT_GROUP_PRIORITY_STANDARD,
-                                                           SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-        const HRESULT hr2 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluMinutes, m,
-                                                           SIMCONNECT_GROUP_PRIORITY_STANDARD,
-                                                           SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-        const HRESULT hr3 = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluYear, y,
-                                                           SIMCONNECT_GROUP_PRIORITY_STANDARD,
-                                                           SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-        const HRESULT hr4 =
-            SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluDay, d, SIMCONNECT_GROUP_PRIORITY_STANDARD,
-                                           SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-
-        if (isFailure(hr1, hr2, hr3, hr4)) { CLogMessage(this).warning(u"Sending time sync failed!"); }
-        else
-        {
-            m_syncTimeDeferredCounter = 5; // allow some time to sync
-            CLogMessage(this).info(u"Synchronized time to '%1' UTC") << currentDateTime.toString();
-        }
-    }
-
     bool CSimulatorFsxCommon::requestPositionDataForSimObject(const CSimConnectObject &simObject,
                                                               SIMCONNECT_PERIOD period)
     {
@@ -2727,7 +2666,6 @@ namespace swift::simplugin::fsxcommon
         m_simConnected = false;
         m_simSimulating = false;
         m_sbDataReceived = 0;
-        m_syncTimeDeferredCounter = 0;
         m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);
         m_dispatchErrors = 0;
         m_receiveExceptionCount = 0;

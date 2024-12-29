@@ -59,15 +59,6 @@ namespace swift::simplugin::fscommon
         return r;
     }
 
-    CTime CSimulatorFsCommon::getTimeSynchronizationOffset() const { return m_syncTimeOffset; }
-
-    bool CSimulatorFsCommon::setTimeSynchronization(bool enable, const physical_quantities::CTime &offset)
-    {
-        m_simTimeSynced = enable;
-        m_syncTimeOffset = offset;
-        return true;
-    }
-
     CAirportList CSimulatorFsCommon::getAirportsInRange(bool recalculateDistance) const
     {
         if (!m_airportsInRangeFromSimulator.isEmpty())

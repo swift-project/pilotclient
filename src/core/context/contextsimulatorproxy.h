@@ -139,13 +139,6 @@ namespace swift::core
             //! \copydoc swift::core::context::IContextSimulator::restoreDisabledModels
             virtual void restoreDisabledModels() override;
 
-            //! \copydoc swift::core::context::IContextSimulator::setTimeSynchronization
-            virtual bool setTimeSynchronization(bool enable,
-                                                const swift::misc::physical_quantities::CTime &offset) override;
-
-            //! \copydoc swift::core::context::IContextSimulator::isTimeSynchronized
-            virtual bool isTimeSynchronized() const override;
-
             //! \copydoc swift::core::context::IContextSimulator::getInterpolationAndRenderingSetupGlobal
             virtual swift::misc::simulation::CInterpolationAndRenderingSetupGlobal
             getInterpolationAndRenderingSetupGlobal() const override;
@@ -170,9 +163,6 @@ namespace swift::core
             //! \copydoc swift::core::context::IContextSimulator::getInterpolationMessages
             virtual swift::misc::CStatusMessageList
             getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
-
-            //! \copydoc swift::core::context::IContextSimulator::getTimeSynchronizationOffset
-            virtual swift::misc::physical_quantities::CTime getTimeSynchronizationOffset() const override;
 
             //! \copydoc swift::core::context::IContextSimulator::followAircraft
             virtual bool followAircraft(const swift::misc::aviation::CCallsign &callsign) override;
