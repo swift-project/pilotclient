@@ -17,11 +17,6 @@ namespace swift::config
         return CBuildConfig::isCompiledWithFs9Support() || CBuildConfig::isCompiledWithFsxSupport() || CBuildConfig::isCompiledWithP3DSupport() || isCompiledWithMSFSSupport() || isCompiledWithMSFS2024Support();
     }
 
-    constexpr bool CBuildConfig::isCompiledWithFlightSimulatorSupport()
-    {
-        return CBuildConfig::isCompiledWithMsFlightSimulatorSupport() || CBuildConfig::isCompiledWithXPlaneSupport() || CBuildConfig::isCompiledWithFGSupport();
-    }
-
     constexpr bool CBuildConfig::isRunningOnWindowsNtPlatform()
     {
 #ifdef Q_OS_WIN

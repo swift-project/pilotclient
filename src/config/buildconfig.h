@@ -42,9 +42,6 @@ namespace swift::config
         //! with XPlane support?
         static constexpr bool isCompiledWithXPlaneSupport(); // defined in buildconfig_gen.inc.in
 
-        //! with any simulator libraries
-        static constexpr bool isCompiledWithFlightSimulatorSupport();
-
         //! Debug build?
         static constexpr bool isDebugBuild();
 

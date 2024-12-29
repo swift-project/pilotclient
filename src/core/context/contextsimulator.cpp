@@ -49,10 +49,7 @@ namespace swift::core::context
         }
     }
 
-    bool IContextSimulator::isSimulatorAvailable() const
-    {
-        return CBuildConfig::isCompiledWithFlightSimulatorSupport() && !this->getSimulatorPluginInfo().isUnspecified();
-    }
+    bool IContextSimulator::isSimulatorAvailable() const { return !this->getSimulatorPluginInfo().isUnspecified(); }
 
     bool IContextSimulator::isSimulatorSimulating() const
     {
