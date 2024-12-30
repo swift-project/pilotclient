@@ -106,10 +106,8 @@ namespace swift::core::afv::audio
         CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
         if (status == CMacOSMicrophoneAccess::Authorized)
         {
-            m_audioInput->start(m_audioInputBuffer);
-            connect(m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
-            m_started = true;
-            return;
+            // void
+            // Audio start will be handled below
         }
         else if (status == CMacOSMicrophoneAccess::NotDetermined)
         {
@@ -123,11 +121,10 @@ namespace swift::core::afv::audio
             CLogMessage(this).error(u"Microphone access not granted. Voice input will not work.");
             return;
         }
-#else
+#endif
         m_audioInput->start(m_audioInputBuffer);
         connect(m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
         m_started = true;
-#endif
         const QString format = toQString(m_inputFormat);
         CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.description() << format;
     }
