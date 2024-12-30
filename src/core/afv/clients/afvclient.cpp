@@ -1329,9 +1329,6 @@ namespace swift::core::afv::clients
         // void rounding issues from float/double
         quint32 roundedFrequencyHz = static_cast<quint32>(qRound(frequencyHz / 1000.0)) * 1000;
 
-        // disabled?
-        if (!m_enableAliased) { return roundedFrequencyHz; }
-
         // change to aliased frequency if needed
         {
             QMutexLocker lock(&m_mutex);

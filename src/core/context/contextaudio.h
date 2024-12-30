@@ -233,7 +233,6 @@ namespace swift::core
                 swift::misc::CSimpleCommandParser::registerCommand({ ".mute", "mute audio" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".unmute", "unmute audio" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".vol volume", "volume 0..100" });
-                swift::misc::CSimpleCommandParser::registerCommand({ ".aliased on|off", "aliased HF frequencies" });
             }
 
             // -------- parts which can run in core and GUI, referring to local voice client ------------
@@ -248,7 +247,6 @@ namespace swift::core
             //! .mute                          mute             swift::core::context::CContextAudioBase
             //! .unmute                        unmute           swift::core::context::CContextAudioBase
             //! .vol .volume   volume 0..100   set volume       swift::core::context::CContextAudioBase
-            //! .aliased on|off                aliased stations swift::core::context::CContextAudioBase
             //! </pre>
             virtual bool parseCommandLine(const QString &commandLine,
                                           const swift::misc::CIdentifier &originator) override;

@@ -80,10 +80,11 @@ namespace swift::core::context
     {
         Q_UNUSED(originator)
         if (commandLine.isEmpty()) { return false; }
-        CSimpleCommandParser parser({ ".vol", ".volume", // output volume
-                                      ".mute", // mute
-                                      ".unmute", // unmute
-                                      ".aliased" });
+        CSimpleCommandParser parser({
+            ".vol", ".volume", // output volume
+            ".mute", // mute
+            ".unmute", // unmute
+        });
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
 
@@ -101,14 +102,6 @@ namespace swift::core::context
         {
             const int v = parser.toInt(1);
             this->setMasterOutputVolume(v);
-            return true;
-        }
-        else if (afvClient() && parser.matchesCommand(".aliased") && parser.countParts() > 1)
-        {
-            const bool enable = parser.toBool(1, true);
-            afvClient()->enableAliasedStations(enable);
-
-            CLogMessage(this).info(u"Aliased stations are: %1") << boolToOnOff(enable);
             return true;
         }
         return false;

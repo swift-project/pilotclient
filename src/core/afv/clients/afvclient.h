@@ -180,13 +180,6 @@ namespace swift::core::afv::clients
         //! @}
 
         //! @{
-        //! Aliased stations enabled?
-        //! \threadsafe
-        bool isAliasedStationsEnabled() const { return m_enableAliased; }
-        void enableAliasedStations(bool enabled) { m_enableAliased = enabled; }
-        //! @}
-
-        //! @{
         //! Update frequency
         //! \threadsafe
         Q_INVOKABLE void updateComFrequency(quint16 id, quint32 frequencyHz);
@@ -411,7 +404,6 @@ namespace swift::core::afv::clients
         std::atomic_int m_heartBeatFailures { 0 }; //!< voice server heartbeat failures
         std::atomic_bool m_isStarted { false };
         std::atomic_bool m_loopbackOn { false };
-        std::atomic_bool m_enableAliased { true };
         std::atomic_bool m_winCoInitialized { false }; //!< Windows only CoInitializeEx
         std::atomic_bool m_integratedComUnit { false }; //!< is COM unit sychronized, integrated?
 
