@@ -88,9 +88,6 @@ namespace swift::core
             //! Constructor
             CContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
-            //! Register myself in DBus, fail safe
-            void registerWithDBus(swift::misc::CDBusServer *server);
-
         private:
             swift::misc::CIdentifierList m_registeredApplications;
 

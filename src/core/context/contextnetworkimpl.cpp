@@ -120,12 +120,6 @@ namespace swift::core::context
                 Qt::QueuedConnection);
     }
 
-    void CContextNetwork::registerWithDBus(swift::misc::CDBusServer *server)
-    {
-        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return; };
-        server->addObject(IContextNetwork::ObjectPath(), this);
-    }
-
     void CContextNetwork::setSimulationEnvironmentProvider(ISimulationEnvironmentProvider *provider)
     {
         if (this->canUseAirspaceMonitor()) { m_airspace->setSimulationEnvironmentProvider(provider); }

@@ -25,7 +25,7 @@ namespace swift::core::context
         case CCoreFacadeConfig::LocalInDBusServer:
         {
             auto *context = new CContextNetwork(mode, runtime);
-            context->registerWithDBus(server);
+            context->registerWithDBus(ObjectPath(), server);
             return context;
         }
         case CCoreFacadeConfig::Remote:

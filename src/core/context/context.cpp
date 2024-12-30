@@ -4,6 +4,7 @@
 #include "core/context/context.h"
 
 #include "core/application.h"
+#include "misc/dbusserver.h"
 #include "misc/logcategories.h"
 
 using namespace swift::misc;
@@ -68,6 +69,14 @@ namespace swift::core::context
     const IContextSimulator *IContext::getIContextSimulator() const
     {
         return this->getRuntime()->getIContextSimulator();
+    }
+
+    void IContext::registerWithDBus(const QString &objectPath, CDBusServer *server)
+    {
+        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return; }
+
+        // remark that registers all SIGNALS, not only the interface ons
+        server->addObject(objectPath, this);
     }
 
     const CStatusMessage &IContext::statusMessageEmptyContext()

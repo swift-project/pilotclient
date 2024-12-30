@@ -25,12 +25,6 @@ namespace swift::core::context
         : IContextApplication(mode, runtime), CIdentifiable(this)
     {}
 
-    void CContextApplication::registerWithDBus(swift::misc::CDBusServer *server)
-    {
-        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return; }
-        server->addObject(IContextApplication::ObjectPath(), this);
-    }
-
     void CContextApplication::changeSettings(const CValueCachePacket &settings, const CIdentifier &origin)
     {
         // Intentionally don't check for round trip here

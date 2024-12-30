@@ -64,7 +64,7 @@ namespace swift::core::context
         case CCoreFacadeConfig::LocalInDBusServer:
         {
             auto *context = new CContextAudio(mode, runtime);
-            context->registerWithDBus(server);
+            context->registerWithDBus(ObjectPath(), server);
             return context;
         }
         case CCoreFacadeConfig::Remote:

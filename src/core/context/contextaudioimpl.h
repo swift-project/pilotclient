@@ -59,9 +59,6 @@ namespace swift::core
             //! Constructor
             CContextAudio(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime);
 
-            //! Register myself in DBus
-            void registerWithDBus(misc::CDBusServer *server);
-
         private:
             misc::audio::CAudioDeviceInfoList m_registeredDevices;
             QMap<misc::CIdentifier, misc::aviation::CCallsign> m_registeredCallsigns;

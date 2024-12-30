@@ -461,9 +461,6 @@ namespace swift::core
             //! Constructor, with link to runtime
             CContextNetwork(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
-            //! Register myself in DBus
-            void registerWithDBus(swift::misc::CDBusServer *server);
-
             //! Set the provider
             void setSimulationEnvironmentProvider(swift::misc::simulation::ISimulationEnvironmentProvider *provider);
 

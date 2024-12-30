@@ -72,12 +72,6 @@ namespace swift::core::context
 
     CContextOwnAircraft::~CContextOwnAircraft() {}
 
-    void CContextOwnAircraft::registerWithDBus(CDBusServer *server)
-    {
-        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return; }
-        server->addObject(IContextOwnAircraft::ObjectPath(), this);
-    }
-
     CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }

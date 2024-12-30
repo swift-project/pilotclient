@@ -215,9 +215,6 @@ namespace swift::core
             //! Constructor, with link to runtime
             CContextOwnAircraft(CCoreFacadeConfig::ContextMode, CCoreFacade *runtime);
 
-            //! Register myself in DBus
-            void registerWithDBus(swift::misc::CDBusServer *server);
-
         private:
             swift::misc::simulation::CSimulatedAircraft m_ownAircraft; //!< my aircraft
             mutable QReadWriteLock m_lockAircraft; //!< lock aircraft

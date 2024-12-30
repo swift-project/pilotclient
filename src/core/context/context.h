@@ -152,6 +152,9 @@ namespace swift::core::context
         //! Called when shutdown is about to be called
         virtual void onAboutToShutdown() {}
 
+        //! Register myself in DBus
+        void registerWithDBus(const QString &objectPath, misc::CDBusServer *server);
+
         //! Standard message when status message is returned in empty context
         static const misc::CStatusMessage &statusMessageEmptyContext();
 
