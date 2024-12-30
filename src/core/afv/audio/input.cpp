@@ -101,33 +101,30 @@ namespace swift::core::afv::audio
         if (!m_audioInputBuffer) { m_audioInputBuffer = new CAudioInputBuffer(this); }
         else { m_audioInputBuffer->disconnect(); } // make sure disconnected in any case
         m_audioInputBuffer->start(m_inputFormat);
-
-#ifdef Q_OS_MAC
-        CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
-        if (status == CMacOSMicrophoneAccess::Authorized)
-        {
-            // void
-            // Audio start will be handled below
-        }
-        else if (status == CMacOSMicrophoneAccess::NotDetermined)
-        {
-            connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this,
-                    &CInput::delayedInitMicrophone);
-            m_micAccess.requestAccess();
-            CLogMessage(this).info(u"MacOS requested input device");
-        }
-        else
-        {
-            CLogMessage(this).error(u"Microphone access not granted. Voice input will not work.");
-            return;
-        }
-#endif
-        m_audioInput->start(m_audioInputBuffer);
-        connect(m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
-        m_started = true;
         const QString format = toQString(m_inputFormat);
         CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.description() << format;
+
+#ifdef Q_OS_MAC
+        this->initMicrophoneMacOS();
+#else
+        this->initMicrophone();
+#endif
     }
+
+#ifdef Q_OS_MAC
+    void CInput::initMicrophoneMacOS()
+    {
+        CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
+        if (status == CMacOSMicrophoneAccess::Authorized) { this->initMicrophone(); }
+        else if (status == CMacOSMicrophoneAccess::NotDetermined)
+        {
+            connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this, &CInput::initMicrophone);
+            m_micAccess.requestAccess();
+            CLogMessage(this).info(u"Request macOS permission for microphone");
+        }
+        else { CLogMessage(this).error(u"Microphone access not granted. Voice input will not work."); }
+    }
+#endif
 
     void CInput::stop()
     {
@@ -187,13 +184,12 @@ namespace swift::core::afv::audio
         emit opusDataAvailable(opusDataAvailableArgs);
     }
 
-#ifdef Q_OS_MAC
-    void CInput::delayedInitMicrophone()
+    void CInput::initMicrophone()
     {
         m_audioInput->start(m_audioInputBuffer);
         connect(m_audioInputBuffer, &CAudioInputBuffer::frameAvailable, this, &CInput::audioInDataAvailable);
         m_started = true;
+        CLogMessage(this).info(u"Started input");
     }
-#endif
 
 } // namespace swift::core::afv::audio

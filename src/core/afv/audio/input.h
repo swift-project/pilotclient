@@ -129,6 +129,8 @@ namespace swift::core::afv::audio
     private:
         void audioInDataAvailable(const QByteArray &frame);
 
+        void initMicrophone();
+
         static constexpr qint64 c_frameSize = 960;
         int m_sampleRate = 0;
 
@@ -152,7 +154,7 @@ namespace swift::core::afv::audio
 
 #ifdef Q_OS_MAC
         swift::misc::CMacOSMicrophoneAccess m_micAccess;
-        void delayedInitMicrophone();
+        void initMicrophoneMacOS();
 #endif
     };
 } // namespace swift::core::afv::audio
