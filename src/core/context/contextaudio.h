@@ -26,7 +26,6 @@
 #include "misc/identifiable.h"
 #include "misc/identifier.h"
 #include "misc/input/actionhotkeydefs.h"
-#include "misc/macos/microphoneaccess.h"
 #include "misc/network/connectionstatus.h"
 #include "misc/network/userlist.h"
 #include "misc/simplecommandparser.h"
@@ -73,7 +72,7 @@ namespace swift::core
             static const QString &ObjectPath();
 
             //! \copydoc IContext::getPathAndContextId()
-            virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
+            QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
             //! Factory method
             static IContextAudio *create(CCoreFacade *runtime, CCoreFacadeConfig::ContextMode mode,
@@ -96,7 +95,7 @@ namespace swift::core
             //! Unregister devices
             virtual void unRegisterDevices(const swift::misc::audio::CAudioDeviceInfoList &devices) = 0;
 
-            //! Remove all devices for identifer (i.e. "a machine")
+            //! Remove all devices for identifier (i.e. "a machine")
             virtual void unRegisterDevicesFor(const swift::misc::CIdentifier &identifier) = 0;
 
             //! Register an audio callsign (used with AFV)
@@ -135,7 +134,19 @@ namespace swift::core
 
         public:
             //! Destructor
-            virtual ~CContextAudioBase() override;
+            ~CContextAudioBase() override;
+
+            //! @{
+            //! Copy operations
+            CContextAudioBase(const CContextAudioBase &) = delete;
+            CContextAudioBase &operator=(const CContextAudioBase &) = delete;
+            //! @}
+
+            //! @{
+            //! Move operations
+            CContextAudioBase(CContextAudioBase &&) = delete;
+            CContextAudioBase &operator=(CContextAudioBase &&) = delete;
+            //! @}
 
             //! Graceful shutdown
             void gracefulShutdown();
@@ -209,7 +220,7 @@ namespace swift::core
             bool isAudioStarted() const;
 
             //! Is audio enabled?
-            bool isAudioEnabled() const { return m_voiceClient; }
+            bool isAudioEnabled() const { return m_voiceClient != nullptr; }
 
             //! Integrated with COM unit?
             bool isComUnitIntegrated() const;
@@ -248,8 +259,7 @@ namespace swift::core
             //! .unmute                        unmute           swift::core::context::CContextAudioBase
             //! .vol .volume   volume 0..100   set volume       swift::core::context::CContextAudioBase
             //! </pre>
-            virtual bool parseCommandLine(const QString &commandLine,
-                                          const swift::misc::CIdentifier &originator) override;
+            bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
             //! \endcond
 
             // ------------- DBus ---------------
@@ -275,25 +285,6 @@ namespace swift::core
 
             //! PTT in voice client received
             void ptt(bool active, const swift::misc::CIdentifier &identifier);
-
-            /*
-             * Workaround those must be invisible for DBus
-             *
-
-            //! @{
-            //! VU levels
-            void inputVolumePeakVU (double value);
-            void outputVolumePeakVU(double value);
-            //! @}
-
-            //! Callsigns I receive have changed
-            void receivingCallsignsChanged(const swift::core::afv::audio::TransceiverReceivingCallsignsChangedArgs
-            &args);
-
-            //! Client updated from own aicraft data
-            void updatedFromOwnAircraftCockpit();
-
-            * end workaround */
 
             // ------------ local signals -------
 

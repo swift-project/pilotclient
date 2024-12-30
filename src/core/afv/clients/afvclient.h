@@ -23,7 +23,6 @@
 #include "misc/audio/audiosettings.h"
 #include "misc/aviation/comsystem.h"
 #include "misc/identifiable.h"
-#include "misc/logcategories.h"
 #include "misc/settingscache.h"
 #include "misc/worker.h"
 #include "sound/sampleprovider/volumesampleprovider.h"
@@ -61,7 +60,19 @@ namespace swift::core::afv::clients
         CAfvClient(const QString &apiServer, QObject *owner);
 
         //! Dtor
-        virtual ~CAfvClient() override { this->stopAudio(); }
+        ~CAfvClient() override { this->stopAudio(); }
+
+        //! @{
+        //! Copy operations
+        CAfvClient(const CAfvClient &) = delete;
+        CAfvClient &operator=(const CAfvClient &) = delete;
+        //! }@
+
+        //! @{
+        //! Move operations
+        CAfvClient(const CAfvClient &&) = delete;
+        CAfvClient &operator=(const CAfvClient &&) = delete;
+        //! }@
 
         //! @{
         //! Corresponding callsign
@@ -311,10 +322,10 @@ namespace swift::core::afv::clients
 
     protected:
         //! \copydoc swift::misc::CContinuousWorker::initialize
-        virtual void initialize() override;
+        void initialize() override;
 
         //! \copydoc swift::misc::CContinuousWorker::cleanup
-        virtual void cleanup() override;
+        void cleanup() override;
 
     private:
         void opusDataAvailable(const audio::OpusDataAvailableArgs &args); // threadsafe

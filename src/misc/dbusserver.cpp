@@ -196,7 +196,6 @@ namespace swift::misc
     QDBusConnection::RegisterOptions CDBusServer::registerOptions()
     {
         return QDBusConnection::ExportAdaptors | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots;
-        // return QDBusConnection::ExportAllContents;
     }
 
     bool CDBusServer::registerObjectsWithP2PConnection(QDBusConnection connection)
