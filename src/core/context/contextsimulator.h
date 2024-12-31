@@ -136,6 +136,12 @@ namespace swift::core::context
         void autoPublishDataWritten(const swift::misc::simulation::CSimulatorInfo &simulator);
 
     public slots:
+        //! Is a simulator plugin loaded (connected to the simulator)?
+        bool isSimulatorAvailable() const;
+
+        //! Is available simulator simulating? Returns false if no simulator is available
+        bool isSimulatorSimulating() const;
+
         //! Simulator info, currently loaded plugin
         virtual swift::misc::simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;
 
@@ -242,12 +248,6 @@ namespace swift::core::context
         //! Interpolation messages
         virtual swift::misc::CStatusMessageList
         getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
-
-        //! Simulator avialable (driver available)?
-        bool isSimulatorAvailable() const;
-
-        //! Is available simulator simulating? Returns false if no simulator is available
-        bool isSimulatorSimulating() const;
 
         //! Get mapping messages
         virtual swift::misc::CStatusMessageList
