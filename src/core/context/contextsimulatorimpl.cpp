@@ -598,16 +598,6 @@ namespace swift::core::context
         return true;
     }
 
-    void CContextSimulator::listenForAllSimulators()
-    {
-        const auto plugins = getAvailableSimulatorPlugins();
-        for (const CSimulatorPluginInfo &p : plugins)
-        {
-            Q_ASSERT(!p.isUnspecified());
-            if (p.isValid()) { this->listenForSimulator(p); }
-        }
-    }
-
     void CContextSimulator::unloadSimulatorPlugin()
     {
         if (!m_simulatorPlugin.first.isUnspecified())

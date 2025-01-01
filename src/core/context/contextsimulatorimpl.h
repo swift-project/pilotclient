@@ -363,9 +363,6 @@ namespace swift::core
             //! Listen for single simulator
             bool listenForSimulator(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo);
 
-            //! Listen for all simulators
-            void listenForAllSimulators();
-
             //! Call stop() on all loaded listeners
             void stopSimulatorListeners();
 
