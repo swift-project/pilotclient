@@ -360,9 +360,6 @@ namespace swift::core
             //! Unload plugin, if desired restart listeners
             void unloadSimulatorPlugin();
 
-            //! Listen for single simulator
-            bool listenForSimulator(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo);
-
             //! Call stop() on all loaded listeners
             void stopSimulatorListeners();
 

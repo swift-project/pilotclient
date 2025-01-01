@@ -160,7 +160,44 @@ namespace swift::core::context
 
     bool CContextSimulator::startSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
     {
-        return this->listenForSimulator(simulatorInfo);
+        Q_ASSERT(this->getIContextApplication());
+        Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
+        Q_ASSERT(!simulatorInfo.isUnspecified());
+        Q_ASSERT(m_simulatorPlugin.first.isUnspecified());
+
+        if (!m_listenersThread.isRunning())
+        {
+            m_listenersThread.setObjectName("CContextSimulator: Thread for listener " + simulatorInfo.getIdentifier());
+            m_listenersThread.start(QThread::LowPriority);
+        }
+
+        ISimulatorListener *listener = m_plugins->createListener(simulatorInfo.getIdentifier());
+        if (!listener) { return false; }
+
+        if (listener->thread() != &m_listenersThread)
+        {
+            Q_ASSERT_X(!listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
+
+            const bool c = connect(listener, &ISimulatorListener::simulatorStarted, this,
+                                   &CContextSimulator::onSimulatorStarted, Qt::QueuedConnection);
+            if (!c)
+            {
+                CLogMessage(this).error(u"Unable to use '%1'") << simulatorInfo.toQString();
+                return false;
+            }
+            listener->setProperty("isInitialized", true);
+            listener->moveToThread(&m_listenersThread);
+        }
+
+        // start if not already running
+        if (!listener->isRunning())
+        {
+            const bool s = QMetaObject::invokeMethod(listener, &ISimulatorListener::start, Qt::QueuedConnection);
+            Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
+            Q_UNUSED(s)
+        }
+        CLogMessage(this).info(u"Listening for simulator '%1'") << simulatorInfo.getIdentifier();
+        return true;
     }
 
     void CContextSimulator::stopSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
@@ -553,48 +590,6 @@ namespace swift::core::context
             }
         });
 
-        return true;
-    }
-
-    bool CContextSimulator::listenForSimulator(const CSimulatorPluginInfo &simulatorInfo)
-    {
-        Q_ASSERT(this->getIContextApplication());
-        Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
-        Q_ASSERT(!simulatorInfo.isUnspecified());
-        Q_ASSERT(m_simulatorPlugin.first.isUnspecified());
-
-        if (!m_listenersThread.isRunning())
-        {
-            m_listenersThread.setObjectName("CContextSimulator: Thread for listener " + simulatorInfo.getIdentifier());
-            m_listenersThread.start(QThread::LowPriority);
-        }
-
-        ISimulatorListener *listener = m_plugins->createListener(simulatorInfo.getIdentifier());
-        if (!listener) { return false; }
-
-        if (listener->thread() != &m_listenersThread)
-        {
-            Q_ASSERT_X(!listener->parent(), Q_FUNC_INFO, "Objects with parent cannot be moved to thread");
-
-            const bool c = connect(listener, &ISimulatorListener::simulatorStarted, this,
-                                   &CContextSimulator::onSimulatorStarted, Qt::QueuedConnection);
-            if (!c)
-            {
-                CLogMessage(this).error(u"Unable to use '%1'") << simulatorInfo.toQString();
-                return false;
-            }
-            listener->setProperty("isInitialized", true);
-            listener->moveToThread(&m_listenersThread);
-        }
-
-        // start if not already running
-        if (!listener->isRunning())
-        {
-            const bool s = QMetaObject::invokeMethod(listener, &ISimulatorListener::start, Qt::QueuedConnection);
-            Q_ASSERT_X(s, Q_FUNC_INFO, "cannot invoke method");
-            Q_UNUSED(s)
-        }
-        CLogMessage(this).info(u"Listening for simulator '%1'") << simulatorInfo.getIdentifier();
         return true;
     }
 
