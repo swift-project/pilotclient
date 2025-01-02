@@ -69,9 +69,8 @@ namespace swift::core
             virtual bool setSimulatorSettings(const swift::misc::simulation::settings::CSimulatorSettings &settings,
                                               const swift::misc::simulation::CSimulatorInfo &simulatorInfo) override;
 
-            //! \copydoc swift::core::context::IContextSimulator::startSimulatorPlugin
-            virtual bool
-            startSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override;
+            //! \copydoc swift::core::context::IContextSimulator::setPlugin
+            virtual bool setPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override;
 
             //! \copydoc swift::core::context::IContextSimulator::stopSimulatorPlugin
             virtual void

@@ -55,8 +55,8 @@ namespace swift::core::context
             return false;
         }
 
-        //! \copydoc IContextSimulator::startSimulatorPlugin
-        virtual bool startSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override
+        //! \copydoc IContextSimulator::setPlugin
+        bool setPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override
         {
             Q_UNUSED(simulatorInfo)
             logEmptyContextWarning(Q_FUNC_INFO);

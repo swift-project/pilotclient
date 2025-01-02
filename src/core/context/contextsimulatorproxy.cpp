@@ -264,9 +264,9 @@ namespace swift::core::context
         m_dBusInterface->callDBus(QLatin1String("setInterpolationAndRenderingSetupGlobal"), setup);
     }
 
-    bool CContextSimulatorProxy::startSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
+    bool CContextSimulatorProxy::setPlugin(const CSimulatorPluginInfo &info)
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1String("startSimulatorPlugin"), simulatorInfo);
+        return m_dBusInterface->callDBusRet<bool>(QLatin1String("setPlugin"), info);
     }
 
     void CContextSimulatorProxy::stopSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)

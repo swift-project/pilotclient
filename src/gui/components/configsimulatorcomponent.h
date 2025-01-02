@@ -49,7 +49,7 @@ namespace swift::gui::components
         //! Get the plugin ids
         QStringList selectedSimsToPluginIds();
 
-        swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_enabledSimulators { this };
+        swift::misc::CSetting<swift::core::application::TEnabledSimulator> m_enabledSimulators { this };
         swift::misc::simulation::data::CModelSetCaches m_modelSets { true, this };
         QScopedPointer<Ui::CConfigSimulatorComponent> ui;
     };

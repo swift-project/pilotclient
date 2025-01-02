@@ -158,8 +158,9 @@ namespace swift::core::context
         //! Check all listeners enabled if simulator is connected
         virtual int checkListeners() = 0;
 
-        //! Load and start specific simulator plugin
-        virtual bool startSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
+        //! Set the plugin and start. This function has no effect if already called previously or using the stored
+        //! simulator from the settings
+        virtual bool setPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) = 0;
 
         //! Stop listener or unload the given plugin (if currently loaded)
         virtual void stopSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) = 0;

@@ -86,9 +86,11 @@ namespace swift::core
             virtual bool setSimulatorSettings(const swift::misc::simulation::settings::CSimulatorSettings &settings,
                                               const swift::misc::simulation::CSimulatorInfo &simulator) override;
 
-            //! \copydoc swift::core::context::IContextSimulator::startSimulatorPlugin
-            virtual bool
-            startSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override;
+            //! \copydoc swift::core::context::IContextSimulator::startSimulatorListener
+            bool startSimulatorListener();
+
+            //! \copydoc swift::core::context::IContextSimulator::setPlugin
+            bool setPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorInfo) override;
 
             //! \copydoc swift::core::context::IContextSimulator::stopSimulatorPlugin
             virtual void
@@ -348,12 +350,6 @@ namespace swift::core
             //! Relay status message to simulator under consideration of settings
             void relayStatusMessageToSimulator(const swift::misc::CStatusMessage &message);
 
-            //! Handle a change in enabled simulators
-            void changeEnabledSimulators();
-
-            //! Reads list of enabled simulators, starts listeners
-            void restoreSimulatorPlugins();
-
             //! Load plugin and connect
             bool loadSimulatorPlugin(const swift::misc::simulation::CSimulatorPluginInfo &simulatorPluginInfo);
 
@@ -361,7 +357,7 @@ namespace swift::core
             void unloadSimulatorPlugin();
 
             //! Call stop() on all loaded listeners
-            void stopSimulatorListeners();
+            void stopSimulatorListener();
 
             //! Add to message list for matching
             void addMatchingMessages(const swift::misc::aviation::CCallsign &callsign,
@@ -396,11 +392,10 @@ namespace swift::core
             QString m_networkSessionId; //!< Network session of CServer::getServerSessionId, if not connected empty (for
                                         //!< statistics, ..)
             swift::misc::simulation::CBackgroundValidation *m_validator = nullptr;
+            misc::simulation::CSimulatorPluginInfo m_selectedSimulatorPlugin;
 
             // settings
-            swift::misc::CSettingReadOnly<application::TEnabledSimulators> m_enabledSimulators {
-                this, &CContextSimulator::changeEnabledSimulators
-            };
+            swift::misc::CSettingReadOnly<application::TEnabledSimulator> m_enabledSimulator { this };
             swift::misc::CSetting<swift::misc::simulation::settings::TModelMatching> m_matchingSettings {
                 this
             }; //!< matching settings (all simulators)

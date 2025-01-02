@@ -42,38 +42,31 @@ namespace swift::core::application
         }
     };
 
-    //! Selected simulator plugins
-    struct TEnabledSimulators : misc::TSettingTrait<QStringList>
+    //! Enabled simulator plugin identifier
+    struct TEnabledSimulator : misc::TSettingTrait<QString>
     {
         //! \copydoc swift::misc::TSettingTrait::key
-        static const char *key() { return "application/enabledsimulators"; }
+        static const char *key() { return "application/enabledsimulator"; }
 
         //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
-            static const QString name("Enabled simulators");
+            static const QString name("Enabled simulator");
             return name;
         }
 
         //! \copydoc swift::misc::TSettingTrait::defaultValue
-        static const QStringList &defaultValue()
+        static const QString &defaultValue()
         {
-            // All default simulators
-            static const QStringList enabledSimulators(misc::simulation::CSimulatorPluginInfo::guessDefaultPlugins());
-            return enabledSimulators;
+            static QString defaultValue;
+            return defaultValue;
         }
 
         //! \copydoc swift::misc::TSettingTrait::isValid
-        static bool isValid(const QStringList &pluginIdentifiers, QString &)
+        static bool isValid(const QString &pluginIdentifier, QString &)
         {
-            for (const QString &pluginIdentifier : pluginIdentifiers)
-            {
-                if (!misc::simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return pluginIdentifier.isEmpty() ||
+                   misc::simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier);
         }
     };
 

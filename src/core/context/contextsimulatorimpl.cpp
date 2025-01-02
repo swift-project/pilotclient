@@ -64,7 +64,17 @@ namespace swift::core::context
             CBuildConfig::isLocalDeveloperDebugBuild() ? MatchingLogAll : MatchingLogSimplified;
         m_logMatchingMessages = logMatchingMessages;
         m_plugins->collectPlugins();
-        this->restoreSimulatorPlugins();
+
+        const QString enabledSimulator = m_enabledSimulator.get();
+        if (!enabledSimulator.isEmpty())
+        {
+            auto plugins = m_plugins->getAvailableSimulatorPlugins();
+            auto it = std::find_if(plugins.begin(), plugins.end(), [&](const CSimulatorPluginInfo &plugin) {
+                return plugin.getIdentifier() == enabledSimulator;
+            });
+            Q_ASSERT_X(it != plugins.end(), Q_FUNC_INFO, "Plugin not found");
+            CContextSimulator::setPlugin(*it);
+        }
 
         connect(&m_aircraftMatcher, &CAircraftMatcher::setupChanged, this, &CContextSimulator::matchingSetupChanged);
         connect(&CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance(),
@@ -122,7 +132,7 @@ namespace swift::core::context
             m_validator->deleteLater();
             m_validator = nullptr;
         }
-        this->stopSimulatorListeners();
+        this->stopSimulatorListener();
         this->disconnect();
         this->unloadSimulatorPlugin();
 
@@ -158,12 +168,24 @@ namespace swift::core::context
         return true;
     }
 
-    bool CContextSimulator::startSimulatorPlugin(const CSimulatorPluginInfo &simulatorInfo)
+    bool CContextSimulator::setPlugin(const CSimulatorPluginInfo &info)
+    {
+        if (!m_selectedSimulatorPlugin.isUnspecified()) { return false;}
+        m_selectedSimulatorPlugin = info;
+        startSimulatorListener();
+        return true;
+    }
+
+
+    bool CContextSimulator::startSimulatorListener()
     {
         Q_ASSERT(this->getIContextApplication());
         Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
-        Q_ASSERT(!simulatorInfo.isUnspecified());
+        Q_ASSERT(!m_selectedSimulatorPlugin.isUnspecified());
         Q_ASSERT(m_simulatorPlugin.first.isUnspecified());
+
+        this->stopSimulatorListener();
+        const CSimulatorPluginInfo simulatorInfo = m_selectedSimulatorPlugin;
 
         if (!m_listenersThread.isRunning())
         {
@@ -738,7 +760,7 @@ namespace swift::core::context
             // we got disconnected, plugin no longer needed
             this->updateMarkAllAsNotRendered(); // without plugin nothing can be rendered
             this->unloadSimulatorPlugin();
-            this->restoreSimulatorPlugins();
+            this->startSimulatorListener();
 
             if (m_wasSimulating) { emit this->vitalityLost(); }
             m_wasSimulating = false;
@@ -878,33 +900,6 @@ namespace swift::core::context
         if (simMsg.relayThisStatusMessage(message) && m_simulatorPlugin.second)
         {
             m_simulatorPlugin.second->displayStatusMessage(message);
-        }
-    }
-
-    void CContextSimulator::changeEnabledSimulators()
-    {
-        CSimulatorPluginInfo currentPluginInfo = m_simulatorPlugin.first;
-        const QStringList enabledSimulators = m_enabledSimulators.getThreadLocal();
-
-        // Unload the current plugin, if it is no longer enabled
-        if (!currentPluginInfo.isUnspecified() && !enabledSimulators.contains(currentPluginInfo.getIdentifier()))
-        {
-            unloadSimulatorPlugin();
-            emit simulatorStatusChanged(ISimulator::Disconnected);
-        }
-        restoreSimulatorPlugins();
-    }
-
-    void CContextSimulator::restoreSimulatorPlugins()
-    {
-        if (!m_simulatorPlugin.first.isUnspecified()) { return; }
-
-        this->stopSimulatorListeners();
-        const QStringList enabledSimulators = m_enabledSimulators.getThreadLocal();
-        const CSimulatorPluginInfoList allSimulators = m_plugins->getAvailableSimulatorPlugins();
-        for (const CSimulatorPluginInfo &s : allSimulators)
-        {
-            if (enabledSimulators.contains(s.getIdentifier())) { startSimulatorPlugin(s); }
         }
     }
 
@@ -1112,7 +1107,7 @@ namespace swift::core::context
 
     void CContextSimulator::onSimulatorStarted(const CSimulatorPluginInfo &info)
     {
-        this->stopSimulatorListeners();
+        this->stopSimulatorListener();
         this->loadSimulatorPlugin(info);
 
         // if we have enabled messages, we will disable if size getting too high
@@ -1137,17 +1132,14 @@ namespace swift::core::context
         emit this->ownAircraftModelChanged(lookupModel);
     }
 
-    void CContextSimulator::stopSimulatorListeners()
+    void CContextSimulator::stopSimulatorListener()
     {
-        for (const CSimulatorPluginInfo &info : getAvailableSimulatorPlugins())
+        ISimulatorListener *listener = m_plugins->getListener(m_selectedSimulatorPlugin.getIdentifier());
+        if (listener)
         {
-            ISimulatorListener *listener = m_plugins->getListener(info.getIdentifier());
-            if (listener)
-            {
-                const bool s = QMetaObject::invokeMethod(listener, &ISimulatorListener::stop);
-                Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke stop");
-                Q_UNUSED(s)
-            }
+            const bool s = QMetaObject::invokeMethod(listener, &ISimulatorListener::stop);
+            Q_ASSERT_X(s, Q_FUNC_INFO, "Cannot invoke stop");
+            Q_UNUSED(s)
         }
     }
 
