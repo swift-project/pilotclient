@@ -93,6 +93,7 @@ namespace XSwiftBus
     {
         this->updateMessageBoxFromSettings();
         m_framePeriodSampler->show();
+        m_swiftNetworkConnected.set(0);
     }
 
     CService::~CService() = default;
@@ -134,6 +135,8 @@ namespace XSwiftBus
             m_framePeriodSampler->m_totalSecondsLate = 0;
         }
     }
+
+    void CService::setFlightNetworkConnected(bool connected) { m_swiftNetworkConnected.set(connected); }
 
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)
     {
@@ -507,6 +510,14 @@ namespace XSwiftBus
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
                 queueDBusCall([=]() { resetFrameTotals(); });
+            }
+            else if (message.getMethodName() == "setFlightNetworkConnected")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                bool connected = false;
+                message.beginArgumentRead();
+                message.getArgument(connected);
+                queueDBusCall([=]() { setFlightNetworkConnected(connected); });
             }
             else if (message.getMethodName() == "getLatitudeDeg")
             {
