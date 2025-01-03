@@ -132,9 +132,6 @@ namespace swift::core::context
                                const swift::misc::simulation::CAircraftModelList &invalid, bool stopped,
                                const swift::misc::CStatusMessageList &msgs);
 
-        //! Auto publish data written for simulator
-        void autoPublishDataWritten(const swift::misc::simulation::CSimulatorInfo &simulator);
-
     public slots:
         //! Simulator info, currently loaded plugin
         virtual swift::misc::simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const = 0;

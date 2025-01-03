@@ -497,8 +497,6 @@ namespace swift::core::context
         Q_ASSERT(c);
         c = connect(simulator, &ISimulator::driverMessages, this, &IContextSimulator::driverMessages);
         Q_ASSERT(c);
-        c = connect(simulator, &ISimulator::autoPublishDataWritten, this, &IContextSimulator::autoPublishDataWritten);
-        Q_ASSERT(c);
 
         // disconnect for X-Plane FPS below 20
         c = connect(simulator, &ISimulator::insufficientFrameRateDetected, this, [this](bool fatal) {

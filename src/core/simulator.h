@@ -289,9 +289,6 @@ namespace swift::core
         virtual swift::misc::CStatusMessageList
         getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const = 0;
 
-        //! Get the data for auto publishing
-        const swift::misc::simulation::CAutoPublishData &getPublishData() const { return m_autoPublishing; }
-
         //!  Counter added aircraft
         int getStatisticsPhysicallyAddedAircraft() const { return m_statsPhysicallyAddedAircraft; }
 
@@ -386,9 +383,6 @@ namespace swift::core
         //! A requested elevation has been received
         void receivedRequestedElevation(const swift::misc::geo::CElevationPlane &plane,
                                         const swift::misc::aviation::CCallsign &callsign);
-
-        //! Auto publish data written for simulator
-        void autoPublishDataWritten(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! Frame rate has fallen too far below the threshold to maintain consistent sim rate
         void insufficientFrameRateDetected(bool fatal);
@@ -577,7 +571,6 @@ namespace swift::core
         }; //!< pseudo elevation for testing purposes
         swift::misc::simulation::CSimulatorInternals m_simulatorInternals; //!< setup read from the sim
         swift::misc::simulation::CInterpolationLogger m_interpolationLogger; //!< log.interpolation
-        swift::misc::simulation::CAutoPublishData m_autoPublishing; //!< for the DB
         swift::misc::aviation::CAircraftSituationPerCallsign
             m_lastSentSituations; //!< last situations sent to simulator
         swift::misc::aviation::CAircraftPartsPerCallsign m_lastSentParts; //!< last parts sent to simulator
