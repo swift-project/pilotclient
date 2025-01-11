@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main/main.qml</file>
+        <file>main/SimSelection.qml</file>
+        <file>main/MainLayout.qml</file>
+        <file>components/StatusLight.qml</file>
+        <file>components/NavigationBar.qml</file>
+        <file>components/ComPanel.qml</file>
+        <file>components/AtcPanel.qml</file>
+        <file>components/LogPanel.qml</file>
+        <file>components/AvionicButton.qml</file>
+        <file>components/TestModel.qml</file>
+        <file>components/TestModelLogs.qml</file>
+
+        <file>components/SimulatorButton.qml</file>
+        <file>components/StatusBar.qml</file>
+        <file>pages/MainPage.qml</file>
+        <file>pages/ConnectionPage.qml</file>
+
+    </qresource>
+</RCC>
