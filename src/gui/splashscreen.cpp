@@ -10,7 +10,7 @@ using namespace swift::misc;
 
 namespace swift::gui
 {
-    CSplashScreen::CSplashScreen(const QPixmap &pixmap)
+    CSplashScreen::CSplashScreen(const QPixmap &pixmap, const QFont &font)
     {
         const int height = qFloor(pixmap.height() * 1.2);
         const int width = pixmap.width();
@@ -26,22 +26,12 @@ namespace swift::gui
         painter.drawPixmap(0, height - statusbar_height, statusbar);
 
         this->setPixmap(splash);
-
-        m_clearTextTimer.setSingleShot(true);
-        connect(&m_clearTextTimer, &QTimer::timeout, this, &CSplashScreen::clearMessage);
+        this->setFont(font);
     }
 
-    void CSplashScreen::showStatusMessage(const QString &html)
+    void CSplashScreen::showStatusMessage(const QString &msg)
     {
-        if (html.isEmpty()) { return; }
-        this->showMessage(html, Qt::AlignHCenter | Qt::AlignBottom);
-        m_clearTextTimer.start(2000);
+        if (msg.isEmpty()) { return; }
+        this->showMessage(msg, Qt::AlignHCenter | Qt::AlignBottom);
     }
-
-    void CSplashScreen::showStatusMessage(const swift::misc::CStatusMessage &message)
-    {
-        this->showStatusMessage(message.toHtml(true, true));
-    }
-
-    void CSplashScreen::setSplashFont(const QFont &font) { this->setFont(font); }
 } // namespace swift::gui
