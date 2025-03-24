@@ -22,20 +22,10 @@ namespace swift::gui
     {
     public:
         //! Ctor
-        CSplashScreen(const QPixmap &pixmap);
+        CSplashScreen(const QPixmap &pixmap, const QFont &font);
 
         //! Show status message
-        void showStatusMessage(const QString &html);
-
-        //! Show status message
-        void showStatusMessage(const swift::misc::CStatusMessage &message);
-
-        //! Set the font for the splash screen
-        void setSplashFont(const QFont &font);
-
-    private:
-        QString m_message;
-        QTimer m_clearTextTimer;
+        void showStatusMessage(const QString &msg);
     };
 } // namespace swift::gui
 
