@@ -115,7 +115,7 @@ namespace swift::gui::components
 
     CHotkeyDialog::~CHotkeyDialog() {}
 
-    CKeySelectionBox::CKeySelectionBox(QWidget *parent) : CHorizontalComboBox(parent)
+    CKeySelectionBox::CKeySelectionBox(QWidget *parent) : QComboBox(parent)
     {
         connect(this, qOverload<int>(&CKeySelectionBox::currentIndexChanged), this,
                 &CKeySelectionBox::updateSelectedIndex);
@@ -199,7 +199,6 @@ namespace swift::gui::components
                                                      const CKeyboardKey &keyboardKey)
     {
         int currentIndex = 0;
-        const int width = qRound(1.5 * this->width());
         const bool select = !keyboardKey.isUnknown();
 
         CKeySelectionBox *ksb = new CKeySelectionBox(ui->qf_Advanced);
@@ -211,7 +210,6 @@ namespace swift::gui::components
         }
 
         ksb->setSelectedIndex(currentIndex);
-        ksb->setPopupWidth(qMin(width, 600));
         ksb->addItem(noKeyButton(), QVariant::fromValue(CKeyboardKey())); // at back (easier to find it is there twice)
 
         ui->qf_Advanced->layout()->addWidget(ksb);
@@ -226,7 +224,6 @@ namespace swift::gui::components
                                                      const CJoystickButton &joystickButton)
     {
         int currentIndex = -1;
-        const int width = qRound(1.5 * this->width());
 
         CKeySelectionBox *ksb = new CKeySelectionBox(ui->qf_Advanced);
         ksb->addItem(noKeyButton(), QVariant::fromValue(CJoystickButton())); // at front
@@ -241,7 +238,6 @@ namespace swift::gui::components
         }
 
         ksb->setSelectedIndex(currentIndex);
-        ksb->setPopupWidth(qMin(width, 600));
         ksb->addItem(noKeyButton(),
                      QVariant::fromValue(CJoystickButton())); // at back (easier to find it is there twice)
 
