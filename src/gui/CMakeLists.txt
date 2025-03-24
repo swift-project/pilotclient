@@ -874,16 +874,7 @@ add_library(gui SHARED
         views/viewdbobjects.h
         views/viewtimestampobjects.cpp
         views/viewtimestampobjects.h
-        windowfinder.cpp
-        windowfinder.h
         )
-
-if(WIN32)
-        target_sources(gui PRIVATE
-                win/windowfinderwindows.cpp
-                win/windowfinderwindows.h
-        )
-endif()
 
 # Copy resources
 add_custom_command(TARGET gui
