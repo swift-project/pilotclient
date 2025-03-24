@@ -308,9 +308,6 @@ private:
     //! Ckeck if the DB data have been loaded
     void checkDbDataLoaded();
 
-    //! Copy the xswiftbus files from build directory
-    void copyXSwiftBusDialog(bool checkFileTimestamp);
-
     //! Auto publish diloag
     int autoPublishDialog();
 
