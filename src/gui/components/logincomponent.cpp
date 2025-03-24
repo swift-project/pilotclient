@@ -31,7 +31,6 @@
 #include "gui/editors/pilotform.h"
 #include "gui/editors/serverform.h"
 #include "gui/guiapplication.h"
-#include "gui/loginmodebuttons.h"
 #include "gui/ticklabel.h"
 #include "gui/uppercasevalidator.h"
 #include "misc/aviation/aircrafticaocode.h"

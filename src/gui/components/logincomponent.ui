@@ -393,12 +393,6 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>swift::gui::CLoginModeButtons</class>
-   <extends>QFrame</extends>
-   <header>gui/loginmodebuttons.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>swift::gui::CTickLabel</class>
    <extends>QLabel</extends>
    <header>gui/ticklabel.h</header>

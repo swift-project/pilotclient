@@ -223,12 +223,9 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="swift::gui::CLoginModeButtons" name="frp_LoginMode">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>20</height>
-             </size>
+           <widget class="QCheckBox" name="cb_observer">
+            <property name="text">
+             <string>Observer (co-pilot)</string>
             </property>
            </widget>
           </item>
@@ -258,12 +255,6 @@
    <class>swift::gui::components::CServerListSelector</class>
    <extends>QComboBox</extends>
    <header>gui/components/serverlistselector.h</header>
-  </customwidget>
-  <customwidget>
-   <class>swift::gui::CLoginModeButtons</class>
-   <extends>QFrame</extends>
-   <header>gui/loginmodebuttons.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
