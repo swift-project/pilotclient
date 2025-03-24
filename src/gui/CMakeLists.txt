@@ -568,8 +568,6 @@ add_library(gui SHARED
         editors/validationindicator.cpp
         editors/validationindicator.h
         editors/validationindicator.ui
-        elidedpushbutton.cpp
-        elidedpushbutton.h
         enablefordockwidgetinfoarea.cpp
         enablefordockwidgetinfoarea.h
         enableforframelesswindow.cpp
