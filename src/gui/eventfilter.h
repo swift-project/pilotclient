@@ -19,19 +19,9 @@ namespace swift::gui
         //! \copydoc QObject::QObject
         using QObject::QObject;
 
-        //! Not allowed characters
-        void setIllegalCharacters(const QString &illegal) { m_illegalChars = illegal; }
-
-        //! Allow only ASCII
-        void setOnlyAscii() { m_onlyAscii = true; }
-
     protected:
         //! Filter
-        virtual bool eventFilter(QObject *object, QEvent *event) override;
-
-    private:
-        QString m_illegalChars;
-        bool m_onlyAscii = false;
+        bool eventFilter(QObject *object, QEvent *event) override;
     };
 } // namespace swift::gui
 

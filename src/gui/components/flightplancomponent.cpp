@@ -108,17 +108,11 @@ namespace swift::gui::components
         ui->le_SsrEquipment->setReadOnly(true);
 
         CUpperCaseEventFilter *ef = new CUpperCaseEventFilter(ui->pte_Route);
-        ef->setOnlyAscii();
         ui->pte_Route->installEventFilter(ef);
         ef = new CUpperCaseEventFilter(ui->pte_Remarks);
-        ef->setOnlyAscii();
         ui->pte_Remarks->installEventFilter(ef);
         ef = new CUpperCaseEventFilter(ui->pte_AdditionalRemarks);
-        ef->setOnlyAscii();
         ui->pte_AdditionalRemarks->installEventFilter(ef);
-        // readonly
-        // ef = new CUpperCaseEventFilter(ui->pte_RemarksGenerated);
-        // ui->pte_RemarksGenerated->installEventFilter(ef);
 
         // connect
         connect(ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan, Qt::QueuedConnection);
