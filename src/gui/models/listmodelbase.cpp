@@ -89,8 +89,7 @@ namespace swift::gui::models
 
         // Upfront checking avoids unnecessary data fetching
         if (!formatter || !formatter->supportsRole(role)) { return CListModelBaseNonTemplate::data(index, role); }
-
-        // index, updront checking
+        // index, upfront checking
         const int row = index.row();
         const int col = index.column();
         const CPropertyIndex propertyIndex = this->columnToPropertyIndex(col);
