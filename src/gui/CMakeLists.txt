@@ -772,8 +772,6 @@ add_library(gui SHARED
         showhidebar.cpp
         showhidebar.h
         showhidebar.ui
-        singleapplicationui.cpp
-        singleapplicationui.h
         splashscreen.cpp
         splashscreen.h
         stylesheetutility.cpp
