@@ -9,7 +9,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QModelIndex>
-#include <QModelIndexList>
 #include <QStandardItemModel>
 #include <QString>
 #include <QStringList>
@@ -42,33 +41,33 @@ namespace swift::gui::models
         static constexpr int asyncThreshold = 50;
 
         //! Destructor
-        virtual ~CListModelBaseNonTemplate() override {}
+        ~CListModelBaseNonTemplate() override = default;
 
         //! \name Functions from QStandardItemModel
         //! @{
         //! \copydoc QStandardItemModel::columnCount
-        virtual int columnCount(const QModelIndex &modelIndex = QModelIndex()) const final override;
+        int columnCount(const QModelIndex &modelIndex = QModelIndex()) const final;
 
         //! \copydoc QStandardItemModel::headerData
-        virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const final override;
+        QVariant headerData(int section, Qt::Orientation orientation, int role) const final;
 
         //! \copydoc QStandardItemModel::index
-        virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const final override;
+        QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const final;
 
         //! \copydoc QStandardItemModel::parent
-        virtual QModelIndex parent(const QModelIndex &child) const final override;
+        QModelIndex parent(const QModelIndex &child) const final;
 
         //! \copydoc QStandardItemModel::flags
-        virtual Qt::ItemFlags flags(const QModelIndex &index) const final override;
+        Qt::ItemFlags flags(const QModelIndex &index) const final;
 
         //! \copydoc QStandardItemModel::supportedDragActions
-        virtual Qt::DropActions supportedDragActions() const final override;
+        Qt::DropActions supportedDragActions() const final;
 
         //! \copydoc QStandardItemModel::supportedDropActions
-        virtual Qt::DropActions supportedDropActions() const final override;
+        Qt::DropActions supportedDropActions() const final;
 
         //! \copydoc QStandardItemModel::mimeTypes
-        virtual QStringList mimeTypes() const final override;
+        QStringList mimeTypes() const final;
         //! @}
 
         //! Column to property index
