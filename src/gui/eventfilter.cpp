@@ -27,21 +27,17 @@ namespace swift::gui
                 if (e->text().length() == 1)
                 {
                     const QChar c = e->text().front();
-                    if (m_illegalChars.contains(c)) { return true; }
                     if (c.isLetter())
                     {
                         const ushort unicode = c.unicode();
-                        if (m_onlyAscii && unicode > 127) { return true; }
+                        if (unicode > 127) { return true; }
 
                         pte->insertPlainText(e->text().toUpper());
                         // return true to prevent further processing
                         return true;
                     }
-                    else
-                    {
-                        // all codes like backspace etc.
-                        return false;
-                    }
+                    // all codes like backspace etc.
+                    return false;
                 } // length
             } // key event
         }
