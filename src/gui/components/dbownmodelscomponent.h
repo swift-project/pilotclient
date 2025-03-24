@@ -243,9 +243,6 @@ namespace swift::gui
                 virtual void customMenu(menus::CMenuActions &menuActions) override;
 
             private:
-                QList<QAction *> m_loadActions; //!< load actions
-                QList<QAction *> m_reloadActions; //!< reload actions
-                QList<QAction *> m_clearCacheActions; //!< clear own models cahce if ever needed
                 QAction *m_csl2xsbAction = nullptr; //!< run csl2xsb script
             };
         };
