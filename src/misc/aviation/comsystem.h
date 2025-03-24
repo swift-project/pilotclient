@@ -89,9 +89,6 @@ namespace swift::misc::aviation
         //! Set UNICOM frequency as active
         void setActiveUnicom();
 
-        //! Set International Air Distress 121.5MHz
-        void setActiveInternationalAirDistress();
-
         //! Get channel spacing
         ChannelSpacing getChannelSpacing() const { return m_channelSpacing; }
 

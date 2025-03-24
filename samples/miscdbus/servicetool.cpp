@@ -139,9 +139,8 @@ namespace swift::sample
                   << tsqv.userType() << Qt::endl;
 
             // Aviation
-            const CComSystem comSystem =
-                CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress(),
-                           CPhysicalQuantitiesConstants::FrequencyUnicom());
+            const CComSystem comSystem = CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyUnicom(),
+                                                    CPhysicalQuantitiesConstants::FrequencyUnicom());
             testServiceInterface.receiveComUnit(comSystem);
             qtout << "Send COM via interface " << comSystem << Qt::endl;
 
