@@ -26,22 +26,10 @@ namespace swift::gui
         emit tickChanged(this->m_isPixmapTicked);
     }
 
-    void swift::gui::CTickLabel::setToolTips(const QString &ticked, const QString &unticked)
+    void CTickLabel::setToolTips(const QString &ticked, const QString &unticked)
     {
         m_toolTipTicked = ticked;
         m_toolTipUnticked = unticked;
-        this->setLabel();
-    }
-
-    void CTickLabel::setPixmapTicked(const QPixmap &pixmap)
-    {
-        m_pixmapTicked = pixmap;
-        this->setLabel();
-    }
-
-    void CTickLabel::setPixmapUnticked(const QPixmap &pixmap)
-    {
-        m_pixmapUnticked = pixmap;
         this->setLabel();
     }
 
