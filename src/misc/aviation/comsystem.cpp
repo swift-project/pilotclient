@@ -61,13 +61,6 @@ namespace swift::misc::aviation
         this->setFrequencyActive(physical_quantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
     }
 
-    void CComSystem::setActiveInternationalAirDistress()
-    {
-        this->toggleActiveStandby();
-        this->setFrequencyActive(
-            physical_quantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
-    }
-
     CComSystem CComSystem::getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz)
     {
         return CComSystem(
