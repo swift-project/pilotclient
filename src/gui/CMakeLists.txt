@@ -629,9 +629,6 @@ add_library(gui SHARED
         lineedithistory.h
         loadindicator.cpp
         loadindicator.h
-        loginmodebuttons.cpp
-        loginmodebuttons.h
-        loginmodebuttons.ui
         mainwindowaccess.cpp
         mainwindowaccess.h
         managedstatusbar.cpp

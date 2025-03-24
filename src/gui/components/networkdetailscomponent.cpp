@@ -66,9 +66,16 @@ namespace swift::gui::components
 
     CNetworkDetailsComponent::~CNetworkDetailsComponent() {}
 
-    CLoginMode CNetworkDetailsComponent::getLoginMode() const { return ui->frp_LoginMode->getLoginMode(); }
+    CLoginMode CNetworkDetailsComponent::getLoginMode() const
+    {
+        return ui->cb_observer->isChecked() ? CLoginMode::Observer : CLoginMode::Pilot;
+    }
 
-    void CNetworkDetailsComponent::setLoginMode(CLoginMode mode) { ui->frp_LoginMode->setLoginMode(mode); }
+    void CNetworkDetailsComponent::setLoginMode(CLoginMode mode)
+    {
+        if (mode == CLoginMode::Observer) { ui->cb_observer->setChecked(true); }
+        else { ui->cb_observer->setChecked(false); }
+    }
 
     bool CNetworkDetailsComponent::isVatsimServerSelected() const
     {
