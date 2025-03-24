@@ -420,7 +420,7 @@ namespace swift::gui::views
         this->setDragEnabled(allowDrag);
         this->setDropIndicatorShown(allowDrag || allowDrop);
         m_model->allowDrop(allowDrop);
-        m_model->allowFileDrop(allowDropJsonFile);
+        m_model->allowJsonFileDrop(allowDropJsonFile);
     }
 
     template <class T>

@@ -37,7 +37,7 @@ namespace swift::gui
         virtual void allowDrop(bool allowed) { m_allowDrop = allowed; }
 
         //! Allow JSON file drop
-        virtual void allowFileDrop(bool allow) { m_acceptJsonFile = allow; }
+        virtual void allowJsonFileDrop(bool allow) { m_acceptJsonFile = allow; }
 
         //! Accept drop?
         bool acceptDrop(const QMimeData *mime) const;
