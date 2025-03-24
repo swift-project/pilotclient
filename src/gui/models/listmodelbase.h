@@ -41,47 +41,47 @@ namespace swift::gui::models
         using ObjectType = typename T::value_type;
 
         //! Destructor
-        virtual ~CListModelBase() override {}
+        ~CListModelBase() override = default;
 
         //! \name Functions from QStandardItemModel
         //! @{
 
         //! \copydoc QStandardItemModel::data
-        virtual QVariant data(const QModelIndex &index, int role) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
 
         //! \copydoc QStandardItemModel::setData
-        virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) final override;
+        bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) final;
 
         //! \copydoc QStandardItemModel::mimeData
-        virtual QMimeData *mimeData(const QModelIndexList &indexes) const final override;
+        QMimeData *mimeData(const QModelIndexList &indexes) const final;
 
         //! \copydoc QStandardItemModel::sort
-        virtual void sort(int column, Qt::SortOrder order) final override;
+        void sort(int column, Qt::SortOrder order) final;
 
         //! \copydoc QStandardItemModel::rowCount
-        virtual int rowCount(const QModelIndex &parentIndex = QModelIndex()) const final override;
+        int rowCount(const QModelIndex &parentIndex = QModelIndex()) const final;
 
         //! \copydoc QStandardItemModel::canDropMimeData
-        virtual bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
-                                     const QModelIndex &parent) const final override;
+        bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
+                             const QModelIndex &parent) const final;
 
         //! \copydoc QStandardItemModel::dropMimeData
-        virtual bool dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column,
-                                  const QModelIndex &parent) final override;
+        bool dropMimeData(const QMimeData *mimeData, Qt::DropAction action, int row, int column,
+                          const QModelIndex &parent) final;
         //! @}
 
         //! \name Functions from CListModelBaseNonTemplate
         //! @{
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::toJson
-        virtual QJsonObject toJson(bool selectedOnly = false) const override;
+        QJsonObject toJson(bool selectedOnly = false) const override;
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::toJsonString
-        virtual QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented,
-                                     bool selectedOnly = false) const override;
+        QString toJsonString(QJsonDocument::JsonFormat format = QJsonDocument::Indented,
+                             bool selectedOnly = false) const override;
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::isOrderable
-        virtual bool isOrderable() const override;
+        bool isOrderable() const override;
         //! @}
 
         //! Valid index (in range)
@@ -196,11 +196,11 @@ namespace swift::gui::models
         //! @{
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::onDataChanged
-        virtual void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomLeft,
-                                   const QVector<int> &roles) override;
+        void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomLeft,
+                           const QVector<int> &roles) override;
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::onDataChanged
-        virtual void onChangedDigest() override;
+        void onChangedDigest() override;
         //! @}
 
         //! Update filtered container
