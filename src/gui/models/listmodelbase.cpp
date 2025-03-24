@@ -6,7 +6,6 @@
 
 #include "gui/models/listmodelbase.h"
 
-#include <QFlags>
 #include <QJsonDocument>
 #include <QList>
 #include <QMimeData>
