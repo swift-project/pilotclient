@@ -492,8 +492,6 @@ add_library(gui SHARED
         components/usercomponent.cpp
         components/usercomponent.h
         components/usercomponent.ui
-        copyxswiftbusdialog.cpp
-        copyxswiftbusdialog.h
         dockwidget.cpp
         dockwidget.h
         dockwidgetinfoarea.cpp

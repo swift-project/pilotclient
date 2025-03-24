@@ -438,8 +438,6 @@ void SwiftGuiStd::verifyPrerequisites()
         if (msgs.size() > 1) { this->displayInOverlayWindow(msgs); }
         else { this->displayInOverlayWindow(msgs.front()); }
     }
-
-    this->copyXSwiftBusDialog(true);
 }
 
 void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAircraftModelList &valid,
