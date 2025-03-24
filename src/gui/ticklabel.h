@@ -31,12 +31,6 @@ namespace swift::gui
         //! Set the tool tips
         void setToolTips(const QString &ticked, const QString &unticked);
 
-        //! Ticked pixmap
-        void setPixmapTicked(const QPixmap &pixmap);
-
-        //! Unticked pixmap
-        void setPixmapUnticked(const QPixmap &pixmap);
-
     signals:
         //! Changed ticked state
         void tickChanged(bool ticked);
