@@ -21,8 +21,7 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CSettingsGuiComponent::CSettingsGuiComponent(QWidget *parent)
-        : QFrame(parent), swift::gui::CSingleApplicationUi(this), ui(new Ui::CSettingsGuiComponent)
+    CSettingsGuiComponent::CSettingsGuiComponent(QWidget *parent) : QFrame(parent), ui(new Ui::CSettingsGuiComponent)
     {
         ui->setupUi(this);
 

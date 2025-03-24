@@ -10,7 +10,6 @@
 #include <QScopedPointer>
 
 #include "gui/settings/guisettings.h"
-#include "gui/singleapplicationui.h"
 
 namespace Ui
 {
@@ -21,7 +20,7 @@ namespace swift::gui::components
     /*!
      * General GUI settings
      */
-    class CSettingsGuiComponent : public QFrame, public swift::gui::CSingleApplicationUi
+    class CSettingsGuiComponent : public QFrame
     {
         Q_OBJECT
 
