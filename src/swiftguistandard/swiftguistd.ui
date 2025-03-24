@@ -572,17 +572,4 @@
   <include location="../misc/misc.qrc"/>
  </resources>
  <connections/>
- <slots>
-  <slot>setMainPage()</slot>
-  <slot>toggleNetworkConnection()</slot>
-  <slot>menuClicked()</slot>
-  <slot>networkServerSelected(QModelIndex)</slot>
-  <slot>alterTrafficServer()</slot>
-  <slot>onlineAtcStationSelected(QModelIndex)</slot>
-  <slot>commandEntered()</slot>
-  <slot>getMetar()</slot>
-  <slot>cockpitValuesChanged()</slot>
-  <slot>audioDeviceSelected(int)</slot>
-  <slot>voiceRoomOverride()</slot>
- </slots>
 </ui>
