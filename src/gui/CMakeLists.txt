@@ -616,8 +616,6 @@ add_library(gui SHARED
         guiapplication.h
         guiutility.cpp
         guiutility.h
-        horizontalcombobox.cpp
-        horizontalcombobox.h
         infoarea.cpp
         infoarea.h
         labelandicon.cpp

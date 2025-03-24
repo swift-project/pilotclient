@@ -10,7 +10,6 @@
 #include <QObject>
 #include <QScopedPointer>
 
-#include "gui/horizontalcombobox.h"
 #include "gui/models/actionmodel.h"
 #include "gui/swiftguiexport.h"
 #include "misc/identifierlist.h"
@@ -36,7 +35,7 @@ namespace swift::gui::components
     /*!
      * ComboBox for selecting keyboard keys
      */
-    class SWIFT_GUI_EXPORT CKeySelectionBox : public CHorizontalComboBox
+    class SWIFT_GUI_EXPORT CKeySelectionBox : public QComboBox
     {
         Q_OBJECT
 
