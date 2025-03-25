@@ -33,6 +33,8 @@ namespace swift::gui::components
         QStringListModel *lvm = new QStringListModel(ui->lv_Entities);
         ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
         ui->lv_Entities->setModel(lvm);
+        ui->lv_Entities->setDisabled(true);
+        ui->lv_Entities->setSelectionMode(QAbstractItemView::NoSelection);
         ui->bb_loadDataDialog->button(QDialogButtonBox::Apply)->setText("Load");
         ui->wi_WorkStatus->setVisible(false);
         ui->wi_Consolidate->setVisible(false);
@@ -58,7 +60,6 @@ namespace swift::gui::components
         m_autoConsolidate = false;
         const QStringList entitiesStringList = CEntityFlags::entitiesToStringList(loadEntities);
         this->entitiesModel()->setStringList(entitiesStringList);
-        ui->lv_Entities->selectAll();
         return true;
     }
 
@@ -67,20 +68,12 @@ namespace swift::gui::components
         return qobject_cast<QStringListModel *>(ui->lv_Entities->model());
     }
 
-    QStringList CDbLoadDataDialog::selectedEntities() const
-    {
-        QStringList entities;
-        const QModelIndexList indexes = ui->lv_Entities->selectionModel()->selectedIndexes();
-        for (const QModelIndex &index : indexes) { entities.append(index.data(Qt::DisplayRole).toString()); }
-        return entities;
-    }
-
     void CDbLoadDataDialog::onButtonClicked(QAbstractButton *button)
     {
         if (!button) { return; }
         if (button == ui->bb_loadDataDialog->button(QDialogButtonBox::Apply))
         {
-            const QStringList entityList = this->selectedEntities();
+            const QStringList entityList = entitiesModel()->stringList();
             if (entityList.isEmpty()) { return; }
             const CEntityFlags::Entity loadEntities = CEntityFlags::multipleEntitiesByNames(entityList);
             m_pendingEntities = sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(loadEntities, false);

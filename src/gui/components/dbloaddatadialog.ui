@@ -22,14 +22,11 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="gb_Entities">
-     <property name="title">
-      <string>Entities</string>
-     </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QLabel" name="lbl_Load">
         <property name="text">
-         <string>New DB data. Load the given entities?</string>
+         <string>The following new data is available in the swift database. Load it?</string>
         </property>
        </widget>
       </item>

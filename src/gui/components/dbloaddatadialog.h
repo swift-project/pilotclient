@@ -43,9 +43,6 @@ namespace swift::gui::components
         //! The string list model
         QStringListModel *entitiesModel() const;
 
-        //! All selected items
-        QStringList selectedEntities() const;
-
         //! Button clicked
         void onButtonClicked(QAbstractButton *button);
 
