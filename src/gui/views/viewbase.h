@@ -271,7 +271,7 @@ namespace swift::gui
             void setFilterWidget(filters::CFilterWidget *filterWidget);
 
             //! Set custom menu if applicable
-            menus::IMenuDelegate *setCustomMenu(menus::IMenuDelegate *menu, bool nestPreviousMenu = true);
+            void setCustomMenu(menus::IMenuDelegate *menu, bool nestPreviousMenu = true);
 
             //! Enable loading indicator
             void enableLoadIndicator(bool enable);

@@ -186,7 +186,7 @@ namespace swift::gui::views
         this->horizontalHeader()->setSectionResizeMode(mode);
     }
 
-    IMenuDelegate *CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
+    void CViewBaseNonTemplate::setCustomMenu(IMenuDelegate *menu, bool nestPreviousMenu)
     {
         if (menu && nestPreviousMenu)
         {
@@ -204,7 +204,6 @@ namespace swift::gui::views
             // no nesting
             m_menu = menu;
         }
-        return menu;
     }
 
     CMenuActions CViewBaseNonTemplate::initMenuActions(CViewBaseNonTemplate::MenuFlag menu)
