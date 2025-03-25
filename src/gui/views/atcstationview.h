@@ -47,9 +47,6 @@ namespace swift::gui
             void changedAtcStationConnectionStatus(const swift::misc::aviation::CAtcStation &station, bool added);
 
         signals:
-            //! Request some dummy ATC stations
-            void testRequestDummyAtcOnlineStations(int number);
-
             //! Request COM frequency
             void requestComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
                                      swift::misc::aviation::CComSystem::ComUnit unit);
@@ -62,14 +59,11 @@ namespace swift::gui
             virtual void customMenu(swift::gui::menus::CMenuActions &menuActions) override;
 
         private:
-            void emitTestRequest1kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(1000); }
-            void emitTestRequest3kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(3000); }
             void tuneInAtcCom1();
             void tuneInAtcCom2();
             void requestTextMessage();
 
             QList<QAction *> m_actions; //!< real actions
-            QList<QAction *> m_debugActions; //!< used for debug context menu
         };
     } // namespace views
 } // namespace swift::gui

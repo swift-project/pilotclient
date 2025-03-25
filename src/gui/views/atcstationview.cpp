@@ -44,16 +44,6 @@ namespace swift::gui::views
     void CAtcStationView::customMenu(CMenuActions &menuActions)
     {
         menuActions.addMenuCom();
-        if (CBuildConfig::isDebugBuild())
-        {
-            if (m_debugActions.isEmpty()) { m_debugActions = QList<QAction *>({ nullptr, nullptr }); }
-            m_debugActions[0] = menuActions.addAction(m_debugActions[0], CIcons::tableSheet16(),
-                                                      "Test: 1k ATC online stations", CMenuAction::pathClientCom(),
-                                                      { this, &CAtcStationView::emitTestRequest1kAtcOnlineDummies });
-            m_debugActions[1] = menuActions.addAction(m_debugActions[1], CIcons::tableSheet16(),
-                                                      "Test: 3k ATC online stations", CMenuAction::pathClientCom(),
-                                                      { this, &CAtcStationView::emitTestRequest3kAtcOnlineDummies });
-        }
 
         if (this->hasSelection())
         {

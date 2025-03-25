@@ -108,9 +108,6 @@ namespace swift::gui
             void connectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
                                          const swift::misc::network::CConnectionStatus &to);
 
-            //! Request dummy ATC online stations
-            void testCreateDummyOnlineAtcStations(int number);
-
             //! Request udpate
             void requestOnlineStationsUpdate();
 

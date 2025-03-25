@@ -97,8 +97,6 @@ namespace swift::gui::components
                 &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
         connect(ui->tvp_AtcStationsOnline, &CAtcStationView::objectSelected, this,
                 &CAtcStationComponent::onOnlineAtcStationVariantSelected, Qt::QueuedConnection);
-        connect(ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this,
-                &CAtcStationComponent::testCreateDummyOnlineAtcStations);
         connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this,
                 &CAtcStationComponent::requestOnlineStationsUpdate);
         connect(ui->tvp_AtcStationsOnline, &CAtcStationView::requestNewBackendData, this,
@@ -287,12 +285,6 @@ namespace swift::gui::components
             this->clearOnlineViews();
             this->update();
         }
-    }
-
-    void CAtcStationComponent::testCreateDummyOnlineAtcStations(int number)
-    {
-        if (!sGui || !sGui->getIContextNetwork()) { return; }
-        if (this->canAccessContext()) { sGui->getIContextNetwork()->testCreateDummyOnlineAtcStations(number); }
     }
 
     void CAtcStationComponent::requestOnlineStationsUpdate()

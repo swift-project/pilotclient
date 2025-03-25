@@ -58,9 +58,6 @@ namespace swift::gui
             void fullResizeToContents();
 
         signals:
-            //! Request some dummy ATC stations
-            void testRequestDummyAtcOnlineStations(int number);
-
             //! Request COM frequency
             void requestComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
                                      swift::misc::aviation::CComSystem::ComUnit unit);
