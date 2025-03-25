@@ -13,7 +13,6 @@
 #include <QtGlobal>
 
 #include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/settings/viewupdatesettings.h"
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/callsign.h"
 #include "misc/network/connectionstatus.h"
@@ -57,14 +56,8 @@ namespace swift::gui::components
         void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
                                        const swift::misc::network::CConnectionStatus &to);
 
-        //! Settings have been changed
-        void onSettingsChanged();
-
         QScopedPointer<Ui::CUserComponent> ui;
         QTimer m_updateTimer;
-        swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settings {
-            this, &CUserComponent::onSettingsChanged
-        };
     };
 } // namespace swift::gui::components
 #endif // SWIFT_GUI_USERCOMPONENT_H

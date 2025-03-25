@@ -124,7 +124,9 @@ namespace swift::gui::components
         connect(&m_updateTimer, &QTimer::timeout, this, &CMappingComponent::timerUpdate);
         m_updateTimer.setObjectName(this->objectName() + "::updateTimer");
         ui->tvp_AircraftModels->setDisplayAutomatically(false);
-        this->settingsChanged();
+
+        using namespace std::chrono_literals;
+        m_updateTimer.setInterval(10s);
 
         // selector
         ui->comp_SimulatorSelector->setRememberSelection(false); // pilot client UI
@@ -561,13 +563,6 @@ namespace swift::gui::components
     {
         if (!m_bucket.tryConsume()) { return; }
         this->updateRenderedAircraftView(true); // forced update
-    }
-
-    void CMappingComponent::settingsChanged()
-    {
-        const CViewUpdateSettings settings = m_settings.get();
-        const int ms = settings.getRenderingUpdateTime().toMs();
-        m_updateTimer.setInterval(ms);
     }
 
     void CMappingComponent::onNetworkConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)

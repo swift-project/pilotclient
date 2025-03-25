@@ -273,9 +273,6 @@
      <widget class="swift::gui::components::CSettingsGuiComponent" name="comp_SettingsGuiGeneral"/>
     </item>
     <item>
-     <widget class="swift::gui::components::CSettingsViewUpdateTimes" name="comp_SettingsGuiRefreshTimes"/>
-    </item>
-    <item>
      <widget class="QWidget" name="qw_SettingsGuiFont" native="true">
       <layout class="QHBoxLayout" name="hl_SettingsGuiFontColor">
        <property name="spacing">
@@ -690,12 +687,6 @@
    <class>swift::gui::components::CSettingsSimulatorMessagesComponent</class>
    <extends>QFrame</extends>
    <header>gui/components/settingssimulatormessagescomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>swift::gui::components::CSettingsViewUpdateTimes</class>
-   <extends>QFrame</extends>
-   <header>gui/components/settingsviewupdatetimes.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

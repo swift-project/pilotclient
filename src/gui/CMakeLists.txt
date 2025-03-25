@@ -439,9 +439,6 @@ add_library(gui SHARED
         components/settingsvatsimreaderscomponent.cpp
         components/settingsvatsimreaderscomponent.h
         components/settingsvatsimreaderscomponent.ui
-        components/settingsviewupdatetimes.cpp
-        components/settingsviewupdatetimes.h
-        components/settingsviewupdatetimes.ui
         components/settingsxswiftbuscomponent.cpp
         components/settingsxswiftbuscomponent.h
         components/settingsxswiftbuscomponent.ui
@@ -761,8 +758,6 @@ add_library(gui SHARED
         settings/textmessagesettings.cpp
         settings/textmessagesettings.h
         settings/updatenotification.h
-        settings/viewupdatesettings.cpp
-        settings/viewupdatesettings.h
         sharedstringlistcompleter.cpp
         sharedstringlistcompleter.h
         shortcut.cpp

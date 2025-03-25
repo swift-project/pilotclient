@@ -71,8 +71,6 @@ namespace swift::gui::components
                          !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsGuiGeneral.getFilename()));
         readOnlyCheckbox(ui->cb_SettingsDockWidget,
                          !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsDockWidget.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsViewUpdate,
-                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsViewUpdate.getFilename()));
 
         readOnlyCheckbox(ui->cb_SettingsEnabledSimulators, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
                                                                info, m_settingsEnabledSimulators.getFilename()));
@@ -124,7 +122,6 @@ namespace swift::gui::components
     {
         ui->cb_SettingsGuiGeneral->setText(checkBoxText(TGeneralGui::humanReadable(), true));
         ui->cb_SettingsDockWidget->setText(checkBoxText(TDockWidget::humanReadable(), true));
-        ui->cb_SettingsViewUpdate->setText(checkBoxText(TViewUpdateSettings::humanReadable(), true));
     }
 
     void CCopySettingsAndCachesComponent::initSimulator()
@@ -290,19 +287,6 @@ namespace swift::gui::components
                 const CDockWidgetSettings dwSettings =
                     CDockWidgetSettings::fromJsonNoThrow(joStr, true, success, errMsg);
                 this->displayStatusMessage(m_settingsDockWidget.setAndSave(dwSettings), dwSettings.toQString(true));
-                copied++;
-            }
-        }
-
-        if (ui->cb_SettingsViewUpdate->isChecked())
-        {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
-                otherVersionInfo, m_settingsViewUpdate.getFilename());
-            if (!joStr.isEmpty())
-            {
-                const CViewUpdateSettings viewUpdate =
-                    CViewUpdateSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                this->displayStatusMessage(m_settingsViewUpdate.setAndSave(viewUpdate), viewUpdate.toQString(true));
                 copied++;
             }
         }

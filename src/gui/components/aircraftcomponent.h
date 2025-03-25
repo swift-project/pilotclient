@@ -13,7 +13,6 @@
 #include <QtGlobal>
 
 #include "gui/enablefordockwidgetinfoarea.h"
-#include "gui/settings/viewupdatesettings.h"
 #include "gui/swiftguiexport.h"
 #include "misc/network/connectionstatus.h"
 
@@ -88,16 +87,10 @@ namespace swift::gui
             void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
                                            const swift::misc::network::CConnectionStatus &to);
 
-            //! Settings have been changed
-            void onSettingsChanged();
-
             //! Own aircraft has been moved
             void onOwnAircraftMoved(const swift::misc::physical_quantities::CLength &distance);
 
             QScopedPointer<Ui::CAircraftComponent> ui;
-            swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settings {
-                this, &CAircraftComponent::onSettingsChanged
-            }; //!< settings changed
             QTimer m_updateTimer;
             int m_updateCounter = 0;
         };

@@ -58,7 +58,9 @@ namespace swift::gui::components
                 &CAircraftComponent::onOwnAircraftMoved, Qt::QueuedConnection);
         connect(&m_updateTimer, &QTimer::timeout, this, &CAircraftComponent::update);
 
-        this->onSettingsChanged();
+        using namespace std::chrono_literals;
+        m_updateTimer.setInterval(10s);
+
         m_updateTimer.start();
     }
 
@@ -147,13 +149,6 @@ namespace swift::gui::components
                 ui->tvp_AircraftInRange->configureMenuFastPositionUpdates(sendFast);
             }
         }
-    }
-
-    void CAircraftComponent::onSettingsChanged()
-    {
-        const CViewUpdateSettings settings = m_settings.get();
-        const int ms = settings.getAircraftUpdateTime().toMs();
-        m_updateTimer.setInterval(ms);
     }
 
     void CAircraftComponent::onOwnAircraftMoved(const CLength &distance)

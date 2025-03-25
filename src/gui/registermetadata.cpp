@@ -8,7 +8,6 @@
 #include "gui/settings/guisettings.h"
 #include "gui/settings/navigatorsettings.h"
 #include "gui/settings/textmessagesettings.h"
-#include "gui/settings/viewupdatesettings.h"
 
 namespace swift::gui
 {
@@ -16,7 +15,6 @@ namespace swift::gui
     {
         swift::gui::settings::CDockWidgetSettings::registerMetadata();
         swift::gui::settings::CNavigatorSettings::registerMetadata();
-        swift::gui::settings::CViewUpdateSettings::registerMetadata();
         swift::gui::settings::CGeneralGuiSettings::registerMetadata();
         swift::gui::settings::CTextMessageSettings::registerMetadata();
         swift::gui::components::registerMetadata();

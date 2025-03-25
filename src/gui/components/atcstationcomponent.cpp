@@ -152,8 +152,8 @@ namespace swift::gui::components
             this->airportsRead();
         }
 
-        // init settings
-        this->settingsChanged();
+        using namespace std::chrono_literals;
+        m_updateTimer.setInterval(10ms);
     }
 
     CAtcStationComponent::~CAtcStationComponent() {}
@@ -327,22 +327,6 @@ namespace swift::gui::components
         if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
         if (!CComSystem::isValidComFrequency(frequency)) { return; }
         sGui->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier());
-    }
-
-    void CAtcStationComponent::settingsChanged()
-    {
-        if (!this->canAccessContext()) { return; }
-        const CViewUpdateSettings settings = m_settingsView.get();
-        const int ms = settings.getAtcUpdateTime().toMs();
-        const bool connected = sGui->getIContextNetwork()->isConnected();
-        m_updateTimer.setInterval(ms);
-        if (connected)
-        {
-            m_timestampOnlineStationsChanged = QDateTime::currentDateTimeUtc();
-            m_updateTimer.start(ms); // restart
-            this->update();
-        }
-        else { m_updateTimer.stop(); }
     }
 
     void CAtcStationComponent::airportsRead() { this->initCompleters(); }

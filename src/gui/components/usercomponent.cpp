@@ -39,7 +39,9 @@ namespace swift::gui::components
         connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
                 &CUserComponent::onConnectionStatusChanged);
         connect(&m_updateTimer, &QTimer::timeout, this, &CUserComponent::update);
-        this->onSettingsChanged();
+
+        using namespace std::chrono_literals;
+        m_updateTimer.setInterval(10s);
     }
 
     CUserComponent::~CUserComponent() {}
@@ -102,12 +104,5 @@ namespace swift::gui::components
             m_updateTimer.stop();
         }
         else if (to.isConnected()) { m_updateTimer.start(); }
-    }
-
-    void CUserComponent::onSettingsChanged()
-    {
-        const CViewUpdateSettings settings = m_settings.get();
-        const int ms = settings.getAtcUpdateTime().toMs();
-        m_updateTimer.setInterval(ms);
     }
 } // namespace swift::gui::components

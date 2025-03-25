@@ -19,7 +19,6 @@
 #include <QtGlobal>
 
 #include "gui/overlaymessagesframe.h"
-#include "gui/settings/viewupdatesettings.h"
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/atcstation.h"
 #include "misc/aviation/comsystem.h"
@@ -130,9 +129,6 @@ namespace swift::gui
             //! Init the completers
             void initCompleters();
 
-            //! Settings have been changed
-            void settingsChanged();
-
             //! Contexts?
             bool canAccessContext() const;
 
@@ -154,9 +150,6 @@ namespace swift::gui
             swift::misc::aviation::CCallsign m_selectedCallsign;
             QDateTime m_timestampLastReadOnlineStations; //!< stations read
             QDateTime m_timestampOnlineStationsChanged; //!< stations marked as changed
-            swift::misc::CSettingReadOnly<swift::gui::settings::TViewUpdateSettings> m_settingsView {
-                this, &CAtcStationComponent::settingsChanged
-            };
         };
     } // namespace components
 } // namespace swift::gui

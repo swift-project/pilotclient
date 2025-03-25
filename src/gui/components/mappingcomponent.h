@@ -15,7 +15,6 @@
 
 #include "gui/enablefordockwidgetinfoarea.h"
 #include "gui/overlaymessagesframe.h"
-#include "gui/settings/viewupdatesettings.h"
 #include "gui/swiftguiexport.h"
 #include "misc/identifiable.h"
 #include "misc/identifier.h"
@@ -161,9 +160,6 @@ namespace swift::gui
             //! Token bucket based update
             void tokenBucketUpdateAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
-            //! Settings have been changed
-            void settingsChanged();
-
             //! Connection status has been changed
             void onNetworkConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
                                                   const swift::misc::network::CConnectionStatus &to);
@@ -191,9 +187,6 @@ namespace swift::gui
             QTimer m_updateTimer;
             bool m_missedRenderedAircraftUpdate = true; //! Rendered aircraft need update
             swift::misc::CTokenBucket m_bucket { 3, 5000, 1 };
-            swift::misc::CSettingReadOnly<settings::TViewUpdateSettings> m_settings {
-                this, &CMappingComponent::settingsChanged
-            }; //!< settings changed
             views::CCheckBoxDelegate *m_currentMappingsViewDelegate = nullptr; //! checkbox in view
         };
     } // namespace components

@@ -20,7 +20,6 @@
 #include "gui/settings/dockwidgetsettings.h"
 #include "gui/settings/guisettings.h"
 #include "gui/settings/textmessagesettings.h"
-#include "gui/settings/viewupdatesettings.h"
 #include "gui/swiftguiexport.h"
 #include "misc/applicationinfo.h"
 #include "misc/audio/audiosettings.h"
@@ -113,7 +112,6 @@ namespace swift::gui::components
         swift::misc::CSetting<swift::core::audio::TOutputDevice> m_settingsAudioOutputDevice { this };
         swift::misc::CSetting<settings::TGeneralGui> m_settingsGuiGeneral { this };
         swift::misc::CSetting<settings::TDockWidget> m_settingsDockWidget { this };
-        swift::misc::CSetting<settings::TViewUpdateSettings> m_settingsViewUpdate { this };
         swift::misc::CSetting<settings::TBackgroundConsolidation> m_settingsConsolidation {
             this
         }; //!< consolidation time
