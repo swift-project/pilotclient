@@ -343,7 +343,12 @@ namespace swift::misc::aviation
         fp.setRemarks(fpDom.attribute("Remarks"));
         fp.setRoute(fpDom.attribute("Route"));
 
-        const QString voice = fpDom.attribute("VoiceType");
+        QString voice = fpDom.attribute("VoiceType");
+        if (voice.toLower() == "full")
+        {
+            // Default string in LNM exporter
+            voice = "VOICE";
+        }
         fp.setVoiceCapabilities(voice);
 
         // Ignoring equipment prefix, suffix and IsHeavy flag
