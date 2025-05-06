@@ -556,9 +556,10 @@ namespace swift::gui::components
     void CFlightPlanComponent::loadFromDisk()
     {
         CStatusMessageList msgs;
-        const QString fileName = QFileDialog::getOpenFileName(
-            this, tr("Load flight plan"), this->getDefaultFilename(true),
-            "Flight plans (*.json *.sfp *.xml);;swift (*.json *.txt);;SimBrief (*.xml);;SB4 (*.sfp)");
+        const QString fileName =
+            QFileDialog::getOpenFileName(this, tr("Load flight plan"), this->getDefaultFilename(true),
+                                         "Flight plans (*.json *.sfp *.vfp *.xml);;swift (*.json *.txt);;SimBrief "
+                                         "(*.xml);;vPilot (*.vfp);;SB4 (*.sfp)");
         if (fileName.isEmpty()) { return; }
         CFlightPlan fp = CFlightPlan::loadFromMultipleFormats(fileName, &msgs);
         if (!fp.hasCallsign()) { fp.setCallsign(ui->le_Callsign->text()); } // set callsign if it wasn't set

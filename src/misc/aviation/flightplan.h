@@ -398,6 +398,9 @@ namespace swift::misc::aviation
         //! As HTML
         QString asHTML(bool i18n = false) const;
 
+        //! From vPilot data
+        static CFlightPlan fromVPilotFormat(const QString &vPilotData);
+
         //! From SB4 data
         static CFlightPlan fromSB4Format(const QString &sbData);
 
