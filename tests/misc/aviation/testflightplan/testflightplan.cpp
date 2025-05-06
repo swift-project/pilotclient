@@ -12,6 +12,7 @@
 #include "misc/aviation/flightplan.h"
 #include "misc/aviation/selcal.h"
 #include "misc/network/voicecapabilities.h"
+#include "misc/pq/literals.h"
 
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;
@@ -30,6 +31,9 @@ namespace MiscTest
 
         //! Flight plan altitude
         void flightPlanAltitude();
+
+        //! Import flightplan from vpilot vfp format
+        void importVpilotFlightplan();
     };
 
     void CTestFlightPlan::flightPlanRemarks()
@@ -102,6 +106,36 @@ namespace MiscTest
         QVERIFY2(a.asFpICAOAltitudeString() == "S0150", "Expect S0150");
         a = CAltitude(1600, CAltitude::MeanSeaLevel, CLengthUnit::m());
         QVERIFY2(a.asFpICAOAltitudeString() == "M0160", "Expect M0160");
+    }
+
+    void CTestFlightPlan::importVpilotFlightplan()
+    {
+        using namespace swift::misc::physical_quantities::Literals;
+
+        const CFlightPlan fp = CFlightPlan::fromVPilotFormat(QStringLiteral(
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?><FlightPlan "
+            "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+            "FlightType=\"VFR\" Equipment=\"G\" CruiseAltitude=\"5500\" CruiseSpeed=\"115\" DepartureAirport=\"EDRY\" "
+            "DestinationAirport=\"EDDL\" AlternateAirport=\"EDDK\" Route=\"WRB DOMUX\" "
+            "Remarks=\"TEST remark\" IsHeavy=\"false\" EquipmentPrefix=\"\" EquipmentSuffix=\"\" "
+            "DepartureTime=\"1744\" "
+            "DepartureTimeAct=\"1744\" EnrouteHours=\"2\" EnrouteMinutes=\"28\" FuelHours=\"3\" FuelMinutes=\"45\" "
+            "VoiceType=\"Full\" />"));
+
+        QCOMPARE_EQ(fp.getFlightRules(), CFlightPlan::VFR);
+        QCOMPARE_EQ(fp.getCruiseTrueAirspeed(), 115_kts);
+        QCOMPARE_EQ(fp.getOriginAirportIcao().getIcaoCode(), "EDRY");
+        QCOMPARE_EQ(fp.getDestinationAirportIcao().getIcaoCode(), "EDDL");
+        QCOMPARE_EQ(fp.getAlternateAirportIcao().getIcaoCode(), "EDDK");
+        QCOMPARE_EQ(fp.getRemarks(), "/V/ TEST remark");
+        QCOMPARE_EQ(fp.getRoute(), "WRB DOMUX");
+        QCOMPARE_EQ(fp.getFuelTime(), CTime(3, 45, 0));
+        QCOMPARE_EQ(fp.getEnrouteTime(), CTime(2, 28, 0));
+        QCOMPARE_EQ(fp.getCruiseAltitude().asFpVatsimAltitudeString(), "FL055");
+        QCOMPARE_EQ(fp.getTakeoffTimePlannedHourMin(), "17:44");
+
+        // Should not read aircraft type from vfp
+        QCOMPARE_EQ(fp.getAircraftInfo().getAircraftIcao().getAircraftType(), "");
     }
 } // namespace MiscTest
 
