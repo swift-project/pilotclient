@@ -52,7 +52,6 @@ if(UNIX AND NOT APPLE)
 
 
     installLib(${QT_INSTALL_LIBS} libQt6Core.so.6)
-    installLib(${QT_INSTALL_LIBS} libQt6Core5Compat.so.6)
     installLib(${QT_INSTALL_LIBS} libQt6DBus.so.6)
     installLib(${QT_INSTALL_LIBS} libQt6Gui.so.6)
     installLib(${QT_INSTALL_LIBS} libQt6Multimedia.so.6)

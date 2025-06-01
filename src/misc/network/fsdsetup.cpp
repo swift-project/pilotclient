@@ -87,7 +87,7 @@ namespace swift::misc::network
         {
             msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"No codec"));
         }
-        if (!textCodecNames(true, true).contains(this->getTextCodec()))
+        if (!QStringDecoder::availableCodecs().contains(this->getTextCodec()))
         {
             msgs.push_back(CStatusMessage(CStatusMessage::SeverityError, u"Unrecognized codec name"));
         }

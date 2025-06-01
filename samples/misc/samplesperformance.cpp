@@ -13,7 +13,6 @@
 #include <QElapsedTimer>
 #include <QHash>
 #include <QList>
-#include <QRegExp>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QString>
@@ -155,8 +154,7 @@ namespace swift::sample
         std::generate_n(std::back_inserter(strList3), 100000, generator);
         std::generate_n(std::back_inserter(strList4), 100000, generator);
         QRegularExpression newRegex("^.*aaa.*$", QRegularExpression::CaseInsensitiveOption);
-        QRegExp fullRegex(".*aaa.*", Qt::CaseInsensitive);
-        QRegExp wildcardRegex("*aaa*", Qt::CaseInsensitive, QRegExp::Wildcard);
+        QRegularExpression fullRegex(".*aaa.*", QRegularExpression::CaseInsensitiveOption);
         QString containsStr("aaa");
         number = 0;
         timer.start();
@@ -170,18 +168,10 @@ namespace swift::sample
         timer.start();
         for (const auto &str : std::as_const(strList2))
         {
-            if (fullRegex.exactMatch(str)) number++;
+            if (fullRegex.match(str).hasMatch()) number++;
         }
         ms = timer.elapsed();
         out << "full regex matched " << number << " of" << strList2.size() << " strings in " << ms << "ms" << Qt::endl;
-        number = 0;
-        timer.start();
-        for (const auto &str : std::as_const(strList3))
-        {
-            if (wildcardRegex.exactMatch(str)) number++;
-        }
-        ms = timer.elapsed();
-        out << "wildcard matched " << number << " of " << strList3.size() << " strings in " << ms << "ms" << Qt::endl;
         number = 0;
         timer.start();
         for (const auto &str : std::as_const(strList4))
@@ -441,7 +431,7 @@ namespace swift::sample
             auto lines = splitLinesRefs(bigString);
             Q_UNUSED(lines);
         }
-        out << "Split 100,000 line string into list of lines: (QList<QStringRef>)    " << timer.elapsed() << "ms"
+        out << "Split 100,000 line string into list of lines: (QList<QStringView>)    " << timer.elapsed() << "ms"
             << Qt::endl;
 
         return EXIT_SUCCESS;

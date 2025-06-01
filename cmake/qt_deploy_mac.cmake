@@ -12,7 +12,6 @@ endfunction()
 
 copy_framework(QtConcurrent)
 copy_framework(QtCore)
-copy_framework(QtCore5Compat)
 copy_framework(QtDBus)
 copy_framework(QtGui)
 copy_framework(QtMultimedia)

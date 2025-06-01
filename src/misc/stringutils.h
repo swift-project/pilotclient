@@ -17,7 +17,6 @@
 #include <QMapIterator>
 #include <QSet>
 #include <QString>
-#include <QStringRef>
 #include <QStringView>
 #include <QtGlobal>
 
@@ -89,9 +88,9 @@ namespace swift::misc
     //! Split a string into multiple strings, using a predicate function to identify the split points.
     //! \warning The returned refs are only valid during the lifetime of the original string.
     template <class F>
-    QList<QStringRef> splitStringRefs(const QString &s, F predicate)
+    QList<QStringView> splitStringRefs(const QString &s, F predicate)
     {
-        QList<QStringRef> result;
+        QList<QStringView> result;
         auto notPredicate = [=](auto c) { return !predicate(c); };
         auto begin = s.begin();
         while (true)
@@ -99,14 +98,14 @@ namespace swift::misc
             begin = std::find_if(begin, s.end(), notPredicate);
             if (begin == s.end()) { return result; }
             auto end = std::find_if(begin, s.end(), predicate);
-            result.push_back(QStringRef(&s, std::distance(s.begin(), begin), std::distance(begin, end)));
+            result.push_back(QStringView(s).slice(std::distance(s.begin(), begin), std::distance(begin, end)));
             begin = end;
         }
     }
 
     //! Split a string into multiple lines. Blank lines are skipped.
     //! \warning The returned refs are only valid during the lifetime of the original string.
-    SWIFT_MISC_EXPORT QList<QStringRef> splitLinesRefs(const QString &s);
+    SWIFT_MISC_EXPORT QList<QStringView> splitLinesRefs(const QString &s);
 
     //! It would be risky to call splitStringRefs with an rvalue, so forbid it.
     template <class F>
@@ -119,7 +118,7 @@ namespace swift::misc
     template <class F>
     QStringList splitString(const QString &s, F predicate)
     {
-        return makeRange(splitStringRefs(s, predicate)).transform([](QStringRef sr) { return sr.toString(); });
+        return makeRange(splitStringRefs(s, predicate)).transform([](QStringView sv) { return sv.toString(); });
     }
 
     //! Split a string into multiple lines. Blank lines are skipped.
@@ -256,9 +255,6 @@ namespace swift::misc
     //! Strip a designator from a combined string
     SWIFT_MISC_EXPORT QString stripDesignatorFromCompleterString(const QString &candidate);
 
-    //! Strip a designator from a combined string
-    SWIFT_MISC_EXPORT QStringList textCodecNames(bool simpleNames, bool mibNames);
-
     //! Remove accents / diacritic marks from a string
     SWIFT_MISC_EXPORT QString simplifyAccents(const QString &candidate);
 
@@ -331,11 +327,6 @@ namespace swift::misc
     struct TString<QString>
     {
         static QString toQString(const QString &s) { return s; }
-    };
-    template <>
-    struct TString<QStringRef>
-    {
-        static QString toQString(const QStringRef &sr) { return sr.toString(); }
     };
     template <>
     struct TString<QStringView>

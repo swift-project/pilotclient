@@ -657,13 +657,13 @@ namespace swift::misc::simulation::fscommon
             // manually parsing because QSettings did not work properly
             const QString fileContent = CFileUtils::readFileToString(configFile);
             if (fileContent.isEmpty()) { continue; }
-            const QList<QStringRef> lines = splitLinesRefs(fileContent);
+            const QList<QStringView> lines = splitLinesRefs(fileContent);
             static const QString p("Path=");
-            for (const QStringRef &line : lines)
+            for (const QStringView &line : lines)
             {
                 const int i = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
                 if (i < 0 || line.endsWith('=')) { continue; }
-                const QStringRef path = line.mid(i + p.length());
+                const QStringView path = line.mid(i + p.length());
                 const QDir dir(QDir::fromNativeSeparators(
                     pathPrefix.isEmpty() ? path.toString() :
                                            CFileUtils::appendFilePathsAndFixUnc(pathPrefix, path.toString())));
@@ -785,20 +785,20 @@ namespace swift::misc::simulation::fscommon
     {
         const QString fileContent = CFileUtils::readFileToString(fsxFile);
         if (fileContent.isEmpty()) { return QSet<QString>(); }
-        const QList<QStringRef> lines = splitLinesRefs(fileContent);
+        const QList<QStringView> lines = splitLinesRefs(fileContent);
         static const QString p("SimObjectPaths.");
 
         const QFileInfo fsxFileInfo(fsxFile);
         const QString relPath = fsxFileInfo.absolutePath();
 
         QSet<QString> paths;
-        for (const QStringRef &line : lines)
+        for (const QStringView &line : lines)
         {
             const int i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
             if (i1 < 0) { continue; }
             const int i2 = line.lastIndexOf('=');
             if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
-            const QStringRef path = line.mid(i2 + 1);
+            const QStringView path = line.mid(i2 + 1);
             QString soPath = QDir::fromNativeSeparators(path.toString());
             if (logConfigPathReading())
             {
@@ -857,20 +857,20 @@ namespace swift::misc::simulation::fscommon
     {
         const QString fileContent = CFileUtils::readFileToString(msfsFile);
         if (fileContent.isEmpty()) { return QSet<QString>(); }
-        const QList<QStringRef> lines = splitLinesRefs(fileContent);
+        const QList<QStringView> lines = splitLinesRefs(fileContent);
         static const QString p("SimObjectPaths.");
 
         const QFileInfo fsxFileInfo(msfsFile);
         const QString relPath = fsxFileInfo.absolutePath();
 
         QSet<QString> paths;
-        for (const QStringRef &line : lines)
+        for (const QStringView &line : lines)
         {
             const int i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
             if (i1 < 0) { continue; }
             const int i2 = line.lastIndexOf('=');
             if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
-            const QStringRef path = line.mid(i2 + 1);
+            const QStringView path = line.mid(i2 + 1);
             QString soPath = QDir::fromNativeSeparators(path.toString());
             if (logConfigPathReading())
             {

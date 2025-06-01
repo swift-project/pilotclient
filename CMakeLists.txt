@@ -87,7 +87,7 @@ if(MSVC)
 endif()
 
 # Find dependencies
-find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test Core5Compat)
+find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test)
 
 # Global compiler options
 if(MSVC)

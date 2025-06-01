@@ -20,7 +20,7 @@ namespace swift::gui::editors
         ui->setupUi(this);
         this->resetToDefaultValues();
         ui->cb_Override->setChecked(true);
-        ui->le_TextCodec->setCompleter(new QCompleter(textCodecNames(true, true), this));
+        ui->le_TextCodec->setCompleter(new QCompleter(QStringDecoder::availableCodecs(), this));
         connect(ui->cb_Override, &QCheckBox::toggled, this, &CFsdSetupForm::enabledToggled, Qt::QueuedConnection);
         connect(ui->pb_SetDefaults, &QPushButton::clicked, this, &CFsdSetupForm::resetToDefaultValues);
     }

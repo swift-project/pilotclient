@@ -698,7 +698,6 @@ target_link_libraries(misc
             Qt::Network
             Qt::Multimedia
             nlohmann_json::nlohmann_json
-            Qt::Core5Compat # for QStringRef
         PRIVATE
             Qt::Xml
             SimpleCrypt

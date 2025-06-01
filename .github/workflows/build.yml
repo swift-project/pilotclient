@@ -108,7 +108,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
-          modules: 'qtmultimedia qt5compat'
+          modules: 'qtmultimedia'
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
@@ -201,7 +201,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
-          modules: 'qtmultimedia qt5compat'
+          modules: 'qtmultimedia'
           arch: win64_msvc2022_64
           cache: true
       - name: Install Qt debug info
@@ -299,7 +299,7 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
-          modules: 'qtmultimedia qt5compat'
+          modules: 'qtmultimedia'
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock

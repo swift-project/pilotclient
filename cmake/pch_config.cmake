@@ -46,7 +46,7 @@ set(SWIFT_MISC_PCH
     <QString>
     <QStringBuilder>
     <QStringList>
-    <QStringRef>
+    <QStringView>
     <QThread>
     <QTime>
     <QTimer>

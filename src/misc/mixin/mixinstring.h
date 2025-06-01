@@ -12,8 +12,6 @@
 #include <QByteArray>
 #include <QDebug>
 #include <QString>
-#include <QStringRef>
-#include <QStringView>
 #include <QTextStream>
 #include <QtGlobal>
 

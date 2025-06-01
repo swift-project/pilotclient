@@ -42,7 +42,6 @@
 #include <QReadWriteLock>
 #include <QString>
 #include <QTcpSocket>
-#include <QTextCodec>
 #include <QTimer>
 #include <QtGlobal>
 
@@ -651,7 +650,8 @@ namespace swift::core::fsd
         // User data
         swift::misc::network::CServer m_server;
         swift::misc::network::CLoginMode m_loginMode;
-        QTextCodec *m_fsdTextCodec = nullptr;
+        QStringEncoder m_encoder;
+        QStringDecoder m_decoder;
         SimType m_simType = SimType::Unknown;
         PilotRating m_pilotRating = PilotRating::Unknown;
         AtcRating m_atcRating = AtcRating::Unknown;

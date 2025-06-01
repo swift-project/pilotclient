@@ -20,9 +20,6 @@
                     <origin>../../dist/bin/Qt6Core.dll</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/bin/Qt6Core5Compat.dll</origin>
-                </distributionFile>
-                <distributionFile>
                     <origin>../../dist/bin/Qt6DBus.dll</origin>
                 </distributionFile>
                 <distributionFile>
@@ -76,9 +73,6 @@
                     <origin>../../dist/lib/libQt6Core.so.6</origin>
                 </distributionFile>
                 <distributionFile>
-                    <origin>../../dist/lib/libQt6Core5Compat.so.6</origin>
-                </distributionFile>
-                <distributionFile>
                     <origin>../../dist/lib/libQt6DBus.so.6</origin>
                 </distributionFile>
                 <distributionFile>
@@ -127,9 +121,6 @@
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/lib/QtCore.framework</origin>
-                </distributionDirectory>
-                <distributionDirectory>
-                    <origin>../../dist/lib/QtCore5Compat.framework</origin>
                 </distributionDirectory>
                 <distributionDirectory>
                     <origin>../../dist/lib/QtDBus.framework</origin>

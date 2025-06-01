@@ -141,8 +141,8 @@ namespace swift::core::fsd
                    "Can't change server details while still connected");
 
         const QString codecName(server.getFsdSetup().getTextCodec());
-        QTextCodec *textCodec = QTextCodec::codecForName(codecName.toLocal8Bit());
-        if (!textCodec) { textCodec = QTextCodec::codecForName("utf-8"); }
+        auto codec = QStringDecoder::encodingForName(codecName);
+        if (!codec.has_value()) { codec = QStringConverter::Utf8; }
         const int protocolRev = (server.getServerType() == CServer::FSDServerVatsim) ?
                                     PROTOCOL_REVISION_VATSIM_VELOCITY :
                                     PROTOCOL_REVISION_CLASSIC;
@@ -150,7 +150,8 @@ namespace swift::core::fsd
         QWriteLocker l(&m_lockUserClientBuffered);
         m_server = server;
         m_protocolRevision = protocolRev;
-        m_fsdTextCodec = textCodec;
+        m_encoder = QStringEncoder(codec.value_or(QStringConverter::Utf8));
+        m_decoder = QStringDecoder(codec.value_or(QStringConverter::Utf8));
     }
 
     void CFSDClient::setCallsign(const CCallsign &callsign)
@@ -781,7 +782,7 @@ namespace swift::core::fsd
     void CFSDClient::sendMessageString(const QString &message)
     {
         if (message.isEmpty()) { return; }
-        const QByteArray bufferEncoded = m_fsdTextCodec->fromUnicode(message);
+        const QByteArray bufferEncoded = m_encoder(message);
         if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
         if (!m_unitTestMode) { m_socket->write(bufferEncoded); }
 
@@ -2199,7 +2200,7 @@ namespace swift::core::fsd
         {
             const QByteArray dataEncoded = m_socket->readLine();
             if (dataEncoded.isEmpty()) { continue; }
-            const QString data = m_fsdTextCodec->toUnicode(dataEncoded);
+            const QString data = m_decoder(dataEncoded);
             this->parseMessage(data);
             lines++;
 

@@ -9,7 +9,6 @@
  */
 
 #include <QTest>
-#include <QTextCodec>
 #include <QTime>
 
 #include "test.h"
@@ -130,18 +129,21 @@ namespace MiscTest
 
     void CTestStringUtils::testCodecs()
     {
-        QTextCodec *latin1 = QTextCodec::codecForName("latin1");
-        QTextCodec *cp1251 = QTextCodec::codecForName("windows-1251");
-        QTextCodec *utf8 = QTextCodec::codecForName("UTF-8");
+        const QStringConverter::Encoding latin1_enc = QStringDecoder::encodingForName("latin1").value();
+        const QStringConverter::Encoding utf8_enc = QStringDecoder::encodingForName("UTF-8").value();
+
+        QStringDecoder latin1_decoder = QStringDecoder(latin1_enc);
+        QStringEncoder latin1_encoder = QStringEncoder(latin1_enc);
+        QStringDecoder utf8_decoder = QStringDecoder(utf8_enc);
+        QStringEncoder utf8_encoder = QStringEncoder(utf8_enc);
+
         const QString testEnglish = QStringLiteral(u"test");
         const QString testRussian = QStringLiteral(u"тест");
-        bool okEn1 = latin1->toUnicode(latin1->fromUnicode(testEnglish)) == testEnglish;
-        bool okEn2 = utf8->toUnicode(utf8->fromUnicode(testEnglish)) == testEnglish;
-        bool okRu1 = cp1251->toUnicode(cp1251->fromUnicode(testRussian)) == testRussian;
-        bool okRu2 = utf8->toUnicode(utf8->fromUnicode(testRussian)) == testRussian;
+        bool okEn1 = latin1_decoder(latin1_encoder(testEnglish)) == testEnglish;
+        bool okEn2 = utf8_decoder(utf8_encoder(testEnglish)) == testEnglish;
+        bool okRu2 = utf8_decoder(utf8_encoder(testRussian)) == testRussian;
         QVERIFY2(okEn1, "English \"test\" equal after round-trip with latin1");
         QVERIFY2(okEn2, "English \"test\" equal after round-trip with utf8");
-        QVERIFY2(okRu1, "Russian \"test\" equal after round-trip with cp1251");
         QVERIFY2(okRu2, "Russian \"test\" equal after round-trip with utf8");
     }
 

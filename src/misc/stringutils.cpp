@@ -8,7 +8,6 @@
 #include <QChar>
 #include <QRegularExpression>
 #include <QStringBuilder>
-#include <QTextCodec>
 
 namespace swift::misc
 {
@@ -17,7 +16,7 @@ namespace swift::misc
         return removeChars(s, [](QChar c) { return c == u' ' || c == u':' || c == u'_' || c == u'-' || c == u'.'; });
     }
 
-    QList<QStringRef> splitLinesRefs(const QString &s)
+    QList<QStringView> splitLinesRefs(const QString &s)
     {
         return splitStringRefs(s, [](QChar c) { return c == '\n' || c == '\r'; });
     }
@@ -208,44 +207,6 @@ namespace swift::misc
         const QString s(candidate.trimmed().toUpper());
         if (s.isEmpty()) { return QString(); }
         return s.contains(' ') ? s.left(s.indexOf(' ')) : s;
-    }
-
-    QStringList simpleTextCodecNamesImpl()
-    {
-        QStringList codecs;
-        for (const QByteArray &ba : QTextCodec::availableCodecs())
-        {
-            const QString c(QString::fromLocal8Bit(ba));
-            codecs << c;
-        }
-        return codecs;
-    }
-
-    QStringList mibTextCodecNamesImpl()
-    {
-        QStringList codecs;
-        for (int mib : QTextCodec::availableMibs())
-        {
-            const QByteArray ba(QTextCodec::codecForMib(mib)->name());
-            const QString c(QString::fromLocal8Bit(ba));
-            codecs << c;
-        }
-        return codecs;
-    }
-
-    QStringList textCodecNames(bool simpleNames, bool mibNames)
-    {
-        static const QStringList simple(simpleTextCodecNamesImpl());
-        static const QStringList mib(mibTextCodecNamesImpl());
-        if (simpleNames && mibNames)
-        {
-            QStringList s(simple);
-            s.append(mib);
-            return s;
-        }
-        if (simpleNames) { return simple; }
-        if (mibNames) { return mib; }
-        return QStringList();
     }
 
     // http://www.codegur.online/14009522/how-to-remove-accents-diacritic-marks-from-a-string-in-qt
@@ -458,11 +419,11 @@ namespace swift::misc
     QMap<QString, QString> parseIniValues(const QString &data)
     {
         QMap<QString, QString> map;
-        QList<QStringRef> lines = splitLinesRefs(data);
-        for (const QStringRef &l : lines)
+        QList<QStringView> lines = splitLinesRefs(data);
+        for (const QStringView &l : lines)
         {
             if (l.isEmpty()) { continue; }
-            const int i = l.indexOf("=");
+            const int i = l.indexOf('=');
             if (i < 0 || i >= l.length() + 1) { continue; }
 
             const QString key = l.left(i).trimmed().toString();
