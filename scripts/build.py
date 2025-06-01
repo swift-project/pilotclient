@@ -41,21 +41,9 @@ class Builder:
         build_path = self._get_swift_build_path()
         if not os.path.isdir(build_path):
             os.makedirs(build_path)
-        os.chdir(build_path)
 
-        cmake_call = ['cmake',
-                      '..',
-                      f'--preset=ci-build-{self.os_map[platform.system()]}']
-        subprocess.check_call(cmake_call, env=dict(os.environ))
-
-        # Workaround while using Make for macOS to pass number of jobs
-        if self.__class__.__name__ == 'MacOSBuilder':
-            subprocess.check_call(["cmake", "--build", ".", "-j3"], env=dict(os.environ))
-        elif self.__class__.__name__ == 'MSVCBuilder':
-            # it seems that ninja does not automatically spawn the correct number of jobs on Windows
-            subprocess.check_call(["cmake", "--build", ".", "-j4"], env=dict(os.environ))
-        else:
-            subprocess.check_call(["cmake", "--build", "."], env=dict(os.environ))
+        self._configure()
+        self._build()
 
     def checks(self):
         """
@@ -198,6 +186,28 @@ class Builder:
 
     def bundle_csl2xsb(self):
         pass
+
+    def _configure(self):
+        build_path = self._get_swift_build_path()
+        os.chdir(build_path)
+
+        cmake_call = ['cmake',
+                      '..',
+                      f'--preset=ci-build-{self.os_map[platform.system()]}']
+        subprocess.check_call(cmake_call, env=dict(os.environ))
+
+    def _build(self):
+        build_path = self._get_swift_build_path()
+        os.chdir(build_path)
+
+        # Workaround while using Make for macOS to pass number of jobs
+        if self.__class__.__name__ == 'MacOSBuilder':
+            subprocess.check_call(["cmake", "--build", ".", "-j3"], env=dict(os.environ))
+        elif self.__class__.__name__ == 'MSVCBuilder':
+            # it seems that ninja does not automatically spawn the correct number of jobs on Windows
+            subprocess.check_call(["cmake", "--build", ".", "-j4"], env=dict(os.environ))
+        else:
+            subprocess.check_call(["cmake", "--build", "."], env=dict(os.environ))
 
     def _get_swift_build_path(self) -> str:
         return self.__build_path
