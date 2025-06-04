@@ -153,10 +153,9 @@ namespace swift::core::db
         entities &= CEntityFlags::AllIcaoCountriesCategory;
 
         CEntityFlags::Entity entitiesTriggered = CEntityFlags::NoEntity;
-        CUrl url;
         if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
         {
-            url = this->getAircraftIcaoUrl(mode);
+            CUrl url = this->getAircraftIcaoUrl(mode);
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
@@ -168,7 +167,7 @@ namespace swift::core::db
 
         if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
         {
-            url = this->getAirlineIcaoUrl(mode);
+            CUrl url = this->getAirlineIcaoUrl(mode);
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
@@ -180,7 +179,7 @@ namespace swift::core::db
 
         if (entities.testFlag(CEntityFlags::CountryEntity))
         {
-            url = this->getCountryUrl(mode);
+            CUrl url = this->getCountryUrl(mode);
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
@@ -192,7 +191,7 @@ namespace swift::core::db
 
         if (entities.testFlag(CEntityFlags::AircraftCategoryEntity))
         {
-            url = this->getAircraftCategoryUrl(mode);
+            CUrl url = this->getAircraftCategoryUrl(mode);
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
@@ -204,7 +203,7 @@ namespace swift::core::db
 
         if (entitiesTriggered != CEntityFlags::NoEntity)
         {
-            emit this->dataRead(entitiesTriggered, CEntityFlags::ReadStarted, 0, url);
+            emit this->dataRead(entitiesTriggered, CEntityFlags::ReadStarted, 0, getBaseUrl(mode));
         }
     }
 

@@ -167,11 +167,9 @@ namespace swift::core::db
         entities &= CEntityFlags::DistributorLiveryModel;
 
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
-        CUrl url;
-
         if (entities.testFlag(CEntityFlags::LiveryEntity))
         {
-            url = this->getLiveryUrl(mode);
+            CUrl url = this->getLiveryUrl(mode);
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
@@ -183,7 +181,7 @@ namespace swift::core::db
 
         if (entities.testFlag(CEntityFlags::DistributorEntity))
         {
-            url = this->getDistributorUrl(mode);
+            CUrl url = this->getDistributorUrl(mode);
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
@@ -195,7 +193,7 @@ namespace swift::core::db
 
         if (entities.testFlag(CEntityFlags::ModelEntity))
         {
-            url = this->getModelUrl(mode);
+            CUrl url = this->getModelUrl(mode);
             if (!url.isEmpty())
             {
                 url.appendQuery(queryLatestTimestamp(newerThan));
@@ -207,7 +205,7 @@ namespace swift::core::db
 
         if (triggeredRead != CEntityFlags::NoEntity)
         {
-            emit dataRead(triggeredRead, CEntityFlags::ReadStarted, 0, url);
+            emit dataRead(triggeredRead, CEntityFlags::ReadStarted, 0, getBaseUrl(mode));
         }
     }
 
