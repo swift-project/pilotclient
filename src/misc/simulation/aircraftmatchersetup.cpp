@@ -129,7 +129,7 @@ namespace swift::misc::simulation
         case IndexMsNetworkEntryFile: m_msReverseLookupFile = variant.toString(); break;
         case IndexMsMatchingStageFile: m_msMatchingStageFile = variant.toString(); break;
         case IndexMsNetworkEnabled: m_msReverseEnabled = variant.toBool(); break;
-        case IndexMsMatchingStageEnabled: m_msReverseEnabled = variant.toBool(); break;
+        case IndexMsMatchingStageEnabled: m_msMatchingEnabled = variant.toBool(); break;
         default: break;
         }
         CValueObject::setPropertyByIndex(index, variant);

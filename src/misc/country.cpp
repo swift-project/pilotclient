@@ -137,7 +137,7 @@ namespace swift::misc
         case IndexIso3Code: this->setIso3Code(variant.toString()); break;
         case IndexName: this->setName(variant.toString()); break;
         case IndexAlias1: this->setAlias1(variant.toString()); break;
-        case IndexAlias2: this->setAlias1(variant.toString()); break;
+        case IndexAlias2: this->setAlias2(variant.toString()); break;
         case IndexHistoric: this->setHistoric(variant.toBool()); break;
         default:
             IDatastoreObjectWithStringKey::canHandleIndex(index) ?

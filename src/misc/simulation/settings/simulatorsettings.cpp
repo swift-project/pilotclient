@@ -165,7 +165,7 @@ namespace swift::misc::simulation::settings
         switch (i)
         {
         case IndexSimulatorDirectory: this->setSimulatorDirectory(variant.toString()); break;
-        case IndexModelDirectories: this->setSimulatorDirectory(variant.toString()); break;
+        case IndexModelDirectories: this->setModelDirectories(variant.toStringList()); break;
         case IndexComIntegration: this->setComIntegrated(variant.toBool()); break;
         case IndexRecordOwnAircraftGnd: this->setRecordOwnAircraftGnd(variant.toBool()); break;
         case IndexModelExcludeDirectoryPatterns: m_excludeDirectoryPatterns = variant.value<QStringList>(); break;

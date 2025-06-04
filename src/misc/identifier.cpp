@@ -242,7 +242,7 @@ namespace swift::misc
         case IndexName: return m_name.compare(compareValue.m_name, Qt::CaseInsensitive);
         case IndexMachineIdBase64: return m_machineIdBase64.compare(compareValue.m_machineIdBase64);
         case IndexMachineName: return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
-        case IndexMachineId: return m_machineName.compare(compareValue.m_machineName, Qt::CaseInsensitive);
+        case IndexMachineId: return getMachineId().compare(compareValue.getMachineId(), Qt::CaseInsensitive);
         case IndexProcessId: return Compare::compare(m_processId, compareValue.m_processId);
         case IndexProcessName: return m_processName.compare(compareValue.m_processName, Qt::CaseInsensitive);
         case IndexIsFromLocalMachine:

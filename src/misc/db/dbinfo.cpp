@@ -87,7 +87,7 @@ namespace swift::misc::db
         switch (i)
         {
         case IndexTableName: this->setTableName(variant.toString()); break;
-        case IndexEntries: this->setTableName(variant.toString()); break;
+        case IndexEntries: this->setEntries(variant.toInt()); break;
         case IndexEntity: this->setEntity(static_cast<CEntityFlags::Entity>(variant.toInt())); break;
         default:
             if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))

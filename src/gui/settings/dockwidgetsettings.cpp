@@ -95,7 +95,7 @@ namespace swift::gui::settings
         case IndexFloatingMargins: return QVariant::fromValue(m_floatingMargins);
         case IndexFloatingFramelessMargins: return QVariant::fromValue(m_floatingFramelessMargins);
         case IndexDockedMargins: return QVariant::fromValue(m_dockedMargins);
-        case IndexFrameless: return QVariant::fromValue(m_floating);
+        case IndexFrameless: return QVariant::fromValue(m_frameless);
         case IndexFloating: return QVariant::fromValue(m_floating);
         default: return CValueObject::propertyByIndex(index);
         }
