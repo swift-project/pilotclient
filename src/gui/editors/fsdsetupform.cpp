@@ -25,7 +25,7 @@ namespace swift::gui::editors
         connect(ui->pb_SetDefaults, &QPushButton::clicked, this, &CFsdSetupForm::resetToDefaultValues);
     }
 
-    CFsdSetupForm::~CFsdSetupForm() {}
+    CFsdSetupForm::~CFsdSetupForm() = default;
 
     CFsdSetup CFsdSetupForm::getValue() const
     {

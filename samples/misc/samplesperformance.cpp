@@ -56,7 +56,8 @@ namespace swift::sample
     int CSamplesPerformance::samplesMisc(QTextStream &out)
     {
         QElapsedTimer timer;
-        int ms, number;
+        qint64 ms {};
+        int number {};
         CSamplesPerformance::copy10kStations(1); // init
 
         // ATC stations, tradionally created
@@ -148,7 +149,10 @@ namespace swift::sample
 
         // Regex pattern matching with lists of 10000 strings containing random hex numbers
         auto generator = []() { return QString::number(CMathUtils::randomGenerator().generate(), 16); };
-        QStringList strList1, strList2, strList3, strList4;
+        QStringList strList1;
+        QStringList strList2;
+        QStringList strList3;
+        QStringList strList4;
         std::generate_n(std::back_inserter(strList1), 100000, generator);
         std::generate_n(std::back_inserter(strList2), 100000, generator);
         std::generate_n(std::back_inserter(strList3), 100000, generator);
@@ -305,7 +309,7 @@ namespace swift::sample
         CDatabaseReader::stringToDatastoreResponse(liveryData, response);
         timer.start();
         const CLiveryList dbLiveries = CLiveryList::fromDatabaseJson(response);
-        int ms = timer.elapsed();
+        qint64 ms = timer.elapsed();
         out << "Read via DB JSON format: " << dbLiveries.size() << " liveries in " << ms << "ms" << Qt::endl;
 
         // does not result in better performance, liveries/airlines have almost a 1:1 ratio
@@ -356,7 +360,7 @@ namespace swift::sample
         std::generate_n(std::back_inserter(strings), 100000, [] {
             QString s;
             std::generate_n(std::back_inserter(s), 10,
-                            [] { return chars[CMathUtils::randomInteger(0, chars.size() - 1)]; });
+                            [] { return chars[CMathUtils::randomInteger(0, static_cast<int>(chars.size() - 1))]; });
             return s;
         });
         QString bigString = strings.join("\n");
@@ -720,10 +724,10 @@ namespace swift::sample
               CCoordinateGeodetic(30.0, 30.0, 30.0), CCoordinateGeodetic(40.0, 40.0, 40.0),
               CCoordinateGeodetic(50.0, 50.0, 50.0), CCoordinateGeodetic(60.0, 60.0, 60.0),
               CCoordinateGeodetic(70.0, 70.0, 70.0) });
-        const int s = pos.size();
+        const qsizetype s = pos.size();
         for (int i = 0; i < n; i++)
         {
-            int p = i % s;
+            const qsizetype p = i % s;
             atc.calculcateAndUpdateRelativeDistance(pos.at(p));
         }
     }

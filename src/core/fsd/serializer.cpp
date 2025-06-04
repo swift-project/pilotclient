@@ -181,7 +181,6 @@ namespace swift::core::fsd
         case SimType::P3Dv4: return "30";
 
         // future versions
-        // future versions
         case SimType::XPLANE12:
         case SimType::P3Dv5: return "0";
         }

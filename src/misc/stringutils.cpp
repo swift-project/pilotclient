@@ -5,6 +5,8 @@
 
 #include "misc/stringutils.h"
 
+#include <any>
+
 #include <QChar>
 #include <QRegularExpression>
 #include <QStringBuilder>
@@ -156,8 +158,8 @@ namespace swift::misc
         const QString bStr = str1.length() >= str2.length() ? str2 : str1;
 
         // starts/ends with
-        const double s1 = aStr.length();
-        const double s2 = bStr.length();
+        const auto s1 = static_cast<double>(aStr.length());
+        const auto s2 = static_cast<double>(bStr.length());
         if (aStr.endsWith(bStr, cs)) { return qRound(s1 / s2 * 100); }
         if (aStr.startsWith(bStr, cs)) { return qRound(s1 / s2 * 100); }
 
@@ -195,17 +197,17 @@ namespace swift::misc
 
     QString intToHex(int value, int digits)
     {
-        QString hex(QString::number(value, 16).toUpper());
-        int l = hex.length();
+        const QString hex(QString::number(value, 16).toUpper());
+        const qsizetype l = hex.length();
         if (l >= digits) { return hex.right(digits); }
-        int d = digits - l;
+        const qsizetype d = digits - l;
         return QString(d, '0') + hex;
     }
 
     QString stripDesignatorFromCompleterString(const QString &candidate)
     {
         const QString s(candidate.trimmed().toUpper());
-        if (s.isEmpty()) { return QString(); }
+        if (s.isEmpty()) { return {}; }
         return s.contains(' ') ? s.left(s.indexOf(' ')) : s;
     }
 
@@ -226,7 +228,7 @@ namespace swift::misc
         for (int i = 0; i < candidate.length(); i++)
         {
             const QChar c = candidate[i];
-            int dIndex = diacriticLetters.indexOf(c);
+            const qsizetype dIndex = diacriticLetters.indexOf(c);
             if (dIndex < 0) { output.append(c); }
             else
             {
@@ -268,7 +270,7 @@ namespace swift::misc
 
     QDateTime fromStringUtc(const QString &dateTimeString, const QString &format)
     {
-        if (dateTimeString.isEmpty() || format.isEmpty()) { return QDateTime(); }
+        if (dateTimeString.isEmpty() || format.isEmpty()) { return {}; }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
         if (!dt.isValid()) { return dt; }
         dt.setOffsetFromUtc(0); // must only be applied to valid timestamps
@@ -277,7 +279,7 @@ namespace swift::misc
 
     QDateTime fromStringUtc(const QString &dateTimeString, Qt::DateFormat format)
     {
-        if (dateTimeString.isEmpty()) { return QDateTime(); }
+        if (dateTimeString.isEmpty()) { return {}; }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
         if (!dt.isValid()) { return dt; }
         dt.setOffsetFromUtc(0); // must only be applied to valid timestamps
@@ -286,7 +288,7 @@ namespace swift::misc
 
     QDateTime fromStringUtc(const QString &dateTimeString, const QLocale &locale, QLocale::FormatType format)
     {
-        if (dateTimeString.isEmpty()) { return QDateTime(); }
+        if (dateTimeString.isEmpty()) { return {}; }
         QDateTime dt = locale.toDateTime(dateTimeString, format);
         if (!dt.isValid()) { return dt; }
         dt.setOffsetFromUtc(0); // must only be applied to valid timestamps
@@ -295,7 +297,7 @@ namespace swift::misc
 
     QDateTime parseMultipleDateTimeFormats(const QString &dateTimeString)
     {
-        if (dateTimeString.isEmpty()) { return QDateTime(); }
+        if (dateTimeString.isEmpty()) { return {}; }
         if (isDigitsOnlyString(dateTimeString))
         {
             // 2017 0301 124421 321
@@ -303,7 +305,7 @@ namespace swift::misc
             if (dateTimeString.length() == 14) { return fromStringUtc(dateTimeString, "yyyyMMddHHmmss"); }
             if (dateTimeString.length() == 12) { return fromStringUtc(dateTimeString, "yyyyMMddHHmm"); }
             if (dateTimeString.length() == 8) { return fromStringUtc(dateTimeString, "yyyyMMdd"); }
-            return QDateTime();
+            return {};
         }
 
         // remove simple separators and check if digits only again
@@ -331,12 +333,12 @@ namespace swift::misc
 
         // SystemLocaleShortDate,
         // SystemLocaleLongDate,
-        return QDateTime();
+        return {};
     }
 
     QDateTime parseDateTimeStringOptimized(const QString &dateTimeString)
     {
-        if (dateTimeString.length() < 8) { return QDateTime(); }
+        if (dateTimeString.length() < 8) { return {}; }
 
         // yyyyMMddHHmmsszzz
         // 01234567890123456
@@ -393,12 +395,12 @@ namespace swift::misc
         return question % u'?';
     }
 
-    int nthIndexOf(const QString &string, QChar ch, int nth, Qt::CaseSensitivity cs)
+    qsizetype nthIndexOf(const QString &string, QChar ch, int nth, Qt::CaseSensitivity cs)
     {
         if (nth < 1 || string.isEmpty() || nth > string.length()) { return -1; }
 
-        int from = 0;
-        int ci = -1;
+        qsizetype from = 0;
+        qsizetype ci = -1;
         for (int t = 0; t < nth; ++t)
         {
             ci = string.indexOf(ch, from, cs);
@@ -423,7 +425,7 @@ namespace swift::misc
         for (const QStringView &l : lines)
         {
             if (l.isEmpty()) { continue; }
-            const int i = l.indexOf('=');
+            const qsizetype i = l.indexOf('=');
             if (i < 0 || i >= l.length() + 1) { continue; }
 
             const QString key = l.left(i).trimmed().toString();
@@ -452,7 +454,7 @@ namespace swift::misc
     {
         QString copy(in);
 
-        thread_local const QRegularExpression re1("\\/\\*(.|\\n)*?\\*\\/");
+        thread_local const QRegularExpression re1(R"(\/\*(.|\n)*?\*\/)");
         if (removeSlashStar) { copy.remove(re1); }
 
         thread_local const QRegularExpression re2("\\/\\/.*");
@@ -461,33 +463,23 @@ namespace swift::misc
         return copy;
     }
 
-    const QString &defaultIfEmpty(const QString &candidate, const QString &defaultIfEmpty)
-    {
-        if (candidate.isEmpty()) { return defaultIfEmpty; }
-        return candidate;
-    }
-
     bool containsAny(const QString &testString, const QStringList &any, Qt::CaseSensitivity cs)
     {
         if (testString.isEmpty() || any.isEmpty()) { return false; }
-        for (const QString &a : any)
-        {
-            if (testString.contains(a, cs)) { return true; }
-        }
-        return false;
+        return std::any_of(any.begin(), any.end(), [&](const QString &a) { return testString.contains(a, cs); });
     }
 
     bool hasBalancedQuotes(const QString &in, char quote)
     {
         if (in.isEmpty()) { return true; }
-        const int c = in.count(quote);
+        const qsizetype c = in.count(quote);
         return (c % 2) == 0;
     }
 
     double parseFraction(const QString &fraction, double failDefault)
     {
         if (fraction.isEmpty()) { return failDefault; }
-        bool ok;
+        bool ok {};
 
         double r = failDefault;
         if (fraction.contains('/'))
@@ -513,9 +505,9 @@ namespace swift::misc
     QString cleanNumber(const QString &number)
     {
         QString n = number.trimmed();
-        if (n.isEmpty()) { return QString(); }
+        if (n.isEmpty()) { return {}; }
 
-        int dp = n.indexOf('.');
+        qsizetype dp = n.indexOf('.');
         if (dp < 0) { dp = n.indexOf(','); }
 
         // clean all trailing stuff
@@ -527,7 +519,7 @@ namespace swift::misc
                 n.chop(1);
                 continue;
             }
-            else if (l == '.' || l == ',') { n.chop(1); }
+            if (l == '.' || l == ',') { n.chop(1); }
             break;
         }
 

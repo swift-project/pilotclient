@@ -592,19 +592,21 @@ namespace swift::core
         if (log)
         {
             static const QString nms = "no model string";
-            CMatchingUtils::addLogDetailsToList(
-                log, remoteAircraft,
-                summary
-                    .arg(remoteAircraft.getAircraftIcaoCode().getCombinedType(),
-                         matchedModel.getAircraftIcaoCode().getCombinedType(),
-                         remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(),
-                         matchedModel.getAircraftIcaoCode().getDesignatorDbKey(),
-                         remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey(),
-                         matchedModel.getAirlineIcaoCode().getVDesignatorDbKey())
-                    .arg(remoteAircraft.getLivery().getCombinedCodePlusInfoAndId(),
-                         matchedModel.getLivery().getCombinedCodePlusInfoAndId(),
-                         defaultIfEmpty(remoteAircraft.getModel().getModelStringAndDbKey(), nms),
-                         matchedModel.getModelStringAndDbKey(), boolToYesNo(didRunAndModifyMatchingScript)));
+            const QString modelString = remoteAircraft.getModel().getModelStringAndDbKey().isEmpty() ?
+                                            nms :
+                                            remoteAircraft.getModel().getModelStringAndDbKey();
+            CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
+                                                summary
+                                                    .arg(remoteAircraft.getAircraftIcaoCode().getCombinedType(),
+                                                         matchedModel.getAircraftIcaoCode().getCombinedType(),
+                                                         remoteAircraft.getAircraftIcaoCode().getDesignatorDbKey(),
+                                                         matchedModel.getAircraftIcaoCode().getDesignatorDbKey(),
+                                                         remoteAircraft.getAirlineIcaoCode().getVDesignatorDbKey(),
+                                                         matchedModel.getAirlineIcaoCode().getVDesignatorDbKey())
+                                                    .arg(remoteAircraft.getLivery().getCombinedCodePlusInfoAndId(),
+                                                         matchedModel.getLivery().getCombinedCodePlusInfoAndId(),
+                                                         modelString, matchedModel.getModelStringAndDbKey(),
+                                                         boolToYesNo(didRunAndModifyMatchingScript)));
         } // log
 
         const QDateTime endTime = QDateTime::currentDateTimeUtc();
@@ -1728,18 +1730,11 @@ namespace swift::core
         }
 
         CMatchingStatisticsEntry::EntryType type = CMatchingStatisticsEntry::Missing;
-        if (airlineIcaoChecked.hasValidDesignator())
-        {
-            type = m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
-                       CMatchingStatisticsEntry::Found :
-                       CMatchingStatisticsEntry::Missing;
-        }
-        else
-        {
-            type = m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
-                       CMatchingStatisticsEntry::Found :
-                       CMatchingStatisticsEntry::Missing;
-        }
+
+        type = m_modelSet.containsModelsWithAircraftAndAirlineIcaoDesignator(aircraftIcao, airlineIcao) ?
+                   CMatchingStatisticsEntry::Found :
+                   CMatchingStatisticsEntry::Missing;
+
         m_statistics.addAircraftAirlineCombination(type, sessionId, m_modelSetInfo, description, aircraftIcao,
                                                    airlineIcao);
     }

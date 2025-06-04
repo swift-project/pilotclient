@@ -47,10 +47,10 @@
 
 //! @{
 //! Protocol version
-#define PROTOCOL_REVISION_CLASSIC 9
-#define PROTOCOL_REVISION_VATSIM_ATC 10
-#define PROTOCOL_REVISION_VATSIM_AUTH 100
-#define PROTOCOL_REVISION_VATSIM_VELOCITY 101
+constexpr int PROTOCOL_REVISION_CLASSIC = 9;
+constexpr int PROTOCOL_REVISION_VATSIM_ATC = 10;
+constexpr int PROTOCOL_REVISION_VATSIM_AUTH = 100;
+constexpr int PROTOCOL_REVISION_VATSIM_VELOCITY = 101;
 //! @}
 
 class QNetworkReply;
@@ -516,10 +516,6 @@ namespace swift::core::fsd
         qint64 averageOffsetTimeMs(const swift::misc::aviation::CCallsign &callsign, int &count,
                                    int maxLastValues = c_maxOffsetTimes) const;
 
-        //! Average offset time in ms
-        qint64 averageOffsetTimeMs(const swift::misc::aviation::CCallsign &callsign,
-                                   int maxLastValues = c_maxOffsetTimes) const;
-
         bool isInterimPositionSendingEnabledForServer() const;
         bool isInterimPositionReceivingEnabledForServer() const;
         bool isVisualPositionSendingEnabledForServer() const;
@@ -552,12 +548,12 @@ namespace swift::core::fsd
         void pendingTimeoutCheck();
 
         //! Fix ATC station range
-        static const swift::misc::physical_quantities::CLength &
+        static swift::misc::physical_quantities::CLength
         fixAtcRange(const swift::misc::physical_quantities::CLength &networkRange,
                     const swift::misc::aviation::CCallsign &cs);
 
         //! Max or 1st non-null value
-        static const swift::misc::physical_quantities::CLength &
+        static swift::misc::physical_quantities::CLength
         maxOrNotNull(const swift::misc::physical_quantities::CLength &l1,
                      const swift::misc::physical_quantities::CLength &l2);
 
@@ -605,10 +601,10 @@ namespace swift::core::fsd
         //! ATIS message
         struct AtisMessage
         {
-            QString voiceRoom;
-            QStringList textLines;
-            QString zuluLogoff;
-            int lineCount = 0;
+            QString m_voiceRoom;
+            QStringList m_textLines;
+            QString m_zuluLogoff;
+            int m_lineCount = 0;
         };
 
         QMap<QString, AtisMessage> m_mapAtisMessages;

@@ -1404,7 +1404,7 @@ namespace swift::misc::simulation
 
                 if (!model.hasFileName())
                 {
-                    if (ignoreEmptyFileNames) { continue; }
+                    if (ignoreEmptyFileNames) { break; }
                     msgs.push_back(CStatusMessage(this).validationError(u"'%1', no file name")
                                    << model.getModelStringAndDbKey());
                     break;

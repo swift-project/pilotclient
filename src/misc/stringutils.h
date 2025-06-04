@@ -82,8 +82,8 @@ namespace swift::misc
     }
 
     //! nth index of ch
-    SWIFT_MISC_EXPORT int nthIndexOf(const QString &string, QChar ch, int nth = 1,
-                                     Qt::CaseSensitivity cs = Qt::CaseInsensitive);
+    SWIFT_MISC_EXPORT qsizetype nthIndexOf(const QString &string, QChar ch, int nth = 1,
+                                           Qt::CaseSensitivity cs = Qt::CaseInsensitive);
 
     //! Split a string into multiple strings, using a predicate function to identify the split points.
     //! \warning The returned refs are only valid during the lifetime of the original string.
@@ -92,7 +92,7 @@ namespace swift::misc
     {
         QList<QStringView> result;
         auto notPredicate = [=](auto c) { return !predicate(c); };
-        auto begin = s.begin();
+        const auto *begin = s.begin();
         while (true)
         {
             begin = std::find_if(begin, s.end(), notPredicate);
@@ -301,9 +301,6 @@ namespace swift::misc
 
     //! Remove comments such as /** **/ or //
     SWIFT_MISC_EXPORT QString removeComments(const QString &in, bool removeSlash, bool removeDoubleSlash);
-
-    //! Default string if string is empty
-    SWIFT_MISC_EXPORT const QString &defaultIfEmpty(const QString &candidate, const QString &defaultIfEmpty);
 
     //! Contains any string of the list?
     SWIFT_MISC_EXPORT bool containsAny(const QString &testString, const QStringList &any, Qt::CaseSensitivity cs);

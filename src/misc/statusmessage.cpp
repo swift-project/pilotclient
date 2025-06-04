@@ -34,7 +34,7 @@ namespace swift::misc
             {
                 const auto pc = std::find(it, format.end(), u'%');
                 temp.append(&*it, std::distance(it, pc));
-                if ((it = pc) == format.end()) { break; }
+                if (it = pc; it == format.end()) { break; }
                 if (++it == format.end())
                 {
                     temp += u'%';

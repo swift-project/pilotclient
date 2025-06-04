@@ -369,7 +369,7 @@ namespace swift::misc
         m_originalTimestamps.clear();
 
         QFile revisionFile(CFileUtils::appendFilePaths(m_basename, ".rev"));
-        if ((m_found = revisionFile.exists()))
+        if (m_found = revisionFile.exists(); m_found)
         {
             if (!revisionFile.open(QFile::ReadOnly | QFile::Text))
             {

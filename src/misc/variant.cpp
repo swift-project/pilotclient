@@ -138,21 +138,18 @@ namespace swift::misc
             try
             {
                 const void *casted = nullptr;
-                if ((casted = aMeta->upCastTo(a.data(), bMeta->getMetaTypeId())))
+                if (casted = aMeta->upCastTo(a.data(), bMeta->getMetaTypeId()); casted)
                 {
                     return bMeta->compareImpl(casted, b.data());
                 }
-                else if ((casted = bMeta->upCastTo(b.data(), aMeta->getMetaTypeId())))
+                if (casted = bMeta->upCastTo(b.data(), aMeta->getMetaTypeId()); casted)
                 {
                     return aMeta->compareImpl(a.data(), casted);
                 }
-                else
-                {
-                    CLogMessage(&a).warning(
-                        u"Comparing two CVariants containing unrelated value objects: %1 (%2) and %3 (%4)")
-                        << a.typeName() << a.userType() << b.typeName() << b.userType();
-                    return 0;
-                }
+                CLogMessage(&a).warning(
+                    u"Comparing two CVariants containing unrelated value objects: %1 (%2) and %3 (%4)")
+                    << a.typeName() << a.userType() << b.typeName() << b.userType();
+                return 0;
             }
             catch (const private_ns::CVariantException &ex)
             {

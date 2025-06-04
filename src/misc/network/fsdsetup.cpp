@@ -18,10 +18,10 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CFsdSetup)
 
 namespace swift::misc::network
 {
-    CFsdSetup::CFsdSetup(SendReceiveDetails sendReceive) : m_sendReceive(sendReceive) {}
+    CFsdSetup::CFsdSetup(SendReceiveDetails sendReceive) : m_sendReceive(static_cast<int>(sendReceive)) {}
 
     CFsdSetup::CFsdSetup(const QString &codec, SendReceiveDetails sendReceive)
-        : m_textCodec(codec), m_sendReceive(sendReceive)
+        : m_textCodec(codec), m_sendReceive(static_cast<int>(sendReceive))
     {}
 
     CFsdSetup::SendReceiveDetails CFsdSetup::getSendReceiveDetails() const
@@ -98,7 +98,7 @@ namespace swift::misc::network
     QVariant CFsdSetup::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTextCodec: return QVariant::fromValue(m_textCodec);
@@ -114,7 +114,7 @@ namespace swift::misc::network
             (*this) = variant.value<CFsdSetup>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTextCodec: this->setTextCodec(variant.value<QString>()); break;
@@ -126,7 +126,7 @@ namespace swift::misc::network
     int CFsdSetup::comparePropertyByIndex(CPropertyIndexRef index, const CFsdSetup &compareValue) const
     {
         if (index.isMyself()) { return this->convertToQString(true).compare(compareValue.convertToQString()); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTextCodec: return this->getTextCodec().compare(compareValue.getTextCodec());

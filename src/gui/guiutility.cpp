@@ -536,10 +536,8 @@ namespace swift::gui
         QLayoutItem *item { nullptr };
         while ((item = layout->takeAt(0)))
         {
-            QLayout *sublayout { nullptr };
-            QWidget *widget { nullptr };
-            if ((sublayout = item->layout())) { deleteLayout(sublayout, deleteWidgets); }
-            else if ((widget = item->widget()))
+            if (QLayout *sublayout = item->layout(); sublayout) { deleteLayout(sublayout, deleteWidgets); }
+            else if (QWidget *widget = item->widget(); widget)
             {
                 widget->hide();
                 if (deleteWidgets) { delete widget; }

@@ -85,11 +85,14 @@ namespace swift::core::fsd
         return cats;
     }
 
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
     CFSDClient::CFSDClient(IClientProvider *clientProvider, IOwnAircraftProvider *ownAircraftProvider,
                            IRemoteAircraftProvider *remoteAircraftProvider, QObject *owner)
         : CContinuousWorker(owner, "FSDClient"), CClientAware(clientProvider), COwnAircraftAware(ownAircraftProvider),
           CRemoteAircraftAware(remoteAircraftProvider), m_tokenBucket(10, 5000, 1)
     {
+        // NOLINTEND(cppcoreguidelines-pro-type-member-init)
+
         initializeMessageTypes();
         connectSocketSignals();
 
@@ -793,7 +796,7 @@ namespace swift::core::fsd
     void CFSDClient::sendQueuedMessage()
     {
         if (m_queuedFsdMessages.isEmpty()) { return; }
-        const int s = m_queuedFsdMessages.size();
+        const qsizetype s = m_queuedFsdMessages.size(); // NOLINT(cppcoreguidelines-init-variables)
         this->sendMessageString(m_queuedFsdMessages.dequeue());
 
         // send up to 6 at once
@@ -832,7 +835,7 @@ namespace swift::core::fsd
 
     QString CFSDClient::getConfiguredLiveryString(const CSimulatedAircraft &myAircraft) const
     {
-        if (!m_sendLiveryString) { return QString(); }
+        if (!m_sendLiveryString) { return {}; }
         QReadLocker l(&m_lockUserClientBuffered);
         const QString livery = m_ownLivery.isEmpty() ? myAircraft.getModel().getSwiftLiveryString() : m_ownLivery;
         return livery;
@@ -1329,7 +1332,7 @@ namespace swift::core::fsd
         const Pong pong = Pong::fromTokens(tokens);
         const qint64 msecSinceEpoch = QDateTime::currentMSecsSinceEpoch();
         const qint64 elapsedTime = msecSinceEpoch - pong.m_timestamp.toLongLong();
-        emit pongReceived(pong.sender(), elapsedTime);
+        emit pongReceived(pong.sender(), static_cast<double>(elapsedTime));
     }
 
     void CFSDClient::handleKillRequest(const QStringList &tokens)
@@ -1390,7 +1393,7 @@ namespace swift::core::fsd
     void CFSDClient::handleClientQuery(const QStringList &tokens)
     {
         const ClientQuery clientQuery = ClientQuery::fromTokens(tokens);
-
+        // NOLINTBEGIN(bugprone-branch-clone)
         if (clientQuery.m_queryType == ClientQueryType::Unknown) { return; }
         if (clientQuery.m_queryType == ClientQueryType::IsValidATC)
         {
@@ -1468,6 +1471,7 @@ namespace swift::core::fsd
             const qint64 offsetTimeMs = currentOffsetTime(callsign);
             emit aircraftConfigReceived(clientQuery.sender(), config, offsetTimeMs);
         }
+        // NOLINTEND(bugprone-branch-clone)
     }
 
     void CFSDClient::handleClientResponse(const QStringList &tokens)
@@ -1478,7 +1482,8 @@ namespace swift::core::fsd
 
         QString responseData1;
         QString responseData2;
-        if (clientResponse.m_responseData.size() > 0) { responseData1 = clientResponse.m_responseData.at(0); }
+        // NOLINTBEGIN(bugprone-branch-clone)
+        if (!clientResponse.m_responseData.empty()) { responseData1 = clientResponse.m_responseData.at(0); }
 
         if (clientResponse.m_responseData.size() > 1) { responseData2 = clientResponse.m_responseData.at(1); }
 
@@ -1489,9 +1494,8 @@ namespace swift::core::fsd
         else if (clientResponse.m_queryType == ClientQueryType::Capabilities)
         {
             Capabilities capabilities = Capabilities::None;
-            for (int i = 0; i < clientResponse.m_responseData.size(); ++i)
+            for (auto keyValuePair : clientResponse.m_responseData)
             {
-                const QString keyValuePair = clientResponse.m_responseData.at(i);
                 if (keyValuePair.count('=') != 1) { continue; }
 
                 const QStringList split = keyValuePair.split('=');
@@ -1514,7 +1518,7 @@ namespace swift::core::fsd
         else if (clientResponse.m_queryType == ClientQueryType::Com1Freq)
         {
             if (responseData1.isEmpty()) { return; }
-            bool ok;
+            bool ok {};
             const double freqMHz = responseData1.toDouble(&ok);
             if (!ok) { return; }
             emit com1FrequencyResponseReceived(clientResponse.sender(), CFrequency(freqMHz, CFrequencyUnit::MHz()));
@@ -1553,6 +1557,7 @@ namespace swift::core::fsd
         {
             // Currently not existing.
         }
+        // NOLINTEND(bugprone-branch-clone)
     }
 
     void CFSDClient::handleServerError(const QStringList &tokens)
@@ -1675,8 +1680,11 @@ namespace swift::core::fsd
     {
         const CServer server = this->getServer();
         const auto socket = rehostingSocket ? rehostingSocket : m_socket;
+
+        // NOLINTBEGIN(cppcoreguidelines-init-variables)
         const QString host = rehostingSocket ? rehostingHost : server.getAddress();
         const quint16 port = rehostingSocket ? m_socket->peerPort() : static_cast<quint16>(getServer().getPort());
+        // NOLINTEND(cppcoreguidelines-init-variables)
 
         resolveLoadBalancing(host, [=](const QString &host) {
             socket->connectToHost(host, port);
@@ -1925,7 +1933,7 @@ namespace swift::core::fsd
             m_lastPositionUpdate.insert(callsign, markerTs);
             return CFsdSetup::c_positionTimeOffsetMsec;
         }
-        const qint64 oldTs = m_lastPositionUpdate.value(callsign);
+        const qint64 oldTs = m_lastPositionUpdate.value(callsign); // NOLINT(cppcoreguidelines-init-variables)
         m_lastPositionUpdate[callsign] = markerTs;
 
         // Ref T297, dynamic offsets
@@ -2000,12 +2008,6 @@ namespace swift::core::fsd
             if (count > maxLastValues) { break; }
         }
         return qRound(static_cast<double>(sum) / count);
-    }
-
-    qint64 CFSDClient::averageOffsetTimeMs(const CCallsign &callsign, int maxLastValues) const
-    {
-        int count = 0;
-        return this->averageOffsetTimeMs(callsign, maxLastValues, count);
     }
 
     bool CFSDClient::isInterimPositionSendingEnabledForServer() const
@@ -2149,7 +2151,7 @@ namespace swift::core::fsd
             callByTime = m_callByTime;
         }
 
-        if (callStatistics.isEmpty()) { return QString(); }
+        if (callStatistics.isEmpty()) { return {}; }
         for (const auto [key, value] : makePairsRange(std::as_const(callStatistics)))
         {
             // key is pair.first, value is pair.second
@@ -2328,7 +2330,7 @@ namespace swift::core::fsd
         {
             if (fsdMessageFiltered.startsWith("#AP"))
             {
-                thread_local const QRegularExpression re("^(#AP\\w+:SERVER:\\d+:)[^:]+(:\\d+:\\d+:\\d+:.+)$");
+                thread_local const QRegularExpression re(R"(^(#AP\w+:SERVER:\d+:)[^:]+(:\d+:\d+:\d+:.+)$)");
                 fsdMessageFiltered.replace(re, "\\1<password>\\2");
                 m_filterPasswordFromLogin = false;
             }
@@ -2365,6 +2367,7 @@ namespace swift::core::fsd
         m_queuedFsdMessages.clear(); // clear everything before the timer is started
 
         // interim positions
+        // NOLINTBEGIN(bugprone-branch-clone)
         if (this->isInterimPositionSendingEnabledForServer())
         {
             m_interimPositionUpdateTimer.start(c_updateInterimPositionIntervalMsec);
@@ -2375,6 +2378,7 @@ namespace swift::core::fsd
             m_visualPositionUpdateTimer.start(c_updateVisualPositionIntervalMsec);
         }
         else { m_visualPositionUpdateTimer.stop(); }
+        // NOLINTEND(bugprone-branch-clone)
     }
 
     void CFSDClient::stopPositionTimers()
@@ -2388,60 +2392,58 @@ namespace swift::core::fsd
 
     void CFSDClient::updateAtisMap(const QString &callsign, AtisLineType type, const QString &line)
     {
+        // NOLINTBEGIN(bugprone-branch-clone)
         if (type == AtisLineType::VoiceRoom)
         {
-            m_mapAtisMessages[callsign].voiceRoom = line;
-            m_mapAtisMessages[callsign].lineCount++;
+            m_mapAtisMessages[callsign].m_voiceRoom = line;
+            m_mapAtisMessages[callsign].m_lineCount++;
             return;
         }
-        else if (type == AtisLineType::TextMessage)
+        if (type == AtisLineType::TextMessage)
         {
-            m_mapAtisMessages[callsign].textLines.push_back(line);
-            m_mapAtisMessages[callsign].lineCount++;
+            m_mapAtisMessages[callsign].m_textLines.push_back(line);
+            m_mapAtisMessages[callsign].m_lineCount++;
             return;
         }
-        else if (type == AtisLineType::ZuluLogoff)
+        if (type == AtisLineType::ZuluLogoff)
         {
-            m_mapAtisMessages[callsign].zuluLogoff = line;
-            m_mapAtisMessages[callsign].lineCount++;
+            m_mapAtisMessages[callsign].m_zuluLogoff = line;
+            m_mapAtisMessages[callsign].m_lineCount++;
             return;
         }
-        else
+        if (!m_mapAtisMessages.contains(callsign)) { return; }
+
+        // Ignore the check for line count.
+        m_mapAtisMessages[callsign].m_lineCount++;
+
+        const CCallsign cs(callsign, CCallsign::Atc);
+        // emit atisVoiceRoomReplyReceived(cs, m_mapAtisMessages[callsign].voiceRoom);
+        emit atisLogoffTimeReplyReceived(cs, m_mapAtisMessages[callsign].m_zuluLogoff);
+
+        CInformationMessage atisMessage(CInformationMessage::ATIS);
+        for (const QString &tm : std::as_const(m_mapAtisMessages[callsign].m_textLines))
         {
-            if (!m_mapAtisMessages.contains(callsign)) { return; }
-
-            // Ignore the check for line count.
-            m_mapAtisMessages[callsign].lineCount++;
-
-            const CCallsign cs(callsign, CCallsign::Atc);
-            // emit atisVoiceRoomReplyReceived(cs, m_mapAtisMessages[callsign].voiceRoom);
-            emit atisLogoffTimeReplyReceived(cs, m_mapAtisMessages[callsign].zuluLogoff);
-
-            CInformationMessage atisMessage(CInformationMessage::ATIS);
-            for (const QString &tm : std::as_const(m_mapAtisMessages[callsign].textLines))
+            const QString fixed = tm.trimmed();
+            if (!fixed.isEmpty())
             {
-                const QString fixed = tm.trimmed();
-                if (!fixed.isEmpty())
-                {
-                    //  detect the stupid z1, z2, z3 placeholders
-                    //! \fixme: Anything better as this stupid code here?
-                    thread_local const QRegularExpression RegExp("[\\n\\t\\r]");
-                    const QString test = fixed.toLower().remove(RegExp);
-                    if (test == "z") return;
-                    if (test.startsWith("z") && test.length() == 2) return; // z1, z2, ..
-                    if (test.length() == 1) return; // sometimes just z
+                //  detect the stupid z1, z2, z3 placeholders
+                //! \fixme: Anything better as this stupid code here?
+                thread_local const QRegularExpression RegExp(R"([\n\t\r])");
+                const QString test = fixed.toLower().remove(RegExp);
+                if (test == "z") return;
+                if (test.startsWith("z") && test.length() == 2) return; // z1, z2, ..
+                if (test.length() == 1) return; // sometimes just z
 
-                    // append
-                    if (!atisMessage.isEmpty()) atisMessage.appendMessage("\n");
-                    atisMessage.appendMessage(fixed);
-                }
+                // append
+                if (!atisMessage.isEmpty()) atisMessage.appendMessage("\n");
+                atisMessage.appendMessage(fixed);
             }
-
-            emit this->atisReplyReceived(cs, atisMessage);
-
-            m_mapAtisMessages.remove(callsign);
-            return;
         }
+
+        emit this->atisReplyReceived(cs, atisMessage);
+
+        m_mapAtisMessages.remove(callsign);
+        // NOLINTEND(bugprone-branch-clone)
     }
 
     void CFSDClient::pendingTimeoutCheck()
@@ -2456,7 +2458,7 @@ namespace swift::core::fsd
         this->disconnectFromServer();
     }
 
-    const CLength &CFSDClient::fixAtcRange(const CLength &networkRange, const CCallsign &cs)
+    CLength CFSDClient::fixAtcRange(const CLength &networkRange, const CCallsign &cs)
     {
         /** T702, https://discordapp.com/channels/539048679160676382/539846348275449887/597814208125730826
         DEL 5 NM
@@ -2508,7 +2510,7 @@ namespace swift::core::fsd
         return networkRange;
     }
 
-    const CLength &CFSDClient::maxOrNotNull(const CLength &l1, const CLength &l2)
+    CLength CFSDClient::maxOrNotNull(const CLength &l1, const CLength &l2)
     {
         if (l1.isNull()) { return l2; }
         if (l2.isNull()) { return l1; }

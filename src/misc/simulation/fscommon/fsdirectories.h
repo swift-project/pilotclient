@@ -169,9 +169,6 @@ namespace swift::misc::simulation::fscommon
         //! Utility functions
         static QSet<QString> findP3dConfigFiles(const QString &configFile, const QString &versionHint = "v5");
         //! @}
-
-        //! Log the reading of config files
-        static bool logConfigPathReading();
     };
 } // namespace swift::misc::simulation::fscommon
 

@@ -7,11 +7,26 @@ Checks:
   - '-modernize-use-trailing-return-type'
   - '-modernize-use-nodiscard'
   - '-modernize-pass-by-value'
+  - '-modernize-avoid-c-arrays'
   - 'bugprone-*'
+  - '-bugprone-easily-swappable-parameters'
   - 'readability-*'
   - '-readability-identifier-length'
+  - '-readability-implicit-bool-conversion'
   - '-readability-braces-around-statements'
+  - '-readability-function-cognitive-complexity'
+  - '-readability-convert-member-functions-to-static'
+  - '-readability-math-missing-parentheses'
+  - '-readability-avoid-unconditional-preprocessor-if'
+  - '-readability-magic-numbers'
   - 'cppcoreguidelines-*'
+  - '-cppcoreguidelines-avoid-magic-numbers'
+  - '-cppcoreguidelines-non-private-member-variables-in-classes'
+  - '-cppcoreguidelines-avoid-c-arrays'
+  - '-cppcoreguidelines-owning-memory'
+  - '-cppcoreguidelines-misleading-capture-default-by-value'
+  - '-cppcoreguidelines-pro-bounds-array-to-pointer-decay'
+
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase

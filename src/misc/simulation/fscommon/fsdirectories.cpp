@@ -618,10 +618,7 @@ namespace swift::misc::simulation::fscommon
             const QString pathUp = CFileUtils::appendFilePaths(CFileUtils::pathUp(path), "Lockheed Martin");
             const QDir d(pathUp);
             if (!d.exists()) { continue; }
-            if (logConfigPathReading())
-            {
-                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D config dir: '%1'") << d.absolutePath();
-            }
+            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D config dir: '%1'") << d.absolutePath();
 
             // all versions sub directories
             // looking for "add-ons.cfg" or simobjects.cfg
@@ -636,10 +633,7 @@ namespace swift::misc::simulation::fscommon
                     if (fi.exists())
                     {
                         files.insert(f);
-                        if (logConfigPathReading())
-                        {
-                            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D config file: '%1'") << f;
-                        }
+                        CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D config file: '%1'") << f;
                     }
                 } // contains
             } // entries
@@ -650,7 +644,7 @@ namespace swift::misc::simulation::fscommon
     QSet<QString> CFsDirectories::allConfigFilesPathValues(const QStringList &configFiles, bool checked,
                                                            const QString &pathPrefix)
     {
-        if (configFiles.isEmpty()) { return QSet<QString>(); }
+        if (configFiles.isEmpty()) { return {}; }
         QSet<QString> paths;
         for (const QString &configFile : configFiles)
         {
@@ -661,7 +655,7 @@ namespace swift::misc::simulation::fscommon
             static const QString p("Path=");
             for (const QStringView &line : lines)
             {
-                const int i = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
+                const qsizetype i = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
                 if (i < 0 || line.endsWith('=')) { continue; }
                 const QStringView path = line.mid(i + p.length());
                 const QDir dir(QDir::fromNativeSeparators(
@@ -675,7 +669,7 @@ namespace swift::misc::simulation::fscommon
 
     QSet<QString> CFsDirectories::allP3dAddOnXmlSimObjectPaths(const QStringList &addOnPaths, bool checked)
     {
-        if (addOnPaths.isEmpty()) { return QSet<QString>(); }
+        if (addOnPaths.isEmpty()) { return {}; }
         QSet<QString> simObjectPaths;
         for (const QString &addOnPath : addOnPaths)
         {
@@ -683,11 +677,9 @@ namespace swift::misc::simulation::fscommon
             QDomDocument doc;
             QFile file(filename);
             if (!file.open(QIODevice::ReadOnly) || !doc.setContent(&file)) { continue; }
-            if (CFsDirectories::logConfigPathReading())
-            {
-                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Reading '%1' from addon path: '%2'")
-                    << file.fileName() << addOnPath;
-            }
+
+            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Reading '%1' from addon path: '%2'")
+                << file.fileName() << addOnPath;
 
             const QDomNodeList components = doc.elementsByTagName("AddOn.Component");
             for (int i = 0; i < components.size(); i++)
@@ -706,18 +698,15 @@ namespace swift::misc::simulation::fscommon
                 const QString fp = QStringView { pathValue }.left(3).contains(':') ?
                                        pathValue :
                                        CFileUtils::appendFilePaths(addOnPath, pathValue);
-                if (CFsDirectories::logConfigPathReading())
-                {
-                    CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Testing '%1' as addon path: '%2'")
-                        << fp << addOnPath;
-                }
+
+                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"Testing '%1' as addon path: '%2'")
+                    << fp << addOnPath;
+
                 if (!checked || QDir(fp).exists())
                 {
                     simObjectPaths.insert(CFileUtils::normalizeFilePathToQtStandard(fp));
-                    if (logConfigPathReading())
-                    {
-                        CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D SimObjects path: '%1'") << fp;
-                    }
+
+                    CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"P3D SimObjects path: '%1'") << fp;
                 }
             } // components
         } // paths
@@ -754,11 +743,9 @@ namespace swift::misc::simulation::fscommon
             if (fi.exists())
             {
                 files.push_back(fi.absoluteFilePath());
-                if (logConfigPathReading())
-                {
-                    CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX config file: '%1'")
-                        << fi.absoluteFilePath();
-                }
+
+                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX config file: '%1'")
+                    << fi.absoluteFilePath();
             }
         }
         return files;
@@ -784,7 +771,7 @@ namespace swift::misc::simulation::fscommon
     QSet<QString> CFsDirectories::fsxSimObjectsPaths(const QString &fsxFile, bool checked)
     {
         const QString fileContent = CFileUtils::readFileToString(fsxFile);
-        if (fileContent.isEmpty()) { return QSet<QString>(); }
+        if (fileContent.isEmpty()) { return {}; }
         const QList<QStringView> lines = splitLinesRefs(fileContent);
         static const QString p("SimObjectPaths.");
 
@@ -794,17 +781,15 @@ namespace swift::misc::simulation::fscommon
         QSet<QString> paths;
         for (const QStringView &line : lines)
         {
-            const int i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
+            const qsizetype i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
             if (i1 < 0) { continue; }
-            const int i2 = line.lastIndexOf('=');
+            const qsizetype i2 = line.lastIndexOf('=');
             if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
             const QStringView path = line.mid(i2 + 1);
             QString soPath = QDir::fromNativeSeparators(path.toString());
-            if (logConfigPathReading())
-            {
-                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path checked: '%1' in '%2'")
-                    << line << fsxFile;
-            }
+
+            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path checked: '%1' in '%2'")
+                << line << fsxFile;
 
             // ignore exclude patterns
             if (containsAny(soPath, CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive))
@@ -822,33 +807,29 @@ namespace swift::misc::simulation::fscommon
             if (checked && !dir.exists())
             {
                 // skip, not existing
-                if (logConfigPathReading())
-                {
-                    CLogMessage(static_cast<CFsDirectories *>(nullptr))
-                            .info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'")
-                        << dir.absolutePath() << fsxFile;
-                }
+
+                CLogMessage(static_cast<CFsDirectories *>(nullptr))
+                        .info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'")
+                    << dir.absolutePath() << fsxFile;
+
                 continue;
             }
 
             const QString afp = dir.absolutePath().toLower();
             if (!CDirectoryUtils::containsFileInDir(afp, airFileFilter(), true))
             {
-                if (logConfigPathReading())
-                {
-                    CLogMessage(static_cast<CFsDirectories *>(nullptr))
-                            .info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file")
-                        << afp << fsxFile << airFileFilter();
-                }
+
+                CLogMessage(static_cast<CFsDirectories *>(nullptr))
+                        .info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file")
+                    << afp << fsxFile << airFileFilter();
+
                 continue;
             }
 
             paths.insert(afp);
-            if (logConfigPathReading())
-            {
-                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'")
-                    << afp << fsxFile;
-            }
+
+            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'")
+                << afp << fsxFile;
         }
         return paths;
     }
@@ -856,7 +837,7 @@ namespace swift::misc::simulation::fscommon
     QSet<QString> CFsDirectories::msfsSimObjectsPaths(const QString &msfsFile, bool checked)
     {
         const QString fileContent = CFileUtils::readFileToString(msfsFile);
-        if (fileContent.isEmpty()) { return QSet<QString>(); }
+        if (fileContent.isEmpty()) { return {}; }
         const QList<QStringView> lines = splitLinesRefs(fileContent);
         static const QString p("SimObjectPaths.");
 
@@ -866,17 +847,15 @@ namespace swift::misc::simulation::fscommon
         QSet<QString> paths;
         for (const QStringView &line : lines)
         {
-            const int i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
+            const qsizetype i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
             if (i1 < 0) { continue; }
-            const int i2 = line.lastIndexOf('=');
+            const qsizetype i2 = line.lastIndexOf('=');
             if (i2 < 0 || i1 >= i2 || line.endsWith('=')) { continue; }
             const QStringView path = line.mid(i2 + 1);
             QString soPath = QDir::fromNativeSeparators(path.toString());
-            if (logConfigPathReading())
-            {
-                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS SimObjects path checked: '%1' in '%2'")
-                    << line << msfsFile;
-            }
+
+            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS SimObjects path checked: '%1' in '%2'")
+                << line << msfsFile;
 
             // ignore exclude patterns
             if (containsAny(soPath, CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns(), Qt::CaseInsensitive))
@@ -891,33 +870,28 @@ namespace swift::misc::simulation::fscommon
             if (checked && !dir.exists())
             {
                 // skip, not existing
-                if (logConfigPathReading())
-                {
-                    CLogMessage(static_cast<CFsDirectories *>(nullptr))
-                            .info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'")
-                        << dir.absolutePath() << msfsFile;
-                }
+                CLogMessage(static_cast<CFsDirectories *>(nullptr))
+                        .info(u"FSX SimObjects path skipped, not existing: '%1' in '%2'")
+                    << dir.absolutePath() << msfsFile;
+
                 continue;
             }
 
             const QString afp = dir.absolutePath().toLower();
             if (!CDirectoryUtils::containsFileInDir(afp, airFileFilter(), true))
             {
-                if (logConfigPathReading())
-                {
-                    CLogMessage(static_cast<CFsDirectories *>(nullptr))
-                            .info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file")
-                        << afp << msfsFile << airFileFilter();
-                }
+
+                CLogMessage(static_cast<CFsDirectories *>(nullptr))
+                        .info(u"FSX SimObjects path: Skipping '%1' from '%2', no '%3' file")
+                    << afp << msfsFile << airFileFilter();
+
                 continue;
             }
 
             paths.insert(afp);
-            if (logConfigPathReading())
-            {
-                CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'")
-                    << afp << msfsFile;
-            }
+
+            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"FSX SimObjects path: '%1' from '%2'")
+                << afp << msfsFile;
         }
         return paths;
     }
@@ -928,5 +902,4 @@ namespace swift::misc::simulation::fscommon
         return a;
     }
 
-    bool CFsDirectories::logConfigPathReading() { return true; }
 } // namespace swift::misc::simulation::fscommon
