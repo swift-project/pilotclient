@@ -212,9 +212,6 @@ void SwiftGuiStd::initStyleSheet()
 
 void SwiftGuiStd::initGuiSignals()
 {
-    // Remark: With new style, only methods of same signature can be connected
-    // This is why we still have some "old" SIGNAL/SLOT connections here
-
     // main window
     connect(ui->sw_MainMiddle, &QStackedWidget::currentChanged, this, &SwiftGuiStd::onCurrentMainWidgetChanged);
 

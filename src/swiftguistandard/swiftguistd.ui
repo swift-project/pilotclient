@@ -369,34 +369,9 @@
     <string>Position EDNX (Schleißheim, GER)</string>
    </property>
   </action>
-  <action name="menu_FileExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="menu_FileSettingsDirectory">
-   <property name="text">
-    <string>Settings directory</string>
-   </property>
-  </action>
-  <action name="menu_FileResetSettings">
-   <property name="text">
-    <string>Reset settings</string>
-   </property>
-  </action>
-  <action name="menu_FileReloadStyleSheets">
-   <property name="text">
-    <string>Reload style sheets</string>
-   </property>
-  </action>
   <action name="menu_WindowFont">
    <property name="text">
     <string>Font</string>
-   </property>
-  </action>
-  <action name="menu_DebugMetaTypes">
-   <property name="text">
-    <string>Meta types (to console)</string>
    </property>
   </action>
   <action name="menu_TestLocationsLOWW">
@@ -428,74 +403,9 @@
     <string>Ctrl+W, Ctrl+N</string>
    </property>
   </action>
-  <action name="menu_NavigatorHorizontal">
-   <property name="text">
-    <string>Horizontal navigator</string>
-   </property>
-  </action>
-  <action name="menu_InternalsMetatypes">
-   <property name="text">
-    <string>Metatypes</string>
-   </property>
-  </action>
-  <action name="menu_InternalsEnvVars">
-   <property name="text">
-    <string>Env.variables</string>
-   </property>
-  </action>
-  <action name="menu_InternalsSetup">
-   <property name="text">
-    <string>Setup</string>
-   </property>
-  </action>
-  <action name="menu_InternalsCompileInfo">
-   <property name="text">
-    <string>Compile info</string>
-   </property>
-  </action>
   <action name="menu_InternalsPage">
    <property name="text">
     <string>Internals page</string>
-   </property>
-  </action>
-  <action name="menu_InternalsDeleteCachedFiles">
-   <property name="text">
-    <string>Delete cached files</string>
-   </property>
-  </action>
-  <action name="menu_InternalsDisplayCachedFiles">
-   <property name="text">
-    <string>Display cached files</string>
-   </property>
-  </action>
-  <action name="menu_SettingsDirectory">
-   <property name="text">
-    <string>Directory</string>
-   </property>
-  </action>
-  <action name="menu_SettingsFiles">
-   <property name="text">
-    <string>Files</string>
-   </property>
-  </action>
-  <action name="menu_SettingsReset">
-   <property name="text">
-    <string>Reset</string>
-   </property>
-  </action>
-  <action name="menu_CacheDirectory">
-   <property name="text">
-    <string>Directory</string>
-   </property>
-  </action>
-  <action name="menu_CacheFiles">
-   <property name="text">
-    <string>Files</string>
-   </property>
-  </action>
-  <action name="menu_CacheReset">
-   <property name="text">
-    <string>Reset</string>
    </property>
   </action>
   <action name="menu_AutoPublish">
