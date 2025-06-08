@@ -117,26 +117,6 @@
    <addaction name="menu_Internals"/>
   </widget>
   <widget class="QStatusBar" name="sb_SwiftData"/>
-  <action name="menu_FileExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="menu_FileSettingsDirectory">
-   <property name="text">
-    <string>Settings directory</string>
-   </property>
-  </action>
-  <action name="menu_FileResetSettings">
-   <property name="text">
-    <string>Reset settings</string>
-   </property>
-  </action>
-  <action name="menu_FileReloadStyleSheets">
-   <property name="text">
-    <string>Reload style sheets</string>
-   </property>
-  </action>
   <action name="menu_WindowFont">
    <property name="text">
     <string>Font</string>
@@ -161,91 +141,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+M, D</string>
-   </property>
-  </action>
-  <action name="menu_WindowToggleOnTop">
-   <property name="text">
-    <string>Toggle stay on top</string>
-   </property>
-  </action>
-  <action name="actionNavigator">
-   <property name="text">
-    <string>Navigator</string>
-   </property>
-  </action>
-  <action name="menu_DebugMetaTypes">
-   <property name="text">
-    <string>Debug metatypes (to console)</string>
-   </property>
-  </action>
-  <action name="menu_JsonBootstrapTemplate">
-   <property name="text">
-    <string>JSON bootstrap template</string>
-   </property>
-  </action>
-  <action name="menu_InternalsEnvVars">
-   <property name="text">
-    <string>Env.variables</string>
-   </property>
-  </action>
-  <action name="menu_InternalsMetatypes">
-   <property name="text">
-    <string>Metatypes</string>
-   </property>
-  </action>
-  <action name="menu_InternalsSetup">
-   <property name="text">
-    <string>Setup</string>
-   </property>
-  </action>
-  <action name="menu_InternalsCompileInfo">
-   <property name="text">
-    <string>Compile info</string>
-   </property>
-  </action>
-  <action name="menu_InternalsDisplayCachedFiles">
-   <property name="text">
-    <string>All cache files</string>
-   </property>
-  </action>
-  <action name="menu_InternalsDeleteCachedFiles">
-   <property name="text">
-    <string>Delete cached fies</string>
-   </property>
-  </action>
-  <action name="menu_SettingsDirectory">
-   <property name="text">
-    <string>Directory</string>
-   </property>
-  </action>
-  <action name="menu_SettingsReset">
-   <property name="text">
-    <string>Reset</string>
-   </property>
-  </action>
-  <action name="menu_SettingsFiles">
-   <property name="text">
-    <string>Files</string>
-   </property>
-  </action>
-  <action name="menu_CacheDirectory">
-   <property name="text">
-    <string>Directory</string>
-   </property>
-  </action>
-  <action name="menu_CacheFiles">
-   <property name="text">
-    <string>Files</string>
-   </property>
-  </action>
-  <action name="menu_CacheReset">
-   <property name="text">
-    <string>Reset</string>
-   </property>
-  </action>
-  <action name="menu_JsonDownloadTemplate">
-   <property name="text">
-    <string>JSON download template</string>
    </property>
   </action>
  </widget>
