@@ -336,7 +336,6 @@ namespace swift::misc
         //! Called after cleanup().
         void finish();
 
-        using CWorkerBase::hasStarted;
         using CWorkerBase::setStarted;
         using CWorkerBase::setFinished;
 
