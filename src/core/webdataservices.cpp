@@ -217,24 +217,12 @@ namespace swift::core
 
         Q_ASSERT_X(!whatToRead.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO,
                    "Info object must be read upfront");
-        CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
-        if (m_vatsimDataFileReader)
-        {
-            if (whatToRead.testFlag(CEntityFlags::VatsimDataFile))
-            {
-                m_vatsimDataFileReader->readInBackgroundThread();
-                triggeredRead |= CEntityFlags::VatsimDataFile;
-            }
-        }
+        Q_ASSERT_X(!whatToRead.testFlag(CEntityFlags::VatsimDataFile), Q_FUNC_INFO,
+                   "Datafile is read periodically and should not be triggered manually!");
+        Q_ASSERT_X(!whatToRead.testFlag(CEntityFlags::MetarEntity), Q_FUNC_INFO,
+                   "METAR file is read periodically and should not be triggered manually!");
 
-        if (m_vatsimMetarReader)
-        {
-            if (whatToRead.testFlag(CEntityFlags::MetarEntity))
-            {
-                m_vatsimMetarReader->readInBackgroundThread();
-                triggeredRead |= CEntityFlags::MetarEntity;
-            }
-        }
+        CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
 
         if (m_airportDataReader)
         {

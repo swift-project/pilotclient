@@ -29,9 +29,6 @@ namespace swift::core::vatsim
         //! Constructor
         explicit CVatsimMetarReader(QObject *owner);
 
-        //! Read / re-read metars
-        void readInBackgroundThread();
-
         //! Get METARs
         //! \threadsafe
         virtual swift::misc::weather::CMetarList getMetars() const;

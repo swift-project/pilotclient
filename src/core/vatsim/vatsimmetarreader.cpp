@@ -35,15 +35,6 @@ namespace swift::core::vatsim
         this->reloadSettings();
     }
 
-    void CVatsimMetarReader::readInBackgroundThread()
-    {
-        QPointer<CVatsimMetarReader> myself(this);
-        QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
-            myself->read();
-        });
-    }
-
     CMetarList CVatsimMetarReader::getMetars() const
     {
         QReadLocker l(&m_lock);
