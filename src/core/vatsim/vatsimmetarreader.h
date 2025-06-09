@@ -9,7 +9,7 @@
 #include <QObject>
 
 #include "core/swiftcoreexport.h"
-#include "core/threadedreader.h"
+#include "core/threadedreaderperiodic.h"
 #include "misc/aviation/airporticaocode.h"
 #include "misc/network/entityflags.h"
 #include "misc/weather/metar.h"
@@ -21,7 +21,7 @@ class QNetworkReply;
 namespace swift::core::vatsim
 {
     //! Read METARs from VATSIM
-    class SWIFT_CORE_EXPORT CVatsimMetarReader : public swift::core::CThreadedReader
+    class SWIFT_CORE_EXPORT CVatsimMetarReader : public swift::core::CThreadedReaderPeriodic
     {
         Q_OBJECT
 

@@ -30,7 +30,7 @@ using namespace swift::core::data;
 
 namespace swift::core::vatsim
 {
-    CVatsimMetarReader::CVatsimMetarReader(QObject *owner) : CThreadedReader(owner, "CVatsimMetarReader")
+    CVatsimMetarReader::CVatsimMetarReader(QObject *owner) : CThreadedReaderPeriodic(owner, "CVatsimMetarReader")
     {
         this->reloadSettings();
     }

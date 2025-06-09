@@ -237,6 +237,8 @@ add_library(core SHARED
         swiftcoreexport.h
         threadedreader.cpp
         threadedreader.h
+        threadedreaderperiodic.cpp
+        threadedreaderperiodic.h
         webdataservices.cpp
         webdataservices.h
         webdataservicesms.cpp
