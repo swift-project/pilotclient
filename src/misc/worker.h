@@ -303,10 +303,6 @@ namespace swift::misc
         //! \threadsafe
         void setEnabled(bool enabled) { m_enabled = enabled; }
 
-        //! Start updating (start/stop timer)
-        //! \threadsafe
-        void startUpdating(int updateTimeSecs);
-
         //! Name of the worker
         const QString &getName() { return m_name; }
 
@@ -326,11 +322,6 @@ namespace swift::misc
 
         //! Wait time for quitAndWait, 0 means not waiting
         virtual unsigned long waitTimeoutMs() const { return 15 * 1000; }
-
-        //! Safely stop update time
-        void stopUpdateTimer();
-
-        QTimer m_updateTimer { this }; //!< timer which can be used by implementing classes
 
     private:
         //! Called after cleanup().

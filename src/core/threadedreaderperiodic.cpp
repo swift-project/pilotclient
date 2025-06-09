@@ -5,40 +5,33 @@
 
 namespace swift::core
 {
-    CThreadedReaderPeriodic::CThreadedReaderPeriodic(QObject *owner, const QString &name) : CThreadedReader(owner, name)
+    CThreadedReaderPeriodic::CThreadedReaderPeriodic(QObject *owner, const QString &name)
+        : CThreadedReader(owner, name), m_updateTimer(owner, name, true)
     {
-        connect(&m_updateTimer, &QTimer::timeout, this, &CThreadedReaderPeriodic::doWork);
-        m_updateTimer.setSingleShot(true);
+        connect(&m_updateTimer, &misc::CThreadedTimer::timeout, this, &CThreadedReaderPeriodic::doWork);
     }
 
     void CThreadedReaderPeriodic::startReader()
     {
         Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Thread was not started yet!");
-        Q_ASSERT(m_initialTime > 0);
-        QTimer::singleShot(m_initialTime, this, [=] { this->doWork(); });
+        QTimer::singleShot(m_initialTime.load(), this, [=] { this->doWork(); });
     }
 
-    void CThreadedReaderPeriodic::setInitialAndPeriodicTime(int initialTime, int periodicTime)
+    void CThreadedReaderPeriodic::setInitialAndPeriodicTime(std::chrono::milliseconds initialTime,
+                                                            std::chrono::milliseconds periodicTime)
     {
         m_initialTime = initialTime;
         m_periodicTime = periodicTime;
-
-        // if timer is active start with delta time
-        // remark: will be reset in doWork
-        if (m_updateTimer.isActive())
-        {
-            const int oldPeriodicTime = m_updateTimer.interval();
-            const int delta = m_periodicTime - oldPeriodicTime + m_updateTimer.remainingTime();
-            m_updateTimer.start(qMax(delta, 0));
-        }
     }
 
     void CThreadedReaderPeriodic::doWork()
     {
         if (!doWorkCheck()) { return; }
         this->doWorkImpl();
-        Q_ASSERT(m_periodicTime > 0);
-        m_updateTimer.start(m_periodicTime); // restart
+        using namespace std::chrono_literals;
+        Q_ASSERT(m_periodicTime.load() > 0ms);
+
+        m_updateTimer.startTimer(m_periodicTime); // restart
     }
 
 } // namespace swift::core

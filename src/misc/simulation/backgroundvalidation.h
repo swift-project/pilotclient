@@ -17,6 +17,7 @@
 #include "misc/simulation/settings/modelmatchersettings.h"
 #include "misc/statusmessagelist.h"
 #include "misc/swiftmiscexport.h"
+#include "misc/threadedtimer.h"
 #include "misc/worker.h"
 
 namespace swift::misc::simulation
@@ -63,6 +64,10 @@ namespace swift::misc::simulation
         //! \threadsafe
         bool requestLastValidationResults();
 
+        //! Start the updating timer
+        //! \threadsafe
+        void startUpdating(std::chrono::milliseconds ms);
+
     signals:
         //! Validating
         void validating(bool running);
@@ -95,6 +100,8 @@ namespace swift::misc::simulation
 
         // Set/caches as member as we are in own thread, central instance will not work
         data::CModelSetCaches m_modelSets { false, this };
+
+        CThreadedTimer m_updateTimer; //!< update timer
 
         //! Do the validation checks
         void doWork();

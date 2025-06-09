@@ -22,9 +22,10 @@ namespace swift::misc::simulation
         return cats;
     }
 
-    CBackgroundValidation::CBackgroundValidation(QObject *owner) : CContinuousWorker(owner, "Background validation")
+    CBackgroundValidation::CBackgroundValidation(QObject *owner)
+        : CContinuousWorker(owner, "Background validation"), m_updateTimer(owner, "Background validation")
     {
-        connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundValidation::doWork);
+        connect(&m_updateTimer, &CThreadedTimer::timeout, this, &CBackgroundValidation::doWork);
     }
 
     void CBackgroundValidation::setCurrentSimulator(const CSimulatorInfo &simulator, const QString &simDirectory,
@@ -94,10 +95,17 @@ namespace swift::misc::simulation
         return true;
     }
 
+    void CBackgroundValidation::startUpdating(std::chrono::milliseconds ms)
+    {
+        Q_ASSERT_X(this->hasStarted(), Q_FUNC_INFO, "Worker not started yet");
+        m_updateTimer.startTimer(ms);
+        setEnabled(true);
+    }
+
     void CBackgroundValidation::beforeQuit() noexcept
     {
         m_wasStopped = true; // stop in utility functions
-        this->stopUpdateTimer();
+        m_updateTimer.stopTimer();
     }
 
     void CBackgroundValidation::doWork()
@@ -162,7 +170,7 @@ namespace swift::misc::simulation
             m_timerBasedRuns++;
 
             // stop timer after some runs
-            if (m_timerBasedRuns > 3) { m_updateTimer.stop(); }
+            if (m_timerBasedRuns > 3) { m_updateTimer.stopTimer(); }
         }
 
         emit this->validating(false);

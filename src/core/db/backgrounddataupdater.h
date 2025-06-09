@@ -16,6 +16,7 @@
 #include "misc/network/entityflags.h"
 #include "misc/simulation/data/modelcaches.h"
 #include "misc/statusmessagelist.h"
+#include "misc/threadedtimer.h"
 #include "misc/worker.h"
 
 namespace swift::core::db
@@ -47,6 +48,7 @@ namespace swift::core::db
         std::atomic_bool m_updatePublishedModels { true }; //!< update when models have been updated
         QMap<QString, QDateTime> m_syncedModelsLatestChange; //! timestamp per cache when last synced
         swift::misc::CStatusMessageList m_messageHistory;
+        misc::CThreadedTimer m_updateTimer; //!< Thread safe timer for update timeout
 
         // set/caches as member as we are in own thread, central instance will not work
         swift::misc::simulation::data::CModelCaches m_modelCaches { false, this };

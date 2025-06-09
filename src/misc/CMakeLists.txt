@@ -319,6 +319,8 @@ add_library(misc SHARED
         swiftdirectories.cpp
         swiftdirectories.h
         swiftmiscexport.h
+        threadedtimer.cpp
+        threadedtimer.h
         threadutils.cpp
         threadutils.h
         timestampbased.cpp
