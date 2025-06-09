@@ -151,15 +151,6 @@ namespace swift::core::vatsim
         return users;
     }
 
-    void CVatsimDataFileReader::readInBackgroundThread()
-    {
-        QPointer<CVatsimDataFileReader> myself(this);
-        QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
-            myself->read();
-        });
-    }
-
     void CVatsimDataFileReader::doWorkImpl() { this->read(); }
 
     void CVatsimDataFileReader::read()

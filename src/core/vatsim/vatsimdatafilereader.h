@@ -112,9 +112,6 @@ namespace swift::core::vatsim
         //! \threadsafe
         void updateWithVatsimDataFileData(swift::misc::simulation::CSimulatedAircraft &aircraftToBeUdpated) const;
 
-        //! Start reading in own thread
-        void readInBackgroundThread();
-
     signals:
         //! Data have been read
         void dataFileRead(int kB);
