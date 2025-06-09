@@ -17,7 +17,6 @@
 
 #include "core/swiftcoreexport.h"
 #include "core/vatsim/vatsimsettings.h"
-#include "misc/logcategories.h"
 #include "misc/network/urlloglist.h"
 #include "misc/worker.h"
 
@@ -39,7 +38,19 @@ namespace swift::core
         static const QStringList &getLogCategories();
 
         //! Destructor
-        virtual ~CThreadedReader() = default;
+        ~CThreadedReader() override = default;
+
+        //! Copy constructor
+        CThreadedReader(const CThreadedReader &) = delete;
+
+        //! Copy assignment
+        CThreadedReader &operator=(const CThreadedReader &) = delete;
+
+        //! Move constructor
+        CThreadedReader(CThreadedReader &&) = delete;
+
+        //! Move assignment
+        CThreadedReader &operator=(CThreadedReader &&) = delete;
 
         //! Thread safe, get update timestamp
         //! \threadsafe

@@ -281,7 +281,7 @@ namespace swift::core
 
         //! ICAO code for id
         //! \threadsafe
-        swift::misc::aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int id) const;
+        swift::misc::aviation::CAircraftIcaoCode getAircraftIcaoCodeForDbKey(int key) const;
 
         //! Use an ICAO object to select the best complete ICAO object from DB for it
         //! \threadsafe
@@ -328,12 +328,12 @@ namespace swift::core
 
         //! ICAO code for id
         //! \threadsafe
-        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int id) const;
+        swift::misc::aviation::CAirlineIcaoCode getAirlineIcaoCodeForDbKey(int key) const;
 
         //! Smart airline selector
         //! \threadsafe
         swift::misc::aviation::CAirlineIcaoCode smartAirlineIcaoSelector(
-            const swift::misc::aviation::CAirlineIcaoCode &code,
+            const swift::misc::aviation::CAirlineIcaoCode &icaoPattern,
             const swift::misc::aviation::CCallsign &callsign = swift::misc::aviation::CCallsign()) const;
 
         //! ICAO code for callsign (e.g. DLH123 -> DLH)

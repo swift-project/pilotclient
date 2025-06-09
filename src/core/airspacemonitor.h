@@ -53,7 +53,7 @@ namespace swift::core
 
     //! Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
     //! Central instance of data for \sa IRemoteAircraftProvider.
-    class SWIFT_CORE_EXPORT CAirspaceMonitor :
+    class SWIFT_CORE_EXPORT CAirspaceMonitor final :
         public swift::misc::simulation::CRemoteAircraftProvider, // those data will be provided from the class
                                                                  // CAirspaceMonitor
         public swift::misc::network::CClientProvider, // those data will be provided from the class CAirspaceMonitor
@@ -198,7 +198,7 @@ namespace swift::core
             FsInnPacket() {}
 
             //! Constructor
-            FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineDesignator,
+            FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator,
                         const QString &combinedCode, const QString &modelString);
 
             QString aircraftIcaoDesignator;
@@ -444,7 +444,7 @@ namespace swift::core
         //! Receive FSInn packet
         //! \remark This can happen even without a query before
         void onCustomFSInnPacketReceived(const swift::misc::aviation::CCallsign &callsign,
-                                         const QString &airlineIcaoDesignator, const QString &aircraftDesignator,
+                                         const QString &airlineIcaoDesignator, const QString &aircraftIcaoDesignator,
                                          const QString &combinedAircraftType, const QString &modelString);
 
         void onRealNameReplyReceived(const swift::misc::aviation::CCallsign &callsign, const QString &realname);

@@ -99,8 +99,6 @@ namespace swift::core
         m_simulatorMaxRenderedDistance = maxRenderedDistance;
     }
 
-    CAirspaceAnalyzer::~CAirspaceAnalyzer() {}
-
     void CAirspaceAnalyzer::onNetworkPositionUpdate(const CAircraftSituation &situation,
                                                     const CTransponder &transponder)
     {
@@ -172,7 +170,7 @@ namespace swift::core
         // this is a trick to not remove everything while debugging
         const qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
         const qint64 callDiffMs = currentTimeMsEpoch - m_lastWatchdogCallMsSinceEpoch;
-        const qint64 callThresholdMs = static_cast<qint64>(updateInterval.count() * 1.5);
+        constexpr auto callThresholdMs = static_cast<qint64>(updateInterval.count() * 1.5);
         m_lastWatchdogCallMsSinceEpoch = currentTimeMsEpoch;
         if (callDiffMs > callThresholdMs)
         {
@@ -228,8 +226,9 @@ namespace swift::core
         Q_ASSERT_X(!CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Expect to run in background thread");
         Q_ASSERT_X(thread() != qApp->thread(), Q_FUNC_INFO, "Expect to run in background thread affinity");
 
-        bool restricted, enabled;
-        int maxAircraft;
+        bool restricted {};
+        bool enabled {};
+        int maxAircraft {};
         CLength maxRenderedDistance;
         {
             QReadLocker l(&m_lockRestrictions);

@@ -19,6 +19,7 @@ Checks:
   - '-readability-math-missing-parentheses'
   - '-readability-avoid-unconditional-preprocessor-if'
   - '-readability-magic-numbers'
+  - '-readability-container-size-empty'
   - 'cppcoreguidelines-*'
   - '-cppcoreguidelines-avoid-magic-numbers'
   - '-cppcoreguidelines-non-private-member-variables-in-classes'

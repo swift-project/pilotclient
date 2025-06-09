@@ -47,7 +47,7 @@ using namespace swift::misc::weather;
 
 namespace swift::core
 {
-    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readers,
+    CWebDataServices::CWebDataServices(CWebReaderFlags::WebReader readerFlags,
                                        const CDatabaseReaderConfigList &dbReaderConfig, QObject *parent)
         : QObject(parent), m_dbReaderConfig(dbReaderConfig)
     {
@@ -65,22 +65,23 @@ namespace swift::core
         // check if I need info objects
         const bool readFromSwiftDb = dbReaderConfig.possiblyReadsFromSwiftDb(); // DB read access
         const bool writeToSwiftDb = dbReaderConfig.possiblyWritesToSwiftDb(); // DB write access
-        if (!readFromSwiftDb && readers.testFlag(CWebReaderFlags::DbInfoDataReader))
+        if (!readFromSwiftDb && readerFlags.testFlag(CWebReaderFlags::DbInfoDataReader))
         {
             // will remove info reader because not needed
-            readers &= ~CWebReaderFlags::DbInfoDataReader;
+            readerFlags &= ~CWebReaderFlags::DbInfoDataReader;
             CLogMessage(this).info(u"Remove info object reader because not needed");
         }
 
         // get entities to be read
-        CEntityFlags::Entity entities = CWebReaderFlags::allEntitiesForReaders(readers);
+        CEntityFlags::Entity entities = CWebReaderFlags::allEntitiesForReaders(readerFlags);
         if (entities.testFlag(CEntityFlags::DbInfoObjectEntity))
         {
-            Q_ASSERT_X(readers.testFlag(CWebReaderFlags::DbInfoDataReader), Q_FUNC_INFO, "info object but no reader");
+            Q_ASSERT_X(readerFlags.testFlag(CWebReaderFlags::DbInfoDataReader), Q_FUNC_INFO,
+                       "info object but no reader");
             CLogMessage(this).info(u"Using info objects for swift DB entities");
         }
 
-        this->initReaders(readers, entities); // reads info objects if required
+        this->initReaders(readerFlags, entities); // reads info objects if required
         if (writeToSwiftDb) { this->initWriters(); }
 
         // make sure this is called in event queue, so pending tasks cam be performed
@@ -98,7 +99,7 @@ namespace swift::core
     CServerList CWebDataServices::getVatsimFsdServers() const
     {
         if (m_vatsimServerFileReader) { return m_vatsimServerFileReader->getFsdServers(); }
-        return CServerList();
+        return {};
     }
 
     CUrl CWebDataServices::getVatsimMetarUrl() const
@@ -116,19 +117,19 @@ namespace swift::core
     CUserList CWebDataServices::getUsersForCallsign(const CCallsign &callsign) const
     {
         if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getUsersForCallsign(callsign); }
-        return CUserList();
+        return {};
     }
 
     CAtcStationList CWebDataServices::getAtcStationsForCallsign(const CCallsign &callsign) const
     {
         if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getAtcStationsForCallsign(callsign); }
-        return CAtcStationList();
+        return {};
     }
 
     CVoiceCapabilities CWebDataServices::getVoiceCapabilityForCallsign(const CCallsign &callsign) const
     {
         if (m_vatsimDataFileReader) { return m_vatsimDataFileReader->getVoiceCapabilityForCallsign(callsign); }
-        return CVoiceCapabilities();
+        return {};
     }
 
     void CWebDataServices::updateWithVatsimDataFileData(CSimulatedAircraft &aircraftToBeUdpated) const
@@ -139,13 +140,13 @@ namespace swift::core
     CStatusMessageList CWebDataServices::asyncPublishModels(const CAircraftModelList &modelsToBePublished) const
     {
         if (m_databaseWriter) { return m_databaseWriter->asyncPublishModels(modelsToBePublished, ""); }
-        return CStatusMessageList();
+        return {};
     }
 
     CStatusMessageList CWebDataServices::asyncAutoPublish(const CAutoPublishData &data) const
     {
         if (m_databaseWriter) { return m_databaseWriter->asyncAutoPublish(data); }
-        return CStatusMessageList();
+        return {};
     }
 
     void CWebDataServices::triggerReadOfDbInfoObjects() { initDbInfoObjectReaderAndTriggerRead(); }
@@ -340,25 +341,25 @@ namespace swift::core
     QDateTime CWebDataServices::getCacheTimestamp(CEntityFlags::Entity entity) const
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
-        if (!CEntityFlags::anySwiftDbEntity(entity)) { return QDateTime(); }
+        if (!CEntityFlags::anySwiftDbEntity(entity)) { return {}; }
         const CDatabaseReader *dr = this->getDbReader(entity);
-        if (!dr) { return QDateTime(); }
+        if (!dr) { return {}; }
         return dr->getCacheTimestamp(entity);
     }
 
     QDateTime CWebDataServices::getLatestDbEntityTimestamp(CEntityFlags::Entity entity) const
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "Need single entity");
-        if (!CEntityFlags::anySwiftDbEntity(entity)) { return QDateTime(); }
+        if (!CEntityFlags::anySwiftDbEntity(entity)) { return {}; }
         const CInfoDataReader *ir = this->getDbInfoDataReader();
-        if (!ir) { return QDateTime(); }
+        if (!ir) { return {}; }
         return ir->getLatestEntityTimestampFromDbInfoObjects(entity);
     }
 
     QDateTime CWebDataServices::getLatestSharedInfoObjectTimestamp(CEntityFlags::Entity entity) const
     {
         const CDatabaseReader *reader = this->getDbReader(entity);
-        if (!reader) { return QDateTime(); }
+        if (!reader) { return {}; }
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
         return reader->getLatestEntityTimestampFromSharedInfoObjects(entity);
     }
@@ -427,11 +428,8 @@ namespace swift::core
             if (!dr) { return -1; }
             return dr->getCacheCount(entity);
         }
-        else
-        {
-            // non DB/shared entities would go here
-            return -1;
-        }
+        // non DB/shared entities would go here
+        return -1;
     }
 
     int CWebDataServices::getDbInfoObjectCount(CEntityFlags::Entity entity) const
@@ -510,7 +508,7 @@ namespace swift::core
     CDistributorList CWebDataServices::getDistributors() const
     {
         if (m_modelDataReader) { return m_modelDataReader->getDistributors(); }
-        return CDistributorList();
+        return {};
     }
 
     int CWebDataServices::getDistributorsCount() const
@@ -522,26 +520,26 @@ namespace swift::core
     CDistributor CWebDataServices::getDistributorForDbKey(const QString &key) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getDistributorForDbKey(key); }
-        return CDistributor();
+        return {};
     }
 
     CDistributor CWebDataServices::smartDistributorSelector(const CDistributor &distributor) const
     {
         if (m_modelDataReader) { return m_modelDataReader->smartDistributorSelector(distributor); }
-        return CDistributor();
+        return {};
     }
 
     CDistributor CWebDataServices::smartDistributorSelector(const CDistributor &distributor,
                                                             const CAircraftModel &model) const
     {
         if (m_modelDataReader) { return m_modelDataReader->smartDistributorSelector(distributor, model); }
-        return CDistributor();
+        return {};
     }
 
     CLiveryList CWebDataServices::getLiveries() const
     {
         if (m_modelDataReader) { return m_modelDataReader->getLiveries(); }
-        return CLiveryList();
+        return {};
     }
 
     int CWebDataServices::getLiveriesCount() const
@@ -553,25 +551,25 @@ namespace swift::core
     CLivery CWebDataServices::getLiveryForCombinedCode(const QString &combinedCode) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getLiveryForCombinedCode(combinedCode); }
-        return CLivery();
+        return {};
     }
 
     CLivery CWebDataServices::getTempLiveryOrDefault() const
     {
         if (m_modelDataReader) { return m_modelDataReader->getLiveryForCombinedCode(CLivery::tempLiveryCode()); }
-        return CLivery();
+        return {};
     }
 
     CLivery CWebDataServices::getStdLiveryForAirlineCode(const CAirlineIcaoCode &icao) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getStdLiveryForAirlineVDesignator(icao); }
-        return CLivery();
+        return {};
     }
 
     CLivery CWebDataServices::getLiveryForDbKey(int id) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getLiveryForDbKey(id); }
-        return CLivery();
+        return {};
     }
 
     CLivery CWebDataServices::smartLiverySelector(const CLivery &livery) const
@@ -583,7 +581,7 @@ namespace swift::core
     CAircraftModelList CWebDataServices::getModels() const
     {
         if (m_modelDataReader) { return m_modelDataReader->getModels(); }
-        return CAircraftModelList();
+        return {};
     }
 
     int CWebDataServices::getModelsCount() const
@@ -595,19 +593,19 @@ namespace swift::core
     QSet<int> CWebDataServices::getModelDbKeys() const
     {
         if (m_modelDataReader) { return m_modelDataReader->getModelDbKeys(); }
-        return QSet<int>();
+        return {};
     }
 
     QStringList CWebDataServices::getModelStrings(bool sort) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getModelStringList(sort); }
-        return QStringList();
+        return {};
     }
 
     QStringList CWebDataServices::getModelCompleterStrings(bool sorted, const CSimulatorInfo &simulator) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getModels().toCompleterStrings(sorted, simulator); }
-        return QStringList();
+        return {};
     }
 
     CAircraftModelList
@@ -619,13 +617,13 @@ namespace swift::core
             return m_modelDataReader->getModelsForAircraftDesignatorAndLiveryCombinedCode(aircraftDesignator,
                                                                                           combinedCode);
         }
-        return CAircraftModelList();
+        return {};
     }
 
     CAircraftModel CWebDataServices::getModelForModelString(const QString &modelString) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getModelForModelString(modelString); }
-        return CAircraftModel();
+        return {};
     }
 
     bool CWebDataServices::containsModelString(const QString &modelString) const
@@ -637,13 +635,13 @@ namespace swift::core
     CAircraftModel CWebDataServices::getModelForDbKey(int dbKey) const
     {
         if (m_modelDataReader) { return m_modelDataReader->getModelForDbKey(dbKey); }
-        return CAircraftModel();
+        return {};
     }
 
     CAircraftIcaoCodeList CWebDataServices::getAircraftIcaoCodes() const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAircraftIcaoCodes(); }
-        return CAircraftIcaoCodeList();
+        return {};
     }
 
     int CWebDataServices::getAircraftIcaoCodesCount() const
@@ -655,7 +653,7 @@ namespace swift::core
     CAircraftIcaoCode CWebDataServices::getAircraftIcaoCodeForDesignator(const QString &designator) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAircraftIcaoCodeForDesignator(designator); }
-        return CAircraftIcaoCode();
+        return {};
     }
 
     int CWebDataServices::getAircraftIcaoCodesForDesignatorCount(const QString &designator) const
@@ -665,22 +663,22 @@ namespace swift::core
 
     QSet<QString> CWebDataServices::getAircraftDesignatorsForAirline(const CAirlineIcaoCode &airline) const
     {
-        if (!airline.hasValidDesignator()) { return QSet<QString>(); }
+        if (!airline.hasValidDesignator()) { return {}; }
         if (m_modelDataReader) { return m_modelDataReader->getAircraftDesignatorsForAirline(airline); }
-        return QSet<QString>();
+        return {};
     }
 
     CAircraftIcaoCodeList CWebDataServices::getAircraftIcaoCodesForAirline(const CAirlineIcaoCode &airline) const
     {
-        if (!airline.hasValidDesignator()) { return CAircraftIcaoCodeList(); }
+        if (!airline.hasValidDesignator()) { return {}; }
         if (m_modelDataReader) { return m_modelDataReader->getAicraftIcaoCodesForAirline(airline); }
-        return CAircraftIcaoCodeList();
+        return {};
     }
 
     CAircraftCategoryList CWebDataServices::getAircraftCategories() const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAircraftCategories(); }
-        return CAircraftCategoryList();
+        return {};
     }
 
     int CWebDataServices::getAircraftCategoriesCount() const
@@ -699,13 +697,13 @@ namespace swift::core
     CAircraftIcaoCodeList CWebDataServices::getAircraftIcaoCodesForDesignator(const QString &designator) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAircraftIcaoCodesForDesignator(designator); }
-        return CAircraftIcaoCodeList();
+        return {};
     }
 
     CAircraftIcaoCode CWebDataServices::getAircraftIcaoCodeForDbKey(int key) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAircraftIcaoCodeForDbKey(key); }
-        return CAircraftIcaoCode();
+        return {};
     }
 
     CAircraftIcaoCode CWebDataServices::smartAircraftIcaoSelector(const CAircraftIcaoCode &icao) const
@@ -717,7 +715,7 @@ namespace swift::core
     CAirlineIcaoCodeList CWebDataServices::getAirlineIcaoCodes() const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodes(); }
-        return CAirlineIcaoCodeList();
+        return {};
     }
 
     bool CWebDataServices::containsAirlineIcaoDesignator(const QString &designator) const
@@ -731,20 +729,20 @@ namespace swift::core
     CWebDataServices::getAirlineIcaoCodeForUniqueDesignatorOrDefault(const QString &designator,
                                                                      bool preferOperatingAirlines) const
     {
-        if (designator.isEmpty()) { return CAirlineIcaoCode(); }
+        if (designator.isEmpty()) { return {}; }
         if (m_icaoDataReader)
         {
             return m_icaoDataReader->getAirlineIcaoCodeForUniqueDesignatorOrDefault(designator,
                                                                                     preferOperatingAirlines);
         }
-        return CAirlineIcaoCode();
+        return {};
     }
 
     CAirlineIcaoCode CWebDataServices::getAirlineIcaoCodeForUniqueIataCodeOrDefault(const QString &iataCode) const
     {
-        if (iataCode.isEmpty()) { return CAirlineIcaoCode(); }
+        if (iataCode.isEmpty()) { return {}; }
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodeForUniqueIataCodeOrDefault(iataCode); }
-        return CAirlineIcaoCode();
+        return {};
     }
 
     int CWebDataServices::getAirlineIcaoCodesCount() const
@@ -779,12 +777,12 @@ namespace swift::core
                                                                 const CCallsign &callsign) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->smartAirlineIcaoSelector(icaoPattern, callsign); }
-        return CAirlineIcaoCode();
+        return {};
     }
 
     CAirlineIcaoCode CWebDataServices::findBestMatchByCallsign(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return CAirlineIcaoCode(); }
+        if (callsign.isEmpty()) { return {}; }
         const CAirlineIcaoCodeList icaos(this->getAirlineIcaoCodes());
         return icaos.findBestMatchByCallsign(callsign);
     }
@@ -792,13 +790,13 @@ namespace swift::core
     CAirlineIcaoCode CWebDataServices::getAirlineIcaoCodeForDbKey(int key) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodeForDbKey(key); }
-        return CAirlineIcaoCode();
+        return {};
     }
 
     CCountryList CWebDataServices::getCountries() const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getCountries(); }
-        return CCountryList();
+        return {};
     }
 
     int CWebDataServices::getCountriesCount() const
@@ -810,13 +808,13 @@ namespace swift::core
     CCountry CWebDataServices::getCountryForName(const QString &name) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getCountryForName(name); }
-        return CCountry();
+        return {};
     }
 
     CAirportList CWebDataServices::getAirports() const
     {
         if (m_airportDataReader) { return m_airportDataReader->getAirports(); }
-        return CAirportList();
+        return {};
     }
 
     int CWebDataServices::getAirportsCount() const
@@ -828,19 +826,19 @@ namespace swift::core
     CAirport CWebDataServices::getAirportForIcaoDesignator(const QString &icao) const
     {
         if (m_airportDataReader) { return m_airportDataReader->getAirportForIcaoDesignator(icao); }
-        return CAirport();
+        return {};
     }
 
     CAirport CWebDataServices::getAirportForNameOrLocation(const QString &nameOrLocation) const
     {
         if (m_airportDataReader) { return m_airportDataReader->getAirportForNameOrLocation(nameOrLocation); }
-        return CAirport();
+        return {};
     }
 
     CCountry CWebDataServices::getCountryForIsoCode(const QString &iso) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getCountryForIsoCode(iso); }
-        return CCountry();
+        return {};
     }
 
     CMetarList CWebDataServices::getMetars() const
@@ -852,7 +850,7 @@ namespace swift::core
     CMetar CWebDataServices::getMetarForAirport(const CAirportIcaoCode &icao) const
     {
         if (m_vatsimMetarReader) { return m_vatsimMetarReader->getMetarForAirport(icao); }
-        return CMetar();
+        return {};
     }
 
     CStatusMessageList CWebDataServices::validateForPublishing(const CAircraftModelList &modelsToBePublished,
@@ -913,7 +911,7 @@ namespace swift::core
     CAirlineIcaoCodeList CWebDataServices::getAirlineIcaoCodesForDesignator(const QString &designator) const
     {
         if (m_icaoDataReader) { return m_icaoDataReader->getAirlineIcaoCodesForDesignator(designator); }
-        return CAirlineIcaoCodeList();
+        return {};
     }
 
     int CWebDataServices::getAirlineIcaoCodesForDesignatorCount(const QString &designator) const
@@ -1311,11 +1309,8 @@ namespace swift::core
             const CDbInfo info = reader->getInfoObjects().findFirstByEntityOrDefault(entity);
             return info.getEntries();
         }
-        else
-        {
-            // non DB entities would go here
-            return -1;
-        }
+        // non DB entities would go here
+        return -1;
     }
 
     CEntityFlags::Entity CWebDataServices::getDbEntitiesWithCachedData() const
@@ -1552,26 +1547,22 @@ namespace swift::core
                 emit this->databaseReaderMessages(m);
                 return false; // wait
             }
-            else
-            {
-                // we have a response, but a failure, means server is alive, but responded with error
-                // such an error (access, ...) normally will not go away
-                const CStatusMessage m =
-                    CLogMessage(this).error(u"Info objects (%1) loading for '%2' failed from '%3', '%4'")
-                    << info << CEntityFlags::entitiesToString(entities) << infoReader->getInfoObjectsUrl().toQString()
-                    << infoReader->getStatusMessage();
-                infoReader->setMarkedAsFailed(true);
-                emit this->databaseReaderMessages(m);
-                return true; // carry on, regardless of situation
-            }
+
+            // we have a response, but a failure, means server is alive, but responded with error
+            // such an error (access, ...) normally will not go away
+            const CStatusMessage m =
+                CLogMessage(this).error(u"Info objects (%1) loading for '%2' failed from '%3', '%4'")
+                << info << CEntityFlags::entitiesToString(entities) << infoReader->getInfoObjectsUrl().toQString()
+                << infoReader->getStatusMessage();
+            infoReader->setMarkedAsFailed(true);
+            emit this->databaseReaderMessages(m);
+            return true; // carry on, regardless of situation
         }
-        else
-        {
-            // wait for 1st reply
-            // we call read again in some time
-            this->readDeferredInBackground(entities);
-            return false; // wait
-        }
+
+        // wait for 1st reply
+        // we call read again in some time
+        this->readDeferredInBackground(entities);
+        return false; // wait
     }
 
     bool CWebDataServices::writeDbDataToDisk(const QString &dir)
