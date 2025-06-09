@@ -45,6 +45,7 @@ namespace swift::core::db
     void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
     {
         if (!this->doWorkCheck()) { return; }
+        Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Thread was not started yet!");
 
         // we accept cached data
         Q_ASSERT_X(!entities.testFlag(CEntityFlags::DbInfoObjectEntity), Q_FUNC_INFO, "Read info objects directly");

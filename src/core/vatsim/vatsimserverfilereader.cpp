@@ -36,6 +36,7 @@ namespace swift::core::vatsim
 
     void CVatsimServerFileReader::readInBackgroundThread()
     {
+        Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Thread was not started yet!");
         QPointer<CVatsimServerFileReader> myself(this);
         QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }

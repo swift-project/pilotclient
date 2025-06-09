@@ -13,6 +13,7 @@ namespace swift::core
 
     void CThreadedReaderPeriodic::startReader()
     {
+        Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Thread was not started yet!");
         Q_ASSERT(m_initialTime > 0);
         QTimer::singleShot(m_initialTime, this, [=] { this->doWork(); });
     }
