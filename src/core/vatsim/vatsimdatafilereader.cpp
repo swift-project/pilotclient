@@ -50,7 +50,8 @@ using namespace swift::core::data;
 
 namespace swift::core::vatsim
 {
-    CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner) : CThreadedReaderPeriodic(owner, "CVatsimDataFileReader")
+    CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner)
+        : CThreadedReaderPeriodic(owner, "CVatsimDataFileReader")
     {
         this->reloadSettings();
     }
