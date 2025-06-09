@@ -48,12 +48,6 @@ namespace swift::core::vatsim
         void dataRead(swift::misc::network::CEntityFlags::Entity entity,
                       swift::misc::network::CEntityFlags::ReadState state, int number, const QUrl &url);
 
-    protected:
-        //! \name swift::core::CThreadedReader overrides
-        //! @{
-        virtual void doWorkImpl() override;
-        //! @}
-
     private:
         swift::misc::CData<swift::core::data::TVatsimSetup> m_lastGoodSetup { this };
 

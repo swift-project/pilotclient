@@ -43,8 +43,6 @@ namespace swift::core::vatsim
         });
     }
 
-    void CVatsimServerFileReader::doWorkImpl() { this->read(); }
-
     void CVatsimServerFileReader::read()
     {
         this->threadAssertCheck();
