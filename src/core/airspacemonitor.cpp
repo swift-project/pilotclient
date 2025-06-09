@@ -313,13 +313,6 @@ namespace swift::core
         }
     }
 
-    bool CAirspaceMonitor::enableAnalyzer(bool enable)
-    {
-        if (!this->analyzer()) { return false; }
-        this->analyzer()->setEnabled(enable);
-        return true;
-    }
-
     void CAirspaceMonitor::testCreateDummyOnlineAtcStations(int number)
     {
         if (number < 1) { return; }
@@ -413,11 +406,7 @@ namespace swift::core
         m_foundInElevationsOnGnd = 0;
     }
 
-    void CAirspaceMonitor::gracefulShutdown()
-    {
-        if (m_analyzer) { m_analyzer->setEnabled(false); }
-        QObject::disconnect(this);
-    }
+    void CAirspaceMonitor::gracefulShutdown() { QObject::disconnect(this); }
 
     int CAirspaceMonitor::reInitializeAllAircraft()
     {

@@ -120,9 +120,6 @@ namespace swift::core
         //! Analyzer
         CAirspaceAnalyzer *analyzer() const { return m_analyzer; }
 
-        //! \copydoc CAirspaceAnalyzer::setEnabled
-        bool enableAnalyzer(bool enable);
-
         //! Gracefully shut down, e.g. for thread safety
         void gracefulShutdown();
 
