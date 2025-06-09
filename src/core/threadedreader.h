@@ -37,7 +37,7 @@ namespace swift::core
         static const QStringList &getLogCategories();
 
         //! Destructor
-        virtual ~CThreadedReader();
+        virtual ~CThreadedReader() = default;
 
         //! Thread safe, get update timestamp
         //! \threadsafe
@@ -46,10 +46,6 @@ namespace swift::core
         //! Thread safe, set update timestamp
         //! \threadsafe
         void setUpdateTimestamp(const QDateTime &updateTimestamp = QDateTime::currentDateTimeUtc());
-
-        //! Was setup read within last xx milliseconds
-        //! \threadsafe
-        bool updatedWithinLastMs(qint64 timeLastMs);
 
         //! Is marked as read failed
         //! \threadsafe
@@ -69,25 +65,13 @@ namespace swift::core
         //! \threadsafe
         void startReader();
 
-        //! Pauses the reader
-        //! \threadsafe
-        void pauseReader();
-
         //! Used in unit test
         //! \remark needs to be done before started in different thread
         void markAsUsedInUnitTest() { m_unitTest = true; }
 
-        //! Has pending URLs?
-        //! \threadsafe
-        bool hasPendingUrls() const;
-
         //! Get the URL log list
         //! \threadsafe
         swift::misc::network::CUrlLogList getUrlLogList() const;
-
-        //! Progress 0..100
-        //! \threadsafe
-        int getNetworkReplyProgress() const { return m_networkReplyProgress; }
 
         //! Max./current bytes
         QPair<qint64, qint64> getNetworkReplyBytes() const;
@@ -98,7 +82,7 @@ namespace swift::core
         }; //!< lock which can be used from the derived classes
         std::atomic_int m_networkReplyProgress; //!< Progress percentage 0...100
         std::atomic_llong m_networkReplyCurrent; //!< current bytes
-        std::atomic_llong m_networkReplyNax; //!< max bytes
+        std::atomic_llong m_networkReplyMax; //!< max bytes
 
         //! Constructor
         CThreadedReader(QObject *owner, const QString &name);
@@ -106,7 +90,7 @@ namespace swift::core
         //! When was reply last modified, -1 if N/A
         qint64 lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const;
 
-        //! Make sure everthing runs correctly in own thread
+        //! Make sure everything runs correctly in own thread
         void threadAssertCheck() const;
 
         //! Stores new content hash and returns if content changed (based on hash value
