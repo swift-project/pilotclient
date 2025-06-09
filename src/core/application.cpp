@@ -665,7 +665,6 @@ namespace swift::core
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        m_useContexts = true;
         m_coreFacadeConfig = coreConfig;
         const CStatusMessage msg = this->initLocalSettings();
         if (msg.isFailure()) { return msg; }
@@ -685,7 +684,6 @@ namespace swift::core
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        m_useContexts = true; // otherwise startCoreFacade will early-return
         m_coreFacadeConfig = CCoreFacadeConfig(CCoreFacadeConfig::NotUsed);
         const CStatusMessage msg = this->initLocalSettings();
         if (msg.isFailure()) { return msg; }
@@ -718,10 +716,6 @@ namespace swift::core
     {
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Call this function after parsing");
 
-        if (!m_useContexts)
-        {
-            return CStatusMessage(this).error(u"No need to start core facade");
-        } // we do not use context, so no need to startup
         if (!m_setupReader || !m_setupReader->isSetupAvailable())
         {
             return CStatusMessage(this).error(u"No setup reader or setup available");

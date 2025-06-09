@@ -653,7 +653,6 @@ namespace swift::core
         const QString m_applicationName; //!< application name
         QReadWriteLock m_accessManagerLock; //!< lock to make access manager access threadsafe
         CCoreFacadeConfig m_coreFacadeConfig; //!< Core facade config if any
-        bool m_useContexts = false; //!< use contexts
         bool m_devFlag = false; //!< dev. environment
         bool m_saveSettingsOnShutdown = true; //!< saving all settings on shutdown
         bool m_localSettingsLoaded = false; //!< local settings loaded?
