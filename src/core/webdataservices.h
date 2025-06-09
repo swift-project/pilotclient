@@ -566,7 +566,7 @@ namespace swift::core
 
     public slots:
         //! Call CWebDataServices::readInBackground by single shot
-        void readDeferredInBackground(swift::misc::network::CEntityFlags::Entity entities, int delayMs);
+        void readDeferredInBackground(swift::misc::network::CEntityFlags::Entity entities);
 
         //! First read (allows to immediately read in background)
         //! \remark ensures info objects (if and only if needed) are read upfront
