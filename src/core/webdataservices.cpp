@@ -90,13 +90,7 @@ namespace swift::core
 
         // trigger reading
         // but do not start all at the same time
-        const CEntityFlags::Entity icaoPart = entities & CEntityFlags::AllIcaoCountriesCategory;
-        const CEntityFlags::Entity modelPart = entities & CEntityFlags::DistributorLiveryModel;
-        CEntityFlags::Entity remainingEntities = entities & ~icaoPart;
-        remainingEntities &= ~modelPart;
-        this->readDeferredInBackground(icaoPart, 500);
-        this->readDeferredInBackground(modelPart, 1000);
-        this->readDeferredInBackground(remainingEntities, 1500);
+        this->readDeferredInBackground(entities);
     }
 
     CWebDataServices::~CWebDataServices() { this->gracefulShutdown(); }
@@ -1280,7 +1274,7 @@ namespace swift::core
 
         // and trigger read
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(25, m_sharedInfoDataReader, [=]() {
+        QTimer::singleShot(0, m_sharedInfoDataReader, [=]() {
             if (!myself || m_shuttingDown) { return; }
             m_sharedInfoDataReader->readInfoData();
         });
@@ -1438,12 +1432,12 @@ namespace swift::core
         }
     }
 
-    void CWebDataServices::readDeferredInBackground(CEntityFlags::Entity entities, int delayMs)
+    void CWebDataServices::readDeferredInBackground(CEntityFlags::Entity entities)
     {
         if (m_shuttingDown) { return; }
         if (entities == CEntityFlags::NoEntity) { return; }
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(delayMs, [=]() // clazy:exclude=connect-3arg-lambda
+        QTimer::singleShot(0, [=]() // clazy:exclude=connect-3arg-lambda
                            {
                                if (!myself || m_shuttingDown) { return; }
                                this->readInBackground(entities); // deferred
@@ -1526,7 +1520,6 @@ namespace swift::core
 
         // this will called for each entity readers, i.e. model reader, ICAO reader ...
         Q_ASSERT_X(infoReader, Q_FUNC_INFO, "Need info data reader");
-        const int waitForInfoObjectsMs = 1000; // ms
 
         if (infoReader->areAllInfoObjectsRead())
         {
@@ -1560,7 +1553,7 @@ namespace swift::core
             if (infoReader->hasReceivedOkReply())
             {
                 // ok, this means we are parsing
-                this->readDeferredInBackground(entities, waitForInfoObjectsMs);
+                this->readDeferredInBackground(entities);
                 const CStatusMessage m = CLogMessage(this).info(u"Parsing objects (%1) for '%2' from '%3'")
                                          << info << CEntityFlags::entitiesToString(entities)
                                          << infoReader->getInfoObjectsUrl().toQString();
@@ -1584,7 +1577,7 @@ namespace swift::core
         {
             // wait for 1st reply
             // we call read again in some time
-            this->readDeferredInBackground(entities, waitForInfoObjectsMs);
+            this->readDeferredInBackground(entities);
             return false; // wait
         }
     }
