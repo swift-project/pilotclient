@@ -34,8 +34,6 @@ namespace swift::core
         m_updateTimer.setSingleShot(true);
     }
 
-    CThreadedReader::~CThreadedReader() {}
-
     qint64 CThreadedReader::lastModifiedMsSinceEpoch(QNetworkReply *nwReply) const
     {
         return CNetworkUtils::lastModifiedMsSinceEpoch(nwReply);
@@ -53,26 +51,10 @@ namespace swift::core
         m_updateTimestamp = updateTimestamp;
     }
 
-    bool CThreadedReader::updatedWithinLastMs(qint64 timeLastMs)
-    {
-        QDateTime dt(getUpdateTimestamp());
-        if (dt.isNull() || !dt.isValid()) { return false; }
-        qint64 delta = QDateTime::currentMSecsSinceEpoch() - dt.toMSecsSinceEpoch();
-        return delta <= timeLastMs;
-    }
-
     void CThreadedReader::startReader()
     {
         Q_ASSERT(m_initialTime > 0);
         QTimer::singleShot(m_initialTime, this, [=] { this->doWork(); });
-    }
-
-    void CThreadedReader::pauseReader() { QTimer::singleShot(0, &m_updateTimer, &QTimer::stop); }
-
-    bool CThreadedReader::hasPendingUrls() const
-    {
-        QReadLocker l(&m_lock);
-        return m_urlReadLog.hasPending();
     }
 
     CUrlLogList CThreadedReader::getUrlLogList() const
@@ -170,7 +152,7 @@ namespace swift::core
 
     QPair<qint64, qint64> CThreadedReader::getNetworkReplyBytes() const
     {
-        return QPair<qint64, qint64>(m_networkReplyCurrent, m_networkReplyNax);
+        return QPair<qint64, qint64>(m_networkReplyCurrent, m_networkReplyMax);
     }
 
     void CThreadedReader::networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url)
@@ -178,7 +160,7 @@ namespace swift::core
         // max can be -1 if file size is not available
         m_networkReplyProgress = (current > 0 && max > 0) ? static_cast<int>((current * 100) / max) : -1;
         m_networkReplyCurrent = current;
-        m_networkReplyNax = max;
+        m_networkReplyMax = max;
 
         Q_UNUSED(url);
         Q_UNUSED(logId);

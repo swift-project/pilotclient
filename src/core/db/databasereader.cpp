@@ -664,7 +664,7 @@ namespace swift::core::db
         if (CEntityFlags::isSingleEntity(entity))
         {
             emit this->entityDownloadProgress(entity, logId, m_networkReplyProgress, m_networkReplyCurrent,
-                                              m_networkReplyNax, url);
+                                              m_networkReplyMax, url);
         }
     }
 
