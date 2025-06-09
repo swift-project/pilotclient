@@ -1019,12 +1019,10 @@ namespace swift::core
         //
         // ---- "metadata" reader, 1 will trigger read directly during init
         //
-        CDatabaseReaderConfigList dbReaderConfig(m_dbReaderConfig);
         const CEntityFlags::Entity dbEntities = entities & CEntityFlags::AllDbEntitiesNoInfoObjects;
         const bool anyDbEntities = CEntityFlags::anySwiftDbEntity(dbEntities); // contains any DB entities
-        const bool needsSharedInfoObjects = dbReaderConfig.needsSharedInfoObjects(dbEntities);
-        const bool needsDbInfoObjects = dbReaderConfig.possiblyReadsFromSwiftDb();
-        bool c = false; // for signal connect
+        const bool needsSharedInfoObjects = m_dbReaderConfig.needsSharedInfoObjects(dbEntities);
+        const bool needsDbInfoObjects = m_dbReaderConfig.possiblyReadsFromSwiftDb();
 
         // 1a. If any DB data, read the info objects upfront
         if (needsDbInfoObjects)
@@ -1039,118 +1037,34 @@ namespace swift::core
         // 1b. Read info objects if needed
         if (needsSharedInfoObjects) { this->initSharedInfoObjectReaderAndTriggerRead(); }
 
+        // ---- data that is read once (triggered via readInBackgroundThread after initReaders finished)
+
         // 2. Status and server file, updating the VATSIM related caches
-        // Read as soon as initReaders is done
         if (readersNeeded.testFlag(CWebReaderFlags::VatsimStatusReader) ||
-            readersNeeded.testFlag(CWebReaderFlags::VatsimDataReader) ||
-            readersNeeded.testFlag(CWebReaderFlags::VatsimMetarReader))
+            readersNeeded.testFlag(CWebReaderFlags::VatsimServerFileReader))
         {
-            m_vatsimStatusReader = new CVatsimStatusFileReader(this);
-            c = connect(m_vatsimStatusReader, &CVatsimStatusFileReader::statusFileRead, this,
-                        &CWebDataServices::vatsimStatusFileRead, Qt::QueuedConnection);
-            CLogMessage(this).info(u"Trigger read of VATSIM status file");
-            m_vatsimStatusReader->start(QThread::LowPriority);
-
-            // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
-            const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(0, this, [=]() {
-                if (!myself || m_shuttingDown) { return; }
-                if (!sApp || sApp->isShuttingDown()) { return; }
-                m_vatsimStatusReader->readInBackgroundThread();
-            });
-
+            startVatsimStatusFileReader();
             startVatsimServerFileReader();
         }
 
-        // ---- "normal data", triggerRead will start read, not starting directly
+        // ---- periodically read data (via CThreadedReader/CContinousWorker)
 
         // 3. VATSIM data file
-        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader))
-        {
-            m_vatsimDataFileReader = new CVatsimDataFileReader(this);
-            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this,
-                        &CWebDataServices::vatsimDataFileRead, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
-            c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
-            m_entitiesPeriodicallyRead |= CEntityFlags::VatsimDataFile;
-            m_vatsimDataFileReader->start(QThread::LowPriority);
-            m_vatsimDataFileReader->startReader();
-        }
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimDataReader)) { startVatsimDataFileReader(); }
 
         // 4. VATSIM METAR data
-        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader))
-        {
-            m_vatsimMetarReader = new CVatsimMetarReader(this);
-            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
-            c = connect(m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
-            m_entitiesPeriodicallyRead |= CEntityFlags::MetarEntity;
-            m_vatsimMetarReader->start(QThread::LowPriority);
-            m_vatsimMetarReader->startReader();
-        }
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::VatsimMetarReader)) { startVatsimMetarFileReader(); }
+
+        // ---- "normal data", triggerRead will start read, not starting directly
 
         // 5. ICAO data reader
-        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader))
-        {
-            m_icaoDataReader = new CIcaoDataReader(this, dbReaderConfig);
-            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
-            c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
-            c = connect(m_icaoDataReader, &CIcaoDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_icaoDataReader, &CIcaoDataReader::entityDownloadProgress, this,
-                        &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            m_icaoDataReader->start(QThread::LowPriority);
-        }
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::IcaoDataReader)) { startIcaoDataReader(); }
 
         // 6. Model reader
-        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader))
-        {
-            m_modelDataReader = new CModelDataReader(this, dbReaderConfig);
-            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_modelDataReader, &CModelDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_modelDataReader, &CModelDataReader::entityDownloadProgress, this,
-                        &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            m_modelDataReader->start(QThread::LowPriority);
-        }
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::ModelReader)) { startModelDataReader(); }
 
         // 7. Airport reader
-        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader))
-        {
-            m_airportDataReader = new CAirportDataReader(this, dbReaderConfig);
-            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this,
-                        &CWebDataServices::readFromSwiftReader, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead,
-                        Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_airportDataReader, &CAirportDataReader::swiftDbDataRead, this,
-                        &CWebDataServices::swiftDbDataRead, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            c = connect(m_airportDataReader, &CAirportDataReader::entityDownloadProgress, this,
-                        &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
-            Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
-            m_airportDataReader->start(QThread::LowPriority);
-        }
-        Q_UNUSED(c) // signal connect flag
+        if (readersNeeded.testFlag(CWebReaderFlags::WebReaderFlag::AirportReader)) { startAirportDataReader(); }
 
         const QDateTime threshold =
             QDateTime::currentDateTimeUtc().addDays(-365); // country and airports are "semi static"
@@ -1159,7 +1073,7 @@ namespace swift::core
         const CEntityFlags::Entity validTsDbEntities =
             this->getDbEntitiesWithTimestampNewerThan(threshold); // those caches are not read, but have a timestamp
         const bool needsSharedInfoObjectsWithoutCache =
-            dbReaderConfig.needsSharedInfoObjectsIfCachesEmpty(dbEntities, cachedDbEntities | validTsDbEntities);
+            m_dbReaderConfig.needsSharedInfoObjectsIfCachesEmpty(dbEntities, cachedDbEntities | validTsDbEntities);
         if (m_sharedInfoDataReader && !needsSharedInfoObjectsWithoutCache)
         {
             // demote error message
@@ -1168,11 +1082,31 @@ namespace swift::core
         }
     }
 
+    void CWebDataServices::startVatsimStatusFileReader()
+    {
+        Q_ASSERT_X(!m_vatsimStatusReader, Q_FUNC_INFO, "VATSIM status file reader already initialized");
+        m_vatsimStatusReader = new CVatsimStatusFileReader(this);
+        connect(m_vatsimStatusReader, &CVatsimStatusFileReader::statusFileRead, this,
+                &CWebDataServices::vatsimStatusFileRead, Qt::QueuedConnection);
+        CLogMessage(this).info(u"Trigger read of VATSIM status file");
+        m_vatsimStatusReader->start(QThread::LowPriority);
+
+        // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
+        const QPointer<CWebDataServices> myself(this);
+        QTimer::singleShot(0, this, [=]() {
+            if (!myself || m_shuttingDown) { return; }
+            if (!sApp || sApp->isShuttingDown()) { return; }
+            m_vatsimStatusReader->readInBackgroundThread();
+        });
+    }
+
     void CWebDataServices::startVatsimServerFileReader()
     {
+        Q_ASSERT_X(!m_vatsimServerFileReader, Q_FUNC_INFO, "VATSIM server file reader already initialized");
         m_vatsimServerFileReader = new CVatsimServerFileReader(this);
-        connect(m_vatsimServerFileReader, &CVatsimServerFileReader::dataFileRead, this,
-                &CWebDataServices::vatsimServerFileRead, Qt::QueuedConnection);
+        bool c = connect(m_vatsimServerFileReader, &CVatsimServerFileReader::dataFileRead, this,
+                         &CWebDataServices::vatsimServerFileRead, Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM server reader signals");
         CLogMessage(this).info(u"Trigger read of VATSIM server file");
         m_vatsimServerFileReader->start(QThread::LowPriority);
 
@@ -1183,6 +1117,92 @@ namespace swift::core
             if (!sApp || sApp->isShuttingDown()) { return; }
             m_vatsimServerFileReader->readInBackgroundThread();
         });
+    }
+
+    void CWebDataServices::startVatsimDataFileReader()
+    {
+        Q_ASSERT_X(!m_vatsimDataFileReader, Q_FUNC_INFO, "VATSIM data file reader already initialized");
+        m_vatsimDataFileReader = new CVatsimDataFileReader(this);
+        bool c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataFileRead, this,
+                         &CWebDataServices::vatsimDataFileRead, Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM data reader signals");
+        c = connect(m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CWebDataServices::dataRead,
+                    Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM data file");
+        m_entitiesPeriodicallyRead |= CEntityFlags::VatsimDataFile;
+        m_vatsimDataFileReader->start(QThread::LowPriority);
+        m_vatsimDataFileReader->startReader();
+    }
+
+    void CWebDataServices::startVatsimMetarFileReader()
+    {
+        Q_ASSERT_X(!m_vatsimMetarReader, Q_FUNC_INFO, "VATSIM METAR file reader already initialized");
+        m_vatsimMetarReader = new CVatsimMetarReader(this);
+        bool c = connect(m_vatsimMetarReader, &CVatsimMetarReader::metarsRead, this, &CWebDataServices::receivedMetars,
+                         Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "VATSIM METAR reader signals");
+        c = connect(m_vatsimMetarReader, &CVatsimMetarReader::dataRead, this, &CWebDataServices::dataRead,
+                    Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed VATSIM METAR");
+        m_entitiesPeriodicallyRead |= CEntityFlags::MetarEntity;
+        m_vatsimMetarReader->start(QThread::LowPriority);
+        m_vatsimMetarReader->startReader();
+    }
+
+    void CWebDataServices::startIcaoDataReader()
+    {
+        Q_ASSERT_X(!m_icaoDataReader, Q_FUNC_INFO, "ICAO data reader already initialized");
+        m_icaoDataReader = new CIcaoDataReader(this, m_dbReaderConfig);
+        bool c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader,
+                         Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
+        c = connect(m_icaoDataReader, &CIcaoDataReader::dataRead, this, &CWebDataServices::dataRead,
+                    Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect ICAO reader signals");
+        c = connect(m_icaoDataReader, &CIcaoDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead,
+                    Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        c = connect(m_icaoDataReader, &CIcaoDataReader::entityDownloadProgress, this,
+                    &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        m_icaoDataReader->start(QThread::LowPriority);
+    }
+
+    void CWebDataServices::startModelDataReader()
+    {
+        Q_ASSERT_X(!m_modelDataReader, Q_FUNC_INFO, "Model data reader already initialized");
+        m_modelDataReader = new CModelDataReader(this, m_dbReaderConfig);
+        bool c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::readFromSwiftReader,
+                         Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        c = connect(m_modelDataReader, &CModelDataReader::dataRead, this, &CWebDataServices::dataRead,
+                    Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        c = connect(m_modelDataReader, &CModelDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead,
+                    Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        c = connect(m_modelDataReader, &CModelDataReader::entityDownloadProgress, this,
+                    &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        m_modelDataReader->start(QThread::LowPriority);
+    }
+
+    void CWebDataServices::startAirportDataReader()
+    {
+        m_airportDataReader = new CAirportDataReader(this, m_dbReaderConfig);
+        bool c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this,
+                         &CWebDataServices::readFromSwiftReader, Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        c = connect(m_airportDataReader, &CAirportDataReader::dataRead, this, &CWebDataServices::dataRead,
+                    Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        c = connect(m_airportDataReader, &CAirportDataReader::swiftDbDataRead, this, &CWebDataServices::swiftDbDataRead,
+                    Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        c = connect(m_airportDataReader, &CAirportDataReader::entityDownloadProgress, this,
+                    &CWebDataServices::entityDownloadProgress, Qt::QueuedConnection);
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Cannot connect Model reader signals");
+        m_airportDataReader->start(QThread::LowPriority);
     }
 
     void CWebDataServices::initDbInfoObjectReaderAndTriggerRead()
