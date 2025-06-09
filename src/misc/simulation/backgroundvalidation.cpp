@@ -25,7 +25,6 @@ namespace swift::misc::simulation
     CBackgroundValidation::CBackgroundValidation(QObject *owner) : CContinuousWorker(owner, "Background validation")
     {
         connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundValidation::doWork);
-        m_updateTimer.setInterval(60 * 1000);
     }
 
     void CBackgroundValidation::setCurrentSimulator(const CSimulatorInfo &simulator, const QString &simDirectory,

@@ -33,7 +33,6 @@ namespace swift::core::db
     CBackgroundDataUpdater::CBackgroundDataUpdater(QObject *owner) : CContinuousWorker(owner, "Background data updater")
     {
         connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundDataUpdater::doWork);
-        m_updateTimer.setInterval(60 * 1000);
         if (sApp && sApp->hasWebDataServices())
         {
             connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModelsSimplified, this,
