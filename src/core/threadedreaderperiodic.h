@@ -11,6 +11,7 @@
 
 #include "core/swiftcoreexport.h"
 #include "core/threadedreader.h"
+#include "misc/threadedtimer.h"
 
 namespace swift::core
 {
@@ -34,14 +35,19 @@ namespace swift::core
         virtual void doWorkImpl() = 0;
 
         //! Set initial and periodic times
-        void setInitialAndPeriodicTime(int initialTime, int periodicTime);
+        //! Changes only apply after the next time the timer restarts
+        //! \threadsafe
+        void setInitialAndPeriodicTime(std::chrono::milliseconds initialTime, std::chrono::milliseconds periodicTime);
 
     private:
         //! Trigger doWorkImpl
         void doWork();
 
-        int m_initialTime = -1; //!< Initial start delay
-        int m_periodicTime = -1; //!< Periodic time after which the task is repeated
+        std::atomic<std::chrono::milliseconds> m_initialTime = std::chrono::milliseconds(0); //!< Initial start delay
+        std::atomic<std::chrono::milliseconds> m_periodicTime =
+            std::chrono::milliseconds(0); //!< Periodic time after which the task is repeated
+
+        misc::CThreadedTimer m_updateTimer; //!< Update timer
     };
 } // namespace swift::core
 

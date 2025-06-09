@@ -90,7 +90,8 @@ namespace swift::core::context
                 Qt::QueuedConnection);
 
         m_validator->start(QThread::LowestPriority);
-        m_validator->startUpdating(60);
+        using namespace std::chrono_literals;
+        m_validator->startUpdating(60s);
     }
 
     // For validation we need simulator directory and model directory

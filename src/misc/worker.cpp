@@ -160,7 +160,6 @@ namespace swift::misc
     {
         Q_ASSERT_X(!name.isEmpty(), Q_FUNC_INFO, "Empty name");
         this->setObjectName(m_name);
-        m_updateTimer.setObjectName(m_name + ":timer");
     }
 
     void CContinuousWorker::start(QThread::Priority priority)
@@ -184,7 +183,6 @@ namespace swift::misc
 
         moveToThread(thread);
         connect(thread, &QThread::started, this, &CContinuousWorker::initialize);
-        connect(thread, &QThread::finished, &m_updateTimer, &QTimer::stop);
         connect(thread, &QThread::finished, this, &CContinuousWorker::cleanup);
         connect(thread, &QThread::finished, this, &CContinuousWorker::finish);
         thread->start(priority);
@@ -230,50 +228,6 @@ namespace swift::misc
                       msgBA); // MS 2019-05 AUDIT because we want a stack trace of all threads, via breakpad
         CLogMessage(this).info(msg);
         Q_UNUSED(ok)
-    }
-
-    void CContinuousWorker::startUpdating(int updateTimeSecs)
-    {
-        Q_ASSERT_X(this->hasStarted(), Q_FUNC_INFO, "Worker not yet started");
-        if (!CThreadUtils::isInThisThread(this))
-        {
-            // shift in correct thread
-            QPointer<CContinuousWorker> myself(this);
-            QTimer::singleShot(0, this, [=] {
-                if (!myself) { return; }
-                this->doIfNotFinished([=] { startUpdating(updateTimeSecs); });
-            });
-            return;
-        }
-
-        // here in correct timer thread
-        if (updateTimeSecs < 0)
-        {
-            this->setEnabled(false);
-            m_updateTimer.stop();
-        }
-        else
-        {
-            this->setEnabled(true);
-            m_updateTimer.start(1000 * updateTimeSecs);
-        }
-    }
-
-    void CContinuousWorker::stopUpdateTimer()
-    {
-        if (!m_updateTimer.isActive()) { return; }
-
-        // avoid "Timers cannot be stopped from another thread"
-        if (CThreadUtils::isInThisThread(&m_updateTimer)) { m_updateTimer.stop(); }
-        else
-        {
-            QPointer<CContinuousWorker> myself(this);
-            QTimer::singleShot(0, &m_updateTimer, [=] {
-                // stop timer in timer thread
-                if (!myself) { return; }
-                m_updateTimer.stop();
-            });
-        }
     }
 
     void CContinuousWorker::finish()

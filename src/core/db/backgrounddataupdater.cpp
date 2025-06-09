@@ -30,9 +30,10 @@ namespace swift::core::db
         return cats;
     }
 
-    CBackgroundDataUpdater::CBackgroundDataUpdater(QObject *owner) : CContinuousWorker(owner, "Background data updater")
+    CBackgroundDataUpdater::CBackgroundDataUpdater(QObject *owner)
+        : CContinuousWorker(owner, "Background data updater"), m_updateTimer(this, "Background data updater")
     {
-        connect(&m_updateTimer, &QTimer::timeout, this, &CBackgroundDataUpdater::doWork);
+        connect(&m_updateTimer, &misc::CThreadedTimer::timeout, this, &CBackgroundDataUpdater::doWork);
         if (sApp && sApp->hasWebDataServices())
         {
             connect(sApp->getWebDataServices()->getDatabaseWriter(), &CDatabaseWriter::publishedModelsSimplified, this,
@@ -44,6 +45,12 @@ namespace swift::core::db
     {
         QReadLocker l(&m_lockMsg);
         return m_messageHistory;
+    }
+
+    void CBackgroundDataUpdater::startUpdating(std::chrono::milliseconds ms)
+    {
+        Q_ASSERT_X(this->hasStarted(), Q_FUNC_INFO, "Worker not started yet");
+        m_updateTimer.startTimer(ms);
     }
 
     void CBackgroundDataUpdater::doWork()

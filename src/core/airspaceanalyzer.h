@@ -24,6 +24,7 @@
 #include "misc/simulation/airspaceaircraftsnapshot.h"
 #include "misc/simulation/ownaircraftprovider.h"
 #include "misc/simulation/remoteaircraftprovider.h"
+#include "misc/threadedtimer.h"
 #include "misc/worker.h"
 
 namespace swift::misc::aviation
@@ -134,6 +135,7 @@ namespace swift::core
         qint64 m_lastWatchdogCallMsSinceEpoch; //!< when last called
         qint64 m_doNotRunAgainBefore = -1; //!< do not run again before, also used to detect debugging
         std::atomic_bool m_enabledWatchdog { true }; //!< watchdog enabled
+        misc::CThreadedTimer m_updateTimer; //!< Thread safe timer for update timeout
 
         // snapshot
         swift::misc::simulation::CAirspaceAircraftSnapshot m_latestAircraftSnapshot;

@@ -162,7 +162,7 @@ void CSwiftData::consolidationSettingChanged()
             m_updater->start(QThread::LowestPriority);
             ui->comp_MainInfoArea->getDataSettingsComponent()->setBackgroundUpdater(m_updater);
         }
-        m_updater->startUpdating(consolidationSecs);
+        m_updater->startUpdating(std::chrono::seconds(consolidationSecs));
     }
 }
 
