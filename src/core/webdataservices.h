@@ -586,8 +586,26 @@ namespace swift::core
         //! VATSIM server file has been read
         void vatsimServerFileRead(int bytes);
 
+        //! Initialize and start VATSIM status file reader
+        void startVatsimStatusFileReader();
+
         //! Initialize and start VATSIM server file reader
         void startVatsimServerFileReader();
+
+        //! Initialize and start VATSIM data file reader
+        void startVatsimDataFileReader();
+
+        //! Initialize and start VATSIM data file reader
+        void startVatsimMetarFileReader();
+
+        //! Initialize and start ICAO data reader
+        void startIcaoDataReader();
+
+        //! Initialize and start model data reader
+        void startModelDataReader();
+
+        //! Initialize and start airport data reader
+        void startAirportDataReader();
 
         //! Read finished from reader
         void readFromSwiftReader(swift::misc::network::CEntityFlags::Entity entities,
