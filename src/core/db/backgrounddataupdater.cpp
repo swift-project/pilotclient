@@ -141,7 +141,7 @@ namespace swift::core::db
             if (c > 0)
             {
                 const CStatusMessage m = modelCaches.setCachedModels(simulatorModels, singleSimulator);
-                const int msElapsed = time.elapsed();
+                const qint64 msElapsed = time.elapsed();
                 this->addHistory(CLogMessage(this).info(u"Consolidated %1 models (%2) for '%3' in %4ms")
                                  << c << description << singleSimulator.convertToQString() << msElapsed);
                 CLogMessage::preformatted(m);

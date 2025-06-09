@@ -97,7 +97,7 @@ namespace swift::core::afv::clients
         if (!hasContexts()) { return; }
 
         // Disconnect all previously connect signals between the AfvClient and the required contexts
-        for (auto context : QVector<QObject *> { sApp->getIContextOwnAircraft(), sApp->getIContextNetwork() })
+        for (auto *context : QVector<QObject *> { sApp->getIContextOwnAircraft(), sApp->getIContextNetwork() })
         {
             this->disconnect(context);
             context->disconnect(this);
@@ -465,11 +465,8 @@ namespace swift::core::afv::clients
         if (!enabledTransceivers.contains(id)) { return false; }
 
         const auto transceivers = this->getTransceivers(); // threadsafe
-        for (const TransceiverDto &dto : transceivers)
-        {
-            if (dto.id == id) { return true; }
-        }
-        return false;
+        return std::any_of(transceivers.cbegin(), transceivers.cend(),
+                           [&id](const TransceiverDto &dto) { return dto.id == id; });
     }
 
     bool CAfvClient::isEnabledComUnit(CComSystem::ComUnit comUnit) const
@@ -507,7 +504,7 @@ namespace swift::core::afv::clients
 
     void CAfvClient::updateComFrequency(CComSystem::ComUnit comUnit, const CFrequency &comFrequency)
     {
-        const quint32 freqHz = static_cast<quint32>(comFrequency.valueInteger(CFrequencyUnit::Hz()));
+        const auto freqHz = static_cast<quint32>(comFrequency.valueInteger(CFrequencyUnit::Hz()));
         this->updateComFrequency(comUnitToTransceiverId(comUnit), freqHz);
     }
 
@@ -592,11 +589,8 @@ namespace swift::core::afv::clients
     bool CAfvClient::isTransmittingTransceiver(quint16 id) const
     {
         QMutexLocker lock(&m_mutexTransceivers);
-        for (const TxTransceiverDto &dto : m_transmittingTransceivers)
-        {
-            if (dto.id == id) { return true; }
-        }
-        return false;
+        return std::any_of(m_transmittingTransceivers.cbegin(), m_transmittingTransceivers.cend(),
+                           [&id](const TxTransceiverDto &dto) { return dto.id == id; });
     }
 
     bool CAfvClient::isTransmittingComUnit(CComSystem::ComUnit comUnit) const
@@ -747,10 +741,8 @@ namespace swift::core::afv::clients
     double CAfvClient::getComOutputVolumeDb(CComSystem::ComUnit comUnit) const
     {
         QMutexLocker lock(&m_mutexVolume);
-        if (comUnit == CComSystem::Com1)
-            return m_outputVolumeDbCom1;
-        else if (comUnit == CComSystem::Com2)
-            return m_outputVolumeDbCom2;
+        if (comUnit == CComSystem::Com1) return m_outputVolumeDbCom1;
+        if (comUnit == CComSystem::Com2) return m_outputVolumeDbCom2;
         qFatal("Invalid COM unit");
         return 0;
     }
@@ -758,10 +750,8 @@ namespace swift::core::afv::clients
     double CAfvClient::getOutputGainRatio(CComSystem::ComUnit comUnit) const
     {
         QMutexLocker lock(&m_mutexVolume);
-        if (comUnit == CComSystem::Com1)
-            return m_outputGainRatioCom1;
-        else if (comUnit == CComSystem::Com2)
-            return m_outputGainRatioCom2;
+        if (comUnit == CComSystem::Com1) return m_outputGainRatioCom1;
+        if (comUnit == CComSystem::Com2) return m_outputGainRatioCom2;
         qFatal("Invalid COM unit");
         return 0;
     }
@@ -784,7 +774,7 @@ namespace swift::core::afv::clients
     {
         QMutexLocker lock(&m_mutexVolume);
         if (comUnit == CComSystem::Com1) { return m_outputVolumeCom1Normalized; }
-        else if (comUnit == CComSystem::Com2) { return m_outputVolumeCom2Normalized; }
+        if (comUnit == CComSystem::Com2) { return m_outputVolumeCom2Normalized; }
         qFatal("Invalid ComUnit");
         return 0;
     }
@@ -1069,7 +1059,10 @@ namespace swift::core::afv::clients
         const int failures = ++m_heartBeatFailures;
         if (failures < 2) { return; }
 
-        QString un, pw, cs, client;
+        QString un;
+        QString pw;
+        QString cs;
+        QString client;
         {
             QMutexLocker lock(&m_mutexConnection);
             un = m_connection->getUserName();
@@ -1331,17 +1324,17 @@ namespace swift::core::afv::clients
         {
             QMutexLocker lock(&m_mutex);
             CFrequency roundedFrequency(static_cast<int>(roundedFrequencyHz), CFrequencyUnit::Hz());
-            const auto it = std::find_if(
-                m_aliasedStations.constBegin(), m_aliasedStations.constEnd(), [roundedFrequency](const StationDto &d) {
-                    if (d.frequencyAliasHz > 100000000 &&
-                        roundedFrequency.value(CFrequencyUnit::Hz()) > 100000000) // both VHF
-                    {
-                        const int aliasedFreqHz = static_cast<int>(qRound(d.frequencyAliasHz / 1000.0)) * 1000;
-                        return CComSystem::isSameFrequency(CFrequency(aliasedFreqHz, CFrequencyUnit::Hz()),
-                                                           roundedFrequency);
-                    }
-                    return d.frequencyAliasHz == roundedFrequency.value(CFrequencyUnit::Hz());
-                });
+            const auto it = std::find_if(m_aliasedStations.constBegin(), m_aliasedStations.constEnd(),
+                                         [roundedFrequency](const StationDto &d) {
+                                             if (d.frequencyAliasHz > 100000000 &&
+                                                 roundedFrequency.value(CFrequencyUnit::Hz()) > 100000000) // both VHF
+                                             {
+                                                 const int aliasedFreqHz = qRound(d.frequencyAliasHz / 1000.0) * 1000;
+                                                 return CComSystem::isSameFrequency(
+                                                     CFrequency(aliasedFreqHz, CFrequencyUnit::Hz()), roundedFrequency);
+                                             }
+                                             return d.frequencyAliasHz == roundedFrequency.value(CFrequencyUnit::Hz());
+                                         });
 
             if (it != m_aliasedStations.constEnd())
             {

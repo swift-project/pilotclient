@@ -176,7 +176,7 @@ namespace swift::core
             {
                 if (!myself || !sApp || sApp->isShuttingDown()) // cppcheck-suppress knownConditionTrueFalse
                 {
-                    return CFlightPlan();
+                    return {};
                 }
                 if (m_flightPlanCache.contains(callsign)) { plan = m_flightPlanCache[callsign]; }
             }
@@ -186,7 +186,7 @@ namespace swift::core
 
     CFlightPlanRemarks CAirspaceMonitor::tryToGetFlightPlanRemarks(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return CFlightPlanRemarks(); }
+        if (callsign.isEmpty()) { return {}; }
 
         // full flight plan's remarks
         if (m_flightPlanCache.contains(callsign)) { return m_flightPlanCache[callsign].getFlightPlanRemarks(); }
@@ -198,7 +198,7 @@ namespace swift::core
         }
 
         // unsupported
-        return CFlightPlanRemarks();
+        return {};
     }
 
     CAtcStationList CAirspaceMonitor::getAtcStationsOnlineRecalculated()
@@ -524,14 +524,14 @@ namespace swift::core
         if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
         CClientList clients(this->getClients()); // copy
         bool changed = false;
-        for (auto client = clients.begin(); client != clients.end(); ++client)
+        for (auto &client : clients)
         {
-            if (client->hasSpecifiedVoiceCapabilities()) { continue; } // we already have voice caps
+            if (client.hasSpecifiedVoiceCapabilities()) { continue; } // we already have voice caps
             const CVoiceCapabilities vc =
-                sApp->getWebDataServices()->getVoiceCapabilityForCallsign(client->getCallsign());
+                sApp->getWebDataServices()->getVoiceCapabilityForCallsign(client.getCallsign());
             if (vc.isUnknown()) { continue; }
             changed = true;
-            client->setVoiceCapabilities(vc);
+            client.setVoiceCapabilities(vc);
         }
         if (!changed) { return; }
         this->setClients(clients);
@@ -756,7 +756,7 @@ namespace swift::core
             // TODO Replace with Qt 6.0 QStringView::slice()
             zuluTimeView.chop(1); // Remove z
 
-            bool ok;
+            bool ok {};
             const int h = zuluTimeView.left(2).toInt(&ok);
             if (!ok) { return; }
             const int m = zuluTimeView.right(2).toInt(&ok);
@@ -1063,13 +1063,10 @@ namespace swift::core
                         callsign, rv.model.getAircraftIcaoCodeDesignator(), rv.model.getAirlineIcaoCodeVDesignator(),
                         rv.model.getLivery().getCombinedCode(), modelString, type, log, false);
                 }
-                else
-                {
-                    lookupModel = rv.model;
-                    CCallsign::addLogDetailsToList(log, callsign,
-                                                   QStringLiteral("Matching script: Using model from matching script"),
-                                                   CAirspaceMonitor::getLogCategories());
-                }
+                lookupModel = rv.model;
+                CCallsign::addLogDetailsToList(log, callsign,
+                                               QStringLiteral("Matching script: Using model from matching script"),
+                                               CAirspaceMonitor::getLogCategories());
             }
         }
         else { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("No reverse lookup script used")); }
@@ -1451,19 +1448,19 @@ namespace swift::core
         if (callsign.isEmpty()) { return; }
 
         unsigned long pp = 0;
-        bool ok;
+        bool ok {};
         pp = config.toULong(&ok, 10);
 
-        bool gear = (pp & 1u);
-        bool landLight = (pp & 2u);
-        bool navLight = (pp & 4u);
-        bool strobeLight = (pp & 8u);
-        bool beaconLight = (pp & 16u);
-        bool taxiLight = (pp & 32u);
-        bool engine1Running = (pp & 64u);
-        bool engine2Running = (pp & 128u);
-        bool engine3Running = (pp & 256u);
-        bool engine4Running = (pp & 512u);
+        bool gear = (pp & 1U);
+        bool landLight = (pp & 2U);
+        bool navLight = (pp & 4U);
+        bool strobeLight = (pp & 8U);
+        bool beaconLight = (pp & 16U);
+        bool taxiLight = (pp & 32U);
+        bool engine1Running = (pp & 64U);
+        bool engine2Running = (pp & 128U);
+        bool engine3Running = (pp & 256U);
+        bool engine4Running = (pp & 512U);
 
         // CLogMessage(this).info(u"taxiLight %1 landLight %2 beaconLight %3 strobeLight %4 gear %5") << taxiLight <<
         // landLight << beaconLight << strobeLight << gear; CLogMessage(this).info(u"engine1Running %1 engine2Running %2

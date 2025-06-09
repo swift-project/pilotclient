@@ -63,7 +63,19 @@ namespace swift::core
                           fsd::CFSDClient *fsdClient, CAirspaceMonitor *airspaceMonitorParent);
 
         //! Destructor
-        virtual ~CAirspaceAnalyzer() override;
+        ~CAirspaceAnalyzer() override = default;
+
+        //! Copy constructor
+        CAirspaceAnalyzer(const CAirspaceAnalyzer &) = delete;
+
+        //! Copy assignment
+        CAirspaceAnalyzer &operator=(const CAirspaceAnalyzer &) = delete;
+
+        //! Move constructor
+        CAirspaceAnalyzer(CAirspaceAnalyzer &&) = delete;
+
+        //! Move assignment
+        CAirspaceAnalyzer &operator=(CAirspaceAnalyzer &&) = delete;
 
         //! Get the latest snapshot
         //! \threadsafe

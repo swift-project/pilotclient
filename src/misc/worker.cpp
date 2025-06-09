@@ -218,9 +218,7 @@ namespace swift::misc
         const unsigned long waitTimeoutMs = this->waitTimeoutMs();
         const QString name(this->getName());
         qint64 waitTime = QDateTime::currentMSecsSinceEpoch();
-        const bool ok =
-            workerThread->wait(waitTimeoutMs); //! \todo KB 2017-10 temp workaround: in T145 this will be fixed,
-                                               //! sometimes (very rarely) hanging here during shutdown
+        const bool ok = workerThread->wait(waitTimeoutMs);
         waitTime = QDateTime::currentMSecsSinceEpoch() - waitTime;
         const QString msg = QStringLiteral("Waiting for quitAndWait of '%1' for %2ms").arg(name).arg(waitTime);
         const QByteArray msgBA = msg.toLatin1();

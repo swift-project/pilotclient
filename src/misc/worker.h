@@ -34,16 +34,28 @@ namespace swift::misc
     /*!
      * Just a subclass of QThread whose destructor waits for the thread to finish.
      */
-    class SWIFT_MISC_EXPORT CRegularThread : public QThread
+    class SWIFT_MISC_EXPORT CRegularThread final : public QThread
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        CRegularThread(QObject *parent = nullptr) : QThread(parent) {}
+        explicit CRegularThread(QObject *parent = nullptr) : QThread(parent) {}
 
         //! Destructor
         ~CRegularThread() override;
+
+        //! Copy constructor
+        CRegularThread(const CRegularThread &) = delete;
+
+        //! Copy assignment
+        CRegularThread &operator=(const CRegularThread &) = delete;
+
+        //! Move constructor
+        CRegularThread(CRegularThread &&) = delete;
+
+        //! Move assignment
+        CRegularThread &operator=(CRegularThread &&) = delete;
 
     protected:
         //! \copydoc QThread::run
@@ -61,6 +73,21 @@ namespace swift::misc
         Q_OBJECT
 
     public:
+        //! Destructor.
+        ~CWorkerBase() override;
+
+        //! Copy constructor
+        CWorkerBase(const CWorkerBase &) = delete;
+
+        //! Copy assignment
+        CWorkerBase &operator=(const CWorkerBase &) = delete;
+
+        //! Move constructor
+        CWorkerBase(CWorkerBase &&) = delete;
+
+        //! Move assignment
+        CWorkerBase &operator=(CWorkerBase &&) = delete;
+
         //! Log categories
         static const QStringList &getLogCategories();
 
@@ -146,9 +173,6 @@ namespace swift::misc
     protected:
         //! Constructor.
         CWorkerBase();
-
-        //! Destructor.
-        ~CWorkerBase() override;
 
         //! For the task to check whether it can finish early.
         //! \threadsafe
