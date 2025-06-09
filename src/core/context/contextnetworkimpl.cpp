@@ -386,8 +386,8 @@ namespace swift::core::context
         if (commandLine.isEmpty()) { return false; }
 
         static const QStringList cmds({ ".msg", ".m", ".chat", ".altos", ".altoffset", ".addtimeos", ".addtimeoffset",
-                                        ".wallop", ".watchdog", ".reinit", ".reinitialize", ".enable", ".disable",
-                                        ".ignore", ".unignore", ".fsd" });
+                                        ".wallop", ".reinit", ".reinitialize", ".enable", ".disable", ".ignore",
+                                        ".unignore", ".fsd" });
         CSimpleCommandParser parser(cmds);
         parser.parse(commandLine);
         if (!parser.isKnownCommand()) { return false; }
@@ -525,15 +525,6 @@ namespace swift::core::context
                 CLogMessage(this).info(u"Added add offset time %1ms") << ost;
             }
             else { CLogMessage(this).info(u"Reset add. time offset"); }
-        }
-        else if (parser.matchesCommand(".watchdog"))
-        {
-            if (!m_airspace) { return false; }
-            if (parser.countParts() < 2) { return false; }
-
-            const bool watchdog = parser.toBool(1, true);
-            m_airspace->enableAnalyzer(watchdog);
-            CLogMessage(this).info(u"Enabled watchdog: %1") << boolToYesNo(watchdog);
         }
         else if (parser.matchesCommand(".reinit", ".reinitialize"))
         {

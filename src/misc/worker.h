@@ -299,10 +299,6 @@ namespace swift::misc
         //! \threadsafe
         bool isEnabled() const { return m_enabled; }
 
-        //! Enabled (running)?
-        //! \threadsafe
-        void setEnabled(bool enabled) { m_enabled = enabled; }
-
         //! Start updating (start/stop timer)
         //! \threadsafe
         void startUpdating(int updateTimeSecs);
@@ -335,6 +331,10 @@ namespace swift::misc
     private:
         //! Called after cleanup().
         void finish();
+
+        //! Enabled (running)?
+        //! \threadsafe
+        void setEnabled(bool enabled) { m_enabled = enabled; }
 
         using CWorkerBase::setStarted;
         using CWorkerBase::setFinished;
