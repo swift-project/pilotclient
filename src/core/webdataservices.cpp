@@ -218,38 +218,32 @@ namespace swift::core
 
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
 
-        if (m_airportDataReader)
+        if (m_airportDataReader && whatToRead.testFlag(CEntityFlags::AirportEntity))
         {
-            if (whatToRead.testFlag(CEntityFlags::AirportEntity))
-            {
-                CEntityFlags::Entity airportEntities = whatToRead & CEntityFlags::AirportEntity;
-                m_airportDataReader->readInBackgroundThread(airportEntities, newerThan);
-                triggeredRead |= CEntityFlags::AirportEntity;
-            }
+            CEntityFlags::Entity airportEntities = whatToRead & CEntityFlags::AirportEntity;
+            m_airportDataReader->readInBackgroundThread(airportEntities, newerThan);
+            triggeredRead |= CEntityFlags::AirportEntity;
         }
 
-        if (m_icaoDataReader)
+        const bool shouldReadIcaoData = whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) ||
+                                        whatToRead.testFlag(CEntityFlags::AircraftCategoryEntity) ||
+                                        whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) ||
+                                        whatToRead.testFlag(CEntityFlags::CountryEntity);
+        if (m_icaoDataReader && shouldReadIcaoData)
         {
-            if (whatToRead.testFlag(CEntityFlags::AircraftIcaoEntity) ||
-                whatToRead.testFlag(CEntityFlags::AircraftCategoryEntity) ||
-                whatToRead.testFlag(CEntityFlags::AirlineIcaoEntity) ||
-                whatToRead.testFlag(CEntityFlags::CountryEntity))
-            {
-                CEntityFlags::Entity icaoEntities = whatToRead & CEntityFlags::AllIcaoCountriesCategory;
-                m_icaoDataReader->readInBackgroundThread(icaoEntities, newerThan);
-                triggeredRead |= icaoEntities;
-            }
+            CEntityFlags::Entity icaoEntities = whatToRead & CEntityFlags::AllIcaoCountriesCategory;
+            m_icaoDataReader->readInBackgroundThread(icaoEntities, newerThan);
+            triggeredRead |= icaoEntities;
         }
 
-        if (m_modelDataReader)
+        const bool shouldReadModelData = whatToRead.testFlag(CEntityFlags::LiveryEntity) ||
+                                         whatToRead.testFlag(CEntityFlags::DistributorEntity) ||
+                                         whatToRead.testFlag(CEntityFlags::ModelEntity);
+        if (m_modelDataReader && shouldReadModelData)
         {
-            if (whatToRead.testFlag(CEntityFlags::LiveryEntity) ||
-                whatToRead.testFlag(CEntityFlags::DistributorEntity) || whatToRead.testFlag(CEntityFlags::ModelEntity))
-            {
-                CEntityFlags::Entity modelEntities = whatToRead & CEntityFlags::DistributorLiveryModel;
-                m_modelDataReader->readInBackgroundThread(modelEntities, newerThan);
-                triggeredRead |= modelEntities;
-            }
+            CEntityFlags::Entity modelEntities = whatToRead & CEntityFlags::DistributorLiveryModel;
+            m_modelDataReader->readInBackgroundThread(modelEntities, newerThan);
+            triggeredRead |= modelEntities;
         }
 
         return triggeredRead;
@@ -1458,7 +1452,6 @@ namespace swift::core
             if (waitForDbInfoReader)
             {
                 // do not read yet, will call this function again after some time
-                // see CWebDataServices::waitForInfoObjects
                 if (!this->waitForDbInfoObjectsThenRead(entities)) { return; }
             }
 
@@ -1467,7 +1460,6 @@ namespace swift::core
             if (waitForSharedInfoFile)
             {
                 // do not read yet, will call this function again after some time
-                // CWebDataServices::waitForInfoObjects
                 if (!this->waitForSharedInfoObjectsThenRead(entities)) { return; }
             }
         }
