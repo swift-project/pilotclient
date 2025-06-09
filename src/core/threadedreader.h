@@ -28,6 +28,8 @@ namespace swift::core
 {
     //! Support for threaded based reading and parsing tasks such
     //! as data files via http, or file system and parsing (such as FSX models)
+    //! Usage: Create a subclass, call start() and dispatch a call to the thread of the reader.
+    //! See protected functions for helpers (e.g. doWorkCheck() to check if the work should be continued)
     class SWIFT_CORE_EXPORT CThreadedReader : public swift::misc::CContinuousWorker
     {
         Q_OBJECT

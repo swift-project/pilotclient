@@ -131,6 +131,7 @@ namespace swift::core::vatsim
     void CVatsimMetarReader::reloadSettings()
     {
         const CReaderSettings s = m_settings.get();
-        this->setInitialAndPeriodicTime(s.getInitialTime().toMs(), s.getPeriodicTime().toMs());
+        this->setInitialAndPeriodicTime(std::chrono::milliseconds(s.getInitialTime().toMs()),
+                                        std::chrono::milliseconds(s.getPeriodicTime().toMs()));
     }
 } // namespace swift::core::vatsim

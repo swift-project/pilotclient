@@ -27,20 +27,22 @@ using namespace swift::misc::physical_quantities;
 using namespace swift::misc::simulation;
 using namespace swift::core::fsd;
 
+static constexpr std::chrono::milliseconds updateInterval { 7500 };
+
 namespace swift::core
 {
     CAirspaceAnalyzer::CAirspaceAnalyzer(IOwnAircraftProvider *ownAircraftProvider, CFSDClient *fsdClient,
                                          CAirspaceMonitor *airspaceMonitorParent)
         : CContinuousWorker(airspaceMonitorParent, "CAirspaceAnalyzer"), COwnAircraftAware(ownAircraftProvider),
-          CRemoteAircraftAware(airspaceMonitorParent)
+          CRemoteAircraftAware(airspaceMonitorParent), m_updateTimer(this, "CAirspaceAnalyzer")
     {
         Q_ASSERT_X(fsdClient, Q_FUNC_INFO, "Network object required to connect");
 
         // all in new thread from here on
         this->setObjectName(this->getName());
-        m_updateTimer.start(7500);
+        m_updateTimer.startTimer(updateInterval);
         m_lastWatchdogCallMsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
-        bool c = connect(&m_updateTimer, &QTimer::timeout, this, &CAirspaceAnalyzer::onTimeout);
+        bool c = connect(&m_updateTimer, &CThreadedTimer::timeout, this, &CAirspaceAnalyzer::onTimeout);
         Q_ASSERT(c);
 
         // network connected
@@ -134,9 +136,9 @@ namespace swift::core
         if (newStatus.isDisconnected())
         {
             this->clear();
-            m_updateTimer.stop();
+            m_updateTimer.stopTimer();
         }
-        else if (newStatus.isConnected()) { m_updateTimer.start(); }
+        else if (newStatus.isConnected()) { m_updateTimer.startTimer(updateInterval); }
     }
 
     void CAirspaceAnalyzer::onTimeout()
@@ -170,7 +172,7 @@ namespace swift::core
         // this is a trick to not remove everything while debugging
         const qint64 currentTimeMsEpoch = QDateTime::currentMSecsSinceEpoch();
         const qint64 callDiffMs = currentTimeMsEpoch - m_lastWatchdogCallMsSinceEpoch;
-        const qint64 callThresholdMs = static_cast<qint64>(m_updateTimer.interval() * 1.5);
+        const qint64 callThresholdMs = static_cast<qint64>(updateInterval.count() * 1.5);
         m_lastWatchdogCallMsSinceEpoch = currentTimeMsEpoch;
         if (callDiffMs > callThresholdMs)
         {

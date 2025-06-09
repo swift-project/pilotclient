@@ -52,8 +52,6 @@ namespace swift::core::afv::clients
         connect(m_connection, &CClientConnection::audioReceived, this, &CAfvClient::audioOutDataAvailable);
         connect(m_voiceServerTimer, &QTimer::timeout, this, &CAfvClient::onTimerUpdate);
 
-        m_updateTimer.stop(); // not used
-
         // deferred init - use swift::misc:: singleShot to call in correct thread, "myself" NOT needed
         swift::misc::singleShot(1000, this, [=] { this->deferredInit(); });
     }
