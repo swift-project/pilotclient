@@ -61,10 +61,6 @@ namespace swift::core
         //! \threadsafe
         swift::misc::network::CUrlLogList getReadLog() const;
 
-        //! Starts the reader
-        //! \threadsafe
-        void startReader();
-
         //! Used in unit test
         //! \remark needs to be done before started in different thread
         void markAsUsedInUnitTest() { m_unitTest = true; }
@@ -97,12 +93,6 @@ namespace swift::core
         //! \threadsafe
         bool didContentChange(const QString &content, int startPosition = -1);
 
-        //! Set initial and periodic times
-        void setInitialAndPeriodicTime(int initialTime, int periodicTime);
-
-        //! This method does the actual work in the derived class
-        virtual void doWorkImpl() {}
-
         //! Still enabled etc.?
         //! \threadsafe under normal conditions
         bool doWorkCheck() const;
@@ -124,13 +114,8 @@ namespace swift::core
         static void logInconsistentData(const swift::misc::CStatusMessage &msg, const char *funcInfo = nullptr);
 
     private:
-        //! Trigger doWorkImpl
-        void doWork();
-
         static constexpr int OutdatedPendingCallMs = 30 * 1000; //!< when is a call considered "outdated"
 
-        int m_initialTime = -1; //!< Initial start delay
-        int m_periodicTime = -1; //!< Periodic time after which the task is repeated
         QDateTime m_updateTimestamp; //!< when file/resource was read
         size_t m_contentHash = 0; //!< has of the content given
         std::atomic_bool m_markedAsFailed { false }; //!< marker if reading failed

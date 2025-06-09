@@ -13,7 +13,7 @@
 
 #include "core/data/vatsimsetup.h"
 #include "core/swiftcoreexport.h"
-#include "core/threadedreader.h"
+#include "core/threadedreaderperiodic.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/atcstationlist.h"
@@ -34,7 +34,7 @@ namespace swift::misc::simulation
 namespace swift::core::vatsim
 {
     //! Read vatsim data file
-    class SWIFT_CORE_EXPORT CVatsimDataFileReader : public CThreadedReader
+    class SWIFT_CORE_EXPORT CVatsimDataFileReader : public CThreadedReaderPeriodic
     {
         Q_OBJECT
 
