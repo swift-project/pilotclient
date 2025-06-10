@@ -422,7 +422,7 @@ namespace swift::misc
     {
         QMap<QString, QString> map;
         QList<QStringView> lines = splitLinesRefs(data);
-        for (const QStringView &l : lines)
+        for (const QStringView l : lines)
         {
             if (l.isEmpty()) { continue; }
             const qsizetype i = l.indexOf('=');
