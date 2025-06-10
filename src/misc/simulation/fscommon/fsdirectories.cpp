@@ -653,7 +653,7 @@ namespace swift::misc::simulation::fscommon
             if (fileContent.isEmpty()) { continue; }
             const QList<QStringView> lines = splitLinesRefs(fileContent);
             static const QString p("Path=");
-            for (const QStringView &line : lines)
+            for (const QStringView line : lines)
             {
                 const qsizetype i = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
                 if (i < 0 || line.endsWith('=')) { continue; }
@@ -779,7 +779,7 @@ namespace swift::misc::simulation::fscommon
         const QString relPath = fsxFileInfo.absolutePath();
 
         QSet<QString> paths;
-        for (const QStringView &line : lines)
+        for (const QStringView line : lines)
         {
             const qsizetype i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
             if (i1 < 0) { continue; }
@@ -845,7 +845,7 @@ namespace swift::misc::simulation::fscommon
         const QString relPath = fsxFileInfo.absolutePath();
 
         QSet<QString> paths;
-        for (const QStringView &line : lines)
+        for (const QStringView line : lines)
         {
             const qsizetype i1 = line.lastIndexOf(p, -1, Qt::CaseInsensitive);
             if (i1 < 0) { continue; }
