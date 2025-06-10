@@ -17,6 +17,7 @@ concurrency:
 env:
   do_vatsim_key: ${{ github.event_name == 'push' }}
   do_symbols:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+  do_doxygen:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
   qt_version:    6.8.0
   bitrock_version: qt-professional-24.7.0
   bitrock_url:     https://releases.installbuilder.com/installbuilder
@@ -81,16 +82,25 @@ jobs:
           cppcheck --template=gcc --inline-suppr --std=c++17 --enable=style,unusedFunction \
                    -i src/plugins/weatherdata/gfs/g2clib -DCPPCHECK --force --suppressions-list=cppcheck.supp \
                    --library=qt.cfg --library=posix.cfg .
+      - name: Install Qt docs
+        if: ${{ env.do_doxygen == 'true' }}
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.qt_version }}
+          no-qt-binaries: true
+          documentation: true
+          cache: true
       - name: Run doxygen
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ env.do_doxygen == 'true' }}
         working-directory: docs
         run: |
           sudo apt-get -y install doxygen graphviz
           doxygen Doxyfile
         env:
           DOXY_SRC_ROOT: ..
+          DOXY_TAGFILES: ${{ runner.workspace }}/Qt/Docs/Qt-${{ env.qt_version }}
       - name: Upload doxygen
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ env.do_doxygen == 'true' }}
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/html/

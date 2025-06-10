@@ -2199,6 +2199,25 @@ SKIP_FUNCTION_MACROS   = YES
 # the path). If a tag file is not located in the directory in which doxygen is
 # run, you must also specify the path to the tagfile here.
 
+TAGFILES               = $(DOXY_TAGFILES)/qdoc/qdoc.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qmake/qmake.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtconcurrent/qtconcurrent.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtcore/qtcore.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtdbus/qtdbus.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtgui/qtgui.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtnetwork/qtnetwork.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtopengl/qtopengl.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtqml/qtqml.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtqmlcore/qtqmlcore.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtqmlmodels/qtqmlmodels.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtqmltest/qtqmltest.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtqmlworkerscript/qtqmlworkerscript.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtqmlxmllistmodel/qtqmlxmllistmodel.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtsvg/qtsvg.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qttestlib/qttestlib.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtwidgets/qtwidgets.tags=http://doc.qt.io/qt-6/ \
+                         $(DOXY_TAGFILES)/qtxml/qtxml.tags=http://doc.qt.io/qt-6/
+
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create a
 # tag file that is based on the input files it reads. See section "Linking to
 # external documentation" for more information about the usage of tag files.
