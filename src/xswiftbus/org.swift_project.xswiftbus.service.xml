@@ -66,8 +66,6 @@ R"XML(<node>
       <arg name="path" type="s" direction="out"/>
       <arg name="icao" type="s" direction="out"/>
     </method>
-    <method name="updateAirportsInRange">
-    </method>
     <method name="getAircraftModelPath">
       <arg type="s" direction="out"/>
     </method>

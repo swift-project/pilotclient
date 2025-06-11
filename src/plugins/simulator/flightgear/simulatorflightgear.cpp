@@ -99,7 +99,6 @@ namespace swift::simplugin::flightgear
         connect(&m_pendingAddedTimer, &QTimer::timeout, this, &CSimulatorFlightgear::addNextPendingAircraft);
         m_fastTimer.start(100);
         m_slowTimer.start(1000);
-        m_airportUpdater.start(60 * 1000);
         m_pendingAddedTimer.start(5000);
 
         this->setDefaultModel(

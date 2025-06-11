@@ -200,9 +200,6 @@ namespace swift::simplugin::xplane
         //! \remark this is where the interpolated data are set
         void updateRemoteAircraft();
 
-        //! Update airports
-        void updateAirportsInRange();
-
         //! @{
         //! Request elevation and CG from XPlane
         void requestRemoteAircraftDataFromXPlane();
@@ -275,7 +272,6 @@ namespace swift::simplugin::xplane
         CXSwiftBusTrafficProxy *m_trafficProxy { nullptr };
         QTimer m_fastTimer;
         QTimer m_slowTimer;
-        QTimer m_airportUpdater;
         QTimer m_pendingAddedTimer;
         unsigned int m_fastTimerCalls = 0; //!< how often called
         unsigned int m_slowTimerCalls = 0; //!< how often called

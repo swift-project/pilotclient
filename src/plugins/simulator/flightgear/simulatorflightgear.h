@@ -228,7 +228,6 @@ namespace swift::simplugin::flightgear
         CFGSwiftBusTrafficProxy *m_trafficProxy { nullptr };
         QTimer m_fastTimer;
         QTimer m_slowTimer;
-        QTimer m_airportUpdater;
         QTimer m_pendingAddedTimer;
         swift::misc::CData<swift::misc::simulation::data::TModelSetCacheFG> m_modelSet {
             this
