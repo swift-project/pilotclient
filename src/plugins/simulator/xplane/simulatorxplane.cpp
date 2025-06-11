@@ -217,6 +217,7 @@ namespace swift::simplugin::xplane
     void CSimulatorXPlane::setFlightNetworkConnected(bool connected)
     {
         if (connected && !this->isShuttingDownOrDisconnected()) { m_serviceProxy->resetFrameTotals(); }
+        m_serviceProxy->setFlightNetworkConnected(connected);
         CSimulatorPluginCommon::setFlightNetworkConnected(connected);
     }
 
