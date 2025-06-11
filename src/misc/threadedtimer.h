@@ -18,6 +18,7 @@ namespace swift::misc
     {
         Q_OBJECT
     public:
+        //! Constructor
         CThreadedTimer(QObject *owner, const QString &name, bool singleShot = false);
 
         //! Destructor
@@ -32,6 +33,7 @@ namespace swift::misc
         void stopTimer();
 
     signals:
+        //! Timer timed out
         void timeout();
 
     private:

@@ -397,7 +397,7 @@ namespace swift::gui
 
             //! Show loading indicator
             //! \param containerSizeDependent check against resize threshold if indicator makes sense
-            //! \param timeoutMs timeout the loading indicator
+            //! \param timeout timeout the loading indicator
             //! \param processEvents force event processing to display indicator by updating GUI
             int showLoadIndicator(int containerSizeDependent = -1,
                                   std::chrono::milliseconds timeout = std::chrono::milliseconds { 0 },

@@ -77,6 +77,7 @@ namespace MiscTest
 
 } // namespace MiscTest
 
+//! main
 SWIFTTEST_APPLESS_MAIN(MiscTest::CMiscOnGroundInfo);
 
 #include "testongroundinfo.moc"

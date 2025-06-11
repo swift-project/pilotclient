@@ -160,13 +160,15 @@ namespace swift::misc
             swift::misc::physical_quantities::CLength
             getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const;
 
-            //! \copydoc IOwnAircraftProvider::updateCockpit(const swift::misc::simulation::CSimulatedAircraft &, const
-            //! swift::misc::CIdentifier &)
+            // clang-format off
+            //! \copydoc IOwnAircraftProvider::updateCockpit(const swift::misc::simulation::CSimulatedAircraft &, const swift::misc::CIdentifier &)
+            // clang-format on
             bool updateCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
                                const swift::misc::CIdentifier &originator);
 
-            //! \copydoc IOwnAircraftProvider::updateCockpit(const aviation::CComSystem &, const aviation::CComSystem &,
-            //! const aviation::CTransponder &, const swift::misc::CIdentifier &);
+            // clang-format off
+            //! \copydoc IOwnAircraftProvider::updateCockpit(const aviation::CComSystem &, const aviation::CComSystem &, const aviation::CTransponder &, const swift::misc::CIdentifier &)
+            // clang-format on
             bool updateCockpit(const aviation::CComSystem &com1, const aviation::CComSystem &com2,
                                const aviation::CTransponder &transponder, const swift::misc::CIdentifier &originator);
 
