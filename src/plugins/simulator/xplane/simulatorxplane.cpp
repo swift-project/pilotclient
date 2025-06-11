@@ -101,11 +101,9 @@ namespace swift::simplugin::xplane
         m_pendingAddedTimer.setObjectName(this->objectName().append(":m_pendingAddedTimer"));
         connect(&m_fastTimer, &QTimer::timeout, this, &CSimulatorXPlane::fastTimerTimeout);
         connect(&m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::slowTimerTimeout);
-        connect(&m_airportUpdater, &QTimer::timeout, this, &CSimulatorXPlane::updateAirportsInRange);
         connect(&m_pendingAddedTimer, &QTimer::timeout, this, &CSimulatorXPlane::addNextPendingAircraft);
         m_fastTimer.start(100);
         m_slowTimer.start(1000);
-        m_airportUpdater.start(60 * 1000);
         m_pendingAddedTimer.start(5000);
 
         this->setDefaultModel({ "Jets A320_a A320_a_Austrian_Airlines A320_a_Austrian_Airlines",
@@ -498,7 +496,6 @@ namespace swift::simplugin::xplane
         setSimulatorDetails("X-Plane", {}, xplaneVersion);
         connect(m_serviceProxy, &CXSwiftBusServiceProxy::aircraftModelChanged, this,
                 &CSimulatorXPlane::emitOwnAircraftModelChanged);
-        m_serviceProxy->updateAirportsInRange();
         connect(m_trafficProxy, &CXSwiftBusTrafficProxy::simFrame, this, &CSimulatorXPlane::updateRemoteAircraft);
         connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAdded, this,
                 &CSimulatorXPlane::onRemoteAircraftAdded);
@@ -1153,12 +1150,6 @@ namespace swift::simplugin::xplane
         {
             m_minSuspicousTerrainProbe = distance;
         }
-    }
-
-    void CSimulatorXPlane::updateAirportsInRange()
-    {
-        if (this->isShuttingDownOrDisconnected()) { return; }
-        m_serviceProxy->updateAirportsInRange();
     }
 
     void CSimulatorXPlane::onRemoteAircraftAdded(const QString &callsign)
