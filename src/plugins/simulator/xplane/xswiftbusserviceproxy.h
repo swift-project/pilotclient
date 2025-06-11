@@ -123,9 +123,6 @@ namespace swift::simplugin::xplane
         //! \copydoc XSwiftBus::CService::addTextMessage
         void addTextMessage(const QString &text, double red, double green, double blue);
 
-        //! \copydoc XSwiftBus::CService::updateAirportsInRange
-        void updateAirportsInRange();
-
         //! @{
         //! \copydoc XSwiftBus::CService::getAircraftModelPath
         QString getAircraftModelPath() const;

@@ -22,7 +22,7 @@ namespace swift::simplugin::fsx
                       swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
                       swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
-        //! \name ISimulator implementations
+        //! ISimulator implementations
         //! @{
         virtual bool connectTo() override;
         //! @}
@@ -38,6 +38,7 @@ namespace swift::simplugin::fsx
         using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
 
     protected:
+        //! \copydoc swift::core::ISimulatorListener::startImpl
         virtual void startImpl() override;
     };
 } // namespace swift::simplugin::fsx

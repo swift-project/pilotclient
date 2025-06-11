@@ -210,11 +210,6 @@ namespace swift::simplugin::xplane
         m_dbusInterface->callDBus(QLatin1String("addTextMessage"), text, red, green, blue);
     }
 
-    void CXSwiftBusServiceProxy::updateAirportsInRange()
-    {
-        m_dbusInterface->callDBus(QLatin1String("updateAirportsInRange"));
-    }
-
     QString CXSwiftBusServiceProxy::getAircraftModelPath() const
     {
         return m_dbusInterface->callDBusRet<QString>(QLatin1String("getAircraftModelPath"));
