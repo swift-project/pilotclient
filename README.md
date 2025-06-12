@@ -49,3 +49,10 @@ Pull requests should be made against the `main` branch.
 [:blue_book: Developer guide](https://github.com/swift-project/pilotclient/wiki)
 
 [:orange_book: API documentation](https://apidocs.swift-project.org/)
+
+Licensing
+=========
+swift is dual-licensed under the GPL-3.0-or-later or the swift pilot client license (a modified GPL-3.0-or-later license).
+Official releases are published under the swift pilot client license.
+This dual licensing is necessary because swift may, depending on the build settings, link to proprietary software that is not compatible with the GPL-3.0-or-later.
+For example, this includes vatsimauth or simulator-specific connectors.
