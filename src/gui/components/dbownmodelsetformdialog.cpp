@@ -64,12 +64,6 @@ namespace swift::gui::components
         return QDialog::exec();
     }
 
-    bool CDbOwnModelSetFormDialog::event(QEvent *event)
-    {
-        if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
-        return QDialog::event(event);
-    }
-
     void CDbOwnModelSetFormDialog::buttonClicked()
     {
         const QObject *sender = QObject::sender();

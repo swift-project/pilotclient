@@ -37,10 +37,6 @@ namespace swift::gui::components
         //! \copydoc QDialog::exec
         virtual int exec() override;
 
-    protected:
-        //! \copydoc QObject::event
-        virtual bool event(QEvent *event) override;
-
     private:
         QScopedPointer<Ui::CUpdateInfoDialog> ui;
         swift::misc::CSetting<swift::gui::settings::TUpdateNotificationSettings> m_setting { this }; //!< show again?

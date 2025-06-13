@@ -54,7 +54,7 @@ namespace swift::gui::components
         connect(this, &QWizard::helpRequested, sGui, [=] {
             if (!myself) { return; }
             if (!sGui || sGui->isShuttingDown()) { return; }
-            sGui->showHelp(this);
+            sGui->showHelp("install");
         });
 
         this->setScreenGeometry();
@@ -69,12 +69,6 @@ namespace swift::gui::components
     {
         const CConfigurationWizard *wizard = qobject_cast<const CConfigurationWizard *>(standardWizard);
         return wizard && wizard->lastStepSkipped();
-    }
-
-    bool CConfigurationWizard::event(QEvent *event)
-    {
-        if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
-        return QDialog::event(event);
     }
 
     void CConfigurationWizard::wizardCurrentIdChanged(int id)

@@ -111,7 +111,7 @@ namespace swift::core::data
         swift::misc::network::CUrl getVatsimFsdHttpUrl() const { return m_vatsimFsdHttpUrl; }
 
         //! Help page URL
-        swift::misc::network::CUrl getHelpPageUrl(const QString &context = {}) const;
+        swift::misc::network::CUrl getHelpPageUrl() const;
 
         //! Predefined servers
         const swift::misc::network::CServerList &getPredefinedServers() const { return m_predefinedServers; }

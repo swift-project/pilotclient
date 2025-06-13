@@ -50,10 +50,6 @@ namespace swift::gui::components
         //! Static version of CConfigurationWizard::lastStepSkipped
         static bool lastWizardStepSkipped(const QWizard *standardWizard);
 
-    protected:
-        //! \copydoc QObject::event
-        virtual bool event(QEvent *event) override;
-
     private:
         //! The current page has changed
         void wizardCurrentIdChanged(int id);

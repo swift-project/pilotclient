@@ -222,7 +222,7 @@ namespace swift::gui::components
     void CAircraftModelValidationComponent::showHelp()
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
-        sGui->showHelp(this);
+        sGui->showHelp("model_set_validation");
     }
 
     void CAircraftModelValidationComponent::saveInvalidModels(const CAircraftModelList &models) const

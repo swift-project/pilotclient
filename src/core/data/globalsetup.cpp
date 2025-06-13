@@ -41,20 +41,7 @@ namespace swift::core::data
     const CUrl &CGlobalSetup::getSwiftSharedUrl() const { return m_sharedUrl; }
     CUrl CGlobalSetup::getDbHomePageUrl() const { return getDbRootDirectoryUrl().withAppendedPath("/page/index.php"); }
 
-    CUrl CGlobalSetup::getHelpPageUrl(const QString &context) const
-    {
-        // we display in the standard browser,
-        // so the user will realize if the URL does not work
-        CUrl url = m_onlineHelpUrl;
-        if (url.isEmpty()) { return url; }
-
-        // context string something like "application.moreSpecific.evenMoreSpecific"
-        QString c = "client";
-        if (QCoreApplication::instance()) { c = QCoreApplication::instance()->applicationName(); }
-        if (!context.isEmpty()) { c += "." + context; }
-        url.appendQuery("context", c);
-        return url;
-    }
+    CUrl CGlobalSetup::getHelpPageUrl() const { return m_onlineHelpUrl; }
 
     CUrl CGlobalSetup::getLegalDirectoryUrl() const { return getDbRootDirectoryUrl().withAppendedPath("/legal/"); }
 

@@ -44,10 +44,6 @@ namespace swift::gui::components
         //! Set airspace monitor
         void setAirspaceMonitor(swift::core::CAirspaceMonitor *airspaceMonitor);
 
-    protected:
-        //! \copydoc QObject::event
-        virtual bool event(QEvent *event) override;
-
     private:
         QScopedPointer<Ui::CInterpolationLogDisplayDialog> ui;
     };

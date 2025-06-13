@@ -47,10 +47,6 @@ namespace swift::gui::components
                                const swift::misc::simulation::CAircraftModelList &invalid, bool stopped,
                                const swift::misc::CStatusMessageList &msgs);
 
-    protected:
-        //! \copydoc QObject::event
-        virtual bool event(QEvent *event) override;
-
     private:
         QScopedPointer<Ui::CAircraftModelSetValidationDialog> ui;
     };

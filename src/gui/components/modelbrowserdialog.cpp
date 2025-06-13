@@ -19,12 +19,6 @@ namespace swift::gui::components
         // void;
     }
 
-    bool CModelBrowserDialog::event(QEvent *event)
-    {
-        if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
-        return QDialog::event(event);
-    }
-
     void CModelBrowserDialog::done(int r)
     {
         ui->comp_ModelBrowser->close();

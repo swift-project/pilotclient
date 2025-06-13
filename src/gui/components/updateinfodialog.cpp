@@ -45,12 +45,6 @@ namespace swift::gui::components
         return r;
     }
 
-    bool CUpdateInfoDialog::event(QEvent *event)
-    {
-        if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
-        return QDialog::event(event);
-    }
-
     void CUpdateInfoDialog::onDontShowAgain(bool dontShowAgain) { m_setting.setAndSave(!dontShowAgain); }
 
     void CUpdateInfoDialog::selectionChanged()

@@ -32,10 +32,4 @@ namespace swift::gui::components
         this->setWindowTitle(QStringLiteral("Model validation for '%1'").arg(simulator.toQString(true)));
         CGuiApplication::modalWindowToFront();
     }
-
-    bool CAircraftModelSetValidationDialog::event(QEvent *event)
-    {
-        if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
-        return QDialog::event(event);
-    }
 } // namespace swift::gui::components

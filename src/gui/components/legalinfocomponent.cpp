@@ -56,7 +56,7 @@ namespace swift::gui::components
     {
         if (!sGui) { return; }
         const CGlobalSetup gs = sGui->getGlobalSetup();
-        const CUrl url = gs.getHelpPageUrl("checklist");
+        const CUrl url = gs.getHelpPageUrl().withAppendedPath("checklist");
         ui->lbl_Tip->setText(QStringLiteral("Please read the <a href=\"%1\">checklist before your 1st flight</a>")
                                  .arg(url.getFullUrl()));
         ui->lbl_Tip->setTextFormat(Qt::RichText);

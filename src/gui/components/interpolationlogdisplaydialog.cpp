@@ -39,10 +39,4 @@ namespace swift::gui::components
     {
         ui->comp_InterpolationLogDisplay->setAirspaceMonitor(airspaceMonitor);
     }
-
-    bool CInterpolationLogDisplayDialog::event(QEvent *event)
-    {
-        if (CGuiApplication::triggerShowHelp(this, event)) { return true; }
-        return QDialog::event(event);
-    }
 } // namespace swift::gui::components

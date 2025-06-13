@@ -56,10 +56,6 @@ namespace swift::gui::components
         //! Exec and display simulator
         virtual int exec() override;
 
-    protected:
-        //! \copydoc QObject::event
-        virtual bool event(QEvent *event) override;
-
     private:
         QScopedPointer<Ui::CDbOwnModelSetFormDialog> ui;
         swift::misc::simulation::CAircraftModelList m_modelSet;
