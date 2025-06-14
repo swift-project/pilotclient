@@ -141,7 +141,6 @@ add_subdirectory(cmake/dbus)
 add_subdirectory(cmake/sodium)
 add_subdirectory(cmake/opus)
 add_subdirectory(cmake/simconnect)
-add_subdirectory(cmake/dplay)
 add_subdirectory(third_party)
 
 
