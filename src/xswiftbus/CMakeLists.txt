@@ -101,30 +101,16 @@ elseif(UNIX)
     target_link_options(xswiftbus PUBLIC -nodefaultlibs -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/xswiftbus.map)
 endif()
 
-
-target_link_libraries(xswiftbus PUBLIC externals_event nlohmann_json::nlohmann_json externals_dbus externals_xplm)
-
-
-if(SWIFT_WIN32)
-    set(PNG_LIBRARIES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/32/lib/png.lib)
-    set(ZLIB_LIBRARIES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/32/lib/z.lib)
-elseif(SWIFT_WIN64)
-    set(PNG_LIBRARIES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/png.lib)
-    set(ZLIB_LIBRARIES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/z.lib)
-
-else()
-    find_package(PNG REQUIRED)
-    find_package(ZLIB REQUIRED)
-endif()
+target_link_libraries(xswiftbus PUBLIC libevent::core nlohmann_json::nlohmann_json dbus-1 externals_xplm)
 
 # Externals required by xplanemp2
-if(WIN32)
+if (WIN32)
     find_package(OpenGL REQUIRED)
+    find_package(PNG REQUIRED)
+    find_package(ZLIB REQUIRED)
 
-    target_link_libraries(xswiftbus PUBLIC ${PNG_LIBRARIES} ${ZLIB_LIBRARIES} OpenGL::GL OpenGL::GLU)
-elseif(UNIX AND NOT APPLE)
-    target_link_libraries(xswiftbus PUBLIC ${PNG_LIBRARIES} ${ZLIB_LIBRARIES})
-endif()
+    target_link_libraries(xswiftbus PUBLIC PNG::PNG ZLIB::ZLIB OpenGL::GL OpenGL::GLU)
+endif ()
 
 if(MSVC)
     target_compile_definitions(xswiftbus PRIVATE _CRT_SECURE_NO_WARNINGS)

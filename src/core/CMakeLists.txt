@@ -256,7 +256,8 @@ target_link_libraries(core
             misc
             input
             sound
-            externals_sodium
+            Opus::opus
+            libsodium::libsodium
             msgpack-cxx
             config
         PRIVATE

@@ -3,5 +3,4 @@
 
 add_subdirectory(simplecrypt)
 add_subdirectory(qjsonwebtoken)
-add_subdirectory(nlohmann_json)
 add_subdirectory(cmake/msgpack EXCLUDE_FROM_ALL SYSTEM)

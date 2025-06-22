@@ -128,3 +128,54 @@ elseif(APPLE)
     install(DIRECTORY ${QT_INSTALL_PLUGINS}/tls DESTINATION bin FILES_MATCHING PATTERN "*.dylib")
 
 endif()
+
+macro(CheckPathExists PATH LIBS)
+    foreach (LIB IN LISTS LIBS)
+        if (NOT EXISTS ${PATH}/${LIB})
+            message(WARNING "Expected deploy directory ${PATH}/${LIB} not found. Installation will not work!")
+        endif ()
+    endforeach ()
+endmacro()
+
+set(CONAN_DEPLOY_DIR ${PROJECT_SOURCE_DIR}/build_conan/full_deploy/host)
+if (UNIX AND NOT APPLE)
+
+    # Opus
+    set(OPUS_PATH ${CONAN_DEPLOY_DIR}/opus/1.3.1/${CMAKE_BUILD_TYPE}/${CMAKE_SYSTEM_PROCESSOR})
+    set(OPUS_LIBS libopus.so.0.8.0 libopus.so.0 libopus.so)
+    CheckPathExists(${OPUS_PATH}/lib ${OPUS_LIBS})
+    foreach (LIB IN LISTS OPUS_LIBS)
+        install(FILES ${OPUS_PATH}/lib/${LIB} DESTINATION lib)
+    endforeach ()
+    CheckPathExists(${OPUS_PATH} licenses/COPYING)
+    install(FILES ${OPUS_PATH}/licenses/COPYING DESTINATION licenses RENAME COPYING.OPUS.txt)
+
+    # sodium
+    set(SODIUM_PATH ${CONAN_DEPLOY_DIR}/libsodium/1.0.18/${CMAKE_BUILD_TYPE}/${CMAKE_SYSTEM_PROCESSOR})
+    set(SODIUM_LIBS libsodium.so.23.3.0 libsodium.so.23 libsodium.so)
+    CheckPathExists(${SODIUM_PATH}/lib ${SODIUM_LIBS})
+    foreach (LIB IN LISTS SODIUM_LIBS)
+        install(FILES ${SODIUM_PATH}/lib/${LIB} DESTINATION lib)
+    endforeach ()
+    CheckPathExists(${SODIUM_PATH} /licenses/LICENSE)
+    install(FILES ${SODIUM_PATH}/licenses/LICENSE DESTINATION licenses RENAME LICENSE.LIBSODIUM.txt)
+
+    # libevent
+    set(EVENT_PATH ${CONAN_DEPLOY_DIR}/libevent/2.1.12/${CMAKE_BUILD_TYPE}/${CMAKE_SYSTEM_PROCESSOR})
+    set(EVENT_LIBS
+            libevent_core-2.1.so.7.0.1
+            libevent_core-2.1.so.7
+            libevent_core-2.1.so
+            libevent_core.so
+    )
+    CheckPathExists(${EVENT_PATH}/lib ${EVENT_LIBS})
+    foreach (LIB IN LISTS EVENT_LIBS)
+        install(FILES ${EVENT_PATH}/lib/${LIB} DESTINATION xswiftbus/64)
+    endforeach ()
+    CheckPathExists(${EVENT_PATH} /licenses/LICENSE)
+    install(FILES ${EVENT_PATH}/licenses/LICENSE DESTINATION xswiftbus/64 RENAME LICENSE.LIBEVENT.txt)
+elseif (APPLE)
+    # TODO
+elseif (SWIFT_WIN64)
+    # TODO
+endif ()

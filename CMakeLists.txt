@@ -88,6 +88,10 @@ endif()
 
 # Find dependencies
 find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test)
+find_package(Opus REQUIRED)
+find_package(libsodium REQUIRED)
+find_package(nlohmann_json REQUIRED)
+add_subdirectory(cmake/dbus)
 
 # Global compiler options
 if(MSVC)
@@ -137,16 +141,13 @@ endif()
 
 # Add external folders
 add_subdirectory(cmake/vatsimauth)
-add_subdirectory(cmake/dbus)
-add_subdirectory(cmake/sodium)
-add_subdirectory(cmake/opus)
 add_subdirectory(cmake/simconnect)
 add_subdirectory(third_party)
 
 
 if(SWIFT_BUILD_XSWIFTBUS)
     add_subdirectory(cmake/xp)
-    add_subdirectory(cmake/event)
+    find_package(Libevent REQUIRED)
 endif()
 
 # Add source folders

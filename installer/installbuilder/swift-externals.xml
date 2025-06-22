@@ -72,6 +72,21 @@
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/lib/libsodium.so.*</origin>
                 </distributionFile>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/lib/libopus.so.*</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>licenses</description>
+            <destination>${installdir}/licenses</destination>
+            <name>licenses</name>
+            <distributionFileList>
+                <distributionFile>
+                    <allowWildcards>1</allowWildcards>
+                    <origin>../../dist/licenses/*</origin>
+                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
