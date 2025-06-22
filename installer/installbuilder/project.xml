@@ -135,15 +135,6 @@ It must be closed before the installation can proceed</progressText>
         </setInstallerVariable>
     </preInstallationActionList>
     <postInstallationActionList>
-        <runProgram>
-            <program>osascript</program>
-            <programArguments>-l AppleScript ${installdir}/bin/create_dbus_machineid.scpt</programArguments>
-            <ruleList>
-                <platformTest>
-                    <type>osx</type>
-                </platformTest>
-            </ruleList>
-        </runProgram>
         <createDirectory>
             <path>${user_home_directory}/Library/LaunchAgents</path>
             <ruleList>

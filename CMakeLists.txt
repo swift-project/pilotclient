@@ -15,6 +15,8 @@ if(APPLE)
     list(APPEND SWIFT_LANGUAGES OBJC OBJCXX)
 endif()
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+
 project(swift LANGUAGES ${SWIFT_LANGUAGES})
 
 include(cmake/tools.cmake)
@@ -88,6 +90,18 @@ endif()
 
 # Find dependencies
 find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test)
+find_package(Opus REQUIRED)
+find_package(libsodium REQUIRED)
+find_package(nlohmann_json REQUIRED)
+if(UNIX AND NOT APPLE)
+    add_subdirectory(cmake/dbus)
+else()
+    find_package(DBus1 REQUIRED)
+endif()
+
+if(SWIFT_VATSIM_SUPPORT)
+    find_package(VATSIMAuth REQUIRED)
+endif()
 
 # Global compiler options
 if(MSVC)
@@ -136,17 +150,13 @@ if(MSVC)
 endif()
 
 # Add external folders
-add_subdirectory(cmake/vatsimauth)
-add_subdirectory(cmake/dbus)
-add_subdirectory(cmake/sodium)
-add_subdirectory(cmake/opus)
 add_subdirectory(cmake/simconnect)
 add_subdirectory(third_party)
 
 
 if(SWIFT_BUILD_XSWIFTBUS)
-    add_subdirectory(cmake/xp)
-    add_subdirectory(cmake/event)
+    find_package(XPSDK REQUIRED)
+    find_package(Libevent REQUIRED)
 endif()
 
 # Add source folders

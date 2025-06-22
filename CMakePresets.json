@@ -4,11 +4,14 @@
     {
       "name": "ci-base",
       "hidden": true,
+      "toolchainFile": "build_conan/build/RelWithDebInfo/generators/conan_toolchain.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "SWIFT_MINIFY_DEBUG_SYMBOLS": "ON",
         "SWIFT_USE_CRASHPAD": "OFF",
         "SWIFT_BUILD_SAMPLES": "OFF",
+        "VATSIM_AUTH_PATH": "${sourceDir}/third_party/externals",
+        "XP_SDK_PATH": "${sourceDir}/third_party/externals/XPLM/SDK",
         "VATSIM_KEY_JSON": "vatsim.json",
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist"
         }

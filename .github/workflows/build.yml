@@ -21,7 +21,7 @@ env:
   bitrock_version: qt-professional-24.7.0
   bitrock_url:     https://releases.installbuilder.com/installbuilder
   externals: swift-project/externals
-  externals_sha: e67552f92d6b5ba49aa3f1f4ebae6de51192c34e
+  externals_sha: dfe49bbeb8f0ca664afa293ad3f454cffe751acf
   use_externals: ${{ secrets.EXTERNALS_PAT != '' }}
 
 jobs:
@@ -131,8 +131,8 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          sudo apt-get -y install dbus-x11 libglu1-mesa-dev libopus-dev libsodium-dev libpulse-dev libdbus-1-dev libevent-dev libpng-dev ninja-build
-          pip3 install requests
+          sudo apt-get -y install dbus-x11 libglu1-mesa-dev libpulse-dev libdbus-1-dev ninja-build
+          pip3 install requests conan
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -148,6 +148,17 @@ jobs:
           ref: ${{ env.externals_sha }}
           token: ${{ env.EXTERNALS_PAT }}
           path: 'third_party/externals'
+      - name: Install conan dependencies
+        shell: bash
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+        run: |
+          conan profile detect
+          conan remote disable conancenter
+          conan remote add swift https://artifactory.swift-project.org/artifactory/api/conan/conan-local
+          conan remote login swift "$ARTIFACTORY_USER" --password "$ARTIFACTORY_TOKEN"
+          conan install . --output-folder=build_conan --deployer=full_deploy -pr=ci/profile_linux
       - name: Start DBus session bus
         run: |
           dbus-launch --sh-syntax | tee session.sh
@@ -235,7 +246,7 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          pip install requests PyInstaller
+          pip install requests PyInstaller conan
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -251,6 +262,17 @@ jobs:
           ref: ${{ env.externals_sha }}
           token: ${{ env.EXTERNALS_PAT }}
           path: 'third_party/externals'
+      - name: Install conan dependencies
+        shell: bash
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+        run: |
+          conan profile detect
+          conan remote disable conancenter
+          conan remote add swift https://artifactory.swift-project.org/artifactory/api/conan/conan-local
+          conan remote login swift "$ARTIFACTORY_USER" --password "$ARTIFACTORY_TOKEN"
+          conan install . --output-folder=build_conan --deployer=full_deploy -pr=ci/profile_win
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
@@ -263,12 +285,14 @@ jobs:
       - uses: Trass3r/setup-cpp@1b63900ecf3f0b7c60ee53aa7be122f2c4fe7a2c
       - name: Build swift (without symbols)
         if: ${{ env.do_symbols != 'true' }}
+        shell: cmd
         run: |
-          python -u scripts/build.py -w 64 -t msvc
+          build_conan\\build\\RelWithDebInfo\\generators\\conanrun.bat && python -u scripts/build.py -w 64 -t msvc
       - name: Build swift (with symbols)
         if: ${{ env.do_symbols == 'true' }}
+        shell: cmd
         run: |
-          python -u scripts/build.py -w 64 -t msvc --upload-symbols
+          build_conan\\build\\RelWithDebInfo\\generators\\conanrun.bat && python -u scripts/build.py -w 64 -t msvc --upload-symbols
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
@@ -328,7 +352,7 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          pip3 install requests
+          pip3 install requests conan
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -344,6 +368,17 @@ jobs:
           ref: ${{ env.externals_sha }}
           token: ${{ env.EXTERNALS_PAT }}
           path: 'third_party/externals'
+      - name: Install conan dependencies
+        shell: bash
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+        run: |
+          conan profile detect
+          conan remote disable conancenter
+          conan remote add swift https://artifactory.swift-project.org/artifactory/api/conan/conan-local
+          conan remote login swift "$ARTIFACTORY_USER" --password "$ARTIFACTORY_TOKEN"
+          conan install . --output-folder=build_conan --deployer=full_deploy -pr=ci/profile_mac
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |

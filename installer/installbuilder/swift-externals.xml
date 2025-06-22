@@ -54,9 +54,6 @@
                 <distributionFile>
                     <origin>../../dist/bin/7za</origin>
                 </distributionFile>
-                <distributionFile>
-                    <origin>../../dist/bin/create_dbus_machineid.scpt</origin>
-                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
@@ -69,8 +66,33 @@
                     <origin>../../dist/lib/libvatsimauth.so</origin>
                 </distributionFile>
                 <distributionFile>
+                    <origin>../../dist/lib/libsodium.so.23.3.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libsodium.so.23</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libsodium.so</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libopus.so.0.8.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libopus.so.0</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libopus.so</origin>
+                </distributionFile>
+            </distributionFileList>
+        </folder>
+        <folder>
+            <description>licenses</description>
+            <destination>${installdir}/licenses</destination>
+            <name>licenses</name>
+            <distributionFileList>
+                <distributionFile>
                     <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/lib/libsodium.so.*</origin>
+                    <origin>../../dist/licenses/*</origin>
                 </distributionFile>
             </distributionFileList>
         </folder>
@@ -82,6 +104,15 @@
             <distributionFileList>
                 <distributionFile>
                     <origin>../../dist/lib/libsodium.23.dylib</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libsodium.dylib</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libopus.0.8.0.dylib</origin>
+                </distributionFile>
+                <distributionFile>
+                    <origin>../../dist/lib/libopus.dylib</origin>
                 </distributionFile>
                 <distributionFile>
                     <origin>../../dist/lib/libopus.0.dylib</origin>

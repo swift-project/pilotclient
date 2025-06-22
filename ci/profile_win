@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
+[settings]
+arch=x86_64
+build_type=RelWithDebInfo
+compiler=msvc
+compiler.cppstd=17
+compiler.runtime=dynamic
+compiler.version=194
+os=Windows
+
+# Force Ninja generator
+[conf]
+tools.cmake.cmaketoolchain:generator=Ninja

@@ -92,39 +92,17 @@ target_include_directories(xswiftbus PUBLIC
 
 
 if(SWIFT_WIN64)
-    target_link_libraries(xswiftbus PUBLIC externals_xplm externals_xpwidgets)
+    target_link_libraries(xswiftbus PUBLIC XPSDK::XPLM XPSDK::XPWidgets)
 elseif(APPLE)
-    target_link_libraries(xswiftbus PRIVATE externals_xplm externals_xpwidgets "-framework Cocoa" "-framework CoreFoundation")
+    target_link_libraries(xswiftbus PRIVATE XPSDK::XPLM XPSDK::XPWidgets "-framework Cocoa" "-framework CoreFoundation")
     target_compile_definitions(xswiftbus PRIVATE XUTILS_EXCLUDE_MAC_CRAP)
 elseif(UNIX)
+    target_link_libraries(xswiftbus PUBLIC XPSDK::XPLM XPSDK::XPWidgets)
     # Flags needed because there is no XPLM link library
     target_link_options(xswiftbus PUBLIC -nodefaultlibs -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/xswiftbus.map)
 endif()
 
-
-target_link_libraries(xswiftbus PUBLIC externals_event nlohmann_json::nlohmann_json externals_dbus externals_xplm)
-
-
-if(SWIFT_WIN32)
-    set(PNG_LIBRARIES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/32/lib/png.lib)
-    set(ZLIB_LIBRARIES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/32/lib/z.lib)
-elseif(SWIFT_WIN64)
-    set(PNG_LIBRARIES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/png.lib)
-    set(ZLIB_LIBRARIES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/z.lib)
-
-else()
-    find_package(PNG REQUIRED)
-    find_package(ZLIB REQUIRED)
-endif()
-
-# Externals required by xplanemp2
-if(WIN32)
-    find_package(OpenGL REQUIRED)
-
-    target_link_libraries(xswiftbus PUBLIC ${PNG_LIBRARIES} ${ZLIB_LIBRARIES} OpenGL::GL OpenGL::GLU)
-elseif(UNIX AND NOT APPLE)
-    target_link_libraries(xswiftbus PUBLIC ${PNG_LIBRARIES} ${ZLIB_LIBRARIES})
-endif()
+target_link_libraries(xswiftbus PUBLIC libevent::core nlohmann_json::nlohmann_json dbus-1)
 
 if(MSVC)
     target_compile_definitions(xswiftbus PRIVATE _CRT_SECURE_NO_WARNINGS)
@@ -186,10 +164,19 @@ if(WIN32)
     set(DBUS_SESSION_CONF_MAYBE_AUTH_EXTERNAL "<!--<auth>EXTERNAL</auth>-->")
     configure_file(${swift_SOURCE_DIR}/src/misc/share/dbus-1/session.conf.in ${CMAKE_CURRENT_BINARY_DIR}/session.conf)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/session.conf DESTINATION xswiftbus/64/share/dbus-1/)
-
-    install(FILES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/bin/dbus-daemon.exe DESTINATION xswiftbus/64/)
-    install(FILES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/lib/expat.dll DESTINATION xswiftbus/64/)
 endif()
 
 install(DIRECTORY LegacyData DESTINATION xswiftbus)
 install(FILES xswiftbus.conf ${CMAKE_CURRENT_BINARY_DIR}/readme.txt DESTINATION xswiftbus)
+
+if (DEFINED SWIFT_DEV_X_PLANE_PLUGINS_DIR)
+    # Copy xswiftbus to X-Plane folder for development
+    add_custom_target(copy_xswiftbus
+            DEPENDS xswiftbus
+            COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR}
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_INSTALL_PREFIX}/xswiftbus ${SWIFT_DEV_X_PLANE_PLUGINS_DIR}/xswiftbus
+
+            COMMENT "Installing xswiftbus into X-Plane plugins dir"
+
+    )
+endif ()

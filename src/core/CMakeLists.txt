@@ -256,7 +256,8 @@ target_link_libraries(core
             misc
             input
             sound
-            externals_sodium
+            Opus::opus
+            libsodium::libsodium
             msgpack-cxx
             config
         PRIVATE
@@ -266,7 +267,7 @@ target_link_libraries(core
 )
 
 if(SWIFT_VATSIM_SUPPORT)
-    target_link_libraries(core PUBLIC externals_vatsim_auth)
+    target_link_libraries(core PUBLIC VATSIMAuth::VATSIMAuth)
 endif()
 
 target_compile_definitions(core PRIVATE BUILD_SWIFT_CORE_LIB)

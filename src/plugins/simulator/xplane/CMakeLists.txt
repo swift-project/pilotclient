@@ -26,7 +26,7 @@ target_include_directories(simulatorxplane PUBLIC ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(simulatorxplane
         PUBLIC
         misc
-        externals_dbus
+        dbus-1
         plugincommon
 )
 
