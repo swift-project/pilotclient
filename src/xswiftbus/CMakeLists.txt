@@ -92,16 +92,17 @@ target_include_directories(xswiftbus PUBLIC
 
 
 if(SWIFT_WIN64)
-    target_link_libraries(xswiftbus PUBLIC externals_xplm externals_xpwidgets)
+    target_link_libraries(xswiftbus PUBLIC XPSDK::XPLM XPSDK::XPWidgets)
 elseif(APPLE)
-    target_link_libraries(xswiftbus PRIVATE externals_xplm externals_xpwidgets "-framework Cocoa" "-framework CoreFoundation")
+    target_link_libraries(xswiftbus PRIVATE XPSDK::XPLM XPSDK::XPWidgets "-framework Cocoa" "-framework CoreFoundation")
     target_compile_definitions(xswiftbus PRIVATE XUTILS_EXCLUDE_MAC_CRAP)
 elseif(UNIX)
+    target_link_libraries(xswiftbus PUBLIC XPSDK::XPLM XPSDK::XPWidgets)
     # Flags needed because there is no XPLM link library
     target_link_options(xswiftbus PUBLIC -nodefaultlibs -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/xswiftbus.map)
 endif()
 
-target_link_libraries(xswiftbus PUBLIC libevent::core nlohmann_json::nlohmann_json dbus-1 externals_xplm)
+target_link_libraries(xswiftbus PUBLIC libevent::core nlohmann_json::nlohmann_json dbus-1)
 
 # Externals required by xplanemp2
 if (WIN32)
@@ -179,3 +180,13 @@ endif()
 
 install(DIRECTORY LegacyData DESTINATION xswiftbus)
 install(FILES xswiftbus.conf ${CMAKE_CURRENT_BINARY_DIR}/readme.txt DESTINATION xswiftbus)
+
+if (DEFINED SWIFT_DEV_X_PLANE_PLUGINS_DIR)
+    # Copy xswiftbus to X-Plane folder for development
+    add_custom_target(copy_xswiftbus ALL
+            COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR}
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_INSTALL_PREFIX}/xswiftbus ${SWIFT_DEV_X_PLANE_PLUGINS_DIR}
+
+            COMMENT "Installing xswiftbus into X-Plane plugins dir"
+    )
+endif ()

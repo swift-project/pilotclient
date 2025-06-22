@@ -15,6 +15,8 @@ if(APPLE)
     list(APPEND SWIFT_LANGUAGES OBJC OBJCXX)
 endif()
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+
 project(swift LANGUAGES ${SWIFT_LANGUAGES})
 
 include(cmake/tools.cmake)
@@ -92,6 +94,9 @@ find_package(Opus REQUIRED)
 find_package(libsodium REQUIRED)
 find_package(nlohmann_json REQUIRED)
 add_subdirectory(cmake/dbus)
+if(SWIFT_VATSIM_SUPPORT)
+    find_package(VATSIMAuth REQUIRED)
+endif()
 
 # Global compiler options
 if(MSVC)
@@ -140,13 +145,12 @@ if(MSVC)
 endif()
 
 # Add external folders
-add_subdirectory(cmake/vatsimauth)
 add_subdirectory(cmake/simconnect)
 add_subdirectory(third_party)
 
 
 if(SWIFT_BUILD_XSWIFTBUS)
-    add_subdirectory(cmake/xp)
+    find_package(XPSDK REQUIRED)
     find_package(Libevent REQUIRED)
 endif()
 
