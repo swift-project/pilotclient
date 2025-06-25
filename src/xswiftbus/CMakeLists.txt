@@ -183,10 +183,12 @@ install(FILES xswiftbus.conf ${CMAKE_CURRENT_BINARY_DIR}/readme.txt DESTINATION 
 
 if (DEFINED SWIFT_DEV_X_PLANE_PLUGINS_DIR)
     # Copy xswiftbus to X-Plane folder for development
-    add_custom_target(copy_xswiftbus ALL
+    add_custom_target(copy_xswiftbus
+            DEPENDS xswiftbus
             COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR}
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_INSTALL_PREFIX}/xswiftbus ${SWIFT_DEV_X_PLANE_PLUGINS_DIR}
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_INSTALL_PREFIX}/xswiftbus ${SWIFT_DEV_X_PLANE_PLUGINS_DIR}/xswiftbus
 
             COMMENT "Installing xswiftbus into X-Plane plugins dir"
+
     )
 endif ()
