@@ -21,7 +21,7 @@ env:
   bitrock_version: qt-professional-24.7.0
   bitrock_url:     https://releases.installbuilder.com/installbuilder
   externals: swift-project/externals
-  externals_sha: e67552f92d6b5ba49aa3f1f4ebae6de51192c34e
+  externals_sha: 497bafbe7f8df2fac928c974ebea9ecff9f87771
   use_externals: ${{ secrets.EXTERNALS_PAT != '' }}
 
 jobs:
