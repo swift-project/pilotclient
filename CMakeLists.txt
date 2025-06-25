@@ -93,7 +93,12 @@ find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Con
 find_package(Opus REQUIRED)
 find_package(libsodium REQUIRED)
 find_package(nlohmann_json REQUIRED)
-add_subdirectory(cmake/dbus)
+if(UNIX AND NOT APPLE)
+    add_subdirectory(cmake/dbus)
+else()
+    find_package(DBus1 REQUIRED)
+endif()
+
 if(SWIFT_VATSIM_SUPPORT)
     find_package(VATSIMAuth REQUIRED)
 endif()
