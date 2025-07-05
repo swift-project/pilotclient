@@ -256,5 +256,7 @@ elseif (SWIFT_WIN64)
         endif()
     endforeach ()
     install(FILES ${DBUS_PATH}/bin/dbus-daemon.exe DESTINATION bin)
-
+    if(SWIFT_BUILD_XSWIFTBUS)
+        install(FILES ${DBUS_PATH}/bin/dbus-daemon.exe DESTINATION xswiftbus/64)
+    endif()
 endif ()
