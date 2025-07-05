@@ -263,8 +263,11 @@ jobs:
           path: 'third_party/externals'
       - name: Install conan dependencies
         run: |
-          conan profile detect --force
-          conan install . --output-folder=build_conan --settings=build_type=RelWithDebInfo --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja --deployer=full_deploy
+          conan profile detect
+          conan remote disable conancenter
+          conan remote add swift https://artifactory.swift-project.org/artifactory/api/conan/conan-local
+          conan remote login swift "$ARTIFACTORY_USER" --password "$ARTIFACTORY_TOKEN"
+          conan install . --output-folder=build_conan --deployer=full_deploy -pr=ci/profile_win
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
@@ -360,8 +363,11 @@ jobs:
           path: 'third_party/externals'
       - name: Install conan dependencies
         run: |
-          conan profile detect --force
-          conan install . --output-folder=build_conan --settings=build_type=RelWithDebInfo --build=missing --deployer=full_deploy
+          conan profile detect
+          conan remote disable conancenter
+          conan remote add swift https://artifactory.swift-project.org/artifactory/api/conan/conan-local
+          conan remote login swift "$ARTIFACTORY_USER" --password "$ARTIFACTORY_TOKEN"
+          conan install . --output-folder=build_conan --deployer=full_deploy -pr=ci/profile_mac
       - name: Create Vatsim key file
         if: ${{ env.do_vatsim_key == 'true' }}
         run: |
