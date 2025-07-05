@@ -132,11 +132,16 @@ macro(CheckPathExists PATH LIBS)
     endforeach ()
 endmacro()
 
+set(SWIFT_SYSTEM_PROCESSOR ${CMAKE_SYSTEM_PROCESSOR})
+if(SWIFT_SYSTEM_PROCESSOR STREQUAL "AMD64")
+    set(SWIFT_SYSTEM_PROCESSOR "x86_64")
+endif()
+
 set(CONAN_DEPLOY_DIR ${PROJECT_SOURCE_DIR}/build_conan/full_deploy/host)
-set(OPUS_PATH ${CONAN_DEPLOY_DIR}/opus/1.3.1/${CMAKE_BUILD_TYPE}/${CMAKE_SYSTEM_PROCESSOR})
-set(EVENT_PATH ${CONAN_DEPLOY_DIR}/libevent/2.1.12/${CMAKE_BUILD_TYPE}/${CMAKE_SYSTEM_PROCESSOR})
-set(SODIUM_PATH ${CONAN_DEPLOY_DIR}/libsodium/1.0.18/${CMAKE_BUILD_TYPE}/${CMAKE_SYSTEM_PROCESSOR})
-set(DBUS_PATH ${CONAN_DEPLOY_DIR}/dbus/1.15.8/${CMAKE_BUILD_TYPE}/${CMAKE_SYSTEM_PROCESSOR})
+set(OPUS_PATH ${CONAN_DEPLOY_DIR}/opus/1.3.1/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_PROCESSOR})
+set(EVENT_PATH ${CONAN_DEPLOY_DIR}/libevent/2.1.12/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_PROCESSOR})
+set(SODIUM_PATH ${CONAN_DEPLOY_DIR}/libsodium/1.0.18/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_PROCESSOR})
+set(DBUS_PATH ${CONAN_DEPLOY_DIR}/dbus/1.15.8/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_PROCESSOR})
 
 CheckPathExists(${SODIUM_PATH} /licenses/LICENSE)
 install(FILES ${SODIUM_PATH}/licenses/LICENSE DESTINATION licenses RENAME LICENSE.LIBSODIUM.txt)
@@ -218,5 +223,38 @@ elseif (APPLE)
     install(FILES ${DBUS_PATH}/bin/dbus-uuidgen DESTINATION bin)
 
 elseif (SWIFT_WIN64)
-    # TODO
+    # Opus
+    set(OPUS_LIBS opus.dll)
+    CheckPathExists(${OPUS_PATH}/bin ${OPUS_LIBS})
+    foreach (LIB IN LISTS OPUS_LIBS)
+        install(FILES ${OPUS_PATH}/bin/${LIB} DESTINATION bin)
+    endforeach ()
+
+    # sodium
+    set(SODIUM_LIBS libsodium.dll)
+    CheckPathExists(${SODIUM_PATH}/bin ${SODIUM_LIBS})
+    foreach (LIB IN LISTS SODIUM_LIBS)
+        install(FILES ${SODIUM_PATH}/bin/${LIB} DESTINATION bin)
+    endforeach ()
+
+    # libevent
+    if(SWIFT_BUILD_XSWIFTBUS)
+        set(EVENT_LIBS event_core.dll)
+        CheckPathExists(${EVENT_PATH}/bin ${EVENT_LIBS})
+        foreach (LIB IN LISTS EVENT_LIBS)
+            install(FILES ${EVENT_PATH}/bin/${LIB} DESTINATION xswiftbus/64)
+        endforeach ()
+    endif()
+
+    # DBus
+    set(DBUS_LIBS dbus-1-3.dll)
+    CheckPathExists(${DBUS_PATH}/bin ${DBUS_LIBS})
+    foreach (LIB IN LISTS DBUS_LIBS)
+        install(FILES ${DBUS_PATH}/bin/${LIB} DESTINATION bin)
+        if(SWIFT_BUILD_XSWIFTBUS)
+            install(FILES ${DBUS_PATH}/bin/${LIB} DESTINATION xswiftbus/64)
+        endif()
+    endforeach ()
+    install(FILES ${DBUS_PATH}/bin/dbus-daemon.exe DESTINATION bin)
+
 endif ()
