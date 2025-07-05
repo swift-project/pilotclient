@@ -142,16 +142,50 @@ set(OPUS_PATH ${CONAN_DEPLOY_DIR}/opus/1.3.1/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_
 set(EVENT_PATH ${CONAN_DEPLOY_DIR}/libevent/2.1.12/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_PROCESSOR})
 set(SODIUM_PATH ${CONAN_DEPLOY_DIR}/libsodium/1.0.18/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_PROCESSOR})
 set(DBUS_PATH ${CONAN_DEPLOY_DIR}/dbus/1.15.8/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_PROCESSOR})
+set(EXPAT_PATH ${CONAN_DEPLOY_DIR}/expat/2.7.1/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_PROCESSOR})
+set(NLOHMANN_JSON_PATH ${CONAN_DEPLOY_DIR}/nlohmann_json/3.11.3)
 
-CheckPathExists(${SODIUM_PATH} /licenses/LICENSE)
+CheckPathExists(${SODIUM_PATH} licenses/LICENSE)
 install(FILES ${SODIUM_PATH}/licenses/LICENSE DESTINATION licenses RENAME LICENSE.LIBSODIUM.txt)
 
 CheckPathExists(${OPUS_PATH} licenses/COPYING)
 install(FILES ${OPUS_PATH}/licenses/COPYING DESTINATION licenses RENAME COPYING.OPUS.txt)
 
+# xswiftbus licenses
 if(SWIFT_BUILD_XSWIFTBUS)
-    CheckPathExists(${EVENT_PATH} /licenses/LICENSE)
-    install(FILES ${EVENT_PATH}/licenses/LICENSE DESTINATION xswiftbus/64 RENAME LICENSE.LIBEVENT.txt)
+    CheckPathExists(${PROJECT_SOURCE_DIR} licenses/GPL-3.0-or-later.txt)
+    CheckPathExists(${PROJECT_SOURCE_DIR} licenses/LicenseRef-swift-pilot-client-1.txt)
+    install(FILES ${PROJECT_SOURCE_DIR}/licenses/GPL-3.0-or-later.txt DESTINATION xswiftbus/licenses RENAME LICENSE.XSWIFTBUS.GPL-3.0-or-later.txt)
+    install(FILES ${PROJECT_SOURCE_DIR}/licenses/LicenseRef-swift-pilot-client-1.txt DESTINATION xswiftbus/licenses RENAME LICENSE.XSWIFTBUS.LicenseRef-swift-pilot-client-1.txt.txt)
+
+    CheckPathExists(${EVENT_PATH} licenses/LICENSE)
+    install(FILES ${EVENT_PATH}/licenses/LICENSE DESTINATION xswiftbus/licenses RENAME LICENSE.LIBEVENT.txt)
+
+    CheckPathExists(${NLOHMANN_JSON_PATH} licenses/LICENSE.MIT)
+    install(FILES ${NLOHMANN_JSON_PATH}/licenses/LICENSE.MIT DESTINATION xswiftbus/licenses RENAME LICENSE.NLOHMANN_JSON.txt)
+
+    CheckPathExists(${DBUS_PATH} licenses/COPYING)
+    install(FILES ${DBUS_PATH}/licenses/COPYING DESTINATION xswiftbus/licenses RENAME LICENSE.DBUS.txt)
+    install(FILES ${DBUS_PATH}/licenses/AFL-2.1.txt DESTINATION xswiftbus/licenses RENAME LICENSE.DBUS.AFL-2.1.txt)
+    install(FILES ${DBUS_PATH}/licenses/GPL-2.0-or-later.txt DESTINATION xswiftbus/licenses RENAME LICENSE.DBUS.GPL-2.0-or-later.txt)
+
+    CheckPathExists(${EXPAT_PATH} licenses/COPYING)
+    install(FILES ${EXPAT_PATH}/licenses/COPYING DESTINATION xswiftbus/licenses RENAME LICENSE.EXPAT.txt)
+
+    string(REPLACE "\\" "/" XP_SDK_PATH_ESCAPED "${XP_SDK_PATH}")
+    CheckPathExists(${XP_SDK_PATH_ESCAPED} license.txt)
+    install(FILES ${XP_SDK_PATH_ESCAPED}/license.txt DESTINATION xswiftbus/licenses RENAME LICENSE.XPSDK.txt)
+
+    CheckPathExists(${PROJECT_SOURCE_DIR}/src/xswiftbus/xplanemp2 LICENSE.md)
+    install(FILES ${PROJECT_SOURCE_DIR}/src/xswiftbus/xplanemp2/LICENSE.md DESTINATION xswiftbus/licenses RENAME LICENSE.XPLANEMP2.txt)
+endif()
+
+# dbus licenses
+if(APPLE OR WIN32)
+    CheckPathExists(${DBUS_PATH} licenses/COPYING)
+    install(FILES ${DBUS_PATH}/licenses/COPYING DESTINATION licenses RENAME LICENSE.DBUS.txt)
+    install(FILES ${DBUS_PATH}/licenses/AFL-2.1.txt DESTINATION licenses RENAME LICENSE.DBUS.AFL-2.1.txt)
+    install(FILES ${DBUS_PATH}/licenses/GPL-2.0-or-later.txt DESTINATION licenses RENAME LICENSE.DBUS.GPL-2.0-or-later.txt)
 endif()
 
 if (UNIX AND NOT APPLE)

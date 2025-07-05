@@ -104,15 +104,6 @@ endif()
 
 target_link_libraries(xswiftbus PUBLIC libevent::core nlohmann_json::nlohmann_json dbus-1)
 
-# Externals required by xplanemp2
-if (WIN32)
-    find_package(OpenGL REQUIRED)
-    find_package(PNG REQUIRED)
-    find_package(ZLIB REQUIRED)
-
-    target_link_libraries(xswiftbus PUBLIC PNG::PNG ZLIB::ZLIB OpenGL::GL OpenGL::GLU)
-endif ()
-
 if(MSVC)
     target_compile_definitions(xswiftbus PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
