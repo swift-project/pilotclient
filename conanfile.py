@@ -31,6 +31,7 @@ class SwiftRecipe(ConanFile):
         self.options["opus"].shared = True
         if self.settings.os != "Linux":
             self.options["dbus"].shared = True
+            self.options["dbus"].message_bus = True
 
     def layout(self):
         cmake_layout(self)

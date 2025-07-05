@@ -28,11 +28,6 @@ elseif(APPLE)
 endif()
 install(PROGRAMS ${crashpad_handler_path} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
-# create_dbus_machineid
-if(APPLE)
-    install(FILES ${swift_SOURCE_DIR}/third_party/externals/macx-clang/64/bin/create_dbus_machineid.scpt DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-endif()
-
 # Deploy qt libs
 
 # Workaround to get Qt paths for deployment (until switching to Qt6 deployment tool)
@@ -210,6 +205,17 @@ elseif (APPLE)
         endforeach ()
     endif()
 
+    # DBus
+    set(DBUS_LIBS libdbus-1.3.dylib libdbus-1.dylib)
+    CheckPathExists(${DBUS_PATH}/lib ${DBUS_LIBS})
+    foreach (LIB IN LISTS DBUS_LIBS)
+        install(FILES ${DBUS_PATH}/lib/${LIB} DESTINATION lib)
+        if(SWIFT_BUILD_XSWIFTBUS)
+            install(FILES ${DBUS_PATH}/lib/${LIB} DESTINATION xswiftbus/64)
+        endif()
+    endforeach ()
+    install(FILES ${DBUS_PATH}/bin/dbus-daemon DESTINATION bin)
+    install(FILES ${DBUS_PATH}/bin/dbus-uuidgen DESTINATION bin)
 
 elseif (SWIFT_WIN64)
     # TODO
