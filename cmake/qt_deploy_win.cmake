@@ -6,12 +6,33 @@ execute_process(COMMAND qmake6 -query QT_INSTALL_BINS OUTPUT_VARIABLE QT_INSTALL
 
 string(STRIP ${QT_INSTALL_BINS} QT_INSTALL_BINS)
 
+# As this is executed as install script, we cannot simply use CMAKE_BUILD_TYPE
+set(DEBUG_BUILD FALSE)
+
+if(EXISTS ${CMAKE_INSTALL_PREFIX}/bin/cored.dll)
+    set(DEBUG_BUILD TRUE)
+endif()
+
+if(DEBUG_BUILD)
+    set(SWIFT_DLLS
+        ${CMAKE_INSTALL_PREFIX}/bin/cored.dll
+        ${CMAKE_INSTALL_PREFIX}/bin/guid.dll
+        ${CMAKE_INSTALL_PREFIX}/bin/inputd.dll
+        ${CMAKE_INSTALL_PREFIX}/bin/miscd.dll
+        ${CMAKE_INSTALL_PREFIX}/bin/soundd.dll
+    )
+else()
+    set(SWIFT_DLLS
+        ${CMAKE_INSTALL_PREFIX}/bin/core.dll
+        ${CMAKE_INSTALL_PREFIX}/bin/gui.dll
+        ${CMAKE_INSTALL_PREFIX}/bin/input.dll
+        ${CMAKE_INSTALL_PREFIX}/bin/misc.dll
+        ${CMAKE_INSTALL_PREFIX}/bin/sound.dll
+    )
+endif()
+
 execute_process(COMMAND ${QT_INSTALL_BINS}/windeployqt.exe
-                        ${CMAKE_INSTALL_PREFIX}/bin/core.dll
-                        ${CMAKE_INSTALL_PREFIX}/bin/gui.dll
-                        ${CMAKE_INSTALL_PREFIX}/bin/input.dll
-                        ${CMAKE_INSTALL_PREFIX}/bin/misc.dll
-                        ${CMAKE_INSTALL_PREFIX}/bin/sound.dll
+                        ${SWIFT_DLLS}
                         ${CMAKE_INSTALL_PREFIX}/bin/swiftcore.exe
                         ${CMAKE_INSTALL_PREFIX}/bin/swiftdata.exe
                         ${CMAKE_INSTALL_PREFIX}/bin/swiftguistd.exe
