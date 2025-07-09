@@ -31,10 +31,6 @@
                     <allowWildcards>1</allowWildcards>
                     <origin>../../dist/bin/*opus*.dll</origin>
                 </distributionFile>
-                <distributionFile>
-                    <allowWildcards>1</allowWildcards>
-                    <origin>../../dist/bin/*7za.exe</origin>
-                </distributionFile>
             </distributionFileList>
         </folder>
         <folder>
@@ -50,11 +46,6 @@
             <destination>${installdir}/bin</destination>
             <name>bin_osx</name>
             <platforms>osx</platforms>
-            <distributionFileList>
-                <distributionFile>
-                    <origin>../../dist/bin/7za</origin>
-                </distributionFile>
-            </distributionFileList>
         </folder>
         <folder>
             <description>lib</description>

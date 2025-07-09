@@ -7,15 +7,6 @@ set(GENERAL_FILES
         )
 install(FILES ${GENERAL_FILES} DESTINATION bin)
 
-# 7za
-if(SWIFT_WIN32)
-    install(FILES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/32/bin/7za.exe DESTINATION bin)
-elseif(SWIFT_WIN64)
-    install(FILES ${swift_SOURCE_DIR}/third_party/externals/win32-msvc/64/bin/7za.exe DESTINATION bin)
-elseif(APPLE)
-    install(FILES ${swift_SOURCE_DIR}/third_party/externals/macx-clang/64/bin/7za DESTINATION bin)
-endif()
-
 # Crashpad
 if(UNIX AND NOT APPLE)
     set(crashpad_handler_path ${swift_SOURCE_DIR}/third_party/externals/linux-g++/64/bin/swift_crashpad_handler)

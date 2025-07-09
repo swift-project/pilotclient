@@ -25,21 +25,11 @@ namespace swift::misc
         //! \remark 4 bytes -> 32bit
         static QByteArray lengthHeader(qint32 size);
 
-        //! Unzip my using 7zip
-        //! \remark relies on external 7zip command line
-        static bool zip7Uncompress(const QString &file, const QString &directory,
-                                   QStringList *stdOutAndError = nullptr);
-
-        //! External program existing?
-        //! \remark relies on external 7zip command line
-        static bool hasZip7(QStringList *stdOutAndError = nullptr);
-
-        //! Uses which to determine if 7Zip exists
-        //! \remark for UNIX systems, using which
-        static bool whichZip7(QStringList *stdOutAndError = nullptr);
+        //! Unzip file
+        static bool zipUncompress(const QString &file, const QString &directory, QStringList *stdOutAndError = nullptr);
 
     private:
-        static bool runZip7Process(QProcess *zipProcess, QStringList *stdOutAndError);
+        static bool runZipProcess(QProcess *zipProcess, QStringList *stdOutAndError);
     };
 } // namespace swift::misc
 

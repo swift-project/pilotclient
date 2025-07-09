@@ -173,7 +173,7 @@ namespace swift::gui::components
 
         // if possible we will unzip
         QStringList stdOutAndError;
-        if (CCompressUtils::zip7Uncompress(destFile.absoluteFilePath(), xSwiftBusDirectory, &stdOutAndError))
+        if (CCompressUtils::zipUncompress(destFile.absoluteFilePath(), xSwiftBusDirectory, &stdOutAndError))
         {
             // capture values by copy!
             const CStatusMessage msg =

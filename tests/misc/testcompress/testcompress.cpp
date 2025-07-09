@@ -49,26 +49,14 @@ namespace MiscTest
         tempDir.setAutoRemove(true);
         QVERIFY2(tempDir.isValid(), "Invalid directory");
 
-        const bool win = CBuildConfig::isRunningOnWindowsNtPlatform();
-        const bool zip7Exists = CCompressUtils::hasZip7();
-        if (!win && !zip7Exists)
-        {
-            QSKIP("No 7zip, skipping");
-            return;
-        }
-
-        QVERIFY2(zip7Exists, "No 7zip");
-
         const QString td = tempDir.path();
-        const QString compressedFile(
-            CFileUtils::appendFilePaths(CSwiftDirectories::shareTestDirectory(), "countries.json.gz"));
-        const QString unCompressedFile(CFileUtils::appendFilePaths(td, "countries.json"));
-        const bool c = CCompressUtils::zip7Uncompress(compressedFile, td);
+        const QString compressedFile(CFileUtils::appendFilePaths(CSwiftDirectories::shareTestDirectory(), "test.zip"));
+        const QString unCompressedFile(CFileUtils::appendFilePaths(td, "1.txt"));
+        const bool c = CCompressUtils::zipUncompress(compressedFile, td);
 
         QVERIFY2(c, "Uncompressing failed");
 
         const QFileInfo check(unCompressedFile);
-        QVERIFY2(check.size() > 1000, "Uncompressing yielded not data");
         QVERIFY2(check.exists(), "Uncompressed file does not exist");
         QVERIFY2(check.isReadable(), "Not readable");
 

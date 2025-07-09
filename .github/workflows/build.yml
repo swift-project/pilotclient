@@ -426,10 +426,10 @@ jobs:
           merge-multiple: true
       - name: Repackage xswiftbus
         run: |
-          7z x -y xswiftbus-windows-64-*.7z
-          7z x -y xswiftbus-linux-64-*.7z
-          7z x -y xswiftbus-macos-64-*.7z
-          7z a -y -mx=9 xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.7z xswiftbus
+          unzip -o xswiftbus-windows-64-*.zip
+          unzip -o xswiftbus-linux-64-*.zip
+          unzip -o xswiftbus-macos-64-*.zip
+          zip -r -9 xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.zip xswiftbus
       - name: Upload xswiftbus-fat
         uses: actions/upload-artifact@v4
         with:

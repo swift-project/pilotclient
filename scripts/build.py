@@ -14,6 +14,7 @@ import datastore
 import tarfile
 from lib.util import get_vs_env
 import utils
+import zipfile
 
 
 class Builder:
@@ -120,10 +121,19 @@ class Builder:
         build_path = self._get_swift_build_path()
         os.chdir(build_path)
         os_map = {'Linux': 'linux', 'Darwin': 'macos', 'Windows': 'windows'}
-        archive_name = '-'.join(['xswiftbus', os_map[platform.system()], self.word_size, self.version]) + '.7z'
+        archive_name = '-'.join(['xswiftbus', os_map[platform.system()], self.word_size, self.version]) + '.zip'
         archive_path = path.abspath(path.join(os.pardir, archive_name))
-        content_path = path.abspath(path.join(utils.get_swift_source_path(), 'dist', 'xswiftbus'))
-        subprocess.check_call(['7z', 'a', '-mx=9', archive_path, content_path, "-xr!*.debug", "-xr!*.dSYM"], env=dict(os.environ))
+        base_path = path.abspath(path.join(utils.get_swift_source_path(), 'dist'))
+        content_path = path.join(base_path, 'xswiftbus')
+        with zipfile.ZipFile(archive_path, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zip_file:
+            for root, dirs, files in os.walk(content_path):
+                dirs[:] = [d for d in dirs if not d.endswith('.debug') and not d.endswith(".dSYM")]
+                for file in files:
+                    if file.endswith(".debug") or file.endswith(".dSYM"):
+                        continue
+                    content_file_path = os.path.join(root, file)
+                    arcname = os.path.join(os.path.relpath(os.path.dirname(content_file_path), base_path), file)
+                    zip_file.write(content_file_path, arcname)
 
     def symbols(self, upload_symbols):
         """
