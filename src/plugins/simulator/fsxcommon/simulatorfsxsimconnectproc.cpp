@@ -126,7 +126,7 @@ namespace swift::simplugin::fsxcommon
                 const QString exceptionString(
                     CSimConnectUtilities::simConnectExceptionToString(static_cast<DWORD>(exception->dwException)));
                 const QString sendIdDetails = simulatorFsxP3D->getSendIdTraceDetails(sendId);
-                CLogMessage(simulatorFsxP3D).warning(u"Caught simConnect exception: '%1' '%2' | send details: '%3'")
+                CLogMessage(simulatorFsxP3D).warning(u"Caught SimConnect exception: '%1' '%2' | send details: '%3'")
                     << exceptionString << ex << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
             }
             break; // SIMCONNECT_RECV_ID_EXCEPTION

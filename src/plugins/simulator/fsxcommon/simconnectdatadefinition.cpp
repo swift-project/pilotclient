@@ -81,8 +81,7 @@ namespace swift::simplugin::fsxcommon
         hr += initRemoteAircraftSimDataSet(hSimConnect);
         hr += initSimulatorEnvironment(hSimConnect);
         hr += initSbDataArea(hSimConnect);
-        if (simInfo.isMSFS()) { hr += initMSFSTransponder(hSimConnect); }
-        if (simInfo.isMSFS2024()) { hr += initMSFS2024Transponder(hSimConnect); }
+        if (simInfo.isMSFS() || simInfo.isMSFS2024()) { hr += initMSFSTransponder(hSimConnect); }
         return hr;
     }
 
@@ -418,22 +417,6 @@ namespace swift::simplugin::fsxcommon
         {
             CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr))
                     .error(u"SimConnect error: MSFS transponder data definitions %1")
-                << hr;
-        }
-        return hr;
-    }
-
-    HRESULT CSimConnectDefinitions::initMSFS2024Transponder(const HANDLE hSimConnect)
-    {
-        HRESULT hr = s_ok();
-        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
-                                             "TRANSPONDER STATE:1", "Enum");
-        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
-                                             "TRANSPONDER IDENT:1", "Bool");
-        if (isFailure(hr))
-        {
-            CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr))
-                    .error(u"SimConnect error: MSFS2024 transponder data definitions %1")
                 << hr;
         }
         return hr;
