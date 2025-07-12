@@ -81,6 +81,13 @@ namespace swift::simplugin::fsxcommon
             switch (exceptionId)
             {
             case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE: break;
+            case SIMCONNECT_EXCEPTION_NAME_UNRECOGNIZED:
+            {
+                // MSFS-specific SimVars might fail on P3D.
+                // Silently ignore them as they are not accessed.
+                logGenericExceptionInfo = false;
+                break;
+            }
             case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID:
                 break; // Specifies that the client event, request ID, data definition ID, or object ID was not
                        // recognized
@@ -126,7 +133,7 @@ namespace swift::simplugin::fsxcommon
                 const QString exceptionString(
                     CSimConnectUtilities::simConnectExceptionToString(static_cast<DWORD>(exception->dwException)));
                 const QString sendIdDetails = simulatorFsxP3D->getSendIdTraceDetails(sendId);
-                CLogMessage(simulatorFsxP3D).warning(u"Caught simConnect exception: '%1' '%2' | send details: '%3'")
+                CLogMessage(simulatorFsxP3D).warning(u"Caught SimConnect exception: '%1' '%2' | send details: '%3'")
                     << exceptionString << ex << (sendIdDetails.isEmpty() ? "N/A" : sendIdDetails);
             }
             break; // SIMCONNECT_RECV_ID_EXCEPTION
@@ -245,7 +252,7 @@ namespace swift::simplugin::fsxcommon
             {
             case CSimConnectDefinitions::RequestOwnAircraft:
             {
-                static_assert(sizeof(DataDefinitionOwnAircraft) == 45 * sizeof(double),
+                static_assert(sizeof(DataDefinitionOwnAircraft) == 49 * sizeof(double),
                               "DataDefinitionOwnAircraft has an incorrect size.");
                 const DataDefinitionOwnAircraft *ownAircaft =
                     reinterpret_cast<const DataDefinitionOwnAircraft *>(&pObjData->dwData);
@@ -258,13 +265,6 @@ namespace swift::simplugin::fsxcommon
                     reinterpret_cast<const DataDefinitionOwnAircraftModel *>(&pObjData->dwData);
                 const CAircraftModel model(dataDefinitionModel->title, CAircraftModel::TypeOwnSimulatorModel);
                 simulatorFsxP3D->reverseLookupAndUpdateOwnAircraftModel(model);
-                break;
-            }
-            case CSimConnectDefinitions::RequestMSFSTransponder:
-            {
-                const DataDefinitionMSFSTransponderMode *transponderMode =
-                    reinterpret_cast<const DataDefinitionMSFSTransponderMode *>(&pObjData->dwData);
-                simulatorFsxP3D->updateMSFSTransponderMode(*transponderMode);
                 break;
             }
             default:

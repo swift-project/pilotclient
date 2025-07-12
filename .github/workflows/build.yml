@@ -486,7 +486,7 @@ jobs:
             swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}.run
             swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}.exe
             swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}.dmg
-            xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.7z
+            xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.zip
             swiftsymbols-allos-${{ needs.preBuild.outputs.version }}:swiftsymbols
       - name: Publish doxygen
         uses: actions/deploy-pages@v4
