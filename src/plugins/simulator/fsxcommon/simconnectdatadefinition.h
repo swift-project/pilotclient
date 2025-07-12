@@ -76,9 +76,9 @@ namespace swift::simplugin::fsxcommon
         double rotationVelocityBodyX; //!< Rotation Velocity Body X
         double rotationVelocityBodyY; //!< Rotation Velocity Body Y
         double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
-        // 44
-        double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
-        // 45
+        double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, MSFS)
+        double transponderMode; //!< transponder state (MSFS)
+        double ident; //!< ident (MSFS)
     };
 
     //! Data struct of aircraft position
@@ -249,13 +249,6 @@ namespace swift::simplugin::fsxcommon
         QString toQString() const;
     };
 
-    //! Data structure for MSFS transponder mode information
-    struct DataDefinitionMSFSTransponderMode
-    {
-        double transponderMode = 1; //!< transponder state simvar
-        double ident = 0; //!< ident
-    };
-
     //! Client areas
     enum ClientAreaId
     {
@@ -279,7 +272,6 @@ namespace swift::simplugin::fsxcommon
             DataRemoteAircraftModelData, //!< model data eventually used and reported back from simulator
             DataRemoteAircraftSetData, //!< set model data such as airline
             DataSimEnvironment,
-            DataTransponderModeMSFS,
             DataClientAreaSb, //!< whole SB area, see http://squawkbox.ca/doc/sdk/fsuipc.php
             DataClientAreaSbIdent, //!< SB ident single value 0x7b93/19
             DataClientAreaSbStandby, //!< SB standby 0x7b91/17
@@ -293,7 +285,6 @@ namespace swift::simplugin::fsxcommon
             RequestOwnAircraft,
             RequestOwnAircraftTitle,
             RequestSbData, //!< SB client area / XPDR mode
-            RequestMSFSTransponder, //!< MSFS XPDR mode/ident
             RequestFacility,
             RequestEndMarker //!< free request ids can start here
         };
@@ -342,9 +333,6 @@ namespace swift::simplugin::fsxcommon
 
         //! Initialize the SB data are
         static HRESULT initSbDataArea(const HANDLE hSimConnect);
-
-        //! Initialize data definition for MSFS transponder
-        static HRESULT initMSFSTransponder(const HANDLE hSimConnect);
     };
 } // namespace swift::simplugin::fsxcommon
 

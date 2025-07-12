@@ -30,6 +30,11 @@ namespace swift::simplugin::msfs
         virtual void
         setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation,
                         const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
+
+        void
+        setTransponderMode(swift::misc::aviation::CTransponder &transponder,
+                           const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
+
     };
 
     //! Listener for MSFS

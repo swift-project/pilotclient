@@ -41,6 +41,20 @@ namespace swift::simplugin::msfs
                             CLengthUnit::ft() };
     }
 
+    void CSimulatorMsFs::setTransponderMode(
+        swift::misc::aviation::CTransponder& transponder,
+        const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft& simulatorOwnAircraft)
+    {
+        auto mode = CTransponder::StateIdent;
+        if (!simulatorOwnAircraft.ident)
+        {
+            qRound(simulatorOwnAircraft.transponderMode) >= 3 ? mode = CTransponder::ModeC :
+                                                                mode = CTransponder::StateStandby;
+        }
+        transponder.setTransponderMode(mode);
+    }
+
+
     void CSimulatorMsFsListener::startImpl()
     {
         if (!loadAndResolveMSFSimConnect()) { return; }

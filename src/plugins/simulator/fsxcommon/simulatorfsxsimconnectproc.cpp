@@ -245,7 +245,7 @@ namespace swift::simplugin::fsxcommon
             {
             case CSimConnectDefinitions::RequestOwnAircraft:
             {
-                static_assert(sizeof(DataDefinitionOwnAircraft) == 45 * sizeof(double),
+                static_assert(sizeof(DataDefinitionOwnAircraft) == 47 * sizeof(double),
                               "DataDefinitionOwnAircraft has an incorrect size.");
                 const DataDefinitionOwnAircraft *ownAircaft =
                     reinterpret_cast<const DataDefinitionOwnAircraft *>(&pObjData->dwData);
@@ -258,13 +258,6 @@ namespace swift::simplugin::fsxcommon
                     reinterpret_cast<const DataDefinitionOwnAircraftModel *>(&pObjData->dwData);
                 const CAircraftModel model(dataDefinitionModel->title, CAircraftModel::TypeOwnSimulatorModel);
                 simulatorFsxP3D->reverseLookupAndUpdateOwnAircraftModel(model);
-                break;
-            }
-            case CSimConnectDefinitions::RequestMSFSTransponder:
-            {
-                const DataDefinitionMSFSTransponderMode *transponderMode =
-                    reinterpret_cast<const DataDefinitionMSFSTransponderMode *>(&pObjData->dwData);
-                simulatorFsxP3D->updateMSFSTransponderMode(*transponderMode);
                 break;
             }
             default:
