@@ -44,9 +44,6 @@ namespace swift::gui::components
         //! Ident selected
         bool isIdentSelected() const;
 
-        //! reset to last mode (unequal ident)
-        void resetTransponderMode();
-
         //! Selected transponder mode
         void setSelectedTransponderModeAsString(const QString &mode);
 
@@ -60,10 +57,10 @@ namespace swift::gui::components
         //! Mode / state has been changed
         void transponderModeChanged(swift::misc::aviation::CTransponder::TransponderMode newMode);
 
-        //! Ident phase ended
-        void transponderStateIdentEnded();
-
     private:
+        //! reset to last mode (unequal ident)
+        void resetTransponderMode();
+
         swift::misc::aviation::CTransponder::TransponderMode m_currentMode =
             swift::misc::aviation::CTransponder::StateStandby;
         swift::misc::aviation::CTransponder::TransponderMode m_resetMode =

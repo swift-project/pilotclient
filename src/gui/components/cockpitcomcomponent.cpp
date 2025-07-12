@@ -64,8 +64,6 @@ namespace swift::gui::components
         // Relay COM form signals
         connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged, this,
                 &CCockpitComComponent::transponderModeChanged);
-        connect(ui->editor_Com, &CCockpitComForm::transponderStateIdentEnded, this,
-                &CCockpitComComponent::transponderStateIdentEnded);
 
         // hook up with changes from own aircraft context
         if (sGui)
