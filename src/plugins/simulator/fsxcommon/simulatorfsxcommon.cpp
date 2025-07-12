@@ -204,7 +204,6 @@ namespace swift::simplugin::fsxcommon
             {
                 DataDefinitionMSFSTransponderMode t;
                 t.transponderMode = (newTransponder.isInStandby() ? 1 : 4);
-                t.ident = newTransponder.isIdentifying();
 
                 HRESULT hr = s_ok();
 
@@ -684,8 +683,8 @@ namespace swift::simplugin::fsxcommon
     }
 
     void CSimulatorFsxCommon::setTransponderMode(
-        swift::misc::aviation::CTransponder &transponder,
-                                    const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft)
+        [[maybe_unused]] swift::misc::aviation::CTransponder &transponder,
+                                    [[maybe_unused]] const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft)
     { /* Do not modify the transponder mode by default. Only MSFS allows to read it from SimVars */ }
 
 
