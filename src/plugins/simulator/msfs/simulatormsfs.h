@@ -35,6 +35,10 @@ namespace swift::simplugin::msfs
         setTransponderMode(swift::misc::aviation::CTransponder &transponder,
                            const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
 
+        void setComVolume(swift::misc::aviation::CComSystem &com,
+                          const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft,
+                          swift::misc::aviation::CComSystem::ComUnit unit) override;
+
     };
 
     //! Listener for MSFS

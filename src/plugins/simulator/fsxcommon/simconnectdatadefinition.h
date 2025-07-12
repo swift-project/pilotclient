@@ -79,6 +79,8 @@ namespace swift::simplugin::fsxcommon
         double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, MSFS)
         double transponderMode; //!< transponder state (MSFS)
         double ident; //!< ident (MSFS)
+        double com1Volume; //!< COM1 volume (MSFS)
+        double com2Volume; //!< COM2 volume (MSFS)
     };
 
     //! Data struct of aircraft position

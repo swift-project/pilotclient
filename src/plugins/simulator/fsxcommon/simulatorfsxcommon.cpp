@@ -687,6 +687,14 @@ namespace swift::simplugin::fsxcommon
                                     [[maybe_unused]] const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft)
     { /* Do not modify the transponder mode by default. Only MSFS allows to read it from SimVars */ }
 
+    void CSimulatorFsxCommon::setComVolume(
+        [[maybe_unused]] swift::misc::aviation::CComSystem &com,
+        [[maybe_unused]] const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft,
+        [[maybe_unused]] swift::misc::aviation::CComSystem::ComUnit unit)
+    {
+        /* Do not modify the COM volume by default. Only MSFS allows to read it from SimVars */
+    }
+
 
     void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
     {
@@ -792,6 +800,8 @@ namespace swift::simplugin::fsxcommon
             if (!changedCom1Standby) { com1.setFrequencyStandby(myAircraft.getCom1System().getFrequencyStandby()); }
             else { m_lastCom1Standby.setNull(); }
 
+            setComVolume(com1, simulatorOwnAircraft, CComSystem::Com1);
+
             const bool changedCom1 = myAircraft.getCom1System() != com1;
 
             m_simCom1 = com1;
@@ -819,6 +829,8 @@ namespace swift::simplugin::fsxcommon
 
             if (!changedCom2Standby) { com2.setFrequencyStandby(myAircraft.getCom2System().getFrequencyStandby()); }
             else { m_lastCom2Standby.setNull(); }
+
+            setComVolume(com2, simulatorOwnAircraft, CComSystem::Com2);
 
             const bool changedCom2 = myAircraft.getCom2System() != com2;
 

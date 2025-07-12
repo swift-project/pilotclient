@@ -178,13 +178,18 @@ namespace swift::simplugin::fsxcommon
                                              "ROTATION VELOCITY BODY Y", "Radians per second");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "ROTATION VELOCITY BODY Z", "Radians per second");
-        // MSFS 2020/2024 only
+        // MSFS 2020/2024 only. Placed at the end because non-MSFS simulators fail with these and skip them.
+        // Only access the members when using MSFS!
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "INDICATED ALTITUDE CALIBRATED", "Feet");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "TRANSPONDER STATE:1", "Enum");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "TRANSPONDER IDENT:1", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "COM VOLUME:1", "Percent");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "COM VOLUME:2", "Percent");
 
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE",
                                              nullptr, SIMCONNECT_DATATYPE_STRING256);

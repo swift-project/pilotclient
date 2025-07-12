@@ -508,6 +508,12 @@ namespace swift::simplugin::fsxcommon
         setTransponderMode(swift::misc::aviation::CTransponder &transponder,
                         const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
+        //! Customization point for changing the COM volume
+        virtual void
+        setComVolume(swift::misc::aviation::CComSystem &com,
+                                  const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft,
+                                  swift::misc::aviation::CComSystem::ComUnit unit);
+
         //! Called when data about our own aircraft are received
         void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
 

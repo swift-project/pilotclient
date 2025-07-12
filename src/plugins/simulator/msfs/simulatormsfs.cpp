@@ -54,6 +54,15 @@ namespace swift::simplugin::msfs
         transponder.setTransponderMode(mode);
     }
 
+    void CSimulatorMsFs::setComVolume(
+        swift::misc::aviation::CComSystem& com,
+        const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft& simulatorOwnAircraft,
+        swift::misc::aviation::CComSystem::ComUnit unit)
+    {
+        if (unit == CComSystem::Com1) { com.setVolumeReceive(simulatorOwnAircraft.com1Volume);}
+        if (unit == CComSystem::Com2) { com.setVolumeReceive(simulatorOwnAircraft.com2Volume); }
+    }
+
 
     void CSimulatorMsFsListener::startImpl()
     {
