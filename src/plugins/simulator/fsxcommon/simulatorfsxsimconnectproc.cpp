@@ -81,6 +81,13 @@ namespace swift::simplugin::fsxcommon
             switch (exceptionId)
             {
             case SIMCONNECT_EXCEPTION_OPERATION_INVALID_FOR_OBJECT_TYPE: break;
+            case SIMCONNECT_EXCEPTION_NAME_UNRECOGNIZED:
+            {
+                // MSFS-specific SimVars might fail on P3D.
+                // Silently ignore them as they are not accessed.
+                logGenericExceptionInfo = false;
+                break;
+            }
             case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID:
                 break; // Specifies that the client event, request ID, data definition ID, or object ID was not
                        // recognized
