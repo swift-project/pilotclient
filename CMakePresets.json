@@ -62,6 +62,7 @@
       "name": "dev-debug",
       "displayName": "Development Debug",
       "description": "Base preset that can either be used directly or can be customized through a CMakeUserPresets.json",
+      "toolchainFile": "build_conan/build/Debug/generators/conan_toolchain.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "SWIFT_USE_CRASHPAD": "OFF",
