@@ -20,7 +20,6 @@ using namespace swift::core;
 
 int main(int argc, char *argv[])
 {
-    CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
     QApplication qa(argc, argv);
     Q_UNUSED(qa) // application init needed
 

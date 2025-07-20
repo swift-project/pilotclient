@@ -105,7 +105,6 @@ namespace swift::gui
     {
         this->addWindowModeOption();
         this->addWindowResetSizeOption();
-        this->addWindowScaleSizeOption();
 
         // notify when app goes down
         connect(qGuiApp, &QGuiApplication::lastWindowClosed, this, &CGuiApplication::gracefulShutdown);
@@ -148,15 +147,6 @@ namespace swift::gui
         m_cmdWindowSizeReset = QCommandLineOption(
             { { "r", "resetsize" }, QCoreApplication::translate("main", "Reset window size (ignore saved values).") });
         this->addParserOption(m_cmdWindowSizeReset);
-    }
-
-    void CGuiApplication::addWindowScaleSizeOption()
-    {
-        // just added here to display it in help
-        // parseScaleFactor() is used since it is needed upfront (before application is created)
-        m_cmdWindowScaleSize =
-            QCommandLineOption("scale", QCoreApplication::translate("main", "Scale: number."), "scalevalue");
-        this->addParserOption(m_cmdWindowScaleSize);
     }
 
     void CGuiApplication::addWindowStateOption()
@@ -286,28 +276,6 @@ namespace swift::gui
     }
 
     void CGuiApplication::exit(int retcode) { CApplication::exit(retcode); }
-
-    void CGuiApplication::highDpiScreenSupport(const QString &scaleFactor)
-    {
-        // https://lists.qt-project.org/pipermail/development/2019-September/037434.html
-        // QSize s = CGuiUtility::physicalScreenSizeOs();
-        QString sf = scaleFactor.trimmed().isEmpty() ? defaultScaleFactorString() : scaleFactor;
-        if (sf.contains('/'))
-        {
-            const double sfd = parseFraction(scaleFactor, -1);
-            sf = sfd < 0 ? "1.0" : QString::number(sfd, 'f', 8);
-        }
-
-        sf = cleanNumber(sf);
-
-        // qputenv("QT_ENABLE_HIGHDPI_SCALING", "1");
-        QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::Floor);
-
-        const QByteArray sfa = sf.toLatin1();
-        qputenv("QT_SCALE_FACTOR", sfa);
-    }
-
-    bool CGuiApplication::isUsingHighDpiScreenSupport() { return CGuiUtility::isUsingHighDpiScreenSupport(); }
 
     QScreen *CGuiApplication::currentScreen()
     {
@@ -453,53 +421,6 @@ namespace swift::gui
             m_splashScreen->close(); // GUI
             m_splashScreen.reset();
         }
-    }
-
-    double CGuiApplication::parseScaleFactor(int argc, char *argv[])
-    {
-        for (int i = 1; i < argc; ++i)
-        {
-            if (qstrcmp(argv[i], "--scale") == 0 || qstrcmp(argv[i], "-scale") == 0)
-            {
-                if (i + 1 >= argc) { return -1.0; } // no value
-                const QString factor(argv[i + 1]);
-                bool ok;
-                const double f = factor.toDouble(&ok);
-                return ok ? f : -1.0;
-            }
-        }
-        return -1.0;
-    }
-
-    QString CGuiApplication::scaleFactor(int argc, char *argv[])
-    {
-        for (int i = 1; i < argc; ++i)
-        {
-            if (qstrcmp(argv[i], "--scale") == 0 || qstrcmp(argv[i], "-scale") == 0)
-            {
-                if (i + 1 >= argc) { return QString(); } // no value
-                const QString factor(argv[i + 1]);
-                return factor.trimmed();
-            }
-        }
-        return QString();
-    }
-
-    QString CGuiApplication::defaultScaleFactorString()
-    {
-        if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return "1.0"; }
-
-        // On windows
-        // Qt 5.14.1 default is device ratio 3
-        // Qt 5.14.0 default device ratio was 2
-
-        // 2/3 (0.66667) => device ratio 3
-        // 0.75 => device ratio 2.25
-        // 0.8  => device ratio 2.4
-        // 1.00 => device ratio 3
-
-        // currently NOT used
-        return "1.0";
     }
 
     void CGuiApplication::cmdLineErrorMessage(const QString &text, const QString &informativeText) const

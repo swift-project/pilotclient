@@ -797,7 +797,7 @@ namespace swift::gui
 
     QString CGuiUtility::metricsInfo()
     {
-        static const QString s("%1 %2 %3 | 80 chars: w%4 h%5 | 43 chars: w%6 h%7");
+        static const QString s("%1 %2 | 80 chars: w%3 h%4 | 43 chars: w%5 h%6");
         const QSizeF s80 = CGuiUtility::fontMetrics80Chars();
         const QSizeF s43 = CGuiUtility::fontMetricsLazyDog43Chars();
 
@@ -811,21 +811,7 @@ namespace swift::gui
             desktop = QStringLiteral("Desktop w%1 w%2").arg(sd.width()).arg(sd.height());
             ratio = QStringLiteral("ratio: %1").arg(mainWidget->devicePixelRatioF());
         }
-        return s.arg(desktop)
-            .arg(CGuiUtility::isUsingHighDpiScreenSupport() ? "hi DPI" : "-")
-            .arg(ratio)
-            .arg(s80.width())
-            .arg(s80.height())
-            .arg(s43.width())
-            .arg(s43.height());
-    }
-
-    bool CGuiUtility::isUsingHighDpiScreenSupport()
-    {
-        const QByteArray v = qgetenv("QT_AUTO_SCREEN_SCALE_FACTOR");
-        const QString vs(v);
-        const bool highDpi = stringToBool(vs);
-        return highDpi;
+        return s.arg(desktop).arg(ratio).arg(s80.width()).arg(s80.height()).arg(s43.width()).arg(s43.height());
     }
 
     void CGuiUtility::forceStyleSheetUpdate(QWidget *widget)

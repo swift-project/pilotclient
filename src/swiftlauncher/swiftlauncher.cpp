@@ -425,8 +425,6 @@ QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs
 void CSwiftLauncher::startButtonPressed()
 {
     const QObject *sender = QObject::sender();
-    const qreal scaleFactor = ui->comp_Scale->getScaleFactor();
-    CGuiApplication::highDpiScreenSupport(QString::number(scaleFactor, 'f', 4));
 
     const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
     const bool shift = km.testFlag(Qt::ShiftModifier);

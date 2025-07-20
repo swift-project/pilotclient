@@ -90,9 +90,6 @@ namespace swift::gui
         //! CMD line arguments (reset size store)
         void addWindowResetSizeOption();
 
-        //! CMD line arguments (scale size on DPI screens)
-        void addWindowScaleSizeOption();
-
         //! Window state
         Qt::WindowState getWindowState() const;
 
@@ -255,13 +252,6 @@ namespace swift::gui
         //! Exit application, perform graceful shutdown and exit
         static void exit(int retcode = 0);
 
-        //! Support for high DPI screens
-        //! \note Needs to be at the beginning of main
-        static void highDpiScreenSupport(const QString &scaleFactor = {});
-
-        //! Uses the high DPI support?
-        static bool isUsingHighDpiScreenSupport();
-
         //! Current screen
         static QScreen *currentScreen();
 
@@ -271,16 +261,6 @@ namespace swift::gui
 
         //! Bring any modal dialog to front
         static void modalWindowToFront();
-
-        //! Parse scale factor if any
-        //! \deprecated using scaleFactor now
-        static double parseScaleFactor(int argc, char *argv[]);
-
-        //! Get the scale factor
-        static QString scaleFactor(int argc, char *argv[]);
-
-        //! Get a default scale factor
-        static QString defaultScaleFactorString();
 
     signals:
         //! Style sheet changed
@@ -323,7 +303,6 @@ namespace swift::gui
         QCommandLineOption m_cmdWindowStateMinimized { "emptyMinimized" }; //!< window state (minimized)
         QCommandLineOption m_cmdWindowMode { "emptyWindowMode" }; //!< window mode (flags: frameless ...)
         QCommandLineOption m_cmdWindowSizeReset { "emptySizeReset" }; //!< window size reset
-        QCommandLineOption m_cmdWindowScaleSize { "emptyScale" }; //!< window scale size
         CStyleSheetUtility m_styleSheetUtility { this }; //!< style sheet utility
         bool m_uiSetupCompleted = false; //!< ui setup completed
         bool m_saveMainWidgetState = true; //!< save/restore main widget's state

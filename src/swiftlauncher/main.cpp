@@ -35,7 +35,6 @@ void initDbCacheFromResourceFileIfRequired(CGuiApplication &a)
 
 int main(int argc, char *argv[])
 {
-    CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
     QApplication qa(argc, argv); // needed
     Q_UNUSED(qa)
     CGuiApplication a(CApplicationInfo::swiftLauncher(), CApplicationInfo::Launcher, CIcons::swiftLauncher1024());
