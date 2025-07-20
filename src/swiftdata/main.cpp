@@ -19,7 +19,6 @@ using namespace swift::gui;
 
 int main(int argc, char *argv[])
 {
-    CGuiApplication::highDpiScreenSupport(CGuiApplication::scaleFactor(argc, argv));
     QApplication qa(argc, argv);
     Q_UNUSED(qa)
 

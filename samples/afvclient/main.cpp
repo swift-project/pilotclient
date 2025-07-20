@@ -28,7 +28,6 @@ using namespace swift::core::afv::model;
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication qa(argc, argv);
 
     swift::core::registerMetadata();

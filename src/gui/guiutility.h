@@ -254,9 +254,6 @@ namespace swift::gui
         //! Some info about font metrics
         static QString metricsInfo();
 
-        //! Using high DPI screen support
-        static bool isUsingHighDpiScreenSupport();
-
         //! Forces a stylesheet update
         static void forceStyleSheetUpdate(QWidget *widget);
 

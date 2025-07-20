@@ -16,7 +16,6 @@ using namespace swift::gui;
 //! main
 int main(int argc, char *argv[])
 {
-    CGuiApplication::highDpiScreenSupport();
     QApplication qa(argc, argv);
     CGuiApplication a("samplehotkey", swift::misc::CApplicationInfo::Sample, QPixmap());
     swift::gui::components::CSettingsHotkeyComponent w;

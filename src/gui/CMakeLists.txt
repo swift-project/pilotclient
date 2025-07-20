@@ -378,9 +378,6 @@ add_library(gui SHARED
         components/remoteaircraftselector.cpp
         components/remoteaircraftselector.h
         components/remoteaircraftselector.ui
-        components/scalescreenfactor.cpp
-        components/scalescreenfactor.h
-        components/scalescreenfactor.ui
         components/selcalcodeselector.cpp
         components/selcalcodeselector.h
         components/selcalcodeselector.ui

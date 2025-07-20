@@ -735,16 +735,6 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0" colspan="3">
-             <widget class="swift::gui::components::CScaleScreenFactor" name="comp_Scale">
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="3" colspan="2">
              <widget class="QCheckBox" name="cb_ResetWindow">
               <property name="text">
@@ -844,12 +834,6 @@
    <class>swift::gui::components::CAboutHtmlComponent</class>
    <extends>QFrame</extends>
    <header>gui/components/abouthtmlcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>swift::gui::components::CScaleScreenFactor</class>
-   <extends>QFrame</extends>
-   <header>gui/components/scalescreenfactor.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
