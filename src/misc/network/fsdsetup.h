@@ -144,7 +144,7 @@ namespace swift::misc::network
         static const CFsdSetup &vatsimStandard();
 
     private:
-        QString m_textCodec = "latin1";
+        QString m_textCodec = "ISO-8859-1";
         int m_sendReceive = static_cast<int>(All);
 
         SWIFT_METACLASS(
