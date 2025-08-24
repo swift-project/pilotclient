@@ -465,7 +465,7 @@ namespace swift::gui::components
         this->admitCache(simulator); // trigger loading
 
         QPointer<CDbOwnModelSetComponent> myself(this);
-        QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(1000, this, [=, this] {
             if (!sApp || sApp->isShuttingDown()) { return; }
             if (!myself) { return; }
             this->setSimulator(simulator);

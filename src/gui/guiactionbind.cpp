@@ -88,7 +88,7 @@ namespace swift::gui
     void CGuiActionBindHandler::connectDestroy(QObject *object)
     {
         // if the action is destroyed from somewhere else I unbind myself
-        QObject::connect(object, &QObject::destroyed, [=] { this->unbind(); });
+        QObject::connect(object, &QObject::destroyed, [=, this] { this->unbind(); });
     }
 
     void CGuiActionBindHandler::unbind()

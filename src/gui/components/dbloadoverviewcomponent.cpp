@@ -76,7 +76,7 @@ namespace swift::gui::components
             connect(sGui->getWebDataServices(), &CWebDataServices::dataRead, this,
                     &CDbLoadOverviewComponent::dataLoaded);
             QPointer<CDbLoadOverviewComponent> myself(this);
-            QTimer::singleShot(10 * 1000, this, [=] {
+            QTimer::singleShot(10 * 1000, this, [=, this] {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 this->loadInfoObjects();
                 this->adjustTextWidth();

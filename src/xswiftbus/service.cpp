@@ -260,6 +260,7 @@ namespace XSwiftBus
 
     static const char *introspection_service = DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 #include "org.swift_project.xswiftbus.service.xml"
+
         ;
 
     DBusHandlerResult CService::dbusMessageHandler(const CDBusMessage &message_)
@@ -277,11 +278,11 @@ namespace XSwiftBus
         {
             if (message.getMethodName() == "getVersionNumber")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getVersionNumber()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getVersionNumber()); });
             }
             else if (message.getMethodName() == "getCommitHash")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getCommitHash()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getCommitHash()); });
             }
             else if (message.getMethodName() == "addTextMessage")
             {
@@ -296,11 +297,11 @@ namespace XSwiftBus
                 message.getArgument(green);
                 message.getArgument(blue);
 
-                queueDBusCall([=]() { addTextMessage(text, red, green, blue); });
+                queueDBusCall([=, this]() { addTextMessage(text, red, green, blue); });
             }
             else if (message.getMethodName() == "getOwnAircraftSituationData")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const double lat = m_latitude.get();
                     const double lon = m_longitude.get();
                     const double alt = m_elevation.get();
@@ -324,7 +325,7 @@ namespace XSwiftBus
             }
             else if (message.getMethodName() == "getOwnAircraftVelocityData")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const double velocityX = m_velocityX.get();
                     const double velocityY = m_velocityY.get();
                     const double velocityZ = m_velocityZ.get();
@@ -344,7 +345,7 @@ namespace XSwiftBus
             }
             else if (message.getMethodName() == "getOwnAircraftCom1Data")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const int active = m_com1Active.get();
                     const int standby = m_com1Standby.get();
                     const double volume = m_com1Volume.get();
@@ -362,7 +363,7 @@ namespace XSwiftBus
             }
             else if (message.getMethodName() == "getOwnAircraftCom2Data")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const int active = m_com2Active.get();
                     const int standby = m_com2Standby.get();
                     const double volume = m_com2Volume.get();
@@ -380,7 +381,7 @@ namespace XSwiftBus
             }
             else if (message.getMethodName() == "getOwnAircraftXpdr")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const int code = m_xpdrCode.get();
                     const int mode = m_xpdrMode.get();
                     const bool id = m_xpdrIdent.get();
@@ -394,7 +395,7 @@ namespace XSwiftBus
             }
             else if (message.getMethodName() == "getOwnAircraftLights")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const bool beaconLightsOn = m_beaconLightsOn.get();
                     const bool landingLightsOn = m_landingLightsOn.get();
                     const bool navLightsOn = m_navLightsOn.get();
@@ -412,7 +413,7 @@ namespace XSwiftBus
             }
             else if (message.getMethodName() == "getOwnAircraftParts")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const double flapsReployRatio = m_flapsReployRatio.get();
                     const double gearReployRatio = m_gearReployRatio.getAt(0);
                     const double speedBrakeRatio = m_speedBrakeRatio.get();
@@ -428,7 +429,7 @@ namespace XSwiftBus
             }
             else if (message.getMethodName() == "getOwnAircraftModelData")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const std::string aircraftModelPath = this->getAircraftModelPath();
                     const std::string aircraftIcaoCode = this->getAircraftIcaoCode();
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
@@ -440,59 +441,59 @@ namespace XSwiftBus
             }
             else if (message.getMethodName() == "getAircraftModelPath")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAircraftModelPath()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAircraftModelPath()); });
             }
             else if (message.getMethodName() == "getAircraftModelFilename")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAircraftModelFilename()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAircraftModelFilename()); });
             }
             else if (message.getMethodName() == "getAircraftModelString")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAircraftModelString()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAircraftModelString()); });
             }
             else if (message.getMethodName() == "getAircraftName")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAircraftName()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAircraftName()); });
             }
             else if (message.getMethodName() == "getAircraftLivery")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAircraftLivery()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAircraftLivery()); });
             }
             else if (message.getMethodName() == "getAircraftIcaoCode")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAircraftIcaoCode()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAircraftIcaoCode()); });
             }
             else if (message.getMethodName() == "getAircraftDescription")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAircraftDescription()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAircraftDescription()); });
             }
             else if (message.getMethodName() == "getXPlaneVersionMajor")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getXPlaneVersionMajor()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getXPlaneVersionMajor()); });
             }
             else if (message.getMethodName() == "getXPlaneVersionMinor")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getXPlaneVersionMinor()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getXPlaneVersionMinor()); });
             }
             else if (message.getMethodName() == "getXPlaneInstallationPath")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getXPlaneInstallationPath()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getXPlaneInstallationPath()); });
             }
             else if (message.getMethodName() == "getXPlanePreferencesPath")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getXPlanePreferencesPath()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getXPlanePreferencesPath()); });
             }
             else if (message.getMethodName() == "isPaused")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, isPaused()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, isPaused()); });
             }
             else if (message.getMethodName() == "isUsingRealTime")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, isUsingRealTime()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, isUsingRealTime()); });
             }
             else if (message.getMethodName() == "getFrameStats")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const auto stats = getFrameStats();
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
                     reply.beginArgumentWrite();
@@ -506,163 +507,163 @@ namespace XSwiftBus
             else if (message.getMethodName() == "resetFrameTotals")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                queueDBusCall([=]() { resetFrameTotals(); });
+                queueDBusCall([=, this]() { resetFrameTotals(); });
             }
             else if (message.getMethodName() == "getLatitudeDeg")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getLatitudeDeg()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getLatitudeDeg()); });
             }
             else if (message.getMethodName() == "getLongitudeDeg")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getLongitudeDeg()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getLongitudeDeg()); });
             }
             else if (message.getMethodName() == "getAltitudeMslM")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAltitudeMslM()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAltitudeMslM()); });
             }
             else if (message.getMethodName() == "getPressureAltitudeFt")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getPressureAltitudeFt()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getPressureAltitudeFt()); });
             }
             else if (message.getMethodName() == "getHeightAglM")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getHeightAglM()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getHeightAglM()); });
             }
             else if (message.getMethodName() == "getGroundSpeedMps")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getGroundSpeedMps()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getGroundSpeedMps()); });
             }
             else if (message.getMethodName() == "getIndicatedAirspeedKias")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getIndicatedAirspeedKias()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getIndicatedAirspeedKias()); });
             }
             else if (message.getMethodName() == "getTrueAirspeedKias")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getTrueAirspeedKias()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getTrueAirspeedKias()); });
             }
             else if (message.getMethodName() == "getPitchDeg")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getPitchDeg()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getPitchDeg()); });
             }
             else if (message.getMethodName() == "getRollDeg")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getRollDeg()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getRollDeg()); });
             }
             else if (message.getMethodName() == "getTrueHeadingDeg")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getTrueHeadingDeg()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getTrueHeadingDeg()); });
             }
             else if (message.getMethodName() == "getLocalXVelocityXMps")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getLocalXVelocityMps()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getLocalXVelocityMps()); });
             }
             else if (message.getMethodName() == "getLocalYVelocityYMps")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getLocalYVelocityMps()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getLocalYVelocityMps()); });
             }
             else if (message.getMethodName() == "getLocalZVelocityZMps")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getLocalZVelocityMps()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getLocalZVelocityMps()); });
             }
             else if (message.getMethodName() == "getPitchRadPerSec")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getPitchRadPerSec()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getPitchRadPerSec()); });
             }
             else if (message.getMethodName() == "getRollRadPerSec")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getRollRadPerSec()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getRollRadPerSec()); });
             }
             else if (message.getMethodName() == "getHeadingRadPerSec")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getHeadingRadPerSec()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getHeadingRadPerSec()); });
             }
             else if (message.getMethodName() == "getAnyWheelOnGround")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAnyWheelOnGround()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAnyWheelOnGround()); });
             }
             else if (message.getMethodName() == "getAllWheelsOnGround")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getAllWheelsOnGround()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getAllWheelsOnGround()); });
             }
             else if (message.getMethodName() == "getGroundElevation")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getGroundElevation()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getGroundElevation()); });
             }
             else if (message.getMethodName() == "getCom1ActiveKhz")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getCom1ActiveKhz()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getCom1ActiveKhz()); });
             }
             else if (message.getMethodName() == "getCom1StandbyKhz")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getCom1StandbyKhz()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getCom1StandbyKhz()); });
             }
             else if (message.getMethodName() == "getCom2ActiveKhz")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getCom2ActiveKhz()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getCom2ActiveKhz()); });
             }
             else if (message.getMethodName() == "getCom2StandbyKhz")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getCom2StandbyKhz()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getCom2StandbyKhz()); });
             }
             else if (message.getMethodName() == "isCom1Receiving")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, isCom1Receiving()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, isCom1Receiving()); });
             }
             else if (message.getMethodName() == "isCom1Transmitting")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, isCom1Transmitting()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, isCom1Transmitting()); });
             }
             else if (message.getMethodName() == "getCom1Volume")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getCom1Volume()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getCom1Volume()); });
             }
             else if (message.getMethodName() == "isCom2Receiving")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, isCom2Receiving()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, isCom2Receiving()); });
             }
             else if (message.getMethodName() == "isCom2Transmitting")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, isCom2Transmitting()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, isCom2Transmitting()); });
             }
             else if (message.getMethodName() == "getCom2Volume")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getCom2Volume()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getCom2Volume()); });
             }
             else if (message.getMethodName() == "getTransponderCode")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getTransponderCode()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getTransponderCode()); });
             }
             else if (message.getMethodName() == "getTransponderMode")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getTransponderMode()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getTransponderMode()); });
             }
             else if (message.getMethodName() == "getTransponderIdent")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getTransponderIdent()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getTransponderIdent()); });
             }
             else if (message.getMethodName() == "getBeaconLightsOn")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getBeaconLightsOn()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getBeaconLightsOn()); });
             }
             else if (message.getMethodName() == "getLandingLightsOn")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getLandingLightsOn()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getLandingLightsOn()); });
             }
             else if (message.getMethodName() == "getTaxiLightsOn")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getTaxiLightsOn()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getTaxiLightsOn()); });
             }
             else if (message.getMethodName() == "getNavLightsOn")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getNavLightsOn()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getNavLightsOn()); });
             }
             else if (message.getMethodName() == "getStrobeLightsOn")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getStrobeLightsOn()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getStrobeLightsOn()); });
             }
             else if (message.getMethodName() == "getQNHInHg")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getQNHInHg()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getQNHInHg()); });
             }
             else if (message.getMethodName() == "setCom1ActiveKhz")
             {
@@ -670,7 +671,7 @@ namespace XSwiftBus
                 int frequency = 0;
                 message.beginArgumentRead();
                 message.getArgument(frequency);
-                queueDBusCall([=]() { setCom1ActiveKhz(frequency); });
+                queueDBusCall([=, this]() { setCom1ActiveKhz(frequency); });
             }
             else if (message.getMethodName() == "setCom1StandbyKhz")
             {
@@ -678,7 +679,7 @@ namespace XSwiftBus
                 int frequency = 0;
                 message.beginArgumentRead();
                 message.getArgument(frequency);
-                queueDBusCall([=]() { setCom1StandbyKhz(frequency); });
+                queueDBusCall([=, this]() { setCom1StandbyKhz(frequency); });
             }
             else if (message.getMethodName() == "setCom2ActiveKhz")
             {
@@ -686,7 +687,7 @@ namespace XSwiftBus
                 int frequency = 0;
                 message.beginArgumentRead();
                 message.getArgument(frequency);
-                queueDBusCall([=]() { setCom2ActiveKhz(frequency); });
+                queueDBusCall([=, this]() { setCom2ActiveKhz(frequency); });
             }
             else if (message.getMethodName() == "setCom2StandbyKhz")
             {
@@ -694,7 +695,7 @@ namespace XSwiftBus
                 int frequency = 0;
                 message.beginArgumentRead();
                 message.getArgument(frequency);
-                queueDBusCall([=]() { setCom2StandbyKhz(frequency); });
+                queueDBusCall([=, this]() { setCom2StandbyKhz(frequency); });
             }
             else if (message.getMethodName() == "setTransponderCode")
             {
@@ -702,7 +703,7 @@ namespace XSwiftBus
                 int code = 0;
                 message.beginArgumentRead();
                 message.getArgument(code);
-                queueDBusCall([=]() { setTransponderCode(code); });
+                queueDBusCall([=, this]() { setTransponderCode(code); });
             }
             else if (message.getMethodName() == "setTransponderMode")
             {
@@ -710,34 +711,34 @@ namespace XSwiftBus
                 int mode = 0;
                 message.beginArgumentRead();
                 message.getArgument(mode);
-                queueDBusCall([=]() { setTransponderMode(mode); });
+                queueDBusCall([=, this]() { setTransponderMode(mode); });
             }
             else if (message.getMethodName() == "getFlapsDeployRatio")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getFlapsDeployRatio()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getFlapsDeployRatio()); });
             }
             else if (message.getMethodName() == "getGearDeployRatio")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getGearDeployRatio()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getGearDeployRatio()); });
             }
             else if (message.getMethodName() == "getNumberOfEngines")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getNumberOfEngines()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getNumberOfEngines()); });
             }
             else if (message.getMethodName() == "getEngineN1Percentage")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     const std::vector<double> enginesN1Percentage = getEngineN1Percentage();
                     sendDBusReply(sender, serial, enginesN1Percentage);
                 });
             }
             else if (message.getMethodName() == "getSpeedBrakeRatio")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getSpeedBrakeRatio()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getSpeedBrakeRatio()); });
             }
             else if (message.getMethodName() == "getSettingsJson")
             {
-                queueDBusCall([=]() { sendDBusReply(sender, serial, getSettingsJson()); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, getSettingsJson()); });
             }
             else if (message.getMethodName() == "setSettingsJson")
             {
@@ -745,7 +746,7 @@ namespace XSwiftBus
                 std::string json;
                 message.beginArgumentRead();
                 message.getArgument(json);
-                queueDBusCall([=]() { setSettingsJson(json); });
+                queueDBusCall([=, this]() { setSettingsJson(json); });
             }
             else
             {

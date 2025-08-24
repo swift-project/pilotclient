@@ -40,7 +40,7 @@ namespace swift::gui::components
         }
 
         QPointer<CModelMatcherLogEnable> myself(this);
-        QTimer::singleShot(5000, this, [=] {
+        QTimer::singleShot(5000, this, [=, this] {
             if (!myself) { return; }
             this->initGui();
         });

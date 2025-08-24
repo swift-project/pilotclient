@@ -286,7 +286,7 @@ namespace swift::core
                 // identifier is needed because own aircraft context also reports changed aircraft to
                 // xCtxChangedOwnAircraftModel and we avoid roundtrips
                 c = connect(this->getCContextSimulator(), &CContextSimulator::ownAircraftModelChanged,
-                            this->getCContextOwnAircraft(), [=](const CAircraftModel &changedModel) {
+                            this->getCContextOwnAircraft(), [=, this](const CAircraftModel &changedModel) {
                                 if (!this->getIContextOwnAircraft()) { return; }
                                 if (!this->getCContextSimulator()) { return; }
                                 this->getCContextOwnAircraft()->xCtxChangedSimulatorModel(

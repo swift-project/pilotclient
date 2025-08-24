@@ -253,7 +253,7 @@ namespace swift::gui
         else
         {
             QPointer<CGuiApplication> myself(this);
-            connectOnce(this, &CGuiApplication::uiObjectTreeReady, this, [=] {
+            connectOnce(this, &CGuiApplication::uiObjectTreeReady, this, [=, this] {
                 if (!myself) { return; }
                 this->addWindowFlags(flags);
             });
@@ -499,7 +499,7 @@ namespace swift::gui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("Reset settings");
-        c = connect(a, &QAction::triggered, this, [=] {
+        c = connect(a, &QAction::triggered, this, [=, this] {
             if (!sGui || sGui->isShuttingDown()) { return; }
             CSettingsCache::instance()->clearAllValues();
             CLogMessage(this).info(u"Cleared all settings!");
@@ -507,7 +507,7 @@ namespace swift::gui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("List settings files");
-        c = connect(a, &QAction::triggered, this, [=]() {
+        c = connect(a, &QAction::triggered, this, [=, this]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files(CSettingsCache::instance()->enumerateStore());
             CLogMessage(this).info(files.join("\n"));
@@ -524,7 +524,7 @@ namespace swift::gui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("Reset cache");
-        c = connect(a, &QAction::triggered, this, [=]() {
+        c = connect(a, &QAction::triggered, this, [=, this]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files = CApplication::clearCaches();
             CLogMessage(this).info(u"Cleared caches! " % QString::number(files.size()) + " files");
@@ -532,7 +532,7 @@ namespace swift::gui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("List cache files");
-        c = connect(a, &QAction::triggered, this, [=]() {
+        c = connect(a, &QAction::triggered, this, [=, this]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             const QStringList files(CDataCache::instance()->enumerateStore());
             CLogMessage(this).info(files.join("\n"));
@@ -540,14 +540,14 @@ namespace swift::gui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction(CIcons::disk16(), "Log directory");
-        c = connect(a, &QAction::triggered, this, [=]() {
+        c = connect(a, &QAction::triggered, this, [=, this]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->openStandardLogDirectory();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction(CIcons::disk16(), "Crash dumps directory");
-        c = connect(a, &QAction::triggered, this, [=]() {
+        c = connect(a, &QAction::triggered, this, [=, this]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->openStandardCrashDumpDirectory();
         });
@@ -563,14 +563,14 @@ namespace swift::gui
     {
         QMenu *sm = menu.addMenu("Style sheet");
         QAction *aReload = sm->addAction(CIcons::refresh16(), "Reload");
-        bool c = connect(aReload, &QAction::triggered, this, [=]() {
+        bool c = connect(aReload, &QAction::triggered, this, [=, this]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->reloadStyleSheets();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         QAction *aOpen = sm->addAction(CIcons::text16(), "Open qss file");
-        c = connect(aOpen, &QAction::triggered, this, [=]() {
+        c = connect(aOpen, &QAction::triggered, this, [=, this]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->openStandardWidgetStyleSheet();
         });
@@ -611,7 +611,7 @@ namespace swift::gui
         QAction *a = sm->addAction("JSON bootstrap");
         bool c = connect(
             a, &QAction::triggered, this,
-            [=]() {
+            [=, this]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 const CGlobalSetup s = this->getGlobalSetup();
                 CLogMessage(this).info(s.toJsonString());
@@ -622,7 +622,7 @@ namespace swift::gui
         a = sm->addAction("JSON version update info (for info only)");
         c = connect(
             a, &QAction::triggered, this,
-            [=]() {
+            [=, this]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 const CUpdateInfo info = this->getUpdateInfo();
                 CLogMessage(this).info(info.toJsonString());
@@ -635,7 +635,7 @@ namespace swift::gui
             a = menu.addAction("Services log.(console)");
             c = connect(
                 a, &QAction::triggered, this,
-                [=]() {
+                [=, this]() {
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     CLogMessage(this).info(this->getWebDataServices()->getReadersLog());
                 },
@@ -645,7 +645,7 @@ namespace swift::gui
             a = sm->addAction("JSON DB info (for info only)");
             c = connect(
                 a, &QAction::triggered, this,
-                [=]() {
+                [=, this]() {
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
                     const CDbInfoList info = this->getWebDataServices()->getDbInfoDataReader()->getInfoObjects();
@@ -657,7 +657,7 @@ namespace swift::gui
             a = sm->addAction("JSON shared info (for info only)");
             c = connect(
                 a, &QAction::triggered, this,
-                [=]() {
+                [=, this]() {
                     if (!sGui || sGui->isShuttingDown()) { return; }
                     if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
                     const CDbInfoList info = this->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
@@ -670,7 +670,7 @@ namespace swift::gui
         a = menu.addAction("Metadata (slow)");
         c = connect(
             a, &QAction::triggered, this,
-            [=]() {
+            [=, this]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 CLogMessage(this).info(getAllUserMetatypesTypes());
             },
@@ -711,7 +711,7 @@ namespace swift::gui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction("Toggle stay on top");
-        c = connect(a, &QAction::triggered, this, [=]() {
+        c = connect(a, &QAction::triggered, this, [=, this]() {
             if (!w) { return; }
             this->toggleStayOnTop();
         });
@@ -730,7 +730,7 @@ namespace swift::gui
         Q_ASSERT_X(c, Q_FUNC_INFO, "connect failed");
 
         a = menu.addAction("Toggle normal or minimized");
-        c = connect(a, &QAction::triggered, this, [=]() {
+        c = connect(a, &QAction::triggered, this, [=, this]() {
             if (!w) { return; }
             this->windowMinimizeNormalToggle();
         });
@@ -750,7 +750,7 @@ namespace swift::gui
         if (!w) { return; }
         QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
 
-        bool c = connect(a, &QAction::triggered, this, [=]() {
+        bool c = connect(a, &QAction::triggered, this, [=, this]() {
             if (!sGui || sGui->isShuttingDown()) { return; }
             this->showHelp();
         });
@@ -984,7 +984,7 @@ namespace swift::gui
     void CGuiApplication::triggerNewVersionCheck(int delayedMs)
     {
         if (!m_updateSetting.get()) { return; }
-        QTimer::singleShot(delayedMs, this, [=] {
+        QTimer::singleShot(delayedMs, this, [=, this] {
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (m_updateDialog) { return; } // already checked elsewhere
             this->checkNewVersion(true);

@@ -844,7 +844,7 @@ namespace swift::simplugin::xplane
         {
             // we are just about to add that aircraft
             QPointer<CSimulatorXPlane> myself(this);
-            QTimer::singleShot(TimeoutAdding, this, [=] {
+            QTimer::singleShot(TimeoutAdding, this, [=, this] {
                 if (!myself) { return; }
                 m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
                 this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
@@ -1004,9 +1004,9 @@ namespace swift::simplugin::xplane
         const QStringList csStrings = callsigns.getCallsignStrings();
         QPointer<CSimulatorXPlane> myself(this);
         m_trafficProxy->getRemoteAircraftData(
-            csStrings, [=](const QStringList &callsigns, const QDoubleList &latitudesDeg,
-                           const QDoubleList &longitudesDeg, const QDoubleList &elevationsMeters,
-                           const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters) {
+            csStrings, [=, this](const QStringList &callsigns, const QDoubleList &latitudesDeg,
+                                 const QDoubleList &longitudesDeg, const QDoubleList &elevationsMeters,
+                                 const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters) {
                 if (!myself) { return; }
                 this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters,
                                                         waterFlags, verticalOffsetsMeters);
@@ -1017,7 +1017,7 @@ namespace swift::simplugin::xplane
     {
         if (callsigns.isEmpty()) { return; }
         QPointer<CSimulatorXPlane> myself(this);
-        QTimer::singleShot(0, this, [=] {
+        QTimer::singleShot(0, this, [=, this] {
             if (!myself) { return; }
             this->requestRemoteAircraftDataFromXPlane(callsigns);
         });
@@ -1251,7 +1251,7 @@ namespace swift::simplugin::xplane
     void CSimulatorXPlane::triggerAddNextPendingAircraft()
     {
         QPointer<CSimulatorXPlane> myself(this);
-        QTimer::singleShot(100, this, [=] {
+        QTimer::singleShot(100, this, [=, this] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
             this->addNextPendingAircraft();
         });
@@ -1281,7 +1281,7 @@ namespace swift::simplugin::xplane
     void CSimulatorXPlane::triggerRemoveAircraft(const CCallsign &callsign, qint64 deferMs)
     {
         QPointer<CSimulatorXPlane> myself(this);
-        QTimer::singleShot(deferMs, this, [=] {
+        QTimer::singleShot(deferMs, this, [=, this] {
             if (!myself) { return; }
             this->physicallyRemoveRemoteAircraft(callsign);
         });
@@ -1335,7 +1335,7 @@ namespace swift::simplugin::xplane
 
         m_timer.start(); // restart because we will check just now
         QPointer<CSimulatorXPlaneListener> myself(this);
-        QTimer::singleShot(0, this, [=] {
+        QTimer::singleShot(0, this, [=, this] {
             if (!myself) { return; }
             checkConnection();
         });

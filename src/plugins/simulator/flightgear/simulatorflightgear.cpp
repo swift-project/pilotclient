@@ -577,7 +577,7 @@ namespace swift::simplugin::flightgear
         {
             // we are just about to add that aircraft
             QPointer<CSimulatorFlightgear> myself(this);
-            QTimer::singleShot(TimeoutAdding, this, [=] {
+            QTimer::singleShot(TimeoutAdding, this, [=, this] {
                 if (!myself) { return; }
                 m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
                 this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
@@ -726,8 +726,8 @@ namespace swift::simplugin::flightgear
         QPointer<CSimulatorFlightgear> myself(this);
         m_trafficProxy->getRemoteAircraftData(
             csStrings,
-            [=](const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
-                const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters) {
+            [=, this](const QStringList &callsigns, const QDoubleList &latitudesDeg, const QDoubleList &longitudesDeg,
+                      const QDoubleList &elevationsMeters, const QDoubleList &verticalOffsetsMeters) {
                 if (!myself) { return; }
                 this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters,
                                                         verticalOffsetsMeters);
@@ -738,7 +738,7 @@ namespace swift::simplugin::flightgear
     {
         if (callsigns.isEmpty()) { return; }
         QPointer<CSimulatorFlightgear> myself(this);
-        QTimer::singleShot(0, this, [=] {
+        QTimer::singleShot(0, this, [=, this] {
             if (!myself) { return; }
             this->requestRemoteAircraftDataFromFlightgear(callsigns);
         });
@@ -933,7 +933,7 @@ namespace swift::simplugin::flightgear
     void CSimulatorFlightgear::triggerAddNextPendingAircraft()
     {
         QPointer<CSimulatorFlightgear> myself(this);
-        QTimer::singleShot(100, this, [=] {
+        QTimer::singleShot(100, this, [=, this] {
             if (!myself) { return; }
             this->addNextPendingAircraft();
         });
@@ -963,7 +963,7 @@ namespace swift::simplugin::flightgear
     void CSimulatorFlightgear::triggerRemoveAircraft(const CCallsign &callsign, qint64 deferMs)
     {
         QPointer<CSimulatorFlightgear> myself(this);
-        QTimer::singleShot(deferMs, this, [=] {
+        QTimer::singleShot(deferMs, this, [=, this] {
             if (!myself) { return; }
             this->physicallyRemoveRemoteAircraft(callsign);
         });
@@ -1019,7 +1019,7 @@ namespace swift::simplugin::flightgear
 
         m_timer.start(); // restart because we will check just now
         QPointer<CSimulatorFlightgearListener> myself(this);
-        QTimer::singleShot(0, this, [=] {
+        QTimer::singleShot(0, this, [=, this] {
             if (!myself) { return; }
             checkConnection();
         });

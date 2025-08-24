@@ -127,7 +127,7 @@ namespace swift::gui::components
         this->updateUiConnectState();
 
         QPointer<CLoginComponent> myself(this);
-        QTimer::singleShot(5000, this, [=] {
+        QTimer::singleShot(5000, this, [=, this] {
             if (!myself) { return; }
             this->updateGui();
         });

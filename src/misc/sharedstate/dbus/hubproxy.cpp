@@ -25,7 +25,7 @@ namespace swift::misc::shared_state::dbus
     std::pair<QSharedPointer<IDuplex>, QFuture<bool>> CHubProxy::getDuplex(const CIdentifier &identifier)
     {
         auto duplex = QSharedPointer<CDuplexProxy>::create(m_interface->connection(), m_service, this);
-        connect(duplex.get(), &QObject::destroyed, this, [=] { closeDuplex(identifier); });
+        connect(duplex.get(), &QObject::destroyed, this, [=, this] { closeDuplex(identifier); });
         return std::make_pair(duplex, openDuplexAsync(identifier));
     }
 

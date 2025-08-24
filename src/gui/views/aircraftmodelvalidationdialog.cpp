@@ -43,7 +43,7 @@ namespace swift::gui::views
     void CAircraftModelValidationDialog::triggerValidation(int delayMs)
     {
         QPointer<CAircraftModelValidationDialog> myself(this);
-        QTimer::singleShot(delayMs, this, [=] {
+        QTimer::singleShot(delayMs, this, [=, this] {
             if (!myself) { return; }
             this->validate();
         });

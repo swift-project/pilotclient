@@ -306,7 +306,7 @@ namespace swift::core
             if (this->isSet(m_cmdTestCrashpad))
             {
                 msgs.push_back(CLogMessage(this).info(u"About to simulate crash"));
-                QTimer::singleShot(10 * 1000, [=] {
+                QTimer::singleShot(10 * 1000, [=, this] {
                     if (!sApp || sApp->isShuttingDown()) { return; }
                     this->simulateCrash();
                 });
@@ -579,7 +579,7 @@ namespace swift::core
         if (!fi.dir().exists()) { return nullptr; }
 
         // function called with reply when done
-        CallbackSlot callbackSlot(this, [=](QNetworkReply *reply) {
+        CallbackSlot callbackSlot(this, [=, this](QNetworkReply *reply) {
             QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(reply);
             CStatusMessage msg;
             if (reply->error() != QNetworkReply::NoError)
@@ -1284,7 +1284,7 @@ namespace swift::core
     {
         // run in QAM thread
         if (this->isShuttingDown()) { return; }
-        QTimer::singleShot(0, m_accessManager, [=] {
+        QTimer::singleShot(0, m_accessManager, [=, this] {
             // should be now in QAM thread
             if (!sApp || sApp->isShuttingDown()) { return; }
             Q_ASSERT_X(CThreadUtils::isInThisThread(sApp->m_accessManager), Q_FUNC_INFO,
@@ -1337,7 +1337,7 @@ namespace swift::core
             Q_ASSERT_X(callback.object(), Q_FUNC_INFO, "Need callback object (to determine thread)");
             connect(
                 reply, &QNetworkReply::finished, callback.object(),
-                [=] {
+                [=, this] {
                     // Called when finished!
                     // QNetworkRequest::FollowRedirectsAttribute would allow auto redirect, but we use our approach as
                     // it gives us better control \fixme: Check again on Qt 5.9: Added redirects policy to

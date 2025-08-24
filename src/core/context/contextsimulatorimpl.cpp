@@ -72,7 +72,7 @@ namespace swift::core::context
 
         // deferred init of last model set, if no other data are set in meantime
         const QPointer<CContextSimulator> myself(this);
-        QTimer::singleShot(2500ms, this, [=] {
+        QTimer::singleShot(2500ms, this, [=, this] {
             if (!myself) { return; }
             this->initByLastUsedModelSet();
             m_aircraftMatcher.setSetup(m_matchingSettings.get());
@@ -541,7 +541,7 @@ namespace swift::core::context
 
         // Emit signal after this function completes completely decoupled
         QPointer<CContextSimulator> myself(this);
-        QTimer::singleShot(25, this, [=] {
+        QTimer::singleShot(25, this, [=, this] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
             if (m_simulatorPlugin.second)
             {
@@ -1060,7 +1060,7 @@ namespace swift::core::context
         m_simulatorPlugin.second->logicallyRemoveRemoteAircraft(callsign);
         aircraft.setModel(aircraft.getNetworkModel()); // like originally from network
         QPointer<CContextSimulator> myself(this);
-        QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(1000, this, [=, this] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }
             this->xCtxAddedRemoteAircraftReadyForModelMatching(aircraft);
         });
@@ -1095,7 +1095,7 @@ namespace swift::core::context
         QPointer<CContextSimulator> myself(this);
         for (const CCallsign &cs : callsigns)
         {
-            QTimer::singleShot(delayMs, this, [=] {
+            QTimer::singleShot(delayMs, this, [=, this] {
                 if (!sApp || sApp->isShuttingDown() || !myself) { return; }
                 this->doMatchingAgain(cs);
             });
@@ -1114,7 +1114,7 @@ namespace swift::core::context
         if (!this->isSimulatorAvailable()) { return false; }
 
         QPointer<CContextSimulator> myself(this);
-        QTimer::singleShot(2500, this, [=] {
+        QTimer::singleShot(2500, this, [=, this] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }
             const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
             if (!aircraft.hasCallsign()) { return; } // no longer valid
@@ -1135,7 +1135,7 @@ namespace swift::core::context
         if (m_logMatchingMessages)
         {
             const QPointer<CContextSimulator> myself(this);
-            QTimer::singleShot(5000, this, [=] {
+            QTimer::singleShot(5000, this, [=, this] {
                 if (!myself) { return; }
                 if (m_aircraftMatcher.getModelSetCount() > MatchingLogMaxModelSetSize)
                 {

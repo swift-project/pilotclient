@@ -110,7 +110,7 @@ namespace swift::gui::components
         if (success)
         {
             QPointer<CAutoPublishComponent> myself(this);
-            this->showOverlayMessagesWithConfirmation(msgs, true, "Clean up auto publish files?", [=] {
+            this->showOverlayMessagesWithConfirmation(msgs, true, "Clean up auto publish files?", [=, this] {
                 if (!myself) { return; }
                 const auto timeout = 5000ms;
                 myself->deleteAllFiles();

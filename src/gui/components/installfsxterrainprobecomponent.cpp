@@ -41,7 +41,7 @@ namespace swift::gui::components
                 &CInstallFsxTerrainProbeComponent::onSimulatorChanged);
 
         QPointer<CInstallFsxTerrainProbeComponent> myself(this);
-        QTimer::singleShot(500, this, [=] {
+        QTimer::singleShot(500, this, [=, this] {
             if (!myself) { return; }
             this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
         });

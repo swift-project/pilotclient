@@ -125,7 +125,7 @@ namespace swift::gui::components
             const bool defaultConsolidate = !ui->cb_AllModels->isChecked() && ui->cb_ModelSet->isChecked();
 
             QPointer<CDbLoadDataDialog> myself(this);
-            QTimer::singleShot(2000, this, [=] {
+            QTimer::singleShot(2000, this, [=, this] {
                 if (!myself) { return; }
                 ui->wi_Consolidate->setVisible(true);
                 ui->wi_WorkStatus->setVisible(false);
@@ -196,7 +196,7 @@ namespace swift::gui::components
         m_consolidating = false;
 
         QPointer<CDbLoadDataDialog> myself(this);
-        QTimer::singleShot(2000, this, [=] {
+        QTimer::singleShot(2000, this, [=, this] {
             if (!myself) { return; }
             ui->pb_Loading->setMaximum(100);
             ui->wi_WorkStatus->setVisible(false);

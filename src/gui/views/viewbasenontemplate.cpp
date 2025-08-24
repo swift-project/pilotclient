@@ -592,7 +592,7 @@ namespace swift::gui::views
         // call this deferred, otherwise the values are overridden with any values
         // from the UI builder
         const QPointer<CViewBaseNonTemplate> guard(this);
-        QTimer::singleShot(500, this, [=]() {
+        QTimer::singleShot(500, this, [=, this]() {
             if (!guard) { return; }
             CViewBaseNonTemplate::settingsChanged();
         });

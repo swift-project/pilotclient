@@ -569,7 +569,7 @@ namespace XSwiftBus
         {
             if (message.getMethodName() == "acquireMultiplayerPlanes")
             {
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     std::string owner;
                     bool acquired = acquireMultiplayerPlanes(&owner);
                     CDBusMessage reply = CDBusMessage::createReply(sender, serial);
@@ -583,21 +583,21 @@ namespace XSwiftBus
             else if (message.getMethodName() == "cleanup")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                queueDBusCall([=]() { cleanup(); });
+                queueDBusCall([=, this]() { cleanup(); });
             }
             else if (message.getMethodName() == "loadPlanesPackage")
             {
                 std::string path;
                 message.beginArgumentRead();
                 message.getArgument(path);
-                queueDBusCall([=]() { sendDBusReply(sender, serial, loadPlanesPackage(path)); });
+                queueDBusCall([=, this]() { sendDBusReply(sender, serial, loadPlanesPackage(path)); });
             }
             else if (message.getMethodName() == "setDefaultIcao")
             {
                 std::string defaultIcao;
                 message.beginArgumentRead();
                 message.getArgument(defaultIcao);
-                queueDBusCall([=]() { setDefaultIcao(defaultIcao); });
+                queueDBusCall([=, this]() { setDefaultIcao(defaultIcao); });
             }
             else if (message.getMethodName() == "setMaxPlanes")
             {
@@ -605,7 +605,7 @@ namespace XSwiftBus
                 int planes = 100;
                 message.beginArgumentRead();
                 message.getArgument(planes);
-                queueDBusCall([=]() { setMaxPlanes(planes); });
+                queueDBusCall([=, this]() { setMaxPlanes(planes); });
             }
             else if (message.getMethodName() == "setMaxDrawDistance")
             {
@@ -613,7 +613,7 @@ namespace XSwiftBus
                 double nauticalMiles = 100;
                 message.beginArgumentRead();
                 message.getArgument(nauticalMiles);
-                queueDBusCall([=]() { setMaxDrawDistance(nauticalMiles); });
+                queueDBusCall([=, this]() { setMaxDrawDistance(nauticalMiles); });
             }
             else if (message.getMethodName() == "addPlane")
             {
@@ -630,7 +630,7 @@ namespace XSwiftBus
                 message.getArgument(airlineIcao);
                 message.getArgument(livery);
 
-                queueDBusCall([=]() { addPlane(callsign, modelName, aircraftIcao, airlineIcao, livery); });
+                queueDBusCall([=, this]() { addPlane(callsign, modelName, aircraftIcao, airlineIcao, livery); });
             }
             else if (message.getMethodName() == "removePlane")
             {
@@ -638,12 +638,12 @@ namespace XSwiftBus
                 std::string callsign;
                 message.beginArgumentRead();
                 message.getArgument(callsign);
-                queueDBusCall([=]() { removePlane(callsign); });
+                queueDBusCall([=, this]() { removePlane(callsign); });
             }
             else if (message.getMethodName() == "removeAllPlanes")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
-                queueDBusCall([=]() { removeAllPlanes(); });
+                queueDBusCall([=, this]() { removeAllPlanes(); });
             }
             else if (message.getMethodName() == "setPlanesPositions")
             {
@@ -665,7 +665,7 @@ namespace XSwiftBus
                 message.getArgument(rolls);
                 message.getArgument(headings);
                 message.getArgument(onGrounds);
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     setPlanesPositions(callsigns, latitudes, longitudes, altitudes, pitches, rolls, headings,
                                        onGrounds);
                 });
@@ -708,7 +708,7 @@ namespace XSwiftBus
                 message.getArgument(strobeLights);
                 message.getArgument(navLights);
                 message.getArgument(lightPatterns);
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     setPlanesSurfaces(callsigns, gears, flaps, spoilers, speedBrakes, slats, wingSweeps, thrusts,
                                       elevators, rudders, ailerons, landLights, taxiLights, beaconLights, strobeLights,
                                       navLights, lightPatterns);
@@ -726,14 +726,14 @@ namespace XSwiftBus
                 message.getArgument(codes);
                 message.getArgument(modeCs);
                 message.getArgument(idents);
-                queueDBusCall([=]() { setPlanesTransponders(callsigns, codes, modeCs, idents); });
+                queueDBusCall([=, this]() { setPlanesTransponders(callsigns, codes, modeCs, idents); });
             }
             else if (message.getMethodName() == "getRemoteAircraftData")
             {
                 std::vector<std::string> requestedCallsigns;
                 message.beginArgumentRead();
                 message.getArgument(requestedCallsigns);
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     std::vector<std::string> callsigns = requestedCallsigns;
                     std::vector<double> latitudesDeg;
                     std::vector<double> longitudesDeg;
@@ -764,7 +764,7 @@ namespace XSwiftBus
                 message.getArgument(latitudeDeg);
                 message.getArgument(longitudeDeg);
                 message.getArgument(altitudeMeters);
-                queueDBusCall([=]() {
+                queueDBusCall([=, this]() {
                     bool isWater = false;
                     const auto elevation =
                         getElevationAtPosition(callsign, latitudeDeg, longitudeDeg, altitudeMeters, isWater);
@@ -784,7 +784,7 @@ namespace XSwiftBus
                 std::string callsign;
                 message.beginArgumentRead();
                 message.getArgument(callsign);
-                queueDBusCall([=]() { setFollowedAircraft(callsign); });
+                queueDBusCall([=, this]() { setFollowedAircraft(callsign); });
             }
             else
             {

@@ -45,7 +45,7 @@ namespace swift::misc::simulation
         if (remoteProvider)
         {
             this->setRemoteAircraftProvider(remoteProvider);
-            QObject::connect(&m_initTimer, &QTimer::timeout, [=] { this->deferredInit(); });
+            QObject::connect(&m_initTimer, &QTimer::timeout, [=, this] { this->deferredInit(); });
             m_initTimer.setSingleShot(true);
             m_initTimer.start(2500);
         }
@@ -386,7 +386,7 @@ namespace swift::misc::simulation
         CAircraftParts currentParts;
 
         // find the first parts earlier than the current time
-        const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [=](auto &&p) {
+        const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [=, this](auto &&p) {
             return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch;
         });
         const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();

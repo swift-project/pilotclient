@@ -51,13 +51,13 @@ namespace swift::gui::components
         ui->rb_Global->setChecked(true);
 
         QPointer<CInterpolationSetupComponent> myself(this);
-        QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(1000, this, [=, this] {
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (!myself) { return; }
             this->onModeChanged();
         });
 
-        QTimer::singleShot(30 * 1000, this, [=] {
+        QTimer::singleShot(30 * 1000, this, [=, this] {
             if (!sGui || sGui->isShuttingDown()) { return; }
             if (!myself) { return; }
             this->onSetupChanged();
@@ -140,7 +140,7 @@ namespace swift::gui::components
             CLogMessage(this).info(u"Set global setup: '%1'") << gs.toQString(true);
 
             const QPointer<CInterpolationSetupComponent> myself(this);
-            QTimer::singleShot(250, this, [=] {
+            QTimer::singleShot(250, this, [=, this] {
                 if (!myself) { return; }
                 this->reloadSetup();
             });
@@ -165,7 +165,7 @@ namespace swift::gui::components
             if (!set) { return; }
 
             const QPointer<CInterpolationSetupComponent> myself(this);
-            QTimer::singleShot(250, this, [=] {
+            QTimer::singleShot(250, this, [=, this] {
                 if (!myself) { return; }
                 this->displaySetupsPerCallsign();
             });
@@ -194,7 +194,7 @@ namespace swift::gui::components
             if (!set) { return; }
 
             const QPointer<CInterpolationSetupComponent> myself(this);
-            QTimer::singleShot(100, this, [=] {
+            QTimer::singleShot(100, this, [=, this] {
                 if (!myself) { return; }
                 this->displaySetupsPerCallsign();
             });

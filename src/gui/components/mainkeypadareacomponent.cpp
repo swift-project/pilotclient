@@ -73,7 +73,7 @@ namespace swift::gui::components
         connect(this, &CMainKeypadAreaComponent::commandEntered, sGui->getCoreFacade(), &CCoreFacade::parseCommandLine);
 
         QPointer<CMainKeypadAreaComponent> myself(this);
-        QTimer::singleShot(5000, this, [=] {
+        QTimer::singleShot(5000, this, [=, this] {
             if (!myself || !sGui) { return; }
             this->update();
         });

@@ -296,7 +296,7 @@ namespace swift::gui::views
         const QPointer<CSimulatedAircraftView> myself(this);
         for (const CSimulatedAircraft &sa : aircraft)
         {
-            QTimer::singleShot(10, this, [=] {
+            QTimer::singleShot(10, this, [=, this] {
                 if (!myself) { return; }
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 CSimulatedAircraft enabledAircraft(sa);

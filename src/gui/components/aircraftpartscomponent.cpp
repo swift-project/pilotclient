@@ -135,7 +135,7 @@ namespace swift::gui::components
 
         // simple approach to update UI when parts are received
         const QPointer<CAircraftPartsComponent> myself(this);
-        QTimer::singleShot(3000, this, [=] {
+        QTimer::singleShot(3000, this, [=, this] {
             if (!myself) { return; }
             ui->pb_CurrentParts->click();
             ui->pb_RequestFromNetwork->setEnabled(true);

@@ -96,7 +96,7 @@ void CSwiftData::init()
 
     sGui->triggerNewVersionCheck(20 * 1000);
     QPointer<CSwiftData> myself(this);
-    QTimer::singleShot(15 * 1000, this, [=] {
+    QTimer::singleShot(15 * 1000, this, [=, this] {
         if (!myself || !sGui || sGui->isShuttingDown()) { return; }
         this->checkMinimumVersion();
         this->checkAutoPublishing();

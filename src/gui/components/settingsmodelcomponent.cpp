@@ -37,7 +37,7 @@ namespace swift::gui::components
 
         // start updater if not yet done
         QPointer<CSettingsModelComponent> myself(this);
-        QTimer::singleShot(2500, this, [=] {
+        QTimer::singleShot(2500, this, [=, this] {
             if (!myself) { return; }
             this->consolidationEntered();
         });

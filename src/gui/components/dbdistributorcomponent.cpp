@@ -101,7 +101,7 @@ namespace swift::gui::components
 
         // deferred because filter must first work and update
         const QPointer<CDbDistributorComponent> myself(this);
-        QTimer::singleShot(2000, this, [=] {
+        QTimer::singleShot(2000, this, [=, this] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
             ui->tvp_Distributors->selectDbKeys(keys);
         });

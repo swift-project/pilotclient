@@ -128,7 +128,7 @@ namespace swift::core
         {
             // thread safe update of m_network
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(0, m_fsdClient, [=] {
+            QTimer::singleShot(0, m_fsdClient, [=, this] {
                 if (!myself) { return; }
                 if (m_fsdClient)
                 {
@@ -581,7 +581,7 @@ namespace swift::core
             }
 
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(MMCheckAgainMs, this, [=]() {
+            QTimer::singleShot(MMCheckAgainMs, this, [=, this]() {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 if (!this->isAircraftInRange(callsign))
                 {
@@ -658,7 +658,7 @@ namespace swift::core
             // if the queries now yield a result all will be fine
             // otherwise we need to check again
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(MMVerifyMs, this, [=]() {
+            QTimer::singleShot(MMVerifyMs, this, [=, this]() {
                 // makes sure we have ICAO data
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 this->verifyReceivedIcaoData(callsign);
@@ -1096,7 +1096,7 @@ namespace swift::core
         if (added)
         {
             const QPointer<CAirspaceMonitor> myself(this);
-            QTimer::singleShot(MMVerifyMs, this, [=]() {
+            QTimer::singleShot(MMVerifyMs, this, [=, this]() {
                 // makes sure we have ICAO data
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
                 this->verifyReceivedIcaoData(callsign);
@@ -1126,7 +1126,7 @@ namespace swift::core
         QPointer<CAirspaceMonitor> myself(this);
         for (const CSimulatedAircraft &ac : aircraft)
         {
-            QTimer::singleShot(c++ * 25, this, [=] {
+            QTimer::singleShot(c++ * 25, this, [=, this] {
                 if (!myself) { return; }
                 myself->addNewAircraftInRange(ac);
                 if (!readyForModelMatching) { return; }

@@ -254,7 +254,7 @@ namespace swift::gui::components
             {
                 const CStatusMessage msg = CStatusMessage(this).info(u"Using existing file '%1'") << saveAsFile;
                 const QPointer<CInstallXSwiftBusComponent> guard(this);
-                QTimer::singleShot(100, this, [=] {
+                QTimer::singleShot(100, this, [=, this] {
                     if (guard.isNull()) { return; }
                     this->downloadedXSwiftBusFile(msg);
                 });
@@ -295,9 +295,9 @@ namespace swift::gui::components
         }
 
         static const QString confirm("Install in '%1'?");
-        this->showOverlayMessagesWithConfirmation(status, false, confirm.arg(ui->le_XSwiftBusPluginDir->text()), [=] {
-            QTimer::singleShot(0, this, &CInstallXSwiftBusComponent::installXSwiftBus);
-        });
+        this->showOverlayMessagesWithConfirmation(
+            status, false, confirm.arg(ui->le_XSwiftBusPluginDir->text()),
+            [=, this] { QTimer::singleShot(0, this, &CInstallXSwiftBusComponent::installXSwiftBus); });
     }
 
     CRemoteFile CInstallXSwiftBusComponent::getRemoteFileSelected() const

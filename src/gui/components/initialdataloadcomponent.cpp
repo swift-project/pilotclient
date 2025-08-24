@@ -25,7 +25,7 @@ namespace swift::gui::components
     void CInitialDataLoadWizardPage::initializePage()
     {
         Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing config");
-        QTimer::singleShot(500, m_config, [=] { m_config->loadAllFromShared(); });
+        QTimer::singleShot(500, m_config, [=, this] { m_config->loadAllFromShared(); });
     }
 
     bool CInitialDataLoadWizardPage::validatePage()

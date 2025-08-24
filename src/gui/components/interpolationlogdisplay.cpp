@@ -544,7 +544,7 @@ namespace swift::gui::components
     {
         // it can take a while until we receive parts, so we init
         QPointer<CInterpolationLogDisplay> myself(this);
-        QTimer::singleShot(250, this, [=] {
+        QTimer::singleShot(250, this, [=, this] {
             if (!myself) { return; }
             if (m_callsign.isEmpty()) { return; }
             myself->onPartsAdded(m_callsign, CAircraftParts());

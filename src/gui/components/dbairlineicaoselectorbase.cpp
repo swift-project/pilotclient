@@ -44,7 +44,7 @@ namespace swift::gui::components
         if (c > 0)
         {
             QPointer<CDbAirlineIcaoSelectorBase> myself(this);
-            QTimer::singleShot(500, [=]() {
+            QTimer::singleShot(500, [=, this]() {
                 if (!sGui || sGui->isShuttingDown()) { return; }
                 if (!myself) { return; }
                 this->onCodesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c, {});

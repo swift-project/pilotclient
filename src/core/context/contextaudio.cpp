@@ -119,7 +119,7 @@ namespace swift::core::context
         // the whole context/facade system is not initialized when this code here is executed
 
         QPointer<CContextAudioBase> myself(this);
-        QTimer::singleShot(5000, this, [=] {
+        QTimer::singleShot(5000, this, [=, this] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
 
             const CSettings as = m_audioSettings.getThreadLocal();
@@ -453,7 +453,7 @@ namespace swift::core::context
         {
             // Play additional notification
             const QPointer<const CContextAudioBase> myself(this);
-            QTimer::singleShot(ms, this, [=] {
+            QTimer::singleShot(ms, this, [=, this] {
                 if (!sApp || sApp->isShuttingDown() || !myself) { return; }
                 this->playNotification(CNotificationSounds::NotificationTextMessageSupervisor, true);
             });

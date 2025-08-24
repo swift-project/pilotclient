@@ -85,7 +85,7 @@ namespace swift::gui::components
                     &CCockpitComComponent::onAtcStationsChanged, Qt::QueuedConnection);
 
             QPointer<CCockpitComComponent> myself(this);
-            QTimer::singleShot(10 * 1000, this, [=] {
+            QTimer::singleShot(10 * 1000, this, [=, this] {
                 if (!sGui || sGui->isShuttingDown() || !myself) { return; }
                 const CSimulatedAircraft aircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
                 this->updateCockpitFromContext(aircraft, CIdentifier::fake());

@@ -114,7 +114,7 @@ CSwiftLauncher::CSwiftLauncher(bool installerMode, QWidget *parent)
     const QPointer<CSwiftLauncher> myself(this);
     if (installerMode)
     {
-        QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(1000, this, [=, this] {
             if (!sGui || sGui->isShuttingDown() || !myself) { return; }
             ui->fr_SwiftLauncherMain->showOverlayHTMLMessage("Checking installation!<br>One moment please ....");
             this->raise();
@@ -122,7 +122,7 @@ CSwiftLauncher::CSwiftLauncher(bool installerMode, QWidget *parent)
     }
 
     // auto launch wizard and other init parts
-    QTimer::singleShot(2500, this, [=] {
+    QTimer::singleShot(2500, this, [=, this] {
         if (!sGui || sGui->isShuttingDown() || !myself) { return; }
         this->onCoreModeReleased();
         this->requestMacMicrophoneAccess();
