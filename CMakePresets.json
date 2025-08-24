@@ -67,7 +67,8 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "SWIFT_USE_CRASHPAD": "OFF",
         "SWIFT_VATSIM_SUPPORT": "OFF",
-        "SWIFT_MINIFY_DEBUG_SYMBOLS": "OFF"
+        "SWIFT_MINIFY_DEBUG_SYMBOLS": "OFF",
+        "SWIFT_BUILD_XSWIFTBUS": "OFF"
       }
     }
   ]
