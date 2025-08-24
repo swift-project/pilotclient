@@ -66,11 +66,11 @@ namespace swift::gui::models
         CSequence<QString> humanNames = CLogPattern::allHumanReadableNames();
         humanNames.removeIf(
             [this](const QString &name) { return this->stringMatchesFilterExpression(name, this->m_category); });
-        auto humanCats = humanNames.transform([](const QString &name) {
-            const auto strings = CLogPattern::fromHumanReadableName(name).getCategoryStrings();
-            return strings.isEmpty() ? QString {} : *strings.begin();
-        });
-
-        return CVariant::from(CLogPattern::anyOf(categories.join(humanCats)).withSeverityAtOrAbove(m_severity));
+        const auto view = humanNames | std::views::transform([](const QString &name) {
+                              const auto strings = CLogPattern::fromHumanReadableName(name).getCategoryStrings();
+                              return strings.isEmpty() ? QString {} : *strings.begin();
+                          });
+        return CVariant::from(
+            CLogPattern::anyOf(categories.join({ view.begin(), view.end() })).withSeverityAtOrAbove(m_severity));
     }
 } // namespace swift::gui::models

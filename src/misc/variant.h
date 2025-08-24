@@ -7,6 +7,7 @@
 #define SWIFT_MISC_VARIANT_H
 
 #include <algorithm>
+#include <ranges>
 #include <type_traits>
 
 #include <QDBusArgument>
@@ -397,10 +398,14 @@ namespace swift::misc::private_ns
             }
 
             QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant> {
-                return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });
+                const auto view =
+                    list | std::views::transform([](const typename T::value_type &v) { return CVariant::from(v); });
+                return { view.begin(), view.end() };
             });
             QMetaType::registerConverter<QVector<CVariant>, T>([](const QVector<CVariant> &list) -> T {
-                return makeRange(list).transform([](const CVariant &v) { return v.to<typename T::value_type>(); });
+                const auto view =
+                    list | std::views::transform([](const CVariant &v) { return v.to<typename T::value_type>(); });
+                return { view.begin(), view.end() };
             });
         }
     }

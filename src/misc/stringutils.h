@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <ranges>
 
 #include <QByteArray>
 #include <QDateTime>
@@ -20,7 +21,6 @@
 #include <QStringView>
 #include <QtGlobal>
 
-#include "misc/range.h"
 #include "misc/swiftmiscexport.h"
 #include "misc/typetraits.h"
 
@@ -118,7 +118,9 @@ namespace swift::misc
     template <class F>
     QStringList splitString(const QString &s, F predicate)
     {
-        return makeRange(splitStringRefs(s, predicate)).transform([](QStringView sv) { return sv.toString(); });
+        const auto view =
+            splitStringRefs(s, predicate) | std::views::transform([](QStringView sv) { return sv.toString(); });
+        return { view.begin(), view.end() };
     }
 
     //! Split a string into multiple lines. Blank lines are skipped.

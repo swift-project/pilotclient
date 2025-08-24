@@ -3,6 +3,8 @@
 
 #include "core/vatsim/vatsimdatafilereader.h"
 
+#include <ranges>
+
 #include <QByteArray>
 #include <QDateTime>
 #include <QMetaObject>
@@ -81,8 +83,11 @@ namespace swift::core::vatsim
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignSet &callsigns) const
     {
-        return this->getAircraft().findByCallsigns(callsigns).transform(
-            predicates::MemberTransform(&CSimulatedAircraft::getPilot));
+        auto view = this->getAircraft() | std::views::filter([&](const CSimulatedAircraft &aircraft) {
+                        return callsigns.contains(aircraft.getCallsign());
+                    }) |
+                    std::views::transform([](const CSimulatedAircraft &aircraft) { return aircraft.getPilot(); });
+        return { view.begin(), view.end() };
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign) const
@@ -130,8 +135,11 @@ namespace swift::core::vatsim
 
     CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignSet &callsigns) const
     {
-        return this->getAtcStations().findByCallsigns(callsigns).transform(
-            predicates::MemberTransform(&CAtcStation::getController));
+        auto view =
+            this->getAtcStations() |
+            std::views::filter([&](const CAtcStation &station) { return callsigns.contains(station.getCallsign()); }) |
+            std::views::transform([](const CAtcStation &station) { return station.getController(); });
+        return { view.begin(), view.end() };
     }
 
     CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign) const
@@ -309,8 +317,9 @@ namespace swift::core::vatsim
         const CFrequency freq(controller["frequency"].toString().toDouble(), CFrequencyUnit::kHz());
         const CLength range(controller["visual_range"].toInt(), CLengthUnit::NM());
         const QJsonArray atisLines = controller["text_atis"].toArray();
-        const auto atisText = makeRange(atisLines).transform([](auto line) { return line.toString(); });
-        const CInformationMessage atis(CInformationMessage::ATIS, atisText.to<QStringList>().join('\n'));
+        const auto atisText = atisLines | std::views::transform([](const auto &line) { return line.toString(); });
+        const CInformationMessage atis(CInformationMessage::ATIS,
+                                       QStringList(atisText.begin(), atisText.end()).join('\n'));
         return CAtcStation(callsign, user, freq, {}, range, true, {}, {}, atis);
     }
 

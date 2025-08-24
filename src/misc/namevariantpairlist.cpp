@@ -3,6 +3,8 @@
 
 #include "misc/namevariantpairlist.h"
 
+#include <ranges>
+
 #include "misc/range.h"
 
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CNameVariantPair, CNameVariantPairList)
@@ -22,8 +24,8 @@ namespace swift::misc
 
     QStringList CNameVariantPairList::getNames(bool sorted) const
     {
-        if (this->isEmpty()) { return QStringList(); }
-        QStringList codes = this->transform(predicates::MemberTransform(&CNameVariantPair::getName));
+        const auto view = *this | std::views::transform([](const CNameVariantPair &pair) { return pair.getName(); });
+        QStringList codes(view.begin(), view.end());
         if (sorted) { codes.sort(); }
         return codes;
     }

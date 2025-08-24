@@ -34,7 +34,9 @@ namespace swift::misc
 
     QStringList CIdentifierList::getMachineNames(bool unique, bool sort) const
     {
-        QStringList codes = this->transform(predicates::MemberTransform(&CIdentifier::getMachineName));
+        const auto view =
+            *this | std::views::transform([](const CIdentifier &identifier) { return identifier.getMachineName(); });
+        QStringList codes(view.begin(), view.end());
         if (sort) { codes.sort(); }
         if (unique) { codes.removeDuplicates(); }
         return codes;

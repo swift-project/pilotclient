@@ -112,24 +112,26 @@ namespace swift::misc::aviation
 
     QStringList CLiveryList::getCombinedCodes(bool sort) const
     {
-        if (this->isEmpty()) { return QStringList(); }
-        QStringList codes = this->transform(predicates::MemberTransform(&CLivery::getCombinedCode));
+        const auto view = *this | std::views::transform([](const CLivery &livery) { return livery.getCombinedCode(); });
+        QStringList codes(view.begin(), view.end());
         if (sort) { codes.sort(); }
         return codes;
     }
 
     QStringList CLiveryList::getCombinedCodesPlusInfo(bool sort) const
     {
-        if (this->isEmpty()) { return QStringList(); }
-        QStringList codes = this->transform(predicates::MemberTransform(&CLivery::getCombinedCodePlusInfo));
+        const auto view =
+            *this | std::views::transform([](const CLivery &livery) { return livery.getCombinedCodePlusInfo(); });
+        QStringList codes(view.begin(), view.end());
         if (sort) { codes.sort(); }
         return codes;
     }
 
     QStringList CLiveryList::getCombinedCodesPlusInfoAndId(bool sort) const
     {
-        if (this->isEmpty()) { return QStringList(); }
-        QStringList codes = this->transform(predicates::MemberTransform(&CLivery::getCombinedCodePlusInfoAndId));
+        const auto view =
+            *this | std::views::transform([](const CLivery &livery) { return livery.getCombinedCodePlusInfoAndId(); });
+        QStringList codes(view.begin(), view.end());
         if (sort) { codes.sort(); }
         return codes;
     }

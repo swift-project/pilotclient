@@ -3,6 +3,8 @@
 
 #include "misc/logcategorylist.h"
 
+#include <ranges>
+
 #include <QDBusMetaType>
 #include <QList>
 #include <QMetaObject>
@@ -24,7 +26,8 @@ namespace swift::misc
 
     QStringList CLogCategoryList::toQStringList() const
     {
-        return transform([](const CLogCategory &cat) { return cat.toQString(); });
+        const auto view = *this | std::views::transform([](const CLogCategory &cat) { return cat.toQString(); });
+        return { view.begin(), view.end() };
     }
 
     QString CLogCategoryList::toQString(bool i18n) const { return convertToQString(i18n); }

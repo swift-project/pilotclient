@@ -33,13 +33,16 @@ namespace swift::misc::simulation
 
     CUserList CSimulatedAircraftList::getPilots() const
     {
-        return this->findBy(predicates::MemberValid(&CSimulatedAircraft::getPilot))
-            .transform(predicates::MemberTransform(&CSimulatedAircraft::getPilot));
+        auto view = *this | std::views::filter([](const CSimulatedAircraft &aircraft) {
+            return aircraft.getPilot().isValid();
+        }) | std::views::transform([](const CSimulatedAircraft &aircraft) { return aircraft.getPilot(); });
+        return { view.begin(), view.end() };
     }
 
     CAircraftModelList CSimulatedAircraftList::getModels() const
     {
-        return this->transform(predicates::MemberTransform(&CSimulatedAircraft::getModel));
+        const auto view = *this | std::views::transform([](const CSimulatedAircraft &info) { return info.getModel(); });
+        return { view.begin(), view.end() };
     }
 
     CSimulatedAircraftList CSimulatedAircraftList::findByEnabled(bool enabled) const

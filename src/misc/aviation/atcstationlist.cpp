@@ -85,8 +85,10 @@ namespace swift::misc::aviation
 
     CUserList CAtcStationList::getControllers() const
     {
-        return this->findBy(predicates::MemberValid(&CAtcStation::getController))
-            .transform(predicates::MemberTransform(&CAtcStation::getController));
+        auto view = *this |
+                    std::views::filter([](const CAtcStation &station) { return station.getController().isValid(); }) |
+                    std::views::transform([](const CAtcStation &station) { return station.getController(); });
+        return { view.begin(), view.end() };
     }
 
     int CAtcStationList::removeIfOutsideRange() { return this->removeIf(&CAtcStation::isInRange, false); }

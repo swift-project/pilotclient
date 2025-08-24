@@ -23,7 +23,9 @@ namespace swift::misc::simulation
 
     QStringList CSimulatorPluginInfoList::toStringList(bool i18n) const
     {
-        return this->transform([i18n](const CSimulatorPluginInfo &info) { return info.toQString(i18n); });
+        const auto view =
+            *this | std::views::transform([&](const CSimulatorPluginInfo &info) { return info.toQString(i18n); });
+        return { view.begin(), view.end() };
     }
 
     CSimulatorPluginInfo CSimulatorPluginInfoList::findByIdentifier(const QString &identifier) const

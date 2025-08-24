@@ -48,7 +48,9 @@ namespace swift::misc::simulation::fscommon
 
     QStringList CAircraftCfgEntriesList::getTitles(bool sorted) const
     {
-        QStringList titles = this->transform(predicates::MemberTransform(&CAircraftCfgEntries::getTitle));
+        const auto &view =
+            *this | std::views::transform([](const CAircraftCfgEntries &info) { return info.getTitle(); });
+        QStringList titles(view.begin(), view.end());
         if (sorted) { titles.sort(Qt::CaseInsensitive); }
         return titles;
     }
