@@ -228,9 +228,6 @@ namespace swift::gui
                                                      double endValue = 0.0);
 
         //! Main window font metrics or default metrics
-        static QFontMetrics currentFontMetrics();
-
-        //! Main window font metrics or default metrics
         static QFontMetricsF currentFontMetricsF();
 
         //! Main window font or default font

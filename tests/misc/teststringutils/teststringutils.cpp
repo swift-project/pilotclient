@@ -84,7 +84,7 @@ namespace MiscTest
                 (c.length() == size) ? fromStringUtc(c, "yyyyMMddHHmmss") : fromStringUtc(c, "yyyyMMddHHmmsszzz");
             QDateTime dt3 = (c.length() == size) ? QDateTime::fromString(c, "yyyyMMddHHmmss") :
                                                    QDateTime::fromString(c, "yyyyMMddHHmmsszzz");
-            dt3.setOffsetFromUtc(0);
+            dt3.setTimeZone(QTimeZone::utc());
 
             const qint64 ms1 = dt1.toMSecsSinceEpoch();
             const qint64 ms2 = dt2.toMSecsSinceEpoch();

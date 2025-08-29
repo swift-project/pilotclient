@@ -78,7 +78,7 @@ namespace swift::misc
 
             static QString blurb(int typeId, const QString &operationName)
             {
-                return QString("CVariant requested unsupported operation of contained ") + QMetaType::typeName(typeId) +
+                return QString("CVariant requested unsupported operation of contained ") + QMetaType(typeId).name() +
                        " object: " + operationName;
             }
         };
@@ -369,7 +369,7 @@ namespace swift::misc
         }
 
         //! \private Getter to obtain the IValueObjectMetaInfo which was stored by swift::misc::registerMetaValueType.
-        IValueObjectMetaInfo *getValueObjectMetaInfo(int typeId);
+        IValueObjectMetaInfo *getValueObjectMetaInfo(QMetaType mt);
 
         //! \private Getter to obtain the IValueObjectMetaInfo which was stored by swift::misc::registerMetaValueType.
         IValueObjectMetaInfo *getValueObjectMetaInfo(const QVariant &);

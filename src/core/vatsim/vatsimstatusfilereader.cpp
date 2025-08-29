@@ -120,8 +120,8 @@ namespace swift::core::vatsim
             Q_UNUSED(changed);
 
             // data read finished
-            emit this->statusFileRead(statusFileData.count());
-            emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFinished, statusFileData.count());
+            emit this->statusFileRead(statusFileData.size());
+            emit this->dataRead(CEntityFlags::VatsimStatusFile, CEntityFlags::ReadFinished, statusFileData.size());
         }
         else
         {

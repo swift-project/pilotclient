@@ -122,7 +122,7 @@ namespace swift::misc
                 {
                     list.push_back(fromQStringList(T::getLogCategories()));
                 }
-                if constexpr (QMetaTypeId<T>::Defined) { list.push_back(QMetaType::typeName(qMetaTypeId<T>())); }
+                if constexpr (QMetaTypeId<T>::Defined) { list.push_back(QMetaType(qMetaTypeId<T>()).name()); }
                 if constexpr (std::is_base_of_v<QObject, T>)
                 {
                     list.appendCategoriesFromMetaObject(T::staticMetaObject);

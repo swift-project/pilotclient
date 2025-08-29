@@ -29,9 +29,9 @@ namespace swift::misc
     //! \private
     int qMetaTypeId_CVariantList = -1; // referenced in variantlist.cpp
 
-    private_ns::IValueObjectMetaInfo *private_ns::getValueObjectMetaInfo(int typeId)
+    private_ns::IValueObjectMetaInfo *private_ns::getValueObjectMetaInfo(QMetaType mt)
     {
-        return getValueObjectMetaInfo(QVariant(QMetaType(typeId), nullptr));
+        return getValueObjectMetaInfo(QVariant(mt, nullptr));
     }
 
     private_ns::IValueObjectMetaInfo *private_ns::getValueObjectMetaInfo(const QVariant &v)
@@ -41,14 +41,15 @@ namespace swift::misc
 
     bool CVariant::canConvert(int typeId) const
     {
-        if (m_v.canConvert(typeId)) { return true; }
+        const QMetaType mt(typeId);
+        if (m_v.canConvert(mt)) { return true; }
         if (typeId == qMetaTypeId_CVariantList)
         {
             return m_v.canConvert<QVector<CVariant>>() || m_v.canConvert<QVariantList>();
         }
         if (userType() == qMetaTypeId_CVariantList)
         {
-            return QVariant::fromValue(QVector<CVariant>()).canConvert(typeId) ||
+            return QVariant::fromValue(QVector<CVariant>()).canConvert(mt) ||
                    QVariant(QMetaType(typeId), nullptr).canConvert<QVariantList>();
         }
         return false;
@@ -56,14 +57,15 @@ namespace swift::misc
 
     bool CVariant::convert(int typeId)
     {
-        if (!m_v.canConvert(typeId))
+        const QMetaType mt(typeId);
+        if (!m_v.canConvert(mt))
         {
             if (!canConvert(typeId)) { return false; }
             if (typeId == qMetaTypeId_CVariantList)
             {
                 if (m_v.canConvert<QVector<CVariant>>())
                 {
-                    if (!m_v.convert(qMetaTypeId<QVector<CVariant>>())) { return false; }
+                    if (!m_v.convert(QMetaType(qMetaTypeId<QVector<CVariant>>()))) { return false; }
                 }
                 else if (m_v.canConvert<QVariantList>())
                 {
@@ -77,14 +79,14 @@ namespace swift::misc
             }
             if (userType() == qMetaTypeId_CVariantList)
             {
-                if (QVariant::fromValue(QVector<CVariant>()).canConvert(typeId))
+                if (QVariant::fromValue(QVector<CVariant>()).canConvert(mt))
                 {
-                    if (!m_v.convert(qMetaTypeId<QVector<CVariant>>())) { return false; }
+                    if (!m_v.convert(QMetaType(qMetaTypeId<QVector<CVariant>>()))) { return false; }
                 }
                 else { return false; }
             }
         }
-        return m_v.convert(typeId);
+        return m_v.convert(mt);
     }
 
     bool CVariant::isVariantList() const { return userType() == qMetaTypeId_CVariantList; }
@@ -168,22 +170,22 @@ namespace swift::misc
         QJsonObject json;
         json.insert("type", this->typeName());
 
-        switch (m_v.type())
+        switch (m_v.metaType().id())
         {
-        case QVariant::Invalid: json.insert("value", 0); break;
-        case QVariant::Int: json.insert("value", m_v.toInt()); break;
-        case QVariant::UInt: json.insert("value", m_v.toInt()); break;
-        case QVariant::Bool: json.insert("value", m_v.toBool()); break;
-        case QVariant::Double: json.insert("value", m_v.toDouble()); break;
-        case QVariant::LongLong: json.insert("value", m_v.toLongLong()); break;
-        case QVariant::ULongLong: json.insert("value", m_v.toLongLong()); break;
-        case QVariant::String: json.insert("value", m_v.toString()); break;
-        case QVariant::Char: json.insert("value", m_v.toString()); break;
-        case QVariant::ByteArray: json.insert("value", m_v.toString()); break;
-        case QVariant::DateTime: json.insert("value", m_v.toDateTime().toString(Qt::ISODate)); break;
-        case QVariant::Date: json.insert("value", m_v.toDate().toString(Qt::ISODate)); break;
-        case QVariant::Time: json.insert("value", m_v.toTime().toString(Qt::ISODate)); break;
-        case QVariant::StringList: json.insert("value", QJsonArray::fromStringList(m_v.toStringList())); break;
+        case QMetaType::UnknownType: json.insert("value", 0); break;
+        case QMetaType::Int: json.insert("value", m_v.toInt()); break;
+        case QMetaType::UInt: json.insert("value", m_v.toInt()); break;
+        case QMetaType::Bool: json.insert("value", m_v.toBool()); break;
+        case QMetaType::Double: json.insert("value", m_v.toDouble()); break;
+        case QMetaType::LongLong: json.insert("value", m_v.toLongLong()); break;
+        case QMetaType::ULongLong: json.insert("value", m_v.toLongLong()); break;
+        case QMetaType::QString: json.insert("value", m_v.toString()); break;
+        case QMetaType::Char: json.insert("value", m_v.toString()); break;
+        case QMetaType::QByteArray: json.insert("value", m_v.toString()); break;
+        case QMetaType::QDateTime: json.insert("value", m_v.toDateTime().toString(Qt::ISODate)); break;
+        case QMetaType::QDate: json.insert("value", m_v.toDate().toString(Qt::ISODate)); break;
+        case QMetaType::QTime: json.insert("value", m_v.toTime().toString(Qt::ISODate)); break;
+        case QMetaType::QStringList: json.insert("value", QJsonArray::fromStringList(m_v.toStringList())); break;
         default:
             try
             {
@@ -222,44 +224,44 @@ namespace swift::misc
             m_v.clear();
             return;
         }
-        const int typeId = QMetaType::type(qPrintable(typeName));
+
+        const QMetaType mt = QMetaType::fromName(qPrintable(typeName));
 
         const QJsonValue value = json.value("value");
         if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
-        switch (typeId)
+        switch (mt.id())
         {
-        case QVariant::Invalid: throw CJsonException("Type not recognized by QMetaType");
-        case QVariant::Int: m_v.setValue(value.toInt()); break;
-        case QVariant::UInt: m_v.setValue<uint>(static_cast<uint>(value.toInt())); break;
-        case QVariant::Bool: m_v.setValue(value.toBool()); break;
-        case QVariant::Double: m_v.setValue(value.toDouble()); break;
-        case QVariant::LongLong: m_v.setValue(static_cast<qlonglong>(value.toDouble())); break;
-        case QVariant::ULongLong: m_v.setValue(static_cast<qulonglong>(value.toDouble())); break;
-        case QVariant::String: m_v.setValue(value.toString()); break;
-        case QVariant::Char: m_v.setValue(value.toString().size() > 0 ? value.toString().at(0) : '\0'); break;
-        case QVariant::ByteArray: m_v.setValue(value.toString().toLatin1()); break;
-        case QVariant::DateTime: m_v.setValue(fromStringUtc(value.toString(), Qt::ISODate)); break;
-        case QVariant::Date: m_v.setValue(QDate::fromString(value.toString(), Qt::ISODate)); break;
-        case QVariant::Time: m_v.setValue(QTime::fromString(value.toString(), Qt::ISODate)); break;
-        case QVariant::StringList: m_v.setValue(QVariant(value.toArray().toVariantList()).toStringList()); break;
+        case QMetaType::UnknownType: throw CJsonException("Type not recognized by QMetaType");
+        case QMetaType::Int: m_v.setValue(value.toInt()); break;
+        case QMetaType::UInt: m_v.setValue<uint>(static_cast<uint>(value.toInt())); break;
+        case QMetaType::Bool: m_v.setValue(value.toBool()); break;
+        case QMetaType::Double: m_v.setValue(value.toDouble()); break;
+        case QMetaType::LongLong: m_v.setValue(static_cast<qlonglong>(value.toDouble())); break;
+        case QMetaType::ULongLong: m_v.setValue(static_cast<qulonglong>(value.toDouble())); break;
+        case QMetaType::QString: m_v.setValue(value.toString()); break;
+        case QMetaType::Char: m_v.setValue(value.toString().size() > 0 ? value.toString().at(0) : '\0'); break;
+        case QMetaType::QByteArray: m_v.setValue(value.toString().toLatin1()); break;
+        case QMetaType::QDateTime: m_v.setValue(fromStringUtc(value.toString(), Qt::ISODate)); break;
+        case QMetaType::QDate: m_v.setValue(QDate::fromString(value.toString(), Qt::ISODate)); break;
+        case QMetaType::QTime: m_v.setValue(QTime::fromString(value.toString(), Qt::ISODate)); break;
+        case QMetaType::QStringList: m_v.setValue(QVariant(value.toArray().toVariantList()).toStringList()); break;
         default:
             try
             {
-                auto *meta = private_ns::getValueObjectMetaInfo(typeId);
+                auto *meta = private_ns::getValueObjectMetaInfo(mt);
                 if (meta)
                 {
                     CJsonScope scope("value"); // tracker
                     Q_UNUSED(scope);
-                    m_v = QVariant(QMetaType(typeId), nullptr);
+                    m_v = QVariant(mt, nullptr);
 
                     // this will call convertFromJson if there is no MemoizedJson
                     meta->convertFromMemoizedJson(value.toObject(), data(), true);
                 }
-                else if (QMetaType::hasRegisteredConverterFunction(QMetaType(qMetaTypeId<QString>()),
-                                                                   QMetaType(typeId)))
+                else if (QMetaType::hasRegisteredConverterFunction(QMetaType(qMetaTypeId<QString>()), mt))
                 {
                     m_v.setValue(value.toString());
-                    if (!m_v.convert(typeId)) { throw CJsonException("Failed to convert from JSON string"); }
+                    if (!m_v.convert(mt)) { throw CJsonException("Failed to convert from JSON string"); }
                 }
                 else { throw CJsonException("Type not supported by convertFromJson"); }
             }
@@ -315,9 +317,9 @@ namespace swift::misc
             m_v.clear();
             return;
         }
-        int typeId = QMetaType::type(qPrintable(typeName));
+        const QMetaType mt = QMetaType::fromName(qPrintable(typeName));
 
-        auto *meta = private_ns::getValueObjectMetaInfo(typeId);
+        auto *meta = private_ns::getValueObjectMetaInfo(mt);
         if (meta)
         {
             try
@@ -326,7 +328,7 @@ namespace swift::misc
                 if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
 
                 CJsonScope scope("value");
-                m_v = QVariant(QMetaType(typeId), nullptr);
+                m_v = QVariant(mt, nullptr);
                 meta->convertFromMemoizedJson(value.toObject(), data(), allowFallbackToJson);
             }
             catch (const private_ns::CVariantException &ex)
@@ -353,18 +355,18 @@ namespace swift::misc
 
     size_t CVariant::getValueHash() const
     {
-        switch (m_v.type())
+        switch (m_v.metaType().id())
         {
-        case QVariant::Invalid: return 0;
-        case QVariant::Int: return qHash(m_v.toInt());
-        case QVariant::UInt: return qHash(m_v.toUInt());
-        case QVariant::Bool: return qHash(m_v.toUInt());
-        case QVariant::Double: return qHash(m_v.toUInt());
-        case QVariant::LongLong: return qHash(m_v.toLongLong());
-        case QVariant::ULongLong: return qHash(m_v.toULongLong());
-        case QVariant::String: return qHash(m_v.toString());
-        case QVariant::Char: return qHash(m_v.toChar());
-        case QVariant::ByteArray: return qHash(m_v.toByteArray());
+        case QMetaType::UnknownType: return 0;
+        case QMetaType::Int: return qHash(m_v.toInt());
+        case QMetaType::UInt: return qHash(m_v.toUInt());
+        case QMetaType::Bool: return qHash(m_v.toUInt());
+        case QMetaType::Double: return qHash(m_v.toUInt());
+        case QMetaType::LongLong: return qHash(m_v.toLongLong());
+        case QMetaType::ULongLong: return qHash(m_v.toULongLong());
+        case QMetaType::QString: return qHash(m_v.toString());
+        case QMetaType::Char: return qHash(m_v.toChar());
+        case QMetaType::QByteArray: return qHash(m_v.toByteArray());
         default:
             try
             {
@@ -397,7 +399,7 @@ namespace swift::misc
      * 2 functions required for unmarshallFromDbus
      * \internal
      */
-    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType, const QString &typeName);
+    QVariant fixQVariantFromDbusArgument(const QVariant &variant, QMetaType localUserType, const QString &typeName);
     QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
     //! @}
 
@@ -410,7 +412,7 @@ namespace swift::misc
         if (typeName.isEmpty()) { *this = CVariant(); }
         else
         {
-            *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)), typeName);
+            *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::fromName(qPrintable(typeName)), typeName);
         }
     }
 
@@ -481,10 +483,9 @@ namespace swift::misc
 
     QPixmap CVariant::toPixmap() const
     {
-        if (m_v.type() == QVariant::Pixmap) { return m_v.value<QPixmap>(); }
-        if (m_v.type() == QVariant::Image) { return QPixmap::fromImage(m_v.value<QImage>()); }
-        if (m_v.type() == QVariant::Icon) { return iconToPixmap(m_v.value<QIcon>()); }
-
+        if (m_v.typeId() == QMetaType::QPixmap) { return m_v.value<QPixmap>(); }
+        if (m_v.typeId() == QMetaType::QImage) { return QPixmap::fromImage(m_v.value<QImage>()); }
+        if (m_v.typeId() == QMetaType::QIcon) { return iconToPixmap(m_v.value<QIcon>()); }
         return CIcon(toIcon()).toPixmap();
     }
 
@@ -492,7 +493,7 @@ namespace swift::misc
 
     int CVariant::getMetaTypeId() const { return private_ns::MetaTypeHelper<CVariant>::maybeGetMetaTypeId(); }
 
-    QString CVariant::getClassName() const { return QMetaType::typeName(getMetaTypeId()); }
+    QString CVariant::getClassName() const { return QMetaType(getMetaTypeId()).name(); }
 
     bool CVariant::isA(int metaTypeId) const
     {
@@ -521,24 +522,23 @@ namespace swift::misc
         }
     }
 
-    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType, const QString &typeName)
+    QVariant fixQVariantFromDbusArgument(const QVariant &variant, QMetaType localUserType, const QString &typeName)
     {
-        if (localUserType == static_cast<int>(QVariant::Invalid))
+        if (localUserType.id() == static_cast<int>(QMetaType::UnknownType))
         {
             CLogMessage(&variant).warning(u"Invalid type for unmarshall: %1") << typeName;
         }
-
         // my business?
         if (!variant.canConvert<QDBusArgument>()) { return variant; }
 
         // complex, user type
         // it has to be made sure, that the cast works
         const QDBusArgument arg = variant.value<QDBusArgument>();
-        constexpr int userType = static_cast<int>(QVariant::UserType);
-        if (localUserType < userType)
+        constexpr int userType = static_cast<int>(QMetaType::User);
+        if (localUserType.id() < userType)
         {
             // complex Qt type, e.g. QDateTime
-            return complexQtTypeFromDbusArgument(arg, localUserType);
+            return complexQtTypeFromDbusArgument(arg, localUserType.id());
         }
         else if (QMetaType(localUserType).flags() & QMetaType::IsEnumeration)
         {
@@ -593,7 +593,7 @@ namespace swift::misc
         }
         default:
         {
-            const char *name = QMetaType::typeName(type);
+            const char *name = QMetaType(type).name();
             qFatal("Type cannot be resolved: %s (%d)", name ? name : "", type);
         }
         }

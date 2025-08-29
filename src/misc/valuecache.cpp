@@ -116,9 +116,10 @@ namespace swift::misc
         QStringList result;
         for (const auto &key : keys)
         {
-            QString time = contains(key) ?
-                               QDateTime::fromMSecsSinceEpoch(value(key).second, Qt::UTC).toString(Qt::ISODate) :
-                               "no timestamp";
+            QString time =
+                contains(key) ?
+                    QDateTime::fromMSecsSinceEpoch(value(key).second, QTimeZone::utc()).toString(Qt::ISODate) :
+                    "no timestamp";
             result.push_back(key + " (" + time + ")");
         }
         return result.join(",");
@@ -255,7 +256,7 @@ namespace swift::misc
         if (values.isEmpty()) { return; }
         m_elements.detach(); //! \fixme see http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
         auto out = std::as_const(m_elements).lowerBound(values.cbegin().key());
-        auto end = std::as_const(m_elements).upperBound((values.cend() - 1).key());
+        auto end = std::as_const(m_elements).upperBound((std::prev(values.cend())).key());
         for (auto in = values.cbegin(); in != values.cend(); ++in)
         {
             while (out != end && out.key() < in.key()) { ++out; }
@@ -292,7 +293,7 @@ namespace swift::misc
         CValueCachePacket ackedChanges(values.isSaved());
         m_elements.detach(); //! \fixme see http://doc.qt.io/qt-5/containers.html#implicit-sharing-iterator-problem
         auto out = std::as_const(m_elements).lowerBound(values.cbegin().key());
-        auto end = std::as_const(m_elements).upperBound((values.cend() - 1).key());
+        auto end = std::as_const(m_elements).upperBound((std::prev(values.cend())).key());
         for (auto in = values.cbegin(); in != values.cend(); ++in)
         {
             while (out != end && out.key() < in.key()) { ++out; }
@@ -822,23 +823,20 @@ namespace swift::misc
         {
             return CStatusMessage(this, invalidSeverity, u"Empty cache value %1", true) << element.m_nameWithKey;
         }
-        else if (value.userType() != element.m_metaType)
+        if (value.userType() != element.m_metaType)
         {
             return CStatusMessage(this).error(u"Expected %1 but got %2 for %3")
-                   << QMetaType::typeName(element.m_metaType) << value.typeName() << element.m_nameWithKey;
+                   << QMetaType(element.m_metaType).name() << value.typeName() << element.m_nameWithKey;
         }
-        else if (element.m_validator && !element.m_validator(value, reason))
+        if (element.m_validator && !element.m_validator(value, reason))
         {
             if (reason.isEmpty())
             {
                 return CStatusMessage(this).error(u"%1 is not valid for %2")
                        << value.toQString() << element.m_nameWithKey;
             }
-            else
-            {
-                return CStatusMessage(this).error(u"%1 (%2 for %3)")
-                       << reason << value.toQString() << element.m_nameWithKey;
-            }
+            return CStatusMessage(this).error(u"%1 (%2 for %3)")
+                   << reason << value.toQString() << element.m_nameWithKey;
         }
         else { return {}; }
     }

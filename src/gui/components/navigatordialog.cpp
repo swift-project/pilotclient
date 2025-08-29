@@ -251,7 +251,7 @@ namespace swift::gui::components
     void CNavigatorDialog::enterEvent(QEnterEvent *event)
     {
         // event called when mouse is over, acts as auto-focus
-        QApplication::setActiveWindow(this);
+        activateWindow();
         QDialog::enterEvent(event);
     }
 

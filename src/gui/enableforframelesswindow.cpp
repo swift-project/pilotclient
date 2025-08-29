@@ -194,7 +194,7 @@ namespace swift::gui
         Q_ASSERT(m_widget);
         if (m_windowMode == WindowFrameless && event->button() == Qt::LeftButton)
         {
-            m_framelessDragPosition = event->globalPos() - m_widget->frameGeometry().topLeft();
+            m_framelessDragPosition = event->globalPosition().toPoint() - m_widget->frameGeometry().topLeft();
             event->accept();
             return true;
         }
@@ -217,7 +217,7 @@ namespace swift::gui
                 return false;
             }
 
-            m_widget->move(event->globalPos() - m_framelessDragPosition);
+            m_widget->move(event->globalPosition().toPoint() - m_framelessDragPosition);
             event->accept();
             return true;
         }

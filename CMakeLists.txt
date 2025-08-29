@@ -128,8 +128,6 @@ elseif(${CMAKE_CXX_COMPILER_ID} MATCHES ".*Clang")
     add_compile_options("$<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Woverloaded-virtual;-Wzero-as-null-pointer-constant;-Wno-return-std-move>")
 endif()
 
-add_compile_definitions(QT_NO_DEPRECATED_WARNINGS)
-
 if(SWIFT_USE_CRASHPAD)
     add_compile_definitions(SWIFT_USE_CRASHPAD)
 endif()

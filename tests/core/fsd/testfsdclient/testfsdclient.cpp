@@ -728,9 +728,9 @@ namespace SwiftFsdTest
         // Server without ICAOEQ capability is set by default (in init())
         QSignalSpy spy(m_client, &CFSDClient::rawFsdMessage);
         QDateTime takeoffTimePlanned = QDateTime::fromString("1530", "hhmm");
-        takeoffTimePlanned.setTimeSpec(Qt::UTC);
+        takeoffTimePlanned.setTimeZone(QTimeZone::utc());
         QDateTime takeoffTimeActual = QDateTime::fromString("1535", "hhmm");
-        takeoffTimeActual.setTimeSpec(Qt::UTC);
+        takeoffTimeActual.setTimeZone(QTimeZone::utc());
         CAltitude flightLevel(35000, CAltitude::FlightLevel, CLengthUnit::ft());
         CFlightPlanAircraftInfo info("H/B744/L");
         CFlightPlan fp({}, info, "EGLL", "KORD", "NONE", takeoffTimePlanned, takeoffTimeActual,
@@ -755,9 +755,9 @@ namespace SwiftFsdTest
 
         QSignalSpy spy(m_client, &CFSDClient::rawFsdMessage);
         QDateTime takeoffTimePlanned = QDateTime::fromString("1530", "hhmm");
-        takeoffTimePlanned.setTimeSpec(Qt::UTC);
+        takeoffTimePlanned.setTimeZone(QTimeZone::utc());
         QDateTime takeoffTimeActual = QDateTime::fromString("1535", "hhmm");
-        takeoffTimeActual.setTimeSpec(Qt::UTC);
+        takeoffTimeActual.setTimeZone(QTimeZone::utc());
         CAltitude flightLevel(35000, CAltitude::FlightLevel, CLengthUnit::ft());
         CFlightPlanAircraftInfo info("B748/H-SDE3FGHIM1M2RWXY/LB1");
         CFlightPlan fp({}, info, "EGLL", "KORD", "NONE", takeoffTimePlanned, takeoffTimeActual,

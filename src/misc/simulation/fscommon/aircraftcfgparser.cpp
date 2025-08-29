@@ -412,12 +412,12 @@ namespace swift::misc::simulation::fscommon
         {
             return {}; // normal when there is no settings value
         }
-        else if (static_cast<QMetaType::Type>(qv.type()) == QMetaType::QStringList)
+        if (static_cast<QMetaType::Type>(qv.typeId()) == QMetaType::QStringList)
         {
             const QStringList l = qv.toStringList();
             return l.join(",").trimmed();
         }
-        else if (static_cast<QMetaType::Type>(qv.type()) == QMetaType::QString) { return qv.toString().trimmed(); }
+        if (static_cast<QMetaType::Type>(qv.typeId()) == QMetaType::QString) { return qv.toString().trimmed(); }
         Q_ASSERT(false);
         return {};
     }

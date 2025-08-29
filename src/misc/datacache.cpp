@@ -616,7 +616,7 @@ namespace swift::misc
         for (auto it = m_timestamps.cbegin(); it != m_timestamps.cend(); ++it)
         {
             result.push_back(it.key() + "(" +
-                             QDateTime::fromMSecsSinceEpoch(it.value(), Qt::UTC).toString(Qt::ISODate) + ")");
+                             QDateTime::fromMSecsSinceEpoch(it.value(), QTimeZone::UTC).toString(Qt::ISODate) + ")");
         }
         return result.join(",");
     }

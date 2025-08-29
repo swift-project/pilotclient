@@ -273,7 +273,7 @@ namespace swift::misc
         if (dateTimeString.isEmpty() || format.isEmpty()) { return {}; }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
         if (!dt.isValid()) { return dt; }
-        dt.setOffsetFromUtc(0); // must only be applied to valid timestamps
+        dt.setTimeZone(QTimeZone::utc()); // must only be applied to valid timestamps
         return dt;
     }
 
@@ -282,7 +282,7 @@ namespace swift::misc
         if (dateTimeString.isEmpty()) { return {}; }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
         if (!dt.isValid()) { return dt; }
-        dt.setOffsetFromUtc(0); // must only be applied to valid timestamps
+        dt.setTimeZone(QTimeZone::utc()); // must only be applied to valid timestamps
         return dt;
     }
 
@@ -291,7 +291,7 @@ namespace swift::misc
         if (dateTimeString.isEmpty()) { return {}; }
         QDateTime dt = locale.toDateTime(dateTimeString, format);
         if (!dt.isValid()) { return dt; }
-        dt.setOffsetFromUtc(0); // must only be applied to valid timestamps
+        dt.setTimeZone(QTimeZone::utc()); // must only be applied to valid timestamps
         return dt;
     }
 
@@ -348,7 +348,7 @@ namespace swift::misc
         QDate date;
         date.setDate(year, month, day);
         QDateTime dt;
-        dt.setOffsetFromUtc(0);
+        dt.setTimeZone(QTimeZone::utc());
         dt.setDate(date);
         if (dateTimeString.length() < 12) { return dt; }
 

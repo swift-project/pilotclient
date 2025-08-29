@@ -115,7 +115,8 @@ namespace swift::misc
     void CRgbColor::setByString(const QString &color, bool isName)
     {
         if (color.isEmpty()) { return; }
-        else if (isName)
+
+        if (isName)
         {
             const QColor q(color);
             m_r = q.red();
@@ -132,7 +133,7 @@ namespace swift::misc
                 this->setInvalid();
                 return;
             }
-            q.setNamedColor("#" + c);
+            q = QColor::fromString("#" + c);
             this->setQColor(q);
         }
     }

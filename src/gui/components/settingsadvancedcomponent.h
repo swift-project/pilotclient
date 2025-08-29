@@ -33,7 +33,7 @@ namespace swift::gui::components
         virtual ~CSettingsAdvancedComponent();
 
     private:
-        void crashDumpUploadEnabledChanged(int state);
+        void crashDumpUploadEnabledChanged(Qt::CheckState state);
 
         QScopedPointer<Ui::CSettingsAdvancedComponent> ui;
         swift::misc::CSetting<swift::core::application::TCrashDumpUploadEnabled> m_crashDumpUploadEnabled { this };

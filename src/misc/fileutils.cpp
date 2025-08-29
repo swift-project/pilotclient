@@ -55,7 +55,7 @@ namespace swift::misc
         if (!file.open(QIODevice::WriteOnly)) { return false; }
         const qint64 c = file.write(data);
         file.close();
-        return c == data.count();
+        return c == data.size();
     }
 
     bool CFileUtils::writeStringToLockedFile(const QString &content, const QString &fileNameAndPath)

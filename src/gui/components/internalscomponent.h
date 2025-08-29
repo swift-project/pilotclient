@@ -39,7 +39,7 @@ namespace swift::gui::components
 
     private:
         //! Enable / disable debugging
-        void enableDebug(int state);
+        void enableDebug(Qt::CheckState checkState);
 
         //! Send the text message
         void sendTextMessage();

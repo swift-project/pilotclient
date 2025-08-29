@@ -377,7 +377,7 @@ namespace swift::gui
         const QJsonDocument jsonDoc(QJsonDocument::fromJson(utf8Data));
         const QJsonObject jsonObj(jsonDoc.object());
         const QString typeName(jsonObj.value("type").toString());
-        const int typeId = QMetaType::type(qPrintable(typeName));
+        const int typeId = QMetaType::fromName(qPrintable(typeName)).id();
 
         // check if a potential valid value object
         if (typeName.isEmpty() || typeId == QMetaType::UnknownType) { return CVariant(); }
@@ -397,7 +397,7 @@ namespace swift::gui
         Q_ASSERT_X(!jsonObj.isEmpty(), Q_FUNC_INFO, "Empty JSON object");
         const QString typeName(jsonObj.value("type").toString());
         if (typeName.isEmpty()) { return Unknown; }
-        const int typeId = QMetaType::type(qPrintable(typeName));
+        const int typeId = QMetaType::fromName(qPrintable(typeName)).id();
         return typeId;
     }
 
@@ -724,14 +724,7 @@ namespace swift::gui
         return effect;
     }
 
-    QFontMetrics CGuiUtility::currentFontMetrics()
-    {
-        const QWidget *w = CGuiUtility::mainApplicationWidget();
-        if (w) { return w->fontMetrics(); }
-        return QApplication::fontMetrics();
-    }
-
-    QFontMetricsF CGuiUtility::currentFontMetricsF() { return QFontMetricsF(CGuiUtility::currentFontMetrics()); }
+    QFontMetricsF CGuiUtility::currentFontMetricsF() { return QFontMetricsF(qApp->font()); }
 
     QFont CGuiUtility::currentFont()
     {
@@ -754,7 +747,7 @@ namespace swift::gui
     {
         // 43 characters        0123456789012345678901234567890123456789012
         static const QString s("The quick brown fox jumps over the lazy dog");
-        const QFontMetricsF fm = CGuiUtility::currentFontMetrics();
+        const QFontMetricsF fm = CGuiUtility::currentFontMetricsF();
         const qreal scale = withRatio ? CGuiUtility::mainApplicationWidgetPixelRatio() : 1.0;
         const QSizeF size = fm.size(Qt::TextSingleLine, s);
         return size * scale;

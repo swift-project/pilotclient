@@ -29,9 +29,9 @@ namespace swift::misc
             meta = meta.append("type: ")
                        .append(QString::number(mt))
                        .append(" name: ")
-                       .append(QMetaType::typeName(mt))
+                       .append(metaType.name())
                        .append(" | ")
-                       .append(QString::number(QMetaType::sizeOf(mt)))
+                       .append(QString::number(metaType.sizeOf()))
                        .append(" / ")
                        .append(QString::number(swift::misc::heapSizeOf(metaType)))
                        .append(separator);

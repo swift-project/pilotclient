@@ -320,7 +320,7 @@ namespace swift::misc::simulation
             else if (variant.canConvert<qint64>()) { m_fileTimestamp = variant.value<qint64>(); }
             break;
         case IndexModelMode:
-            if (static_cast<QMetaType::Type>(variant.type()) == QMetaType::QString)
+            if (static_cast<QMetaType::Type>(variant.typeId()) == QMetaType::QString)
             {
                 this->setModelModeAsString(variant.toString());
             }
@@ -519,7 +519,8 @@ namespace swift::misc::simulation
 
     QDateTime CAircraftModel::getFileTimestamp() const
     {
-        return this->hasValidFileTimestamp() ? QDateTime::fromMSecsSinceEpoch(m_fileTimestamp, Qt::UTC) : QDateTime();
+        return this->hasValidFileTimestamp() ? QDateTime::fromMSecsSinceEpoch(m_fileTimestamp, QTimeZone::utc()) :
+                                               QDateTime();
     }
 
     QString CAircraftModel::getFormattedFileTimestampYmdhms() const

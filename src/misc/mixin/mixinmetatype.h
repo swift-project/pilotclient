@@ -67,7 +67,7 @@ namespace swift::misc
         template <class Derived>
         QString MetaType<Derived>::getClassName() const
         {
-            return QMetaType::typeName(getMetaTypeId());
+            return QMetaType(getMetaTypeId()).name();
         }
 
         template <class Derived>

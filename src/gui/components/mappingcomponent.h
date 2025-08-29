@@ -120,7 +120,7 @@ namespace swift::gui
             void onResetAircraft();
 
             //! Model preview
-            void onModelPreviewChanged(int state);
+            void onModelPreviewChanged(Qt::CheckState state);
 
             //! Request update for models from backend
             void onModelsUpdateRequested();

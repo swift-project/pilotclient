@@ -49,7 +49,7 @@ namespace swift::misc
         // doing this in the switch gives gcc warning as IndexIcon is no member of ColumnIndex
         if (static_cast<int>(i) == static_cast<int>(IndexIcon))
         {
-            if (static_cast<QMetaType::Type>(variant.type()) == QMetaType::Int)
+            if (static_cast<QMetaType::Type>(variant.typeId()) == QMetaType::Int)
             {
                 CIcons::IconIndex iconIndex = variant.value<CIcons::IconIndex>();
                 this->m_icon = CIcon::iconByIndex(iconIndex);

@@ -410,7 +410,7 @@ bool CSwiftLauncher::warnAboutOtherSwiftApplications()
     const QString msg = u"While using the wizard no other application should run.\nClose applications and try "
                         u"again.\nCurrently running: " %
                         running.processNames().join(',');
-    QMessageBox::question(this, "Wizard", msg, QMessageBox::Close);
+    QMessageBox::question(this, "Wizard", msg, QMessageBox::StandardButtons(QMessageBox::StandardButton::Close));
     return false;
 }
 

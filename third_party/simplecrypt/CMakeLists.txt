@@ -16,3 +16,4 @@ target_include_directories(SimpleCrypt
         ${PROJECT_SOURCE_DIR}/third_party
 )
 set_property(TARGET SimpleCrypt PROPERTY POSITION_INDEPENDENT_CODE ON)
+target_compile_definitions(SimpleCrypt PRIVATE QT_NO_DEPRECATED_WARNINGS)

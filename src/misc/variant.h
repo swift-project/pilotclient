@@ -84,9 +84,6 @@ namespace swift::misc
         //! Move-construct from a QVariant.
         CVariant(QVariant &&var) noexcept : m_v(std::move(var)) {}
 
-        //! Construct a null variant of the given type.
-        CVariant(QVariant::Type type) : m_v(type) {}
-
         //! Avoid unexpected implicit cast to QVariant::Type. (Use CVariant::from() instead.)
         CVariant(int) = delete;
 
@@ -252,7 +249,11 @@ namespace swift::misc
         bool isValid() const { return m_v.isValid(); }
 
         //! Return the metatype ID of the value in this variant, or QMetaType::User if it is a user type.
-        QMetaType::Type type() const { return static_cast<QMetaType::Type>(m_v.type()); }
+        QMetaType::Type type() const
+        {
+            const int type = m_v.typeId();
+            return type >= QMetaType::Type::User ? QMetaType::Type::User : static_cast<QMetaType::Type>(type);
+        }
 
         //! Return the typename of the value in this variant.
         const char *typeName() const { return m_v.typeName(); }

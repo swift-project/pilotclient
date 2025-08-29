@@ -664,10 +664,10 @@ namespace swift::gui::components
         QPoint globalPos = this->mapToGlobal(point);
         QScopedPointer<QMenu> contextMenu(new QMenu(this));
 
-        contextMenu->addAction("Max.data area", this, &CDbMappingComponent::resizeForSelect,
-                               QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_D));
-        contextMenu->addAction("Max.mapping area", this, &CDbMappingComponent::resizeForMapping,
-                               QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_M));
+        contextMenu->addAction("Max.data area", QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_D),
+                               this, &CDbMappingComponent::resizeForSelect);
+        contextMenu->addAction("Max.mapping area", QKeySequence(static_cast<Qt::Key>(Qt::CTRL) + Qt::Key_M, Qt::Key_M),
+                               this, &CDbMappingComponent::resizeForMapping);
         QAction *selectedItem = contextMenu.data()->exec(globalPos);
         Q_UNUSED(selectedItem)
     }
