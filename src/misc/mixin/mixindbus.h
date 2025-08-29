@@ -174,7 +174,6 @@ namespace swift::misc
         void DBusByMetaClass<Derived, Tags...>::baseUnmarshall(CEmpty *, const QDBusArgument &)
         {}
 
-        // *INDENT-OFF*
         /*!
          * When a derived class and a base class both inherit from mixin::DBusByTuple,
          * the derived class uses this macro to disambiguate the inherited members.
@@ -182,7 +181,6 @@ namespace swift::misc
 #define SWIFT_MISC_DECLARE_USING_MIXIN_DBUS(DERIVED, ...)                                                              \
     using ::swift::misc::mixin::DBusByMetaClass<DERIVED SWIFT_TRAILING_VA_ARGS(__VA_ARGS__)>::marshallToDbus;          \
     using ::swift::misc::mixin::DBusByMetaClass<DERIVED SWIFT_TRAILING_VA_ARGS(__VA_ARGS__)>::unmarshallFromDbus;
-        // *INDENT-ON*
 
     } // namespace mixin
 } // namespace swift::misc

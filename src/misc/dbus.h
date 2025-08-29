@@ -22,7 +22,6 @@ QDBusArgument &operator<<(QDBusArgument &arg, const std::string &s);
  */
 const QDBusArgument &operator>>(const QDBusArgument &arg, std::string &s);
 
-// *INDENT-OFF*
 /*!
  * Operator for streaming enums to QDBusArgument.
  */

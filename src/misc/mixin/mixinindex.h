@@ -147,14 +147,12 @@ namespace swift::misc
          * When a derived class and a base class both inherit from mixin::Index,
          * the derived class uses this macro to disambiguate the inherited members.
          */
-        // *INDENT-OFF*
 #define SWIFT_MISC_DECLARE_USING_MIXIN_INDEX(DERIVED)                                                                  \
     using ::swift::misc::mixin::Index<DERIVED>::apply;                                                                 \
     using ::swift::misc::mixin::Index<DERIVED>::setPropertyByIndex;                                                    \
     using ::swift::misc::mixin::Index<DERIVED>::propertyByIndex;                                                       \
     using ::swift::misc::mixin::Index<DERIVED>::comparePropertyByIndex;                                                \
     using ::swift::misc::mixin::Index<DERIVED>::equalsPropertyByIndex;
-        // *INDENT-ON*
 
         template <class Derived>
         void Index<Derived>::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)

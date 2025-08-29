@@ -58,7 +58,6 @@ namespace XSwiftBus
 
     CTraffic *CTraffic::s_instance = nullptr;
 
-    // *INDENT-OFF*
     CTraffic::CTraffic(CSettingsProvider *settingsProvider)
         : CDBusObject(settingsProvider),
           m_followPlaneViewNextCommand("org/swift-project/xswiftbus/follow_next_plane",
@@ -75,7 +74,6 @@ namespace XSwiftBus
         // init labels
         this->setDrawingLabels(this->getSettings().isDrawingLabels());
     }
-    // *INDENT-ON*
 
     CTraffic::~CTraffic()
     {

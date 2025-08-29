@@ -100,7 +100,6 @@ namespace swift::misc::mixin
         return static_cast<Derived *>(this);
     }
 
-    // *INDENT-OFF*
     /*!
      * When a derived class and a base class both inherit from mixin::String,
      * the derived class uses this macro to disambiguate the inherited members.
@@ -109,7 +108,6 @@ namespace swift::misc::mixin
     using ::swift::misc::mixin::String<DERIVED>::toQString;                                                            \
     using ::swift::misc::mixin::String<DERIVED>::toStdString;                                                          \
     using ::swift::misc::mixin::String<DERIVED>::stringForStreaming;
-    // *INDENT-ON*
 } // namespace swift::misc::mixin
 
 #endif // SWIFT_MISC_MIXIN_MIXINSTRING_H

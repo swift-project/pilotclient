@@ -237,7 +237,6 @@ namespace swift::misc::geo
     int CCoordinateGeodetic::clampVector()
     {
         int c = 0;
-        // *INDENT-OFF*
         if (m_x < -1.0)
         {
             m_x = -1.0;
@@ -268,7 +267,6 @@ namespace swift::misc::geo
             m_z = 1.0;
             c++;
         }
-        // *INDENT-ON*
         return c;
     }
 

@@ -103,7 +103,6 @@ namespace swift::misc
             return false;
         }
 
-        // *INDENT-OFF*
         /*!
          * When a derived class and a base class both inherit from mixin::MetaType,
          * the derived class uses this macro to disambiguate the inherited members.
@@ -113,7 +112,6 @@ namespace swift::misc
     using ::swift::misc::mixin::MetaType<DERIVED>::getMetaTypeId;                                                      \
     using ::swift::misc::mixin::MetaType<DERIVED>::getClassName;                                                       \
     using ::swift::misc::mixin::MetaType<DERIVED>::isA;
-        // *INDENT-ON*
 
     } // namespace mixin
 } // namespace swift::misc

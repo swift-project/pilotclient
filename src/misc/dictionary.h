@@ -72,14 +72,12 @@ namespace swift::misc
     /*!
      * Associative container with value semantics, chooses a sensible default implementation container type.
      */
-    // *INDENT-OFF*
     template <class Key, class Value, template <class...> class Impl = TDefaultAssociativeType>
     class CDictionary :
         public mixin::DBusOperators<CDictionary<Key, Value, Impl>>,
         public mixin::DataStreamOperators<CDictionary<Key, Value, Impl>>,
         public mixin::JsonOperators<CDictionary<Key, Value, Impl>>,
         public mixin::String<CDictionary<Key, Value, Impl>>
-    // *INDENT-ON*
     {
         //! \copydoc swift::misc::CValueObject::compare
         friend int compare(const CDictionary &a, const CDictionary &b)

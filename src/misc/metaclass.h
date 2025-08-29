@@ -41,7 +41,6 @@
 
 //! \endcond
 
-// *INDENT-OFF*
 /*!
  * Macro to define a nested metaclass that describes the attributes of its
  * enclosing class. Use in the private section of the class.
@@ -80,7 +79,6 @@
  */
 #define SWIFT_METAMEMBER_NAMED(MEMBER, NAME, ...)                                                                      \
     makeMetaMember(&Class::m_##MEMBER, NAME SWIFT_TRAILING_VA_ARGS(__VA_ARGS__))
-// *INDENT-ON*
 
 //! std::string qHash
 inline size_t qHash(const std::string &key, uint seed) { return qHash(QString::fromStdString(key), seed); }
