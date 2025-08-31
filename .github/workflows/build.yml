@@ -28,7 +28,7 @@ env:
 jobs:
 
   preBuild:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository }}
     outputs:
       version: ${{ steps.version.outputs.value }}
@@ -54,7 +54,7 @@ jobs:
           warnIfNotFound: false
 
   checks:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: preBuild
 
     steps:
@@ -106,7 +106,7 @@ jobs:
           path: docs/html/
 
   buildLinux:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
@@ -425,7 +425,7 @@ jobs:
           path: ${{ github.workspace }}/xswiftbus-*
 
   postBuild:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [preBuild, checks, buildLinux, buildWin64, buildMacOS]
 
     steps:
@@ -451,7 +451,7 @@ jobs:
           name: xswiftbus-thin-*
 
   release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [preBuild, postBuild]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     outputs:
@@ -492,7 +492,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   notify:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [preBuild, checks, buildLinux, buildWin64, buildMacOS, postBuild, release]
     if: always()
 
