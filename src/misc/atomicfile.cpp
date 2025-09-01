@@ -18,14 +18,8 @@
 #elif defined(Q_OS_WIN32)
 #    include <Windows.h>
 #    include <io.h>
-#endif
 
-//! \var qt_ntfs_permission_lookup
-//! \see QFileDevice::Permissions
-#ifdef Q_OS_WIN
-extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
-#else
-int qt_ntfs_permission_lookup = 0;
+#    include <QNtfsPermissionCheckGuard>
 #endif
 
 namespace swift::misc
@@ -34,10 +28,13 @@ namespace swift::misc
     bool checkPermissions(CAtomicFile::OpenMode mode, const QFileInfo &fileInfo)
     {
         bool ok = true;
-        qt_ntfs_permission_lookup++;
-        if ((mode & CAtomicFile::ReadOnly) && !fileInfo.isReadable()) { ok = false; }
-        if ((mode & CAtomicFile::WriteOnly) && !fileInfo.isWritable()) { ok = false; }
-        qt_ntfs_permission_lookup--;
+        {
+#if defined(Q_OS_WIN32)
+            QNtfsPermissionCheckGuard permissionGuard;
+#endif
+            if ((mode & CAtomicFile::ReadOnly) && !fileInfo.isReadable()) { ok = false; }
+            if ((mode & CAtomicFile::WriteOnly) && !fileInfo.isWritable()) { ok = false; }
+        }
         return ok;
     }
 
