@@ -113,6 +113,9 @@ R"XML(<node>
     </method>
     <method name="resetFrameTotals">
     </method>
+    <method name="setFlightNetworkConnected">
+      <arg type="b" direction="in"/>
+    </method>
     <method name="getLatitudeDeg">
       <arg type="d" direction="out"/>
     </method>
