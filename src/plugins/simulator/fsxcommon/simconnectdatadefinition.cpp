@@ -81,8 +81,7 @@ namespace swift::simplugin::fsxcommon
         hr += initRemoteAircraftSimDataSet(hSimConnect);
         hr += initSimulatorEnvironment(hSimConnect);
         hr += initSbDataArea(hSimConnect);
-        if (simInfo.isMSFS()) { hr += initMSFSTransponder(hSimConnect); }
-        if (simInfo.isMSFS2024()) { hr += initMSFS2024Transponder(hSimConnect); }
+        if (simInfo.isMSFS() || simInfo.isMSFS2024()) { hr += initMSFSTransponder(hSimConnect); }
         return hr;
     }
 
@@ -179,9 +178,18 @@ namespace swift::simplugin::fsxcommon
                                              "ROTATION VELOCITY BODY Y", "Radians per second");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "ROTATION VELOCITY BODY Z", "Radians per second");
-        // FS2020
+        // MSFS 2020/2024 only. Placed at the end because non-MSFS simulators fail with these and skip them.
+        // Only access the members when using MSFS!
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "INDICATED ALTITUDE CALIBRATED", "Feet");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "TRANSPONDER STATE:1", "Enum");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "TRANSPONDER IDENT:1", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "COM VOLUME:1", "Percent");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "COM VOLUME:2", "Percent");
 
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE",
                                              nullptr, SIMCONNECT_DATATYPE_STRING256);
@@ -412,28 +420,11 @@ namespace swift::simplugin::fsxcommon
         HRESULT hr = s_ok();
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
                                              "TRANSPONDER STATE:1", "Enum");
-        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
-                                             "TRANSPONDER IDENT:1", "Bool");
+
         if (isFailure(hr))
         {
             CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr))
                     .error(u"SimConnect error: MSFS transponder data definitions %1")
-                << hr;
-        }
-        return hr;
-    }
-
-    HRESULT CSimConnectDefinitions::initMSFS2024Transponder(const HANDLE hSimConnect)
-    {
-        HRESULT hr = s_ok();
-        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
-                                             "TRANSPONDER STATE:1", "Enum");
-        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
-                                             "TRANSPONDER IDENT:1", "Bool");
-        if (isFailure(hr))
-        {
-            CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr))
-                    .error(u"SimConnect error: MSFS2024 transponder data definitions %1")
                 << hr;
         }
         return hr;
