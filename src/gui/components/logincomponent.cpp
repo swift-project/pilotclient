@@ -41,6 +41,7 @@
 #include "misc/logmessage.h"
 #include "misc/network/connectionstatus.h"
 #include "misc/network/entityflags.h"
+#include "misc/network/server.h"
 #include "misc/network/serverlist.h"
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/simulatedaircraft.h"
@@ -299,8 +300,10 @@ namespace swift::gui::components
         if (!m_updatePilotOnServerChanges) { return; }
         const bool vatsim = this->isVatsimNetworkTabSelected();
         // const CUser user = vatsim ? this->getCurrentVatsimServer().getUser() : server.getUser();
-        const CUser user = server.getServerType() != 2 ? this->getCurrentVatsimServer().getUser() : server.getUser();
-        if ((vatsim && server.getServerType() != 2) || (!vatsim && server.getServerType() == 2))
+        const CUser user =
+            server.getServerType() != CServer::FSDServer ? this->getCurrentVatsimServer().getUser() : server.getUser();
+        if ((vatsim && server.getServerType() != CServer::FSDServer) ||
+            (!vatsim && server.getServerType() == CServer::FSDServer))
             ui->form_Pilot->setUser(user);
     }
 
