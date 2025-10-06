@@ -298,8 +298,10 @@ namespace swift::gui::components
     {
         if (!m_updatePilotOnServerChanges) { return; }
         const bool vatsim = this->isVatsimNetworkTabSelected();
-        const CUser user = vatsim ? this->getCurrentVatsimServer().getUser() : server.getUser();
-        ui->form_Pilot->setUser(user);
+        // const CUser user = vatsim ? this->getCurrentVatsimServer().getUser() : server.getUser();
+        const CUser user = server.getServerType() != 2 ? this->getCurrentVatsimServer().getUser() : server.getUser();
+        if ((vatsim && server.getServerType() != 2) || (!vatsim && server.getServerType() == 2))
+            ui->form_Pilot->setUser(user);
     }
 
     void CLoginComponent::onSimulatorStatusChanged(int status)
