@@ -33,7 +33,7 @@ namespace swift::gui::components
         });
     }
 
-    CStatusMessagesDetail::~CStatusMessagesDetail() {}
+    CStatusMessagesDetail::~CStatusMessagesDetail() = default;
 
     void CStatusMessagesDetail::appendStatusMessageToList(const CStatusMessage &message)
     {

@@ -23,7 +23,7 @@ namespace swift::core
 
     public:
         //! Ctor
-        Q_INVOKABLE MSWebServices() {}
+        Q_INVOKABLE MSWebServices() = default;
 
         //! @{
         //! Functions calling the web services

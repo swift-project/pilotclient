@@ -20,7 +20,7 @@ namespace swift::gui::components
         this->setFocusProxy(ui->comp_FuselageSelector);
     }
 
-    CDbLiveryColorSearch::~CDbLiveryColorSearch() {}
+    CDbLiveryColorSearch::~CDbLiveryColorSearch() = default;
 
     CLivery CDbLiveryColorSearch::getLivery() const
     {

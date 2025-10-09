@@ -54,7 +54,7 @@ namespace swift::core
 
         //! Destructor
         //! \remark saves a log of removed models if any
-        virtual ~CAircraftMatcher() override;
+        ~CAircraftMatcher() override;
 
         //! Copy constructor
         CAircraftMatcher(const CAircraftMatcher &) = delete;
@@ -268,13 +268,13 @@ namespace swift::core
                           swift::misc::CStatusMessageList *log = nullptr);
 
         //! \copydoc swift::misc::simulation::IAircraftModelSetProvider::getModelSet
-        virtual swift::misc::simulation::CAircraftModelList getModelSet() const override { return m_modelSet; }
+        swift::misc::simulation::CAircraftModelList getModelSet() const override { return m_modelSet; }
 
         //! Model set as reference
         virtual const swift::misc::simulation::CAircraftModelList &getModelSetRef() const { return m_modelSet; }
 
         //! Model set count
-        virtual int getModelSetCount() const override { return m_modelSet.sizeInt(); }
+        int getModelSetCount() const override { return m_modelSet.sizeInt(); }
 
         //! Models
         bool hasModels() const { return !m_modelSet.isEmpty(); }

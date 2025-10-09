@@ -24,7 +24,7 @@ namespace swift::gui::models
         IModelFilter(bool enabled = true) : m_enabled(enabled) {}
 
         //! Destructor
-        virtual ~IModelFilter() {}
+        virtual ~IModelFilter() = default;
 
         //! Used container data
         virtual ContainerType filter(const ContainerType &container) const = 0;

@@ -13,5 +13,5 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    COtherSwiftVersionsDialog::~COtherSwiftVersionsDialog() {}
+    COtherSwiftVersionsDialog::~COtherSwiftVersionsDialog() = default;
 } // namespace swift::gui::components

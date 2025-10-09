@@ -22,7 +22,7 @@ namespace swift::misc
     {
     public:
         //! Construct an object identifying an invalid process.
-        CProcessInfo() {}
+        CProcessInfo() = default;
 
         //! Construct an object identifying the process with the given PID.
         explicit CProcessInfo(qint64 pid) : m_pid(pid), m_name(processNameFromId(pid)) {}

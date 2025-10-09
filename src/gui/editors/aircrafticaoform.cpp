@@ -54,7 +54,7 @@ namespace swift::gui::editors
             { qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>() });
     }
 
-    CAircraftIcaoForm::~CAircraftIcaoForm() {}
+    CAircraftIcaoForm::~CAircraftIcaoForm() = default;
 
     bool CAircraftIcaoForm::setValue(const swift::misc::aviation::CAircraftIcaoCode &icao)
     {

@@ -42,8 +42,6 @@ namespace swift::gui
         this->setWholeInfoAreaFloating(m_infoAreaFloating);
     }
 
-    CInfoArea::~CInfoArea() {}
-
     void CInfoArea::initInfoArea()
     {
         // initInfoArea() needs be called after(!) GUI is setup

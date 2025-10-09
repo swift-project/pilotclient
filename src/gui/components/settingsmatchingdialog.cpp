@@ -15,7 +15,7 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    CSettingsMatchingDialog::~CSettingsMatchingDialog() {}
+    CSettingsMatchingDialog::~CSettingsMatchingDialog() = default;
 
     CAircraftMatcherSetup CSettingsMatchingDialog::getMatchingSetup() const
     {

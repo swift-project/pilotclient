@@ -20,7 +20,7 @@ namespace swift::gui::components
                 &CSettingsAdvancedComponent::crashDumpUploadEnabledChanged);
     }
 
-    CSettingsAdvancedComponent::~CSettingsAdvancedComponent() {}
+    CSettingsAdvancedComponent::~CSettingsAdvancedComponent() = default;
 
     void CSettingsAdvancedComponent::crashDumpUploadEnabledChanged(Qt::CheckState state)
     {

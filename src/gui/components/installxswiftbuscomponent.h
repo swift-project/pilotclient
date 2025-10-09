@@ -37,7 +37,7 @@ namespace swift::gui::components
         explicit CInstallXSwiftBusComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CInstallXSwiftBusComponent();
+        ~CInstallXSwiftBusComponent() override;
 
         //! Set a default name for download
         void setDefaultDownloadName(const QString &defaultDownload);
@@ -120,7 +120,7 @@ namespace swift::gui::components
         void setConfigComponent(CInstallXSwiftBusComponent *config) { m_config = config; }
 
         //! \copydoc QWizardPage::validatePage
-        virtual bool validatePage() override;
+        bool validatePage() override;
 
     private:
         CInstallXSwiftBusComponent *m_config = nullptr;

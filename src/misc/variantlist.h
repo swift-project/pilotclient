@@ -32,7 +32,7 @@ namespace swift::misc
         using CSequence::CSequence;
 
         //! Default constructor.
-        CVariantList() {}
+        CVariantList() = default;
 
         //! Construct from a base class object.
         CVariantList(const CSequence &other);

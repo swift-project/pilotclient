@@ -11,8 +11,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CArtifact, CArtifactList)
 
 namespace swift::misc::db
 {
-    CArtifactList::CArtifactList() {}
-
     CArtifactList::CArtifactList(const CSequence<CArtifact> &other) : CSequence<CArtifact>(other) {}
 
     CPlatformSet CArtifactList::getPlatforms() const

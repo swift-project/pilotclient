@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CCGSourceSelector(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CCGSourceSelector() override;
+        ~CCGSourceSelector() override;
 
         //! @{
         //! Get/set value

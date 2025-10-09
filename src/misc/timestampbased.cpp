@@ -12,8 +12,6 @@
 
 namespace swift::misc
 {
-    ITimestampBased::ITimestampBased() {}
-
     ITimestampBased::ITimestampBased(qint64 msSincePoch) : m_timestampMSecsSinceEpoch(msSincePoch) {}
 
     ITimestampBased::ITimestampBased(const QDateTime &timestamp)

@@ -16,7 +16,7 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CDbOwnModelSetDialog::~CDbOwnModelSetDialog() {}
+    CDbOwnModelSetDialog::~CDbOwnModelSetDialog() = default;
 
     void CDbOwnModelSetDialog::setSimulator(const CSimulatorInfo &simulator)
     {

@@ -31,7 +31,7 @@ namespace swift::gui::editors
         explicit CPbhsForm(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CPbhsForm() override;
+        ~CPbhsForm() override;
 
         //! Get bank angle
         swift::misc::physical_quantities::CAngle getBankAngle() const;
@@ -64,7 +64,7 @@ namespace swift::gui::editors
         void updateSituation(swift::misc::aviation::CAircraftSituation &situation);
 
         //! \copydoc CForm::setReadOnly
-        virtual void setReadOnly(bool readOnly) override;
+        void setReadOnly(bool readOnly) override;
 
         //! Show the "SET" button
         void showSetButton(bool visible);

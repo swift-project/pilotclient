@@ -46,7 +46,7 @@ namespace swift::gui::components
         connect(this, &CDbLoadDataDialog::rejected, this, &CDbLoadDataDialog::onRejected);
     }
 
-    CDbLoadDataDialog::~CDbLoadDataDialog() {}
+    CDbLoadDataDialog::~CDbLoadDataDialog() = default;
 
     bool CDbLoadDataDialog::newerOrEmptyEntitiesDetected(CEntityFlags::Entity loadEntities)
     {

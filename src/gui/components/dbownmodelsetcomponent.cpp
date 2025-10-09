@@ -107,10 +107,7 @@ namespace swift::gui::components
         this->triggerSetSimulatorDeferred(simulator);
     }
 
-    CDbOwnModelSetComponent::~CDbOwnModelSetComponent()
-    {
-        // void
-    }
+    CDbOwnModelSetComponent::~CDbOwnModelSetComponent() = default;
 
     views::CAircraftModelView *CDbOwnModelSetComponent::view() const { return ui->tvp_OwnModelSet; }
 

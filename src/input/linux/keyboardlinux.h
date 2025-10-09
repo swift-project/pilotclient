@@ -32,11 +32,11 @@ namespace swift::input
         CKeyboardLinux &operator=(CKeyboardLinux const &) = delete;
 
         //! Destructor
-        virtual ~CKeyboardLinux() override;
+        ~CKeyboardLinux() override;
 
     protected:
         //! \copydoc IKeyboard::init()
-        virtual bool init() override;
+        bool init() override;
 
     private slots:
         //! Changed directory to linux devices

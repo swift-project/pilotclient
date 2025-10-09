@@ -28,7 +28,7 @@ namespace swift::misc::simulation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CInterpolationSetupList();
+        CInterpolationSetupList() = default;
 
         //! Single object
         CInterpolationSetupList(const CInterpolationAndRenderingSetupPerCallsign &setup);

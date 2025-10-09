@@ -24,7 +24,7 @@ namespace swift::gui::components
         this->ps_settingsChanged();
     }
 
-    CSettingsViewUpdateTimes::~CSettingsViewUpdateTimes() {}
+    CSettingsViewUpdateTimes::~CSettingsViewUpdateTimes() = default;
 
     void CSettingsViewUpdateTimes::ps_sliderChanged()
     {

@@ -30,7 +30,7 @@ namespace swift::misc
         using CMessageBase::CMessageBase;
 
         //! Construct a message with the "uncategorized" category.
-        CLogMessage();
+        CLogMessage() = default;
 
         //! Constructor taking filename, line number, and function name, for uncategorized verbose debug messages.
         CLogMessage(const char *file, int line, const char *function);

@@ -96,7 +96,7 @@ namespace swift::simplugin::emulated
         this->updateWindowTitleAndUiValues(simulator->getSimulatorInfo());
     }
 
-    CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog() {}
+    CSimulatorEmulatedMonitorDialog::~CSimulatorEmulatedMonitorDialog() = default;
 
     void CSimulatorEmulatedMonitorDialog::appendStatusMessageToList(const swift::misc::CStatusMessage &statusMessage)
     {

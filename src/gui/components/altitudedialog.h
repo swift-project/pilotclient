@@ -44,7 +44,7 @@ namespace swift::gui::components
         explicit CAltitudeDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAltitudeDialog() override;
+        ~CAltitudeDialog() override;
 
         //! Get mode
         Mode getMode() const;

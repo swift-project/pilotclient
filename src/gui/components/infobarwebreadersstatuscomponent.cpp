@@ -165,7 +165,7 @@ namespace swift::gui::components
         this->init();
     }
 
-    CInfoBarWebReadersStatusComponent::~CInfoBarWebReadersStatusComponent() {}
+    CInfoBarWebReadersStatusComponent::~CInfoBarWebReadersStatusComponent() = default;
 
     void CInfoBarWebReadersStatusComponent::showConsolidationStatus(bool show)
     {

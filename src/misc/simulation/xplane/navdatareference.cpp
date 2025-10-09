@@ -12,8 +12,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation::xplane, CNavDataReference,
 
 namespace swift::misc::simulation::xplane
 {
-    CNavDataReference::CNavDataReference() = default;
-
     CNavDataReference::CNavDataReference(int id, const geo::CLatitude &latitude, const geo::CLongitude &longitude)
         : m_id(id), m_position(latitude, longitude, {})
     {}
@@ -43,8 +41,6 @@ namespace swift::misc::simulation::xplane
     {
         return QString::number(id()) + ":" + m_position.convertToQString(i18n);
     }
-
-    CNavDataReferenceList::CNavDataReferenceList() = default;
 
     CNavDataReferenceList::CNavDataReferenceList(const CSequence<CNavDataReference> &other)
         : CSequence<CNavDataReference>(other)

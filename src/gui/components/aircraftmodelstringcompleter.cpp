@@ -55,7 +55,7 @@ namespace swift::gui::components
         this->initGui();
     }
 
-    CAircraftModelStringCompleter::~CAircraftModelStringCompleter() {}
+    CAircraftModelStringCompleter::~CAircraftModelStringCompleter() = default;
 
     QString CAircraftModelStringCompleter::getModelString() const { return ui->le_modelString->text(); }
 

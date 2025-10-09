@@ -55,7 +55,7 @@ namespace swift::gui::components
         this->updatesChanged();
     }
 
-    CInstallXSwiftBusComponent::~CInstallXSwiftBusComponent() {}
+    CInstallXSwiftBusComponent::~CInstallXSwiftBusComponent() = default;
 
     void CInstallXSwiftBusComponent::setDefaultDownloadName(const QString &defaultDownload)
     {

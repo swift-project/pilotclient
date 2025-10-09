@@ -30,7 +30,7 @@ namespace swift::gui::editors
         explicit COwnModelSetForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~COwnModelSetForm() override;
+        ~COwnModelSetForm() override;
 
         //! Reload data
         void reloadData();
@@ -79,7 +79,7 @@ namespace swift::gui::editors
 
         //! \name Form functions, here not used
         //! @{
-        virtual void setReadOnly(bool readOnly) override { Q_UNUSED(readOnly); }
+        void setReadOnly(bool readOnly) override { Q_UNUSED(readOnly); }
         //! @}
 
     signals:

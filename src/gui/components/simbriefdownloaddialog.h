@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CSimBriefDownloadDialog(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CSimBriefDownloadDialog() override;
+        ~CSimBriefDownloadDialog() override;
 
         //! SimBrief data
         swift::misc::aviation::CSimBriefData getSimBriefData() const;
@@ -36,7 +36,7 @@ namespace swift::gui::components
         void setSimBriefData(const swift::misc::aviation::CSimBriefData &data);
 
         //! \copydoc QDialog::exec
-        virtual int exec() override;
+        int exec() override;
 
     private:
         QScopedPointer<Ui::CSimBriefDownloadDialog> ui;

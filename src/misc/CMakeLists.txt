@@ -291,7 +291,6 @@ add_library(misc SHARED
         propertyindexref.h
         propertyindexvariantmap.cpp
         propertyindexvariantmap.h
-        provider.cpp
         provider.h
         range.h
         registermetadata.cpp

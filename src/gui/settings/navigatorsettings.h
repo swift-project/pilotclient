@@ -32,10 +32,10 @@ namespace swift::gui::settings
         };
 
         //! Default constructor
-        CNavigatorSettings();
+        CNavigatorSettings() = default;
 
         //! Destructor.
-        ~CNavigatorSettings() {}
+        ~CNavigatorSettings() = default;
 
         //! Reset to defaults
         void reset();

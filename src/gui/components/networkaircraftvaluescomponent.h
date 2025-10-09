@@ -25,7 +25,7 @@ namespace swift::gui::components
         explicit CNetworkAircraftValuesComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CNetworkAircraftValuesComponent() override;
+        ~CNetworkAircraftValuesComponent() override;
 
         //! Show the current values
         void showValues();

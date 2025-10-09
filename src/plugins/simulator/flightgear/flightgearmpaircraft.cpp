@@ -13,8 +13,6 @@ using namespace swift::misc::simulation;
 
 namespace swift::simplugin::flightgear
 {
-    CFlightgearMPAircraft::CFlightgearMPAircraft() {}
-
     CFlightgearMPAircraft::CFlightgearMPAircraft(const CSimulatedAircraft &aircraft, ISimulator *simulator,
                                                  CInterpolationLogger *logger)
         : m_aircraft(aircraft),

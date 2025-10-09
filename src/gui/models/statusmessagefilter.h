@@ -28,11 +28,10 @@ namespace swift::gui::models
                              const QString &category);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::CStatusMessageList
-        filter(const swift::misc::CStatusMessageList &inContainer) const override;
+        swift::misc::CStatusMessageList filter(const swift::misc::CStatusMessageList &inContainer) const override;
 
         //! \copydoc IModelFilter::getAsValueObject
-        virtual swift::misc::CVariant getAsValueObject() const override;
+        swift::misc::CVariant getAsValueObject() const override;
 
     private:
         swift::misc::CStatusMessage::StatusSeverity m_severity = swift::misc::CStatusMessage::SeverityError;

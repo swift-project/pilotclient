@@ -21,7 +21,7 @@ namespace swift::gui::components
         toggleTabBarLocked(true);
     }
 
-    CCoreInfoAreaComponent::~CCoreInfoAreaComponent() {}
+    CCoreInfoAreaComponent::~CCoreInfoAreaComponent() = default;
 
     CLogComponent *CCoreInfoAreaComponent::getLogComponent() { return ui->comp_Log; }
 

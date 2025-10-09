@@ -28,7 +28,7 @@ namespace swift::gui::components
         explicit CRawFsdMessagesDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CRawFsdMessagesDialog();
+        ~CRawFsdMessagesDialog() override;
 
     private:
         QScopedPointer<Ui::CRawFsdMessagesDialog> ui;

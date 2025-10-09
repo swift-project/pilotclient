@@ -52,7 +52,7 @@ namespace swift::gui::components
         }
     }
 
-    CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase() {}
+    CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase() = default;
 
     bool CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
     {

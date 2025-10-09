@@ -25,7 +25,7 @@ namespace swift::gui
         CEcosystemComboBox(const swift::misc::network::CEcosystemList &systems, QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CEcosystemComboBox() {}
+        ~CEcosystemComboBox() override = default;
 
         //! The selected ecosystem
         swift::misc::network::CEcosystem getSelectedEcosystem() const;

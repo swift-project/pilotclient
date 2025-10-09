@@ -28,7 +28,7 @@ namespace swift::gui::components
         this->setMargins(QMargins());
     }
 
-    CMarginsInput::~CMarginsInput() {}
+    CMarginsInput::~CMarginsInput() = default;
 
     void CMarginsInput::setMargins(const QMargins &margins)
     {

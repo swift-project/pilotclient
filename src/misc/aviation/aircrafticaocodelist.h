@@ -35,7 +35,7 @@ namespace swift::misc::aviation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CAircraftIcaoCodeList();
+        CAircraftIcaoCodeList() = default;
 
         //! Construct from a base class object.
         CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other);

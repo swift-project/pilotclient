@@ -35,7 +35,7 @@ namespace swift::gui::components
         explicit CDownloadDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDownloadDialog() override;
+        ~CDownloadDialog() override;
 
         //! \copydoc CDownloadComponent::setDownloadFile
         void setDownloadFile(const swift::misc::network::CRemoteFile &remoteFile);
@@ -54,7 +54,7 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc QDialog::accept
-        virtual void accept() override;
+        void accept() override;
 
     private:
         QScopedPointer<Ui::CDownloadDialog> ui;

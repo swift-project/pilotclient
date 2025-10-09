@@ -62,7 +62,7 @@ namespace swift::gui::components
         m_updateTimer.start();
     }
 
-    CAircraftComponent::~CAircraftComponent() {}
+    CAircraftComponent::~CAircraftComponent() = default;
 
     int CAircraftComponent::countAircraftInView() const
     {

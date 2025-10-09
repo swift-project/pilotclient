@@ -13,8 +13,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftIcaoCode, CAircraft
 
 namespace swift::misc::aviation
 {
-    CAircraftIcaoCodeList::CAircraftIcaoCodeList() {}
-
     CAircraftIcaoCodeList::CAircraftIcaoCodeList(const CSequence<CAircraftIcaoCode> &other)
         : CSequence<CAircraftIcaoCode>(other)
     {}

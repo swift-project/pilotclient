@@ -26,7 +26,7 @@ namespace swift::sound::sample_provider
         CPinkNoiseGenerator(QObject *parent = nullptr) : ISampleProvider(parent) {}
 
         //! Read samples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! Gain
         void setGain(double gain) { m_gain = gain; }

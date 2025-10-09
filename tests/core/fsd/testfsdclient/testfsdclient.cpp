@@ -46,7 +46,7 @@ namespace SwiftFsdTest
         explicit CTestFSDClient(QObject *parent = nullptr) : QObject(parent) {}
 
         //! Destructor
-        virtual ~CTestFSDClient() {}
+        ~CTestFSDClient() override = default;
 
     private slots:
         void initTestCase();

@@ -53,7 +53,7 @@ namespace swift::gui::editors
             { qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>() });
     }
 
-    CAirlineIcaoForm::~CAirlineIcaoForm() {}
+    CAirlineIcaoForm::~CAirlineIcaoForm() = default;
 
     void CAirlineIcaoForm::setValue(const CAirlineIcaoCode &icao)
     {

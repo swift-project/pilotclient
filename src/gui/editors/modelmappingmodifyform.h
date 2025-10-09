@@ -38,7 +38,7 @@ namespace swift::gui::editors
         explicit CModelMappingModifyForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CModelMappingModifyForm() override;
+        ~CModelMappingModifyForm() override;
 
         //! Get the values
         swift::misc::CPropertyIndexVariantMap getValues() const;
@@ -47,11 +47,11 @@ namespace swift::gui::editors
         void setValue(const swift::misc::simulation::CAircraftModel &model);
 
         //! \copydoc CForm::setReadOnly
-        virtual void setReadOnly(bool readOnly) override;
+        void setReadOnly(bool readOnly) override;
 
     protected:
         //! \copydoc CFormDbUser::userChanged
-        virtual void userChanged() override;
+        void userChanged() override;
 
     private:
         //! Return pressed

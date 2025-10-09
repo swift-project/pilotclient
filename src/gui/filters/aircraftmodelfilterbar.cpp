@@ -60,7 +60,7 @@ namespace swift::gui::filters
         });
     }
 
-    CAircraftModelFilterBar::~CAircraftModelFilterBar() {}
+    CAircraftModelFilterBar::~CAircraftModelFilterBar() = default;
 
     void CAircraftModelFilterBar::displayCount(bool show) { ui->filter_Buttons->displayCount(show); }
 

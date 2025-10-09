@@ -43,13 +43,13 @@ namespace swift::gui::components
         CNavigatorDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CNavigatorDialog() override;
+        ~CNavigatorDialog() override;
 
         //! Navigator
         void buildNavigator(int columns);
 
         //! Called when dialog is closed
-        virtual void reject() override;
+        void reject() override;
 
         //! Toggle frameless mode
         void toggleFrameless();
@@ -78,25 +78,25 @@ namespace swift::gui::components
         //! @{
 
         //! \copydoc QDialog::mouseMoveEvent
-        virtual void mouseMoveEvent(QMouseEvent *event) override;
+        void mouseMoveEvent(QMouseEvent *event) override;
 
         //! \copydoc QDialog::mousePressEvent
-        virtual void mousePressEvent(QMouseEvent *event) override;
+        void mousePressEvent(QMouseEvent *event) override;
 
         //! \copydoc QDialog::mouseReleaseEvent
-        virtual void mouseReleaseEvent(QMouseEvent *event) override;
+        void mouseReleaseEvent(QMouseEvent *event) override;
 
         //! \copydoc QDialog::changeEvent
-        virtual void changeEvent(QEvent *evt) override;
+        void changeEvent(QEvent *evt) override;
 
         //! \copydoc CEnableForFramelessWindow::windowFlagsChanged
-        virtual void windowFlagsChanged() override;
+        void windowFlagsChanged() override;
 
         //! \copydoc QDialog::paintEvent
-        virtual void paintEvent(QPaintEvent *event) override;
+        void paintEvent(QPaintEvent *event) override;
 
         //! \copydoc QDialog::enterEvent
-        virtual void enterEvent(QEnterEvent *event) override;
+        void enterEvent(QEnterEvent *event) override;
         //! @}
 
     private:

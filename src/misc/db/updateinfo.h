@@ -32,13 +32,13 @@ namespace swift::misc::db
         };
 
         //! Constructor
-        CUpdateInfo() {}
+        CUpdateInfo() = default;
 
         //! Constructor
         CUpdateInfo(const CArtifactList &artifacts, const CDistributionList &distributions);
 
         //! Destructor.
-        ~CUpdateInfo() {}
+        ~CUpdateInfo() = default;
 
         //! Artifacts (pilot client)
         const CArtifactList &getArtifactsPilotClient() const { return m_artifactsPilotClient; }

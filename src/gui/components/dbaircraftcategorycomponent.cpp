@@ -38,7 +38,7 @@ namespace swift::gui::components
                              sGui->getWebDataServices()->getAircraftCategoriesCount());
     }
 
-    CDbAircraftCategoryComponent::~CDbAircraftCategoryComponent() {}
+    CDbAircraftCategoryComponent::~CDbAircraftCategoryComponent() = default;
 
     void CDbAircraftCategoryComponent::onCategoryRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState,
                                                       int count)

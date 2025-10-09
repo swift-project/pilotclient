@@ -8,8 +8,6 @@
 
 namespace swift::core::fsd
 {
-    FlightPlan::FlightPlan() {}
-
     FlightPlan::FlightPlan(const QString &sender, const QString &receiver, FlightType flightType,
                            const QString &aircraftIcaoType, int trueCruisingSpeed, const QString &depAirport,
                            int estimatedDepTime, int actualDepTime, const QString &cruiseAlt,

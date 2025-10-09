@@ -22,7 +22,7 @@ namespace swift::gui::components
         connect(ui->pb_Save, &QPushButton::clicked, this, &CSettingsSwiftPlugin::save);
     }
 
-    CSettingsSwiftPlugin::~CSettingsSwiftPlugin() {}
+    CSettingsSwiftPlugin::~CSettingsSwiftPlugin() = default;
 
     swift::misc::simulation::settings::CSwiftPluginSettings CSettingsSwiftPlugin::getPluginSettings() const
     {

@@ -36,7 +36,7 @@ namespace swift::misc::simulation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CDistributorList();
+        CDistributorList() = default;
 
         //! Construct from a base class object.
         CDistributorList(const CSequence<CDistributor> &other);

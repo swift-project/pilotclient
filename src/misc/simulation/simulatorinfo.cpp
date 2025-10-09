@@ -27,8 +27,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInfo)
 
 namespace swift::misc::simulation
 {
-    CSimulatorInfo::CSimulatorInfo() {}
-
     CSimulatorInfo::CSimulatorInfo(const QString &identifierString)
         : m_simulator(identifierToSimulator(identifierString))
     {}

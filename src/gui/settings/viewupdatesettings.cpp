@@ -16,8 +16,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CViewUpdateSettings)
 
 namespace swift::gui::settings
 {
-    CViewUpdateSettings::CViewUpdateSettings() {}
-
     void CViewUpdateSettings::reset()
     {
         this->m_updateAircraft = CTime(10.0, CTimeUnit::s());

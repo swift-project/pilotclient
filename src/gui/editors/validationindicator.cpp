@@ -30,7 +30,7 @@ namespace swift::gui::editors
         m_resetTimer.start(ResetInterval);
     }
 
-    CValidationIndicator::~CValidationIndicator() {}
+    CValidationIndicator::~CValidationIndicator() = default;
 
     void CValidationIndicator::passed()
     {

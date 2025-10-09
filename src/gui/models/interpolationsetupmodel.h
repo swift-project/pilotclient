@@ -25,7 +25,7 @@ namespace swift::gui::models
         explicit CInterpolationSetupListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CInterpolationSetupListModel() override {}
+        ~CInterpolationSetupListModel() override = default;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_MODELS_INTERPOLATIONSETUPMODEL_H

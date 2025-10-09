@@ -8,8 +8,6 @@
 
 namespace swift::core::fsd
 {
-    ClientResponse::ClientResponse() {}
-
     ClientResponse::ClientResponse(const QString &sender, const QString &receiver, ClientQueryType queryType,
                                    const QStringList &responseData)
         : MessageBase(sender, receiver), m_queryType(queryType), m_responseData(responseData)

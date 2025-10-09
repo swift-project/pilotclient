@@ -19,8 +19,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::geo, CCoordinateGeodetic)
 
 namespace swift::misc::geo
 {
-    ICoordinateGeodetic::~ICoordinateGeodetic() {}
-
     QString CCoordinateGeodetic::convertToQString(bool i18n) const
     {
         return ICoordinateGeodetic::convertToQString(i18n);
@@ -524,8 +522,6 @@ namespace swift::misc::geo
         return m_relativeBearing.toQString(i18n) % u' ' % m_relativeDistance.toQString(i18n) % u' ' %
                ICoordinateGeodetic::convertToQString(i18n);
     }
-
-    ICoordinateWithRelativePosition::ICoordinateWithRelativePosition() {}
 
     bool ICoordinateWithRelativePosition::canHandleIndex(CPropertyIndexRef index)
     {

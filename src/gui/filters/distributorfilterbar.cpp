@@ -41,7 +41,7 @@ namespace swift::gui::filters
         });
     }
 
-    CDistributorFilterBar::~CDistributorFilterBar() {}
+    CDistributorFilterBar::~CDistributorFilterBar() = default;
 
     std::unique_ptr<swift::gui::models::IModelFilter<CDistributorList>> CDistributorFilterBar::createModelFilter() const
     {

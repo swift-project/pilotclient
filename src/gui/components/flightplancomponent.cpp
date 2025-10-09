@@ -221,7 +221,7 @@ namespace swift::gui::components
         });
     }
 
-    CFlightPlanComponent::~CFlightPlanComponent() {}
+    CFlightPlanComponent::~CFlightPlanComponent() = default;
 
     void CFlightPlanComponent::loginDataSet()
     {

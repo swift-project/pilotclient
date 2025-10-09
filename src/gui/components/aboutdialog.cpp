@@ -30,7 +30,7 @@ namespace swift::gui::components
         });
     }
 
-    CAboutDialog::~CAboutDialog() {}
+    CAboutDialog::~CAboutDialog() = default;
 
     void CAboutDialog::init()
     {

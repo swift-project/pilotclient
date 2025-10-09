@@ -51,7 +51,7 @@ namespace swift::gui
         connect(this, &QTextEdit::customContextMenuRequested, this, &CTextMessageTextEdit::showContextMenuForTextEdit);
     }
 
-    CTextMessageTextEdit::~CTextMessageTextEdit() {}
+    CTextMessageTextEdit::~CTextMessageTextEdit() = default;
 
     void CTextMessageTextEdit::insertTextMessage(const CTextMessage &textMessage, int maxMessages)
     {

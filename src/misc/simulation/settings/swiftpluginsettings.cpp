@@ -9,8 +9,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSwiftPluginS
 
 namespace swift::misc::simulation::settings
 {
-    CSwiftPluginSettings::CSwiftPluginSettings() {}
-
     void CSwiftPluginSettings::setEmulatedSimulator(const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");

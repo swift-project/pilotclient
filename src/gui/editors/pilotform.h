@@ -31,7 +31,7 @@ namespace swift::gui::editors
         explicit CPilotForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CPilotForm() override;
+        ~CPilotForm() override;
 
         //! Set VATSIM validation mode
         void setVatsimValidation(bool vatsim);
@@ -47,8 +47,8 @@ namespace swift::gui::editors
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
+        void setReadOnly(bool readonly) override;
+        swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
     private:

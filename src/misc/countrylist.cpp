@@ -11,8 +11,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CCountry, CCountryList)
 
 namespace swift::misc
 {
-    CCountryList::CCountryList() {}
-
     CCountryList::CCountryList(const CSequence<CCountry> &other) : CSequence<CCountry>(other) {}
 
     CCountry CCountryList::findByIsoCode(const QString &isoCode) const

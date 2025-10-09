@@ -14,8 +14,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CDistribution)
 
 namespace swift::misc::db
 {
-    CDistribution::CDistribution() {}
-
     CDistribution::CDistribution(const QString &channel, int stability, bool restricted)
         : m_channel(channel.trimmed().toUpper()), m_stability(stability), m_restricted(restricted)
     {}

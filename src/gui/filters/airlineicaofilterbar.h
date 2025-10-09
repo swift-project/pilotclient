@@ -41,10 +41,10 @@ namespace swift::gui::filters
         explicit CAirlineIcaoFilterBar(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAirlineIcaoFilterBar() override;
+        ~CAirlineIcaoFilterBar() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::aviation::CAirlineIcaoCodeList>>
+        std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::aviation::CAirlineIcaoCodeList>>
         createModelFilter() const override;
 
         //! Filter default values by ICAO code
@@ -52,7 +52,7 @@ namespace swift::gui::filters
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged
-        virtual void onRowCountChanged(int count, bool withFilter) override;
+        void onRowCountChanged(int count, bool withFilter) override;
 
     private slots:
         //! Country has been changed
@@ -60,7 +60,7 @@ namespace swift::gui::filters
 
     protected:
         //! Clear form
-        virtual void clearForm() override;
+        void clearForm() override;
 
     private:
         QScopedPointer<Ui::CAirlineIcaoFilterBar> ui;

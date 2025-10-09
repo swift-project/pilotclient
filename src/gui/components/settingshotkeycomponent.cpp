@@ -51,7 +51,7 @@ namespace swift::gui::components
         ui->tv_Hotkeys->selectRow(0);
     }
 
-    CSettingsHotkeyComponent::~CSettingsHotkeyComponent() {}
+    CSettingsHotkeyComponent::~CSettingsHotkeyComponent() = default;
 
     void CSettingsHotkeyComponent::saveSettings()
     {

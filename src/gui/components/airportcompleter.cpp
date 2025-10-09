@@ -30,7 +30,7 @@ namespace swift::gui::components
         this->onAirportsChanged();
     }
 
-    CAirportCompleter::~CAirportCompleter() {}
+    CAirportCompleter::~CAirportCompleter() = default;
 
     void CAirportCompleter::setAirport(const CAirport &airport)
     {

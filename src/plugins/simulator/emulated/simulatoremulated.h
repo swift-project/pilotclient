@@ -43,39 +43,37 @@ namespace swift::simplugin::emulated
                            swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CSimulatorEmulated() override;
+        ~CSimulatorEmulated() override;
 
         // functions implemented
-        virtual bool connectTo() override;
-        virtual bool disconnectFrom() override;
-        virtual void unload() override;
-        virtual bool isConnected() const override;
-        virtual bool isPaused() const override;
-        virtual bool isSimulating() const override;
-        virtual bool changeRemoteAircraftModel(const swift::misc::simulation::CSimulatedAircraft &aircraft) override;
-        virtual bool changeRemoteAircraftEnabled(const swift::misc::simulation::CSimulatedAircraft &aircraft) override;
-        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
-                                               const swift::misc::CIdentifier &originator) override;
-        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal,
-                                              const swift::misc::CIdentifier &originator) override;
-        virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
-        virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
-        virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
-        virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
-        virtual swift::misc::CStatusMessageList
+        bool connectTo() override;
+        bool disconnectFrom() override;
+        void unload() override;
+        bool isConnected() const override;
+        bool isPaused() const override;
+        bool isSimulating() const override;
+        bool changeRemoteAircraftModel(const swift::misc::simulation::CSimulatedAircraft &aircraft) override;
+        bool changeRemoteAircraftEnabled(const swift::misc::simulation::CSimulatedAircraft &aircraft) override;
+        bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                       const swift::misc::CIdentifier &originator) override;
+        bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                      const swift::misc::CIdentifier &originator) override;
+        void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
+        void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
+        bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
+        swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
+        swift::misc::CStatusMessageList
         getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
-        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign,
-                                               const swift::misc::aviation::CAircraftSituation &situation,
-                                               const swift::misc::aviation::CAircraftParts &parts) override;
-        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
-                                      const swift::misc::aviation::CCallsign &callsign) override;
+        bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign,
+                                       const swift::misc::aviation::CAircraftSituation &situation,
+                                       const swift::misc::aviation::CAircraftParts &parts) override;
+        bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
+                              const swift::misc::aviation::CCallsign &callsign) override;
 
         // ----- functions just logged -------
-        virtual bool
-        logicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
-        virtual bool logicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
-        virtual int
-        physicallyRemoveMultipleRemoteAircraft(const swift::misc::aviation::CCallsignSet &callsigns) override;
+        bool logicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
+        bool logicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
+        int physicallyRemoveMultipleRemoteAircraft(const swift::misc::aviation::CCallsignSet &callsigns) override;
 
         // functions logged and used
         //! \ingroup swiftdotcommands
@@ -84,7 +82,7 @@ namespace swift::simplugin::emulated
         //! .drv hide   hide emulated driver window     swift::simplugin::emulated::CSimulatorEmulated
         //! </pre>
         //! \copydoc swift::core::ISimulator::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
+        bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
 
         //! UI setter
         void setCombinedStatus(bool connected, bool simulating, bool paused);
@@ -131,13 +129,12 @@ namespace swift::simplugin::emulated
         void internalAircraftChanged();
 
     protected:
-        virtual bool
-        physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
-        virtual bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
-        virtual int physicallyRemoveAllRemoteAircraft() override;
+        bool physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &remoteAircraft) override;
+        bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
+        int physicallyRemoveAllRemoteAircraft() override;
 
         //! \copydoc swift::core::ISimulator::parseDetails
-        virtual bool parseDetails(const swift::misc::CSimpleCommandParser &parser) override;
+        bool parseDetails(const swift::misc::CSimpleCommandParser &parser) override;
 
     private:
         //! Set object name
@@ -195,13 +192,13 @@ namespace swift::simplugin::emulated
 
     protected:
         //! \copydoc swift::core::ISimulatorListener::startImpl
-        virtual void startImpl() override;
+        void startImpl() override;
 
         //! \copydoc swift::core::ISimulatorListener::stopImpl
-        virtual void stopImpl() override;
+        void stopImpl() override;
 
         //! \copydoc swift::core::ISimulatorListener::stopImpl
-        virtual void checkImpl() override;
+        void checkImpl() override;
     };
 } // namespace swift::simplugin::emulated
 

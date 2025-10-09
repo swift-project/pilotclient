@@ -43,7 +43,7 @@ namespace swift::gui::components
         });
     }
 
-    CSettingsModelComponent::~CSettingsModelComponent() {}
+    CSettingsModelComponent::~CSettingsModelComponent() = default;
 
     int CSettingsModelComponent::getBackgroundUpdaterIntervallSecs() const
     {

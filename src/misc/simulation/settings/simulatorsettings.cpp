@@ -44,8 +44,6 @@ namespace swift::misc::simulation::settings
         return u;
     }
 
-    CSimulatorSettings::CSimulatorSettings() {}
-
     void CSimulatorSettings::setSimulatorDirectory(const QString &simulatorDirectory)
     {
         m_simulatorDirectory = simulatorDirectory.trimmed();

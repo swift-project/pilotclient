@@ -29,7 +29,7 @@ namespace swift::gui::menus
         static const QStringList &getLogCategories();
 
         //! \copydoc IMenuDelegate::customMenu
-        virtual void customMenu(CMenuActions &menuActions) override;
+        void customMenu(CMenuActions &menuActions) override;
 
         //! Allow to use the actions directly
         QList<QAction *> getActions() const;

@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CCopyModelsFromOtherSwiftVersionsDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CCopyModelsFromOtherSwiftVersionsDialog();
+        ~CCopyModelsFromOtherSwiftVersionsDialog() override;
 
     private:
         QScopedPointer<Ui::CCopyModelsFromOtherSwiftVersionsDialog> ui;

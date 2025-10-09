@@ -12,8 +12,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CDistributor, CDistributor
 
 namespace swift::misc::simulation
 {
-    CDistributorList::CDistributorList() {}
-
     CDistributorList::CDistributorList(const CSequence<CDistributor> &other) : CSequence<CDistributor>(other) {}
 
     CDistributor CDistributorList::findByKeyOrAlias(const QString &keyOrAlias) const

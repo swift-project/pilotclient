@@ -19,8 +19,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAtcStation, CAtcStationList
 
 namespace swift::misc::aviation
 {
-    CAtcStationList::CAtcStationList() {}
-
     CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) : CSequence<CAtcStation>(other) {}
 
     CAtcStationList CAtcStationList::findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const

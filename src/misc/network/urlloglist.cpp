@@ -7,8 +7,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CUrlLog, CUrlLogList)
 
 namespace swift::misc::network
 {
-    CUrlLogList::CUrlLogList() {}
-
     CUrlLogList::CUrlLogList(const CSequence &other) : CSequence<CUrlLog>(other) {}
 
     int CUrlLogList::addPendingUrl(const CUrl &url, int maxNumber)

@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CFirstModelSetDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CFirstModelSetDialog();
+        ~CFirstModelSetDialog() override;
 
     private:
         QScopedPointer<Ui::CFirstModelSetDialog> ui;

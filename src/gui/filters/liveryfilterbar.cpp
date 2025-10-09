@@ -46,7 +46,7 @@ namespace swift::gui::filters
         this->clearForm();
     }
 
-    CLiveryFilterBar::~CLiveryFilterBar() {}
+    CLiveryFilterBar::~CLiveryFilterBar() = default;
 
     std::unique_ptr<models::IModelFilter<CLiveryList>> CLiveryFilterBar::createModelFilter() const
     {

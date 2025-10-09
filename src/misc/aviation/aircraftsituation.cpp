@@ -87,8 +87,6 @@ namespace swift::misc::aviation
         qRegisterMetaType<CAircraftSituation::GndElevationInfo>();
     }
 
-    CAircraftSituation::CAircraftSituation() {}
-
     CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign)
         : m_correspondingCallsign(correspondingCallsign)
     {}

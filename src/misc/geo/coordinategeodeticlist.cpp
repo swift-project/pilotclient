@@ -12,8 +12,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::geo, CCoordinateGeodetic, CCoordinateG
 
 namespace swift::misc::geo
 {
-    CCoordinateGeodeticList::CCoordinateGeodeticList() {}
-
     CCoordinateGeodeticList::CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other)
         : CSequence<CCoordinateGeodetic>(other)
     {}

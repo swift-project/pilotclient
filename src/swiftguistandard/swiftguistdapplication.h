@@ -31,10 +31,10 @@ public:
 
 protected:
     //! Parsing of special CMD args
-    virtual bool parsingHookIn() override;
+    bool parsingHookIn() override;
 
     //! Start facade by cmd arguments
-    virtual swift::misc::CStatusMessageList startHookIn() override;
+    swift::misc::CStatusMessageList startHookIn() override;
 
 private:
     static swift::core::CCoreFacadeConfig coreModeToCoreFacadeConfig(swift::core::CoreModes::CoreMode,

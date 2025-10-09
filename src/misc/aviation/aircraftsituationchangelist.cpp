@@ -7,8 +7,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftSituationChange, CA
 
 namespace swift::misc::aviation
 {
-    CAircraftSituationChangeList::CAircraftSituationChangeList() {}
-
     CAircraftSituationChangeList::CAircraftSituationChangeList(const CSequence<CAircraftSituationChange> &other)
         : CSequence<CAircraftSituationChange>(other)
     {}

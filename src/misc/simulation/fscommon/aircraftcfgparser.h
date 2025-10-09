@@ -35,14 +35,14 @@ namespace swift::misc
             CAircraftCfgParser(const CSimulatorInfo &simInfo, QObject *parent = nullptr);
 
             //! Virtual destructor
-            virtual ~CAircraftCfgParser() override;
+            ~CAircraftCfgParser() override;
 
             //! Get parsed aircraft cfg entries list
             const CAircraftCfgEntriesList &getAircraftCfgEntriesList() const { return m_parsedCfgEntriesList; }
 
             //! \name Interface functions
             //! @{
-            virtual bool isLoadingFinished() const override;
+            bool isLoadingFinished() const override;
             //! @}
 
             //! Parse a single file
@@ -55,8 +55,8 @@ namespace swift::misc
         protected:
             //! \name Interface functions
             //! @{
-            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
-                                              const QStringList &modelDirectories) override;
+            void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                      const QStringList &modelDirectories) override;
             //! @}
 
         private:

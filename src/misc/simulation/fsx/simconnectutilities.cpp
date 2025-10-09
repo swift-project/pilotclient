@@ -15,8 +15,6 @@ using namespace swift::misc::aviation;
 
 namespace swift::misc::simulation::fsx
 {
-    CSimConnectUtilities::CSimConnectUtilities() {}
-
     QString CSimConnectUtilities::resolveEnumToString(const DWORD id, const char *enumName)
     {
         const int i = CSimConnectUtilities::staticMetaObject.indexOfEnumerator(enumName);

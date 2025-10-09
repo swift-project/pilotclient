@@ -70,7 +70,7 @@ namespace swift::misc
 
     public:
         //! Default constructor.
-        CVariant() {}
+        CVariant() = default;
 
         //! Copy constructor.
         CVariant(const CVariant &) = default;

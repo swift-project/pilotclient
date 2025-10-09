@@ -9,8 +9,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CNameVariantPair, CNameVariantPairList
 
 namespace swift::misc
 {
-    CNameVariantPairList::CNameVariantPairList() {}
-
     CNameVariantPairList::CNameVariantPairList(const CSequence<CNameVariantPair> &other)
         : CSequence<CNameVariantPair>(other)
     {}

@@ -30,7 +30,7 @@ namespace swift::gui::editors
         connect(ui->le_PitchOnGround, &QLineEdit::editingFinished, this, &CInterpolationSetupForm::onPitchChanged);
     }
 
-    CInterpolationSetupForm::~CInterpolationSetupForm() {}
+    CInterpolationSetupForm::~CInterpolationSetupForm() = default;
 
     void CInterpolationSetupForm::setValue(const CInterpolationAndRenderingSetupBase &setup)
     {

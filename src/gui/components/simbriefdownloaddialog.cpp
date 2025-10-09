@@ -16,7 +16,7 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CSimBriefDownloadDialog::~CSimBriefDownloadDialog() {}
+    CSimBriefDownloadDialog::~CSimBriefDownloadDialog() = default;
 
     CSimBriefData CSimBriefDownloadDialog::getSimBriefData() const
     {

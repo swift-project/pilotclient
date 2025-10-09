@@ -14,7 +14,7 @@ namespace swift::gui::components
         ui->lw_StringList->setSelectionMode(QAbstractItemView::SingleSelection);
     }
 
-    CStringListDialog::~CStringListDialog() {}
+    CStringListDialog::~CStringListDialog() = default;
 
     void CStringListDialog::setStrings(const QStringList &strings)
     {

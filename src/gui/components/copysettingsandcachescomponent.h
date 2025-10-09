@@ -50,7 +50,7 @@ namespace swift::gui::components
         explicit CCopySettingsAndCachesComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CCopySettingsAndCachesComponent();
+        ~CCopySettingsAndCachesComponent() override;
 
         //! Reload other versions
         void reloadOtherVersions(int deferMs = -1);
@@ -169,10 +169,10 @@ namespace swift::gui::components
         void setConfigComponent(CCopySettingsAndCachesComponent *config) { m_copyCachesAndSettings = config; }
 
         //! \copydoc QWizardPage::initializePage
-        virtual void initializePage() override;
+        void initializePage() override;
 
         //! \copydoc QWizardPage::validatePage
-        virtual bool validatePage() override;
+        bool validatePage() override;
 
     private:
         CCopySettingsAndCachesComponent *m_copyCachesAndSettings = nullptr;

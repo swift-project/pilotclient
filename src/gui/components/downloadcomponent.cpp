@@ -52,7 +52,7 @@ namespace swift::gui::components
         connect(ui->pb_Launch, &QPushButton::pressed, this, &CDownloadComponent::startDownloadedExecutable);
     }
 
-    CDownloadComponent::~CDownloadComponent() {}
+    CDownloadComponent::~CDownloadComponent() = default;
 
     bool CDownloadComponent::setDownloadFile(const CRemoteFile &remoteFile)
     {

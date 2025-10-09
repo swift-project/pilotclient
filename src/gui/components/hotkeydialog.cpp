@@ -113,7 +113,7 @@ namespace swift::gui::components
         initStyleSheet();
     }
 
-    CHotkeyDialog::~CHotkeyDialog() {}
+    CHotkeyDialog::~CHotkeyDialog() = default;
 
     CKeySelectionBox::CKeySelectionBox(QWidget *parent) : QComboBox(parent)
     {

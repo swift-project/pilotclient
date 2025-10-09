@@ -50,7 +50,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        EuroscopeSimData();
+        EuroscopeSimData() = default;
     };
 
     //! Equal to operator

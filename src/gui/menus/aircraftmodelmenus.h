@@ -63,7 +63,7 @@ namespace swift::gui
             static const QStringList &getLogCategories();
 
             //! \copydoc IMenuDelegate::customMenu
-            virtual void customMenu(CMenuActions &menuActions) override;
+            void customMenu(CMenuActions &menuActions) override;
 
         private:
             void showSimulatorFile(); //!< simulator file
@@ -91,7 +91,7 @@ namespace swift::gui
             static const QStringList &getLogCategories();
 
             //! \copydoc IMenuDelegate::customMenu
-            virtual void customMenu(CMenuActions &menuActions) override;
+            void customMenu(CMenuActions &menuActions) override;
 
             //! Change target
             void setModelsTarget(QObject *target) { m_modelsTarget = target; }
@@ -123,7 +123,7 @@ namespace swift::gui
             static const QStringList &getLogCategories();
 
             //! \copydoc IMenuDelegate::customMenu
-            virtual void customMenu(CMenuActions &menuActions) override;
+            void customMenu(CMenuActions &menuActions) override;
 
             //! Change target
             void setModelsTarget(QObject *target) { m_modelsTarget = target; }

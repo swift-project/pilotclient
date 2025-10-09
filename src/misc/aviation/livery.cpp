@@ -25,8 +25,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CLivery)
 
 namespace swift::misc::aviation
 {
-    CLivery::CLivery() {}
-
     CLivery::CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description)
         : CLivery(-1, combinedCode, airline, description, "", "", false)
     {}

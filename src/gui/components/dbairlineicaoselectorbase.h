@@ -34,7 +34,7 @@ namespace swift::gui::components
 
     public:
         //! Destructor
-        virtual ~CDbAirlineIcaoSelectorBase() override;
+        ~CDbAirlineIcaoSelectorBase() override;
 
         //! Current airline ICAO
         virtual bool setAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &icao);
@@ -66,16 +66,16 @@ namespace swift::gui::components
         virtual QCompleter *createCompleter() = 0;
 
         //! \copydoc QWidget::dragEnterEvent
-        virtual void dragEnterEvent(QDragEnterEvent *event) override;
+        void dragEnterEvent(QDragEnterEvent *event) override;
 
         //! \copydoc QWidget::dragMoveEvent
-        virtual void dragMoveEvent(QDragMoveEvent *event) override;
+        void dragMoveEvent(QDragMoveEvent *event) override;
 
         //! \copydoc QWidget::dragLeaveEvent
-        virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+        void dragLeaveEvent(QDragLeaveEvent *event) override;
 
         //! \copydoc QWidget::dropEvent
-        virtual void dropEvent(QDropEvent *event) override;
+        void dropEvent(QDropEvent *event) override;
 
         QScopedPointer<QCompleter> m_completer; //!< completer used
         swift::misc::aviation::CAirlineIcaoCode m_currentIcao; //!< current ICAO object

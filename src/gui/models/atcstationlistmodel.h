@@ -35,7 +35,7 @@ namespace swift::gui::models
         explicit CAtcStationListModel(AtcStationMode stationMode, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAtcStationListModel() override {}
+        ~CAtcStationListModel() override = default;
 
         //! Set station mode
         void setStationMode(AtcStationMode stationMode);

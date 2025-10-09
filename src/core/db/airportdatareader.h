@@ -44,30 +44,28 @@ namespace swift::core::db
         int getAirportsCount() const;
 
         // data read from local data
-        virtual swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir,
-                                                                  swift::misc::network::CEntityFlags::Entity whatToRead,
-                                                                  bool overrideNewerOnly) override;
-        virtual bool readFromJsonFilesInBackground(const QString &dir,
-                                                   swift::misc::network::CEntityFlags::Entity whatToRead,
-                                                   bool overrideNewerOnly) override;
+        swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir,
+                                                          swift::misc::network::CEntityFlags::Entity whatToRead,
+                                                          bool overrideNewerOnly) override;
+        bool readFromJsonFilesInBackground(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead,
+                                           bool overrideNewerOnly) override;
 
         // base class overrides
-        virtual swift::misc::network::CEntityFlags::Entity getSupportedEntities() const override;
-        virtual QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entities) const override;
-        virtual int getCacheCount(swift::misc::network::CEntityFlags::Entity entity) const override;
-        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
-        virtual swift::misc::network::CEntityFlags::Entity
+        swift::misc::network::CEntityFlags::Entity getSupportedEntities() const override;
+        QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entities) const override;
+        int getCacheCount(swift::misc::network::CEntityFlags::Entity entity) const override;
+        swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
+        swift::misc::network::CEntityFlags::Entity
         getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const override;
-        virtual void synchronizeCaches(swift::misc::network::CEntityFlags::Entity entities) override;
-        virtual void admitCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        void synchronizeCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        void admitCaches(swift::misc::network::CEntityFlags::Entity entities) override;
 
     protected:
         // base class overrides
-        virtual void invalidateCaches(swift::misc::network::CEntityFlags::Entity entities) override;
-        virtual bool hasChangedUrl(swift::misc::network::CEntityFlags::Entity entity,
-                                   swift::misc::network::CUrl &oldUrlInfo,
-                                   swift::misc::network::CUrl &newUrlInfo) const override;
-        virtual swift::misc::network::CUrl getDbServiceBaseUrl() const override;
+        void invalidateCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        bool hasChangedUrl(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CUrl &oldUrlInfo,
+                           swift::misc::network::CUrl &newUrlInfo) const override;
+        swift::misc::network::CUrl getDbServiceBaseUrl() const override;
 
     private:
         swift::misc::CData<swift::core::data::TDbAirportCache> m_airportCache {

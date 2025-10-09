@@ -25,7 +25,7 @@ namespace swift::gui::filters
         CFilterDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CFilterDialog();
+        ~CFilterDialog() override = default;
 
     private:
         //! Stylesheet changed

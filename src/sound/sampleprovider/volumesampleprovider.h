@@ -21,7 +21,7 @@ namespace swift::sound::sample_provider
         CVolumeSampleProvider(ISampleProvider *sourceProvider, QObject *parent = nullptr);
 
         //! \copydoc ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! @{
         //! Gain ratio, value a amplitude need to be multiplied with

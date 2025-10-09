@@ -204,7 +204,7 @@ namespace swift::gui
             virtual bool acceptDrop(const QMimeData *mimeData) const = 0;
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
-            virtual bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
+            bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
 
             //! Resize mode
             ResizeMode getResizeMode() const { return m_resizeMode; }
@@ -301,7 +301,7 @@ namespace swift::gui
             Menu getMenu() const { return m_menus; }
 
             //! \copydoc QTableView::setSelectionModel
-            virtual void setSelectionModel(QItemSelectionModel *model) override;
+            void setSelectionModel(QItemSelectionModel *model) override;
 
             //! Main application window widget if any
             QWidget *mainApplicationWindowWidget() const;
@@ -430,7 +430,7 @@ namespace swift::gui
             CViewBaseNonTemplate(QWidget *parent);
 
             //! Destructor
-            virtual ~CViewBaseNonTemplate() override;
+            ~CViewBaseNonTemplate() override;
 
             //! Method creating the menu
             //! \remarks override this method to contribute to the menu
@@ -440,19 +440,19 @@ namespace swift::gui
             //! \name Functions from QTableView
             //! @{
             //! \copydoc QTableView::resizeEvent
-            virtual void resizeEvent(QResizeEvent *event) override;
+            void resizeEvent(QResizeEvent *event) override;
 
             //! \copydoc QTableView::dragEnterEvent
-            virtual void dragEnterEvent(QDragEnterEvent *event) override;
+            void dragEnterEvent(QDragEnterEvent *event) override;
 
             //! \copydoc QTableView::dragMoveEvent
-            virtual void dragMoveEvent(QDragMoveEvent *event) override;
+            void dragMoveEvent(QDragMoveEvent *event) override;
 
             //! \copydoc QTableView::dragLeaveEvent
-            virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+            void dragLeaveEvent(QDragLeaveEvent *event) override;
 
             //! \copydoc QTableView::dropEvent
-            virtual void dropEvent(QDropEvent *event) override;
+            void dropEvent(QDropEvent *event) override;
             //! @}
 
             //! Perform resizing (no presizing) / non slot method for template
@@ -660,7 +660,7 @@ namespace swift::gui
             using ObjectType = typename T::ObjectType;
 
             //! Destructor
-            virtual ~CViewBase()
+            ~CViewBase() override
             {
                 if (m_model) { m_model->markDestroyed(); }
             }
@@ -716,13 +716,13 @@ namespace swift::gui
             //! @{
 
             //! \copydoc swift::gui::models::ISelectionModel::selectObjects
-            virtual void selectObjects(const ContainerType &selectedObjects) override;
+            void selectObjects(const ContainerType &selectedObjects) override;
 
             //! \copydoc swift::gui::models::ISelectionModel::selectedObjects
-            virtual ContainerType selectedObjects() const override;
+            ContainerType selectedObjects() const override;
 
             //! \copydoc swift::gui::models::ISelectionModel::unselectedObjects
-            virtual ContainerType unselectedObjects() const override;
+            ContainerType unselectedObjects() const override;
             //! @}
 
             //! First selected, the only one, or default
@@ -762,70 +762,70 @@ namespace swift::gui
             //! @{
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::removeSelectedRows
-            virtual int removeSelectedRows() override;
+            int removeSelectedRows() override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::presizeOrFullResizeToContents
-            virtual void presizeOrFullResizeToContents() override;
+            void presizeOrFullResizeToContents() override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::clearHighlighting
-            virtual void clearHighlighting() override;
+            void clearHighlighting() override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::materializeFilter
-            virtual void materializeFilter() override;
+            void materializeFilter() override;
             //! @}
 
             //! \name swift::gui::views::CViewBaseNonTemplate implementations
             //! @{
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::clear
-            virtual void clear() override;
+            void clear() override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::rowCount
-            virtual int rowCount() const override;
+            int rowCount() const override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::isEmpty
-            virtual bool isEmpty() const override;
+            bool isEmpty() const override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::isOrderable
-            virtual bool isOrderable() const override;
+            bool isOrderable() const override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::allowDragDrop
-            virtual void allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile = false) override;
+            void allowDragDrop(bool allowDrag, bool allowDrop, bool allowDropJsonFile = false) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::isDropAllowed
-            virtual bool isDropAllowed() const override;
+            bool isDropAllowed() const override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::dropEvent
-            virtual void dropEvent(QDropEvent *event) override;
+            void dropEvent(QDropEvent *event) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::acceptDrop
-            virtual bool acceptDrop(const QMimeData *mimeData) const override;
+            bool acceptDrop(const QMimeData *mimeData) const override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::setSorting
-            virtual bool setSorting(const swift::misc::CPropertyIndex &propertyIndex,
-                                    Qt::SortOrder order = Qt::AscendingOrder) override;
+            bool setSorting(const swift::misc::CPropertyIndex &propertyIndex,
+                            Qt::SortOrder order = Qt::AscendingOrder) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::sortByPropertyIndex
-            virtual void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex,
-                                             Qt::SortOrder order = Qt::AscendingOrder) override;
+            void sortByPropertyIndex(const swift::misc::CPropertyIndex &propertyIndex,
+                                     Qt::SortOrder order = Qt::AscendingOrder) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::setNoSorting
-            virtual void setNoSorting() override { m_model->setNoSorting(); }
+            void setNoSorting() override { m_model->setNoSorting(); }
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::getSortProperty
-            virtual swift::misc::CPropertyIndex getSortProperty() const override { return m_model->getSortProperty(); }
+            swift::misc::CPropertyIndex getSortProperty() const override { return m_model->getSortProperty(); }
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::getSortColumn
-            virtual int getSortColumn() const override { return m_model->getSortColumn(); }
+            int getSortColumn() const override { return m_model->getSortColumn(); }
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::hasValidSortColumn
-            virtual bool hasValidSortColumn() const override { return m_model->hasValidSortColumn(); }
+            bool hasValidSortColumn() const override { return m_model->hasValidSortColumn(); }
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::endsWithEmptyColumn
-            virtual bool endsWithEmptyColumn() const override { return m_model->endsWithEmptyColumn(); }
+            bool endsWithEmptyColumn() const override { return m_model->endsWithEmptyColumn(); }
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::getSortOrder
-            virtual Qt::SortOrder getSortOrder() const override { return m_model->getSortOrder(); }
+            Qt::SortOrder getSortOrder() const override { return m_model->getSortOrder(); }
             //! @}
 
             //! Sort if columns or order changed
@@ -889,46 +889,46 @@ namespace swift::gui
             //! @{
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::reachedResizeThreshold
-            virtual bool reachedResizeThreshold(int containrerSize = -1) const override;
+            bool reachedResizeThreshold(int containrerSize = -1) const override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::performModeBasedResizeToContent
-            virtual void performModeBasedResizeToContent() override;
+            void performModeBasedResizeToContent() override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::performUpdateContainer
-            virtual int performUpdateContainer(const swift::misc::CVariant &variant, bool sort, bool resize) override;
+            int performUpdateContainer(const swift::misc::CVariant &variant, bool sort, bool resize) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::updateSortIndicator
-            virtual void updateSortIndicator() override;
+            void updateSortIndicator() override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::mouseOverCallback
-            virtual void mouseOverCallback(const QModelIndex &index, bool mouseOver) override;
+            void mouseOverCallback(const QModelIndex &index, bool mouseOver) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::drawDropIndicator
-            virtual void drawDropIndicator(bool indicator) override;
+            void drawDropIndicator(bool indicator) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::copy
-            virtual void copy() override;
+            void copy() override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::cut
-            virtual void cut() override;
+            void cut() override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::paste
-            virtual void paste() override;
+            void paste() override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::displayJsonPopup
-            virtual void displayJsonPopup() override { this->displayContainerAsJsonPopup(false); }
+            void displayJsonPopup() override { this->displayContainerAsJsonPopup(false); }
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::displaySelectedJsonPopup
-            virtual void displaySelectedJsonPopup() override { this->displayContainerAsJsonPopup(true); }
+            void displaySelectedJsonPopup() override { this->displayContainerAsJsonPopup(true); }
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::filterDialogFinished
-            virtual bool filterDialogFinished(int status) override;
+            bool filterDialogFinished(int status) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::filterWidgetChangedFilter
-            virtual bool filterWidgetChangedFilter(bool enabled) override;
+            bool filterWidgetChangedFilter(bool enabled) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::removeFilter
-            virtual void removeFilter() override;
+            void removeFilter() override;
             //! @}
 
             //! Modify JSON data loaded in swift::gui::views::CViewBaseNonTemplate::loadJson
@@ -942,10 +942,10 @@ namespace swift::gui
             virtual void jsonLoadedAndModelUpdated(const ContainerType &data);
 
             //! \copydoc swift::gui::views::CViewBaseNonTemplate::customMenu
-            virtual void customMenu(menus::CMenuActions &menuActions) override;
+            void customMenu(menus::CMenuActions &menuActions) override;
 
             //! \copydoc swift::gui::views::CViewBaseNonTemplate::customMenu
-            virtual swift::misc::CStatusMessage loadJsonFile(const QString &fileName) override;
+            swift::misc::CStatusMessage loadJsonFile(const QString &fileName) override;
 
             //! Display the container as JSON popup
             virtual void displayContainerAsJsonPopup(bool selectedOnly);
@@ -954,20 +954,19 @@ namespace swift::gui
             //! @{
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::removeFilter
-            virtual void onClicked(const QModelIndex &index) override;
+            void onClicked(const QModelIndex &index) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::onDoubleClicked
-            virtual void onDoubleClicked(const QModelIndex &index) override;
+            void onDoubleClicked(const QModelIndex &index) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::onRowSelected
-            virtual void onRowSelected(const QModelIndex &index) override;
+            void onRowSelected(const QModelIndex &index) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::loadJson
-            virtual swift::misc::CStatusMessage loadJson(const QString &directory = {}) override;
+            swift::misc::CStatusMessage loadJson(const QString &directory = {}) override;
 
             //!\copydoc swift::gui::views::CViewBaseNonTemplate::saveJson
-            virtual swift::misc::CStatusMessage saveJson(bool selectedOnly = false,
-                                                         const QString &directory = {}) override;
+            swift::misc::CStatusMessage saveJson(bool selectedOnly = false, const QString &directory = {}) override;
             //! @}
         };
     } // namespace views

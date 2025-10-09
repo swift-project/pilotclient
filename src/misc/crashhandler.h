@@ -30,7 +30,7 @@ namespace swift::misc
         static CCrashHandler *instance();
 
         //! Destructor
-        virtual ~CCrashHandler();
+        ~CCrashHandler() override;
 
         //! Initialize and start crashpad handler process
         void init();

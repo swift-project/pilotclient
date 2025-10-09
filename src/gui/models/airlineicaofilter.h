@@ -23,7 +23,7 @@ namespace swift::gui::models
                            bool isReal, bool isVa);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::aviation::CAirlineIcaoCodeList
+        swift::misc::aviation::CAirlineIcaoCodeList
         filter(const swift::misc::aviation::CAirlineIcaoCodeList &inContainer) const override;
 
     private:

@@ -96,7 +96,7 @@ namespace swift::gui::components
         });
     }
 
-    CInfoBarStatusComponent::~CInfoBarStatusComponent() {}
+    CInfoBarStatusComponent::~CInfoBarStatusComponent() = default;
 
     void CInfoBarStatusComponent::initLeds()
     {

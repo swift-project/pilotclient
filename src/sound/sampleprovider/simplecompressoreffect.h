@@ -26,7 +26,7 @@ namespace swift::sound::sample_provider
         CSimpleCompressorEffect(ISampleProvider *source, QObject *parent = nullptr);
 
         //! \copydoc ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! Enable
         void setEnabled(bool enabled);

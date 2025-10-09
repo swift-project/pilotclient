@@ -38,7 +38,7 @@ namespace swift::gui::components
                 &CApplicationCloseDialog::buttonClicked);
     }
 
-    CApplicationCloseDialog::~CApplicationCloseDialog() {}
+    CApplicationCloseDialog::~CApplicationCloseDialog() = default;
 
     void CApplicationCloseDialog::onAccepted()
     {

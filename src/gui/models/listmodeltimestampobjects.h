@@ -49,7 +49,7 @@ namespace swift::gui::models
         using ObjectType = typename T::value_type;
 
         //! Destructor
-        virtual ~CListModelTimestampWithOffsetObjects() {}
+        ~CListModelTimestampWithOffsetObjects() override = default;
 
         //! Insert as first element by keeping maxElements and the latest first
         void push_frontKeepLatestAdjustedFirst(const ObjectType &object, int max);

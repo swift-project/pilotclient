@@ -39,7 +39,7 @@ namespace swift::gui::models
         CActionModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CActionModel() override;
+        ~CActionModel() override;
 
         //! \copydoc QAbstractItemModel::data
         QVariant data(const QModelIndex &index, int role) const override;

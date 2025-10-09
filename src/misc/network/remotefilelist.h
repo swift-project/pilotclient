@@ -28,7 +28,7 @@ namespace swift::misc::network
         using CSequence::CSequence;
 
         //! Default constructor.
-        CRemoteFileList();
+        CRemoteFileList() = default;
 
         //! Construct from a base class object.
         CRemoteFileList(const CSequence<CRemoteFile> &other);

@@ -34,7 +34,7 @@ namespace swift::gui::components
         }
 
         //! \copydoc QWizardPage::validatePage
-        virtual bool validatePage() override { return true; }
+        bool validatePage() override { return true; }
 
     private:
         CInstallXSwiftBusComponent *m_xSwiftBusConfig = nullptr;

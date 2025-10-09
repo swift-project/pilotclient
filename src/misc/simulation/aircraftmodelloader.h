@@ -90,7 +90,7 @@ namespace swift::misc::simulation
         using ModelConsolidationCallback = std::function<int(swift::misc::simulation::CAircraftModelList &, bool)>;
 
         //! Destructor
-        virtual ~IAircraftModelLoader() override;
+        ~IAircraftModelLoader() override = default;
 
         //! Loading finished?
         virtual bool isLoadingFinished() const = 0;
@@ -121,8 +121,8 @@ namespace swift::misc::simulation
         bool supportsSimulator(const CSimulatorInfo &simulator) const { return m_simulator == simulator; }
 
         // Interface implementations
-        virtual void setModels(const CAircraftModelList &models) override;
-        virtual int updateModels(const CAircraftModelList &models) override;
+        void setModels(const CAircraftModelList &models) override;
+        int updateModels(const CAircraftModelList &models) override;
 
     signals:
         //! Disk loading started
@@ -192,12 +192,12 @@ namespace swift::misc::simulation
         CDummyModelLoader(const CSimulatorInfo &simulator, QObject *parent);
 
         //! IAircraftModelLoader::isLoadingFinished
-        virtual bool isLoadingFinished() const override;
+        bool isLoadingFinished() const override;
 
     protected:
         //! IAircraftModelLoader::startLoadingFromDisk
-        virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
-                                          const QStringList &modelDirectories) override;
+        void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                  const QStringList &modelDirectories) override;
 
     private:
         qint64 m_loadingStartedTs = -1;

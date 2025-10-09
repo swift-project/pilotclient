@@ -49,7 +49,7 @@ namespace swift::gui::editors
         connect(ui->comp_Coordinate, &CCoordinateForm::changedCoordinate, this, &CSituationForm::onCoordinateChanged);
     }
 
-    CSituationForm::~CSituationForm() {}
+    CSituationForm::~CSituationForm() = default;
 
     void CSituationForm::setSituation(const swift::misc::aviation::CAircraftSituation &situation)
     {

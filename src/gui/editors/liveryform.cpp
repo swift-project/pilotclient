@@ -60,7 +60,7 @@ namespace swift::gui::editors
         connect(ui->pb_SearchColor, &QPushButton::pressed, this, &CLiveryForm::searchForColor);
     }
 
-    CLiveryForm::~CLiveryForm() {}
+    CLiveryForm::~CLiveryForm() = default;
 
     CLivery CLiveryForm::getValue() const
     {

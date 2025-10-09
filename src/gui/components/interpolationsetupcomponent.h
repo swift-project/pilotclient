@@ -36,7 +36,7 @@ namespace swift::gui::components
         explicit CInterpolationSetupComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CInterpolationSetupComponent() override;
+        ~CInterpolationSetupComponent() override;
 
         //! Setup mode
         Mode getSetupMode() const;

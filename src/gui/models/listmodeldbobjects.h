@@ -34,7 +34,7 @@ namespace swift::gui::models
         using KeyType = K;
 
         //! Destructor
-        virtual ~CListModelDbObjects() {}
+        ~CListModelDbObjects() override = default;
 
         //! Keys to be highlighted
         void setHighlightedDbKeys(const QList<KeyType> &keys) { m_highlightKeys = keys; }
@@ -43,20 +43,20 @@ namespace swift::gui::models
         void clearHighlightedDbKeys() { m_highlightKeys.clear(); }
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::clearHighlighting
-        virtual void clearHighlighting() override
+        void clearHighlighting() override
         {
             this->clearHighlightedDbKeys();
             CListModelBase<ContainerType, UseCompare>::clearHighlighting();
         }
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::hasHighlightedRows
-        virtual bool hasHighlightedRows() const override { return !m_highlightKeys.isEmpty(); }
+        bool hasHighlightedRows() const override { return !m_highlightKeys.isEmpty(); }
 
         //! Set color for highlighting
         void setHighlightColor(QColor color) { m_highlightColor = color; }
 
         //! Get data for index and role
-        virtual QVariant data(const QModelIndex &index, int role) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
 
         //! DB key for given index
         KeyType dbKeyForIndex(const QModelIndex &index) const;
@@ -88,17 +88,17 @@ namespace swift::gui::models
         using KeyType = K;
 
         //! Destructor
-        virtual ~COrderableListModelDbObjects() {}
+        ~COrderableListModelDbObjects() override = default;
 
         //! \name specialized swift::gui::models::CListModelDbObjects functions for ordering
         //! @{
         using COrderableListModelDbObjects::CListModelDbObjects::update;
 
         //! \copydoc swift::gui::models::CListModelDbObjects::update
-        virtual int update(const ContainerType &container, bool sort) override;
+        int update(const ContainerType &container, bool sort) override;
 
         //! \copydoc swift::gui::models::CListModelDbObjects::moveItems
-        virtual void moveItems(const ContainerType &items, int position) override;
+        void moveItems(const ContainerType &items, int position) override;
         //! @}
 
         //! Sort order to order property swift::misc::IOrderable::IndexOrder

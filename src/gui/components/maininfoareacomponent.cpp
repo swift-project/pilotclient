@@ -27,7 +27,7 @@ namespace swift::gui::components
         connect(this->getLogComponent(), &CLogComponent::requestAttention, this, &CMainInfoAreaComponent::selectLog);
     }
 
-    CMainInfoAreaComponent::~CMainInfoAreaComponent() {}
+    CMainInfoAreaComponent::~CMainInfoAreaComponent() = default;
 
     CAtcStationComponent *CMainInfoAreaComponent::getAtcStationComponent() { return ui->comp_AtcStations; }
 

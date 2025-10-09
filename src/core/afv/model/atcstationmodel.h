@@ -65,7 +65,7 @@ namespace swift::core::afv::model
         CSampleAtcStationModel(QObject *parent = nullptr);
 
         //! Dtor
-        ~CSampleAtcStationModel() override;
+        ~CSampleAtcStationModel() override = default;
 
         //! Update the stations
         void updateAtcStations(const QVector<CSampleAtcStation> &atcStations);

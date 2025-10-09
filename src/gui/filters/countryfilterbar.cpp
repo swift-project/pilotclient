@@ -32,7 +32,7 @@ namespace swift::gui::filters
         this->clearForm();
     }
 
-    CCountryFilterBar::~CCountryFilterBar() {}
+    CCountryFilterBar::~CCountryFilterBar() = default;
 
     std::unique_ptr<swift::gui::models::IModelFilter<CCountryList>> CCountryFilterBar::createModelFilter() const
     {

@@ -58,7 +58,7 @@ namespace swift::gui::components
         });
     }
 
-    CAircraftModelValidationComponent::~CAircraftModelValidationComponent() {}
+    CAircraftModelValidationComponent::~CAircraftModelValidationComponent() = default;
 
     void CAircraftModelValidationComponent::validatedModelSet(const CSimulatorInfo &simulator,
                                                               const CAircraftModelList &valid,

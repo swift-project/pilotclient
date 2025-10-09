@@ -12,8 +12,6 @@ SWIFT_DEFINE_COLLECTION_MIXINS(swift::misc::aviation, CCallsign, CCallsignSet)
 
 namespace swift::misc::aviation
 {
-    CCallsignSet::CCallsignSet() {}
-
     CCallsignSet::CCallsignSet(const QStringList &callsigns, CCallsign::TypeHint typeHint)
     {
         for (const QString &c : callsigns)

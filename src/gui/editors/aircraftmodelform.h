@@ -29,19 +29,19 @@ namespace swift::gui::editors
         explicit CAircraftModelForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftModelForm() override;
+        ~CAircraftModelForm() override;
 
         //! Allow to drop data
         void allowDrop(bool allowDrop);
 
         //! \copydoc swift::gui::editors::CForm::setReadOnly
-        virtual void setReadOnly(bool readOnly) override;
+        void setReadOnly(bool readOnly) override;
 
         //! \copydoc swift::gui::editors::CForm::setSelectOnly
-        virtual void setSelectOnly() override;
+        void setSelectOnly() override;
 
         //! \copydoc swift::gui::editors::CForm::validate
-        virtual swift::misc::CStatusMessageList validate(bool withNestedForms = true) const override;
+        swift::misc::CStatusMessageList validate(bool withNestedForms = true) const override;
 
         //! \copydoc swift::gui::editors::CForm::validate
         virtual swift::misc::CStatusMessageList validateLivery(bool withNestedForms = true) const;

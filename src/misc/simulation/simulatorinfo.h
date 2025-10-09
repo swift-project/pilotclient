@@ -61,7 +61,7 @@ namespace swift::misc::simulation
         static constexpr int NumberOfSimulators = 7;
 
         //! Default constructor
-        CSimulatorInfo();
+        CSimulatorInfo() = default;
 
         //! Constructor
         CSimulatorInfo(const QString &identifierString);

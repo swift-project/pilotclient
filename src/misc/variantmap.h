@@ -38,7 +38,7 @@ namespace swift::misc
         using CDictionary::CDictionary;
 
         //! Default constructor.
-        CVariantMap() {}
+        CVariantMap() = default;
 
         //! Copy constructor.
         CVariantMap(const CVariantMap &) = default;

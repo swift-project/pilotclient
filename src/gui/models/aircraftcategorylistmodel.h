@@ -23,7 +23,7 @@ namespace swift::gui::models
         explicit CAircraftCategoryListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftCategoryListModel() {}
+        ~CAircraftCategoryListModel() override = default;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_MODELS_AIRCRAFTCATEGORYLISTMODEL_H

@@ -29,8 +29,8 @@ namespace swift::core
 
         public slots:
             //! \copydoc IContextApplication::changeSettings
-            virtual void changeSettings(const swift::misc::CValueCachePacket &settings,
-                                        const swift::misc::CIdentifier &origin) override
+            void changeSettings(const swift::misc::CValueCachePacket &settings,
+                                const swift::misc::CIdentifier &origin) override
             {
                 Q_UNUSED(settings);
                 Q_UNUSED(origin);
@@ -38,31 +38,31 @@ namespace swift::core
             }
 
             //! \copydoc IContextApplication::getAllSettings
-            virtual swift::misc::CValueCachePacket getAllSettings() const override
+            swift::misc::CValueCachePacket getAllSettings() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return swift::misc::CValueCachePacket();
             }
 
             //! \copydoc IContextApplication::getUnsavedSettingsKeys
-            virtual QStringList getUnsavedSettingsKeys() const override
+            QStringList getUnsavedSettingsKeys() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return QStringList();
             }
 
             //! \copydoc IContextApplication::getUnsavedSettingsKeys
-            virtual swift::core::context::CSettingsDictionary getUnsavedSettingsKeysDescribed() const override
+            swift::core::context::CSettingsDictionary getUnsavedSettingsKeysDescribed() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return CSettingsDictionary();
             }
 
             //! \copydoc IContextApplication::synchronizeLocalSettings
-            virtual void synchronizeLocalSettings() override { logEmptyContextWarning(Q_FUNC_INFO); }
+            void synchronizeLocalSettings() override { logEmptyContextWarning(Q_FUNC_INFO); }
 
             //! \copydoc IContextApplication::saveSettings
-            virtual swift::misc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override
+            swift::misc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override
             {
                 Q_UNUSED(keyPrefix);
                 logEmptyContextWarning(Q_FUNC_INFO);
@@ -70,7 +70,7 @@ namespace swift::core
             }
 
             //! \copydoc IContextApplication::saveSettingsByKey
-            virtual swift::misc::CStatusMessage saveSettingsByKey(const QStringList &keys) override
+            swift::misc::CStatusMessage saveSettingsByKey(const QStringList &keys) override
             {
                 Q_UNUSED(keys);
                 logEmptyContextWarning(Q_FUNC_INFO);
@@ -78,15 +78,14 @@ namespace swift::core
             }
 
             //! \copydoc IContextApplication::loadSettings
-            virtual swift::misc::CStatusMessage loadSettings() override
+            swift::misc::CStatusMessage loadSettings() override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return swift::misc::CStatusMessage();
             }
 
             //! \copydoc IContextApplication::registerHotkeyActions
-            virtual void registerHotkeyActions(const QStringList &actions,
-                                               const swift::misc::CIdentifier &origin) override
+            void registerHotkeyActions(const QStringList &actions, const swift::misc::CIdentifier &origin) override
             {
                 Q_UNUSED(actions);
                 Q_UNUSED(origin);
@@ -94,8 +93,8 @@ namespace swift::core
             }
 
             //! \copydoc IContextApplication::callHotkeyActionRemotely
-            virtual void callHotkeyActionRemotely(const QString &action, bool argument,
-                                                  const swift::misc::CIdentifier &origin) override
+            void callHotkeyActionRemotely(const QString &action, bool argument,
+                                          const swift::misc::CIdentifier &origin) override
             {
                 Q_UNUSED(action);
                 Q_UNUSED(argument);
@@ -104,7 +103,7 @@ namespace swift::core
             }
 
             //! \copydoc IContextApplication::registerApplication
-            virtual swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) override
+            swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) override
             {
                 Q_UNUSED(application);
                 logEmptyContextWarning(Q_FUNC_INFO);
@@ -112,21 +111,21 @@ namespace swift::core
             }
 
             //! \copydoc IContextApplication::unregisterApplication
-            virtual void unregisterApplication(const swift::misc::CIdentifier &application) override
+            void unregisterApplication(const swift::misc::CIdentifier &application) override
             {
                 Q_UNUSED(application);
                 logEmptyContextWarning(Q_FUNC_INFO);
             }
 
             //! \copydoc IContextApplication::getRegisteredApplications
-            virtual swift::misc::CIdentifierList getRegisteredApplications() const override
+            swift::misc::CIdentifierList getRegisteredApplications() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return swift::misc::CIdentifierList();
             }
 
             //! \copydoc IContextApplication::getApplicationIdentifier
-            virtual swift::misc::CIdentifier getApplicationIdentifier() const override
+            swift::misc::CIdentifier getApplicationIdentifier() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
                 return swift::misc::CIdentifier();

@@ -58,7 +58,7 @@ namespace swift::gui
             int replaceOrAddObjectByCallsign(const ObjectType &object);
 
             //! Reselect by callsigns
-            virtual void selectObjects(const ContainerType &selectedObjects) override;
+            void selectObjects(const ContainerType &selectedObjects) override;
 
         protected:
             //! Constructor

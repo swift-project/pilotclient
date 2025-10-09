@@ -35,7 +35,7 @@ namespace swift::gui::components
         explicit CDbAircraftCategoryComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbAircraftCategoryComponent();
+        ~CDbAircraftCategoryComponent() override;
 
     private:
         //! ICAO codes have been read

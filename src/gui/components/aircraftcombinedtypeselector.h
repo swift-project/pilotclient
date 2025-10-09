@@ -36,7 +36,7 @@ namespace swift::gui::components
         explicit CAircraftCombinedTypeSelector(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftCombinedTypeSelector() override;
+        ~CAircraftCombinedTypeSelector() override;
 
         //! Set comined code, e.g. L1P
         void setCombinedType(const QString &combinedCode);

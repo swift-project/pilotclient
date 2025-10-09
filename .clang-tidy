@@ -4,6 +4,7 @@
 Checks: >
   -*,
   modernize-use-auto,
+  modernize-use-override,
 
 
 CheckOptions:

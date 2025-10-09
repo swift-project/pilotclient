@@ -41,7 +41,7 @@ namespace swift::misc
         };
 
         //! Default constructor.
-        CTestValueObject() {}
+        CTestValueObject() = default;
 
         //! Constructor.
         CTestValueObject(const QString &name, const QString &description) : m_name(name), m_description(description) {}

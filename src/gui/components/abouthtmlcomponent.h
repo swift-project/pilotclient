@@ -30,7 +30,7 @@ namespace swift::gui::components
         explicit CAboutHtmlComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAboutHtmlComponent() override;
+        ~CAboutHtmlComponent() override;
 
     private:
         //! Load credits and legal info

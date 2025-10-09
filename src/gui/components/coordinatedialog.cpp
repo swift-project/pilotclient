@@ -22,7 +22,7 @@ namespace swift::gui::components
         connect(this, &QDialog::accepted, this, &CCoordinateDialog::changedCoordinate);
     }
 
-    CCoordinateDialog::~CCoordinateDialog() {}
+    CCoordinateDialog::~CCoordinateDialog() = default;
 
     CCoordinateGeodetic CCoordinateDialog::getCoordinate() const { return ui->editor_Coordinate->getCoordinate(); }
 

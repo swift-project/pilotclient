@@ -46,7 +46,7 @@ namespace swift::misc
         Q_DECLARE_FLAGS(Platform, PlatformFlag)
 
         //! Constructor
-        CPlatform() {}
+        CPlatform() = default;
 
         //! Constructor
         CPlatform(const QString &p);

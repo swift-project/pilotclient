@@ -95,7 +95,7 @@ namespace swift::gui::components
         this->contextFlagsToGui();
     }
 
-    CInternalsComponent::~CInternalsComponent() {}
+    CInternalsComponent::~CInternalsComponent() = default;
 
     void CInternalsComponent::showEvent(QShowEvent *event)
     {

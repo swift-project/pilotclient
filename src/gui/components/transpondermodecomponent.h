@@ -38,7 +38,7 @@ namespace swift::gui::components
         explicit CTransponderModeComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CTransponderModeComponent() override;
+        ~CTransponderModeComponent() override;
 
     signals:
         //! value has been changed

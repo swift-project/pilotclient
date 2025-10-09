@@ -32,7 +32,7 @@ namespace swift::misc::aviation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CLiveryList();
+        CLiveryList() = default;
 
         //! Construct from a base class object.
         CLiveryList(const CSequence<CLivery> &other);

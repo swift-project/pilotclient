@@ -87,7 +87,7 @@ namespace swift::gui
             explicit CDbMappingComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbMappingComponent() override;
+            ~CDbMappingComponent() override;
 
             //! Graceful shutdown
             void gracefulShutdown();
@@ -375,7 +375,7 @@ namespace swift::gui
                 CMappingVPilotMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent) {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(menus::CMenuActions &menuActions) override;
+                void customMenu(menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
@@ -398,7 +398,7 @@ namespace swift::gui
                 CStashToolsMenu(CDbMappingComponent *mappingComponent);
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(menus::CMenuActions &menuActions) override;
+                void customMenu(menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
@@ -421,7 +421,7 @@ namespace swift::gui
                 COwnModelSetMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent) {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(menus::CMenuActions &menuActions) override;
+                void customMenu(menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
@@ -439,7 +439,7 @@ namespace swift::gui
                 CRemovedModelsMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent) {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(menus::CMenuActions &menuActions) override;
+                void customMenu(menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
@@ -457,7 +457,7 @@ namespace swift::gui
                 CApplyDbDataMenu(CDbMappingComponent *mappingComponent) : menus::IMenuDelegate(mappingComponent) {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(menus::CMenuActions &menuActions) override;
+                void customMenu(menus::CMenuActions &menuActions) override;
 
             private:
                 //! Mapping component
@@ -476,7 +476,7 @@ namespace swift::gui
                 CMergeWithVPilotMenu(CDbMappingComponent *mappingComponent);
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(menus::CMenuActions &menuActions) override;
+                void customMenu(menus::CMenuActions &menuActions) override;
 
                 //! Mapping component
                 CDbMappingComponent *mappingComponent() const;

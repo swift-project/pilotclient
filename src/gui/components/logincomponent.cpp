@@ -134,7 +134,7 @@ namespace swift::gui::components
         });
     }
 
-    CLoginComponent::~CLoginComponent() {}
+    CLoginComponent::~CLoginComponent() = default;
 
     void CLoginComponent::mainInfoAreaChanged(const QWidget *currentWidget)
     {

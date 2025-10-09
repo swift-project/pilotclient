@@ -150,7 +150,7 @@ namespace swift::misc
 
     protected:
         //! Constructor
-        ITimestampBased();
+        ITimestampBased() = default;
 
         //! Constructor
         ITimestampBased(qint64 msSincePoch);

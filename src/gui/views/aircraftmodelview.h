@@ -140,24 +140,24 @@ namespace swift::gui
         protected:
             //! \copydoc QTableView::dropEvent
             //! \sa swift::gui::models::CListModelBase::dropMimeData
-            virtual void dropEvent(QDropEvent *event) override;
+            void dropEvent(QDropEvent *event) override;
 
             //! \name View base class overrides
             //! @{
 
             //! \copydoc swift::gui::views::COrderableViewWithDbObjects::customMenu
-            virtual void customMenu(menus::CMenuActions &menuActions) override;
+            void customMenu(menus::CMenuActions &menuActions) override;
 
             //! \copydoc swift::gui::views::COrderableViewWithDbObjects::modifyLoadedJsonData
-            virtual swift::misc::CStatusMessage
+            swift::misc::CStatusMessage
             modifyLoadedJsonData(swift::misc::simulation::CAircraftModelList &models) const override;
 
             //! \copydoc swift::gui::views::COrderableViewWithDbObjects::validateLoadedJsonData
-            virtual swift::misc::CStatusMessage
+            swift::misc::CStatusMessage
             validateLoadedJsonData(const swift::misc::simulation::CAircraftModelList &models) const override;
 
             //! \copydoc swift::gui::views::COrderableViewWithDbObjects::jsonLoadedAndModelUpdated
-            virtual void jsonLoadedAndModelUpdated(const swift::misc::simulation::CAircraftModelList &models) override;
+            void jsonLoadedAndModelUpdated(const swift::misc::simulation::CAircraftModelList &models) override;
             //! @}
 
         private:

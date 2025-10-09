@@ -26,7 +26,7 @@ namespace swift::misc::simulation::settings
         };
 
         //! Default constructor
-        CModelSettings();
+        CModelSettings() = default;
 
         //! Allow excluded models?
         bool getAllowExcludedModels() const { return m_allowExcludeModels; }

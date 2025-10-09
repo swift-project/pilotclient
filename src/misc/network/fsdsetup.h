@@ -65,7 +65,7 @@ namespace swift::misc::network
         //! @}
 
         //! Default constructor.
-        CFsdSetup() {}
+        CFsdSetup() = default;
 
         //! Constructor.
         CFsdSetup(SendReceiveDetails sendReceive);

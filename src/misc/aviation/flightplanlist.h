@@ -29,7 +29,7 @@ namespace swift::misc::aviation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CFlightPlanList();
+        CFlightPlanList() = default;
 
         //! Construct from a base class object.
         CFlightPlanList(const CSequence<CFlightPlan> &other);

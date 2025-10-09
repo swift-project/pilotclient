@@ -17,7 +17,7 @@ namespace swift::gui::components
         ui->comp_GuiSettings->hideOpacity(true);
     }
 
-    CDataSettingsComponent::~CDataSettingsComponent() {}
+    CDataSettingsComponent::~CDataSettingsComponent() = default;
 
     void CDataSettingsComponent::setBackgroundUpdater(const CBackgroundDataUpdater *updater)
     {

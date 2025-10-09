@@ -30,7 +30,7 @@ namespace swift::gui::views
                 Qt::QueuedConnection);
     }
 
-    CAircraftModelValidationDialog::~CAircraftModelValidationDialog() {}
+    CAircraftModelValidationDialog::~CAircraftModelValidationDialog() = default;
 
     void CAircraftModelValidationDialog::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator,
                                                    const QString &simulatorDir)

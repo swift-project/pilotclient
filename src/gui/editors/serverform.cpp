@@ -28,7 +28,7 @@ namespace swift::gui::editors
         connect(ui->tb_Unhide, &QToolButton::clicked, this, &CServerForm::tempUnhidePassword);
     }
 
-    CServerForm::~CServerForm() {}
+    CServerForm::~CServerForm() = default;
 
     void CServerForm::setServer(const CServer &server)
     {

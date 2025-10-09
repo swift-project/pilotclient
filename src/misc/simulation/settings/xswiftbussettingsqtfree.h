@@ -19,10 +19,10 @@ namespace swift::misc::simulation::settings
     {
     protected:
         //! Constructor.
-        CXSwiftBusSettingsQtFree() {}
+        CXSwiftBusSettingsQtFree() = default;
 
         //! Destructor.
-        virtual ~CXSwiftBusSettingsQtFree() {}
+        virtual ~CXSwiftBusSettingsQtFree() = default;
 
     public:
         //! DBus server

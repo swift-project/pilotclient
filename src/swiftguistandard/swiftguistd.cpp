@@ -86,7 +86,7 @@ SwiftGuiStd::SwiftGuiStd(swift::gui::CEnableForFramelessWindow::WindowMode windo
     this->init();
 }
 
-SwiftGuiStd::~SwiftGuiStd() {}
+SwiftGuiStd::~SwiftGuiStd() = default;
 
 void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
 {

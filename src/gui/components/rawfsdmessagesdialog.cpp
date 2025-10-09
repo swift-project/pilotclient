@@ -12,5 +12,5 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    CRawFsdMessagesDialog::~CRawFsdMessagesDialog() {}
+    CRawFsdMessagesDialog::~CRawFsdMessagesDialog() = default;
 } // namespace swift::gui::components

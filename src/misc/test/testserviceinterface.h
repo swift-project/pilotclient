@@ -68,7 +68,7 @@ namespace swift::misc::test
                               QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~ITestServiceInterface();
+        ~ITestServiceInterface() override = default;
 
         //! Ping via DBus, tests object marshalling/unmarshalling
         static int pingTests(ITestServiceInterface &testServiceInterface, bool verbose);

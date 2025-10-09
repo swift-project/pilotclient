@@ -26,7 +26,7 @@ namespace swift::gui::models
         explicit CCountryListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CCountryListModel() {}
+        ~CCountryListModel() override = default;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_MODELS_COUNTRYLISTMODEL_H

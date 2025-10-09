@@ -15,7 +15,7 @@ namespace swift::gui::editors
         this->setFocusProxy(ui->editor_AircraftIcao);
     }
 
-    CAircraftModelForm::~CAircraftModelForm() {}
+    CAircraftModelForm::~CAircraftModelForm() = default;
 
     void CAircraftModelForm::setReadOnly(bool readOnly)
     {

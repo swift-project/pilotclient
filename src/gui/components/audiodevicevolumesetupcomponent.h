@@ -39,7 +39,7 @@ namespace swift::gui::components
         explicit CAudioDeviceVolumeSetupComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAudioDeviceVolumeSetupComponent() override;
+        ~CAudioDeviceVolumeSetupComponent() override;
 
         //! @{
         //! Get input and output volume values

@@ -63,7 +63,7 @@ namespace swift::gui::components
         explicit CLoginComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLoginComponent() override;
+        ~CLoginComponent() override;
 
         //! Automatically popup
         void setAutoPopupWizad(bool autoPopup);

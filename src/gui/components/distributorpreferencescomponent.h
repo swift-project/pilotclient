@@ -36,7 +36,7 @@ namespace swift::gui
             explicit CDistributorPreferencesComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDistributorPreferencesComponent();
+            ~CDistributorPreferencesComponent() override;
 
         private:
             //! Changed preferences

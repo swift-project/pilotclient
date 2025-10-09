@@ -15,7 +15,7 @@ namespace swift::gui::components
         this->reloadRegisteredDevices();
     }
 
-    CAudioAdvancedDistributedDialog::~CAudioAdvancedDistributedDialog() {}
+    CAudioAdvancedDistributedDialog::~CAudioAdvancedDistributedDialog() = default;
 
     void CAudioAdvancedDistributedDialog::reloadRegisteredDevices()
     {

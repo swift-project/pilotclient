@@ -39,7 +39,7 @@ namespace swift::gui::components
                 &CDBusServerAddressSelector::editingFinished);
     }
 
-    CDBusServerAddressSelector::~CDBusServerAddressSelector() {}
+    CDBusServerAddressSelector::~CDBusServerAddressSelector() = default;
 
     QString CDBusServerAddressSelector::getP2PAddress() const
     {

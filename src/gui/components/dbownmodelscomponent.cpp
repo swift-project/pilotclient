@@ -97,10 +97,7 @@ namespace swift::gui::components
         ui->tvp_OwnAircraftModels->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_OwnAircraftModels, this));
     }
 
-    CDbOwnModelsComponent::~CDbOwnModelsComponent()
-    {
-        // void
-    }
+    CDbOwnModelsComponent::~CDbOwnModelsComponent() = default;
 
     const QStringList &CDbOwnModelsComponent::getLogCategories()
     {

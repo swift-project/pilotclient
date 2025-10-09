@@ -32,7 +32,7 @@ namespace swift::simplugin::xplane
         CSimulatorXPlaneConfigWindow(QWidget *parent);
 
         //! Dtor.
-        virtual ~CSimulatorXPlaneConfigWindow() override;
+        ~CSimulatorXPlaneConfigWindow() override;
 
     private:
         //! Settings from UI

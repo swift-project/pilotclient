@@ -159,7 +159,7 @@ namespace swift::misc
     {
     public:
         //! Default constructor.
-        CMessageBase() {}
+        CMessageBase() = default;
 
         //! Construct a message with some specific category.
         explicit CMessageBase(const CLogCategory &category) : m_categories({ category }) {}

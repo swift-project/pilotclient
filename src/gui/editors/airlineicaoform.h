@@ -34,7 +34,7 @@ namespace swift::gui::editors
         explicit CAirlineIcaoForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAirlineIcaoForm() override;
+        ~CAirlineIcaoForm() override;
 
         //! Set value
         void setValue(const swift::misc::aviation::CAirlineIcaoCode &icao = swift::misc::aviation::CAirlineIcaoCode());
@@ -50,9 +50,9 @@ namespace swift::gui::editors
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual void setSelectOnly() override;
-        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
+        void setReadOnly(bool readonly) override;
+        void setSelectOnly() override;
+        swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Clear
@@ -70,7 +70,7 @@ namespace swift::gui::editors
 
     protected:
         //! \copydoc CForm::jsonPasted
-        virtual void jsonPasted(const QString &json) override;
+        void jsonPasted(const QString &json) override;
 
         //! Variant has been dropped
         void onDroppedCode(const swift::misc::CVariant &variantDropped);

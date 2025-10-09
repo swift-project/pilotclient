@@ -12,8 +12,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CLivery, CLiveryList)
 
 namespace swift::misc::aviation
 {
-    CLiveryList::CLiveryList() {}
-
     CLiveryList::CLiveryList(const CSequence<CLivery> &other) : CSequence<CLivery>(other) {}
 
     CLiveryList CLiveryList::findByAirlineIcaoDesignator(const QString &icao) const

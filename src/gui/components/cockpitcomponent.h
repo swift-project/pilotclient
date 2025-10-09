@@ -34,10 +34,10 @@ namespace swift::gui
             explicit CCockpitComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CCockpitComponent() override;
+            ~CCockpitComponent() override;
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
-            virtual bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
+            bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
 
             //! Is the info area shown?
             bool isInfoAreaShown() const;
@@ -50,7 +50,7 @@ namespace swift::gui
 
         protected:
             //! \copydoc QWidget::mouseDoubleClickEvent
-            virtual void mouseDoubleClickEvent(QMouseEvent *event) override;
+            void mouseDoubleClickEvent(QMouseEvent *event) override;
 
         private:
             //! Show or hide cockpit details

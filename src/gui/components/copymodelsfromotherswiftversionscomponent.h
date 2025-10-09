@@ -32,7 +32,7 @@ namespace swift::gui::components
         explicit CCopyModelsFromOtherSwiftVersionsComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CCopyModelsFromOtherSwiftVersionsComponent();
+        ~CCopyModelsFromOtherSwiftVersionsComponent() override;
 
         //! Reload other versions
         void reloadOtherVersions(int deferMs = -1);
@@ -74,10 +74,10 @@ namespace swift::gui::components
         void setConfigComponent(CCopyModelsFromOtherSwiftVersionsComponent *config) { m_copyModels = config; }
 
         //! \copydoc QWizardPage::initializePage
-        virtual void initializePage() override;
+        void initializePage() override;
 
         //! \copydoc QWizardPage::validatePage
-        virtual bool validatePage() override;
+        bool validatePage() override;
 
     private:
         CCopyModelsFromOtherSwiftVersionsComponent *m_copyModels = nullptr;

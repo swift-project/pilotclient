@@ -29,8 +29,8 @@ namespace swift::gui::models
         //! Constructor
         explicit CAirlineIcaoCodeListModel(QObject *parent = nullptr);
 
-        //! DestructorCAirlineIcaoCodeList
-        virtual ~CAirlineIcaoCodeListModel() {}
+        //! Destructor
+        ~CAirlineIcaoCodeListModel() override = default;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_AIRLINEICAOLISTMODEL_H

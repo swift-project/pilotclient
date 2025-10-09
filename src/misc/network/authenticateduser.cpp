@@ -15,8 +15,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CAuthenticatedUser)
 
 namespace swift::misc::network
 {
-    CAuthenticatedUser::CAuthenticatedUser() {}
-
     CAuthenticatedUser::CAuthenticatedUser(int id, const QString &realname)
         : IDatastoreObjectWithIntegerKey(id), m_realname(realname.trimmed())
     {}

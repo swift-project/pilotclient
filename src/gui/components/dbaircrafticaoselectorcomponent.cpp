@@ -54,7 +54,7 @@ namespace swift::gui::components
         }
     }
 
-    CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent() {}
+    CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent() = default;
 
     bool CDbAircraftIcaoSelectorComponent::setAircraftIcao(const CAircraftIcaoCode &icao)
     {

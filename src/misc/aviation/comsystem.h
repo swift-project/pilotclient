@@ -58,7 +58,7 @@ namespace swift::misc::aviation
         };
 
         //! Default constructor
-        CComSystem() {}
+        CComSystem() = default;
 
         //! Constructor
         CComSystem(const QString &name, const physical_quantities::CFrequency &activeFrequency,

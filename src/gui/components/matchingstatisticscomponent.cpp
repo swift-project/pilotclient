@@ -25,7 +25,7 @@ namespace swift::gui::components
                 &CMatchingStatisticsComponent::onGenerateClicked);
     }
 
-    CMatchingStatisticsComponent::~CMatchingStatisticsComponent() {}
+    CMatchingStatisticsComponent::~CMatchingStatisticsComponent() = default;
 
     void CMatchingStatisticsComponent::onGenerateClicked()
     {

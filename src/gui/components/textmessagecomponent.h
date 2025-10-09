@@ -43,10 +43,10 @@ namespace swift::gui
             explicit CTextMessageComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CTextMessageComponent() override;
+            ~CTextMessageComponent() override;
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
-            virtual bool setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget) override;
+            bool setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget) override;
 
             //! Used to allow direct input from global command line when visible
             //! \remark takes the messages, turns it into a ".msg" command, and emits it

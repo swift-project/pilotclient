@@ -31,7 +31,7 @@ namespace swift::gui::components
         explicit CAircraftPartsHistory(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftPartsHistory();
+        ~CAircraftPartsHistory() override;
 
     private:
         QScopedPointer<Ui::CAircraftPartsHistory> ui;

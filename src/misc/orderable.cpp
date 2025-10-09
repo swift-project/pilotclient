@@ -13,8 +13,6 @@
 
 namespace swift::misc
 {
-    IOrderable::IOrderable() {}
-
     IOrderable::IOrderable(int order) : m_order(order) {}
 
     QString IOrderable::getOrderAsString() const

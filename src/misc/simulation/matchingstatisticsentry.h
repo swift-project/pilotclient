@@ -43,7 +43,7 @@ namespace swift::misc::simulation
         };
 
         //! Default constructor.
-        CMatchingStatisticsEntry();
+        CMatchingStatisticsEntry() = default;
 
         //! Constructor
         CMatchingStatisticsEntry(EntryType type, const QString &sessionId, const QString &modelSetId,

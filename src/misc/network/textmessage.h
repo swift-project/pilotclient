@@ -40,7 +40,7 @@ namespace swift::misc::network
         };
 
         //! Default constructor.
-        CTextMessage() {}
+        CTextMessage() = default;
 
         //! Constructor, radio message
         CTextMessage(const QString &message, const physical_quantities::CFrequency &frequency,

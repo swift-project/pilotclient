@@ -40,10 +40,7 @@ namespace swift::gui::components
                 &CDbOwnModelSetFormDialog::simulatorChanged);
     }
 
-    CDbOwnModelSetFormDialog::~CDbOwnModelSetFormDialog()
-    {
-        // void
-    }
+    CDbOwnModelSetFormDialog::~CDbOwnModelSetFormDialog() = default;
 
     void CDbOwnModelSetFormDialog::reloadData()
     {

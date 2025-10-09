@@ -23,7 +23,7 @@ namespace swift::sound::sample_provider
         CSinusGenerator(double frequencyHz, QObject *parent = nullptr);
 
         //! \copydoc ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! Set the gain
         void setGain(double gain) { m_gain = gain; }

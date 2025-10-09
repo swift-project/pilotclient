@@ -45,7 +45,7 @@ namespace swift::gui::components
         }
     }
 
-    CDbDistributorComponent::~CDbDistributorComponent() {}
+    CDbDistributorComponent::~CDbDistributorComponent() = default;
 
     CDistributorView *CDbDistributorComponent::view() const { return ui->tvp_Distributors; }
 

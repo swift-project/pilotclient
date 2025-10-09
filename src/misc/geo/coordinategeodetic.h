@@ -54,7 +54,7 @@ namespace swift::misc
             ICoordinateGeodetic() = default;
 
             //! Destructor
-            virtual ~ICoordinateGeodetic();
+            virtual ~ICoordinateGeodetic() = default;
 
             //! Copy constructor
             ICoordinateGeodetic(const ICoordinateGeodetic &) = default;
@@ -216,7 +216,7 @@ namespace swift::misc
 
         protected:
             //! Constructor
-            ICoordinateWithRelativePosition();
+            ICoordinateWithRelativePosition() = default;
 
             //! Can given index be handled?
             static bool canHandleIndex(CPropertyIndexRef index);
@@ -232,7 +232,7 @@ namespace swift::misc
         {
         public:
             //! Default constructor (null coordinate)
-            CCoordinateGeodetic() {}
+            CCoordinateGeodetic() = default;
 
             //! Constructor by normal vector
             CCoordinateGeodetic(const QVector3D &normal)
@@ -264,19 +264,19 @@ namespace swift::misc
                                                   const physical_quantities::CAngle &relBearing) const;
 
             //! \copydoc ICoordinateGeodetic::latitude
-            virtual CLatitude latitude() const override;
+            CLatitude latitude() const override;
 
             //! \copydoc ICoordinateGeodetic::longitude
-            virtual CLongitude longitude() const override;
+            CLongitude longitude() const override;
 
             //! \copydoc ICoordinateGeodetic::geodeticHeight
-            virtual const aviation::CAltitude &geodeticHeight() const override { return m_geodeticHeight; }
+            const aviation::CAltitude &geodeticHeight() const override { return m_geodeticHeight; }
 
             //! \copydoc ICoordinateGeodetic::normalVector
-            virtual QVector3D normalVector() const override;
+            QVector3D normalVector() const override;
 
             //! \copydoc ICoordinateGeodetic::normalVectorDouble
-            virtual std::array<double, 3> normalVectorDouble() const override;
+            std::array<double, 3> normalVectorDouble() const override;
 
             //! \copydoc mixin::Index::propertyByIndex
             QVariant propertyByIndex(CPropertyIndexRef index) const;
@@ -344,7 +344,7 @@ namespace swift::misc
             }
 
             //! Is null?
-            virtual bool isNull() const override
+            bool isNull() const override
             {
                 if (m_geodeticHeight.isNull()) { return true; }
                 return math::CMathUtils::epsilonZeroLimits(m_x) && math::CMathUtils::epsilonZeroLimits(m_y) &&

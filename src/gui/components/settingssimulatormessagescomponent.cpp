@@ -25,7 +25,7 @@ namespace swift::gui::components
         this->load();
     }
 
-    CSettingsSimulatorMessagesComponent::~CSettingsSimulatorMessagesComponent() {}
+    CSettingsSimulatorMessagesComponent::~CSettingsSimulatorMessagesComponent() = default;
 
     void CSettingsSimulatorMessagesComponent::save()
     {

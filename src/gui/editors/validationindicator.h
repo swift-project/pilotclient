@@ -60,7 +60,7 @@ namespace swift::gui::editors
 
     protected:
         //! \copydoc QFrame::paintEvent
-        virtual void paintEvent(QPaintEvent *paintEvent) override;
+        void paintEvent(QPaintEvent *paintEvent) override;
 
     private:
         const int ResetInterval = 5000;

@@ -47,20 +47,20 @@ namespace swift::gui::components
         explicit CDbAutoSimulatorStashingComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbAutoSimulatorStashingComponent() override;
+        ~CDbAutoSimulatorStashingComponent() override;
 
         //! At least run once and completed
         bool isCompleted() const { return m_state == Completed; }
 
         //! \copydoc swift::core::IProgressIndicator::updateProgressIndicator
-        virtual void updateProgressIndicator(int percent) override;
+        void updateProgressIndicator(int percent) override;
 
     public slots:
         //! \copydoc QDialog::accept
-        virtual void accept() override;
+        void accept() override;
 
         //! \copydoc QDialog::exec
-        virtual int exec() override;
+        int exec() override;
 
     private:
         //! Init the GUI

@@ -19,12 +19,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRender
 
 namespace swift::misc::simulation
 {
-    CInterpolationAndRenderingSetupBase::CInterpolationAndRenderingSetupBase()
-    {
-        // Experimental
-        // m_fixSceneryOffset = CBuildConfig::isLocalDeveloperDebugBuild();
-    }
-
     bool CInterpolationAndRenderingSetupBase::setSendingGndFlagToSimulator(bool sendFLag)
     {
         if (sendFLag == m_sendGndToSim) { return false; }
@@ -150,8 +144,6 @@ namespace swift::misc::simulation
         return index >= CInterpolationAndRenderingSetupBase::IndexLogInterpolation &&
                index <= CInterpolationAndRenderingSetupBase::IndexFixSceneryOffset;
     }
-
-    CInterpolationAndRenderingSetupGlobal::CInterpolationAndRenderingSetupGlobal() {}
 
     int CInterpolationAndRenderingSetupGlobal::InfiniteAircraft() { return 100; }
 
@@ -307,8 +299,6 @@ namespace swift::misc::simulation
         }
         CValueObject::setPropertyByIndex(index, variant);
     }
-
-    CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign() {}
 
     CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign(
         const CCallsign &callsign, const CInterpolationAndRenderingSetupGlobal &globalSetup)

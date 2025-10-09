@@ -18,10 +18,6 @@ using namespace swift::config;
 
 namespace swift::misc::simulation
 {
-    IRemoteAircraftProvider::IRemoteAircraftProvider() {}
-
-    IRemoteAircraftProvider::~IRemoteAircraftProvider() {}
-
     const QStringList &CRemoteAircraftProvider::getLogCategories()
     {
         static const QStringList cats { CLogCategories::matching(), CLogCategories::network() };
@@ -961,8 +957,6 @@ namespace swift::misc::simulation
         }
         return removedCallsign;
     }
-
-    CRemoteAircraftAware::~CRemoteAircraftAware() {}
 
     CSimulatedAircraftList CRemoteAircraftAware::getAircraftInRange() const
     {

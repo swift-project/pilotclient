@@ -210,22 +210,19 @@ namespace swift::misc
             const physical_quantities::CSpeed &getGroundSpeed() const { return m_situation.getGroundSpeed(); }
 
             //! \copydoc swift::misc::geo::ICoordinateGeodetic::latitude
-            virtual geo::CLatitude latitude() const override { return m_situation.latitude(); }
+            geo::CLatitude latitude() const override { return m_situation.latitude(); }
 
             //! \copydoc swift::misc::geo::ICoordinateGeodetic::longitude
-            virtual geo::CLongitude longitude() const override { return m_situation.longitude(); }
+            geo::CLongitude longitude() const override { return m_situation.longitude(); }
 
             //! \copydoc swift::misc::geo::ICoordinateGeodetic::geodeticHeight
             const aviation::CAltitude &geodeticHeight() const override { return m_situation.geodeticHeight(); }
 
             //! \copydoc swift::misc::geo::ICoordinateGeodetic::normalVector
-            virtual QVector3D normalVector() const override { return m_situation.normalVector(); }
+            QVector3D normalVector() const override { return m_situation.normalVector(); }
 
             //! \copydoc swift::misc::geo::ICoordinateGeodetic::normalVectorDouble
-            virtual std::array<double, 3> normalVectorDouble() const override
-            {
-                return m_situation.normalVectorDouble();
-            }
+            std::array<double, 3> normalVectorDouble() const override { return m_situation.normalVectorDouble(); }
 
             //! \copydoc swift::misc::aviation::CAircraftSituation::getGroundElevation
             const aviation::CAltitude &getGroundElevation() const { return m_situation.getGroundElevation(); }

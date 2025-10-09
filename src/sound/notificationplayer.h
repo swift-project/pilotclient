@@ -26,7 +26,7 @@ namespace swift::sound
         CNotificationPlayer(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CNotificationPlayer() override {}
+        ~CNotificationPlayer() override = default;
 
         //! Play notification sound
         void play(swift::misc::audio::CNotificationSounds::NotificationFlag notification, int volume = 100);

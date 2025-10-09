@@ -27,7 +27,7 @@ namespace swift::gui
         connect(ui->pb_Close, &QPushButton::clicked, this, &CPluginDetailsWindow::close);
     }
 
-    CPluginDetailsWindow::~CPluginDetailsWindow() {}
+    CPluginDetailsWindow::~CPluginDetailsWindow() = default;
 
     void CPluginDetailsWindow::setPluginName(const QString &name)
     {

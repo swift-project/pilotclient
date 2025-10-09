@@ -29,13 +29,13 @@ namespace swift::gui::components
         explicit CUpdateInfoDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CUpdateInfoDialog() override;
+        ~CUpdateInfoDialog() override;
 
         //! A new version existing?
         bool isNewVersionAvailable() const;
 
         //! \copydoc QDialog::exec
-        virtual int exec() override;
+        int exec() override;
 
     private:
         QScopedPointer<Ui::CUpdateInfoDialog> ui;

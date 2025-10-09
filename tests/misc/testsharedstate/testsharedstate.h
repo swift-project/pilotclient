@@ -71,7 +71,7 @@ namespace MiscTest
     public:
         //! Ctor
         CTestScalarObserver(QObject *parent) : CScalarObserver(parent) {}
-        virtual void onValueChanged(const int &) override {}
+        void onValueChanged(const int &) override {}
     };
 
     //! List mutator subclass
@@ -107,10 +107,10 @@ namespace MiscTest
         //! @{
 
         //! \copydoc swift::misc::shared_state::CListObserver::onElementAdded
-        virtual void onElementAdded(const int &) override {}
+        void onElementAdded(const int &) override {}
 
         //! \copydoc swift::misc::shared_state::CListObserver::onElementsReplaced
-        virtual void onElementsReplaced(const QList<int> &) override {}
+        void onElementsReplaced(const QList<int> &) override {}
         //! @}
     };
 } // namespace MiscTest

@@ -30,7 +30,7 @@ namespace swift::gui::editors
         explicit CFsdSetupForm(QWidget *parent = nullptr);
 
         //! Constructor
-        virtual ~CFsdSetupForm() override;
+        ~CFsdSetupForm() override;
 
         //! FSD setup from GUI
         swift::misc::network::CFsdSetup getValue() const;
@@ -58,8 +58,8 @@ namespace swift::gui::editors
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
+        void setReadOnly(bool readonly) override;
+        swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
     private:

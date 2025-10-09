@@ -27,7 +27,7 @@ namespace swift::sound
         CSelcalPlayer(const swift::misc::audio::CAudioDeviceInfo &device, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CSelcalPlayer() override;
+        ~CSelcalPlayer() override;
 
         //! Stop the player thread
         void gracefulShutdown();

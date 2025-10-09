@@ -9,8 +9,6 @@
 
 namespace swift::core::fsd
 {
-    ServerError::ServerError() {}
-
     ServerError::ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode,
                              const QString &causingParameter, const QString &description)
         : MessageBase(sender, receiver), m_errorNumber(errorCode), m_causingParameter(causingParameter),

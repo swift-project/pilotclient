@@ -21,7 +21,7 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    CStatusMessageFormSmall::~CStatusMessageFormSmall() {}
+    CStatusMessageFormSmall::~CStatusMessageFormSmall() = default;
 
     void CStatusMessageFormSmall::setVariant(const CVariant &messageVariant)
     {

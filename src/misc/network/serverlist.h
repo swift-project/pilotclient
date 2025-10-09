@@ -26,7 +26,7 @@ namespace swift::misc::network
         using CSequence::CSequence;
 
         //! Default constructor.
-        CServerList();
+        CServerList() = default;
 
         //! Construct from a base class object.
         CServerList(const CSequence<CServer> &other);

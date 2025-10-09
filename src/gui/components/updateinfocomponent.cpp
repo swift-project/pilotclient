@@ -43,7 +43,7 @@ namespace swift::gui::components
         if (!m_updateInfo.get().isEmpty()) { this->changedUpdateInfo(); }
     }
 
-    CUpdateInfoComponent::~CUpdateInfoComponent() {}
+    CUpdateInfoComponent::~CUpdateInfoComponent() = default;
 
     CArtifact CUpdateInfoComponent::getLatestAvailablePilotClientArtifactForSelection() const
     {

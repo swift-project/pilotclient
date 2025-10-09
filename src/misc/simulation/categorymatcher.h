@@ -27,7 +27,7 @@ namespace swift::misc
             static const QStringList &getLogCategories();
 
             //! Constructor
-            CCategoryMatcher() {}
+            CCategoryMatcher() = default;
 
             //! Used categories
             void setCategories(const aviation::CAircraftCategoryList &categories);

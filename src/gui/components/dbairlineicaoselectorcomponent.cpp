@@ -35,7 +35,7 @@ namespace swift::gui::components
         connect(ui->le_Airline, &QLineEdit::editingFinished, this, &CDbAirlineIcaoSelectorComponent::onDataChanged);
     }
 
-    CDbAirlineIcaoSelectorComponent::~CDbAirlineIcaoSelectorComponent() {}
+    CDbAirlineIcaoSelectorComponent::~CDbAirlineIcaoSelectorComponent() = default;
 
     void CDbAirlineIcaoSelectorComponent::setReadOnly(bool readOnly) { ui->le_Airline->setReadOnly(readOnly); }
 

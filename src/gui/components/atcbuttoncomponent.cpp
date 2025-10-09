@@ -36,7 +36,7 @@ namespace swift::gui::components
         this->setVisible(false); // will be changed when ATC stations are reported
     }
 
-    CAtcButtonComponent::~CAtcButtonComponent() {}
+    CAtcButtonComponent::~CAtcButtonComponent() = default;
 
     void CAtcButtonComponent::updateStations()
     {

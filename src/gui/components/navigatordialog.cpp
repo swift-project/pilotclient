@@ -73,7 +73,7 @@ namespace swift::gui::components
         this->onStyleSheetsChanged();
     }
 
-    CNavigatorDialog::~CNavigatorDialog() {}
+    CNavigatorDialog::~CNavigatorDialog() = default;
 
     void CNavigatorDialog::buildNavigator(int columns)
     {

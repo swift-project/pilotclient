@@ -14,6 +14,6 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CCockpitComAudioDialog::~CCockpitComAudioDialog() {}
+    CCockpitComAudioDialog::~CCockpitComAudioDialog() = default;
 
 } // namespace swift::gui::components

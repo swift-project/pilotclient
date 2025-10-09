@@ -79,8 +79,6 @@ namespace swift::misc::simulation
         return ("Illegal mode");
     }
 
-    CInterpolatorMultiWrapper::CInterpolatorMultiWrapper() {}
-
     CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const aviation::CCallsign &callsign,
                                                          ISimulationEnvironmentProvider *p1,
                                                          IInterpolationSetupProvider *p2, IRemoteAircraftProvider *p3,

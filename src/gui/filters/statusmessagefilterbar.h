@@ -33,22 +33,22 @@ namespace swift::gui::filters
         void displayCount(bool show);
 
         //! Destructor
-        virtual ~CStatusMessageFilterBar() override;
+        ~CStatusMessageFilterBar() override;
 
         //! Use icons with radio buttons
         void useRadioButtonDescriptiveIcons(bool oneCharacterText);
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>>
+        std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>>
         createModelFilter() const override;
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged
-        virtual void onRowCountChanged(int count, bool withFilter) override;
+        void onRowCountChanged(int count, bool withFilter) override;
 
     protected:
         //! \copydoc CFilterWidget::clearForm
-        virtual void clearForm() override;
+        void clearForm() override;
 
     private:
         QScopedPointer<Ui::CStatusMessageFilterBar> ui;

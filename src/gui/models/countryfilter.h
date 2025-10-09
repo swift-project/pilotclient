@@ -22,7 +22,7 @@ namespace swift::gui::models
         CCountryFilter(const QString &isoCode, const QString &name);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::CCountryList filter(const swift::misc::CCountryList &inContainer) const override;
+        swift::misc::CCountryList filter(const swift::misc::CCountryList &inContainer) const override;
 
     private:
         QString m_isoCode;

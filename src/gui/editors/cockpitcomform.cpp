@@ -66,7 +66,7 @@ namespace swift::gui::editors
         this->initLeds();
     }
 
-    CCockpitComForm::~CCockpitComForm() {}
+    CCockpitComForm::~CCockpitComForm() = default;
 
     void CCockpitComForm::setReadOnly(bool readonly)
     {

@@ -32,7 +32,7 @@ namespace swift::misc::db
         using CSequence::CSequence;
 
         //! Empty constructor.
-        CArtifactList();
+        CArtifactList() = default;
 
         //! Construct from a base class object.
         CArtifactList(const CSequence<CArtifact> &other);

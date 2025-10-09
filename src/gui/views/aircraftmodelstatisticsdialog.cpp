@@ -29,7 +29,7 @@ namespace swift::gui::views
                 &CAircraftModelStatisticsDialog::displayHTMLMatrix);
     }
 
-    CAircraftModelStatisticsDialog::~CAircraftModelStatisticsDialog() {}
+    CAircraftModelStatisticsDialog::~CAircraftModelStatisticsDialog() = default;
 
     void CAircraftModelStatisticsDialog::analyzeModels(const CAircraftModelList &models)
     {

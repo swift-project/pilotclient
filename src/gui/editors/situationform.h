@@ -31,7 +31,7 @@ namespace swift::gui::editors
         explicit CSituationForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSituationForm() override;
+        ~CSituationForm() override;
 
         //! Set the situation
         void setSituation(const swift::misc::aviation::CAircraftSituation &situation);
@@ -41,9 +41,9 @@ namespace swift::gui::editors
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual void setSelectOnly() override;
-        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
+        void setReadOnly(bool readonly) override;
+        void setSelectOnly() override;
+        swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Set button visible

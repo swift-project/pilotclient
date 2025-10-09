@@ -89,7 +89,7 @@ namespace swift::core
                          const swift::core::db::CDatabaseReaderConfigList &dbReaderConfig, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CWebDataServices() override;
+        ~CWebDataServices() override;
 
         //! Shutdown
         void gracefulShutdown();

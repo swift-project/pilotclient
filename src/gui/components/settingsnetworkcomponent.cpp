@@ -20,5 +20,5 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    CSettingsNetworkComponent::~CSettingsNetworkComponent() {}
+    CSettingsNetworkComponent::~CSettingsNetworkComponent() = default;
 } // namespace swift::gui::components

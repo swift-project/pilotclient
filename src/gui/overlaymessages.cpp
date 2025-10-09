@@ -74,7 +74,7 @@ namespace swift::gui
         this->setDefaultConfirmationButton(QMessageBox::Cancel);
     }
 
-    COverlayMessages::~COverlayMessages() {}
+    COverlayMessages::~COverlayMessages() = default;
 
     void COverlayMessages::init(int w, int h)
     {

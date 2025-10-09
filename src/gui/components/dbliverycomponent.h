@@ -48,7 +48,7 @@ namespace swift::gui
             explicit CDbLiveryComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbLiveryComponent();
+            ~CDbLiveryComponent() override;
 
             //! The livery view
             swift::gui::views::CLiveryView *view();

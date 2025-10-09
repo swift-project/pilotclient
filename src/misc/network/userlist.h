@@ -29,7 +29,7 @@ namespace swift::misc::network
         using CSequence::CSequence;
 
         //! Default constructor.
-        CUserList();
+        CUserList() = default;
 
         //! Construct from a base class object.
         CUserList(const CSequence &other);

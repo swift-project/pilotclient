@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CAirportCompleter(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAirportCompleter();
+        ~CAirportCompleter() override;
 
         //! Set airport
         void setAirport(const swift::misc::aviation::CAirport &airport);

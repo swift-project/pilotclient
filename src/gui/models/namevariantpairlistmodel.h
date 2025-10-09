@@ -34,7 +34,7 @@ namespace swift::gui::models
         explicit CNameVariantPairModel(bool withIcon, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CNameVariantPairModel() {}
+        ~CNameVariantPairModel() override = default;
 
         //! Icon on / off
         void setIconMode(bool withIcon);

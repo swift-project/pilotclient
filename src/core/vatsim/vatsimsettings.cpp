@@ -11,8 +11,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::vatsim, CRawFsdMessageSettings)
 
 namespace swift::core::vatsim
 {
-    CReaderSettings::CReaderSettings() {}
-
     CReaderSettings::CReaderSettings(const CTime &initialTime, const CTime &periodicTime, bool neverUpdate)
         : m_initialTime(initialTime), m_periodicTime(periodicTime), m_neverUpdate(neverUpdate)
     {}
@@ -60,8 +58,6 @@ namespace swift::core::vatsim
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-
-    CRawFsdMessageSettings::CRawFsdMessageSettings() {}
 
     CRawFsdMessageSettings::CRawFsdMessageSettings(bool enabled, const QString &FileDir)
         : m_rawFsdMessagesEnabled(enabled), m_FileDir(FileDir)

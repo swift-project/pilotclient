@@ -97,7 +97,7 @@ namespace swift::gui
         void setOffsetWhenFloating(const QPoint &point, bool frameless);
 
         //! \copydoc CEnableForFramelessWindow::setFrameless
-        virtual void setFrameless(bool frameless) override;
+        void setFrameless(bool frameless) override;
 
         //! Toggle floating
         void toggleFloating();
@@ -198,19 +198,19 @@ namespace swift::gui
         void setAlwaysOnTopFlag(bool onTop);
 
         //! \copydoc QWidget::closeEvent
-        virtual void closeEvent(QCloseEvent *event) override;
+        void closeEvent(QCloseEvent *event) override;
 
         //! \copydoc QWidget::paintEvent
-        virtual void paintEvent(QPaintEvent *event) override;
+        void paintEvent(QPaintEvent *event) override;
 
         //! \copydoc QWidget::mouseMoveEvent
-        virtual void mouseMoveEvent(QMouseEvent *event) override;
+        void mouseMoveEvent(QMouseEvent *event) override;
 
         //! \copydoc QWidget::mouseMoveEvent
-        virtual void keyPressEvent(QKeyEvent *event) override;
+        void keyPressEvent(QKeyEvent *event) override;
 
         //! \copydoc QWidget::mousePressEvent
-        virtual void mousePressEvent(QMouseEvent *event) override;
+        void mousePressEvent(QMouseEvent *event) override;
 
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const;

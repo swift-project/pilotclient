@@ -33,10 +33,10 @@ namespace swift::gui::components
         explicit CRadarComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CRadarComponent() override;
+        ~CRadarComponent() override;
 
         //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
-        virtual bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
+        bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
 
     private:
         void prepareScene();

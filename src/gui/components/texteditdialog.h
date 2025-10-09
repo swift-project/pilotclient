@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CTextEditDialog(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CTextEditDialog() override;
+        ~CTextEditDialog() override;
 
         //! Access to text edit
         QTextEdit *textEdit() const;

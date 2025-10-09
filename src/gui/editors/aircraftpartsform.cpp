@@ -32,7 +32,7 @@ namespace swift::gui::editors
                 &CAircraftPartsForm::changeAircraftParts); // force change signal
     }
 
-    CAircraftPartsForm::~CAircraftPartsForm() {}
+    CAircraftPartsForm::~CAircraftPartsForm() = default;
 
     void CAircraftPartsForm::setReadOnly(bool readonly)
     {

@@ -61,7 +61,7 @@ namespace MiscTest
         explicit CTestFsdMessages(QObject *parent = nullptr) : QObject(parent) {}
 
         //! Destructor
-        virtual ~CTestFsdMessages() {}
+        ~CTestFsdMessages() override = default;
 
     private slots:
         void testAddAtc();

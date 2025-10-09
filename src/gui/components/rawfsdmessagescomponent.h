@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CRawFsdMessagesComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CRawFsdMessagesComponent();
+        ~CRawFsdMessagesComponent() override;
 
     private:
         void setupConnections();

@@ -25,8 +25,6 @@ namespace swift::gui::views
         : QItemDelegate(parent), m_iconCheckedUrl(iconCheckedUrl), m_iconUncheckedUrl(iconUncheckedUrl)
     {}
 
-    CCheckBoxDelegate::~CCheckBoxDelegate() {}
-
     QWidget *CCheckBoxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                                              const QModelIndex &index) const
     {

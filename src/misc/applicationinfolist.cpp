@@ -14,8 +14,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CApplicationInfo, CApplicationInfoList
 
 namespace swift::misc
 {
-    CApplicationInfoList::CApplicationInfoList() {}
-
     CApplicationInfoList::CApplicationInfoList(const CSequence<CApplicationInfo> &other)
         : CSequence<CApplicationInfo>(other)
     {}

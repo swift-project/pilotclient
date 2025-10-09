@@ -30,7 +30,7 @@ namespace swift::misc::network
         using CSequence::CSequence;
 
         //! Default constructor.
-        CClientList();
+        CClientList() = default;
 
         //! Construct from a base class object.
         CClientList(const CSequence &other);

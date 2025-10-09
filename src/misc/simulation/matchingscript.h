@@ -55,7 +55,7 @@ namespace swift::misc::simulation
 
     public:
         //! Ctor
-        Q_INVOKABLE MSInOutValues() {}
+        Q_INVOKABLE MSInOutValues() = default;
 
         //! Ctor
         Q_INVOKABLE MSInOutValues(const QString &cs, const QString &csAsSet, const QString &flightNumber,
@@ -248,7 +248,7 @@ namespace swift::misc::simulation
 
     public:
         //! Ctor
-        Q_INVOKABLE MSModelSet() {}
+        Q_INVOKABLE MSModelSet() = default;
 
         //! Get callsign
         const QString &getSimulator() const { return m_simulator; }

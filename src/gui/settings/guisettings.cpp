@@ -11,8 +11,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CGeneralGuiSettings)
 
 namespace swift::gui::settings
 {
-    CGeneralGuiSettings::CGeneralGuiSettings() {}
-
     void CGeneralGuiSettings::setWidgetStyle(const QString &widgetStyle)
     {
         if (this->m_widgetStyle == widgetStyle) { return; }

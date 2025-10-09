@@ -82,7 +82,7 @@ namespace swift::gui::components
         }
     }
 
-    COwnAircraftComponent::~COwnAircraftComponent() {}
+    COwnAircraftComponent::~COwnAircraftComponent() = default;
 
     void COwnAircraftComponent::setUser(const CUser &user)
     {

@@ -40,7 +40,7 @@ namespace swift::gui::components
                              sGui->getWebDataServices()->getLiveriesCount());
     }
 
-    CDbLiveryComponent::~CDbLiveryComponent() {}
+    CDbLiveryComponent::~CDbLiveryComponent() = default;
 
     CLiveryView *CDbLiveryComponent::view() { return ui->tvp_Liveries; }
 

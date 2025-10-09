@@ -125,7 +125,7 @@ namespace swift::misc
 
         protected:
             //! Constructor
-            CInterpolationAndRenderingSetupBase();
+            CInterpolationAndRenderingSetupBase() = default;
 
             //! Can handle index?
             static bool canHandleIndex(int index);
@@ -155,7 +155,7 @@ namespace swift::misc
             };
 
             //! Constructor.
-            CInterpolationAndRenderingSetupGlobal();
+            CInterpolationAndRenderingSetupGlobal() = default;
 
             //! Considered as "all aircraft"
             static int InfiniteAircraft();
@@ -239,7 +239,7 @@ namespace swift::misc
             };
 
             //! Constructor
-            CInterpolationAndRenderingSetupPerCallsign();
+            CInterpolationAndRenderingSetupPerCallsign() = default;
 
             //! Constructor from global setup
             CInterpolationAndRenderingSetupPerCallsign(const aviation::CCallsign &callsign,

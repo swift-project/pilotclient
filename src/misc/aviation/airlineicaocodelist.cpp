@@ -20,8 +20,6 @@ namespace swift::misc::aviation
         return cats;
     }
 
-    CAirlineIcaoCodeList::CAirlineIcaoCodeList() {}
-
     CAirlineIcaoCodeList::CAirlineIcaoCodeList(const CSequence<CAirlineIcaoCode> &other)
         : CSequence<CAirlineIcaoCode>(other)
     {}

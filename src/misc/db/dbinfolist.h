@@ -30,7 +30,7 @@ namespace swift::misc::db
         using CSequence::CSequence;
 
         //! Default constructor.
-        CDbInfoList();
+        CDbInfoList() = default;
 
         //! Construct from a base class object.
         CDbInfoList(const CSequence<CDbInfo> &other);

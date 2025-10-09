@@ -43,7 +43,7 @@ namespace swift::gui::components
         this->setTabBarPosition(QTabWidget::North);
     }
 
-    CDataInfoAreaComponent::~CDataInfoAreaComponent() {}
+    CDataInfoAreaComponent::~CDataInfoAreaComponent() = default;
 
     CDbModelComponent *CDataInfoAreaComponent::getModelComponent() const { return ui->comp_DbModels; }
 

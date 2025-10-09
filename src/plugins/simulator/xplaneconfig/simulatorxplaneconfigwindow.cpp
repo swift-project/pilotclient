@@ -42,7 +42,7 @@ namespace swift::simplugin::xplane
         connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorXPlaneConfigWindow::close);
     }
 
-    CSimulatorXPlaneConfigWindow::~CSimulatorXPlaneConfigWindow() {}
+    CSimulatorXPlaneConfigWindow::~CSimulatorXPlaneConfigWindow() = default;
 
     void CSimulatorXPlaneConfigWindow::onSettingsAccepted()
     {

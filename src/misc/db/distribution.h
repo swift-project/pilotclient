@@ -36,7 +36,7 @@ namespace swift::misc::db
         };
 
         //! Default constructor
-        CDistribution();
+        CDistribution() = default;
 
         //! Constructor
         CDistribution(const QString &channel, int stability, bool restricted);

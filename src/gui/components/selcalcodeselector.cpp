@@ -34,7 +34,7 @@ namespace swift::gui::components
                 &CSelcalCodeSelector::selcalIndexChanged);
     }
 
-    CSelcalCodeSelector::~CSelcalCodeSelector() {}
+    CSelcalCodeSelector::~CSelcalCodeSelector() = default;
 
     QString CSelcalCodeSelector::getSelcalCode() const
     {

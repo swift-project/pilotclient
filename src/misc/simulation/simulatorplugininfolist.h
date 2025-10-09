@@ -32,7 +32,7 @@ namespace swift::misc::simulation
         using CSequence::CSequence;
 
         //! Default constructor
-        CSimulatorPluginInfoList();
+        CSimulatorPluginInfoList() = default;
 
         //! Construct from a base class object.
         CSimulatorPluginInfoList(const CSequence<CSimulatorPluginInfo> &other);

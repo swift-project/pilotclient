@@ -21,10 +21,7 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CDbModelMappingModifyDialog::~CDbModelMappingModifyDialog()
-    {
-        // void
-    }
+    CDbModelMappingModifyDialog::~CDbModelMappingModifyDialog() = default;
 
     CPropertyIndexVariantMap CDbModelMappingModifyDialog::getValues() const
     {

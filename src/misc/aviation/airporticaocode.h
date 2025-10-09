@@ -25,7 +25,7 @@ namespace swift::misc::aviation
     {
     public:
         //! Default constructor.
-        CAirportIcaoCode() {}
+        CAirportIcaoCode() = default;
 
         //! Constructor
         CAirportIcaoCode(const QString &icaoCode) : m_icaoCode(CAirportIcaoCode::unifyAirportCode(icaoCode)) {}

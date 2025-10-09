@@ -36,7 +36,7 @@ namespace swift::gui::components
                 &COtherSwiftVersionsComponent::reloadOtherVersions);
     }
 
-    COtherSwiftVersionsComponent::~COtherSwiftVersionsComponent() {}
+    COtherSwiftVersionsComponent::~COtherSwiftVersionsComponent() = default;
 
     bool COtherSwiftVersionsComponent::hasSelection() const { return (ui->tvp_ApplicationInfo->hasSelection()); }
 

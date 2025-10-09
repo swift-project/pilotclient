@@ -42,7 +42,7 @@ namespace swift::gui::components
         this->onSettingsChanged();
     }
 
-    CUserComponent::~CUserComponent() {}
+    CUserComponent::~CUserComponent() = default;
 
     int CUserComponent::countClients() const
     {

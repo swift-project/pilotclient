@@ -16,7 +16,7 @@ namespace swift::gui
         connect(ui->pb_ShowHidePushButton, &QPushButton::clicked, this, &CShowHideBar::toggleShowHide);
     }
 
-    CShowHideBar::~CShowHideBar() {}
+    CShowHideBar::~CShowHideBar() = default;
 
     bool CShowHideBar::isShown() const { return ui->pb_ShowHidePushButton->isChecked(); }
 } // namespace swift::gui

@@ -30,10 +30,10 @@ namespace swift::gui::views
 
     protected:
         //! \copydoc QWidget::resizeEvent
-        virtual void resizeEvent(QResizeEvent *event) override;
+        void resizeEvent(QResizeEvent *event) override;
 
         //! \copydoc QWidget::wheelEvent
-        virtual void wheelEvent(QWheelEvent *event) override;
+        void wheelEvent(QWheelEvent *event) override;
     };
 } // namespace swift::gui::views
 

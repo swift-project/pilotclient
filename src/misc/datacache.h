@@ -83,7 +83,7 @@ namespace swift::misc
         CDataCacheRevision(const QString &basename);
 
         //! Destructor.
-        ~CDataCacheRevision();
+        ~CDataCacheRevision() = default;
 
         //! @{
         //! Non-copyable.
@@ -247,7 +247,7 @@ namespace swift::misc
 
     public:
         //! Destructor.
-        virtual ~CDataCache() override;
+        ~CDataCache() override;
 
         //! Return the singleton instance.
         static CDataCache *instance();
@@ -297,7 +297,7 @@ namespace swift::misc
         void saveToStoreAsync(const swift::misc::CValueCachePacket &values);
         void loadFromStoreAsync();
 
-        virtual void connectPage(private_ns::CValuePage *page) override;
+        void connectPage(private_ns::CValuePage *page) override;
 
         QFileSystemWatcher m_watcher;
 

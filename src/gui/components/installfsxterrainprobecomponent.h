@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CInstallFsxTerrainProbeComponent(QWidget *parent = nullptr);
 
         //! Destructors
-        virtual ~CInstallFsxTerrainProbeComponent();
+        ~CInstallFsxTerrainProbeComponent() override;
 
     private:
         QScopedPointer<Ui::CInstallFsxTerrainProbeComponent> ui;

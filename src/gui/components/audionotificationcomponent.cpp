@@ -94,7 +94,7 @@ namespace swift::gui::components
         Q_ASSERT(c);
     }
 
-    CAudioNotificationComponent::~CAudioNotificationComponent() {}
+    CAudioNotificationComponent::~CAudioNotificationComponent() = default;
 
     void CAudioNotificationComponent::reloadSettings()
     {

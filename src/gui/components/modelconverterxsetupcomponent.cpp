@@ -23,7 +23,7 @@ namespace swift::gui::components
         ui->le_McxBinary->setText(m_setting.get());
     }
 
-    CModelConverterXSetupComponent::~CModelConverterXSetupComponent() {}
+    CModelConverterXSetupComponent::~CModelConverterXSetupComponent() = default;
 
     void CModelConverterXSetupComponent::selectBinary()
     {

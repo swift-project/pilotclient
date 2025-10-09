@@ -24,7 +24,7 @@ namespace swift::simplugin::emulated
         CSimulatorEmulatedConfig(QObject *parent = nullptr);
 
         //! Dtor
-        virtual ~CSimulatorEmulatedConfig() override {}
+        ~CSimulatorEmulatedConfig() override = default;
 
         //! \copydoc swift::gui::IPluginConfig::createConfigWindow()
         swift::gui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;

@@ -88,10 +88,7 @@ namespace swift::gui::views
         resize->setContext(Qt::WidgetShortcut);
     }
 
-    CViewBaseNonTemplate::~CViewBaseNonTemplate()
-    {
-        // dtor
-    }
+    CViewBaseNonTemplate::~CViewBaseNonTemplate() = default;
 
     bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {

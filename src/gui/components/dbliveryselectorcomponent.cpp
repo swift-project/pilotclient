@@ -55,10 +55,7 @@ namespace swift::gui::components
                              sGui->getWebDataServices()->getLiveriesCount(), {});
     }
 
-    CDbLiverySelectorComponent::~CDbLiverySelectorComponent()
-    {
-        // void
-    }
+    CDbLiverySelectorComponent::~CDbLiverySelectorComponent() = default;
 
     void CDbLiverySelectorComponent::setLivery(const CLivery &livery)
     {

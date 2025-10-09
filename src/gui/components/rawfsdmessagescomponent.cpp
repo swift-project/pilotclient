@@ -44,7 +44,7 @@ namespace swift::gui::components
         expandWritingToFile(false);
     }
 
-    CRawFsdMessagesComponent::~CRawFsdMessagesComponent() {}
+    CRawFsdMessagesComponent::~CRawFsdMessagesComponent() = default;
 
     void CRawFsdMessagesComponent::setupConnections()
     {

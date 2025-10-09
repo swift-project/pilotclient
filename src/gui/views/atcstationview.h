@@ -59,7 +59,7 @@ namespace swift::gui
 
         protected:
             //! \copydoc CViewBase::customMenu
-            virtual void customMenu(swift::gui::menus::CMenuActions &menuActions) override;
+            void customMenu(swift::gui::menus::CMenuActions &menuActions) override;
 
         private:
             void emitTestRequest1kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(1000); }

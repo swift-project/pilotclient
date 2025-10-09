@@ -36,7 +36,7 @@ namespace swift::gui::components
         explicit CSettingsSimulatorBasicsComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsSimulatorBasicsComponent() override;
+        ~CSettingsSimulatorBasicsComponent() override;
 
         //! Show / hide selector
         void hideSelector(bool show);

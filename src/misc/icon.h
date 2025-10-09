@@ -39,7 +39,7 @@ namespace swift::misc
     {
     public:
         //! Default constructor.
-        CIcon() {}
+        CIcon() = default;
 
         //! Constructor.
         CIcon(CIcons::IconIndex index);

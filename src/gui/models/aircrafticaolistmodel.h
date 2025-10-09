@@ -23,7 +23,7 @@ namespace swift::gui::models
         explicit CAircraftIcaoCodeListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftIcaoCodeListModel() {}
+        ~CAircraftIcaoCodeListModel() override = default;
     };
 } // namespace swift::gui::models
 

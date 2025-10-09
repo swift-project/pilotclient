@@ -59,7 +59,7 @@ namespace swift::gui
             explicit CDbModelWorkbenchComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbModelWorkbenchComponent() override;
+            ~CDbModelWorkbenchComponent() override;
 
             //! Log categories
             static const QStringList &getLogCategories();
@@ -84,18 +84,18 @@ namespace swift::gui
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const swift::misc::simulation::CAircraftModelList &models) override
+            void setModels(const swift::misc::simulation::CAircraftModelList &models) override
             {
                 this->setModelsForSimulator(models, swift::misc::simulation::CSimulatorInfo());
             }
-            virtual void setModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models,
-                                               const swift::misc::simulation::CSimulatorInfo &simulator) override;
-            virtual int updateModels(const swift::misc::simulation::CAircraftModelList &models) override
+            void setModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models,
+                                       const swift::misc::simulation::CSimulatorInfo &simulator) override;
+            int updateModels(const swift::misc::simulation::CAircraftModelList &models) override
             {
                 return this->updateModelsForSimulator(models, swift::misc::simulation::CSimulatorInfo());
             }
-            virtual int updateModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models,
-                                                 const swift::misc::simulation::CSimulatorInfo &simulator) override;
+            int updateModelsForSimulator(const swift::misc::simulation::CAircraftModelList &models,
+                                         const swift::misc::simulation::CSimulatorInfo &simulator) override;
             //! @}
 
         private:

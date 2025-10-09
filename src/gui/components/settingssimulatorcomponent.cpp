@@ -120,7 +120,7 @@ namespace swift::gui::components
         }
     }
 
-    CSettingsSimulatorComponent::~CSettingsSimulatorComponent() {}
+    CSettingsSimulatorComponent::~CSettingsSimulatorComponent() = default;
 
     void CSettingsSimulatorComponent::setGuiValues()
     {

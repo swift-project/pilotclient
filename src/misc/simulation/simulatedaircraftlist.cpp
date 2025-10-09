@@ -25,8 +25,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatedAircraft, CSimul
 
 namespace swift::misc::simulation
 {
-    CSimulatedAircraftList::CSimulatedAircraftList() {}
-
     CSimulatedAircraftList::CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other)
         : CSequence<CSimulatedAircraft>(other)
     {}

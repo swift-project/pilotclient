@@ -31,7 +31,7 @@ namespace swift::misc
 
     public:
         //! Constructor
-        CIconList() {}
+        CIconList() = default;
 
         //! Construct from a base class object.
         CIconList(const CSequence<CIcon> &other);

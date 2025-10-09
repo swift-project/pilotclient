@@ -18,8 +18,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CVPilotModelR
 
 namespace swift::misc::simulation::fscommon
 {
-    CVPilotModelRule::CVPilotModelRule() {}
-
     CVPilotModelRule::CVPilotModelRule(const QString &modelName, const QString &folder, const QString &typeCode,
                                        const QString &callsignPrefix, qint64 updated)
         : ITimestampBased(updated), m_modelName(modelName.trimmed().toUpper()), m_folder(folder.trimmed().toUpper()),

@@ -46,7 +46,7 @@ namespace swift::gui::components
         });
     }
 
-    CModelMatcherLogEnable::~CModelMatcherLogEnable() {}
+    CModelMatcherLogEnable::~CModelMatcherLogEnable() = default;
 
     bool CModelMatcherLogEnable::isReverseLookupLogEnabled() const { return ui->cb_LogReverseLookup->isChecked(); }
 

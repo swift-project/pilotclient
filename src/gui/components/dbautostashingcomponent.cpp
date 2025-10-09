@@ -62,7 +62,7 @@ namespace swift::gui::components
         this->resetDescription();
     }
 
-    CDbAutoStashingComponent::~CDbAutoStashingComponent() {}
+    CDbAutoStashingComponent::~CDbAutoStashingComponent() = default;
 
     void CDbAutoStashingComponent::accept()
     {

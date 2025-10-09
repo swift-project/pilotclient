@@ -20,7 +20,7 @@ namespace swift::gui::filters
                 Qt::QueuedConnection);
     }
 
-    CFilterWidget::~CFilterWidget() {}
+    CFilterWidget::~CFilterWidget() = default;
 
     void CFilterWidget::setButtonsAndCount(CFilterBarButtons *buttons)
     {

@@ -35,7 +35,7 @@ namespace swift::gui::models
         explicit CSimulatedAircraftListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CSimulatedAircraftListModel() override {}
+        ~CSimulatedAircraftListModel() override = default;
 
         //! Mode
         void setAircraftMode(AircraftMode mode);

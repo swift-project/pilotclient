@@ -88,21 +88,21 @@ namespace swift::misc
         {
         public:
             //! clientprovider
-            virtual CClientList getClients() const override;
-            virtual void setClients(const CClientList &clients) override;
-            virtual void clearClients() override;
-            virtual CClientList getClientsForCallsigns(const aviation::CCallsignSet &callsigns) const override;
-            virtual CClient getClientOrDefaultForCallsign(const aviation::CCallsign &callsign) const override;
-            virtual bool hasClientInfo(const aviation::CCallsign &callsign) const override;
-            virtual bool addNewClient(const CClient &client) override;
-            virtual bool setOtherClient(const swift::misc::network::CClient &client) override;
-            virtual int updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm,
-                                          bool skipEqualValues = true) override;
-            virtual int removeClient(const aviation::CCallsign &callsign) override;
-            virtual bool autoAdjustCientGndCapability(const aviation::CAircraftSituation &situation) override;
-            virtual bool addClientGndCapability(const aviation::CCallsign &callsign) override;
-            virtual bool setClientGndCapability(const aviation::CCallsign &callsign, bool supportGndFlag) override;
-            virtual void markAsSwiftClient(const aviation::CCallsign &callsign) override;
+            CClientList getClients() const override;
+            void setClients(const CClientList &clients) override;
+            void clearClients() override;
+            CClientList getClientsForCallsigns(const aviation::CCallsignSet &callsigns) const override;
+            CClient getClientOrDefaultForCallsign(const aviation::CCallsign &callsign) const override;
+            bool hasClientInfo(const aviation::CCallsign &callsign) const override;
+            bool addNewClient(const CClient &client) override;
+            bool setOtherClient(const swift::misc::network::CClient &client) override;
+            int updateOrAddClient(const aviation::CCallsign &callsign, const CPropertyIndexVariantMap &vm,
+                                  bool skipEqualValues = true) override;
+            int removeClient(const aviation::CCallsign &callsign) override;
+            bool autoAdjustCientGndCapability(const aviation::CAircraftSituation &situation) override;
+            bool addClientGndCapability(const aviation::CCallsign &callsign) override;
+            bool setClientGndCapability(const aviation::CCallsign &callsign, bool supportGndFlag) override;
+            void markAsSwiftClient(const aviation::CCallsign &callsign) override;
 
         private:
             CClientPerCallsign m_clients;

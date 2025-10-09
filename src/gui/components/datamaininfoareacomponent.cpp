@@ -43,7 +43,7 @@ namespace swift::gui::components
         ui->comp_Log->showFilterBar();
     }
 
-    CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent() {}
+    CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent() = default;
 
     CLogComponent *CDataMainInfoAreaComponent::getLogComponent() const { return ui->comp_Log; }
 

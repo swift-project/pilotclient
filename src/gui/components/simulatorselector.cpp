@@ -51,7 +51,7 @@ namespace swift::gui::components
         connect(ui->cb_Simulators, &QComboBox::currentTextChanged, this, &CSimulatorSelector::comboBoxChanged);
     }
 
-    CSimulatorSelector::~CSimulatorSelector() {}
+    CSimulatorSelector::~CSimulatorSelector() = default;
 
     void CSimulatorSelector::setMode(CSimulatorSelector::Mode mode, bool forced)
     {

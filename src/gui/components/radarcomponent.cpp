@@ -58,7 +58,7 @@ namespace swift::gui::components
         m_headingTimer.start(50);
     }
 
-    CRadarComponent::~CRadarComponent() {}
+    CRadarComponent::~CRadarComponent() = default;
 
     bool CRadarComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {

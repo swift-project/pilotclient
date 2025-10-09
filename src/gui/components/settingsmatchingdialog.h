@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CSettingsMatchingDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsMatchingDialog();
+        ~CSettingsMatchingDialog() override;
 
         //! Get setup
         swift::misc::simulation::CAircraftMatcherSetup getMatchingSetup() const;

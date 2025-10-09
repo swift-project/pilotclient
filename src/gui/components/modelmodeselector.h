@@ -34,7 +34,7 @@ namespace swift::gui::components
         explicit CModelModeSelector(QWidget *parent = nullptr);
 
         //! Destructor
-        ~CModelModeSelector();
+        ~CModelModeSelector() override;
 
         //! Get mode
         swift::misc::simulation::CAircraftModel::ModelMode getMode() const;

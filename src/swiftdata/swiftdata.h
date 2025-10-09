@@ -44,14 +44,14 @@ public:
     CSwiftData(QWidget *parent = nullptr);
 
     //! Destructor
-    virtual ~CSwiftData() override;
+    ~CSwiftData() override;
 
 protected:
     //! \name QMainWindow events
     //! @{
 
     //! \copydoc QMainWindow::closeEvent
-    virtual void closeEvent(QCloseEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
     //! @}
 
 private:

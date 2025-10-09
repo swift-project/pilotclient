@@ -28,7 +28,7 @@ namespace swift::gui::components
         explicit CAutoPublishComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAutoPublishComponent() override;
+        ~CAutoPublishComponent() override;
 
         //! Read the files
         int readFiles();

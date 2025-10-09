@@ -32,7 +32,7 @@ namespace swift::gui::editors
         explicit CModelMappingForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CModelMappingForm() override;
+        ~CModelMappingForm() override;
 
         //! Value
         swift::misc::simulation::CAircraftModel getValue() const;
@@ -41,9 +41,9 @@ namespace swift::gui::editors
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual void setSelectOnly() override;
-        virtual swift::misc::CStatusMessageList validate(bool withNestedObjects) const override;
+        void setReadOnly(bool readonly) override;
+        void setSelectOnly() override;
+        swift::misc::CStatusMessageList validate(bool withNestedObjects) const override;
         //! @}
 
         //! Set model
@@ -55,7 +55,7 @@ namespace swift::gui::editors
 
     protected:
         //! \copydoc CFormDbUser::userChanged
-        virtual void userChanged() override;
+        void userChanged() override;
 
     private:
         //! CG (aka vertical offset) from UI

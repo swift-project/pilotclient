@@ -7,8 +7,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CPropertyIndex, CPropertyIndexList)
 
 namespace swift::misc
 {
-    CPropertyIndexList::CPropertyIndexList() {}
-
     CPropertyIndexList::CPropertyIndexList(const CSequence<CPropertyIndex> &other) : CSequence<CPropertyIndex>(other) {}
 
     CPropertyIndexList CPropertyIndexList::copyFrontRemoved() const

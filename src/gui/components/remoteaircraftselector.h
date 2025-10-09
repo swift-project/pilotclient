@@ -40,7 +40,7 @@ namespace swift::gui::components
         explicit CRemoteAircraftSelector(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CRemoteAircraftSelector() override;
+        ~CRemoteAircraftSelector() override;
 
         //! Selected callsign
         swift::misc::aviation::CCallsign getSelectedCallsign() const;
@@ -54,7 +54,7 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc QWidget::showEvent
-        virtual void showEvent(QShowEvent *event) override;
+        void showEvent(QShowEvent *event) override;
 
     private:
         //! Added aircraft, change content of combobox

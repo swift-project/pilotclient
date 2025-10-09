@@ -29,7 +29,7 @@ namespace swift::misc::aviation
 
     public:
         //! Default constructor
-        CCallsignSet();
+        CCallsignSet() = default;
 
         //! By string list
         CCallsignSet(const QStringList &callsigns, CCallsign::TypeHint typeHint = CCallsign::NoHint);

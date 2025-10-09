@@ -11,8 +11,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorInfo, CSimulator
 
 namespace swift::misc::simulation
 {
-    CSimulatorInfoList::CSimulatorInfoList() {}
-
     CSimulatorInfoList::CSimulatorInfoList(const CSequence<CSimulatorInfo> &other) : CSequence<CSimulatorInfo>(other) {}
 
     CSimulatorInfoList CSimulatorInfoList::withNoDuplicates() const

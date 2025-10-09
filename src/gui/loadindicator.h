@@ -55,10 +55,10 @@ namespace swift::gui
         const QColor &color() const { return m_color; }
 
         //! \copydoc QWidget::sizeHint
-        virtual QSize sizeHint() const override;
+        QSize sizeHint() const override;
 
         //! \copydoc QWidget::heightForWidth
-        virtual int heightForWidth(int w) const override;
+        int heightForWidth(int w) const override;
 
         //! Paint to another painter
         void paint(QPainter &painter) const;
@@ -96,10 +96,10 @@ namespace swift::gui
 
     protected:
         //! \copydoc QWidget::timerEvent
-        virtual void timerEvent(QTimerEvent *event) override;
+        void timerEvent(QTimerEvent *event) override;
 
         //! \copydoc QWidget::paintEvent
-        virtual void paintEvent(QPaintEvent *event) override;
+        void paintEvent(QPaintEvent *event) override;
 
         //! Is parent widget visible?
         bool isParentVisible() const;
@@ -124,7 +124,7 @@ namespace swift::gui
         CLoadIndicatorEnabled(QWidget *usingWidget);
 
         //! Destructor
-        virtual ~CLoadIndicatorEnabled() {}
+        virtual ~CLoadIndicatorEnabled() = default;
 
         //! Copy constructor
         CLoadIndicatorEnabled(const CLoadIndicatorEnabled &) = delete;

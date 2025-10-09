@@ -44,10 +44,7 @@ namespace swift::gui::editors
         });
     }
 
-    COwnModelSetForm::~COwnModelSetForm()
-    {
-        // void
-    }
+    COwnModelSetForm::~COwnModelSetForm() = default;
 
     void COwnModelSetForm::reloadData()
     {

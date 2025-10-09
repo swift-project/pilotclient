@@ -11,8 +11,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CIdentifier, CIdentifierList)
 
 namespace swift::misc
 {
-    CIdentifierList::CIdentifierList() {}
-
     CIdentifierList::CIdentifierList(const CSequence<CIdentifier> &other) : CSequence<CIdentifier>(other) {}
 
     bool CIdentifierList::containsAnyNotIn(const CIdentifierList &other) const

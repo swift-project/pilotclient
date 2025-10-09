@@ -36,7 +36,7 @@ namespace swift::gui::components
         explicit CUpdateInfoComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CUpdateInfoComponent() override;
+        ~CUpdateInfoComponent() override;
 
         //! Is there a new version available return version, else empty string
         swift::misc::db::CArtifact getLatestAvailablePilotClientArtifactForSelection() const;

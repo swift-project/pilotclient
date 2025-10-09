@@ -44,7 +44,7 @@ namespace swift::gui::settings
         };
 
         //! Default constructor
-        CTextMessageSettings();
+        CTextMessageSettings() = default;
 
         //! Private messages? All considered.
         bool popupPrivateMessages() const;

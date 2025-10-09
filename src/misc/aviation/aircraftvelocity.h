@@ -34,7 +34,7 @@ namespace swift::misc::aviation
         };
 
         //! Default constructor
-        CAircraftVelocity();
+        CAircraftVelocity() = default;
 
         //! Constructor
         CAircraftVelocity(double x, double y, double z, physical_quantities::CSpeedUnit xyzUnit, double pitch,

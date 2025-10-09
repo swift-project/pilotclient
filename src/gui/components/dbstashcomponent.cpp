@@ -80,7 +80,7 @@ namespace swift::gui::components
         this->onUserChanged();
     }
 
-    CDbStashComponent::~CDbStashComponent() {}
+    CDbStashComponent::~CDbStashComponent() = default;
 
     CStatusMessage CDbStashComponent::validateStashModel(const CAircraftModel &model, bool allowReplace) const
     {

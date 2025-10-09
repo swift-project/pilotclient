@@ -33,7 +33,7 @@ namespace swift::gui::components
         explicit CSettingsModelComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsModelComponent();
+        ~CSettingsModelComponent() override;
 
         //! Interval, -1 for disabled
         int getBackgroundUpdaterIntervallSecs() const;

@@ -25,8 +25,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAtcStation)
 
 namespace swift::misc::aviation
 {
-    CAtcStation::CAtcStation() {}
-
     CAtcStation::CAtcStation(const QString &callsign) : m_callsign(callsign) { m_callsign.setTypeHint(CCallsign::Atc); }
 
     CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency,

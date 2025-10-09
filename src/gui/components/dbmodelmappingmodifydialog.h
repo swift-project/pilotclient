@@ -36,7 +36,7 @@ namespace swift::gui::components
         explicit CDbModelMappingModifyDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbModelMappingModifyDialog();
+        ~CDbModelMappingModifyDialog() override;
 
         //! Get the values
         swift::misc::CPropertyIndexVariantMap getValues() const;

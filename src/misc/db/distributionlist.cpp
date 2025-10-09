@@ -9,8 +9,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CDistribution, CDistributionList)
 
 namespace swift::misc::db
 {
-    CDistributionList::CDistributionList() {}
-
     CDistributionList::CDistributionList(const CSequence<CDistribution> &other) : CSequence<CDistribution>(other) {}
 
     QStringList CDistributionList::getChannels() const

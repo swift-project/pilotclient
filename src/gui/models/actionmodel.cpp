@@ -23,7 +23,7 @@ namespace swift::gui::models
         setupModelData();
     }
 
-    CActionModel::~CActionModel() {}
+    CActionModel::~CActionModel() = default;
 
     int CActionModel::columnCount(const QModelIndex &parent) const
     {

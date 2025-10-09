@@ -27,7 +27,7 @@ namespace swift::misc
         {
         public:
             CPromiseData() { this->reportStarted(); }
-            ~CPromiseData()
+            ~CPromiseData() override
             {
                 if (this->isRunning()) { this->cancel(); }
             }

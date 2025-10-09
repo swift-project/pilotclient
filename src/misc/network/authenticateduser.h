@@ -43,7 +43,7 @@ namespace swift::misc::network
         };
 
         //! Default constructor.
-        CAuthenticatedUser();
+        CAuthenticatedUser() = default;
 
         //! Constructor.
         CAuthenticatedUser(int id, const QString &realname);

@@ -7,8 +7,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CMatchingStatisticsEntry, 
 
 namespace swift::misc::simulation
 {
-    CMatchingStatistics::CMatchingStatistics() {}
-
     CMatchingStatistics::CMatchingStatistics(const CSequence<CMatchingStatisticsEntry> &other)
         : CSequence<CMatchingStatisticsEntry>(other)
     {}

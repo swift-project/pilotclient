@@ -11,10 +11,7 @@ using namespace swift::misc;
 
 namespace swift::gui
 {
-    IMainWindowAccess::~IMainWindowAccess()
-    {
-        // void
-    }
+    IMainWindowAccess::~IMainWindowAccess() = default;
 
     bool IMainWindowAccess::displayInStatusBar(const CStatusMessage &message)
     {

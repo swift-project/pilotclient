@@ -58,7 +58,7 @@ namespace swift::gui::components
         this->onSimulatorChanged();
     }
 
-    CSettingsSimulatorBasicsComponent::~CSettingsSimulatorBasicsComponent() {}
+    CSettingsSimulatorBasicsComponent::~CSettingsSimulatorBasicsComponent() = default;
 
     void CSettingsSimulatorBasicsComponent::hideSelector(bool show) { ui->comp_SimulatorSelector->setVisible(show); }
 

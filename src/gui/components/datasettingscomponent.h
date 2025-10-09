@@ -36,7 +36,7 @@ namespace swift::gui::components
         explicit CDataSettingsComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDataSettingsComponent();
+        ~CDataSettingsComponent() override;
 
         //! Background updater
         void setBackgroundUpdater(const swift::core::db::CBackgroundDataUpdater *updater);

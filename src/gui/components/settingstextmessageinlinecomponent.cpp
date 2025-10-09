@@ -34,7 +34,7 @@ namespace swift::gui::components
         this->settingsChanged();
     }
 
-    CSettingsTextMessageInlineComponent::~CSettingsTextMessageInlineComponent() {}
+    CSettingsTextMessageInlineComponent::~CSettingsTextMessageInlineComponent() = default;
 
     void CSettingsTextMessageInlineComponent::settingsChanged()
     {

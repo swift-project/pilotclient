@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CDbLiveryColorSearch(QWidget *parent = nullptr);
 
         //! Destructor
-        ~CDbLiveryColorSearch();
+        ~CDbLiveryColorSearch() override;
 
         //! Found livery if any, otherwise default
         swift::misc::aviation::CLivery getLivery() const;

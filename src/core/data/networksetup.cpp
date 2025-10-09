@@ -12,8 +12,6 @@ using namespace swift::misc::network;
 
 namespace swift::core::data
 {
-    CNetworkSetup::CNetworkSetup() {}
-
     CServer CNetworkSetup::getLastVatsimServer() const { return m_lastVatsimServer.get(); }
 
     CStatusMessage CNetworkSetup::setLastVatsimServer(const CServer &server) { return m_lastVatsimServer.set(server); }

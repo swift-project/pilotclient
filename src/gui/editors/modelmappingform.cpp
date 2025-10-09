@@ -43,7 +43,7 @@ namespace swift::gui::editors
         this->userChanged();
     }
 
-    CModelMappingForm::~CModelMappingForm() {}
+    CModelMappingForm::~CModelMappingForm() = default;
 
     swift::misc::simulation::CAircraftModel CModelMappingForm::getValue() const
     {

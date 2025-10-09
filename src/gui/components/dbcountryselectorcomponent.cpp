@@ -51,7 +51,7 @@ namespace swift::gui::components
                               sGui->getWebDataServices()->getCountriesCount());
     }
 
-    CDbCountrySelectorComponent::~CDbCountrySelectorComponent() {}
+    CDbCountrySelectorComponent::~CDbCountrySelectorComponent() = default;
 
     void CDbCountrySelectorComponent::setCountry(const swift::misc::CCountry &country)
     {

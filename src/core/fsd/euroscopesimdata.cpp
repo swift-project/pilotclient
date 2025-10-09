@@ -12,8 +12,6 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    EuroscopeSimData::EuroscopeSimData() = default;
-
     EuroscopeSimData::EuroscopeSimData(const QString &sender, const QString &model, const QString &livery,
                                        quint64 timestamp, double latitude, double longitude, double altitude,
                                        double heading, int bank, int pitch, int groundSpeed, bool onGround,

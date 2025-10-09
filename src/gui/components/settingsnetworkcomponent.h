@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CSettingsNetworkComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsNetworkComponent();
+        ~CSettingsNetworkComponent() override;
 
     private:
         QScopedPointer<Ui::CSettingsNetworkComponent> ui;

@@ -40,21 +40,21 @@ namespace swift::gui::filters
         explicit CDistributorFilterBar(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDistributorFilterBar() override;
+        ~CDistributorFilterBar() override;
 
         //! Set simulator
         void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<models::IModelFilter<swift::misc::simulation::CDistributorList>>
+        std::unique_ptr<models::IModelFilter<swift::misc::simulation::CDistributorList>>
         createModelFilter() const override;
 
         //! \copydoc CFilterWidget::onRowCountChanged
-        virtual void onRowCountChanged(int count, bool withFilter) override;
+        void onRowCountChanged(int count, bool withFilter) override;
 
     protected:
         //! Clear form
-        virtual void clearForm() override;
+        void clearForm() override;
 
     private:
         //! Trigger filter by changing a value

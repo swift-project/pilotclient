@@ -47,7 +47,7 @@ namespace swift::core::data
         Q_DECLARE_FLAGS(AudioMode, AudioModeFlag)
 
         //! Default constructor
-        CLauncherSetup() {}
+        CLauncherSetup() = default;
 
         //! Destructor.
         // virtual ~CLauncherSetup() {}

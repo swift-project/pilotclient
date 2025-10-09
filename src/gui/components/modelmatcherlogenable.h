@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CModelMatcherLogEnable(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CModelMatcherLogEnable() override;
+        ~CModelMatcherLogEnable() override;
 
         //! Reverse lookup enabled?
         bool isReverseLookupLogEnabled() const;

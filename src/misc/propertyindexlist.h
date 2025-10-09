@@ -27,7 +27,7 @@ namespace swift::misc
         using CSequence::CSequence;
 
         //! Default constructor.
-        CPropertyIndexList();
+        CPropertyIndexList() = default;
 
         //! Construct from a base class object.
         CPropertyIndexList(const CSequence<CPropertyIndex> &other);

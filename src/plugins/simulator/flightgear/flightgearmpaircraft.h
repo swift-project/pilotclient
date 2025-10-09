@@ -31,7 +31,7 @@ namespace swift::simplugin::flightgear
                               swift::misc::simulation::CInterpolationLogger *logger);
 
         //! Destructor
-        ~CFlightgearMPAircraft() {}
+        ~CFlightgearMPAircraft() = default;
 
         //! Set simulated aircraft
         void setSimulatedAircraft(const swift::misc::simulation::CSimulatedAircraft &simulatedAircraft);

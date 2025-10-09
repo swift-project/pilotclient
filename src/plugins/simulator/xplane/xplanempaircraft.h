@@ -23,14 +23,14 @@ namespace swift::simplugin::xplane
     {
     public:
         //! Constructor
-        CXPlaneMPAircraft();
+        CXPlaneMPAircraft() = default;
 
         //! Constructor providing initial situation/parts
         CXPlaneMPAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft,
                           swift::core::ISimulator *simulator, swift::misc::simulation::CInterpolationLogger *logger);
 
         //! Destructor
-        ~CXPlaneMPAircraft() {}
+        ~CXPlaneMPAircraft() = default;
 
         //! Set simulated aircraft
         void setSimulatedAircraft(const swift::misc::simulation::CSimulatedAircraft &simulatedAircraft);

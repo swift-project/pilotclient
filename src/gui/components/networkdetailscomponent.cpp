@@ -63,7 +63,7 @@ namespace swift::gui::components
         this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
     }
 
-    CNetworkDetailsComponent::~CNetworkDetailsComponent() {}
+    CNetworkDetailsComponent::~CNetworkDetailsComponent() = default;
 
     CLoginMode CNetworkDetailsComponent::getLoginMode() const
     {

@@ -47,7 +47,7 @@ namespace swift::gui::components
         explicit CSimulatorComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSimulatorComponent();
+        ~CSimulatorComponent() override;
 
         //! Number of entries
         int rowCount() const;

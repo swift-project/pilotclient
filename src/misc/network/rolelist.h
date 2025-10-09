@@ -30,7 +30,7 @@ namespace swift::misc::network
         using CSequence::CSequence;
 
         //! Default constructor.
-        CRoleList();
+        CRoleList() = default;
 
         //! Has role?
         bool hasRole(const QString &roleName) const;

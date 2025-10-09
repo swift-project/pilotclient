@@ -19,7 +19,7 @@ namespace swift::core
         virtual void updateProgressIndicator(int percentage) = 0;
 
         //! Dtor
-        virtual ~IProgressIndicator() {}
+        virtual ~IProgressIndicator() = default;
 
         //! Same as updateProgressIndicator but processing events
         void updateProgressIndicatorAndProcessEvents(int percentage)

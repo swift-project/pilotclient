@@ -59,7 +59,7 @@ void CSwiftData::initStyleSheet()
     this->setStyleSheet(s);
 }
 
-CSwiftData::~CSwiftData() {}
+CSwiftData::~CSwiftData() = default;
 
 void CSwiftData::closeEvent(QCloseEvent *event)
 {

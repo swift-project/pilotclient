@@ -27,7 +27,7 @@ namespace swift::input
         IJoystick(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~IJoystick() {}
+        ~IJoystick() override = default;
 
         //! Creates a native joystick handler object
         static std::unique_ptr<IJoystick> create(QObject *parent = nullptr);

@@ -9,8 +9,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftParts, CAircraftPar
 
 namespace swift::misc::aviation
 {
-    CAircraftPartsList::CAircraftPartsList() {}
-
     CAircraftPartsList::CAircraftPartsList(const CSequence<CAircraftParts> &other) : CSequence<CAircraftParts>(other) {}
 
     int CAircraftPartsList::setOnGround(bool onGround)

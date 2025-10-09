@@ -64,7 +64,7 @@ namespace swift::gui::components
         });
     }
 
-    CInterpolationSetupComponent::~CInterpolationSetupComponent() {}
+    CInterpolationSetupComponent::~CInterpolationSetupComponent() = default;
 
     CInterpolationSetupComponent::Mode CInterpolationSetupComponent::getSetupMode() const
     {

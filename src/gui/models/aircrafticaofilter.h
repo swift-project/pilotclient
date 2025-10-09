@@ -23,7 +23,7 @@ namespace swift::gui::models
                             const QString &description, const QString &combinedType);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::aviation::CAircraftIcaoCodeList
+        swift::misc::aviation::CAircraftIcaoCodeList
         filter(const swift::misc::aviation::CAircraftIcaoCodeList &inContainer) const override;
 
     private:

@@ -51,7 +51,7 @@ namespace swift::gui::components
         connect(completer, qOverload<const QString &>(&QCompleter::activated), this, &CColorSelector::setColorByName);
     }
 
-    CColorSelector::~CColorSelector() {}
+    CColorSelector::~CColorSelector() = default;
 
     void CColorSelector::setColor(const swift::misc::CRgbColor &color)
     {

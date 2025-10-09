@@ -15,8 +15,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CNavigatorSettings)
 
 namespace swift::gui::settings
 {
-    CNavigatorSettings::CNavigatorSettings() {}
-
     void CNavigatorSettings::reset() {}
 
     void CNavigatorSettings::setMargins(const QMargins &margins)

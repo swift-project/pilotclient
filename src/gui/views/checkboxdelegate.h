@@ -33,21 +33,21 @@ namespace swift::gui::views
         CCheckBoxDelegate(const QString &iconCheckedUrl, const QString &iconUncheckedUrl, QObject *parent = nullptr);
 
         //! Destructor
-        ~CCheckBoxDelegate();
+        ~CCheckBoxDelegate() override = default;
 
         //! \copydoc QItemDelegate::createEditor
-        virtual QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                                      const QModelIndex &index) const override;
+        QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const override;
 
         //! \copydoc QItemDelegate::setEditorData
-        virtual void setEditorData(QWidget *editor, const QModelIndex &index) const override;
+        void setEditorData(QWidget *editor, const QModelIndex &index) const override;
 
         //! \copydoc QItemDelegate::setModelData
-        virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
+        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
         //! \copydoc QItemDelegate::updateEditorGeometry
-        virtual void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
-                                          const QModelIndex &index) const override;
+        void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option,
+                                  const QModelIndex &index) const override;
 
     private:
         QString m_iconCheckedUrl;

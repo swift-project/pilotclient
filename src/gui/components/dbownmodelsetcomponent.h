@@ -75,7 +75,7 @@ namespace swift::gui
             explicit CDbOwnModelSetComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbOwnModelSetComponent() override;
+            ~CDbOwnModelSetComponent() override;
 
             //! Corresponding view
             views::CAircraftModelView *view() const;
@@ -118,22 +118,22 @@ namespace swift::gui
             void setSimulatorSelectorMode(CSimulatorSelector::Mode mode);
 
             //! \copydoc CDbMappingComponentAware::setMappingComponent
-            virtual void setMappingComponent(CDbMappingComponent *component) override;
+            void setMappingComponent(CDbMappingComponent *component) override;
 
             //! Model set is for simulator
             swift::misc::simulation::CSimulatorInfo getModelSetSimulator() const { return m_simulator; }
 
             //! \name Implementations of the models interfaces
             //! @{
-            virtual void setModels(const swift::misc::simulation::CAircraftModelList &models) override
+            void setModels(const swift::misc::simulation::CAircraftModelList &models) override
             {
                 this->setModelSet(models, this->getModelSetSimulator());
             }
-            virtual int updateModels(const swift::misc::simulation::CAircraftModelList &models) override
+            int updateModels(const swift::misc::simulation::CAircraftModelList &models) override
             {
                 return this->replaceOrAddModelSet(models, this->getModelSetSimulator());
             }
-            virtual swift::misc::simulation::CSimulatorInfo getSelectedSimulator() const override
+            swift::misc::simulation::CSimulatorInfo getSelectedSimulator() const override
             {
                 return this->getModelSetSimulator();
             }
@@ -235,7 +235,7 @@ namespace swift::gui
                 {}
 
                 //! \copydoc IMenuDelegate::customMenu
-                virtual void customMenu(swift::gui::menus::CMenuActions &menuActions) override;
+                void customMenu(swift::gui::menus::CMenuActions &menuActions) override;
 
             private:
                 QList<QAction *> m_setActions;

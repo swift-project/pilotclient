@@ -43,7 +43,7 @@ namespace swift::gui::components
         explicit CAircraftModelStringCompleter(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftModelStringCompleter() override;
+        ~CAircraftModelStringCompleter() override;
 
         //! The model string
         QString getModelString() const;

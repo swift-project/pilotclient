@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CSettingsNetworkServersComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsNetworkServersComponent();
+        ~CSettingsNetworkServersComponent() override;
 
     private:
         //! Reload settings

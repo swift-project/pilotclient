@@ -56,7 +56,7 @@ namespace swift::gui
         CEnableForDockWidgetInfoArea(CDockWidgetInfoArea *parentInfoArea = nullptr);
 
         //! Destructor
-        virtual ~CEnableForDockWidgetInfoArea() {}
+        virtual ~CEnableForDockWidgetInfoArea() = default;
 
         CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
         swift::misc::CConnectionGuard m_connections; //!< connections

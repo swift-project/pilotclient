@@ -28,7 +28,7 @@ namespace swift::sound::sample_provider
         void addSamples(const QVector<float> &samples);
 
         //! ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! Bytes from buffer
         int getBufferedBytes() const { return m_audioBuffer.size(); }

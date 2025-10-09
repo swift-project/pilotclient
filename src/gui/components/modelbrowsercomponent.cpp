@@ -56,10 +56,7 @@ namespace swift::gui::components
         this->onSetRelativePosition();
     }
 
-    CModelBrowserComponent::~CModelBrowserComponent()
-    {
-        // void
-    }
+    CModelBrowserComponent::~CModelBrowserComponent() = default;
 
     void CModelBrowserComponent::close() { this->remove(); }
 

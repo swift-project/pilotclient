@@ -37,7 +37,7 @@ namespace swift::gui::components
                               sGui->getWebDataServices()->getCountriesCount(), {});
     }
 
-    CDbCountryComponent::~CDbCountryComponent() {}
+    CDbCountryComponent::~CDbCountryComponent() = default;
 
     void CDbCountryComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState, int count,
                                               const QUrl &url)

@@ -25,7 +25,7 @@ namespace swift::gui::views
                 &CFlightPlanDialog::loadFp);
     }
 
-    CFlightPlanDialog::~CFlightPlanDialog() {}
+    CFlightPlanDialog::~CFlightPlanDialog() = default;
 
     void CFlightPlanDialog::showFlightPlan(const CCallsign &callsign)
     {

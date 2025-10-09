@@ -32,10 +32,7 @@ namespace swift::gui::components
                 &CDbAirlineNameSelectorComponent::ps_dataChanged);
     }
 
-    CDbAirlineNameSelectorComponent::~CDbAirlineNameSelectorComponent()
-    {
-        // no inline destructor, read QScopedPointer Forward Declared Pointers
-    }
+    CDbAirlineNameSelectorComponent::~CDbAirlineNameSelectorComponent() = default;
 
     bool CDbAirlineNameSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
     {

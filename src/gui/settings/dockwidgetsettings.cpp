@@ -15,8 +15,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CDockWidgetSettings)
 
 namespace swift::gui::settings
 {
-    CDockWidgetSettings::CDockWidgetSettings() {}
-
     void CDockWidgetSettings::resetMarginsToDefault()
     {
         // this->setMarginsWhenFloating(QMargins(0, 3, 15, 35)); // found by trial and error on windows

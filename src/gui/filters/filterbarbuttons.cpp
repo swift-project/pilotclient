@@ -20,7 +20,7 @@ namespace swift::gui::filters
         connect(ui->tb_New, &QToolButton::clicked, this, &CFilterBarButtons::ps_buttonClicked);
     }
 
-    CFilterBarButtons::~CFilterBarButtons() {}
+    CFilterBarButtons::~CFilterBarButtons() = default;
 
     void CFilterBarButtons::displayCount(bool show) { ui->le_Count->setVisible(show); }
 

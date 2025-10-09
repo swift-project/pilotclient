@@ -42,7 +42,7 @@ namespace swift::gui::components
         explicit CDbDistributorSelectorComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbDistributorSelectorComponent() override;
+        ~CDbDistributorSelectorComponent() override;
 
         //! Current distributor
         void setDistributor(const swift::misc::simulation::CDistributor &distributor);
@@ -71,16 +71,16 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc QWidget::dragEnterEvent
-        virtual void dragEnterEvent(QDragEnterEvent *event) override;
+        void dragEnterEvent(QDragEnterEvent *event) override;
 
         //! \copydoc QWidget::dragMoveEvent
-        virtual void dragMoveEvent(QDragMoveEvent *event) override;
+        void dragMoveEvent(QDragMoveEvent *event) override;
 
         //! \copydoc QWidget::dragLeaveEvent
-        virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+        void dragLeaveEvent(QDragLeaveEvent *event) override;
 
         //! \copydoc QWidget::dropEvent
-        virtual void dropEvent(QDropEvent *event) override;
+        void dropEvent(QDropEvent *event) override;
 
     private:
         //! Distributors have been read

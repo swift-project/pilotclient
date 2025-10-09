@@ -24,7 +24,7 @@ namespace swift::gui::components
         this->toggleTabBarLocked(true);
     }
 
-    CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent() {}
+    CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent() = default;
 
     QSize CCockpitInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {

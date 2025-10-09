@@ -41,7 +41,7 @@ namespace swift::gui::components
         explicit CSimulatorSelector(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSimulatorSelector() override;
+        ~CSimulatorSelector() override;
 
         //! How to display
         void setMode(Mode mode, bool forced = false);

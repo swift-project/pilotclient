@@ -209,7 +209,7 @@ namespace swift::gui::components
         this->setTransmitReceiveInUiFromVoiceClient();
     }
 
-    CAudioDeviceVolumeSetupComponent::~CAudioDeviceVolumeSetupComponent() {}
+    CAudioDeviceVolumeSetupComponent::~CAudioDeviceVolumeSetupComponent() = default;
 
     int CAudioDeviceVolumeSetupComponent::getInValue(int from, int to) const
     {

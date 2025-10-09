@@ -23,7 +23,7 @@ namespace swift::gui::components
         explicit CTransponderCodeSpinBox(QWidget *parent = nullptr);
 
         //! \copydoc QDoubleSpinBox::textFromValue
-        virtual QString textFromValue(int value) const override;
+        QString textFromValue(int value) const override;
     };
 } // namespace swift::gui::components
 

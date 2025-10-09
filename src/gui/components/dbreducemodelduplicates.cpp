@@ -37,7 +37,7 @@ namespace swift::gui::components
         connect(this, &QDialog::finished, this, &CDbReduceModelDuplicates::stop);
     }
 
-    CDbReduceModelDuplicates::~CDbReduceModelDuplicates() {}
+    CDbReduceModelDuplicates::~CDbReduceModelDuplicates() = default;
 
     void CDbReduceModelDuplicates::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
     {

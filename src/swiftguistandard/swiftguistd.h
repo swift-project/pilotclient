@@ -79,7 +79,7 @@ public:
     SwiftGuiStd(WindowMode windowMode, QWidget *parent = nullptr);
 
     //! Destructor
-    virtual ~SwiftGuiStd() override;
+    ~SwiftGuiStd() override;
 
 signals:
     //! Main info area has changed
@@ -91,19 +91,19 @@ protected:
     //! @{
 
     //! \copydoc QMainWindow::mouseMoveEvent
-    virtual void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
 
     //! \copydoc QMainWindow::mousePressEvent
-    virtual void mousePressEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 
     //! \copydoc QMainWindow::mouseReleaseEvent
-    virtual void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
     //! \copydoc QMainWindow::closeEvent
-    virtual void closeEvent(QCloseEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 
     //! \copydoc QMainWindow::changeEvent
-    virtual void changeEvent(QEvent *event) override;
+    void changeEvent(QEvent *event) override;
     //! @}
 
     //! Get a minimize action which minimizes the window

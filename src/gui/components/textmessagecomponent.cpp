@@ -125,7 +125,7 @@ namespace swift::gui::components
         });
     }
 
-    CTextMessageComponent::~CTextMessageComponent() {}
+    CTextMessageComponent::~CTextMessageComponent() = default;
 
     bool CTextMessageComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {

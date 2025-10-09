@@ -17,8 +17,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation::fscommon, CAircraftCfgEntr
 
 namespace swift::misc::simulation::fscommon
 {
-    CAircraftCfgEntriesList::CAircraftCfgEntriesList() = default;
-
     CAircraftCfgEntriesList::CAircraftCfgEntriesList(const CSequence<CAircraftCfgEntries> &other) : CSequence(other) {}
 
     bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)

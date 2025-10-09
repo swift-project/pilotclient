@@ -11,8 +11,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRole, CRoleList)
 
 namespace swift::misc::network
 {
-    CRoleList::CRoleList() {}
-
     bool CRoleList::hasRole(const QString &roleName) const
     {
         return this->contains(&CRole::getName, roleName.trimmed().toUpper());

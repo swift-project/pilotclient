@@ -13,5 +13,5 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CFirstModelSetDialog::~CFirstModelSetDialog() {}
+    CFirstModelSetDialog::~CFirstModelSetDialog() = default;
 } // namespace swift::gui::components

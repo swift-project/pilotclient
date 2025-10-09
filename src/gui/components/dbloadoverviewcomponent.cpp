@@ -84,7 +84,7 @@ namespace swift::gui::components
         }
     }
 
-    CDbLoadOverviewComponent::~CDbLoadOverviewComponent() {}
+    CDbLoadOverviewComponent::~CDbLoadOverviewComponent() = default;
 
     void CDbLoadOverviewComponent::display() { m_dsTriggerGuiUpdate.inputSignal(); }
 

@@ -19,7 +19,7 @@ namespace swift::misc
     {
     public:
         //! Dtor
-        virtual ~IProvider();
+        virtual ~IProvider() = default;
 
         //! Copy constructor
         IProvider(const IProvider &) = delete;
@@ -44,7 +44,7 @@ namespace swift::misc
         IProviderAware(PROVIDER *provider = nullptr) { this->setProvider(provider); }
 
         //! Dtor
-        virtual ~IProviderAware() {}
+        virtual ~IProviderAware() = default;
 
         //! Has provider?
         bool hasProvider() const { return m_provider; }

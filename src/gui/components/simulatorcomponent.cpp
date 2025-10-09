@@ -71,7 +71,7 @@ namespace swift::gui::components
         this->onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
     }
 
-    CSimulatorComponent::~CSimulatorComponent() {}
+    CSimulatorComponent::~CSimulatorComponent() = default;
 
     void CSimulatorComponent::addOrUpdateLiveDataByName(const QString &name, const QString &value, const CIcon &icon)
     {

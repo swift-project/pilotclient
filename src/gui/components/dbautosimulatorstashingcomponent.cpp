@@ -61,7 +61,7 @@ namespace swift::gui::components
         }
     }
 
-    CDbAutoSimulatorStashingComponent::~CDbAutoSimulatorStashingComponent() {}
+    CDbAutoSimulatorStashingComponent::~CDbAutoSimulatorStashingComponent() = default;
 
     void CDbAutoSimulatorStashingComponent::updateProgressIndicator(int percent)
     {

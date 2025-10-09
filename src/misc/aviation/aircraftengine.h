@@ -22,7 +22,7 @@ namespace swift::misc::aviation
     {
     public:
         //! Default constructor
-        CAircraftEngine() {}
+        CAircraftEngine() = default;
 
         //! Constructor
         //! \remark numbers are 1 based!

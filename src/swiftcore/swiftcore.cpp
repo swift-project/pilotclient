@@ -72,7 +72,7 @@ CSwiftCore::CSwiftCore(QWidget *parent)
             &CCoreFacade::parseCommandLine);
 }
 
-CSwiftCore::~CSwiftCore() {}
+CSwiftCore::~CSwiftCore() = default;
 
 void CSwiftCore::initStyleSheet()
 {

@@ -66,7 +66,7 @@ namespace swift::gui::components
         connect(ui->le_Sm, &QLineEdit::textEdited, this, &CAltitudeDialog::onTextEdit);
     }
 
-    CAltitudeDialog::~CAltitudeDialog() {}
+    CAltitudeDialog::~CAltitudeDialog() = default;
 
     CAltitudeDialog::Mode CAltitudeDialog::getMode() const
     {

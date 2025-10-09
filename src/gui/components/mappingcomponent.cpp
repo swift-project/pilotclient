@@ -178,7 +178,7 @@ namespace swift::gui::components
         });
     }
 
-    CMappingComponent::~CMappingComponent() {}
+    CMappingComponent::~CMappingComponent() = default;
 
     int CMappingComponent::countCurrentMappings() const
     {

@@ -44,7 +44,7 @@ namespace swift::gui::components
         this->reloadSettings();
     }
 
-    CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent() {}
+    CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent() = default;
 
     void CSettingsNetworkServersComponent::reloadSettings()
     {

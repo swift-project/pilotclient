@@ -62,7 +62,7 @@ namespace swift::gui::components
         m_history.initialize(sApp->getDataLinkDBus());
     }
 
-    CLogComponent::~CLogComponent() {}
+    CLogComponent::~CLogComponent() = default;
 
     void CLogComponent::displayLog(bool attention)
     {

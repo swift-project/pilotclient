@@ -24,7 +24,7 @@ namespace swift::gui::models
         explicit CServerListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CServerListModel() {}
+        ~CServerListModel() override = default;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_MODELS_SERVERLISTMODEL_H

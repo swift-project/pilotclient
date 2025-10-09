@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CCoordinateDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CCoordinateDialog();
+        ~CCoordinateDialog() override;
 
         //! \copydoc swift::gui::editors::CCoordinateForm::getCoordinate
         swift::misc::geo::CCoordinateGeodetic getCoordinate() const;

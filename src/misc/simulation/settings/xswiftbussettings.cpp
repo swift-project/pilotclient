@@ -9,8 +9,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CXSwiftBusSet
 
 namespace swift::misc::simulation::settings
 {
-    CXSwiftBusSettings::CXSwiftBusSettings() {}
-
     CXSwiftBusSettings::CXSwiftBusSettings(const QString &json) { this->parseXSwiftBusStringQt(json); }
 
     QVariant CXSwiftBusSettings::propertyByIndex(CPropertyIndexRef index) const

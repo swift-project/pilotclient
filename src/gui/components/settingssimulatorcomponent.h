@@ -41,7 +41,7 @@ namespace swift::gui::components
         explicit CSettingsSimulatorComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsSimulatorComponent() override;
+        ~CSettingsSimulatorComponent() override;
 
     private:
         //! Driver plugin enabled/disabled

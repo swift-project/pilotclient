@@ -43,7 +43,7 @@ namespace swift::gui::components
         this->guiSettingsChanged();
     }
 
-    CSettingsGuiComponent::~CSettingsGuiComponent() {}
+    CSettingsGuiComponent::~CSettingsGuiComponent() = default;
 
     void CSettingsGuiComponent::hideOpacity(bool hide)
     {

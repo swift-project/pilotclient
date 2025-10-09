@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CInitialDataLoadComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CInitialDataLoadComponent();
+        ~CInitialDataLoadComponent() override;
 
         //! \copydoc swift::gui::components::CDbLoadOverviewComponent::loadAllFromShared
         void loadAllFromShared();
@@ -59,10 +59,10 @@ namespace swift::gui::components
         void setConfigComponent(CInitialDataLoadComponent *config) { m_config = config; }
 
         //! \copydoc QWizardPage::initializePage
-        virtual void initializePage() override;
+        void initializePage() override;
 
         //! \copydoc QWizardPage::validatePage
-        virtual bool validatePage() override;
+        bool validatePage() override;
 
     private:
         CInitialDataLoadComponent *m_config = nullptr;

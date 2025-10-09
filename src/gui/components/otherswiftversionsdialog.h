@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit COtherSwiftVersionsDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~COtherSwiftVersionsDialog();
+        ~COtherSwiftVersionsDialog() override;
 
     private:
         QScopedPointer<Ui::COtherSwiftVersionsDialog> ui;

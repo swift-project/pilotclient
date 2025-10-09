@@ -36,7 +36,7 @@ namespace swift::gui::components
                 &CCopyModelsFromOtherSwiftVersionsComponent::onVersionChanged);
     }
 
-    CCopyModelsFromOtherSwiftVersionsComponent::~CCopyModelsFromOtherSwiftVersionsComponent() {}
+    CCopyModelsFromOtherSwiftVersionsComponent::~CCopyModelsFromOtherSwiftVersionsComponent() = default;
 
     void CCopyModelsFromOtherSwiftVersionsComponent::copy()
     {

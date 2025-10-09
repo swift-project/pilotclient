@@ -70,7 +70,7 @@ namespace swift::gui
 
         protected:
             //! \copydoc CViewBase::customMenu
-            virtual void customMenu(menus::CMenuActions &menuActions) override;
+            void customMenu(menus::CMenuActions &menuActions) override;
 
         private:
             //! Request text message for selected aircraft

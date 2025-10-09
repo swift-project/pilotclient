@@ -67,7 +67,7 @@ namespace swift::gui::components
         this->onWebDataRead();
     }
 
-    CDbQuickMappingWizard::~CDbQuickMappingWizard() {}
+    CDbQuickMappingWizard::~CDbQuickMappingWizard() = default;
 
     const QStringList &CDbQuickMappingWizard::getLogCategories()
     {

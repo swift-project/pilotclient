@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CAircraftPartsComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CAircraftPartsComponent() override;
+        ~CAircraftPartsComponent() override;
 
         //! Set selected callsign
         void setCallsign(const swift::misc::aviation::CCallsign &callsign);

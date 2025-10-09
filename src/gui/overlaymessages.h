@@ -51,7 +51,7 @@ namespace swift::gui
         explicit COverlayMessages(int w, int h, QWidget *parent);
 
         //! Destructor
-        virtual ~COverlayMessages() override;
+        ~COverlayMessages() override;
 
         //! Messages mode
         void setModeToMessages();
@@ -189,7 +189,7 @@ namespace swift::gui
         void display(std::chrono::milliseconds timeout = std::chrono::milliseconds(0));
 
         //! \copydoc QFrame::keyPressEvent
-        virtual void keyPressEvent(QKeyEvent *event) override;
+        void keyPressEvent(QKeyEvent *event) override;
 
     private:
         QScopedPointer<Ui::COverlayMessages> ui;

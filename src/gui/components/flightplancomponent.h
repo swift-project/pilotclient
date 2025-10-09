@@ -83,7 +83,7 @@ namespace swift::gui::components
         explicit CFlightPlanComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CFlightPlanComponent() override;
+        ~CFlightPlanComponent() override;
 
         //! Login data were set
         void loginDataSet();

@@ -16,7 +16,7 @@ namespace swift::gui::editors
 {
     CForm::CForm(QWidget *parent) : COverlayMessagesFrame(parent) {}
 
-    CForm::~CForm() {}
+    CForm::~CForm() = default;
 
     void CForm::setSelectOnly() { this->setReadOnly(true); }
 
@@ -48,7 +48,7 @@ namespace swift::gui::editors
 
     CFormDbUser::CFormDbUser(QWidget *parent) : CForm(parent) {}
 
-    CFormDbUser::~CFormDbUser() {}
+    CFormDbUser::~CFormDbUser() = default;
 
     CAuthenticatedUser CFormDbUser::getSwiftDbUser() const { return m_swiftDbUser.get(); }
 

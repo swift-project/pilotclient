@@ -19,7 +19,7 @@ namespace swift::gui
     {
     public:
         //! Dtor
-        virtual ~CDropBase();
+        virtual ~CDropBase() = default;
 
         //! Accepted ids
         void setAcceptedMetaTypeIds(const QList<int> &ids);
@@ -47,7 +47,7 @@ namespace swift::gui
 
     protected:
         //! Ctor
-        CDropBase();
+        CDropBase() = default;
 
     private:
         bool m_allowDrop = true; //!< dropping allowed?

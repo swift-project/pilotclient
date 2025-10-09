@@ -31,7 +31,7 @@ namespace swift::gui::components
         explicit CCoreStatusComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        ~CCoreStatusComponent();
+        ~CCoreStatusComponent() override;
 
     private:
         QScopedPointer<Ui::CCoreStatusComponent> ui;

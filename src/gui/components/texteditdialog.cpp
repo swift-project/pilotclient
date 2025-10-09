@@ -13,7 +13,7 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CTextEditDialog::~CTextEditDialog() {}
+    CTextEditDialog::~CTextEditDialog() = default;
 
     QTextEdit *CTextEditDialog::textEdit() const { return ui->te_TextEdit; }
 

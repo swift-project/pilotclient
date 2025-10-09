@@ -41,7 +41,7 @@ namespace swift::gui::editors
         ui->drop_DropData->setAcceptedMetaTypeIds({ qMetaTypeId<CDistributor>(), qMetaTypeId<CDistributorList>() });
     }
 
-    CDistributorForm::~CDistributorForm() {}
+    CDistributorForm::~CDistributorForm() = default;
 
     bool CDistributorForm::setValue(const swift::misc::simulation::CDistributor &distributor)
     {

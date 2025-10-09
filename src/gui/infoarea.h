@@ -43,7 +43,7 @@ namespace swift::gui
 
     public:
         //! Destructor
-        virtual ~CInfoArea() override;
+        ~CInfoArea() override = default;
 
         //! Add items to context menu
         void addToContextMenu(QMenu *menu) const;
@@ -165,14 +165,14 @@ namespace swift::gui
         explicit CInfoArea(QWidget *parent = nullptr);
 
         //! \copydoc QWidget::closeEvent
-        virtual void closeEvent(QCloseEvent *event) override;
+        void closeEvent(QCloseEvent *event) override;
 
         //! \copydoc QWidget::paintEvent
-        virtual void paintEvent(QPaintEvent *event) override;
+        void paintEvent(QPaintEvent *event) override;
 
         //! \copydoc QWidget::keyPressEvent
         //! \remarks nor fully sufficient, as the info area is hardly having focus
-        virtual void keyPressEvent(QKeyEvent *event) override;
+        void keyPressEvent(QKeyEvent *event) override;
 
         //! Preferred size when floating (size hint)
         virtual QSize getPreferredSizeWhenFloating(int areaIndex) const = 0;

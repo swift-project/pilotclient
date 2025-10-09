@@ -29,7 +29,7 @@ namespace swift::gui::models
         explicit CLiveryListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CLiveryListModel() override {}
+        ~CLiveryListModel() override = default;
     };
 } // namespace swift::gui::models
 

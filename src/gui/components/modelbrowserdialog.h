@@ -27,10 +27,10 @@ namespace swift::gui::components
         explicit CModelBrowserDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CModelBrowserDialog() override;
+        ~CModelBrowserDialog() override;
 
         //! \copydoc QDialog::closeEvent
-        virtual void done(int r) override;
+        void done(int r) override;
 
     private:
         QScopedPointer<Ui::CModelBrowserDialog> ui;

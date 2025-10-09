@@ -59,10 +59,7 @@ namespace swift::gui::components
                                  sApp->getWebDataServices()->getDistributorsCount());
     }
 
-    CDbDistributorSelectorComponent::~CDbDistributorSelectorComponent()
-    {
-        // void
-    }
+    CDbDistributorSelectorComponent::~CDbDistributorSelectorComponent() = default;
 
     void CDbDistributorSelectorComponent::setDistributor(const CDistributor &distributor)
     {

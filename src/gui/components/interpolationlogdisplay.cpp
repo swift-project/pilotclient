@@ -98,10 +98,7 @@ namespace swift::gui::components
                 Qt::QueuedConnection);
     }
 
-    CInterpolationLogDisplay::~CInterpolationLogDisplay()
-    {
-        // void
-    }
+    CInterpolationLogDisplay::~CInterpolationLogDisplay() = default;
 
     void CInterpolationLogDisplay::setSimulator(ISimulator *simulator)
     {

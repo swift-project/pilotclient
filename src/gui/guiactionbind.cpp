@@ -23,8 +23,6 @@ namespace swift::gui
         connect(sApp, &CApplication::aboutToShutdown, this, &CGuiActionBindHandler::unbind);
     }
 
-    CGuiActionBindHandler::~CGuiActionBindHandler() {}
-
     CActionBindings CGuiActionBindHandler::bindMenu(QMenu *menu, const QString &path)
     {
         Q_ASSERT(menu);

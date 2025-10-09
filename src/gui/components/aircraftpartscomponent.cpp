@@ -43,10 +43,7 @@ namespace swift::gui::components
         ui->comp_RemoteAircraftCompleter->addOwnCallsign(true);
     }
 
-    CAircraftPartsComponent::~CAircraftPartsComponent()
-    {
-        // void
-    }
+    CAircraftPartsComponent::~CAircraftPartsComponent() = default;
 
     void CAircraftPartsComponent::setCallsign(const CCallsign &callsign)
     {

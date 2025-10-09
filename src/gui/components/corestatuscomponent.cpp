@@ -14,6 +14,6 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    CCoreStatusComponent::~CCoreStatusComponent() {}
+    CCoreStatusComponent::~CCoreStatusComponent() = default;
 
 } // namespace swift::gui::components

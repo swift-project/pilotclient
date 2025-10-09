@@ -31,7 +31,7 @@ namespace swift::gui::components
                 &CModelMatcherLogComponent::callsignEntered);
     }
 
-    CModelMatcherLogComponent::~CModelMatcherLogComponent() {}
+    CModelMatcherLogComponent::~CModelMatcherLogComponent() = default;
 
     bool CModelMatcherLogComponent::hasContexts() const
     {

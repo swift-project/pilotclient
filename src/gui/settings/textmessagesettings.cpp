@@ -14,8 +14,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CTextMessageSettings)
 
 namespace swift::gui::settings
 {
-    CTextMessageSettings::CTextMessageSettings() {}
-
     bool CTextMessageSettings::popupPrivateMessages() const
     {
         return this->getPopupAllMessages() || m_popupPrivateMessages;

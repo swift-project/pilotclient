@@ -25,7 +25,7 @@ namespace swift::gui::components
         connect(ui->cb_DontShowAgain, &QCheckBox::toggled, this, &CUpdateInfoDialog::onDontShowAgain);
     }
 
-    CUpdateInfoDialog::~CUpdateInfoDialog() {}
+    CUpdateInfoDialog::~CUpdateInfoDialog() = default;
 
     bool CUpdateInfoDialog::isNewVersionAvailable() const
     {

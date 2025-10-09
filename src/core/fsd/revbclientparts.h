@@ -40,7 +40,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        RevBClientParts();
+        RevBClientParts() = default;
     };
 
     //! Equal to operator

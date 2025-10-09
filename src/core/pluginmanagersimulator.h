@@ -51,14 +51,14 @@ namespace swift::core
         int checkAvailableListeners();
 
         //! \copydoc swift::core::IPluginManager::collectPlugins()
-        virtual void collectPlugins() override;
+        void collectPlugins() override;
 
     protected:
         //! \copydoc swift::core::IPluginManager::acceptedIids()
-        virtual swift::misc::CSequence<QString> acceptedIids() const override;
+        swift::misc::CSequence<QString> acceptedIids() const override;
 
         //! \copydoc swift::core::IPluginManager::pluginDirectory()
-        virtual const QString &pluginDirectory() const override;
+        const QString &pluginDirectory() const override;
 
     private:
         /*!

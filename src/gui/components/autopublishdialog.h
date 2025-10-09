@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CAutoPublishDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAutoPublishDialog() override;
+        ~CAutoPublishDialog() override;
 
         //! \copydoc CAutoPublishComponent::readFiles
         int readFiles();

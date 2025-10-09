@@ -35,7 +35,7 @@ namespace swift::gui::editors
         connect(ui->pb_SetOwnAircraft, &QPushButton::released, this, &CPbhsForm::changeValues);
     }
 
-    CPbhsForm::~CPbhsForm() {}
+    CPbhsForm::~CPbhsForm() = default;
 
     CAngle CPbhsForm::getBankAngle() const { return CAngle(getBankAngleDegrees(), CAngleUnit::deg()); }
 

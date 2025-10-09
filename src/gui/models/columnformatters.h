@@ -36,7 +36,7 @@ namespace swift::gui::models
         {}
 
         //! Virtual destructor
-        virtual ~CDefaultFormatter() {}
+        virtual ~CDefaultFormatter() = default;
 
         //! Copy constructor
         CDefaultFormatter(const CDefaultFormatter &) = default;
@@ -156,13 +156,13 @@ namespace swift::gui::models
         {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::tooltipRole
-        virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::decorationRole
-        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! @{
         //! Width/height
@@ -185,7 +185,7 @@ namespace swift::gui::models
         CStringFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay()) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Just returns a empty "" value
@@ -196,7 +196,7 @@ namespace swift::gui::models
         CEmptyFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay()) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Just returns a empty "" value
@@ -207,7 +207,7 @@ namespace swift::gui::models
         CIncognitoFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay()) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Layout will be defined by a delegate
@@ -221,7 +221,7 @@ namespace swift::gui::models
         {}
 
         //! \copydoc CDefaultFormatter::flags
-        virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
+        Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
     };
 
     //! Bool value, format as text
@@ -237,10 +237,10 @@ namespace swift::gui::models
         {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::flags
-        virtual Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
+        Qt::ItemFlags flags(Qt::ItemFlags flags, bool editable) const override;
 
     protected:
         const swift::misc::CVariant m_trueNameVariant = "true"; //!< displayed when true
@@ -258,13 +258,13 @@ namespace swift::gui::models
         CBoolLedFormatter(const QString &onName, const QString &offName, int alignment = alignDefault());
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! Display the LED
-        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::tooltipRole
-        virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override
+        swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override
         {
             return CBoolTextFormatter::displayRole(dataCVariant);
         }
@@ -300,13 +300,13 @@ namespace swift::gui::models
                            const QString &onName, const QString &offName, int alignment = alignCentered());
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! Display the icon
-        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::tooltipRole
-        virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override;
 
     protected:
         const swift::misc::CVariant m_iconOnVariant; //!< Used when on
@@ -324,10 +324,10 @@ namespace swift::gui::models
         {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &valueObject) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &valueObject) const override;
 
         //! \copydoc CDefaultFormatter::decorationRole
-        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &valueObject) const override;
+        swift::misc::CVariant decorationRole(const swift::misc::CVariant &valueObject) const override;
     };
 
     //! Formatter when column contains QDateTime, QDate or QTime
@@ -338,7 +338,7 @@ namespace swift::gui::models
         CDateTimeFormatter(const QString &formatString = formatYmd(), int alignment = alignDefault(), bool i18n = true);
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dateTime) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dateTime) const override;
 
         //! Year month day
         static const QString &formatYmd()
@@ -387,7 +387,7 @@ namespace swift::gui::models
         CIntegerFormatter(int alignment = alignRightVCenter()) : CDefaultFormatter(alignment, false) {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &expectedInteger) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &expectedInteger) const override;
     };
 
     //! Formatter when column contains an altitude
@@ -409,7 +409,7 @@ namespace swift::gui::models
         void setUnit(const swift::misc::physical_quantities::CLengthUnit &unit);
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &altitude) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &altitude) const override;
 
     private:
         swift::misc::physical_quantities::CLengthUnit m_unit = swift::misc::physical_quantities::CLengthUnit::ft();
@@ -424,13 +424,13 @@ namespace swift::gui::models
         CColorFormatter(int alignment = alignCentered(), bool i18n = true);
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! \copydoc CDefaultFormatter::tooltipRole
-        virtual swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant tooltipRole(const swift::misc::CVariant &dataCVariant) const override;
 
         //! Display the icon
-        virtual swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant decorationRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Formatter for physical quantities
@@ -447,7 +447,7 @@ namespace swift::gui::models
         {}
 
         //! \copydoc swift::gui::models::CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &physicalQuantity) const override
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &physicalQuantity) const override
         {
             if (physicalQuantity.canConvert<PQ>())
             {
@@ -500,7 +500,7 @@ namespace swift::gui::models
         {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Angle in degrees
@@ -537,7 +537,7 @@ namespace swift::gui::models
         {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 
     //! Speed displayed in kts
@@ -553,7 +553,7 @@ namespace swift::gui::models
         {}
 
         //! \copydoc CDefaultFormatter::displayRole
-        virtual swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
+        swift::misc::CVariant displayRole(const swift::misc::CVariant &dataCVariant) const override;
     };
 } // namespace swift::gui::models
 

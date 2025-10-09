@@ -24,7 +24,7 @@ namespace swift::gui::components
         this->preselectSimulators();
     }
 
-    CConfigSimulatorComponent::~CConfigSimulatorComponent() {}
+    CConfigSimulatorComponent::~CConfigSimulatorComponent() = default;
 
     void CConfigSimulatorComponent::save()
     {

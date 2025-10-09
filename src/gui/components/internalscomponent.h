@@ -31,11 +31,11 @@ namespace swift::gui::components
         explicit CInternalsComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CInternalsComponent() override;
+        ~CInternalsComponent() override;
 
     protected:
         //! \copydoc QWidget::showEvent
-        virtual void showEvent(QShowEvent *event) override;
+        void showEvent(QShowEvent *event) override;
 
     private:
         //! Enable / disable debugging

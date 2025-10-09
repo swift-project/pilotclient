@@ -13,8 +13,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftCategory, CAircraft
 
 namespace swift::misc::aviation
 {
-    CAircraftCategoryList::CAircraftCategoryList() {}
-
     CAircraftCategoryList::CAircraftCategoryList(const CSequence<CAircraftCategory> &other)
         : CSequence<CAircraftCategory>(other)
     {}

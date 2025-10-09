@@ -276,7 +276,7 @@ namespace swift::misc
         }
 
         //! Default constructor.
-        CDictionary() {}
+        CDictionary() = default;
 
         //! Initializer list constructor.
         CDictionary(std::initializer_list<std::pair<Key, Value>> il) : m_impl(il) {}

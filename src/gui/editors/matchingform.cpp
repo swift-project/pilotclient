@@ -41,7 +41,7 @@ namespace swift::gui::editors
                 Qt::QueuedConnection);
     }
 
-    CMatchingForm::~CMatchingForm() {}
+    CMatchingForm::~CMatchingForm() = default;
 
     void CMatchingForm::setReadOnly(bool readonly)
     {

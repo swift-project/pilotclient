@@ -26,7 +26,7 @@ namespace swift::gui::components
         explicit CCockpitComAudioDialog(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CCockpitComAudioDialog() override;
+        ~CCockpitComAudioDialog() override;
 
     private:
         QScopedPointer<Ui::CCockpitComAudioDialog> ui;

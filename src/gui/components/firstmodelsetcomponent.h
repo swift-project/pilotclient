@@ -41,7 +41,7 @@ namespace swift::gui::components
         explicit CFirstModelSetComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CFirstModelSetComponent();
+        ~CFirstModelSetComponent() override;
 
     private:
         QScopedPointer<Ui::CFirstModelSetComponent> ui;
@@ -99,7 +99,7 @@ namespace swift::gui::components
         void setFirstModelSet(CFirstModelSetComponent *firstModelSet) { m_firstModelSet = firstModelSet; }
 
         //! \copydoc QWizardPage::validatePage
-        virtual bool validatePage() override;
+        bool validatePage() override;
 
     private:
         CFirstModelSetComponent *m_firstModelSet = nullptr;

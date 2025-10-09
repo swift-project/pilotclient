@@ -56,10 +56,7 @@ namespace swift::gui::components
                            sApp->getWebDataServices()->getModelsCount(), {});
     }
 
-    CDbModelComponent::~CDbModelComponent()
-    {
-        // void
-    }
+    CDbModelComponent::~CDbModelComponent() = default;
 
     bool CDbModelComponent::hasModels() const { return !ui->tvp_AircraftModel->isEmpty(); }
 

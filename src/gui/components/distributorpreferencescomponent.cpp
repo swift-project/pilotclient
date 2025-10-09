@@ -64,7 +64,7 @@ namespace swift::gui::components
         this->triggerDeferredSimulatorChange();
     }
 
-    CDistributorPreferencesComponent::~CDistributorPreferencesComponent() {}
+    CDistributorPreferencesComponent::~CDistributorPreferencesComponent() = default;
 
     void CDistributorPreferencesComponent::onPreferencesChanged()
     {

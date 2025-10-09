@@ -18,8 +18,6 @@ namespace swift::misc::aviation
     const CAngleUnit CAircraftVelocity::c_pbhAngleUnit = CAngleUnit::rad();
     const CTimeUnit CAircraftVelocity::c_timeUnit = CTimeUnit::s();
 
-    CAircraftVelocity::CAircraftVelocity() = default;
-
     CAircraftVelocity::CAircraftVelocity(double x, double y, double z, CSpeedUnit xyzUnit, double pitch, double roll,
                                          double heading, CAngleUnit pbhAngleUnit, CTimeUnit pbhTimeUnit)
     {

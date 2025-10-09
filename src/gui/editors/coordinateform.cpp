@@ -62,7 +62,7 @@ namespace swift::gui::editors
         this->setCoordinate(c);
     }
 
-    CCoordinateForm::~CCoordinateForm() {}
+    CCoordinateForm::~CCoordinateForm() = default;
 
     bool CCoordinateForm::setCoordinate(const ICoordinateGeodetic &coordinate)
     {

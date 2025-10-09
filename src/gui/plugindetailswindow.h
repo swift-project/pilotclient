@@ -33,7 +33,7 @@ namespace swift::gui
         explicit CPluginDetailsWindow(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CPluginDetailsWindow() override;
+        ~CPluginDetailsWindow() override;
 
         //! Sets the plugin name
         void setPluginName(const QString &name);

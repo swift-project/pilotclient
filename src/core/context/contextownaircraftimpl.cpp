@@ -70,8 +70,6 @@ namespace swift::core::context
         this->initOwnAircraft();
     }
 
-    CContextOwnAircraft::~CContextOwnAircraft() {}
-
     CSimulatedAircraft CContextOwnAircraft::getOwnAircraft() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }

@@ -85,7 +85,7 @@ namespace swift::gui::components
         ui->cb_UseWorkbench->setVisible(false);
     }
 
-    CModelMatcherComponent::~CModelMatcherComponent() {}
+    CModelMatcherComponent::~CModelMatcherComponent() = default;
 
     void CModelMatcherComponent::tabIndexChanged(int index)
     {

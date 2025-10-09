@@ -33,8 +33,6 @@ namespace swift::core::afv::model
 
     CSampleAtcStationModel::CSampleAtcStationModel(QObject *parent) : QAbstractListModel(parent) {}
 
-    CSampleAtcStationModel::~CSampleAtcStationModel() {}
-
     void CSampleAtcStationModel::updateAtcStations(const QVector<CSampleAtcStation> &atcStations)
     {
         // Add stations which didn't exist yet

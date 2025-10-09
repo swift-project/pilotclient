@@ -48,7 +48,7 @@ namespace swift::misc
             };
 
             //! Default constructor.
-            CCallsign() {}
+            CCallsign() = default;
 
             //! Constructor
             CCallsign(const QString &callsign, TypeHint hint = NoHint);

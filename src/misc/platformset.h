@@ -25,7 +25,7 @@ namespace swift::misc
 
     public:
         //! Default constructor.
-        CPlatformSet();
+        CPlatformSet() = default;
 
         //! Construct from a base class object.
         CPlatformSet(const CCollection<CPlatform> &other);

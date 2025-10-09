@@ -158,7 +158,7 @@ namespace swift::gui::components
         this->settingsChanged();
     }
 
-    CAtcStationComponent::~CAtcStationComponent() {}
+    CAtcStationComponent::~CAtcStationComponent() = default;
 
     void CAtcStationComponent::setTab(AtcTab tab)
     {

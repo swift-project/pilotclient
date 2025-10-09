@@ -28,7 +28,7 @@ namespace swift::gui::components
         explicit CSettingsViewUpdateTimes(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsViewUpdateTimes();
+        ~CSettingsViewUpdateTimes() override;
 
     private slots:
         //! Slider changed

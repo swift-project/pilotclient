@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CCoreSettingsDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CCoreSettingsDialog();
+        ~CCoreSettingsDialog() override;
 
     private:
         QScopedPointer<Ui::CCoreSettingsDialog> ui;

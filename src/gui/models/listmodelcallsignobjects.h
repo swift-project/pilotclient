@@ -31,7 +31,7 @@ namespace swift::gui::models
         using ObjectType = typename T::value_type;
 
         //! Destructor
-        virtual ~CListModelCallsignObjects() {}
+        ~CListModelCallsignObjects() override = default;
 
         //! Keys to be highlighted
         void setHighlightedCallsigns(const swift::misc::aviation::CCallsignSet &callsigns)
@@ -43,7 +43,7 @@ namespace swift::gui::models
         void clearHighlightedCallsigns() { m_highlightCallsigns.clear(); }
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::clearHighlighting
-        virtual void clearHighlighting() override
+        void clearHighlighting() override
         {
             this->clearHighlightedCallsigns();
             CListModelBase<ContainerType, UseCompare>::clearHighlighting();
@@ -53,7 +53,7 @@ namespace swift::gui::models
         void setHighlightColor(QColor color) { m_highlightColor = color; }
 
         //! Get data for index and role
-        virtual QVariant data(const QModelIndex &index, int role) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
 
         //! Callsign for given index
         swift::misc::aviation::CCallsign callsignForIndex(const QModelIndex &index) const;

@@ -9,8 +9,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CMatchingStatisticsEntr
 
 namespace swift::misc::simulation
 {
-    CMatchingStatisticsEntry::CMatchingStatisticsEntry() {}
-
     CMatchingStatisticsEntry::CMatchingStatisticsEntry(EntryType type, const QString &sessionId,
                                                        const QString &modelSetId, const QString &description,
                                                        const QString &aircraftDesignator,

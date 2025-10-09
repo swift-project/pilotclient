@@ -41,8 +41,8 @@ namespace swift::misc::simulation
         //! @{
         //! Members not implenented or fully implenented by CRemoteAircraftProvider
         //! \ingroup remoteaircraftprovider
-        virtual QObject *asQObject() override { return this; }
-        virtual CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
+        QObject *asQObject() override { return this; }
+        CAirspaceAircraftSnapshot getLatestAirspaceAircraftSnapshot() const override;
         //! @}
     };
 } // namespace swift::misc::simulation

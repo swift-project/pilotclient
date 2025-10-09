@@ -33,7 +33,7 @@ namespace swift::misc::geo
         };
 
         //! Default constructor
-        CElevationPlane() {}
+        CElevationPlane() = default;
 
         //! Plane at given coordinates with range to 2nd coordinate
         CElevationPlane(const ICoordinateGeodetic &coordinate, const ICoordinateGeodetic &rangeCoordinate);
@@ -96,7 +96,7 @@ namespace swift::misc::geo
         double getAltitudeValue(const physical_quantities::CLengthUnit &unit) const;
 
         //! Existing value?
-        virtual bool isNull() const override;
+        bool isNull() const override;
 
         //! Check if elevation is within radius and can be used
         //! \remark checks against the set radius

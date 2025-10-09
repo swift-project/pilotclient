@@ -9,8 +9,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CDbInfo, CDbInfoList)
 
 namespace swift::misc::db
 {
-    CDbInfoList::CDbInfoList() {}
-
     CDbInfoList::CDbInfoList(const CSequence<CDbInfo> &other) : CSequence<CDbInfo>(other) {}
 
     CDbInfo CDbInfoList::findFirstByEntityOrDefault(CEntityFlags::Entity entity) const

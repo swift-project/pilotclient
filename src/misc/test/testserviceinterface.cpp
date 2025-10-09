@@ -27,8 +27,6 @@ namespace swift::misc::test
         : QDBusAbstractInterface(service, path, ITestServiceInterface::InterfaceName(), connection, parent)
     {}
 
-    ITestServiceInterface::~ITestServiceInterface() {}
-
     int ITestServiceInterface::pingTests(ITestServiceInterface &testServiceInterface, bool verbose)
     {
         int errors = 0;

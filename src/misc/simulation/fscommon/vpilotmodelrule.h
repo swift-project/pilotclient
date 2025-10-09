@@ -36,7 +36,7 @@ namespace swift::misc::simulation::fscommon
         };
 
         //! Default constructor
-        CVPilotModelRule();
+        CVPilotModelRule() = default;
 
         //! Default constructor.
         CVPilotModelRule(const QString &modelName, const QString &folder, const QString &typeCode,

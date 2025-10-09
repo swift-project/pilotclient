@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CAudioAdvancedDistributedComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CAudioAdvancedDistributedComponent() override;
+        ~CAudioAdvancedDistributedComponent() override;
 
         //! Reload registered devices
         void reloadRegisteredDevices();

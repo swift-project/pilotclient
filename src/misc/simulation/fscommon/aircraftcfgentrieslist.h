@@ -35,7 +35,7 @@ namespace swift::misc::simulation::fscommon
         using CSequence::CSequence;
 
         //! Default constructor.
-        CAircraftCfgEntriesList();
+        CAircraftCfgEntriesList() = default;
 
         //! Construct from a base class object.
         CAircraftCfgEntriesList(const CSequence<CAircraftCfgEntries> &other);

@@ -39,7 +39,7 @@ namespace swift::gui::editors
         connect(ui->le_RealName, &QLineEdit::editingFinished, this, &CPilotForm::doValidation);
     }
 
-    CPilotForm::~CPilotForm() {}
+    CPilotForm::~CPilotForm() = default;
 
     void CPilotForm::setVatsimValidation(bool vatsim)
     {

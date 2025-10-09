@@ -72,7 +72,7 @@ namespace swift::gui
                    const QString &offName = "off", int targetWidth = -1, QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLedWidget() override;
+        ~CLedWidget() override;
 
         //! Value
         bool value() const { return m_blinkState; }
@@ -188,10 +188,10 @@ namespace swift::gui
         void resetState();
 
         //! Paint event
-        virtual void paintEvent(QPaintEvent *event) override;
+        void paintEvent(QPaintEvent *event) override;
 
         //! Mouse pressed
-        virtual void mousePressEvent(QMouseEvent *event) override;
+        void mousePressEvent(QMouseEvent *event) override;
 
         //! Set / init LED
         void setLed(LedColor ledColor = NoColor);

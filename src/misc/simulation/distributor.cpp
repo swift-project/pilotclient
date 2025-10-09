@@ -16,8 +16,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributor)
 
 namespace swift::misc::simulation
 {
-    CDistributor::CDistributor() {}
-
     CDistributor::CDistributor(const QString &key) { this->setDbKey(unifyKeyOrAlias(key)); }
 
     CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1,

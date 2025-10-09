@@ -21,7 +21,7 @@ namespace swift::gui::components
         this->initValues();
     }
 
-    CSettingsVatsimReadersComponent::~CSettingsVatsimReadersComponent() {}
+    CSettingsVatsimReadersComponent::~CSettingsVatsimReadersComponent() = default;
 
     void CSettingsVatsimReadersComponent::onSettingsChanged() { this->initValues(); }
 

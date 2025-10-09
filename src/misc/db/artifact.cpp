@@ -16,8 +16,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CArtifact)
 
 namespace swift::misc::db
 {
-    CArtifact::CArtifact() {}
-
     CArtifact::CArtifact(const QString &name, const QString &version, const QString &md5, CArtifact::ArtifactType type,
                          int size, bool existing, const CPlatform &platform)
         : m_name(name.trimmed()), m_md5(md5), m_type(static_cast<int>(type)), m_size(size), m_existing(existing),

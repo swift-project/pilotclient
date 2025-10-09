@@ -12,8 +12,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRemoteFile, CRemoteFileList)
 
 namespace swift::misc::network
 {
-    CRemoteFileList::CRemoteFileList() {}
-
     CRemoteFileList::CRemoteFileList(const CSequence<CRemoteFile> &other) : CSequence<CRemoteFile>(other) {}
 
     QStringList CRemoteFileList::getNames(bool sorted) const

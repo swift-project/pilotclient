@@ -31,7 +31,7 @@ namespace swift::misc::network
         using CSequence::CSequence;
 
         //! Default constructor.
-        CRawFsdMessageList();
+        CRawFsdMessageList() = default;
 
         //! Construct from a base class object.
         CRawFsdMessageList(const CSequence &other);

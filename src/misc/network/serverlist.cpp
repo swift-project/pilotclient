@@ -7,8 +7,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CServer, CServerList)
 
 namespace swift::misc::network
 {
-    CServerList::CServerList() {}
-
     CServerList::CServerList(const CSequence<CServer> &other) : CSequence<CServer>(other) {}
 
     bool CServerList::containsName(const QString &name) const

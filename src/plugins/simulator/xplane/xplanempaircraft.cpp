@@ -13,8 +13,6 @@ using namespace swift::misc::simulation;
 
 namespace swift::simplugin::xplane
 {
-    CXPlaneMPAircraft::CXPlaneMPAircraft() {}
-
     CXPlaneMPAircraft::CXPlaneMPAircraft(const CSimulatedAircraft &aircraft, ISimulator *simulator,
                                          CInterpolationLogger *logger)
         : m_aircraft(aircraft),

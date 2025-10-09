@@ -39,7 +39,7 @@ namespace swift::gui::components
         explicit CDbLoginComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbLoginComponent() override;
+        ~CDbLoginComponent() override;
 
         //! DB user
         swift::misc::network::CAuthenticatedUser getDbUser() const;

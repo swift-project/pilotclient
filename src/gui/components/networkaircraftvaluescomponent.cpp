@@ -19,10 +19,7 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    CNetworkAircraftValuesComponent::~CNetworkAircraftValuesComponent()
-    {
-        // void
-    }
+    CNetworkAircraftValuesComponent::~CNetworkAircraftValuesComponent() = default;
 
     void CNetworkAircraftValuesComponent::showValues()
     {

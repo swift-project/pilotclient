@@ -99,8 +99,6 @@ namespace swift::misc::simulation
         this->setObjectInfo(simulator);
     }
 
-    IAircraftModelLoader::~IAircraftModelLoader() {}
-
     void IAircraftModelLoader::startLoading(LoadMode mode,
                                             const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation,
                                             const QStringList &modelDirectories)

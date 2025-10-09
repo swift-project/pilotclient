@@ -36,7 +36,7 @@ namespace swift::gui::components
         //        &CSettingsTextMessageStyle::fontSizePlus);
     }
 
-    CSettingsTextMessageStyle::~CSettingsTextMessageStyle() {}
+    CSettingsTextMessageStyle::~CSettingsTextMessageStyle() = default;
 
     QStringList CSettingsTextMessageStyle::getFamilySizeStyle() const
     {

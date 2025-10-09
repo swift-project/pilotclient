@@ -36,8 +36,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CAircraftModel, CAircraftM
 
 namespace swift::misc::simulation
 {
-    CAircraftModelList::CAircraftModelList() {}
-
     CAircraftModelList::CAircraftModelList(const CSequence<CAircraftModel> &other) : CSequence<CAircraftModel>(other) {}
 
     bool CAircraftModelList::containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const

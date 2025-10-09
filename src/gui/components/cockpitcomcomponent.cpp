@@ -93,7 +93,7 @@ namespace swift::gui::components
         }
     }
 
-    CCockpitComComponent::~CCockpitComComponent() {}
+    CCockpitComComponent::~CCockpitComComponent() = default;
 
     void CCockpitComComponent::setTransponderModeStateIdent() { ui->editor_Com->setTransponderModeStateIdent(); }
 

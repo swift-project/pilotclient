@@ -79,7 +79,7 @@ namespace swift::gui::components
         });
     }
 
-    CMainKeypadAreaComponent::~CMainKeypadAreaComponent() {}
+    CMainKeypadAreaComponent::~CMainKeypadAreaComponent() = default;
 
     void CMainKeypadAreaComponent::onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes,
                                                          const QList<int> &floatingIndexes)

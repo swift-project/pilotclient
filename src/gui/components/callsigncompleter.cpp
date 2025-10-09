@@ -43,7 +43,7 @@ namespace swift::gui::components
         m_dsAircraftsInRangeChanged.inputSignal(); // trigger
     }
 
-    CCallsignCompleter::~CCallsignCompleter() {}
+    CCallsignCompleter::~CCallsignCompleter() = default;
 
     CCallsign CCallsignCompleter::getCallsign(bool onlyKnownCallsign) const
     {

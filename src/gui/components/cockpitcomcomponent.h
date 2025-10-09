@@ -43,7 +43,7 @@ namespace swift::gui::components
         explicit CCockpitComComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CCockpitComComponent() override;
+        ~CCockpitComComponent() override;
 
         //! Set to swift::misc::aviation::CTransponder::StateIdent
         void setTransponderModeStateIdent();
@@ -63,7 +63,7 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc QWidget::paintEvent
-        virtual void paintEvent(QPaintEvent *event) override;
+        void paintEvent(QPaintEvent *event) override;
 
     private:
         //! Cockpit values have been changed in GUI

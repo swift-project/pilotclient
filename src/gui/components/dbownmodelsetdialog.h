@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CDbOwnModelSetDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbOwnModelSetDialog() override;
+        ~CDbOwnModelSetDialog() override;
 
         //! \copydoc CDbOwnModelSetComponent::setSimulator
         void setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator);

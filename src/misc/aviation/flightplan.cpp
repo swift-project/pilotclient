@@ -28,8 +28,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CFlightPlan)
 
 namespace swift::misc::aviation
 {
-    CFlightPlanRemarks::CFlightPlanRemarks() {}
-
     CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, bool parse) : m_remarks(cleanRemarks(remarks))
     {
         if (parse) { this->parseFlightPlanRemarks(); }

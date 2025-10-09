@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CSettingsTextMessageStyle(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsTextMessageStyle() override;
+        ~CSettingsTextMessageStyle() override;
 
         //! Fmily, size and style
         QStringList getFamilySizeStyle() const;

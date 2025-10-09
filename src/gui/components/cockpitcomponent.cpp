@@ -30,7 +30,7 @@ namespace swift::gui::components
                 &CCockpitComponent::onRequestTextMessageCom2, Qt::QueuedConnection);
     }
 
-    CCockpitComponent::~CCockpitComponent() {}
+    CCockpitComponent::~CCockpitComponent() = default;
 
     bool CCockpitComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {

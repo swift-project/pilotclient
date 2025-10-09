@@ -28,7 +28,7 @@ namespace swift::gui::components
         explicit CRegisterComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CRegisterComponent();
+        ~CRegisterComponent() override;
 
     private:
         QScopedPointer<Ui::CRegisterComponent> ui;

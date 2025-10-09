@@ -11,7 +11,7 @@ namespace swift::gui
 {
     CLabelAndIcon::CLabelAndIcon(QWidget *parent) : QFrame(parent), ui(new Ui::CLabelAndIcon) { ui->setupUi(this); }
 
-    CLabelAndIcon::~CLabelAndIcon() {}
+    CLabelAndIcon::~CLabelAndIcon() = default;
 
     void CLabelAndIcon::set(const QPixmap &pixmap, const QString &text)
     {

@@ -33,7 +33,7 @@ namespace swift::gui::components
         explicit CCockpitInfoAreaComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CCockpitInfoAreaComponent() override;
+        ~CCockpitInfoAreaComponent() override;
 
         //! Info areas
         enum InfoArea
@@ -54,10 +54,10 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc CInfoArea::getPreferredSizeWhenFloating
-        virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
+        QSize getPreferredSizeWhenFloating(int areaIndex) const override;
 
         //! \copydoc CInfoArea::indexToPixmap
-        virtual const QPixmap &indexToPixmap(int areaIndex) const override;
+        const QPixmap &indexToPixmap(int areaIndex) const override;
 
     private:
         QScopedPointer<Ui::CCockpitInfoAreaComponent> ui;

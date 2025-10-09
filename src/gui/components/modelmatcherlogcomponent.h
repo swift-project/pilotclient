@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CModelMatcherLogComponent(QWidget *parent = nullptr);
 
         //! Constructor
-        virtual ~CModelMatcherLogComponent() override;
+        ~CModelMatcherLogComponent() override;
 
     private:
         QScopedPointer<Ui::CModelMatcherLogComponent> ui;

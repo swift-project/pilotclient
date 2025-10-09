@@ -46,10 +46,7 @@ namespace swift::gui::editors
         connect(ui->le_CG, &QLineEdit::editingFinished, this, &CModelMappingModifyForm::onCGEdited);
     }
 
-    CModelMappingModifyForm::~CModelMappingModifyForm()
-    {
-        // void
-    }
+    CModelMappingModifyForm::~CModelMappingModifyForm() = default;
 
     CPropertyIndexVariantMap CModelMappingModifyForm::getValues() const
     {

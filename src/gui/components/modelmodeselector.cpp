@@ -17,10 +17,7 @@ namespace swift::gui::components
         connect(ui->rb_Include, &QRadioButton::released, this, &CModelModeSelector::changed);
     }
 
-    CModelModeSelector::~CModelModeSelector()
-    {
-        // void
-    }
+    CModelModeSelector::~CModelModeSelector() = default;
 
     swift::misc::simulation::CAircraftModel::ModelMode CModelModeSelector::getMode() const
     {

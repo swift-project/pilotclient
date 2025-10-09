@@ -24,7 +24,7 @@ namespace swift::gui::components
                 &CAudioAdvancedDistributedComponent::reloadRegisteredDevices, Qt::QueuedConnection);
     }
 
-    CAudioAdvancedDistributedComponent::~CAudioAdvancedDistributedComponent() {}
+    CAudioAdvancedDistributedComponent::~CAudioAdvancedDistributedComponent() = default;
 
     void CAudioAdvancedDistributedComponent::reloadRegisteredDevices()
     {

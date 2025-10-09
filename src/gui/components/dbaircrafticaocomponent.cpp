@@ -44,7 +44,7 @@ namespace swift::gui::components
                          sGui->getWebDataServices()->getAircraftIcaoCodesCount());
     }
 
-    CDbAircraftIcaoComponent::~CDbAircraftIcaoComponent() {}
+    CDbAircraftIcaoComponent::~CDbAircraftIcaoComponent() = default;
 
     swift::gui::views::CAircraftIcaoCodeView *CDbAircraftIcaoComponent::view() const { return ui->tvp_AircraftIcao; }
 

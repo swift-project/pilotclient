@@ -119,42 +119,41 @@ namespace swift::simplugin::flightgear
                              swift::misc::network::IClientProvider *clientProvider, QObject *parent = nullptr);
 
         //! Dtor
-        virtual ~CSimulatorFlightgear() override;
+        ~CSimulatorFlightgear() override;
 
         //! \name ISimulator implementations
         //! @{
-        virtual bool connectTo() override;
-        virtual bool disconnectFrom() override;
-        virtual bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
-                                               const swift::misc::CIdentifier &originator) override;
-        virtual bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal,
-                                              const swift::misc::CIdentifier &originator) override;
-        virtual void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
-        virtual void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
-        virtual bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
-        virtual swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
-        virtual void unload() override;
-        virtual QString getStatisticsSimulatorSpecific() const override;
-        virtual void resetAircraftStatistics() override;
-        virtual swift::misc::CStatusMessageList
+        bool connectTo() override;
+        bool disconnectFrom() override;
+        bool updateOwnSimulatorCockpit(const swift::misc::simulation::CSimulatedAircraft &aircraft,
+                                       const swift::misc::CIdentifier &originator) override;
+        bool updateOwnSimulatorSelcal(const swift::misc::aviation::CSelcal &selcal,
+                                      const swift::misc::CIdentifier &originator) override;
+        void displayStatusMessage(const swift::misc::CStatusMessage &message) const override;
+        void displayTextMessage(const swift::misc::network::CTextMessage &message) const override;
+        bool isPhysicallyRenderedAircraft(const swift::misc::aviation::CCallsign &callsign) const override;
+        swift::misc::aviation::CCallsignSet physicallyRenderedAircraft() const override;
+        void unload() override;
+        QString getStatisticsSimulatorSpecific() const override;
+        void resetAircraftStatistics() override;
+        swift::misc::CStatusMessageList
         getInterpolationMessages(const swift::misc::aviation::CCallsign &callsign) const override;
-        virtual bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign,
-                                               const swift::misc::aviation::CAircraftSituation &situation,
-                                               const swift::misc::aviation::CAircraftParts &parts) override;
-        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
-                                      const swift::misc::aviation::CCallsign &callsign) override;
+        bool testSendSituationAndParts(const swift::misc::aviation::CCallsign &callsign,
+                                       const swift::misc::aviation::CAircraftSituation &situation,
+                                       const swift::misc::aviation::CAircraftParts &parts) override;
+        bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
+                              const swift::misc::aviation::CCallsign &callsign) override;
         //! @}
 
     protected:
         //! \name ISimulator implementations
         //! @{
-        virtual bool isConnected() const override;
-        virtual bool
-        physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft) override;
-        virtual bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
-        virtual int physicallyRemoveAllRemoteAircraft() override;
-        virtual void clearAllRemoteAircraftData() override;
-        virtual bool isPaused() const override { return false; }
+        bool isConnected() const override;
+        bool physicallyAddRemoteAircraft(const swift::misc::simulation::CSimulatedAircraft &newRemoteAircraft) override;
+        bool physicallyRemoveRemoteAircraft(const swift::misc::aviation::CCallsign &callsign) override;
+        int physicallyRemoveAllRemoteAircraft() override;
+        void clearAllRemoteAircraftData() override;
+        bool isPaused() const override { return false; }
         //! @}
 
     private slots:
@@ -259,13 +258,13 @@ namespace swift::simplugin::flightgear
 
     protected:
         //! \copydoc swift::core::ISimulatorListener::startImpl
-        virtual void startImpl() override;
+        void startImpl() override;
 
         //! \copydoc swift::core::ISimulatorListener::stopImpl
-        virtual void stopImpl() override;
+        void stopImpl() override;
 
         //! \copydoc swift::core::ISimulatorListener::checkImpl
-        virtual void checkImpl() override;
+        void checkImpl() override;
 
     private:
         void checkConnection();
@@ -292,14 +291,13 @@ namespace swift::simplugin::flightgear
 
     public:
         //! \copydoc swift::core::ISimulatorFactory::create
-        virtual swift::core::ISimulator *
-        create(const swift::misc::simulation::CSimulatorPluginInfo &info,
-               swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
-               swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
-               swift::misc::network::IClientProvider *clientProvider) override;
+        swift::core::ISimulator *create(const swift::misc::simulation::CSimulatorPluginInfo &info,
+                                        swift::misc::simulation::IOwnAircraftProvider *ownAircraftProvider,
+                                        swift::misc::simulation::IRemoteAircraftProvider *remoteAircraftProvider,
+                                        swift::misc::network::IClientProvider *clientProvider) override;
 
         //! \copydoc swift::core::ISimulatorFactory::createListener
-        virtual swift::core::ISimulatorListener *
+        swift::core::ISimulatorListener *
         createListener(const swift::misc::simulation::CSimulatorPluginInfo &info) override
         {
             return new CSimulatorFlightgearListener(info);
