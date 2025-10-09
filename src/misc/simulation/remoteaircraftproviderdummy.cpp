@@ -13,7 +13,7 @@ namespace swift::misc::simulation
 {
     CRemoteAircraftProviderDummy *CRemoteAircraftProviderDummy::instance()
     {
-        static CRemoteAircraftProviderDummy *dummy = new CRemoteAircraftProviderDummy();
+        static auto dummy = new CRemoteAircraftProviderDummy();
         return dummy;
     }
 

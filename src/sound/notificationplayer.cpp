@@ -91,7 +91,7 @@ namespace swift::sound
 
         // new effect
         // QString fn = url.toLocalFile();
-        QSoundEffect *effect = new QSoundEffect(this);
+        auto effect = new QSoundEffect(this);
         effect->setSource(url);
         effect->setLoopCount(1);
         effect->setMuted(false);

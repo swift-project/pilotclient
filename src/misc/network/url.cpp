@@ -231,7 +231,7 @@ namespace swift::misc::network
     QVariant CUrl::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexHost: return QVariant::fromValue(m_host);
@@ -249,7 +249,7 @@ namespace swift::misc::network
             (*this) = variant.value<CUrl>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexHost: this->setHost(variant.value<QString>()); break;

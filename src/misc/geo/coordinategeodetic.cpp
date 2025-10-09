@@ -138,7 +138,7 @@ namespace swift::misc::geo
     {
         if (!index.isMyself())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
@@ -162,7 +162,7 @@ namespace swift::misc::geo
     {
         if (!index.isMyself())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexLatitude:
@@ -284,7 +284,7 @@ namespace swift::misc::geo
             (*this) = variant.value<CCoordinateGeodetic>();
             return;
         }
-        const ICoordinateGeodetic::ColumnIndex i = index.frontCasted<ICoordinateGeodetic::ColumnIndex>();
+        const auto i = index.frontCasted<ICoordinateGeodetic::ColumnIndex>();
         switch (i)
         {
         case IndexGeodeticHeight: m_geodeticHeight.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -459,7 +459,7 @@ namespace swift::misc::geo
         if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
         if (!index.isMyself())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexRelativeBearing: return this->getRelativeBearing().propertyByIndex(index.copyFrontRemoved());
@@ -477,7 +477,7 @@ namespace swift::misc::geo
         if (ICoordinateGeodetic::canHandleIndex(index)) { return; }
         if (!index.isMyself())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexRelativeBearing: m_relativeBearing.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -500,7 +500,7 @@ namespace swift::misc::geo
         }
         if (!index.isMyself())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexRelativeBearing:

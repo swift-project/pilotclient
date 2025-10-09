@@ -79,7 +79,7 @@ namespace swift::gui::components
 
     QCompleter *CDbAirlineIcaoSelectorComponent::createCompleter()
     {
-        QCompleter *c = new QCompleter(completerStrings(), this);
+        auto *c = new QCompleter(completerStrings(), this);
         c->setCaseSensitivity(Qt::CaseInsensitive);
         c->setCompletionMode(QCompleter::PopupCompletion);
         c->setMaxVisibleItems(10);

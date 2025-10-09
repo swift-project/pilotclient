@@ -305,7 +305,7 @@ namespace swift::core::afv::connection
 
     QEventLoop *CApiServerConnection::newEventLoop()
     {
-        QEventLoop *loop = new QEventLoop(this);
+        auto *loop = new QEventLoop(this);
         if (sApp)
         {
             QObject::connect(sApp, &CApplication::aboutToShutdown, loop, &QEventLoop::quit, Qt::QueuedConnection);

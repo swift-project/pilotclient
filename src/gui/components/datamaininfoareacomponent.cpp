@@ -68,7 +68,7 @@ namespace swift::gui::components
 
     QSize CDataMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaData:
@@ -81,7 +81,7 @@ namespace swift::gui::components
 
     const QPixmap &CDataMainInfoAreaComponent::indexToPixmap(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaData: return CIcons::appDatabase16();

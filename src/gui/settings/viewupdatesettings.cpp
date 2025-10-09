@@ -47,7 +47,7 @@ namespace swift::gui::settings
     QVariant CViewUpdateSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAircraft: return QVariant::fromValue(this->m_updateAircraft);
@@ -66,7 +66,7 @@ namespace swift::gui::settings
             return;
         }
 
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAircraft: this->m_updateAircraft = variant.value<CTime>(); break;

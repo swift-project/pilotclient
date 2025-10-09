@@ -263,7 +263,7 @@ namespace swift::misc::aviation
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAlternateAirportIcao: return m_alternateAirportIcao.propertyByIndex(index.copyFrontRemoved());
@@ -288,7 +288,7 @@ namespace swift::misc::aviation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAlternateAirportIcao:
@@ -616,7 +616,7 @@ namespace swift::misc::aviation
                             variant.convertFromJson(jsonObject);
                             if (variant.canConvert<CFlightPlan>())
                             {
-                                const CFlightPlan fp = variant.value<CFlightPlan>();
+                                const auto fp = variant.value<CFlightPlan>();
                                 return fp;
                             }
                             else

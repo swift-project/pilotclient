@@ -13,7 +13,7 @@ namespace swift::simplugin::flightgear
 
     swift::gui::CPluginConfigWindow *CSimulatorFlightgearConfig::createConfigWindow(QWidget *parent)
     {
-        CSimulatorFlightgearConfigWindow *w = new CSimulatorFlightgearConfigWindow(parent);
+        auto w = new CSimulatorFlightgearConfigWindow(parent);
         return w;
     }
 } // namespace swift::simplugin::flightgear

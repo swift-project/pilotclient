@@ -75,7 +75,7 @@ namespace swift::core::context
 
     CSettingsDictionary CContextApplicationProxy::getUnsavedSettingsKeysDescribed() const
     {
-        CSettingsDictionary result =
+        auto result =
             m_dBusInterface->callDBusRet<CSettingsDictionary>(QLatin1String("getUnsavedSettingsKeysDescribed"));
         for (auto it = result.begin(); it != result.end(); ++it)
         {

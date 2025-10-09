@@ -58,7 +58,7 @@ namespace swift::gui::models
         {
             if (action == Qt::MoveAction)
             {
-                const ContainerType container(valueVariant.value<ContainerType>());
+                const auto container(valueVariant.value<ContainerType>());
                 if (container.isEmpty()) { return false; }
                 const int position = parent.row();
                 this->moveItems(container, position);
@@ -111,7 +111,7 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     bool CListModelBase<T, UseCompare>::setData(const QModelIndex &index, const QVariant &value, int role)
     {
-        Qt::ItemDataRole dataRole = static_cast<Qt::ItemDataRole>(role);
+        auto dataRole = static_cast<Qt::ItemDataRole>(role);
         if (!(dataRole == Qt::UserRole || dataRole == Qt::EditRole)) { return false; }
 
         // check / init
@@ -542,7 +542,7 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     QMimeData *CListModelBase<T, UseCompare>::mimeData(const QModelIndexList &indexes) const
     {
-        QMimeData *mimeData = new QMimeData();
+        auto *mimeData = new QMimeData();
         if (indexes.isEmpty()) { return mimeData; }
 
         ContainerType container;

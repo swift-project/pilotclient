@@ -201,7 +201,7 @@ namespace swift::gui::components
         const CStatusMessage msg = m_audioSettings.set(as);
         CLogMessage(this).preformatted(msg);
 
-        const QCheckBox *sender = qobject_cast<const QCheckBox *>(QObject::sender());
+        const auto *sender = qobject_cast<const QCheckBox *>(QObject::sender());
         if (checked && sGui && sGui->getCContextAudioBase() && sender)
         {
             const CNotificationSounds::NotificationFlag f = this->checkBoxToFlag(sender);

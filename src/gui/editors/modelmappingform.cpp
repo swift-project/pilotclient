@@ -32,7 +32,7 @@ namespace swift::gui::editors
         ui->le_Id->setReadOnly(true);
         ui->le_Parts->setPlaceholderText("Allowed: " + CAircraftModel::supportedParts());
         ui->lai_Id->set(CIcons::appMappings16(), "Id:");
-        CUpperCaseValidator *uc = new CUpperCaseValidator(0, 5, ui->le_Parts);
+        auto *uc = new CUpperCaseValidator(0, 5, ui->le_Parts);
         uc->setAllowedCharacters(CAircraftModel::supportedParts());
         ui->le_Parts->setValidator(uc);
 

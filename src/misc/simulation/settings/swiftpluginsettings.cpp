@@ -28,7 +28,7 @@ namespace swift::misc::simulation::settings
     QVariant CSwiftPluginSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEmulatedSimulator: return this->m_emulatedSimulator.propertyByIndex(index.copyFrontRemoved());
@@ -46,7 +46,7 @@ namespace swift::misc::simulation::settings
             (*this) = variant.value<CSwiftPluginSettings>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEmulatedSimulator:

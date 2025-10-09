@@ -43,7 +43,7 @@ namespace swift::gui::components
 
         constexpr int MaxLength = 10;
         constexpr int MinLength = 0;
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_PartnerCallsign);
+        auto *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_PartnerCallsign);
         ucv->setAllowedCharacters09AZ();
         ui->le_PartnerCallsign->setMaxLength(MaxLength);
         ui->le_PartnerCallsign->setValidator(ucv);

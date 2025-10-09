@@ -83,7 +83,7 @@ namespace swift::gui::models
 
     CAtcStationTreeModel *CAtcStationListModel::toAtcTreeModel() const
     {
-        CAtcStationTreeModel *tm = new CAtcStationTreeModel(QObject::parent());
+        auto *tm = new CAtcStationTreeModel(QObject::parent());
         tm->setColumns(m_columns);
         tm->updateContainer(this->container());
         return tm;

@@ -10,7 +10,7 @@ namespace swift::misc::simulation::settings
     QVariant CFGSwiftBusSettings::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDBusServerAddress: return QVariant::fromValue(m_dBusServerAddress);
@@ -27,7 +27,7 @@ namespace swift::misc::simulation::settings
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDBusServerAddress: m_dBusServerAddress = variant.toString(); break;

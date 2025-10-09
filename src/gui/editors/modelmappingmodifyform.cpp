@@ -32,8 +32,7 @@ namespace swift::gui::editors
         ui->le_Parts->setPlaceholderText("Parts " + CAircraftModel::supportedParts());
         this->userChanged();
 
-        CUpperCaseValidator *ucv =
-            new CUpperCaseValidator(true, 0, CAircraftModel::supportedParts().size(), ui->le_Parts);
+        auto *ucv = new CUpperCaseValidator(true, 0, CAircraftModel::supportedParts().size(), ui->le_Parts);
         ucv->setAllowedCharacters(CAircraftModel::supportedParts());
         ui->le_Parts->setValidator(ucv);
 

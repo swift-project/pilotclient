@@ -129,13 +129,13 @@ namespace swift::gui::components
         {
             if (valueVariant.canConvert<CCountry>())
             {
-                const CCountry country(valueVariant.value<CCountry>());
+                const auto country(valueVariant.value<CCountry>());
                 if (!country.hasIsoCode()) { return; }
                 this->setCountry(country);
             }
             else if (valueVariant.canConvert<CCountryList>())
             {
-                const CCountryList countries(valueVariant.value<CCountryList>());
+                const auto countries(valueVariant.value<CCountryList>());
                 if (countries.isEmpty()) { return; }
                 this->setCountry(countries.front());
             }
@@ -150,7 +150,7 @@ namespace swift::gui::components
         {
             if (count > 0)
             {
-                QCompleter *c = new QCompleter(sGui->getWebDataServices()->getCountries().toNameList(), this);
+                auto *c = new QCompleter(sGui->getWebDataServices()->getCountries().toNameList(), this);
                 c->setCaseSensitivity(Qt::CaseInsensitive);
                 c->setCompletionMode(QCompleter::PopupCompletion);
                 c->setMaxVisibleItems(10);

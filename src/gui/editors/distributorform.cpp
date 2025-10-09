@@ -115,7 +115,7 @@ namespace swift::gui::editors
         if (variantDropped.canConvert<CDistributor>()) { distributor = variantDropped.value<CDistributor>(); }
         else if (variantDropped.canConvert<CDistributorList>())
         {
-            const CDistributorList icaoList(variantDropped.value<CDistributorList>());
+            const auto icaoList(variantDropped.value<CDistributorList>());
             if (icaoList.isEmpty()) { return; }
             distributor = icaoList.front();
         }

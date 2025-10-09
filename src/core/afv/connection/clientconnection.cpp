@@ -162,7 +162,7 @@ namespace swift::core::afv::connection
         if (deserializer.m_dtoNameBuffer == AudioRxOnTransceiversDto::getShortDtoName())
         {
             // qDebug() << "Received audio data";
-            const AudioRxOnTransceiversDto audioOnTransceiverDto = deserializer.getDto<AudioRxOnTransceiversDto>();
+            const auto audioOnTransceiverDto = deserializer.getDto<AudioRxOnTransceiversDto>();
             if (m_connection.isReceivingAudio() && m_connection.isConnected())
             {
                 emit audioReceived(audioOnTransceiverDto);

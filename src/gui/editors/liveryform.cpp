@@ -117,7 +117,7 @@ namespace swift::gui::editors
             CVariant jsonVariant;
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CLiveryList>()) { return; }
-            const CLiveryList liveries = jsonVariant.value<CLiveryList>();
+            const auto liveries = jsonVariant.value<CLiveryList>();
             if (!liveries.isEmpty()) { this->setValue(liveries.front()); }
         }
         catch (const CJsonException &ex)
@@ -193,7 +193,7 @@ namespace swift::gui::editors
         if (variantDropped.canConvert<CLivery>()) { livery = variantDropped.value<CLivery>(); }
         else if (variantDropped.canConvert<CLiveryList>())
         {
-            CLiveryList liveryList(variantDropped.value<CLiveryList>());
+            auto liveryList(variantDropped.value<CLiveryList>());
             if (liveryList.isEmpty()) { return; }
             livery = liveryList.front();
         }
@@ -229,7 +229,7 @@ namespace swift::gui::editors
             m_colorSearch = new CDbLiveryColorSearchDialog(this);
             m_colorSearch->setModal(true);
         }
-        const QDialog::DialogCode c = static_cast<QDialog::DialogCode>(m_colorSearch->exec());
+        const auto c = static_cast<QDialog::DialogCode>(m_colorSearch->exec());
         if (c == QDialog::Rejected) { return; }
         const CLivery found = m_colorSearch->getLivery();
         if (found.isLoadedFromDb()) { this->setValue(found); }

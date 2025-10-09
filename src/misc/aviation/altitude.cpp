@@ -181,7 +181,7 @@ namespace swift::misc::aviation
             rd = AboveGround;
         }
 
-        const CLength l = CPqString::parse<CLength>(v, mode);
+        const auto l = CPqString::parse<CLength>(v, mode);
         *this = CAltitude(l, rd);
     }
 

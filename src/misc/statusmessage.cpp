@@ -397,7 +397,7 @@ namespace swift::misc
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMessage: return QVariant::fromValue(this->getMessage());
@@ -427,7 +427,7 @@ namespace swift::misc
             IOrderable::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMessage:
@@ -448,7 +448,7 @@ namespace swift::misc
             return ITimestampBased::comparePropertyByIndex(index, compareValue);
         }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMessageAsHtml:

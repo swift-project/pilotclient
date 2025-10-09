@@ -64,7 +64,7 @@ namespace swift::misc::db
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexChannel: return QVariant::fromValue(m_channel);
@@ -88,7 +88,7 @@ namespace swift::misc::db
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexChannel: this->setChannel(variant.value<QString>()); break;

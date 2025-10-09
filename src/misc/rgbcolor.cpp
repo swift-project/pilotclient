@@ -169,7 +169,7 @@ namespace swift::misc
     QVariant CRgbColor::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexBlue: return QVariant::fromValue(blue());
@@ -187,7 +187,7 @@ namespace swift::misc
             (*this) = variant.value<CRgbColor>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexBlue: m_b = variant.toInt(); break;
@@ -201,7 +201,7 @@ namespace swift::misc
     int CRgbColor::comparePropertyByIndex(CPropertyIndexRef index, const CRgbColor &compareValue) const
     {
         if (index.isMyself()) { return this->compare(compareValue); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexBlue: return Compare::compare(m_b, compareValue.m_b);

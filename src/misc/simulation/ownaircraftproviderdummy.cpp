@@ -140,7 +140,7 @@ namespace swift::misc::simulation
 
     COwnAircraftProviderDummy *COwnAircraftProviderDummy::instance()
     {
-        static COwnAircraftProviderDummy *dummy = new COwnAircraftProviderDummy();
+        static auto dummy = new COwnAircraftProviderDummy();
         return dummy;
     }
 } // namespace swift::misc::simulation

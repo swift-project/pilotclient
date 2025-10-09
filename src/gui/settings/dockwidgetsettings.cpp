@@ -89,7 +89,7 @@ namespace swift::gui::settings
     QVariant CDockWidgetSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexFloatingMargins: return QVariant::fromValue(m_floatingMargins);
@@ -109,7 +109,7 @@ namespace swift::gui::settings
             return;
         }
 
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexFloatingMargins: m_floatingMargins = variant.toString(); break;

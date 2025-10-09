@@ -62,7 +62,7 @@ namespace swift::misc
     QVariant CDirectories::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDirFlightPlan: return QVariant::fromValue(m_dirFlightPlan);
@@ -86,7 +86,7 @@ namespace swift::misc
             (*this) = variant.value<CDirectories>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDirFlightPlan: this->setFlightPlanDirectory(variant.toString()); break;

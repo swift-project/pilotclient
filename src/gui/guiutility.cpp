@@ -58,7 +58,7 @@ namespace swift::gui
         for (QWidget *w : tlw)
         {
             // best choice is to check on frameless window
-            CEnableForFramelessWindow *mw = dynamic_cast<CEnableForFramelessWindow *>(w);
+            auto *mw = dynamic_cast<CEnableForFramelessWindow *>(w);
             if (!mw) { continue; }
             if (mw->isMainApplicationWindow()) { return mw; }
         }
@@ -76,7 +76,7 @@ namespace swift::gui
             const QWidgetList tlw = CGuiUtility::topLevelApplicationWidgetsWithName();
             for (QWidget *w : tlw)
             {
-                QMainWindow *qmw = qobject_cast<QMainWindow *>(w);
+                auto *qmw = qobject_cast<QMainWindow *>(w);
                 if (!qmw) { continue; }
                 if (!qmw->parentWidget()) { return qmw; }
             }
@@ -562,7 +562,7 @@ namespace swift::gui
         do {
             widget = widget->parentWidget();
             if (!widget) { return nullptr; }
-            QTabWidget *tw = qobject_cast<QTabWidget *>(widget);
+            auto *tw = qobject_cast<QTabWidget *>(widget);
             if (tw) { return tw; }
             level++;
         }
@@ -671,14 +671,14 @@ namespace swift::gui
     bool CGuiUtility::isQMainWindow(const QWidget *widget)
     {
         if (!widget) { return false; }
-        const QMainWindow *mw = qobject_cast<const QMainWindow *>(widget);
+        const auto *mw = qobject_cast<const QMainWindow *>(widget);
         return mw;
     }
 
     bool CGuiUtility::isDialog(const QWidget *widget)
     {
         if (!widget) { return false; }
-        const QDialog *mw = qobject_cast<const QDialog *>(widget);
+        const auto *mw = qobject_cast<const QDialog *>(widget);
         return mw;
     }
 
@@ -698,9 +698,9 @@ namespace swift::gui
     {
         // http://stackoverflow.com/questions/19087822/how-to-make-qt-widgets-fade-in-or-fade-out#
         Q_ASSERT(widget);
-        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(widget);
+        auto *effect = new QGraphicsOpacityEffect(widget);
         widget->setGraphicsEffect(effect);
-        QPropertyAnimation *a = new QPropertyAnimation(effect, "opacity");
+        auto *a = new QPropertyAnimation(effect, "opacity");
         a->setDuration(durationMs);
         a->setStartValue(startValue);
         a->setEndValue(endValue);
@@ -713,9 +713,9 @@ namespace swift::gui
                                                        double endValue)
     {
         Q_ASSERT(widget);
-        QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(widget);
+        auto *effect = new QGraphicsOpacityEffect(widget);
         widget->setGraphicsEffect(effect);
-        QPropertyAnimation *a = new QPropertyAnimation(effect, "opacity");
+        auto *a = new QPropertyAnimation(effect, "opacity");
         a->setDuration(durationMs);
         a->setStartValue(startValue);
         a->setEndValue(endValue);

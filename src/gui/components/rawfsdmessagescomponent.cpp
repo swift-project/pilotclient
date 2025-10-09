@@ -198,8 +198,7 @@ namespace swift::gui::components
 
     void CRawFsdMessagesComponent::changeFileWritingMode()
     {
-        const CRawFsdMessageSettings::FileWriteMode mode =
-            ui->cb_FileWritingMode->currentData().value<CRawFsdMessageSettings::FileWriteMode>();
+        const auto mode = ui->cb_FileWritingMode->currentData().value<CRawFsdMessageSettings::FileWriteMode>();
         m_setting.setProperty(vatsim::CRawFsdMessageSettings::IndexFileWriteMode, CVariant::fromValue(mode));
     }
 

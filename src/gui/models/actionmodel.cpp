@@ -69,7 +69,7 @@ namespace swift::gui::models
     {
         if (!index.isValid()) { return {}; }
 
-        CActionItem *childItem = static_cast<CActionItem *>(index.internalPointer());
+        auto *childItem = static_cast<CActionItem *>(index.internalPointer());
         CActionItem *parentItem = childItem->getParentItem();
 
         if (parentItem == m_rootItem.data()) { return {}; }

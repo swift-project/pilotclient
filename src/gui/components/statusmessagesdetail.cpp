@@ -121,7 +121,7 @@ namespace swift::gui::components
 
     void CStatusMessagesDetail::CMessageMenu::customMenu(CMenuActions &menuActions)
     {
-        CStatusMessagesDetail *messagesDetail = qobject_cast<CStatusMessagesDetail *>(this->parent());
+        auto *messagesDetail = qobject_cast<CStatusMessagesDetail *>(this->parent());
         Q_ASSERT_X(messagesDetail, Q_FUNC_INFO, "Missing parent");
 
         const bool v = messagesDetail->ui->form_StatusMessage->isVisible();

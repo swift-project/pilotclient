@@ -513,7 +513,7 @@ namespace swift::gui
 
     void COverlayMessages::addShadow(QColor color)
     {
-        QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+        auto *shadow = new QGraphicsDropShadowEffect(this);
         color.setAlpha(96);
         shadow->setColor(color);
         this->setGraphicsEffect(shadow);

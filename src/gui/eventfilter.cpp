@@ -14,13 +14,13 @@ namespace swift::gui
     {
         if (event->type() == QEvent::KeyPress)
         {
-            if (QKeyEvent *e = dynamic_cast<QKeyEvent *>(event))
+            if (auto *e = dynamic_cast<QKeyEvent *>(event))
             {
                 // If QKeyEvent::text() returns an empty QString then let normal
                 // processing proceed as it may be a control (e.g. cursor movement)
                 // key.  Otherwise convert the text to upper case and insert it at
                 // the current cursor position.
-                QPlainTextEdit *pte = qobject_cast<QPlainTextEdit *>(object);
+                auto *pte = qobject_cast<QPlainTextEdit *>(object);
                 if (!pte) { return false; }
                 if (pte->isReadOnly()) { return false; }
 

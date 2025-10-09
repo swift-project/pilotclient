@@ -46,7 +46,7 @@ namespace swift::misc::simulation
             else { old->deleteLater(); }
         }
 
-        QProcess *process = new QProcess(parent);
+        auto process = new QProcess(parent);
         const QString argument = QDir::toNativeSeparators(model.getFileName());
         process->setProgram(modelConverterX);
         process->setArguments({ argument });

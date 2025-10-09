@@ -96,7 +96,7 @@ namespace swift::gui::editors
         ui->cb_ServerType->clear();
         for (const int type : CServer::allServerTypes())
         {
-            const CServer::ServerType st = static_cast<CServer::ServerType>(type);
+            const auto st = static_cast<CServer::ServerType>(type);
             ui->cb_ServerType->insertItem(c++, CServer::serverTypeToString(st), QVariant::fromValue(type));
         }
     }

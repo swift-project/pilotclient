@@ -48,7 +48,7 @@ namespace swift::gui::models
     CVariant CDefaultFormatter::decorationRole(const CVariant &dataCVariant) const
     {
         // direct return if type is already correct
-        const QMetaType::Type type = static_cast<QMetaType::Type>(dataCVariant.type());
+        const auto type = static_cast<QMetaType::Type>(dataCVariant.type());
 
         if (type == QMetaType::QPixmap) { return dataCVariant; }
         if (type == QMetaType::QIcon) { return dataCVariant; }
@@ -56,14 +56,14 @@ namespace swift::gui::models
         // convert to pixmap
         if (type == QMetaType::QImage)
         {
-            const QImage img = dataCVariant.value<QImage>();
+            const auto img = dataCVariant.value<QImage>();
             return CVariant::from(QPixmap::fromImage(img));
         }
 
         // Our CIcon class
         if (dataCVariant.canConvert<CIcon>())
         {
-            const CIcon i = dataCVariant.value<CIcon>();
+            const auto i = dataCVariant.value<CIcon>();
             return CVariant::from(i.toPixmap());
         }
 
@@ -96,7 +96,7 @@ namespace swift::gui::models
     CVariant CDefaultFormatter::data(int role, const CVariant &inputData) const
     {
         if (!this->supportsRole(role)) { return CVariant(); }
-        const Qt::ItemDataRole roleEnum = static_cast<Qt::ItemDataRole>(role);
+        const auto roleEnum = static_cast<Qt::ItemDataRole>(role);
 
         // always supported
         if (roleEnum == Qt::TextAlignmentRole) return { alignmentRole() };
@@ -149,7 +149,7 @@ namespace swift::gui::models
         if (dataCVariant.isNull()) { return {}; }
         if (dataCVariant.canConvert<CIcon>())
         {
-            const CIcon icon = dataCVariant.value<CIcon>();
+            const auto icon = dataCVariant.value<CIcon>();
             return icon.getDescriptiveText();
         }
         return emptyStringVariant();
@@ -163,7 +163,7 @@ namespace swift::gui::models
         QPixmap pm;
         if (dataCVariant.canConvert<CIcon>())
         {
-            const CIcon icon = dataCVariant.value<CIcon>();
+            const auto icon = dataCVariant.value<CIcon>();
             pm = icon.toPixmap();
         }
 
@@ -199,17 +199,17 @@ namespace swift::gui::models
         if (dateTime.isNull()) return {};
         if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QDateTime)
         {
-            const QDateTime dt = dateTime.value<QDateTime>();
+            const auto dt = dateTime.value<QDateTime>();
             return dt.toString(m_formatString);
         }
         else if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QDate)
         {
-            const QDate d = dateTime.value<QDate>();
+            const auto d = dateTime.value<QDate>();
             return d.toString(m_formatString);
         }
         else if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QTime)
         {
-            const QTime t = dateTime.value<QTime>();
+            const auto t = dateTime.value<QTime>();
             return t.toString(m_formatString);
         }
         else if (dateTime.isIntegral())
@@ -229,7 +229,7 @@ namespace swift::gui::models
         if (dataCVariant.canConvert<CLength>())
         {
             // special treatment for some cases
-            const CLength l = dataCVariant.value<CLength>();
+            const auto l = dataCVariant.value<CLength>();
             const bool valid = !l.isNull() && (l.isPositiveWithEpsilonConsidered() || l.isZeroEpsilonConsidered());
             return valid ? CPhysiqalQuantiyFormatter::displayRole(dataCVariant) : emptyStringVariant();
         }
@@ -245,7 +245,7 @@ namespace swift::gui::models
         if (dataCVariant.canConvert<CFrequency>())
         {
             // special treatment for some cases
-            const CFrequency f = dataCVariant.value<CFrequency>();
+            const auto f = dataCVariant.value<CFrequency>();
             if (CComSystem::isValidComFrequency(f)) { return CPhysiqalQuantiyFormatter::displayRole(dataCVariant); }
             return emptyStringVariant();
         }
@@ -259,7 +259,7 @@ namespace swift::gui::models
     CVariant CSpeedKtsFormatter::displayRole(const CVariant &dataCVariant) const
     {
         // special treatment for some cases
-        const CSpeed s = dataCVariant.value<CSpeed>();
+        const auto s = dataCVariant.value<CSpeed>();
         if (!s.isNull() && (s.isPositiveWithEpsilonConsidered() || s.isZeroEpsilonConsidered()))
         {
             return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
@@ -376,7 +376,7 @@ namespace swift::gui::models
 
     CVariant CAltitudeFormatter::displayRole(const CVariant &altitude) const
     {
-        CAltitude alt(altitude.to<CAltitude>());
+        auto alt(altitude.to<CAltitude>());
         if (m_flightLevel) { alt.toFlightLevel(); }
         else { alt.switchUnit(m_unit); }
         return alt.toQString(m_useI18n);
@@ -395,7 +395,7 @@ namespace swift::gui::models
 
     CVariant CColorFormatter::decorationRole(const CVariant &dataCVariant) const
     {
-        const CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
+        const auto rgbColor(dataCVariant.to<CRgbColor>());
         if (!rgbColor.isValid()) { return emptyPixmapVariant(); }
         return CVariant::fromValue(rgbColor.toPixmap());
     }
@@ -403,7 +403,7 @@ namespace swift::gui::models
     CVariant CColorFormatter::tooltipRole(const CVariant &dataCVariant) const
     {
         static const CVariant empty(CVariant::fromValue(QPixmap()));
-        const CRgbColor rgbColor(dataCVariant.to<CRgbColor>());
+        const auto rgbColor(dataCVariant.to<CRgbColor>());
         if (!rgbColor.isValid()) { return emptyStringVariant(); }
         return rgbColor.hex(true);
     }

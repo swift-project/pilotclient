@@ -113,7 +113,7 @@ namespace swift::gui::components
     void CMainKeypadAreaComponent::buttonSelected()
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
-        QPushButton *senderButton = static_cast<QPushButton *>(QObject::sender());
+        auto *senderButton = static_cast<QPushButton *>(QObject::sender());
         Q_ASSERT_X(senderButton, Q_FUNC_INFO, "No sender button");
         if (!senderButton) { return; }
         const CMainInfoAreaComponent::InfoArea infoArea = buttonToMainInfoArea(senderButton);

@@ -63,7 +63,7 @@ namespace swift::misc::db
     QVariant CDbInfo::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTableName: return QVariant::fromValue(m_tableName);
@@ -83,7 +83,7 @@ namespace swift::misc::db
             (*this) = variant.value<CDbInfo>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTableName: this->setTableName(variant.toString()); break;
@@ -106,7 +106,7 @@ namespace swift::misc::db
         {
             return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTableName: return this->getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive);

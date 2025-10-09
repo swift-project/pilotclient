@@ -451,7 +451,7 @@ namespace swift::gui::components
             m_modelModifyDialog->setValue(ui->comp_StashAircraft->view()->selectedObject());
         }
 
-        const QDialog::DialogCode s = static_cast<QDialog::DialogCode>(m_modelModifyDialog->exec());
+        const auto s = static_cast<QDialog::DialogCode>(m_modelModifyDialog->exec());
         if (s == QDialog::Rejected) { return; }
         const CPropertyIndexVariantMap vm = m_modelModifyDialog->getValues();
         ui->comp_StashAircraft->applyToSelected(vm);
@@ -564,7 +564,7 @@ namespace swift::gui::components
 
     void CDbMappingComponent::onTabIndexChanged(int index)
     {
-        const CDbMappingComponent::TabIndex ti = static_cast<CDbMappingComponent::TabIndex>(index);
+        const auto ti = static_cast<CDbMappingComponent::TabIndex>(index);
         switch (ti)
         {
         case CDbMappingComponent::TabOwnModelSet:
@@ -850,7 +850,7 @@ namespace swift::gui::components
 
     void CDbMappingComponent::CMappingVPilotMenu::customMenu(CMenuActions &menuActions)
     {
-        CDbMappingComponent *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
+        auto *mapComp = qobject_cast<CDbMappingComponent *>(this->parent());
         Q_ASSERT_X(mapComp, Q_FUNC_INFO, "Cannot access mapping component");
 
         const bool canUseVPilot = mappingComponent()->withVPilot();

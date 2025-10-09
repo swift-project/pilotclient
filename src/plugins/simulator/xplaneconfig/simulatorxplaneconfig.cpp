@@ -16,7 +16,7 @@ namespace swift::simplugin::xplane
 
     swift::gui::CPluginConfigWindow *CSimulatorXPlaneConfig::createConfigWindow(QWidget *parent)
     {
-        CSimulatorXPlaneConfigWindow *w = new CSimulatorXPlaneConfigWindow(parent);
+        auto *w = new CSimulatorXPlaneConfigWindow(parent);
         return w;
     }
 } // namespace swift::simplugin::xplane

@@ -96,7 +96,7 @@ namespace swift::misc
     QVariant CApplicationInfo::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexApplication: return QVariant::fromValue(m_app);
@@ -121,7 +121,7 @@ namespace swift::misc
             (*this) = variant.value<CApplicationInfo>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexApplication: this->setApplication(static_cast<Application>(variant.toInt())); break;
@@ -142,7 +142,7 @@ namespace swift::misc
     int CApplicationInfo::comparePropertyByIndex(CPropertyIndexRef index, const CApplicationInfo &compareValue) const
     {
         if (index.isMyself()) { return this->getExecutablePath().compare(compareValue.getExecutablePath()); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexApplicationDataPath:

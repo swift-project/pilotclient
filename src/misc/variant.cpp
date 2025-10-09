@@ -533,7 +533,7 @@ namespace swift::misc
 
         // complex, user type
         // it has to be made sure, that the cast works
-        const QDBusArgument arg = variant.value<QDBusArgument>();
+        const auto arg = variant.value<QDBusArgument>();
         constexpr int userType = static_cast<int>(QMetaType::User);
         if (localUserType.id() < userType)
         {

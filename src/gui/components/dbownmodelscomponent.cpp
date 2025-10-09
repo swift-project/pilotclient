@@ -282,7 +282,7 @@ namespace swift::gui::components
                            QStringLiteral("Completely reload '%1' models from disk?").arg(simulator.toQString(true)),
                            QMessageBox::Ok | QMessageBox::Cancel, this);
         msgBox.setDefaultButton(QMessageBox::Cancel);
-        const QMessageBox::StandardButton reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
+        const auto reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
         if (reply != QMessageBox::Ok) { return; }
 
         this->requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundNoCache);
@@ -497,7 +497,7 @@ namespace swift::gui::components
             "override the loaded models from the simulator.\nNormally you would not want that (cancel).",
             QMessageBox::Save | QMessageBox::Cancel, this);
         msgBox.setDefaultButton(QMessageBox::Cancel);
-        const QMessageBox::StandardButton reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
+        const auto reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
         if (reply != QMessageBox::Cancel) { return; }
         const CAircraftModelList models = ui->tvp_OwnAircraftModels->container();
         if (models.isEmpty()) { return; }

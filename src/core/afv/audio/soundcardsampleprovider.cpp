@@ -33,8 +33,7 @@ namespace swift::core::afv::audio
         constexpr int voiceInputNumber = 4; // number of CallsignSampleProviders
         for (quint16 transceiverID : transceiverIDs)
         {
-            CReceiverSampleProvider *transceiverInput =
-                new CReceiverSampleProvider(m_waveFormat, transceiverID, voiceInputNumber, m_mixer);
+            auto transceiverInput = new CReceiverSampleProvider(m_waveFormat, transceiverID, voiceInputNumber, m_mixer);
             connect(transceiverInput, &CReceiverSampleProvider::receivingCallsignsChanged, this,
                     &CSoundcardSampleProvider::receivingCallsignsChanged);
             m_receiverInputs.push_back(transceiverInput);

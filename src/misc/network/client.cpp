@@ -85,7 +85,7 @@ namespace swift::misc::network
     QVariant CClient::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCapabilities: return QVariant::fromValue(m_capabilities);
@@ -110,7 +110,7 @@ namespace swift::misc::network
             (*this) = variant.value<CClient>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCapabilities: m_capabilities = variant.toInt(); break;

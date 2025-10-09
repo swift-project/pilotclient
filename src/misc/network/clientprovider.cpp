@@ -206,7 +206,7 @@ namespace swift::misc::network
 
     CClientProviderDummy *CClientProviderDummy::instance()
     {
-        static CClientProviderDummy *dummy = new CClientProviderDummy();
+        static auto dummy = new CClientProviderDummy();
         return dummy;
     }
 } // namespace swift::misc::network

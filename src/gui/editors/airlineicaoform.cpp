@@ -161,7 +161,7 @@ namespace swift::gui::editors
             CVariant jsonVariant;
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CAirlineIcaoCodeList>()) { return; }
-            const CAirlineIcaoCodeList icaos = jsonVariant.value<CAirlineIcaoCodeList>();
+            const auto icaos = jsonVariant.value<CAirlineIcaoCodeList>();
             if (!icaos.isEmpty()) { this->setValue(icaos.front()); }
         }
         catch (const CJsonException &ex)
@@ -176,7 +176,7 @@ namespace swift::gui::editors
         if (variantDropped.canConvert<CAirlineIcaoCode>()) { icao = variantDropped.value<CAirlineIcaoCode>(); }
         else if (variantDropped.canConvert<CAirlineIcaoCodeList>())
         {
-            const CAirlineIcaoCodeList icaoList(variantDropped.value<CAirlineIcaoCodeList>());
+            const auto icaoList(variantDropped.value<CAirlineIcaoCodeList>());
             if (icaoList.isEmpty()) { return; }
             icao = icaoList.front();
         }

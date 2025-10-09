@@ -59,7 +59,7 @@ namespace swift::misc
             if (m_provider == provider) { return; }
             if (m_provider) { m_lastProviderConnections.disconnectAll(); }
             m_provider = provider; // new provider
-            IProvider *iProvider = dynamic_cast<IProvider *>(provider);
+            auto iProvider = dynamic_cast<IProvider *>(provider);
             if (iProvider && iProvider->asQObject())
             {
                 QMetaObject::Connection con = QObject::connect(iProvider->asQObject(), &QObject::destroyed,

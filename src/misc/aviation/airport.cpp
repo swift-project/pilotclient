@@ -93,7 +93,7 @@ namespace swift::misc::aviation
     QVariant CAirport::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIcao: return m_icao.propertyByIndex(index.copyFrontRemoved());
@@ -116,7 +116,7 @@ namespace swift::misc::aviation
             (*this) = variant.value<CAirport>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIcao: m_icao.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -140,7 +140,7 @@ namespace swift::misc::aviation
         {
             return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIcao: return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());

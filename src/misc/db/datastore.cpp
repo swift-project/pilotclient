@@ -94,7 +94,7 @@ namespace swift::misc::db
     QVariant IDatastoreObjectWithIntegerKey::propertyByIndex(CPropertyIndexRef index) const
     {
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbIntegerKey: return QVariant::fromValue(m_dbKey);
@@ -114,7 +114,7 @@ namespace swift::misc::db
             ITimestampBased::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbIntegerKey: m_dbKey = variant.toInt(); break;
@@ -131,7 +131,7 @@ namespace swift::misc::db
         {
             return ITimestampBased::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbKeyAsString: // fall thru
@@ -194,7 +194,7 @@ namespace swift::misc::db
     QVariant IDatastoreObjectWithStringKey::propertyByIndex(CPropertyIndexRef index) const
     {
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbKeyAsString: // fall thru
@@ -214,7 +214,7 @@ namespace swift::misc::db
             ITimestampBased::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbStringKey:
@@ -232,7 +232,7 @@ namespace swift::misc::db
         {
             return ITimestampBased::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbKeyAsString: // fall thru

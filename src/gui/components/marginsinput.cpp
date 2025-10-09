@@ -20,7 +20,7 @@ namespace swift::gui::components
         connect(ui->le_Right, &QLineEdit::returnPressed, this, &CMarginsInput::confirmed);
         connect(ui->le_Top, &QLineEdit::returnPressed, this, &CMarginsInput::confirmed);
 
-        QIntValidator *v = new QIntValidator(0, 100, this);
+        auto *v = new QIntValidator(0, 100, this);
         ui->le_Bottom->setValidator(v);
         ui->le_Left->setValidator(v);
         ui->le_Right->setValidator(v);

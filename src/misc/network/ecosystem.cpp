@@ -71,7 +71,7 @@ namespace swift::misc::network
     QVariant CEcosystem::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSystem: return QVariant::fromValue(m_system);
@@ -87,7 +87,7 @@ namespace swift::misc::network
             (*this) = variant.value<CEcosystem>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSystem: m_system = variant.toInt(); break;
@@ -98,7 +98,7 @@ namespace swift::misc::network
     int CEcosystem::comparePropertyByIndex(CPropertyIndexRef index, const CEcosystem &compareValue) const
     {
         if (index.isMyself()) { return Compare::compare(m_system, compareValue.m_system); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSystem: return Compare::compare(m_system, compareValue.m_system);

@@ -36,7 +36,7 @@ namespace swift::gui::menus
 
     CAircraftModelView *IAircraftModelViewMenu::modelView() const
     {
-        CAircraftModelView *mv = qobject_cast<CAircraftModelView *>(parent());
+        auto *mv = qobject_cast<CAircraftModelView *>(parent());
         Q_ASSERT_X(mv, Q_FUNC_INFO, "no view");
         return mv;
     }

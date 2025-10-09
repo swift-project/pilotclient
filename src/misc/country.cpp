@@ -106,7 +106,7 @@ namespace swift::misc
     QVariant CCountry::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIsoCode: return QVariant::fromValue(m_dbKey);
@@ -130,7 +130,7 @@ namespace swift::misc
             (*this) = variant.value<CCountry>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIsoCode: this->setIsoCode(variant.toString()); break;
@@ -154,7 +154,7 @@ namespace swift::misc
         {
             return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIsoCode: return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive);

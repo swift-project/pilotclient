@@ -35,7 +35,7 @@ namespace swift::gui::components
 
     const QPixmap &CCockpitInfoAreaComponent::indexToPixmap(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaAudio: return CIcons::appAudio16();

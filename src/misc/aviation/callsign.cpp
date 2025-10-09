@@ -310,7 +310,7 @@ namespace swift::misc::aviation
     QVariant CCallsign::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsignString: return QVariant(this->asString());
@@ -328,7 +328,7 @@ namespace swift::misc::aviation
             (*this) = variant.value<CCallsign>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsignString: m_callsign = unifyCallsign(variant.toString()); break;
@@ -341,7 +341,7 @@ namespace swift::misc::aviation
     int CCallsign::comparePropertyByIndex(CPropertyIndexRef index, const CCallsign &compareValue) const
     {
         if (index.isMyself()) { return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsignString: return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);

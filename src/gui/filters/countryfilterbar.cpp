@@ -25,7 +25,7 @@ namespace swift::gui::filters
         connect(ui->le_IsoCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
         connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
+        auto *ucv = new CUpperCaseValidator(this);
         ui->le_IsoCode->setValidator(ucv);
 
         // reset form

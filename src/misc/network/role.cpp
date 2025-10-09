@@ -26,7 +26,7 @@ namespace swift::misc::network
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexName: return QVariant::fromValue(m_name);
@@ -48,7 +48,7 @@ namespace swift::misc::network
             IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexName: this->setName(variant.value<QString>()); break;

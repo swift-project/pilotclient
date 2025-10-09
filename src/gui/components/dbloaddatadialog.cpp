@@ -30,7 +30,7 @@ namespace swift::gui::components
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        QStringListModel *lvm = new QStringListModel(ui->lv_Entities);
+        auto *lvm = new QStringListModel(ui->lv_Entities);
         ui->comp_SimulatorSelector->setMode(CSimulatorSelector::RadioButtons);
         ui->lv_Entities->setModel(lvm);
         ui->bb_loadDataDialog->button(QDialogButtonBox::Apply)->setText("Load");

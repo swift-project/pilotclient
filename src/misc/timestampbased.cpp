@@ -154,7 +154,7 @@ namespace swift::misc
     {
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexUtcTimestamp: return QVariant::fromValue(this->getUtcTimestamp());
@@ -178,7 +178,7 @@ namespace swift::misc
     {
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexUtcTimestamp: this->setUtcTimestamp(variant.toDateTime()); return;
@@ -271,7 +271,7 @@ namespace swift::misc
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexOffsetMs:
@@ -303,7 +303,7 @@ namespace swift::misc
         }
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexOffsetMs:
@@ -329,7 +329,7 @@ namespace swift::misc
         }
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexOffsetWithUnit:

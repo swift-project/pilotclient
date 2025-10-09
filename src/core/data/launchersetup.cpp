@@ -22,7 +22,7 @@ namespace swift::core::data
     QVariant CLauncherSetup::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDBusAddress: return QVariant::fromValue(m_dBusAddress);
@@ -40,7 +40,7 @@ namespace swift::core::data
             (*this) = variant.value<CLauncherSetup>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDBusAddress: this->setDBusAddress(variant.toString()); break;

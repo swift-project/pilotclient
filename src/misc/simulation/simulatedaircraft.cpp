@@ -321,7 +321,7 @@ namespace swift::misc::simulation
     QVariant CSimulatedAircraft::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexModel: return this->getModel().propertyByIndex(index.copyFrontRemoved());
@@ -362,7 +362,7 @@ namespace swift::misc::simulation
             (*this) = variant.value<CSimulatedAircraft>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsign: m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -401,7 +401,7 @@ namespace swift::misc::simulation
         {
             return m_callsign.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getCallsign());
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsign:

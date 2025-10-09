@@ -309,7 +309,7 @@ namespace swift::gui::components
 
     void CLoginComponent::onSimulatorStatusChanged(int status)
     {
-        ISimulator::SimulatorStatus s = static_cast<ISimulator::SimulatorStatus>(status);
+        auto s = static_cast<ISimulator::SimulatorStatus>(status);
         if (!this->hasValidContexts()) { return; }
         m_simulatorConnected = s.testFlag(ISimulator::Connected);
         this->updateUiConnectState();

@@ -62,7 +62,7 @@ namespace swift::misc
         CVariant propertyByIndex(const swift::misc::CPropertyIndex &index) const
         {
             if (index.isMyself()) { return CVariant::from(*this); }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDescription: return CVariant::fromValue(this->m_description);
@@ -79,7 +79,7 @@ namespace swift::misc
                 (*this) = variant.to<CTestValueObject>();
                 return;
             }
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexDescription: this->setDescription(variant.value<QString>()); break;

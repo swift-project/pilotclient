@@ -27,7 +27,7 @@ namespace swift::misc
     QVariant CNameVariantPair::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexName: return QVariant(this->m_name);
@@ -43,7 +43,7 @@ namespace swift::misc
             (*this) = variant.value<CNameVariantPair>();
             return;
         }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
 
         // special case, handle icon and allow to set it
         // doing this in the switch gives gcc warning as IndexIcon is no member of ColumnIndex
@@ -51,7 +51,7 @@ namespace swift::misc
         {
             if (static_cast<QMetaType::Type>(variant.typeId()) == QMetaType::Int)
             {
-                CIcons::IconIndex iconIndex = variant.value<CIcons::IconIndex>();
+                const auto iconIndex = variant.value<CIcons::IconIndex>();
                 this->m_icon = CIcon::iconByIndex(iconIndex);
             }
             else { this->m_icon = variant.value<swift::misc::CIcon>(); }

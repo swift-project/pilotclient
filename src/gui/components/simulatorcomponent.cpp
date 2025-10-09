@@ -214,7 +214,7 @@ namespace swift::gui::components
 
     void CSimulatorComponent::onSimulatorStatusChanged(int status)
     {
-        ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
+        auto simStatus = static_cast<ISimulator::SimulatorStatus>(status);
         this->clear(); // clean up, will be refreshed
         if (simStatus.testFlag(ISimulator::Connected))
         {

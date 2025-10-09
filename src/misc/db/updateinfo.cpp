@@ -100,7 +100,7 @@ namespace swift::misc::db
     QVariant CUpdateInfo::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexArtifactsPilotClient: return QVariant::fromValue(m_artifactsPilotClient);
@@ -117,7 +117,7 @@ namespace swift::misc::db
             (*this) = variant.value<CUpdateInfo>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexArtifactsPilotClient: m_artifactsPilotClient = variant.value<CArtifactList>(); break;

@@ -129,7 +129,7 @@ namespace MiscTest
         CVariant variant = CVariant::from(ints);
         QVERIFY2(variant.canConvert<CVariantList>(), "Variant containing list can convert to CVariantList");
         QVERIFY2(variant.convert(qMetaTypeId<CVariantList>()), "Variant containing list can convert to CVariantList");
-        const CVariantList variantInts = variant.to<CVariantList>();
+        const auto variantInts = variant.to<CVariantList>();
         QVERIFY2(ints.size() == variantInts.size(), "Variant list has same size as original list");
         QVERIFY2(ints[0] == variantInts[0].to<int>(), "Variant list has same element");
         QVERIFY2(variant.canConvert<CSequence<int>>(), "Variant containing can convert back");
@@ -139,7 +139,7 @@ namespace MiscTest
         variant = CVariant::from(list);
         QVERIFY2(variant.canConvert<CVariantList>(), "Variant containing list can convert to CVariantList");
         QVERIFY2(variant.convert(qMetaTypeId<CVariantList>()), "Variant containing list can convert to CVariantList");
-        CVariantList variantList = variant.to<CVariantList>();
+        auto variantList = variant.to<CVariantList>();
         QVERIFY2(list.size() == variantList.size(), "Variant list has same size as original list");
         QVERIFY2(list[0] == variantList[0].to<CAirlineIcaoCode>(), "Variant list has same element");
         QVERIFY2(variant.canConvert<CAirlineIcaoCodeList>(), "Variant containing can convert back");

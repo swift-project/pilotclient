@@ -22,14 +22,14 @@ namespace swift::gui
 
     const CInfoArea *CDockWidgetInfoArea::getParentInfoArea() const
     {
-        const CInfoArea *ia = qobject_cast<const CInfoArea *>(this->parent());
+        const auto *ia = qobject_cast<const CInfoArea *>(this->parent());
         Q_ASSERT(ia);
         return ia;
     }
 
     CInfoArea *CDockWidgetInfoArea::getParentInfoArea()
     {
-        CInfoArea *ia = qobject_cast<CInfoArea *>(this->parent());
+        auto *ia = qobject_cast<CInfoArea *>(this->parent());
         Q_ASSERT(ia);
         return ia;
     }
@@ -105,7 +105,7 @@ namespace swift::gui
             Q_ASSERT(w);
 
             // CEnableForDockWidgetInfoArea is no QObject, so we use dynamic_cast
-            CEnableForDockWidgetInfoArea *dwc = dynamic_cast<CEnableForDockWidgetInfoArea *>(w);
+            auto *dwc = dynamic_cast<CEnableForDockWidgetInfoArea *>(w);
             if (dwc) { widgetsWithDockWidgetInfoAreaComponent.append(dwc); }
         }
         QList<CDockWidgetInfoArea *> nestedInfoAreas = this->findNestedInfoAreas();

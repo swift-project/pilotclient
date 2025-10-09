@@ -207,7 +207,7 @@ namespace swift::misc::aviation
     QVariant CTransponder::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMode: return QVariant::fromValue(this->getTransponderMode());
@@ -231,7 +231,7 @@ namespace swift::misc::aviation
             (*this) = variant.value<CTransponder>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMode: m_transponderMode = variant.toInt(); break;

@@ -68,7 +68,7 @@ namespace swift::gui::components
     void COtherSwiftVersionsComponent::onObjectSelected(const CVariant &object)
     {
         if (!object.canConvert<CApplicationInfo>()) { return; }
-        const CApplicationInfo info(object.value<CApplicationInfo>());
+        const auto info(object.value<CApplicationInfo>());
         emit this->versionChanged(info);
     }
 } // namespace swift::gui::components

@@ -132,7 +132,7 @@ namespace swift::misc::aviation
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexOnGroundFactor: return QVariant::fromValue(m_onGroundFactor);
@@ -149,7 +149,7 @@ namespace swift::misc::aviation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexOnGroundFactor: m_onGroundFactor = variant.toDouble(); break;

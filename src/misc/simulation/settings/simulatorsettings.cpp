@@ -140,7 +140,7 @@ namespace swift::misc::simulation::settings
     QVariant CSimulatorSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSimulatorDirectory: return QVariant::fromValue(m_simulatorDirectory);
@@ -161,7 +161,7 @@ namespace swift::misc::simulation::settings
             (*this) = variant.value<CSimulatorSettings>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSimulatorDirectory: this->setSimulatorDirectory(variant.toString()); break;
@@ -509,7 +509,7 @@ namespace swift::misc::simulation::settings
     QVariant CSimulatorMessagesSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTechnicalLogSeverity: return QVariant::fromValue(m_technicalLogLevel);
@@ -526,7 +526,7 @@ namespace swift::misc::simulation::settings
             (*this) = variant.value<CSimulatorMessagesSettings>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTechnicalLogSeverity:

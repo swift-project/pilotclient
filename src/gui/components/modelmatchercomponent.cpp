@@ -214,7 +214,7 @@ namespace swift::gui::components
     {
         if (!m_settingsDialog) { m_settingsDialog = new CSettingsMatchingDialog(this); }
         m_settingsDialog->setMatchingSetup(m_matcher.getSetup());
-        const QDialog::DialogCode r = static_cast<QDialog::DialogCode>(m_settingsDialog->exec());
+        const auto r = static_cast<QDialog::DialogCode>(m_settingsDialog->exec());
         if (r == QDialog::Accepted) { m_matcher.setSetup(m_settingsDialog->getMatchingSetup()); }
     }
 

@@ -756,7 +756,7 @@ namespace swift::core
             {
                 if (ms.isQObject())
                 {
-                    const MSInOutValues *reverseModelProcessed = qobject_cast<const MSInOutValues *>(ms.toQObject());
+                    const auto *reverseModelProcessed = qobject_cast<const MSInOutValues *>(ms.toQObject());
                     logMessage = reverseModelProcessed->getLogMessage();
                     if (!reverseModelProcessed->isModified()) { break; }
 

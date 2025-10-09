@@ -273,7 +273,7 @@ namespace swift::misc::aviation
         }
         if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
@@ -313,7 +313,7 @@ namespace swift::misc::aviation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPosition: m_position.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -346,7 +346,7 @@ namespace swift::misc::aviation
         {
             return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPosition:

@@ -54,7 +54,7 @@ namespace swift::core::data
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexFsdServers: return QVariant::fromValue(this->m_fsdServers);
@@ -76,7 +76,7 @@ namespace swift::core::data
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexFsdServers: this->m_fsdServers = variant.value<CServerList>(); break;

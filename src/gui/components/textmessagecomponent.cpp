@@ -477,12 +477,12 @@ namespace swift::gui::components
         const QString tabName = callsign.asString();
         const QString style = this->getStyleSheet();
         const bool supervisor = callsign.isSupervisorCallsign();
-        QWidget *newTabWidget = new QWidget(this);
+        auto *newTabWidget = new QWidget(this);
         newTabWidget->setObjectName(u"Tab widget " % tabName);
         newTabWidget->setProperty("callsign", callsign.asString());
-        QPushButton *closeButton = new QPushButton("Close", newTabWidget);
-        QVBoxLayout *layout = new QVBoxLayout(newTabWidget);
-        CTextMessageTextEdit *textEdit = new CTextMessageTextEdit(newTabWidget);
+        auto *closeButton = new QPushButton("Close", newTabWidget);
+        auto *layout = new QVBoxLayout(newTabWidget);
+        auto *textEdit = new CTextMessageTextEdit(newTabWidget);
         textEdit->setObjectName("tep_" + tabName);
         int marginLeft, marginRight, marginTop, marginBottom;
         ui->tb_TextMessagesAll->layout()->getContentsMargins(&marginLeft, &marginTop, &marginRight, &marginBottom);
@@ -495,7 +495,7 @@ namespace swift::gui::components
         textEdit->setStyleSheetForContent(style);
 
         const int index = ui->tw_TextMessages->addTab(newTabWidget, this->getCallsignAndRealName(callsign));
-        QToolButton *closeButtonInTab = new QToolButton(newTabWidget);
+        auto *closeButtonInTab = new QToolButton(newTabWidget);
         closeButtonInTab->setText("[X]");
         closeButtonInTab->setProperty("supervisormsg", supervisor);
         QTabBar *bar = ui->tw_TextMessages->tabBar();
@@ -570,7 +570,7 @@ namespace swift::gui::components
         const QWidget *tab = this->findTextMessageTabByCallsign(cs);
         if (!tab) { tab = this->addNewTextMessageTab(cs); }
         Q_ASSERT_X(tab, Q_FUNC_INFO, "Missing tab");
-        CTextMessageTextEdit *textEdit = tab->findChild<CTextMessageTextEdit *>();
+        auto *textEdit = tab->findChild<CTextMessageTextEdit *>();
         SWIFT_VERIFY_X(textEdit, Q_FUNC_INFO, "Missing text edit");
         if (!textEdit) { return; } // do not crash, though this situation should not happen
         textEdit->insertTextMessage(textMessage);

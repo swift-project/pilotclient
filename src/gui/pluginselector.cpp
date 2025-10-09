@@ -21,7 +21,7 @@ namespace swift::gui
     {
         setObjectName("CPluginSelector");
 
-        QVBoxLayout *layout = new QVBoxLayout;
+        auto *layout = new QVBoxLayout;
         setLayout(layout);
 
         connect(m_configButtonMapper, &QSignalMapper::mappedString, this, &CPluginSelector::pluginConfigRequested);
@@ -33,12 +33,12 @@ namespace swift::gui
         SWIFT_VERIFY_X(!identifier.isEmpty(), Q_FUNC_INFO, "Missing identifier");
         if (identifier.isEmpty()) { return; }
 
-        QWidget *pw = new QWidget;
-        QHBoxLayout *layout = new QHBoxLayout;
+        auto *pw = new QWidget;
+        auto *layout = new QHBoxLayout;
         layout->setContentsMargins(0, 0, 0, 0);
         pw->setLayout(layout);
 
-        QCheckBox *cb = new QCheckBox(name);
+        auto *cb = new QCheckBox(name);
         cb->setObjectName(identifier);
         cb->setProperty("pluginIdentifier", identifier);
         connect(cb, &QCheckBox::checkStateChanged, this, &CPluginSelector::handlePluginStateChange);
@@ -49,7 +49,7 @@ namespace swift::gui
 
         if (hasConfig)
         {
-            QPushButton *config = new QPushButton(swift::misc::CIcons::wrench16(), "");
+            auto *config = new QPushButton(swift::misc::CIcons::wrench16(), "");
             config->setToolTip("Plugin configuration");
             m_configButtonMapper->setMapping(config, identifier);
             connect(config, &QPushButton::clicked, m_configButtonMapper, qOverload<>(&QSignalMapper::map));
@@ -64,14 +64,14 @@ namespace swift::gui
 
     void CPluginSelector::setEnabled(const QString &identifier, bool enabled)
     {
-        QCheckBox *cb = findChild<QCheckBox *>(identifier);
+        auto *cb = findChild<QCheckBox *>(identifier);
         Q_ASSERT(cb);
         cb->setChecked(enabled);
     }
 
     void CPluginSelector::handlePluginStateChange()
     {
-        QCheckBox *cb = qobject_cast<QCheckBox *>(sender());
+        auto *cb = qobject_cast<QCheckBox *>(sender());
         Q_ASSERT(cb);
 
         bool enabled = cb->checkState() != Qt::Unchecked;

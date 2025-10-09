@@ -54,7 +54,7 @@ namespace swift::gui::components
             m_fontSettingsDialog->setWithColorSelection(false);
         }
 
-        const QDialog::DialogCode r = static_cast<QDialog::DialogCode>(m_fontSettingsDialog->exec());
+        const auto r = static_cast<QDialog::DialogCode>(m_fontSettingsDialog->exec());
         if (r == QDialog::Accepted)
         {
             const QStringList familySizeStyle = this->getFamilySizeStyle();
@@ -72,7 +72,7 @@ namespace swift::gui::components
         }
 
         m_textEditDialog->textEdit()->setPlainText(m_style);
-        const QDialog::DialogCode r = static_cast<QDialog::DialogCode>(m_textEditDialog->exec());
+        const auto r = static_cast<QDialog::DialogCode>(m_textEditDialog->exec());
         if (r == QDialog::Accepted)
         {
             m_style = m_textEditDialog->textEdit()->toPlainText();

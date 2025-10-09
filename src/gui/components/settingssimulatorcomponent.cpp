@@ -377,7 +377,7 @@ namespace swift::gui::components
         const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
 
         const QString configId = m_plugins->getPluginConfigId(selected.getIdentifier());
-        IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
+        auto *config = m_plugins->getPluginById<IPluginConfig>(configId);
         SWIFT_VERIFY_X(config, Q_FUNC_INFO, "Missing config");
         if (!config) { return; }
 

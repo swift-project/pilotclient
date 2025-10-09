@@ -50,8 +50,8 @@ namespace swift::gui::models
             QList<QStandardItem *> categoryRow;
 
             // ownership of QStandardItem is taken by model
-            QStandardItem *si = new QStandardItem(category.isAssignable() ? CIcons::paperPlane16() : CIcons::folder16(),
-                                                  category.getLevelAndName());
+            auto *si = new QStandardItem(category.isAssignable() ? CIcons::paperPlane16() : CIcons::folder16(),
+                                         category.getLevelAndName());
             si->setEditable(false);
             categoryRow.push_back(si);
 

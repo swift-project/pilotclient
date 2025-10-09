@@ -222,7 +222,7 @@ namespace swift::misc::network
         if (started.isValid() && started.canConvert<qint64>())
         {
             const qint64 now = QDateTime::currentMSecsSinceEpoch();
-            const qint64 start = started.value<qint64>();
+            const auto start = started.value<qint64>();
             return (now - start);
         }
         return -1;

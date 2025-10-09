@@ -33,7 +33,7 @@ namespace swift::misc::input
             (*this) = variant.value<CJoystickButton>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDeviceName: this->setDeviceName(variant.value<QString>()); break;
@@ -47,7 +47,7 @@ namespace swift::misc::input
     QVariant CJoystickButton::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDeviceName: return QVariant::fromValue(this->getDeviceName());

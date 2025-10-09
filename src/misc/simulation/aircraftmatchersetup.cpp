@@ -96,7 +96,7 @@ namespace swift::misc::simulation
     QVariant CAircraftMatcherSetup::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMatchingAlgorithm: return QVariant::fromValue(m_algorithm);
@@ -119,7 +119,7 @@ namespace swift::misc::simulation
             (*this) = variant.value<CAircraftMatcherSetup>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMatchingAlgorithm: m_algorithm = variant.toInt(); break;

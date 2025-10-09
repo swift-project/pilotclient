@@ -194,7 +194,7 @@ namespace SwiftFsdTest
 
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
-        CTextMessageList messages = arguments.at(0).value<CTextMessageList>();
+        auto messages = arguments.at(0).value<CTextMessageList>();
         QCOMPARE(messages.size(), 1);
         CTextMessage message = messages.front();
         QCOMPARE(message.getMessage(), "Hey how are you doing?");
@@ -216,7 +216,7 @@ namespace SwiftFsdTest
 
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
-        CTextMessageList receivedMessages = arguments.at(0).value<CTextMessageList>();
+        auto receivedMessages = arguments.at(0).value<CTextMessageList>();
         QCOMPARE(receivedMessages.size(), 1);
         CTextMessage message = receivedMessages.front();
         QCOMPARE(message.getMessage(), text);
@@ -247,7 +247,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:EDLW_TWR:ATIS");
     }
 
@@ -293,8 +293,8 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 2);
-        const CAircraftSituation situation = arguments.at(0).value<CAircraftSituation>();
-        const CTransponder transponder = arguments.at(1).value<CTransponder>();
+        const auto situation = arguments.at(0).value<CAircraftSituation>();
+        const auto transponder = arguments.at(1).value<CTransponder>();
 
         QCOMPARE(situation.getCallsign().asString(), "ABCD");
         QCOMPARE(transponder.getTransponderMode(), CTransponder::ModeC);
@@ -390,7 +390,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 2);
-        CClient::Capabilities caps = arguments.at(1).value<swift::misc::network::CClient::Capabilities>();
+        auto caps = arguments.at(1).value<swift::misc::network::CClient::Capabilities>();
         QVERIFY(caps.testFlag(CClient::FsdWithAircraftConfig));
     }
 
@@ -433,7 +433,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#APABCD:SERVER:1234567:123456:1:101:16:Test User");
     }
 
@@ -447,7 +447,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#AAABCD:SERVER:Test User:1234567:123456:5:101");
     }
 
@@ -460,7 +460,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#DPABCD:1234567");
     }
 
@@ -473,7 +473,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#DAABCD:1234567");
     }
 
@@ -503,7 +503,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 2);
         const QList<QVariant> arguments = spy.takeLast();
         QCOMPARE(arguments.size(), 1);
-        const CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        const auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         const QString fsdRawMessage = fsdMessage.getRawMessage();
 
         // PilotRating::Student
@@ -536,7 +536,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 2);
         QList<QVariant> arguments = spy.takeLast();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
 
         // changed after we changed to PB inversion to *-1
         // now also Pilot rating to Student
@@ -570,7 +570,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 2);
         QList<QVariant> arguments = spy.takeLast();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
 
         // changed after we changed to PB inversion to *-1
         // pilot rating now STUDENT
@@ -585,7 +585,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>%ABCD:99998:0:300:1:48.11028:8.56972:0");
     }
 
@@ -597,7 +597,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QVERIFY(fsdMessage.getRawMessage().contains("FSD Sent=>$PIABCD:SERVER:"));
     }
 
@@ -609,7 +609,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$POABCD:SERVER:123456789");
     }
 
@@ -621,7 +621,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CRABCD:ZZZZ_TWR:RN:Test User::1");
     }
 
@@ -633,7 +633,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CRABCD:ZZZZ_TWR:CAPS:ATCINFO=1:MODELDESC=1:ACCONFIG=1");
     }
 
@@ -645,7 +645,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:ZZZZ_TWR:RN");
     }
 
@@ -657,7 +657,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:SERVER:ATC:EDDM_TWR");
     }
 
@@ -669,7 +669,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:DLH123:ACC:{\"request\":\"full\"}");
     }
 
@@ -681,7 +681,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#TMABCD:ZZZZ_TWR:hey dude!");
     }
 
@@ -693,7 +693,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#TMABCD:*S:Please help!!!");
     }
 
@@ -706,7 +706,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#TMABCD:@24050:hey dude!");
     }
 
@@ -719,7 +719,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#TMABCD:@24050&@35725:hey dude!");
     }
 
@@ -741,7 +741,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(
             fsdMessage.getRawMessage(),
             "FSD Sent=>$FPABCD:SERVER:V:H/B744/L:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:UNIT TEST:EGLL.KORD");
@@ -768,7 +768,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(
             fsdMessage.getRawMessage(),
             "FSD Sent=>$FPABCD:SERVER:V:B748/H-SDE3FGHIM1M2RWXY/LB1:420:EGLL:1530:1535:FL350:KORD:8:15:9:30:NONE:UNIT "
@@ -783,7 +783,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#SBABCD:XYZ:PIR");
     }
 
@@ -795,7 +795,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#SBABCD:XYZ:PI:GEN:EQUIPMENT=B744:AIRLINE=BAW");
     }
 
@@ -807,7 +807,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#SBABCD:XYZ:PI:GEN:EQUIPMENT=B744:AIRLINE=BAW:LIVERY=UNION");
     }
 
@@ -819,7 +819,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#SBABCD:XYZ:PI:GEN:EQUIPMENT=B744");
     }
 
@@ -831,19 +831,19 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#SBABCD:XYZ:PI:GEN:LIVERY=UNION");
     }
 
     void CTestFSDClient::testSendAircraftConfiguration()
     {
         QSignalSpy spy(m_client, &CFSDClient::rawFsdMessage);
-        m_client->sendAircraftConfiguration("XYZ", "{\"request\":\"full\"}");
+        m_client->sendAircraftConfiguration("XYZ", R"({"request":"full"})");
 
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:XYZ:ACC:{\"request\":\"full\"}");
     }
 
@@ -860,7 +860,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 1);
         QList<QVariant> arguments = spy.takeFirst();
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CQABCD:@94836:ACC:{\"config\":{\"gear_down\":true}}");
     }
 
@@ -872,7 +872,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 2);
         QList<QVariant> arguments = spy.takeAt(1);
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>$CRABCD:EDMM_CTR:C?:123.000");
     }
 
@@ -884,7 +884,7 @@ namespace SwiftFsdTest
         QCOMPARE(spy.count(), 2);
         QList<QVariant> arguments = spy.takeAt(1);
         QCOMPARE(arguments.size(), 1);
-        CRawFsdMessage fsdMessage = arguments.at(0).value<CRawFsdMessage>();
+        auto fsdMessage = arguments.at(0).value<CRawFsdMessage>();
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#SBABCD:EDMM_CTR:PI:GEN:EQUIPMENT=B737:AIRLINE=BER");
     }
 

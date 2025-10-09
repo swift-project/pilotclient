@@ -588,7 +588,7 @@ namespace swift::core::context
         if (!m_voiceClient) { return; }
 
         const CCallsign cs = m_voiceClient->getCallsign();
-        const CAfvClient::ConnectionStatus s = static_cast<CAfvClient::ConnectionStatus>(status);
+        const auto s = static_cast<CAfvClient::ConnectionStatus>(status);
 
         switch (s)
         {

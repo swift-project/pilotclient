@@ -109,7 +109,7 @@ namespace swift::misc::network
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexVatsimId: return QVariant::fromValue(m_vatsimId);
@@ -133,7 +133,7 @@ namespace swift::misc::network
             IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexVatsimId: this->setVatsimId(variant.toInt()); break;

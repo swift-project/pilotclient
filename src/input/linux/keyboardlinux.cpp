@@ -159,7 +159,7 @@ namespace swift::input
     {
         struct input_event eventInput;
 
-        QFile *fileInput = qobject_cast<QFile *>(sender()->parent());
+        auto fileInput = qobject_cast<QFile *>(sender()->parent());
         if (!fileInput) return;
 
         bool found = false;

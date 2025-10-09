@@ -89,7 +89,7 @@ namespace swift::gui::components
         CGuiUtility::deleteLayout(ui->fr_NavigatorDialogInner->layout(), false);
 
         // new layout
-        QGridLayout *gridLayout = new QGridLayout(ui->fr_NavigatorDialogInner);
+        auto *gridLayout = new QGridLayout(ui->fr_NavigatorDialogInner);
         gridLayout->setObjectName("gl_CNavigatorDialog");
         gridLayout->setSpacing(0);
         gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -101,7 +101,7 @@ namespace swift::gui::components
         for (QAction *action : this->actions())
         {
             if (!action) { continue; }
-            QToolButton *tb = new QToolButton(ui->fr_NavigatorDialogInner);
+            auto *tb = new QToolButton(ui->fr_NavigatorDialogInner);
             tb->setDefaultAction(action);
             tb->setObjectName(this->objectName() % u':' % action->objectName());
             if (!action->text().isEmpty()) { tb->setToolTip(action->text()); }
@@ -266,7 +266,7 @@ namespace swift::gui::components
 
     void CNavigatorDialog::changeLayout()
     {
-        QAction *a = qobject_cast<QAction *>(QObject::sender());
+        auto *a = qobject_cast<QAction *>(QObject::sender());
         if (!a) { return; }
         QString v(a->data().toString());
         if (v == "1c") { buildNavigator(1); }

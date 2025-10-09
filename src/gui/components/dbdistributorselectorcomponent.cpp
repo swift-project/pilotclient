@@ -147,13 +147,13 @@ namespace swift::gui::components
         {
             if (valueVariant.canConvert<CDistributor>())
             {
-                CDistributor distributor(valueVariant.value<CDistributor>());
+                auto distributor(valueVariant.value<CDistributor>());
                 if (!distributor.hasValidDbKey()) { return; }
                 this->setDistributor(distributor);
             }
             else if (valueVariant.canConvert<CDistributorList>())
             {
-                CDistributorList distributors(valueVariant.value<CDistributorList>());
+                auto distributors(valueVariant.value<CDistributorList>());
                 if (distributors.isEmpty()) { return; }
                 this->setDistributor(distributors.front());
             }
@@ -170,7 +170,7 @@ namespace swift::gui::components
             {
                 const QStringList keysAndAliases(
                     sGui->getWebDataServices()->getDistributors().getDbKeysAndAliases(true));
-                QCompleter *c = new QCompleter(keysAndAliases, this);
+                auto *c = new QCompleter(keysAndAliases, this);
                 c->setCaseSensitivity(Qt::CaseInsensitive);
                 c->setCompletionMode(QCompleter::PopupCompletion);
                 c->setMaxVisibleItems(10);

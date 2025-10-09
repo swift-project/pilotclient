@@ -49,7 +49,7 @@ namespace swift::gui::settings
     QVariant CNavigatorSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMargins: return QVariant::fromValue(this->m_margins);
@@ -67,7 +67,7 @@ namespace swift::gui::settings
             return;
         }
 
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMargins: this->m_margins = variant.toString(); break;

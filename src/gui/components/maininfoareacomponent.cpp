@@ -78,7 +78,7 @@ namespace swift::gui::components
 
     QSize CMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaCockpit:
@@ -111,7 +111,7 @@ namespace swift::gui::components
 
     const QPixmap &CMainInfoAreaComponent::indexToPixmap(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaCockpit: return CIcons::appCockpit16();

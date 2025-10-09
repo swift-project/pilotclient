@@ -70,7 +70,7 @@ namespace swift::misc::network
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexName: return QVariant::fromValue(m_name);
@@ -93,7 +93,7 @@ namespace swift::misc::network
             ITimestampBased::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexName: this->setName(variant.value<QString>()); break;

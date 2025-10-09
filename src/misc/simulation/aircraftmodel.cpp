@@ -248,7 +248,7 @@ namespace swift::misc::simulation
         }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexModelString: return QVariant(m_modelString);
@@ -296,7 +296,7 @@ namespace swift::misc::simulation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexModelString: m_modelString = variant.toString(); break;
@@ -347,7 +347,7 @@ namespace swift::misc::simulation
         }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
         if (index.isMyself()) { return m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexModelString: return m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive);

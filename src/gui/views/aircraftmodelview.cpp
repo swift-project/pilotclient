@@ -49,7 +49,7 @@ namespace swift::gui::views
         this->setSettingsDirectoryIndex(CDirectories::IndexDirLastModelJsonOrDefault);
 
         // shortcut
-        QShortcut *stashShortcut = new QShortcut(CShortcut::keyStash(), this);
+        auto *stashShortcut = new QShortcut(CShortcut::keyStash(), this);
         stashShortcut->setContext(Qt::WidgetShortcut);
         connect(stashShortcut, &QShortcut::activated, this, &CAircraftModelView::requestedStash);
 
@@ -222,7 +222,7 @@ namespace swift::gui::views
             {
                 if (valueVariant.canConvert<CAircraftModel>())
                 {
-                    const CAircraftModel model = valueVariant.value<CAircraftModel>();
+                    const auto model = valueVariant.value<CAircraftModel>();
                     if (!model.hasModelString()) { return; }
                     const CAircraftModelList models({ model });
                     this->derivedModel()->replaceOrAddByModelString(models);
@@ -230,7 +230,7 @@ namespace swift::gui::views
                 }
                 else if (valueVariant.canConvert<CAircraftModelList>())
                 {
-                    const CAircraftModelList models(valueVariant.value<CAircraftModelList>());
+                    const auto models(valueVariant.value<CAircraftModelList>());
                     if (models.isEmpty()) { return; }
                     this->derivedModel()->replaceOrAddByModelString(models);
                     return;
@@ -240,13 +240,13 @@ namespace swift::gui::views
                 if (!this->hasSelection()) { return; }
                 if (valueVariant.canConvert<CAircraftIcaoCode>())
                 {
-                    const CAircraftIcaoCode icao = valueVariant.value<CAircraftIcaoCode>();
+                    const auto icao = valueVariant.value<CAircraftIcaoCode>();
                     if (icao.validate().hasErrorMessages()) { return; }
                     this->applyToSelected(icao);
                 }
                 else if (valueVariant.canConvert<CAircraftIcaoCodeList>())
                 {
-                    const CAircraftIcaoCodeList icaos(valueVariant.value<CAircraftIcaoCodeList>());
+                    const auto icaos(valueVariant.value<CAircraftIcaoCodeList>());
                     if (icaos.size() != 1) { return; }
                     const CAircraftIcaoCode icao = icaos.front();
                     if (icao.validate().hasErrorMessages()) { return; }
@@ -254,13 +254,13 @@ namespace swift::gui::views
                 }
                 else if (valueVariant.canConvert<CLivery>())
                 {
-                    const CLivery livery = valueVariant.value<CLivery>();
+                    const auto livery = valueVariant.value<CLivery>();
                     if (livery.validate().hasErrorMessages()) { return; }
                     this->applyToSelected(livery);
                 }
                 else if (valueVariant.canConvert<CLiveryList>())
                 {
-                    const CLiveryList liveries(valueVariant.value<CLiveryList>());
+                    const auto liveries(valueVariant.value<CLiveryList>());
                     if (liveries.size() != 1) { return; }
                     const CLivery livery = liveries.front();
                     if (livery.validate().hasErrorMessages()) { return; }
@@ -268,13 +268,13 @@ namespace swift::gui::views
                 }
                 else if (valueVariant.canConvert<CDistributor>())
                 {
-                    const CDistributor distributor = valueVariant.value<CDistributor>();
+                    const auto distributor = valueVariant.value<CDistributor>();
                     if (distributor.validate().hasErrorMessages()) { return; }
                     this->applyToSelected(distributor);
                 }
                 else if (valueVariant.canConvert<CDistributorList>())
                 {
-                    const CDistributorList distributors(valueVariant.value<CDistributorList>());
+                    const auto distributors(valueVariant.value<CDistributorList>());
                     if (distributors.size() != 1) { return; }
                     const CDistributor distributor = distributors.front();
                     if (distributor.validate().hasErrorMessages()) { return; }
@@ -282,14 +282,14 @@ namespace swift::gui::views
                 }
                 else if (valueVariant.canConvert<CAirlineIcaoCode>())
                 {
-                    const CAirlineIcaoCode airline = valueVariant.value<CAirlineIcaoCode>();
+                    const auto airline = valueVariant.value<CAirlineIcaoCode>();
                     if (airline.validate().hasErrorMessages()) { return; }
                     emit requestHandlingOfStashDrop(
                         airline); // I need to convert to stanard livery, which I can`t do here
                 }
                 else if (valueVariant.canConvert<CAirlineIcaoCodeList>())
                 {
-                    const CAirlineIcaoCodeList airlines(valueVariant.value<CAirlineIcaoCodeList>());
+                    const auto airlines(valueVariant.value<CAirlineIcaoCodeList>());
                     if (airlines.size() != 1) { return; }
                     const CAirlineIcaoCode airline = airlines.front();
                     if (airline.validate().hasErrorMessages()) { return; }

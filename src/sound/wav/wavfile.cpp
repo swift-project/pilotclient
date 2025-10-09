@@ -109,7 +109,7 @@ namespace swift::sound::wav
 
         if (memcmp(&dataHeader.descriptor.id, "data", 4) == 0)
         {
-            const qint32 dataLength = qFromLittleEndian<qint32>(dataHeader.descriptor.size);
+            const auto dataLength = qFromLittleEndian<qint32>(dataHeader.descriptor.size);
             m_audioData = read(dataLength);
             if (m_audioData.size() != dataLength)
             {

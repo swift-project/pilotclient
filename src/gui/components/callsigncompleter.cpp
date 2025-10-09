@@ -28,7 +28,7 @@ namespace swift::gui::components
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         Q_ASSERT_X(sGui->getIContextNetwork(), Q_FUNC_INFO, "Need network context");
         ui->setupUi(this);
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(ui->le_Callsign);
+        auto *ucv = new CUpperCaseValidator(ui->le_Callsign);
         ui->le_Callsign->setValidator(ucv);
         ui->le_Callsign->setCompleter(*completer());
         ui->led_Status->setToolTips("connected", "disconnected");
@@ -129,7 +129,7 @@ namespace swift::gui::components
 
     CSharedStringListCompleter *CCallsignCompleter::completer()
     {
-        static CSharedStringListCompleter *c = new CSharedStringListCompleter();
+        static auto *c = new CSharedStringListCompleter();
         return c;
     }
 } // namespace swift::gui::components

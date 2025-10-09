@@ -76,7 +76,7 @@ namespace swift::gui::components
         const CSettingsDictionary settingsDictionary(sApp->getIContextApplication()->getUnsavedSettingsKeysDescribed());
         QStringList descriptions = settingsDictionary.values();
         descriptions.sort();
-        QStringListModel *model = new QStringListModel(descriptions, this);
+        auto *model = new QStringListModel(descriptions, this);
         ui->lv_UnsavedSettings->setModel(model);
         ui->lv_UnsavedSettings->selectAll();
 

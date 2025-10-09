@@ -285,13 +285,13 @@ namespace MiscTest
 
     void CTestPhysicalQuantities::memoryTests()
     {
-        CLength *c = new CLength(100, CLengthUnit::m());
+        auto c = new CLength(100, CLengthUnit::m());
         c->switchUnit(CLengthUnit::NM());
         QVERIFY2(c->getUnit() == CLengthUnit::NM() && CLengthUnit::defaultUnit() == CLengthUnit::m(),
                  "Testing distance units failed");
         delete c;
 
-        CAngle *a = new CAngle(100, CAngleUnit::rad());
+        auto a = new CAngle(100, CAngleUnit::rad());
         a->switchUnit(CAngleUnit::deg());
         QVERIFY2(a->getUnit() == CAngleUnit::deg() && CAngleUnit::defaultUnit() == CAngleUnit::deg(),
                  "Testing angle units failed");
@@ -307,13 +307,13 @@ namespace MiscTest
         QVERIFY2(CMass(33.45, CMassUnit::kg()) == CMass("33.45000 kg"), "CMass");
 
         // parsing via variant
-        CSpeed parsedPq1 = CPqString::parseToVariant("100.123 km/h").value<CSpeed>();
+        auto parsedPq1 = CPqString::parseToVariant("100.123 km/h").value<CSpeed>();
         QVERIFY2(CSpeed(100.123, CSpeedUnit::km_h()) == parsedPq1, "Parsed speed via variant");
 
-        CLength parsedPq2 = CPqString::parseToVariant("-33.123ft").value<CLength>();
+        auto parsedPq2 = CPqString::parseToVariant("-33.123ft").value<CLength>();
         QVERIFY2(CLength(-33.123, CLengthUnit::ft()) == parsedPq2, "Parsed length via variant");
 
-        CFrequency parsedPq3 = CPqString::parse<CFrequency>("122.8MHz");
+        auto parsedPq3 = CPqString::parse<CFrequency>("122.8MHz");
         QVERIFY2(CFrequency(122.8, CFrequencyUnit::MHz()) == parsedPq3, "Parsed frequency via variant");
     }
 

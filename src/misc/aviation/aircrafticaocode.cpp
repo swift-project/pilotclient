@@ -651,7 +651,7 @@ namespace swift::misc::aviation
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAircraftDesignator: return QVariant::fromValue(m_designator);
@@ -687,7 +687,7 @@ namespace swift::misc::aviation
             IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAircraftDesignator: this->setDesignator(variant.value<QString>()); break;
@@ -714,7 +714,7 @@ namespace swift::misc::aviation
         {
             return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAircraftDesignator: return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive);

@@ -56,7 +56,7 @@ namespace swift::misc::test
 
     CTestService *CTestService::registerTestService(QDBusConnection &connection, bool verbose, QObject *parent)
     {
-        CTestService *pTestService = new CTestService(
+        const auto pTestService = new CTestService(
             verbose,
             parent); // just a QObject with signals / slots and  Q_CLASSINFO("D-Bus Interface", some service name)
         if (!connection.registerService(CTestService::InterfaceName()))

@@ -492,7 +492,7 @@ namespace swift::misc::physical_quantities
     QVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*derived()); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexValue: return QVariant::fromValue(m_value);
@@ -514,7 +514,7 @@ namespace swift::misc::physical_quantities
             (*this) = variant.value<PQ>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexValue: m_value = variant.toDouble(); break;
@@ -532,7 +532,7 @@ namespace swift::misc::physical_quantities
     int CPhysicalQuantity<MU, PQ>::comparePropertyByIndex(CPropertyIndexRef index, const PQ &pq) const
     {
         if (index.isMyself()) { return compareImpl(*derived(), pq); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexValue: return Compare::compare(m_value, pq.m_value);

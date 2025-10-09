@@ -93,8 +93,7 @@ namespace swift::gui::components
         const QModelIndex indexHotkey = model->index(index.row(), 0, QModelIndex());
         Q_ASSERT_X(indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).canConvert<CActionHotkey>(), Q_FUNC_INFO,
                    "No action hotkey");
-        const CActionHotkey actionHotkey =
-            indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
+        const auto actionHotkey = indexHotkey.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
         const CActionHotkey selectedActionHotkey =
             CHotkeyDialog::getActionHotkey(actionHotkey, getAllIdentifiers(), this);
         if (selectedActionHotkey.isValid() && checkAndConfirmConflicts(selectedActionHotkey, { actionHotkey }))
@@ -115,8 +114,7 @@ namespace swift::gui::components
         const QModelIndexList indexes = ui->tv_Hotkeys->selectionModel()->selectedRows();
         for (const auto &index : indexes)
         {
-            const CActionHotkey actionHotkey =
-                index.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
+            const auto actionHotkey = index.data(CActionHotkeyListModel::ActionHotkeyRole).value<CActionHotkey>();
             removeHotkeyFromSettings(actionHotkey);
             m_model.removeRows(index.row(), 1, QModelIndex());
         }
@@ -213,7 +211,7 @@ namespace swift::gui::components
     {
         if (keyDown)
         {
-            QMessageBox *msgBox = new QMessageBox(this);
+            auto *msgBox = new QMessageBox(this);
             msgBox->setAttribute(Qt::WA_DeleteOnClose);
             msgBox->setStandardButtons(QMessageBox::Ok);
             msgBox->setWindowTitle("Test");

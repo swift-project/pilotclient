@@ -20,7 +20,7 @@ namespace swift::misc::simulation::settings
     QVariant CModelSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAllowExclude: return QVariant::fromValue(this->m_allowExcludeModels);
@@ -35,7 +35,7 @@ namespace swift::misc::simulation::settings
             (*this) = variant.value<CModelSettings>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAllowExclude: this->setAllowExcludedModels(variant.toBool()); break;

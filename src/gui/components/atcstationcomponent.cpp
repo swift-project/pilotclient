@@ -61,7 +61,7 @@ namespace swift::gui::components
         ui->tw_Atc->setCurrentIndex(0);
         ui->tw_Atc->tabBar()->setExpanding(false);
         ui->tw_Atc->tabBar()->setUsesScrollButtons(true);
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(ui->le_AtcStationsOnlineMetar);
+        auto *ucv = new CUpperCaseValidator(ui->le_AtcStationsOnlineMetar);
         ui->le_AtcStationsOnlineMetar->setValidator(ucv);
 
         // some icons
@@ -367,7 +367,7 @@ namespace swift::gui::components
         const QStringList airports = sGui->getWebDataServices()->getAirports().allIcaoCodes(true);
         if (!airports.isEmpty())
         {
-            QCompleter *airportCompleter = new QCompleter(airports, this);
+            auto *airportCompleter = new QCompleter(airports, this);
             const int w5chars = airportCompleter->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
             airportCompleter->popup()->setMinimumWidth(w5chars * 5);
             ui->le_AtcStationsOnlineMetar->setCompleter(airportCompleter);
@@ -470,7 +470,7 @@ namespace swift::gui::components
 
     QVBoxLayout *CAtcStationComponent::vLayout() const
     {
-        QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(this->layout());
+        auto *layout = qobject_cast<QVBoxLayout *>(this->layout());
         return layout;
     }
 } // namespace swift::gui::components

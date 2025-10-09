@@ -520,7 +520,7 @@ namespace swift::gui
         }
 
         // Inner widget is supposed to be a QFrame / promoted QFrame
-        QFrame *innerWidget = qobject_cast<QFrame *>(
+        auto *innerWidget = qobject_cast<QFrame *>(
             outerWidget->layout()->itemAt(0)->widget()); // the inner widget containing the layout
         Q_ASSERT_X(innerWidget, "CDockWidget::initStatusBar", "No inner widget");
         if (!innerWidget)
@@ -535,7 +535,7 @@ namespace swift::gui
         m_statusBar.initStatusBar();
 
         // layout
-        QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(innerWidget->layout());
+        auto *vLayout = qobject_cast<QVBoxLayout *>(innerWidget->layout());
         Q_ASSERT_X(vLayout, "CDockWidget::initStatusBar", "No outer widget layout");
         if (!vLayout)
         {
@@ -546,7 +546,7 @@ namespace swift::gui
 
         // adjust stretching of the original widget. It was the only widget so far
         // and should occupy maximum space
-        QWidget *compWidget = innerWidget->findChild<QWidget *>(QString(), Qt::FindDirectChildrenOnly);
+        auto *compWidget = innerWidget->findChild<QWidget *>(QString(), Qt::FindDirectChildrenOnly);
         Q_ASSERT(compWidget);
         if (!compWidget) { return; }
         QSizePolicy sizePolicy = compWidget->sizePolicy();
