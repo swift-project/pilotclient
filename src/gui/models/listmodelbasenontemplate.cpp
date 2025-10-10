@@ -21,14 +21,14 @@ namespace swift::gui::models
 
     QVariant CListModelBaseNonTemplate::headerData(int section, Qt::Orientation orientation, int role) const
     {
-        if (orientation != Qt::Horizontal) { return QVariant(); }
+        if (orientation != Qt::Horizontal) { return {}; }
         const bool handled = (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == Qt::InitialSortOrderRole);
-        if (!handled) { return QVariant(); }
-        if (section < 0 || section >= m_columns.size()) { return QVariant(); }
+        if (!handled) { return {}; }
+        if (section < 0 || section >= m_columns.size()) { return {}; }
 
-        if (role == Qt::DisplayRole) { return QVariant(m_columns.at(section).getColumnName()); }
-        if (role == Qt::ToolTipRole) { return QVariant(m_columns.at(section).getColumnToolTip()); }
-        return QVariant();
+        if (role == Qt::DisplayRole) { return { m_columns.at(section).getColumnName() }; }
+        if (role == Qt::ToolTipRole) { return { m_columns.at(section).getColumnToolTip() }; }
+        return {};
     }
 
     QModelIndex CListModelBaseNonTemplate::index(int row, int column, const QModelIndex &parent) const
@@ -40,7 +40,7 @@ namespace swift::gui::models
     QModelIndex CListModelBaseNonTemplate::parent(const QModelIndex &child) const
     {
         Q_UNUSED(child)
-        return QModelIndex();
+        return {};
     }
 
     CPropertyIndex CListModelBaseNonTemplate::columnToPropertyIndex(int column) const

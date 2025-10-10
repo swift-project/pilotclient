@@ -86,7 +86,7 @@ namespace swift::gui::views
         const QVariant data = this->model()->data(index.siblingAtColumn(0)); // supposed to be the callsign
         const QString callsign = data.toString();
         const CAtcStationTreeModel *model = this->stationModel();
-        if (!model) { return CAtcStation(); }
+        if (!model) { return {}; }
         return model->container().findFirstByCallsign(CCallsign(callsign, CCallsign::Atc));
     }
 

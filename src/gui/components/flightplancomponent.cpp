@@ -775,7 +775,7 @@ namespace swift::gui::components
     CAircraftIcaoCode CFlightPlanComponent::getAircraftIcaoCode() const
     {
         const QString designator(ui->le_AircraftType->text());
-        if (!CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCode(); }
+        if (!CAircraftIcaoCode::isValidDesignator(designator)) { return {}; }
         if (sApp && sApp->hasWebDataServices())
         {
             const CAircraftIcaoCode designatorFromDb =

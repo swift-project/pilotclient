@@ -33,6 +33,6 @@ namespace swift::core::fsd
 
         QStringList responseData;
         if (tokens.size() > 3) { responseData = tokens.mid(3); }
-        return ClientResponse(tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), responseData);
+        return { tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), responseData };
     }
 } // namespace swift::core::fsd

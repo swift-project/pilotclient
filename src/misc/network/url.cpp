@@ -98,7 +98,7 @@ namespace swift::misc::network
 
     QString CUrl::getFileName() const { return toQUrl().fileName(); }
 
-    QUrl CUrl::toQUrl() const { return QUrl(getFullUrl()); }
+    QUrl CUrl::toQUrl() const { return { getFullUrl() }; }
 
     void CUrl::setQUrl(const QUrl &url)
     {

@@ -137,7 +137,7 @@ namespace swift::simplugin::xplane
 
     CStatusMessageList CSimulatorXPlane::getInterpolationMessages(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty() || !m_xplaneAircraftObjects.contains(callsign)) { return CStatusMessageList(); }
+        if (callsign.isEmpty() || !m_xplaneAircraftObjects.contains(callsign)) { return {}; }
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupConsolidated(callsign, false);
         return m_xplaneAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
@@ -1085,7 +1085,7 @@ namespace swift::simplugin::xplane
         // so not to override it with some DB value in X mode, we set it to "0"
         if (model.getDistributor().matchesKeyOrAlias(CDistributor::xplaneXcsl()) && cg.isNull())
         {
-            return CLength(0.0, CLengthUnit::ft());
+            return { 0.0, CLengthUnit::ft() };
         }
         return cg;
     }
@@ -1293,7 +1293,7 @@ namespace swift::simplugin::xplane
         if (m_addingInProgressAircraft.isEmpty()) { return empty; }
         const QList<qint64> ts = m_addingInProgressAircraft.values();
         const auto mm = std::minmax_element(ts.constBegin(), ts.constEnd());
-        return QPair<qint64, qint64>(*mm.first, *mm.second);
+        return { *mm.first, *mm.second };
     }
 
     bool CSimulatorXPlane::canAddAircraft() const

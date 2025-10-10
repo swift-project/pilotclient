@@ -44,7 +44,7 @@ namespace swift::misc
     QStringList CDirectoryUtils::getRelativeSubDirectories(const QString &rootDir)
     {
         const QDir dir(rootDir);
-        if (!dir.exists()) { return QStringList(); }
+        if (!dir.exists()) { return {}; }
         return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
     }
 

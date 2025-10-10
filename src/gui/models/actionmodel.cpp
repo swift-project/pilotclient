@@ -33,7 +33,7 @@ namespace swift::gui::models
 
     QVariant CActionModel::data(const QModelIndex &index, int role) const
     {
-        if (!index.isValid()) { return QVariant(); }
+        if (!index.isValid()) { return {}; }
 
         const CActionItem *item = static_cast<CActionItem *>(index.internalPointer());
         Q_ASSERT_X(item, Q_FUNC_INFO, "Missing item");
@@ -56,7 +56,7 @@ namespace swift::gui::models
 
     QModelIndex CActionModel::index(int row, int column, const QModelIndex &parent) const
     {
-        if (!hasIndex(row, column, parent)) { return QModelIndex(); }
+        if (!hasIndex(row, column, parent)) { return {}; }
 
         const CActionItem *parentItem =
             parent.isValid() ? static_cast<CActionItem *>(parent.internalPointer()) : m_rootItem.data();

@@ -30,7 +30,7 @@ namespace swift::gui::components
     {
         // see also CMainInfoAreaComponent::getPreferredSizeWhenFloating
         Q_UNUSED(areaIndex)
-        return QSize(600, 400);
+        return { 600, 400 };
     }
 
     const QPixmap &CCockpitInfoAreaComponent::indexToPixmap(int areaIndex) const

@@ -368,7 +368,7 @@ namespace swift::misc::aviation
     {
         const QString et = this->getEngineType();
         if (et.length() == 1) { return et[0]; }
-        return QChar();
+        return {};
     }
 
     int CAircraftIcaoCode::getEnginesCount() const
@@ -819,7 +819,7 @@ namespace swift::misc::aviation
             { "L1P", "L2P" }, { "L1P", "S1P" }, { "L2J", "L3J" }, { "L2J", "L4J" }, { "L3J", "L4J" }
         };
 
-        if (isValidCombinedType(combinedCode)) { return QStringList(); }
+        if (isValidCombinedType(combinedCode)) { return {}; }
         if (knownCodes.contains(combinedCode)) { return knownCodes.values(combinedCode); }
 
         // turn E to P engine
@@ -873,7 +873,7 @@ namespace swift::misc::aviation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CAircraftIcaoCode();
+            return {};
         }
 
         const int engineCount(json.value(prefix % u"enginecount").toInt(-1));

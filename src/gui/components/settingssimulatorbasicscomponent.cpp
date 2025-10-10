@@ -249,7 +249,7 @@ namespace swift::gui::components
     QStringList CSettingsSimulatorBasicsComponent::parseDirectories(const QString &rawString) const
     {
         const QString raw = rawString.trimmed();
-        if (raw.isEmpty()) { return QStringList(); }
+        if (raw.isEmpty()) { return {}; }
         QStringList dirs;
         thread_local const QRegularExpression regExp("\n|\r\n|\r");
         const QStringList rawLines = raw.split(regExp);

@@ -115,7 +115,7 @@ namespace swift::gui::editors
             bool ok;
             const double cgv = v.toDouble(&ok);
             if (!ok) { return CLength::null(); }
-            return CLength(cgv, CLengthUnit::ft());
+            return { cgv, CLengthUnit::ft() };
         }
 
         CLength cg;

@@ -51,21 +51,15 @@ namespace swift::core
 
     CStatusMessage CCoreFacade::tryToReconnectWithDBus()
     {
-        if (m_shuttingDown) { return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Shutdown"); }
-        if (!m_config.requiresDBusConnection())
-        {
-            return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Not DBus based");
-        }
+        if (m_shuttingDown) { return { this, CStatusMessage::SeverityInfo, u"Shutdown" }; }
+        if (!m_config.requiresDBusConnection()) { return { this, CStatusMessage::SeverityInfo, u"Not DBus based" }; }
         const QString dBusAddress = this->getDBusAddress();
-        if (dBusAddress.isEmpty())
-        {
-            return CStatusMessage(this, CStatusMessage::SeverityInfo, u"Not DBus based, no address");
-        }
+        if (dBusAddress.isEmpty()) { return { this, CStatusMessage::SeverityInfo, u"Not DBus based, no address" }; }
         QString connectMsg;
         if (!CContextApplicationProxy::isContextResponsive(dBusAddress, connectMsg))
         {
-            return CStatusMessage(this, CStatusMessage::SeverityError,
-                                  u"Cannot connect DBus at '" % dBusAddress % u"', reason: " % connectMsg);
+            return { this, CStatusMessage::SeverityError,
+                     u"Cannot connect DBus at '" % dBusAddress % u"', reason: " % connectMsg };
         }
 
         // re-init

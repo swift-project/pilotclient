@@ -72,8 +72,8 @@ namespace swift::misc::db
 
     QJsonValue IDatastoreObjectWithIntegerKey::getDbKeyAsJsonValue() const
     {
-        if (this->hasValidDbKey()) { return QJsonValue(m_dbKey); }
-        return QJsonValue();
+        if (this->hasValidDbKey()) { return { m_dbKey }; }
+        return {};
     }
 
     void IDatastoreObjectWithIntegerKey::setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json,
@@ -104,7 +104,7 @@ namespace swift::misc::db
         case IndexVersion: return QVariant::fromValue(this->getVersion());
         default: break;
         }
-        return QVariant();
+        return {};
     }
 
     void IDatastoreObjectWithIntegerKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
@@ -153,7 +153,7 @@ namespace swift::misc::db
 
     QJsonValue IDatastoreObjectWithStringKey::getDbKeyAsJsonValue() const
     {
-        if (this->hasValidDbKey()) { return QJsonValue(m_dbKey); }
+        if (this->hasValidDbKey()) { return { m_dbKey }; }
         static const QJsonValue null;
         return null;
     }
@@ -204,7 +204,7 @@ namespace swift::misc::db
         case IndexVersion: return QVariant::fromValue(this->getVersion());
         default: break;
         }
-        return QVariant();
+        return {};
     }
 
     void IDatastoreObjectWithStringKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)

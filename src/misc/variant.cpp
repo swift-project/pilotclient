@@ -597,7 +597,7 @@ namespace swift::misc
             qFatal("Type cannot be resolved: %s (%d)", name ? name : "", type);
         }
         }
-        return QVariant(); // suppress compiler warning
+        return {}; // suppress compiler warning
     }
 
 } // namespace swift::misc

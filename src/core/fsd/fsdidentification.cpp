@@ -31,6 +31,6 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<FSDIdentification *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
-        return FSDIdentification(tokens[0], tokens[1], tokens[2], tokens[3]);
+        return { tokens[0], tokens[1], tokens[2], tokens[3] };
     }
 } // namespace swift::core::fsd

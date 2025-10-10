@@ -211,7 +211,7 @@ namespace swift::misc::db
         {
             CONTAINER objs(this->container());
             objs.removeObjectsWithoutDbKey();
-            if (objs.isEmpty()) { return QDateTime(); }
+            if (objs.isEmpty()) { return {}; }
             return objs.latestTimestamp();
         }
 
@@ -220,7 +220,7 @@ namespace swift::misc::db
         {
             CONTAINER objs(this->container());
             objs.removeObjectsWithoutDbKey();
-            if (objs.isEmpty()) { return QDateTime(); }
+            if (objs.isEmpty()) { return {}; }
             return objs.oldestDbTimestamp();
         }
 

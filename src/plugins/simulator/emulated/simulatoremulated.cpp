@@ -181,7 +181,7 @@ namespace swift::simplugin::emulated
     CStatusMessageList CSimulatorEmulated::getInterpolationMessages(const CCallsign &callsign) const
     {
         if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
-        if (!m_interpolators.contains(callsign)) { return CStatusMessageList(); }
+        if (!m_interpolators.contains(callsign)) { return {}; }
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupPerCallsignOrDefault(callsign); // threadsafe copy
         return m_interpolators[callsign]->getInterpolationMessages(setup.getInterpolatorMode());

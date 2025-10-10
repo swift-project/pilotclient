@@ -56,11 +56,11 @@ namespace swift::misc::db
 
     CRemoteFile CArtifact::asRemoteFile() const
     {
-        if (!this->hasDistributions()) { return CRemoteFile(); }
+        if (!this->hasDistributions()) { return {}; }
         CRemoteFile rf(this->getName(), this->getFileSize());
         const CDistribution d = this->getMostStableDistribution();
         const CUrl url = d.getDownloadUrl();
-        if (url.isEmpty()) { return CRemoteFile(); }
+        if (url.isEmpty()) { return {}; }
         rf.setUtcTimestamp(this->getUtcTimestamp());
         rf.setUrl(url);
         rf.setDescription(this->getPlatform().toQString() + " " + d.getChannel());

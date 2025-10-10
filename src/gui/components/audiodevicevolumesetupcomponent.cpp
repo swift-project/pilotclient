@@ -524,14 +524,14 @@ namespace swift::gui::components
 
     CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedInputDevice() const
     {
-        if (!hasAudio()) { return CAudioDeviceInfo(); }
+        if (!hasAudio()) { return {}; }
         const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioInputDevices();
         return devices.findByName(ui->cb_SetupAudioInputDevice->currentText());
     }
 
     CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedOutputDevice() const
     {
-        if (!hasAudio()) { return CAudioDeviceInfo(); }
+        if (!hasAudio()) { return {}; }
         const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioOutputDevices();
         return devices.findByName(ui->cb_SetupAudioOutputDevice->currentText());
     }

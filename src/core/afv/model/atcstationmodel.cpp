@@ -71,7 +71,7 @@ namespace swift::core::afv::model
 
     QVariant CSampleAtcStationModel::data(const QModelIndex &index, int role) const
     {
-        if (index.row() < 0 || index.row() >= m_atcStations.count()) return QVariant();
+        if (index.row() < 0 || index.row() >= m_atcStations.count()) return {};
 
         const CSampleAtcStation &atcStation = m_atcStations[index.row()];
         if (role == CallsignRole) return atcStation.callsign();
@@ -80,7 +80,7 @@ namespace swift::core::afv::model
         if (role == RadioDistanceRole) return atcStation.radioDistanceM();
         if (role == FrequencyRole) return atcStation.formattedFrequency();
         if (role == FrequencyKhzRole) return atcStation.frequency() / 1000;
-        return QVariant();
+        return {};
     }
 
     QHash<int, QByteArray> CSampleAtcStationModel::roleNames() const

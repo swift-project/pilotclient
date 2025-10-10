@@ -83,7 +83,7 @@ namespace swift::misc::db
 
     CDistributionList CDistributionList::fromDatabaseJson(const QString &json)
     {
-        if (json.isEmpty()) { return CDistributionList(); }
+        if (json.isEmpty()) { return {}; }
         return CDistributionList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
 } // namespace swift::misc::db

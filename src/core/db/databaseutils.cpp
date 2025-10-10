@@ -353,7 +353,7 @@ namespace swift::core::db
                                                                   IProgressIndicator *progressIndicator,
                                                                   bool processEvents)
     {
-        if (!sApp || !sApp->getWebDataServices() || sApp->isShuttingDown()) { return CAircraftModelList(); }
+        if (!sApp || !sApp->getWebDataServices() || sApp->isShuttingDown()) { return {}; }
         const CAircraftModelList dbFsFamilyModels(sApp->getWebDataServices()->getModels().findFsFamilyModels());
         CAircraftModelList stashModels;
         if (dbFsFamilyModels.isEmpty() || ownModels.isEmpty()) { return stashModels; }
@@ -410,7 +410,7 @@ namespace swift::core::db
     QJsonDocument CDatabaseUtils::databaseJsonToQJsonDocument(const QString &content)
     {
         static const QString compressed("swift:");
-        if (content.isEmpty()) { return QJsonDocument(); }
+        if (content.isEmpty()) { return {}; }
         QByteArray byteData;
         if (json::looksLikeJson(content))
         {
@@ -439,21 +439,21 @@ namespace swift::core::db
             while (false);
         }
 
-        if (byteData.isEmpty()) { return QJsonDocument(); }
+        if (byteData.isEmpty()) { return {}; }
         return QJsonDocument::fromJson(byteData);
     }
 
     QJsonDocument CDatabaseUtils::readQJsonDocumentFromDatabaseFile(const QString &filename)
     {
         const QString raw = CFileUtils::readFileToString(filename);
-        if (raw.isEmpty()) { return QJsonDocument(); }
+        if (raw.isEmpty()) { return {}; }
         return CDatabaseUtils::databaseJsonToQJsonDocument(raw);
     }
 
     QJsonObject CDatabaseUtils::readQJsonObjectFromDatabaseFile(const QString &filename)
     {
         const QString raw = CFileUtils::readFileToString(filename);
-        if (raw.isEmpty()) { return QJsonObject(); }
+        if (raw.isEmpty()) { return {}; }
 
         // allow also compressed format
         const QJsonDocument jsonDoc = CDatabaseUtils::databaseJsonToQJsonDocument(raw);

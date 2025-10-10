@@ -45,8 +45,5 @@ namespace swift::misc::simulation
         }
     }
 
-    CAirspaceAircraftSnapshot CRemoteAircraftProviderDummy::getLatestAirspaceAircraftSnapshot() const
-    {
-        return CAirspaceAircraftSnapshot();
-    }
+    CAirspaceAircraftSnapshot CRemoteAircraftProviderDummy::getLatestAirspaceAircraftSnapshot() const { return {}; }
 } // namespace swift::misc::simulation

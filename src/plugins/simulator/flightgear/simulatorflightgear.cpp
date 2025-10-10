@@ -131,7 +131,7 @@ namespace swift::simplugin::flightgear
 
     CStatusMessageList CSimulatorFlightgear::getInterpolationMessages(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty() || !m_flightgearAircraftObjects.contains(callsign)) { return CStatusMessageList(); }
+        if (callsign.isEmpty() || !m_flightgearAircraftObjects.contains(callsign)) { return {}; }
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupConsolidated(callsign, false);
         return m_flightgearAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
@@ -975,7 +975,7 @@ namespace swift::simplugin::flightgear
         if (m_addingInProgressAircraft.isEmpty()) { return empty; }
         const QList<qint64> ts = m_addingInProgressAircraft.values();
         const auto mm = std::minmax_element(ts.constBegin(), ts.constEnd());
-        return QPair<qint64, qint64>(*mm.first, *mm.second);
+        return { *mm.first, *mm.second };
     }
 
     bool CSimulatorFlightgear::canAddAircraft() const

@@ -28,7 +28,7 @@ namespace swift::misc::simulation
         default: break;
         }
 
-        return CInterpolationResult();
+        return {};
     }
 
     const CAircraftSituation &

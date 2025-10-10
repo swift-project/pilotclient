@@ -555,7 +555,7 @@ namespace swift::misc
         QMutexLocker lock(&m_mutex);
 
         Q_ASSERT(m_updateInProgress);
-        return QSet<QString>(m_timestamps.keyBegin(), m_timestamps.keyEnd());
+        return { m_timestamps.keyBegin(), m_timestamps.keyEnd() };
     }
 
     const QMap<QString, qint64> &CDataCacheRevision::newerTimestamps() const

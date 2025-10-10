@@ -24,7 +24,7 @@ namespace swift::misc::input
 
     QString CKeyboardKey::getKeyAsString() const
     {
-        if (m_keyCode == Key_Unknown) return QString();
+        if (m_keyCode == Key_Unknown) return {};
 
         static const QHash<KeyCode, QString> keyStrings = {
             { Key_ShiftLeft, QStringLiteral("ShiftLeft") },  { Key_ShiftRight, QStringLiteral("ShiftRight") },

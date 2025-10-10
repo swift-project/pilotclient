@@ -16,12 +16,12 @@ namespace swift::misc::simulation
 
     CDistributor CDistributorList::findByKeyOrAlias(const QString &keyOrAlias) const
     {
-        if (keyOrAlias.isEmpty()) { return CDistributor(); }
+        if (keyOrAlias.isEmpty()) { return {}; }
         for (const CDistributor &distributor : (*this))
         {
             if (distributor.matchesKeyOrAlias(keyOrAlias)) { return distributor; }
         }
-        return CDistributor();
+        return {};
     }
 
     CDistributor CDistributorList::findByModelData(const CAircraftModel &model) const
@@ -37,7 +37,7 @@ namespace swift::misc::simulation
             return this->findByKeyOrAlias("PAI");
         }
 
-        return CDistributor();
+        return {};
     }
 
     CDistributorList CDistributorList::findFsFamilyStandard() const
@@ -58,7 +58,7 @@ namespace swift::misc::simulation
             // more lenient search
             return this->findByKeyOrAlias(key);
         }
-        return CDistributor();
+        return {};
     }
 
     CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributorPattern,
@@ -81,7 +81,7 @@ namespace swift::misc::simulation
 
     QStringList CDistributorList::getDbKeysAndAliases(bool sort) const
     {
-        if (this->isEmpty()) { return QStringList(); }
+        if (this->isEmpty()) { return {}; }
         QStringList sl;
         for (const CDistributor &d : *this)
         {
@@ -96,7 +96,7 @@ namespace swift::misc::simulation
 
     CDistributorList CDistributorList::matchesSimulator(const CSimulatorInfo &simulator) const
     {
-        if (this->isEmpty()) { return CDistributorList(); }
+        if (this->isEmpty()) { return {}; }
         CDistributorList distributors;
         for (const CDistributor &distributor : (*this))
         {

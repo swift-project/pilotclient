@@ -64,7 +64,7 @@ namespace swift::misc::db
 
     QDateTime CDatastoreUtility::parseTimestamp(const QString &timestamp)
     {
-        if (timestamp.isEmpty()) { return QDateTime(); }
+        if (timestamp.isEmpty()) { return {}; }
         return parseDateTimeStringOptimized(removeDateTimeSeparators(timestamp));
     }
 

@@ -131,9 +131,15 @@ namespace swift::core::vatsim
 
     CServer CVatsimServerFileReader::parseServer(const QJsonObject &server) const
     {
-        return CServer(server["name"].toString(), server["location"].toString(), server["hostname_or_ip"].toString(),
-                       6809, CUser("id", "real name", "email", "password"), CFsdSetup::vatsimStandard(),
-                       CEcosystem::VATSIM, CServer::FSDServerVatsim, server["clients_connection_allowed"].toInt());
+        return { server["name"].toString(),
+                 server["location"].toString(),
+                 server["hostname_or_ip"].toString(),
+                 6809,
+                 CUser("id", "real name", "email", "password"),
+                 CFsdSetup::vatsimStandard(),
+                 CEcosystem::VATSIM,
+                 CServer::FSDServerVatsim,
+                 static_cast<bool>(server["clients_connection_allowed"].toInt()) };
     }
 
 } // namespace swift::core::vatsim

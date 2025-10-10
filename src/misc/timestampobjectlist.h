@@ -173,7 +173,7 @@ namespace swift::misc
         //! Oldest timestamp
         QDateTime oldestTimestamp() const
         {
-            if (this->container().isEmpty()) { return QDateTime(); }
+            if (this->container().isEmpty()) { return {}; }
             return this->oldestObject().getUtcTimestamp();
         }
 
@@ -674,14 +674,14 @@ namespace swift::misc
         //! Latest adjusted timestamp
         QDateTime latestAdjustedTimestamp() const
         {
-            if (this->container().isEmpty()) { return QDateTime(); }
+            if (this->container().isEmpty()) { return {}; }
             return this->latestAdjustedObject().getUtcTimestamp();
         }
 
         //! Oldest adjusted timestamp
         QDateTime oldestAdjustedTimestamp() const
         {
-            if (this->container().isEmpty()) { return QDateTime(); }
+            if (this->container().isEmpty()) { return {}; }
             return this->oldestAdjustedObject().getUtcTimestamp();
         }
 

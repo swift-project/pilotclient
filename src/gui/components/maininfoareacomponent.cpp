@@ -91,9 +91,9 @@ namespace swift::gui::components
         case InfoAreaInterpolation:
         case InfoAreaSettings:
         case InfoAreaTextMessages:
-        case InfoAreaRadar: return QSize(600, 400);
-        case InfoAreaFlightPlan: return QSize(800, 600);
-        default: return QSize(600, 400);
+        case InfoAreaRadar: return { 600, 400 };
+        case InfoAreaFlightPlan: return { 800, 600 };
+        default: return { 600, 400 };
         }
     }
 

@@ -34,7 +34,7 @@ namespace swift::gui::models
     swift::misc::aviation::CCallsign
     CListModelCallsignObjects<T, UseCompare>::callsignForIndex(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return CCallsign(); }
+        if (!index.isValid()) { return {}; }
         return this->at(index).getCallsign();
     }
 

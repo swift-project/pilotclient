@@ -29,7 +29,7 @@ namespace swift::misc::geo
     {
         const CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
         const CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
-        return CCoordinateGeodetic(lat, lon, geodeticHeight);
+        return { lat, lon, geodeticHeight };
     }
 
     const CCoordinateGeodetic &CCoordinateGeodetic::null()
@@ -141,10 +141,10 @@ namespace swift::misc::geo
             {
             case IndexLatitude: return this->latitude().propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude: return this->longitude().propertyByIndex(index.copyFrontRemoved());
-            case IndexLatitudeAsString: return QVariant(this->latitudeAsString());
-            case IndexLongitudeAsString: return QVariant(this->longitudeAsString());
+            case IndexLatitudeAsString: return { this->latitudeAsString() };
+            case IndexLongitudeAsString: return { this->longitudeAsString() };
             case IndexGeodeticHeight: return this->geodeticHeight().propertyByIndex(index.copyFrontRemoved());
-            case IndexGeodeticHeightAsString: return QVariant(this->geodeticHeightAsString());
+            case IndexGeodeticHeightAsString: return { this->geodeticHeightAsString() };
             case IndexNormalVector: return QVariant::fromValue(this->normalVector());
             default: break;
             }

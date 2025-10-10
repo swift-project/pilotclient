@@ -57,9 +57,18 @@ namespace swift::core::fsd
         bool onGround = false;
         unpackPBH(tokens[8].toUInt(), pitch, bank, heading, onGround);
 
-        return PilotDataUpdate(fromQString<CTransponder::TransponderMode>(tokens[0]), tokens[1], tokens[2].toInt(),
-                               fromQString<PilotRating>(tokens[3]), tokens[4].toDouble(), tokens[5].toDouble(),
-                               tokens[6].toInt(), tokens[6].toInt() + tokens[9].toInt(), tokens[7].toInt(), pitch, bank,
-                               heading, onGround);
+        return { fromQString<CTransponder::TransponderMode>(tokens[0]),
+                 tokens[1],
+                 tokens[2].toInt(),
+                 fromQString<PilotRating>(tokens[3]),
+                 tokens[4].toDouble(),
+                 tokens[5].toDouble(),
+                 tokens[6].toInt(),
+                 tokens[6].toInt() + tokens[9].toInt(),
+                 tokens[7].toInt(),
+                 pitch,
+                 bank,
+                 heading,
+                 onGround };
     }
 } // namespace swift::core::fsd

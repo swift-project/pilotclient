@@ -97,8 +97,8 @@ namespace swift::misc::aviation
         switch (i)
         {
         case IndexIcao: return m_icao.propertyByIndex(index.copyFrontRemoved());
-        case IndexLocation: return QVariant(m_location);
-        case IndexDescriptiveName: return QVariant(m_descriptiveName);
+        case IndexLocation: return { m_location };
+        case IndexDescriptiveName: return { m_descriptiveName };
         case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
         case IndexElevation: return this->getElevation().propertyByIndex(index.copyFrontRemoved());
         case IndexOperating: return QVariant::fromValue(this->isOperating());

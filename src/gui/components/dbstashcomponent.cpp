@@ -87,10 +87,9 @@ namespace swift::gui::components
         if (!allowReplace && ui->tvp_StashAircraftModels->container().containsModelStringOrDbKey(model))
         {
             const QString msg("Model '%1' already stashed");
-            return CStatusMessage(validationCategories(), CStatusMessage::SeverityError,
-                                  msg.arg(model.getModelString()));
+            return { validationCategories(), CStatusMessage::SeverityError, msg.arg(model.getModelString()) };
         }
-        return CStatusMessage();
+        return {};
     }
 
     CStatusMessage CDbStashComponent::stashModel(const CAircraftModel &model, bool replace, bool consolidateWithDbData,
@@ -114,7 +113,7 @@ namespace swift::gui::components
     CStatusMessageList CDbStashComponent::stashModels(const CAircraftModelList &models, bool replace,
                                                       bool consolidateWithDbData, bool clearHighlighting)
     {
-        if (models.isEmpty()) { return CStatusMessageList(); }
+        if (models.isEmpty()) { return {}; }
         CStatusMessageList msgs;
         int successfullyAdded = 0;
         for (const CAircraftModel &model : models)
@@ -168,7 +167,7 @@ namespace swift::gui::components
 
     CAircraftModel CDbStashComponent::getStashedModel(const QString &modelString) const
     {
-        if (modelString.isEmpty() || ui->tvp_StashAircraftModels->isEmpty()) { return CAircraftModel(); }
+        if (modelString.isEmpty() || ui->tvp_StashAircraftModels->isEmpty()) { return {}; }
         return ui->tvp_StashAircraftModels->container().findFirstByModelStringOrDefault(modelString);
     }
 
@@ -304,10 +303,10 @@ namespace swift::gui::components
     CStatusMessageList CDbStashComponent::validate(CAircraftModelList &validModels,
                                                    CAircraftModelList &invalidModels) const
     {
-        if (ui->tvp_StashAircraftModels->isEmpty()) { return CStatusMessageList(); }
+        if (ui->tvp_StashAircraftModels->isEmpty()) { return {}; }
         Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "No web services");
         const CAircraftModelList models(getSelectedOrAllModels());
-        if (models.isEmpty()) { return CStatusMessageList(); }
+        if (models.isEmpty()) { return {}; }
         const bool ignoreEqual = ui->cb_ChangedOnly->isChecked();
         const CStatusMessageList msgs(
             sGui->getWebDataServices()->validateForPublishing(models, ignoreEqual, validModels, invalidModels));

@@ -20,7 +20,7 @@ namespace swift::misc
 
     QStringList CNameVariantPairList::getNames(bool sorted) const
     {
-        if (this->isEmpty()) { return QStringList(); }
+        if (this->isEmpty()) { return {}; }
         QStringList codes = this->transform(predicates::MemberTransform(&CNameVariantPair::getName));
         if (sorted) { codes.sort(); }
         return codes;
@@ -28,21 +28,21 @@ namespace swift::misc
 
     CNameVariantPair CNameVariantPairList::getValue(const QString &name) const
     {
-        if (name.isEmpty()) { return CNameVariantPair(); }
+        if (name.isEmpty()) { return {}; }
         return this->findBy(&CNameVariantPair::getName, name).frontOrDefault();
     }
 
     CVariant CNameVariantPairList::getVariantValue(const QString &name) const
     {
-        if (name.isEmpty()) { return CVariant(); }
+        if (name.isEmpty()) { return {}; }
         return getValue(name).getVariant();
     }
 
     QString CNameVariantPairList::getValueAsString(const QString &name) const
     {
-        if (name.isEmpty()) { return QString(); }
+        if (name.isEmpty()) { return {}; }
         const CVariant cs(getValue(name).getVariant());
-        if (cs.isNull() || !cs.canConvert<QString>()) { return QString(); }
+        if (cs.isNull() || !cs.canConvert<QString>()) { return {}; }
         return cs.value<QString>();
     }
 

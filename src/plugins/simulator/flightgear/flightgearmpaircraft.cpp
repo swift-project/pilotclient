@@ -55,7 +55,7 @@ namespace swift::simplugin::flightgear
         return this->getInterpolator() ? this->getInterpolator()->getInterpolationMessages(mode) : CStatusMessageList();
     }
 
-    CCallsignSet CFlightgearMPAircraftObjects::getAllCallsigns() const { return CCallsignSet(this->keys()); }
+    CCallsignSet CFlightgearMPAircraftObjects::getAllCallsigns() const { return { this->keys() }; }
 
     QStringList CFlightgearMPAircraftObjects::getAllCallsignStrings(bool sorted) const
     {

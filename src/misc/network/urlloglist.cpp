@@ -28,7 +28,7 @@ namespace swift::misc::network
 
     CUrlLogList CUrlLogList::findOutdatedPending(int outdatedOffsetMs) const
     {
-        if (this->isEmpty()) { return CUrlLogList(); }
+        if (this->isEmpty()) { return {}; }
         return this->findPending().findBeforeNowMinusOffset(outdatedOffsetMs);
     }
 

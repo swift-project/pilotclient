@@ -119,7 +119,7 @@ namespace swift::core
 
     QPair<qint64, qint64> CThreadedReader::getNetworkReplyBytes() const
     {
-        return QPair<qint64, qint64>(m_networkReplyCurrent, m_networkReplyMax);
+        return { m_networkReplyCurrent, m_networkReplyMax };
     }
 
     void CThreadedReader::networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url)

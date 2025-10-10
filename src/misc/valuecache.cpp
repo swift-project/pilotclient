@@ -680,7 +680,7 @@ namespace swift::misc
     {
         Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO,
                    "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
-        return element.m_value.read();
+        return element.m_value.read(); // NOLINT(modernize-return-braced-init-list)
     }
 
     CStatusMessage CValuePage::setValue(Element &element, CVariant value, qint64 timestamp, bool save)

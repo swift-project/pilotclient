@@ -215,7 +215,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::FG: return m_modelCacheFG.get();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.get();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.get();
-        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return CAircraftModelList();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
     }
 
@@ -235,7 +235,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::FG: msg = m_modelCacheFG.set(setModels); break;
         case CSimulatorInfo::MSFS: msg = m_modelCacheMsfs.set(setModels); break;
         case CSimulatorInfo::MSFS2024: msg = m_modelCacheMsfs2024.set(setModels); break;
-        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return CStatusMessage();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
         this->emitCacheChanged(simulator); // set
         return msg;
@@ -292,7 +292,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::FG: return m_modelCacheFG.getAvailableTimestamp();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getAvailableTimestamp();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.getAvailableTimestamp();
-        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return QDateTime();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
     }
 
@@ -315,7 +315,7 @@ namespace swift::misc::simulation::data
             return m_modelCacheMsfs2024.set(m_modelCacheMsfs2024.get(), ts.toMSecsSinceEpoch());
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
-        return CStatusMessage();
+        return {};
     }
 
     void CModelCaches::synchronizeCache(const CSimulatorInfo &simulator) { this->synchronizeCacheImpl(simulator); }
@@ -432,7 +432,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::FG: return m_modelCacheFG.get();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.get();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.get();
-        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return CAircraftModelList();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
     }
 
@@ -463,7 +463,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::FG: msg = m_modelCacheFG.set(orderedModels); break;
         case CSimulatorInfo::MSFS: msg = m_modelCacheMsfs.set(orderedModels); break;
         case CSimulatorInfo::MSFS2024: msg = m_modelCacheMsfs2024.set(orderedModels); break;
-        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return CStatusMessage();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
         this->emitCacheChanged(simulator); // set
         return msg;
@@ -481,7 +481,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::FG: return m_modelCacheFG.getAvailableTimestamp();
         case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getAvailableTimestamp();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.getAvailableTimestamp();
-        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); return QDateTime();
+        default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); return {};
         }
     }
 
@@ -504,7 +504,7 @@ namespace swift::misc::simulation::data
             return m_modelCacheMsfs2024.set(m_modelCacheMsfs2024.get(), ts.toMSecsSinceEpoch());
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
-        return CStatusMessage();
+        return {};
     }
 
     void CModelSetCaches::synchronizeCache(const CSimulatorInfo &simulator) { this->synchronizeCacheImpl(simulator); }

@@ -313,10 +313,10 @@ namespace swift::misc::aviation
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexCallsignString: return QVariant(this->asString());
-        case IndexCallsignStringAsSet: return QVariant(this->getStringAsSet());
-        case IndexTelephonyDesignator: return QVariant(this->getTelephonyDesignator());
-        case IndexSuffix: return QVariant(this->getSuffix());
+        case IndexCallsignString: return { this->asString() };
+        case IndexCallsignStringAsSet: return { this->getStringAsSet() };
+        case IndexTelephonyDesignator: return { this->getTelephonyDesignator() };
+        case IndexSuffix: return { this->getSuffix() };
         default: return CValueObject::propertyByIndex(index);
         }
     }

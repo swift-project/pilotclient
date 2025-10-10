@@ -59,7 +59,7 @@ namespace swift::gui::menus
 
     QPixmap CMenuAction::getPixmap() const
     {
-        if (m_icon.isNull()) { return QPixmap(); }
+        if (m_icon.isNull()) { return {}; }
         return m_icon.pixmap(m_icon.actualSize(QSize(16, 16)));
     }
 
@@ -233,7 +233,7 @@ namespace swift::gui::menus
 
     CMenuActions CMenuActions::addActions(const QList<QAction *> &actions, const QString &path)
     {
-        if (actions.isEmpty()) { return CMenuActions(); }
+        if (actions.isEmpty()) { return {}; }
         CMenuAction menuAction;
         CMenuActions menuActions;
         for (QAction *a : actions)
@@ -421,19 +421,19 @@ namespace swift::gui::menus
 
     CMenuAction CMenuActions::addMenuViewOrder()
     {
-        if (this->containsMenu(CMenuAction::pathViewOrder())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::pathViewOrder())) { return {}; }
         return this->addMenu(CIcons::arrowMediumEast16(), "Order", CMenuAction::pathViewOrder());
     }
 
     CMenuAction CMenuActions::addMenuSimulator()
     {
-        if (this->containsMenu(CMenuAction::pathSimulator())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::pathSimulator())) { return {}; }
         return this->addMenu(CIcons::appSimulator16(), "Simulator", CMenuAction::pathSimulator());
     }
 
     CMenuAction CMenuActions::addMenuStash()
     {
-        if (this->containsMenu(CMenuAction::pathModelStash())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::pathModelStash())) { return {}; }
         const bool canConnectDb =
             sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->hasSuccesfullyConnectedSwiftDb();
         const QString text(canConnectDb ? "Stash tools" : "Stash tools (Warning: no DB!)");
@@ -442,49 +442,49 @@ namespace swift::gui::menus
 
     CMenuAction CMenuActions::addMenuStashEditor()
     {
-        if (this->containsMenu(CMenuAction::pathModelStashEditor())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::pathModelStashEditor())) { return {}; }
         return this->addMenu(CIcons::appDbStash16(), "Edit models", CMenuAction::pathModelStashEditor());
     }
 
     CMenuAction CMenuActions::addMenuDatabase()
     {
-        if (this->containsMenu(CMenuAction::pathViewDatabase())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::pathViewDatabase())) { return {}; }
         return this->addMenu(CMenuAction::subMenuDatabase());
     }
 
     CMenuAction CMenuActions::addMenuConsolidateModels()
     {
-        if (this->containsMenu(CMenuAction::pathModelConsolidate())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::pathModelConsolidate())) { return {}; }
         return this->addMenu(CMenuAction::subMenuConsolidateModels());
     }
 
     CMenuAction CMenuActions::addMenuModelSet()
     {
-        if (this->containsMenu(CMenuAction::pathModelSet())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::pathModelSet())) { return {}; }
         return this->addMenu(CIcons::appModels16(), "Model set", CMenuAction::pathModelSet());
     }
 
     CMenuAction CMenuActions::addMenuCom()
     {
-        if (this->containsMenu(CMenuAction::subMenuCom().getPath())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::subMenuCom().getPath())) { return {}; }
         return this->addAction(CMenuAction::subMenuCom());
     }
 
     CMenuAction CMenuActions::addMenuDisplayModels()
     {
-        if (this->containsMenu(CMenuAction::subMenuDisplayModels().getPath())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::subMenuDisplayModels().getPath())) { return {}; }
         return this->addAction(CMenuAction::subMenuDisplayModels());
     }
 
     CMenuAction CMenuActions::addMenuRenderModels()
     {
-        if (this->containsMenu(CMenuAction::subMenuRenderModels().getPath())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::subMenuRenderModels().getPath())) { return {}; }
         return this->addAction(CMenuAction::subMenuRenderModels());
     }
 
     CMenuAction CMenuActions::addMenuDataTransfer()
     {
-        if (this->containsMenu(CMenuAction::subMenuDataTransfer().getPath())) { return CMenuAction(); }
+        if (this->containsMenu(CMenuAction::subMenuDataTransfer().getPath())) { return {}; }
         return this->addAction(CMenuAction::subMenuDataTransfer());
     }
 

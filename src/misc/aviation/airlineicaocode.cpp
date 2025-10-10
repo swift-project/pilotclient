@@ -444,7 +444,7 @@ namespace swift::misc::aviation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null (e.g. for color liveries)
-            return CAirlineIcaoCode();
+            return {};
         }
 
         QString designator(json.value(prefix % u"designator").toString());

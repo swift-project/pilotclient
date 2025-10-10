@@ -26,6 +26,6 @@ namespace swift::core::fsd
             return {};
         }
 
-        return Rehost(tokens[0], tokens[1]);
+        return { tokens[0], tokens[1] };
     }
 } // namespace swift::core::fsd

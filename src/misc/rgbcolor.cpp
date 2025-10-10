@@ -49,7 +49,7 @@ namespace swift::misc
         }
     }
 
-    QColor CRgbColor::toQColor() const { return QColor(red(), green(), blue()); }
+    QColor CRgbColor::toQColor() const { return { red(), green(), blue() }; }
 
     bool CRgbColor::setQColor(const QColor &color)
     {

@@ -56,7 +56,7 @@ namespace swift::misc
 
     QString CCountry::getCombinedStringIsoName() const
     {
-        if (!this->hasIsoCode()) { return QString(); }
+        if (!this->hasIsoCode()) { return {}; }
         QString s(m_dbKey);
         if (m_name.isEmpty()) { return s; }
         return u" (" % m_name % u')';
@@ -64,7 +64,7 @@ namespace swift::misc
 
     QString CCountry::getCombinedStringNameIso() const
     {
-        if (!this->isValid()) { return QString(); }
+        if (!this->isValid()) { return {}; }
         return m_name % u" -  " % m_dbKey;
     }
 
@@ -172,7 +172,7 @@ namespace swift::misc
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CCountry();
+            return {};
         }
         const QString iso(json.value(prefix % u"id").toString());
         const QString name(json.value(prefix % u"country").toString());

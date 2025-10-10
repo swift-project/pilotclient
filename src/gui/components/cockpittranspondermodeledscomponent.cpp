@@ -114,13 +114,13 @@ namespace swift::gui::components
 
     CTransponder CCockpitTransponderModeLedsComponent::getOwnTransponder() const
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CTransponder(); }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return {}; }
         return sGui->getIContextOwnAircraft()->getOwnAircraft().getTransponder();
     }
 
     CSimulatedAircraft CCockpitTransponderModeLedsComponent::getOwnAircraft() const
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CSimulatedAircraft(); }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return {}; }
         return sGui->getIContextOwnAircraft()->getOwnAircraft();
     }
 } // namespace swift::gui::components

@@ -177,7 +177,7 @@ namespace swift::misc
 
     CStatusMessage CStatusMessageList::toSingleMessage() const
     {
-        if (this->isEmpty()) { return CStatusMessage(); }
+        if (this->isEmpty()) { return {}; }
         if (this->size() == 1) { return this->front(); }
         QStringList newMsgs;
         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;

@@ -143,7 +143,7 @@ namespace swift::gui::editors
         if (ui->rb_DistributorsSelected->isChecked()) { return this->getSelectedDistributors(); }
         if (ui->rb_DistributorsFromBelow->isChecked()) { return this->getShownDistributors(); }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong option");
-        return CDistributorList();
+        return {};
     }
 
     bool COwnModelSetForm::optionDbIcaoCodesOnly() const { return ui->rb_DbIcaoCodesOnly->isChecked(); }

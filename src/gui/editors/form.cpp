@@ -23,7 +23,7 @@ namespace swift::gui::editors
     CStatusMessageList CForm::validate(bool withNestedObjects) const
     {
         Q_UNUSED(withNestedObjects);
-        return CStatusMessageList();
+        return {};
     }
 
     CStatusMessageList CForm::validateAsOverlayMessage(bool withNestedObjects, bool appendOldMessages,

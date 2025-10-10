@@ -50,8 +50,8 @@ namespace swift::gui::components
         const QString csString = ui->le_Callsign->text().trimmed().toUpper();
         const bool valid =
             onlyKnownCallsign ? this->isValidKnownCallsign(csString) : CCallsign::isValidAircraftCallsign(csString);
-        if (!valid) { return CCallsign(); }
-        return CCallsign(csString, CCallsign::Aircraft);
+        if (!valid) { return {}; }
+        return { csString, CCallsign::Aircraft };
     }
 
     void CCallsignCompleter::setCallsign(const CCallsign &cs) { ui->le_Callsign->setText(cs.asString()); }

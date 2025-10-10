@@ -39,7 +39,7 @@ namespace swift::gui::components
     CServer CServerListSelector::currentServer() const
     {
         const int i = currentIndex();
-        if (i < 0 || i >= m_servers.size()) { return CServer(); }
+        if (i < 0 || i >= m_servers.size()) { return {}; }
         return m_servers[i];
     }
 

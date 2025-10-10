@@ -19,7 +19,7 @@ namespace swift::gui
 
     CEcosystem CEcosystemComboBox::getSelectedEcosystem() const
     {
-        if (this->currentIndex() < 0 || this->currentIndex() >= m_systems.size()) { return CEcosystem(); }
+        if (this->currentIndex() < 0 || this->currentIndex() >= m_systems.size()) { return {}; }
         return m_systems[this->currentIndex()];
     }
 

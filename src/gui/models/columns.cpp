@@ -45,35 +45,35 @@ namespace swift::gui::models
 
     CColumn CColumn::standardValueObject(const QString &headerName, const CPropertyIndex &propertyIndex, int alignment)
     {
-        return CColumn(headerName, propertyIndex, new CValueObjectFormatter(alignment));
+        return { headerName, propertyIndex, new CValueObjectFormatter(alignment) };
     }
 
     CColumn CColumn::standardValueObject(const QString &headerName, const QString &toolTip,
                                          const CPropertyIndex &propertyIndex, int alignment)
     {
-        return CColumn(headerName, toolTip, propertyIndex, new CValueObjectFormatter(alignment));
+        return { headerName, toolTip, propertyIndex, new CValueObjectFormatter(alignment) };
     }
 
     CColumn CColumn::standardString(const QString &headerName, const CPropertyIndex &propertyIndex, int alignment)
     {
-        return CColumn(headerName, propertyIndex, new CStringFormatter(alignment));
+        return { headerName, propertyIndex, new CStringFormatter(alignment) };
     }
 
     CColumn CColumn::standardString(const QString &headerName, const QString &toolTip,
                                     const CPropertyIndex &propertyIndex, int alignment)
     {
-        return CColumn(headerName, toolTip, propertyIndex, new CStringFormatter(alignment));
+        return { headerName, toolTip, propertyIndex, new CStringFormatter(alignment) };
     }
 
     CColumn CColumn::orderColumn(const CPropertyIndex &propertyIndex, int alignment)
     {
-        return CColumn("#", "order", propertyIndex, new CStringFormatter(alignment));
+        return { "#", "order", propertyIndex, new CStringFormatter(alignment) };
     }
 
     CColumn CColumn::standardInteger(const QString &headerName, const QString &toolTip,
                                      const CPropertyIndex &propertyIndex, int alignment)
     {
-        return CColumn(headerName, toolTip, propertyIndex, new CIntegerFormatter(alignment));
+        return { headerName, toolTip, propertyIndex, new CIntegerFormatter(alignment) };
     }
 
     CColumn CColumn::emptyColumn()
@@ -137,7 +137,7 @@ namespace swift::gui::models
         Q_ASSERT(isValidColumn(column));
         const CColumn col = m_columns[column];
         Q_ASSERT(col.isSortable());
-        if (!col.isSortable()) { return CPropertyIndex(); }
+        if (!col.isSortable()) { return {}; }
         if (col.hasSortPropertyIndex()) { return col.getSortPropertyIndex(); }
         return col.getPropertyIndex();
     }

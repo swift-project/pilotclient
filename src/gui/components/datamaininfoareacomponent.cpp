@@ -75,7 +75,7 @@ namespace swift::gui::components
         case InfoAreaMapping:
         case InfoAreaSettings:
         case InfoAreaLog:
-        default: return QSize(800, 600);
+        default: return { 800, 600 };
         }
     }
 

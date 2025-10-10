@@ -41,7 +41,7 @@ namespace swift::misc::geo
         const double MaxDevFt = maxDeviation.value(CLengthUnit::ft());
         const QPair<double, double> elvStdDevMean = CMathUtils::standardDeviationAndMean(valuesInFt);
         if (elvStdDevMean.first > MaxDevFt) { return CElevationPlane::null(); }
-        return CElevationPlane(reference, elvStdDevMean.second, CElevationPlane::singlePointRadius());
+        return { reference, elvStdDevMean.second, CElevationPlane::singlePointRadius() };
     }
 
 } // namespace swift::misc::geo

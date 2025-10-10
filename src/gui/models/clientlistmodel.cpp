@@ -53,14 +53,14 @@ namespace swift::gui::models
             // no model string for ATC
             const CClient client = this->at(index);
             const bool atc = client.isAtc();
-            if (atc) { return QVariant("ATC"); }
+            if (atc) { return { "ATC" }; }
         }
         else if (pi == qf && role == Qt::DecorationRole)
         {
             // no symbol for ATC
             const CClient client = this->at(index);
             const bool atc = client.isAtc();
-            if (atc) { return QVariant(); }
+            if (atc) { return {}; }
         }
         return CListModelBase::data(index, role);
     }

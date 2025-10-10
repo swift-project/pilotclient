@@ -493,7 +493,7 @@ namespace swift::core::db
 
     CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
     {
-        if (!sApp || sApp->isShuttingDown()) { return CUrl(); }
+        if (!sApp || sApp->isShuttingDown()) { return {}; }
         switch (mode)
         {
         case CDbFlags::DbReading: return this->getDbServiceBaseUrl().withAppendedPath("/service");
@@ -501,7 +501,7 @@ namespace swift::core::db
         case CDbFlags::Shared: return sApp->getGlobalSetup().getSharedDbDataDirectoryUrl();
         default: qFatal("Wrong mode"); break;
         }
-        return CUrl();
+        return {};
     }
 
     bool CDatabaseReader::isChangedUrl(const CUrl &oldUrl, const CUrl &currentUrl)

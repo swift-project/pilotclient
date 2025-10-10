@@ -186,7 +186,7 @@ namespace swift::gui
 
     QString CStyleSheetUtility::style(const QString &fileName) const
     {
-        if (!this->containsStyle(fileName)) { return QString(); }
+        if (!this->containsStyle(fileName)) { return {}; }
         return m_styleSheets[fileName.toLower()].trimmed();
     }
 

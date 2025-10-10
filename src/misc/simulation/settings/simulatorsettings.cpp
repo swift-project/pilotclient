@@ -186,7 +186,7 @@ namespace swift::misc::simulation::settings
         {
             // mostly happening with emulated driver, VERIFY for better debugging
             SWIFT_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            return CSimulatorSettings();
+            return {};
         }
         switch (simulator.getSimulator())
         {
@@ -200,12 +200,12 @@ namespace swift::misc::simulation::settings
 
         default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
-        return CSimulatorSettings();
+        return {};
     }
 
     CSpecializedSimulatorSettings CMultiSimulatorSettings::getSpecializedSettings(const CSimulatorInfo &simulator) const
     {
-        return CSpecializedSimulatorSettings(this->getSettings(simulator), simulator);
+        return { this->getSettings(simulator), simulator };
     }
 
     CStatusMessage CMultiSimulatorSettings::setSettings(const CSimulatorSettings &settings,
@@ -570,7 +570,7 @@ namespace swift::misc::simulation::settings
 
     QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoy() const
     {
-        if (!m_genericSettings.hasSimulatorDirectory()) { return QStringList(); }
+        if (!m_genericSettings.hasSimulatorDirectory()) { return {}; }
         const QString s(m_genericSettings.getSimulatorDirectory());
         QStringList dirs;
         switch (m_simulator.getSimulator())

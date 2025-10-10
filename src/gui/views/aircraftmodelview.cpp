@@ -390,7 +390,7 @@ namespace swift::gui::views
     CStatusMessage CAircraftModelView::modifyLoadedJsonData(CAircraftModelList &models) const
     {
         if (m_correspondingSimulator.isNoSimulator()) { return {}; }
-        if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, u"Empty models", true); }
+        if (models.isEmpty()) { return { this, CStatusMessage::SeverityDebug, u"Empty models", true }; }
 
         // multiple sims with same count
         const int removed = models.removeIfNotMatchingSimulator(m_correspondingSimulator);

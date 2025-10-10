@@ -109,7 +109,7 @@ namespace swift::gui
         update();
     }
 
-    QSize CLoadIndicator::sizeHint() const { return QSize(64, 64); }
+    QSize CLoadIndicator::sizeHint() const { return { 64, 64 }; }
 
     int CLoadIndicator::heightForWidth(int w) const { return w; }
 

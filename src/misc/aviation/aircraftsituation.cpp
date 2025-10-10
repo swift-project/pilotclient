@@ -252,13 +252,13 @@ namespace swift::misc::aviation
             if (distRatio > 0.95) { return oldSituation.getGroundElevationPlane(); }
 
             const double situationElvFt = newElvFt - distRatio * deltaElvFt;
-            return CElevationPlane(situation, situationElvFt, CElevationPlane::singlePointRadius());
+            return { situation, situationElvFt, CElevationPlane::singlePointRadius() };
         }
         else
         {
             const double elvSumFt = oldElvFt + newElvFt;
             const double elvFt = 0.5 * elvSumFt;
-            return CElevationPlane(newSituation, elvFt, CElevationPlane::singlePointRadius());
+            return { newSituation, elvFt, CElevationPlane::singlePointRadius() };
         }
     }
 
@@ -834,7 +834,7 @@ namespace swift::misc::aviation
         if (this->getGroundSpeed().isNull())
         {
             if (!min.isNull()) { return min; }
-            return CLength(0, CLengthUnit::nullUnit());
+            return { 0, CLengthUnit::nullUnit() };
         }
         const double seconds = ms.count() / 1000.0;
         const double gsMeterSecond = this->getGroundSpeed().value(CSpeedUnit::m_s());

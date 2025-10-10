@@ -79,7 +79,7 @@ namespace swift::gui::models
     QVariant CListModelBase<T, UseCompare>::data(const QModelIndex &index, int role) const
     {
         // check / init
-        if (!this->isValidIndex(index)) { return QVariant(); }
+        if (!this->isValidIndex(index)) { return {}; }
 
         if (role == Qt::BackgroundRole) { return CListModelBaseNonTemplate::data(index, role); }
 

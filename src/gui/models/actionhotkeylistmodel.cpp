@@ -24,8 +24,8 @@ namespace swift::gui::models
 
     QVariant CActionHotkeyListModel::data(const QModelIndex &index, int role) const
     {
-        if (!index.isValid()) { return QVariant(); }
-        if (index.row() >= m_actionHotkeys.size() || index.row() < 0) { return QVariant(); }
+        if (!index.isValid()) { return {}; }
+        if (index.row() >= m_actionHotkeys.size() || index.row() < 0) { return {}; }
 
         if (role == Qt::DisplayRole)
         {

@@ -5,6 +5,7 @@ Checks: >
   -*,
   modernize-use-auto,
   modernize-use-override,
+  modernize-return-braced-init-list,
 
 
 CheckOptions:

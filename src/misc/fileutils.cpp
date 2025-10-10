@@ -301,7 +301,7 @@ namespace swift::misc
                                       const QStringList &excludeDirectories,
                                       std::function<bool(const QFileInfo &)> predicate)
     {
-        if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
+        if (isExcludedDirectory(dir, excludeDirectories)) { return {}; }
         const QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {
@@ -349,7 +349,7 @@ namespace swift::misc
                                              const QStringList &excludeDirectories,
                                              std::function<bool(const QFileInfo &)> predicate)
     {
-        if (isExcludedDirectory(dir, excludeDirectories)) { return QFileInfoList(); }
+        if (isExcludedDirectory(dir, excludeDirectories)) { return {}; }
         QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {

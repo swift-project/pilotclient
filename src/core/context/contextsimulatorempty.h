@@ -28,21 +28,21 @@ namespace swift::core::context
         swift::misc::simulation::CSimulatorPluginInfo getSimulatorPluginInfo() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CSimulatorPluginInfo();
+            return {};
         }
 
         //! \copydoc IContextSimulator::getAvailableSimulatorPlugins
         swift::misc::simulation::CSimulatorPluginInfoList getAvailableSimulatorPlugins() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CSimulatorPluginInfoList();
+            return {};
         }
 
         //! \copydoc IContextSimulator::getSimulatorSettings
         swift::misc::simulation::settings::CSimulatorSettings getSimulatorSettings() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::settings::CSimulatorSettings();
+            return {};
         }
 
         //! \copydoc IContextSimulator::setSimulatorSettings
@@ -84,28 +84,28 @@ namespace swift::core::context
         swift::misc::simulation::CAircraftModelList getModelSet() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CAircraftModelList();
+            return {};
         }
 
         //! \copydoc IContextSimulator::simulatorsWithInitializedModelSet
         swift::misc::simulation::CSimulatorInfo simulatorsWithInitializedModelSet() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CSimulatorInfo();
+            return {};
         }
 
         //! \copydoc IContextSimulator::verifyPrerequisites
         swift::misc::CStatusMessageList verifyPrerequisites() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::CStatusMessageList();
+            return {};
         }
 
         //! \copydoc IContextSimulator::getModelSetLoaderSimulator
         swift::misc::simulation::CSimulatorInfo getModelSetLoaderSimulator() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CSimulatorInfo();
+            return {};
         }
 
         //! \copydoc IContextSimulator::setModelSetLoaderSimulator
@@ -119,7 +119,7 @@ namespace swift::core::context
         QStringList getModelSetStrings() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return QStringList();
+            return {};
         }
 
         //! \copydoc IContextSimulator::getModelSetCompleterStrings
@@ -127,7 +127,7 @@ namespace swift::core::context
         {
             Q_UNUSED(sorted);
             logEmptyContextWarning(Q_FUNC_INFO);
-            return QStringList();
+            return {};
         }
 
         //! \copydoc IContextSimulator::removeModelsFromSet
@@ -151,7 +151,7 @@ namespace swift::core::context
         swift::misc::simulation::CAircraftModelList getDisabledModelsForMatching() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CAircraftModelList();
+            return {};
         }
 
         //! \copydoc CAircraftMatcher::restoreDisabledModels
@@ -186,7 +186,7 @@ namespace swift::core::context
         {
             Q_UNUSED(modelString);
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CAircraftModelList();
+            return {};
         }
 
         //! \copydoc IContextSimulator::getModelSetCount
@@ -200,7 +200,7 @@ namespace swift::core::context
         swift::misc::simulation::CSimulatorInternals getSimulatorInternals() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CSimulatorInternals();
+            return {};
         }
 
         //! \copydoc ISimulator::getInterpolationSetupGlobal
@@ -208,14 +208,14 @@ namespace swift::core::context
         getInterpolationAndRenderingSetupGlobal() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CInterpolationAndRenderingSetupGlobal();
+            return {};
         }
 
         //! \copydoc ISimulator::getInterpolationSetupsPerCallsign
         swift::misc::simulation::CInterpolationSetupList getInterpolationAndRenderingSetupsPerCallsign() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CInterpolationSetupList();
+            return {};
         }
 
         //! \copydoc ISimulator::getInterpolationSetupPerCallsignOrDefault
@@ -225,7 +225,7 @@ namespace swift::core::context
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CInterpolationAndRenderingSetupPerCallsign();
+            return {};
         }
 
         //! \copydoc swift::misc::simulation::IInterpolationSetupProvider::setInterpolationSetupGlobal
@@ -253,7 +253,7 @@ namespace swift::core::context
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::CStatusMessageList();
+            return {};
         }
 
         //! \copydoc IContextSimulator::followAircraft
@@ -309,7 +309,7 @@ namespace swift::core::context
         {
             Q_UNUSED(callsign);
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::CStatusMessageList();
+            return {};
         }
 
         //! \copydoc IContextSimulator::enableMatchingMessages
@@ -340,7 +340,7 @@ namespace swift::core::context
         {
             Q_UNUSED(missingOnly)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CMatchingStatistics();
+            return {};
         }
 
         //! \copydoc IContextSimulator::setMatchingSetup
@@ -375,7 +375,7 @@ namespace swift::core::context
         swift::misc::simulation::CAircraftMatcherSetup getMatchingSetup() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CAircraftMatcherSetup();
+            return {};
         }
     };
 } // namespace swift::core::context

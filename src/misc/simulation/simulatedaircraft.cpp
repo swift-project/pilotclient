@@ -209,7 +209,7 @@ namespace swift::misc::simulation
         default: break;
         }
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Wrong unit");
-        return CComSystem(); // avoid warning
+        return {}; // avoid warning
     }
 
     void CSimulatedAircraft::setCockpit(const CSimulatedAircraft &aircraft)

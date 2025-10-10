@@ -17,13 +17,13 @@ namespace swift::misc::aviation
     CLiveryList CLiveryList::findByAirlineIcaoDesignator(const QString &icao) const
     {
         QString icaoCode(icao.trimmed().toUpper());
-        if (icaoCode.isEmpty()) { return CLiveryList(); }
+        if (icaoCode.isEmpty()) { return {}; }
         return this->findBy(&CLivery::getAirlineIcaoCodeDesignator, icaoCode);
     }
 
     CLivery CLiveryList::findStdLiveryByAirlineIcaoVDesignator(const CAirlineIcaoCode &icao) const
     {
-        if (this->isEmpty() || !icao.hasValidDesignator()) { return CLivery(); }
+        if (this->isEmpty() || !icao.hasValidDesignator()) { return {}; }
         CLiveryList candidates;
         for (const CLivery &livery : *this)
         {
@@ -47,7 +47,7 @@ namespace swift::misc::aviation
     CLivery CLiveryList::findStdLiveryByAirlineIcaoVDesignator(const QString &icao) const
     {
         const QString icaoDesignator(icao.trimmed().toUpper());
-        if (icaoDesignator.isEmpty()) { return CLivery(); }
+        if (icaoDesignator.isEmpty()) { return {}; }
         return this->findFirstByOrDefault([&](const CLivery &livery) {
             if (!livery.isAirlineStandardLivery()) { return false; }
             return livery.getAirlineIcaoCode().matchesVDesignator(icaoDesignator);
@@ -56,7 +56,7 @@ namespace swift::misc::aviation
 
     CLiveryList CLiveryList::findStdLiveriesBySimplifiedAirlineName(const QString &containedString) const
     {
-        if (containedString.isEmpty()) { return CLiveryList(); }
+        if (containedString.isEmpty()) { return {}; }
         return this->findBy([&](const CLivery &livery) {
             // keep isAirlineStandardLivery first (faster)
             return livery.isAirlineStandardLivery() && livery.isContainedInSimplifiedAirlineName(containedString);
@@ -65,7 +65,7 @@ namespace swift::misc::aviation
 
     CLiveryList CLiveryList::findStdLiveriesByNamesOrTelephonyDesignator(const QString &candidate) const
     {
-        if (candidate.isEmpty()) { return CLiveryList(); }
+        if (candidate.isEmpty()) { return {}; }
         return this->findBy([&](const CLivery &livery) {
             // keep isAirlineStandardLivery first (faster)
             return livery.isAirlineStandardLivery() &&
@@ -75,7 +75,7 @@ namespace swift::misc::aviation
 
     CLivery CLiveryList::findColorLiveryOrDefault(const CRgbColor &fuselage, const CRgbColor &tail) const
     {
-        if (!fuselage.isValid() || !tail.isValid()) { return CLivery(); }
+        if (!fuselage.isValid() || !tail.isValid()) { return {}; }
         return this->findFirstByOrDefault([&](const CLivery &livery) {
             if (!livery.isColorLivery()) { return false; }
             return livery.matchesColors(fuselage, tail);
@@ -84,7 +84,7 @@ namespace swift::misc::aviation
 
     CLivery CLiveryList::findClosestColorLiveryOrDefault(const CRgbColor &fuselage, const CRgbColor &tail) const
     {
-        if (!fuselage.isValid() || !tail.isValid()) { return CLivery(); }
+        if (!fuselage.isValid() || !tail.isValid()) { return {}; }
         CLivery bestMatch;
         double bestDistance = 1.0;
         for (const CLivery &livery : *this)
@@ -103,14 +103,14 @@ namespace swift::misc::aviation
 
     CLivery CLiveryList::findByCombinedCode(const QString &combinedCode) const
     {
-        if (!CLivery::isValidCombinedCode(combinedCode)) { return CLivery(); }
+        if (!CLivery::isValidCombinedCode(combinedCode)) { return {}; }
         return this->findFirstByOrDefault(
             [&](const CLivery &livery) { return livery.matchesCombinedCode(combinedCode); });
     }
 
     QStringList CLiveryList::getCombinedCodes(bool sort) const
     {
-        if (this->isEmpty()) { return QStringList(); }
+        if (this->isEmpty()) { return {}; }
         QStringList codes = this->transform(predicates::MemberTransform(&CLivery::getCombinedCode));
         if (sort) { codes.sort(); }
         return codes;
@@ -118,7 +118,7 @@ namespace swift::misc::aviation
 
     QStringList CLiveryList::getCombinedCodesPlusInfo(bool sort) const
     {
-        if (this->isEmpty()) { return QStringList(); }
+        if (this->isEmpty()) { return {}; }
         QStringList codes = this->transform(predicates::MemberTransform(&CLivery::getCombinedCodePlusInfo));
         if (sort) { codes.sort(); }
         return codes;
@@ -126,7 +126,7 @@ namespace swift::misc::aviation
 
     QStringList CLiveryList::getCombinedCodesPlusInfoAndId(bool sort) const
     {
-        if (this->isEmpty()) { return QStringList(); }
+        if (this->isEmpty()) { return {}; }
         QStringList codes = this->transform(predicates::MemberTransform(&CLivery::getCombinedCodePlusInfoAndId));
         if (sort) { codes.sort(); }
         return codes;
@@ -186,7 +186,7 @@ namespace swift::misc::aviation
             const CLiveryList liveries(this->findStdLiveriesByNamesOrTelephonyDesignator(search));
             if (!liveries.isEmpty()) { return liveries.front(); }
         }
-        return CLivery();
+        return {};
     }
 
     CLiveryList CLiveryList::fromDatabaseJsonCaching(const QJsonArray &array,

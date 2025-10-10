@@ -350,7 +350,7 @@ namespace swift::gui::components
 
     swift::misc::aviation::CLivery CDbAutoStashingComponent::getTempLivery()
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return CLivery(); }
+        if (!sGui || !sGui->hasWebDataServices()) { return {}; }
         return sGui->getWebDataServices()->getTempLiveryOrDefault();
     }
 } // namespace swift::gui::components

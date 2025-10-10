@@ -26,6 +26,6 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<Mute *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
-        return Mute(tokens[0], tokens[1], tokens[2] == QStringLiteral("1"));
+        return { tokens[0], tokens[1], tokens[2] == QStringLiteral("1") };
     }
 } // namespace swift::core::fsd

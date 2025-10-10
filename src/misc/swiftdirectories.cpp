@@ -112,7 +112,7 @@ namespace swift::misc
     QFileInfoList CSwiftDirectories::currentApplicationDataDirectories()
     {
         const QDir swiftAppData(applicationDataDirectory()); // contains 1..n subdirs
-        if (!swiftAppData.isReadable()) { return QFileInfoList(); }
+        if (!swiftAppData.isReadable()) { return {}; }
         return swiftAppData.entryInfoList({}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
     }
 

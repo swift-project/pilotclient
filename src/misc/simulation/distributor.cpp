@@ -173,7 +173,7 @@ namespace swift::misc::simulation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CDistributor();
+            return {};
         }
 
         const QString description(json.value(prefix % u"description").toString());

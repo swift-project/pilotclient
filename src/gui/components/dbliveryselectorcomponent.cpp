@@ -98,7 +98,7 @@ namespace swift::gui::components
 
     CLivery CDbLiverySelectorComponent::getLivery() const
     {
-        if (!sGui || sGui->isShuttingDown()) { return CLivery(); }
+        if (!sGui || sGui->isShuttingDown()) { return {}; }
 
         const QString raw = ui->le_Livery->text();
         const int dbKey = CDatastoreUtility::extractIntegerKey(raw);

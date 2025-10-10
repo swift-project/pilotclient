@@ -122,7 +122,7 @@ namespace swift::misc::db
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CDbInfo();
+            return {};
         }
         const int id(json.value(prefix % u"id").toInt());
         const int entries(json.value(prefix % u"entries").toInt());

@@ -35,6 +35,6 @@ namespace swift::misc::simulation
         {
             if (info.getSimulatorInfo() == simulator) { return info; }
         }
-        return CSimulatorPluginInfo();
+        return {};
     }
 } // namespace swift::misc::simulation

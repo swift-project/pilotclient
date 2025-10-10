@@ -29,7 +29,7 @@ namespace swift::core::context
         {
             Q_UNUSED(recalculateDistance)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CAtcStationList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getClosestAtcStationsOnline()
@@ -37,14 +37,14 @@ namespace swift::core::context
         {
             Q_UNUSED(number)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CAtcStationList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getAircraftInRange()
         swift::misc::simulation::CSimulatedAircraftList getAircraftInRange() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CSimulatedAircraftList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getAircraftInRangeForCallsign
@@ -53,7 +53,7 @@ namespace swift::core::context
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CSimulatedAircraft();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getOnlineStationsForFrequency
@@ -62,14 +62,14 @@ namespace swift::core::context
         {
             Q_UNUSED(frequency)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CAtcStationList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getAircraftInRangeCallsigns()
         swift::misc::aviation::CCallsignSet getAircraftInRangeCallsigns() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CCallsignSet();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getAircraftInRangeCount
@@ -93,7 +93,7 @@ namespace swift::core::context
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CAtcStation();
+            return {};
         }
 
         //! \copydoc IContextNetwork::isOnlineStation
@@ -154,7 +154,7 @@ namespace swift::core::context
         swift::misc::network::CServer getConnectedServer() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::network::CServer();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getLoginMode
@@ -184,7 +184,7 @@ namespace swift::core::context
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CFlightPlan();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getMetarForAirport
@@ -200,7 +200,7 @@ namespace swift::core::context
         swift::misc::network::CUserList getUsers() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::network::CUserList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getUsersForCallsigns
@@ -209,7 +209,7 @@ namespace swift::core::context
         {
             Q_UNUSED(callsigns)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::network::CUserList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getUserForCallsign
@@ -217,14 +217,14 @@ namespace swift::core::context
         {
             Q_UNUSED(callsign)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::network::CUser();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getClients
         swift::misc::network::CClientList getClients() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::network::CClientList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getClientsForCallsigns
@@ -233,7 +233,7 @@ namespace swift::core::context
         {
             Q_UNUSED(callsigns)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::network::CClientList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::setOtherClient
@@ -314,7 +314,7 @@ namespace swift::core::context
         swift::misc::network::CServerList getVatsimFsdServers() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::network::CServerList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::updateAircraftEnabled
@@ -393,7 +393,7 @@ namespace swift::core::context
         swift::misc::aviation::CCallsignSet getFastPositionEnabledCallsigns() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CCallsignSet();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getReverseLookupMessages
@@ -402,7 +402,7 @@ namespace swift::core::context
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign)
-            return swift::misc::CStatusMessageList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::isReverseLookupMessagesEnabled
@@ -425,7 +425,7 @@ namespace swift::core::context
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign)
-            return swift::misc::CStatusMessageList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::getRemoteAircraftParts
@@ -434,7 +434,7 @@ namespace swift::core::context
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             Q_UNUSED(callsign)
-            return swift::misc::aviation::CAircraftPartsList();
+            return {};
         }
 
         //! \copydoc IContextNetwork::isAircraftPartsHistoryEnabled

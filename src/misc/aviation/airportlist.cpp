@@ -50,14 +50,14 @@ namespace swift::misc::aviation
 
     CAirport CAirportList::findFirstByNameOrLocation(const QString &nameOrLocation) const
     {
-        if (this->isEmpty() || nameOrLocation.isEmpty()) { return CAirport(); }
+        if (this->isEmpty() || nameOrLocation.isEmpty()) { return {}; }
         CAirportList airports =
             this->findBy([&](const CAirport &airport) { return airport.matchesDescriptiveName(nameOrLocation); });
         if (!airports.isEmpty()) { return airports.frontOrDefault(); }
 
         airports = this->findBy([&](const CAirport &airport) { return airport.matchesLocation(nameOrLocation); });
         if (!airports.isEmpty()) { return airports.frontOrDefault(); }
-        return CAirport();
+        return {};
     }
 
     QStringList CAirportList::allIcaoCodes(bool sorted) const

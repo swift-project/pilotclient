@@ -53,7 +53,15 @@ namespace swift::core::fsd
         bool onGround = false;
         unpackPBH(tokens[7].toUInt(), pitch, bank, heading, onGround);
 
-        return InterimPilotDataUpdate(tokens[0], tokens[1], tokens[3].toDouble(), tokens[4].toDouble(),
-                                      tokens[5].toInt(), tokens[6].toInt(), pitch, bank, heading, onGround);
+        return { tokens[0],
+                 tokens[1],
+                 tokens[3].toDouble(),
+                 tokens[4].toDouble(),
+                 tokens[5].toInt(),
+                 tokens[6].toInt(),
+                 pitch,
+                 bank,
+                 heading,
+                 onGround };
     }
 } // namespace swift::core::fsd

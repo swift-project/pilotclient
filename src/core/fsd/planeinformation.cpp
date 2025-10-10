@@ -52,6 +52,6 @@ namespace swift::core::fsd
                 else if (pair[0] == QLatin1String("LIVERY")) { livery = pair[1]; }
             }
         }
-        return PlaneInformation(tokens[0], tokens[1], aircraft, airline, livery);
+        return { tokens[0], tokens[1], aircraft, airline, livery };
     }
 } // namespace swift::core::fsd

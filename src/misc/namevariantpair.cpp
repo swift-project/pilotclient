@@ -30,8 +30,8 @@ namespace swift::misc
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexName: return QVariant(this->m_name);
-        case IndexVariant: return this->m_variant;
+        case IndexName: return { this->m_name };
+        case IndexVariant: return this->m_variant; // NOLINT(modernize-return-braced-init-list)
         default: return CValueObject::propertyByIndex(index);
         }
     }

@@ -66,7 +66,7 @@ namespace swift::misc::aviation
 
     CAircraftCategoryList CAircraftCategoryList::findHighestLevels(const CAircraftCategoryList &categories)
     {
-        if (categories.isEmpty()) { return CAircraftCategoryList(); }
+        if (categories.isEmpty()) { return {}; }
         QMap<int, CAircraftCategory> highestLevels;
         for (const CAircraftCategory &category : *this)
         {

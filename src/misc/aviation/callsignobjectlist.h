@@ -51,7 +51,7 @@ namespace swift::misc::aviation
         //! Get callsigns as strings
         QString getCallsignsAsString(const QString &separator, bool sorted = false) const
         {
-            if (this->container().isEmpty()) { return QString(); }
+            if (this->container().isEmpty()) { return {}; }
             const QStringList callsigns = this->getCallsignStrings(sorted);
             return callsigns.join(separator);
         }

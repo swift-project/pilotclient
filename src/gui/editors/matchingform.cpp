@@ -86,7 +86,7 @@ namespace swift::gui::editors
     CStatusMessageList CMatchingForm::validate(bool withNestedForms) const
     {
         Q_UNUSED(withNestedForms)
-        return CStatusMessageList();
+        return {};
     }
 
     void CMatchingForm::setValue(const CAircraftMatcherSetup &setup)

@@ -322,7 +322,7 @@ namespace swift::misc::aviation
 
     CFlightPlan CFlightPlan::fromVPilotFormat(const QString &vPilotData)
     {
-        if (vPilotData.isEmpty()) { return CFlightPlan(); }
+        if (vPilotData.isEmpty()) { return {}; }
         QDomDocument doc;
         doc.setContent(vPilotData);
         const QDomElement fpDom = doc.firstChildElement();
@@ -378,7 +378,7 @@ namespace swift::misc::aviation
 
     CFlightPlan CFlightPlan::fromSB4Format(const QString &sbData)
     {
-        if (sbData.isEmpty()) { return CFlightPlan(); }
+        if (sbData.isEmpty()) { return {}; }
         CFlightPlan fp;
         const QMap<QString, QString> values = parseIniValues(sbData);
         const QString altStr = values.value("Altitude");
@@ -416,7 +416,7 @@ namespace swift::misc::aviation
 
     CFlightPlan CFlightPlan::fromSimBriefFormat(const QString &simBrief)
     {
-        if (simBrief.isEmpty()) { return CFlightPlan(); }
+        if (simBrief.isEmpty()) { return {}; }
         CFlightPlan fp;
         QDomDocument doc;
         doc.setContent(simBrief);
@@ -532,7 +532,7 @@ namespace swift::misc::aviation
 
     CFlightPlan CFlightPlan::fromMultipleFormats(const QString &data, const QString &fileSuffix)
     {
-        if (data.isEmpty()) { return CFlightPlan(); }
+        if (data.isEmpty()) { return {}; }
         if (fileSuffix.contains("xml", Qt::CaseInsensitive))
         {
             if (data.contains("<OFP>", Qt::CaseInsensitive) && data.contains("<general>", Qt::CaseInsensitive))
@@ -561,7 +561,7 @@ namespace swift::misc::aviation
                     msgs->push_back(
                         CStatusMessage(static_cast<CFlightPlan *>(nullptr)).validationError(u"No file name"));
                 }
-                return CFlightPlan();
+                return {};
             }
             else
             {
@@ -573,7 +573,7 @@ namespace swift::misc::aviation
                                             .validationError(u"File '%1' does not exist")
                                         << fileName);
                     }
-                    return CFlightPlan();
+                    return {};
                 }
             }
 
@@ -586,7 +586,7 @@ namespace swift::misc::aviation
                                         .validationError(u"File '%1' does not contain data")
                                     << fileName);
                 }
-                return CFlightPlan();
+                return {};
             }
 
             if (fileName.endsWith(".sfp", Qt::CaseInsensitive)) { return CFlightPlan::fromSB4Format(data); }
@@ -653,7 +653,7 @@ namespace swift::misc::aviation
                     QStringLiteral("Parsing flight plan from '%1' failed.").arg(fileName)));
             }
         }
-        return CFlightPlan();
+        return {};
     }
 
     const QString &CFlightPlan::flightRulesToString(CFlightPlan::FlightRules rules)

@@ -88,9 +88,9 @@ namespace swift::gui::components
 
     CDistributor CDbDistributorSelectorComponent::getDistributor() const
     {
-        if (!sGui) { return CDistributor(); }
+        if (!sGui) { return {}; }
         const QString distributorKeyOrAlias(ui->le_Distributor->text().trimmed().toUpper());
-        if (distributorKeyOrAlias.isEmpty()) { return CDistributor(); }
+        if (distributorKeyOrAlias.isEmpty()) { return {}; }
         if (m_currentDistributor.matchesKeyOrAlias(distributorKeyOrAlias)) { return m_currentDistributor; }
 
         const CDistributor d(sGui->getWebDataServices()->getDistributors().findByKey(distributorKeyOrAlias));

@@ -32,8 +32,8 @@ namespace swift::gui::components
         auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
-        case InfoAreaLog: return QSize(400, 300);
-        default: return QSize(400, 300);
+        case InfoAreaLog: return { 400, 300 };
+        default: return { 400, 300 };
         }
     }
 

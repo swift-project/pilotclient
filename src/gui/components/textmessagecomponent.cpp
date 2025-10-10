@@ -599,7 +599,7 @@ namespace swift::gui::components
 
     CSimulatedAircraft CTextMessageComponent::getOwnAircraft() const
     {
-        if (!sGui || !sGui->getIContextOwnAircraft()) { return CSimulatedAircraft(); }
+        if (!sGui || !sGui->getIContextOwnAircraft()) { return {}; }
         return sGui->getIContextOwnAircraft()->getOwnAircraft();
     }
 

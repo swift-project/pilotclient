@@ -53,7 +53,7 @@ namespace swift::gui::views
     template <class T>
     CCallsignSet CViewWithCallsignObjects<T>::selectedCallsigns() const
     {
-        if (!this->hasSelection()) { return CCallsignSet(); }
+        if (!this->hasSelection()) { return {}; }
         const ContainerType selected(this->selectedObjects());
         return selected.getCallsigns();
     }

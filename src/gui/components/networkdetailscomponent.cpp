@@ -150,7 +150,7 @@ namespace swift::gui::components
     CCallsign CNetworkDetailsComponent::getPartnerCallsign() const
     {
         if (ui->le_PartnerCallsign->text().isEmpty()) { return {}; }
-        return CCallsign(ui->le_PartnerCallsign->text(), CCallsign::Aircraft);
+        return { ui->le_PartnerCallsign->text(), CCallsign::Aircraft };
     }
 
     void CNetworkDetailsComponent::reloadOtherServersSetup()

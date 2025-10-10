@@ -265,7 +265,7 @@ namespace swift::gui::components
         {
             this->showOverlayMessage(CStatusMessage(this).validationError(u"Invalid callsign for mapping"),
                                      OverlayMessageMs);
-            return CCallsign();
+            return {};
         }
 
         const CCallsign callsign(cs);
@@ -275,7 +275,7 @@ namespace swift::gui::components
             const CStatusMessage msg = CStatusMessage(this).validationError(u"Unmapped callsign '%1' for mapping")
                                        << callsign.asString();
             this->showOverlayMessage(msg);
-            return CCallsign();
+            return {};
         }
         return callsign;
     }

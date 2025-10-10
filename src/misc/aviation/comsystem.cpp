@@ -63,32 +63,30 @@ namespace swift::misc::aviation
 
     CComSystem CComSystem::getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz)
     {
-        return CComSystem(
-            CModulator::NameCom1(),
-            physical_quantities::CFrequency(activeFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()),
-            physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz,
-                                            physical_quantities::CFrequencyUnit::MHz()));
+        return { CModulator::NameCom1(),
+                 physical_quantities::CFrequency(activeFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()),
+                 physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz,
+                                                 physical_quantities::CFrequencyUnit::MHz()) };
     }
 
     CComSystem CComSystem::getCom1System(const CFrequency &activeFrequency, const CFrequency &standbyFrequency)
     {
-        return CComSystem(CModulator::NameCom1(), activeFrequency,
-                          standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
+        return { CModulator::NameCom1(), activeFrequency,
+                 standbyFrequency.isNull() ? activeFrequency : standbyFrequency };
     }
 
     CComSystem CComSystem::getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz)
     {
-        return CComSystem(
-            CModulator::NameCom2(),
-            physical_quantities::CFrequency(activeFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()),
-            physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz,
-                                            physical_quantities::CFrequencyUnit::MHz()));
+        return { CModulator::NameCom2(),
+                 physical_quantities::CFrequency(activeFrequencyMHz, physical_quantities::CFrequencyUnit::MHz()),
+                 physical_quantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz,
+                                                 physical_quantities::CFrequencyUnit::MHz()) };
     }
 
     CComSystem CComSystem::getCom2System(const CFrequency &activeFrequency, const CFrequency &standbyFrequency)
     {
-        return CComSystem(CModulator::NameCom2(), activeFrequency,
-                          standbyFrequency.isNull() ? activeFrequency : standbyFrequency);
+        return { CModulator::NameCom2(), activeFrequency,
+                 standbyFrequency.isNull() ? activeFrequency : standbyFrequency };
     }
 
     bool CComSystem::isValidCivilAviationFrequency(const CFrequency &f)

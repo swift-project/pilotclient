@@ -27,7 +27,7 @@ namespace swift::core::context
         swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CSimulatedAircraft();
+            return {};
         }
 
         //! \copydoc IContextOwnAircraft::getOwnComSystem
@@ -36,21 +36,21 @@ namespace swift::core::context
         {
             Q_UNUSED((unit);)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CComSystem();
+            return {};
         }
 
         //! \copydoc IContextOwnAircraft::getOwnTransponder()
         swift::misc::aviation::CTransponder getOwnTransponder() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CTransponder();
+            return {};
         }
 
         //! \copydoc IContextOwnAircraft::getOwnAircraftSituation()
         swift::misc::aviation::CAircraftSituation getOwnAircraftSituation() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CAircraftSituation();
+            return {};
         }
 
         //! \copydoc IContextOwnAircraft::updateOwnPosition

@@ -42,7 +42,7 @@ namespace swift::misc
         else { return CIcons::pixmapByIndex(this->getIndex()); }
     }
 
-    QIcon CIcon::toQIcon() const { return QIcon(toPixmap()); }
+    QIcon CIcon::toQIcon() const { return { toPixmap() }; }
 
     QString CIcon::convertToQString(bool i18n) const
     {

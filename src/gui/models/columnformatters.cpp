@@ -95,7 +95,7 @@ namespace swift::gui::models
 
     CVariant CDefaultFormatter::data(int role, const CVariant &inputData) const
     {
-        if (!this->supportsRole(role)) { return CVariant(); }
+        if (!this->supportsRole(role)) { return {}; }
         const auto roleEnum = static_cast<Qt::ItemDataRole>(role);
 
         // always supported
@@ -112,7 +112,7 @@ namespace swift::gui::models
         case Qt::CheckStateRole: return checkStateRole(inputData); // as Qt check state
         default: break;
         }
-        return CVariant();
+        return {};
     }
 
     int CDefaultFormatter::alignDefault() { return alignLeftVCenter(); }
@@ -180,12 +180,12 @@ namespace swift::gui::models
 
     CVariant CValueObjectFormatter::displayRole(const CVariant &valueObject) const
     {
-        return CVariant(valueObject.toQString(m_useI18n));
+        return { valueObject.toQString(m_useI18n) };
     }
 
     CVariant CValueObjectFormatter::decorationRole(const CVariant &valueObject) const
     {
-        return CVariant(valueObject.toPixmap());
+        return { valueObject.toPixmap() };
     }
 
     CDateTimeFormatter::CDateTimeFormatter(const QString &formatString, int alignment, bool i18n)
@@ -292,7 +292,7 @@ namespace swift::gui::models
             return v ? CVariant(m_trueNameVariant) : CVariant(m_falseNameVariant);
         }
         Q_ASSERT_X(false, "CBoolTextFormatter", "no boolean value");
-        return CVariant();
+        return {};
     }
 
     Qt::ItemFlags CBoolTextFormatter::flags(Qt::ItemFlags flags, bool editable) const
@@ -317,7 +317,7 @@ namespace swift::gui::models
     {
         Q_UNUSED(dataCVariant);
         Q_ASSERT_X(false, Q_FUNC_INFO, "this role should be disabled with led boolean");
-        return CVariant();
+        return {};
     }
 
     CVariant CBoolLedFormatter::decorationRole(const CVariant &dataCVariant) const
@@ -328,7 +328,7 @@ namespace swift::gui::models
             return v ? m_pixmapOnLedVariant : m_pixmapOffLedVariant;
         }
         Q_ASSERT_X(false, "CBoolLedFormatter", "no boolean value");
-        return CVariant();
+        return {};
     }
 
     CBoolIconFormatter::CBoolIconFormatter(int alignment)
@@ -355,7 +355,7 @@ namespace swift::gui::models
     {
         Q_UNUSED(dataCVariant)
         Q_ASSERT_X(false, "CBoolIconFormatter", "this role should be disabled with icon boolean");
-        return CVariant();
+        return {};
     }
 
     CVariant CBoolIconFormatter::decorationRole(const CVariant &dataCVariant) const
@@ -366,7 +366,7 @@ namespace swift::gui::models
             return v ? m_iconOnVariant : m_iconOffVariant;
         }
         Q_ASSERT_X(false, "CBoolIconFormatter", "no boolean value");
-        return CVariant();
+        return {};
     }
 
     CVariant CBoolIconFormatter::tooltipRole(const CVariant &dataCVariant) const
@@ -390,7 +390,7 @@ namespace swift::gui::models
     {
         Q_UNUSED(dataCVariant)
         Q_ASSERT_X(false, Q_FUNC_INFO, "this role should be disabled with RGB color");
-        return CVariant();
+        return {};
     }
 
     CVariant CColorFormatter::decorationRole(const CVariant &dataCVariant) const
@@ -430,7 +430,7 @@ namespace swift::gui::models
 
         const int i = expectedInteger.toInt(&ok);
         if (ok) { return QString::number(i); }
-        return CVariant();
+        return {};
     }
 
     CVariant CEmptyFormatter::displayRole(const CVariant &dataCVariant) const

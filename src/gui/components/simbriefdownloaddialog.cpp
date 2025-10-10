@@ -20,7 +20,7 @@ namespace swift::gui::components
 
     CSimBriefData CSimBriefDownloadDialog::getSimBriefData() const
     {
-        return CSimBriefData(ui->le_SimBriefURL->text().trimmed(), ui->le_SimBriefUsername->text().trimmed());
+        return { ui->le_SimBriefURL->text().trimmed(), ui->le_SimBriefUsername->text().trimmed() };
     }
 
     void CSimBriefDownloadDialog::setSimBriefData(const CSimBriefData &data)

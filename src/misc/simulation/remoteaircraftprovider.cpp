@@ -33,7 +33,7 @@ namespace swift::misc::simulation
         QReadLocker l(&m_lockAircraft);
         const QList<CSimulatedAircraft> aircraftInRange = m_aircraftInRange.values();
         l.unlock();
-        return CSimulatedAircraftList(aircraftInRange);
+        return { aircraftInRange };
     }
 
     CCallsignSet CRemoteAircraftProvider::getAircraftInRangeCallsigns() const
@@ -41,7 +41,7 @@ namespace swift::misc::simulation
         QReadLocker l(&m_lockAircraft);
         const QList<CCallsign> callsigns = m_aircraftInRange.keys();
         l.unlock();
-        return CCallsignSet(callsigns);
+        return { callsigns };
     }
 
     CSimulatedAircraft CRemoteAircraftProvider::getAircraftInRangeForCallsign(const CCallsign &callsign) const
@@ -83,7 +83,7 @@ namespace swift::misc::simulation
         QReadLocker l(&m_lockSituations);
         const QList<CAircraftSituation> situations(m_latestSituationByCallsign.values());
         l.unlock();
-        return CAircraftSituationList(situations);
+        return { situations };
     }
 
     CAircraftSituationList CRemoteAircraftProvider::latestOnGroundProviderElevations() const
@@ -91,7 +91,7 @@ namespace swift::misc::simulation
         QReadLocker l(&m_lockSituations);
         const QList<CAircraftSituation> situations(m_latestOnGroundProviderElevation.values());
         l.unlock();
-        return CAircraftSituationList(situations);
+        return { situations };
     }
 
     int CRemoteAircraftProvider::remoteAircraftSituationsCount(const CCallsign &callsign) const

@@ -11,17 +11,14 @@ namespace swift::misc::simulation
     IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
     {
         QReadLocker l(&m_lockSetup);
-        if (!m_setupsPerCallsign.contains(callsign))
-        {
-            return CInterpolationAndRenderingSetupPerCallsign(callsign, m_globalSetup);
-        }
+        if (!m_setupsPerCallsign.contains(callsign)) { return { callsign, m_globalSetup }; }
         return m_setupsPerCallsign.value(callsign);
     }
 
     CInterpolationSetupList IInterpolationSetupProvider::getInterpolationSetupsPerCallsign() const
     {
         const SetupsPerCallsign setups = this->getSetupsPerCallsign();
-        return CInterpolationSetupList(setups.values());
+        return { setups.values() };
     }
 
     bool IInterpolationSetupProvider::hasSetupsPerCallsign() const
@@ -200,13 +197,13 @@ namespace swift::misc::simulation
     CInterpolationAndRenderingSetupPerCallsign
     CInterpolationSetupAware::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
     {
-        if (!this->hasProvider()) { return CInterpolationAndRenderingSetupPerCallsign(); }
+        if (!this->hasProvider()) { return {}; }
         return this->provider()->getInterpolationSetupPerCallsignOrDefault(callsign);
     }
 
     CInterpolationAndRenderingSetupGlobal CInterpolationSetupAware::getInterpolationSetupGlobal() const
     {
-        if (!this->hasProvider()) { return CInterpolationAndRenderingSetupGlobal(); }
+        if (!this->hasProvider()) { return {}; }
         return this->provider()->getInterpolationSetupGlobal();
     }
 } // namespace swift::misc::simulation

@@ -26,7 +26,7 @@ namespace swift::misc
     CPropertyIndex CPropertyIndex::copyFrontRemoved() const
     {
         SWIFT_VERIFY_X(!this->isEmpty(), Q_FUNC_INFO, "Empty index");
-        if (this->isEmpty()) { return CPropertyIndex(); }
+        if (this->isEmpty()) { return {}; }
         CPropertyIndex copy = *this;
         copy.m_indexes.pop_front();
         return copy;

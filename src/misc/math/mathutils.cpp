@@ -155,6 +155,6 @@ namespace swift::misc::math
         const double meanValue = mean(values);
         const double varianceValue = mean(squaredDifferences(values, meanValue));
         const double sd = sqrt(varianceValue);
-        return QPair<double, double>(sd, meanValue);
+        return { sd, meanValue };
     }
 } // namespace swift::misc::math

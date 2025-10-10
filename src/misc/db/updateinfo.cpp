@@ -62,9 +62,9 @@ namespace swift::misc::db
 
     CDistribution CUpdateInfo::anticipateOwnDistribution() const
     {
-        if (this->isEmpty()) { return CDistribution(); }
+        if (this->isEmpty()) { return {}; }
         const CArtifactList ownArtifacts = this->getArtifactsPilotClientForCurrentPlatform();
-        if (ownArtifacts.isEmpty()) { return CDistribution(); }
+        if (ownArtifacts.isEmpty()) { return {}; }
 
         const QVersionNumber myVersion = CBuildConfig::getVersion();
         const QVersionNumber latestVersion = ownArtifacts.getLatestQVersion();
@@ -136,12 +136,12 @@ namespace swift::misc::db
         const CArtifactList artifacts = CArtifactList::fromDatabaseJson(jsonArtifacts);
         Q_ASSERT_X(jsonDistributions.size() == distributions.size(), Q_FUNC_INFO, "size mismatch");
         Q_ASSERT_X(artifacts.size() == artifacts.size(), Q_FUNC_INFO, "size mismatch");
-        return CUpdateInfo(artifacts, distributions);
+        return { artifacts, distributions };
     }
 
     CUpdateInfo CUpdateInfo::fromDatabaseJson(const QString &jsonString)
     {
-        if (jsonString.isEmpty()) { return CUpdateInfo(); }
+        if (jsonString.isEmpty()) { return {}; }
         return CUpdateInfo::fromDatabaseJson(json::jsonObjectFromString(jsonString));
     }
 

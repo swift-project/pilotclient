@@ -233,7 +233,7 @@ namespace swift::gui::components
 
     CAircraftModel CDbMappingComponent::getModelFromView(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return CAircraftModel(); }
+        if (!index.isValid()) { return {}; }
         const QObject *sender = QObject::sender();
 
         // check if we have an explicit sender
@@ -247,7 +247,7 @@ namespace swift::gui::components
 
         // no sender, use current tab
         const CAircraftModelView *mv = this->currentModelView();
-        if (!mv) { return CAircraftModel(); }
+        if (!mv) { return {}; }
         return mv->at(index);
     }
 
@@ -325,7 +325,7 @@ namespace swift::gui::components
     CAircraftModelList CDbMappingComponent::getSelectedModelsToStash() const
     {
         const CAircraftModelView *mv = this->currentModelView();
-        if (!mv || !mv->hasSelectedModelsToStash()) { return CAircraftModelList(); }
+        if (!mv || !mv->hasSelectedModelsToStash()) { return {}; }
         return mv->selectedObjects();
     }
 

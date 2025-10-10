@@ -29,6 +29,6 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<Pong *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
-        return Pong(tokens[0], tokens[1], tokens[2]);
+        return { tokens[0], tokens[1], tokens[2] };
     }
 } // namespace swift::core::fsd

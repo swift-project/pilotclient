@@ -227,9 +227,9 @@ namespace swift::misc::simulation
     QString MSModelSet::findCombinedTypeWithClosestColorLivery(const QString &combinedType,
                                                                const QString &rgbColor) const
     {
-        if (combinedType.isEmpty() || rgbColor.isEmpty()) { return QString(); }
+        if (combinedType.isEmpty() || rgbColor.isEmpty()) { return {}; }
         CAircraftModelList models = m_modelSet.findByCombinedTypeWithColorLivery(combinedType);
-        if (models.isEmpty()) { return QString(); }
+        if (models.isEmpty()) { return {}; }
         const CRgbColor color(rgbColor);
         models = models.findClosestFuselageColorDistance(color);
         return models.isEmpty() ? QString() : models.front().getModelString();
@@ -242,16 +242,16 @@ namespace swift::misc::simulation
         if (!ms.isEmpty()) { return ms; }
         if (combinedType.size() != 3) { return ms; }
         QString wildCard(combinedType);
-        if (wildCard.size() != 3) { return QString(); }
+        if (wildCard.size() != 3) { return {}; }
         wildCard[1] = '*';
         return this->findCombinedTypeWithClosestColorLivery(wildCard, rgbColor);
     }
 
     QString MSModelSet::findAircraftFamilyWithClosestColorLivery(const QString &family, const QString &rgbColor) const
     {
-        if (family.isEmpty() || rgbColor.isEmpty()) { return QString(); }
+        if (family.isEmpty() || rgbColor.isEmpty()) { return {}; }
         CAircraftModelList models = m_modelSet.findByFamilyWithColorLivery(family);
-        if (models.isEmpty()) { return QString(); }
+        if (models.isEmpty()) { return {}; }
         const CRgbColor color(rgbColor);
         models = models.findClosestFuselageColorDistance(color);
         return models.isEmpty() ? QString() : models.front().getModelString();

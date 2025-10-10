@@ -41,21 +41,21 @@ namespace swift::core
             swift::misc::CValueCachePacket getAllSettings() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return swift::misc::CValueCachePacket();
+                return {};
             }
 
             //! \copydoc IContextApplication::getUnsavedSettingsKeys
             QStringList getUnsavedSettingsKeys() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return QStringList();
+                return {};
             }
 
             //! \copydoc IContextApplication::getUnsavedSettingsKeys
             swift::core::context::CSettingsDictionary getUnsavedSettingsKeysDescribed() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return CSettingsDictionary();
+                return {};
             }
 
             //! \copydoc IContextApplication::synchronizeLocalSettings
@@ -66,7 +66,7 @@ namespace swift::core
             {
                 Q_UNUSED(keyPrefix);
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return swift::misc::CStatusMessage();
+                return {};
             }
 
             //! \copydoc IContextApplication::saveSettingsByKey
@@ -74,14 +74,14 @@ namespace swift::core
             {
                 Q_UNUSED(keys);
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return swift::misc::CStatusMessage();
+                return {};
             }
 
             //! \copydoc IContextApplication::loadSettings
             swift::misc::CStatusMessage loadSettings() override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return swift::misc::CStatusMessage();
+                return {};
             }
 
             //! \copydoc IContextApplication::registerHotkeyActions
@@ -107,7 +107,7 @@ namespace swift::core
             {
                 Q_UNUSED(application);
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return swift::misc::CIdentifier();
+                return {};
             }
 
             //! \copydoc IContextApplication::unregisterApplication
@@ -121,14 +121,14 @@ namespace swift::core
             swift::misc::CIdentifierList getRegisteredApplications() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return swift::misc::CIdentifierList();
+                return {};
             }
 
             //! \copydoc IContextApplication::getApplicationIdentifier
             swift::misc::CIdentifier getApplicationIdentifier() const override
             {
                 logEmptyContextWarning(Q_FUNC_INFO);
-                return swift::misc::CIdentifier();
+                return {};
             }
         };
     } // namespace context

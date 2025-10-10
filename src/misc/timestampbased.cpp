@@ -20,7 +20,7 @@ namespace swift::misc
 
     QDateTime ITimestampBased::getUtcTimestamp() const
     {
-        if (m_timestampMSecsSinceEpoch < 0) { return QDateTime(); }
+        if (m_timestampMSecsSinceEpoch < 0) { return {}; }
         return QDateTime::fromMSecsSinceEpoch(m_timestampMSecsSinceEpoch);
     }
 
@@ -289,7 +289,7 @@ namespace swift::misc
         }
         const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
-        return QVariant();
+        return {};
     }
 
     void ITimestampWithOffsetBased::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)

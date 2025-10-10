@@ -74,7 +74,7 @@ namespace swift::gui::views
     CAircraftCategory CAircraftCategoryTreeView::selectedObject() const
     {
         const CAircraftCategoryTreeModel *model = this->categoryModel();
-        if (!model) { return CAircraftCategory(); }
+        if (!model) { return {}; }
         return model->container().frontOrDefault();
     }
 

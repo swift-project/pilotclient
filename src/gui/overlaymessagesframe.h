@@ -364,7 +364,7 @@ namespace swift::gui
             int hInner = qRound(heightFactor * h);
             if (wInner > WIDGET::maximumWidth()) { wInner = WIDGET::maximumWidth(); }
             if (hInner > WIDGET::maximumHeight()) { hInner = WIDGET::maximumHeight(); }
-            return QSize(wInner, hInner);
+            return { wInner, hInner };
         }
 
         bool m_forceSmallMsgs = false; //!< force small messages

@@ -40,7 +40,7 @@ CStatusMessageList CSwiftGuiStdApplication::startHookIn()
             const CStatusMessage m =
                 CStatusMessage(this, CLogCategories::validation()).error(u"Inconsistent pair DBus: '%1' and core: '%2'")
                 << dBusAddress << coreModeStr;
-            return CStatusMessageList(m);
+            return { m };
         }
     }
 

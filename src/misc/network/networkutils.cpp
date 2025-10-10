@@ -205,7 +205,7 @@ namespace swift::misc::network
         {
             return lastModifiedQv.value<QDateTime>();
         }
-        return QDateTime();
+        return {};
     }
 
     qint64 CNetworkUtils::lastModifiedSinceNow(const QNetworkReply *nwReply)
@@ -246,9 +246,9 @@ namespace swift::misc::network
 
     QUrl CNetworkUtils::getHttpRedirectUrl(QNetworkReply *nwReply)
     {
-        if (!nwReply) { return QUrl(); }
+        if (!nwReply) { return {}; }
         const QVariant possibleRedirectUrl = nwReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-        if (!possibleRedirectUrl.isValid()) { return QUrl(); }
+        if (!possibleRedirectUrl.isValid()) { return {}; }
         QUrl redirectUrl = possibleRedirectUrl.toUrl();
         if (redirectUrl.isRelative()) { redirectUrl = nwReply->url().resolved(redirectUrl); }
         return redirectUrl;

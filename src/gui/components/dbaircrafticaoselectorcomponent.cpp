@@ -91,7 +91,7 @@ namespace swift::gui::components
         {
             const QString icaoOnly = CDatastoreUtility::stripKeyInParentheses(text);
             if (m_currentIcao.getDesignator() == icaoOnly) { return m_currentIcao; }
-            return CAircraftIcaoCode(icaoOnly);
+            return { icaoOnly };
         }
         CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
         if (icao.isNull())
@@ -99,7 +99,7 @@ namespace swift::gui::components
             // did not find by key
             const QString icaoOnly = CDatastoreUtility::stripKeyInParentheses(text);
             if (m_currentIcao.getDesignator() == icaoOnly) { return m_currentIcao; }
-            return CAircraftIcaoCode(icaoOnly);
+            return { icaoOnly };
         }
         return icao;
     }

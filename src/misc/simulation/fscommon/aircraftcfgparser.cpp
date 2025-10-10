@@ -140,14 +140,14 @@ namespace swift::misc::simulation::fscommon
         // function has to be threadsafe
         //
 
-        if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
+        if (m_cancelLoading) { return {}; }
 
         // excluded?
         if (CFileUtils::isExcludedDirectory(directory, excludeDirectories) || isExcludedSubDirectory(directory))
         {
             const CStatusMessage m = CStatusMessage(this).info(u"Skipping directory '%1' (excluded)") << directory;
             messages.push_back(m);
-            return CAircraftCfgEntriesList();
+            return {};
         }
 
         // set directory with name filters, get aircraft.cfg and sub directories
@@ -160,7 +160,7 @@ namespace swift::misc::simulation::fscommon
         dir.setNameFilters(fileNameFilters(getSimulator().isMSFS(), getSimulator().isMSFS2024()));
         if (!dir.exists())
         {
-            return CAircraftCfgEntriesList(); // can happen if there are shortcuts or linked dirs not available
+            return {}; // can happen if there are shortcuts or linked dirs not available
         }
 
         const QString currentDir = dir.absolutePath();
@@ -187,7 +187,7 @@ namespace swift::misc::simulation::fscommon
 
         for (const auto &fileInfo : files)
         {
-            if (m_cancelLoading) { return CAircraftCfgEntriesList(); }
+            if (m_cancelLoading) { return {}; }
             if (fileInfo.isDir())
             {
                 const QString nextDir = fileInfo.absoluteFilePath();
@@ -251,7 +251,7 @@ namespace swift::misc::simulation::fscommon
                 CStatusMessage(static_cast<CAircraftCfgParser *>(nullptr)).warning(u"Unable to read file '%1'")
                 << fnFixed;
             msgs.push_back(m);
-            return CAircraftCfgEntriesList();
+            return {};
         }
 
         QTextStream in(&file);

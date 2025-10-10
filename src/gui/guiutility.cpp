@@ -167,11 +167,11 @@ namespace swift::gui
 #ifdef Q_OS_WINDOWS
         return Private::windowsGetDesktopResolution();
 #elif defined(Q_OS_MAC)
-        return QSize();
+        return {};
 #elif defined(Q_OS_LINUX)
-        return QSize();
+        return {};
 #else
-        return QSize();
+        return {};
 #endif
     }
 
@@ -367,24 +367,24 @@ namespace swift::gui
 
     CVariant CGuiUtility::fromSwiftDragAndDropData(const QMimeData *mime)
     {
-        if (!hasSwiftVariantMimeType(mime)) { return CVariant(); }
+        if (!hasSwiftVariantMimeType(mime)) { return {}; }
         return CGuiUtility::fromSwiftDragAndDropData(mime->data(swiftJsonDragAndDropMimeType()));
     }
 
     CVariant CGuiUtility::fromSwiftDragAndDropData(const QByteArray &utf8Data)
     {
-        if (utf8Data.isEmpty()) { return CVariant(); }
+        if (utf8Data.isEmpty()) { return {}; }
         const QJsonDocument jsonDoc(QJsonDocument::fromJson(utf8Data));
         const QJsonObject jsonObj(jsonDoc.object());
         const QString typeName(jsonObj.value("type").toString());
         const int typeId = QMetaType::fromName(qPrintable(typeName)).id();
 
         // check if a potential valid value object
-        if (typeName.isEmpty() || typeId == QMetaType::UnknownType) { return CVariant(); }
+        if (typeName.isEmpty() || typeId == QMetaType::UnknownType) { return {}; }
 
         CVariant valueVariant;
         const CStatusMessage status = valueVariant.convertFromJsonNoThrow(jsonObj, {}, {});
-        if (status.isFailure()) { return CVariant(); }
+        if (status.isFailure()) { return {}; }
         return valueVariant;
     }
 
@@ -409,9 +409,9 @@ namespace swift::gui
 
     QFileInfo CGuiUtility::representedMimeFile(const QMimeData *mime)
     {
-        if (!mime->hasText()) { return QFileInfo(); }
+        if (!mime->hasText()) { return {}; }
         const QString candidate = mime->text();
-        if (candidate.isEmpty()) { return QFileInfo(); }
+        if (candidate.isEmpty()) { return {}; }
         if (!candidate.contains("://")) { return QFileInfo(candidate); }
         QUrl url(candidate);
         const QString localFile = url.toLocalFile();
@@ -515,7 +515,7 @@ namespace swift::gui
 
         // fallback, can be mfw it is not found
         CEnableForFramelessWindow *mfw = CGuiUtility::mainFramelessEnabledWindow();
-        if (!mfw || !mfw->getWidget()) { return QPoint(); }
+        if (!mfw || !mfw->getWidget()) { return {}; }
         return mfw->getWidget()->pos(); // is main window, so not mapToGlobal
     }
 
@@ -631,7 +631,7 @@ namespace swift::gui
         const int b = parts.at(3).toInt(&ok);
         Q_ASSERT_X(ok, Q_FUNC_INFO, "malformed number");
         Q_UNUSED(ok)
-        return QMargins(l, t, r, b);
+        return { l, t, r, b };
     }
 
     QList<int> CGuiUtility::indexToUniqueRows(const QModelIndexList &indexes)
@@ -763,7 +763,7 @@ namespace swift::gui
         const QSizeF s = s1 + s2;
         const qreal w = s.width() * xCharacters / 123; // 123 chars
         const qreal h = s.height() * yCharacters / 2; // 2 lines
-        return QSizeF(w, h);
+        return { w, h };
     }
 
     void CGuiUtility::centerWidget(QWidget *widget)

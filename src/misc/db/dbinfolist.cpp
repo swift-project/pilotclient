@@ -17,7 +17,7 @@ namespace swift::misc::db
         {
             if (info.matchesEntity(entity)) { return info; }
         }
-        return CDbInfo();
+        return {};
     }
 
     CDbInfoList CDbInfoList::fromDatabaseJson(const QJsonArray &array)

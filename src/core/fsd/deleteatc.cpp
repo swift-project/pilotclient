@@ -26,6 +26,6 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<DeleteAtc *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
-        return DeleteAtc(tokens[0], (tokens.size() >= 2) ? tokens[1] : QString());
+        return { tokens[0], (tokens.size() >= 2) ? tokens[1] : QString() };
     }
 } // namespace swift::core::fsd

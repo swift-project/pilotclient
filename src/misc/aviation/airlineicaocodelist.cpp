@@ -30,13 +30,13 @@ namespace swift::misc::aviation
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignator(const QString &designator) const
     {
-        if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }
+        if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return {}; }
         return this->findBy([&](const CAirlineIcaoCode &code) { return code.matchesDesignator(designator); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByIataCode(const QString &iata) const
     {
-        if (!CAirlineIcaoCode::isValidIataCode(iata)) { return CAirlineIcaoCodeList(); }
+        if (!CAirlineIcaoCode::isValidIataCode(iata)) { return {}; }
         return this->findBy([&](const CAirlineIcaoCode &code) { return code.matchesIataCode(iata); });
     }
 
@@ -48,14 +48,14 @@ namespace swift::misc::aviation
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByDesignatorOrIataCode(const QString &designatorOrIata) const
     {
-        if (designatorOrIata.isEmpty()) { return CAirlineIcaoCodeList(); }
+        if (designatorOrIata.isEmpty()) { return {}; }
         return this->findBy(
             [&](const CAirlineIcaoCode &code) { return code.matchesDesignatorOrIataCode(designatorOrIata); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByVDesignator(const QString &designator) const
     {
-        if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return CAirlineIcaoCodeList(); }
+        if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return {}; }
         return this->findBy([&](const CAirlineIcaoCode &code) { return code.matchesVDesignator(designator); });
     }
 
@@ -69,34 +69,34 @@ namespace swift::misc::aviation
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByVDesignatorOrIataCode(const QString &designatorOrIata) const
     {
-        if (designatorOrIata.isEmpty()) { return CAirlineIcaoCodeList(); }
+        if (designatorOrIata.isEmpty()) { return {}; }
         return this->findBy(
             [&](const CAirlineIcaoCode &code) { return code.matchesVDesignatorOrIataCode(designatorOrIata); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByCountryIsoCode(const QString &isoCode) const
     {
-        if (isoCode.length() != 2) { return CAirlineIcaoCodeList(); }
+        if (isoCode.length() != 2) { return {}; }
         const QString iso(isoCode.toUpper());
         return this->findBy([&](const CAirlineIcaoCode &code) { return code.getCountry().getIsoCode() == iso; });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findBySimplifiedNameContaining(const QString &containedString) const
     {
-        if (containedString.isEmpty()) { return CAirlineIcaoCodeList(); }
+        if (containedString.isEmpty()) { return {}; }
         return this->findBy(
             [&](const CAirlineIcaoCode &code) { return code.isContainedInSimplifiedName(containedString); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByTelephonyDesignator(const QString &candidate) const
     {
-        if (candidate.isEmpty()) { return CAirlineIcaoCodeList(); }
+        if (candidate.isEmpty()) { return {}; }
         return this->findBy([&](const CAirlineIcaoCode &code) { return code.matchesTelephonyDesignator(candidate); });
     }
 
     CAirlineIcaoCodeList CAirlineIcaoCodeList::findByNamesOrTelephonyDesignator(const QString &candidate) const
     {
-        if (candidate.isEmpty()) { return CAirlineIcaoCodeList(); }
+        if (candidate.isEmpty()) { return {}; }
         return this->findBy(
             [&](const CAirlineIcaoCode &code) { return code.matchesNamesOrTelephonyDesignator(candidate); });
     }
@@ -275,9 +275,9 @@ namespace swift::misc::aviation
 
     CAirlineIcaoCode CAirlineIcaoCodeList::findBestMatchByCallsign(const CCallsign &callsign) const
     {
-        if (this->isEmpty() || callsign.isEmpty()) { return CAirlineIcaoCode(); }
+        if (this->isEmpty() || callsign.isEmpty()) { return {}; }
         const QString airline = callsign.getAirlinePrefix().toUpper();
-        if (airline.isEmpty()) { return CAirlineIcaoCode(); }
+        if (airline.isEmpty()) { return {}; }
         const CAirlineIcaoCode airlineCode = (airline.length() == 3) ?
                                                  this->findFirstByOrDefault(&CAirlineIcaoCode::getDesignator, airline) :
                                                  this->findFirstByOrDefault(&CAirlineIcaoCode::getVDesignator, airline);

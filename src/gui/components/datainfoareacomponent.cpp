@@ -110,7 +110,7 @@ namespace swift::gui::components
         case InfoAreaModels:
         case InfoAreaCountries:
         case InfoAreaAircraftCategories:
-        default: return QSize(800, 600);
+        default: return { 800, 600 };
         }
     }
 

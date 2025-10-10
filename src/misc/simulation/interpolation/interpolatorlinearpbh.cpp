@@ -59,8 +59,7 @@ namespace swift::misc::simulation
             SWIFT_VERIFY_X(headingStart.getReferenceNorth() == headingEnd.getReferenceNorth(), Q_FUNC_INFO,
                            "Need same reference");
         }
-        return CHeading(interpolateAngle(headingStart, headingEnd, m_simulationTimeFraction),
-                        headingEnd.getReferenceNorth());
+        return { interpolateAngle(headingStart, headingEnd, m_simulationTimeFraction), headingEnd.getReferenceNorth() };
     }
 
     CAngle CInterpolatorLinearPbh::getPitch() const

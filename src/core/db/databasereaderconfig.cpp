@@ -110,7 +110,7 @@ namespace swift::core::db
                 if (config.getEntities() == entities) { return config; }
             }
         }
-        return CDatabaseReaderConfig(); // not found
+        return {}; // not found
     }
 
     void CDatabaseReaderConfigList::markAsDbDown()

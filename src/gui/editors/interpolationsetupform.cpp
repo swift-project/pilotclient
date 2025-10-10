@@ -76,7 +76,7 @@ namespace swift::gui::editors
     CStatusMessageList CInterpolationSetupForm::validate(bool nested) const
     {
         Q_UNUSED(nested)
-        return CStatusMessageList();
+        return {};
     }
 
     void CInterpolationSetupForm::onCheckboxChanged(Qt::CheckState state)

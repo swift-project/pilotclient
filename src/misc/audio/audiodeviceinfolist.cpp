@@ -175,12 +175,12 @@ namespace swift::misc::audio
 
     CAudioDeviceInfo CAudioDeviceInfoList::defaultInputDevice()
     {
-        return CAudioDeviceInfo(CAudioDeviceInfo::InputDevice, defaultQtInputDevice().description());
+        return { CAudioDeviceInfo::InputDevice, defaultQtInputDevice().description() };
     }
 
     CAudioDeviceInfo CAudioDeviceInfoList::defaultOutputDevice()
     {
-        return CAudioDeviceInfo(CAudioDeviceInfo::OutputDevice, defaultQtOutputDevice().description());
+        return { CAudioDeviceInfo::OutputDevice, defaultQtOutputDevice().description() };
     }
 
 } // namespace swift::misc::audio

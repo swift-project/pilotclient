@@ -635,7 +635,7 @@ namespace swift::gui
 
     CDockWidgetSettings CDockWidget::getSettings() const
     {
-        if (this->objectName().isEmpty()) { return CDockWidgetSettings(); }
+        if (this->objectName().isEmpty()) { return {}; }
 
         // we need object name for settings %OwnerName%"
         const CDockWidgetSettings s = m_settings.get();

@@ -78,7 +78,7 @@ namespace swift::gui::editors
         return s;
     }
 
-    CAngle CSituationForm::getBankAngle() const { return CAngle(getBankAngleDegrees(), CAngleUnit::deg()); }
+    CAngle CSituationForm::getBankAngle() const { return { getBankAngleDegrees(), CAngleUnit::deg() }; }
 
     double CSituationForm::getBankAngleDegrees() const
     {
@@ -89,7 +89,7 @@ namespace swift::gui::editors
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
-    CAngle CSituationForm::getPitchAngle() const { return CAngle(getPitchAngleDegrees(), CAngleUnit::deg()); }
+    CAngle CSituationForm::getPitchAngle() const { return { getPitchAngleDegrees(), CAngleUnit::deg() }; }
 
     double CSituationForm::getPitchAngleDegrees() const
     {
@@ -100,7 +100,7 @@ namespace swift::gui::editors
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
-    CAngle CSituationForm::getHeadingAngle() const { return CAngle(getHeadingAngleDegrees(), CAngleUnit::deg()); }
+    CAngle CSituationForm::getHeadingAngle() const { return { getHeadingAngleDegrees(), CAngleUnit::deg() }; }
 
     double CSituationForm::getHeadingAngleDegrees() const
     {
@@ -122,13 +122,13 @@ namespace swift::gui::editors
 
     CPressure CSituationForm::getBarometricPressureMsl() const
     {
-        return CPressure(this->getBarometricPressureMslMillibar(), CPressureUnit::mbar());
+        return { this->getBarometricPressureMslMillibar(), CPressureUnit::mbar() };
     }
 
     CSpeed CSituationForm::getGroundSpeed() const
     {
         const int gsKts = ui->sb_GsKts->value();
-        return CSpeed(gsKts, CSpeedUnit::kts());
+        return { static_cast<double>(gsKts), CSpeedUnit::kts() };
     }
 
     void CSituationForm::setReadOnly(bool readonly)

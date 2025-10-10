@@ -201,7 +201,7 @@ namespace swift::misc::aviation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CLivery();
+            return {};
         }
 
         const QString combinedCode(json.value(prefix % u"combinedcode").toString());
@@ -236,7 +236,7 @@ namespace swift::misc::aviation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CLivery();
+            return {};
         }
 
         const QString combinedCode(json.value(prefix % u"combinedcode").toString());

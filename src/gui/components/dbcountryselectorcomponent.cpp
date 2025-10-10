@@ -73,13 +73,13 @@ namespace swift::gui::components
 
     swift::misc::CCountry CDbCountrySelectorComponent::getCountry() const
     {
-        if (!sGui) { return CCountry(); }
+        if (!sGui) { return {}; }
         const QString iso(ui->le_CountryIso->text().trimmed().toUpper());
         const QString name(ui->le_CountryName->text().trimmed());
         if (CCountry::isValidIsoCode(iso)) { return sGui->getWebDataServices()->getCountryForIsoCode(iso); }
         else
         {
-            if (name.isEmpty()) { return CCountry(); }
+            if (name.isEmpty()) { return {}; }
             return sGui->getWebDataServices()->getCountryForName(name);
         }
     }

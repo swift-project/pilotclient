@@ -53,14 +53,20 @@ namespace swift::core::fsd
         bool unused = false; //! \todo check if needed?
         unpackPBH(tokens[5].toUInt(), pitch, bank, heading, unused);
 
-        return VisualPilotDataStopped(tokens[0], tokens[1].toDouble(), tokens[2].toDouble(), tokens[3].toDouble(),
-                                      tokens[4].toDouble(), pitch, bank, heading,
-                                      tokens.value(12, QStringLiteral("0")).toDouble());
+        return { tokens[0],
+                 tokens[1].toDouble(),
+                 tokens[2].toDouble(),
+                 tokens[3].toDouble(),
+                 tokens[4].toDouble(),
+                 pitch,
+                 bank,
+                 heading,
+                 tokens.value(12, QStringLiteral("0")).toDouble() };
     }
 
     VisualPilotDataUpdate VisualPilotDataStopped::toUpdate() const
     {
-        return VisualPilotDataUpdate(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank,
-                                     m_heading, 0, 0, 0, 0, 0, 0, m_noseGearAngle);
+        return { m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank, m_heading, 0, 0, 0,
+                 0,        0,          0,           m_noseGearAngle };
     }
 } // namespace swift::core::fsd

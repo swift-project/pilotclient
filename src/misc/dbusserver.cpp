@@ -188,7 +188,7 @@ namespace swift::misc
         {
             const QMetaClassInfo ci = mo->classInfo(i);
             const QString name = QString(ci.name()).toLower();
-            if (name == "d-bus interface") { return QString(ci.value()); }
+            if (name == "d-bus interface") { return { ci.value() }; }
         }
         return {};
     }

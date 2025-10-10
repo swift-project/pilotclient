@@ -145,7 +145,7 @@ namespace swift::misc::aviation
 
     CTransponder CTransponder::getStandardTransponder(qint32 transponderCode, CTransponder::TransponderMode mode)
     {
-        return CTransponder(transponderCode, mode);
+        return { transponderCode, mode };
     }
 
     const QString &CTransponder::modeAsString(CTransponder::TransponderMode mode)
