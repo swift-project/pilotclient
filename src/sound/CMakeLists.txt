@@ -8,19 +8,6 @@ add_library(sound SHARED
         codecs/opusdecoder.h
         codecs/opusencoder.cpp
         codecs/opusencoder.h
-        dsp/SimpleComp.cpp
-        dsp/SimpleComp.h
-        dsp/SimpleCompProcess.inl
-        dsp/SimpleEnvelope.cpp
-        dsp/SimpleEnvelope.h
-        dsp/SimpleGain.h
-        dsp/SimpleGate.cpp
-        dsp/SimpleGate.h
-        dsp/SimpleGateProcess.inl
-        dsp/SimpleHeader.h
-        dsp/SimpleLimit.cpp
-        dsp/SimpleLimit.h
-        dsp/SimpleLimitProcess.inl
         dsp/biquadfilter.cpp
         dsp/biquadfilter.h
         notificationplayer.cpp
@@ -76,6 +63,7 @@ target_link_libraries(sound
         Qt::Multimedia
         misc
         Opus::opus
+        ChunkwareDsp
 )
 
 install(TARGETS sound

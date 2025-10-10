@@ -9,7 +9,8 @@
 #include <QObject>
 #include <QTimer>
 
-#include "sound/dsp/SimpleComp.h"
+#include "chunkware_dsp/SimpleComp.h"
+
 #include "sound/sampleprovider/sampleprovider.h"
 #include "sound/swiftsoundexport.h"
 

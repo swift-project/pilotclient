@@ -31,9 +31,9 @@
 #ifndef chunkware_SIMPLE_LIMIT_H
 #define chunkware_SIMPLE_LIMIT_H
 
-#include "SimpleHeader.h"       // common header
-#include "SimpleEnvelope.h"     // for base class of FastEnvelope
-#include "SimpleGain.h"         // for gain functions
+#include "chunkware_dsp/SimpleHeader.h"       // common header
+#include "chunkware_dsp/SimpleEnvelope.h"     // for base class of FastEnvelope
+#include "chunkware_dsp/SimpleGain.h"         // for gain functions
 #include <vector>
 
 namespace chunkware_simple

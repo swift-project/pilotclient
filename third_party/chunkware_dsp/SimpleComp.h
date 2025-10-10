@@ -30,9 +30,9 @@
 #ifndef chunkware_simple_SIMPLE_COMP_H
 #define chunkware_simple_SIMPLE_COMP_H
 
-#include "SimpleHeader.h"       // common header
-#include "SimpleEnvelope.h"     // for base class
-#include "SimpleGain.h"         // for gain functions
+#include "chunkware_dsp/SimpleEnvelope.h"
+#include "chunkware_dsp/SimpleGain.h"
+#include "chunkware_dsp/SimpleHeader.h"
 
 namespace chunkware_simple
 {
