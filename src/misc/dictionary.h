@@ -499,9 +499,9 @@ namespace swift::misc
                       "Maps must have the same key type");
         if (map1.empty() || map2.empty()) { return; }
         auto it1 = implementationOf(map1).lowerBound(map2.cbegin().key());
-        auto end1 = implementationOf(map1).upperBound((map2.cend() - 1).key());
+        auto end1 = implementationOf(map1).upperBound(std::prev(map2.cend()).key());
         auto it2 = implementationOf(map2).lowerBound(map1.cbegin().key());
-        auto end2 = implementationOf(map2).upperBound((map1.cend() - 1).key());
+        auto end2 = implementationOf(map2).upperBound(std::prev(map1.cend()).key());
         while (it1 != end1 && it2 != end2)
         {
             if (it1.key() < it2.key()) { ++it1; }
