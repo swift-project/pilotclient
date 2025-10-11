@@ -48,11 +48,11 @@ namespace swift::core::afv::model
             QVector<CSampleAtcStation> transceivers;
             QString callsign;
 
-            for (auto it = rootArray.begin(); it != rootArray.end(); ++it)
+            for (auto it : rootArray)
             {
-                if (it->isObject())
+                if (it.isObject())
                 {
-                    const QJsonObject stationObject = it->toObject();
+                    const QJsonObject stationObject = it.toObject();
 
                     if (stationObject.contains("callsign")) { callsign = stationObject.value("callsign").toString(); }
 
@@ -61,9 +61,9 @@ namespace swift::core::afv::model
                     if (stationObject.contains("transceivers"))
                     {
                         QJsonArray txArray = stationObject.value("transceivers").toArray();
-                        for (auto jt = txArray.begin(); jt != txArray.end(); ++jt)
+                        for (auto &&jt : txArray)
                         {
-                            const TransceiverDto transceiver = TransceiverDto::fromJson(jt->toObject());
+                            const TransceiverDto transceiver = TransceiverDto::fromJson(jt.toObject());
                             transceivers.push_back({ callsign, transceiver });
                         }
                     }

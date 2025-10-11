@@ -639,10 +639,10 @@ namespace swift::misc::json
     {
         QStringList sl;
         if (array.isEmpty()) { return sl; }
-        for (int i = 0; i < array.size(); i++)
+        for (const auto &i : array)
         {
-            if (!array.at(i).isString()) { continue; }
-            sl.push_back(array.at(i).toString());
+            if (!i.isString()) { continue; }
+            sl.push_back(i.toString());
         }
         return sl;
     }

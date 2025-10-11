@@ -1507,7 +1507,7 @@ namespace swift::misc::simulation
     {
         CAircraftModel::MemoHelper::CMemoizer helper;
         QJsonArray array;
-        for (auto it = cbegin(); it != cend(); ++it) { array << it->toMemoizedJson(helper); }
+        for (const auto &it : *this) { array << it.toMemoizedJson(helper); }
         QJsonObject json;
         json.insert("containerbase", array);
         json.insert("aircraftIcaos", helper.getTable<CAircraftIcaoCode>().toJson());
@@ -1563,12 +1563,12 @@ namespace swift::misc::simulation
         }
 
         int index = 0;
-        for (auto i = array.begin(); i != array.end(); ++i)
+        for (auto &&i : array)
         {
             CJsonScope scope("containerbase", index++);
             Q_UNUSED(scope)
             CAircraftModel value;
-            value.convertFromMemoizedJson(i->toObject(), helper);
+            value.convertFromMemoizedJson(i.toObject(), helper);
             this->push_back(value);
         }
     }

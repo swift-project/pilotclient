@@ -295,20 +295,14 @@ namespace swift::misc::simulation
 
     bool CInterpolatorSpline::areAnyElevationsMissing() const
     {
-        for (unsigned int i = 0; i < m_s.size(); i++)
-        {
-            if (!m_s[i].hasGroundElevation()) { return true; }
-        }
-        return false;
+        return std::any_of(m_s.begin(), m_s.end(),
+                           [](const auto &situation) { return !situation.hasGroundElevation(); });
     }
 
     bool CInterpolatorSpline::isAnySituationNearGroundRelevant() const
     {
-        for (unsigned int i = 0; i < m_s.size(); i++)
-        {
-            if (!m_s[i].canLikelySkipNearGroundInterpolation()) { return true; }
-        }
-        return false;
+        return std::any_of(m_s.begin(), m_s.end(),
+                           [](const auto &situation) { return !situation.canLikelySkipNearGroundInterpolation(); });
     }
 
     CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa,

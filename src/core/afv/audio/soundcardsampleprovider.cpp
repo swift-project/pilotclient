@@ -106,9 +106,8 @@ namespace swift::core::afv::audio
         {
             bool audioPlayed = false;
             QVector<quint16> handledTransceiverIDs;
-            for (int i = 0; i < rxTransceiversFilteredAndSorted.size(); i++)
+            for (const auto rxTransceiver : rxTransceiversFilteredAndSorted)
             {
-                const RxTransceiverDto rxTransceiver = rxTransceiversFilteredAndSorted[i];
                 if (!handledTransceiverIDs.contains(rxTransceiver.id))
                 {
                     handledTransceiverIDs.push_back(rxTransceiver.id);

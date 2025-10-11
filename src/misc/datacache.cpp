@@ -763,14 +763,14 @@ namespace swift::misc
     QJsonArray CDataCacheRevision::toJson(const QSet<QString> &pins)
     {
         QJsonArray result;
-        for (auto it = pins.begin(); it != pins.end(); ++it) { result.push_back(*it); }
+        for (const auto &pin : pins) { result.push_back(pin); }
         return result;
     }
 
     QSet<QString> CDataCacheRevision::fromJson(const QJsonArray &pins)
     {
         QSet<QString> result;
-        for (auto it = pins.begin(); it != pins.end(); ++it) { result.insert(it->toString()); }
+        for (auto pin : pins) { result.insert(pin.toString()); }
         return result;
     }
 

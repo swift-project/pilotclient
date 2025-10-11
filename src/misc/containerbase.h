@@ -136,11 +136,10 @@ namespace swift::misc
             if (value.isUndefined()) { throw CJsonException("Missing 'containerbase'"); }
             QJsonArray array = value.toArray();
             int index = 0;
-            for (auto i = array.begin(); i != array.end(); ++i)
+            for (auto ref : array)
             {
                 CJsonScope scope("containerbase", index++);
                 Q_UNUSED(scope);
-                QJsonValueRef ref = (*i);
                 typename Derived::value_type val;
                 ref >> val;
                 derived().push_back(std::move(val));
