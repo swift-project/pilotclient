@@ -253,7 +253,8 @@ namespace swift::misc::simulation::xplane
 
             const QString packageFilePath = it.fileInfo().absolutePath();
             QFile file(packageFile);
-            file.open(QIODevice::ReadOnly);
+            const bool res = file.open(QIODevice::ReadOnly);
+            SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open package file");
             QString content;
 
             QTextStream ts(&file);
@@ -273,7 +274,8 @@ namespace swift::misc::simulation::xplane
             emit this->loadingProgress(this->getSimulator(), QStringLiteral("Parsing CSL '%1'").arg(packageFile), -1);
 
             QFile file(packageFile);
-            file.open(QIODevice::ReadOnly);
+            const bool res = file.open(QIODevice::ReadOnly);
+            SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open package file");
             QString content;
 
             QTextStream ts(&file);

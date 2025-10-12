@@ -2077,13 +2077,15 @@ namespace swift::core::fsd
         {
             const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
             m_rawFsdMessageLogFile.setFileName(filePath);
-            m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
+            const bool res = m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
+            SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open log file");
         }
         else if (setting.getFileWriteMode() == CRawFsdMessageSettings::Append)
         {
             const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
             m_rawFsdMessageLogFile.setFileName(filePath);
-            m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly | QIODevice::Append);
+            const bool res = m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly | QIODevice::Append);
+            SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open log file");
         }
         else if (setting.getFileWriteMode() == CRawFsdMessageSettings::Timestamped)
         {
@@ -2093,7 +2095,8 @@ namespace swift::core::fsd
             filename += QLatin1String(".log");
             const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), filename);
             m_rawFsdMessageLogFile.setFileName(filePath);
-            m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
+            const bool res = m_rawFsdMessageLogFile.open(QIODevice::Text | QIODevice::WriteOnly);
+            SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open log file");
         }
     }
 

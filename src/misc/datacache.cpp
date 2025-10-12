@@ -83,7 +83,11 @@ namespace swift::misc
         connect(m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote,
                 Qt::DirectConnection);
 
-        if (!QFile::exists(revisionFileName())) { QFile(revisionFileName()).open(QFile::WriteOnly); }
+        if (!QFile::exists(revisionFileName()))
+        {
+            const bool res = QFile(revisionFileName()).open(QFile::WriteOnly);
+            SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open revision file");
+        }
         m_serializer->loadFromStore({}, false, true); // load pinned values
         singleShot(0, this,
                    [this] // only start the serializer if the main thread event loop runs

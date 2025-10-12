@@ -8,6 +8,7 @@
  * \ingroup testmisc
  */
 
+#include <QElapsedTimer>
 #include <QTest>
 #include <QTime>
 

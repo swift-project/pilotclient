@@ -14,6 +14,7 @@
 
 #include "config/buildconfig.h"
 #include "misc/swiftdirectories.h"
+#include "misc/verify.h"
 
 using namespace swift::config;
 
@@ -42,7 +43,8 @@ namespace swift::misc
         QDir::root().mkpath(CSwiftDirectories::logDirectory());
         removeOldLogFiles();
         m_logFile.setFileName(getLogFilePath());
-        m_logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
+        const bool res = m_logFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
+        SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open log file");
         m_stream.setDevice(&m_logFile);
         m_stream.setEncoding(QStringConverter::Utf8);
         writeHeaderToFile();
