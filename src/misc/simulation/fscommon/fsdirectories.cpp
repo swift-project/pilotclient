@@ -331,6 +331,8 @@ namespace swift::misc::simulation::fscommon
             "OneStore/microsoft-discovery",
             "landingchallenge",
             "tutorials",
+            "point-of-interest",
+            "airport",
 
         };
         return exclude;
@@ -338,9 +340,7 @@ namespace swift::misc::simulation::fscommon
 
     const QStringList &CFsDirectories::msfs2024SimObjectsExcludeDirectoryPatterns()
     {
-        static const QStringList exclude {
-            "landingchallenge",
-            "tutorials",
+        static const QStringList exclude { "PassiveAircraft", "STUB", "ZZZZ"
 
         };
         return exclude;

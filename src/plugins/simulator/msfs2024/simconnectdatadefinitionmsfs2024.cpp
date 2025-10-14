@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "simconnectdatadefinition.h"
+#include "simconnectdatadefinitionmsfs2024.h"
 
 #include <tuple>
 
 #include <QStringBuilder>
 
 #include "../fscommon/simulatorfscommonfunctions.h"
-#include "simconnectsymbols.h"
+#include "simconnectsymbolsmsfs2024.h"
 
 #include "misc/aviation/aircraftenginelist.h"
 #include "misc/aviation/aircraftparts.h"
@@ -19,12 +19,13 @@ using namespace swift::misc::aviation;
 using namespace swift::misc::simulation;
 using namespace swift::simplugin::fscommon;
 
-namespace swift::simplugin::fsxcommon
+namespace swift::simplugin::msfs2024common
 {
     const QString &CSimConnectDefinitions::requestToString(Request request)
     {
         static const QString ownAircraft("RequestOwnAircraft");
         static const QString title("RequestOwnAircraftTitle");
+        static const QString livery("RequestOwnAircraftLivery");
         static const QString sbData("RequestSbData");
         static const QString facility("RequestFacility");
         static const QString end("<end>");
@@ -37,6 +38,7 @@ namespace swift::simplugin::fsxcommon
         case RequestSbData: return sbData;
         case RequestFacility: return facility;
         case RequestEndMarker: return end;
+        case RequestOwnAircraftLivery: return livery;
         default: break;
         }
         return unknown;
@@ -74,6 +76,8 @@ namespace swift::simplugin::fsxcommon
     HRESULT CSimConnectDefinitions::initDataDefinitionsWhenConnected(const HANDLE hSimConnect,
                                                                      const CSimulatorInfo &simInfo)
     {
+        Q_UNUSED(simInfo);
+
         HRESULT hr = s_ok();
         hr += initOwnAircraft(hSimConnect);
         hr += initRemoteAircraft(hSimConnect);
@@ -81,15 +85,15 @@ namespace swift::simplugin::fsxcommon
         hr += initRemoteAircraftSimDataSet(hSimConnect);
         hr += initSimulatorEnvironment(hSimConnect);
         hr += initSbDataArea(hSimConnect);
-        if (simInfo.isMSFS()) { hr += initMSFSTransponder(hSimConnect); }
-        // if (simInfo.isMSFS2024()) { hr += initMSFS2024Transponder(hSimConnect); }
+        hr += initMSFS2024Transponder(hSimConnect);
+        hr += initOwnAircraftList(hSimConnect);
         return hr;
     }
 
     HRESULT CSimConnectDefinitions::initOwnAircraft(const HANDLE hSimConnect)
     {
-        // FSX vars: https://docs.microsoft.com/en-us/previous-versions/microsoft-esp/cc526981(v%3dmsdn.10)
-        // all the VARS here should be FSX/P3D
+        // MSFS2024 vars:
+        // https://docs.flightsimulator.com/msfs2024/html/6_Programming_APIs/SimVars/Simulation_Variables.htm
         HRESULT hr = s_ok();
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "PLANE LATITUDE",
                                              "Degrees");
@@ -185,6 +189,10 @@ namespace swift::simplugin::fsxcommon
 
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE",
                                              nullptr, SIMCONNECT_DATATYPE_STRING256);
+        // MSFS2024 specific from here
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "LIVERY NAME",
+                                             nullptr, SIMCONNECT_DATATYPE_STRING256);
+
         if (isFailure(hr))
         {
             CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initOwnAircraft %1")
@@ -229,10 +237,12 @@ namespace swift::simplugin::fsxcommon
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
                                              "GENERAL ENG COMBUSTION:4", "Bool");
 
-        // Lights (other definition)
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE",
                                              nullptr, SIMCONNECT_DATATYPE_STRING256);
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "LIVERY NAME",
+                                             nullptr, SIMCONNECT_DATATYPE_STRING256);
 
+        // Lights (other definition)
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights,
                                              "LIGHT STROBE", "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights,
@@ -295,6 +305,9 @@ namespace swift::simplugin::fsxcommon
                                              "ATC FLIGHT NUMBER", nullptr, SIMCONNECT_DATATYPE_STRING8);
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData, "TITLE",
                                              nullptr, SIMCONNECT_DATATYPE_STRING256);
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftModelData,
+                                             "LIVERY NAME", nullptr, SIMCONNECT_DATATYPE_STRING256);
+
         if (isFailure(hr))
         {
             CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr))
@@ -407,7 +420,7 @@ namespace swift::simplugin::fsxcommon
         return hr;
     }
 
-    HRESULT CSimConnectDefinitions::initMSFSTransponder(const HANDLE hSimConnect)
+    HRESULT CSimConnectDefinitions::initMSFS2024Transponder(const HANDLE hSimConnect)
     {
         HRESULT hr = s_ok();
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
@@ -417,27 +430,32 @@ namespace swift::simplugin::fsxcommon
         if (isFailure(hr))
         {
             CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr))
-                    .error(u"SimConnect error: MSFS transponder data definitions %1")
+                    .error(u"SimConnect error: MSFS2024 transponder data definitions %1")
                 << hr;
         }
         return hr;
     }
 
-    // HRESULT CSimConnectDefinitions::initMSFS2024Transponder(const HANDLE hSimConnect)
-    //{
-    //     HRESULT hr = s_ok();
-    //     hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
-    //                                          "TRANSPONDER STATE:1", "Enum");
-    //     hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataTransponderModeMSFS,
-    //                                          "TRANSPONDER IDENT:1", "Bool");
-    //     if (isFailure(hr))
-    //     {
-    //         CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr))
-    //                 .error(u"SimConnect error: MSFS2024 transponder data definitions %1")
-    //             << hr;
-    //     }
-    //     return hr;
-    // }
+    HRESULT CSimConnectDefinitions::initOwnAircraftList(const HANDLE hSimConnect)
+    {
+        // MSFS2024 vars:
+        // https://docs.flightsimulator.com/msfs2024/html/6_Programming_APIs/SimVars/Simulation_Variables.htm
+        HRESULT hr = s_ok();
+        hr += SimConnect_EnumerateSimObjectsAndLiveries(hSimConnect, CSimConnectDefinitions::REQUEST_AIRPLANE,
+                                                        SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT);
+        hr += SimConnect_EnumerateSimObjectsAndLiveries(hSimConnect, CSimConnectDefinitions::REQUEST_HELICOPTER,
+                                                        SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT);
+        // hr += SimConnect_EnumerateSimObjectsAndLiveries(hSimConnect, CSimConnectDefinitions::REQUEST_HOT_AIR,
+        //                                                 SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT);
+
+        if (isFailure(hr))
+        {
+            CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr))
+                    .error(u"SimConnect error: initOwnAircraftList %1")
+                << hr;
+        }
+        return hr;
+    }
 
     DataDefinitionRemoteAircraftPartsWithoutLights::DataDefinitionRemoteAircraftPartsWithoutLights()
     {
@@ -535,4 +553,4 @@ namespace swift::simplugin::fsxcommon
                u" 17 (standby): " % QString::number(data[17]) % u" 19 (ident): " % QString::number(data[19]);
     }
 
-} // namespace swift::simplugin::fsxcommon
+} // namespace swift::simplugin::msfs2024common

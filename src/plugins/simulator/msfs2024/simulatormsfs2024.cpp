@@ -3,7 +3,7 @@
 
 #include "simulatorMsFs2024.h"
 
-#include "../fsxcommon/simconnectsymbols.h"
+#include "../msfs2024/simconnectsymbolsmsfs2024.h"
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
@@ -13,23 +13,23 @@ using namespace swift::misc::network;
 using namespace swift::misc::simulation;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::core;
-using namespace swift::simplugin::fsxcommon;
+using namespace swift::simplugin::msfs2024common;
 
 namespace swift::simplugin::msfs2024
 {
     CSimulatorMsFs2024::CSimulatorMsFs2024(const CSimulatorPluginInfo &info, IOwnAircraftProvider *ownAircraftProvider,
                                            IRemoteAircraftProvider *remoteAircraftProvider,
                                            IClientProvider *clientProvider, QObject *parent)
-        : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
+        : CSimulatorMsfs2024(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
-        this->setDefaultModel({ "Airbus A320 Neo Asobo", CAircraftModel::TypeModelMatchingDefaultModel,
+        this->setDefaultModel({ "A320neo V2", CAircraftModel::TypeModelMatchingDefaultModel,
                                 "Airbus A320 default model", CAircraftIcaoCode("A320", "L2J") });
     }
 
     bool CSimulatorMsFs2024::connectTo()
     {
         if (!loadAndResolveMSFS2024SimConnect()) { return false; }
-        return CSimulatorFsxCommon::connectTo();
+        return CSimulatorMsfs2024::connectTo();
     }
 
     void CSimulatorMsFs2024::setTrueAltitude(CAircraftSituation &aircraftSituation,
@@ -44,7 +44,7 @@ namespace swift::simplugin::msfs2024
     void CSimulatorMsFs2024Listener::startImpl()
     {
         if (!loadAndResolveMSFS2024SimConnect()) { return; }
-        CSimulatorFsxCommonListener::startImpl();
+        CSimulatorMsfs2024Listener::startImpl();
     }
 
 } // namespace swift::simplugin::msfs2024

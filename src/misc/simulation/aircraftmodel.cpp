@@ -42,6 +42,10 @@ namespace swift::misc::simulation
         : m_modelString(model.trimmed().toUpper()), m_modelType(type)
     {}
 
+    CAircraftModel::CAircraftModel(const QString &model, const QString &livery, CAircraftModel::ModelType type)
+        : m_modelString(model.trimmed().toUpper()), m_modelLivery(livery.trimmed().toUpper()), m_modelType(type)
+    {}
+
     CAircraftModel::CAircraftModel(const QString &model, CAircraftModel::ModelType type, const CAircraftIcaoCode &icao,
                                    const CLivery &livery)
         : m_aircraftIcao(icao), m_livery(livery), m_modelString(model.trimmed().toUpper()), m_modelType(type)
@@ -237,6 +241,12 @@ namespace swift::misc::simulation
         return this->getAllModelStringsAndAliases() % " " % this->getDbKeyAsStringInParentheses();
     }
 
+    QString CAircraftModel::getMsfs2024Modelstring()
+    {
+        m_modelString = m_modelString.trimmed().toUpper() % u" " % m_modelLivery.trimmed().toUpper();
+        return m_modelString;
+    }
+
     bool CAircraftModel::isVtol() const { return this->getAircraftIcaoCode().isVtol(); }
 
     QVariant CAircraftModel::propertyByIndex(swift::misc::CPropertyIndexRef index) const
@@ -274,6 +284,8 @@ namespace swift::misc::simulation
         case IndexLivery: return m_livery.propertyByIndex(index.copyFrontRemoved());
         case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
         case IndexMembersDbStatus: return this->getMembersDbStatus();
+        case IndexModelLivery: return QVariant(m_modelLivery);
+        case IndexShortModelString: return QVariant(getShortModelString());
         default: return CValueObject::propertyByIndex(index);
         }
     }
@@ -584,6 +596,23 @@ namespace swift::misc::simulation
         return (sim.isFG()) ? this->getSwiftLiveryString(true, false, false) : this->getSwiftLiveryString();
     }
 
+    QString CAircraftModel::getShortModelString() const
+    {
+
+        QString shortModelString = m_modelString;
+        if (m_modelString.contains(m_modelLivery))
+        {
+            int lastIndex = m_modelString.lastIndexOf(m_modelLivery);
+
+            if (lastIndex != -1)
+            {
+                const QString newModelString = m_modelString.left(lastIndex);
+                shortModelString = newModelString;
+            }
+        }
+        return shortModelString;
+    }
+
     DBTripleIds CAircraftModel::parseNetworkLiveryString(const QString &liveryString)
     {
         // "swift_m22l33a11"
@@ -764,6 +793,13 @@ namespace swift::misc::simulation
         }
         if (path.endsWith('/')) { return p.contains(path.left(path.length() - 1), cs); }
         return (p.contains(path, cs));
+    }
+
+    bool CAircraftModel::matchesModelStringAndLivery(const QString &modelString, const QString &modelLivery,
+                                                     Qt::CaseSensitivity sensitivity) const
+    {
+        return (stringCompare(modelString, m_modelString, sensitivity) &&
+                stringCompare(modelLivery, m_modelLivery, sensitivity));
     }
 
     bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
@@ -999,6 +1035,7 @@ namespace swift::misc::simulation
         const QString modelName(json.value(prefix % u"name").toString());
         const QString modelMode(json.value(prefix % u"mode").toString());
         const QString parts(json.value(prefix % u"parts").toString());
+        const QString modelLivery(json.value(prefix % u"modellivery").toString());
 
         // check for undefined to rule out 0ft values
         const QJsonValue cgjv = json.value(prefix % u"cgft");
@@ -1008,6 +1045,7 @@ namespace swift::misc::simulation
         const CSimulatorInfo simInfo = CSimulatorInfo::fromDatabaseJson(json, prefix);
         CAircraftModel model(modelString, CAircraftModel::TypeDatabaseEntry, simInfo, modelName, modelDescription);
         model.setModelStringAlias(modelStringAlias);
+        model.setModelLivery(modelLivery); // msfs2024
         model.setModelModeAsString(modelMode);
         model.setSupportedParts(parts);
         model.setCG(cg);

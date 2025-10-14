@@ -409,6 +409,12 @@ namespace swift::misc
             //! Get model string
             const QString &getModelString() const { return m_models[CurrentModel].getModelString(); }
 
+            //! Get model Livery MSFS2024
+            const QString &getLiveryString() const { return m_models[CurrentModel].getModelLivery(); }
+
+            //! Get short model string (without livery)
+            const QString getShortModelString() const { return m_models[CurrentModel].getShortModelString(); }
+
             //! Set model string
             void setModelString(const QString &modelString);
 

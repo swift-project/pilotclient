@@ -731,12 +731,14 @@ namespace swift::misc::simulation
         return d;
     }
 
-    bool CAircraftModelList::removeModelWithString(const QString &modelString, Qt::CaseSensitivity sensitivity)
+    bool CAircraftModelList::removeModelWithString(const QString &modelString, const QString &modelLivery,
+                                                   Qt::CaseSensitivity sensitivity)
     {
         if (modelString.isEmpty()) { return false; }
         if (this->isEmpty()) { return false; }
-        const int r = this->removeIf(
-            [&](const CAircraftModel &model) { return model.matchesModelString(modelString, sensitivity); });
+        const int r = this->removeIf([&](const CAircraftModel &model) {
+            return model.matchesModelStringAndLivery(modelString, modelLivery, sensitivity);
+        });
         return r > 0;
     }
 
@@ -849,7 +851,11 @@ namespace swift::misc::simulation
                                                          Qt::CaseSensitivity sensitivity)
     {
         bool r = false;
-        if (!this->isEmpty()) { r = this->removeModelWithString(addOrReplaceModel.getModelString(), sensitivity); }
+        if (!this->isEmpty())
+        {
+            r = this->removeModelWithString(addOrReplaceModel.getModelString(), addOrReplaceModel.getModelLivery(),
+                                            sensitivity);
+        }
         this->push_back(addOrReplaceModel);
         return r;
     }
@@ -902,6 +908,18 @@ namespace swift::misc::simulation
         {
             if (!model.hasModelString()) { continue; }
             ms.append(model.getModelString());
+        }
+        if (sort) { ms.sort(Qt::CaseInsensitive); }
+        return ms;
+    }
+
+    QStringList CAircraftModelList::getModelStringAndLiveryList(bool sort) const
+    {
+        QStringList ms;
+        for (const CAircraftModel &model : *this)
+        {
+            if (!model.hasModelString()) { continue; }
+            ms.append(model.getModelString() + "{" + model.getModelLivery() + "}");
         }
         if (sort) { ms.sort(Qt::CaseInsensitive); }
         return ms;
@@ -1731,12 +1749,12 @@ namespace swift::misc::simulation
         if (valid)
         {
             validModels.push_back(model);
-            invalidModels.removeModelWithString(model.getModelString(), Qt::CaseInsensitive);
+            invalidModels.removeModelWithString(model.getModelString(), model.getModelLivery(), Qt::CaseInsensitive);
         }
         else
         {
             invalidModels.push_back(model);
-            validModels.removeModelWithString(model.getModelString(), Qt::CaseInsensitive);
+            validModels.removeModelWithString(model.getModelString(), model.getModelLivery(), Qt::CaseInsensitive);
         }
     }
 

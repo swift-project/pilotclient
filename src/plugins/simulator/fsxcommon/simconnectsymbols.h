@@ -39,7 +39,7 @@ inline bool loadAndResolveP3DSimConnectByString(const QString &version)
 
 FSXCOMMON_EXPORT bool loadAndResolveMSFSimConnect();
 
-FSXCOMMON_EXPORT bool loadAndResolveMSFS2024SimConnect();
+// FSXCOMMON_EXPORT bool loadAndResolveMSFS2024SimConnect();
 
 #else
 

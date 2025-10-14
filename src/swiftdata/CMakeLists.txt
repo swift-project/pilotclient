@@ -7,6 +7,8 @@ add_executable(swiftdata WIN32
         swiftdata.h
         swiftdata.ui
         swiftdatamenus.cpp
+        swiftdataapplication.cpp
+        swiftdataapplication.h
         )
 
 if(WIN32)

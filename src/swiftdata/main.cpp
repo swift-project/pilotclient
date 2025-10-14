@@ -11,6 +11,7 @@
 #include "misc/crashhandler.h"
 #include "misc/icons.h"
 #include "swiftdata.h"
+#include "swiftdataapplication.h"
 
 using namespace swift::misc;
 using namespace swift::core;
@@ -23,19 +24,25 @@ int main(int argc, char *argv[])
     Q_UNUSED(qa)
 
     CCrashHandler::instance()->init();
-    CGuiApplication a(CApplicationInfo::swiftMappingTool(), CApplicationInfo::MappingTool, CIcons::swiftDatabase48());
-    if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
-    a.splashScreen(CIcons::swiftDatabase256());
-    a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders,
-                                  CDatabaseReaderConfigList::forMappingTool());
-    a.startCoreFacadeWithoutContexts();
-    if (!a.start())
+
+    int r = 0;
     {
-        a.gracefulShutdown();
-        return EXIT_FAILURE;
+        // CGuiApplication a(CApplicationInfo::swiftMappingTool(), CApplicationInfo::MappingTool,
+        //                   CIcons::swiftDatabase48());
+        CSwiftDataApplication a; // application with contexts
+        if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
+        a.splashScreen(CIcons::swiftDatabase256());
+        a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders,
+                                      CDatabaseReaderConfigList::forMappingTool());
+        a.startCoreFacadeWithoutContexts();
+        if (!a.start())
+        {
+            a.gracefulShutdown();
+            return EXIT_FAILURE;
+        }
+        CSwiftData w;
+        w.show();
+        int r = a.exec();
     }
-    CSwiftData w;
-    w.show();
-    int r = a.exec();
     return r;
 }

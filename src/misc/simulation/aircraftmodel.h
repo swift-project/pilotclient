@@ -83,7 +83,9 @@ namespace swift::misc
                 TypeManuallySet, //!< manually set, e.g. from GUI
                 TypeOwnSimulatorModel, //!< represents own simulator model (AI model, model on disk)
                 TypeVPilotRuleBased, //!< based on a vPilot rule
-                TypeTerrainProbe //!< peudo aircraft used for terrain probing (FSX)
+                TypeTerrainProbe, //!< peudo aircraft used for terrain probing (FSX)
+                TypeOwnSimulatorLivery //!< represents own simulator model livery (msfs2024)
+
             };
 
             //! Mode, decides if a model is supposed to be used in the model set for model matching
@@ -124,7 +126,9 @@ namespace swift::misc
                 IndexSupportedParts,
                 IndexModelModeAsIcon,
                 IndexHasQueriedModelString,
-                IndexMembersDbStatus
+                IndexMembersDbStatus,
+                IndexModelLivery, // MSFS2024
+                IndexShortModelString,
             };
 
             //! \copydoc swift::misc::CValueObject::registerMetadata
@@ -135,6 +139,9 @@ namespace swift::misc
 
             //! Constructor.
             CAircraftModel(const QString &model, ModelType type);
+
+            //! Constructor.
+            CAircraftModel(const QString &model, const QString &livery, ModelType type);
 
             //! Constructor.
             CAircraftModel(const QString &model, ModelType type, const aviation::CAircraftIcaoCode &icao,
@@ -181,11 +188,20 @@ namespace swift::misc
             //! Model key, either queried or loaded from simulator model
             const QString &getModelString() const { return m_modelString; }
 
+            //! Model Livery, part of model string in MSFS 2024
+            const QString &getModelLivery() const { return m_modelLivery; }
+
             //! Model string and DB key (if available)
             QString getModelStringAndDbKey() const;
 
             //! Model string
             void setModelString(const QString &modelString) { m_modelString = modelString.trimmed().toUpper(); }
+
+            //! Model livery msfs2024
+            void setModelLivery(const QString &modelLivery) { m_modelLivery = modelLivery.trimmed().toUpper(); }
+
+            //! Model livery whitout part for lifery msfs2024
+            QString getShortModelString() const;
 
             //! Model key, either queried or loaded from simulator model
             const QString &getModelStringAlias() const { return m_modelStringAlias; }
@@ -195,6 +211,9 @@ namespace swift::misc
 
             //! Get model string and aliases
             QString getAllModelStringsAliasesAndDbKey() const;
+
+            //! Get model string and Livery
+            QString getMsfs2024Modelstring();
 
             //! Model string alias
             void setModelStringAlias(const QString &alias) { m_modelStringAlias = alias.trimmed().toUpper(); }
@@ -419,6 +438,10 @@ namespace swift::misc
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
+            //! Matches model string and livery?
+            bool matchesModelStringAndLivery(const QString &modelString, const QString &modelLivery,
+                                             Qt::CaseSensitivity sensitivity) const;
+
             //! Matches model string or alias?
             bool matchesModelStringOrAlias(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
@@ -567,11 +590,13 @@ namespace swift::misc
             CSimulatorInfo m_simulator; //!< model for given simulator
             CDistributor m_distributor; //!< who designed or distributed the model
             QString m_modelString; //!< Simulator model key, unique
+            QString m_modelLivery; //!< Simulator livery (msfs2024)
             QString m_modelStringAlias; //!< Simulator model key alias, unique
             QString m_name; //!< Model name
             QString m_description; //!< descriptive text
             QString m_fileName; //!< file name
             QString m_supportedParts; //!< supported parts
+            QString m_shortModelString; //!< cached short model string
             qint64 m_fileTimestamp = -1; //!< file timestamp of originating file (if applicable)
             ModelType m_modelType = TypeUnknown; //!< model string is coming representing ...?
             ModelMode m_modelMode = Include; //!< model mode (include / exclude)
@@ -591,6 +616,7 @@ namespace swift::misc
                 SWIFT_METAMEMBER(supportedParts),
                 SWIFT_METAMEMBER(modelString, 0, CaseInsensitiveComparison),
                 SWIFT_METAMEMBER(modelStringAlias, 0, CaseInsensitiveComparison),
+                SWIFT_METAMEMBER(modelLivery, 0, CaseInsensitiveComparison),
                 SWIFT_METAMEMBER(name),
                 SWIFT_METAMEMBER(description, 0, DisabledForComparison),
                 SWIFT_METAMEMBER(fileName, 0, DisabledForComparison),

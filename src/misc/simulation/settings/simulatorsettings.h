@@ -120,6 +120,11 @@ namespace swift::misc::simulation::settings
         //! Record GND values with radius
         bool setRecordedGndRadius(const swift::misc::physical_quantities::CLength &radius);
 
+        //! Reads the settings for automatic loading when starting swiftgui
+        bool getPropertyWithDbEntry() { return m_withDbEntry; }
+        bool getPropertyModelSet() { return m_modelSet; }
+        bool getPropertyDistributorFiltered() { return m_distributorFiltered; }
+
         //! Reset the paths
         void resetPaths();
 
@@ -135,6 +140,10 @@ namespace swift::misc::simulation::settings
         //! \copydoc swift::misc::mixin::Index::setPropertyByIndex
         void setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant);
 
+        void setPropertyModelSet(bool value);
+        void setPropertyWithDbEntry(bool value);
+        void setPropertyDistributorFiltered(bool value);
+
     private:
         QString m_simulatorDirectory; //!< Simulator directory
         QStringList m_modelDirectories; //!< Model directory
@@ -142,6 +151,11 @@ namespace swift::misc::simulation::settings
         bool m_comIntegration = false; //!< COM integration
         bool m_recordGnd = false; //!< Record GND values (of own aircraft)
         int m_cgSource = static_cast<int>(CGFromSimulatorFirst); //!< CG source
+        bool m_modelSet = false; //!< Reads models from simulator via SimConnect (msfs2024 only)
+        bool m_withDbEntry = false; //!< Only models with swift database entry are used after reading (msfs2024 only)
+        bool m_distributorFiltered =
+            false; //!< Only the distributors from the configuration file are used (msfs2024 only)
+
         physical_quantities::CLength m_recordedGndRadius { 250.0, physical_quantities::CLengthUnit::m() };
 
         SWIFT_METACLASS(
@@ -152,7 +166,10 @@ namespace swift::misc::simulation::settings
             SWIFT_METAMEMBER(comIntegration),
             SWIFT_METAMEMBER(cgSource),
             SWIFT_METAMEMBER(recordGnd),
-            SWIFT_METAMEMBER(recordedGndRadius));
+            SWIFT_METAMEMBER(recordedGndRadius),
+            SWIFT_METAMEMBER(modelSet),
+            SWIFT_METAMEMBER(withDbEntry),
+            SWIFT_METAMEMBER(distributorFiltered));
     };
 
     //! Some P3D/FSX settings
@@ -240,7 +257,7 @@ namespace swift::misc::simulation::settings
         const QStringList &getModelDirectoriesIfNotDefault() const;
 
         //! Default model exclude patterns
-        const QStringList &getDefaultModelExcludeDirectoryPatterns() const;
+        const QStringList &getDefaultModelExcludePatterns() const;
 
         //! First model directoy
         QString getFirstModelDirectoryOrDefault() const;

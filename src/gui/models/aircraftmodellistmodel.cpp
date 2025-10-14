@@ -36,6 +36,7 @@ namespace swift::gui::models
         (void)QT_TRANSLATE_NOOP("CAircraftModelListModel", "model");
     }
 
+    // TODO TZ check if some columns can be hidden automatically for different sims
     void CAircraftModelListModel::setAircraftModelMode(CAircraftModelListModel::AircraftModelMode mode)
     {
         if (m_mode == mode) { return; }
@@ -45,7 +46,10 @@ namespace swift::gui::models
         {
         case NotSet:
         case OwnAircraftModelClient:
-            m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString }));
+            // m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString }));
+            m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexShortModelString }));
+
+            m_columns.addColumn(CColumn::standardString("liverypart", CAircraftModel::IndexModelLivery));
             m_columns.addColumn(
                 CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
             m_columns.addColumn(
@@ -82,7 +86,9 @@ namespace swift::gui::models
 
         case OwnAircraftModelMappingTool:
         case StashModel:
-            m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
+            m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexShortModelString));
+
+            m_columns.addColumn(CColumn::standardString("liverypart", CAircraftModel::IndexModelLivery));
             m_columns.addColumn(
                 CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
             if (mode == StashModel)

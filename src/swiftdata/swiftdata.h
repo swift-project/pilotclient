@@ -25,7 +25,8 @@ namespace Ui
 namespace swift::core
 {
     class CWebDataServices;
-}
+    // class CPluginManagerSimulator;
+} // namespace swift::core
 namespace swift::gui::components
 {
     class CAutoPublishDialog;

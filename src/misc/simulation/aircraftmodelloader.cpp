@@ -131,17 +131,27 @@ namespace swift::misc::simulation
             return;
         }
 
-        // really load from disk?
-        const QStringList modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
-        if (m_skipLoadingEmptyModelDir && modelDirs.isEmpty())
+        QStringList modelDirs = { "", "" };
+        if (simulator.isMSFS2024())
         {
-            const CStatusMessage status = CStatusMessage(this, CStatusMessage::SeverityWarning,
-                                                         u"Empty or not existing '%1' directory '%2', skipping read")
-                                          << simulator.toQString() << modelDirectories.join(", ");
-            m_loadingMessages.push_back(status);
-            m_loadingMessages.freezeOrder();
             emit this->loadingFinished(m_loadingMessages, simulator, LoadingSkipped);
             return;
+        }
+        else
+        {
+            // really load from disk?
+            modelDirs = this->getInitializedModelDirectories(modelDirectories, simulator);
+            if (m_skipLoadingEmptyModelDir && modelDirs.isEmpty())
+            {
+                const CStatusMessage status =
+                    CStatusMessage(this, CStatusMessage::SeverityWarning,
+                                   u"Empty or not existing '%1' directory '%2', skipping read")
+                    << simulator.toQString() << modelDirectories.join(", ");
+                m_loadingMessages.push_back(status);
+                m_loadingMessages.freezeOrder();
+                emit this->loadingFinished(m_loadingMessages, simulator, LoadingSkipped);
+                return;
+            }
         }
 
         this->setObjectInfo(simulator);
