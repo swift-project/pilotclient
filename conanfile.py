@@ -36,6 +36,10 @@ class SwiftRecipe(ConanFile):
         if self.settings.os != "Linux":
             self.options["dbus"].shared = True
             self.options["dbus"].message_bus = True
+        if self.settings.os == "Macos":
+            # use static libraries on macOS for a universal plugin binary
+            self.options["libevent"].shared = False
+            self.options["dbus"].shared = False
 
     def layout(self):
         cmake_layout(self)

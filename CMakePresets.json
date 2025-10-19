@@ -41,7 +41,26 @@
         "rhs": "Darwin"
       },
       "cacheVariables": {
-        "SWIFT_USE_CRASHPAD": "OFF"
+        "SWIFT_USE_CRASHPAD": "OFF",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64"
+      }
+    },
+    {
+      "name": "ci-build-macos-xswiftbus-arm",
+      "displayName": "CI Build macOS xswiftbus ARM",
+      "inherits": "ci-base",
+      "toolchainFile": "build_conan_arm/build/RelWithDebInfo/generators/conan_toolchain.cmake",
+      "generator": "Unix Makefiles",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "SWIFT_USE_CRASHPAD": "OFF",
+        "SWIFT_ONLY_XSWIFTBUS_WORKAROUND": "ON",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist_arm"
       }
     },
     {
