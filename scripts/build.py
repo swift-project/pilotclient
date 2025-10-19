@@ -95,6 +95,24 @@ class Builder:
         os.chdir(build_path)
         subprocess.check_call(["cmake", "--install", "."], env=dict(os.environ))
 
+        # Build xswiftbus for ARM/Apple Silicon
+        # Workaround to do this here. Should be moved when refactoring the build script
+        if self.__class__.__name__ == 'MacOSBuilder':
+            arm_build_path = path.abspath(path.join(utils.get_swift_source_path(), "build_arm"))
+            if not os.path.isdir(arm_build_path):
+                os.makedirs(arm_build_path)
+            os.chdir(arm_build_path)
+            subprocess.check_call(["cmake", "..", "--preset=ci-build-macos-xswiftbus-arm"], env=dict(os.environ))
+            subprocess.check_call(["cmake", "--build", ".", "-j4"], env=dict(os.environ))
+            subprocess.check_call(["cmake", "--install", "."], env=dict(os.environ))
+
+            os.chdir(utils.get_swift_source_path())
+            os.rename("dist/xswiftbus/64/mac.xpl", "dist/xswiftbus/64/mac_x86.xpl")
+
+            subprocess.check_call(["lipo", "-create", "dist_arm/xswiftbus/64/mac.xpl", "dist/xswiftbus/64/mac_x86.xpl", "-output", "dist/xswiftbus/64/mac.xpl"], env=dict(os.environ))
+            os.remove("dist/xswiftbus/64/mac_x86.xpl")
+            os.chdir(build_path)
+
         if self._should_publish():
             self._strip_debug()
             self.create_installer()
