@@ -371,8 +371,8 @@ void CSwiftLauncher::setDefaults()
     ui->rb_WindowNormal->setChecked(!setup.useFramelessWindow());
 
     const CLauncherSetup::CoreMode mode = setup.getCoreMode();
-    ui->rb_SwiftStandalone->setChecked(mode == CLauncherSetup::Standalone ? true : false);
-    ui->rb_SwiftDistributed->setChecked(mode == CLauncherSetup::Distributed ? true : false);
+    ui->rb_SwiftStandalone->setChecked(mode == CLauncherSetup::Standalone);
+    ui->rb_SwiftDistributed->setChecked(mode == CLauncherSetup::Distributed);
 
     const CLauncherSetup::AudioMode audio = setup.getAudioMode();
     ui->cb_DisableCoreAudio->setChecked(audio.testFlag(CLauncherSetup::AudioDisableDistributedCoreAudio));

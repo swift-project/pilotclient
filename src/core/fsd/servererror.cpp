@@ -26,8 +26,7 @@ namespace swift::core::fsd
             ServerErrorCode::AuthTimeout,
         };
 
-        if (fatalErrors.contains(m_errorNumber)) { return true; }
-        else { return false; }
+        return fatalErrors.contains(m_errorNumber);
     }
 
     QStringList ServerError::toTokens() const

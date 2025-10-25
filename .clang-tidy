@@ -47,6 +47,7 @@ Checks: >
   readability-redundant-member-init,
   cppcoreguidelines-init-variables,
   readability-static-accessed-through-instance,
+  readability-simplify-boolean-expr,
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase

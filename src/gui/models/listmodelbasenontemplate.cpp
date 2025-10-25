@@ -94,7 +94,7 @@ namespace swift::gui::models
 
     bool CListModelBaseNonTemplate::hasValidSortColumn() const
     {
-        if (!(m_sortColumn >= 0 && m_sortColumn < m_columns.size())) { return false; }
+        if (m_sortColumn < 0 || m_sortColumn >= m_columns.size()) { return false; }
         return m_columns.isSortable(m_sortColumn);
     }
 

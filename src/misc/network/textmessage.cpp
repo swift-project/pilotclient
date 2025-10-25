@@ -113,13 +113,11 @@ namespace swift::misc::network
         if (this->getSenderCallsign() != textMessage.getSenderCallsign()) { return false; }
         if (this->isRadioMessage() && textMessage.isRadioMessage())
         {
-            if (this->getFrequency() != textMessage.getFrequency()) { return false; }
-            return true;
+            return this->getFrequency() == textMessage.getFrequency();
         }
         else if (this->isPrivateMessage() && textMessage.isPrivateMessage())
         {
-            if (this->getRecipientCallsign() != textMessage.getRecipientCallsign()) { return false; }
-            return true;
+            return this->getRecipientCallsign() == textMessage.getRecipientCallsign();
         }
         return false;
     }

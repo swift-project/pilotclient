@@ -543,7 +543,7 @@ namespace swift::gui
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
         this->setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::East);
-        const bool init = m_tabBar ? false : true;
+        const bool init = m_tabBar == nullptr;
 
         for (int i = 0; i < m_dockWidgetInfoAreas.size(); i++)
         {

@@ -280,8 +280,7 @@ namespace swift::misc::aviation
         // allow 2 chars for special codes like "VV"
         if (airline.length() < 2 || airline.length() > 5) { return false; }
         const auto chars = makeRange(airline.begin(), airline.end());
-        if (chars.containsBy([](QChar c) { return !c.isUpper() && !c.isDigit(); })) { return false; }
-        return true;
+        return !chars.containsBy([](QChar c) { return !c.isUpper() && !c.isDigit(); });
     }
 
     bool CAirlineIcaoCode::isValidIataCode(const QString &iataCode)

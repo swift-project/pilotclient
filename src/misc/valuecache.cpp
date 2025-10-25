@@ -390,7 +390,7 @@ namespace swift::misc
             auto object = json.object();
             json.setObject(it->mergeToMemoizedJson(object));
 
-            if (!(file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
+            if (!file.seek(0) || !file.resize(0) || file.write(json.toJson()) <= 0 || !file.checkedClose())
             {
                 return CStatusMessage(this).error(u"Failed to write to %1: %2")
                        << file.fileName() << file.errorString();

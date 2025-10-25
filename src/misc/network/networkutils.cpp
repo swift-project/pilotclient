@@ -265,8 +265,7 @@ namespace swift::misc::network
     bool CNetworkUtils::looksLikePhpErrorMessage(const QString &errorMessage)
     {
         if (errorMessage.length() < 50) { return false; }
-        if (errorMessage.contains("xdebug", Qt::CaseInsensitive)) { return true; }
-        return false;
+        return errorMessage.contains("xdebug", Qt::CaseInsensitive);
     }
 
     const QString &CNetworkUtils::networkOperationToString(QNetworkAccessManager::Operation operation)

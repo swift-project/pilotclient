@@ -32,10 +32,7 @@ namespace swift::misc::simulation::fscommon
         quint32 remainder = 0, quotient = 0, result = 0;
         remainder = num % divider;
         quotient = num / divider;
-        if (!(quotient == 0 && remainder == 0))
-        {
-            result += hornerScheme(quotient, divider, factor) * factor + remainder;
-        }
+        if (quotient != 0 || remainder != 0) { result += hornerScheme(quotient, divider, factor) * factor + remainder; }
         return result;
     }
 } // namespace swift::misc::simulation::fscommon

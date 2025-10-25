@@ -48,11 +48,7 @@ namespace swift::gui
         if (!this->isVisible()) { return false; }
 
         // further checks
-        if (this->isFloating())
-        {
-            if (this->isMinimized()) { return false; }
-            return true;
-        }
+        if (this->isFloating()) { return !this->isMinimized(); }
         else { return isSelectedDockWidget(); }
     }
 

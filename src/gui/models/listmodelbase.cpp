@@ -112,7 +112,7 @@ namespace swift::gui::models
     bool CListModelBase<T, UseCompare>::setData(const QModelIndex &index, const QVariant &value, int role)
     {
         auto dataRole = static_cast<Qt::ItemDataRole>(role);
-        if (!(dataRole == Qt::UserRole || dataRole == Qt::EditRole)) { return false; }
+        if (dataRole != Qt::UserRole && dataRole != Qt::EditRole) { return false; }
 
         // check / init
         if (!this->isValidIndex(index)) { return false; }

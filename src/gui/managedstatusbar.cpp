@@ -40,7 +40,7 @@ namespace swift::gui
     void CManagedStatusBar::initStatusBar(QStatusBar *statusBar)
     {
         if (m_statusBar) { return; }
-        m_ownedStatusBar = statusBar ? false : true;
+        m_ownedStatusBar = statusBar == nullptr;
         m_statusBar = statusBar ? statusBar : new QStatusBar();
         if (m_statusBar->objectName().isEmpty()) { m_statusBar->setObjectName("sb_ManagedStatusBar"); }
 

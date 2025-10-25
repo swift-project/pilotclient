@@ -419,8 +419,7 @@ namespace swift::gui::components
 
     bool CAtcStationComponent::canAccessContext() const
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return false; }
-        return true;
+        return sGui && !sGui->isShuttingDown() && sGui->getIContextNetwork();
     }
 
     void CAtcStationComponent::clearOnlineViews()

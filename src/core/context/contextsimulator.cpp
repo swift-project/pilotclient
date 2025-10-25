@@ -53,7 +53,6 @@ namespace swift::core::context
 
     bool IContextSimulator::isSimulatorSimulating() const
     {
-        if (!isSimulatorAvailable() || !getSimulatorStatus().testFlag(ISimulator::Simulating)) { return false; }
-        return true;
+        return isSimulatorAvailable() && getSimulatorStatus().testFlag(ISimulator::Simulating);
     }
 } // namespace swift::core::context

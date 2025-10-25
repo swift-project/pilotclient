@@ -405,9 +405,7 @@ namespace swift::core
         if (CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
 
         const CDistribution d(this->getOwnDistribution());
-        if (d.isRestricted() && this->isSet(m_cmdDevelopment)) { return true; }
-
-        return false;
+        return d.isRestricted() && this->isSet(m_cmdDevelopment);
     }
 
     CStatusMessage CApplication::initLocalSettings()

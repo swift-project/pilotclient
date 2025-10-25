@@ -294,7 +294,7 @@ namespace swift::misc::aviation
             if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude NULL value")); }
             return false;
         }
-        if (!(this->getReferenceDatum() == FlightLevel || this->getReferenceDatum() == MeanSeaLevel))
+        if (this->getReferenceDatum() != FlightLevel && this->getReferenceDatum() != MeanSeaLevel)
         {
             if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude, must be FL or MSL")); }
             return false;
