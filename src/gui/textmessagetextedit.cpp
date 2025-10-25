@@ -71,8 +71,7 @@ namespace swift::gui
 
     void CTextMessageTextEdit::redrawHtml()
     {
-        const QString html(
-            this->toHtml(m_latestFirst ? m_messages.reversed() : m_messages, m_withSender, m_withRecipient));
+        const QString html(toHtml(m_latestFirst ? m_messages.reversed() : m_messages, m_withSender, m_withRecipient));
         m_textDocument.setHtml(html);
         this->moveCursor(m_latestFirst ? QTextCursor::Start : QTextCursor::End);
     }

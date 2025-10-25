@@ -364,7 +364,7 @@ namespace swift::gui
             CLogSubscriber logSub(this, [&](const CStatusMessage &message) {
                 // handles an error in restoreGeometry/State
                 const int ret =
-                    QMessageBox::critical(sGui->mainApplicationWidget(), sGui->getApplicationNameAndVersion(),
+                    QMessageBox::critical(mainApplicationWidget(), sGui->getApplicationNameAndVersion(),
                                           QStringLiteral("Restoring the window state/geometry failed!\n"
                                                          "You need to reset the window size (command -%1).\n\n"
                                                          "Original msg: %2\n\n"

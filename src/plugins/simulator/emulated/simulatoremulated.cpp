@@ -38,7 +38,7 @@ namespace swift::simplugin::emulated
         this->onSettingsChanged(); // init from settings
 
         m_myAircraft = this->getOwnAircraft(); // sync with provider
-        m_monitorWidget = new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWidget());
+        m_monitorWidget = new CSimulatorEmulatedMonitorDialog(this, CGuiApplication::mainApplicationWidget());
 
         connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
         connect(sGui, &CGuiApplication::aboutToShutdown, this, &CSimulatorEmulated::closeMonitor, Qt::QueuedConnection);

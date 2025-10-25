@@ -44,7 +44,7 @@ namespace swift::simplugin::common
     {
         if (!m_interpolationDisplayDialog)
         {
-            QWidget *parentWidget = sGui ? sGui->mainApplicationWidget() : nullptr;
+            QWidget *parentWidget = sGui ? CGuiApplication::mainApplicationWidget() : nullptr;
             auto *dialog = new CInterpolationLogDisplayDialog(this, nullptr, parentWidget);
             m_interpolationDisplayDialog = dialog;
             m_interpolationDisplayDialog->setModal(false);

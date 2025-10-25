@@ -166,8 +166,8 @@ namespace swift::gui::components
 
         // override if values are not empty
         const CSpecializedSimulatorSettings ss = m_settings.getSpecializedSettings(simulator);
-        const QString sd = CFileUtils::fixWindowsUncPath(
-            CFileUtils::normalizeFilePathToQtStandard(ss.defaultSimulatorDirectory(simulator)));
+        const QString sd = CFileUtils::fixWindowsUncPath(CFileUtils::normalizeFilePathToQtStandard(
+            CSpecializedSimulatorSettings::defaultSimulatorDirectory(simulator)));
         if (!sd.isEmpty())
         {
             ui->le_SimulatorDirectory->setText(sd);
@@ -181,7 +181,7 @@ namespace swift::gui::components
             m_unsavedChanges = true;
         }
 
-        const QStringList excludes(ss.defaultModelExcludeDirectoryPatterns(simulator));
+        const QStringList excludes(CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(simulator));
         if (!excludes.isEmpty())
         {
             this->displayExcludeDirectoryPatterns(excludes);

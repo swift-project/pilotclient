@@ -56,7 +56,7 @@ namespace swift::gui::components
     void CSettingsHotkeyComponent::saveSettings()
     {
         const CStatusMessage msg = m_actionHotkeys.save();
-        CLogMessage(this).preformatted(msg);
+        CLogMessage::preformatted(msg);
     }
 
     void CSettingsHotkeyComponent::registerDummyPttEntry()

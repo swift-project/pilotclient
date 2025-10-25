@@ -229,7 +229,7 @@ namespace swift::gui
         if (resetTimeMs > 0)
         {
             QPointer<CLedWidget> myself(this);
-            m_resetTimer.singleShot(resetTimeMs, this, [=] {
+            QTimer::singleShot(resetTimeMs, this, [=] {
                 if (!myself) { return; }
                 this->resetState();
             });
@@ -252,7 +252,7 @@ namespace swift::gui
 
     void CLedWidget::setTriState(int resetTimeMs)
     {
-        if (resetTimeMs > 0) { m_resetTimer.singleShot(resetTimeMs, this, &CLedWidget::resetState); }
+        if (resetTimeMs > 0) { QTimer::singleShot(resetTimeMs, this, &CLedWidget::resetState); }
         else
         {
             m_resetTimer.stop();

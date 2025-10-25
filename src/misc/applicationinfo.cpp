@@ -206,7 +206,7 @@ namespace swift::misc
 
     CApplicationInfo::Application CApplicationInfo::guessApplication()
     {
-        const QString a(QCoreApplication::instance()->applicationName().toLower());
+        const QString a(QCoreApplication::applicationName().toLower());
         if (a.contains("test")) { return CApplicationInfo::UnitTest; } // names like testcore
         if (a.contains("sample")) { return CApplicationInfo::Sample; }
         if (a.contains("core")) { return CApplicationInfo::PilotClientCore; }

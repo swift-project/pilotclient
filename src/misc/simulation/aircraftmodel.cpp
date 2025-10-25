@@ -132,6 +132,7 @@ namespace swift::misc::simulation
     QJsonObject CAircraftModel::toMemoizedJson(MemoHelper::CMemoizer &helper) const
     {
         QJsonObject json;
+        // NOLINTBEGIN(readability-static-accessed-through-instance)
         introspect<CAircraftModel>().forEachMember([&, this](auto member) {
             if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
             {
@@ -139,11 +140,13 @@ namespace swift::misc::simulation
                 json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(maybeMemo));
             }
         });
+        // NOLINTEND(readability-static-accessed-through-instance)
         return json;
     }
 
     void CAircraftModel::convertFromMemoizedJson(const QJsonObject &json, const MemoHelper::CUnmemoizer &helper)
     {
+        // NOLINTBEGIN(readability-static-accessed-through-instance)
         introspect<CAircraftModel>().forEachMember([&, this](auto member) {
             if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
             {
@@ -151,6 +154,7 @@ namespace swift::misc::simulation
                 if (it != json.end()) { it.value() >> helper.maybeUnmemoize(member.in(*this)).get(); }
             }
         });
+        // NOLINTEND(readability-static-accessed-through-instance)
     }
 
     QString CAircraftModel::asHtmlSummary(const QString &separator) const

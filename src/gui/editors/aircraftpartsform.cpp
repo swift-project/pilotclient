@@ -75,7 +75,7 @@ namespace swift::gui::editors
         }
         catch (const CJsonException &ex)
         {
-            CLogMessage(this).preformatted(CStatusMessage::fromJsonException(ex, this, "Parse error"));
+            CLogMessage::preformatted(CStatusMessage::fromJsonException(ex, this, "Parse error"));
             return parts;
         }
         return parts;

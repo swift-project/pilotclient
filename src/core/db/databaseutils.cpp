@@ -179,7 +179,7 @@ namespace swift::core::db
             if (processEvents && c % 125 == 0)
             {
                 if (!sApp || sApp->isShuttingDown()) { return models; }
-                sApp->processEventsFor(25);
+                CApplication::processEventsFor(25);
             }
 
             const QString ms(model.getModelString());
@@ -222,7 +222,7 @@ namespace swift::core::db
             if (processEvents && c % 125 == 0)
             {
                 if (!sApp || sApp->isShuttingDown()) { return models; }
-                sApp->processEventsFor(25);
+                CApplication::processEventsFor(25);
             }
 
             const QString ms(model.getModelString());
@@ -268,7 +268,7 @@ namespace swift::core::db
             if (modified || model.hasValidDbKey())
             {
                 c++;
-                if (processEvents && c % 125 == 0) { sApp->processEventsFor(25); }
+                if (processEvents && c % 125 == 0) { CApplication::processEventsFor(25); }
             }
         }
         CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"Consolidated %1 models in %2ms")
@@ -374,7 +374,7 @@ namespace swift::core::db
                     const int percentage = c * 100 / maxModelsCount;
                     progressIndicator->updateProgressIndicatorAndProcessEvents(percentage);
                 }
-                else { sApp->processEventsFor(10); }
+                else { CApplication::processEventsFor(10); }
             }
 
             // values to be skipped

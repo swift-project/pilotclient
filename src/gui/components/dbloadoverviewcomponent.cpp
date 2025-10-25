@@ -31,7 +31,7 @@ namespace swift::gui::components
         //! \fixme KB 201709 It is hard to judge if it is a good idea to trigger cache admit in a UI component
         //  althought admit happens in background, this component might trigger cache reads not needed (though it is not
         //  very likely)
-        this->admitCaches();
+        admitCaches();
 
         ui->lbl_DatabaseUrl->setTextFormat(Qt::RichText);
         ui->lbl_DatabaseUrl->setTextInteractionFlags(Qt::TextBrowserInteraction);

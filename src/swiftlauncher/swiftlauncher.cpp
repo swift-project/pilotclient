@@ -183,7 +183,7 @@ void CSwiftLauncher::clearWindowsRegistry()
 
 CSwiftLauncher::~CSwiftLauncher() = default;
 
-QString CSwiftLauncher::getCmdLine() const { return this->toCmdLine(m_executable, m_executableArgs); }
+QString CSwiftLauncher::getCmdLine() const { return toCmdLine(m_executable, m_executableArgs); }
 
 bool CSwiftLauncher::startDetached()
 {
@@ -500,7 +500,7 @@ void CSwiftLauncher::checkRunningApplicationsAndCore()
     if (m_startMappingToolWaitCycles > 0) { m_startMappingToolWaitCycles--; }
     if (m_startGuiWaitCycles > 0) { m_startGuiWaitCycles--; }
 
-    const CApplicationInfoList runningApps = sGui->getRunningApplications();
+    const CApplicationInfoList runningApps = CGuiApplication::getRunningApplications();
     const bool foundLocalCore = runningApps.containsApplication(CApplicationInfo::PilotClientCore);
     const bool foundLocalMappingTool = runningApps.containsApplication(CApplicationInfo::MappingTool);
     const bool foundLocalPilotClientGui = runningApps.containsApplication(CApplicationInfo::PilotClientGui);

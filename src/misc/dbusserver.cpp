@@ -211,12 +211,12 @@ namespace swift::misc
             if (ok)
             {
                 CLogMessage(this).info(u"Adding '%1' to the new connection '%2'")
-                    << key << this->getDBusInterfaceFromClassInfo(i.value());
+                    << key << getDBusInterfaceFromClassInfo(i.value());
             }
             else
             {
                 CLogMessage(this).info(u"Adding '%1' failed, connection '%2', error '%3'")
-                    << key << this->getDBusInterfaceFromClassInfo(i.value()) << connection.lastError().message();
+                    << key << getDBusInterfaceFromClassInfo(i.value()) << connection.lastError().message();
                 success = false;
             }
         }

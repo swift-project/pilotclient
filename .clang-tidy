@@ -46,6 +46,7 @@ Checks: >
   readability-use-anyofallof,
   readability-redundant-member-init,
   cppcoreguidelines-init-variables,
+  readability-static-accessed-through-instance,
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase

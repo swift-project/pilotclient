@@ -175,7 +175,7 @@ namespace swift::gui::components
         if (ui->cb_Silent->isChecked())
         {
             // allow UI updates
-            sApp->processEventsFor(50);
+            CApplication::processEventsFor(50);
             return true;
         }
         const QMessageBox::StandardButton reply = QMessageBox::question(

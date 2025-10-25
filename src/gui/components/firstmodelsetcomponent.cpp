@@ -298,7 +298,7 @@ namespace swift::gui::components
 
     QWidget *CFirstModelSetComponent::mainWindow()
     {
-        QWidget *pw = sGui->mainApplicationWidget();
+        QWidget *pw = CGuiApplication::mainApplicationWidget();
         return pw ? pw : this;
     }
 

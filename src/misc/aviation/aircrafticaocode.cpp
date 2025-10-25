@@ -122,7 +122,7 @@ namespace swift::misc::aviation
         {
             // actually we would expect all DB data to be valid, however right now
             // we only check special cases
-            if (this->getDesignator() == this->getUnassignedDesignator()) { return msg; } // DB ZZZZ
+            if (this->getDesignator() == getUnassignedDesignator()) { return msg; } // DB ZZZZ
         }
 
         if (!hasKnownDesignator())

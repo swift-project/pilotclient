@@ -262,7 +262,7 @@ namespace swift::misc
           m_revisionFileName(revisionFileName)
     {}
 
-    const QString &CDataCacheSerializer::persistentStore() const { return m_cache->persistentStore(); }
+    const QString &CDataCacheSerializer::persistentStore() const { return CDataCache::persistentStore(); }
 
     void CDataCacheSerializer::saveToStore(const swift::misc::CVariantMap &values,
                                            const swift::misc::CValueCachePacket &baseline)

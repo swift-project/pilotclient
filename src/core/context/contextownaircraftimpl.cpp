@@ -142,7 +142,7 @@ namespace swift::core::context
         ownAircraft.setPilot(m_currentNetworkServer.get().getUser());
 
         // If we already have a model from somehwere, keep it, otherwise init default
-        ownAircraft.setModel(this->reverseLookupModel(ownAircraft.getModel()));
+        ownAircraft.setModel(reverseLookupModel(ownAircraft.getModel()));
         if (!ownAircraft.getAircraftIcaoCode().hasValidDesignator())
         {
             ownAircraft.setModel(getDefaultOwnAircraftModel());
@@ -205,7 +205,7 @@ namespace swift::core::context
 
     bool CContextOwnAircraft::updateOwnModel(const CAircraftModel &model, const CIdentifier &identifier)
     {
-        CAircraftModel updateModel(this->reverseLookupModel(model));
+        CAircraftModel updateModel(reverseLookupModel(model));
         {
             QWriteLocker l(&m_lockAircraft);
             const bool changed = (m_ownAircraft.getModel() != updateModel);

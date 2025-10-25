@@ -542,7 +542,7 @@ namespace swift::simplugin::xplane
         if (!m_serviceProxy) { return; }
         CLogMessage(this).info(u"XPlane xSwiftBus service unregistered");
 
-        if (m_dbusMode == P2P) { m_dBusConnection.disconnectFromPeer(m_dBusConnection.name()); }
+        if (m_dbusMode == P2P) { QDBusConnection::disconnectFromPeer(m_dBusConnection.name()); }
         m_dBusConnection = QDBusConnection { "default" };
         if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
         delete m_serviceProxy;
@@ -1373,11 +1373,11 @@ namespace swift::simplugin::xplane
         m_DBusConnection = QDBusConnection::sessionBus();
         if (!m_DBusConnection.isConnected())
         {
-            m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
+            QDBusConnection::disconnectFromBus(m_DBusConnection.name());
             return;
         }
         checkConnectionCommon(); // bus
-        m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
+        QDBusConnection::disconnectFromBus(m_DBusConnection.name());
     }
 
     void CSimulatorXPlaneListener::checkConnectionViaPeer(const QString &address)
@@ -1386,11 +1386,11 @@ namespace swift::simplugin::xplane
         if (!m_DBusConnection.isConnected())
         {
             // This is required to cleanup the connection in QtDBus
-            m_DBusConnection.disconnectFromPeer(m_DBusConnection.name());
+            QDBusConnection::disconnectFromPeer(m_DBusConnection.name());
             return;
         }
         checkConnectionCommon(); // peer
-        m_DBusConnection.disconnectFromPeer(m_DBusConnection.name());
+        QDBusConnection::disconnectFromPeer(m_DBusConnection.name());
     }
 
     void CSimulatorXPlaneListener::checkConnectionCommon()
@@ -1441,7 +1441,7 @@ namespace swift::simplugin::xplane
     void CSimulatorXPlaneListener::serviceRegistered(const QString &serviceName)
     {
         if (serviceName == xswiftbusServiceName()) { emit simulatorStarted(getPluginInfo()); }
-        m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
+        QDBusConnection::disconnectFromBus(m_DBusConnection.name());
     }
 
     void CSimulatorXPlaneListener::onXSwiftBusServerSettingChanged()

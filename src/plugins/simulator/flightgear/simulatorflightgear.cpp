@@ -386,7 +386,7 @@ namespace swift::simplugin::flightgear
         if (!m_serviceProxy) { return; }
         CLogMessage(this).info(u"FG DBus service unregistered");
 
-        if (m_dbusMode == P2P) { m_dBusConnection.disconnectFromPeer(m_dBusConnection.name()); }
+        if (m_dbusMode == P2P) { QDBusConnection::disconnectFromPeer(m_dBusConnection.name()); }
         m_dBusConnection = QDBusConnection { "default" };
         if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
         delete m_serviceProxy;
@@ -1043,11 +1043,11 @@ namespace swift::simplugin::flightgear
         m_conn = QDBusConnection::sessionBus();
         if (!m_conn.isConnected())
         {
-            m_conn.disconnectFromBus(m_conn.name());
+            QDBusConnection::disconnectFromBus(m_conn.name());
             return;
         }
         checkConnectionCommon();
-        m_conn.disconnectFromBus(m_conn.name());
+        QDBusConnection::disconnectFromBus(m_conn.name());
     }
 
     void CSimulatorFlightgearListener::checkConnectionViaPeer(const QString &address)
@@ -1056,11 +1056,11 @@ namespace swift::simplugin::flightgear
         if (!m_conn.isConnected())
         {
             // This is required to cleanup the connection in QtDBus
-            m_conn.disconnectFromPeer(m_conn.name());
+            QDBusConnection::disconnectFromPeer(m_conn.name());
             return;
         }
         checkConnectionCommon();
-        m_conn.disconnectFromPeer(m_conn.name());
+        QDBusConnection::disconnectFromPeer(m_conn.name());
     }
 
     void CSimulatorFlightgearListener::checkConnectionCommon()
@@ -1103,7 +1103,7 @@ namespace swift::simplugin::flightgear
     void CSimulatorFlightgearListener::serviceRegistered(const QString &serviceName)
     {
         if (serviceName == fgswiftbusServiceName()) { emit simulatorStarted(getPluginInfo()); }
-        m_conn.disconnectFromBus(m_conn.name());
+        QDBusConnection::disconnectFromBus(m_conn.name());
     }
 
     void CSimulatorFlightgearListener::fgSwiftBusServerSettingChanged()

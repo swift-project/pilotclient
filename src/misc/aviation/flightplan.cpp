@@ -128,13 +128,12 @@ namespace swift::misc::aviation
         m_isParsed = true;
         if (m_remarks.isEmpty()) { return; }
         const QString remarks = m_remarks.toUpper();
-        const QString callsign =
-            CCallsign::unifyCallsign(this->getRemark(remarks, "REG/")); // registration is a callsign
+        const QString callsign = CCallsign::unifyCallsign(getRemark(remarks, "REG/")); // registration is a callsign
         if (CCallsign::isValidAircraftCallsign(callsign)) { m_registration = CCallsign(callsign, CCallsign::Aircraft); }
         m_voiceCapabilities = m_voiceCapabilities.isUnknown() ? CVoiceCapabilities(m_remarks) : m_voiceCapabilities;
         m_flightOperator =
-            this->getRemark(remarks, "OPR/"); // operator, e.g. British airways, sometimes people use ICAO code here
-        m_selcalCode = CSelcal(this->getRemark(remarks, "SEL/"));
+            getRemark(remarks, "OPR/"); // operator, e.g. British airways, sometimes people use ICAO code here
+        m_selcalCode = CSelcal(getRemark(remarks, "SEL/"));
         m_radioTelephony = getRemark(remarks, "CALLSIGN/"); // used similar to radio telephony
         if (m_radioTelephony.isEmpty()) { m_radioTelephony = getRemark(remarks, "RT/"); }
         if (!m_flightOperator.isEmpty() && CAirlineIcaoCode::isValidAirlineDesignator(m_flightOperator))

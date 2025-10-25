@@ -838,7 +838,7 @@ namespace swift::core
         {
             const CStatusMessage m = this->supportsContexts() ? this->getIContextApplication()->saveSettings() :
                                                                 CSettingsCache::instance()->saveToStore();
-            CLogMessage(this).preformatted(m);
+            CLogMessage::preformatted(m);
         }
 
         // from here on we really rip apart the application object
@@ -870,7 +870,7 @@ namespace swift::core
 
         // clean up all in "deferred delete state"
         qApp->sendPostedEvents(nullptr, QEvent::DeferredDelete);
-        sApp->processEventsFor(500);
+        processEventsFor(500);
 
         // completed
         m_shutdown = true;
