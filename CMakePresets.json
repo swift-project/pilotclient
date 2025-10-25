@@ -78,6 +78,22 @@
       }
     },
     {
+      "name": "ci-build-linux-no-pch",
+      "displayName": "CI Build Linux without PCH (used for static code analysis)",
+      "inherits": "ci-build-linux",
+      "generator": "Ninja",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "VATSIM_KEY_JSON": "",
+        "SWIFT_USE_PCH": "OFF"
+      }
+    },
+    {
       "name": "dev-debug",
       "displayName": "Development Debug",
       "description": "Base preset that can either be used directly or can be customized through a CMakeUserPresets.json",

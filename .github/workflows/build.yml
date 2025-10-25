@@ -18,6 +18,7 @@ env:
   do_vatsim_key: ${{ github.event_name == 'push' }}
   do_symbols:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
   do_doxygen:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+  do_static_analysis: ${{ github.event_name == 'push' && github.ref != 'refs/heads/main' }}
   qt_version:    6.10.0
   bitrock_version: qt-professional-24.7.0
   bitrock_url:     https://releases.installbuilder.com/installbuilder
@@ -104,6 +105,62 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs/html/
+      - name: Check if clang-tidy analysis is required
+        id: check_need_clang_tidy
+        run: |
+          if python3 -u scripts/run_static_analysis.py --check-changed-files; then
+            echo "should_run_clang_tidy=false" >> $GITHUB_OUTPUT
+          else
+            echo "should_run_clang_tidy=true" >> $GITHUB_OUTPUT
+          fi
+      - name: Checkout repository
+        if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+          submodules: 'true'
+      - name: Install Qt
+        if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.qt_version }}
+          modules: 'qtmultimedia'
+          cache: true
+      - name: Install dependencies
+        if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
+        run: |
+          sudo apt-get -y install dbus-x11 libglu1-mesa-dev libpulse-dev libdbus-1-dev ninja-build
+          pip3 install requests conan
+      - name: Checkout externals
+        if: ${{ env.use_externals == 'true' && steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
+        uses: actions/checkout@v4
+        env:
+          EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
+        with:
+          repository: ${{ env.externals }}
+          ref: ${{ env.externals_sha }}
+          token: ${{ env.EXTERNALS_PAT }}
+          path: 'third_party/externals'
+      - name: Install conan dependencies
+        if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
+        shell: bash
+        env:
+          ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+          ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+        run: |
+          conan profile detect
+          conan remote disable conancenter
+          conan remote add swift https://artifactory.swift-project.org/artifactory/api/conan/conan-local
+          conan remote login swift "$ARTIFACTORY_USER" --password "$ARTIFACTORY_TOKEN"
+          conan install . --output-folder=build_conan --deployer=full_deploy -pr=ci/profile_linux
+      - name: Run clang-tidy
+        if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
+        shell: bash
+        run: |
+          mkdir build && pushd build
+          cmake .. --preset ci-build-linux-no-pch
+          popd
+          python3 scripts/run_static_analysis.py --clang-tidy --build-path build --changed-files-ci
 
   buildLinux:
     runs-on: ubuntu-22.04

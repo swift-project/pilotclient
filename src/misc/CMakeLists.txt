@@ -718,10 +718,12 @@ if(APPLE)
     target_link_libraries(misc PRIVATE "-lbsm -framework AVFoundation -framework Security -framework CoreFoundation -framework ApplicationServices -framework Foundation -framework IOKit")
 endif()
 
-target_precompile_headers(misc
-    PRIVATE
-        ${SWIFT_MISC_PCH}
-)
+if(SWIFT_USE_PCH)
+    target_precompile_headers(misc
+        PRIVATE
+            ${SWIFT_MISC_PCH}
+    )
+endif()
 
 install(TARGETS misc
     LIBRARY DESTINATION lib

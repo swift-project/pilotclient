@@ -881,12 +881,14 @@ target_link_libraries(gui
 
 target_compile_definitions(gui PRIVATE BUILD_SWIFT_GUI_LIB)
 
-target_precompile_headers(gui
-        PRIVATE
-            ${SWIFT_MISC_PCH}
-            ${SWIFT_CORE_PCH}
-            ${SWIFT_GUI_PCH}
-)
+if(SWIFT_USE_PCH)
+    target_precompile_headers(gui
+            PRIVATE
+                ${SWIFT_MISC_PCH}
+                ${SWIFT_CORE_PCH}
+                ${SWIFT_GUI_PCH}
+    )
+endif()
 
 install(TARGETS gui
     LIBRARY DESTINATION lib

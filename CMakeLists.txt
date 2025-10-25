@@ -59,6 +59,7 @@ option(SWIFT_MINIFY_DEBUG_SYMBOLS "Minify debug symbols" OFF)
 option(SWIFT_ONLY_XSWIFTBUS_WORKAROUND "Only build xswiftbus (useful when compiling on ARM)" OFF)
 
 option(SWIFT_USE_CRASHPAD "Use crashpad" OFF)
+option(SWIFT_USE_PCH "Use precompiled headers" ON)
 
 
 # Shortcut to only build xswiftbus
