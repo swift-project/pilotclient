@@ -15,7 +15,7 @@
 #include "misc/fileutils.h"
 #include "misc/swiftdirectories.h"
 
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
 #    include <ShlObj.h>
 #endif
 
@@ -47,7 +47,7 @@ namespace swift::misc::simulation::xplane
         return lastLine;
     }
 
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
     QString getWindowsLocalAppDataPath()
     {
         QString result;
@@ -85,7 +85,7 @@ namespace swift::misc::simulation::xplane
     {
         //! \fixme KB 8/17 we could also use the runtime CBuildConfig decision here, which looks nicer (I personally
         //! always try to avoid ifdef)
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
         return CFileUtils::appendFilePathsAndFixUnc(getWindowsLocalAppDataPath(), xplaneInstallFile);
 #elif defined(Q_OS_LINUX)
         static const QString xp(".x-plane");

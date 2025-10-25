@@ -48,6 +48,7 @@ Checks: >
   cppcoreguidelines-init-variables,
   readability-static-accessed-through-instance,
   readability-simplify-boolean-expr,
+  readability-use-concise-preprocessor-directives,
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase

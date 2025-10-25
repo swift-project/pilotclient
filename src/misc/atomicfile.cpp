@@ -12,7 +12,7 @@
 
 #include "misc/algorithm.h"
 
-#if defined(Q_OS_POSIX)
+#ifdef Q_OS_POSIX
 #    include <errno.h>
 #    include <stdio.h>
 #elif defined(Q_OS_WIN32)
@@ -29,7 +29,7 @@ namespace swift::misc
     {
         bool ok = true;
         {
-#if defined(Q_OS_WIN32)
+#ifdef Q_OS_WIN32
             QNtfsPermissionCheckGuard permissionGuard;
 #endif
             if ((mode & CAtomicFile::ReadOnly) && !fileInfo.isReadable()) { ok = false; }
@@ -71,7 +71,7 @@ namespace swift::misc
     {
         if (!isOpen()) { return; }
 
-#if defined(Q_OS_WIN32)
+#ifdef Q_OS_WIN32
         FlushFileBuffers(reinterpret_cast<HANDLE>(_get_osfhandle(handle())));
 #endif
 
@@ -118,7 +118,7 @@ namespace swift::misc
             36, QChar('0'));
     }
 
-#if defined(Q_OS_POSIX)
+#ifdef Q_OS_POSIX
     void CAtomicFile::replaceOriginal()
     {
         auto result = ::rename(qPrintable(fileName()), qPrintable(m_originalFilename));

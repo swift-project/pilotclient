@@ -26,7 +26,7 @@
 #include "misc/logmessage.h"
 #include "misc/threadutils.h"
 
-#if defined(Q_OS_MACOS)
+#ifdef Q_OS_MACOS
 #    include "input/macos/macosinpututils.h"
 #endif
 
@@ -422,7 +422,7 @@ void SwiftGuiStd::verifyPrerequisites()
     }
     else { msgs.push_back(sGui->getIContextSimulator()->verifyPrerequisites()); }
 
-#if defined(Q_OS_MACOS)
+#ifdef Q_OS_MACOS
     if (!swift::input::CMacOSInputUtils::hasAccess())
     {
         // A log message about missing permissions is already emitted when initializing the keyboard.

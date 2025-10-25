@@ -8,7 +8,7 @@
 #include <QFile>
 #include <QFileInfo>
 
-#if defined(Q_OS_MACOS)
+#ifdef Q_OS_MACOS
 #    include <libproc.h>
 #elif defined(Q_OS_WIN)
 #    ifndef NOMINMAX
@@ -30,7 +30,7 @@ namespace swift::misc
         return QStringLiteral("{ %1, %2 }").arg(QString::number(m_pid), m_name);
     }
 
-#if defined(Q_OS_LINUX)
+#ifdef Q_OS_LINUX
     QString CProcessInfo::processNameFromId(qint64 pid)
     {
         QString path = QFileInfo(QStringLiteral("/proc/%1/exe").arg(pid)).symLinkTarget();
