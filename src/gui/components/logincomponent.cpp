@@ -403,7 +403,7 @@ namespace swift::gui::components
     {
         int v = ui->pb_LogoffTimeout->value();
         v -= 1;
-        if (v < 0) { v = 0; }
+        v = std::max(v, 0);
         ui->pb_LogoffTimeout->setValue(v);
         if (v <= 0)
         {

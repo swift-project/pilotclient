@@ -65,8 +65,7 @@ namespace swift::gui::components
 
     void CDbAutoSimulatorStashingComponent::updateProgressIndicator(int percent)
     {
-        if (percent > 100) { percent = 100; }
-        if (percent < 0) { percent = 0; }
+        percent = std::clamp(percent, 0, 100);
         ui->pb_StashingProgress->setValue(percent);
     }
 

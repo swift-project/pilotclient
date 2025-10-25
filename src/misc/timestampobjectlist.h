@@ -6,6 +6,8 @@
 #ifndef SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 #define SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 
+#include <algorithm>
+
 #include <QtGlobal>
 
 #include "config/buildconfig.h"
@@ -382,8 +384,8 @@ namespace swift::misc
                     const ITimestampBased &l = last;
                     const ITimestampBased &o = object;
                     const qint64 diff = l.getAbsTimeDifferenceMs(o);
-                    if (diff > mmm.max) { mmm.max = diff; }
-                    if (diff < mmm.min) { mmm.min = diff; }
+                    mmm.max = std::max(diff, mmm.max);
+                    mmm.min = std::min(diff, mmm.min);
                     mean += diff;
                 }
                 c++;
@@ -722,8 +724,8 @@ namespace swift::misc
             {
                 if (!object.hasNonZeroOffsetTime()) { continue; }
                 const qint64 os = object.getTimeOffsetMs();
-                if (os > mmm.max) { mmm.max = os; }
-                if (os < mmm.min) { mmm.min = os; }
+                mmm.max = std::max(os, mmm.max);
+                mmm.min = std::min(os, mmm.min);
                 mean += os;
                 c++;
             }

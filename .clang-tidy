@@ -42,7 +42,7 @@ Checks: >
   modernize-use-transparent-functors,
   modernize-use-uncaught-exceptions,
   modernize-use-using,
-
+  readability-use-std-min-max,
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase

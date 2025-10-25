@@ -163,8 +163,7 @@ namespace swift::gui::components
 
     void CDbAutoStashingComponent::updateProgressIndicator(int percent)
     {
-        if (percent > 100) { percent = 100; }
-        if (percent < 0) { percent = 0; }
+        percent = std::clamp(percent, 0, 100);
         ui->pb_StashingProgress->setValue(percent);
         ui->le_Stashed->setText(QString::number(m_noStashed));
         ui->le_NoData->setText(QString::number(m_noData));
@@ -249,7 +248,7 @@ namespace swift::gui::components
                 if (max < all)
                 {
                     int maxPercent = autoStashed.size() * 100 / max;
-                    if (maxPercent > percent) { percent = maxPercent; }
+                    percent = std::max(maxPercent, percent);
                 }
                 this->updateProgressIndicator(percent);
             }

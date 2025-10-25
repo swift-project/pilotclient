@@ -105,7 +105,7 @@ namespace swift::misc::simulation
                 const qint64 deltaMs = now - startedMs;
                 m_pendingElevationRequests.remove(requestedForCallsign);
                 m_statsCurrentElevRequestTimeMs = deltaMs;
-                if (m_statsMaxElevRequestTimeMs < deltaMs) { m_statsMaxElevRequestTimeMs = deltaMs; }
+                m_statsMaxElevRequestTimeMs = std::max(m_statsMaxElevRequestTimeMs, deltaMs);
             }
         }
         return true;

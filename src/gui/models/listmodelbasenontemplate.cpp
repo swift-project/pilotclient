@@ -150,7 +150,7 @@ namespace swift::gui::models
         const int columns = columnCount();
         const int rows = rowCount();
         if (columns < 1) { return; }
-        if (startRowIndex < 0) { startRowIndex = 0; }
+        startRowIndex = std::max(startRowIndex, 0);
         if (endRowIndex >= rows) { endRowIndex = rows - 1; }
         const QModelIndex topLeft(createIndex(startRowIndex, 0));
         const QModelIndex bottomRight(createIndex(endRowIndex, columns - 1));

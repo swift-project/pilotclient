@@ -93,7 +93,7 @@ namespace swift::misc::network
         for (const CUrlLog &rl : *this)
         {
             if (rl.isPending()) { continue; }
-            if (rl.getResponseTimeMs() > max) { max = rl.getResponseTimeMs(); }
+            max = std::max(rl.getResponseTimeMs(), max);
         }
         return max;
     }
@@ -105,7 +105,7 @@ namespace swift::misc::network
         for (const CUrlLog &rl : *this)
         {
             if (rl.isPending()) { continue; }
-            if (rl.getResponseTimeMs() < min) { min = rl.getResponseTimeMs(); }
+            min = std::min(rl.getResponseTimeMs(), min);
         }
         return min;
     }

@@ -187,7 +187,7 @@ namespace swift::misc
             if (msg.isEmpty()) { continue; }
             newMsgs.append(msg.getMessage());
             CStatusMessage::StatusSeverity ms = msg.getSeverity();
-            if (s < ms) { s = ms; }
+            s = std::max(s, ms);
             cats.push_back(msg.getCategories());
         }
         const CStatusMessage newMsg(cats, s, newMsgs.join(", "));

@@ -63,7 +63,7 @@ namespace swift::misc::simulation::settings
                                  int freqRgb, int privRgb, int servRgb, int statRgb, int supRgb)
         {
             if (topPx >= 0) { bottomPx = -1; }
-            if (lines < 3) { lines = 3; }
+            lines = std::max(lines, 3);
             this->setMessageBoxValues(
                 std::to_string(leftPx) + ";" + std::to_string(topPx) + ";" + std::to_string(rightPx) + ";" +
                 std::to_string(bottomPx) + ";" + std::to_string(lines) + ";" + std::to_string(durationMs) + ";" +

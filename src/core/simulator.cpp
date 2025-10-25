@@ -1040,7 +1040,7 @@ namespace swift::core
 
         if (!this->isUpdateAllRemoteAircraft(startTime)) { this->resetUpdateAllRemoteAircraft(); }
 
-        if (m_statsMaxUpdateTimeMs < dt) { m_statsMaxUpdateTimeMs = dt; }
+        m_statsMaxUpdateTimeMs = std::max(m_statsMaxUpdateTimeMs, dt);
         if (m_statsLastUpdateAircraftRequestedMs > 0)
         {
             m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequestedMs;

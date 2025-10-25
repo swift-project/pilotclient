@@ -821,7 +821,7 @@ namespace swift::simplugin::flightgear
             const qint64 wasStartedMs = m_addingInProgressAircraft.value(cs);
             const qint64 deltaTimeMs = QDateTime::currentMSecsSinceEpoch() - wasStartedMs;
             m_statsAddCurrentTimeMs = deltaTimeMs;
-            if (deltaTimeMs > m_statsAddMaxTimeMs) { m_statsAddMaxTimeMs = deltaTimeMs; }
+            m_statsAddMaxTimeMs = std::max(deltaTimeMs, m_statsAddMaxTimeMs);
             m_addingInProgressAircraft.remove(cs);
         }
 
