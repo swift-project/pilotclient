@@ -201,11 +201,8 @@ namespace swift::gui::models
 
     bool CColumns::hasAnyWidthPercentage() const
     {
-        for (const CColumn &c : m_columns)
-        {
-            if (c.hasWidthPercentage()) { return true; }
-        }
-        return false;
+        return std::any_of(m_columns.cbegin(), m_columns.cend(),
+                           [](const CColumn &c) { return c.hasWidthPercentage(); });
     }
 
     void CColumns::setWidthPercentages(const QList<int> &percentages)

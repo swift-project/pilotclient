@@ -58,12 +58,10 @@ namespace swift::misc
 
         if (!recursively) { return false; }
         const QStringList relSubDirs = CDirectoryUtils::getRelativeSubDirectories(dir);
-        for (const QString &relSubDir : relSubDirs)
-        {
+        return std::any_of(relSubDirs.cbegin(), relSubDirs.cend(), [&](const QString &relSubDir) {
             const QString absSubDir = CFileUtils::appendFilePaths(directory.absolutePath(), relSubDir);
-            if (CDirectoryUtils::containsFileInDir(absSubDir, filter, recursively)) { return true; }
-        }
-        return false;
+            return CDirectoryUtils::containsFileInDir(absSubDir, filter, recursively);
+        });
     }
 
     bool CDirectoryUtils::existsUnemptyDirectory(const QString &testDir)

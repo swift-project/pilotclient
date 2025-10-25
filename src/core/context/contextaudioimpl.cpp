@@ -53,11 +53,8 @@ namespace swift::core::context
 
     bool CContextAudio::hasRegisteredAudioCallsign(const CCallsign &callsign) const
     {
-        for (const CCallsign &cs : m_registeredCallsigns.values())
-        {
-            if (callsign == cs) { return true; }
-        }
-        return false;
+        return std::any_of(m_registeredCallsigns.begin(), m_registeredCallsigns.end(),
+                           [&](const CCallsign &cs) { return callsign == cs; });
     }
 
     CAudioDeviceInfoList CContextAudio::getRegisteredDevices() const { return m_registeredDevices; }

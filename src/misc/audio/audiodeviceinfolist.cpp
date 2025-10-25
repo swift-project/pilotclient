@@ -121,11 +121,9 @@ namespace swift::misc::audio
     bool CAudioDeviceInfoList::hasSameDevices(const CAudioDeviceInfoList &compareDevices) const
     {
         if (compareDevices.size() != this->size()) { return false; }
-        for (const CAudioDeviceInfo &d : *this)
-        {
-            if (!compareDevices.findRegisteredDeviceOrDefault(d).isValid()) { return false; }
-        }
-        return true;
+        return std::all_of(cbegin(), cend(), [&](const CAudioDeviceInfo &d) {
+            return compareDevices.findRegisteredDeviceOrDefault(d).isValid();
+        });
     }
 
     CAudioDeviceInfoList CAudioDeviceInfoList::allInputDevices()

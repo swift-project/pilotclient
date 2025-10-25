@@ -11,11 +11,7 @@ namespace swift::misc::network
 
     bool CServerList::containsName(const QString &name) const
     {
-        for (const CServer &s : *this)
-        {
-            if (s.matchesName(name)) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(), [&](const CServer &s) { return s.matchesName(name); });
     }
 
     bool CServerList::removeByName(const QString &name)
@@ -39,11 +35,7 @@ namespace swift::misc::network
 
     bool CServerList::containsAddressPort(const CServer &server)
     {
-        for (const CServer &s : *this)
-        {
-            if (s.matchesAddressPort(server)) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(), [&](const CServer &s) { return s.matchesAddressPort(server); });
     }
 
     void CServerList::addIfAddressNotExists(const CServer &server)

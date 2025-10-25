@@ -458,21 +458,15 @@ namespace swift::misc
         //! Any negative or zero offset time?
         bool containsZeroOrNegativeOffsetTime() const
         {
-            for (const ITimestampWithOffsetBased &obj : this->container())
-            {
-                if (obj.getTimeOffsetMs() <= 0) { return true; }
-            }
-            return false;
+            return std::any_of(this->container().begin(), this->container().end(),
+                               [](const ITimestampWithOffsetBased &obj) { return obj.getTimeOffsetMs() <= 0; });
         }
 
         //! Any negative offset time?
         bool containsNegativeOffsetTime() const
         {
-            for (const ITimestampWithOffsetBased &obj : this->container())
-            {
-                if (obj.getTimeOffsetMs() < 0) { return true; }
-            }
-            return false;
+            return std::any_of(this->container().begin(), this->container().end(),
+                               [](const ITimestampWithOffsetBased &obj) { return obj.getTimeOffsetMs() < 0; });
         }
 
         //! Adds a time to all offset values

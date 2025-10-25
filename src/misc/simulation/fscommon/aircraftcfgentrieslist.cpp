@@ -66,11 +66,9 @@ namespace swift::misc::simulation::fscommon
     bool CAircraftCfgEntriesList::containsTitle(const QString &title) const
     {
         if (title.isEmpty()) { return false; }
-        for (const CAircraftCfgEntries &entries : (*this))
-        {
-            if (stringCompare(entries.getTitle(), title, Qt::CaseInsensitive)) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(), [&](const CAircraftCfgEntries &entries) {
+            return stringCompare(entries.getTitle(), title, Qt::CaseInsensitive);
+        });
     }
 
     CAircraftModelList CAircraftCfgEntriesList::toAircraftModelList(bool ignoreDuplicatesAndEmptyModelStrings,

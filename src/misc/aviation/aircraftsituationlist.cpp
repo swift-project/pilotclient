@@ -74,11 +74,9 @@ namespace swift::misc::aviation
 
     bool CAircraftSituationList::areAllOnGroundDetailsSame(COnGroundInfo::OnGroundDetails details) const
     {
-        for (const CAircraftSituation &situation : *this)
-        {
-            if (situation.getOnGroundInfo().getGroundDetails() != details) { return false; }
-        }
-        return true;
+        return std::all_of(cbegin(), cend(), [&](const CAircraftSituation &situation) {
+            return situation.getOnGroundInfo().getGroundDetails() == details;
+        });
     }
 
     bool CAircraftSituationList::isConstOnGround() const
@@ -242,11 +240,9 @@ namespace swift::misc::aviation
 
     bool CAircraftSituationList::containsPushBack() const
     {
-        for (const CAircraftSituation &situation : *this)
-        {
-            if (situation.getGroundSpeed().isNegativeWithEpsilonConsidered()) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(), [](const CAircraftSituation &situation) {
+            return situation.getGroundSpeed().isNegativeWithEpsilonConsidered();
+        });
     }
 
     int CAircraftSituationList::countOnGround(COnGroundInfo::IsOnGround og) const

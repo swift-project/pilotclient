@@ -402,11 +402,7 @@ namespace swift::misc::aviation
     {
         if (!callsign.contains("_")) { return false; }
         const QStringView uc = callsign.toUpper();
-
-        for (const QString &r : CCallsign::atcAlikeCallsignSuffixes())
-        {
-            if (uc.endsWith(r)) { return true; }
-        }
-        return false;
+        return std::any_of(CCallsign::atcAlikeCallsignSuffixes().cbegin(), CCallsign::atcAlikeCallsignSuffixes().cend(),
+                           [&](const QString &r) { return uc.endsWith(r); });
     }
 } // namespace swift::misc::aviation

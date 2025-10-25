@@ -40,22 +40,18 @@ namespace swift::misc::simulation
 
     bool CAircraftModelList::containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
     {
-        for (const CAircraftModel &model : (*this))
-        {
-            if (model.matchesModelString(modelString, sensitivity)) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(), [&](const CAircraftModel &model) {
+            return model.matchesModelString(modelString, sensitivity);
+        });
     }
 
     bool CAircraftModelList::containsModelStringOrDbKey(const CAircraftModel &model,
                                                         Qt::CaseSensitivity sensitivity) const
     {
-        for (const CAircraftModel &m : (*this))
-        {
-            if (m.hasValidDbKey() && m.getDbKey() == model.getDbKey()) { return true; }
-            if (m.matchesModelString(model.getModelString(), sensitivity)) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(), [&](const CAircraftModel &m) {
+            return (m.hasValidDbKey() && m.getDbKey() == model.getDbKey()) ||
+                   m.matchesModelString(model.getModelString(), sensitivity);
+        });
     }
 
     bool CAircraftModelList::containsCallsign(const CCallsign &callsign) const

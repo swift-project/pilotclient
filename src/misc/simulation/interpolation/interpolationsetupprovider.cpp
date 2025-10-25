@@ -178,11 +178,9 @@ namespace swift::misc::simulation
     {
         const SetupsPerCallsign setupsCopy = this->getSetupsPerCallsign();
         if (setupsCopy.isEmpty()) { return false; }
-        for (const CInterpolationAndRenderingSetupPerCallsign &setup : setupsCopy)
-        {
-            if (setup.logInterpolation()) { return true; }
-        }
-        return false;
+        return std::any_of(
+            setupsCopy.cbegin(), setupsCopy.cend(),
+            [](const CInterpolationAndRenderingSetupPerCallsign &setup) { return setup.logInterpolation(); });
     }
 
     IInterpolationSetupProvider::SetupsPerCallsign IInterpolationSetupProvider::getSetupsPerCallsign() const

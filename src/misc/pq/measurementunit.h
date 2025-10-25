@@ -443,11 +443,9 @@ namespace swift::misc::physical_quantities
         static bool isValidUnitSymbol(const QString &symbol, Qt::CaseSensitivity caseSensitivity)
         {
             if (symbol.isEmpty()) return false;
-            for (const auto &unit : U::allUnits())
-            {
-                if (stringCompare(unit.getSymbol(), symbol, caseSensitivity)) { return true; }
-            }
-            return false;
+            return std::any_of(U::allUnits().cbegin(), U::allUnits().cend(), [&](const auto &unit) {
+                return stringCompare(unit.getSymbol(), symbol, caseSensitivity);
+            });
         }
 
         /*!
@@ -477,11 +475,8 @@ namespace swift::misc::physical_quantities
                                            Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
         {
             if (candidate.isEmpty()) return false;
-            for (const auto &unit : U::allUnits())
-            {
-                if (candidate.endsWith(unit.getSymbol(), caseSensitivity)) { return true; }
-            }
-            return false;
+            return std::any_of(U::allUnits().cbegin(), U::allUnits().cend(),
+                               [&](const auto &unit) { return candidate.endsWith(unit.getSymbol(), caseSensitivity); });
         }
 
         //! Dimensionless unit

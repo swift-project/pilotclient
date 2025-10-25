@@ -46,12 +46,10 @@ namespace swift::misc::db
     bool CArtifact::isWithDistribution(const CDistribution &distribution, bool acceptMoreStableDistributions) const
     {
         if (distribution.isEmpty() || !this->hasDistributions()) { return false; }
-        for (const CDistribution &dist : this->getDistributions())
-        {
-            if (dist == distribution) { return true; }
-            if (acceptMoreStableDistributions && dist.isStabilityBetter(distribution)) { return true; }
-        }
-        return false;
+        return std::any_of(
+            this->getDistributions().cbegin(), this->getDistributions().cend(), [&](const CDistribution &dist) {
+                return dist == distribution || (acceptMoreStableDistributions && dist.isStabilityBetter(distribution));
+            });
     }
 
     CRemoteFile CArtifact::asRemoteFile() const

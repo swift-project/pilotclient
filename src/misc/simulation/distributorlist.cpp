@@ -72,11 +72,8 @@ namespace swift::misc::simulation
 
     bool CDistributorList::matchesAnyKeyOrAlias(const QString &keyOrAlias) const
     {
-        for (const CDistributor &distributor : (*this))
-        {
-            if (distributor.matchesKeyOrAlias(keyOrAlias)) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(),
+                           [&](const CDistributor &distributor) { return distributor.matchesKeyOrAlias(keyOrAlias); });
     }
 
     QStringList CDistributorList::getDbKeysAndAliases(bool sort) const

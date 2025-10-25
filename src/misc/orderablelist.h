@@ -40,11 +40,8 @@ namespace swift::misc
         //! All order values set or missing some?
         bool needsOrder() const
         {
-            for (const OBJ &obj : container())
-            {
-                if (!obj.hasValidOrder()) { return true; }
-            }
-            return false;
+            return std::any_of(this->container().begin(), this->container().end(),
+                               [](const OBJ &obj) { return !obj.hasValidOrder(); });
         }
 
         //! All order values IOrderable::order
