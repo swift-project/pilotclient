@@ -50,7 +50,7 @@ namespace swift::core::fsd
         static QString pdu() { return "#AP"; }
 
     private:
-        AddPilot() : MessageBase() {}
+        AddPilot() = default;
 
         QString m_cid;
         QString m_password;

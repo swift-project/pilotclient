@@ -24,9 +24,7 @@ namespace swift::misc::simulation
         return cats;
     }
 
-    CRemoteAircraftProvider::CRemoteAircraftProvider(QObject *parent)
-        : QObject(parent), IRemoteAircraftProvider(), CIdentifiable(this)
-    {}
+    CRemoteAircraftProvider::CRemoteAircraftProvider(QObject *parent) : QObject(parent), CIdentifiable(this) {}
 
     CSimulatedAircraftList CRemoteAircraftProvider::getAircraftInRange() const
     {

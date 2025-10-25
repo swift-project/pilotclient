@@ -8,8 +8,6 @@
 
 namespace swift::core::fsd
 {
-    InterimPilotDataUpdate::InterimPilotDataUpdate() : MessageBase() {}
-
     InterimPilotDataUpdate::InterimPilotDataUpdate(const QString &sender, const QString &receiver, double latitude,
                                                    double longitude, int altitudeTrue, int groundSpeed, double pitch,
                                                    double bank, double heading, bool onGround)

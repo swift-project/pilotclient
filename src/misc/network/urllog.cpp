@@ -16,10 +16,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CUrlLog)
 
 namespace swift::misc::network
 {
-    CUrlLog::CUrlLog(const CUrl &url) : ITimestampBased(), m_id(uniqueId()), m_url(url)
-    {
-        ITimestampBased::setCurrentUtcTime();
-    }
+    CUrlLog::CUrlLog(const CUrl &url) : m_id(uniqueId()), m_url(url) { ITimestampBased::setCurrentUtcTime(); }
 
     void CUrlLog::setResponseTimestampToNow()
     {

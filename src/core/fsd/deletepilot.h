@@ -31,7 +31,7 @@ namespace swift::core::fsd
 
     private:
         //! Ctor
-        DeletePilot();
+        DeletePilot() = default;
     };
 
     //! Equal to operator

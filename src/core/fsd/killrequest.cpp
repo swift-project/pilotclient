@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    KillRequest::KillRequest() : MessageBase() {}
-
     KillRequest::KillRequest(const QString &callsign, const QString &receiver, const QString &reason)
         : MessageBase(callsign, receiver), m_reason(reason)
     {}

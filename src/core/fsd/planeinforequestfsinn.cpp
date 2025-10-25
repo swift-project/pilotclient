@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    PlaneInfoRequestFsinn::PlaneInfoRequestFsinn() : MessageBase() {}
-
     PlaneInfoRequestFsinn::PlaneInfoRequestFsinn(const QString &sender, const QString &receiver,
                                                  const QString &airlineIcao, const QString &aircraftIcao,
                                                  const QString &aircraftIcaoCombinedType,

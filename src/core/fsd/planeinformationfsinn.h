@@ -37,7 +37,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        PlaneInformationFsinn();
+        PlaneInformationFsinn() = default;
     };
 
     //! Equal to operator

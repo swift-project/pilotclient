@@ -54,7 +54,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        VisualPilotDataPeriodic();
+        VisualPilotDataPeriodic() = default;
     };
 
     //! Equal to operator

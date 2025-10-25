@@ -1232,7 +1232,7 @@ namespace swift::core
         }
     }
 
-    ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info) : QObject(), m_info(info)
+    ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info) : m_info(info)
     {
         this->setObjectName("ISimulatorListener:" + info.toQString());
 

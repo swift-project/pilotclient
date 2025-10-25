@@ -42,7 +42,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        InterimPilotDataUpdate();
+        InterimPilotDataUpdate() = default;
     };
 
     //! Equal to operator

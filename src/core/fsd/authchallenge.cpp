@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    AuthChallenge::AuthChallenge() : MessageBase() {}
-
     AuthChallenge::AuthChallenge(const QString &sender, const QString &target, const QString &challengeKey)
         : MessageBase(sender, target), m_challengeKey(challengeKey)
     {}

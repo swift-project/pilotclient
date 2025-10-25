@@ -25,8 +25,7 @@ using namespace swift::core::context;
 
 namespace swift::gui::components
 {
-    CUserComponent::CUserComponent(QWidget *parent)
-        : QTabWidget(parent), CEnableForDockWidgetInfoArea(), ui(new Ui::CUserComponent)
+    CUserComponent::CUserComponent(QWidget *parent) : QTabWidget(parent), ui(new Ui::CUserComponent)
     {
         ui->setupUi(this);
         this->setCurrentIndex(0);

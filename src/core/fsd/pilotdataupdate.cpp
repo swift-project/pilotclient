@@ -12,8 +12,6 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    PilotDataUpdate::PilotDataUpdate() : MessageBase() {}
-
     PilotDataUpdate::PilotDataUpdate(CTransponder::TransponderMode transponderMode, const QString &sender,
                                      int transponderCode, PilotRating rating, double latitude, double longitude,
                                      int altitudeTrue, int altitudePressure, int groundSpeed, double pitch, double bank,

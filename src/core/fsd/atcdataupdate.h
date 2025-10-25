@@ -46,7 +46,7 @@ namespace swift::core::fsd
 
     private:
         //! Ctor
-        AtcDataUpdate();
+        AtcDataUpdate() = default;
     };
 
     //! Equal to operator

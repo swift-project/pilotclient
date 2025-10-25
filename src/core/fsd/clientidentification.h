@@ -43,7 +43,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        ClientIdentification();
+        ClientIdentification() = default;
     };
 
     //! Equal to operator

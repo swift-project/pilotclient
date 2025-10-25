@@ -34,7 +34,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        FSDIdentification();
+        FSDIdentification() = default;
     };
 } // namespace swift::core::fsd
 

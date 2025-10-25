@@ -39,8 +39,7 @@ namespace swift::gui::components
         return cats;
     }
 
-    CSimulatorComponent::CSimulatorComponent(QWidget *parent)
-        : QTabWidget(parent), CEnableForDockWidgetInfoArea(), ui(new Ui::CSimulatorComponent)
+    CSimulatorComponent::CSimulatorComponent(QWidget *parent) : QTabWidget(parent), ui(new Ui::CSimulatorComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 

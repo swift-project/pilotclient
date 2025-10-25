@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    AuthResponse::AuthResponse() : MessageBase() {}
-
     AuthResponse::AuthResponse(const QString &sender, const QString &receiver, const QString &response)
         : MessageBase(sender, receiver), m_response(response)
     {}

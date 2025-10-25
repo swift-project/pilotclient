@@ -29,7 +29,7 @@ namespace swift::core::fsd
         QString m_timestamp; //!< timestamp
 
     private:
-        Ping();
+        Ping() = default;
     };
 
     //! Equal to operator

@@ -15,8 +15,6 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    VisualPilotDataUpdate::VisualPilotDataUpdate() : MessageBase() {}
-
     VisualPilotDataUpdate::VisualPilotDataUpdate(const QString &sender, double latitude, double longitude,
                                                  double altitudeTrue, double heightAgl, double pitch, double bank,
                                                  double heading, double xVelocity, double yVelocity, double zVelocity,

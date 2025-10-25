@@ -11,8 +11,6 @@ using namespace swift::misc::network;
 
 namespace swift::core::fsd
 {
-    AtcDataUpdate::AtcDataUpdate() : MessageBase() {}
-
     AtcDataUpdate::AtcDataUpdate(const QString &sender, int frequencykHz, CFacilityType facility, int visibleRange,
                                  AtcRating rating, double latitude, double longitude, int elevation)
         : MessageBase(sender, {}), m_frequencykHz(frequencykHz), m_facility(facility), m_visibleRange(visibleRange),

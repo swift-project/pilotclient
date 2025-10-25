@@ -14,8 +14,6 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    VisualPilotDataStopped::VisualPilotDataStopped() : MessageBase() {}
-
     VisualPilotDataStopped::VisualPilotDataStopped(const QString &sender, double latitude, double longitude,
                                                    double altitudeTrue, double heightAgl, double pitch, double bank,
                                                    double heading, double noseGearAngle)

@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    FSDIdentification::FSDIdentification() : MessageBase() {}
-
     FSDIdentification::FSDIdentification(const QString &callsign, const QString &receiver, const QString &serverVersion,
                                          const QString &initialChallenge)
         : MessageBase(callsign, receiver), m_serverVersion(serverVersion), m_initialChallenge(initialChallenge)

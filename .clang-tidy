@@ -44,6 +44,7 @@ Checks: >
   modernize-use-using,
   readability-use-std-min-max,
   readability-use-anyofallof,
+  readability-redundant-member-init,
 
 CheckOptions:
   - key: readability-identifier-naming.ClassCase

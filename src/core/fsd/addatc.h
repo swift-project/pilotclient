@@ -47,7 +47,7 @@ namespace swift::core::fsd
         QString realName() const { return m_realName; }
 
     private:
-        AddAtc();
+        AddAtc() = default;
 
         QString m_cid;
         QString m_password;

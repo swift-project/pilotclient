@@ -34,7 +34,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        VisualPilotDataToggle();
+        VisualPilotDataToggle() = default;
     };
 
     //! Equal to operator
