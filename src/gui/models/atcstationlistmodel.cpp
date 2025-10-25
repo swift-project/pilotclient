@@ -25,7 +25,6 @@
 #include "misc/propertyindexvariantmap.h"
 
 using namespace swift::misc::physical_quantities;
-using namespace swift::misc::audio;
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;
 

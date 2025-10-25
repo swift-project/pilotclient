@@ -7,6 +7,7 @@
 #include <QtGlobal>
 
 #include "gui/models/columns.h"
+#include "misc/country.h"
 
 using namespace swift::misc;
 using namespace swift::misc::physical_quantities;

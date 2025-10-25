@@ -8,6 +8,7 @@
 
 #include <QFileDialog>
 #include <QListWidget>
+#include <QMenu>
 #include <QNetworkReply>
 #include <QObject>
 #include <QScopedPointer>

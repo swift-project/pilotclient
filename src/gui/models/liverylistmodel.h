@@ -8,13 +8,13 @@
 
 #include "gui/models/listmodeldbobjects.h"
 #include "gui/swiftguiexport.h"
+#include "misc/aviation/liverylist.h"
 
 class QObject;
 
 namespace swift::misc::aviation
 {
     class CLivery;
-    class CLiveryList;
 } // namespace swift::misc::aviation
 
 namespace swift::gui::models

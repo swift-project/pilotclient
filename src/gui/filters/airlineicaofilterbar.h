@@ -15,6 +15,7 @@
 #include "gui/models/modelfilter.h"
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/airlineicaocode.h"
+#include "misc/aviation/airlineicaocodelist.h"
 
 namespace Ui
 {
@@ -23,10 +24,6 @@ namespace Ui
 namespace swift::misc
 {
     class CCountry;
-    namespace aviation
-    {
-        class CAirlineIcaoCodeList;
-    }
 } // namespace swift::misc
 namespace swift::gui::filters
 {

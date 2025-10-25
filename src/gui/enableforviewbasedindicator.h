@@ -6,6 +6,8 @@
 #ifndef SWIFT_GUI_ENABLEFORVIEWBASEDINDICATOR_H
 #define SWIFT_GUI_ENABLEFORVIEWBASEDINDICATOR_H
 
+#include <chrono>
+
 #include "gui/swiftguiexport.h"
 
 namespace swift::gui::views

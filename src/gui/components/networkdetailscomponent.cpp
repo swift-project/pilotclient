@@ -13,7 +13,6 @@
 #include "gui/uppercasevalidator.h"
 
 using namespace swift::misc::network;
-using namespace swift::misc::audio;
 using namespace swift::misc::aviation;
 using namespace swift::core;
 using namespace swift::core::data;

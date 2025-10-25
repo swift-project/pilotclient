@@ -15,7 +15,6 @@
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
-using namespace swift::misc::audio;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
 using namespace swift::misc::simulation;

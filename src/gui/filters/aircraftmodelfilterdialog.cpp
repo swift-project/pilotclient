@@ -11,7 +11,6 @@
 using namespace swift::gui::models;
 using namespace swift::gui::filters;
 using namespace swift::misc::simulation;
-using namespace swift::misc::network;
 
 namespace swift::gui::filters
 {

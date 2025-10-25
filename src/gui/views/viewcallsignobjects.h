@@ -7,6 +7,7 @@
 #define SWIFT_GUI_VIEWS_VIEWCALLSIGNOBJECTS_H
 
 #include "gui/views/viewbase.h"
+#include "misc/aviation/callsignset.h"
 
 class QAction;
 class QIntValidator;

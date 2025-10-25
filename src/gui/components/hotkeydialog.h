@@ -6,6 +6,7 @@
 #ifndef SWIFT_GUI_COMPONENTS_HOTKEYDIALOG_H
 #define SWIFT_GUI_COMPONENTS_HOTKEYDIALOG_H
 
+#include <QComboBox>
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>

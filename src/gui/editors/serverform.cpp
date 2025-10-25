@@ -13,7 +13,6 @@
 #include "misc/network/user.h"
 
 using namespace swift::misc;
-using namespace swift::misc::audio;
 using namespace swift::misc::network;
 
 namespace swift::gui::editors

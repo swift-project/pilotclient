@@ -20,7 +20,6 @@
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 using namespace swift::misc::aviation;
-using namespace swift::misc::network;
 using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::models

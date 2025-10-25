@@ -14,6 +14,7 @@
 #include "gui/filters/filterwidget.h"
 #include "gui/models/modelfilter.h"
 #include "gui/swiftguiexport.h"
+#include "misc/aviation/liverylist.h"
 #include "misc/rgbcolor.h"
 
 namespace Ui
@@ -23,7 +24,6 @@ namespace Ui
 namespace swift::misc::aviation
 {
     class CLivery;
-    class CLiveryList;
 } // namespace swift::misc::aviation
 namespace swift::gui::filters
 {

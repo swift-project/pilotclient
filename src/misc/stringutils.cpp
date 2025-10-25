@@ -10,6 +10,7 @@
 #include <QChar>
 #include <QRegularExpression>
 #include <QStringBuilder>
+#include <QTimeZone>
 
 namespace swift::misc
 {
