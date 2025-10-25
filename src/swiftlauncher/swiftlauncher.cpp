@@ -181,7 +181,7 @@ void CSwiftLauncher::clearWindowsRegistry()
     CGuiApplication::removeAllWindowsSwiftRegistryEntries();
 }
 
-CSwiftLauncher::~CSwiftLauncher() {}
+CSwiftLauncher::~CSwiftLauncher() = default;
 
 QString CSwiftLauncher::getCmdLine() const { return this->toCmdLine(m_executable, m_executableArgs); }
 

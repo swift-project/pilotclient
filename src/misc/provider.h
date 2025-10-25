@@ -32,7 +32,7 @@ namespace swift::misc
 
     protected:
         //! Constructor
-        IProvider() {}
+        IProvider() {} // NOLINT(modernize-use-equals-default)
     };
 
     //! Base class of provider aware classes

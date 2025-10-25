@@ -28,7 +28,7 @@ namespace swift::misc::simulation::flightgear
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
             QSettings flightgearRegistry(
-                "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlightGear_is1",
+                R"(HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\FlightGear_is1)",
                 QSettings::NativeFormat);
             flightgearRootDir = flightgearRegistry.value("InstallLocation").toString().trimmed();
         }

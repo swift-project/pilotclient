@@ -3,7 +3,7 @@
 
 #include "simulatorflightgear.h"
 
-#include <math.h>
+#include <cmath>
 
 #include <QColor>
 #include <QDBusServiceWatcher>
@@ -872,7 +872,10 @@ namespace swift::simplugin::flightgear
         }
 
         using namespace std::placeholders;
-        auto callback = std::bind(&CSimulatorFlightgear::callbackReceivedRequestedElevation, this, _1, _2, false);
+        auto callback = [this](auto &&plane, auto &&callsign) {
+            callbackReceivedRequestedElevation(std::forward<decltype(plane)>(plane),
+                                               std::forward<decltype(callsign)>(callsign), false);
+        };
 
         // Request
         m_trafficProxy->getElevationAtPosition(callsign, pos.latitude().value(CAngleUnit::deg()),

@@ -48,7 +48,9 @@ namespace swift::misc::private_ns
     auto invokeMethod(T *object, F &&func, Ts &&...args)
     {
         const auto invoker = [](auto &&...x) { return private_ns::invokeSlot(std::forward<decltype(x)>(x)...); };
+        // NOLINTBEGIN(modernize-avoid-bind)
         auto method = std::bind(invoker, std::forward<F>(func), object, std::forward<Ts>(args)...);
+        // NOLINTEND(modernize-avoid-bind)
         CPromise<decltype(std::move(method)())> promise;
         QMetaObject::invokeMethod(
             object, [promise, method = std::move(method)]() mutable { promise.setResultFrom(std::move(method)); });

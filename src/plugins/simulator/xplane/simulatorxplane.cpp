@@ -3,7 +3,7 @@
 
 #include "simulatorxplane.h"
 
-#include <math.h>
+#include <cmath>
 
 #include <QColor>
 #include <QDBusServiceWatcher>
@@ -267,7 +267,11 @@ namespace swift::simplugin::xplane
         }
 
         using namespace std::placeholders;
-        auto callback = std::bind(&CSimulatorXPlane::callbackReceivedRequestedElevation, this, _1, _2, _3);
+        auto callback = [this](auto &&plane, auto &&callsign, auto &&isWater) {
+            callbackReceivedRequestedElevation(std::forward<decltype(plane)>(plane),
+                                               std::forward<decltype(callsign)>(callsign),
+                                               std::forward<decltype(isWater)>(isWater));
+        };
 
         // Request
         m_trafficProxy->getElevationAtPosition(callsign, pos.latitude().value(CAngleUnit::deg()),

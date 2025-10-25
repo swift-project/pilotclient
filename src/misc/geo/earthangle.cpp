@@ -84,7 +84,7 @@ namespace swift::misc::geo
         }
 
         // http://www.regular-expressions.info/floatingpoint.html
-        thread_local const QRegularExpression rx("[+-]?\\d+(?:\\.\\d+)?");
+        thread_local const QRegularExpression rx(R"([+-]?\d+(?:\.\d+)?)");
         int deg = 0;
         int min = 0;
         double sec = 0.0;

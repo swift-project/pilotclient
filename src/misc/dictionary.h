@@ -92,25 +92,25 @@ namespace swift::misc
         using impl_type = Impl<Key, Value>;
 
         //! STL compatibility
-        typedef Key key_type;
+        using key_type = Key;
 
         //! STL compatibility
-        typedef Value value_type;
+        using value_type = Value;
 
         //! STL compatibility
-        typedef Value &reference;
+        using reference = Value &;
 
         //! STL compatibility
-        typedef const Value &const_reference;
+        using const_reference = Value &;
 
         //! STL compatibility
-        typedef typename Impl<Key, Value>::size_type size_type;
+        using size_type = typename Impl<Key, Value>::size_type;
 
         //! STL compatibility
-        typedef typename Impl<Key, Value>::iterator iterator;
+        using iterator = typename Impl<Key, Value>::iterator;
 
         //! STL compatibility
-        typedef typename Impl<Key, Value>::const_iterator const_iterator;
+        using const_iterator = typename Impl<Key, Value>::const_iterator;
 
         //! Return a copy containing only those elements for which the dictionary keys return true for a given
         //! predicate.

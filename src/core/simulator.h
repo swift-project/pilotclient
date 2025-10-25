@@ -715,7 +715,7 @@ namespace swift::core
 
     protected:
         //! Default ctor
-        ISimulatorFactory() {}
+        ISimulatorFactory() {} // NOLINT(modernize-use-equals-default)
     };
 } // namespace swift::core
 

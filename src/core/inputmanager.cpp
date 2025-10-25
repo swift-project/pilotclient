@@ -3,7 +3,7 @@
 
 #include "core/inputmanager.h"
 
-#include <limits.h>
+#include <climits>
 
 #include <QtGlobal>
 

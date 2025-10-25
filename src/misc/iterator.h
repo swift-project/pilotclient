@@ -134,8 +134,8 @@ namespace swift::misc::Iterators
         };
 
         //! The type returned by this iterator's arrow operator, which may be a pointer or a pointer-like wrapper object
-        using pointer = typename std::conditional<std::is_reference_v<undecayed_type>,
-                                                  std::remove_reference_t<undecayed_type> *, PointerWrapper>::type;
+        using pointer = std::conditional_t<std::is_reference_v<undecayed_type>,
+                                           std::remove_reference_t<undecayed_type> *, PointerWrapper>;
 
         //! Constructor.
         TransformIterator(I iterator, F function) : m_iterator(iterator), m_function(function) {}

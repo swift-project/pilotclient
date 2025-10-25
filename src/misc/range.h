@@ -191,16 +191,16 @@ namespace swift::misc
     public:
         //! @{
         //! STL compatibility
-        typedef typename std::iterator_traits<I>::value_type value_type;
-        typedef typename std::iterator_traits<I>::reference reference;
-        typedef typename std::iterator_traits<I>::difference_type difference_type;
-        typedef const value_type &const_reference;
-        typedef value_type key_type;
-        typedef difference_type size_type;
-        typedef I iterator;
-        typedef I const_iterator;
-        typedef std::reverse_iterator<I> reverse_iterator;
-        typedef std::reverse_iterator<I> const_reverse_iterator;
+        using value_type = typename std::iterator_traits<I>::value_type;
+        using reference = typename std::iterator_traits<I>::reference;
+        using difference_type = typename std::iterator_traits<I>::difference_type;
+        using const_reference = const value_type &;
+        using key_type = value_type;
+        using size_type = difference_type;
+        using iterator = I;
+        using const_iterator = I;
+        using reverse_iterator = std::reverse_iterator<I>;
+        using const_reverse_iterator = std::reverse_iterator<I>;
         //! @}
 
         //! Constructor.
@@ -225,7 +225,7 @@ namespace swift::misc
         //! Create a range from reverse iterators.
         CRange<const_reverse_iterator> reverse() const
         {
-            static_assert(std::is_same_v<decltype(*rbegin()), decltype(*begin())>, "");
+            static_assert(std::is_same_v<decltype(*rbegin()), decltype(*begin())>);
             return { rbegin(), rend() };
         }
 

@@ -48,9 +48,11 @@ namespace swift::core
         template <typename RecvObj>
         int bind(const QString &action, RecvObj *receiver, void (RecvObj::*slotPointer)(bool))
         {
+            // NOLINTBEGIN(modernize-avoid-bind)
             using namespace std::placeholders;
             auto function = std::bind(slotPointer, receiver, _1);
             return bindImpl(action, receiver, function);
+            // NOLINTEND(modernize-avoid-bind)
         }
 
         //! Register a new hotkey function

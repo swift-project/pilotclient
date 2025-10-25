@@ -124,7 +124,7 @@ namespace swift::misc::network
     bool CClientProvider::setClientGndCapability(const CCallsign &callsign, bool supportGndFlag)
     {
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
-        if (callsign.isEmpty()) { return 0; }
+        if (callsign.isEmpty()) { return false; }
 
         CClient client = this->getClientOrDefaultForCallsign(callsign);
 

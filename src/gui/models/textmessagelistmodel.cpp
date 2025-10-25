@@ -21,7 +21,7 @@ using namespace swift::misc::aviation;
 namespace swift::gui::models
 {
     CTextMessageListModel::CTextMessageListModel(TextMessageMode mode, QObject *parent)
-        : CListModelTimestampObjects("ModelTextMessageList", parent), m_textMessageMode(NotSet)
+        : CListModelTimestampObjects("ModelTextMessageList", parent)
     {
         this->setTextMessageMode(mode);
 

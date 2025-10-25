@@ -318,7 +318,7 @@ namespace swift::gui
 
     private:
         //! No constructor, use static functions only
-        CGuiUtility() {}
+        CGuiUtility() {} // NOLINT(modernize-use-equals-default)
 
         static QWidget *s_mainApplicationWidget;
     };

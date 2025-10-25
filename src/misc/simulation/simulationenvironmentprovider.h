@@ -404,7 +404,7 @@ namespace swift::misc::simulation
 
     protected:
         //! Default constructor
-        CSimulationEnvironmentAware() {}
+        CSimulationEnvironmentAware() {} // NOLINT(modernize-use-equals-default)
 
         //! Constructor
         CSimulationEnvironmentAware(ISimulationEnvironmentProvider *simEnvProvider) : IProviderAware(simEnvProvider)

@@ -66,7 +66,7 @@ public:
     CSwiftLauncher(bool installerMode, QWidget *parent = nullptr);
 
     //! Destructor
-    virtual ~CSwiftLauncher() override;
+    ~CSwiftLauncher() override;
 
     //! Executable (to be started)
     const QString &getExecutable() const { return m_executable; }

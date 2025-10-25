@@ -113,7 +113,7 @@ def run_clazy(build_path: str, changed_source_files: set[str]):
             '-p', build_path,
             "-extra-arg", "-Werror",
             "-extra-arg", "-Wno-unnecessary-virtual-specifier",
-            '--header-filter', '(config|core|gui|input|misc|plugins|sound|swiftcore|swiftdata|swiftguistandard|swiftlauncher|xswiftbus)/',
+            '--header-filter', f'{utils.get_swift_source_path()}/src/',
             *changed_source_files
         ], text=True, check=True)
     except CalledProcessError:

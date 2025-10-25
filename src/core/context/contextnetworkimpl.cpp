@@ -3,8 +3,6 @@
 
 #include "core/context/contextnetworkimpl.h"
 
-#include <stdbool.h>
-
 #include <QStringBuilder>
 #include <QTimer>
 

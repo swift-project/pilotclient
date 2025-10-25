@@ -157,7 +157,7 @@ namespace swift::misc
 
         protected:
             //! Default constructor
-            CClientAware() {}
+            CClientAware() {} // NOLINT(modernize-use-equals-default)
 
             //! Constructor
             CClientAware(IClientProvider *clientProvider) : IProviderAware(clientProvider) {}

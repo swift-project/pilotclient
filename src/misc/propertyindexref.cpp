@@ -11,7 +11,7 @@
 
 namespace swift::misc
 {
-    CPropertyIndexRef::CPropertyIndexRef(int index) : m_begin(nullptr), m_sizeOrIndex(index) {}
+    CPropertyIndexRef::CPropertyIndexRef(int index) : m_sizeOrIndex(index) {}
 
     CPropertyIndexRef::CPropertyIndexRef(const QVector<int> &indexes)
         : m_begin(indexes.data()), m_sizeOrIndex(indexes.size())

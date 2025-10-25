@@ -3,7 +3,7 @@
 
 #include "atcbuttoncomponent.h"
 
-#include <math.h>
+#include <cmath>
 
 #include <QGridLayout>
 #include <QPushButton>

@@ -8,7 +8,7 @@
 #if defined(Q_OS_WIN32)
 #    include <windows.h>
 #elif defined(Q_OS_UNIX)
-#    include <time.h>
+#    include <ctime>
 #endif
 
 namespace swift::misc

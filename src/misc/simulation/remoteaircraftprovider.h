@@ -689,7 +689,7 @@ namespace swift::misc::simulation
 
     protected:
         //! Default constructor
-        CRemoteAircraftAware() {}
+        CRemoteAircraftAware() {} // NOLINT(modernize-use-equals-default)
 
         //! Constructor
         CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : IProviderAware(remoteAircraftProvider)

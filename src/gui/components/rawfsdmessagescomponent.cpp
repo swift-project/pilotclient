@@ -66,7 +66,7 @@ namespace swift::gui::components
 
         using namespace std::placeholders;
         QMetaObject::Connection c = sGui->getIContextNetwork()->connectRawFsdMessageSignal(
-            this, std::bind(&CRawFsdMessagesComponent::addFsdMessage, this, _1));
+            this, [this](auto &&msg) { addFsdMessage(std::forward<decltype(msg)>(msg)); });
         if (!c)
         {
             ui->pte_RawFsdMessages->appendPlainText(QStringLiteral("Could not connect to raw FSD message."));

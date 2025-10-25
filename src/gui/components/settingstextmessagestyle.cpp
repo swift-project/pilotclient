@@ -94,7 +94,7 @@ namespace swift::gui::components
     void CSettingsTextMessageStyle::replaceTableStyle(const QString &newTableStyle)
     {
         QString style = m_style;
-        thread_local const QRegularExpression re("table\\s*\\{.*\\}");
+        thread_local const QRegularExpression re(R"(table\s*\{.*\})");
         style.replace(re, newTableStyle);
         m_style = style;
     }
@@ -112,7 +112,7 @@ namespace swift::gui::components
     bool CSettingsTextMessageStyle::changeFontSize(bool increase)
     {
         QString style = m_style;
-        thread_local const QRegularExpression re("table\\s*\\{.*:\\s*(\\d{1,2}).*\\}");
+        thread_local const QRegularExpression re(R"(table\s*\{.*:\s*(\d{1,2}).*\})");
         const QRegularExpressionMatch match = re.match(style);
         const QStringList matches = match.capturedTexts();
         if (matches.size() != 2) { return false; }

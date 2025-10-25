@@ -40,7 +40,7 @@ namespace swift::misc
         CIdentifiable(QObject *nameProvider);
 
         //! Construct without a name
-        CIdentifiable() {}
+        CIdentifiable() {} // NOLINT(modernize-use-equals-default)
 
         //! Destructor
         ~CIdentifiable();

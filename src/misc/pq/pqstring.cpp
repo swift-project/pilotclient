@@ -35,7 +35,7 @@ namespace swift::misc::physical_quantities
         // check
         if (vs.isEmpty()) { return v; }
 
-        thread_local const QRegularExpression regex("([-+]?[0-9]*[\\.,]?[0-9]+)\\s*(\\D*)$");
+        thread_local const QRegularExpression regex(R"(([-+]?[0-9]*[\.,]?[0-9]+)\s*(\D*)$)");
         const auto match = regex.match(value);
         if (!match.hasMatch()) { return v; } // not a valid number
         QString unit = match.captured(2).trimmed();

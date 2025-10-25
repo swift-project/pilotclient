@@ -25,7 +25,7 @@
 
 SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::geo, CCoordinateGeodetic)
 
-namespace swift::misc
+namespace swift::misc // NOLINT(modernize-concat-nested-namespaces)
 {
     namespace geo
     {

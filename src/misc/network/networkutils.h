@@ -138,7 +138,7 @@ namespace swift::misc::network
 
     private:
         //! Hidden constructor
-        CNetworkUtils() {}
+        CNetworkUtils() {} // NOLINT(modernize-use-equals-default)
     };
 } // namespace swift::misc::network
 

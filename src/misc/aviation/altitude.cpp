@@ -374,7 +374,7 @@ namespace swift::misc::aviation
     const QRegularExpression &CAltitude::fpAltitudeRegExp()
     {
         thread_local const QRegularExpression re(
-            "([Ff][Ll]?\\d{2,3})|([Ss]\\d{2,4})|([Aa]\\d{2,3})|([Mm]\\d{2,4})|(\\d{3,5}(ft|m))");
+            R"(([Ff][Ll]?\d{2,3})|([Ss]\d{2,4})|([Aa]\d{2,3})|([Mm]\d{2,4})|(\d{3,5}(ft|m)))");
         return re;
     }
 

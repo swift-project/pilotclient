@@ -242,9 +242,6 @@ namespace swift::misc::physical_quantities
         //! Constructor
         CMeasurementUnit(const Data &data) : m_data(&data) {}
 
-        //! Constructor saves the address of its argument, so forbid rvalues
-        CMeasurementUnit(const Data &&) = delete;
-
         //! Destructor
         ~CMeasurementUnit() = default;
 
@@ -258,6 +255,9 @@ namespace swift::misc::physical_quantities
         const Data *m_data = (static_cast<void>(throw std::logic_error("Uninitialized pimpl")), nullptr);
 
     public:
+        //! Constructor saves the address of its argument, so forbid rvalues
+        CMeasurementUnit(const Data &&) = delete;
+
         //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const { return this->getSymbol(i18n); }
 

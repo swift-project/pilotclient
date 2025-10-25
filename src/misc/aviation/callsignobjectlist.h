@@ -258,7 +258,7 @@ namespace swift::misc::aviation
 
     protected:
         //! Constructor
-        ICallsignObjectList() {}
+        ICallsignObjectList() {} // NOLINT(modernize-use-equals-default)
 
         //! Container
         const CONTAINER &container() const { return static_cast<const CONTAINER &>(*this); }

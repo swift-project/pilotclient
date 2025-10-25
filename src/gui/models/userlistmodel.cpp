@@ -17,8 +17,7 @@ using namespace swift::misc::aviation;
 
 namespace swift::gui::models
 {
-    CUserListModel::CUserListModel(UserMode userMode, QObject *parent)
-        : CListModelBase("ModelUserList", parent), m_userMode(NotSet)
+    CUserListModel::CUserListModel(UserMode userMode, QObject *parent) : CListModelBase("ModelUserList", parent)
     {
         this->setUserMode(userMode);
 
