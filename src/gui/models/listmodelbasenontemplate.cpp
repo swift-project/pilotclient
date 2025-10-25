@@ -158,7 +158,7 @@ namespace swift::gui::models
     }
 
     CListModelBaseNonTemplate::CListModelBaseNonTemplate(const QString &translationContext, QObject *parent)
-        : QStandardItemModel(parent), m_columns(translationContext), m_sortColumn(-1), m_sortOrder(Qt::AscendingOrder)
+        : QStandardItemModel(parent), m_columns(translationContext)
     {
         // non unique default name, set translation context as default
         this->setObjectName(translationContext);

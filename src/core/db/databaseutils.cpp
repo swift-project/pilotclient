@@ -425,7 +425,7 @@ namespace swift::core::db
                 const int contentIndex = content.indexOf(':', cl);
                 if (contentIndex < cl) break; // should not happen, malformed
                 const QString ls = content.mid(cl, contentIndex - cl); // content length
-                bool ok;
+                bool ok {};
                 const qint32 size = ls.toInt(&ok);
                 if (!ok) break; // malformed size
                 if (size < 1) break;

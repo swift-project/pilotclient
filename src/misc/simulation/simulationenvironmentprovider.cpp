@@ -310,7 +310,7 @@ namespace swift::misc::simulation
 
     int ISimulationEnvironmentProvider::cleanUpElevations(const ICoordinateGeodetic &referenceCoordinate, int maxNumber)
     {
-        int currentMax;
+        int currentMax {};
         CCoordinateGeodeticList coordinates(this->getAllElevationCoordinates(currentMax));
         if (maxNumber < 0) { maxNumber = currentMax; }
         const int size = coordinates.size();
@@ -390,8 +390,8 @@ namespace swift::misc::simulation
         const int m = foundMissed.second;
         const double hitRatioPercent = 100.0 * static_cast<double>(f) / static_cast<double>(f + m);
 
-        int elvGnd;
-        int elv;
+        int elvGnd {};
+        int elv {};
         {
             QReadLocker l(&m_lockElvCoordinates);
             elvGnd = m_elvCoordinatesGnd.sizeInt();

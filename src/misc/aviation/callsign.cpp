@@ -286,7 +286,7 @@ namespace swift::misc::aviation
     int CCallsign::getFlightNumberInt() const
     {
         if (this->isAtcCallsign()) { return -1; }
-        bool ok;
+        bool ok {};
         const int fn = this->getFlightNumber().toInt(&ok);
         return ok ? fn : -1;
     }

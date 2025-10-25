@@ -80,7 +80,7 @@ namespace swift::misc::network
     bool CUrlLogList::markAsReceived(const QNetworkReply *nwReply, bool success)
     {
         Q_ASSERT_X(nwReply, Q_FUNC_INFO, "missing reply");
-        bool ok;
+        bool ok {};
         const int id = nwReply->property(CUrlLog::propertyNameId()).toInt(&ok);
         return (ok && id >= 0) ? this->markAsReceived(id, success) : false;
     }

@@ -43,7 +43,7 @@ namespace swift::misc::physical_quantities
         unit = unit.trimmed(); // trim after replace, not before
 
         if (unit.isEmpty() || number.isEmpty()) { return v; }
-        bool success;
+        bool success {};
         const double numberD = parseNumber(number, success, mode);
         if (!success) { return v; }
 

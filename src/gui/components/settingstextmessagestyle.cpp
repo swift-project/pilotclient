@@ -117,7 +117,7 @@ namespace swift::gui::components
         const QStringList matches = match.capturedTexts();
         if (matches.size() != 2) { return false; }
 
-        bool ok;
+        bool ok {};
         int ptSize = matches.last().toInt(&ok);
         if (!ok) { return false; }
         if (increase)

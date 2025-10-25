@@ -212,7 +212,7 @@ namespace swift::misc::aviation
             comFreq.parseFromString(input, sep);
             if (comFreq.isNull())
             {
-                bool ok;
+                bool ok {};
                 const double f = CPqString::parseNumber(input, ok, sep);
                 if (ok) { comFreq = CFrequency(f, f > 999 ? CFrequencyUnit::kHz() : CFrequencyUnit::MHz()); }
                 else { comFreq = CFrequency::null(); }

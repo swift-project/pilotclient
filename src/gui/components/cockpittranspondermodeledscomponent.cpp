@@ -48,7 +48,7 @@ namespace swift::gui::components
         QWidget *w = qobject_cast<QWidget *>(QObject::sender());
         if (!w) { return; }
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
-        CTransponder::TransponderMode mode;
+        CTransponder::TransponderMode mode {};
         if (m_ledStandby.data() == w) { mode = CTransponder::StateStandby; }
         else if (m_ledIdent.data() == w) { mode = CTransponder::StateIdent; }
         else if (m_ledModes.data() == w) { mode = CTransponder::ModeC; }

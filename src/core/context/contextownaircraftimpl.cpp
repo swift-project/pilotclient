@@ -284,7 +284,7 @@ namespace swift::core::context
         {
             CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder;
         }
-        bool changed;
+        bool changed {};
         {
             QWriteLocker l(&m_lockAircraft);
             changed = m_ownAircraft.hasChangedCockpitData(com1, com2, transponder);
@@ -301,7 +301,7 @@ namespace swift::core::context
         {
             CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << transponderMode;
         }
-        bool changed;
+        bool changed {};
         {
             QWriteLocker l(&m_lockAircraft);
             changed = m_ownAircraft.setTransponderMode(transponderMode);

@@ -21,7 +21,7 @@ namespace swift::simplugin::xplane
                                                                  InterfaceName(), connection, this);
         if (!dummy)
         {
-            bool s;
+            bool s {};
             s = connection.connect(
                 QString(), "/xswiftbus/service", "org.swift_project.xswiftbus.service", "aircraftModelChanged", this,
                 SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));

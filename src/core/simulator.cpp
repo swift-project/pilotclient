@@ -333,7 +333,7 @@ namespace swift::core
             if (part2.startsWith("max"))
             {
                 if (!parser.hasPart(3)) { return false; }
-                bool ok;
+                bool ok {};
                 const int max = parser.part(3).toInt(&ok);
                 if (!ok) { return false; }
                 m_interpolationLogger.setMaxSituations(max);

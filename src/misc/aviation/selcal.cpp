@@ -54,7 +54,10 @@ namespace swift::misc::aviation
     bool CSelcal::isValidCode(const QString &code)
     {
         if (code.length() != 4) return false;
-        int p1, p2, p3, p4;
+        int p1 {};
+        int p2 {};
+        int p3 {};
+        int p4 {};
         QString codeUpper = code.toUpper();
         if ((p1 = CSelcal::validCharacters().indexOf(codeUpper.at(0))) < 0) return false;
         if ((p2 = CSelcal::validCharacters().indexOf(codeUpper.at(1))) < 0) return false;

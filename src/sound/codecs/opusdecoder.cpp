@@ -7,7 +7,7 @@ namespace swift::sound::codecs
 {
     COpusDecoder::COpusDecoder(int sampleRate, int channels) : m_channels(channels)
     {
-        int error;
+        int error {};
         m_opusDecoder = opus_decoder_create(sampleRate, channels, &error);
     }
 

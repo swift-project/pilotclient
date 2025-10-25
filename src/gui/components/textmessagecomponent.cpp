@@ -484,7 +484,10 @@ namespace swift::gui::components
         auto *layout = new QVBoxLayout(newTabWidget);
         auto *textEdit = new CTextMessageTextEdit(newTabWidget);
         textEdit->setObjectName("tep_" + tabName);
-        int marginLeft, marginRight, marginTop, marginBottom;
+        int marginLeft {};
+        int marginRight {};
+        int marginTop {};
+        int marginBottom {};
         ui->tb_TextMessagesAll->layout()->getContentsMargins(&marginLeft, &marginTop, &marginRight, &marginBottom);
         newTabWidget->layout()->setContentsMargins(marginLeft, marginTop, marginRight, 2);
         layout->addWidget(textEdit);
@@ -773,7 +776,7 @@ namespace swift::gui::components
             else
             {
                 // not a standard channel
-                bool isNumber;
+                bool isNumber {};
                 const QString selectedTabText = firstPartOfTabText(ui->tw_TextMessages->tabText(index).trimmed());
                 const double frequency = selectedTabText.toDouble(&isNumber);
                 if (isNumber)

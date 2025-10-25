@@ -23,7 +23,7 @@ namespace swift::core::fsd
 
     QStringList VisualPilotDataStopped::toTokens() const
     {
-        std::uint32_t pbh;
+        std::uint32_t pbh {};
         packPBH(m_pitch, m_bank, m_heading, false /*! \todo check if needed? */, pbh);
 
         QStringList tokens;

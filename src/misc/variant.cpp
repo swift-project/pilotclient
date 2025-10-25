@@ -543,7 +543,7 @@ namespace swift::misc
         else if (QMetaType(localUserType).flags() & QMetaType::IsEnumeration)
         {
             arg.beginStructure();
-            int i;
+            int i {};
             arg >> i;
             arg.endStructure();
 

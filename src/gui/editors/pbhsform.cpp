@@ -49,7 +49,7 @@ namespace swift::gui::editors
     double CPbhsForm::getBankAngleDegrees() const
     {
         const QString v(ui->le_Bank->text().replace(',', '.'));
-        bool ok;
+        bool ok {};
         double vd = v.toDouble(&ok);
         if (!ok) { vd = 0.0; }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
@@ -67,7 +67,7 @@ namespace swift::gui::editors
     double CPbhsForm::getPitchAngleDegrees() const
     {
         const QString v(ui->le_Pitch->text().replace(',', '.'));
-        bool ok;
+        bool ok {};
         double vd = v.toDouble(&ok);
         if (!ok) { vd = 0.0; }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
@@ -87,7 +87,7 @@ namespace swift::gui::editors
     double CPbhsForm::getHeadingAngleDegrees() const
     {
         const QString v(ui->le_Heading->text().replace(',', '.'));
-        bool ok;
+        bool ok {};
         double vd = v.toDouble(&ok);
         if (!ok) { vd = 0.0; }
         return CAngle::normalizeDegrees180(vd, RoundDigits);

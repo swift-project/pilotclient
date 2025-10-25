@@ -450,7 +450,8 @@ namespace swift::gui::components
                 m_splitterSizes = ui->sp_AtcSplitter->sizes();
                 if (m_splitterSizes.size() > 1)
                 {
-                    int min, max;
+                    int min {};
+                    int max {};
                     ui->sp_AtcSplitter->getRange(1, &min, &max);
                     QList<int> newSizes;
                     newSizes.push_back(qMax(0, m_splitterSizes.first() + m_splitterSizes.last() - min));

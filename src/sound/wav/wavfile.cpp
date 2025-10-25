@@ -52,7 +52,7 @@ namespace swift::sound::wav
         WAVEHeader wave; //!< WAVE header
     };
 
-    CWavFile::CWavFile(QObject *parent) : QFile(parent), m_headerLength(0) {}
+    CWavFile::CWavFile(QObject *parent) : QFile(parent) {}
 
     bool CWavFile::open(const QString &fileName)
     {
@@ -82,7 +82,7 @@ namespace swift::sound::wav
                 if (qFromLittleEndian<quint32>(header.wave.descriptor.size) > sizeof(WAVEHeader))
                 {
                     // Extended data available
-                    quint16 extraFormatBytes;
+                    quint16 extraFormatBytes {};
                     if (peek((char *)&extraFormatBytes, sizeof(quint16)) != sizeof(quint16)) return false;
                     const qint64 throwAwayBytes = sizeof(quint16) + qFromLittleEndian<quint16>(extraFormatBytes);
                     if (read(throwAwayBytes).size() != throwAwayBytes) return false;

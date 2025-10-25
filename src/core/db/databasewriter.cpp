@@ -172,7 +172,7 @@ namespace swift::core::db
             CAircraftModelList modelsPublished;
             CAircraftModelList modelsSkipped;
             CStatusMessageList msgs;
-            bool directWrite;
+            bool directWrite {};
             const bool sendingSuccessful =
                 parseSwiftPublishResponse(responseData, modelsPublished, modelsSkipped, msgs, directWrite);
             const int c = CDatabaseUtils::fillInMissingAircraftAndLiveryEntities(modelsPublished);

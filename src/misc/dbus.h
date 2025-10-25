@@ -40,7 +40,7 @@ QDBusArgument &operator<<(QDBusArgument &arg, const E &value)
 template <class E, std::enable_if_t<std::is_enum_v<E>, int> = 0>
 const QDBusArgument &operator>>(const QDBusArgument &arg, E &value)
 {
-    int temp;
+    int temp {};
     arg.beginStructure();
     arg >> temp;
     arg.endStructure();

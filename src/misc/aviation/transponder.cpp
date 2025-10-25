@@ -120,7 +120,7 @@ namespace swift::misc::aviation
     {
         if (CTransponder::isValidTransponderCode(transponderCode))
         {
-            bool ok;
+            bool ok {};
             this->setTransponderCode(transponderCode.toInt(&ok));
         }
         else { Q_ASSERT_X(false, "CTransponder::setTransponderCode", "illegal transponder value"); }
@@ -129,7 +129,7 @@ namespace swift::misc::aviation
     bool CTransponder::isValidTransponderCode(const QString &transponderCode)
     {
         if (transponderCode.isEmpty() || transponderCode.length() > 4) return false;
-        bool number;
+        bool number {};
         int tc = transponderCode.toInt(&number);
         if (!number) return false;
         if (tc < 0 || tc > 7777) return false;

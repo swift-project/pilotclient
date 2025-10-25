@@ -58,7 +58,7 @@ namespace swift::core
 
     private:
         std::atomic<bool> m_setupAvailable { false }; //!< setup available?
-        data::CGlobalSetup m_setup {}; //!< data setup
+        data::CGlobalSetup m_setup; //!< data setup
 
         //! Read by local file
         swift::misc::CStatusMessageList readLocalBootstrapFile();

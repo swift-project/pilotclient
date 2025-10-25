@@ -17,7 +17,7 @@ namespace swift::core::fsd
 
     QStringList InterimPilotDataUpdate::toTokens() const
     {
-        std::uint32_t pbh;
+        std::uint32_t pbh {};
         packPBH(m_pitch, m_bank, m_heading, m_onGround, pbh);
 
         auto tokens = QStringList {};

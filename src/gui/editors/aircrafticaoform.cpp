@@ -124,7 +124,7 @@ namespace swift::gui::editors
         const QString family(ui->le_Family->text().trimmed().toUpper());
         const QString wtc(ui->cb_Wtc->currentText().left(1));
         const QString combined(ui->combined_TypeSelector->getCombinedType());
-        bool ok;
+        bool ok {};
         int rank = ui->cb_Rank->currentText().toInt(&ok);
         if (!ok) { rank = 10; }
         bool legacy = ui->cb_Legacy->isChecked();

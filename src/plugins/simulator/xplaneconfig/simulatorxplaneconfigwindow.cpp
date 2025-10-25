@@ -147,7 +147,7 @@ namespace swift::simplugin::xplane
     int CSimulatorXPlaneConfigWindow::marginToInt(const QString &text, int defaultValue)
     {
         if (text.isEmpty()) { return defaultValue; }
-        bool ok;
+        bool ok {};
         const int v = text.toInt(&ok);
         return ok ? v : defaultValue;
     }

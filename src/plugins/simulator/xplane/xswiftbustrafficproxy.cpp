@@ -32,7 +32,7 @@ namespace swift::simplugin::xplane
                                                                  connection, this);
         if (!dummy)
         {
-            bool s;
+            bool s {};
             s = connection.connect(QString(), "/xswiftbus/traffic", "org.swift_project.xswiftbus.traffic", "simFrame",
                                    this, SIGNAL(simFrame()));
             Q_ASSERT(s);

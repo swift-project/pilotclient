@@ -89,7 +89,7 @@ namespace swift::gui::editors
         const QString id = ui->le_Id->text();
         if (sGui && !sGui->isShuttingDown() && sGui->hasWebDataServices())
         {
-            bool ok;
+            bool ok {};
             const int dbKey = id.toInt(&ok);
             if (ok) { code = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey); }
         }
@@ -188,7 +188,7 @@ namespace swift::gui::editors
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
 
-        bool ok;
+        bool ok {};
         const int id = ui->le_Id->text().toInt(&ok);
         const CAirlineIcaoCode icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(id);
         if (ok && !icao.isLoadedFromDb())

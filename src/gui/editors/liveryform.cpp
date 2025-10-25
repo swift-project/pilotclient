@@ -68,7 +68,7 @@ namespace swift::gui::editors
         const QString id = ui->le_Id->text();
         if (!id.isEmpty() && sGui && !sGui->isShuttingDown() && sGui->hasWebDataServices())
         {
-            bool ok;
+            bool ok {};
             const int dbKey = id.toInt(&ok);
             if (ok) { livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey); }
         }

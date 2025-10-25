@@ -75,7 +75,7 @@ namespace swift::misc::geo
         }
 
         // number only -> parsed as degrees
-        bool isDouble;
+        bool isDouble {};
         const double valueDegrees = wgs.toDouble(&isDouble);
         if (isDouble)
         {
@@ -93,7 +93,7 @@ namespace swift::misc::geo
         while (i.hasNext() && c < 3)
         {
             const QRegularExpressionMatch match = i.next();
-            bool ok;
+            bool ok {};
             if (match.hasMatch())
             {
                 const QString cap = match.captured(0);

@@ -204,7 +204,7 @@ namespace swift::misc::aviation
         //! Incremental update or add object
         int incrementalUpdateOrAdd(const OBJ &objectBeforeChanges, const CPropertyIndexVariantMap &changedValues)
         {
-            int c;
+            int c {};
             const CCallsign cs = objectBeforeChanges.getCallsign();
             if (this->containsCallsign(cs))
             {

@@ -139,7 +139,7 @@ namespace swift::misc
                 else if (part.contains("port=", Qt::CaseInsensitive))
                 {
                     const QString p = part.mid(part.lastIndexOf("=") + 1).trimmed();
-                    bool ok;
+                    bool ok {};
                     port = p.toInt(&ok);
                     if (!ok) { port = -1; }
                 }
@@ -158,7 +158,7 @@ namespace swift::misc
 
     bool CDBusServer::dBusAddressToHostAndPort(const QString &dbusAddress, QString &o_host, QString &o_port)
     {
-        int port;
+        int port {};
         const bool s = dBusAddressToHostAndPort(dbusAddress, o_host, port);
         o_port = QString::number(port);
         return s;

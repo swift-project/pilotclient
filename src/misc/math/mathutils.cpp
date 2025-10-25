@@ -18,8 +18,8 @@ namespace swift::misc::math
     double CMathUtils::round(double value, int digits)
     {
         // gosh, is there no Qt method for this??? It's year 2013
-        double fractpart, intpart;
-        fractpart = modf(value, &intpart);
+        double intpart {};
+        double fractpart = modf(value, &intpart);
         if (epsilonZeroLimits(fractpart)) { return value; } // do not mess any "integers" to the worse
         const double m = pow(10.0, digits);
         const qint64 ri = qRound64(value * m); // do not loose any range here
@@ -30,8 +30,8 @@ namespace swift::misc::math
     double CMathUtils::roundEpsilon(double value, double epsilon)
     {
         if (epsilonZeroLimits(epsilon)) { return value; } // avoid division by 0
-        double fractpart, intpart;
-        fractpart = modf(value, &intpart);
+        double intpart {};
+        double fractpart = modf(value, &intpart);
         if (epsilonZeroLimits(fractpart)) { return value; } // do not mess any "integers" to the worse
         const double roundValue = value / epsilon;
         const qint64 ri = qRound64(roundValue);
@@ -98,7 +98,7 @@ namespace swift::misc::math
 
     QString CMathUtils::fractionalPartAsString(double value, int width)
     {
-        double intpart;
+        double intpart {};
         const double fractpart = modf(value, &intpart);
         const int prec = width >= 0 ? width + 1 : 10;
         const QString f = QString::number(fractpart, 'f', prec); // avoid scientific notation

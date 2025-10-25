@@ -467,7 +467,7 @@ namespace swift::gui::components
         int currentSize = ui->sp_MappingComponent->sizes().last(); // current size
         if (h2 <= currentSize) { return; }
 
-        int h1;
+        int h1 {};
         if (h * 0.90 > h2)
         {
             // enough space to display as whole

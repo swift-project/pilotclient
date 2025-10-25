@@ -328,7 +328,7 @@ namespace swift::gui::components
     void CHotkeyDialog::clearAdvancedFrame()
     {
         QLayout *layout = ui->qf_Advanced->layout();
-        QLayoutItem *child;
+        QLayoutItem *child {};
 
         while ((child = layout->takeAt(0)) != nullptr)
         {

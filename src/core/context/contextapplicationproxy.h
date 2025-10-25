@@ -96,7 +96,7 @@ namespace swift::core
         protected:
             //! Constructor
             CContextApplicationProxy(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
-                : IContextApplication(mode, runtime), m_dBusInterface(nullptr)
+                : IContextApplication(mode, runtime)
             {}
 
             //! DBus version constructor

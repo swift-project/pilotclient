@@ -112,7 +112,7 @@ namespace swift::gui::editors
         // without unit we assume ft
         if (isDigitsOnlyString(v))
         {
-            bool ok;
+            bool ok {};
             const double cgv = v.toDouble(&ok);
             if (!ok) { return CLength::null(); }
             return { cgv, CLengthUnit::ft() };

@@ -1133,7 +1133,7 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlane::onXSwiftBusSettingsChanged()
     {
-        bool ok;
+        bool ok {};
         const CXSwiftBusSettings xPlaneSide = this->receiveXSwiftBusSettings(ok);
         if (ok)
         {

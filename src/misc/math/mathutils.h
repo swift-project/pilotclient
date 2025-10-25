@@ -57,7 +57,7 @@ namespace swift::misc::math
         //! Fractional part of value
         static inline double fract(double value)
         {
-            double unused;
+            double unused {};
             return modf(value, &unused);
         }
 

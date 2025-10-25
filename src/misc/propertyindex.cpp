@@ -58,7 +58,7 @@ namespace swift::misc
         for (const auto &index : QStringView { indexes }.split(';'))
         {
             if (index.isEmpty()) { continue; }
-            bool ok;
+            bool ok {};
             int i = index.toInt(&ok);
             Q_ASSERT(ok);
             Q_ASSERT(i >= static_cast<int>(CPropertyIndexRef::GlobalIndexCValueObject));

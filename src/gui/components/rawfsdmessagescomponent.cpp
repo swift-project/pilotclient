@@ -87,7 +87,7 @@ namespace swift::gui::components
     void CRawFsdMessagesComponent::enableDisableRawFsdMessages()
     {
         //! \fixme KB 2019-03 hardcoded style sheet
-        bool enable;
+        bool enable {};
         if (ui->pb_EnableDisable->text() == "Enable")
         {
             enable = true;

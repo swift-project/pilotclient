@@ -234,7 +234,7 @@ namespace swift::misc::aviation
             return false;
         }
 
-        bool ok;
+        bool ok {};
         if (v.startsWith("F", Qt::CaseInsensitive))
         {
             this->setUnit(CLengthUnit::ft());

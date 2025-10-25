@@ -224,6 +224,7 @@ namespace swift::misc
         template <typename F>
         static CWorker *fromTask(QObject *owner, const QString &name, F &&task)
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
             int typeId = qMetaTypeId<std::decay_t<decltype(std::forward<F>(task)())>>();
             return fromTaskImpl(owner, name, typeId, [task = std::forward<F>(task)]() mutable {
                 if constexpr (std::is_void_v<decltype(task())>)

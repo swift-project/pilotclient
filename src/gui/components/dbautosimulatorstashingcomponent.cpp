@@ -129,7 +129,7 @@ namespace swift::gui::components
         int maxObjectsStashed = -1;
         if (!ui->le_MaxModelsStashed->text().isEmpty())
         {
-            bool ok;
+            bool ok {};
             ui->le_MaxModelsStashed->text().toInt(&ok);
             if (!ok) { maxObjectsStashed = 100; }
         }

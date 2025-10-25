@@ -444,7 +444,7 @@ namespace swift::misc::aviation
         const QDomNodeList generalList = doc.elementsByTagName("general");
         if (!generalList.isEmpty())
         {
-            bool ok;
+            bool ok {};
             const QDomNode general = generalList.at(0);
             QString route = general.firstChildElement("route").text();
             fp.setRoute(route.remove("DCT").simplified().trimmed());
@@ -470,7 +470,7 @@ namespace swift::misc::aviation
         const QDomNodeList timeList = doc.elementsByTagName("times");
         if (!timeList.isEmpty())
         {
-            bool ok;
+            bool ok {};
             const QDomNode times = timeList.at(0);
             const QString enroute = times.firstChildElement("est_time_enroute").text();
             const int enrouteSecs = enroute.toInt(&ok);

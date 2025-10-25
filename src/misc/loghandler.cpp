@@ -206,7 +206,7 @@ namespace swift::misc
         if (isFallThroughEnabled(handlers))
         {
             Q_ASSERT_X(m_oldHandler, Q_FUNC_INFO, "Handler must be installed");
-            QtMsgType type;
+            QtMsgType type {};
             QString category;
             QString message;
             statusMessage.toQtLogTriple(&type, &category, &message);

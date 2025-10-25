@@ -21,7 +21,7 @@ namespace swift::simplugin::flightgear
                                                                  connection, this);
         if (!dummy)
         {
-            bool s;
+            bool s {};
             s = connection.connect(QString(), "/fgswiftbus/traffic", "org.swift_project.fgswiftbus.traffic", "simFrame",
                                    this, SIGNAL(simFrame()));
             Q_ASSERT(s);

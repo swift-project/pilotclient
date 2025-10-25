@@ -135,7 +135,7 @@ namespace swift::misc::network
 
     bool CNetworkUtils::isValidPort(const QString &port)
     {
-        bool success;
+        bool success {};
         int p = port.toInt(&success);
         if (!success) return false;
         return (p >= 1 && p <= 65535);

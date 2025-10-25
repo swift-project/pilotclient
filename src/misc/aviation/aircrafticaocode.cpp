@@ -376,7 +376,7 @@ namespace swift::misc::aviation
         if (m_combinedType.length() < 2) { return -1; }
         const QString c(m_combinedType.mid(1, 1));
         if (c == "-") { return -1; }
-        bool ok;
+        bool ok {};
         int ec = c.toInt(&ok);
         if (ok && ec >= 0 && ec < 10) { return ec; }
         return -1;

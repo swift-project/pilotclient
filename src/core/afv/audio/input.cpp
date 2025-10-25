@@ -159,7 +159,7 @@ namespace swift::core::afv::audio
             m_maxSampleInput = qMax(qAbs(sampleInput), m_maxSampleInput);
         }
 
-        int length;
+        int length {};
         const QByteArray encodedBuffer = m_encoder.encode(samples, samples.size(), &length);
         m_opusBytesEncoded += length;
 
