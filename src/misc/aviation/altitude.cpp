@@ -216,7 +216,7 @@ namespace swift::misc::aviation
         // in same step get numeric value only
         bool beforeDigit = true;
         QString numericPart;
-        for (int i = 0; i < v.length(); i++)
+        for (int i = 0; i < v.length(); i++) // NOLINT
         {
             const QChar c = v[i];
             if (c.isDigit())

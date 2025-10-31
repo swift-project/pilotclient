@@ -39,7 +39,7 @@ namespace swift::misc::aviation
         QList<CFrequency> f;
         if (!CSelcal::isValidCode(m_code)) return f;
         f.reserve(m_code.length());
-        for (int pos = 0; pos < m_code.length(); pos++) { f.append(CSelcal::audioFrequencyEquivalent(m_code.at(pos))); }
+        for (const QChar c : m_code) { f.append(CSelcal::audioFrequencyEquivalent(c)); }
         return f;
     }
 

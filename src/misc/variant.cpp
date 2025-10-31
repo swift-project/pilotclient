@@ -498,8 +498,7 @@ namespace swift::misc
     bool CVariant::isA(int metaTypeId) const
     {
         if (metaTypeId == QMetaType::UnknownType) { return false; }
-        if (metaTypeId == getMetaTypeId()) { return true; }
-        return false;
+        return metaTypeId == getMetaTypeId();
     }
 
     bool CVariant::matches(const CVariant &value) const
