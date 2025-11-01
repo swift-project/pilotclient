@@ -185,7 +185,7 @@ namespace swift::gui::models
 
     CVariant CValueObjectFormatter::decorationRole(const CVariant &valueObject) const
     {
-        return { valueObject.toPixmap() };
+        return { QVariant(valueObject.toPixmap()) };
     }
 
     CDateTimeFormatter::CDateTimeFormatter(const QString &formatString, int alignment, bool i18n)
