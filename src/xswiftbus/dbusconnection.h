@@ -4,6 +4,11 @@
 #ifndef SWIFT_SIM_XSWIFTBUS_DBUSCONNECTION_H
 #define SWIFT_SIM_XSWIFTBUS_DBUSCONNECTION_H
 
+#ifndef NOMINMAX
+// windows.h min/max might be imported via dbus.h
+#    define NOMINMAX
+#endif
+
 #include <dbus/dbus.h>
 #include <event2/event.h>
 

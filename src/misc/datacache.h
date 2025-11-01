@@ -83,7 +83,7 @@ namespace swift::misc
         CDataCacheRevision(const QString &basename);
 
         //! Destructor.
-        ~CDataCacheRevision() = default;
+        ~CDataCacheRevision();
 
         //! @{
         //! Non-copyable.

@@ -351,6 +351,8 @@ namespace swift::misc
         : m_basename(basename), m_session(std::make_unique<Session>(m_basename + "/.session"))
     {}
 
+    CDataCacheRevision::~CDataCacheRevision() = default; // Explicitly in cpp file
+
     CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps,
                                                                   bool updateUuid, bool pinsOnly)
     {

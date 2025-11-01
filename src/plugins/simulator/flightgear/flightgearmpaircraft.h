@@ -23,7 +23,7 @@ namespace swift::simplugin::flightgear
     {
     public:
         //! Constructor
-        CFlightgearMPAircraft();
+        CFlightgearMPAircraft() = default;
 
         //! Constructor providing initial situation/parts
         CFlightgearMPAircraft(const swift::misc::simulation::CSimulatedAircraft &aircraft,
