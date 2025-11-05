@@ -707,7 +707,6 @@ namespace swift::misc::simulation::settings
             // msfs2024 uses no model directories but uses the field "packages directory" for filtering modelstrings
             // Asterix stands for everything == no filtering
             static const QString msfs2024 = "*";
-            if (msfs2024.isEmpty()) { return e; }
             static const QStringList md { msfs2024 };
             return md;
         }

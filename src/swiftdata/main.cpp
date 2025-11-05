@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
         }
         CSwiftData w;
         w.show();
-        int r = a.exec();
+        r = a.exec();
     }
     return r;
 }

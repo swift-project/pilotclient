@@ -120,7 +120,7 @@ using PfnSimConnect_AICreateSimulatedObject_EX1 = HRESULT(__stdcall *)(HANDLE, c
 
 //! The SimConnect Symbols
 //! \private
-struct SimConnectSymbols
+struct SimConnectSymbolsMsfs2024
 {
     PfnSimConnect_Open SimConnect_Open = nullptr;
     PfnSimConnect_Close SimConnect_Close = nullptr;
@@ -169,7 +169,7 @@ struct SimConnectSymbols
 #endif
 };
 
-static SimConnectSymbols gSymbols;
+static SimConnectSymbolsMsfs2024 gSymbols;
 
 template <typename FuncPtr>
 bool resolveSimConnectSymbol(QLibrary &library, FuncPtr &funcPtr, const char *funcName)

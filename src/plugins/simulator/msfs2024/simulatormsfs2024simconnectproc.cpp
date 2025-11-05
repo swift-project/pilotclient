@@ -221,8 +221,6 @@ namespace swift::simplugin::msfs2024common
             const DWORD requestId = event->dwRequestID;
             const DWORD objectId = event->dwObjectID;
 
-            const QString Test = CSimulatorMsfs2024::requestIdToString(requestId);
-
             simulatorMsfs2024->m_dispatchRequestIdLast = requestId;
 
             if (CSimulatorMsfs2024::isRequestForSimConnectObject(requestId))

@@ -513,17 +513,15 @@ namespace swift::simplugin::msfs2024common
             bool incremnental = true;
             bool sortByDistributor = true;
             bool consolidateWithDb = false;
-            bool ShowAllInstalledModells = true;
+            bool ShowAllInstalledModells = true; // msfs20424 always show all installed models
 
             if (gui_application)
             {
                 givenDistributorsOnly = m_generic.getPropertyDistributorFiltered();
                 dbDataOnly = m_generic.getPropertyWithDbEntry();
-                dbIcaoOnly = false;
                 incremnental = false;
-                sortByDistributor = true;
                 consolidateWithDb = true;
-                ShowAllInstalledModells = true; // msfs20424 always show all installed models
+                ShowAllInstalledModells = true;
             }
 
             // CDistributorList distributorList;

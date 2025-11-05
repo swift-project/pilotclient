@@ -74,7 +74,7 @@ CStatusMessageList CSwiftDataApplication::startHookIn()
 bool CSwiftDataApplication::parsingHookIn()
 {
     // Parse core relevant arguments
-    const QString dBusAddress(this->getCmdDBusAddressValue());
+    // const QString dBusAddress(this->getCmdDBusAddressValue());
     // if (!dBusAddress.isEmpty())
     //{
     //     // check if reachable
