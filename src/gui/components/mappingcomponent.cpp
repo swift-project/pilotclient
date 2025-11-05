@@ -84,6 +84,7 @@ namespace swift::gui::components
                 &CMappingComponent::onModelsUpdateRequested);
         connect(ui->tvp_AircraftModels, &CAircraftModelView::modelDataChanged, this,
                 &CMappingComponent::onRowCountChanged);
+        connect(ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::onModelSelectedInView);
         connect(ui->tvp_AircraftModels, &CAircraftModelView::requestTempDisableModelsForMatching, this,
                 &CMappingComponent::onTempDisableModelsForMatchingRequested);
 
@@ -256,6 +257,12 @@ namespace swift::gui::components
         ui->cb_AircraftEnabled->setChecked(simAircraft.isEnabled());
         ui->le_Callsign->setText(simAircraft.getCallsign().asString());
         ui->completer_ModelStrings->setModel(simAircraft.getModel());
+    }
+
+    void CMappingComponent::onModelSelectedInView(const QModelIndex &index)
+    {
+        const CAircraftModel model = ui->tvp_AircraftModels->at(index);
+        ui->completer_ModelStrings->setModel(model);
     }
 
     CCallsign CMappingComponent::validateRenderedCallsign()
