@@ -553,7 +553,7 @@ namespace swift::simplugin::msfs2024common
         void updateTransponderMode(const misc::aviation::CTransponder::TransponderMode xpdrMode);
 
         //! Update transponder mode from MSFS
-        void updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode);
+        void updateMSFS2024TransponderMode(const DataDefinitionMSFSTransponderMode transponderMode);
 
         //! An AI aircraft was added in the simulator
         bool simulatorReportedObjectAdded(DWORD objectId);

@@ -981,6 +981,15 @@ namespace swift::core
     bool ISimulator::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
     {
         if (this->isShuttingDown()) { return false; }
+
+        // TODO TZ remove after testing
+        CLogMessage(this).info(u"ISimulator::changeRemoteAircraftEnabled CHECK:"
+                               u"aircraft.getModelType %1 "
+                               u"aircraft.getModelString %2 "
+                               u"aircraft.getLiveryString %3 ")
+            << aircraft.getModelType() << aircraft.getModelString() << aircraft.getLiveryString();
+        ;
+
         return aircraft.isEnabled() ? this->physicallyAddRemoteAircraft(aircraft) :
                                       this->physicallyRemoveRemoteAircraft(aircraft.getCallsign());
     }

@@ -84,6 +84,7 @@ namespace swift::gui::components
                 &CMappingComponent::onModelsUpdateRequested);
         connect(ui->tvp_AircraftModels, &CAircraftModelView::modelDataChanged, this,
                 &CMappingComponent::onRowCountChanged);
+        connect(ui->tvp_AircraftModels, &CAircraftModelView::clicked, this, &CMappingComponent::onModelSelectedInView);
         connect(ui->tvp_AircraftModels, &CAircraftModelView::requestTempDisableModelsForMatching, this,
                 &CMappingComponent::onTempDisableModelsForMatchingRequested);
 
@@ -258,6 +259,12 @@ namespace swift::gui::components
         ui->completer_ModelStrings->setModel(simAircraft.getModel());
     }
 
+    void CMappingComponent::onModelSelectedInView(const QModelIndex &index)
+    {
+        const CAircraftModel model = ui->tvp_AircraftModels->at(index);
+        ui->completer_ModelStrings->setModel(model);
+    }
+
     CCallsign CMappingComponent::validateRenderedCallsign()
     {
         const QString cs = ui->le_Callsign->text().trimmed();
@@ -326,7 +333,10 @@ namespace swift::gui::components
         }
         const CCallsign callsign(this->validateRenderedCallsign());
         if (callsign.isEmpty()) { return; }
+
+        // Because of msfs2024, the model string contains the combination of title and livery.
         const QString modelString = ui->completer_ModelStrings->getModelString();
+
         if (modelString.isEmpty())
         {
             this->showOverlayHTMLMessage(CStatusMessage(this).validationError(u"Missing model for mapping"),
@@ -359,6 +369,13 @@ namespace swift::gui::components
         if (aircraftFromBackend.getModelString() != modelString)
         {
             const CAircraftModelList models = sGui->getIContextSimulator()->getModelSetModelsStartingWith(modelString);
+
+            // TODO TZ DEBUG only for testing
+            const CStatusMessage msg = CStatusMessage(this).validationInfo(u"Found: %1 models for %2")
+                                       << models.size() << modelString;
+            this->showOverlayMessage(msg, OverlayMessageMs);
+            // END testing
+
             if (models.isEmpty())
             {
                 const CStatusMessage msg = CStatusMessage(this).validationError(u"No model for title: '%1'")
@@ -368,6 +385,7 @@ namespace swift::gui::components
             }
 
             CAircraftModel model(models.front());
+            // found more than one model?
             if (models.size() > 1)
             {
                 if (models.containsModelString(modelString))
@@ -384,8 +402,10 @@ namespace swift::gui::components
             model.setModelType(CAircraftModel::TypeManuallySet);
             CLogMessage(this).info(u"Requesting changes for '%1'") << callsign.asString();
 
-            // enable in any case
+            // rendering-flag enable in any case
             sGui->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), true);
+
+            // trigger model change
             changed =
                 sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, identifier());
         }

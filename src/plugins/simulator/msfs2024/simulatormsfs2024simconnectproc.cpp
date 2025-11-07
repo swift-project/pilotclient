@@ -297,7 +297,7 @@ namespace swift::simplugin::msfs2024common
             {
                 const DataDefinitionMSFSTransponderMode *transponderMode =
                     reinterpret_cast<const DataDefinitionMSFSTransponderMode *>(&pObjData->dwData);
-                simulatorMsfs2024->updateMSFSTransponderMode(*transponderMode);
+                simulatorMsfs2024->updateMSFS2024TransponderMode(*transponderMode);
                 break;
             }
             default:
@@ -325,7 +325,7 @@ namespace swift::simplugin::msfs2024common
                     } // position
                     else if (subRequest == CSimConnectDefinitions::SimObjectModel)
                     {
-                        static_assert(sizeof(DataDefinitionRemoteAircraftModel) == sizeof(double) + 168 + 256,
+                        static_assert(sizeof(DataDefinitionRemoteAircraftModel) == sizeof(double) + 168 + 256 + 256,
                                       "DataDefinitionRemoteAircraftModel has an incorrect size.");
                         const DataDefinitionRemoteAircraftModel *remoteAircraftModel =
                             reinterpret_cast<const DataDefinitionRemoteAircraftModel *>(&pObjData->dwData);

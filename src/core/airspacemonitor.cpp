@@ -773,6 +773,14 @@ namespace swift::core
                                                        const QString &aircraftIcaoDesignator,
                                                        const QString &combinedAircraftType, const QString &modelString)
     {
+        // TODO TZ remove when testing is done
+        CLogMessage(this).info(u"CAirspaceMonitor::onCustomFSInnPacketReceived CHECK:"
+                               u"callsign %1 "
+                               u"airlineIcaoDesignator %2 "
+                               u"aircraftIcaoDesignator %3 "
+                               u"modelString %4 ")
+            << callsign << airlineIcaoDesignator << aircraftIcaoDesignator << modelString;
+
         // it can happen this is called before any queries
         // ES sends FsInn packets for callsigns such as ACCGER1, which are hard to distinguish
         // 1) checking if they are already in the list checks again ATC position which is safe
@@ -834,9 +842,9 @@ namespace swift::core
             // in order not to override swift livery string data, we ignore those
             if (!usedModelString.isEmpty())
             {
-                this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, QString(),
-                                                 usedModelString, CAircraftModel::TypeFSInnData,
-                                                 pReverseLookupMessages);
+                const CSimulatedAircraft aircraft = this->addOrUpdateAircraftInRange(
+                    callsign, aircraftIcaoDesignator, airlineIcaoDesignator, QString(), usedModelString,
+                    CAircraftModel::TypeFSInnData, pReverseLookupMessages);
                 this->addReverseLookupMessages(callsign, reverseLookupMessages);
             }
             this->sendReadyForModelMatching(callsign, ReceivedFsInnPacket); // from FSInn
@@ -846,6 +854,14 @@ namespace swift::core
     void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator,
                                                const QString &airlineIcaoDesignator, const QString &livery)
     {
+        // TODO TZ remove when testing is done
+        CLogMessage(this).info(u"CAirspaceMonitor::onIcaoCodesReceived CHECK:"
+                               u"callsign %1 "
+                               u"aircraftIcaoDesignator %2 "
+                               u"airlineIcaoDesignator %3 "
+                               u"livery %4 ")
+            << callsign << aircraftIcaoDesignator << airlineIcaoDesignator << livery;
+
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "not in main thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         if (CBuildConfig::isLocalDeveloperDebugBuild())
@@ -865,13 +881,16 @@ namespace swift::core
                                        CAirspaceMonitor::getLogCategories());
 
         const CClient client = this->getClientOrDefaultForCallsign(callsign);
-        this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery,
-                                         client.getQueriedModelString(), CAircraftModel::TypeQueriedFromNetwork,
-                                         pReverseLookupMessages);
-        this->addReverseLookupMessages(callsign, reverseLookupMessages);
-        this->sendReadyForModelMatching(callsign, ReceivedIcaoCodes); // ICAO codes received
+        const CSimulatedAircraft aircraft = this->addOrUpdateAircraftInRange(
+            callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, client.getQueriedModelString(),
+            CAircraftModel::TypeQueriedFromNetwork, pReverseLookupMessages);
+        if (aircraft.getModel().getModelType() != CAircraftModel::TypeManuallySet)
+        {
+            this->addReverseLookupMessages(callsign, reverseLookupMessages);
+            this->sendReadyForModelMatching(callsign, ReceivedIcaoCodes); // ICAO codes received
 
-        emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
+            emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
+        }
     }
 
     CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(
@@ -1178,9 +1197,26 @@ namespace swift::core
         const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
         if (aircraft.hasValidCallsign())
         {
+            // TODO TZ at this point we have a poblem if the model has no DB key yet (msfs2024 liveries)
             // only if we do not have a DB model yet
-            if (!aircraft.getModel().hasValidDbKey())
+            // int testType = aircraft.getModelType();1
+            CLogMessage(this).info(u"CAirspaceMonitor::addOrUpdateAircraftInRange CHECK:"
+                                   u"aircraft.getModelType %1 "
+                                   u"callsign %2 "
+                                   u"aircraftIcao %3 "
+                                   u"incomming modelType %4 ")
+                << aircraft.getModelType() << callsign.toQString() << aircraftIcao << modelType;
+
+            if (!aircraft.getModel().hasValidDbKey() && aircraft.getModelType() != CAircraftModel::TypeManuallySet)
             {
+
+                CLogMessage(this).warning(u"CAirspaceMonitor::reverseLookupModelWithFlightplanData "
+                                          u"aircraft.getModelType %1 "
+                                          u"callsign %2 "
+                                          u"aircraftIcao %3 "
+                                          u"incomming modelType %4 ")
+                    << aircraft.getModelType() << callsign.toQString() << aircraftIcao << modelType;
+
                 CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao,
                                                                                   livery, modelString, modelType, log);
                 model.updateMissingParts(aircraft.getModel());

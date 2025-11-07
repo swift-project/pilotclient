@@ -1710,6 +1710,14 @@ namespace swift::core
                                                    const QString &livery)
     {
         Q_UNUSED(livery)
+        // TODO TZ remove after testing
+        CLogMessage(this).info(u"CAircraftMatcher::onIcaoCodesReceived CHECK:"
+                               u"callsign %1 "
+                               u"aircraftIcao %2 "
+                               u"airlineIcao %3 "
+                               u"livery %4 ")
+            << callsign << aircraftIcao << airlineIcao << livery;
+
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
         if (m_modelSet.isEmpty()) { return; } // ignore empty sets to not create silly stats
         if (sessionId.isEmpty()) { return; }

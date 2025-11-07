@@ -1142,6 +1142,11 @@ namespace swift::core::context
         if (c)
         {
             const CSimulatedAircraft aircraft(this->getAircraftInRangeForCallsign(callsign));
+            // TODO TZ
+            CLogMessage(this).info(u"CContextNetwork::updateAircraftModel model.getModelString %1 model.getModelLivery "
+                                   u"%2 model.getModelType %3 aircraft.getModelType '%4'")
+                << model.getModelString() << model.getModelLivery() << model.getModelType() << aircraft.getModelType();
+
             Q_ASSERT_X(!aircraft.getCallsign().isEmpty(), Q_FUNC_INFO, "missing callsign");
             emit this->changedRemoteAircraftModel(aircraft, originator); // update aircraft model
         }

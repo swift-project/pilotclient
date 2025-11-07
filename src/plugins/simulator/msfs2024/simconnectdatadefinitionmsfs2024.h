@@ -86,7 +86,7 @@ namespace swift::simplugin::msfs2024common
     struct DataDefinitionOwnAircraftModel
     {
         char title[256]; //!< Aircraft model string
-        char livery[256]; //!< Aircraft model string
+        char livery[256]; //!< Aircraft livery string msfs2024
     };
 
     //! Data struct of aircraft model data
@@ -107,6 +107,7 @@ namespace swift::simplugin::msfs2024common
         char atcAirlineNumber[64]; //!< airline number
         char atcFlightNumber[8]; //!< flight number (168)
         char title[256]; //!< Aircraft model string
+        char livery[256]; //!< Aircraft livery string msfs2024
     };
 
     //! Data struct of aircraft data (setable)

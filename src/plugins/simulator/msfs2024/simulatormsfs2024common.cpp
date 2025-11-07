@@ -430,20 +430,16 @@ namespace swift::simplugin::msfs2024common
         // TODO TZ a message should be displayed here because the gui freezes during loading
         // better: move to the background (e.g., use CWorker::fromTask(...)), avoid GUI freeze.
 
-        this->createNewModelList();
-
         CLogMessage(this).info(u"%1 SimObjects and Liveries in vSimObjectsAndLiveries")
             << vSimObjectsAndLiveries.size();
-        // Cannot create children for a parent that is in a different thread.
-        // owner = this (QObject in main thread)
-        // auto *worker = CWorker::fromTask(this, "createNewModelList", [=]() {
-        //    this->createNewModelList();
-        //    return QVariant(); // void-Result
-        //});
 
-        // TODO TZ where to place this message?
-        // worker->then(this, [=] { CLogMessage(this).info(u"SimObjects and Liveries in vSimObjectsAndLiveries ready");
-        // });
+        auto *worker = CWorker::fromTask(this, "createNewModelList", [=]() {
+            this->createNewModelList();
+            return QVariant(); // void-Result
+        });
+
+        // TODO TZ where to place this message better?
+        worker->then(this, [=] { CLogMessage(this).info(u"SimObjects and Liveries in vSimObjectsAndLiveries ready"); });
     }
 
     void CSimulatorMsfs2024::createNewModelList()
@@ -475,6 +471,7 @@ namespace swift::simplugin::msfs2024common
             model.setModelString(modelLivery.szSimObjectCombinedTitle);
             model.setModelLivery(modelLivery.szLiveryName);
             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+            if (!modelkey) model.setModelType(CAircraftModel::TypeManuallySet);
             model.setSimulator(this->getSimulatorInfo());
 
             bool excluded = false;
@@ -528,7 +525,7 @@ namespace swift::simplugin::msfs2024common
             // for (const QString &name : distributorNames) { distributorList.push_back(CDistributor(name)); }
             CDistributorList distributorList = sGui->getWebDataServices()->getDistributors();
 
-            const CModelSetBuilder builder(this);
+            CModelSetBuilder builder(nullptr);
             CModelSetBuilder::Builder options =
                 givenDistributorsOnly ? CModelSetBuilder::GivenDistributorsOnly : CModelSetBuilder::NoOptions;
             if (dbDataOnly) { options |= CModelSetBuilder::OnlyDbData; }
@@ -1118,6 +1115,7 @@ namespace swift::simplugin::msfs2024common
         });
     }
 
+    // called decoupled from simconnect event queue very fast
     void CSimulatorMsfs2024::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
                                                                const DataDefinitionPosData &remoteAircraftData)
     {
@@ -1170,6 +1168,7 @@ namespace swift::simplugin::msfs2024common
         }
     }
 
+    // called decoupled from simconnect event queue
     void
     CSimulatorMsfs2024::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
                                                           const DataDefinitionRemoteAircraftModel &remoteAircraftModel)
@@ -1179,7 +1178,11 @@ namespace swift::simplugin::msfs2024common
         CSimConnectObject &so = m_simConnectObjects[cs];
         if (so.isPendingRemoved()) { return; }
 
-        const QString modelString(remoteAircraftModel.title);
+        // TODO TZ  verify model and livery
+        QString combinedModelstring =
+            QString::fromUtf8(remoteAircraftModel.title) + " " + QString::fromUtf8(remoteAircraftModel.livery);
+        const QString modelString(combinedModelstring.trimmed());
+
         const CLength cg(remoteAircraftModel.cgToGroundFt, CLengthUnit::ft());
         so.setAircraftCG(cg);
         so.setAircraftModelString(modelString);
@@ -1230,7 +1233,7 @@ namespace swift::simplugin::msfs2024common
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), myXpdr, this->identifier());
     }
 
-    void CSimulatorMsfs2024::updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode)
+    void CSimulatorMsfs2024::updateMSFS2024TransponderMode(const DataDefinitionMSFSTransponderMode transponderMode)
     {
         auto mode = CTransponder::StateIdent;
         if (!transponderMode.ident)
@@ -1390,9 +1393,10 @@ namespace swift::simplugin::msfs2024common
 
         CLogMessage(this).warning(u"Model failed to be added: '%1' details: %2")
             << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
-        CStatusMessage verifyMsg;
-        const bool verifiedAircraft = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
-        if (!verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
+        // CStatusMessage verifyMsg;
+        // const bool verifiedAircraft = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
+        const bool verifiedAircraft = true;
+        // if (!verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
 
         CSimConnectObject simObjAddAgain(simObject);
         simObjAddAgain.increaseAddingExceptions();
@@ -1411,6 +1415,7 @@ namespace swift::simplugin::msfs2024common
                         << simObjAddAgain.getAddingExceptions() :
                     CLogMessage(this).warning(u"Model '%1' %2 failed verification and will be disabled")
                         << simObjAddAgain.getAircraftModelString() << simObjAddAgain.toQString();
+
             this->updateAircraftEnabled(simObjAddAgain.getCallsign(), false); // disable
             emit this->physicallyAddingRemoteModelFailed(simObjAddAgain.getAircraft(), true, true,
                                                          msg); // verify failed
@@ -2007,8 +2012,8 @@ namespace swift::simplugin::msfs2024common
                                       .arg(fsxPositionToString(initialPosition)));
         }
 
-        const QByteArray modelStringBa = toFsxChar(modelString);
-        const QByteArray modelLiveryBa = toFsxChar(modelLiveryString);
+        const QByteArray modelStringBa = toFsxChar(modelString).trimmed();
+        const QByteArray modelLiveryBa = toFsxChar(modelLiveryString).trimmed();
 
         const QByteArray csBa = toFsxChar(callsign.toQString().left(12));
         CSimConnectObject::SimObjectType type = CSimConnectObject::AircraftNonAtc;
