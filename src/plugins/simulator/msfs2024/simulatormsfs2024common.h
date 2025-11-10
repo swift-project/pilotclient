@@ -29,6 +29,7 @@
 #include "misc/simulation/aircraftmodel.h"
 #include "misc/simulation/data/modelcaches.h" // TODO ???
 #include "misc/simulation/interpolation/interpolatorlinear.h"
+#include "misc/simulation/settings/modelmatchersettings.h"
 #include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/simulation/simulatedaircraft.h"
 #include "misc/simulation/simulatorplugininfo.h"
@@ -741,6 +742,10 @@ namespace swift::simplugin::msfs2024common
 
         //! Simulator info
         swift::misc::simulation::CSimulatorInfo m_simulatorInfo;
+
+        swift::misc::CSetting<swift::misc::simulation::settings::TModelMatching> m_matchingSettings {
+            this
+        }; //!< settings
 
     public:
         //! @{

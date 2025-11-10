@@ -774,12 +774,14 @@ namespace swift::core
                                                        const QString &combinedAircraftType, const QString &modelString)
     {
         // TODO TZ remove when testing is done
+        // #SBBER750:DAL483:FSIPIR:0:BER:A320:::::L2J:PMDG 737-800 AIRBERLIN (D-ABKM)
         CLogMessage(this).info(u"CAirspaceMonitor::onCustomFSInnPacketReceived CHECK:"
                                u"callsign %1 "
                                u"airlineIcaoDesignator %2 "
                                u"aircraftIcaoDesignator %3 "
-                               u"modelString %4 ")
-            << callsign << airlineIcaoDesignator << aircraftIcaoDesignator << modelString;
+                               u"combinedAircraftType %4 "
+                               u"modelString %5 ")
+            << callsign << airlineIcaoDesignator << aircraftIcaoDesignator << combinedAircraftType << modelString;
 
         // it can happen this is called before any queries
         // ES sends FsInn packets for callsigns such as ACCGER1, which are hard to distinguish
@@ -854,13 +856,15 @@ namespace swift::core
     void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator,
                                                const QString &airlineIcaoDesignator, const QString &livery)
     {
-        // TODO TZ remove when testing is done
+        // TODO TZ remove logmessage when testing is done
+        // #SBDAL483:BER636:PI:GEN:EQUIPMENT=B738:AIRLINE=DAL:LIVERY=swift_l1855a1787m13853
         CLogMessage(this).info(u"CAirspaceMonitor::onIcaoCodesReceived CHECK:"
                                u"callsign %1 "
                                u"aircraftIcaoDesignator %2 "
                                u"airlineIcaoDesignator %3 "
                                u"livery %4 ")
             << callsign << aircraftIcaoDesignator << airlineIcaoDesignator << livery;
+        // End TODO TZ
 
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "not in main thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }

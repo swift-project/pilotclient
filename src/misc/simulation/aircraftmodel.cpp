@@ -284,8 +284,6 @@ namespace swift::misc::simulation
         case IndexLivery: return m_livery.propertyByIndex(index.copyFrontRemoved());
         case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
         case IndexMembersDbStatus: return this->getMembersDbStatus();
-        case IndexModelLivery: return QVariant(m_modelLivery);
-        case IndexShortModelString: return QVariant(getShortModelString());
         default: return CValueObject::propertyByIndex(index);
         }
     }

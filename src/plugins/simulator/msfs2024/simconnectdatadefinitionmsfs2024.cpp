@@ -444,9 +444,9 @@ namespace swift::simplugin::msfs2024common
         hr += SimConnect_EnumerateSimObjectsAndLiveries(hSimConnect, CSimConnectDefinitions::REQUEST_AIRPLANE,
                                                         SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT);
         hr += SimConnect_EnumerateSimObjectsAndLiveries(hSimConnect, CSimConnectDefinitions::REQUEST_HELICOPTER,
-                                                        SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT);
+                                                        SIMCONNECT_SIMOBJECT_TYPE_HELICOPTER);
         // hr += SimConnect_EnumerateSimObjectsAndLiveries(hSimConnect, CSimConnectDefinitions::REQUEST_HOT_AIR,
-        //                                                 SIMCONNECT_SIMOBJECT_TYPE_AIRCRAFT);
+        //                                                 SIMCONNECT_SIMOBJECT_TYPE_HOT_AIR_BALLOON);
 
         if (isFailure(hr))
         {

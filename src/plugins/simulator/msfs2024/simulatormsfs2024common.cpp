@@ -448,10 +448,17 @@ namespace swift::simplugin::msfs2024common
         const CSpecializedSimulatorSettings settings = this->getSimulatorSettings();
         CSimulatorSettings m_generic = settings.getGenericSettings();
         QStringList excludePatterns = m_generic.getModelExcludeDirectoryPatterns();
+        QStringList filterList = m_generic.getModelDirectories();
 
         bool gui_application = true;
+        bool useFilterList = true;
+        bool matchFilter = false;
+
         QString guiName = sGui->getApplicationName();
         if (guiName.contains("mapping")) gui_application = false;
+
+        const CAircraftMatcherSetup setup = m_matchingSettings.get();
+        bool skipExcluded = setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ExcludeNoExcluded);
 
         CAircraftModelList newModels;
 
@@ -462,6 +469,9 @@ namespace swift::simplugin::msfs2024common
             CAircraftModel model;
             CAircraftModel modelFromDb =
                 sGui->getWebDataServices()->getModelForModelString(modelLivery.szSimObjectCombinedTitle.trimmed());
+
+            // model is marked as excluded in the database, so skip it
+            if (modelFromDb.getModelMode() == CAircraftModel::Exclude && skipExcluded && gui_application) { continue; }
 
             // If the model is in the database, there is a DbKey
             int modelkey = modelFromDb.getDbKey();
@@ -487,6 +497,27 @@ namespace swift::simplugin::msfs2024common
             }
             if (excluded) continue; // skip adding this model
 
+            if (useFilterList)
+            {
+                matchFilter = false;
+                for (const QString &rawFilter : filterList)
+                {
+                    if (rawFilter.trimmed().contains("*"))
+                    {
+                        // wildcard found, disable filter list
+                        useFilterList = false;
+                        continue;
+                    }
+                    const QString filter = rawFilter.trimmed();
+                    if (model.getModelString().contains(filter, Qt::CaseInsensitive))
+                    {
+                        matchFilter = true;
+                        break;
+                    }
+                }
+            }
+            if (useFilterList && !matchFilter) continue; // skip adding this model
+
             newModels.replaceOrAddModelWithString(model, Qt::CaseInsensitive);
         }
 
@@ -507,7 +538,7 @@ namespace swift::simplugin::msfs2024common
             bool givenDistributorsOnly = false;
             bool dbDataOnly = false;
             bool dbIcaoOnly = false;
-            bool incremnental = true;
+            bool incremnental = false;
             bool sortByDistributor = true;
             bool consolidateWithDb = false;
             bool ShowAllInstalledModells = true; // msfs20424 always show all installed models

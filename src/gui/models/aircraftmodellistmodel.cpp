@@ -46,10 +46,7 @@ namespace swift::gui::models
         {
         case NotSet:
         case OwnAircraftModelClient:
-            // m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString }));
-            m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexShortModelString }));
-
-            m_columns.addColumn(CColumn::standardString("liverypart", CAircraftModel::IndexModelLivery));
+            m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString }));
             m_columns.addColumn(
                 CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
             m_columns.addColumn(
@@ -86,9 +83,7 @@ namespace swift::gui::models
 
         case OwnAircraftModelMappingTool:
         case StashModel:
-            m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexShortModelString));
-
-            m_columns.addColumn(CColumn::standardString("liverypart", CAircraftModel::IndexModelLivery));
+            m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString }));
             m_columns.addColumn(
                 CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
             if (mode == StashModel)

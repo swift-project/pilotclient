@@ -344,7 +344,8 @@ namespace swift::gui::components
         Q_UNUSED(modelDirectories);
 
         using namespace std::chrono_literals;
-        const CStatusMessage msg = CLogMessage(this).info(u"Start loading models for %1") << simulator.toQString();
+        const CStatusMessage msg = CLogMessage(this).info(u"Triiger loading models for %1 from SimConnect")
+                                   << simulator.toQString();
         this->showOverlayHTMLMessage(msg, 2s);
 
         return;
@@ -530,11 +531,10 @@ namespace swift::gui::components
                                                        IAircraftModelLoader::LoadMode mode,
                                                        const QStringList &modelDirectories)
     {
-        // At this point, we switch how the models should be loaded: SimConnect or classic file search
-        if (simulator.isMSFS2024())
-            this->loadInstalledModelsSimConnect(simulator, mode, modelDirectories);
-        else
-            this->loadInstalledModels(simulator, mode, modelDirectories);
+        // TODO TZ add SimConnect loading
+        if (simulator.isMSFS2024()) this->loadInstalledModelsSimConnect(simulator, mode, modelDirectories);
+
+        this->loadInstalledModels(simulator, mode, modelDirectories);
     }
 
     void CDbOwnModelsComponent::requestSimulatorModelsWithCacheInBackground(const CSimulatorInfo &simulator)

@@ -127,8 +127,6 @@ namespace swift::misc
                 IndexModelModeAsIcon,
                 IndexHasQueriedModelString,
                 IndexMembersDbStatus,
-                IndexModelLivery, // MSFS2024
-                IndexShortModelString,
             };
 
             //! \copydoc swift::misc::CValueObject::registerMetadata
