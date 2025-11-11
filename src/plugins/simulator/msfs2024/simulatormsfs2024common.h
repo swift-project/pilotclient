@@ -105,9 +105,6 @@ namespace swift::simplugin::msfs2024common
         CSimConnectObject simObject; //!< CSimConnectObject at the time of the trace
         QString comment; //!< where sent
 
-        //! For probe
-        bool isForProbe() const { return simObject.getType() == CSimConnectObject::TerrainProbe; }
-
         //! For aircraft
         bool isForAircraft() const { return simObject.getType() == CSimConnectObject::AircraftNonAtc; }
 
@@ -187,11 +184,11 @@ namespace swift::simplugin::msfs2024common
                                                const swift::misc::aviation::CAircraftParts &parts) override;
         //! @}
 
-        //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation
-        //! \remark x86 FSX version, x64 version is overridden
-        //! \sa CSimulatorFsxCommon::is
-        virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
-                                      const swift::misc::aviation::CCallsign &aircraftCallsign) override;
+        ////! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation
+        ////! \remark x86 FSX version, x64 version is overridden
+        ////! \sa CSimulatorFsxCommon::is
+        // virtual bool requestElevation(const swift::misc::geo::ICoordinateGeodetic &reference,
+        //                               const swift::misc::aviation::CCallsign &aircraftCallsign) override;
 
         //! saves the SimObjects received from the simulator a structure
         void CacheSimObjectAndLiveries(const SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST *msg);
@@ -213,13 +210,6 @@ namespace swift::simplugin::msfs2024common
 
         //! Set tracing on/off
         void setTractingSendId(bool trace);
-
-        //! FSX Terrain probe
-        //! \remark must be off at P3D v4.2 drivers or later
-        bool isUsingFsxTerrainProbe() const { return m_useFsxTerrainProbe; }
-
-        //! FSX terrain probe
-        void setUsingFsxTerrainProbe(bool use) { m_useFsxTerrainProbe = use; }
 
         //! Using the SB offsets?
         bool isUsingSbOffsetValues() const { return m_useSbOffsets; }
@@ -243,17 +233,8 @@ namespace swift::simplugin::msfs2024common
             return requestId >= RequestSimObjAircraftStart && requestId <= RequestSimObjAircraftRangeEnd;
         }
 
-        //! Request for probe (elevation)?
-        static bool isRequestForSimObjTerrainProbe(DWORD requestId)
-        {
-            return requestId >= RequestSimObjTerrainProbeStart && requestId <= RequestSimObjTerrainProbeRangeEnd;
-        }
-
         //! Request for any CSimConnectObject?
-        static bool isRequestForSimConnectObject(DWORD requestId)
-        {
-            return isRequestForSimObjAircraft(requestId) || isRequestForSimObjTerrainProbe(requestId);
-        }
+        static bool isRequestForSimConnectObject(DWORD requestId) { return isRequestForSimObjAircraft(requestId); }
 
         //! Sub request type
         static CSimConnectDefinitions::SimObjectRequest requestToSimObjectRequest(DWORD requestId);
@@ -308,9 +289,6 @@ namespace swift::simplugin::msfs2024common
 
         //! Get new request id, overflow safe
         SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForSimObjAircraft();
-
-        //! Get new request id, overflow safe
-        SIMCONNECT_DATA_REQUEST_ID obtainRequestIdForSimObjTerrainProbe();
 
         //! Release AI control
         //! \remark P3D version is overridden
@@ -388,10 +366,6 @@ namespace swift::simplugin::msfs2024common
                                                                            //!< overriden by specialized P3D function
         CSimConnectObjects m_simConnectObjects; //!< AI objects and their object and request ids
 
-        // probes
-        bool m_useFsxTerrainProbe = is32bit(); //!< Use FSX Terrain probe?
-        bool m_initFsxTerrainProbes = false; //!< initialized terrain probes
-        int m_addedProbes = 0; //!< added probes
         QMap<DWORD, swift::misc::aviation::CCallsign>
             m_pendingProbeRequests; //!< pending elevation requests: requestId/aircraft callsign
 
@@ -421,14 +395,6 @@ namespace swift::simplugin::msfs2024common
                                              AircraftAddMode addMode,
                                              const CSimConnectObject &correspondingSimObject = {});
 
-        //! Add AI object for terrain probe
-        //! \remark experimental
-        bool physicallyAddAITerrainProbe(const swift::misc::geo::ICoordinateGeodetic &coordinate, int number);
-
-        //! Add number probes (inits the probe objects)
-        //! \remark experimental
-        int physicallyInitAITerrainProbes(const swift::misc::geo::ICoordinateGeodetic &coordinate, int number);
-
         //! Remove aircraft no longer in provider
         //! \remark kind of cleanup function, in an ideal scenario this should never need to cleanup something
         swift::misc::aviation::CCallsignSet physicallyRemoveAircraftNotInProvider();
@@ -449,9 +415,6 @@ namespace swift::simplugin::msfs2024common
 
         //! Logging version of verifyFailedAircraftInfo
         bool logVerifyFailedAircraftInfo(const CSimConnectObject &simObject) const;
-
-        //! Verify the probe
-        void verifyAddedTerrainProbe(const swift::misc::simulation::CSimulatedAircraft &remoteAircraftIn);
 
         //! Add next aircraft based on timer
         void timerBasedObjectAddOrRemove();
@@ -586,10 +549,6 @@ namespace swift::simplugin::msfs2024common
         bool requestPositionDataForSimObject(const CSimConnectObject &simObject,
                                              SIMCONNECT_PERIOD period = SIMCONNECT_PERIOD_SECOND);
 
-        //! Request data for the terrain probe
-        bool requestTerrainProbeData(const CSimConnectObject &simObject,
-                                     const swift::misc::aviation::CCallsign &aircraftCallsign);
-
         //! Request lights for a CSimConnectObject
         bool requestLightsForSimObject(const CSimConnectObject &simObject);
 
@@ -655,13 +614,6 @@ namespace swift::simplugin::msfs2024common
             RequestSimObjAircraftStart - 1 +
             static_cast<int>(CSimConnectDefinitions::SimObjectEndMarker) * MaxSimObjAircraft;
 
-        // -- range for probe data, each probe object will get its own request id and use the offset ranges
-        static constexpr int RequestSimObjTerrainProbeStart = RequestSimObjAircraftRangeEnd + 1;
-        static constexpr int RequestSimObjTerrainProbeEnd = RequestSimObjTerrainProbeStart - 1 + MaxSimObjProbes;
-        static constexpr int RequestSimObjTerrainProbeRangeEnd =
-            RequestSimObjTerrainProbeStart - 1 +
-            static_cast<int>(CSimConnectDefinitions::SimObjectEndMarker) * MaxSimObjProbes;
-
         // times
         static constexpr int AddPendingAircraftIntervalMs = 20 * 1000;
         static constexpr int DispatchIntervalMs = 10; //!< how often with run the FSX event queue
@@ -713,8 +665,6 @@ namespace swift::simplugin::msfs2024common
         CSimConnectObjects m_addPendingAircraft; //!< aircraft/probes awaiting to be added;
         SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(
             RequestSimObjAircraftStart); //!< request id, use obtainRequestIdForSimObjAircraft to get id
-        SIMCONNECT_DATA_REQUEST_ID m_requestIdSimObjTerrainProbe = static_cast<SIMCONNECT_DATA_REQUEST_ID>(
-            RequestSimObjTerrainProbeStart); //!< request id, use obtainRequestIdForSimObjTerrainProbe to get id
         QTimer m_simObjectTimer; //!< updating of SimObjects awaiting to be added
 
         // Last selected frequencies in simulator before setting 8.33 kHz spacing frequency
@@ -753,10 +703,6 @@ namespace swift::simplugin::msfs2024common
         static DWORD offsetSimObjAircraft(CSimConnectDefinitions::SimObjectRequest req)
         {
             return MaxSimObjAircraft * static_cast<DWORD>(req);
-        }
-        static DWORD offsetSimObjTerrainProbe(CSimConnectDefinitions::SimObjectRequest req)
-        {
-            return MaxSimObjProbes * static_cast<DWORD>(req);
         }
         //! @}
     };

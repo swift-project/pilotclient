@@ -34,7 +34,7 @@ namespace swift::simplugin::msfs2024common
                                                                     setupProvider, remoteAircraftProvider, logger))
     {
         this->resetCameraPositions();
-        m_type = aircraft.isTerrainProbe() ? TerrainProbe : AircraftNonAtc;
+        m_type = AircraftNonAtc;
         m_interpolator->initCorrespondingModel(aircraft.getModel());
         m_callsignByteArray = aircraft.getCallsignAsString().toLatin1();
     }
@@ -43,7 +43,7 @@ namespace swift::simplugin::msfs2024common
     {
         m_aircraft = aircraft;
         m_callsignByteArray = aircraft.getCallsignAsString().toLatin1();
-        m_type = aircraft.isTerrainProbe() ? TerrainProbe : AircraftNonAtc;
+        m_type = AircraftNonAtc;
     }
 
     void CSimConnectObject::setAircraftModelString(const QString &modelString)
@@ -78,7 +78,6 @@ namespace swift::simplugin::msfs2024common
         DWORD os = 0;
         switch (this->getType())
         {
-        case TerrainProbe: os = static_cast<DWORD>(CSimulatorMsfs2024::offsetSimObjTerrainProbe(offset)); break;
         case AircraftNonAtc:
         case AircraftSimulatedObject:
         default: os = static_cast<DWORD>(CSimulatorMsfs2024::offsetSimObjAircraft(offset)); break;
@@ -233,7 +232,6 @@ namespace swift::simplugin::msfs2024common
 
     CSimConnectObject::SimObjectType CSimConnectObject::requestIdToType(DWORD requestId)
     {
-        if (CSimulatorMsfs2024::isRequestForSimObjTerrainProbe(requestId)) { return TerrainProbe; }
         if (CSimulatorMsfs2024::isRequestForSimObjAircraft(requestId)) { return AircraftNonAtc; }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong range");
         return AircraftNonAtc;
@@ -243,13 +241,12 @@ namespace swift::simplugin::msfs2024common
     {
         static const QString a1("aircraft (non ATC)");
         static const QString a2("aircraft (sim.object)");
-        static const QString p("probe");
+        // static const QString p("probe");
         static const QString u("unknown");
         switch (type)
         {
         case AircraftNonAtc: return a1;
         case AircraftSimulatedObject: return a2;
-        case TerrainProbe: return p;
         default: break;
         }
         return u;
@@ -296,6 +293,7 @@ namespace swift::simplugin::msfs2024common
         return this->getSimObjectForObjectId(objectId).getCallsign();
     }
 
+    // TODO TZ  optimize?
     CCallsignSet CSimConnectObjects::getAllCallsigns(bool withoutProbes) const
     {
         if (this->isEmpty()) { return CCallsignSet(); }
@@ -308,6 +306,7 @@ namespace swift::simplugin::msfs2024common
         return callsigns;
     }
 
+    // TODO TZ  optimize?
     QStringList CSimConnectObjects::getAllCallsignStrings(bool sorted, bool withoutProbes) const
     {
         return this->getAllCallsigns(withoutProbes).getCallsignStrings(sorted);
@@ -382,17 +381,17 @@ namespace swift::simplugin::msfs2024common
         return c > 0;
     }
 
-    int CSimConnectObjects::removeAllProbes()
-    {
-        const QList<CSimConnectObject> probes = this->getProbes();
-        int c = 0;
-        for (const CSimConnectObject &probe : probes)
-        {
-            this->remove(probe.getCallsign());
-            c++;
-        }
-        return c;
-    }
+    // int CSimConnectObjects::removeAllProbes()
+    //{
+    //     const QList<CSimConnectObject> probes = this->getProbes();
+    //     int c = 0;
+    //     for (const CSimConnectObject &probe : probes)
+    //     {
+    //         this->remove(probe.getCallsign());
+    //         c++;
+    //     }
+    //     return c;
+    // }
 
     bool CSimConnectObjects::containsPendingAdded() const
     {
@@ -477,32 +476,6 @@ namespace swift::simplugin::msfs2024common
         QList<CSimConnectObject> l = this->getByType(CSimConnectObject::AircraftNonAtc);
         l.append(this->getByType(CSimConnectObject::AircraftSimulatedObject));
         return l;
-    }
-
-    CSimConnectObject CSimConnectObjects::getNotPendingProbe() const
-    {
-        for (const CSimConnectObject &simObject : *this)
-        {
-            if (simObject.getType() == CSimConnectObject::TerrainProbe && !simObject.isPending()) { return simObject; }
-        }
-        return CSimConnectObject();
-    }
-
-    CSimConnectObject CSimConnectObjects::getOldestNotPendingProbe() const
-    {
-        CSimConnectObject oldestProbe;
-        for (const CSimConnectObject &simObject : *this)
-        {
-            if (simObject.getType() == CSimConnectObject::TerrainProbe && !simObject.isPending())
-            {
-                if (!oldestProbe.hasCreatedTimestamp() ||
-                    oldestProbe.getCreatedTimestamp() > simObject.getCreatedTimestamp())
-                {
-                    oldestProbe = simObject;
-                }
-            }
-        }
-        return oldestProbe;
     }
 
     bool CSimConnectObjects::containsType(CSimConnectObject::SimObjectType type) const

@@ -27,7 +27,6 @@ namespace swift::simplugin::msfs2024common
         {
             AircraftNonAtc,
             AircraftSimulatedObject,
-            TerrainProbe,
             AllTypes
         };
 
@@ -79,9 +78,6 @@ namespace swift::simplugin::msfs2024common
 
         //! Aircraft NON ATC?
         bool isAircraftNonAtc() const { return this->getType() == AircraftNonAtc; }
-
-        //! Probe?
-        bool isTerrainProbe() const { return this->getType() == TerrainProbe; }
 
         //! Set the type
         void setType(SimObjectType type) { m_type = type; }
@@ -424,9 +420,6 @@ namespace swift::simplugin::msfs2024common
         //! Get by type
         QList<CSimConnectObject> getByType(CSimConnectObject::SimObjectType type) const;
 
-        //! All probes
-        QList<CSimConnectObject> getProbes() const { return this->getByType(CSimConnectObject::TerrainProbe); }
-
         //! All aircraft
         QList<CSimConnectObject> getAircraft() const;
 
@@ -438,9 +431,6 @@ namespace swift::simplugin::msfs2024common
 
         //! Contains object of type
         bool containsType(CSimConnectObject::SimObjectType type) const;
-
-        //! Probe?
-        bool containsProbe() const { return this->containsType(CSimConnectObject::TerrainProbe); }
 
         //! Aircraft?
         bool containsAircraft() const;

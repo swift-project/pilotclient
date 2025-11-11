@@ -113,11 +113,6 @@ namespace swift::simplugin::msfs2024common
                             Q_UNUSED(removed);
                             CLogMessage(simulatorMsfs2024).warning(u"Adding probe failed: %1 %2")
                                 << simObject.getCallsign().asString() << simObject.getAircraftModelString();
-                            if (simulatorMsfs2024->isUsingFsxTerrainProbe())
-                            {
-                                CLogMessage(simulatorMsfs2024).warning(u"Disabling terrain probe");
-                                simulatorMsfs2024->setUsingFsxTerrainProbe(false);
-                            }
                             logGenericExceptionInfo = false;
                         } // aircraft
                     } // valid
@@ -366,37 +361,6 @@ namespace swift::simplugin::msfs2024common
                         }
                     }
                 }
-                else if (CSimulatorMsfs2024::isRequestForSimObjTerrainProbe(requestId))
-                {
-                    const CSimConnectObject probeObj = simulatorMsfs2024->getSimObjectForObjectId(objectId);
-                    if (!probeObj.hasValidRequestAndObjectId()) { break; }
-                    Q_ASSERT_X(probeObj.isTerrainProbe(), Q_FUNC_INFO, "No probe");
-                    const CSimConnectDefinitions::SimObjectRequest subRequest =
-                        CSimulatorMsfs2024::requestToSimObjectRequest(requestId);
-
-                    if (subRequest == CSimConnectDefinitions::SimObjectPositionData)
-                    {
-                        static_assert(sizeof(DataDefinitionPosData) == 5 * sizeof(double),
-                                      "DataDefinitionRemoteAircraftSimData has an incorrect size.");
-                        const DataDefinitionPosData *probeSimData =
-                            reinterpret_cast<const DataDefinitionPosData *>(&pObjData->dwData);
-                        // extra check, but ids should be the same
-                        if (objectId == probeObj.getObjectId())
-                        {
-                            const CCallsign cs = simulatorMsfs2024->m_pendingProbeRequests.value(requestId);
-                            if (cs.isEmpty()) { break; }
-                            simulatorMsfs2024->updateProbeFromSimulator(cs, *probeSimData);
-                        }
-                    }
-                    else
-                    {
-                        if (CBuildConfig::isLocalDeveloperDebugBuild())
-                        {
-                            CLogMessage(simulatorMsfs2024).error(u"Unknown subrequest (probe): '%1' %2")
-                                << CSimConnectDefinitions::simObjectRequestToString(subRequest) << probeObj.toQString();
-                        }
-                    }
-                } // probe
             }
             break; // default (SIMCONNECT_RECV_ID_SIMOBJECT_DATA)
             }

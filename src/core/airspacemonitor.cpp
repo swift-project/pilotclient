@@ -549,6 +549,12 @@ namespace swift::core
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
+        // TODO TZ remove when testing is done
+        CLogMessage(this).info(u"CAirspaceMonitor::sendReadyForModelMatching "
+                               u"callsign %1 ")
+            << callsign;
+        // TODO remove
+
         // set flag and init ts
         Readiness &readiness = this->addMatchingReadinessFlag(callsign, rf);
 
@@ -769,12 +775,15 @@ namespace swift::core
         }
     }
 
+    // for request
+    // #SBBER750:DAL483:FSIPIR:0:BER:A320:::::L2J:PMDG 737-800 AIRBERLIN (D-ABKM)
+    // and also for information
+    // #SBFSC751 : BER636 : FSIPI : 0 ::EC35:: :: : H2T : AIRBUS H135 NORSK LUFTAMBULANSE
     void CAirspaceMonitor::onCustomFSInnPacketReceived(const CCallsign &callsign, const QString &airlineIcaoDesignator,
                                                        const QString &aircraftIcaoDesignator,
                                                        const QString &combinedAircraftType, const QString &modelString)
     {
         // TODO TZ remove when testing is done
-        // #SBBER750:DAL483:FSIPIR:0:BER:A320:::::L2J:PMDG 737-800 AIRBERLIN (D-ABKM)
         CLogMessage(this).info(u"CAirspaceMonitor::onCustomFSInnPacketReceived CHECK:"
                                u"callsign %1 "
                                u"airlineIcaoDesignator %2 "
@@ -853,11 +862,11 @@ namespace swift::core
         }
     }
 
+    // #SBDAL483:BER636:PI:GEN:EQUIPMENT=B738:AIRLINE=DAL:LIVERY=swift_l1855a1787m13853
     void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator,
                                                const QString &airlineIcaoDesignator, const QString &livery)
     {
         // TODO TZ remove logmessage when testing is done
-        // #SBDAL483:BER636:PI:GEN:EQUIPMENT=B738:AIRLINE=DAL:LIVERY=swift_l1855a1787m13853
         CLogMessage(this).info(u"CAirspaceMonitor::onIcaoCodesReceived CHECK:"
                                u"callsign %1 "
                                u"aircraftIcaoDesignator %2 "
@@ -888,6 +897,8 @@ namespace swift::core
         const CSimulatedAircraft aircraft = this->addOrUpdateAircraftInRange(
             callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, client.getQueriedModelString(),
             CAircraftModel::TypeQueriedFromNetwork, pReverseLookupMessages);
+
+        // we do not change manually assigned models
         if (aircraft.getModel().getModelType() != CAircraftModel::TypeManuallySet)
         {
             this->addReverseLookupMessages(callsign, reverseLookupMessages);
@@ -1211,6 +1222,7 @@ namespace swift::core
                                    u"incomming modelType %4 ")
                 << aircraft.getModelType() << callsign.toQString() << aircraftIcao << modelType;
 
+            // we do not change manually assigned models
             if (!aircraft.getModel().hasValidDbKey() && aircraft.getModelType() != CAircraftModel::TypeManuallySet)
             {
 
