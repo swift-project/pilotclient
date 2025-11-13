@@ -22,7 +22,7 @@ namespace swift::simplugin::msfs2024
                                            IClientProvider *clientProvider, QObject *parent)
         : CSimulatorMsfs2024(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
-        this->setDefaultModel({ "A320neo V2", CAircraftModel::TypeModelMatchingDefaultModel,
+        this->setDefaultModel({ "A320NEO V2", CAircraftModel::TypeModelMatchingDefaultModel,
                                 "Airbus A320 default model", CAircraftIcaoCode("A320", "L2J") });
     }
 

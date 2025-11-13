@@ -370,12 +370,6 @@ namespace swift::gui::components
         {
             const CAircraftModelList models = sGui->getIContextSimulator()->getModelSetModelsStartingWith(modelString);
 
-            // TODO TZ DEBUG only for testing
-            const CStatusMessage msg = CStatusMessage(this).validationInfo(u"Found: %1 models for %2")
-                                       << models.size() << modelString;
-            this->showOverlayMessage(msg, OverlayMessageMs);
-            // END testing
-
             if (models.isEmpty())
             {
                 const CStatusMessage msg = CStatusMessage(this).validationError(u"No model for title: '%1'")

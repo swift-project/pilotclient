@@ -130,6 +130,13 @@ namespace swift::simplugin::msfs2024common
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT NAV", "Bool");
         hr +=
             SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT LOGO", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT RECOGNITION",
+                                             "Bool");
+        hr +=
+            SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT CABIN", "Bool");
+        hr +=
+            SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT WING", "Bool");
+
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "TRANSPONDER CODE:1",
                                              nullptr);
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
@@ -171,6 +178,11 @@ namespace swift::simplugin::msfs2024common
                                              "GENERAL ENG COMBUSTION:3", "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "GENERAL ENG COMBUSTION:4", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "GENERAL ENG COMBUSTION:5", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "GENERAL ENG COMBUSTION:6", "Bool");
+
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD X",
                                              "Feet per second");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD Y",
@@ -236,6 +248,10 @@ namespace swift::simplugin::msfs2024common
                                              "GENERAL ENG COMBUSTION:3", "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
                                              "GENERAL ENG COMBUSTION:4", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
+                                             "GENERAL ENG COMBUSTION:5", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
+                                             "GENERAL ENG COMBUSTION:6", "Bool");
 
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE",
                                              nullptr, SIMCONNECT_DATATYPE_STRING256);
@@ -255,12 +271,12 @@ namespace swift::simplugin::msfs2024common
                                              "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights,
                                              "LIGHT LOGO", "Bool");
-        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights, "LIGHT NAV",
-                                             "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights,
                                              "LIGHT RECOGNITION", "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights,
                                              "LIGHT CABIN", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftLights,
+                                             "LIGHT WING", "Bool");
 
         if (isFailure(hr))
         {
@@ -473,11 +489,12 @@ namespace swift::simplugin::msfs2024common
     {
         return std::tie(flapsLeadingEdgeLeftPercent, flapsLeadingEdgeRightPercent, flapsTrailingEdgeLeftPercent,
                         flapsTrailingEdgeRightPercent, gearHandlePosition, spoilersHandlePosition, engine1Combustion,
-                        engine2Combustion, engine3Combustion, engine4Combustion) ==
+                        engine2Combustion, engine3Combustion, engine4Combustion, engine5Combustion,
+                        engine6Combustion) ==
                std::tie(rhs.flapsLeadingEdgeLeftPercent, rhs.flapsLeadingEdgeRightPercent,
                         rhs.flapsTrailingEdgeLeftPercent, rhs.flapsTrailingEdgeRightPercent, rhs.gearHandlePosition,
                         rhs.spoilersHandlePosition, rhs.engine1Combustion, rhs.engine2Combustion, rhs.engine3Combustion,
-                        rhs.engine4Combustion);
+                        rhs.engine4Combustion, rhs.engine5Combustion, rhs.engine6Combustion);
     }
 
     void DataDefinitionRemoteAircraftPartsWithoutLights::setAllEngines(bool on)
@@ -486,6 +503,8 @@ namespace swift::simplugin::msfs2024common
         engine2Combustion = on ? 1 : 0;
         engine3Combustion = on ? 1 : 0;
         engine4Combustion = on ? 1 : 0;
+        engine5Combustion = on ? 1 : 0;
+        engine6Combustion = on ? 1 : 0;
     }
 
     void DataDefinitionRemoteAircraftPartsWithoutLights::setEngine(int number1based, bool on)
@@ -497,6 +516,8 @@ namespace swift::simplugin::msfs2024common
         case 2: engine2Combustion = v; break;
         case 3: engine3Combustion = v; break;
         case 4: engine4Combustion = v; break;
+        case 5: engine5Combustion = v; break;
+        case 6: engine6Combustion = v; break;
         default: break;
         }
     }
@@ -523,6 +544,8 @@ namespace swift::simplugin::msfs2024common
         engine2Combustion = -1;
         engine3Combustion = -1;
         engine4Combustion = -1;
+        engine5Combustion = -1;
+        engine6Combustion = -1;
     }
 
     void DataDefinitionRemoteAircraftPartsWithoutLights::initFromParts(const CAircraftParts &parts)
@@ -544,7 +567,7 @@ namespace swift::simplugin::msfs2024common
     CAircraftLights DataDefinitionRemoteAircraftLights::toLights() const
     {
         return CAircraftLights(dtb(lightStrobe), dtb(lightLanding), dtb(lightTaxi), dtb(lightBeacon), dtb(lightNav),
-                               dtb(lightLogo), dtb(lightRecognition), dtb(lightCabin));
+                               dtb(lightLogo), dtb(lightRecognition), dtb(lightCabin), dtb(lightWing));
     }
 
     QString DataDefinitionClientAreaSb::toQString() const

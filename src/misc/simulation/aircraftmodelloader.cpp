@@ -131,7 +131,7 @@ namespace swift::misc::simulation
             return;
         }
 
-        // TODO TZ
+        // TODO TZ 2024: skip loading for MSFS2024?
         QStringList modelDirs = { "", "" };
         // if (simulator.isMSFS2024())
         //{

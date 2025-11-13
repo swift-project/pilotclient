@@ -33,7 +33,8 @@ namespace swift::misc::aviation
             IndexNav,
             IndexLogo,
             IndexRecognition,
-            IndexCabin
+            IndexCabin,
+            IndexWing,
         };
 
         //! Default constructor
@@ -48,6 +49,10 @@ namespace swift::misc::aviation
         //! Constructor
         CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn,
                         bool recognition, bool cabin);
+
+        //! Constructor
+        CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn,
+                        bool recognitionOn, bool cabin, bool wingOn);
 
         //! Strobes lights on?
         bool isStrobeOn() const { return m_strobeOn; }
@@ -86,16 +91,22 @@ namespace swift::misc::aviation
         void setLogoOn(bool on) { m_logoOn = on; }
 
         //! Recognition lights on?
-        bool isRecognitionOn() const { return m_recognition; }
+        bool isRecognitionOn() const { return m_recognitionOn; }
 
         //! Set recognition lights
-        void setRecognitionOn(bool on) { m_recognition = on; }
+        void setRecognitionOn(bool on) { m_recognitionOn = on; }
 
         //! Cabin lights on?
-        bool isCabinOn() const { return m_cabin; }
+        bool isCabinOn() const { return m_cabinOn; }
 
         //! Set cabin lights
-        void setCabinOn(bool on) { m_cabin = on; }
+        void setCabinOn(bool on) { m_cabinOn = on; }
+
+        //! Wing light on?
+        bool isWingOn() const { return m_wingOn; }
+
+        //! Set wing lights
+        void setWingOn(bool on) { m_wingOn = on; }
 
         //! All on
         void setAllOn();
@@ -135,9 +146,11 @@ namespace swift::misc::aviation
         bool m_beaconOn = false;
         bool m_navOn = false;
         bool m_logoOn = false;
-        bool m_recognition = false; //!< not supported by aircraft config (VATSIM)
-        bool m_cabin = false; //!< not supported by aircraft config (VATSIM)
+        bool m_recognitionOn = false; //!< not supported by aircraft config (VATSIM)
+        bool m_cabinOn = false; //!< not supported by aircraft config (VATSIM)
+        bool m_wingOn = false; //!< not supported by aircraft config (VATSIM)
 
+        // TODO TZ check if disabled lights can be activated. for testing we keep them enabled in JSON
         SWIFT_METACLASS(
             CAircraftLights,
             SWIFT_METAMEMBER(isNull, 0, DisabledForJson), // disable since JSON is used for network
@@ -147,8 +160,12 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER_NAMED(beaconOn, "beacon_on"),
             SWIFT_METAMEMBER_NAMED(navOn, "nav_on"),
             SWIFT_METAMEMBER_NAMED(logoOn, "logo_on"),
-            SWIFT_METAMEMBER(recognition, 0, DisabledForJson), // disable since JSON is used for network
-            SWIFT_METAMEMBER(cabin, 0, DisabledForJson) // disable since JSON is used for network
+            SWIFT_METAMEMBER_NAMED(recognitionOn,"recognition_on"), 
+            SWIFT_METAMEMBER_NAMED(cabinOn, "cabin_on"), 
+            SWIFT_METAMEMBER_NAMED(wingOn, "wing_on") 
+            //SWIFT_METAMEMBER(recognitionOn, 0, DisabledForJson), // disable since JSON is used for network
+            //SWIFT_METAMEMBER(cabinOn, 0, DisabledForJson), // disable since JSON is used for network
+            //SWIFT_METAMEMBER(wingOn, 0, DisabledForJson) // disable since JSON is used for network
         );
     };
 } // namespace swift::misc::aviation

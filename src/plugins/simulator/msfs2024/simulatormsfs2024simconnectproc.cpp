@@ -281,7 +281,7 @@ namespace swift::simplugin::msfs2024common
             {
             case CSimConnectDefinitions::RequestOwnAircraft:
             {
-                static_assert(sizeof(DataDefinitionOwnAircraft) == 45 * sizeof(double),
+                static_assert(sizeof(DataDefinitionOwnAircraft) == 50 * sizeof(double),
                               "DataDefinitionOwnAircraft has an incorrect size.");
                 const DataDefinitionOwnAircraft *ownAircaft =
                     reinterpret_cast<const DataDefinitionOwnAircraft *>(&pObjData->dwData);
@@ -333,7 +333,7 @@ namespace swift::simplugin::msfs2024common
                     } // model
                     else if (subRequest == CSimConnectDefinitions::SimObjectLights)
                     {
-                        static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 8 * sizeof(double),
+                        static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 9 * sizeof(double),
                                       "DataDefinitionRemoteAircraftLights has an incorrect size.");
                         const DataDefinitionRemoteAircraftLights *remoteAircraftLights =
                             reinterpret_cast<const DataDefinitionRemoteAircraftLights *>(&pObjData->dwData);
@@ -374,11 +374,6 @@ namespace swift::simplugin::msfs2024common
                     (SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST *)pData;
                 switch (msg->dwRequestID)
                 {
-                // case CSimConnectDefinitions::REQUEST_ALL:
-                // case CSimConnectDefinitions::REQUEST_USER:
-                // case CSimConnectDefinitions::REQUEST_BOAT:
-                // case CSimConnectDefinitions::REQUEST_GROUND:
-                // case CSimConnectDefinitions::REQUEST_ANIMAL:
                 case CSimConnectDefinitions::REQUEST_AIRPLANE:
                 case CSimConnectDefinitions::REQUEST_HELICOPTER:
                 case CSimConnectDefinitions::REQUEST_HOT_AIR: simulatorMsfs2024->CacheSimObjectAndLiveries(msg); break;

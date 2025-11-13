@@ -36,7 +36,6 @@ namespace swift::gui::models
         (void)QT_TRANSLATE_NOOP("CAircraftModelListModel", "model");
     }
 
-    // TODO TZ check if some columns can be hidden automatically for different sims
     void CAircraftModelListModel::setAircraftModelMode(CAircraftModelListModel::AircraftModelMode mode)
     {
         if (m_mode == mode) { return; }

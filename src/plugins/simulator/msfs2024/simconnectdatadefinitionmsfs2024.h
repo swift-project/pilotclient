@@ -47,7 +47,10 @@ namespace swift::simplugin::msfs2024common
         double lightBeacon; //!< Is beacon light on?
         double lightNav; //!< Is nav light on?
         double lightLogo; //!< Is logo light on?
-        // 18
+        double lightRecognition;
+        double lightCabin; //!< Is cabin light on?
+        double lightWing; //!< Is wing light on?
+        // 21
         double transponderCode; //!< Transponder Code
         double com1ActiveMHz; //!< COM1 active frequency
         double com2ActiveMHz; //!< COM2 active frequency
@@ -60,26 +63,28 @@ namespace swift::simplugin::msfs2024common
         double comTest2; //!< COM2 test
         double comStatus1; //!< COM1 status
         double comStatus2; //!< COM2 status
-        // 30
+        // 33
         double flapsHandlePosition; //!< Flaps handle position in percent
         double spoilersHandlePosition; //!< Spoilers out? (flag)
         double gearHandlePosition; //!< Gear handle position (flag)
-        // 33
+        // 36
         double numberOfEngines; //!< Number of engines
         double engine1Combustion; //!< Engine 1 combustion flag
         double engine2Combustion; //!< Engine 2 combustion flag
         double engine3Combustion; //!< Engine 3 combustion flag
         double engine4Combustion; //!< Engine 4 combustion flag
-        // 38
+        double engine5Combustion; //!< Engine 5 combustion flag
+        double engine6Combustion; //!< Engine 6 combustion flag
+        // 43
         double velocityWorldX; //!< Velocity World X
         double velocityWorldY; //!< Velocity World Y
         double velocityWorldZ; //!< Velocity World Z
         double rotationVelocityBodyX; //!< Rotation Velocity Body X
         double rotationVelocityBodyY; //!< Rotation Velocity Body Y
         double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
-        // 44
+        // 49
         double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
-        // 45
+        // 50
     };
 
     //! Data struct of aircraft position
@@ -159,6 +164,8 @@ namespace swift::simplugin::msfs2024common
         double engine2Combustion; //!< Engine 2 combustion flag
         double engine3Combustion; //!< Engine 3 combustion flag
         double engine4Combustion; //!< Engine 4 combustion flag
+        double engine5Combustion; //!< Engine 5 combustion flag
+        double engine6Combustion; //!< Engine 6 combustion flag
 
         //! Ctor
         DataDefinitionRemoteAircraftPartsWithoutLights();
@@ -199,7 +206,7 @@ namespace swift::simplugin::msfs2024common
         double lightLogo; //!< Is logo light on?
         double lightRecognition; //!< Is recognition light on
         double lightCabin; //!< Is cabin light on
-
+        double lightWing; //!< Is cabin light on
         //! Convert to lights
         swift::misc::aviation::CAircraftLights toLights() const;
     };

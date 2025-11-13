@@ -41,7 +41,7 @@
 #include "misc/logmessage.h"
 #include "misc/network/connectionstatus.h"
 #include "misc/network/entityflags.h"
-// TODO TZ remove afte testing
+// TODO TZ remove after testing. it is in another branch already
 #include "misc/network/server.h"
 // TODO TZ end remove afte testing
 #include "misc/network/serverlist.h"
@@ -301,7 +301,7 @@ namespace swift::gui::components
     {
         if (!m_updatePilotOnServerChanges) { return; }
         const bool vatsim = this->isVatsimNetworkTabSelected();
-        // TODO TZ remove after testing
+        // TODO TZ remove after testing. it is on another branch already
         // const CUser user = vatsim ? this->getCurrentVatsimServer().getUser() : server.getUser();
         const CUser user =
             server.getServerType() != CServer::FSDServer ? this->getCurrentVatsimServer().getUser() : server.getUser();

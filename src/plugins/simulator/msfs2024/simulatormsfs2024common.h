@@ -68,26 +68,27 @@ namespace swift::simplugin::msfs2024common
         EventSetTimeZuluHours,
         EventSetTimeZuluMinutes,
         // ------------ lights -------------
-        EventLandingLightsOff,
-        EventLandinglightsOn,
+        // EventLandingLightsOff,
+        // EventLandinglightsOn,
         EventLandingLightsSet,
-        EventLandingLightsToggle,
-        EventPanelLightsOff,
-        EventPanelLightsOn,
+        // EventLandingLightsToggle,
+        // EventPanelLightsOff,
+        // EventPanelLightsOn,
         EventPanelLightsSet,
-        EventStrobesOff,
-        EventStrobesOn,
+        // EventStrobesOff,
+        // EventStrobesOn,
         EventStrobesSet,
-        EventStrobesToggle,
-        EventToggleBeaconLights,
-        EventToggleCabinLights,
-        EventToggleLogoLights,
-        EventToggleNavLights,
-        EventToggleRecognitionLights,
-        EventToggleTaxiLights,
-        EventToggleWingLights,
+        // EventStrobesToggle,
+        EventBeaconLightsSet,
+        EventCabinLightsSet,
+        EventLogoLightsSet,
+        EventNavLightsSet,
+        EventRecognitionLightsSet,
+        EventTaxiLightsSet,
+        EventWingLightsSet,
         // ------------- flaps -------------
         EventFlapsSet,
+        EventGearSet,
         // ---------- end marker -----------
         EventFSXEndMarker
     };
@@ -337,9 +338,9 @@ namespace swift::simplugin::msfs2024common
         //! Format conversion
         //! \note must be valid situation
         static SIMCONNECT_DATA_INITPOSITION
-        aircraftSituationToFsxPosition(const swift::misc::aviation::CAircraftSituation &situation, bool sendGnd = true,
-                                       bool forceUnderflowDetection = false,
-                                       swift::misc::CStatusMessage *details = nullptr);
+        aircraftSituationToPosition(const swift::misc::aviation::CAircraftSituation &situation, bool sendGnd = true,
+                                    bool forceUnderflowDetection = false,
+                                    swift::misc::CStatusMessage *details = nullptr);
 
         //! Format conversion
         //! \note must be valid situation
@@ -474,9 +475,9 @@ namespace swift::simplugin::msfs2024common
         //! Send lights to simulator (those which have to be toggled)
         //! \remark challenge here is that I can only sent those value if I have already obtained the current light
         //! state from simulator \param force send lights even if they appear to be the same
-        void sendToggledLightsToSimulator(const CSimConnectObject &simObject,
-                                          const swift::misc::aviation::CAircraftLights &lightsWanted,
-                                          bool force = false);
+        // void sendToggledLightsToSimulator(const CSimConnectObject &simObject,
+        //                                   const swift::misc::aviation::CAircraftLights &lightsWanted,
+        //                                   bool force = false);
 
         //! Call CSimulatorFsxCommon::updateRemoteAircraftFromSimulator asynchronously
         //! \remark do not to send SimConnect data in event loop

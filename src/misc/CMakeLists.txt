@@ -535,6 +535,8 @@ add_library(misc SHARED
         simulation/flightgear/flightgearutil.h
         simulation/msfs2024/aircraftmodelloadermsfs2024.cpp
         simulation/msfs2024/aircraftmodelloadermsfs2024.h
+        simulation/msfs2024/simconnectutilities.cpp
+        simulation/msfs2024/simconnectutilities.h
         simulation/fscommon/aircraftcfgentries.cpp
         simulation/fscommon/aircraftcfgentries.h
         simulation/fscommon/aircraftcfgentrieslist.cpp
@@ -681,7 +683,7 @@ add_library(misc SHARED
         weather/windlayer.h
         weather/windlayerlist.cpp
         weather/windlayerlist.h
-)
+        )
 
 if(APPLE)
     target_sources(misc PRIVATE

@@ -551,8 +551,8 @@ namespace swift::core
 
         // TODO TZ remove when testing is done
         CLogMessage(this).info(u"CAirspaceMonitor::sendReadyForModelMatching "
-                               u"callsign %1 ")
-            << callsign;
+                               u"callsign %1 Flag %2 ")
+            << callsign << rf;
         // TODO remove
 
         // set flag and init ts
@@ -1212,17 +1212,7 @@ namespace swift::core
         const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
         if (aircraft.hasValidCallsign())
         {
-            // TODO TZ at this point we have a poblem if the model has no DB key yet (msfs2024 liveries)
-            // only if we do not have a DB model yet
-            // int testType = aircraft.getModelType();1
-            CLogMessage(this).info(u"CAirspaceMonitor::addOrUpdateAircraftInRange CHECK:"
-                                   u"aircraft.getModelType %1 "
-                                   u"callsign %2 "
-                                   u"aircraftIcao %3 "
-                                   u"incomming modelType %4 ")
-                << aircraft.getModelType() << callsign.toQString() << aircraftIcao << modelType;
-
-            // we do not change manually assigned models
+            // we do not change manually assigned models (msfs2024)
             if (!aircraft.getModel().hasValidDbKey() && aircraft.getModelType() != CAircraftModel::TypeManuallySet)
             {
 
@@ -1491,6 +1481,7 @@ namespace swift::core
         this->updateAircraftInRange(callsign, vm);
     }
 
+    // TODO TZ  I think, we can remove this method in future, as we have now longer IVAO supported protocols
     void CAirspaceMonitor::onRevBAircraftConfigReceived(const CCallsign &callsign, const QString &config,
                                                         qint64 currentOffsetMs)
     {
