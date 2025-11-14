@@ -22,6 +22,7 @@ env:
   qt_version:    6.10.0
   bitrock_version: qt-professional-24.7.0
   bitrock_url:     https://releases.installbuilder.com/installbuilder
+  installbuilder_hash_macos: 833717ad9189efdee7af3bbb5808bdf6b826c835cbc9c41817be750ae94a939b
   externals: swift-project/externals
   externals_sha: e1f1743ba159e11b0c065ea8f1ae1a0e91e3bf39
   use_externals: ${{ secrets.EXTERNALS_PAT != '' }}
@@ -378,7 +379,7 @@ jobs:
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildMacOS:
-    runs-on: macos-13
+    runs-on: macos-15
     needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
@@ -402,14 +403,12 @@ jobs:
         if: steps.cache-bitrock.outputs.cache-hit != 'true'
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O $HOME/installbuilder.dmg ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-osx-installer.dmg
+          echo "${{ env.installbuilder_hash_macos }}  $HOME/installbuilder.dmg" | sha256sum -c -
       - name: Install InstallBuilder
         run: |
-          chmod 700 $HOME/installbuilder.dmg
-          sudo hdiutil attach $HOME/installbuilder.dmg
-          sudo cp -rf "/Volumes/InstallBuilder Qt/installbuilder-${{ env.bitrock_version }}-osx-installer.app" /Applications
-          sudo hdiutil detach "/Volumes/InstallBuilder Qt"
-          sudo spctl --master-disable
-          sudo chmod -R +x /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app
+          hdiutil attach $HOME/installbuilder.dmg
+          cp -rf "/Volumes/InstallBuilder Qt/installbuilder-${{ env.bitrock_version }}-osx-installer.app" /Applications
+          hdiutil detach "/Volumes/InstallBuilder Qt"
           sudo xattr -r -d com.apple.quarantine /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app
           sudo /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app/Contents/MacOs/installbuilder.sh --mode unattended --prefix /Applications/installbuilder
           cat >~/license.xml <<EOF
