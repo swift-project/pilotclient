@@ -383,7 +383,7 @@ jobs:
           path: ${{ github.workspace }}/xswiftbus-*
 
   buildMacOS:
-    runs-on: macos-13
+    runs-on: macos-15
     needs: [preBuild, checks]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
@@ -410,12 +410,9 @@ jobs:
           echo "${{ env.installbuilder_hash_macos }}  $HOME/installbuilder.dmg" | sha256sum -c -
       - name: Install InstallBuilder
         run: |
-          chmod 700 $HOME/installbuilder.dmg
-          sudo hdiutil attach $HOME/installbuilder.dmg
-          sudo cp -rf "/Volumes/InstallBuilder Qt/installbuilder-${{ env.bitrock_version }}-osx-installer.app" /Applications
-          sudo hdiutil detach "/Volumes/InstallBuilder Qt"
-          sudo spctl --master-disable
-          sudo chmod -R +x /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app
+          hdiutil attach $HOME/installbuilder.dmg
+          cp -rf "/Volumes/InstallBuilder Qt/installbuilder-${{ env.bitrock_version }}-osx-installer.app" /Applications
+          hdiutil detach "/Volumes/InstallBuilder Qt"
           sudo xattr -r -d com.apple.quarantine /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app
           sudo /Applications/installbuilder-${{ env.bitrock_version }}-osx-installer.app/Contents/MacOs/installbuilder.sh --mode unattended --prefix /Applications/installbuilder
           cat >~/license.xml <<EOF
