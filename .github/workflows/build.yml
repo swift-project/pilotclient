@@ -20,8 +20,11 @@ env:
   do_doxygen:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
   do_static_analysis: ${{ github.event_name == 'push' && github.ref != 'refs/heads/main' }}
   qt_version:    6.10.0
-  bitrock_version: qt-professional-24.7.0
+  bitrock_version: qt-professional-25.10.1
   bitrock_url:     https://releases.installbuilder.com/installbuilder
+  installbuilder_hash_win: f92b1741c78b8f024473f55057b26107c8ed9cc1ca583eb9323d0023a8024e00
+  installbuilder_hash_linux: 3dff24cf94af17158cbcb16af41ecf0bb5060ba97d052597f15b987bd5e5b43a
+  installbuilder_hash_macos: bffa8b2663c6e9aaaa1ed7cdb41a874d34ff89f22adfab419e172915f8f4ce57
   externals: swift-project/externals
   externals_sha: e1f1743ba159e11b0c065ea8f1ae1a0e91e3bf39
   use_externals: ${{ secrets.EXTERNALS_PAT != '' }}
@@ -187,6 +190,7 @@ jobs:
         if: steps.cache-bitrock.outputs.cache-hit != 'true'
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O ~/installbuilder.run ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-linux-x64-installer.run
+          echo "${{ env.installbuilder_hash_linux }}  $HOME/installbuilder.run" | sha256sum -c -
       - name: Install InstallBuilder
         run: |
           chmod 700 ~/installbuilder.run
@@ -301,6 +305,7 @@ jobs:
         shell: C:\msys64\usr\bin\bash.exe -le {0}
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O /c/installbuilder.exe ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-windows-x64-installer.exe
+          echo "${{ env.installbuilder_hash_win }}  /c/installbuilder.exe" | sha256sum -c -
         env:
           MSYSTEM: MSYS2
       - name: Install InstallBuilder
@@ -402,6 +407,7 @@ jobs:
         if: steps.cache-bitrock.outputs.cache-hit != 'true'
         run: |
           wget --retry-connrefused -t 10 -w 10 -T 60 -O $HOME/installbuilder.dmg ${{ env.bitrock_url }}/installbuilder-${{ env.bitrock_version }}-osx-installer.dmg
+          echo "${{ env.installbuilder_hash_macos }}  $HOME/installbuilder.dmg" | sha256sum -c -
       - name: Install InstallBuilder
         run: |
           chmod 700 $HOME/installbuilder.dmg
