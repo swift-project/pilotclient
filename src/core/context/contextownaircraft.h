@@ -135,10 +135,15 @@ namespace swift::core::context
         //! Set XPDR mode
         virtual bool setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode) = 0;
 
-        //! Tune in a COM frequency
+        //! Tune in a COM frequency (active)
         virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
                                               swift::misc::aviation::CComSystem::ComUnit comUnit,
                                               const swift::misc::CIdentifier &originator) = 0;
+
+        //! Tune in a COM frequency (standby)
+        virtual bool updateStandbyComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                               swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                               const swift::misc::CIdentifier &originator) = 0;
 
         //! Set current pilot
         virtual bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) = 0;

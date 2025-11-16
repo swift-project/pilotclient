@@ -330,11 +330,12 @@ namespace swift::gui::components
     }
 
     void CAtcStationComponent::setComFrequency(const physical_quantities::CFrequency &frequency,
-                                               CComSystem::ComUnit unit)
+                                               CComSystem::ComUnit unit, bool active)
     {
         if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
         if (!CComSystem::isValidComFrequency(frequency)) { return; }
-        sGui->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier());
+        if (active) { sGui->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier()); }
+        else { sGui->getIContextOwnAircraft()->updateStandbyComFrequency(frequency, unit, identifier()); }
     }
 
     void CAtcStationComponent::settingsChanged()

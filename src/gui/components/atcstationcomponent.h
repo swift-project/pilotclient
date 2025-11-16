@@ -122,7 +122,7 @@ namespace swift::gui
 
             //! Set COM frequency
             void setComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
-                                 swift::misc::aviation::CComSystem::ComUnit unit);
+                                 swift::misc::aviation::CComSystem::ComUnit unit, bool active);
 
             //! Airports read from web readers
             void airportsRead();

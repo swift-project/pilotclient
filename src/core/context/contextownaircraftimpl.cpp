@@ -330,6 +330,26 @@ namespace swift::core::context
         return changed;
     }
 
+    bool CContextOwnAircraft::updateStandbyComFrequency(const CFrequency &frequency, CComSystem::ComUnit unit,
+                                                        const CIdentifier &originator)
+    {
+        if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return false; }
+        if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+        CComSystem com1, com2;
+        CTransponder xpdr;
+        {
+            QReadLocker l(&m_lockAircraft);
+            com1 = m_ownAircraft.getCom1System();
+            com2 = m_ownAircraft.getCom2System();
+            xpdr = m_ownAircraft.getTransponder();
+        }
+        if (unit == CComSystem::Com1) { com1.setFrequencyStandby(frequency); }
+        else { com2.setFrequencyStandby(frequency); }
+
+        const bool changed = this->updateCockpit(com1, com2, xpdr, originator);
+        return changed;
+    }
+
     bool CContextOwnAircraft::updateOwnAircraftPilot(const CUser &pilot)
     {
         {

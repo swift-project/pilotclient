@@ -63,7 +63,7 @@ namespace swift::gui
 
             //! Request COM frequency
             void requestComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
-                                     swift::misc::aviation::CComSystem::ComUnit unit);
+                                     swift::misc::aviation::CComSystem::ComUnit unit, bool active);
 
             //! Request a text message to
             void requestTextMessageWidget(const swift::misc::aviation::CCallsign &callsign);
@@ -107,7 +107,7 @@ namespace swift::gui
 
             //! @{
             //! Tune in/invoke
-            void tuneInAtc(misc::aviation::CComSystem::ComUnit unit);
+            void tuneInAtc(misc::aviation::CComSystem::ComUnit unit, bool active);
             void requestTextMessage();
             //! @}
 

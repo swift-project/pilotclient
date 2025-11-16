@@ -118,18 +118,24 @@ namespace swift::gui::views
 
         auto *menu = new QMenu(this); // menu
 
-        auto *com1 = new QAction(CIcons::appCockpit16(), "Tune in COM1", this);
-        auto *com2 = new QAction(CIcons::appCockpit16(), "Tune in COM2", this);
+        auto *com1 = new QAction(CIcons::appCockpit16(), "Tune in COM1 (active)", this);
+        auto *com2 = new QAction(CIcons::appCockpit16(), "Tune in COM2 (active)", this);
+        auto *com1_stby = new QAction(CIcons::appCockpit16(), "Tune in COM1 (standby)", this);
+        auto *com2_stby = new QAction(CIcons::appCockpit16(), "Tune in COM2 (standby)", this);
         auto *text = new QAction(CIcons::appTextMessages16(), "Show text messages", this);
         auto *resize = new QAction(CIcons::resize16(), "Resize", this);
 
-        connect(com1, &QAction::triggered, this, [this]() { tuneInAtc(CComSystem::Com1); });
-        connect(com2, &QAction::triggered, this, [this]() { tuneInAtc(CComSystem::Com2); });
+        connect(com1, &QAction::triggered, this, [this]() { tuneInAtc(CComSystem::Com1, true); });
+        connect(com2, &QAction::triggered, this, [this]() { tuneInAtc(CComSystem::Com2, true); });
+        connect(com1_stby, &QAction::triggered, this, [this]() { tuneInAtc(CComSystem::Com1, false); });
+        connect(com2_stby, &QAction::triggered, this, [this]() { tuneInAtc(CComSystem::Com2, false); });
         connect(text, &QAction::triggered, this, &CAtcStationTreeView::requestTextMessage);
         connect(resize, &QAction::triggered, this, &CAtcStationTreeView::fullResizeToContentsImpl);
 
         menu->addAction(com1);
         menu->addAction(com2);
+        menu->addAction(com1_stby);
+        menu->addAction(com2_stby);
         menu->addAction(text);
         menu->addSeparator();
         menu->addAction(resize);
@@ -160,11 +166,11 @@ namespace swift::gui::views
         }
     }
 
-    void CAtcStationTreeView::tuneInAtc(const misc::aviation::CComSystem::ComUnit unit)
+    void CAtcStationTreeView::tuneInAtc(const misc::aviation::CComSystem::ComUnit unit, const bool active)
     {
         const CAtcStation s(this->selectedObject());
         if (s.getCallsign().isEmpty()) { return; }
-        emit this->requestComFrequency(s.getFrequency(), unit);
+        emit this->requestComFrequency(s.getFrequency(), unit, active);
     }
 
     void CAtcStationTreeView::requestTextMessage()

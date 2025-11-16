@@ -57,26 +57,32 @@ namespace swift::gui::views
 
         if (this->hasSelection())
         {
-            if (m_actions.isEmpty()) { m_actions = QList<QAction *>({ nullptr, nullptr, nullptr }); }
+            if (m_actions.isEmpty()) { m_actions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr }); }
 
-            m_actions[0] = menuActions.addAction(m_actions[0], CIcons::appCockpit16(), "Tune in COM1",
+            m_actions[0] = menuActions.addAction(m_actions[0], CIcons::appCockpit16(), "Tune in COM1 (active)",
                                                  CMenuAction::pathClientCom(),
-                                                 { this, [this]() { tuneInAtc(CComSystem::Com1); } });
-            m_actions[1] = menuActions.addAction(m_actions[1], CIcons::appCockpit16(), "Tune in COM2",
+                                                 { this, [this]() { tuneInAtc(CComSystem::Com1, true); } });
+            m_actions[1] = menuActions.addAction(m_actions[1], CIcons::appCockpit16(), "Tune in COM2 (active)",
                                                  CMenuAction::pathClientCom(),
-                                                 { this, [this]() { tuneInAtc(CComSystem::Com2); } });
-            m_actions[2] =
-                menuActions.addAction(m_actions[2], CIcons::appTextMessages16(), "Show text messages",
+                                                 { this, [this]() { tuneInAtc(CComSystem::Com2, true); } });
+            m_actions[2] = menuActions.addAction(m_actions[2], CIcons::appCockpit16(), "Tune in COM1 (standby)",
+                                                 CMenuAction::pathClientCom(),
+                                                 { this, [this]() { tuneInAtc(CComSystem::Com1, false); } });
+            m_actions[3] = menuActions.addAction(m_actions[3], CIcons::appCockpit16(), "Tune in COM2 (standby)",
+                                                 CMenuAction::pathClientCom(),
+                                                 { this, [this]() { tuneInAtc(CComSystem::Com2, false); } });
+            m_actions[4] =
+                menuActions.addAction(m_actions[4], CIcons::appTextMessages16(), "Show text messages",
                                       CMenuAction::pathClientCom(), { this, &CAtcStationView::requestTextMessage });
         }
         CViewBase::customMenu(menuActions);
     }
 
-    void CAtcStationView::tuneInAtc(const misc::aviation::CComSystem::ComUnit unit)
+    void CAtcStationView::tuneInAtc(const misc::aviation::CComSystem::ComUnit unit, const bool active)
     {
         const CAtcStation s(this->selectedObject());
         if (s.getCallsign().isEmpty()) { return; }
-        emit this->requestComFrequency(s.getFrequency(), unit);
+        emit this->requestComFrequency(s.getFrequency(), unit, active);
     }
 
     void CAtcStationView::requestTextMessage()

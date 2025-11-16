@@ -89,6 +89,11 @@ namespace swift::core
                                           swift::misc::aviation::CComSystem::ComUnit comUnit,
                                           const swift::misc::CIdentifier &originator) override;
 
+            //! \copydoc swift::core::context::IContextOwnAircraft::updateStandbyComFrequency
+            bool updateStandbyComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                           swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                           const swift::misc::CIdentifier &originator) override;
+
             //! \copydoc swift::core::context::IContextOwnAircraft::updateOwnAircraftPilot
             bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override;
 

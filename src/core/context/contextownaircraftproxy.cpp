@@ -111,6 +111,14 @@ namespace swift::core::context
                                                   originator);
     }
 
+    bool CContextOwnAircraftProxy::updateStandbyComFrequency(const physical_quantities::CFrequency &frequency,
+                                                             swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                                             const CIdentifier &originator)
+    {
+        return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateStandbyComFrequency"), frequency, comUnit,
+                                                  originator);
+    }
+
     bool CContextOwnAircraftProxy::updateOwnAircraftPilot(const swift::misc::network::CUser &pilot)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnAircraftPilot"), pilot);

@@ -100,6 +100,18 @@ namespace swift::core::context
             return false;
         }
 
+        //! \copydoc IContextOwnAircraft::updateStandbyComFrequency
+        bool updateStandbyComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                       swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                       const swift::misc::CIdentifier &originator) override
+        {
+            Q_UNUSED(frequency);
+            Q_UNUSED(comUnit);
+            Q_UNUSED(originator);
+            logEmptyContextWarning(Q_FUNC_INFO);
+            return false;
+        }
+
         //! \copydoc IContextOwnAircraft::updateOwnAircraftPilot
         bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override
         {
