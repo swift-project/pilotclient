@@ -59,12 +59,12 @@ namespace swift::gui::views
         {
             if (m_actions.isEmpty()) { m_actions = QList<QAction *>({ nullptr, nullptr, nullptr }); }
 
-            m_actions[0] =
-                menuActions.addAction(m_actions[0], CIcons::appCockpit16(), "Tune in COM1",
-                                      CMenuAction::pathClientCom(), { this, &CAtcStationView::tuneInAtcCom1 });
-            m_actions[1] =
-                menuActions.addAction(m_actions[1], CIcons::appCockpit16(), "Tune in COM2",
-                                      CMenuAction::pathClientCom(), { this, &CAtcStationView::tuneInAtcCom2 });
+            m_actions[0] = menuActions.addAction(m_actions[0], CIcons::appCockpit16(), "Tune in COM1",
+                                                 CMenuAction::pathClientCom(),
+                                                 { this, [this]() { tuneInAtc(CComSystem::Com1); } });
+            m_actions[1] = menuActions.addAction(m_actions[1], CIcons::appCockpit16(), "Tune in COM2",
+                                                 CMenuAction::pathClientCom(),
+                                                 { this, [this]() { tuneInAtc(CComSystem::Com2); } });
             m_actions[2] =
                 menuActions.addAction(m_actions[2], CIcons::appTextMessages16(), "Show text messages",
                                       CMenuAction::pathClientCom(), { this, &CAtcStationView::requestTextMessage });
@@ -72,18 +72,11 @@ namespace swift::gui::views
         CViewBase::customMenu(menuActions);
     }
 
-    void CAtcStationView::tuneInAtcCom1()
+    void CAtcStationView::tuneInAtc(const misc::aviation::CComSystem::ComUnit unit)
     {
         const CAtcStation s(this->selectedObject());
         if (s.getCallsign().isEmpty()) { return; }
-        emit this->requestComFrequency(s.getFrequency(), CComSystem::Com1);
-    }
-
-    void CAtcStationView::tuneInAtcCom2()
-    {
-        const CAtcStation s(this->selectedObject());
-        if (s.getCallsign().isEmpty()) { return; }
-        emit this->requestComFrequency(s.getFrequency(), CComSystem::Com2);
+        emit this->requestComFrequency(s.getFrequency(), unit);
     }
 
     void CAtcStationView::requestTextMessage()

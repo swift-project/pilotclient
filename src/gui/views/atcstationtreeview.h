@@ -107,8 +107,7 @@ namespace swift::gui
 
             //! @{
             //! Tune in/invoke
-            void tuneInAtcCom1();
-            void tuneInAtcCom2();
+            void tuneInAtc(misc::aviation::CComSystem::ComUnit unit);
             void requestTextMessage();
             //! @}
 

@@ -123,8 +123,8 @@ namespace swift::gui::views
         auto *text = new QAction(CIcons::appTextMessages16(), "Show text messages", this);
         auto *resize = new QAction(CIcons::resize16(), "Resize", this);
 
-        connect(com1, &QAction::triggered, this, &CAtcStationTreeView::tuneInAtcCom1);
-        connect(com2, &QAction::triggered, this, &CAtcStationTreeView::tuneInAtcCom2);
+        connect(com1, &QAction::triggered, this, [this]() { tuneInAtc(CComSystem::Com1); });
+        connect(com2, &QAction::triggered, this, [this]() { tuneInAtc(CComSystem::Com2); });
         connect(text, &QAction::triggered, this, &CAtcStationTreeView::requestTextMessage);
         connect(resize, &QAction::triggered, this, &CAtcStationTreeView::fullResizeToContentsImpl);
 
@@ -160,18 +160,11 @@ namespace swift::gui::views
         }
     }
 
-    void CAtcStationTreeView::tuneInAtcCom1()
+    void CAtcStationTreeView::tuneInAtc(const misc::aviation::CComSystem::ComUnit unit)
     {
         const CAtcStation s(this->selectedObject());
         if (s.getCallsign().isEmpty()) { return; }
-        emit this->requestComFrequency(s.getFrequency(), CComSystem::Com1);
-    }
-
-    void CAtcStationTreeView::tuneInAtcCom2()
-    {
-        const CAtcStation s(this->selectedObject());
-        if (s.getCallsign().isEmpty()) { return; }
-        emit this->requestComFrequency(s.getFrequency(), CComSystem::Com2);
+        emit this->requestComFrequency(s.getFrequency(), unit);
     }
 
     void CAtcStationTreeView::requestTextMessage()

@@ -64,8 +64,7 @@ namespace swift::gui
         private:
             void emitTestRequest1kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(1000); }
             void emitTestRequest3kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(3000); }
-            void tuneInAtcCom1();
-            void tuneInAtcCom2();
+            void tuneInAtc(misc::aviation::CComSystem::ComUnit unit);
             void requestTextMessage();
 
             QList<QAction *> m_actions; //!< real actions
