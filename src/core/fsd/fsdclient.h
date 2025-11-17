@@ -313,7 +313,7 @@ namespace swift::core::fsd
         void planeInformationFsinnReceived(const swift::misc::aviation::CCallsign &callsign,
                                            const QString &airlineIcaoDesignator, const QString &aircraftDesignator,
                                            const QString &combinedAircraftType, const QString &modelString);
-        void revbAircraftConfigReceived(const QString &sender, const QString &config, qint64 currentOffsetTimeMs);
+
         void muteRequestReceived(bool mute);
 
         //! @}
@@ -474,7 +474,6 @@ namespace swift::core::fsd
 #ifdef SWIFT_VATSIM_SUPPORT
         void handleFsdIdentification(const QStringList &tokens);
 #endif
-        void handleRevBClientPartsPacket(const QStringList &tokens);
         void handleRehost(const QStringList &tokens);
         void handleMute(const QStringList &tokens);
 

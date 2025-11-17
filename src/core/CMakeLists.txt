@@ -170,8 +170,6 @@ add_library(core SHARED
         fsd/pong.h
         fsd/rehost.cpp
         fsd/rehost.h
-        fsd/revbclientparts.cpp
-        fsd/revbclientparts.h
         fsd/serializer.cpp
         fsd/serializer.h
         fsd/servererror.cpp

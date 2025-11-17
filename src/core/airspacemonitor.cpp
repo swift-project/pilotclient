@@ -90,8 +90,6 @@ namespace swift::core
         connect(m_fsdClient, &CFSDClient::serverResponseReceived, this, &CAirspaceMonitor::onServerReplyReceived);
         connect(m_fsdClient, &CFSDClient::aircraftConfigReceived, this, &CAirspaceMonitor::onAircraftConfigReceived);
         connect(m_fsdClient, &CFSDClient::connectionStatusChanged, this, &CAirspaceMonitor::onConnectionStatusChanged);
-        connect(m_fsdClient, &CFSDClient::revbAircraftConfigReceived, this,
-                &CAirspaceMonitor::onRevBAircraftConfigReceived);
 
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing data reader");
 
@@ -546,13 +544,19 @@ namespace swift::core
 
     void CAirspaceMonitor::sendReadyForModelMatching(const CCallsign &callsign, MatchingReadinessFlag rf)
     {
+
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
         // TODO TZ remove when testing is done
-        CLogMessage(this).info(u"CAirspaceMonitor::sendReadyForModelMatching "
-                               u"callsign %1 Flag %2 ")
-            << callsign << rf;
+        // CLogMessage(this).info(u"CAirspaceMonitor::sendReadyForModelMatching "
+        //                       u"callsign %1 Flag %2 ")
+        //    << callsign << rf;
+
+        CStatusMessageList reverseLookupMessages;
+        CCallsign::addLogDetailsToList(&reverseLookupMessages, callsign,
+                                       QStringLiteral("CAirspaceMonitor::sendReadyForModelMatching Flag: %1").arg(rf),
+                                       CAirspaceMonitor::getLogCategories());
         // TODO remove
 
         // set flag and init ts
@@ -674,6 +678,14 @@ namespace swift::core
 
         // normally we should never get here
         CLogMessage(this).info(u"Verified '%1' again, has ICAO codes, ready for matching!") << callsign;
+
+        // TODO TZ remove when testing is done
+        CStatusMessageList reverseLookupMessages;
+        CCallsign::addLogDetailsToList(&reverseLookupMessages, callsign,
+                                       QStringLiteral("CAirspaceMonitor::verifyReceivedIcaoData"),
+                                       CAirspaceMonitor::getLogCategories());
+        // end TZ remove
+
         this->sendReadyForModelMatching(callsign, Verified);
     }
 
@@ -837,7 +849,7 @@ namespace swift::core
                 usedModelString.clear();
                 CCallsign::addLogDetailsToList(
                     pReverseLookupMessages, callsign,
-                    QStringLiteral("FsInn modelstring '%1' ignored because of setuo").arg(modelString));
+                    QStringLiteral("FsInn modelstring '%1' ignored because of setup").arg(modelString));
             }
             else if (!CAircraftMatcher::isKnownModelString(modelString, callsign, pReverseLookupMessages))
             {
@@ -1479,70 +1491,6 @@ namespace swift::core
         const CPropertyIndexVariantMap vm({ CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency },
                                           CVariant::from(frequency));
         this->updateAircraftInRange(callsign, vm);
-    }
-
-    // TODO TZ  I think, we can remove this method in future, as we have now longer IVAO supported protocols
-    void CAirspaceMonitor::onRevBAircraftConfigReceived(const CCallsign &callsign, const QString &config,
-                                                        qint64 currentOffsetMs)
-    {
-
-        Q_ASSERT(CThreadUtils::isInThisThread(this));
-        SWIFT_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
-        if (callsign.isEmpty()) { return; }
-
-        unsigned long pp = 0;
-        bool ok {};
-        pp = config.toULong(&ok, 10);
-
-        bool gear = (pp & 1U);
-        bool landLight = (pp & 2U);
-        bool navLight = (pp & 4U);
-        bool strobeLight = (pp & 8U);
-        bool beaconLight = (pp & 16U);
-        bool taxiLight = (pp & 32U);
-        bool engine1Running = (pp & 64U);
-        bool engine2Running = (pp & 128U);
-        bool engine3Running = (pp & 256U);
-        bool engine4Running = (pp & 512U);
-
-        // CLogMessage(this).info(u"taxiLight %1 landLight %2 beaconLight %3 strobeLight %4 gear %5") << taxiLight <<
-        // landLight << beaconLight << strobeLight << gear; CLogMessage(this).info(u"engine1Running %1 engine2Running %2
-        // engine3Running %3 engine4Running %4") << engine1Running << engine2Running << engine3Running <<
-        // engine4Running;
-
-        CAircraftParts aircraftparts;
-        aircraftparts.setGearDown(gear);
-
-        CAircraftLights lights;
-        lights.setStrobeOn(strobeLight);
-        lights.setLandingOn(landLight);
-        lights.setTaxiOn(taxiLight);
-        lights.setBeaconOn(beaconLight);
-        lights.setNavOn(navLight);
-        aircraftparts.setLights(lights);
-
-        CAircraftEngineList engines;
-        engines.initEngines(4, false);
-        engines.setEngineOn(1, engine1Running);
-        engines.setEngineOn(2, engine2Running);
-        engines.setEngineOn(3, engine3Running);
-        engines.setEngineOn(4, engine4Running);
-        aircraftparts.setEngines(engines);
-
-        // make sure in any case right time and correct details
-        aircraftparts.setCurrentUtcTime();
-        aircraftparts.setTimeOffsetMs(currentOffsetMs);
-        aircraftparts.setPartsDetails(CAircraftParts::FSDAircraftParts);
-
-        // store parts
-        this->storeAircraftParts(callsign, aircraftparts, true);
-
-        // update client capability
-        CClient client = this->getClientOrDefaultForCallsign(callsign);
-        client.setUserCallsign(callsign); // make valid by setting a callsign
-        if (client.hasCapability(CClient::FsdWithAircraftConfig)) { return; }
-        client.addCapability(CClient::FsdWithAircraftConfig);
-        this->setOtherClient(client);
     }
 
     void CAirspaceMonitor::onAircraftConfigReceived(const CCallsign &callsign, const QJsonObject &jsonObject,

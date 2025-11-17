@@ -473,8 +473,6 @@ namespace swift::core
                                              const QString &aircraftIcao, const QString &airlineIcao);
         void onConnectionStatusChanged(swift::misc::network::CConnectionStatus oldStatus,
                                        swift::misc::network::CConnectionStatus newStatus);
-        void onRevBAircraftConfigReceived(const swift::misc::aviation::CCallsign &callsign, const QString &config,
-                                          qint64 currentOffsetMs);
     };
 } // namespace swift::core
 
