@@ -19,7 +19,7 @@ env:
   do_symbols:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
   do_doxygen:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
   do_static_analysis: ${{ github.event_name == 'push' && github.ref != 'refs/heads/main' }}
-  qt_version:    6.10.0
+  qt_version:    6.10.1
   bitrock_version: qt-professional-25.10.1
   bitrock_url:     https://releases.installbuilder.com/installbuilder
   installbuilder_hash_win: f92b1741c78b8f024473f55057b26107c8ed9cc1ca583eb9323d0023a8024e00
