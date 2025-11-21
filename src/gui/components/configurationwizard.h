@@ -42,7 +42,7 @@ namespace swift::gui::components
         explicit CConfigurationWizard(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CConfigurationWizard() override;
+        ~CConfigurationWizard() override;
 
         //! Was the last step skipped?
         bool lastStepSkipped() const;

@@ -31,41 +31,37 @@
 #include "misc/network/userlist.h"
 #include "misc/network/voicecapabilities.h"
 
-namespace swift::misc
+namespace swift::misc::network
 {
-    namespace network
+    void registerMetadata()
     {
-        void registerMetadata()
-        {
-            CAuthenticatedUser::registerMetadata();
-            CConnectionStatus::registerMetadata();
-            CClient::registerMetadata();
-            qDBusRegisterMetaType<swift::misc::network::CClient::Capability>();
-            qDBusRegisterMetaType<swift::misc::network::CClient::Capabilities>();
-            CClientList::registerMetadata();
-            CEcosystem::registerMetadata();
-            CEcosystemList::registerMetadata();
-            CEntityFlags::registerMetadata();
-            CFacilityType::registerMetadata();
-            CFsdSetup::registerMetadata();
-            CLoginMode::registerMetadata();
-            CRawFsdMessage::registerMetadata();
-            CRawFsdMessageList::registerMetadata();
-            CRemoteFile::registerMetadata();
-            CRemoteFileList::registerMetadata();
-            CRole::registerMetadata();
-            CRoleList::registerMetadata();
-            CServer::registerMetadata();
-            CServerList::registerMetadata();
-            CTextMessage::registerMetadata();
-            CTextMessageList::registerMetadata();
-            CUrl::registerMetadata();
-            CUrlLog::registerMetadata();
-            CUrlLogList::registerMetadata();
-            CUser::registerMetadata();
-            CUserList::registerMetadata();
-            CVoiceCapabilities::registerMetadata();
-        }
-    } // namespace network
-
-} // namespace swift::misc
+        CAuthenticatedUser::registerMetadata();
+        CConnectionStatus::registerMetadata();
+        CClient::registerMetadata();
+        qDBusRegisterMetaType<swift::misc::network::CClient::Capability>();
+        qDBusRegisterMetaType<swift::misc::network::CClient::Capabilities>();
+        CClientList::registerMetadata();
+        CEcosystem::registerMetadata();
+        CEcosystemList::registerMetadata();
+        CEntityFlags::registerMetadata();
+        CFacilityType::registerMetadata();
+        CFsdSetup::registerMetadata();
+        CLoginMode::registerMetadata();
+        CRawFsdMessage::registerMetadata();
+        CRawFsdMessageList::registerMetadata();
+        CRemoteFile::registerMetadata();
+        CRemoteFileList::registerMetadata();
+        CRole::registerMetadata();
+        CRoleList::registerMetadata();
+        CServer::registerMetadata();
+        CServerList::registerMetadata();
+        CTextMessage::registerMetadata();
+        CTextMessageList::registerMetadata();
+        CUrl::registerMetadata();
+        CUrlLog::registerMetadata();
+        CUrlLogList::registerMetadata();
+        CUser::registerMetadata();
+        CUserList::registerMetadata();
+        CVoiceCapabilities::registerMetadata();
+    }
+} // namespace swift::misc::network

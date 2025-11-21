@@ -17,5 +17,5 @@ namespace swift::simplugin::emulated
         connect(ui->bb_Close, &QDialogButtonBox::rejected, this, &CSimulatorEmulatedConfigWidget::close);
     }
 
-    CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget() {}
+    CSimulatorEmulatedConfigWidget::~CSimulatorEmulatedConfigWidget() = default;
 } // namespace swift::simplugin::emulated

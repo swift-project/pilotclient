@@ -36,7 +36,7 @@ namespace swift::gui::components
         ui->comp_DBusServer->set(dBusAddress);
     }
 
-    CSettingsXSwiftBusComponent::~CSettingsXSwiftBusComponent() {}
+    CSettingsXSwiftBusComponent::~CSettingsXSwiftBusComponent() = default;
 
     void CSettingsXSwiftBusComponent::resetServer()
     {

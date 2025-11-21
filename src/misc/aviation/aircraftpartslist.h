@@ -31,7 +31,7 @@ namespace swift::misc::aviation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CAircraftPartsList();
+        CAircraftPartsList() = default;
 
         //! Construct from a base class object.
         CAircraftPartsList(const CSequence<CAircraftParts> &other);

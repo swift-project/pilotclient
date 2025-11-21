@@ -68,7 +68,7 @@ namespace swift::misc::simulation::settings
         }
 
         //! \copydoc swift::misc::TSettingTrait::defaultValue
-        static CFGSwiftBusSettings defaultValue() { return CFGSwiftBusSettings(); }
+        static CFGSwiftBusSettings defaultValue() { return {}; }
 
         //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const CFGSwiftBusSettings &settings, QString &)

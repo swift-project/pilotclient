@@ -91,14 +91,14 @@ namespace swift::core::context
         }
 
         //! \copydoc IContext::getPathAndContextId()
-        virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
+        QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
         static IContextNetwork *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode,
                                        swift::misc::CDBusServer *server, QDBusConnection &connection);
 
         //! Destructor
-        virtual ~IContextNetwork() override {}
+        ~IContextNetwork() override = default;
 
     signals:
         //! An aircraft disappeared

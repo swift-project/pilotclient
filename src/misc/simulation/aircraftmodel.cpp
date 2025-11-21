@@ -136,6 +136,7 @@ namespace swift::misc::simulation
     QJsonObject CAircraftModel::toMemoizedJson(MemoHelper::CMemoizer &helper) const
     {
         QJsonObject json;
+        // NOLINTBEGIN(readability-static-accessed-through-instance)
         introspect<CAircraftModel>().forEachMember([&, this](auto member) {
             if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
             {
@@ -143,11 +144,13 @@ namespace swift::misc::simulation
                 json << std::make_pair(CExplicitLatin1String(member.latin1Name()), std::cref(maybeMemo));
             }
         });
+        // NOLINTEND(readability-static-accessed-through-instance)
         return json;
     }
 
     void CAircraftModel::convertFromMemoizedJson(const QJsonObject &json, const MemoHelper::CUnmemoizer &helper)
     {
+        // NOLINTBEGIN(readability-static-accessed-through-instance)
         introspect<CAircraftModel>().forEachMember([&, this](auto member) {
             if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
             {
@@ -155,6 +158,7 @@ namespace swift::misc::simulation
                 if (it != json.end()) { it.value() >> helper.maybeUnmemoize(member.in(*this)).get(); }
             }
         });
+        // NOLINTEND(readability-static-accessed-through-instance)
     }
 
     QString CAircraftModel::asHtmlSummary(const QString &separator) const
@@ -258,26 +262,26 @@ namespace swift::misc::simulation
         }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexModelString: return QVariant(m_modelString);
-        case IndexModelStringAlias: return QVariant(m_modelStringAlias);
+        case IndexModelString: return { m_modelString };
+        case IndexModelStringAlias: return { m_modelStringAlias };
         case IndexAllModelStrings: return this->getAllModelStringsAndAliases();
         case IndexHasQueriedModelString: return QVariant::fromValue(this->hasQueriedModelString());
         case IndexModelType: return QVariant::fromValue(m_modelType);
-        case IndexModelTypeAsString: return QVariant(this->getModelTypeAsString());
+        case IndexModelTypeAsString: return { this->getModelTypeAsString() };
         case IndexModelMode: return QVariant::fromValue(m_modelMode);
         case IndexModelModeAsString: return QVariant::fromValue(this->getModelModeAsString());
         case IndexModelModeAsIcon: return QVariant::fromValue(this->getModelModeAsIcon());
         case IndexDistributor: return m_distributor.propertyByIndex(index.copyFrontRemoved());
         case IndexSimulatorInfo: return m_simulator.propertyByIndex(index.copyFrontRemoved());
-        case IndexSimulatorInfoAsString: return QVariant(m_simulator.toQString());
-        case IndexDescription: return QVariant(m_description);
-        case IndexName: return QVariant(m_name);
-        case IndexFileName: return QVariant(m_fileName);
+        case IndexSimulatorInfoAsString: return { m_simulator.toQString() };
+        case IndexDescription: return { m_description };
+        case IndexName: return { m_name };
+        case IndexFileName: return { m_fileName };
         case IndexCG: return m_cg.propertyByIndex(index.copyFrontRemoved());
-        case IndexSupportedParts: return QVariant(m_supportedParts);
+        case IndexSupportedParts: return { m_supportedParts };
         case IndexFileTimestamp: return QVariant::fromValue(this->getFileTimestamp());
         case IndexFileTimestampFormattedYmdhms: return QVariant::fromValue(this->getFormattedFileTimestampYmdhms());
         case IndexAircraftIcaoCode: return m_aircraftIcao.propertyByIndex(index.copyFrontRemoved());
@@ -306,7 +310,7 @@ namespace swift::misc::simulation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexModelString: m_modelString = variant.toString(); break;
@@ -357,7 +361,7 @@ namespace swift::misc::simulation
         }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
         if (index.isMyself()) { return m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexModelString: return m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive);
@@ -578,7 +582,7 @@ namespace swift::misc::simulation
 
     QString CAircraftModel::getSwiftLiveryString(bool aircraftIcao, bool livery, bool model) const
     {
-        if (!aircraftIcao && !livery && !model) { return QString(); }
+        if (!aircraftIcao && !livery && !model) { return {}; }
         const QString l =
             (livery && this->getLivery().hasValidDbKey() ? u'l' % this->getLivery().getDbKeyAsString() : QString()) %
             (aircraftIcao && this->getAircraftIcaoCode().hasValidDbKey() ?
@@ -614,7 +618,7 @@ namespace swift::misc::simulation
     DBTripleIds CAircraftModel::parseNetworkLiveryString(const QString &liveryString)
     {
         // "swift_m22l33a11"
-        if (!CAircraftModel::isSwiftLiveryString(liveryString)) { return DBTripleIds(); }
+        if (!CAircraftModel::isSwiftLiveryString(liveryString)) { return {}; }
 
         DBTripleIds ids;
         const QString ls = liveryString.mid(liveryStringPrefix().length()).toLower();
@@ -769,7 +773,7 @@ namespace swift::misc::simulation
 
     QDir CAircraftModel::getFileDirectory() const
     {
-        if (!this->hasFileName()) { return QDir(); }
+        if (!this->hasFileName()) { return {}; }
         const QFileInfo fi(CFileUtils::fixWindowsUncPath(this->getFileName()));
         return fi.absoluteDir();
     }
@@ -1131,7 +1135,7 @@ namespace swift::misc::simulation
 
     QString CAircraftModel::cleanUpPartsString(const QString &p)
     {
-        if (p.isEmpty()) { return QString(); }
+        if (p.isEmpty()) { return {}; }
         QString pc = removeChars(p.toUpper(), [](QChar c) { return !supportedParts().contains(c); });
         std::sort(pc.begin(), pc.end());
         return pc;

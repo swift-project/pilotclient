@@ -20,7 +20,7 @@ namespace swift::gui::components
                 &CDbOwnModelsDialog::successfullyLoadedModels);
     }
 
-    CDbOwnModelsDialog::~CDbOwnModelsDialog() {}
+    CDbOwnModelsDialog::~CDbOwnModelsDialog() = default;
 
     void CDbOwnModelsDialog::setSimulator(const CSimulatorInfo &simulator)
     {

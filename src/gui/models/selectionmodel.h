@@ -14,7 +14,7 @@ namespace swift::gui::models
     {
     public:
         //! Destructor
-        virtual ~ISelectionModel() {}
+        virtual ~ISelectionModel() = default;
 
         //! Selected objects
         virtual ContainerType selectedObjects() const = 0;

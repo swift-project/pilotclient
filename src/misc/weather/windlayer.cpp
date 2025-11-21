@@ -22,7 +22,7 @@ namespace swift::misc::weather
     QVariant CWindLayer::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexLevel: return QVariant::fromValue(m_level);
@@ -41,7 +41,7 @@ namespace swift::misc::weather
             (*this) = variant.value<CWindLayer>();
             return;
         }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexLevel: setLevel(variant.value<CAltitude>()); break;

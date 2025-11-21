@@ -10,8 +10,6 @@
 namespace swift::misc
 {
 
-    CLogMessage::CLogMessage() = default;
-
     CLogMessage::CLogMessage(const char *file, int line, const char *function) : m_logger(file, line, function) {}
 
     CLogMessage::operator CStatusMessage() { return { m_categories, m_severity, message() }; }

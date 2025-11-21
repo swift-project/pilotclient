@@ -13,7 +13,7 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    CInstallXSwiftBusDialog::~CInstallXSwiftBusDialog() {}
+    CInstallXSwiftBusDialog::~CInstallXSwiftBusDialog() = default;
 
     void CInstallXSwiftBusDialog::setDefaultDownloadName(const QString &defaultName)
     {

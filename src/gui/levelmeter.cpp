@@ -25,7 +25,7 @@ namespace swift::gui
         m_redrawTimer->setObjectName("CLevelMeter");
     }
 
-    CLevelMeter::~CLevelMeter() {}
+    CLevelMeter::~CLevelMeter() = default;
 
     void CLevelMeter::reset()
     {

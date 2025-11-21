@@ -30,7 +30,7 @@ namespace swift::gui::editors
         explicit CInterpolationSetupForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CInterpolationSetupForm() override;
+        ~CInterpolationSetupForm() override;
 
         //! Set value
         void setValue(const swift::misc::simulation::CInterpolationAndRenderingSetupBase &setup);
@@ -40,8 +40,8 @@ namespace swift::gui::editors
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
+        void setReadOnly(bool readonly) override;
+        swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
     signals:

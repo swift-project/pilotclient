@@ -363,7 +363,7 @@ namespace swift::misc
 
     void CLogPattern::unmarshallFromDbus(const QDBusArgument &argument)
     {
-        quint8 severities;
+        quint8 severities {};
         QStringList strings;
         argument >> severities >> m_strategy >> strings;
         m_strings = QSet<QString>(strings.begin(), strings.end());
@@ -385,7 +385,7 @@ namespace swift::misc
 
     void CLogPattern::unmarshalFromDataStream(QDataStream &stream)
     {
-        quint8 severities;
+        quint8 severities {};
         QStringList strings;
         stream >> severities >> m_strategy >> strings;
         m_strings = QSet<QString>(strings.begin(), strings.end());

@@ -46,7 +46,7 @@ namespace swift::gui
             explicit CModelMatcherComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CModelMatcherComponent() override;
+            ~CModelMatcherComponent() override;
 
             //! Tab (where this component is embedded) has been changed
             void tabIndexChanged(int index);

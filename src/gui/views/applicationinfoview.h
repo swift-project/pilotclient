@@ -44,7 +44,7 @@ namespace swift::gui::views
         CApplicationInfoMenu(CApplicationInfoView *modelView) : menus::IMenuDelegate(modelView) {}
 
         //! \copydoc menus::IMenuDelegate::customMenu
-        virtual void customMenu(menus::CMenuActions &menuActions) override;
+        void customMenu(menus::CMenuActions &menuActions) override;
 
     private:
         //! Model view

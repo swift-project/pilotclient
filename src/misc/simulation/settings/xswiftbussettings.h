@@ -40,7 +40,7 @@ namespace swift::misc::simulation::settings
         };
 
         //! Default constructor
-        CXSwiftBusSettings();
+        CXSwiftBusSettings() = default;
 
         //! From JSON constructor
         CXSwiftBusSettings(const QString &json);
@@ -79,7 +79,7 @@ namespace swift::misc::simulation::settings
         void parseXSwiftBusStringQt(const QString &json) { this->parseXSwiftBusString(json.toStdString()); }
 
         //! Sets both timestamps
-        virtual void setCurrentUtcTime() override;
+        void setCurrentUtcTime() override;
 
         //! Valid settings?
         CStatusMessageList validate() const;
@@ -89,7 +89,7 @@ namespace swift::misc::simulation::settings
 
     protected:
         //! \copydoc CXSwiftBusSettingsQtFree::objectUpdated
-        virtual void objectUpdated() override final;
+        void objectUpdated() override;
 
     private:
         SWIFT_METACLASS(

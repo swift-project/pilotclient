@@ -45,7 +45,7 @@ namespace swift::misc
             using CSequence::CSequence;
 
             //! Default constructor.
-            CSimulatedAircraftList();
+            CSimulatedAircraftList() = default;
 
             //! Construct from a base class object.
             CSimulatedAircraftList(const CSequence<CSimulatedAircraft> &other);

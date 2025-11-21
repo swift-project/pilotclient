@@ -14,8 +14,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CTextMessageSettings)
 
 namespace swift::gui::settings
 {
-    CTextMessageSettings::CTextMessageSettings() {}
-
     bool CTextMessageSettings::popupPrivateMessages() const
     {
         return this->getPopupAllMessages() || m_popupPrivateMessages;
@@ -78,7 +76,7 @@ namespace swift::gui::settings
     QVariant CTextMessageSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPopupAllMessages: return QVariant::fromValue(this->getPopupAllMessages());
@@ -100,7 +98,7 @@ namespace swift::gui::settings
             (*this) = variant.value<CTextMessageSettings>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPopupAllMessages: this->setPopupAllMessages(variant.toBool()); break;

@@ -60,7 +60,7 @@ namespace swift::misc
         CDBusServer(const QString &service, const QString &address, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CDBusServer() override;
+        ~CDBusServer() override;
 
         //! Add a QObject to be exposed via DBus
         void addObject(const QString &name, QObject *object);

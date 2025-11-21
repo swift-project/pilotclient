@@ -40,7 +40,7 @@ namespace swift::gui::components
         explicit CDbModelComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbModelComponent();
+        ~CDbModelComponent() override;
 
         //! Get latest model if any
         swift::misc::simulation::CAircraftModel getLatestModel() const;

@@ -27,7 +27,7 @@ namespace MiscTest
 
     void CTestSlot::slotBasics()
     {
-        QObject *obj = new QObject(this);
+        auto obj = new QObject(this);
         CSlot<void(const QString &)> slot1 = { obj, [&](const QString &name) { obj->setObjectName(name); } };
         QVERIFY2(slot1, "Slot has valid object and function - can be called.");
 

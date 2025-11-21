@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    PlaneInformationFsinn::PlaneInformationFsinn() : MessageBase() {}
-
     PlaneInformationFsinn::PlaneInformationFsinn(const QString &sender, const QString &receiver,
                                                  const QString &airlineIcao, const QString &aircraftIcao,
                                                  const QString &aircraftIcaoCombinedType,
@@ -44,6 +42,6 @@ namespace swift::core::fsd
             return {};
         };
 
-        return PlaneInformationFsinn(tokens[0], tokens[1], tokens[4], tokens[5], tokens[10], tokens[11]);
+        return { tokens[0], tokens[1], tokens[4], tokens[5], tokens[10], tokens[11] };
     }
 } // namespace swift::core::fsd

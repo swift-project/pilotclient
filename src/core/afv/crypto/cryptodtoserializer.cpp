@@ -8,7 +8,7 @@ namespace swift::core::afv::crypto
     CryptoDtoSerializer::Deserializer CryptoDtoSerializer::deserialize(CCryptoDtoChannel &channel,
                                                                        const QByteArray &bytes, bool loopback)
     {
-        return Deserializer(channel, bytes, loopback);
+        return { channel, bytes, loopback };
     }
 
     CryptoDtoSerializer::Deserializer::Deserializer(CCryptoDtoChannel &channel, const QByteArray &bytes, bool loopback)

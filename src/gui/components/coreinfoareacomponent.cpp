@@ -21,7 +21,7 @@ namespace swift::gui::components
         toggleTabBarLocked(true);
     }
 
-    CCoreInfoAreaComponent::~CCoreInfoAreaComponent() {}
+    CCoreInfoAreaComponent::~CCoreInfoAreaComponent() = default;
 
     CLogComponent *CCoreInfoAreaComponent::getLogComponent() { return ui->comp_Log; }
 
@@ -29,17 +29,17 @@ namespace swift::gui::components
 
     QSize CCoreInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
-        InfoArea area = static_cast<InfoArea>(areaIndex);
+        auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
-        case InfoAreaLog: return QSize(400, 300);
-        default: return QSize(400, 300);
+        case InfoAreaLog: return { 400, 300 };
+        default: return { 400, 300 };
         }
     }
 
     const QPixmap &CCoreInfoAreaComponent::indexToPixmap(int areaIndex) const
     {
-        InfoArea area = static_cast<InfoArea>(areaIndex);
+        auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaLog: return CIcons::appLog16();

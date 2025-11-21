@@ -181,7 +181,7 @@ namespace swift::misc::aviation
             rd = AboveGround;
         }
 
-        const CLength l = CPqString::parse<CLength>(v, mode);
+        const auto l = CPqString::parse<CLength>(v, mode);
         *this = CAltitude(l, rd);
     }
 
@@ -216,7 +216,7 @@ namespace swift::misc::aviation
         // in same step get numeric value only
         bool beforeDigit = true;
         QString numericPart;
-        for (int i = 0; i < v.length(); i++)
+        for (int i = 0; i < v.length(); i++) // NOLINT
         {
             const QChar c = v[i];
             if (c.isDigit())
@@ -234,7 +234,7 @@ namespace swift::misc::aviation
             return false;
         }
 
-        bool ok;
+        bool ok {};
         if (v.startsWith("F", Qt::CaseInsensitive))
         {
             this->setUnit(CLengthUnit::ft());
@@ -294,7 +294,7 @@ namespace swift::misc::aviation
             if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude NULL value")); }
             return false;
         }
-        if (!(this->getReferenceDatum() == FlightLevel || this->getReferenceDatum() == MeanSeaLevel))
+        if (this->getReferenceDatum() != FlightLevel && this->getReferenceDatum() != MeanSeaLevel)
         {
             if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude, must be FL or MSL")); }
             return false;
@@ -374,7 +374,7 @@ namespace swift::misc::aviation
     const QRegularExpression &CAltitude::fpAltitudeRegExp()
     {
         thread_local const QRegularExpression re(
-            "([Ff][Ll]?\\d{2,3})|([Ss]\\d{2,4})|([Aa]\\d{2,3})|([Mm]\\d{2,4})|(\\d{3,5}(ft|m))");
+            R"(([Ff][Ll]?\d{2,3})|([Ss]\d{2,4})|([Aa]\d{2,3})|([Mm]\d{2,4})|(\d{3,5}(ft|m)))");
         return re;
     }
 

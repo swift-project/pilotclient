@@ -40,7 +40,7 @@ namespace swift::gui::filters
         explicit CAircraftIcaoFilterBar(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftIcaoFilterBar() override;
+        ~CAircraftIcaoFilterBar() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
         std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::aviation::CAircraftIcaoCodeList>>
@@ -54,7 +54,7 @@ namespace swift::gui::filters
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged
-        virtual void onRowCountChanged(int count, bool withFilter) override;
+        void onRowCountChanged(int count, bool withFilter) override;
 
     protected:
         //! \copydoc CFilterWidget::clearForm

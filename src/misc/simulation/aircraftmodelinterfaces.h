@@ -20,8 +20,8 @@ namespace swift::misc::simulation
 
         //! @{
         //! Ctor, dtor, copy operators (CLANG warnings)
-        IModelsSetable() {}
-        virtual ~IModelsSetable() {}
+        IModelsSetable() = default;
+        virtual ~IModelsSetable() = default;
         IModelsSetable(const IModelsSetable &) = default;
         IModelsSetable &operator=(const IModelsSetable &) = default;
         //! @}
@@ -36,8 +36,8 @@ namespace swift::misc::simulation
 
         //! @{
         //! Ctor, dtor, copy operators (CLANG warnings)
-        IModelsUpdatable() {}
-        virtual ~IModelsUpdatable() {}
+        IModelsUpdatable() = default;
+        virtual ~IModelsUpdatable() = default;
         IModelsUpdatable(const IModelsUpdatable &) = default;
         IModelsUpdatable &operator=(const IModelsUpdatable &) = default;
         //! @}
@@ -52,8 +52,8 @@ namespace swift::misc::simulation
 
         //! @{
         //! Ctor, dtor, copy operators (CLANG warnings)
-        IModelsForSimulatorSetable() {}
-        virtual ~IModelsForSimulatorSetable() {}
+        IModelsForSimulatorSetable() = default;
+        virtual ~IModelsForSimulatorSetable() = default;
         IModelsForSimulatorSetable(const IModelsForSimulatorSetable &) = default;
         IModelsForSimulatorSetable &operator=(const IModelsForSimulatorSetable &) = default;
         //! @}
@@ -68,8 +68,8 @@ namespace swift::misc::simulation
 
         //! @{
         //! Ctor, dtor, copy operators (CLANG warnings)
-        IModelsForSimulatorUpdatable() {}
-        virtual ~IModelsForSimulatorUpdatable() {}
+        IModelsForSimulatorUpdatable() = default;
+        virtual ~IModelsForSimulatorUpdatable() = default;
         IModelsForSimulatorUpdatable(const IModelsForSimulatorUpdatable &) = default;
         IModelsForSimulatorUpdatable &operator=(const IModelsForSimulatorUpdatable &) = default;
         //! @}
@@ -84,8 +84,8 @@ namespace swift::misc::simulation
 
         //! @{
         //! Ctor, dtor, copy operators (CLANG warnings)
-        ISimulatorSelectable() {}
-        virtual ~ISimulatorSelectable() {}
+        ISimulatorSelectable() = default;
+        virtual ~ISimulatorSelectable() = default;
         ISimulatorSelectable(const ISimulatorSelectable &) = default;
         ISimulatorSelectable &operator=(const ISimulatorSelectable &) = default;
         //! @}

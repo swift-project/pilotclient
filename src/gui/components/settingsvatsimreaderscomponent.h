@@ -30,7 +30,7 @@ namespace swift::gui::components
         explicit CSettingsVatsimReadersComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsVatsimReadersComponent();
+        ~CSettingsVatsimReadersComponent() override;
 
     private:
         void onSettingsChanged();

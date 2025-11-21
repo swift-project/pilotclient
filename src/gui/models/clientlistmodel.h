@@ -27,10 +27,10 @@ namespace swift::gui::models
         explicit CClientListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CClientListModel() {}
+        ~CClientListModel() override = default;
 
         //! \copydoc QAbstractListModel::data()
-        virtual QVariant data(const QModelIndex &index, int role) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_MODELS_CLIENTLISTMODEL_H

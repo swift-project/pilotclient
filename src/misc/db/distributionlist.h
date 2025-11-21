@@ -34,7 +34,7 @@ namespace swift::misc::db
         using CSequence::CSequence;
 
         //! Empty constructor.
-        CDistributionList();
+        CDistributionList() = default;
 
         //! Construct from a base class object.
         CDistributionList(const CSequence<CDistribution> &other);

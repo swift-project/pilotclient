@@ -23,7 +23,7 @@ namespace swift::gui::models
         explicit CAircraftSituationListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftSituationListModel() {}
+        ~CAircraftSituationListModel() override = default;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_MODELS_AIRCRAFTSITUATIONLISTMODEL_H

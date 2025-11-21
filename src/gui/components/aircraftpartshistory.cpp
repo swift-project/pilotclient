@@ -47,7 +47,7 @@ namespace swift::gui::components
         connect(&m_timerUpdateHistory, &QTimer::timeout, this, &CAircraftPartsHistory::updatePartsHistory);
     }
 
-    CAircraftPartsHistory::~CAircraftPartsHistory() {}
+    CAircraftPartsHistory::~CAircraftPartsHistory() = default;
 
     void CAircraftPartsHistory::initGui()
     {

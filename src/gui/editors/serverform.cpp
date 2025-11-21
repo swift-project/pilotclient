@@ -13,7 +13,6 @@
 #include "misc/network/user.h"
 
 using namespace swift::misc;
-using namespace swift::misc::audio;
 using namespace swift::misc::network;
 
 namespace swift::gui::editors
@@ -29,7 +28,7 @@ namespace swift::gui::editors
         connect(ui->tb_Unhide, &QToolButton::clicked, this, &CServerForm::tempUnhidePassword);
     }
 
-    CServerForm::~CServerForm() {}
+    CServerForm::~CServerForm() = default;
 
     void CServerForm::setServer(const CServer &server)
     {
@@ -97,7 +96,7 @@ namespace swift::gui::editors
         ui->cb_ServerType->clear();
         for (const int type : CServer::allServerTypes())
         {
-            const CServer::ServerType st = static_cast<CServer::ServerType>(type);
+            const auto st = static_cast<CServer::ServerType>(type);
             ui->cb_ServerType->insertItem(c++, CServer::serverTypeToString(st), QVariant::fromValue(type));
         }
     }

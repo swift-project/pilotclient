@@ -57,7 +57,7 @@ namespace swift::gui::components
         explicit CInterpolationLogDisplay(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CInterpolationLogDisplay() override;
+        ~CInterpolationLogDisplay() override;
 
         //! Set simulator
         void setSimulator(swift::core::ISimulator *simulator);

@@ -41,10 +41,10 @@ namespace swift::gui
 
     protected:
         //! \copydoc QLineEdit::keyPressEvent
-        virtual void keyPressEvent(QKeyEvent *event) override;
+        void keyPressEvent(QKeyEvent *event) override;
 
         //! \copydoc QLineEdit::keyPressEvent
-        virtual void contextMenuEvent(QContextMenuEvent *event) override;
+        void contextMenuEvent(QContextMenuEvent *event) override;
 
     private:
         QStringList m_history;

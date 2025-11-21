@@ -93,7 +93,7 @@ namespace swift::gui::components
         }
     }
 
-    CCockpitComComponent::~CCockpitComComponent() {}
+    CCockpitComComponent::~CCockpitComComponent() = default;
 
     void CCockpitComComponent::setTransponderModeStateIdent() { ui->editor_Com->setTransponderModeStateIdent(); }
 
@@ -140,7 +140,7 @@ namespace swift::gui::components
     {
         // unavailable context during shutdown possible
         // mostly when client runs with DBus, but DBus is down
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CSimulatedAircraft(); }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return {}; }
         return sGui->getIContextOwnAircraft()->getOwnAircraft();
     }
 

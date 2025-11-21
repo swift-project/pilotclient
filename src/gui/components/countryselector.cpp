@@ -31,7 +31,7 @@ namespace swift::gui::components
         this->onCountriesLoaded();
     }
 
-    CCountrySelector::~CCountrySelector() {}
+    CCountrySelector::~CCountrySelector() = default;
 
     void CCountrySelector::setCountry(const CCountry &country)
     {

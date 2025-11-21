@@ -105,7 +105,7 @@ namespace swift::core::vatsim
 
     CVoiceCapabilities CVatsimDataFileReader::getVoiceCapabilityForCallsign(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return CVoiceCapabilities(); }
+        if (callsign.isEmpty()) { return {}; }
         QReadLocker rl(&m_lock);
         return m_flightPlanRemarks.value(callsign).getVoiceCapabilities();
     }
@@ -299,7 +299,7 @@ namespace swift::core::vatsim
 
     CFlightPlanRemarks CVatsimDataFileReader::parseFlightPlanRemarks(const QJsonObject &pilot) const
     {
-        return CFlightPlanRemarks(pilot["flight_plan"]["remarks"].toString().trimmed());
+        return { pilot["flight_plan"]["remarks"].toString().trimmed() };
     }
 
     CAtcStation CVatsimDataFileReader::parseController(const QJsonObject &controller) const
@@ -311,7 +311,7 @@ namespace swift::core::vatsim
         const QJsonArray atisLines = controller["text_atis"].toArray();
         const auto atisText = makeRange(atisLines).transform([](auto line) { return line.toString(); });
         const CInformationMessage atis(CInformationMessage::ATIS, atisText.to<QStringList>().join('\n'));
-        return CAtcStation(callsign, user, freq, {}, range, true, {}, {}, atis);
+        return { callsign, user, freq, {}, range, true, {}, {}, atis };
     }
 
     void CVatsimDataFileReader::reloadSettings()

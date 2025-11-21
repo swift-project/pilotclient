@@ -118,7 +118,7 @@ namespace swift::misc::simulation
 
     protected:
         //! Default constructor
-        CInterpolationSetupAware() {}
+        CInterpolationSetupAware() {} // NOLINT(modernize-use-equals-default)
 
         //! Constructor
         CInterpolationSetupAware(IInterpolationSetupProvider *setupProvider) : IProviderAware(setupProvider) {}

@@ -450,7 +450,7 @@ namespace swift::core::db
                              const JsonDatastoreResponse &response) const;
 
         //! Network request progress
-        virtual void networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url) override;
+        void networkReplyProgress(int logId, qint64 current, qint64 max, const QUrl &url) override;
 
     private:
         //! Read / re-read data file

@@ -42,7 +42,7 @@ namespace swift::gui::components
         });
     }
 
-    CTransponderModeComponent::~CTransponderModeComponent() {}
+    CTransponderModeComponent::~CTransponderModeComponent() = default;
 
     void CTransponderModeComponent::init()
     {

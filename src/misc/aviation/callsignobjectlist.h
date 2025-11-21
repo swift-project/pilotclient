@@ -51,7 +51,7 @@ namespace swift::misc::aviation
         //! Get callsigns as strings
         QString getCallsignsAsString(const QString &separator, bool sorted = false) const
         {
-            if (this->container().isEmpty()) { return QString(); }
+            if (this->container().isEmpty()) { return {}; }
             const QStringList callsigns = this->getCallsignStrings(sorted);
             return callsigns.join(separator);
         }
@@ -204,7 +204,7 @@ namespace swift::misc::aviation
         //! Incremental update or add object
         int incrementalUpdateOrAdd(const OBJ &objectBeforeChanges, const CPropertyIndexVariantMap &changedValues)
         {
-            int c;
+            int c {};
             const CCallsign cs = objectBeforeChanges.getCallsign();
             if (this->containsCallsign(cs))
             {
@@ -258,7 +258,7 @@ namespace swift::misc::aviation
 
     protected:
         //! Constructor
-        ICallsignObjectList() {}
+        ICallsignObjectList() {} // NOLINT(modernize-use-equals-default)
 
         //! Container
         const CONTAINER &container() const { return static_cast<const CONTAINER &>(*this); }

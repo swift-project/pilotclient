@@ -30,7 +30,7 @@ namespace swift::gui::components
         explicit CDbReduceModelDuplicates(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbReduceModelDuplicates() override;
+        ~CDbReduceModelDuplicates() override;
 
         //! Set the models
         void setModels(const swift::misc::simulation::CAircraftModelList &models,
@@ -40,7 +40,7 @@ namespace swift::gui::components
         void process();
 
         //! \copydoc swift::core::IProgressIndicator::updateProgressIndicator
-        virtual void updateProgressIndicator(int percentage) override;
+        void updateProgressIndicator(int percentage) override;
 
         //! The models to be removed
         const swift::misc::simulation::CAircraftModelList &getRemoveCandidates() const { return m_removeCandidates; }

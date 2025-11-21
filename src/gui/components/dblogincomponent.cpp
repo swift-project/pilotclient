@@ -72,7 +72,7 @@ namespace swift::gui::components
         this->setUserInfo(this->getDbUser());
     }
 
-    CDbLoginComponent::~CDbLoginComponent() {}
+    CDbLoginComponent::~CDbLoginComponent() = default;
 
     CAuthenticatedUser CDbLoginComponent::getDbUser() const { return m_loginService.getDbUser(); }
 

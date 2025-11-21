@@ -28,7 +28,7 @@ namespace swift::misc::network
         using CSequence::CSequence;
 
         //! Default constructor.
-        CEcosystemList();
+        CEcosystemList() = default;
 
         //! Construct from a base class object.
         CEcosystemList(const CSequence &other);

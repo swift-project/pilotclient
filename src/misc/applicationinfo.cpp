@@ -96,7 +96,7 @@ namespace swift::misc
     QVariant CApplicationInfo::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexApplication: return QVariant::fromValue(m_app);
@@ -121,7 +121,7 @@ namespace swift::misc
             (*this) = variant.value<CApplicationInfo>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexApplication: this->setApplication(static_cast<Application>(variant.toInt())); break;
@@ -142,7 +142,7 @@ namespace swift::misc
     int CApplicationInfo::comparePropertyByIndex(CPropertyIndexRef index, const CApplicationInfo &compareValue) const
     {
         if (index.isMyself()) { return this->getExecutablePath().compare(compareValue.getExecutablePath()); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexApplicationDataPath:
@@ -206,7 +206,7 @@ namespace swift::misc
 
     CApplicationInfo::Application CApplicationInfo::guessApplication()
     {
-        const QString a(QCoreApplication::instance()->applicationName().toLower());
+        const QString a(QCoreApplication::applicationName().toLower());
         if (a.contains("test")) { return CApplicationInfo::UnitTest; } // names like testcore
         if (a.contains("sample")) { return CApplicationInfo::Sample; }
         if (a.contains("core")) { return CApplicationInfo::PilotClientCore; }

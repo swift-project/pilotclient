@@ -67,9 +67,9 @@ namespace swift::sample
         out << f1 << " " << f1.valueRoundedWithUnit(CFrequencyUnit::MHz()) << " "
             << f1.valueRoundedWithUnit(CFrequencyUnit::GHz(), 3);
 
-        CSpeed s1 = CSpeed(100, CSpeedUnit::km_h());
-        CSpeed s2 = CSpeed(1000, CSpeedUnit::ft_min());
-        CSpeed s3 = CSpeed(s2);
+        CSpeed s1(100, CSpeedUnit::km_h());
+        CSpeed s2(1000, CSpeedUnit::ft_min());
+        CSpeed s3(s2);
         s3.switchUnit(CSpeedUnit::m_s());
         out << s1 << " " << s1.valueRoundedWithUnit(CSpeedUnit::defaultUnit()) << " "
             << s1.valueRoundedWithUnit(CSpeedUnit::NM_h());

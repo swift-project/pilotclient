@@ -28,7 +28,7 @@ namespace swift::core
                                                        const CAircraftModelList &currentSet, Builder options,
                                                        const CDistributorList &distributors) const
     {
-        if (models.isEmpty()) { return CAircraftModelList(); }
+        if (models.isEmpty()) { return {}; }
         CAircraftModelList modelSet;
 
         // Select by distributor:

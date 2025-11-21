@@ -50,7 +50,7 @@ namespace swift::gui::components
         explicit CDataMainInfoAreaComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDataMainInfoAreaComponent() override;
+        ~CDataMainInfoAreaComponent() override;
 
         //! Log component
         CLogComponent *getLogComponent() const;
@@ -73,10 +73,10 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc CInfoArea::getPreferredSizeWhenFloating
-        virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
+        QSize getPreferredSizeWhenFloating(int areaIndex) const override;
 
         //! \copydoc CInfoArea::indexToPixmap
-        virtual const QPixmap &indexToPixmap(int areaIndex) const override;
+        const QPixmap &indexToPixmap(int areaIndex) const override;
 
     private:
         QScopedPointer<Ui::CDataMainInfoAreaComponent> ui;

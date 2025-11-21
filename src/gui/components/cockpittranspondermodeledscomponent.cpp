@@ -48,7 +48,7 @@ namespace swift::gui::components
         QWidget *w = qobject_cast<QWidget *>(QObject::sender());
         if (!w) { return; }
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
-        CTransponder::TransponderMode mode;
+        CTransponder::TransponderMode mode {};
         if (m_ledStandby.data() == w) { mode = CTransponder::StateStandby; }
         else if (m_ledIdent.data() == w) { mode = CTransponder::StateIdent; }
         else if (m_ledModes.data() == w) { mode = CTransponder::ModeC; }
@@ -114,13 +114,13 @@ namespace swift::gui::components
 
     CTransponder CCockpitTransponderModeLedsComponent::getOwnTransponder() const
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CTransponder(); }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return {}; }
         return sGui->getIContextOwnAircraft()->getOwnAircraft().getTransponder();
     }
 
     CSimulatedAircraft CCockpitTransponderModeLedsComponent::getOwnAircraft() const
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return CSimulatedAircraft(); }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return {}; }
         return sGui->getIContextOwnAircraft()->getOwnAircraft();
     }
 } // namespace swift::gui::components

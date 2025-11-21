@@ -29,7 +29,7 @@ namespace swift::misc::network
         using CSequence::CSequence;
 
         //! Default constructor.
-        CUrlLogList();
+        CUrlLogList() = default;
 
         //! Construct from a base class object.
         CUrlLogList(const CSequence &other);

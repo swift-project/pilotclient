@@ -132,10 +132,7 @@ namespace swift::misc::network
         return u; // normally never reached
     }
 
-    CVoiceCapabilities CVoiceCapabilities::fromFlightPlanRemarks(const QString &remarks)
-    {
-        return CVoiceCapabilities(remarks);
-    }
+    CVoiceCapabilities CVoiceCapabilities::fromFlightPlanRemarks(const QString &remarks) { return { remarks }; }
 
     CVoiceCapabilities CVoiceCapabilities::fromText(const QString &text)
     {
@@ -144,11 +141,11 @@ namespace swift::misc::network
             const CVoiceCapabilities vc(text);
             return vc;
         }
-        if (text.contains("TEXT", Qt::CaseInsensitive)) { return CVoiceCapabilities(TextOnly); }
-        if (text.contains("ONLY", Qt::CaseInsensitive)) { return CVoiceCapabilities(TextOnly); }
-        if (text.contains("RECEIVE", Qt::CaseInsensitive)) { return CVoiceCapabilities(VoiceReceivingOnly); }
-        if (text.contains("VOICE", Qt::CaseInsensitive)) { return CVoiceCapabilities(Voice); }
-        return CVoiceCapabilities(Unknown);
+        if (text.contains("TEXT", Qt::CaseInsensitive)) { return { TextOnly }; }
+        if (text.contains("ONLY", Qt::CaseInsensitive)) { return { TextOnly }; }
+        if (text.contains("RECEIVE", Qt::CaseInsensitive)) { return { VoiceReceivingOnly }; }
+        if (text.contains("VOICE", Qt::CaseInsensitive)) { return { Voice }; }
+        return { Unknown };
     }
 
     const QList<CVoiceCapabilities> &CVoiceCapabilities::allCapabilities()

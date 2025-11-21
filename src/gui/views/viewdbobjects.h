@@ -63,14 +63,14 @@ namespace swift::gui
             int replaceOrAddObjectsByKey(const ContainerType &container);
 
             //! Select by DB keys
-            virtual void selectObjects(const ContainerType &selectedObjects) override;
+            void selectObjects(const ContainerType &selectedObjects) override;
 
         protected:
             //! Constructor
             explicit CViewWithDbObjects(QWidget *parent = nullptr);
 
             //! \copydoc swift::gui::views::CViewBaseNonTemplate::customMenu
-            virtual void customMenu(swift::gui::menus::CMenuActions &menuActions) override;
+            void customMenu(swift::gui::menus::CMenuActions &menuActions) override;
         };
 
         //! Base class for views with DB objects also orderable (based on swift::misc::IOrderableList )
@@ -91,14 +91,14 @@ namespace swift::gui
             using KeyType = typename T::KeyType;
 
             //! Select by DB keys
-            virtual void selectObjects(const ContainerType &selectedObjects) override;
+            void selectObjects(const ContainerType &selectedObjects) override;
 
         protected:
             //! Constructor
             explicit COrderableViewWithDbObjects(QWidget *parent = nullptr);
 
             //! \copydoc swift::gui::views::CViewBaseNonTemplate::customMenu
-            virtual void customMenu(swift::gui::menus::CMenuActions &menuActions) override;
+            void customMenu(swift::gui::menus::CMenuActions &menuActions) override;
 
             //! Move selected items
             void moveSelectedItems(int order);

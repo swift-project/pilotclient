@@ -40,7 +40,7 @@ namespace swift::misc
 
         private:
             //! Constructor, only static methods
-            CBcdConversions() {}
+            CBcdConversions() {} // NOLINT(modernize-use-equals-default)
 
             //! Horner scheme
             static quint32 hornerScheme(quint32 num, quint32 divider, quint32 factor);

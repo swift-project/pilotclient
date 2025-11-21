@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CMarginsInput(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CMarginsInput() override;
+        ~CMarginsInput() override;
 
         //! Set margins
         void setMargins(const QMargins &margins);

@@ -49,7 +49,7 @@ namespace swift::misc
             static constexpr int MaxPartsAgePerCallsignSecs = 60; //!< How many seconds to keep parts for interpolation
 
             //! Destructor
-            virtual ~IRemoteAircraftProvider() override;
+            ~IRemoteAircraftProvider() override = default;
 
             //! Copy constructor
             IRemoteAircraftProvider(const IRemoteAircraftProvider &) = delete;
@@ -292,7 +292,7 @@ namespace swift::misc
 
         protected:
             //! Constructor
-            IRemoteAircraftProvider();
+            IRemoteAircraftProvider() = default;
         };
     } // namespace simulation
 } // namespace swift::misc
@@ -318,79 +318,74 @@ namespace swift::misc::simulation
         CRemoteAircraftProvider(QObject *parent);
 
         // remoteaircraftprovider
-        virtual CSimulatedAircraftList getAircraftInRange() const override;
-        virtual aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
-        virtual CSimulatedAircraft getAircraftInRangeForCallsign(const aviation::CCallsign &callsign) const override;
-        virtual CAircraftModel getAircraftInRangeModelForCallsign(const aviation::CCallsign &callsign) const override;
-        virtual int getAircraftInRangeCount() const override;
-        virtual bool isAircraftInRange(const aviation::CCallsign &callsign) const override;
-        virtual bool isVtolAircraft(const aviation::CCallsign &callsign) const override;
-        virtual aviation::CAircraftSituationList
-        remoteAircraftSituations(const aviation::CCallsign &callsign) const override;
-        virtual aviation::CAircraftSituation remoteAircraftSituation(const aviation::CCallsign &callsign,
-                                                                     int index) const override;
-        virtual MillisecondsMinMaxMean
+        CSimulatedAircraftList getAircraftInRange() const override;
+        aviation::CCallsignSet getAircraftInRangeCallsigns() const override;
+        CSimulatedAircraft getAircraftInRangeForCallsign(const aviation::CCallsign &callsign) const override;
+        CAircraftModel getAircraftInRangeModelForCallsign(const aviation::CCallsign &callsign) const override;
+        int getAircraftInRangeCount() const override;
+        bool isAircraftInRange(const aviation::CCallsign &callsign) const override;
+        bool isVtolAircraft(const aviation::CCallsign &callsign) const override;
+        aviation::CAircraftSituationList remoteAircraftSituations(const aviation::CCallsign &callsign) const override;
+        aviation::CAircraftSituation remoteAircraftSituation(const aviation::CCallsign &callsign,
+                                                             int index) const override;
+        MillisecondsMinMaxMean
         remoteAircraftSituationsTimestampDifferenceMinMaxMean(const aviation::CCallsign &callsign) const override;
-        virtual aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
-        virtual aviation::CAircraftSituationList latestOnGroundProviderElevations() const override;
-        virtual int remoteAircraftSituationsCount(const aviation::CCallsign &callsign) const override;
-        virtual aviation::CAircraftPartsList remoteAircraftParts(const aviation::CCallsign &callsign) const override;
-        virtual int remoteAircraftPartsCount(const aviation::CCallsign &callsign) const override;
-        virtual bool isRemoteAircraftSupportingParts(const aviation::CCallsign &callsign) const override;
-        virtual int getRemoteAircraftSupportingPartsCount() const override;
-        virtual aviation::CCallsignSet remoteAircraftSupportingParts() const override;
-        virtual aviation::CAircraftSituationChangeList
+        aviation::CAircraftSituationList latestRemoteAircraftSituations() const override;
+        aviation::CAircraftSituationList latestOnGroundProviderElevations() const override;
+        int remoteAircraftSituationsCount(const aviation::CCallsign &callsign) const override;
+        aviation::CAircraftPartsList remoteAircraftParts(const aviation::CCallsign &callsign) const override;
+        int remoteAircraftPartsCount(const aviation::CCallsign &callsign) const override;
+        bool isRemoteAircraftSupportingParts(const aviation::CCallsign &callsign) const override;
+        int getRemoteAircraftSupportingPartsCount() const override;
+        aviation::CCallsignSet remoteAircraftSupportingParts() const override;
+        aviation::CAircraftSituationChangeList
         remoteAircraftSituationChanges(const aviation::CCallsign &callsign) const override;
-        virtual int remoteAircraftSituationChangesCount(const aviation::CCallsign &callsign) const override;
-        virtual bool updateAircraftEnabled(const aviation::CCallsign &callsign, bool enabledForRendering) override;
-        virtual bool setAircraftEnabledFlag(const swift::misc::aviation::CCallsign &callsign,
-                                            bool enabledForRendering) override;
-        virtual int updateMultipleAircraftEnabled(const aviation::CCallsignSet &callsigns,
-                                                  bool enabledForRendering) override;
-        virtual bool updateAircraftModel(const aviation::CCallsign &callsign, const CAircraftModel &model,
-                                         const CIdentifier &originator) override;
-        virtual bool updateAircraftNetworkModel(const aviation::CCallsign &callsign, const CAircraftModel &model,
-                                                const CIdentifier &originator) override;
-        virtual bool updateFastPositionEnabled(const aviation::CCallsign &callsign,
-                                               bool enableFastPositonUpdates) override;
-        virtual bool updateAircraftRendered(const aviation::CCallsign &callsign, bool rendered) override;
-        virtual int updateMultipleAircraftRendered(const aviation::CCallsignSet &callsigns, bool rendered) override;
-        virtual int updateAircraftGroundElevation(const aviation::CCallsign &callsign,
-                                                  const geo::CElevationPlane &elevation,
-                                                  aviation::CAircraftSituation::GndElevationInfo info,
-                                                  bool *setForOnGroundPosition) override;
-        virtual bool updateCG(const aviation::CCallsign &callsign, const physical_quantities::CLength &cg) override;
-        virtual bool updateCGAndModelString(const aviation::CCallsign &callsign, const physical_quantities::CLength &cg,
-                                            const QString &modelString) override;
-        virtual aviation::CCallsignSet updateCGForModel(const QString &modelString,
-                                                        const physical_quantities::CLength &cg) override;
-        virtual physical_quantities::CLength getCGFromDB(const aviation::CCallsign &callsign) const override;
-        virtual physical_quantities::CLength getCGFromDB(const QString &modelString) const override;
-        virtual void rememberCGFromDB(const physical_quantities::CLength &cgFromDB,
-                                      const aviation::CCallsign &callsign) override;
-        virtual void rememberCGFromDB(const physical_quantities::CLength &cgFromDB,
-                                      const QString &modelString) override;
-        virtual void updateMarkAllAsNotRendered() override;
-        virtual CStatusMessageList getAircraftPartsHistory(const aviation::CCallsign &callsign) const override;
-        virtual bool isAircraftPartsHistoryEnabled() const override;
-        virtual void enableAircraftPartsHistory(bool enabled) override;
-        virtual int aircraftSituationsAdded() const override;
-        virtual int aircraftPartsAdded() const override;
-        virtual qint64 situationsLastModified(const aviation::CCallsign &callsign) const override;
-        virtual qint64 partsLastModified(const aviation::CCallsign &callsign) const override;
-        virtual geo::CElevationPlane averageElevationOfNonMovingAircraft(const aviation::CAircraftSituation &reference,
-                                                                         const physical_quantities::CLength &range,
-                                                                         int minValues = 1,
-                                                                         int sufficientValues = 2) const override;
-        virtual QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
+        int remoteAircraftSituationChangesCount(const aviation::CCallsign &callsign) const override;
+        bool updateAircraftEnabled(const aviation::CCallsign &callsign, bool enabledForRendering) override;
+        bool setAircraftEnabledFlag(const swift::misc::aviation::CCallsign &callsign,
+                                    bool enabledForRendering) override;
+        int updateMultipleAircraftEnabled(const aviation::CCallsignSet &callsigns, bool enabledForRendering) override;
+        bool updateAircraftModel(const aviation::CCallsign &callsign, const CAircraftModel &model,
+                                 const CIdentifier &originator) override;
+        bool updateAircraftNetworkModel(const aviation::CCallsign &callsign, const CAircraftModel &model,
+                                        const CIdentifier &originator) override;
+        bool updateFastPositionEnabled(const aviation::CCallsign &callsign, bool enableFastPositonUpdates) override;
+        bool updateAircraftRendered(const aviation::CCallsign &callsign, bool rendered) override;
+        int updateMultipleAircraftRendered(const aviation::CCallsignSet &callsigns, bool rendered) override;
+        int updateAircraftGroundElevation(const aviation::CCallsign &callsign, const geo::CElevationPlane &elevation,
+                                          aviation::CAircraftSituation::GndElevationInfo info,
+                                          bool *setForOnGroundPosition) override;
+        bool updateCG(const aviation::CCallsign &callsign, const physical_quantities::CLength &cg) override;
+        bool updateCGAndModelString(const aviation::CCallsign &callsign, const physical_quantities::CLength &cg,
+                                    const QString &modelString) override;
+        aviation::CCallsignSet updateCGForModel(const QString &modelString,
+                                                const physical_quantities::CLength &cg) override;
+        physical_quantities::CLength getCGFromDB(const aviation::CCallsign &callsign) const override;
+        physical_quantities::CLength getCGFromDB(const QString &modelString) const override;
+        void rememberCGFromDB(const physical_quantities::CLength &cgFromDB,
+                              const aviation::CCallsign &callsign) override;
+        void rememberCGFromDB(const physical_quantities::CLength &cgFromDB, const QString &modelString) override;
+        void updateMarkAllAsNotRendered() override;
+        CStatusMessageList getAircraftPartsHistory(const aviation::CCallsign &callsign) const override;
+        bool isAircraftPartsHistoryEnabled() const override;
+        void enableAircraftPartsHistory(bool enabled) override;
+        int aircraftSituationsAdded() const override;
+        int aircraftPartsAdded() const override;
+        qint64 situationsLastModified(const aviation::CCallsign &callsign) const override;
+        qint64 partsLastModified(const aviation::CCallsign &callsign) const override;
+        geo::CElevationPlane averageElevationOfNonMovingAircraft(const aviation::CAircraftSituation &reference,
+                                                                 const physical_quantities::CLength &range,
+                                                                 int minValues = 1,
+                                                                 int sufficientValues = 2) const override;
+        QList<QMetaObject::Connection> connectRemoteAircraftProviderSignals(
             QObject *receiver, std::function<void(const aviation::CAircraftSituation &)> addedSituationSlot,
             std::function<void(const aviation::CCallsign &, const aviation::CAircraftParts &)> addedPartsSlot,
             std::function<void(const aviation::CCallsign &)> removedAircraftSlot,
             std::function<void(const CAirspaceAircraftSnapshot &)> aircraftSnapshotSlot) override;
 
-        virtual void enableReverseLookupMessages(ReverseLookupLogging enable) override;
-        virtual ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
-        virtual swift::misc::CStatusMessageList
+        void enableReverseLookupMessages(ReverseLookupLogging enable) override;
+        ReverseLookupLogging isReverseLookupMessagesEnabled() const override;
+        swift::misc::CStatusMessageList
         getReverseLookupMessages(const swift::misc::aviation::CCallsign &callsign) const override;
 
         //! @{
@@ -404,7 +399,7 @@ namespace swift::misc::simulation
         //! @}
 
         //! \copydoc swift::misc::IProvider::asQObject
-        virtual QObject *asQObject() override { return this; }
+        QObject *asQObject() override { return this; }
 
         //! Clear all data
         void clear();
@@ -565,7 +560,7 @@ namespace swift::misc::simulation
     {
     public:
         //! Destructor
-        virtual ~CRemoteAircraftAware() override;
+        ~CRemoteAircraftAware() override = default;
 
         //! \copydoc IRemoteAircraftProvider::getAircraftInRange
         CSimulatedAircraftList getAircraftInRange() const;
@@ -694,7 +689,7 @@ namespace swift::misc::simulation
 
     protected:
         //! Default constructor
-        CRemoteAircraftAware() {}
+        CRemoteAircraftAware() {} // NOLINT(modernize-use-equals-default)
 
         //! Constructor
         CRemoteAircraftAware(IRemoteAircraftProvider *remoteAircraftProvider) : IProviderAware(remoteAircraftProvider)

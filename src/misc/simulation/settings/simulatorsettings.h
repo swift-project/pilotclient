@@ -55,7 +55,7 @@ namespace swift::misc::simulation::settings
         static const QString &cgSourceAsString(CGSource source);
 
         //! Default constructor
-        CSimulatorSettings();
+        CSimulatorSettings() = default;
 
         //! Constructor
         CSimulatorSettings(const QString &simDir) : m_simulatorDirectory(simDir) {}
@@ -177,7 +177,7 @@ namespace swift::misc::simulation::settings
     {
     public:
         //! Default constructor
-        CFsxP3DSettings() {}
+        CFsxP3DSettings() = default;
 
         //! Constructor
         CFsxP3DSettings(bool simulatedObject, bool sbOffsets)
@@ -624,7 +624,7 @@ namespace swift::misc::simulation::settings
         Q_DECLARE_FLAGS(TextMessageType, TextMessageTypeFlag)
 
         //! Default constructor
-        CSimulatorMessagesSettings() {}
+        CSimulatorMessagesSettings() = default;
 
         //! Log severity
         void setTechnicalLogSeverity(CStatusMessage::StatusSeverity severity);

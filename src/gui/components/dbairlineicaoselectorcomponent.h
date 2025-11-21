@@ -43,13 +43,13 @@ namespace swift::gui::components
 
         //! Destructor
         //! \note needed for forward declared QScopedPointer and needs to be in .cpp
-        virtual ~CDbAirlineIcaoSelectorComponent() override;
+        ~CDbAirlineIcaoSelectorComponent() override;
 
         //! \name Base class overrides
         //! @{
-        virtual void setReadOnly(bool readOnly) override;
-        virtual bool setAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &icao) override;
-        virtual void clear() override;
+        void setReadOnly(bool readOnly) override;
+        bool setAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &icao) override;
+        void clear() override;
         //! @}
 
         //! Raw text designator
@@ -63,7 +63,7 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc CDbAirlineIcaoSelectorBase::createCompleter
-        virtual QCompleter *createCompleter() override;
+        QCompleter *createCompleter() override;
 
     private:
         //! Get the completer strings

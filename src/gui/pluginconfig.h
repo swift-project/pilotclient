@@ -27,7 +27,7 @@ namespace swift::gui
     {
     public:
         //! Dtor.
-        virtual ~IPluginConfig() {}
+        virtual ~IPluginConfig() = default;
 
         //! Creates a new config window and returns its pointer.
         virtual CPluginConfigWindow *createConfigWindow(QWidget *parent) = 0;

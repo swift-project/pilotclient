@@ -40,7 +40,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        ClientQuery();
+        ClientQuery() = default;
     };
 
     //! Equal to operator

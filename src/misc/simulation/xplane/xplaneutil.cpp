@@ -15,7 +15,7 @@
 #include "misc/fileutils.h"
 #include "misc/swiftdirectories.h"
 
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
 #    include <ShlObj.h>
 #endif
 
@@ -47,7 +47,7 @@ namespace swift::misc::simulation::xplane
         return lastLine;
     }
 
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
     QString getWindowsLocalAppDataPath()
     {
         QString result;
@@ -85,7 +85,7 @@ namespace swift::misc::simulation::xplane
     {
         //! \fixme KB 8/17 we could also use the runtime CBuildConfig decision here, which looks nicer (I personally
         //! always try to avoid ifdef)
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
         return CFileUtils::appendFilePathsAndFixUnc(getWindowsLocalAppDataPath(), xplaneInstallFile);
 #elif defined(Q_OS_LINUX)
         static const QString xp(".x-plane");
@@ -127,7 +127,7 @@ namespace swift::misc::simulation::xplane
 
     QStringList CXPlaneUtil::modelDirectoriesFromSimDir(const QString &simulatorDir)
     {
-        if (simulatorDir.isEmpty()) { return QStringList(); }
+        if (simulatorDir.isEmpty()) { return {}; }
         return QStringList({ simulatorDir });
     }
 
@@ -152,7 +152,7 @@ namespace swift::misc::simulation::xplane
     QStringList CXPlaneUtil::pluginSubdirectories(const QString &pluginDir)
     {
         const QString dirName = pluginDir.isEmpty() ? xplaneRootDir() : pluginDir;
-        if (!CDirectoryUtils::isDirExisting(dirName)) { return QStringList(); }
+        if (!CDirectoryUtils::isDirExisting(dirName)) { return {}; }
         const QDir dir(dirName);
         return dir.entryList(QDir::Dirs, QDir::Name | QDir::IgnoreCase);
     }
@@ -227,7 +227,7 @@ namespace swift::misc::simulation::xplane
     {
         const QString dirName = CFileUtils::fixWindowsUncPath(pluginDir.isEmpty() ? xplaneRootDir() : pluginDir);
         const QDir directory(dirName);
-        if (!directory.exists()) { return QStringList(); }
+        if (!directory.exists()) { return {}; }
 
         // this finds the current levels XPLs
         QStringList files = directory.entryList(xplFileFilter(), QDir::Files, QDir::Name | QDir::IgnoreCase);

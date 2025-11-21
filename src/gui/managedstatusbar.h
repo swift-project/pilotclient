@@ -29,7 +29,7 @@ namespace swift::gui
         explicit CManagedStatusBar(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CManagedStatusBar() override;
+        ~CManagedStatusBar() override;
 
         //! Get the status bar
         QStatusBar *getStatusBar() const { return m_statusBar; }

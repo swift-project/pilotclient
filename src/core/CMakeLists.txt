@@ -270,11 +270,14 @@ endif()
 
 target_compile_definitions(core PRIVATE BUILD_SWIFT_CORE_LIB)
 
-target_precompile_headers(core
-        PRIVATE
-            ${SWIFT_MISC_PCH}
-            ${SWIFT_CORE_PCH}
-)
+
+if(SWIFT_USE_PCH)
+    target_precompile_headers(core
+            PRIVATE
+                ${SWIFT_MISC_PCH}
+                ${SWIFT_CORE_PCH}
+    )
+endif()
 
 install(TARGETS core
     LIBRARY DESTINATION lib

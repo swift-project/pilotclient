@@ -61,12 +61,11 @@ namespace swift::gui::components
         }
     }
 
-    CDbAutoSimulatorStashingComponent::~CDbAutoSimulatorStashingComponent() {}
+    CDbAutoSimulatorStashingComponent::~CDbAutoSimulatorStashingComponent() = default;
 
     void CDbAutoSimulatorStashingComponent::updateProgressIndicator(int percent)
     {
-        if (percent > 100) { percent = 100; }
-        if (percent < 0) { percent = 0; }
+        percent = std::clamp(percent, 0, 100);
         ui->pb_StashingProgress->setValue(percent);
     }
 
@@ -130,7 +129,7 @@ namespace swift::gui::components
         int maxObjectsStashed = -1;
         if (!ui->le_MaxModelsStashed->text().isEmpty())
         {
-            bool ok;
+            bool ok {};
             ui->le_MaxModelsStashed->text().toInt(&ok);
             if (!ok) { maxObjectsStashed = 100; }
         }

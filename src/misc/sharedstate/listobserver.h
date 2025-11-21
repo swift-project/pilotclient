@@ -67,7 +67,7 @@ namespace swift::misc::shared_state
 
     public:
         //! Subscribe using the given transport mechanism.
-        virtual void initialize(IDataLink *dataLink) override
+        void initialize(IDataLink *dataLink) override
         {
             CGenericListObserver::initialize(dataLink);
             if (std::is_same_v<U, CAnyMatch>) { setFilter({}); }
@@ -86,14 +86,8 @@ namespace swift::misc::shared_state
         virtual void onElementsReplaced(const T &values) = 0;
 
     private:
-        virtual void onGenericElementAdded(const CVariant &value) override final
-        {
-            onElementAdded(value.to<typename T::value_type>());
-        }
-        virtual void onGenericElementsReplaced(const CVariantList &values) override final
-        {
-            onElementsReplaced(values.to<T>());
-        }
+        void onGenericElementAdded(const CVariant &value) final { onElementAdded(value.to<typename T::value_type>()); }
+        void onGenericElementsReplaced(const CVariantList &values) final { onElementsReplaced(values.to<T>()); }
     };
 } // namespace swift::misc::shared_state
 

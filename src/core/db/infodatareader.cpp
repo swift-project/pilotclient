@@ -73,7 +73,7 @@ namespace swift::core::db
         if (entity == CEntityFlags::DbInfoObjectEntity || entity == CEntityFlags::SharedInfoObjectEntity)
         {
             SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Using this for CInfoDataReader makes no sense");
-            return QDateTime();
+            return {};
         }
 
         // Forward to web data services so I get cache data from other readers
@@ -214,7 +214,7 @@ namespace swift::core::db
         case CDbFlags::Shared: return getSharedInfoObjectsUrl();
         default: qFatal("Wrong mode");
         }
-        return CUrl();
+        return {};
     }
 
     CStatusMessageList CInfoDataReader::readFromJsonFiles(const QString &dir, CEntityFlags::Entity whatToRead,

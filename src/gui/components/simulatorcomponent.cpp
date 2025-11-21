@@ -39,8 +39,7 @@ namespace swift::gui::components
         return cats;
     }
 
-    CSimulatorComponent::CSimulatorComponent(QWidget *parent)
-        : QTabWidget(parent), CEnableForDockWidgetInfoArea(), ui(new Ui::CSimulatorComponent)
+    CSimulatorComponent::CSimulatorComponent(QWidget *parent) : QTabWidget(parent), ui(new Ui::CSimulatorComponent)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 
@@ -71,7 +70,7 @@ namespace swift::gui::components
         this->onSimulatorStatusChanged(sGui->getIContextSimulator()->getSimulatorStatus());
     }
 
-    CSimulatorComponent::~CSimulatorComponent() {}
+    CSimulatorComponent::~CSimulatorComponent() = default;
 
     void CSimulatorComponent::addOrUpdateLiveDataByName(const QString &name, const QString &value, const CIcon &icon)
     {
@@ -214,7 +213,7 @@ namespace swift::gui::components
 
     void CSimulatorComponent::onSimulatorStatusChanged(int status)
     {
-        ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
+        auto simStatus = static_cast<ISimulator::SimulatorStatus>(status);
         this->clear(); // clean up, will be refreshed
         if (simStatus.testFlag(ISimulator::Connected))
         {

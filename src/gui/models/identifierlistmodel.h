@@ -22,7 +22,7 @@ namespace swift::gui::models
         explicit CIdentifierListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CIdentifierListModel() {}
+        ~CIdentifierListModel() override = default;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_MODELS_IDENTIFIERLISTMODEL_H

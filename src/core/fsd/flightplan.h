@@ -52,7 +52,7 @@ namespace swift::core::fsd
         //! @}
 
     protected:
-        FlightPlan();
+        FlightPlan() = default;
     };
 
     //! Equal to operator

@@ -132,7 +132,7 @@ namespace swift::misc
 
         protected:
             //! Constructor
-            IDatastoreObjectWithIntegerKey() {}
+            IDatastoreObjectWithIntegerKey() {} // NOLINT(modernize-use-equals-default)
 
             //! Constructor
             IDatastoreObjectWithIntegerKey(int key) : m_dbKey(key) {}
@@ -224,7 +224,7 @@ namespace swift::misc
 
         protected:
             //! Constructor
-            IDatastoreObjectWithStringKey() {}
+            IDatastoreObjectWithStringKey() {} // NOLINT(modernize-use-equals-default)
 
             //! Constructor
             IDatastoreObjectWithStringKey(const QString &key) : m_dbKey(key) {}

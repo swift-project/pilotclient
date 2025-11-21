@@ -58,7 +58,7 @@ namespace swift::misc::aviation
         };
 
         //! Default constructor.
-        CAtcStation();
+        CAtcStation() = default;
 
         //! Simplified constructor
         CAtcStation(const QString &callsign);
@@ -202,19 +202,19 @@ namespace swift::misc::aviation
         void setLogoffTimeUtc(const QDateTime &logoffTimeUtc) { m_logoffTimeUtc = logoffTimeUtc; }
 
         //! \copydoc geo::ICoordinateGeodetic::latitude
-        virtual geo::CLatitude latitude() const override;
+        geo::CLatitude latitude() const override;
 
         //! \copydoc geo::ICoordinateGeodetic::longitude
-        virtual geo::CLongitude longitude() const override;
+        geo::CLongitude longitude() const override;
 
         //! \copydoc geo::ICoordinateGeodetic::geodeticHeight
         const aviation::CAltitude &geodeticHeight() const override;
 
         //! \copydoc geo::ICoordinateGeodetic::normalVector
-        virtual QVector3D normalVector() const override;
+        QVector3D normalVector() const override;
 
         //! \copydoc geo::ICoordinateGeodetic::normalVectorDouble
-        virtual std::array<double, 3> normalVectorDouble() const override;
+        std::array<double, 3> normalVectorDouble() const override;
 
         //! \copydoc swift::misc::mixin::Index::propertyByIndex
         QVariant propertyByIndex(CPropertyIndexRef index) const;

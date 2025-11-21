@@ -26,7 +26,7 @@ namespace swift::misc
         using CSequence::CSequence;
 
         //! Default constructor.
-        CApplicationInfoList();
+        CApplicationInfoList() = default;
 
         //! Construct from base class object.
         CApplicationInfoList(const CSequence<CApplicationInfo> &other);

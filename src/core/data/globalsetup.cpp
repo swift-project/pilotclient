@@ -107,7 +107,7 @@ namespace swift::core::data
     {
         if (index.isMyself()) { return CVariant::fromValue(*this); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbRootDirectory: return QVariant::fromValue(m_dbRootDirectoryUrl);
@@ -136,7 +136,7 @@ namespace swift::core::data
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbRootDirectory: m_dbRootDirectoryUrl.setPropertyByIndex(index.copyFrontRemoved(), variant); break;

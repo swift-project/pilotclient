@@ -14,7 +14,7 @@ namespace swift::gui::components
         ui->comp_DataUpdates->showVisibleLoadAllButtons(true, false, true);
     }
 
-    CInitialDataLoadComponent::~CInitialDataLoadComponent() {}
+    CInitialDataLoadComponent::~CInitialDataLoadComponent() = default;
 
     void CInitialDataLoadComponent::loadAllFromShared() { ui->comp_DataUpdates->loadAllFromShared(); }
 

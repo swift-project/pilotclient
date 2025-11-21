@@ -333,7 +333,7 @@ namespace swift::core
             if (part2.startsWith("max"))
             {
                 if (!parser.hasPart(3)) { return false; }
-                bool ok;
+                bool ok {};
                 const int max = parser.part(3).toInt(&ok);
                 if (!ok) { return false; }
                 m_interpolationLogger.setMaxSituations(max);
@@ -1040,7 +1040,7 @@ namespace swift::core
 
         if (!this->isUpdateAllRemoteAircraft(startTime)) { this->resetUpdateAllRemoteAircraft(); }
 
-        if (m_statsMaxUpdateTimeMs < dt) { m_statsMaxUpdateTimeMs = dt; }
+        m_statsMaxUpdateTimeMs = std::max(m_statsMaxUpdateTimeMs, dt);
         if (m_statsLastUpdateAircraftRequestedMs > 0)
         {
             m_statsUpdateAircraftRequestedDeltaMs = startTime - m_statsLastUpdateAircraftRequestedMs;
@@ -1232,7 +1232,7 @@ namespace swift::core
         }
     }
 
-    ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info) : QObject(), m_info(info)
+    ISimulatorListener::ISimulatorListener(const CSimulatorPluginInfo &info) : m_info(info)
     {
         this->setObjectName("ISimulatorListener:" + info.toQString());
 

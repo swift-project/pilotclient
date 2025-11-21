@@ -27,7 +27,7 @@ namespace swift::misc::simulation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CSimulatorInfoList();
+        CSimulatorInfoList() = default;
 
         //! Construct from a base class object.
         CSimulatorInfoList(const CSequence<CSimulatorInfo> &other);

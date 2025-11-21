@@ -20,10 +20,10 @@ namespace swift::sound::sample_provider
         CResourceSoundSampleProvider(const CResourceSound &resourceSound, QObject *parent = nullptr);
 
         //! copydoc ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! copydoc ISampleProvider::isFinished
-        virtual bool isFinished() const override { return m_isFinished; }
+        bool isFinished() const override { return m_isFinished; }
 
         //! @{
         //! Looping

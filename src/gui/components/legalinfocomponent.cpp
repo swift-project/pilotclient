@@ -34,7 +34,7 @@ namespace swift::gui::components
         connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
     }
 
-    CLegalInfoComponent::~CLegalInfoComponent() {}
+    CLegalInfoComponent::~CLegalInfoComponent() = default;
 
     bool CLegalInfoComponent::isAgreedTo() const { return ui->cb_Agree->isChecked(); }
 

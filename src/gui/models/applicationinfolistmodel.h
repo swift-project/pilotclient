@@ -26,7 +26,7 @@ namespace swift::gui::models
         explicit CApplicationInfoListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CApplicationInfoListModel() {}
+        ~CApplicationInfoListModel() override = default;
 
         //! \copydoc swift::misc::CApplicationInfoList::fromOtherSwiftVersionsFromDataDirectories
         void otherSwiftVersionsFromDataDirectories(bool reinit);

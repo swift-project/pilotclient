@@ -44,7 +44,7 @@ namespace swift::gui::components
         expandWritingToFile(false);
     }
 
-    CRawFsdMessagesComponent::~CRawFsdMessagesComponent() {}
+    CRawFsdMessagesComponent::~CRawFsdMessagesComponent() = default;
 
     void CRawFsdMessagesComponent::setupConnections()
     {
@@ -66,7 +66,7 @@ namespace swift::gui::components
 
         using namespace std::placeholders;
         QMetaObject::Connection c = sGui->getIContextNetwork()->connectRawFsdMessageSignal(
-            this, std::bind(&CRawFsdMessagesComponent::addFsdMessage, this, _1));
+            this, [this](auto &&msg) { addFsdMessage(std::forward<decltype(msg)>(msg)); });
         if (!c)
         {
             ui->pte_RawFsdMessages->appendPlainText(QStringLiteral("Could not connect to raw FSD message."));
@@ -87,7 +87,7 @@ namespace swift::gui::components
     void CRawFsdMessagesComponent::enableDisableRawFsdMessages()
     {
         //! \fixme KB 2019-03 hardcoded style sheet
-        bool enable;
+        bool enable {};
         if (ui->pb_EnableDisable->text() == "Enable")
         {
             enable = true;
@@ -198,8 +198,7 @@ namespace swift::gui::components
 
     void CRawFsdMessagesComponent::changeFileWritingMode()
     {
-        const CRawFsdMessageSettings::FileWriteMode mode =
-            ui->cb_FileWritingMode->currentData().value<CRawFsdMessageSettings::FileWriteMode>();
+        const auto mode = ui->cb_FileWritingMode->currentData().value<CRawFsdMessageSettings::FileWriteMode>();
         m_setting.setProperty(vatsim::CRawFsdMessageSettings::IndexFileWriteMode, CVariant::fromValue(mode));
     }
 

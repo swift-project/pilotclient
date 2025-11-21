@@ -46,7 +46,7 @@ namespace swift::gui::components
         explicit COwnAircraftComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~COwnAircraftComponent() override;
+        ~COwnAircraftComponent() override;
 
         //! Validate aircaft
         swift::misc::CStatusMessageList validate() const;

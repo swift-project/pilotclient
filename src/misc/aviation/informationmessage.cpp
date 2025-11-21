@@ -58,7 +58,7 @@ namespace swift::misc::aviation
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexType: return QVariant::fromValue(m_type);
@@ -80,7 +80,7 @@ namespace swift::misc::aviation
             ITimestampBased::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexType: m_type = static_cast<InformationType>(variant.toInt()); break;
@@ -103,7 +103,7 @@ namespace swift::misc::aviation
         {
             return ITimestampBased::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMessage: return m_message.compare(compareValue.m_message, Qt::CaseInsensitive);

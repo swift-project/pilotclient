@@ -13,8 +13,6 @@ using namespace swift::misc::simulation;
 
 namespace swift::simplugin::xplane
 {
-    CXPlaneMPAircraft::CXPlaneMPAircraft() {}
-
     CXPlaneMPAircraft::CXPlaneMPAircraft(const CSimulatedAircraft &aircraft, ISimulator *simulator,
                                          CInterpolationLogger *logger)
         : m_aircraft(aircraft),
@@ -56,7 +54,7 @@ namespace swift::simplugin::xplane
         return this->getInterpolator() ? this->getInterpolator()->getInterpolationMessages(mode) : CStatusMessageList();
     }
 
-    CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const { return CCallsignSet(this->keys()); }
+    CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const { return { this->keys() }; }
 
     QStringList CXPlaneMPAircraftObjects::getAllCallsignStrings(bool sorted) const
     {

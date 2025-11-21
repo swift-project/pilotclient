@@ -9,8 +9,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CMatchingStatisticsEntr
 
 namespace swift::misc::simulation
 {
-    CMatchingStatisticsEntry::CMatchingStatisticsEntry() {}
-
     CMatchingStatisticsEntry::CMatchingStatisticsEntry(EntryType type, const QString &sessionId,
                                                        const QString &modelSetId, const QString &description,
                                                        const QString &aircraftDesignator,
@@ -79,7 +77,7 @@ namespace swift::misc::simulation
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSessionId: return QVariant::fromValue(m_sessionId);
@@ -109,7 +107,7 @@ namespace swift::misc::simulation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSessionId: this->setSessionId(variant.value<QString>()); break;
@@ -130,7 +128,7 @@ namespace swift::misc::simulation
         {
             return ITimestampBased::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSessionId: return m_sessionId.compare(compareValue.m_sessionId, Qt::CaseInsensitive);

@@ -33,30 +33,29 @@ namespace swift::misc
             CDuplex(CHub *hub, const CIdentifier &client, CDBusServer *server, QObject *parent = nullptr);
 
             //! Destructor.
-            virtual ~CDuplex() override;
+            ~CDuplex() override;
 
         public slots:
             //! \name Interface implementations
             //! @{
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::postEvent
-            virtual void postEvent(const QString &channel, const swift::misc::CVariant &param) override;
+            void postEvent(const QString &channel, const swift::misc::CVariant &param) override;
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::setSubscription
-            virtual void setSubscription(const QString &channel, const swift::misc::CVariantList &filters) override;
+            void setSubscription(const QString &channel, const swift::misc::CVariantList &filters) override;
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::requestPeerSubscriptions
-            virtual void requestPeerSubscriptions() override;
+            void requestPeerSubscriptions() override;
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::submitRequest
-            virtual void submitRequest(const QString &channel, const swift::misc::CVariant &param,
-                                       quint32 token) override;
+            void submitRequest(const QString &channel, const swift::misc::CVariant &param, quint32 token) override;
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::advertise
-            virtual void advertise(const QString &channel) override;
+            void advertise(const QString &channel) override;
 
             //! \copydoc swift::misc::shared_state::dbus::IDuplex::withdraw
-            virtual void withdraw(const QString &channel) override;
+            void withdraw(const QString &channel) override;
             //! @}
 
         private:

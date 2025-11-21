@@ -17,7 +17,7 @@ namespace swift::misc::simulation
     //! Cubic spline interpolator
     class SWIFT_MISC_EXPORT CInterpolatorSpline : public CInterpolator
     {
-        virtual void anchor() override;
+        void anchor() override;
 
     public:
         //! Constructor

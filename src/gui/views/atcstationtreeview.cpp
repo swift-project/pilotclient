@@ -86,7 +86,7 @@ namespace swift::gui::views
         const QVariant data = this->model()->data(index.siblingAtColumn(0)); // supposed to be the callsign
         const QString callsign = data.toString();
         const CAtcStationTreeModel *model = this->stationModel();
-        if (!model) { return CAtcStation(); }
+        if (!model) { return {}; }
         return model->container().findFirstByCallsign(CCallsign(callsign, CCallsign::Atc));
     }
 
@@ -116,12 +116,12 @@ namespace swift::gui::views
         if (!this->stationModel()) { return; }
         if (this->stationModel()->container().isEmpty()) { return; }
 
-        QMenu *menu = new QMenu(this); // menu
+        auto *menu = new QMenu(this); // menu
 
-        QAction *com1 = new QAction(CIcons::appCockpit16(), "Tune in COM1", this);
-        QAction *com2 = new QAction(CIcons::appCockpit16(), "Tune in COM2", this);
-        QAction *text = new QAction(CIcons::appTextMessages16(), "Show text messages", this);
-        QAction *resize = new QAction(CIcons::resize16(), "Resize", this);
+        auto *com1 = new QAction(CIcons::appCockpit16(), "Tune in COM1", this);
+        auto *com2 = new QAction(CIcons::appCockpit16(), "Tune in COM2", this);
+        auto *text = new QAction(CIcons::appTextMessages16(), "Show text messages", this);
+        auto *resize = new QAction(CIcons::resize16(), "Resize", this);
 
         connect(com1, &QAction::triggered, this, &CAtcStationTreeView::tuneInAtcCom1);
         connect(com2, &QAction::triggered, this, &CAtcStationTreeView::tuneInAtcCom2);

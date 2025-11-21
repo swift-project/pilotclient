@@ -32,7 +32,7 @@ namespace swift::gui::models
         explicit CUserListModel(UserMode userMode, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CUserListModel() {}
+        ~CUserListModel() override = default;
 
         //! Set station mode
         void setUserMode(UserMode userMode);

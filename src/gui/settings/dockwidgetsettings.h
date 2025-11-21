@@ -35,7 +35,7 @@ namespace swift::gui::settings
         };
 
         //! Default constructor
-        CDockWidgetSettings();
+        CDockWidgetSettings() = default;
 
         //! Reset margins to default
         void resetMarginsToDefault();

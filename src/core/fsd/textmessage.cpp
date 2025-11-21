@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    TextMessage::TextMessage() : MessageBase() {}
-
     TextMessage::TextMessage(const QString &sender, const QString &receiver, const QString &message)
         : MessageBase(sender, receiver), m_message(message)
     {
@@ -46,6 +44,6 @@ namespace swift::core::fsd
         };
 
         QStringList messageTokens = tokens.mid(2);
-        return TextMessage(tokens[0], tokens[1], messageTokens.join(":"));
+        return { tokens[0], tokens[1], messageTokens.join(":") };
     }
 } // namespace swift::core::fsd

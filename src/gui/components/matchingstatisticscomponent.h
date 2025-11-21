@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CMatchingStatisticsComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CMatchingStatisticsComponent();
+        ~CMatchingStatisticsComponent() override;
 
     private:
         //! Show statistics

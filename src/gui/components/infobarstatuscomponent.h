@@ -36,7 +36,7 @@ namespace swift::gui::components
         explicit CInfoBarStatusComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CInfoBarStatusComponent() override;
+        ~CInfoBarStatusComponent() override;
 
         //! DBus used?
         void setDBusStatus(bool dbus);
@@ -53,7 +53,7 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc QWidget::resizeEvent
-        virtual void resizeEvent(QResizeEvent *event) override;
+        void resizeEvent(QResizeEvent *event) override;
 
     private:
         QScopedPointer<Ui::CInfoBarStatusComponent> ui;

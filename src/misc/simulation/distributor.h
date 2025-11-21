@@ -42,7 +42,7 @@ namespace swift::misc::simulation
         };
 
         //! Default constructor.
-        CDistributor();
+        CDistributor() = default;
 
         //! Constructor
         CDistributor(const QString &key);

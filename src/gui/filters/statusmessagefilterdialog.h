@@ -40,10 +40,10 @@ namespace swift::gui::filters
         explicit CStatusMessageFilterDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CStatusMessageFilterDialog() override;
+        ~CStatusMessageFilterDialog() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>>
+        std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CStatusMessageList>>
         createModelFilter() const override;
 
     private:

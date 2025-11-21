@@ -35,7 +35,7 @@ namespace swift::gui::components
         CSettingsHotkeyComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsHotkeyComponent() override;
+        ~CSettingsHotkeyComponent() override;
 
         //! Save settings
         void saveSettings();
@@ -84,10 +84,10 @@ namespace swift::gui::components
         void setConfigComponent(CSettingsHotkeyComponent *config) { m_config = config; }
 
         //! \copydoc QWizardPage::validatePage
-        virtual bool validatePage() override;
+        bool validatePage() override;
 
         //! \copydoc QWizardPage::initializePage
-        virtual void initializePage() override;
+        void initializePage() override;
 
     private:
         CSettingsHotkeyComponent *m_config = nullptr;

@@ -38,7 +38,7 @@ namespace swift::gui::components
         explicit CDbCountryComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbCountryComponent() override;
+        ~CDbCountryComponent() override;
 
     private:
         //! Countries have been read

@@ -56,13 +56,13 @@ namespace swift::gui
             explicit CAircraftComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAircraftComponent() override;
+            ~CAircraftComponent() override;
 
             //! Aircraft in range
             int countAircraftInView() const;
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
-            virtual bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
+            bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
 
             //! Update aircraft/airport view
             void update();

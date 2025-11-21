@@ -49,21 +49,21 @@ namespace swift::core::db
 
     CLivery CModelDataReader::getLiveryForCombinedCode(const QString &combinedCode) const
     {
-        if (!CLivery::isValidCombinedCode(combinedCode)) { return CLivery(); }
+        if (!CLivery::isValidCombinedCode(combinedCode)) { return {}; }
         const CLiveryList liveries(getLiveries());
         return liveries.findByCombinedCode(combinedCode);
     }
 
     CLivery CModelDataReader::getStdLiveryForAirlineVDesignator(const CAirlineIcaoCode &icao) const
     {
-        if (!icao.hasValidDesignator()) { return CLivery(); }
+        if (!icao.hasValidDesignator()) { return {}; }
         const CLiveryList liveries(getLiveries());
         return liveries.findStdLiveryByAirlineIcaoVDesignator(icao);
     }
 
     CLivery CModelDataReader::getLiveryForDbKey(int id) const
     {
-        if (id < 0) { return CLivery(); }
+        if (id < 0) { return {}; }
         const CLiveryList liveries(getLiveries());
         return liveries.findByKey(id);
     }
@@ -78,7 +78,7 @@ namespace swift::core::db
 
     CDistributor CModelDataReader::getDistributorForDbKey(const QString &dbKey) const
     {
-        if (dbKey.isEmpty()) { return CDistributor(); }
+        if (dbKey.isEmpty()) { return {}; }
         const CDistributorList distributors(getDistributors());
         return distributors.findByKeyOrAlias(dbKey);
     }
@@ -87,7 +87,7 @@ namespace swift::core::db
 
     CAircraftModel CModelDataReader::getModelForModelString(const QString &modelString) const
     {
-        if (modelString.isEmpty()) { return CAircraftModel(); }
+        if (modelString.isEmpty()) { return {}; }
         const CAircraftModelList models(this->getModels());
         return models.findFirstByModelStringOrDefault(modelString);
     }
@@ -100,21 +100,21 @@ namespace swift::core::db
 
     CAircraftModel CModelDataReader::getModelForDbKey(int dbKey) const
     {
-        if (dbKey < 0) { return CAircraftModel(); }
+        if (dbKey < 0) { return {}; }
         const CAircraftModelList models(this->getModels());
         return models.findByKey(dbKey);
     }
 
     QSet<QString> CModelDataReader::getAircraftDesignatorsForAirline(const CAirlineIcaoCode &code) const
     {
-        if (!code.hasValidDesignator()) { return QSet<QString>(); }
+        if (!code.hasValidDesignator()) { return {}; }
         const CAircraftModelList models(this->getModels());
         return models.getAircraftDesignatorsForAirline(code);
     }
 
     CAircraftIcaoCodeList CModelDataReader::getAicraftIcaoCodesForAirline(const CAirlineIcaoCode &code) const
     {
-        if (!code.hasValidDesignator()) { return CAircraftIcaoCodeList(); }
+        if (!code.hasValidDesignator()) { return {}; }
         const CAircraftModelList models(this->getModels());
         return models.getAicraftIcaoCodesForAirline(code);
     }
@@ -123,7 +123,7 @@ namespace swift::core::db
     CModelDataReader::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator,
                                                                           const QString &combinedCode)
     {
-        if (aircraftDesignator.isEmpty()) { return CAircraftModelList(); }
+        if (aircraftDesignator.isEmpty()) { return {}; }
         const CAircraftModelList models(this->getModels());
         return models.findByAircraftDesignatorAndLiveryCombinedCode(aircraftDesignator, combinedCode);
     }
@@ -230,13 +230,13 @@ namespace swift::core::db
 
     CAircraftIcaoCodeList CModelDataReader::getAircraftAircraftIcaos() const
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return CAircraftIcaoCodeList(); }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return {}; }
         return sApp->getWebDataServices()->getAircraftIcaoCodes();
     }
 
     CAircraftCategoryList CModelDataReader::getAircraftCategories() const
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return CAircraftCategoryList(); }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return {}; }
         return sApp->getWebDataServices()->getAircraftCategories();
     }
 
@@ -628,7 +628,7 @@ namespace swift::core::db
         case CEntityFlags::LiveryEntity: return m_liveryCache.getAvailableTimestamp();
         case CEntityFlags::ModelEntity: return m_modelCache.getAvailableTimestamp();
         case CEntityFlags::DistributorEntity: return m_distributorCache.getAvailableTimestamp();
-        default: return QDateTime();
+        default: return {};
         }
     }
 

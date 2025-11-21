@@ -45,7 +45,7 @@ namespace swift::gui::components
         explicit CDownloadComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CDownloadComponent();
+        ~CDownloadComponent() override;
 
         //! Set file to be downloaded
         bool setDownloadFile(const swift::misc::network::CRemoteFile &remoteFile);

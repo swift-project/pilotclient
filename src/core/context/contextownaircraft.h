@@ -69,14 +69,14 @@ namespace swift::core::context
         }
 
         //! \copydoc IContext::getPathAndContextId()
-        virtual QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
+        QString getPathAndContextId() const override { return this->buildPathAndContextId(ObjectPath()); }
 
         //! Factory method
         static IContextOwnAircraft *create(CCoreFacade *parent, CCoreFacadeConfig::ContextMode mode,
                                            swift::misc::CDBusServer *server, QDBusConnection &connection);
 
         //! Destructor
-        virtual ~IContextOwnAircraft() override {}
+        ~IContextOwnAircraft() override = default;
 
     signals:
         //! Aircraft cockpit update

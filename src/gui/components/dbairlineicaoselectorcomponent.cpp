@@ -35,7 +35,7 @@ namespace swift::gui::components
         connect(ui->le_Airline, &QLineEdit::editingFinished, this, &CDbAirlineIcaoSelectorComponent::onDataChanged);
     }
 
-    CDbAirlineIcaoSelectorComponent::~CDbAirlineIcaoSelectorComponent() {}
+    CDbAirlineIcaoSelectorComponent::~CDbAirlineIcaoSelectorComponent() = default;
 
     void CDbAirlineIcaoSelectorComponent::setReadOnly(bool readOnly) { ui->le_Airline->setReadOnly(readOnly); }
 
@@ -79,7 +79,7 @@ namespace swift::gui::components
 
     QCompleter *CDbAirlineIcaoSelectorComponent::createCompleter()
     {
-        QCompleter *c = new QCompleter(completerStrings(), this);
+        auto *c = new QCompleter(completerStrings(), this);
         c->setCaseSensitivity(Qt::CaseInsensitive);
         c->setCompletionMode(QCompleter::PopupCompletion);
         c->setMaxVisibleItems(10);

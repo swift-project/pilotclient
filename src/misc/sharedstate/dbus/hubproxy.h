@@ -29,12 +29,12 @@ namespace swift::misc
             CHubProxy(const QDBusConnection &connection, const QString &service, QObject *parent = nullptr);
 
             //! Destructor.
-            virtual ~CHubProxy() override;
+            ~CHubProxy() override;
 
             //! \name Interface implementations
             //! @{
-            virtual bool isConnected() const override;
-            virtual std::pair<QSharedPointer<IDuplex>, QFuture<bool>> getDuplex(const CIdentifier &) override;
+            bool isConnected() const override;
+            std::pair<QSharedPointer<IDuplex>, QFuture<bool>> getDuplex(const CIdentifier &) override;
             //! @}
 
         public slots:
@@ -42,16 +42,16 @@ namespace swift::misc
             //! @{
 
             //! \copydoc swift::misc::shared_state::dbus::IHub::openDuplex
-            virtual bool openDuplex(const swift::misc::CIdentifier &client) override;
+            bool openDuplex(const swift::misc::CIdentifier &client) override;
 
             //! \copydoc swift::misc::shared_state::dbus::IHub::closeDuplex
-            virtual void closeDuplex(const swift::misc::CIdentifier &client) override;
+            void closeDuplex(const swift::misc::CIdentifier &client) override;
             //! @}
 
         protected:
             //! \name Interface implementations
             //! @{
-            virtual QFuture<bool> openDuplexAsync(const CIdentifier &client) override;
+            QFuture<bool> openDuplexAsync(const CIdentifier &client) override;
             //! @}
 
         private:

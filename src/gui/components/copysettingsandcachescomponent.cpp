@@ -44,7 +44,7 @@ namespace swift::gui::components
                 &CCopySettingsAndCachesComponent::onOtherVersionChanged);
     }
 
-    CCopySettingsAndCachesComponent::~CCopySettingsAndCachesComponent() {}
+    CCopySettingsAndCachesComponent::~CCopySettingsAndCachesComponent() = default;
 
     void CCopySettingsAndCachesComponent::reloadOtherVersions(int deferMs)
     {

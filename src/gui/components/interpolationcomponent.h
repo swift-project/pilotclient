@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CInterpolationComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CInterpolationComponent() override;
+        ~CInterpolationComponent() override;
 
     private:
         QScopedPointer<Ui::CInterpolationComponent> ui;

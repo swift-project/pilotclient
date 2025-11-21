@@ -16,8 +16,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CArtifact)
 
 namespace swift::misc::db
 {
-    CArtifact::CArtifact() {}
-
     CArtifact::CArtifact(const QString &name, const QString &version, const QString &md5, CArtifact::ArtifactType type,
                          int size, bool existing, const CPlatform &platform)
         : m_name(name.trimmed()), m_md5(md5), m_type(static_cast<int>(type)), m_size(size), m_existing(existing),
@@ -48,21 +46,19 @@ namespace swift::misc::db
     bool CArtifact::isWithDistribution(const CDistribution &distribution, bool acceptMoreStableDistributions) const
     {
         if (distribution.isEmpty() || !this->hasDistributions()) { return false; }
-        for (const CDistribution &dist : this->getDistributions())
-        {
-            if (dist == distribution) { return true; }
-            if (acceptMoreStableDistributions && dist.isStabilityBetter(distribution)) { return true; }
-        }
-        return false;
+        return std::any_of(
+            this->getDistributions().cbegin(), this->getDistributions().cend(), [&](const CDistribution &dist) {
+                return dist == distribution || (acceptMoreStableDistributions && dist.isStabilityBetter(distribution));
+            });
     }
 
     CRemoteFile CArtifact::asRemoteFile() const
     {
-        if (!this->hasDistributions()) { return CRemoteFile(); }
+        if (!this->hasDistributions()) { return {}; }
         CRemoteFile rf(this->getName(), this->getFileSize());
         const CDistribution d = this->getMostStableDistribution();
         const CUrl url = d.getDownloadUrl();
-        if (url.isEmpty()) { return CRemoteFile(); }
+        if (url.isEmpty()) { return {}; }
         rf.setUtcTimestamp(this->getUtcTimestamp());
         rf.setUrl(url);
         rf.setDescription(this->getPlatform().toQString() + " " + d.getChannel());
@@ -94,7 +90,7 @@ namespace swift::misc::db
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexName: return QVariant::fromValue(m_name);
@@ -123,7 +119,7 @@ namespace swift::misc::db
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexName: this->setName(variant.toString()); break;

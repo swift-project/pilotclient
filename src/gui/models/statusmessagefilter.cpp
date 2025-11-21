@@ -24,7 +24,7 @@ namespace swift::gui::models
         CStatusMessageList outContainer;
         for (const CStatusMessage &msg : inContainer)
         {
-            if (!(m_severity == CStatusMessage::SeverityInfo || m_severity == CStatusMessage::SeverityDebug))
+            if (m_severity != CStatusMessage::SeverityInfo && m_severity != CStatusMessage::SeverityDebug)
             {
                 if (!msg.isSeverityHigherOrEqual(this->m_severity)) { continue; }
             }

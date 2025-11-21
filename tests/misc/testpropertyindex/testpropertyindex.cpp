@@ -42,7 +42,7 @@ namespace MiscTest
         aircraft.setCallsign("DEIHL");
         aircraft.setCom1ActiveFrequency(f);
         CVariant vf = aircraft.propertyByIndex(i);
-        const CFrequency pf = vf.value<CFrequency>();
+        const auto pf = vf.value<CFrequency>();
         QVERIFY2(pf == f, "Frequencies should have same value");
     }
 

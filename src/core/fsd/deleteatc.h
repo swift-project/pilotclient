@@ -29,7 +29,7 @@ namespace swift::core::fsd
         QString m_cid; //!< id
 
     private:
-        DeleteAtc();
+        DeleteAtc() = default;
     };
 
     //! Equal to operator

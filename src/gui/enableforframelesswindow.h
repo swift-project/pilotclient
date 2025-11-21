@@ -48,7 +48,7 @@ namespace swift::gui
                                   QWidget *correspondingWidget);
 
         //! Destructor
-        virtual ~CEnableForFramelessWindow() {}
+        virtual ~CEnableForFramelessWindow() = default;
 
         //! Copy constructor
         CEnableForFramelessWindow(const CEnableForFramelessWindow &) = delete;

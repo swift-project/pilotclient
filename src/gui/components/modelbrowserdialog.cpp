@@ -14,10 +14,7 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    CModelBrowserDialog::~CModelBrowserDialog()
-    {
-        // void;
-    }
+    CModelBrowserDialog::~CModelBrowserDialog() = default;
 
     void CModelBrowserDialog::done(int r)
     {

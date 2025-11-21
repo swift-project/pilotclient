@@ -33,7 +33,7 @@ namespace swift::gui::components
         explicit CSettingsFontComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsFontComponent() override;
+        ~CSettingsFontComponent() override;
 
         //! Set mode
         void setMode(Mode m);

@@ -7,6 +7,7 @@
 
 #include <QDateTime>
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QObject>
 #include <QString>
 #include <QTest>

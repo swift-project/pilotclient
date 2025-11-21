@@ -36,17 +36,17 @@ namespace swift::misc
 
     QString CCacheSettingsUtils::relativeSettingsPath(const QString &fileName)
     {
-        if (!isSetting(fileName)) { return QString(); }
+        if (!isSetting(fileName)) { return {}; }
         const int index = fileName.lastIndexOf(binSettings());
-        if (index < 0) { return QString(); }
+        if (index < 0) { return {}; }
         return fileName.mid(index);
     }
 
     QString CCacheSettingsUtils::relativeCachePath(const QString &fileName)
     {
-        if (!isCache(fileName)) { return QString(); }
+        if (!isCache(fileName)) { return {}; }
         const int index = fileName.lastIndexOf(binData());
-        if (index < 0) { return QString(); }
+        if (index < 0) { return {}; }
         return fileName.mid(index);
     }
 

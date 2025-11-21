@@ -19,7 +19,7 @@ namespace swift::misc
     {
     public:
         //! Dtor
-        virtual ~IProvider();
+        virtual ~IProvider() = default;
 
         //! Copy constructor
         IProvider(const IProvider &) = delete;
@@ -32,7 +32,7 @@ namespace swift::misc
 
     protected:
         //! Constructor
-        IProvider() {}
+        IProvider() {} // NOLINT(modernize-use-equals-default)
     };
 
     //! Base class of provider aware classes
@@ -44,7 +44,7 @@ namespace swift::misc
         IProviderAware(PROVIDER *provider = nullptr) { this->setProvider(provider); }
 
         //! Dtor
-        virtual ~IProviderAware() {}
+        virtual ~IProviderAware() = default;
 
         //! Has provider?
         bool hasProvider() const { return m_provider; }
@@ -59,7 +59,7 @@ namespace swift::misc
             if (m_provider == provider) { return; }
             if (m_provider) { m_lastProviderConnections.disconnectAll(); }
             m_provider = provider; // new provider
-            IProvider *iProvider = dynamic_cast<IProvider *>(provider);
+            auto iProvider = dynamic_cast<IProvider *>(provider);
             if (iProvider && iProvider->asQObject())
             {
                 QMetaObject::Connection con = QObject::connect(iProvider->asQObject(), &QObject::destroyed,

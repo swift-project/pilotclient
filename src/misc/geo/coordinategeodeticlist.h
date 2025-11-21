@@ -34,7 +34,7 @@ namespace swift::misc::geo
         using CSequence::CSequence;
 
         //! Default constructor.
-        CCoordinateGeodeticList();
+        CCoordinateGeodeticList() = default;
 
         //! Construct from a base class object.
         CCoordinateGeodeticList(const CSequence<CCoordinateGeodetic> &other);

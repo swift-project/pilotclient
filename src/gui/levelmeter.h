@@ -37,7 +37,7 @@ namespace swift::gui
         CLevelMeter(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLevelMeter() override;
+        ~CLevelMeter() override;
 
         //! \copydoc QWidget::paintEvent
         void paintEvent(QPaintEvent *event) override;

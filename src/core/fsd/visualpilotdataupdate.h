@@ -58,7 +58,7 @@ namespace swift::core::fsd
         //! @}
 
         // private: // not private: used in CFSDClient::handleVisualPilotDataUpdate
-        VisualPilotDataUpdate();
+        VisualPilotDataUpdate() = default;
     };
 
     //! Equal to operator

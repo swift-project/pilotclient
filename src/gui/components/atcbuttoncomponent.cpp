@@ -3,7 +3,7 @@
 
 #include "atcbuttoncomponent.h"
 
-#include <math.h>
+#include <cmath>
 
 #include <QGridLayout>
 #include <QPushButton>
@@ -36,7 +36,7 @@ namespace swift::gui::components
         this->setVisible(false); // will be changed when ATC stations are reported
     }
 
-    CAtcButtonComponent::~CAtcButtonComponent() {}
+    CAtcButtonComponent::~CAtcButtonComponent() = default;
 
     void CAtcButtonComponent::updateStations()
     {
@@ -50,7 +50,7 @@ namespace swift::gui::components
         if (stations.isEmpty()) { return; }
 
         CGuiUtility::deleteLayout(this->layout(), true);
-        QGridLayout *layout = new QGridLayout(this);
+        auto *layout = new QGridLayout(this);
 
         layout->setObjectName("gl_CAtcButtonComponent");
         layout->setSpacing(4);
@@ -67,7 +67,7 @@ namespace swift::gui::components
                 if (!station.getCallsign().hasAtcSuffix()) { continue; }
             }
 
-            QPushButton *button = new QPushButton(this);
+            auto *button = new QPushButton(this);
             button->setText(station.getCallsignAsString());
             if (m_withIcons) { button->setIcon(CIcon(station.toIcon()).toQIcon()); }
             QObject::connect(button, &QPushButton::released, this, &CAtcButtonComponent::onButtonClicked);
@@ -117,11 +117,11 @@ namespace swift::gui::components
 
     void CAtcButtonComponent::onButtonClicked()
     {
-        QPushButton *button = qobject_cast<QPushButton *>(QObject::sender());
+        auto *button = qobject_cast<QPushButton *>(QObject::sender());
         if (!button) { return; }
         const CVariant v(button->property("atc"));
         if (!v.isValid() || !v.canConvert<CAtcStation>()) { return; }
-        const CAtcStation station = v.value<CAtcStation>();
+        const auto station = v.value<CAtcStation>();
         emit this->requestAtcStation(station);
     }
 } // namespace swift::gui::components

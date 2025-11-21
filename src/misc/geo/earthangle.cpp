@@ -75,7 +75,7 @@ namespace swift::misc::geo
         }
 
         // number only -> parsed as degrees
-        bool isDouble;
+        bool isDouble {};
         const double valueDegrees = wgs.toDouble(&isDouble);
         if (isDouble)
         {
@@ -84,7 +84,7 @@ namespace swift::misc::geo
         }
 
         // http://www.regular-expressions.info/floatingpoint.html
-        thread_local const QRegularExpression rx("[+-]?\\d+(?:\\.\\d+)?");
+        thread_local const QRegularExpression rx(R"([+-]?\d+(?:\.\d+)?)");
         int deg = 0;
         int min = 0;
         double sec = 0.0;
@@ -93,7 +93,7 @@ namespace swift::misc::geo
         while (i.hasNext() && c < 3)
         {
             const QRegularExpressionMatch match = i.next();
-            bool ok;
+            bool ok {};
             if (match.hasMatch())
             {
                 const QString cap = match.captured(0);

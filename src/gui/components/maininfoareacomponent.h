@@ -46,7 +46,7 @@ namespace swift::gui::components
         explicit CMainInfoAreaComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CMainInfoAreaComponent() override;
+        ~CMainInfoAreaComponent() override;
 
         //! Info areas
         enum InfoArea
@@ -123,8 +123,8 @@ namespace swift::gui::components
 
     protected:
         // CInfoArea overrides
-        virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
-        virtual const QPixmap &indexToPixmap(int areaIndex) const override;
+        QSize getPreferredSizeWhenFloating(int areaIndex) const override;
+        const QPixmap &indexToPixmap(int areaIndex) const override;
 
     private:
         QScopedPointer<Ui::CMainInfoAreaComponent> ui;

@@ -16,14 +16,14 @@ namespace swift::gui::editors
 {
     CForm::CForm(QWidget *parent) : COverlayMessagesFrame(parent) {}
 
-    CForm::~CForm() {}
+    CForm::~CForm() = default;
 
     void CForm::setSelectOnly() { this->setReadOnly(true); }
 
     CStatusMessageList CForm::validate(bool withNestedObjects) const
     {
         Q_UNUSED(withNestedObjects);
-        return CStatusMessageList();
+        return {};
     }
 
     CStatusMessageList CForm::validateAsOverlayMessage(bool withNestedObjects, bool appendOldMessages,
@@ -48,7 +48,7 @@ namespace swift::gui::editors
 
     CFormDbUser::CFormDbUser(QWidget *parent) : CForm(parent) {}
 
-    CFormDbUser::~CFormDbUser() {}
+    CFormDbUser::~CFormDbUser() = default;
 
     CAuthenticatedUser CFormDbUser::getSwiftDbUser() const { return m_swiftDbUser.get(); }
 

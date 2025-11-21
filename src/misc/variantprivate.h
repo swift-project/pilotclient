@@ -71,7 +71,7 @@ namespace swift::misc
 
             const QString &operationName() const { return m_operationName; }
 
-            ~CVariantException() {}
+            ~CVariantException() override = default;
 
         private:
             QString m_operationName;
@@ -224,42 +224,39 @@ namespace swift::misc
         struct CValueObjectMetaInfo : public IValueObjectMetaInfo
         {
             CValueObjectMetaInfo();
-            virtual ~CValueObjectMetaInfo() override;
+            ~CValueObjectMetaInfo() override;
             static CValueObjectMetaInfo *instance(const T &);
 
             CValueObjectMetaInfo(const CValueObjectMetaInfo &) = delete;
             CValueObjectMetaInfo &operator=(const CValueObjectMetaInfo &) = delete;
 
-            virtual QString toQString(const void *object, bool i18n) const override;
-            virtual QJsonObject toJson(const void *object) const override;
-            virtual void convertFromJson(const QJsonObject &json, void *object) const override;
-            virtual QJsonObject toMemoizedJson(const void *object) const override;
-            virtual void convertFromMemoizedJson(const QJsonObject &json, void *object,
-                                                 bool allowFallbackToJson) const override;
-            virtual void unmarshall(const QDBusArgument &arg, void *object) const override;
-            virtual size_t getValueHash(const void *object) const override;
-            virtual int getMetaTypeId() const override;
-            virtual const void *upCastTo(const void *object, int metaTypeId) const override;
-            virtual int compareImpl(const void *lhs, const void *rhs) const override;
-            virtual void setPropertyByIndex(void *object, const QVariant &variant,
-                                            CPropertyIndexRef index) const override;
-            virtual void propertyByIndex(const void *object, QVariant &o_variant,
-                                         swift::misc::CPropertyIndexRef index) const override;
-            virtual bool equalsPropertyByIndex(const void *object, const QVariant &compareValue,
-                                               CPropertyIndexRef index) const override;
-            virtual int toIcon(const void *object) const override;
-            virtual bool matches(const void *object, const CVariant &value) const override;
+            QString toQString(const void *object, bool i18n) const override;
+            QJsonObject toJson(const void *object) const override;
+            void convertFromJson(const QJsonObject &json, void *object) const override;
+            QJsonObject toMemoizedJson(const void *object) const override;
+            void convertFromMemoizedJson(const QJsonObject &json, void *object,
+                                         bool allowFallbackToJson) const override;
+            void unmarshall(const QDBusArgument &arg, void *object) const override;
+            size_t getValueHash(const void *object) const override;
+            int getMetaTypeId() const override;
+            const void *upCastTo(const void *object, int metaTypeId) const override;
+            int compareImpl(const void *lhs, const void *rhs) const override;
+            void setPropertyByIndex(void *object, const QVariant &variant, CPropertyIndexRef index) const override;
+            void propertyByIndex(const void *object, QVariant &o_variant,
+                                 swift::misc::CPropertyIndexRef index) const override;
+            bool equalsPropertyByIndex(const void *object, const QVariant &compareValue,
+                                       CPropertyIndexRef index) const override;
+            int toIcon(const void *object) const override;
+            bool matches(const void *object, const CVariant &value) const override;
 
             static const T &cast(const void *object);
             static T &cast(void *object);
         };
 
         template <typename T>
-        CValueObjectMetaInfo<T>::CValueObjectMetaInfo()
-        {}
+        CValueObjectMetaInfo<T>::CValueObjectMetaInfo() = default;
         template <typename T>
-        CValueObjectMetaInfo<T>::~CValueObjectMetaInfo()
-        {}
+        CValueObjectMetaInfo<T>::~CValueObjectMetaInfo() = default;
         template <typename T>
         CValueObjectMetaInfo<T> *CValueObjectMetaInfo<T>::instance(const T &)
         {

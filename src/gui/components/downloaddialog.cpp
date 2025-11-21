@@ -17,7 +17,7 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CDownloadDialog::~CDownloadDialog() {}
+    CDownloadDialog::~CDownloadDialog() = default;
 
     void CDownloadDialog::setDownloadFile(const CRemoteFile &remoteFile)
     {

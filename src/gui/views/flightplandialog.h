@@ -27,7 +27,7 @@ namespace swift::gui::views
         explicit CFlightPlanDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CFlightPlanDialog() override;
+        ~CFlightPlanDialog() override;
 
         //! Show a particular callsign flight plan
         void showFlightPlan(const swift::misc::aviation::CCallsign &callsign);

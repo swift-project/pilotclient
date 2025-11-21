@@ -86,40 +86,40 @@ namespace swift::misc
     {
     public:
         //! STL compatibility
-        typedef T key_type;
+        using key_type = T;
 
         //! STL compatilibty
-        typedef T value_type;
+        using value_type = T;
 
         //! STL compatibility
-        typedef T &reference;
+        using reference = T &;
 
         //! STL compatibility
-        typedef const T &const_reference;
+        using const_reference = const T &;
 
         //! STL compatibility
-        typedef T *pointer;
+        using pointer = T *;
 
         //! STL compatibility
-        typedef const T *const_pointer;
+        using const_pointer = const T *;
 
         //! STL compatibility
-        typedef typename QVector<T>::const_iterator const_iterator;
+        using const_iterator = typename QVector<T>::const_iterator;
 
         //! STL compatibility
-        typedef typename QVector<T>::iterator iterator;
+        using iterator = typename QVector<T>::iterator;
 
         //! STL compatibility
-        typedef typename QVector<T>::const_reverse_iterator const_reverse_iterator;
+        using const_reverse_iterator = typename QVector<T>::const_reverse_iterator;
 
         //! STL compatibility
-        typedef typename QVector<T>::reverse_iterator reverse_iterator;
+        using reverse_iterator = typename QVector<T>::reverse_iterator;
 
         //! STL compatibility
-        typedef ptrdiff_t difference_type;
+        using difference_type = ptrdiff_t;
 
         //! STL compatibility
-        typedef int size_type;
+        using size_type = int;
 
         //! Default constructor.
         CSequence() = default;

@@ -3,7 +3,7 @@
 
 #include "simulatorflightgear.h"
 
-#include <math.h>
+#include <cmath>
 
 #include <QColor>
 #include <QDBusServiceWatcher>
@@ -131,7 +131,7 @@ namespace swift::simplugin::flightgear
 
     CStatusMessageList CSimulatorFlightgear::getInterpolationMessages(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty() || !m_flightgearAircraftObjects.contains(callsign)) { return CStatusMessageList(); }
+        if (callsign.isEmpty() || !m_flightgearAircraftObjects.contains(callsign)) { return {}; }
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupConsolidated(callsign, false);
         return m_flightgearAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
@@ -386,7 +386,7 @@ namespace swift::simplugin::flightgear
         if (!m_serviceProxy) { return; }
         CLogMessage(this).info(u"FG DBus service unregistered");
 
-        if (m_dbusMode == P2P) { m_dBusConnection.disconnectFromPeer(m_dBusConnection.name()); }
+        if (m_dbusMode == P2P) { QDBusConnection::disconnectFromPeer(m_dBusConnection.name()); }
         m_dBusConnection = QDBusConnection { "default" };
         if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
         delete m_serviceProxy;
@@ -821,7 +821,7 @@ namespace swift::simplugin::flightgear
             const qint64 wasStartedMs = m_addingInProgressAircraft.value(cs);
             const qint64 deltaTimeMs = QDateTime::currentMSecsSinceEpoch() - wasStartedMs;
             m_statsAddCurrentTimeMs = deltaTimeMs;
-            if (deltaTimeMs > m_statsAddMaxTimeMs) { m_statsAddMaxTimeMs = deltaTimeMs; }
+            m_statsAddMaxTimeMs = std::max(deltaTimeMs, m_statsAddMaxTimeMs);
             m_addingInProgressAircraft.remove(cs);
         }
 
@@ -872,7 +872,10 @@ namespace swift::simplugin::flightgear
         }
 
         using namespace std::placeholders;
-        auto callback = std::bind(&CSimulatorFlightgear::callbackReceivedRequestedElevation, this, _1, _2, false);
+        auto callback = [this](auto &&plane, auto &&callsign) {
+            callbackReceivedRequestedElevation(std::forward<decltype(plane)>(plane),
+                                               std::forward<decltype(callsign)>(callsign), false);
+        };
 
         // Request
         m_trafficProxy->getElevationAtPosition(callsign, pos.latitude().value(CAngleUnit::deg()),
@@ -975,7 +978,7 @@ namespace swift::simplugin::flightgear
         if (m_addingInProgressAircraft.isEmpty()) { return empty; }
         const QList<qint64> ts = m_addingInProgressAircraft.values();
         const auto mm = std::minmax_element(ts.constBegin(), ts.constEnd());
-        return QPair<qint64, qint64>(*mm.first, *mm.second);
+        return { *mm.first, *mm.second };
     }
 
     bool CSimulatorFlightgear::canAddAircraft() const
@@ -1040,11 +1043,11 @@ namespace swift::simplugin::flightgear
         m_conn = QDBusConnection::sessionBus();
         if (!m_conn.isConnected())
         {
-            m_conn.disconnectFromBus(m_conn.name());
+            QDBusConnection::disconnectFromBus(m_conn.name());
             return;
         }
         checkConnectionCommon();
-        m_conn.disconnectFromBus(m_conn.name());
+        QDBusConnection::disconnectFromBus(m_conn.name());
     }
 
     void CSimulatorFlightgearListener::checkConnectionViaPeer(const QString &address)
@@ -1053,11 +1056,11 @@ namespace swift::simplugin::flightgear
         if (!m_conn.isConnected())
         {
             // This is required to cleanup the connection in QtDBus
-            m_conn.disconnectFromPeer(m_conn.name());
+            QDBusConnection::disconnectFromPeer(m_conn.name());
             return;
         }
         checkConnectionCommon();
-        m_conn.disconnectFromPeer(m_conn.name());
+        QDBusConnection::disconnectFromPeer(m_conn.name());
     }
 
     void CSimulatorFlightgearListener::checkConnectionCommon()
@@ -1100,7 +1103,7 @@ namespace swift::simplugin::flightgear
     void CSimulatorFlightgearListener::serviceRegistered(const QString &serviceName)
     {
         if (serviceName == fgswiftbusServiceName()) { emit simulatorStarted(getPluginInfo()); }
-        m_conn.disconnectFromBus(m_conn.name());
+        QDBusConnection::disconnectFromBus(m_conn.name());
     }
 
     void CSimulatorFlightgearListener::fgSwiftBusServerSettingChanged()

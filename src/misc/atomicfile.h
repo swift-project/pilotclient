@@ -31,15 +31,15 @@ namespace swift::misc
         CAtomicFile(const QString &filename) : QFile(filename) {}
 
         //! \copydoc QFile::~QFile
-        virtual ~CAtomicFile() override;
+        ~CAtomicFile() override;
 
         //! \copydoc QFile::open
         //! Just before opening the file, the filename is changed so we actually write to a temporary file.
-        virtual bool open(OpenMode mode) override;
+        bool open(OpenMode mode) override;
 
         //! \copydoc QFileDevice::close
         //! After closing the file, it is renamed so that it overwrites the target file.
-        virtual void close() override;
+        void close() override;
 
         //! Calls close() and returns false if there was an error at any stage.
         bool checkedClose();

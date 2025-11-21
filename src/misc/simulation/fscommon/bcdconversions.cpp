@@ -22,7 +22,7 @@ namespace swift::misc::simulation::fscommon
     quint32 CBcdConversions::transponderCodeToBcd(const swift::misc::aviation::CTransponder &transponder)
     {
         // FSX documentation is wrong, we need to use kHz + 2 digits, not Hz
-        quint32 t = static_cast<quint32>(transponder.getTransponderCode());
+        auto t = static_cast<quint32>(transponder.getTransponderCode());
         t = dec2Bcd(t);
         return t;
     }
@@ -32,10 +32,7 @@ namespace swift::misc::simulation::fscommon
         quint32 remainder = 0, quotient = 0, result = 0;
         remainder = num % divider;
         quotient = num / divider;
-        if (!(quotient == 0 && remainder == 0))
-        {
-            result += hornerScheme(quotient, divider, factor) * factor + remainder;
-        }
+        if (quotient != 0 || remainder != 0) { result += hornerScheme(quotient, divider, factor) * factor + remainder; }
         return result;
     }
 } // namespace swift::misc::simulation::fscommon

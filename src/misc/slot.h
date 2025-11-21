@@ -70,7 +70,7 @@ namespace swift::misc
     {
     public:
         //! Construct an empty slot.
-        CSlot() {}
+        CSlot() = default;
 
         //! Construct a slot from the given member function of the given object.
         template <typename T, typename U>

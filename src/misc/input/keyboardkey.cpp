@@ -24,7 +24,7 @@ namespace swift::misc::input
 
     QString CKeyboardKey::getKeyAsString() const
     {
-        if (m_keyCode == Key_Unknown) return QString();
+        if (m_keyCode == Key_Unknown) return {};
 
         static const QHash<KeyCode, QString> keyStrings = {
             { Key_ShiftLeft, QStringLiteral("ShiftLeft") },  { Key_ShiftRight, QStringLiteral("ShiftRight") },
@@ -113,7 +113,7 @@ namespace swift::misc::input
     QVariant CKeyboardKey::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexKey: return QVariant::fromValue(m_keyCode);
@@ -133,7 +133,7 @@ namespace swift::misc::input
             (*this) = variant.value<CKeyboardKey>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexKey:

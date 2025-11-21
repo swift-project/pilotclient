@@ -7,6 +7,7 @@
 #define SWIFT_GUI_VIEWS_VIEWCALLSIGNOBJECTS_H
 
 #include "gui/views/viewbase.h"
+#include "misc/aviation/callsignset.h"
 
 class QAction;
 class QIntValidator;
@@ -57,7 +58,7 @@ namespace swift::gui
             int replaceOrAddObjectByCallsign(const ObjectType &object);
 
             //! Reselect by callsigns
-            virtual void selectObjects(const ContainerType &selectedObjects) override;
+            void selectObjects(const ContainerType &selectedObjects) override;
 
         protected:
             //! Constructor

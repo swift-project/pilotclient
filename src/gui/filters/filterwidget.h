@@ -26,7 +26,7 @@ namespace swift::gui::filters
         CFilterWidget(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CFilterWidget();
+        ~CFilterWidget() override;
 
         //! Row count has been changed
         virtual void onRowCountChanged(int count, bool withFilter) = 0;

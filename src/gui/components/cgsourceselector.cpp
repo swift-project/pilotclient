@@ -15,7 +15,7 @@ namespace swift::gui::components
         this->initComboBox();
     }
 
-    CCGSourceSelector::~CCGSourceSelector() {}
+    CCGSourceSelector::~CCGSourceSelector() = default;
 
     CSimulatorSettings::CGSource CCGSourceSelector::getValue() const
     {

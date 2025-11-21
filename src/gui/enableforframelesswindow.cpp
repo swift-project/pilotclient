@@ -292,7 +292,7 @@ namespace swift::gui
                              Qt::QueuedConnection);
         }
 
-        QHBoxLayout *menuBarLayout = new QHBoxLayout;
+        auto *menuBarLayout = new QHBoxLayout;
         menuBarLayout->setObjectName("hl_MenuBar");
         menuBarLayout->addWidget(menuBar, 0, Qt::AlignTop | Qt::AlignLeft);
         menuBarLayout->addWidget(m_framelessCloseButton, 0, Qt::AlignTop | Qt::AlignRight);

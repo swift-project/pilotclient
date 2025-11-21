@@ -32,7 +32,7 @@ namespace swift::gui::components
         explicit CDbLoadOverviewComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbLoadOverviewComponent() override;
+        ~CDbLoadOverviewComponent() override;
 
         //! Initialize
         void display();
@@ -60,7 +60,7 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc QWidget::resizeEvent
-        virtual void resizeEvent(QResizeEvent *event) override;
+        void resizeEvent(QResizeEvent *event) override;
 
     private:
         QScopedPointer<Ui::CDbLoadOverviewComponent> ui;

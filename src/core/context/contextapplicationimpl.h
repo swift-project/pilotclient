@@ -40,49 +40,48 @@ namespace swift::core
 
         public slots:
             //! \copydoc swift::core::context::IContextApplication::changeSettings
-            virtual void changeSettings(const swift::misc::CValueCachePacket &settings,
-                                        const swift::misc::CIdentifier &origin) override;
+            void changeSettings(const swift::misc::CValueCachePacket &settings,
+                                const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc swift::core::context::IContextApplication::getAllSettings
-            virtual swift::misc::CValueCachePacket getAllSettings() const override;
+            swift::misc::CValueCachePacket getAllSettings() const override;
 
             //! \copydoc swift::core::context::IContextApplication::getUnsavedSettingsKeys
-            virtual QStringList getUnsavedSettingsKeys() const override;
+            QStringList getUnsavedSettingsKeys() const override;
 
             //! \copydoc swift::core::context::IContextApplication::getUnsavedSettingsKeysDescribed
-            virtual swift::core::context::CSettingsDictionary getUnsavedSettingsKeysDescribed() const override;
+            swift::core::context::CSettingsDictionary getUnsavedSettingsKeysDescribed() const override;
 
             //! \copydoc swift::core::context::IContextApplication::synchronizeLocalSettings
-            virtual void synchronizeLocalSettings() override;
+            void synchronizeLocalSettings() override;
 
             //! \copydoc swift::core::context::IContextApplication::saveSettings
-            virtual swift::misc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override;
+            swift::misc::CStatusMessage saveSettings(const QString &keyPrefix = {}) override;
 
             //! \copydoc swift::core::context::IContextApplication::saveSettingsByKey
-            virtual swift::misc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;
+            swift::misc::CStatusMessage saveSettingsByKey(const QStringList &keys) override;
 
             //! \copydoc swift::core::context::IContextApplication::loadSettings
-            virtual swift::misc::CStatusMessage loadSettings() override;
+            swift::misc::CStatusMessage loadSettings() override;
 
             //! \copydoc swift::core::context::IContextApplication::registerHotkeyActions
-            virtual void registerHotkeyActions(const QStringList &actions,
-                                               const swift::misc::CIdentifier &origin) override;
+            void registerHotkeyActions(const QStringList &actions, const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc swift::core::context::IContextApplication::callHotkeyActionRemotely
-            virtual void callHotkeyActionRemotely(const QString &action, bool argument,
-                                                  const swift::misc::CIdentifier &origin) override;
+            void callHotkeyActionRemotely(const QString &action, bool argument,
+                                          const swift::misc::CIdentifier &origin) override;
 
             //! \copydoc swift::core::context::IContextApplication::registerApplication
-            virtual swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) override;
+            swift::misc::CIdentifier registerApplication(const swift::misc::CIdentifier &application) override;
 
             //! \copydoc swift::core::context::IContextApplication::unregisterApplication
-            virtual void unregisterApplication(const swift::misc::CIdentifier &application) override;
+            void unregisterApplication(const swift::misc::CIdentifier &application) override;
 
             //! \copydoc swift::core::context::IContextApplication::getRegisteredApplications
-            virtual swift::misc::CIdentifierList getRegisteredApplications() const override;
+            swift::misc::CIdentifierList getRegisteredApplications() const override;
 
             //! \copydoc swift::core::context::IContextApplication::getApplicationIdentifier
-            virtual swift::misc::CIdentifier getApplicationIdentifier() const override;
+            swift::misc::CIdentifier getApplicationIdentifier() const override;
 
         protected:
             //! Constructor

@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CStringListDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CStringListDialog() override;
+        ~CStringListDialog() override;
 
         //! Strings
         void setStrings(const QStringList &strings);

@@ -498,8 +498,7 @@ namespace swift::misc
     bool CVariant::isA(int metaTypeId) const
     {
         if (metaTypeId == QMetaType::UnknownType) { return false; }
-        if (metaTypeId == getMetaTypeId()) { return true; }
-        return false;
+        return metaTypeId == getMetaTypeId();
     }
 
     bool CVariant::matches(const CVariant &value) const
@@ -533,7 +532,7 @@ namespace swift::misc
 
         // complex, user type
         // it has to be made sure, that the cast works
-        const QDBusArgument arg = variant.value<QDBusArgument>();
+        const auto arg = variant.value<QDBusArgument>();
         constexpr int userType = static_cast<int>(QMetaType::User);
         if (localUserType.id() < userType)
         {
@@ -543,7 +542,7 @@ namespace swift::misc
         else if (QMetaType(localUserType).flags() & QMetaType::IsEnumeration)
         {
             arg.beginStructure();
-            int i;
+            int i {};
             arg >> i;
             arg.endStructure();
 
@@ -597,7 +596,7 @@ namespace swift::misc
             qFatal("Type cannot be resolved: %s (%d)", name ? name : "", type);
         }
         }
-        return QVariant(); // suppress compiler warning
+        return {}; // suppress compiler warning
     }
 
 } // namespace swift::misc

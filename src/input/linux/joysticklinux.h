@@ -27,7 +27,7 @@ namespace swift::input
     public:
         //! Constructor
         CJoystickDevice(const QString &path, QFile *fd, QObject *parent);
-        ~CJoystickDevice();
+        ~CJoystickDevice() override;
 
         //! Get device name
         QString getName() const { return m_name; }
@@ -65,10 +65,10 @@ namespace swift::input
         CJoystickLinux &operator=(CJoystickLinux const &) = delete;
 
         //! \brief Destructor
-        virtual ~CJoystickLinux() = default;
+        ~CJoystickLinux() override = default;
 
         //! \copydoc swift::input::IJoystick::getAllAvailableJoystickButtons()
-        virtual swift::misc::input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
+        swift::misc::input::CJoystickButtonList getAllAvailableJoystickButtons() const override;
 
     private:
         friend class IJoystick;

@@ -31,7 +31,7 @@ namespace swift::sound::sample_provider
         CEqualizerSampleProvider(ISampleProvider *sourceProvider, EqualizerPresets preset, QObject *parent = nullptr);
 
         //! \copydoc ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! Bypassing?
         void setBypassEffects(bool value) { m_bypass = value; }

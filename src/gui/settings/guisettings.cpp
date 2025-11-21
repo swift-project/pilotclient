@@ -11,8 +11,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CGeneralGuiSettings)
 
 namespace swift::gui::settings
 {
-    CGeneralGuiSettings::CGeneralGuiSettings() {}
-
     void CGeneralGuiSettings::setWidgetStyle(const QString &widgetStyle)
     {
         if (this->m_widgetStyle == widgetStyle) { return; }
@@ -45,7 +43,7 @@ namespace swift::gui::settings
     QVariant CGeneralGuiSettings::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexWidgetStyle: return QVariant::fromValue(this->m_widgetStyle);
@@ -61,7 +59,7 @@ namespace swift::gui::settings
             (*this) = variant.value<CGeneralGuiSettings>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexWidgetStyle: this->setWidgetStyle(variant.toString()); break;

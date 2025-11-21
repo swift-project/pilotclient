@@ -922,7 +922,7 @@ namespace swift::misc::weather
 
     CMetarDecoder::CMetarDecoder() { allocateDecoders(); }
 
-    CMetarDecoder::~CMetarDecoder() {}
+    CMetarDecoder::~CMetarDecoder() = default; // Needs to stay in .cpp because of IMetarDecoderPart
 
     CMetar CMetarDecoder::decode(const QString &metarString) const
     {

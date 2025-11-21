@@ -28,7 +28,7 @@ namespace swift::gui::components
         explicit CInfoBarWebReadersStatusSmallComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CInfoBarWebReadersStatusSmallComponent() override;
+        ~CInfoBarWebReadersStatusSmallComponent() override;
 
     private:
         QScopedPointer<Ui::CInfoBarWebReadersStatusSmallComponent> ui;

@@ -619,7 +619,7 @@ namespace swift::gui::views
     template <class T>
     int CViewBase<T>::performUpdateContainer(const swift::misc::CVariant &variant, bool sort, bool resize)
     {
-        ContainerType c(variant.to<ContainerType>());
+        auto c(variant.to<ContainerType>());
         return this->updateContainer(c, sort, resize);
     }
 
@@ -844,7 +844,7 @@ namespace swift::gui::views
     template <class T>
     bool CViewBase<T>::filterDialogFinished(int status)
     {
-        const QDialog::DialogCode statusCode = static_cast<QDialog::DialogCode>(status);
+        const auto statusCode = static_cast<QDialog::DialogCode>(status);
         return filterWidgetChangedFilter(statusCode == QDialog::Accepted);
     }
 
@@ -857,8 +857,7 @@ namespace swift::gui::views
             else
             {
                 // takes the filter and triggers the filtering
-                IModelFilterProvider<ContainerType> *provider =
-                    dynamic_cast<IModelFilterProvider<ContainerType> *>(m_filterWidget);
+                auto *provider = dynamic_cast<IModelFilterProvider<ContainerType> *>(m_filterWidget);
                 Q_ASSERT_X(provider, Q_FUNC_INFO, "Filter widget does not provide interface");
                 if (!provider) { return false; }
                 std::unique_ptr<IModelFilter<ContainerType>> f(provider->createModelFilter());

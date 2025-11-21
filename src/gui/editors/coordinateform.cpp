@@ -62,7 +62,7 @@ namespace swift::gui::editors
         this->setCoordinate(c);
     }
 
-    CCoordinateForm::~CCoordinateForm() {}
+    CCoordinateForm::~CCoordinateForm() = default;
 
     bool CCoordinateForm::setCoordinate(const ICoordinateGeodetic &coordinate)
     {
@@ -214,7 +214,7 @@ namespace swift::gui::editors
 
     void CCoordinateForm::latCombinedEntered()
     {
-        bool ok;
+        bool ok {};
         int deg = ui->le_LatDeg->text().trimmed().toInt(&ok);
         if (!ok) return;
 
@@ -246,7 +246,7 @@ namespace swift::gui::editors
 
     void CCoordinateForm::lngCombinedEntered()
     {
-        bool ok;
+        bool ok {};
         int deg = ui->le_LngDeg->text().trimmed().toInt(&ok);
         if (!ok) return;
 

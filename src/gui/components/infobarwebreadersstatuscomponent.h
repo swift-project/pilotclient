@@ -33,7 +33,7 @@ namespace swift::gui
 
         public:
             //! Destructor
-            virtual ~CInfoBarWebReadersStatusBase();
+            ~CInfoBarWebReadersStatusBase() override;
 
             //! Consolidation is running
             virtual void consolidationRunning(bool running);
@@ -99,10 +99,10 @@ namespace swift::gui
             explicit CInfoBarWebReadersStatusComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CInfoBarWebReadersStatusComponent() override;
+            ~CInfoBarWebReadersStatusComponent() override;
 
             //! Show the consolidation status
-            virtual void showConsolidationStatus(bool show) override;
+            void showConsolidationStatus(bool show) override;
 
         private:
             QScopedPointer<Ui::CInfoBarWebReadersStatusComponent> ui;

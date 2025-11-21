@@ -10,6 +10,7 @@
 #include <QChar>
 #include <QRegularExpression>
 #include <QStringBuilder>
+#include <QTimeZone>
 
 namespace swift::misc
 {
@@ -225,9 +226,8 @@ namespace swift::misc
               "i", "o",  "n", "o", "o",  "o", "o", "o", "o", "u",  "u", "u", "u", "y", "y" });
 
         QString output = "";
-        for (int i = 0; i < candidate.length(); i++)
+        for (const QChar c : candidate)
         {
-            const QChar c = candidate[i];
             const qsizetype dIndex = diacriticLetters.indexOf(c);
             if (dIndex < 0) { output.append(c); }
             else

@@ -28,7 +28,7 @@ namespace swift::gui::components
         explicit CModelConverterXSetupComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CModelConverterXSetupComponent();
+        ~CModelConverterXSetupComponent() override;
 
     private:
         //! File dialog

@@ -120,7 +120,7 @@ namespace swift::misc::aviation
     {
         if (CTransponder::isValidTransponderCode(transponderCode))
         {
-            bool ok;
+            bool ok {};
             this->setTransponderCode(transponderCode.toInt(&ok));
         }
         else { Q_ASSERT_X(false, "CTransponder::setTransponderCode", "illegal transponder value"); }
@@ -129,7 +129,7 @@ namespace swift::misc::aviation
     bool CTransponder::isValidTransponderCode(const QString &transponderCode)
     {
         if (transponderCode.isEmpty() || transponderCode.length() > 4) return false;
-        bool number;
+        bool number {};
         int tc = transponderCode.toInt(&number);
         if (!number) return false;
         if (tc < 0 || tc > 7777) return false;
@@ -145,7 +145,7 @@ namespace swift::misc::aviation
 
     CTransponder CTransponder::getStandardTransponder(qint32 transponderCode, CTransponder::TransponderMode mode)
     {
-        return CTransponder(transponderCode, mode);
+        return { transponderCode, mode };
     }
 
     const QString &CTransponder::modeAsString(CTransponder::TransponderMode mode)
@@ -207,7 +207,7 @@ namespace swift::misc::aviation
     QVariant CTransponder::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMode: return QVariant::fromValue(this->getTransponderMode());
@@ -231,7 +231,7 @@ namespace swift::misc::aviation
             (*this) = variant.value<CTransponder>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMode: m_transponderMode = variant.toInt(); break;

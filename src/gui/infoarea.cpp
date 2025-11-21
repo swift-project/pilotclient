@@ -42,8 +42,6 @@ namespace swift::gui
         this->setWholeInfoAreaFloating(m_infoAreaFloating);
     }
 
-    CInfoArea::~CInfoArea() {}
-
     void CInfoArea::initInfoArea()
     {
         // initInfoArea() needs be called after(!) GUI is setup
@@ -97,7 +95,7 @@ namespace swift::gui
 
             menu->addAction(CIcons::floatOne16(), QStringLiteral("Dock / float '%1'").arg(this->windowTitle()), this,
                             &CInfoArea::toggleFloatingWholeInfoArea);
-            QAction *lockTabBarMenuAction = new QAction(menu);
+            auto *lockTabBarMenuAction = new QAction(menu);
             lockTabBarMenuAction->setObjectName(this->objectName().append("LockTabBar"));
             lockTabBarMenuAction->setIconText("Lock tab bar");
             lockTabBarMenuAction->setIcon(CIcons::lockClosed16());
@@ -107,17 +105,17 @@ namespace swift::gui
             connect(lockTabBarMenuAction, &QAction::toggled, this, &CInfoArea::toggleTabBarLocked);
 
             menu->addSeparator();
-            QMenu *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
-            QMenu *subMenuDisplay = new QMenu("Display", menu);
-            QMenu *subMenuRestore = new QMenu("Restore from settings", menu);
-            QMenu *subMenuResetPositions = new QMenu("Reset position", menu);
+            auto *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
+            auto *subMenuDisplay = new QMenu("Display", menu);
+            auto *subMenuRestore = new QMenu("Restore from settings", menu);
+            auto *subMenuResetPositions = new QMenu("Reset position", menu);
             subMenuRestore->setIcon(CIcons::load16());
             subMenuResetPositions->setIcon(CIcons::refresh16());
             subMenuRestore->addActions(this->getInfoAreaRestoreActions(subMenuRestore));
             subMenuDisplay->addActions(this->getInfoAreaSelectActions(false, subMenuDisplay));
             subMenuResetPositions->addActions(this->getInfoAreaResetPositionActions(subMenuResetPositions));
 
-            QSignalMapper *signalMapperToggleFloating = new QSignalMapper(menu);
+            auto *signalMapperToggleFloating = new QSignalMapper(menu);
             bool c = false; // check connections
 
             for (int i = 0; i < m_dockWidgetInfoAreas.size(); i++)
@@ -125,7 +123,7 @@ namespace swift::gui
                 const CDockWidgetInfoArea *dw = m_dockWidgetInfoAreas.at(i);
                 const QString t = dw->windowTitleBackup();
                 const QPixmap pm = this->indexToPixmap(i);
-                QAction *toggleFloatingMenuAction = new QAction(menu);
+                auto *toggleFloatingMenuAction = new QAction(menu);
                 toggleFloatingMenuAction->setObjectName(QString(t).append("ToggleFloatingAction"));
                 toggleFloatingMenuAction->setIconText(t);
                 toggleFloatingMenuAction->setIcon(pm);
@@ -151,7 +149,7 @@ namespace swift::gui
 
             // where and how to display tab bar
             menu->addSeparator();
-            QAction *showMenuText = new QAction(menu);
+            auto *showMenuText = new QAction(menu);
             showMenuText->setObjectName("ShowDockedWidgetTextAction");
             showMenuText->setIconText("Show tab text");
             showMenuText->setIcon(CIcons::headingOne16());
@@ -161,7 +159,7 @@ namespace swift::gui
             connect(showMenuText, &QAction::toggled, this, &CInfoArea::showTabTexts);
 
             // auto adjust floating widgets
-            QAction *showTabbar = new QAction(menu);
+            auto *showTabbar = new QAction(menu);
             showTabbar->setObjectName("ShowTabBar");
             showTabbar->setIconText("Show tab bar");
             showTabbar->setIcon(CIcons::dockBottom16());
@@ -223,7 +221,7 @@ namespace swift::gui
             const QPixmap pm = this->indexToPixmap(i);
             const QString wt(dockWidgetInfoArea->windowTitleBackup());
             static const QString keys("123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            QAction *action = new QAction(QIcon(pm), wt, parent);
+            auto *action = new QAction(QIcon(pm), wt, parent);
             action->setData(i);
             action->setObjectName(this->objectName().append(":getInfoAreaSelectActions:").append(wt));
             if (withShortcut && i < keys.length())
@@ -250,7 +248,7 @@ namespace swift::gui
         {
             const QPixmap pm = this->indexToPixmap(i);
             const QString wt(dockWidgetInfoArea->windowTitleBackup());
-            QAction *action = new QAction(QIcon(pm), wt, parent);
+            auto *action = new QAction(QIcon(pm), wt, parent);
             action->setData(i);
             action->setObjectName(this->objectName().append(":getInfoAreaResetPositionActions:").append(wt));
             connect(action, &QAction::triggered, this, &CInfoArea::resetPositionByAction);
@@ -269,7 +267,7 @@ namespace swift::gui
         {
             const QPixmap pm = this->indexToPixmap(i);
             const QString wt(dockWidgetInfoArea->windowTitleBackup());
-            QAction *action = new QAction(QIcon(pm), wt, parent);
+            auto *action = new QAction(QIcon(pm), wt, parent);
             action->setData(i);
             action->setObjectName(this->objectName().append(":getInfoAreaToggleFloatingActions:").append(wt));
             connect(action, &QAction::triggered, this, &CInfoArea::toggleAreaFloatingByAction, Qt::QueuedConnection);
@@ -288,7 +286,7 @@ namespace swift::gui
         {
             const QPixmap pm = this->indexToPixmap(i);
             const QString wt(dockWidgetInfoArea->windowTitleBackup());
-            QAction *action = new QAction(QIcon(pm), wt, parent);
+            auto *action = new QAction(QIcon(pm), wt, parent);
             action->setData(i);
             action->setObjectName(this->objectName().append(":getInfoAreaRestoreActions:").append(wt));
             connect(action, &QAction::triggered, this, &CInfoArea::restoreDockWidgetInfoArea);
@@ -416,7 +414,7 @@ namespace swift::gui
     void CInfoArea::selectAreaByAction()
     {
         const QObject *sender = QObject::sender();
-        const QAction *action = qobject_cast<const QAction *>(sender);
+        const auto *action = qobject_cast<const QAction *>(sender);
         SWIFT_VERIFY(action);
         if (!action) { return; }
         const int index = action->data().toInt();
@@ -426,7 +424,7 @@ namespace swift::gui
     void CInfoArea::resetPositionByAction()
     {
         const QObject *sender = QObject::sender();
-        const QAction *action = qobject_cast<const QAction *>(sender);
+        const auto *action = qobject_cast<const QAction *>(sender);
         SWIFT_VERIFY(action);
         if (!action) { return; }
         const int index = action->data().toInt();
@@ -436,7 +434,7 @@ namespace swift::gui
     void CInfoArea::toggleAreaFloatingByAction()
     {
         const QObject *sender = QObject::sender();
-        const QAction *action = qobject_cast<const QAction *>(sender);
+        const auto *action = qobject_cast<const QAction *>(sender);
         SWIFT_VERIFY(action);
         if (!action) { return; }
         const int index = action->data().toInt();
@@ -446,7 +444,7 @@ namespace swift::gui
     void CInfoArea::restoreDockWidgetInfoArea()
     {
         const QObject *sender = QObject::sender();
-        const QAction *action = qobject_cast<const QAction *>(sender);
+        const auto *action = qobject_cast<const QAction *>(sender);
         SWIFT_VERIFY(action);
         if (!action) { return; }
         const int index = action->data().toInt();
@@ -503,7 +501,7 @@ namespace swift::gui
     {
         for (CDockWidgetInfoArea *dw : std::as_const(m_dockWidgetInfoAreas))
         {
-            Qt::DockWidgetAreas newAreas = static_cast<Qt::DockWidgetAreas>(area);
+            auto newAreas = static_cast<Qt::DockWidgetAreas>(area);
             Qt::DockWidgetAreas oldAreas = dw->allowedAreas();
             if (oldAreas == newAreas) { continue; }
             dw->setAllowedAreas(newAreas);
@@ -545,7 +543,7 @@ namespace swift::gui
     {
         if (!sGui || sGui->isShuttingDown()) { return; }
         this->setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::East);
-        const bool init = m_tabBar ? false : true;
+        const bool init = m_tabBar == nullptr;
 
         for (int i = 0; i < m_dockWidgetInfoAreas.size(); i++)
         {

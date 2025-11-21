@@ -32,7 +32,7 @@ namespace swift::gui::menus
         IMenuDelegate *getNestedDelegate() const { return m_nestedDelegate; }
 
         //! Destructor
-        virtual ~IMenuDelegate() {}
+        ~IMenuDelegate() override = default;
 
         //! Log categories
         const QStringList &getLogCategories()

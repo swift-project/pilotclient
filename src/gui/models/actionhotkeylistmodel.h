@@ -34,7 +34,7 @@ namespace swift::gui::models
         CActionHotkeyListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CActionHotkeyListModel() override {}
+        ~CActionHotkeyListModel() override = default;
 
         //! \copydoc QAbstractTableModel::rowCount
         int rowCount(const QModelIndex &parent = QModelIndex()) const override;

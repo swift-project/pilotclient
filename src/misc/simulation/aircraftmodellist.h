@@ -63,7 +63,7 @@ namespace swift::misc
             using CSequence::CSequence;
 
             //! Empty constructor.
-            CAircraftModelList();
+            CAircraftModelList() = default;
 
             //! Construct from a base class object.
             CAircraftModelList(const CSequence<CAircraftModel> &other);

@@ -25,7 +25,7 @@ namespace swift::core::context
 {
     CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection,
                                                    CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
-        : IContextSimulator(mode, runtime), m_dBusInterface(nullptr)
+        : IContextSimulator(mode, runtime)
     {
         this->m_dBusInterface = new swift::misc::CGenericDBusInterface(
             serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(), connection, this);

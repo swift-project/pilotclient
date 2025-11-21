@@ -52,12 +52,8 @@ namespace swift::core
         if (!data.contains("identifier") || !data["identifier"].isString()) { return false; }
 
         auto iids = acceptedIids();
-        for (const QString &iid : iids)
-        {
-            if (metadata["IID"].toString() == iid) { return true; }
-        }
-
-        return false;
+        return std::any_of(iids.cbegin(), iids.cend(),
+                           [&](const QString &iid) { return metadata["IID"].toString() == iid; });
     }
 
     QString IPluginManager::pluginIdentifier(const QJsonObject &metadata) const

@@ -43,7 +43,7 @@ namespace swift::gui::components
         if (!m_updateInfo.get().isEmpty()) { this->changedUpdateInfo(); }
     }
 
-    CUpdateInfoComponent::~CUpdateInfoComponent() {}
+    CUpdateInfoComponent::~CUpdateInfoComponent() = default;
 
     CArtifact CUpdateInfoComponent::getLatestAvailablePilotClientArtifactForSelection() const
     {
@@ -198,7 +198,7 @@ namespace swift::gui::components
         const QString platform = this->getSelectedOrDefaultPlatform().getPlatformName();
         const QStringList settings({ channel, platform });
         const CStatusMessage m = m_updateSettings.setAndSave(settings);
-        if (m.isFailure()) { CLogMessage(this).preformatted(m); }
+        if (m.isFailure()) { CLogMessage::preformatted(m); }
     }
 
     void CUpdateInfoComponent::channelChanged() { this->uiSelectionChanged(); }

@@ -32,10 +32,7 @@ namespace swift::gui::components
                 &CDbAirlineNameSelectorComponent::ps_dataChanged);
     }
 
-    CDbAirlineNameSelectorComponent::~CDbAirlineNameSelectorComponent()
-    {
-        // no inline destructor, read QScopedPointer Forward Declared Pointers
-    }
+    CDbAirlineNameSelectorComponent::~CDbAirlineNameSelectorComponent() = default;
 
     bool CDbAirlineNameSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
     {
@@ -51,8 +48,7 @@ namespace swift::gui::components
 
     QCompleter *CDbAirlineNameSelectorComponent::createCompleter()
     {
-        QCompleter *c =
-            new QCompleter(sGui->getWebDataServices()->getAirlineIcaoCodes().toNameCompleterStrings(), this);
+        auto *c = new QCompleter(sGui->getWebDataServices()->getAirlineIcaoCodes().toNameCompleterStrings(), this);
         c->setCaseSensitivity(Qt::CaseInsensitive);
         c->setCompletionMode(QCompleter::PopupCompletion);
         c->setMaxVisibleItems(10);

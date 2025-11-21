@@ -42,7 +42,7 @@ namespace swift::misc::simulation
             // back substitution
             for (int i = N - 2; i >= 0; --i)
             {
-                const size_t it = static_cast<size_t>(i);
+                const auto it = static_cast<size_t>(i);
                 d[it] -= c(it) * d[it + 1];
             }
             return d;
@@ -243,8 +243,8 @@ namespace swift::misc::simulation
         // we use different offset times for fast pos. updates
         // KB: is that correct with dt2, or would it be m_nextSampleTime - m_prevSampleTime
         //     as long as the offset time is constant, it does not matter
-        const double dt1 = static_cast<double>(m_currentTimeMsSinceEpoch - m_prevSampleAdjustedTime);
-        const double dt2 = static_cast<double>(m_nextSampleAdjustedTime - m_prevSampleAdjustedTime);
+        const auto dt1 = static_cast<double>(m_currentTimeMsSinceEpoch - m_prevSampleAdjustedTime);
+        const auto dt2 = static_cast<double>(m_nextSampleAdjustedTime - m_prevSampleAdjustedTime);
         double timeFraction = dt1 / dt2;
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
@@ -295,20 +295,14 @@ namespace swift::misc::simulation
 
     bool CInterpolatorSpline::areAnyElevationsMissing() const
     {
-        for (unsigned int i = 0; i < m_s.size(); i++)
-        {
-            if (!m_s[i].hasGroundElevation()) { return true; }
-        }
-        return false;
+        return std::any_of(m_s.begin(), m_s.end(),
+                           [](const auto &situation) { return !situation.hasGroundElevation(); });
     }
 
     bool CInterpolatorSpline::isAnySituationNearGroundRelevant() const
     {
-        for (unsigned int i = 0; i < m_s.size(); i++)
-        {
-            if (!m_s[i].canLikelySkipNearGroundInterpolation()) { return true; }
-        }
-        return false;
+        return std::any_of(m_s.begin(), m_s.end(),
+                           [](const auto &situation) { return !situation.canLikelySkipNearGroundInterpolation(); });
     }
 
     CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa,

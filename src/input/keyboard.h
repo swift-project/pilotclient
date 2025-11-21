@@ -28,7 +28,7 @@ namespace swift::input
         IKeyboard(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~IKeyboard() {}
+        ~IKeyboard() override = default;
 
         //! Creates a native keyboard handler object
         static std::unique_ptr<IKeyboard> create(QObject *parent = nullptr);

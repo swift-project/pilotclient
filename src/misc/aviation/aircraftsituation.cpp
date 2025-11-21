@@ -87,8 +87,6 @@ namespace swift::misc::aviation
         qRegisterMetaType<CAircraftSituation::GndElevationInfo>();
     }
 
-    CAircraftSituation::CAircraftSituation() {}
-
     CAircraftSituation::CAircraftSituation(const CCallsign &correspondingCallsign)
         : m_correspondingCallsign(correspondingCallsign)
     {}
@@ -254,13 +252,13 @@ namespace swift::misc::aviation
             if (distRatio > 0.95) { return oldSituation.getGroundElevationPlane(); }
 
             const double situationElvFt = newElvFt - distRatio * deltaElvFt;
-            return CElevationPlane(situation, situationElvFt, CElevationPlane::singlePointRadius());
+            return { situation, situationElvFt, CElevationPlane::singlePointRadius() };
         }
         else
         {
             const double elvSumFt = oldElvFt + newElvFt;
             const double elvFt = 0.5 * elvSumFt;
-            return CElevationPlane(newSituation, elvFt, CElevationPlane::singlePointRadius());
+            return { newSituation, elvFt, CElevationPlane::singlePointRadius() };
         }
     }
 
@@ -273,7 +271,7 @@ namespace swift::misc::aviation
         }
         if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
@@ -313,7 +311,7 @@ namespace swift::misc::aviation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPosition: m_position.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -346,7 +344,7 @@ namespace swift::misc::aviation
         {
             return ICoordinateGeodetic::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPosition:
@@ -836,7 +834,7 @@ namespace swift::misc::aviation
         if (this->getGroundSpeed().isNull())
         {
             if (!min.isNull()) { return min; }
-            return CLength(0, CLengthUnit::nullUnit());
+            return { 0, CLengthUnit::nullUnit() };
         }
         const double seconds = ms.count() / 1000.0;
         const double gsMeterSecond = this->getGroundSpeed().value(CSpeedUnit::m_s());

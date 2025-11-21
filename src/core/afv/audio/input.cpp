@@ -159,7 +159,7 @@ namespace swift::core::afv::audio
             m_maxSampleInput = qMax(qAbs(sampleInput), m_maxSampleInput);
         }
 
-        int length;
+        int length {};
         const QByteArray encodedBuffer = m_encoder.encode(samples, samples.size(), &length);
         m_opusBytesEncoded += length;
 
@@ -173,7 +173,7 @@ namespace swift::core::afv::audio
             double db = qBound(minDb, inputVolumeStreamArgs.PeakDB, maxDb);
             double ratio = (db - minDb) / (maxDb - minDb);
             if (ratio < 0.30) { ratio = 0.0; }
-            if (ratio > 1.0) { ratio = 1.0; }
+            ratio = std::min(ratio, 1.0);
             inputVolumeStreamArgs.PeakVU = ratio;
             emit inputVolumeStream(inputVolumeStreamArgs);
             m_sampleCount = 0;

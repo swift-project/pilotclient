@@ -17,7 +17,7 @@ namespace swift::gui::components
         connect(ui->comp_FontSettings, &CSettingsFontComponent::reject, this, &CSettingsFontDialog::reject);
     }
 
-    CSettingsFontDialog::~CSettingsFontDialog() {}
+    CSettingsFontDialog::~CSettingsFontDialog() = default;
 
     const QString &CSettingsFontDialog::getQss() const { return ui->comp_FontSettings->getQss(); }
 

@@ -32,7 +32,7 @@ namespace swift::gui::editors
         explicit CServerForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CServerForm() override;
+        ~CServerForm() override;
 
         //! Set server
         void setServer(const swift::misc::network::CServer &server);
@@ -48,8 +48,8 @@ namespace swift::gui::editors
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
+        void setReadOnly(bool readonly) override;
+        swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Show the password field

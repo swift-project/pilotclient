@@ -121,11 +121,9 @@ namespace swift::misc::audio
     bool CAudioDeviceInfoList::hasSameDevices(const CAudioDeviceInfoList &compareDevices) const
     {
         if (compareDevices.size() != this->size()) { return false; }
-        for (const CAudioDeviceInfo &d : *this)
-        {
-            if (!compareDevices.findRegisteredDeviceOrDefault(d).isValid()) { return false; }
-        }
-        return true;
+        return std::all_of(cbegin(), cend(), [&](const CAudioDeviceInfo &d) {
+            return compareDevices.findRegisteredDeviceOrDefault(d).isValid();
+        });
     }
 
     CAudioDeviceInfoList CAudioDeviceInfoList::allInputDevices()
@@ -175,12 +173,12 @@ namespace swift::misc::audio
 
     CAudioDeviceInfo CAudioDeviceInfoList::defaultInputDevice()
     {
-        return CAudioDeviceInfo(CAudioDeviceInfo::InputDevice, defaultQtInputDevice().description());
+        return { CAudioDeviceInfo::InputDevice, defaultQtInputDevice().description() };
     }
 
     CAudioDeviceInfo CAudioDeviceInfoList::defaultOutputDevice()
     {
-        return CAudioDeviceInfo(CAudioDeviceInfo::OutputDevice, defaultQtOutputDevice().description());
+        return { CAudioDeviceInfo::OutputDevice, defaultQtOutputDevice().description() };
     }
 
 } // namespace swift::misc::audio

@@ -28,7 +28,7 @@ namespace swift::gui::components
         explicit CAtcButtonComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CAtcButtonComponent();
+        ~CAtcButtonComponent() override;
 
         //! Update
         void updateStations();

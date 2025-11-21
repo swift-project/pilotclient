@@ -13,12 +13,12 @@
 #    include "crashpad/client/simulate_crash.h"
 #endif
 
-#if defined(Q_CC_MSVC)
+#ifdef Q_CC_MSVC
 #    include <Windows.h>
 #    include <intrin.h>
 #endif
 
-#if defined(Q_CC_CLANG)
+#ifdef Q_CC_CLANG
 #    if __has_builtin(__builtin_debugtrap)
 #        define SWIFT_BUILTIN_DEBUGTRAP __builtin_debugtrap
 #    elif __has_builtin(__builtin_debugger)
@@ -39,8 +39,8 @@ namespace swift::misc::private_ns
         Q_UNUSED(message)
         Q_UNUSED(audit)
 
-#if defined(QT_DEBUG)
-#    if defined(Q_CC_MSVC)
+#ifdef QT_DEBUG
+#    ifdef Q_CC_MSVC
         if (!audit || IsDebuggerPresent())
         {
             __debugbreak();

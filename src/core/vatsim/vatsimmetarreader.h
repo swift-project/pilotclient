@@ -48,7 +48,7 @@ namespace swift::core::vatsim
 
     protected:
         // CThreadedReader overrides
-        virtual void doWorkImpl() override;
+        void doWorkImpl() override;
 
     private:
         //! Decode METARs

@@ -63,10 +63,10 @@ namespace swift::gui
 
     protected:
         //! \copydoc QMainWindow::changeEvent
-        virtual void changeEvent(QEvent *event) override;
+        void changeEvent(QEvent *event) override;
 
         //! \copydoc QMainWindow::closeEvent
-        virtual void closeEvent(QCloseEvent *event) override;
+        void closeEvent(QCloseEvent *event) override;
 
     private:
         void createActions();

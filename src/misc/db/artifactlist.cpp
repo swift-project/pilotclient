@@ -11,8 +11,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CArtifact, CArtifactList)
 
 namespace swift::misc::db
 {
-    CArtifactList::CArtifactList() {}
-
     CArtifactList::CArtifactList(const CSequence<CArtifact> &other) : CSequence<CArtifact>(other) {}
 
     CPlatformSet CArtifactList::getPlatforms() const
@@ -33,7 +31,7 @@ namespace swift::misc::db
         {
             if (artifact.matchesName(name, cs)) { return artifact; }
         }
-        return CArtifact();
+        return {};
     }
 
     CArtifactList CArtifactList::findByMatchingPlatform(const CPlatform &platform) const
@@ -193,7 +191,7 @@ namespace swift::misc::db
 
     CArtifactList CArtifactList::fromDatabaseJson(const QString &json)
     {
-        if (json.isEmpty()) { return CArtifactList(); }
+        if (json.isEmpty()) { return {}; }
         return CArtifactList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
 } // namespace swift::misc::db

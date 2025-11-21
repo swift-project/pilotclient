@@ -741,7 +741,7 @@ namespace swift::core::db
         case CEntityFlags::AirlineIcaoEntity: return m_airlineIcaoCache.getAvailableTimestamp();
         case CEntityFlags::CountryEntity: return m_countryCache.getAvailableTimestamp();
         case CEntityFlags::AircraftCategoryEntity: return m_categoryCache.getAvailableTimestamp();
-        default: return QDateTime();
+        default: return {};
         }
     }
 

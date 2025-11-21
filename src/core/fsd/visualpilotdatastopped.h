@@ -46,7 +46,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        VisualPilotDataStopped();
+        VisualPilotDataStopped() = default;
     };
 
     //! Equal to operator

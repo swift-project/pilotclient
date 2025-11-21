@@ -29,7 +29,7 @@ namespace swift::misc::simulation
     {
     public:
         //! Default constructor.
-        CDistributorListPreferences();
+        CDistributorListPreferences() = default;
 
         //! Get distributors
         const CDistributorList &getDistributors(const CSimulatorInfo &simulator) const;

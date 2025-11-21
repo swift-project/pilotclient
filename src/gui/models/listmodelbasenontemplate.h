@@ -180,9 +180,9 @@ namespace swift::gui::models
         CListModelBaseNonTemplate(const QString &translationContext, QObject *parent = nullptr);
 
         CColumns m_columns; //!< columns metadata
-        int m_sortColumn; //!< currently sorted column
+        int m_sortColumn { -1 }; //!< currently sorted column
         bool m_modelDestroyed = false; //!< \todo rudimentary workaround for T579, can be removed
-        Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
+        Qt::SortOrder m_sortOrder { Qt::AscendingOrder }; //!< sort order (asc/desc)
         Qt::DropActions m_dropActions = Qt::IgnoreAction; //!< drop actions
         swift::misc::CPropertyIndexList
             m_sortTieBreakers; //!< how column values are sorted if equal, if no value is given this is random

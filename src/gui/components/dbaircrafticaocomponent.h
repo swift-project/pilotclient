@@ -46,7 +46,7 @@ namespace swift::gui
             explicit CDbAircraftIcaoComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbAircraftIcaoComponent() override;
+            ~CDbAircraftIcaoComponent() override;
 
             //! Get the view
             swift::gui::views::CAircraftIcaoCodeView *view() const;

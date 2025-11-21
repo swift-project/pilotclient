@@ -34,7 +34,7 @@ namespace swift::gui::models
             const swift::misc::simulation::CDistributor &distributor = swift::misc::simulation::CDistributor());
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::simulation::CAircraftModelList
+        swift::misc::simulation::CAircraftModelList
         filter(const swift::misc::simulation::CAircraftModelList &inContainer) const override;
 
     private:

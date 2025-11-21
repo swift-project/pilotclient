@@ -67,7 +67,7 @@ namespace swift::misc::shared_state
         //! Called when the scalar value changes.
         virtual void onValueChanged(const T &value) = 0;
 
-        virtual void onGenericValueChanged(const CVariant &value) override final { onValueChanged(value.to<T>()); }
+        void onGenericValueChanged(const CVariant &value) final { onValueChanged(value.to<T>()); }
     };
 } // namespace swift::misc::shared_state
 

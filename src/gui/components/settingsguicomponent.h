@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CSettingsGuiComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsGuiComponent();
+        ~CSettingsGuiComponent() override;
 
         //! Hide opacity elements
         void hideOpacity(bool hide);

@@ -15,8 +15,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::gui::settings, CNavigatorSettings)
 
 namespace swift::gui::settings
 {
-    CNavigatorSettings::CNavigatorSettings() {}
-
     void CNavigatorSettings::reset() {}
 
     void CNavigatorSettings::setMargins(const QMargins &margins)
@@ -49,7 +47,7 @@ namespace swift::gui::settings
     QVariant CNavigatorSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMargins: return QVariant::fromValue(this->m_margins);
@@ -67,7 +65,7 @@ namespace swift::gui::settings
             return;
         }
 
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMargins: this->m_margins = variant.toString(); break;

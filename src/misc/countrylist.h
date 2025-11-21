@@ -35,7 +35,7 @@ namespace swift::misc
         using CSequence::CSequence;
 
         //! Default constructor.
-        CCountryList();
+        CCountryList() = default;
 
         //! Construct from a base class object.
         CCountryList(const CSequence<CCountry> &other);

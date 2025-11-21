@@ -48,7 +48,7 @@ namespace swift::gui::components
 
         constexpr int MaxLength = 10;
         constexpr int MinLength = 0;
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_Callsign);
+        auto *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_Callsign);
         ucv->setAllowedCharacters09AZ();
         ui->le_Callsign->setMaxLength(MaxLength);
         ui->le_Callsign->setValidator(ucv);
@@ -82,7 +82,7 @@ namespace swift::gui::components
         }
     }
 
-    COwnAircraftComponent::~COwnAircraftComponent() {}
+    COwnAircraftComponent::~COwnAircraftComponent() = default;
 
     void COwnAircraftComponent::setUser(const CUser &user)
     {
@@ -130,7 +130,7 @@ namespace swift::gui::components
 
     void COwnAircraftComponent::onSimulatorStatusChanged(int status)
     {
-        ISimulator::SimulatorStatus s = static_cast<ISimulator::SimulatorStatus>(status);
+        auto s = static_cast<ISimulator::SimulatorStatus>(status);
         Q_UNUSED(s);
         if (!this->hasValidContexts()) { return; }
         if (sGui->getIContextNetwork()->isConnected())

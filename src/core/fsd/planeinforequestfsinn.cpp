@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    PlaneInfoRequestFsinn::PlaneInfoRequestFsinn() : MessageBase() {}
-
     PlaneInfoRequestFsinn::PlaneInfoRequestFsinn(const QString &sender, const QString &receiver,
                                                  const QString &airlineIcao, const QString &aircraftIcao,
                                                  const QString &aircraftIcaoCombinedType,
@@ -43,6 +41,6 @@ namespace swift::core::fsd
                 .debug(u"Wrong number of arguments.");
             return {};
         };
-        return PlaneInfoRequestFsinn(tokens[0], tokens[1], tokens[4], tokens[5], tokens[10], tokens[11]);
+        return { tokens[0], tokens[1], tokens[4], tokens[5], tokens[10], tokens[11] };
     }
 } // namespace swift::core::fsd

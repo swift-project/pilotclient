@@ -23,7 +23,7 @@ namespace swift::gui::models
         CDistributorFilter(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::simulation::CDistributorList
+        swift::misc::simulation::CDistributorList
         filter(const swift::misc::simulation::CDistributorList &inDistributors) const override;
 
     private:

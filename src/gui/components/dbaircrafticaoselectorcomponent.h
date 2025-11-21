@@ -47,7 +47,7 @@ namespace swift::gui::components
         explicit CDbAircraftIcaoSelectorComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbAircraftIcaoSelectorComponent() override;
+        ~CDbAircraftIcaoSelectorComponent() override;
 
         //! Current aircraft ICAO
         //! \return changed
@@ -84,16 +84,16 @@ namespace swift::gui::components
 
     protected:
         //! \copydoc QWidget::dragEnterEvent
-        virtual void dragEnterEvent(QDragEnterEvent *event) override;
+        void dragEnterEvent(QDragEnterEvent *event) override;
 
         //! \copydoc QWidget::dragMoveEvent
-        virtual void dragMoveEvent(QDragMoveEvent *event) override;
+        void dragMoveEvent(QDragMoveEvent *event) override;
 
         //! \copydoc QWidget::dragLeaveEvent
-        virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
+        void dragLeaveEvent(QDragLeaveEvent *event) override;
 
         //! \copydoc QWidget::dropEvent
-        virtual void dropEvent(QDropEvent *event) override;
+        void dropEvent(QDropEvent *event) override;
 
     private:
         //! Distributors have been read

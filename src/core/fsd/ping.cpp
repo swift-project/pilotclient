@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    Ping::Ping() : MessageBase() {}
-
     Ping::Ping(const QString &sender, const QString &receiver, const QString &timestamp)
         : MessageBase(sender, receiver), m_timestamp(timestamp)
     {}
@@ -29,6 +27,6 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<Ping *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
-        return Ping(tokens[0], tokens[1], tokens[2]);
+        return { tokens[0], tokens[1], tokens[2] };
     }
 } // namespace swift::core::fsd

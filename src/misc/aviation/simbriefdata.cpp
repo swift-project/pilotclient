@@ -33,7 +33,7 @@ namespace swift::misc::aviation
     QVariant CSimBriefData::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexUrl: return QVariant::fromValue(m_url);
@@ -49,7 +49,7 @@ namespace swift::misc::aviation
             (*this) = variant.value<CSimBriefData>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexUrl: m_url = variant.toString(); break;

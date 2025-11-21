@@ -85,19 +85,19 @@ namespace swift::misc::network
     QVariant CClient::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCapabilities: return QVariant::fromValue(m_capabilities);
-        case IndexCapabilitiesString: return QVariant(this->getCapabilitiesAsString());
+        case IndexCapabilitiesString: return { this->getCapabilitiesAsString() };
         case IndexCallsign: return this->getCallsign().propertyByIndex(index.copyFrontRemoved());
         case IndexUser: return this->getUser().propertyByIndex(index.copyFrontRemoved());
-        case IndexModelString: return QVariant(m_modelString);
-        case IndexServer: return QVariant(m_server);
+        case IndexModelString: return { m_modelString };
+        case IndexServer: return { m_server };
         case IndexVoiceCapabilities: return m_voiceCapabilities.propertyByIndex(index.copyFrontRemoved());
         case IndexVoiceCapabilitiesPixmap: return QVariant::fromValue(CIcon(m_voiceCapabilities.toIcon()).toPixmap());
         case IndexVoiceCapabilitiesIcon: return QVariant::fromValue(CIcon(m_voiceCapabilities.toIcon()));
-        case IndexVoiceCapabilitiesString: return QVariant(m_voiceCapabilities.toQString(true));
+        case IndexVoiceCapabilitiesString: return { m_voiceCapabilities.toQString(true) };
         default: break;
         }
         return CValueObject::propertyByIndex(index);
@@ -110,7 +110,7 @@ namespace swift::misc::network
             (*this) = variant.value<CClient>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCapabilities: m_capabilities = variant.toInt(); break;

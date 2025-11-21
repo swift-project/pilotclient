@@ -8,6 +8,7 @@
 #include "gui/guiapplication.h"
 #include "gui/guiutility.h"
 #include "misc/fileutils.h"
+#include "misc/swiftdirectories.h"
 
 namespace swift::gui::components
 {
@@ -29,7 +30,7 @@ namespace swift::gui::components
         });
     }
 
-    CAboutDialog::~CAboutDialog() {}
+    CAboutDialog::~CAboutDialog() = default;
 
     void CAboutDialog::init()
     {

@@ -60,7 +60,7 @@ namespace swift::misc::network
         static const QString &serverTypeToString(ServerType server);
 
         //! Default constructor.
-        CServer() {}
+        CServer() = default;
 
         //! Constructor.
         CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user,

@@ -45,10 +45,10 @@ namespace swift::gui
 
         //! Contribute to menu
         //! \remarks made public so other classes can nest this submenu
-        virtual void addToContextMenu(QMenu *contextMenu) const override;
+        void addToContextMenu(QMenu *contextMenu) const override;
 
         //! \copydoc CDockWidget::initialFloating
-        virtual void initialFloating() override;
+        void initialFloating() override;
 
     private:
         //! Find all embedded dock widget components. These are components marked as CDockWidgetInfoAreaComponent

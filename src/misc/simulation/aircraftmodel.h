@@ -133,7 +133,7 @@ namespace swift::misc
             static void registerMetadata();
 
             //! Default constructor.
-            CAircraftModel() {}
+            CAircraftModel() = default;
 
             //! Constructor.
             CAircraftModel(const QString &model, ModelType type);

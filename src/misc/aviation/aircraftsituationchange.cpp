@@ -262,7 +262,7 @@ namespace swift::misc::aviation
             return ITimestampWithOffsetBased::propertyByIndex(index);
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsign: return m_correspondingCallsign.propertyByIndex(index.copyFrontRemoved());
@@ -297,7 +297,7 @@ namespace swift::misc::aviation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsign: m_correspondingCallsign.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -331,7 +331,7 @@ namespace swift::misc::aviation
             return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue);
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsign:

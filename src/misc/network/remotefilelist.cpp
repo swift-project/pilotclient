@@ -12,8 +12,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRemoteFile, CRemoteFileList)
 
 namespace swift::misc::network
 {
-    CRemoteFileList::CRemoteFileList() {}
-
     CRemoteFileList::CRemoteFileList(const CSequence<CRemoteFile> &other) : CSequence<CRemoteFile>(other) {}
 
     QStringList CRemoteFileList::getNames(bool sorted) const
@@ -34,28 +32,28 @@ namespace swift::misc::network
 
     CRemoteFile CRemoteFileList::findFirstByNameOrDefault(const QString &name) const
     {
-        if (name.isEmpty()) { return CRemoteFile(); }
+        if (name.isEmpty()) { return {}; }
         return this->findFirstByOrDefault(&CRemoteFile::getName, name);
     }
 
     CRemoteFile CRemoteFileList::findFirstContainingNameOrDefault(const QString &name, Qt::CaseSensitivity cs) const
     {
-        if (name.isEmpty()) { return CRemoteFile(); }
+        if (name.isEmpty()) { return {}; }
         for (const CRemoteFile &rf : *this)
         {
             if (rf.getName().contains(name, cs)) { return rf; }
         }
-        return CRemoteFile();
+        return {};
     }
 
     CRemoteFile CRemoteFileList::findFirstByMatchingBaseNameOrDefault(const QString &baseName) const
     {
-        if (baseName.isEmpty()) { return CRemoteFile(); }
+        if (baseName.isEmpty()) { return {}; }
         for (const CRemoteFile &rf : *this)
         {
             if (rf.matchesBaseName(baseName)) { return rf; }
         }
-        return CRemoteFile();
+        return {};
     }
 
     CRemoteFileList CRemoteFileList::findExecutableFiles() const
@@ -89,7 +87,7 @@ namespace swift::misc::network
 
     CRemoteFileList CRemoteFileList::fromDatabaseJson(const QString &json)
     {
-        if (json.isEmpty()) { return CRemoteFileList(); }
+        if (json.isEmpty()) { return {}; }
         return CRemoteFileList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
 } // namespace swift::misc::network

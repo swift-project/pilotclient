@@ -83,7 +83,11 @@ namespace swift::misc
         connect(m_serializer, &CDataCacheSerializer::valuesLoadedFromStore, this, &CDataCache::changeValuesFromRemote,
                 Qt::DirectConnection);
 
-        if (!QFile::exists(revisionFileName())) { QFile(revisionFileName()).open(QFile::WriteOnly); }
+        if (!QFile::exists(revisionFileName()))
+        {
+            const bool res = QFile(revisionFileName()).open(QFile::WriteOnly);
+            SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open revision file");
+        }
         m_serializer->loadFromStore({}, false, true); // load pinned values
         singleShot(0, this,
                    [this] // only start the serializer if the main thread event loop runs
@@ -258,7 +262,7 @@ namespace swift::misc
           m_revisionFileName(revisionFileName)
     {}
 
-    const QString &CDataCacheSerializer::persistentStore() const { return m_cache->persistentStore(); }
+    const QString &CDataCacheSerializer::persistentStore() const { return CDataCache::persistentStore(); }
 
     void CDataCacheSerializer::saveToStore(const swift::misc::CVariantMap &values,
                                            const swift::misc::CValueCachePacket &baseline)
@@ -347,7 +351,7 @@ namespace swift::misc
         : m_basename(basename), m_session(std::make_unique<Session>(m_basename + "/.session"))
     {}
 
-    CDataCacheRevision::~CDataCacheRevision() = default;
+    CDataCacheRevision::~CDataCacheRevision() = default; // Explicitly in cpp file
 
     CDataCacheRevision::LockGuard CDataCacheRevision::beginUpdate(const QMap<QString, qint64> &timestamps,
                                                                   bool updateUuid, bool pinsOnly)
@@ -553,7 +557,7 @@ namespace swift::misc
         QMutexLocker lock(&m_mutex);
 
         Q_ASSERT(m_updateInProgress);
-        return QSet<QString>(m_timestamps.keyBegin(), m_timestamps.keyEnd());
+        return { m_timestamps.keyBegin(), m_timestamps.keyEnd() };
     }
 
     const QMap<QString, qint64> &CDataCacheRevision::newerTimestamps() const
@@ -761,14 +765,14 @@ namespace swift::misc
     QJsonArray CDataCacheRevision::toJson(const QSet<QString> &pins)
     {
         QJsonArray result;
-        for (auto it = pins.begin(); it != pins.end(); ++it) { result.push_back(*it); }
+        for (const auto &pin : pins) { result.push_back(pin); }
         return result;
     }
 
     QSet<QString> CDataCacheRevision::fromJson(const QJsonArray &pins)
     {
         QSet<QString> result;
-        for (auto it = pins.begin(); it != pins.end(); ++it) { result.insert(it->toString()); }
+        for (auto pin : pins) { result.insert(pin.toString()); }
         return result;
     }
 

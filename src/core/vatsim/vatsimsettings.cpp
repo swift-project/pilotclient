@@ -11,8 +11,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::vatsim, CRawFsdMessageSettings)
 
 namespace swift::core::vatsim
 {
-    CReaderSettings::CReaderSettings() {}
-
     CReaderSettings::CReaderSettings(const CTime &initialTime, const CTime &periodicTime, bool neverUpdate)
         : m_initialTime(initialTime), m_periodicTime(periodicTime), m_neverUpdate(neverUpdate)
     {}
@@ -34,7 +32,7 @@ namespace swift::core::vatsim
     QVariant CReaderSettings::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexInitialTime: return this->m_initialTime.propertyByIndex(index.copyFrontRemoved());
@@ -51,7 +49,7 @@ namespace swift::core::vatsim
             (*this) = variant.value<CReaderSettings>();
             return;
         }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexInitialTime: this->m_initialTime.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -60,8 +58,6 @@ namespace swift::core::vatsim
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
-
-    CRawFsdMessageSettings::CRawFsdMessageSettings() {}
 
     CRawFsdMessageSettings::CRawFsdMessageSettings(bool enabled, const QString &FileDir)
         : m_rawFsdMessagesEnabled(enabled), m_FileDir(FileDir)
@@ -79,7 +75,7 @@ namespace swift::core::vatsim
     QVariant CRawFsdMessageSettings::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexRawFsdMessagesEnabled: return QVariant::fromValue(this->m_rawFsdMessagesEnabled);
@@ -96,7 +92,7 @@ namespace swift::core::vatsim
             (*this) = variant.value<CRawFsdMessageSettings>();
             return;
         }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexRawFsdMessagesEnabled: this->m_rawFsdMessagesEnabled = variant.toBool(); break;

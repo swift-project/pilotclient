@@ -71,7 +71,7 @@ namespace swift::core::db
         }
 
         const bool compress = models.size() > 3;
-        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
+        auto *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
         multiPart->append(CDatabaseUtils::getJsonTextMultipart(models.toDatabaseJson(), compress));
 
         if (sApp->getGlobalSetup().dbDebugFlag()) { multiPart->append(CDatabaseUtils::getMultipartWithDebugFlag()); }
@@ -105,7 +105,7 @@ namespace swift::core::db
 
         const QString json = data.toDatabaseJson();
         const bool compress = json.size() > 2048;
-        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
+        auto *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
         multiPart->append(CDatabaseUtils::getJsonTextMultipart(json, compress));
         if (sApp->getGlobalSetup().dbDebugFlag())
         {
@@ -172,7 +172,7 @@ namespace swift::core::db
             CAircraftModelList modelsPublished;
             CAircraftModelList modelsSkipped;
             CStatusMessageList msgs;
-            bool directWrite;
+            bool directWrite {};
             const bool sendingSuccessful =
                 parseSwiftPublishResponse(responseData, modelsPublished, modelsSkipped, msgs, directWrite);
             const int c = CDatabaseUtils::fillInMissingAircraftAndLiveryEntities(modelsPublished);

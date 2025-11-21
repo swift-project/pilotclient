@@ -32,13 +32,13 @@ namespace swift::misc
         CStatusException &operator=(const CStatusException &) = delete;
 
         //! Return null-terminated message string.
-        virtual const char *what() const noexcept override;
+        const char *what() const noexcept override;
 
         //! Return the contained status message.
         const CStatusMessage &status() const { return m_payload; }
 
         //! Destructor.
-        ~CStatusException() override {}
+        ~CStatusException() override = default;
 
         //! If the message is not empty then throw it.
         static void maybeThrow(const CStatusMessage &);

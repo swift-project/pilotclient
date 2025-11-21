@@ -41,7 +41,7 @@ namespace swift::gui::components
         Q_UNUSED(s);
     }
 
-    CRemoteAircraftSelector::~CRemoteAircraftSelector() {}
+    CRemoteAircraftSelector::~CRemoteAircraftSelector() = default;
 
     swift::misc::aviation::CCallsign CRemoteAircraftSelector::getSelectedCallsign() const
     {

@@ -26,7 +26,7 @@ namespace swift::misc
     CPropertyIndex CPropertyIndex::copyFrontRemoved() const
     {
         SWIFT_VERIFY_X(!this->isEmpty(), Q_FUNC_INFO, "Empty index");
-        if (this->isEmpty()) { return CPropertyIndex(); }
+        if (this->isEmpty()) { return {}; }
         CPropertyIndex copy = *this;
         copy.m_indexes.pop_front();
         return copy;
@@ -58,7 +58,7 @@ namespace swift::misc
         for (const auto &index : QStringView { indexes }.split(';'))
         {
             if (index.isEmpty()) { continue; }
-            bool ok;
+            bool ok {};
             int i = index.toInt(&ok);
             Q_ASSERT(ok);
             Q_ASSERT(i >= static_cast<int>(CPropertyIndexRef::GlobalIndexCValueObject));

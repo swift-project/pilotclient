@@ -33,7 +33,7 @@ namespace swift::gui::components
         this->onAirportsChanged();
     }
 
-    CAirportSmallCompleter::~CAirportSmallCompleter() {}
+    CAirportSmallCompleter::~CAirportSmallCompleter() = default;
 
     void CAirportSmallCompleter::setAirport(const CAirport &airport)
     {
@@ -60,7 +60,7 @@ namespace swift::gui::components
     CAirportIcaoCode CAirportSmallCompleter::getAirportIcaoCode() const
     {
         if (m_current.hasValidIcaoCode()) { return m_current.getIcao(); }
-        return CAirportIcaoCode(this->getIcaoText());
+        return { this->getIcaoText() };
     }
 
     QString CAirportSmallCompleter::getIcaoText() const { return ui->le_Icao->text().trimmed().toUpper(); }

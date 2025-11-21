@@ -9,7 +9,8 @@
 #include <QObject>
 #include <QTimer>
 
-#include "sound/dsp/SimpleComp.h"
+#include "chunkware_dsp/SimpleComp.h"
+
 #include "sound/sampleprovider/sampleprovider.h"
 #include "sound/swiftsoundexport.h"
 
@@ -25,7 +26,7 @@ namespace swift::sound::sample_provider
         CSimpleCompressorEffect(ISampleProvider *source, QObject *parent = nullptr);
 
         //! \copydoc ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
         //! Enable
         void setEnabled(bool enabled);

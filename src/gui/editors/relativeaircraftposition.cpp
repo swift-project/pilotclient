@@ -16,7 +16,7 @@ namespace swift::gui::editors
         ui->setupUi(this);
     }
 
-    CRelativeAircraftPosition::~CRelativeAircraftPosition() {}
+    CRelativeAircraftPosition::~CRelativeAircraftPosition() = default;
 
     void CRelativeAircraftPosition::setReadOnly(bool readOnly)
     {

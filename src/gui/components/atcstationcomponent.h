@@ -61,7 +61,7 @@ namespace swift::gui
             explicit CAtcStationComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CAtcStationComponent() override;
+            ~CAtcStationComponent() override;
 
             //! Set tab
             void setTab(AtcTab tab);
@@ -76,7 +76,7 @@ namespace swift::gui
             void getMetar(const QString &airportIcaoCode);
 
             //! \copydoc CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea
-            virtual bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
+            bool setParentDockWidgetInfoArea(swift::gui::CDockWidgetInfoArea *parentDockableWidget) override;
 
         signals:
             //! Request audio widget

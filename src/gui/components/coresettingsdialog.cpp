@@ -21,7 +21,7 @@ namespace swift::gui::components
         connect(overview, &QPushButton::released, this, &CCoreSettingsDialog::showOverview);
     }
 
-    CCoreSettingsDialog::~CCoreSettingsDialog() {}
+    CCoreSettingsDialog::~CCoreSettingsDialog() = default;
 
     void CCoreSettingsDialog::showOverview() { ui->comp_SettingsComponent->setSettingsOverviewTab(); }
 } // namespace swift::gui::components

@@ -128,7 +128,7 @@ namespace swift::misc::simulation::fscommon
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEntryIndex: return QVariant::fromValue(m_index);
@@ -163,7 +163,7 @@ namespace swift::misc::simulation::fscommon
             ITimestampBased::setPropertyByIndex(index, variant);
             return;
         }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEntryIndex: this->setIndex(variant.toInt()); break;

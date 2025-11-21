@@ -32,7 +32,7 @@ namespace swift::gui::components
         });
     }
 
-    CAboutHtmlComponent::~CAboutHtmlComponent() {}
+    CAboutHtmlComponent::~CAboutHtmlComponent() = default;
 
     void CAboutHtmlComponent::loadAbout()
     {

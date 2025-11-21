@@ -3,9 +3,8 @@
 
 #include "misc/simulation/xplane/aircraftmodelloaderxplane.h"
 
-#include <string.h>
-
 #include <algorithm>
+#include <cstring>
 #include <functional>
 
 #include <QChar>
@@ -253,7 +252,8 @@ namespace swift::misc::simulation::xplane
 
             const QString packageFilePath = it.fileInfo().absolutePath();
             QFile file(packageFile);
-            file.open(QIODevice::ReadOnly);
+            const bool res = file.open(QIODevice::ReadOnly);
+            SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open package file");
             QString content;
 
             QTextStream ts(&file);
@@ -273,7 +273,8 @@ namespace swift::misc::simulation::xplane
             emit this->loadingProgress(this->getSimulator(), QStringLiteral("Parsing CSL '%1'").arg(packageFile), -1);
 
             QFile file(packageFile);
-            file.open(QIODevice::ReadOnly);
+            const bool res = file.open(QIODevice::ReadOnly);
+            SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Could not open package file");
             QString content;
 
             QTextStream ts(&file);
@@ -612,9 +613,14 @@ namespace swift::misc::simulation::xplane
         using command = std::function<bool(const QStringList &, CSLPackage &, const QString &, int)>;
         using namespace std::placeholders;
 
-        const QMap<QString, command> commands {
-            { "EXPORT_NAME", std::bind(&CAircraftModelLoaderXPlane::parseExportCommand, this, _1, _2, _3, _4) }
-        };
+        const QMap<QString, command> commands { { "EXPORT_NAME",
+                                                  [this](auto &&tokens, auto &&package, auto &&path, auto &&lineNum) {
+                                                      return parseExportCommand(
+                                                          std::forward<decltype(tokens)>(tokens),
+                                                          std::forward<decltype(package)>(package),
+                                                          std::forward<decltype(path)>(path),
+                                                          std::forward<decltype(lineNum)>(lineNum));
+                                                  } } };
 
         CSLPackage package;
         int lineNum = 0;
@@ -646,18 +652,68 @@ namespace swift::misc::simulation::xplane
         using namespace std::placeholders;
 
         const QMap<QString, command> commands {
-            { "EXPORT_NAME", std::bind(&CAircraftModelLoaderXPlane::parseDummyCommand, this, _1, _2, _3, _4) },
-            { "DEPENDENCY", std::bind(&CAircraftModelLoaderXPlane::parseDependencyCommand, this, _1, _2, _3, _4) },
-            { "OBJECT", std::bind(&CAircraftModelLoaderXPlane::parseObjectCommand, this, _1, _2, _3, _4) },
-            { "TEXTURE", std::bind(&CAircraftModelLoaderXPlane::parseTextureCommand, this, _1, _2, _3, _4) },
-            { "AIRCRAFT", std::bind(&CAircraftModelLoaderXPlane::parseAircraftCommand, this, _1, _2, _3, _4) },
-            { "OBJ8_AIRCRAFT", std::bind(&CAircraftModelLoaderXPlane::parseObj8AircraftCommand, this, _1, _2, _3, _4) },
-            { "OBJ8", std::bind(&CAircraftModelLoaderXPlane::parseObj8Command, this, _1, _2, _3, _4) },
-            { "HASGEAR", std::bind(&CAircraftModelLoaderXPlane::parseHasGearCommand, this, _1, _2, _3, _4) },
-            { "ICAO", std::bind(&CAircraftModelLoaderXPlane::parseIcaoCommand, this, _1, _2, _3, _4) },
-            { "AIRLINE", std::bind(&CAircraftModelLoaderXPlane::parseAirlineCommand, this, _1, _2, _3, _4) },
-            { "LIVERY", std::bind(&CAircraftModelLoaderXPlane::parseLiveryCommand, this, _1, _2, _3, _4) },
-            { "VERT_OFFSET", std::bind(&CAircraftModelLoaderXPlane::parseDummyCommand, this, _1, _2, _3, _4) },
+            { "EXPORT_NAME",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseDummyCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                           std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            { "DEPENDENCY",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseDependencyCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                                std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            { "OBJECT",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseObjectCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                            std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            { "TEXTURE",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseTextureCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                             std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            {
+                "AIRCRAFT",
+                [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                    return parseAircraftCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                                std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+                },
+            },
+            { "OBJ8_AIRCRAFT",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseObj8AircraftCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                                  std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            { "OBJ8",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseObj8Command(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                          std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            { "HASGEAR",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseHasGearCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                             std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            { "ICAO",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseIcaoCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                          std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            { "AIRLINE",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseAirlineCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                             std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            { "LIVERY",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseLiveryCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                            std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
+            { "VERT_OFFSET",
+              [this](auto &&PH1, auto &&PH2, auto &&PH3, auto &&PH4) {
+                  return parseDummyCommand(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2),
+                                           std::forward<decltype(PH3)>(PH3), std::forward<decltype(PH4)>(PH4));
+              } },
         };
 
         int lineNum = 0;

@@ -20,7 +20,6 @@
 using namespace swift::misc;
 using namespace swift::misc::simulation;
 using namespace swift::misc::aviation;
-using namespace swift::misc::network;
 using namespace swift::misc::physical_quantities;
 
 namespace swift::gui::models
@@ -238,7 +237,7 @@ namespace swift::gui::models
 
     QStringList CAircraftModelListModel::getModelStrings(bool sort) const
     {
-        if (this->isEmpty()) { return QStringList(); }
+        if (this->isEmpty()) { return {}; }
         return this->container().getModelStringList(sort);
     }
 
@@ -264,7 +263,7 @@ namespace swift::gui::models
             // highlight stashed first
             if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive)) { return m_highlightColor; }
 
-            return QVariant();
+            return {};
         }
         else if (role == Qt::ToolTipRole)
         {

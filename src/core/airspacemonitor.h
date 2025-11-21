@@ -195,7 +195,7 @@ namespace swift::core
         struct FsInnPacket
         {
             //! Default ctor
-            FsInnPacket() {}
+            FsInnPacket() = default;
 
             //! Constructor
             FsInnPacket(const QString &aircraftIcaoDesignator, const QString &airlineIcaoDesignator,
@@ -358,7 +358,7 @@ namespace swift::core
         //! \threadsafe
         //! \remark sets gnd.flag from parts if parts are available
         //! \remark uses gnd.elevation if found
-        virtual swift::misc::aviation::CAircraftSituation
+        swift::misc::aviation::CAircraftSituation
         storeAircraftSituation(const swift::misc::aviation::CAircraftSituation &situation,
                                bool allowTestOffset = true) override;
 

@@ -36,7 +36,7 @@ namespace MiscTest
         explicit CTestCompress(QObject *parent = nullptr) : QObject(parent) {}
 
         //! Destructor
-        virtual ~CTestCompress() {}
+        ~CTestCompress() override = default;
 
     private slots:
         //! Uncompress file

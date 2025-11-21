@@ -27,7 +27,7 @@ namespace swift::misc
         //! Linear interpolator, calculation inbetween positions
         class SWIFT_MISC_EXPORT CInterpolatorLinear : public CInterpolator
         {
-            virtual void anchor() override;
+            void anchor() override;
 
         public:
             //! Constructor

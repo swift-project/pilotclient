@@ -13,7 +13,6 @@
 #include "gui/uppercasevalidator.h"
 
 using namespace swift::misc::network;
-using namespace swift::misc::audio;
 using namespace swift::misc::aviation;
 using namespace swift::core;
 using namespace swift::core::data;
@@ -44,7 +43,7 @@ namespace swift::gui::components
 
         constexpr int MaxLength = 10;
         constexpr int MinLength = 0;
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_PartnerCallsign);
+        auto *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_PartnerCallsign);
         ucv->setAllowedCharacters09AZ();
         ui->le_PartnerCallsign->setMaxLength(MaxLength);
         ui->le_PartnerCallsign->setValidator(ucv);
@@ -64,7 +63,7 @@ namespace swift::gui::components
         this->onWebServiceDataRead(CEntityFlags::VatsimDataFile, CEntityFlags::ReadFinished, -1, {});
     }
 
-    CNetworkDetailsComponent::~CNetworkDetailsComponent() {}
+    CNetworkDetailsComponent::~CNetworkDetailsComponent() = default;
 
     CLoginMode CNetworkDetailsComponent::getLoginMode() const
     {
@@ -151,7 +150,7 @@ namespace swift::gui::components
     CCallsign CNetworkDetailsComponent::getPartnerCallsign() const
     {
         if (ui->le_PartnerCallsign->text().isEmpty()) { return {}; }
-        return CCallsign(ui->le_PartnerCallsign->text(), CCallsign::Aircraft);
+        return { ui->le_PartnerCallsign->text(), CCallsign::Aircraft };
     }
 
     void CNetworkDetailsComponent::reloadOtherServersSetup()

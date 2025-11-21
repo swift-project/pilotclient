@@ -34,7 +34,7 @@ namespace swift::sound
                                 const swift::misc::audio::CAudioDeviceInfo &device);
 
         //! Destructor
-        virtual ~CThreadedTonePairPlayer() override = default;
+        ~CThreadedTonePairPlayer() override = default;
 
         //! Play the list of tones.
         //! If the player is currently active, this call will be ignored.
@@ -48,10 +48,10 @@ namespace swift::sound
 
     protected:
         //! \copydoc swift::misc::CContinuousWorker::initialize
-        virtual void initialize() override;
+        void initialize() override;
 
         //! \copydoc swift::misc::CContinuousWorker::beforeQuit
-        virtual void beforeQuit() noexcept override;
+        void beforeQuit() noexcept override;
 
     private:
         void handleStateChanged(QAudio::State newState);

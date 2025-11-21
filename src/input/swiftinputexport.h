@@ -14,7 +14,7 @@
  */
 
 #ifndef WITH_STATIC
-#    if defined(BUILD_SWIFT_INPUT_LIB)
+#    ifdef BUILD_SWIFT_INPUT_LIB
 #        define SWIFT_INPUT_EXPORT Q_DECL_EXPORT
 #    else
 #        define SWIFT_INPUT_EXPORT Q_DECL_IMPORT

@@ -32,7 +32,7 @@ namespace swift::simplugin::flightgear
         CSimulatorFlightgearConfigWindow(QWidget *parent);
 
         //! Dtor.
-        virtual ~CSimulatorFlightgearConfigWindow();
+        ~CSimulatorFlightgearConfigWindow() override;
 
     private:
         //! Settings have been accepted

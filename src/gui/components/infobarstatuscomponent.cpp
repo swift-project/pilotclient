@@ -96,7 +96,7 @@ namespace swift::gui::components
         });
     }
 
-    CInfoBarStatusComponent::~CInfoBarStatusComponent() {}
+    CInfoBarStatusComponent::~CInfoBarStatusComponent() = default;
 
     void CInfoBarStatusComponent::initLeds()
     {
@@ -250,8 +250,8 @@ namespace swift::gui::components
 
     void CInfoBarStatusComponent::updateSpacing()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->mainApplicationWidget()) { return; }
-        const int w = sGui->mainApplicationWidget()->width();
+        if (!sGui || sGui->isShuttingDown() || !CGuiApplication::mainApplicationWidget()) { return; }
+        const int w = CGuiApplication::mainApplicationWidget()->width();
         const int s = (w >= 400) ? 6 : 2;
         this->setSpacing(s);
     }

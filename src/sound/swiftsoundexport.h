@@ -14,7 +14,7 @@
  */
 
 #ifndef WITH_STATIC
-#    if defined(BUILD_SWIFT_SOUND_LIB)
+#    ifdef BUILD_SWIFT_SOUND_LIB
 #        define SWIFT_SOUND_EXPORT Q_DECL_EXPORT
 #    else
 #        define SWIFT_SOUND_EXPORT Q_DECL_IMPORT

@@ -23,7 +23,7 @@ namespace swift::gui
 
     public:
         //! Destructor
-        virtual ~CGuiActionBindHandler();
+        ~CGuiActionBindHandler() override = default;
 
         //! Bound function for swift::core::CActionBind
         void boundFunction(bool enabled);

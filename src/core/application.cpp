@@ -259,16 +259,16 @@ namespace swift::core
 
     CGlobalSetup CApplication::getGlobalSetup() const
     {
-        if (m_shutdown) { return CGlobalSetup(); }
+        if (m_shutdown) { return {}; }
         const CSetupReader *r = m_setupReader.data();
-        if (!r) { return CGlobalSetup(); }
+        if (!r) { return {}; }
         return r->getSetup();
     }
 
     CUpdateInfo CApplication::getUpdateInfo() const
     {
-        if (m_shutdown) { return CUpdateInfo(); }
-        if (!m_gitHubPackagesReader) { return CUpdateInfo(); }
+        if (m_shutdown) { return {}; }
+        if (!m_gitHubPackagesReader) { return {}; }
         return m_gitHubPackagesReader->getUpdateInfo();
     }
 
@@ -405,14 +405,12 @@ namespace swift::core
         if (CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
 
         const CDistribution d(this->getOwnDistribution());
-        if (d.isRestricted() && this->isSet(m_cmdDevelopment)) { return true; }
-
-        return false;
+        return d.isRestricted() && this->isSet(m_cmdDevelopment);
     }
 
     CStatusMessage CApplication::initLocalSettings()
     {
-        if (m_localSettingsLoaded) { return CStatusMessage(); }
+        if (m_localSettingsLoaded) { return {}; }
         m_localSettingsLoaded = true;
 
         // trigger loading and saving of settings in appropriate scenarios
@@ -427,7 +425,7 @@ namespace swift::core
             // sent to swiftcore and saved by swiftcore.
             CSettingsCache::instance()->enableLocalSave();
         }
-        return CStatusMessage();
+        return {};
     }
 
     bool CApplication::hasUnsavedSettings() const { return !this->getUnsavedSettingsKeys().isEmpty(); }
@@ -442,7 +440,7 @@ namespace swift::core
 
     CStatusMessage CApplication::saveSettingsByKey(const QStringList &keys)
     {
-        if (keys.isEmpty()) { return CStatusMessage(); }
+        if (keys.isEmpty()) { return {}; }
         return this->supportsContexts() ? this->getIContextApplication()->saveSettingsByKey(keys) :
                                           CSettingsCache::instance()->saveToStore(keys);
     }
@@ -838,7 +836,7 @@ namespace swift::core
         {
             const CStatusMessage m = this->supportsContexts() ? this->getIContextApplication()->saveSettings() :
                                                                 CSettingsCache::instance()->saveToStore();
-            CLogMessage(this).preformatted(m);
+            CLogMessage::preformatted(m);
         }
 
         // from here on we really rip apart the application object
@@ -870,7 +868,7 @@ namespace swift::core
 
         // clean up all in "deferred delete state"
         qApp->sendPostedEvents(nullptr, QEvent::DeferredDelete);
-        sApp->processEventsFor(500);
+        processEventsFor(500);
 
         // completed
         m_shutdown = true;

@@ -71,7 +71,7 @@ namespace swift::misc
     QVariant CPlatform::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPlatform: return QVariant::fromValue(m_platform);
@@ -86,7 +86,7 @@ namespace swift::misc
             (*this) = variant.value<CPlatform>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPlatform: this->setPlatform(static_cast<Platform>(variant.toInt())); break;
@@ -97,7 +97,7 @@ namespace swift::misc
     int CPlatform::comparePropertyByIndex(CPropertyIndexRef index, const CPlatform &compareValue) const
     {
         if (index.isMyself()) { return Compare::compare(m_platform, compareValue.m_platform); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexPlatform: return Compare::compare(m_platform, compareValue.m_platform);

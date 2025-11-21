@@ -66,7 +66,7 @@ namespace swift::gui::components
         connect(ui->pb_CreateModelSet, &QPushButton::clicked, this, &CFirstModelSetComponent::createModelSet);
     }
 
-    CFirstModelSetComponent::~CFirstModelSetComponent() {}
+    CFirstModelSetComponent::~CFirstModelSetComponent() = default;
 
     void CFirstModelSetComponent::onSimulatorChanged(const CSimulatorInfo &simulator)
     {
@@ -298,7 +298,7 @@ namespace swift::gui::components
 
     QWidget *CFirstModelSetComponent::mainWindow()
     {
-        QWidget *pw = sGui->mainApplicationWidget();
+        QWidget *pw = CGuiApplication::mainApplicationWidget();
         return pw ? pw : this;
     }
 

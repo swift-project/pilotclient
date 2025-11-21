@@ -27,7 +27,7 @@ namespace swift::misc::aviation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CAircraftSituationChangeList();
+        CAircraftSituationChangeList() = default;
 
         //! Construct from a base class object.
         CAircraftSituationChangeList(const CSequence<CAircraftSituationChange> &other);

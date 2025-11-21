@@ -28,7 +28,7 @@ namespace swift::core::fsd
         static QString pdu() { return QStringLiteral("#SB"); }
 
     private:
-        PlaneInfoRequest();
+        PlaneInfoRequest() = default;
     };
 
     //! Equal to operator

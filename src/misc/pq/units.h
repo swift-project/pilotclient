@@ -263,8 +263,8 @@ namespace swift::misc::physical_quantities
         }
 
         //! \copydoc CMeasurementUnit::makeRoundedQStringWithUnit
-        virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool withGroupSeparator = false,
-                                                   bool i18n = false) const override;
+        QString makeRoundedQStringWithUnit(double value, int digits = -1, bool withGroupSeparator = false,
+                                           bool i18n = false) const override;
 
         //! Radians
         static CAngleUnit rad()
@@ -947,8 +947,8 @@ namespace swift::misc::physical_quantities
         }
 
         //! \copydoc CMeasurementUnit::makeRoundedQStringWithUnit
-        virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool withGroupSeparator = false,
-                                                   bool i18n = false) const override;
+        QString makeRoundedQStringWithUnit(double value, int digits = -1, bool withGroupSeparator = false,
+                                           bool i18n = false) const override;
 
         //! Second s
         static CTimeUnit s()

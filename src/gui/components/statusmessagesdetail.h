@@ -32,7 +32,7 @@ namespace swift::gui::components
         explicit CStatusMessagesDetail(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CStatusMessagesDetail() override;
+        ~CStatusMessagesDetail() override;
 
         //! Add message
         void appendStatusMessageToList(const swift::misc::CStatusMessage &message);
@@ -97,7 +97,7 @@ namespace swift::gui::components
             CMessageMenu(CStatusMessagesDetail *parent) : IMenuDelegate(parent) {}
 
             //! \copydoc IMenuDelegate::customMenu
-            virtual void customMenu(menus::CMenuActions &menuActions) override;
+            void customMenu(menus::CMenuActions &menuActions) override;
 
         private:
             QAction *m_action = nullptr;

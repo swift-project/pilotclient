@@ -24,13 +24,13 @@ namespace swift::gui::views
         ui->setupUi(this);
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-        QPushButton *validateButton = new QPushButton("Validate", ui->bb_ValidationDialog);
+        auto *validateButton = new QPushButton("Validate", ui->bb_ValidationDialog);
         ui->bb_ValidationDialog->addButton(validateButton, QDialogButtonBox::ActionRole);
         connect(validateButton, &QPushButton::released, this, &CAircraftModelValidationDialog::validate,
                 Qt::QueuedConnection);
     }
 
-    CAircraftModelValidationDialog::~CAircraftModelValidationDialog() {}
+    CAircraftModelValidationDialog::~CAircraftModelValidationDialog() = default;
 
     void CAircraftModelValidationDialog::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator,
                                                    const QString &simulatorDir)

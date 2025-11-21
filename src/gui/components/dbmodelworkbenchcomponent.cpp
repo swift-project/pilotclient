@@ -50,10 +50,7 @@ namespace swift::gui::components
         ui->tvp_Models->setCustomMenu(new CConsolidateWithDbDataMenu(ui->tvp_Models, this));
     }
 
-    CDbModelWorkbenchComponent::~CDbModelWorkbenchComponent()
-    {
-        // void
-    }
+    CDbModelWorkbenchComponent::~CDbModelWorkbenchComponent() = default;
 
     const QStringList &CDbModelWorkbenchComponent::getLogCategories()
     {

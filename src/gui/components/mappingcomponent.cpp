@@ -179,7 +179,7 @@ namespace swift::gui::components
         });
     }
 
-    CMappingComponent::~CMappingComponent() {}
+    CMappingComponent::~CMappingComponent() = default;
 
     int CMappingComponent::countCurrentMappings() const
     {
@@ -240,7 +240,7 @@ namespace swift::gui::components
     void CMappingComponent::onChangedSimulatedAircraftInView(const CVariant &object, const CPropertyIndex &index)
     {
         if (!index.contains(CSimulatedAircraft::IndexEnabled)) { return; } // we only deal with enabled/disabled here
-        const CSimulatedAircraft sa = object.to<CSimulatedAircraft>(); // changed in GUI
+        const auto sa = object.to<CSimulatedAircraft>(); // changed in GUI
         const CSimulatedAircraft saFromBackend =
             sGui->getIContextNetwork()->getAircraftInRangeForCallsign(sa.getCallsign());
         if (!saFromBackend.hasValidCallsign()) { return; } // obviously deleted
@@ -272,7 +272,7 @@ namespace swift::gui::components
         {
             this->showOverlayMessage(CStatusMessage(this).validationError(u"Invalid callsign for mapping"),
                                      OverlayMessageMs);
-            return CCallsign();
+            return {};
         }
 
         const CCallsign callsign(cs);
@@ -282,7 +282,7 @@ namespace swift::gui::components
             const CStatusMessage msg = CStatusMessage(this).validationError(u"Unmapped callsign '%1' for mapping")
                                        << callsign.asString();
             this->showOverlayMessage(msg);
-            return CCallsign();
+            return {};
         }
         return callsign;
     }
@@ -534,7 +534,7 @@ namespace swift::gui::components
     void CMappingComponent::onTabWidgetChanged(int index)
     {
         Q_UNUSED(index);
-        const TabWidget w = static_cast<TabWidget>(index);
+        const auto w = static_cast<TabWidget>(index);
         const bool show = (w == TabAircraftModels) || (w == TabRenderedAircraft);
         this->showAircraftModelDetails(show);
     }

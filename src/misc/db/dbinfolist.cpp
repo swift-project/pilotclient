@@ -9,8 +9,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CDbInfo, CDbInfoList)
 
 namespace swift::misc::db
 {
-    CDbInfoList::CDbInfoList() {}
-
     CDbInfoList::CDbInfoList(const CSequence<CDbInfo> &other) : CSequence<CDbInfo>(other) {}
 
     CDbInfo CDbInfoList::findFirstByEntityOrDefault(CEntityFlags::Entity entity) const
@@ -19,7 +17,7 @@ namespace swift::misc::db
         {
             if (info.matchesEntity(entity)) { return info; }
         }
-        return CDbInfo();
+        return {};
     }
 
     CDbInfoList CDbInfoList::fromDatabaseJson(const QJsonArray &array)

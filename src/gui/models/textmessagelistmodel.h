@@ -37,7 +37,7 @@ namespace swift::gui::models
         explicit CTextMessageListModel(TextMessageMode stationMode, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CTextMessageListModel() override {}
+        ~CTextMessageListModel() override = default;
 
         //! Set mode
         void setTextMessageMode(TextMessageMode mode);
@@ -46,7 +46,7 @@ namespace swift::gui::models
         TextMessageMode getTextMessageMode() const { return m_textMessageMode; }
 
         //! \copydoc QAbstractItemModel::data
-        virtual QVariant data(const QModelIndex &index, int role) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
 
     private:
         TextMessageMode m_textMessageMode = NotSet;

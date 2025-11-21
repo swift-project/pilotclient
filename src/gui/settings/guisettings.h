@@ -29,7 +29,7 @@ namespace swift::gui::settings
         };
 
         //! Default constructor
-        CGeneralGuiSettings();
+        CGeneralGuiSettings() = default;
 
         //! Widget style
         const QString &getWidgetStyle() const { return m_widgetStyle; }

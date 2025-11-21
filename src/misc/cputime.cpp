@@ -5,16 +5,16 @@
 
 #include <QtGlobal>
 
-#if defined(Q_OS_WIN32)
+#ifdef Q_OS_WIN32
 #    include <windows.h>
 #elif defined(Q_OS_UNIX)
-#    include <time.h>
+#    include <ctime>
 #endif
 
 namespace swift::misc
 {
 
-#if defined(Q_OS_WIN32)
+#ifdef Q_OS_WIN32
 
     static int getCpuTimeMs(const FILETIME &kernelTime, const FILETIME &userTime)
     {

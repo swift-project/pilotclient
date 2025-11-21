@@ -34,7 +34,7 @@ namespace swift::gui::settings
         };
 
         //! Default constructor
-        CViewUpdateSettings();
+        CViewUpdateSettings() = default;
 
         //! Reset to defaults
         void reset();

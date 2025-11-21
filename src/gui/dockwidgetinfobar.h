@@ -31,15 +31,15 @@ namespace swift::gui
 
         //! \copydoc CDockWidget::initialFloating
         //! \remark special case to allow init
-        virtual void initialFloating() override { CDockWidget::initialFloating(); }
+        void initialFloating() override { CDockWidget::initialFloating(); }
 
     protected:
         //! Contribute to menu
-        virtual void addToContextMenu(QMenu *contextMenu) const override;
+        void addToContextMenu(QMenu *contextMenu) const override;
 
     protected:
         //! \copydoc CDockWidget::onStyleSheetsChanged
-        virtual void onStyleSheetsChanged() override;
+        void onStyleSheetsChanged() override;
     };
 } // namespace swift::gui
 

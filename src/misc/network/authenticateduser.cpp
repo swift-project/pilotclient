@@ -15,8 +15,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CAuthenticatedUser)
 
 namespace swift::misc::network
 {
-    CAuthenticatedUser::CAuthenticatedUser() {}
-
     CAuthenticatedUser::CAuthenticatedUser(int id, const QString &realname)
         : IDatastoreObjectWithIntegerKey(id), m_realname(realname.trimmed())
     {}
@@ -109,7 +107,7 @@ namespace swift::misc::network
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexVatsimId: return QVariant::fromValue(m_vatsimId);
@@ -133,7 +131,7 @@ namespace swift::misc::network
             IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexVatsimId: this->setVatsimId(variant.toInt()); break;

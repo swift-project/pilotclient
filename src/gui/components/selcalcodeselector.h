@@ -32,7 +32,7 @@ namespace swift::gui::components
         explicit CSelcalCodeSelector(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSelcalCodeSelector();
+        ~CSelcalCodeSelector() override;
 
         //! SELCAL code
         QString getSelcalCode() const;

@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CSettingsFontDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsFontDialog() override;
+        ~CSettingsFontDialog() override;
 
         //! Get stylesheet
         const QString &getQss() const;

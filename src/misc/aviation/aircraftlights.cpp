@@ -54,7 +54,7 @@ namespace swift::misc::aviation
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIsNull: return QVariant::fromValue(this->isNull());
@@ -79,7 +79,7 @@ namespace swift::misc::aviation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIsNull: m_isNull = variant.toBool(); break;
@@ -98,7 +98,7 @@ namespace swift::misc::aviation
 
     int CAircraftLights::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftLights &compareValue) const
     {
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIsNull: return Compare::compare(m_isNull, compareValue.isNull());

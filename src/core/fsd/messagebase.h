@@ -55,7 +55,7 @@ namespace swift::core::fsd
     {
     public:
         //! Default Constructor
-        MessageBase() {}
+        MessageBase() = default;
 
         //! Constructor
         MessageBase(const QString &sender);

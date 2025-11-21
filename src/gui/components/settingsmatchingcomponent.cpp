@@ -38,7 +38,7 @@ namespace swift::gui::components
         else { this->showButtons(false); }
     }
 
-    CSettingsMatchingComponent::~CSettingsMatchingComponent() {}
+    CSettingsMatchingComponent::~CSettingsMatchingComponent() = default;
 
     CAircraftMatcherSetup CSettingsMatchingComponent::getMatchingSetup() const { return ui->form_Matching->value(); }
 

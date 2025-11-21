@@ -50,7 +50,7 @@ namespace swift::gui::components
         explicit CLogComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLogComponent();
+        ~CLogComponent() override;
 
         //! Display log
         void displayLog(bool attention = false);

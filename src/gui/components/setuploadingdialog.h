@@ -28,7 +28,7 @@ namespace swift::gui::components
         CSetupLoadingDialog(const swift::misc::CStatusMessageList &msgs, QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CSetupLoadingDialog();
+        ~CSetupLoadingDialog() override;
 
     private:
         QScopedPointer<Ui::CSetupLoadingDialog> ui;

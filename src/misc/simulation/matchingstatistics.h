@@ -28,7 +28,7 @@ namespace swift::misc::simulation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CMatchingStatistics();
+        CMatchingStatistics() = default;
 
         //! Construct from a base class object.
         CMatchingStatistics(const CSequence<CMatchingStatisticsEntry> &other);

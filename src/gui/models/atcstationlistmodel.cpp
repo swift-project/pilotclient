@@ -25,7 +25,6 @@
 #include "misc/propertyindexvariantmap.h"
 
 using namespace swift::misc::physical_quantities;
-using namespace swift::misc::audio;
 using namespace swift::misc::aviation;
 using namespace swift::misc::network;
 
@@ -84,7 +83,7 @@ namespace swift::gui::models
 
     CAtcStationTreeModel *CAtcStationListModel::toAtcTreeModel() const
     {
-        CAtcStationTreeModel *tm = new CAtcStationTreeModel(QObject::parent());
+        auto *tm = new CAtcStationTreeModel(QObject::parent());
         tm->setColumns(m_columns);
         tm->updateContainer(this->container());
         return tm;

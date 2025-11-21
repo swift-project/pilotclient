@@ -16,11 +16,11 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CSimBriefDownloadDialog::~CSimBriefDownloadDialog() {}
+    CSimBriefDownloadDialog::~CSimBriefDownloadDialog() = default;
 
     CSimBriefData CSimBriefDownloadDialog::getSimBriefData() const
     {
-        return CSimBriefData(ui->le_SimBriefURL->text().trimmed(), ui->le_SimBriefUsername->text().trimmed());
+        return { ui->le_SimBriefURL->text().trimmed(), ui->le_SimBriefUsername->text().trimmed() };
     }
 
     void CSimBriefDownloadDialog::setSimBriefData(const CSimBriefData &data)

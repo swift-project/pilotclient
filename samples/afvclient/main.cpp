@@ -33,12 +33,12 @@ int main(int argc, char *argv[])
     swift::core::registerMetadata();
     swift::core::CApplication a("sampleafvclient", CApplicationInfo::Sample);
 
-    CAfvMapReader *afvMapReader = new CAfvMapReader(&a);
+    auto *afvMapReader = new CAfvMapReader(&a);
     afvMapReader->updateFromMap();
 
-    CAfvClient *voiceClient = new CAfvClient("https://voice1.vatsim.net", &qa);
+    auto *voiceClient = new CAfvClient("https://voice1.vatsim.net", &qa);
     voiceClient->start(QThread::TimeCriticalPriority); // background thread
-    CAfvClientBridge *voiceClientBridge = new CAfvClientBridge(voiceClient, &qa);
+    auto *voiceClientBridge = new CAfvClientBridge(voiceClient, &qa);
 
     QObject::connect(&qa, &QCoreApplication::aboutToQuit, [voiceClient]() { voiceClient->quitAndWait(); });
 

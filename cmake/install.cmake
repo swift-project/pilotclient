@@ -225,29 +225,16 @@ elseif (APPLE)
         install(FILES ${SODIUM_PATH}/lib/${LIB} DESTINATION lib)
     endforeach ()
 
-    # libevent
-    if(SWIFT_BUILD_XSWIFTBUS)
-        set(EVENT_LIBS
-            libevent_core-2.1.7.dylib
-            libevent_core.dylib
-        )
-        CheckPathExists(${EVENT_PATH}/lib ${EVENT_LIBS})
-        foreach (LIB IN LISTS EVENT_LIBS)
-            install(FILES ${EVENT_PATH}/lib/${LIB} DESTINATION xswiftbus/64)
-        endforeach ()
-    endif()
-
     # DBus
+    set(CONAN_DEPLOY_DIR_DBUS_SHARED ${PROJECT_SOURCE_DIR}/build_conan_dbus_shared/full_deploy/host)
+    set(DBUS_PATH_SHARED ${CONAN_DEPLOY_DIR_DBUS_SHARED}/dbus/1.15.8/${CMAKE_BUILD_TYPE}/${SWIFT_SYSTEM_PROCESSOR})
     set(DBUS_LIBS libdbus-1.3.dylib libdbus-1.dylib)
-    CheckPathExists(${DBUS_PATH}/lib ${DBUS_LIBS})
+    CheckPathExists(${DBUS_PATH_SHARED}/lib ${DBUS_LIBS})
     foreach (LIB IN LISTS DBUS_LIBS)
-        install(FILES ${DBUS_PATH}/lib/${LIB} DESTINATION lib)
-        if(SWIFT_BUILD_XSWIFTBUS)
-            install(FILES ${DBUS_PATH}/lib/${LIB} DESTINATION xswiftbus/64)
-        endif()
+        install(FILES ${DBUS_PATH_SHARED}/lib/${LIB} DESTINATION lib)
     endforeach ()
-    install(FILES ${DBUS_PATH}/bin/dbus-daemon DESTINATION bin)
-    install(FILES ${DBUS_PATH}/bin/dbus-uuidgen DESTINATION bin)
+    install(FILES ${DBUS_PATH_SHARED}/bin/dbus-daemon DESTINATION bin)
+    install(FILES ${DBUS_PATH_SHARED}/bin/dbus-uuidgen DESTINATION bin)
 
 elseif (SWIFT_WIN64)
     # Opus

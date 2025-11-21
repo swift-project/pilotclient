@@ -3,8 +3,6 @@
 
 #include "core/context/contextnetworkimpl.h"
 
-#include <stdbool.h>
-
 #include <QStringBuilder>
 #include <QTimer>
 
@@ -255,10 +253,7 @@ namespace swift::core::context
             return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError,
                                   u"Invalid ICAO data for own aircraft");
         }
-        if (!CNetworkUtils::canConnect(server, msg, 5000))
-        {
-            return CStatusMessage(CStatusMessage::SeverityError, msg);
-        }
+        if (!CNetworkUtils::canConnect(server, msg, 5000)) { return { CStatusMessage::SeverityError, msg }; }
         if (m_fsdClient->isConnected())
         {
             return CStatusMessage({ CLogCategories::validation() }, CStatusMessage::SeverityError,
@@ -620,7 +615,7 @@ namespace swift::core::context
         CCallsignSet callsigns;
         callsigns.push_back(callsign);
         const CUserList users = this->getUsersForCallsigns(callsigns);
-        if (users.isEmpty()) { return CUser(); }
+        if (users.isEmpty()) { return {}; }
         return users[0];
     }
 
@@ -894,7 +889,7 @@ namespace swift::core::context
 
     CAtcStationList CContextNetwork::getClosestAtcStationsOnline(int number) const
     {
-        if (!this->getIContextOwnAircraft()) { return CAtcStationList(); }
+        if (!this->getIContextOwnAircraft()) { return {}; }
         const CAircraftSituation ownSituation = this->getIContextOwnAircraft()->getOwnAircraftSituation();
         const CAtcStationList stations = m_airspace->getAtcStationsOnline().findClosest(number, ownSituation);
         return stations;
@@ -1036,7 +1031,7 @@ namespace swift::core::context
     QString CContextNetwork::getNetworkStatistics(bool reset, const QString &separator)
     {
         if (this->isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_fsdClient) { return QString(); }
+        if (!m_fsdClient) { return {}; }
         return m_fsdClient->getNetworkStatisticsAsText(reset, separator);
     }
 

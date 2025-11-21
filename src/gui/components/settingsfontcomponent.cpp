@@ -36,7 +36,7 @@ namespace swift::gui::components
         connect(sGui, &CGuiApplication::startUpCompleted, this, &CSettingsFontComponent::initValues);
     }
 
-    CSettingsFontComponent::~CSettingsFontComponent() {}
+    CSettingsFontComponent::~CSettingsFontComponent() = default;
 
     void CSettingsFontComponent::setMode(CSettingsFontComponent::Mode m)
     {

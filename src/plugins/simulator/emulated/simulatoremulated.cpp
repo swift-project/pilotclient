@@ -38,7 +38,7 @@ namespace swift::simplugin::emulated
         this->onSettingsChanged(); // init from settings
 
         m_myAircraft = this->getOwnAircraft(); // sync with provider
-        m_monitorWidget = new CSimulatorEmulatedMonitorDialog(this, sGui->mainApplicationWidget());
+        m_monitorWidget = new CSimulatorEmulatedMonitorDialog(this, CGuiApplication::mainApplicationWidget());
 
         connect(qApp, &QApplication::aboutToQuit, this, &CSimulatorEmulated::closeMonitor);
         connect(sGui, &CGuiApplication::aboutToShutdown, this, &CSimulatorEmulated::closeMonitor, Qt::QueuedConnection);
@@ -181,7 +181,7 @@ namespace swift::simplugin::emulated
     CStatusMessageList CSimulatorEmulated::getInterpolationMessages(const CCallsign &callsign) const
     {
         if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
-        if (!m_interpolators.contains(callsign)) { return CStatusMessageList(); }
+        if (!m_interpolators.contains(callsign)) { return {}; }
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupPerCallsignOrDefault(callsign); // threadsafe copy
         return m_interpolators[callsign]->getInterpolationMessages(setup.getInterpolatorMode());

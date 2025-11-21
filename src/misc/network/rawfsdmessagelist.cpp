@@ -7,8 +7,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CRawFsdMessage, CRawFsdMessag
 
 namespace swift::misc::network
 {
-    CRawFsdMessageList::CRawFsdMessageList() {}
-
     CRawFsdMessageList::CRawFsdMessageList(const CSequence &other) : CSequence<CRawFsdMessage>(other) {}
 
     CRawFsdMessageList CRawFsdMessageList::findByPacketType(const QString &type) const

@@ -38,7 +38,7 @@ namespace swift::misc::aviation
         static const QStringList &getLogCategories();
 
         //! Default constructor.
-        CAirlineIcaoCodeList();
+        CAirlineIcaoCodeList() = default;
 
         //! Construct from a base class object.
         CAirlineIcaoCodeList(const CSequence<CAirlineIcaoCode> &other);

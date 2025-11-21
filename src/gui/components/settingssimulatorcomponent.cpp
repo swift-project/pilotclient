@@ -120,7 +120,7 @@ namespace swift::gui::components
         }
     }
 
-    CSettingsSimulatorComponent::~CSettingsSimulatorComponent() {}
+    CSettingsSimulatorComponent::~CSettingsSimulatorComponent() = default;
 
     void CSettingsSimulatorComponent::setGuiValues()
     {
@@ -222,8 +222,9 @@ namespace swift::gui::components
         // get initial aircraft to render
         CInterpolationAndRenderingSetupGlobal setup =
             sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
-        const int noRequested =
-            ui->le_MaxAircraft->text().isEmpty() ? setup.InfiniteAircraft() : ui->le_MaxAircraft->text().toInt();
+        const int noRequested = ui->le_MaxAircraft->text().isEmpty() ?
+                                    CInterpolationAndRenderingSetupGlobal::InfiniteAircraft() :
+                                    ui->le_MaxAircraft->text().toInt();
         const int oldValue = setup.getMaxRenderedAircraft();
         if (oldValue == noRequested) { return; }
 
@@ -301,7 +302,7 @@ namespace swift::gui::components
         bool ok = false;
         CSimulatorSettings settings = CSettingsSimulatorComponent::getSimulatorSettings(ok);
         if (!ok || !settings.setComIntegrated(ui->cb_ComSync->isChecked())) { return; }
-        this->setSimulatorSettings(settings);
+        setSimulatorSettings(settings);
     }
 
     void CSettingsSimulatorComponent::onApplyCGSource()
@@ -310,7 +311,7 @@ namespace swift::gui::components
         const CSimulatorSettings::CGSource source = ui->comp_CGSourceSelector->getValue();
         CSimulatorSettings settings = CSettingsSimulatorComponent::getSimulatorSettings(ok);
         if (!ok || !settings.setCGSource(source)) { return; }
-        this->setSimulatorSettings(settings);
+        setSimulatorSettings(settings);
     }
 
     void CSettingsSimulatorComponent::onApplyRecordGnd()
@@ -332,7 +333,7 @@ namespace swift::gui::components
         const bool c1 = settings.setRecordOwnAircraftGnd(ui->cb_RecordOwnGndPositions->isChecked());
         const bool c2 = settings.setRecordedGndRadius(radius);
         if (!c1 && !c2) { return; }
-        this->setSimulatorSettings(settings);
+        setSimulatorSettings(settings);
     }
 
     void CSettingsSimulatorComponent::onReload() { this->setGuiValues(); }
@@ -377,7 +378,7 @@ namespace swift::gui::components
         const CSimulatorPluginInfo selected = simDrivers.findByIdentifier(identifier);
 
         const QString configId = m_plugins->getPluginConfigId(selected.getIdentifier());
-        IPluginConfig *config = m_plugins->getPluginById<IPluginConfig>(configId);
+        auto *config = m_plugins->getPluginById<IPluginConfig>(configId);
         SWIFT_VERIFY_X(config, Q_FUNC_INFO, "Missing config");
         if (!config) { return; }
 

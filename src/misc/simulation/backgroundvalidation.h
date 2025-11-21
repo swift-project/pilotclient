@@ -78,7 +78,7 @@ namespace swift::misc::simulation
 
     protected:
         //! \copydoc CContinuousWorker::beforeQuit
-        virtual void beforeQuit() noexcept override;
+        void beforeQuit() noexcept override;
 
     private:
         mutable QReadWriteLock m_lock; //!< lock snapshot

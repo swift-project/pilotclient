@@ -6,6 +6,8 @@
 #ifndef SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 #define SWIFT_MISC_TIMESTAMPOBJECTLIST_H
 
+#include <algorithm>
+
 #include <QtGlobal>
 
 #include "config/buildconfig.h"
@@ -173,7 +175,7 @@ namespace swift::misc
         //! Oldest timestamp
         QDateTime oldestTimestamp() const
         {
-            if (this->container().isEmpty()) { return QDateTime(); }
+            if (this->container().isEmpty()) { return {}; }
             return this->oldestObject().getUtcTimestamp();
         }
 
@@ -382,8 +384,8 @@ namespace swift::misc
                     const ITimestampBased &l = last;
                     const ITimestampBased &o = object;
                     const qint64 diff = l.getAbsTimeDifferenceMs(o);
-                    if (diff > mmm.max) { mmm.max = diff; }
-                    if (diff < mmm.min) { mmm.min = diff; }
+                    mmm.max = std::max(diff, mmm.max);
+                    mmm.min = std::min(diff, mmm.min);
                     mean += diff;
                 }
                 c++;
@@ -456,21 +458,15 @@ namespace swift::misc
         //! Any negative or zero offset time?
         bool containsZeroOrNegativeOffsetTime() const
         {
-            for (const ITimestampWithOffsetBased &obj : this->container())
-            {
-                if (obj.getTimeOffsetMs() <= 0) { return true; }
-            }
-            return false;
+            return std::any_of(this->container().begin(), this->container().end(),
+                               [](const ITimestampWithOffsetBased &obj) { return obj.getTimeOffsetMs() <= 0; });
         }
 
         //! Any negative offset time?
         bool containsNegativeOffsetTime() const
         {
-            for (const ITimestampWithOffsetBased &obj : this->container())
-            {
-                if (obj.getTimeOffsetMs() < 0) { return true; }
-            }
-            return false;
+            return std::any_of(this->container().begin(), this->container().end(),
+                               [](const ITimestampWithOffsetBased &obj) { return obj.getTimeOffsetMs() < 0; });
         }
 
         //! Adds a time to all offset values
@@ -674,14 +670,14 @@ namespace swift::misc
         //! Latest adjusted timestamp
         QDateTime latestAdjustedTimestamp() const
         {
-            if (this->container().isEmpty()) { return QDateTime(); }
+            if (this->container().isEmpty()) { return {}; }
             return this->latestAdjustedObject().getUtcTimestamp();
         }
 
         //! Oldest adjusted timestamp
         QDateTime oldestAdjustedTimestamp() const
         {
-            if (this->container().isEmpty()) { return QDateTime(); }
+            if (this->container().isEmpty()) { return {}; }
             return this->oldestAdjustedObject().getUtcTimestamp();
         }
 
@@ -722,8 +718,8 @@ namespace swift::misc
             {
                 if (!object.hasNonZeroOffsetTime()) { continue; }
                 const qint64 os = object.getTimeOffsetMs();
-                if (os > mmm.max) { mmm.max = os; }
-                if (os < mmm.min) { mmm.min = os; }
+                mmm.max = std::max(os, mmm.max);
+                mmm.min = std::min(os, mmm.min);
                 mean += os;
                 c++;
             }

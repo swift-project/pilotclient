@@ -103,7 +103,7 @@ namespace swift::misc::aviation
             return ITimestampWithOffsetBased::propertyByIndex(index);
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEngines: return QVariant::fromValue(m_engines);
@@ -130,7 +130,7 @@ namespace swift::misc::aviation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEngines: m_engines = variant.value<decltype(m_engines)>(); break;
@@ -154,7 +154,7 @@ namespace swift::misc::aviation
             return ITimestampWithOffsetBased::comparePropertyByIndex(index, compareValue);
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEngines: return Compare::compare(this->getEnginesCount(), compareValue.getEnginesCount());

@@ -31,7 +31,7 @@ namespace swift::gui::components
         explicit CConfigSimulatorComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CConfigSimulatorComponent();
+        ~CConfigSimulatorComponent() override;
 
         //! Save data
         void save();
@@ -69,10 +69,10 @@ namespace swift::gui::components
         void setConfigComponent(CConfigSimulatorComponent *config) { m_config = config; }
 
         //! \copydoc QWizardPage::initializePage
-        virtual void initializePage() override;
+        void initializePage() override;
 
         //! \copydoc QWizardPage::validatePage
-        virtual bool validatePage() override;
+        bool validatePage() override;
 
     private:
         CConfigSimulatorComponent *m_config = nullptr;

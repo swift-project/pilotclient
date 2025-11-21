@@ -39,7 +39,7 @@ namespace swift::gui::components
         connect(&m_modelCaches, &CModelCaches::cacheChanged, this, &CAircraftModelStringCompleter::setSimulator,
                 Qt::QueuedConnection);
 
-        CSimulatorInfo simulator = CSimulatorInfo(CSimulatorInfo::P3D); // default
+        auto simulator = CSimulatorInfo(CSimulatorInfo::P3D); // default
         if (sGui->getIContextSimulator())
         {
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this,
@@ -55,7 +55,7 @@ namespace swift::gui::components
         this->initGui();
     }
 
-    CAircraftModelStringCompleter::~CAircraftModelStringCompleter() {}
+    CAircraftModelStringCompleter::~CAircraftModelStringCompleter() = default;
 
     QString CAircraftModelStringCompleter::getModelString() const { return ui->le_modelString->text(); }
 

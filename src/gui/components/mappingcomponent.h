@@ -79,7 +79,7 @@ namespace swift::gui
             explicit CMappingComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CMappingComponent() override;
+            ~CMappingComponent() override;
 
             //! Number of current mappings
             int countCurrentMappings() const;

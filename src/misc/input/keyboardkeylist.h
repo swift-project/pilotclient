@@ -29,7 +29,7 @@ namespace swift::misc::input
         using CSequence::CSequence;
 
         //! Default constructor
-        CKeyboardKeyList();
+        CKeyboardKeyList() = default;
 
         //! Construct from a base class object.
         CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);

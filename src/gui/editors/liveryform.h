@@ -37,7 +37,7 @@ namespace swift::gui::editors
         explicit CLiveryForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLiveryForm() override;
+        ~CLiveryForm() override;
 
         //! Value
         swift::misc::aviation::CLivery getValue() const;
@@ -56,9 +56,9 @@ namespace swift::gui::editors
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual void setSelectOnly() override;
-        virtual swift::misc::CStatusMessageList validate(bool withNestedForms) const override;
+        void setReadOnly(bool readonly) override;
+        void setSelectOnly() override;
+        swift::misc::CStatusMessageList validate(bool withNestedForms) const override;
         //! @}
 
         //! Clear data
@@ -72,7 +72,7 @@ namespace swift::gui::editors
 
     protected:
         //! \copydoc CForm::jsonPasted
-        virtual void jsonPasted(const QString &json) override;
+        void jsonPasted(const QString &json) override;
 
     private:
         //! Livery dropped

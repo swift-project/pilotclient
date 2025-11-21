@@ -16,5 +16,5 @@ namespace swift::gui::components
         this->init();
     }
 
-    CInfoBarWebReadersStatusSmallComponent::~CInfoBarWebReadersStatusSmallComponent() {}
+    CInfoBarWebReadersStatusSmallComponent::~CInfoBarWebReadersStatusSmallComponent() = default;
 } // namespace swift::gui::components

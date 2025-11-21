@@ -143,20 +143,20 @@ namespace swift::gui::views
                 if (!m_menuActions[0])
                 {
                     m_frame = new QFrame(this);
-                    QHBoxLayout *layout = new QHBoxLayout(m_frame);
+                    auto *layout = new QHBoxLayout(m_frame);
                     layout->setContentsMargins(2, 2, 2, 2);
                     m_frame->setLayout(layout);
                     m_leOrder = new QLineEdit(m_frame);
-                    QLabel *icon = new QLabel(m_frame);
+                    auto *icon = new QLabel(m_frame);
                     icon->setPixmap(menu.getPixmap());
                     layout->addWidget(icon);
-                    QLabel *label = new QLabel(m_frame);
+                    auto *label = new QLabel(m_frame);
                     label->setText("Order:");
                     layout->addWidget(label);
                     layout->addWidget(m_leOrder);
                     m_validator = new QIntValidator(0, maxOrder, this);
                     m_leOrder->setValidator(m_validator);
-                    QWidgetAction *orderAction = new QWidgetAction(this);
+                    auto *orderAction = new QWidgetAction(this);
                     orderAction->setDefaultWidget(m_frame);
                     QObject::connect(m_leOrder, &QLineEdit::returnPressed, this,
                                      &COrderableViewWithDbObjects<T>::orderToLineEdit);
@@ -214,7 +214,7 @@ namespace swift::gui::views
     void COrderableViewWithDbObjects<T>::orderToLineEdit()
     {
         if (this->isEmpty()) { return; }
-        QLineEdit *le = qobject_cast<QLineEdit *>(QObject::sender());
+        auto *le = qobject_cast<QLineEdit *>(QObject::sender());
         if (!le || le->text().isEmpty()) { return; }
         const int order = le->text().toInt();
         this->moveSelectedItems(order);

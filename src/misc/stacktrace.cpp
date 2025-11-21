@@ -12,7 +12,7 @@
 #include <QMutexLocker>
 #include <QStringBuilder>
 
-#if defined(Q_CC_MSVC)
+#ifdef Q_CC_MSVC
 #    include <Windows.h>
 
 #    pragma warning(push)
@@ -33,13 +33,13 @@
 namespace swift::misc
 {
 
-#if defined(QT_DEBUG)
+#ifdef QT_DEBUG
     QStringList getStackTrace() { return getStackTraceAlways(); }
 #else
     QStringList getStackTrace() { return { "No stack trace with release build" }; }
 #endif
 
-#if defined(Q_OS_WIN32)
+#ifdef Q_OS_WIN32
     QStringList getStackTraceAlways()
     {
         static QMutex mutex;

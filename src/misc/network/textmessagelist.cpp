@@ -16,8 +16,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CTextMessage, CTextMessageLis
 namespace swift::misc::network
 {
 
-    CTextMessageList::CTextMessageList() {}
-
     CTextMessageList::CTextMessageList(const QString &message, const CCallsign &recipientCallsign)
     {
         CTextMessage pm(message, recipientCallsign);

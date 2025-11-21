@@ -61,13 +61,13 @@ namespace swift::gui::components
         CGuiUtility::setWizardButtonWidths(this);
     }
 
-    CConfigurationWizard::~CConfigurationWizard() {}
+    CConfigurationWizard::~CConfigurationWizard() = default;
 
     bool CConfigurationWizard::lastStepSkipped() const { return m_skipped; }
 
     bool CConfigurationWizard::lastWizardStepSkipped(const QWizard *standardWizard)
     {
-        const CConfigurationWizard *wizard = qobject_cast<const CConfigurationWizard *>(standardWizard);
+        const auto *wizard = qobject_cast<const CConfigurationWizard *>(standardWizard);
         return wizard && wizard->lastStepSkipped();
     }
 

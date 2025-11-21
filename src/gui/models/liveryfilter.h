@@ -25,8 +25,7 @@ namespace swift::gui::models
                       double maxColorDistance, bool colorLiveries, bool airlineLiveries);
 
         //! \copydoc IModelFilter::filter
-        virtual swift::misc::aviation::CLiveryList
-        filter(const swift::misc::aviation::CLiveryList &inContainer) const override;
+        swift::misc::aviation::CLiveryList filter(const swift::misc::aviation::CLiveryList &inContainer) const override;
 
     private:
         int m_id = -1;

@@ -69,13 +69,15 @@ namespace swift::sample
         QByteArray jsonArray(doc.toJson());
         streamOut << "write JSON array with size " << jsonArray.size() << Qt::endl;
         QTemporaryFile tempFile;
-        tempFile.open();
+        bool res = tempFile.open();
+        SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Failed to open file");
         tempFile.write(jsonArray);
         tempFile.close();
         streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" << Qt::endl;
 
         // re-read
-        tempFile.open();
+        res = tempFile.open();
+        SWIFT_VERIFY_X(res, Q_FUNC_INFO, "Failed to open file");
         jsonArray = tempFile.readAll();
         doc = QJsonDocument::fromJson(jsonArray);
         entriesList.clear();

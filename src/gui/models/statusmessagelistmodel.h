@@ -34,7 +34,7 @@ namespace swift::gui::models
         explicit CStatusMessageListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CStatusMessageListModel() override {}
+        ~CStatusMessageListModel() override = default;
 
         //! Set mode
         void setMode(Mode mode);
@@ -46,7 +46,7 @@ namespace swift::gui::models
         void adjustOrderColumn(const swift::misc::CStatusMessageList &messages);
 
         //! \copydoc QAbstractItemModel::data
-        virtual QVariant data(const QModelIndex &index, int role) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
 
         //! Currently sorted by timestamp or by order
         bool isSortedByTimestampOrOrder() const;

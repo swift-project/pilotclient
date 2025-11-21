@@ -30,7 +30,7 @@ namespace swift::core::fsd
         QString m_response; //!< response
 
     private:
-        AuthResponse();
+        AuthResponse() = default;
     };
 
     //! Equal to operator

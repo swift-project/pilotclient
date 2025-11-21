@@ -30,7 +30,7 @@ namespace swift::gui::editors
         connect(ui->le_PitchOnGround, &QLineEdit::editingFinished, this, &CInterpolationSetupForm::onPitchChanged);
     }
 
-    CInterpolationSetupForm::~CInterpolationSetupForm() {}
+    CInterpolationSetupForm::~CInterpolationSetupForm() = default;
 
     void CInterpolationSetupForm::setValue(const CInterpolationAndRenderingSetupBase &setup)
     {
@@ -76,7 +76,7 @@ namespace swift::gui::editors
     CStatusMessageList CInterpolationSetupForm::validate(bool nested) const
     {
         Q_UNUSED(nested)
-        return CStatusMessageList();
+        return {};
     }
 
     void CInterpolationSetupForm::onCheckboxChanged(Qt::CheckState state)

@@ -150,7 +150,7 @@ namespace swift::misc
 
     protected:
         //! Constructor
-        ITimestampBased();
+        ITimestampBased() = default;
 
         //! Constructor
         ITimestampBased(qint64 msSincePoch);
@@ -239,7 +239,7 @@ namespace swift::misc
         static bool canHandleIndex(CPropertyIndexRef index);
 
         //! Constructor
-        ITimestampWithOffsetBased() : ITimestampBased() {}
+        ITimestampWithOffsetBased() = default;
 
         //! Constructor
         ITimestampWithOffsetBased(qint64 msSincePoch) : ITimestampBased(msSincePoch) {}

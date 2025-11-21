@@ -15,7 +15,7 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CAirportDialog::~CAirportDialog() {}
+    CAirportDialog::~CAirportDialog() = default;
 
     void CAirportDialog::setAirport(const CAirport &airport) { ui->comp_AirportCompleter->setAirport(airport); }
 

@@ -3,7 +3,7 @@
 
 #include "joystick.h"
 
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
 #    include "win/joystickwindows.h"
 #elif defined(Q_OS_LINUX)
 #    include "linux/joysticklinux.h"
@@ -20,7 +20,7 @@ namespace swift::input
 
     std::unique_ptr<IJoystick> IJoystick::create(QObject *parent)
     {
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
         std::unique_ptr<IJoystick> ptr(new CJoystickWindows(parent));
 #elif defined(Q_OS_LINUX)
         std::unique_ptr<IJoystick> ptr(new CJoystickLinux(parent));

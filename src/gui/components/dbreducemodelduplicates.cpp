@@ -37,7 +37,7 @@ namespace swift::gui::components
         connect(this, &QDialog::finished, this, &CDbReduceModelDuplicates::stop);
     }
 
-    CDbReduceModelDuplicates::~CDbReduceModelDuplicates() {}
+    CDbReduceModelDuplicates::~CDbReduceModelDuplicates() = default;
 
     void CDbReduceModelDuplicates::setModels(const CAircraftModelList &models, const CSimulatorInfo &simulator)
     {
@@ -61,7 +61,7 @@ namespace swift::gui::components
 
         const QStringList distributors = models.getDistributors().getDbKeysAndAliases(true);
         const int distributorCount = m_models.getDistributors().sizeInt();
-        QCompleter *c = new QCompleter(distributors, this);
+        auto *c = new QCompleter(distributors, this);
         c->setCaseSensitivity(Qt::CaseInsensitive);
         ui->le_Distributor->setCompleter(c);
         ui->le_Models->setText(QStringLiteral("%1 models for simulator '%2', distributors: %3")

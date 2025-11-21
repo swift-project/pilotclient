@@ -35,7 +35,7 @@ namespace swift::gui::components
         explicit CCallsignCompleter(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CCallsignCompleter() override;
+        ~CCallsignCompleter() override;
 
         //! Get the entered callsign
         swift::misc::aviation::CCallsign getCallsign(bool onlyKnownCallsign = true) const;

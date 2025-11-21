@@ -31,7 +31,7 @@
 #ifndef __SIMPLE_ENVELOPE_H__
 #define __SIMPLE_ENVELOPE_H__
 
-#include "SimpleHeader.h"   // common header
+#include "SimpleHeader.h"
 
 namespace chunkware_simple
 {

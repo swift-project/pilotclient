@@ -8,8 +8,6 @@
 
 namespace swift::core::fsd
 {
-    InterimPilotDataUpdate::InterimPilotDataUpdate() : MessageBase() {}
-
     InterimPilotDataUpdate::InterimPilotDataUpdate(const QString &sender, const QString &receiver, double latitude,
                                                    double longitude, int altitudeTrue, int groundSpeed, double pitch,
                                                    double bank, double heading, bool onGround)
@@ -19,7 +17,7 @@ namespace swift::core::fsd
 
     QStringList InterimPilotDataUpdate::toTokens() const
     {
-        std::uint32_t pbh;
+        std::uint32_t pbh {};
         packPBH(m_pitch, m_bank, m_heading, m_onGround, pbh);
 
         auto tokens = QStringList {};
@@ -53,7 +51,15 @@ namespace swift::core::fsd
         bool onGround = false;
         unpackPBH(tokens[7].toUInt(), pitch, bank, heading, onGround);
 
-        return InterimPilotDataUpdate(tokens[0], tokens[1], tokens[3].toDouble(), tokens[4].toDouble(),
-                                      tokens[5].toInt(), tokens[6].toInt(), pitch, bank, heading, onGround);
+        return { tokens[0],
+                 tokens[1],
+                 tokens[3].toDouble(),
+                 tokens[4].toDouble(),
+                 tokens[5].toInt(),
+                 tokens[6].toInt(),
+                 pitch,
+                 bank,
+                 heading,
+                 onGround };
     }
 } // namespace swift::core::fsd

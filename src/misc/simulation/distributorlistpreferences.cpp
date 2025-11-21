@@ -9,8 +9,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributorListPrefere
 
 namespace swift::misc::simulation
 {
-    CDistributorListPreferences::CDistributorListPreferences() {}
-
     const CDistributorList &CDistributorListPreferences::getDistributors(const CSimulatorInfo &simulator) const
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");

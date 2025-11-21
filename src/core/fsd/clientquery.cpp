@@ -8,8 +8,6 @@
 
 namespace swift::core::fsd
 {
-    ClientQuery::ClientQuery() : MessageBase() {}
-
     ClientQuery::ClientQuery(const QString &sender, const QString &clientToBeQueried, ClientQueryType queryType,
                              const QStringList &queryData)
         : MessageBase(sender, clientToBeQueried), m_queryType(queryType), m_queryData(queryData)
@@ -35,6 +33,6 @@ namespace swift::core::fsd
 
         QStringList payload;
         if (tokens.size() > 3) { payload = tokens.mid(3); }
-        return ClientQuery(tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), payload);
+        return { tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), payload };
     }
 } // namespace swift::core::fsd

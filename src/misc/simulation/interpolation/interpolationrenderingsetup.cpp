@@ -19,12 +19,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CInterpolationAndRender
 
 namespace swift::misc::simulation
 {
-    CInterpolationAndRenderingSetupBase::CInterpolationAndRenderingSetupBase()
-    {
-        // Experimental
-        // m_fixSceneryOffset = CBuildConfig::isLocalDeveloperDebugBuild();
-    }
-
     bool CInterpolationAndRenderingSetupBase::setSendingGndFlagToSimulator(bool sendFLag)
     {
         if (sendFLag == m_sendGndToSim) { return false; }
@@ -95,7 +89,7 @@ namespace swift::misc::simulation
 
     QVariant CInterpolationAndRenderingSetupBase::propertyByIndex(CPropertyIndexRef index) const
     {
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexLogInterpolation: return QVariant::fromValue(m_logInterpolation);
@@ -115,7 +109,7 @@ namespace swift::misc::simulation
 
     void CInterpolationAndRenderingSetupBase::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexLogInterpolation: m_logInterpolation = variant.toBool(); return;
@@ -150,8 +144,6 @@ namespace swift::misc::simulation
         return index >= CInterpolationAndRenderingSetupBase::IndexLogInterpolation &&
                index <= CInterpolationAndRenderingSetupBase::IndexFixSceneryOffset;
     }
-
-    CInterpolationAndRenderingSetupGlobal::CInterpolationAndRenderingSetupGlobal() {}
 
     int CInterpolationAndRenderingSetupGlobal::InfiniteAircraft() { return 100; }
 
@@ -272,7 +264,7 @@ namespace swift::misc::simulation
     QVariant CInterpolationAndRenderingSetupGlobal::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMaxRenderedAircraft: return QVariant::fromValue(m_maxRenderedAircraft);
@@ -293,7 +285,7 @@ namespace swift::misc::simulation
             *this = variant.value<CInterpolationAndRenderingSetupGlobal>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMaxRenderedAircraft: m_maxRenderedAircraft = variant.toInt(); return;
@@ -307,8 +299,6 @@ namespace swift::misc::simulation
         }
         CValueObject::setPropertyByIndex(index, variant);
     }
-
-    CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign() {}
 
     CInterpolationAndRenderingSetupPerCallsign::CInterpolationAndRenderingSetupPerCallsign(
         const CCallsign &callsign, const CInterpolationAndRenderingSetupGlobal &globalSetup)
@@ -355,7 +345,7 @@ namespace swift::misc::simulation
     QVariant CInterpolationAndRenderingSetupPerCallsign::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
@@ -372,7 +362,7 @@ namespace swift::misc::simulation
             *this = variant.value<CInterpolationAndRenderingSetupPerCallsign>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsign: m_callsign.setPropertyByIndex(index.copyFrontRemoved(), variant); return;

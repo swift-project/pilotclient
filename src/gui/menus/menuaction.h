@@ -384,7 +384,7 @@ namespace swift::gui::menus
     {
     public:
         //! Constructor
-        CMenuActions() {}
+        CMenuActions() = default;
 
         //! Constructor
         CMenuActions(const QList<CMenuAction> &actions);

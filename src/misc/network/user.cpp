@@ -241,15 +241,15 @@ namespace swift::misc::network
     QVariant CUser::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexEmail: return QVariant(m_email);
-        case IndexId: return QVariant(m_id);
-        case IndexId7Digit: return QVariant(this->get7DigitId());
+        case IndexEmail: return { m_email };
+        case IndexId: return { m_id };
+        case IndexId7Digit: return { this->get7DigitId() };
         case IndexIdInteger: return QVariant::fromValue(this->getIntegerId());
-        case IndexPassword: return QVariant(m_password);
-        case IndexRealName: return QVariant(m_realname);
+        case IndexPassword: return { m_password };
+        case IndexRealName: return { m_realname };
         case IndexHomebase: return m_homebase.propertyByIndex(index.copyFrontRemoved());
         case IndexCallsign: return m_callsign.propertyByIndex(index.copyFrontRemoved());
         default: return CValueObject::propertyByIndex(index);
@@ -263,7 +263,7 @@ namespace swift::misc::network
             (*this) = variant.value<CUser>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEmail: this->setEmail(variant.value<QString>()); break;
@@ -281,7 +281,7 @@ namespace swift::misc::network
     int CUser::comparePropertyByIndex(CPropertyIndexRef index, const CUser &compareValue) const
     {
         if (index.isMyself()) { return this->getRealName().compare(compareValue.getRealName(), Qt::CaseInsensitive); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEmail: return m_email.compare(compareValue.getEmail(), Qt::CaseInsensitive);

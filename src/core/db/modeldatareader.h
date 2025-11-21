@@ -136,30 +136,28 @@ namespace swift::core::db
         bool writeToJsonFiles(const QString &dir);
 
         // Data read from local data
-        virtual swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir,
-                                                                  swift::misc::network::CEntityFlags::Entity whatToRead,
-                                                                  bool overrideNewerOnly) override;
-        virtual bool readFromJsonFilesInBackground(const QString &dir,
-                                                   swift::misc::network::CEntityFlags::Entity whatToRead,
-                                                   bool overrideNewerOnly) override;
+        swift::misc::CStatusMessageList readFromJsonFiles(const QString &dir,
+                                                          swift::misc::network::CEntityFlags::Entity whatToRead,
+                                                          bool overrideNewerOnly) override;
+        bool readFromJsonFilesInBackground(const QString &dir, swift::misc::network::CEntityFlags::Entity whatToRead,
+                                           bool overrideNewerOnly) override;
 
         // cache handling for base class
-        virtual swift::misc::network::CEntityFlags::Entity getSupportedEntities() const override;
-        virtual QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const override;
-        virtual int getCacheCount(swift::misc::network::CEntityFlags::Entity entity) const override;
-        virtual swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
-        virtual swift::misc::network::CEntityFlags::Entity
+        swift::misc::network::CEntityFlags::Entity getSupportedEntities() const override;
+        QDateTime getCacheTimestamp(swift::misc::network::CEntityFlags::Entity entity) const override;
+        int getCacheCount(swift::misc::network::CEntityFlags::Entity entity) const override;
+        swift::misc::network::CEntityFlags::Entity getEntitiesWithCacheCount() const override;
+        swift::misc::network::CEntityFlags::Entity
         getEntitiesWithCacheTimestampNewerThan(const QDateTime &threshold) const override;
-        virtual void synchronizeCaches(swift::misc::network::CEntityFlags::Entity entities) override;
-        virtual void admitCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        void synchronizeCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        void admitCaches(swift::misc::network::CEntityFlags::Entity entities) override;
 
     protected:
         // cache handling for base class
-        virtual void invalidateCaches(swift::misc::network::CEntityFlags::Entity entities) override;
-        virtual bool hasChangedUrl(swift::misc::network::CEntityFlags::Entity entity,
-                                   swift::misc::network::CUrl &oldUrlInfo,
-                                   swift::misc::network::CUrl &newUrlInfo) const override;
-        virtual swift::misc::network::CUrl getDbServiceBaseUrl() const override;
+        void invalidateCaches(swift::misc::network::CEntityFlags::Entity entities) override;
+        bool hasChangedUrl(swift::misc::network::CEntityFlags::Entity entity, swift::misc::network::CUrl &oldUrlInfo,
+                           swift::misc::network::CUrl &newUrlInfo) const override;
+        swift::misc::network::CUrl getDbServiceBaseUrl() const override;
 
     private:
         swift::misc::CData<swift::core::data::TDbLiveryCache> m_liveryCache { this,
@@ -174,10 +172,10 @@ namespace swift::core::db
         std::atomic_bool m_syncedDistributorCache { false }; //!< already synchronized?
 
         //! \copydoc CDatabaseReader::read
-        virtual void read(swift::misc::network::CEntityFlags::Entity entities =
-                              swift::misc::network::CEntityFlags::DistributorLiveryModel,
-                          swift::misc::db::CDbFlags::DataRetrievalModeFlag mode = swift::misc::db::CDbFlags::DbReading,
-                          const QDateTime &newerThan = QDateTime()) override;
+        void read(swift::misc::network::CEntityFlags::Entity entities =
+                      swift::misc::network::CEntityFlags::DistributorLiveryModel,
+                  swift::misc::db::CDbFlags::DataRetrievalModeFlag mode = swift::misc::db::CDbFlags::DbReading,
+                  const QDateTime &newerThan = QDateTime()) override;
 
         //! Reader URL (we read from where?) used to detect changes of location
         swift::misc::CData<swift::core::data::TDbModelReaderBaseUrl> m_readerUrlCache {

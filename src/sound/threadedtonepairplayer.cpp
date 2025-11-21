@@ -134,7 +134,7 @@ namespace swift::sound
         qint64 bytesPerTonePair =
             m_audioFormat.sampleRate() * bytesForAllChannels * tonePair.getDurationMs().count() / 1000;
         bufferData.resize(static_cast<int>(bytesPerTonePair));
-        unsigned char *bufferPointer = reinterpret_cast<unsigned char *>(bufferData.data());
+        auto bufferPointer = reinterpret_cast<unsigned char *>(bufferData.data());
 
         qint64 last0AmplitudeSample = bytesPerTonePair; // last sample when amplitude was 0
         int sampleIndexPerTonePair = 0;
@@ -201,7 +201,7 @@ namespace swift::sound
     {
         Q_ASSERT(this->m_audioFormat.sampleFormat() == QAudioFormat::Int16);
         static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
-        const qint16 value = static_cast<qint16>(amplitude * 32767);
+        const auto value = static_cast<qint16>(amplitude * 32767);
 
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN
         qToBigEndian<qint16>(value, bufferPointer);

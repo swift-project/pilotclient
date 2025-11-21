@@ -193,7 +193,7 @@ namespace swift::misc::simulation::fsx
         static QString resolveEnumToString(const DWORD id, const char *enumName);
 
         //! Hidden constructor
-        CSimConnectUtilities();
+        CSimConnectUtilities() = default;
     };
 } // namespace swift::misc::simulation::fsx
 

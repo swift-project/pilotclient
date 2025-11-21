@@ -16,8 +16,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CAirspaceAircraftSnapsh
 
 namespace swift::misc::simulation
 {
-    CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot() {}
-
     CAirspaceAircraftSnapshot::CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft, bool restricted,
                                                          bool renderingEnabled, int maxAircraft,
                                                          const CLength &maxRenderedDistance)

@@ -15,8 +15,6 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    VisualPilotDataUpdate::VisualPilotDataUpdate() : MessageBase() {}
-
     VisualPilotDataUpdate::VisualPilotDataUpdate(const QString &sender, double latitude, double longitude,
                                                  double altitudeTrue, double heightAgl, double pitch, double bank,
                                                  double heading, double xVelocity, double yVelocity, double zVelocity,
@@ -30,7 +28,7 @@ namespace swift::core::fsd
 
     QStringList VisualPilotDataUpdate::toTokens() const
     {
-        std::uint32_t pbh;
+        std::uint32_t pbh {};
         packPBH(m_pitch, m_bank, m_heading, false /*! \todo check if needed? */, pbh);
 
         QStringList tokens;
@@ -64,22 +62,33 @@ namespace swift::core::fsd
         bool unused = false; //! \todo check if needed?
         unpackPBH(tokens[5].toUInt(), pitch, bank, heading, unused);
 
-        return VisualPilotDataUpdate(
-            tokens[0], tokens[1].toDouble(), tokens[2].toDouble(), tokens[3].toDouble(), tokens[4].toDouble(), pitch,
-            bank, heading, tokens[6].toDouble(), tokens[7].toDouble(), tokens[8].toDouble(), tokens[9].toDouble(),
-            tokens[11].toDouble(), tokens[10].toDouble(), tokens.value(12, QStringLiteral("0")).toDouble());
+        return { tokens[0],
+                 tokens[1].toDouble(),
+                 tokens[2].toDouble(),
+                 tokens[3].toDouble(),
+                 tokens[4].toDouble(),
+                 pitch,
+                 bank,
+                 heading,
+                 tokens[6].toDouble(),
+                 tokens[7].toDouble(),
+                 tokens[8].toDouble(),
+                 tokens[9].toDouble(),
+                 tokens[11].toDouble(),
+                 tokens[10].toDouble(),
+                 tokens.value(12, QStringLiteral("0")).toDouble() };
     }
 
     VisualPilotDataPeriodic VisualPilotDataUpdate::toPeriodic() const
     {
-        return VisualPilotDataPeriodic(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank,
-                                       m_heading, m_xVelocity, m_yVelocity, m_zVelocity, m_pitchRadPerSec,
-                                       m_bankRadPerSec, m_headingRadPerSec, m_noseGearAngle);
+        return { m_sender,    m_latitude,       m_longitude,     m_altitudeTrue,     m_heightAgl,
+                 m_pitch,     m_bank,           m_heading,       m_xVelocity,        m_yVelocity,
+                 m_zVelocity, m_pitchRadPerSec, m_bankRadPerSec, m_headingRadPerSec, m_noseGearAngle };
     }
 
     VisualPilotDataStopped VisualPilotDataUpdate::toStopped() const
     {
-        return VisualPilotDataStopped(m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl, m_pitch, m_bank,
-                                      m_heading, m_noseGearAngle);
+        return { m_sender, m_latitude, m_longitude, m_altitudeTrue, m_heightAgl,
+                 m_pitch,  m_bank,     m_heading,   m_noseGearAngle };
     }
 } // namespace swift::core::fsd

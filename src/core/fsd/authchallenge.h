@@ -30,7 +30,7 @@ namespace swift::core::fsd
 
     private:
         //! Ctor
-        AuthChallenge();
+        AuthChallenge() = default;
     };
 
     //! Equal to operator

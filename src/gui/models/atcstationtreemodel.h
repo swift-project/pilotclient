@@ -25,7 +25,7 @@ namespace swift::gui::models
         explicit CAtcStationTreeModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAtcStationTreeModel() override {}
+        ~CAtcStationTreeModel() override = default;
 
         //! Set columns
         void setColumns(const CColumns &columns) { m_columns.setColumns(columns); }

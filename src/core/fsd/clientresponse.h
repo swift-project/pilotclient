@@ -38,7 +38,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        ClientResponse();
+        ClientResponse() = default;
     };
 
     //! Equal to operator

@@ -3,7 +3,7 @@
 
 #include "simulatorxplane.h"
 
-#include <math.h>
+#include <cmath>
 
 #include <QColor>
 #include <QDBusServiceWatcher>
@@ -137,7 +137,7 @@ namespace swift::simplugin::xplane
 
     CStatusMessageList CSimulatorXPlane::getInterpolationMessages(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty() || !m_xplaneAircraftObjects.contains(callsign)) { return CStatusMessageList(); }
+        if (callsign.isEmpty() || !m_xplaneAircraftObjects.contains(callsign)) { return {}; }
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupConsolidated(callsign, false);
         return m_xplaneAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
@@ -267,7 +267,11 @@ namespace swift::simplugin::xplane
         }
 
         using namespace std::placeholders;
-        auto callback = std::bind(&CSimulatorXPlane::callbackReceivedRequestedElevation, this, _1, _2, _3);
+        auto callback = [this](auto &&plane, auto &&callsign, auto &&isWater) {
+            callbackReceivedRequestedElevation(std::forward<decltype(plane)>(plane),
+                                               std::forward<decltype(callsign)>(callsign),
+                                               std::forward<decltype(isWater)>(isWater));
+        };
 
         // Request
         m_trafficProxy->getElevationAtPosition(callsign, pos.latitude().value(CAngleUnit::deg()),
@@ -538,7 +542,7 @@ namespace swift::simplugin::xplane
         if (!m_serviceProxy) { return; }
         CLogMessage(this).info(u"XPlane xSwiftBus service unregistered");
 
-        if (m_dbusMode == P2P) { m_dBusConnection.disconnectFromPeer(m_dBusConnection.name()); }
+        if (m_dbusMode == P2P) { QDBusConnection::disconnectFromPeer(m_dBusConnection.name()); }
         m_dBusConnection = QDBusConnection { "default" };
         if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
         delete m_serviceProxy;
@@ -1085,7 +1089,7 @@ namespace swift::simplugin::xplane
         // so not to override it with some DB value in X mode, we set it to "0"
         if (model.getDistributor().matchesKeyOrAlias(CDistributor::xplaneXcsl()) && cg.isNull())
         {
-            return CLength(0.0, CLengthUnit::ft());
+            return { 0.0, CLengthUnit::ft() };
         }
         return cg;
     }
@@ -1129,7 +1133,7 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlane::onXSwiftBusSettingsChanged()
     {
-        bool ok;
+        bool ok {};
         const CXSwiftBusSettings xPlaneSide = this->receiveXSwiftBusSettings(ok);
         if (ok)
         {
@@ -1167,7 +1171,7 @@ namespace swift::simplugin::xplane
             const qint64 wasStartedMs = m_addingInProgressAircraft.value(cs);
             const qint64 deltaTimeMs = QDateTime::currentMSecsSinceEpoch() - wasStartedMs;
             m_statsAddCurrentTimeMs = deltaTimeMs;
-            if (deltaTimeMs > m_statsAddMaxTimeMs) { m_statsAddMaxTimeMs = deltaTimeMs; }
+            m_statsAddMaxTimeMs = std::max(deltaTimeMs, m_statsAddMaxTimeMs);
             m_addingInProgressAircraft.remove(cs);
         }
 
@@ -1293,7 +1297,7 @@ namespace swift::simplugin::xplane
         if (m_addingInProgressAircraft.isEmpty()) { return empty; }
         const QList<qint64> ts = m_addingInProgressAircraft.values();
         const auto mm = std::minmax_element(ts.constBegin(), ts.constEnd());
-        return QPair<qint64, qint64>(*mm.first, *mm.second);
+        return { *mm.first, *mm.second };
     }
 
     bool CSimulatorXPlane::canAddAircraft() const
@@ -1369,11 +1373,11 @@ namespace swift::simplugin::xplane
         m_DBusConnection = QDBusConnection::sessionBus();
         if (!m_DBusConnection.isConnected())
         {
-            m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
+            QDBusConnection::disconnectFromBus(m_DBusConnection.name());
             return;
         }
         checkConnectionCommon(); // bus
-        m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
+        QDBusConnection::disconnectFromBus(m_DBusConnection.name());
     }
 
     void CSimulatorXPlaneListener::checkConnectionViaPeer(const QString &address)
@@ -1382,11 +1386,11 @@ namespace swift::simplugin::xplane
         if (!m_DBusConnection.isConnected())
         {
             // This is required to cleanup the connection in QtDBus
-            m_DBusConnection.disconnectFromPeer(m_DBusConnection.name());
+            QDBusConnection::disconnectFromPeer(m_DBusConnection.name());
             return;
         }
         checkConnectionCommon(); // peer
-        m_DBusConnection.disconnectFromPeer(m_DBusConnection.name());
+        QDBusConnection::disconnectFromPeer(m_DBusConnection.name());
     }
 
     void CSimulatorXPlaneListener::checkConnectionCommon()
@@ -1437,7 +1441,7 @@ namespace swift::simplugin::xplane
     void CSimulatorXPlaneListener::serviceRegistered(const QString &serviceName)
     {
         if (serviceName == xswiftbusServiceName()) { emit simulatorStarted(getPluginInfo()); }
-        m_DBusConnection.disconnectFromBus(m_DBusConnection.name());
+        QDBusConnection::disconnectFromBus(m_DBusConnection.name());
     }
 
     void CSimulatorXPlaneListener::onXSwiftBusServerSettingChanged()

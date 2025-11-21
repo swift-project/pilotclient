@@ -49,8 +49,7 @@ namespace swift::gui::models
         for (const QString &suffix : std::as_const(m_suffixes))
         {
             // ownership of QStandardItem is taken by model
-            QStandardItem *typeFolderFirstColumn =
-                new QStandardItem(CCallsign::atcSuffixToIcon(suffix).toQIcon(), suffix);
+            auto *typeFolderFirstColumn = new QStandardItem(CCallsign::atcSuffixToIcon(suffix).toQIcon(), suffix);
             typeFolderFirstColumn->setEditable(false);
             this->invisibleRootItem()->appendRow(typeFolderFirstColumn);
 

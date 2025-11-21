@@ -23,7 +23,7 @@ namespace swift::gui::models
         explicit CAudioDeviceInfoListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAudioDeviceInfoListModel() override {}
+        ~CAudioDeviceInfoListModel() override = default;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_MODELS_AUDIODEVICEINFOLISTMODEL_H

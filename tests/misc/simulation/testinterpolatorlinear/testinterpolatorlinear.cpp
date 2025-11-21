@@ -7,6 +7,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QEventLoop>
 #include <QScopedPointer>
 #include <QTest>

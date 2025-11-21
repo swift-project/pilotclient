@@ -35,7 +35,7 @@ namespace swift::misc::aviation
         using CSequence::CSequence;
 
         //! Default constructor.
-        CAtcStationList();
+        CAtcStationList() = default;
 
         //! Construct from a base class object.
         CAtcStationList(const CSequence<CAtcStation> &other);

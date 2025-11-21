@@ -69,7 +69,7 @@ namespace swift::misc::physical_quantities
         const QString hStr = hhmm.left(2);
         const QString mStr = hhmm.right(2);
 
-        bool ok;
+        bool ok {};
         const int h = hStr.toInt(&ok);
         if (!ok || h < 0 || h > 23) { return false; }
 

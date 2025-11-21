@@ -54,7 +54,7 @@ namespace swift::gui::components
         }
     }
 
-    CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent() {}
+    CDbAircraftIcaoSelectorComponent::~CDbAircraftIcaoSelectorComponent() = default;
 
     bool CDbAircraftIcaoSelectorComponent::setAircraftIcao(const CAircraftIcaoCode &icao)
     {
@@ -91,7 +91,7 @@ namespace swift::gui::components
         {
             const QString icaoOnly = CDatastoreUtility::stripKeyInParentheses(text);
             if (m_currentIcao.getDesignator() == icaoOnly) { return m_currentIcao; }
-            return CAircraftIcaoCode(icaoOnly);
+            return { icaoOnly };
         }
         CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
         if (icao.isNull())
@@ -99,7 +99,7 @@ namespace swift::gui::components
             // did not find by key
             const QString icaoOnly = CDatastoreUtility::stripKeyInParentheses(text);
             if (m_currentIcao.getDesignator() == icaoOnly) { return m_currentIcao; }
-            return CAircraftIcaoCode(icaoOnly);
+            return { icaoOnly };
         }
         return icao;
     }
@@ -151,13 +151,13 @@ namespace swift::gui::components
         {
             if (valueVariant.canConvert<CAircraftIcaoCode>())
             {
-                CAircraftIcaoCode icao(valueVariant.value<CAircraftIcaoCode>());
+                auto icao(valueVariant.value<CAircraftIcaoCode>());
                 if (!icao.hasValidDbKey()) { return; }
                 this->setAircraftIcao(icao);
             }
             else if (valueVariant.canConvert<CAircraftIcaoCodeList>())
             {
-                CAircraftIcaoCodeList icaos(valueVariant.value<CAircraftIcaoCodeList>());
+                auto icaos(valueVariant.value<CAircraftIcaoCodeList>());
                 if (icaos.isEmpty()) { return; }
                 this->setAircraftIcao(icaos.front());
             }
@@ -186,7 +186,7 @@ namespace swift::gui::components
         {
             if (count > 0)
             {
-                QCompleter *c = new QCompleter(this->completerStrings(), this);
+                auto *c = new QCompleter(this->completerStrings(), this);
                 c->setCaseSensitivity(Qt::CaseInsensitive);
                 c->setCompletionMode(QCompleter::PopupCompletion);
                 c->setMaxVisibleItems(10);

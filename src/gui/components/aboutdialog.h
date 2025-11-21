@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CAboutDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAboutDialog() override;
+        ~CAboutDialog() override;
 
     private:
         //! Init values

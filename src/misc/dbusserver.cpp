@@ -139,7 +139,7 @@ namespace swift::misc
                 else if (part.contains("port=", Qt::CaseInsensitive))
                 {
                     const QString p = part.mid(part.lastIndexOf("=") + 1).trimmed();
-                    bool ok;
+                    bool ok {};
                     port = p.toInt(&ok);
                     if (!ok) { port = -1; }
                 }
@@ -158,7 +158,7 @@ namespace swift::misc
 
     bool CDBusServer::dBusAddressToHostAndPort(const QString &dbusAddress, QString &o_host, QString &o_port)
     {
-        int port;
+        int port {};
         const bool s = dBusAddressToHostAndPort(dbusAddress, o_host, port);
         o_port = QString::number(port);
         return s;
@@ -188,7 +188,7 @@ namespace swift::misc
         {
             const QMetaClassInfo ci = mo->classInfo(i);
             const QString name = QString(ci.name()).toLower();
-            if (name == "d-bus interface") { return QString(ci.value()); }
+            if (name == "d-bus interface") { return { ci.value() }; }
         }
         return {};
     }
@@ -211,12 +211,12 @@ namespace swift::misc
             if (ok)
             {
                 CLogMessage(this).info(u"Adding '%1' to the new connection '%2'")
-                    << key << this->getDBusInterfaceFromClassInfo(i.value());
+                    << key << getDBusInterfaceFromClassInfo(i.value());
             }
             else
             {
                 CLogMessage(this).info(u"Adding '%1' failed, connection '%2', error '%3'")
-                    << key << this->getDBusInterfaceFromClassInfo(i.value()) << connection.lastError().message();
+                    << key << getDBusInterfaceFromClassInfo(i.value()) << connection.lastError().message();
                 success = false;
             }
         }

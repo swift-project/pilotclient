@@ -62,7 +62,7 @@ namespace swift::core
         CCoreFacade(const CCoreFacadeConfig &config, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CCoreFacade() override { this->gracefulShutdown(); }
+        ~CCoreFacade() override { this->gracefulShutdown(); }
 
         //! Transport mechanism for sharing state between applications
         swift::misc::shared_state::CDataLinkDBus *getDataLinkDBus() { return this->m_dataLinkDBus; }

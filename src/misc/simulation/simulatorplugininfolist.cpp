@@ -12,8 +12,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorPluginInfo, CSim
 
 namespace swift::misc::simulation
 {
-    CSimulatorPluginInfoList::CSimulatorPluginInfoList() {}
-
     bool CSimulatorPluginInfoList::supportsSimulator(const QString &simulator) const
     {
         return std::find_if(begin(), end(), [&simulator](const CSimulatorPluginInfo &info) {
@@ -37,6 +35,6 @@ namespace swift::misc::simulation
         {
             if (info.getSimulatorInfo() == simulator) { return info; }
         }
-        return CSimulatorPluginInfo();
+        return {};
     }
 } // namespace swift::misc::simulation

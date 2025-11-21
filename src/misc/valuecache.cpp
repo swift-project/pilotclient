@@ -390,7 +390,7 @@ namespace swift::misc
             auto object = json.object();
             json.setObject(it->mergeToMemoizedJson(object));
 
-            if (!(file.seek(0) && file.resize(0) && file.write(json.toJson()) > 0 && file.checkedClose()))
+            if (!file.seek(0) || !file.resize(0) || file.write(json.toJson()) <= 0 || !file.checkedClose())
             {
                 return CStatusMessage(this).error(u"Failed to write to %1: %2")
                        << file.fileName() << file.errorString();
@@ -680,7 +680,7 @@ namespace swift::misc
     {
         Q_ASSERT_X(!element.m_key.isEmpty(), Q_FUNC_INFO,
                    "Empty key suggests an attempt to use value before objectName available for %%OwnerName%%");
-        return element.m_value.read();
+        return element.m_value.read(); // NOLINT(modernize-return-braced-init-list)
     }
 
     CStatusMessage CValuePage::setValue(Element &element, CVariant value, qint64 timestamp, bool save)

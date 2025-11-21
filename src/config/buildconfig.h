@@ -36,7 +36,7 @@ namespace swift::config
         //! with FSUIPC support?
         static constexpr bool isCompiledWithFsuipcSupport(); // defined in buildconfig_gen.inc.in
 
-        //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9)
+        //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9, MSFS, MSFS24)
         static constexpr bool isCompiledWithMsFlightSimulatorSupport();
 
         //! with XPlane support?

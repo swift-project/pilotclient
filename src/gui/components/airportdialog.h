@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CAirportDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAirportDialog();
+        ~CAirportDialog() override;
 
         //! Set airport
         void setAirport(const swift::misc::aviation::CAirport &airport);

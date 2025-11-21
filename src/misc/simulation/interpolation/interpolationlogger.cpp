@@ -212,56 +212,56 @@ namespace swift::misc::simulation
     SituationLog CInterpolationLogger::getLastSituationLog() const
     {
         QReadLocker l(&m_lockSituations);
-        if (m_situationLogs.isEmpty()) { return SituationLog(); }
+        if (m_situationLogs.isEmpty()) { return {}; }
         return m_situationLogs.last();
     }
 
     SituationLog CInterpolationLogger::getLastSituationLog(const CCallsign &cs) const
     {
         const QList<SituationLog> copy(this->getSituationsLog(cs));
-        if (copy.isEmpty()) { return SituationLog(); }
+        if (copy.isEmpty()) { return {}; }
         return copy.last();
     }
 
     CAircraftSituation CInterpolationLogger::getLastSituation() const
     {
         QReadLocker l(&m_lockSituations);
-        if (m_situationLogs.isEmpty()) { return CAircraftSituation(); }
+        if (m_situationLogs.isEmpty()) { return {}; }
         return m_situationLogs.last().situationCurrent;
     }
 
     CAircraftSituation CInterpolationLogger::getLastSituation(const CCallsign &cs) const
     {
         const QList<SituationLog> copy(this->getSituationsLog(cs));
-        if (copy.isEmpty()) { return CAircraftSituation(); }
+        if (copy.isEmpty()) { return {}; }
         return copy.last().situationCurrent;
     }
 
     CAircraftParts CInterpolationLogger::getLastParts() const
     {
         QReadLocker l(&m_lockParts);
-        if (m_partsLogs.isEmpty()) { return CAircraftParts(); }
+        if (m_partsLogs.isEmpty()) { return {}; }
         return m_partsLogs.last().parts;
     }
 
     CAircraftParts CInterpolationLogger::getLastParts(const CCallsign &cs) const
     {
         const QList<PartsLog> copy(this->getPartsLog(cs));
-        if (copy.isEmpty()) { return CAircraftParts(); }
+        if (copy.isEmpty()) { return {}; }
         return copy.last().parts;
     }
 
     PartsLog CInterpolationLogger::getLastPartsLog() const
     {
         QReadLocker l(&m_lockParts);
-        if (m_partsLogs.isEmpty()) { return PartsLog(); }
+        if (m_partsLogs.isEmpty()) { return {}; }
         return m_partsLogs.last();
     }
 
     PartsLog CInterpolationLogger::getLastPartsLog(const CCallsign &cs) const
     {
         const QList<PartsLog> copy(this->getPartsLog(cs));
-        if (copy.isEmpty()) { return PartsLog(); }
+        if (copy.isEmpty()) { return {}; }
         return copy.last();
     }
 

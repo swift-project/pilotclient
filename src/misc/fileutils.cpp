@@ -217,11 +217,8 @@ namespace swift::misc
         int d2 = 0;
         dirs1Cleaned.sort(cs);
         dirs2Cleaned.sort(cs);
-        for (const QString &d1 : dirs1)
-        {
-            if (!stringCompare(d1, dirs2.at(d2), cs)) { return false; }
-        }
-        return true;
+        return std::all_of(dirs1.cbegin(), dirs1.cend(),
+                           [&](const QString &d1) { return stringCompare(d1, dirs2.at(d2), cs); });
     }
 
     Qt::CaseSensitivity CFileUtils::osFileNameCaseSensitivity()
@@ -258,11 +255,8 @@ namespace swift::misc
                                          Qt::CaseSensitivity cs)
     {
         if (excludeDirectories.isEmpty()) { return false; }
-        for (const QString &ex : excludeDirectories)
-        {
-            if (matchesExcludeDirectory(directoryPath, ex, cs)) { return true; }
-        }
-        return false;
+        return std::any_of(excludeDirectories.cbegin(), excludeDirectories.cend(),
+                           [&](const QString &ex) { return matchesExcludeDirectory(directoryPath, ex, cs); });
     }
 
     QStringList CFileUtils::removeSubDirectories(const QStringList &directories, Qt::CaseSensitivity cs)
@@ -301,7 +295,7 @@ namespace swift::misc
                                       const QStringList &excludeDirectories,
                                       std::function<bool(const QFileInfo &)> predicate)
     {
-        if (isExcludedDirectory(dir, excludeDirectories)) { return QString(); }
+        if (isExcludedDirectory(dir, excludeDirectories)) { return {}; }
         const QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {
@@ -349,7 +343,7 @@ namespace swift::misc
                                              const QStringList &excludeDirectories,
                                              std::function<bool(const QFileInfo &)> predicate)
     {
-        if (isExcludedDirectory(dir, excludeDirectories)) { return QFileInfoList(); }
+        if (isExcludedDirectory(dir, excludeDirectories)) { return {}; }
         QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {

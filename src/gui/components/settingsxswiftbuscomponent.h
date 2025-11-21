@@ -35,7 +35,7 @@ namespace swift::gui::components
         explicit CSettingsXSwiftBusComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CSettingsXSwiftBusComponent() override;
+        ~CSettingsXSwiftBusComponent() override;
 
     private:
         QScopedPointer<Ui::CSettingsXSwiftBusComponent> ui;

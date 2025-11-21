@@ -40,5 +40,5 @@ namespace swift::gui::components
         ui->comp_Messages->appendStatusMessagesToList(msgs);
     }
 
-    CSetupLoadingDialog::~CSetupLoadingDialog() {}
+    CSetupLoadingDialog::~CSetupLoadingDialog() = default;
 } // namespace swift::gui::components

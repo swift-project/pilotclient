@@ -15,7 +15,6 @@
 
 using namespace swift::misc;
 using namespace swift::misc::aviation;
-using namespace swift::misc::audio;
 using namespace swift::misc::physical_quantities;
 using namespace swift::misc::math;
 using namespace swift::misc::simulation;
@@ -67,7 +66,7 @@ namespace swift::gui::editors
         this->initLeds();
     }
 
-    CCockpitComForm::~CCockpitComForm() {}
+    CCockpitComForm::~CCockpitComForm() = default;
 
     void CCockpitComForm::setReadOnly(bool readonly)
     {

@@ -105,7 +105,7 @@ namespace swift::misc::simulation
                 const qint64 deltaMs = now - startedMs;
                 m_pendingElevationRequests.remove(requestedForCallsign);
                 m_statsCurrentElevRequestTimeMs = deltaMs;
-                if (m_statsMaxElevRequestTimeMs < deltaMs) { m_statsMaxElevRequestTimeMs = deltaMs; }
+                m_statsMaxElevRequestTimeMs = std::max(m_statsMaxElevRequestTimeMs, deltaMs);
             }
         }
         return true;
@@ -310,7 +310,7 @@ namespace swift::misc::simulation
 
     int ISimulationEnvironmentProvider::cleanUpElevations(const ICoordinateGeodetic &referenceCoordinate, int maxNumber)
     {
-        int currentMax;
+        int currentMax {};
         CCoordinateGeodeticList coordinates(this->getAllElevationCoordinates(currentMax));
         if (maxNumber < 0) { maxNumber = currentMax; }
         const int size = coordinates.size();
@@ -345,7 +345,7 @@ namespace swift::misc::simulation
             if (found)
             {
                 m_elvFound++;
-                return CElevationPlane(coordinate, reference); // plane with radius = distance to reference
+                return { coordinate, reference }; // plane with radius = distance to reference
             }
             else
             {
@@ -379,7 +379,7 @@ namespace swift::misc::simulation
     QPair<int, int> ISimulationEnvironmentProvider::getElevationsFoundMissed() const
     {
         QReadLocker l(&m_lockElvCoordinates);
-        return QPair<int, int>(m_elvFound, m_elvMissed);
+        return { m_elvFound, m_elvMissed };
     }
 
     QString ISimulationEnvironmentProvider::getElevationsFoundMissedInfo() const
@@ -390,8 +390,8 @@ namespace swift::misc::simulation
         const int m = foundMissed.second;
         const double hitRatioPercent = 100.0 * static_cast<double>(f) / static_cast<double>(f + m);
 
-        int elvGnd;
-        int elv;
+        int elvGnd {};
+        int elv {};
         {
             QReadLocker l(&m_lockElvCoordinates);
             elvGnd = m_elvCoordinatesGnd.sizeInt();
@@ -403,7 +403,7 @@ namespace swift::misc::simulation
     QPair<qint64, qint64> ISimulationEnvironmentProvider::getElevationRequestTimes() const
     {
         QReadLocker l(&m_lockElvCoordinates);
-        return QPair<qint64, qint64>(m_statsCurrentElevRequestTimeMs, m_statsMaxElevRequestTimeMs);
+        return { m_statsCurrentElevRequestTimeMs, m_statsMaxElevRequestTimeMs };
     }
 
     QString ISimulationEnvironmentProvider::getElevationRequestTimesInfo() const
@@ -787,37 +787,37 @@ namespace swift::misc::simulation
 
     QPair<int, int> CSimulationEnvironmentAware::getElevationsFoundMissed() const
     {
-        if (!this->hasProvider()) { return QPair<int, int>(0, 0); }
+        if (!this->hasProvider()) { return { 0, 0 }; }
         return this->provider()->getElevationsFoundMissed();
     }
 
     QString CSimulationEnvironmentAware::getElevationsFoundMissedInfo() const
     {
-        if (!this->hasProvider()) { return QString(); }
+        if (!this->hasProvider()) { return {}; }
         return this->provider()->getElevationsFoundMissedInfo();
     }
 
     QPair<qint64, qint64> CSimulationEnvironmentAware::getElevationRequestTimes() const
     {
-        if (!this->hasProvider()) { return QPair<qint64, qint64>(-1, -1); }
+        if (!this->hasProvider()) { return { -1, -1 }; }
         return this->provider()->getElevationRequestTimes();
     }
 
     QString CSimulationEnvironmentAware::getElevationRequestTimesInfo() const
     {
-        if (!this->hasProvider()) { return QString(); }
+        if (!this->hasProvider()) { return {}; }
         return this->provider()->getElevationRequestTimesInfo();
     }
 
     CSimulatorPluginInfo CSimulationEnvironmentAware::getSimulatorPluginInfo() const
     {
-        if (!this->hasProvider()) { return CSimulatorPluginInfo(); }
+        if (!this->hasProvider()) { return {}; }
         return this->provider()->getSimulatorPluginInfo();
     }
 
     CSimulatorInfo CSimulationEnvironmentAware::getSimulatorInfo() const
     {
-        if (!this->hasProvider()) { return CSimulatorInfo(); }
+        if (!this->hasProvider()) { return {}; }
         return this->provider()->getSimulatorInfo();
     }
 
@@ -829,7 +829,7 @@ namespace swift::misc::simulation
 
     CAircraftModel CSimulationEnvironmentAware::getDefaultModel() const
     {
-        if (!this->hasProvider()) { return CAircraftModel(); }
+        if (!this->hasProvider()) { return {}; }
         return this->provider()->getDefaultModel();
     }
 

@@ -44,8 +44,6 @@ namespace swift::misc::simulation::settings
         return u;
     }
 
-    CSimulatorSettings::CSimulatorSettings() {}
-
     void CSimulatorSettings::setSimulatorDirectory(const QString &simulatorDirectory)
     {
         m_simulatorDirectory = simulatorDirectory.trimmed();
@@ -140,7 +138,7 @@ namespace swift::misc::simulation::settings
     QVariant CSimulatorSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSimulatorDirectory: return QVariant::fromValue(m_simulatorDirectory);
@@ -171,7 +169,7 @@ namespace swift::misc::simulation::settings
             (*this) = variant.value<CSimulatorSettings>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexSimulatorDirectory: this->setSimulatorDirectory(variant.toString()); break;
@@ -198,7 +196,7 @@ namespace swift::misc::simulation::settings
         {
             // mostly happening with emulated driver, VERIFY for better debugging
             SWIFT_VERIFY_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
-            return CSimulatorSettings();
+            return {};
         }
         switch (simulator.getSimulator())
         {
@@ -212,12 +210,12 @@ namespace swift::misc::simulation::settings
 
         default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }
-        return CSimulatorSettings();
+        return {};
     }
 
     CSpecializedSimulatorSettings CMultiSimulatorSettings::getSpecializedSettings(const CSimulatorInfo &simulator) const
     {
-        return CSpecializedSimulatorSettings(this->getSettings(simulator), simulator);
+        return { this->getSettings(simulator), simulator };
     }
 
     CStatusMessage CMultiSimulatorSettings::setSettings(const CSimulatorSettings &settings,
@@ -519,7 +517,7 @@ namespace swift::misc::simulation::settings
     QVariant CSimulatorMessagesSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTechnicalLogSeverity: return QVariant::fromValue(m_technicalLogLevel);
@@ -536,7 +534,7 @@ namespace swift::misc::simulation::settings
             (*this) = variant.value<CSimulatorMessagesSettings>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexTechnicalLogSeverity:
@@ -582,7 +580,7 @@ namespace swift::misc::simulation::settings
 
     QStringList CSpecializedSimulatorSettings::getModelDirectoriesFromSimulatorDirectoy() const
     {
-        if (!m_genericSettings.hasSimulatorDirectory()) { return QStringList(); }
+        if (!m_genericSettings.hasSimulatorDirectory()) { return {}; }
         const QString s(m_genericSettings.getSimulatorDirectory());
         QStringList dirs;
         switch (m_simulator.getSimulator())

@@ -35,10 +35,10 @@ namespace swift::core::afv::audio
         void stop();
 
         //! \copydoc QIODevice::readData
-        virtual qint64 readData(char *data, qint64 maxlen) override;
+        qint64 readData(char *data, qint64 maxlen) override;
 
         //! \copydoc QIODevice::writeData
-        virtual qint64 writeData(const char *data, qint64 len) override;
+        qint64 writeData(const char *data, qint64 len) override;
 
     signals:
         //! Frame is available
@@ -80,7 +80,7 @@ namespace swift::core::afv::audio
         CInput(int sampleRate, QObject *parent = nullptr);
 
         //! Dtor
-        virtual ~CInput() override { this->stop(); }
+        ~CInput() override { this->stop(); }
 
         //! @{
         //! Number of encoded bytes

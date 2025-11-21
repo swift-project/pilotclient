@@ -136,7 +136,7 @@ namespace swift::misc::geo
     QVariant CElevationPlane::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexRadius: return m_radius.propertyByIndex(index.copyFrontRemoved());
@@ -152,7 +152,7 @@ namespace swift::misc::geo
             (*this) = variant.value<CElevationPlane>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexRadius: m_radius.setPropertyByIndex(index.copyFrontRemoved(), variant); break;

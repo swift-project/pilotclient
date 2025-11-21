@@ -39,7 +39,7 @@ namespace swift::gui::models
         explicit CDistributorListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CDistributorListModel() override {}
+        ~CDistributorListModel() override = default;
 
         //! Set mode
         void setDistributorMode(DistributorMode distributorMode);
@@ -48,7 +48,7 @@ namespace swift::gui::models
         DistributorMode getDistributorMode() const { return this->m_distributorMode; }
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::isOrderable
-        virtual bool isOrderable() const override { return true; }
+        bool isOrderable() const override { return true; }
 
     private:
         DistributorMode m_distributorMode = NotSet;

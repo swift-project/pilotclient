@@ -36,7 +36,7 @@ namespace swift::gui::components
                 &CCopyModelsFromOtherSwiftVersionsComponent::onVersionChanged);
     }
 
-    CCopyModelsFromOtherSwiftVersionsComponent::~CCopyModelsFromOtherSwiftVersionsComponent() {}
+    CCopyModelsFromOtherSwiftVersionsComponent::~CCopyModelsFromOtherSwiftVersionsComponent() = default;
 
     void CCopyModelsFromOtherSwiftVersionsComponent::copy()
     {
@@ -175,7 +175,7 @@ namespace swift::gui::components
         if (ui->cb_Silent->isChecked())
         {
             // allow UI updates
-            sApp->processEventsFor(50);
+            CApplication::processEventsFor(50);
             return true;
         }
         const QMessageBox::StandardButton reply = QMessageBox::question(

@@ -53,7 +53,7 @@ namespace swift::gui::editors
             { qMetaTypeId<CAirlineIcaoCode>(), qMetaTypeId<CAirlineIcaoCodeList>() });
     }
 
-    CAirlineIcaoForm::~CAirlineIcaoForm() {}
+    CAirlineIcaoForm::~CAirlineIcaoForm() = default;
 
     void CAirlineIcaoForm::setValue(const CAirlineIcaoCode &icao)
     {
@@ -89,7 +89,7 @@ namespace swift::gui::editors
         const QString id = ui->le_Id->text();
         if (sGui && !sGui->isShuttingDown() && sGui->hasWebDataServices())
         {
-            bool ok;
+            bool ok {};
             const int dbKey = id.toInt(&ok);
             if (ok) { code = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey); }
         }
@@ -161,7 +161,7 @@ namespace swift::gui::editors
             CVariant jsonVariant;
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CAirlineIcaoCodeList>()) { return; }
-            const CAirlineIcaoCodeList icaos = jsonVariant.value<CAirlineIcaoCodeList>();
+            const auto icaos = jsonVariant.value<CAirlineIcaoCodeList>();
             if (!icaos.isEmpty()) { this->setValue(icaos.front()); }
         }
         catch (const CJsonException &ex)
@@ -176,7 +176,7 @@ namespace swift::gui::editors
         if (variantDropped.canConvert<CAirlineIcaoCode>()) { icao = variantDropped.value<CAirlineIcaoCode>(); }
         else if (variantDropped.canConvert<CAirlineIcaoCodeList>())
         {
-            const CAirlineIcaoCodeList icaoList(variantDropped.value<CAirlineIcaoCodeList>());
+            const auto icaoList(variantDropped.value<CAirlineIcaoCodeList>());
             if (icaoList.isEmpty()) { return; }
             icao = icaoList.front();
         }
@@ -188,7 +188,7 @@ namespace swift::gui::editors
     {
         if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
 
-        bool ok;
+        bool ok {};
         const int id = ui->le_Id->text().toInt(&ok);
         const CAirlineIcaoCode icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(id);
         if (ok && !icao.isLoadedFromDb())

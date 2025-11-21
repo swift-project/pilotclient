@@ -9,15 +9,13 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CXSwiftBusSet
 
 namespace swift::misc::simulation::settings
 {
-    CXSwiftBusSettings::CXSwiftBusSettings() {}
-
     CXSwiftBusSettings::CXSwiftBusSettings(const QString &json) { this->parseXSwiftBusStringQt(json); }
 
     QVariant CXSwiftBusSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMaxPlanes: return QVariant::fromValue(m_maxPlanes);
@@ -42,7 +40,7 @@ namespace swift::misc::simulation::settings
         }
         if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMaxPlanes: m_maxPlanes = variant.toInt(); break;

@@ -92,25 +92,25 @@ namespace swift::misc
         using impl_type = Impl<Key, Value>;
 
         //! STL compatibility
-        typedef Key key_type;
+        using key_type = Key;
 
         //! STL compatibility
-        typedef Value value_type;
+        using value_type = Value;
 
         //! STL compatibility
-        typedef Value &reference;
+        using reference = Value &;
 
         //! STL compatibility
-        typedef const Value &const_reference;
+        using const_reference = Value &;
 
         //! STL compatibility
-        typedef typename Impl<Key, Value>::size_type size_type;
+        using size_type = typename Impl<Key, Value>::size_type;
 
         //! STL compatibility
-        typedef typename Impl<Key, Value>::iterator iterator;
+        using iterator = typename Impl<Key, Value>::iterator;
 
         //! STL compatibility
-        typedef typename Impl<Key, Value>::const_iterator const_iterator;
+        using const_iterator = typename Impl<Key, Value>::const_iterator;
 
         //! Return a copy containing only those elements for which the dictionary keys return true for a given
         //! predicate.
@@ -276,7 +276,7 @@ namespace swift::misc
         }
 
         //! Default constructor.
-        CDictionary() {}
+        CDictionary() = default;
 
         //! Initializer list constructor.
         CDictionary(std::initializer_list<std::pair<Key, Value>> il) : m_impl(il) {}
@@ -499,9 +499,9 @@ namespace swift::misc
                       "Maps must have the same key type");
         if (map1.empty() || map2.empty()) { return; }
         auto it1 = implementationOf(map1).lowerBound(map2.cbegin().key());
-        auto end1 = implementationOf(map1).upperBound((map2.cend() - 1).key());
+        auto end1 = implementationOf(map1).upperBound(std::prev(map2.cend()).key());
         auto it2 = implementationOf(map2).lowerBound(map1.cbegin().key());
-        auto end2 = implementationOf(map2).upperBound((map1.cend() - 1).key());
+        auto end2 = implementationOf(map2).upperBound(std::prev(map1.cend()).key());
         while (it1 != end1 && it2 != end2)
         {
             if (it1.key() < it2.key()) { ++it1; }

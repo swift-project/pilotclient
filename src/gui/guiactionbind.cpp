@@ -23,8 +23,6 @@ namespace swift::gui
         connect(sApp, &CApplication::aboutToShutdown, this, &CGuiActionBindHandler::unbind);
     }
 
-    CGuiActionBindHandler::~CGuiActionBindHandler() {}
-
     CActionBindings CGuiActionBindHandler::bindMenu(QMenu *menu, const QString &path)
     {
         Q_ASSERT(menu);
@@ -40,7 +38,7 @@ namespace swift::gui
             if (action->menu()) { CGuiActionBindHandler::bindMenu(action->menu(), pathNew); }
 
             const bool hasIcon = !action->icon().isNull();
-            CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(action);
+            auto *bindHandler = new CGuiActionBindHandler(action);
             // MS 2019-10-08 [AFV integration] CActionBind constructor needs an icon index, not a QPixmap
             // CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ?
             // action->icon().pixmap(CIcons::empty16().size()) : CIcons::empty16(), bindHandler,
@@ -63,7 +61,7 @@ namespace swift::gui
             absoluteName ?
                 path :
                 CGuiActionBindHandler::appendPath(path, button->text()).remove('&'); // remove E&xit key codes
-        CGuiActionBindHandler *bindHandler = new CGuiActionBindHandler(button);
+        auto *bindHandler = new CGuiActionBindHandler(button);
         const bool hasIcon = !button->icon().isNull();
         // MS 2019-10-08 [AFV integration] CActionBind constructor needs an icon index, not a QPixmap
         // CActionBinding actionBinding(CActionBinding::create(pathNew, hasIcon ?

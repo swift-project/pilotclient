@@ -73,49 +73,49 @@ namespace swift::core
 
         public:
             //! Destructor
-            virtual ~CContextOwnAircraft() override;
+            ~CContextOwnAircraft() override = default;
 
             // IOwnAircraftProvider overrides
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnCallsign
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::aviation::CCallsign getOwnCallsign() const override;
+            swift::misc::aviation::CCallsign getOwnCallsign() const override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnAircraftPosition
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
+            swift::misc::geo::CCoordinateGeodetic getOwnAircraftPosition() const override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnAircraftParts
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::aviation::CAircraftParts getOwnAircraftParts() const override;
+            swift::misc::aviation::CAircraftParts getOwnAircraftParts() const override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnAircraftModel
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::simulation::CAircraftModel getOwnAircraftModel() const override;
+            swift::misc::simulation::CAircraftModel getOwnAircraftModel() const override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getDistanceToOwnAircraft
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::physical_quantities::CLength
+            swift::misc::physical_quantities::CLength
             getDistanceToOwnAircraft(const swift::misc::geo::ICoordinateGeodetic &position) const override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnModel
             //! \ingroup ownaircraftprovider
             //! \remark perform reverse lookup if possible
-            virtual bool updateOwnModel(const swift::misc::simulation::CAircraftModel &model) override;
+            bool updateOwnModel(const swift::misc::simulation::CAircraftModel &model) override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnSituation
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnSituation(const swift::misc::aviation::CAircraftSituation &situation) override;
+            bool updateOwnSituation(const swift::misc::aviation::CAircraftSituation &situation) override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnParts
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnParts(const swift::misc::aviation::CAircraftParts &parts) override;
+            bool updateOwnParts(const swift::misc::aviation::CAircraftParts &parts) override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnParts
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnCG(const swift::misc::physical_quantities::CLength &cg) override;
+            bool updateOwnCG(const swift::misc::physical_quantities::CLength &cg) override;
 
             //! \copydoc swift::misc::IProvider::asQObject
-            virtual QObject *asQObject() override { return this; }
+            QObject *asQObject() override { return this; }
 
         signals:
             //! Changed aircraft model
@@ -127,63 +127,62 @@ namespace swift::core
         public slots:
             //! \copydoc IContextOwnAircraft::getOwnAircraft()
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const override;
+            swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const override;
 
             //! \copydoc IContextOwnAircraft::getOwnComSystem
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::aviation::CComSystem
+            swift::misc::aviation::CComSystem
             getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const override;
 
             //! \copydoc IContextOwnAircraft::getOwnTransponder()
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::aviation::CTransponder getOwnTransponder() const override;
+            swift::misc::aviation::CTransponder getOwnTransponder() const override;
 
             //! \copydoc IContextOwnAircraft::getOwnAircraftSituation()
             //! \ingroup ownaircraftprovider
-            virtual swift::misc::aviation::CAircraftSituation getOwnAircraftSituation() const override;
+            swift::misc::aviation::CAircraftSituation getOwnAircraftSituation() const override;
 
             //! \copydoc IContextOwnAircraft::updateOwnCallsign
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnCallsign(const swift::misc::aviation::CCallsign &callsign) override;
+            bool updateOwnCallsign(const swift::misc::aviation::CCallsign &callsign) override;
 
             //! \copydoc IContextOwnAircraft::updateOwnIcaoCodes
             //! \ingroup ownaircraftprovider
-            virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
-                                            const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
+            bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                    const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override;
 
             //! \copydoc IContextOwnAircraft::updateOwnPosition
-            virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position,
-                                           const swift::misc::aviation::CAltitude &altitude,
-                                           const swift::misc::aviation::CAltitude &pressureAltitude) override;
+            bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position,
+                                   const swift::misc::aviation::CAltitude &altitude,
+                                   const swift::misc::aviation::CAltitude &pressureAltitude) override;
 
             //! \copydoc IContextOwnAircraft::updateCockpit
-            virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1,
-                                       const swift::misc::aviation::CComSystem &com2,
-                                       const swift::misc::aviation::CTransponder &transponder,
-                                       const swift::misc::CIdentifier &originator) override;
+            bool updateCockpit(const swift::misc::aviation::CComSystem &com1,
+                               const swift::misc::aviation::CComSystem &com2,
+                               const swift::misc::aviation::CTransponder &transponder,
+                               const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateTransponderMode
-            virtual bool
-            updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode,
-                                  const swift::misc::CIdentifier &originator) override;
+            bool updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode,
+                                       const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateSelcal
-            virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal,
-                                      const swift::misc::CIdentifier &originator) override;
+            bool updateSelcal(const swift::misc::aviation::CSelcal &selcal,
+                              const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateActiveComFrequency
-            virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
-                                                  swift::misc::aviation::CComSystem::ComUnit comUnit,
-                                                  const swift::misc::CIdentifier &originator) override;
+            bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                          swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                          const swift::misc::CIdentifier &originator) override;
 
             //! \copydoc IContextOwnAircraft::updateOwnAircraftPilot
-            virtual bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override;
+            bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override;
 
             //! \copydoc IContextOwnAircraft::toggleTransponderMode
-            virtual void toggleTransponderMode() override;
+            void toggleTransponderMode() override;
 
             //! \copydoc IContextOwnAircraft::setTransponderMode
-            virtual bool setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode) override;
+            bool setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode) override;
 
             //! \ingroup swiftdotcommands
             //! <pre>
@@ -193,8 +192,7 @@ namespace swift::core
             //! .selcal      code       set SELCAL code         swift::core::context::CContextOwnAircraft
             //! </pre>
             //! \copydoc IContextOwnAircraft::parseCommandLine
-            virtual bool parseCommandLine(const QString &commandLine,
-                                          const swift::misc::CIdentifier &originator) override;
+            bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override;
 
             //! Register help
             static void registerHelp()

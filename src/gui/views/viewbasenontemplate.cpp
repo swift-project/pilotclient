@@ -51,47 +51,44 @@ namespace swift::gui::views
         this->setTextElideMode(Qt::ElideNone);
 
         // shortcuts
-        QShortcut *filter = new QShortcut(CShortcut::keyDisplayFilter(), this);
+        auto *filter = new QShortcut(CShortcut::keyDisplayFilter(), this);
         bool s = connect(filter, &QShortcut::activated, this, &CViewBaseNonTemplate::displayFilterDialog);
         Q_ASSERT_X(s, Q_FUNC_INFO, "Shortcut");
         filter->setObjectName("Filter shortcut for " + this->objectName());
         filter->setContext(Qt::WidgetShortcut);
 
-        QShortcut *clearSelection = new QShortcut(CShortcut::keyClearSelection(), this);
+        auto *clearSelection = new QShortcut(CShortcut::keyClearSelection(), this);
         s = connect(clearSelection, &QShortcut::activated, this, &CViewBaseNonTemplate::clearSelection);
         Q_ASSERT_X(s, Q_FUNC_INFO, "Shortcut");
         clearSelection->setObjectName("Clear selection shortcut for " + this->objectName());
         clearSelection->setContext(Qt::WidgetShortcut);
 
-        QShortcut *saveJson = new QShortcut(CShortcut::keySaveViews(), this);
+        auto *saveJson = new QShortcut(CShortcut::keySaveViews(), this);
         s = connect(saveJson, &QShortcut::activated, this, &CViewBaseNonTemplate::saveJsonAction);
         Q_ASSERT_X(s, Q_FUNC_INFO, "Shortcut");
         saveJson->setObjectName("Save JSON for " + this->objectName());
         saveJson->setContext(Qt::WidgetShortcut);
 
-        QShortcut *deleteRow = new QShortcut(CShortcut::keyDelete(), this);
+        auto *deleteRow = new QShortcut(CShortcut::keyDelete(), this);
         s = connect(deleteRow, &QShortcut::activated, this, &CViewBaseNonTemplate::removeSelectedRowsChecked);
         Q_ASSERT_X(s, Q_FUNC_INFO, "Shortcut");
         deleteRow->setObjectName("Remove selected rows for " + this->objectName());
         deleteRow->setContext(Qt::WidgetShortcut);
 
-        QShortcut *copy = new QShortcut(CShortcut::keyCopy(), this);
+        auto *copy = new QShortcut(CShortcut::keyCopy(), this);
         s = connect(copy, &QShortcut::activated, this, &CViewBaseNonTemplate::copy);
         Q_ASSERT_X(s, Q_FUNC_INFO, "Shortcut");
         copy->setObjectName("Copy selection shortcut for " + this->objectName());
         copy->setContext(Qt::WidgetShortcut);
 
-        QShortcut *resize = new QShortcut(CShortcut::keyResizeView(), this);
+        auto *resize = new QShortcut(CShortcut::keyResizeView(), this);
         s = connect(resize, &QShortcut::activated, this, &CViewBaseNonTemplate::fullResizeToContents);
         Q_ASSERT_X(s, Q_FUNC_INFO, "Shortcut");
         resize->setObjectName("Resize view shortcut for " + this->objectName());
         resize->setContext(Qt::WidgetShortcut);
     }
 
-    CViewBaseNonTemplate::~CViewBaseNonTemplate()
-    {
-        // dtor
-    }
+    CViewBaseNonTemplate::~CViewBaseNonTemplate() = default;
 
     bool CViewBaseNonTemplate::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
@@ -866,7 +863,7 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::toggleAutoDisplay()
     {
-        const QAction *a = qobject_cast<const QAction *>(QObject::sender());
+        const auto *a = qobject_cast<const QAction *>(QObject::sender());
         if (!a) { return; }
         Q_ASSERT_X(a->isCheckable(), Q_FUNC_INFO, "object not checkable");
         m_displayAutomatically = a->isChecked();

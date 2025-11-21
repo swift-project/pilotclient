@@ -13,8 +13,6 @@
 
 namespace swift::misc
 {
-    IOrderable::IOrderable() {}
-
     IOrderable::IOrderable(int order) : m_order(order) {}
 
     QString IOrderable::getOrderAsString() const
@@ -41,7 +39,7 @@ namespace swift::misc
     {
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexOrder: return QVariant::fromValue(this->m_order);
@@ -58,7 +56,7 @@ namespace swift::misc
     {
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexOrder: this->setOrder(variant.toInt()); return;

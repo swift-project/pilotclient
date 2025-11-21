@@ -20,7 +20,7 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() | Qt::WindowContextHelpButtonHint);
     }
 
-    CAircraftModelSetValidationDialog::~CAircraftModelSetValidationDialog() {}
+    CAircraftModelSetValidationDialog::~CAircraftModelSetValidationDialog() = default;
 
     void CAircraftModelSetValidationDialog::validatedModelSet(const CSimulatorInfo &simulator,
                                                               const CAircraftModelList &valid,

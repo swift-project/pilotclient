@@ -21,7 +21,7 @@ namespace swift::gui::components
         ui->setupUi(this);
     }
 
-    CStatusMessageForm::~CStatusMessageForm() {}
+    CStatusMessageForm::~CStatusMessageForm() = default;
 
     void CStatusMessageForm::setVariant(const CVariant &messageVariant)
     {

@@ -42,7 +42,7 @@ namespace swift::input
         /* Forward */
         struct js_event event;
         while (m_fd->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event)) {}
-        QSocketNotifier *notifier = new QSocketNotifier(m_fd->handle(), QSocketNotifier::Read, m_fd);
+        auto notifier = new QSocketNotifier(m_fd->handle(), QSocketNotifier::Read, m_fd);
         connect(notifier, &QSocketNotifier::activated, this, &CJoystickDevice::processInput);
         m_name = QString(deviceName);
     }
@@ -101,10 +101,10 @@ namespace swift::input
 
     void CJoystickLinux::addJoystickDevice(const QString &path)
     {
-        QFile *fd = new QFile(path);
+        auto fd = new QFile(path);
         if (fd->open(QIODevice::ReadOnly))
         {
-            CJoystickDevice *joystickDevice = new CJoystickDevice(path, fd, this);
+            auto joystickDevice = new CJoystickDevice(path, fd, this);
             connect(joystickDevice, &CJoystickDevice::buttonChanged, this, &CJoystickLinux::joystickButtonChanged);
             m_joystickDevices.push_back(joystickDevice);
         }

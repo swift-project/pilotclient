@@ -33,7 +33,7 @@ namespace swift::gui::models
         explicit CMatchingStatisticsModel(MatchingStatisticsMode mode, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CMatchingStatisticsModel() {}
+        ~CMatchingStatisticsModel() override = default;
 
         //! Set mode
         void setMode(MatchingStatisticsMode mode);

@@ -59,10 +59,7 @@ namespace swift::gui::components
                                  sApp->getWebDataServices()->getDistributorsCount());
     }
 
-    CDbDistributorSelectorComponent::~CDbDistributorSelectorComponent()
-    {
-        // void
-    }
+    CDbDistributorSelectorComponent::~CDbDistributorSelectorComponent() = default;
 
     void CDbDistributorSelectorComponent::setDistributor(const CDistributor &distributor)
     {
@@ -91,9 +88,9 @@ namespace swift::gui::components
 
     CDistributor CDbDistributorSelectorComponent::getDistributor() const
     {
-        if (!sGui) { return CDistributor(); }
+        if (!sGui) { return {}; }
         const QString distributorKeyOrAlias(ui->le_Distributor->text().trimmed().toUpper());
-        if (distributorKeyOrAlias.isEmpty()) { return CDistributor(); }
+        if (distributorKeyOrAlias.isEmpty()) { return {}; }
         if (m_currentDistributor.matchesKeyOrAlias(distributorKeyOrAlias)) { return m_currentDistributor; }
 
         const CDistributor d(sGui->getWebDataServices()->getDistributors().findByKey(distributorKeyOrAlias));
@@ -147,13 +144,13 @@ namespace swift::gui::components
         {
             if (valueVariant.canConvert<CDistributor>())
             {
-                CDistributor distributor(valueVariant.value<CDistributor>());
+                auto distributor(valueVariant.value<CDistributor>());
                 if (!distributor.hasValidDbKey()) { return; }
                 this->setDistributor(distributor);
             }
             else if (valueVariant.canConvert<CDistributorList>())
             {
-                CDistributorList distributors(valueVariant.value<CDistributorList>());
+                auto distributors(valueVariant.value<CDistributorList>());
                 if (distributors.isEmpty()) { return; }
                 this->setDistributor(distributors.front());
             }
@@ -170,7 +167,7 @@ namespace swift::gui::components
             {
                 const QStringList keysAndAliases(
                     sGui->getWebDataServices()->getDistributors().getDbKeysAndAliases(true));
-                QCompleter *c = new QCompleter(keysAndAliases, this);
+                auto *c = new QCompleter(keysAndAliases, this);
                 c->setCaseSensitivity(Qt::CaseInsensitive);
                 c->setCompletionMode(QCompleter::PopupCompletion);
                 c->setMaxVisibleItems(10);

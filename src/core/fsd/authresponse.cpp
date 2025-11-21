@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    AuthResponse::AuthResponse() : MessageBase() {}
-
     AuthResponse::AuthResponse(const QString &sender, const QString &receiver, const QString &response)
         : MessageBase(sender, receiver), m_response(response)
     {}
@@ -29,6 +27,6 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<AuthResponse *>(nullptr)).warning(u"Wrong number of arguments.");
             return {};
         }
-        return AuthResponse(tokens[0], tokens[1], tokens[2]);
+        return { tokens[0], tokens[1], tokens[2] };
     }
 } // namespace swift::core::fsd

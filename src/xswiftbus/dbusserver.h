@@ -4,6 +4,10 @@
 #ifndef SWIFT_SIM_XSWIFTBUS_DBUSSERVER_H
 #define SWIFT_SIM_XSWIFTBUS_DBUSSERVER_H
 
+#ifndef NOMINMAX
+#    define NOMINMAX
+#endif
+
 #include <dbus/dbus.h>
 #include <event2/event.h>
 

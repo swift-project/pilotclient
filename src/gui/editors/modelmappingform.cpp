@@ -32,7 +32,7 @@ namespace swift::gui::editors
         ui->le_Id->setReadOnly(true);
         ui->le_Parts->setPlaceholderText("Allowed: " + CAircraftModel::supportedParts());
         ui->lai_Id->set(CIcons::appMappings16(), "Id:");
-        CUpperCaseValidator *uc = new CUpperCaseValidator(0, 5, ui->le_Parts);
+        auto *uc = new CUpperCaseValidator(0, 5, ui->le_Parts);
         uc->setAllowedCharacters(CAircraftModel::supportedParts());
         ui->le_Parts->setValidator(uc);
 
@@ -43,7 +43,7 @@ namespace swift::gui::editors
         this->userChanged();
     }
 
-    CModelMappingForm::~CModelMappingForm() {}
+    CModelMappingForm::~CModelMappingForm() = default;
 
     swift::misc::simulation::CAircraftModel CModelMappingForm::getValue() const
     {
@@ -112,10 +112,10 @@ namespace swift::gui::editors
         // without unit we assume ft
         if (isDigitsOnlyString(v))
         {
-            bool ok;
+            bool ok {};
             const double cgv = v.toDouble(&ok);
             if (!ok) { return CLength::null(); }
-            return CLength(cgv, CLengthUnit::ft());
+            return { cgv, CLengthUnit::ft() };
         }
 
         CLength cg;

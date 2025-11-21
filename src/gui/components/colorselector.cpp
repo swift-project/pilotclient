@@ -43,7 +43,7 @@ namespace swift::gui::components
         connect(ui->le_Color, &QLineEdit::editingFinished, this, &CColorSelector::onReturnPressed);
         connect(ui->le_Color, &QLineEdit::returnPressed, this, &CColorSelector::onReturnPressed);
 
-        QCompleter *completer = new QCompleter(QColor::colorNames(), this);
+        auto *completer = new QCompleter(QColor::colorNames(), this);
         completer->setCaseSensitivity(Qt::CaseInsensitive);
         completer->setMaxVisibleItems(10);
         completer->setCompletionMode(QCompleter::PopupCompletion);
@@ -51,7 +51,7 @@ namespace swift::gui::components
         connect(completer, qOverload<const QString &>(&QCompleter::activated), this, &CColorSelector::setColorByName);
     }
 
-    CColorSelector::~CColorSelector() {}
+    CColorSelector::~CColorSelector() = default;
 
     void CColorSelector::setColor(const swift::misc::CRgbColor &color)
     {
@@ -114,7 +114,7 @@ namespace swift::gui::components
 
         if (mime->hasColor())
         {
-            const QColor color = qvariant_cast<QColor>(event->mimeData()->colorData());
+            const auto color = qvariant_cast<QColor>(event->mimeData()->colorData());
             if (!color.isValid()) { return; }
             this->setColor(color);
         }
@@ -125,13 +125,13 @@ namespace swift::gui::components
             {
                 if (valueVariant.canConvert<CRgbColor>())
                 {
-                    const CRgbColor rgb(valueVariant.value<CRgbColor>());
+                    const auto rgb(valueVariant.value<CRgbColor>());
                     if (!rgb.isValid()) { return; }
                     this->setColor(rgb);
                 }
                 else if (valueVariant.canConvert<QColor>())
                 {
-                    const QColor qColor(valueVariant.value<QColor>());
+                    const auto qColor(valueVariant.value<QColor>());
                     if (!qColor.isValid()) { return; }
                     this->setColor(qColor);
                 }
@@ -157,8 +157,8 @@ namespace swift::gui::components
         const CRgbColor c(this->getColor());
         if (!c.isValid()) { return; }
 
-        QDrag *drag = new QDrag(this);
-        QMimeData *mimeData = new QMimeData;
+        auto *drag = new QDrag(this);
+        auto *mimeData = new QMimeData;
 
         mimeData->setColorData(QVariant::fromValue(c.toQColor()));
         drag->setMimeData(mimeData);

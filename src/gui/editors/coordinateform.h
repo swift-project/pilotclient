@@ -29,7 +29,7 @@ namespace swift::gui::editors
         explicit CCoordinateForm(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CCoordinateForm() override;
+        ~CCoordinateForm() override;
 
         //! Get the coordinate
         swift::misc::geo::CCoordinateGeodetic getCoordinate() const { return m_coordinate; }
@@ -39,8 +39,8 @@ namespace swift::gui::editors
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
+        void setReadOnly(bool readonly) override;
+        swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Set button visible

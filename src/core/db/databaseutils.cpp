@@ -183,7 +183,7 @@ namespace swift::core::db
             if (processEvents && c % 125 == 0)
             {
                 if (!sApp || sApp->isShuttingDown()) { return models; }
-                sApp->processEventsFor(25);
+                CApplication::processEventsFor(25);
             }
 
             const QString ms(model.getModelString());
@@ -226,7 +226,7 @@ namespace swift::core::db
             if (processEvents && c % 125 == 0)
             {
                 if (!sApp || sApp->isShuttingDown()) { return models; }
-                sApp->processEventsFor(25);
+                CApplication::processEventsFor(25);
             }
 
             const QString ms(model.getModelString());
@@ -272,7 +272,7 @@ namespace swift::core::db
             if (modified || model.hasValidDbKey())
             {
                 c++;
-                if (processEvents && c % 125 == 0) { sApp->processEventsFor(25); }
+                if (processEvents && c % 125 == 0) { CApplication::processEventsFor(25); }
             }
         }
         CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"Consolidated %1 models in %2ms")
@@ -357,7 +357,7 @@ namespace swift::core::db
                                                                   IProgressIndicator *progressIndicator,
                                                                   bool processEvents)
     {
-        if (!sApp || !sApp->getWebDataServices() || sApp->isShuttingDown()) { return CAircraftModelList(); }
+        if (!sApp || !sApp->getWebDataServices() || sApp->isShuttingDown()) { return {}; }
         const CAircraftModelList dbFsFamilyModels(sApp->getWebDataServices()->getModels().findFsFamilyModels());
         CAircraftModelList stashModels;
         if (dbFsFamilyModels.isEmpty() || ownModels.isEmpty()) { return stashModels; }
@@ -378,7 +378,7 @@ namespace swift::core::db
                     const int percentage = c * 100 / maxModelsCount;
                     progressIndicator->updateProgressIndicatorAndProcessEvents(percentage);
                 }
-                else { sApp->processEventsFor(10); }
+                else { CApplication::processEventsFor(10); }
             }
 
             // values to be skipped
@@ -414,7 +414,7 @@ namespace swift::core::db
     QJsonDocument CDatabaseUtils::databaseJsonToQJsonDocument(const QString &content)
     {
         static const QString compressed("swift:");
-        if (content.isEmpty()) { return QJsonDocument(); }
+        if (content.isEmpty()) { return {}; }
         QByteArray byteData;
         if (json::looksLikeJson(content))
         {
@@ -429,7 +429,7 @@ namespace swift::core::db
                 const int contentIndex = content.indexOf(':', cl);
                 if (contentIndex < cl) break; // should not happen, malformed
                 const QString ls = content.mid(cl, contentIndex - cl); // content length
-                bool ok;
+                bool ok {};
                 const qint32 size = ls.toInt(&ok);
                 if (!ok) break; // malformed size
                 if (size < 1) break;
@@ -443,21 +443,21 @@ namespace swift::core::db
             while (false);
         }
 
-        if (byteData.isEmpty()) { return QJsonDocument(); }
+        if (byteData.isEmpty()) { return {}; }
         return QJsonDocument::fromJson(byteData);
     }
 
     QJsonDocument CDatabaseUtils::readQJsonDocumentFromDatabaseFile(const QString &filename)
     {
         const QString raw = CFileUtils::readFileToString(filename);
-        if (raw.isEmpty()) { return QJsonDocument(); }
+        if (raw.isEmpty()) { return {}; }
         return CDatabaseUtils::databaseJsonToQJsonDocument(raw);
     }
 
     QJsonObject CDatabaseUtils::readQJsonObjectFromDatabaseFile(const QString &filename)
     {
         const QString raw = CFileUtils::readFileToString(filename);
-        if (raw.isEmpty()) { return QJsonObject(); }
+        if (raw.isEmpty()) { return {}; }
 
         // allow also compressed format
         const QJsonDocument jsonDoc = CDatabaseUtils::databaseJsonToQJsonDocument(raw);

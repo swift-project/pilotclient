@@ -33,7 +33,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        Rehost();
+        Rehost() = default;
     };
 
     //! Equal to operator

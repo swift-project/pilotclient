@@ -29,7 +29,7 @@ namespace swift::misc::simulation
     {
     public:
         //! Default constructor
-        CAirspaceAircraftSnapshot();
+        CAirspaceAircraftSnapshot() = default;
 
         //! Constructor
         CAirspaceAircraftSnapshot(const CSimulatedAircraftList &allAircraft, bool restricted = false,

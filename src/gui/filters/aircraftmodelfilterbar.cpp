@@ -41,7 +41,7 @@ namespace swift::gui::filters
         ui->comp_DistributorSelector->withDistributorDescription(false);
         this->setButtonsAndCount(ui->filter_Buttons);
 
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
+        auto *ucv = new CUpperCaseValidator(this);
         ui->le_AircraftIcao->setValidator(ucv);
         ui->le_AirlineIcao->setValidator(ucv);
         ui->le_ModelString->setValidator(ucv);
@@ -60,7 +60,7 @@ namespace swift::gui::filters
         });
     }
 
-    CAircraftModelFilterBar::~CAircraftModelFilterBar() {}
+    CAircraftModelFilterBar::~CAircraftModelFilterBar() = default;
 
     void CAircraftModelFilterBar::displayCount(bool show) { ui->filter_Buttons->displayCount(show); }
 

@@ -24,7 +24,7 @@ namespace swift::gui::models
         explicit CAircraftCategoryTreeModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftCategoryTreeModel() override {}
+        ~CAircraftCategoryTreeModel() override = default;
 
         //! Set columns
         void setColumns(const CColumns &columns) { m_columns.setColumns(columns); }

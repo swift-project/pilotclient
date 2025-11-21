@@ -34,7 +34,7 @@ namespace swift::gui::components
         explicit CStatusMessageForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CStatusMessageForm();
+        ~CStatusMessageForm() override;
 
         //! Set message
         void setVariant(const swift::misc::CVariant &messageVariant);

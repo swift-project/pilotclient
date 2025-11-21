@@ -211,7 +211,7 @@ namespace swift::misc::db
         {
             CONTAINER objs(this->container());
             objs.removeObjectsWithoutDbKey();
-            if (objs.isEmpty()) { return QDateTime(); }
+            if (objs.isEmpty()) { return {}; }
             return objs.latestTimestamp();
         }
 
@@ -220,7 +220,7 @@ namespace swift::misc::db
         {
             CONTAINER objs(this->container());
             objs.removeObjectsWithoutDbKey();
-            if (objs.isEmpty()) { return QDateTime(); }
+            if (objs.isEmpty()) { return {}; }
             return objs.oldestDbTimestamp();
         }
 
@@ -241,22 +241,17 @@ namespace swift::misc::db
         //! Any object without key?
         bool containsAnyObjectWithoutKey() const
         {
-            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
-            {
-                if (!obj.hasValidDbKey()) { return true; }
-            }
-            return false;
+            return std::any_of(ITimestampObjectList<OBJ, CONTAINER>::container().cbegin(),
+                               ITimestampObjectList<OBJ, CONTAINER>::container().cend(),
+                               [](const OBJ &obj) { return !obj.hasValidDbKey(); });
         }
 
         //! Contains object with key?
         bool containsDbKey(KEYTYPE key) const
         {
-            for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
-            {
-                if (!obj.hasValidDbKey()) { continue; }
-                if (obj.getDbKey() == key) { return true; }
-            }
-            return false;
+            return std::any_of(ITimestampObjectList<OBJ, CONTAINER>::container().cbegin(),
+                               ITimestampObjectList<OBJ, CONTAINER>::container().cend(),
+                               [&](const OBJ &obj) { return obj.hasValidDbKey() && obj.getDbKey() == key; });
         }
 
         //! From multiple JSON formats

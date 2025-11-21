@@ -19,8 +19,6 @@ namespace swift::gui::filters
                 Qt::QueuedConnection);
     }
 
-    CFilterDialog::~CFilterDialog() {}
-
     void CFilterDialog::onStyleSheetChanged()
     {
         const QString qss = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameFilterDialog());

@@ -8,13 +8,13 @@
 
 #include "gui/models/listmodeldbobjects.h"
 #include "gui/swiftguiexport.h"
+#include "misc/aviation/airlineicaocodelist.h"
 
 class QObject;
 
 namespace swift::misc::aviation
 {
     class CAirlineIcaoCode;
-    class CAirlineIcaoCodeList;
 } // namespace swift::misc::aviation
 
 namespace swift::gui::models
@@ -30,7 +30,7 @@ namespace swift::gui::models
         explicit CAirlineIcaoCodeListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAirlineIcaoCodeListModel() {}
+        ~CAirlineIcaoCodeListModel() override = default;
     };
 } // namespace swift::gui::models
 #endif // SWIFT_GUI_AIRLINEICAOLISTMODEL_H

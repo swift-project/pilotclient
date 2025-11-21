@@ -119,7 +119,7 @@ namespace swift::misc
             bool containsPushBack() const { return m_containsPushBack; }
 
             //! Elevation standard deviation and mean
-            CAltitudePair getElevationStdDevAndMean() const { return CAltitudePair(m_elvStdDev, m_elvMean); }
+            CAltitudePair getElevationStdDevAndMean() const { return { m_elvStdDev, m_elvMean }; }
 
             //! Guess on ground flag
             bool guessOnGround(CAircraftSituation &situation, const simulation::CAircraftModel &model) const;

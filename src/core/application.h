@@ -543,7 +543,7 @@ namespace swift::core
         virtual void onCoreFacadeStarted();
 
         //! Can be used to start special services
-        virtual swift::misc::CStatusMessageList startHookIn() { return swift::misc::CStatusMessageList(); }
+        virtual swift::misc::CStatusMessageList startHookIn() { return {}; }
 
         //! Flag set or explicitly set to true
         bool isSet(const QCommandLineOption &option) const;

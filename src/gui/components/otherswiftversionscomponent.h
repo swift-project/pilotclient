@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit COtherSwiftVersionsComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~COtherSwiftVersionsComponent();
+        ~COtherSwiftVersionsComponent() override;
 
         //! Any version selected?
         bool hasSelection() const;

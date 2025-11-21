@@ -51,7 +51,7 @@ namespace swift::gui::components
                               sGui->getWebDataServices()->getCountriesCount());
     }
 
-    CDbCountrySelectorComponent::~CDbCountrySelectorComponent() {}
+    CDbCountrySelectorComponent::~CDbCountrySelectorComponent() = default;
 
     void CDbCountrySelectorComponent::setCountry(const swift::misc::CCountry &country)
     {
@@ -73,13 +73,13 @@ namespace swift::gui::components
 
     swift::misc::CCountry CDbCountrySelectorComponent::getCountry() const
     {
-        if (!sGui) { return CCountry(); }
+        if (!sGui) { return {}; }
         const QString iso(ui->le_CountryIso->text().trimmed().toUpper());
         const QString name(ui->le_CountryName->text().trimmed());
         if (CCountry::isValidIsoCode(iso)) { return sGui->getWebDataServices()->getCountryForIsoCode(iso); }
         else
         {
-            if (name.isEmpty()) { return CCountry(); }
+            if (name.isEmpty()) { return {}; }
             return sGui->getWebDataServices()->getCountryForName(name);
         }
     }
@@ -129,13 +129,13 @@ namespace swift::gui::components
         {
             if (valueVariant.canConvert<CCountry>())
             {
-                const CCountry country(valueVariant.value<CCountry>());
+                const auto country(valueVariant.value<CCountry>());
                 if (!country.hasIsoCode()) { return; }
                 this->setCountry(country);
             }
             else if (valueVariant.canConvert<CCountryList>())
             {
-                const CCountryList countries(valueVariant.value<CCountryList>());
+                const auto countries(valueVariant.value<CCountryList>());
                 if (countries.isEmpty()) { return; }
                 this->setCountry(countries.front());
             }
@@ -150,7 +150,7 @@ namespace swift::gui::components
         {
             if (count > 0)
             {
-                QCompleter *c = new QCompleter(sGui->getWebDataServices()->getCountries().toNameList(), this);
+                auto *c = new QCompleter(sGui->getWebDataServices()->getCountries().toNameList(), this);
                 c->setCaseSensitivity(Qt::CaseInsensitive);
                 c->setCompletionMode(QCompleter::PopupCompletion);
                 c->setMaxVisibleItems(10);

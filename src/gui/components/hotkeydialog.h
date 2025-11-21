@@ -6,6 +6,7 @@
 #ifndef SWIFT_GUI_COMPONENTS_HOTKEYDIALOG_H
 #define SWIFT_GUI_COMPONENTS_HOTKEYDIALOG_H
 
+#include <QComboBox>
 #include <QDialog>
 #include <QObject>
 #include <QScopedPointer>
@@ -69,7 +70,7 @@ namespace swift::gui::components
                       const swift::misc::CIdentifierList &identifiers, QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CHotkeyDialog() override;
+        ~CHotkeyDialog() override;
 
         //! Get hotkey selected by user
         swift::misc::input::CActionHotkey getSelectedActionHotkey() const { return m_actionHotkey; }
@@ -78,7 +79,7 @@ namespace swift::gui::components
         void initStyleSheet();
 
         //! \copydoc QDialog::accept
-        virtual void accept() override;
+        void accept() override;
 
         //! Runs the hotkey dialog and returns the result
         static swift::misc::input::CActionHotkey getActionHotkey(const swift::misc::input::CActionHotkey &initial,

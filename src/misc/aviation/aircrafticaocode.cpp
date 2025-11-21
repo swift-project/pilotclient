@@ -122,7 +122,7 @@ namespace swift::misc::aviation
         {
             // actually we would expect all DB data to be valid, however right now
             // we only check special cases
-            if (this->getDesignator() == this->getUnassignedDesignator()) { return msg; } // DB ZZZZ
+            if (this->getDesignator() == getUnassignedDesignator()) { return msg; } // DB ZZZZ
         }
 
         if (!hasKnownDesignator())
@@ -368,7 +368,7 @@ namespace swift::misc::aviation
     {
         const QString et = this->getEngineType();
         if (et.length() == 1) { return et[0]; }
-        return QChar();
+        return {};
     }
 
     int CAircraftIcaoCode::getEnginesCount() const
@@ -376,7 +376,7 @@ namespace swift::misc::aviation
         if (m_combinedType.length() < 2) { return -1; }
         const QString c(m_combinedType.mid(1, 1));
         if (c == "-") { return -1; }
-        bool ok;
+        bool ok {};
         int ec = c.toInt(&ok);
         if (ok && ec >= 0 && ec < 10) { return ec; }
         return -1;
@@ -651,7 +651,7 @@ namespace swift::misc::aviation
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAircraftDesignator: return QVariant::fromValue(m_designator);
@@ -687,7 +687,7 @@ namespace swift::misc::aviation
             IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAircraftDesignator: this->setDesignator(variant.value<QString>()); break;
@@ -714,7 +714,7 @@ namespace swift::misc::aviation
         {
             return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAircraftDesignator: return m_designator.compare(compareValue.getDesignator(), Qt::CaseInsensitive);
@@ -819,7 +819,7 @@ namespace swift::misc::aviation
             { "L1P", "L2P" }, { "L1P", "S1P" }, { "L2J", "L3J" }, { "L2J", "L4J" }, { "L3J", "L4J" }
         };
 
-        if (isValidCombinedType(combinedCode)) { return QStringList(); }
+        if (isValidCombinedType(combinedCode)) { return {}; }
         if (knownCodes.contains(combinedCode)) { return knownCodes.values(combinedCode); }
 
         // turn E to P engine
@@ -873,7 +873,7 @@ namespace swift::misc::aviation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CAircraftIcaoCode();
+            return {};
         }
 
         const int engineCount(json.value(prefix % u"enginecount").toInt(-1));

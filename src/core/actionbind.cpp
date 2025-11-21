@@ -22,11 +22,6 @@ namespace swift::core
         return a;
     }
 
-    CActionBind::~CActionBind()
-    {
-        // void
-    }
-
     void CActionBind::unbind()
     {
         if (m_index < 0) { return; }

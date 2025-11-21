@@ -30,15 +30,10 @@ namespace swift::core::application
         //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const misc::input::CActionHotkeyList &value, QString &)
         {
-            for (const auto &actionHotkey : value)
-            {
-                if (actionHotkey.getApplicableMachine().getMachineName().isEmpty() ||
-                    actionHotkey.getAction().isEmpty() || actionHotkey.getCombination().isEmpty())
-                {
-                    return false;
-                }
-            }
-            return true;
+            return std::all_of(value.cbegin(), value.cend(), [](const auto &actionHotkey) {
+                return !actionHotkey.getApplicableMachine().getMachineName().isEmpty() &&
+                       !actionHotkey.getAction().isEmpty() && !actionHotkey.getCombination().isEmpty();
+            });
         }
     };
 
@@ -66,14 +61,9 @@ namespace swift::core::application
         //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const QStringList &pluginIdentifiers, QString &)
         {
-            for (const QString &pluginIdentifier : pluginIdentifiers)
-            {
-                if (!misc::simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return std::all_of(pluginIdentifiers.cbegin(), pluginIdentifiers.cend(), [](const auto &pluginIdentifier) {
+                return misc::simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier);
+            });
         }
     };
 

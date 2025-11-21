@@ -40,10 +40,10 @@ namespace swift::gui::filters
         explicit CAircraftModelFilterDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftModelFilterDialog() override;
+        ~CAircraftModelFilterDialog() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::simulation::CAircraftModelList>>
+        std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::simulation::CAircraftModelList>>
         createModelFilter() const override;
 
     private:

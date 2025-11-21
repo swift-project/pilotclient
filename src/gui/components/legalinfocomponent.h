@@ -31,7 +31,7 @@ namespace swift::gui::components
         explicit CLegalInfoComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLegalInfoComponent();
+        ~CLegalInfoComponent() override;
 
         //! Agreed with?
         bool isAgreedTo() const;
@@ -65,7 +65,7 @@ namespace swift::gui::components
         void setConfigComponent(CLegalInfoComponent *config) { m_legalInfo = config; }
 
         //! \copydoc QWizardPage::validatePage
-        virtual bool validatePage() override;
+        bool validatePage() override;
 
     private:
         CLegalInfoComponent *m_legalInfo = nullptr;

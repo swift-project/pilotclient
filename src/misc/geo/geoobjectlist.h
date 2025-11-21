@@ -230,7 +230,7 @@ namespace swift::misc::geo
 
     protected:
         //! Constructor
-        IGeoObjectList() {}
+        IGeoObjectList() {} // NOLINT(modernize-use-equals-default)
 
         //! Container
         const CONTAINER &container() const { return static_cast<const CONTAINER &>(*this); }
@@ -296,7 +296,7 @@ namespace swift::misc::geo
 
     protected:
         //! Constructor
-        IGeoObjectWithRelativePositionList() {}
+        IGeoObjectWithRelativePositionList() {} // NOLINT(modernize-use-equals-default)
     };
 } // namespace swift::misc::geo
 

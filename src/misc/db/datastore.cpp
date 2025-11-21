@@ -41,7 +41,7 @@ namespace swift::misc::db
 
     void IDatastoreObjectWithIntegerKey::setDbKey(const QString &key)
     {
-        bool ok;
+        bool ok {};
         const int k = key.toInt(&ok);
         m_dbKey = ok ? k : -1;
     }
@@ -65,15 +65,15 @@ namespace swift::misc::db
     int IDatastoreObjectWithIntegerKey::stringToDbKey(const QString &candidate)
     {
         if (candidate.isEmpty()) { return invalidDbKey(); }
-        bool ok;
+        bool ok {};
         int k = candidate.toInt(&ok);
         return ok ? k : invalidDbKey();
     }
 
     QJsonValue IDatastoreObjectWithIntegerKey::getDbKeyAsJsonValue() const
     {
-        if (this->hasValidDbKey()) { return QJsonValue(m_dbKey); }
-        return QJsonValue();
+        if (this->hasValidDbKey()) { return { m_dbKey }; }
+        return {};
     }
 
     void IDatastoreObjectWithIntegerKey::setKeyVersionTimestampFromDatabaseJson(const QJsonObject &json,
@@ -94,7 +94,7 @@ namespace swift::misc::db
     QVariant IDatastoreObjectWithIntegerKey::propertyByIndex(CPropertyIndexRef index) const
     {
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbIntegerKey: return QVariant::fromValue(m_dbKey);
@@ -104,7 +104,7 @@ namespace swift::misc::db
         case IndexVersion: return QVariant::fromValue(this->getVersion());
         default: break;
         }
-        return QVariant();
+        return {};
     }
 
     void IDatastoreObjectWithIntegerKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
@@ -114,7 +114,7 @@ namespace swift::misc::db
             ITimestampBased::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbIntegerKey: m_dbKey = variant.toInt(); break;
@@ -131,7 +131,7 @@ namespace swift::misc::db
         {
             return ITimestampBased::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbKeyAsString: // fall thru
@@ -153,7 +153,7 @@ namespace swift::misc::db
 
     QJsonValue IDatastoreObjectWithStringKey::getDbKeyAsJsonValue() const
     {
-        if (this->hasValidDbKey()) { return QJsonValue(m_dbKey); }
+        if (this->hasValidDbKey()) { return { m_dbKey }; }
         static const QJsonValue null;
         return null;
     }
@@ -194,7 +194,7 @@ namespace swift::misc::db
     QVariant IDatastoreObjectWithStringKey::propertyByIndex(CPropertyIndexRef index) const
     {
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbKeyAsString: // fall thru
@@ -204,7 +204,7 @@ namespace swift::misc::db
         case IndexVersion: return QVariant::fromValue(this->getVersion());
         default: break;
         }
-        return QVariant();
+        return {};
     }
 
     void IDatastoreObjectWithStringKey::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
@@ -214,7 +214,7 @@ namespace swift::misc::db
             ITimestampBased::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbStringKey:
@@ -232,7 +232,7 @@ namespace swift::misc::db
         {
             return ITimestampBased::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDbKeyAsString: // fall thru

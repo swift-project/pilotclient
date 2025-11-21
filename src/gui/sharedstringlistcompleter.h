@@ -22,7 +22,7 @@ namespace swift::gui
     {
     public:
         //! Constructor
-        CSharedStringListCompleter() {}
+        CSharedStringListCompleter() = default;
 
         //! Update data
         bool updateData(const QStringList &data, int cacheTimeMs);

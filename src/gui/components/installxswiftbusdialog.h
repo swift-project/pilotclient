@@ -27,7 +27,7 @@ namespace swift::gui::components
         explicit CInstallXSwiftBusDialog(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CInstallXSwiftBusDialog() override;
+        ~CInstallXSwiftBusDialog() override;
 
         //! \copydoc CInstallXSwiftBusComponent::setDefaultDownloadName
         void setDefaultDownloadName(const QString &defaultName);

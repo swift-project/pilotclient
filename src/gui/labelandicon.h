@@ -33,7 +33,7 @@ namespace swift::gui
         explicit CLabelAndIcon(QWidget *parent = nullptr);
 
         //! Destructor
-        ~CLabelAndIcon();
+        ~CLabelAndIcon() override;
 
         //! Set values (left to right)
         void set(const QPixmap &pixmap, const QString &text);

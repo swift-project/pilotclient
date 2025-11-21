@@ -45,7 +45,7 @@ public:
     CSwiftCore(QWidget *parent = nullptr);
 
     //! Destructor
-    virtual ~CSwiftCore() override;
+    ~CSwiftCore() override;
 
 private:
     //! @{

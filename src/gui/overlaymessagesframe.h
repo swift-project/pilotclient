@@ -48,7 +48,7 @@ namespace swift::gui
     {
     public:
         //! Destructor
-        virtual ~COverlayMessagesBase() override {}
+        ~COverlayMessagesBase() override = default;
 
         //! Init, normally we use lazy init, but by calling init explicitly we can force initalization
         //! \remark usefule for text messages, as history will be already available
@@ -332,7 +332,7 @@ namespace swift::gui
         }
 
         //! \copydoc QFrame::keyPressEvent
-        virtual void keyPressEvent(QKeyEvent *event) override
+        void keyPressEvent(QKeyEvent *event) override
         {
             if (m_overlayMessages && event->key() == Qt::Key_Escape)
             {
@@ -343,7 +343,7 @@ namespace swift::gui
         }
 
         //! \copydoc QFrame::resizeEvent
-        virtual void resizeEvent(QResizeEvent *event) override
+        void resizeEvent(QResizeEvent *event) override
         {
             WIDGET::resizeEvent(event);
             if (m_overlayMessages && m_overlayMessages->isVisible()) { this->initInnerFrame(); }
@@ -364,7 +364,7 @@ namespace swift::gui
             int hInner = qRound(heightFactor * h);
             if (wInner > WIDGET::maximumWidth()) { wInner = WIDGET::maximumWidth(); }
             if (hInner > WIDGET::maximumHeight()) { hInner = WIDGET::maximumHeight(); }
-            return QSize(wInner, hInner);
+            return { wInner, hInner };
         }
 
         bool m_forceSmallMsgs = false; //!< force small messages

@@ -54,7 +54,7 @@ namespace swift::misc::aviation
         };
 
         //! Default constructor.
-        CAircraftIcaoCode() {}
+        CAircraftIcaoCode() = default;
 
         //! Constructor.
         CAircraftIcaoCode(const QString &icao, const QString &combinedType = "");

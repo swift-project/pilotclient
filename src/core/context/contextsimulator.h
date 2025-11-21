@@ -71,7 +71,7 @@ namespace swift::core::context
                                          swift::misc::CDBusServer *server, QDBusConnection &connection);
 
         //! Destructor
-        ~IContextSimulator() override {}
+        ~IContextSimulator() override = default;
 
     signals:
         //! Simulator combined status

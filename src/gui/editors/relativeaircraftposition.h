@@ -28,10 +28,10 @@ namespace swift::gui::editors
         explicit CRelativeAircraftPosition(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CRelativeAircraftPosition() override;
+        ~CRelativeAircraftPosition() override;
 
         //! \copydoc CForm::setReadOnly
-        virtual void setReadOnly(bool readOnly) override;
+        void setReadOnly(bool readOnly) override;
 
         //! Set origin coordinate
         void setOriginCoordinate(const swift::misc::geo::CCoordinateGeodetic &originCoordinate)

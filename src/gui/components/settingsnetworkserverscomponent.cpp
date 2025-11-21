@@ -28,7 +28,6 @@ using namespace swift::gui;
 using namespace swift::misc;
 using namespace swift::misc::network;
 using namespace swift::misc::aviation;
-using namespace swift::misc::audio;
 
 namespace swift::gui::components
 {
@@ -45,7 +44,7 @@ namespace swift::gui::components
         this->reloadSettings();
     }
 
-    CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent() {}
+    CSettingsNetworkServersComponent::~CSettingsNetworkServersComponent() = default;
 
     void CSettingsNetworkServersComponent::reloadSettings()
     {

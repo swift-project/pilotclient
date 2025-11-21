@@ -33,7 +33,7 @@ namespace swift::gui
         CTextMessageTextEdit(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CTextMessageTextEdit() override;
+        ~CTextMessageTextEdit() override;
 
         //! Insert a message
         void insertTextMessage(const swift::misc::network::CTextMessage &textMessage, int maxMessages = -1);

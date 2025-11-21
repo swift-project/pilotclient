@@ -39,7 +39,7 @@ namespace swift::gui::components
         explicit CDbOwnModelSetFormDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbOwnModelSetFormDialog() override;
+        ~CDbOwnModelSetFormDialog() override;
 
         //! Last build set
         const swift::misc::simulation::CAircraftModelList &getModelSet() const { return m_modelSet; }
@@ -54,7 +54,7 @@ namespace swift::gui::components
         void reloadData();
 
         //! Exec and display simulator
-        virtual int exec() override;
+        int exec() override;
 
     private:
         QScopedPointer<Ui::CDbOwnModelSetFormDialog> ui;

@@ -74,7 +74,7 @@ namespace swift::gui::views
     CAircraftCategory CAircraftCategoryTreeView::selectedObject() const
     {
         const CAircraftCategoryTreeModel *model = this->categoryModel();
-        if (!model) { return CAircraftCategory(); }
+        if (!model) { return {}; }
         return model->container().frontOrDefault();
     }
 
@@ -89,8 +89,8 @@ namespace swift::gui::views
         if (!this->categoryModel()) { return; }
         if (this->categoryModel()->container().isEmpty()) { return; }
 
-        QMenu *menu = new QMenu(this); // menu
-        QAction *resize = new QAction(CIcons::resize16(), "Resize", this);
+        auto *menu = new QMenu(this); // menu
+        auto *resize = new QAction(CIcons::resize16(), "Resize", this);
         connect(resize, &QAction::triggered, this, &CAircraftCategoryTreeView::fullResizeToContentsImpl);
 
         menu->addAction(resize);

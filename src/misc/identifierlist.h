@@ -27,7 +27,7 @@ namespace swift::misc
         using CSequence::CSequence;
 
         //! Default constructor.
-        CIdentifierList();
+        CIdentifierList() = default;
 
         //! Construct from a base class object.
         CIdentifierList(const CSequence<CIdentifier> &other);

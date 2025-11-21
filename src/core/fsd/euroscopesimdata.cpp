@@ -12,8 +12,6 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    EuroscopeSimData::EuroscopeSimData() = default;
-
     EuroscopeSimData::EuroscopeSimData(const QString &sender, const QString &model, const QString &livery,
                                        quint64 timestamp, double latitude, double longitude, double altitude,
                                        double heading, int bank, int pitch, int groundSpeed, bool onGround,
@@ -75,9 +73,20 @@ namespace swift::core::fsd
         };
 
         // token[0,15,16] are not used
-        return EuroscopeSimData(tokens[1], tokens[2], tokens[3], tokens[4].toULongLong(), tokens[5].toDouble(),
-                                tokens[6].toDouble(), tokens[7].toDouble(), tokens[8].toDouble(), tokens[9].toInt(),
-                                tokens[10].toInt(), tokens[11].toInt(), tokens[12].toInt(), tokens[13].toDouble(),
-                                tokens[14].toDouble(), fromFlags(tokens[17].toInt()));
+        return { tokens[1],
+                 tokens[2],
+                 tokens[3],
+                 tokens[4].toULongLong(),
+                 tokens[5].toDouble(),
+                 tokens[6].toDouble(),
+                 tokens[7].toDouble(),
+                 tokens[8].toDouble(),
+                 tokens[9].toInt(),
+                 tokens[10].toInt(),
+                 tokens[11].toInt(),
+                 static_cast<bool>(tokens[12].toInt()),
+                 tokens[13].toDouble(),
+                 tokens[14].toDouble(),
+                 fromFlags(tokens[17].toInt()) };
     }
 } // namespace swift::core::fsd

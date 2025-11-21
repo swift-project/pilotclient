@@ -14,7 +14,7 @@
  */
 
 #ifndef WITH_STATIC
-#    if defined(BUILD_SWIFT_CORE_LIB)
+#    ifdef BUILD_SWIFT_CORE_LIB
 #        define SWIFT_CORE_EXPORT Q_DECL_EXPORT
 #    else
 #        define SWIFT_CORE_EXPORT Q_DECL_IMPORT

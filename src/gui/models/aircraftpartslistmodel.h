@@ -26,7 +26,7 @@ namespace swift::gui::models
         explicit CAircraftPartsListModel(QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftPartsListModel() {}
+        ~CAircraftPartsListModel() override = default;
     };
 } // namespace swift::gui::models
 

@@ -55,10 +55,7 @@ namespace swift::gui::components
                              sGui->getWebDataServices()->getLiveriesCount(), {});
     }
 
-    CDbLiverySelectorComponent::~CDbLiverySelectorComponent()
-    {
-        // void
-    }
+    CDbLiverySelectorComponent::~CDbLiverySelectorComponent() = default;
 
     void CDbLiverySelectorComponent::setLivery(const CLivery &livery)
     {
@@ -101,7 +98,7 @@ namespace swift::gui::components
 
     CLivery CDbLiverySelectorComponent::getLivery() const
     {
-        if (!sGui || sGui->isShuttingDown()) { return CLivery(); }
+        if (!sGui || sGui->isShuttingDown()) { return {}; }
 
         const QString raw = ui->le_Livery->text();
         const int dbKey = CDatastoreUtility::extractIntegerKey(raw);
@@ -167,13 +164,13 @@ namespace swift::gui::components
         {
             if (valueVariant.canConvert<CLivery>())
             {
-                const CLivery livery(valueVariant.value<CLivery>());
+                const auto livery(valueVariant.value<CLivery>());
                 if (!livery.hasValidDbKey()) { return; }
                 this->setLivery(livery);
             }
             else if (valueVariant.canConvert<CLiveryList>())
             {
-                const CLiveryList liveries(valueVariant.value<CLiveryList>());
+                const auto liveries(valueVariant.value<CLiveryList>());
                 if (liveries.isEmpty()) { return; }
                 this->setLivery(liveries.front());
             }
@@ -191,7 +188,7 @@ namespace swift::gui::components
             if (count > 0)
             {
                 const QStringList codes(sGui->getWebDataServices()->getLiveries().getCombinedCodesPlusInfoAndId(true));
-                QCompleter *c = new QCompleter(codes, this);
+                auto *c = new QCompleter(codes, this);
                 c->setCaseSensitivity(Qt::CaseInsensitive);
                 c->setCompletionMode(QCompleter::PopupCompletion);
                 c->setMaxVisibleItems(10);

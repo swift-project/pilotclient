@@ -35,18 +35,18 @@ namespace swift::gui::components
 
         //! Destructor
         //! \note needed for forward declared QScopedPointer and needs to be in .cpp
-        virtual ~CDbAirlineNameSelectorComponent() override;
+        ~CDbAirlineNameSelectorComponent() override;
 
         //! \name Base class overrides
         //! @{
-        virtual void setReadOnly(bool readOnly) override;
-        virtual bool setAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &icao) override;
-        virtual void clear() override;
+        void setReadOnly(bool readOnly) override;
+        bool setAirlineIcao(const swift::misc::aviation::CAirlineIcaoCode &icao) override;
+        void clear() override;
         //! @}
 
     protected:
         //! \copydoc CDbAirlineIcaoSelectorBase::createCompleter
-        virtual QCompleter *createCompleter() override;
+        QCompleter *createCompleter() override;
 
     private:
         QScopedPointer<Ui::CDbAirlineNameSelectorComponent> ui;

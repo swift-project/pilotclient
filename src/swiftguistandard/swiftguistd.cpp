@@ -26,7 +26,7 @@
 #include "misc/logmessage.h"
 #include "misc/threadutils.h"
 
-#if defined(Q_OS_MACOS)
+#ifdef Q_OS_MACOS
 #    include "input/macos/macosinpututils.h"
 #endif
 
@@ -86,7 +86,7 @@ SwiftGuiStd::SwiftGuiStd(swift::gui::CEnableForFramelessWindow::WindowMode windo
     this->init();
 }
 
-SwiftGuiStd::~SwiftGuiStd() {}
+SwiftGuiStd::~SwiftGuiStd() = default;
 
 void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
 {
@@ -184,7 +184,7 @@ QAction *SwiftGuiStd::getWindowMinimizeAction(QObject *parent)
 {
     const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarMinButton),
                                                     Qt::white, QSize(16, 16)));
-    QAction *a = new QAction(i, "Window minimized", parent);
+    auto a = new QAction(i, "Window minimized", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::showMinimized);
     return a;
 }
@@ -193,7 +193,7 @@ QAction *SwiftGuiStd::getWindowNormalAction(QObject *parent)
 {
     const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarNormalButton),
                                                     Qt::white, QSize(16, 16)));
-    QAction *a = new QAction(i, "Window normal", parent);
+    auto a = new QAction(i, "Window normal", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::showNormal);
     return a;
 }
@@ -202,7 +202,7 @@ QAction *SwiftGuiStd::getToggleWindowVisibilityAction(QObject *parent)
 {
     const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarShadeButton),
                                                     Qt::white, QSize(16, 16)));
-    QAction *a = new QAction(i, "Toogle main window visibility", parent);
+    auto a = new QAction(i, "Toogle main window visibility", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::toggleWindowVisibility);
     return a;
 }
@@ -211,7 +211,7 @@ QAction *SwiftGuiStd::getToggleStayOnTopAction(QObject *parent)
 {
     const QIcon i(CIcons::changeIconBackgroundColor(this->style()->standardIcon(QStyle::SP_TitleBarUnshadeButton),
                                                     Qt::white, QSize(16, 16)));
-    QAction *a = new QAction(i, "Toogle main window on top", parent);
+    auto a = new QAction(i, "Toogle main window on top", parent);
     connect(a, &QAction::triggered, this, &SwiftGuiStd::toggleWindowStayOnTop);
     return a;
 }
@@ -422,7 +422,7 @@ void SwiftGuiStd::verifyPrerequisites()
     }
     else { msgs.push_back(sGui->getIContextSimulator()->verifyPrerequisites()); }
 
-#if defined(Q_OS_MACOS)
+#ifdef Q_OS_MACOS
     if (!swift::input::CMacOSInputUtils::hasAccess())
     {
         // A log message about missing permissions is already emitted when initializing the keyboard.

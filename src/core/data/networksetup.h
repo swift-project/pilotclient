@@ -27,10 +27,10 @@ namespace swift::core::data
 
     public:
         //! Default constructor
-        CNetworkSetup();
+        CNetworkSetup() = default;
 
         //! Destructor.
-        virtual ~CNetworkSetup() {}
+        ~CNetworkSetup() override = default;
 
         //! Last VATSIM server (VATSIM only)
         swift::misc::network::CServer getLastVatsimServer() const;

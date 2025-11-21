@@ -47,7 +47,7 @@ namespace swift::gui::components
         });
     }
 
-    CInstallFsxTerrainProbeComponent::~CInstallFsxTerrainProbeComponent() {}
+    CInstallFsxTerrainProbeComponent::~CInstallFsxTerrainProbeComponent() = default;
 
     void CInstallFsxTerrainProbeComponent::copyProbe()
     {

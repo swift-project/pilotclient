@@ -39,7 +39,7 @@ namespace swift::simplugin::emulated
         explicit CSimulatorEmulatedMonitorDialog(CSimulatorEmulated *simulator, QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CSimulatorEmulatedMonitorDialog() override;
+        ~CSimulatorEmulatedMonitorDialog() override;
 
         //! Append status message
         void appendStatusMessageToList(const swift::misc::CStatusMessage &statusMessage);

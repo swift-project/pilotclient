@@ -113,7 +113,7 @@ namespace swift::gui::components
         initStyleSheet();
     }
 
-    CHotkeyDialog::~CHotkeyDialog() {}
+    CHotkeyDialog::~CHotkeyDialog() = default;
 
     CKeySelectionBox::CKeySelectionBox(QWidget *parent) : QComboBox(parent)
     {
@@ -201,7 +201,7 @@ namespace swift::gui::components
         int currentIndex = 0;
         const bool select = !keyboardKey.isUnknown();
 
-        CKeySelectionBox *ksb = new CKeySelectionBox(ui->qf_Advanced);
+        auto *ksb = new CKeySelectionBox(ui->qf_Advanced);
         ksb->addItem(noKeyButton(), QVariant::fromValue(CKeyboardKey())); // at front
         for (const CKeyboardKey &supportedKey : allSupportedKeys)
         {
@@ -225,7 +225,7 @@ namespace swift::gui::components
     {
         int currentIndex = -1;
 
-        CKeySelectionBox *ksb = new CKeySelectionBox(ui->qf_Advanced);
+        auto *ksb = new CKeySelectionBox(ui->qf_Advanced);
         ksb->addItem(noKeyButton(), QVariant::fromValue(CJoystickButton())); // at front
         for (const CJoystickButton &availableButton : allAvailableButtons)
         {
@@ -328,7 +328,7 @@ namespace swift::gui::components
     void CHotkeyDialog::clearAdvancedFrame()
     {
         QLayout *layout = ui->qf_Advanced->layout();
-        QLayoutItem *child;
+        QLayoutItem *child {};
 
         while ((child = layout->takeAt(0)) != nullptr)
         {
@@ -344,8 +344,8 @@ namespace swift::gui::components
 
         if (ksb->itemData(oldIndex).canConvert<CKeyboardKey>() && ksb->itemData(newIndex).canConvert<CKeyboardKey>())
         {
-            CKeyboardKey oldKey = ksb->itemData(oldIndex).value<CKeyboardKey>();
-            CKeyboardKey newKey = ksb->itemData(newIndex).value<CKeyboardKey>();
+            auto oldKey = ksb->itemData(oldIndex).value<CKeyboardKey>();
+            auto newKey = ksb->itemData(newIndex).value<CKeyboardKey>();
 
             CHotkeyCombination combination = m_actionHotkey.getCombination();
             if (newKey.isUnknown()) { combination.removeKeyboardKey(oldKey); }
@@ -356,8 +356,8 @@ namespace swift::gui::components
         if (ksb->itemData(oldIndex).canConvert<CJoystickButton>() &&
             ksb->itemData(newIndex).canConvert<CJoystickButton>())
         {
-            CJoystickButton oldButton = ksb->itemData(oldIndex).value<CJoystickButton>();
-            CJoystickButton newButton = ksb->itemData(newIndex).value<CJoystickButton>();
+            auto oldButton = ksb->itemData(oldIndex).value<CJoystickButton>();
+            auto newButton = ksb->itemData(newIndex).value<CJoystickButton>();
 
             CHotkeyCombination combination = m_actionHotkey.getCombination();
             if (!newButton.isValid()) { combination.removeJoystickButton(oldButton); }

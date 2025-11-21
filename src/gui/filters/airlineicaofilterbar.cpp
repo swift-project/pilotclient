@@ -43,7 +43,7 @@ namespace swift::gui::filters
         this->clearForm();
     }
 
-    CAirlineIcaoFilterBar::~CAirlineIcaoFilterBar() {}
+    CAirlineIcaoFilterBar::~CAirlineIcaoFilterBar() = default;
 
     std::unique_ptr<IModelFilter<CAirlineIcaoCodeList>> CAirlineIcaoFilterBar::createModelFilter() const
     {

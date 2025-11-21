@@ -64,7 +64,7 @@ namespace swift::gui::components
         });
     }
 
-    CInterpolationSetupComponent::~CInterpolationSetupComponent() {}
+    CInterpolationSetupComponent::~CInterpolationSetupComponent() = default;
 
     CInterpolationSetupComponent::Mode CInterpolationSetupComponent::getSetupMode() const
     {
@@ -260,7 +260,7 @@ namespace swift::gui::components
     {
         if (deletedObjects.canConvert<CInterpolationSetupList>())
         {
-            const CInterpolationSetupList deletedSetups = deletedObjects.value<CInterpolationSetupList>();
+            const auto deletedSetups = deletedObjects.value<CInterpolationSetupList>();
             if (deletedSetups.isEmpty()) { return; }
 
             // make sure the setups are really deleted

@@ -71,7 +71,7 @@ namespace swift::gui::models
                 "icao", "icao and livery info", { CSimulatedAircraft::IndexCombinedIcaoLiveryStringNetworkModel }));
 
             // icon column for airline
-            CPixmapFormatter *pmf = new CPixmapFormatter();
+            auto *pmf = new CPixmapFormatter();
             pmf->setMaxHeight(25);
             pmf->setMaxWidth(100);
             CColumn col("airline",

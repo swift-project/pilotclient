@@ -136,7 +136,7 @@ namespace swift::gui
         static OverlayWidget *nextOverlayMessageWidget(QWidget *widget, int maxLevels = 10)
         {
             if (!widget || maxLevels < 1) { return nullptr; }
-            OverlayWidget *o = qobject_cast<OverlayWidget *>(widget);
+            auto *o = qobject_cast<OverlayWidget *>(widget);
             if (o) { return o; }
             int cl = 0;
             QWidget *cw = widget->parentWidget();
@@ -318,7 +318,7 @@ namespace swift::gui
 
     private:
         //! No constructor, use static functions only
-        CGuiUtility() {}
+        CGuiUtility() {} // NOLINT(modernize-use-equals-default)
 
         static QWidget *s_mainApplicationWidget;
     };

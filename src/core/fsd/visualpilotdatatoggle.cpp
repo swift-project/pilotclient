@@ -13,8 +13,6 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    VisualPilotDataToggle::VisualPilotDataToggle() : MessageBase() {}
-
     VisualPilotDataToggle::VisualPilotDataToggle(const QString &sender, const QString &client, bool active)
         : MessageBase(sender, {}), m_client(client), m_active(active)
     {}
@@ -36,6 +34,6 @@ namespace swift::core::fsd
             return {};
         }
 
-        return VisualPilotDataToggle(tokens[0], tokens[1], tokens[2] == QStringLiteral("1"));
+        return { tokens[0], tokens[1], tokens[2] == QStringLiteral("1") };
     }
 } // namespace swift::core::fsd

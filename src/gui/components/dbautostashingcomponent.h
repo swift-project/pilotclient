@@ -64,20 +64,20 @@ namespace swift::gui
             explicit CDbAutoStashingComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbAutoStashingComponent() override;
+            ~CDbAutoStashingComponent() override;
 
             //! At least run once and completed
             bool isCompleted() const { return m_state == Completed; }
 
             //! \copydoc swift::core::IProgressIndicator::updateProgressIndicator
-            virtual void updateProgressIndicator(int percent) override;
+            void updateProgressIndicator(int percent) override;
 
         public slots:
             //! \copydoc QDialog::accept
-            virtual void accept() override;
+            void accept() override;
 
             //! \copydoc QDialog::exec
-            virtual int exec() override;
+            int exec() override;
 
             //! Show last result
             void showLastResults();

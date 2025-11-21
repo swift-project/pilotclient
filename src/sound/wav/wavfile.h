@@ -38,7 +38,7 @@ namespace swift::sound::wav
         bool readHeader();
 
         QAudioFormat m_fileFormat;
-        qint64 m_headerLength;
+        qint64 m_headerLength { 0 };
         QByteArray m_audioData;
     };
 } // namespace swift::sound::wav

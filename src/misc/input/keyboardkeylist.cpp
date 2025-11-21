@@ -9,8 +9,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::input, CKeyboardKey, CKeyboardKeyList)
 
 namespace swift::misc::input
 {
-    CKeyboardKeyList::CKeyboardKeyList() {}
-
     CKeyboardKeyList::CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass) : CSequence<CKeyboardKey>(baseClass) {}
 
     QStringList CKeyboardKeyList::getKeyStrings() const

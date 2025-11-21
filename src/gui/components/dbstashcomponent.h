@@ -69,7 +69,7 @@ namespace swift::gui
             explicit CDbStashComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbStashComponent();
+            ~CDbStashComponent() override;
 
             //! Test the given model if it can be stashed
             swift::misc::CStatusMessage validateStashModel(const swift::misc::simulation::CAircraftModel &model,

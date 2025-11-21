@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CSettingsSimulatorMessagesComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsSimulatorMessagesComponent() override;
+        ~CSettingsSimulatorMessagesComponent() override;
 
     private:
         //! Save the data

@@ -40,7 +40,7 @@ namespace swift::misc::aviation
         };
 
         //! Default constructor.
-        CLivery();
+        CLivery() = default;
 
         //! Constructor
         CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description);

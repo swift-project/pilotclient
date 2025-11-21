@@ -51,7 +51,7 @@ namespace swift::core::afv::audio
         for (float sample : std::as_const(buffer))
         {
             const float absSample = qAbs(sample);
-            if (absSample > m_maxSampleOutput) { m_maxSampleOutput = absSample; }
+            m_maxSampleOutput = std::max(absSample, m_maxSampleOutput);
         }
 
         m_sampleCount += buffer.size();
@@ -63,7 +63,7 @@ namespace swift::core::afv::audio
             const double db = qBound(m_minDb, outputVolumeStreamArgs.PeakDb, m_maxDb);
             double ratio = (db - m_minDb) / (m_maxDb - m_minDb);
             if (ratio < 0.30) { ratio = 0.0; }
-            if (ratio > 1.0) { ratio = 1.0; }
+            ratio = std::min(ratio, 1.0);
             outputVolumeStreamArgs.PeakVU = ratio;
             emit outputVolumeStream(outputVolumeStreamArgs);
             m_sampleCount = 0;

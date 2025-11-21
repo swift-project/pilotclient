@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CSettingsSwiftPlugin(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CSettingsSwiftPlugin();
+        ~CSettingsSwiftPlugin() override;
 
         //! Get the plugin settings
         swift::misc::simulation::settings::CSwiftPluginSettings getPluginSettings() const;

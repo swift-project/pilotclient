@@ -30,7 +30,7 @@ namespace swift::core::fsd
         QString m_reason; //!< reason for kill request/kicked
 
     private:
-        KillRequest();
+        KillRequest() = default;
     };
 
     //! Equal to operator

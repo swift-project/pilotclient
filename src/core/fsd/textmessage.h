@@ -42,7 +42,7 @@ namespace swift::core::fsd
         QVector<int> m_frequencies; //!< frequencies in case of radio message.
 
     private:
-        TextMessage();
+        TextMessage() = default;
     };
 } // namespace swift::core::fsd
 

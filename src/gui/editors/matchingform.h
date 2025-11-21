@@ -28,12 +28,12 @@ namespace swift::gui::editors
         explicit CMatchingForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CMatchingForm() override;
+        ~CMatchingForm() override;
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual swift::misc::CStatusMessageList validate(bool withNestedForms) const override;
+        void setReadOnly(bool readonly) override;
+        swift::misc::CStatusMessageList validate(bool withNestedForms) const override;
         //! @}
 
         //! Set valued

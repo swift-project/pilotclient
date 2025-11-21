@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    PlaneInformation::PlaneInformation() : MessageBase() {}
-
     PlaneInformation::PlaneInformation(const QString &sender, const QString &receiver, const QString &aircraft,
                                        const QString &airline = QString(), const QString &livery = QString())
         : MessageBase(sender, receiver), m_aircraft(aircraft), m_airline(airline), m_livery(livery)
@@ -52,6 +50,6 @@ namespace swift::core::fsd
                 else if (pair[0] == QLatin1String("LIVERY")) { livery = pair[1]; }
             }
         }
-        return PlaneInformation(tokens[0], tokens[1], aircraft, airline, livery);
+        return { tokens[0], tokens[1], aircraft, airline, livery };
     }
 } // namespace swift::core::fsd

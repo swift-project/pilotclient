@@ -11,13 +11,11 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CSimulatorInfo, CSimulator
 
 namespace swift::misc::simulation
 {
-    CSimulatorInfoList::CSimulatorInfoList() {}
-
     CSimulatorInfoList::CSimulatorInfoList(const CSequence<CSimulatorInfo> &other) : CSequence<CSimulatorInfo>(other) {}
 
     CSimulatorInfoList CSimulatorInfoList::withNoDuplicates() const
     {
-        if (this->isEmpty()) { return CSimulatorInfoList(); }
+        if (this->isEmpty()) { return {}; }
         QList<int> simIndexes;
         CSimulatorInfoList newList;
         for (const CSimulatorInfo &simulator : *this)
@@ -32,7 +30,7 @@ namespace swift::misc::simulation
 
     CSimulatorInfoList CSimulatorInfoList::splitIntoSingleSimulators() const
     {
-        if (this->isEmpty()) { return CSimulatorInfoList(); }
+        if (this->isEmpty()) { return {}; }
         CSimulatorInfoList newList;
         for (const CSimulatorInfo &simulator : *this)
         {

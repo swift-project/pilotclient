@@ -107,10 +107,7 @@ namespace swift::gui::components
         this->triggerSetSimulatorDeferred(simulator);
     }
 
-    CDbOwnModelSetComponent::~CDbOwnModelSetComponent()
-    {
-        // void
-    }
+    CDbOwnModelSetComponent::~CDbOwnModelSetComponent() = default;
 
     views::CAircraftModelView *CDbOwnModelSetComponent::view() const { return ui->tvp_OwnModelSet; }
 
@@ -180,7 +177,7 @@ namespace swift::gui::components
                                                           const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-        if (models.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityInfo, u"No data", true); }
+        if (models.isEmpty()) { return { this, CStatusMessage::SeverityInfo, u"No data", true }; }
         if (!this->getModelSetSimulator().isSingleSimulator())
         {
             // no sim yet, we set it
@@ -189,10 +186,10 @@ namespace swift::gui::components
         if (simulator != this->getModelSetSimulator())
         {
             // only currently selected sim allowed
-            return CStatusMessage(this, CStatusMessage::SeverityError,
-                                  u"Cannot add data for " % simulator.toQString(true) % u" to " %
-                                      this->getModelSetSimulator().toQString(true),
-                                  true);
+            return { this, CStatusMessage::SeverityError,
+                     u"Cannot add data for " % simulator.toQString(true) % u" to " %
+                         this->getModelSetSimulator().toQString(true),
+                     true };
         }
 
         const bool allowExcludedModels = m_modelSettings.get().getAllowExcludedModels();
@@ -203,12 +200,12 @@ namespace swift::gui::components
             if (!allowExcludedModels) { updateModels.removeIfExcluded(); }
             updateModels.resetOrder();
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(updateModels);
-            return CStatusMessage(this, CStatusMessage::SeverityInfo,
-                                  u"Modified " % QString::number(d) % u" entries in model set " %
-                                      this->getModelSetSimulator().toQString(true),
-                                  true);
+            return { this, CStatusMessage::SeverityInfo,
+                     u"Modified " % QString::number(d) % u" entries in model set " %
+                         this->getModelSetSimulator().toQString(true),
+                     true };
         }
-        else { return CStatusMessage(this, CStatusMessage::SeverityInfo, u"No data modified in model set", true); }
+        else { return { this, CStatusMessage::SeverityInfo, u"No data modified in model set", true }; }
     }
 
     void CDbOwnModelSetComponent::setMappingComponent(CDbMappingComponent *component)
@@ -335,7 +332,7 @@ namespace swift::gui::components
         CAircraftModelList models = ui->tvp_OwnModelSet->containerOrFilteredContainer();
         const CSimulatorInfo simulator = this->getModelSetSimulator();
         m_reduceModelsDialog->setModels(models, simulator);
-        const QDialog::DialogCode ret = static_cast<QDialog::DialogCode>(m_reduceModelsDialog->exec());
+        const auto ret = static_cast<QDialog::DialogCode>(m_reduceModelsDialog->exec());
         if (ret != QDialog::Accepted) { return; }
         const CAircraftModelList removeModels = m_reduceModelsDialog->getRemoveCandidates();
         const CSimulatorInfo removeSimulator = m_reduceModelsDialog->getSimulator();
@@ -412,7 +409,7 @@ namespace swift::gui::components
         {
             m_modelSetFormDialog->setModal(true);
             m_modelSetFormDialog->reloadData();
-            const QDialog::DialogCode rc = static_cast<QDialog::DialogCode>(m_modelSetFormDialog->exec());
+            const auto rc = static_cast<QDialog::DialogCode>(m_modelSetFormDialog->exec());
             if (rc == QDialog::Accepted)
             {
                 this->setModelSet(m_modelSetFormDialog->getModelSet(), m_modelSetFormDialog->getSimulatorInfo());
@@ -504,13 +501,13 @@ namespace swift::gui::components
         const bool noSims = sims.isNoSimulator() || sims.isUnspecified();
         if (!noSims)
         {
-            CDbOwnModelSetComponent *ownModelSetComp = qobject_cast<CDbOwnModelSetComponent *>(this->parent());
+            auto *ownModelSetComp = qobject_cast<CDbOwnModelSetComponent *>(this->parent());
             Q_ASSERT_X(ownModelSetComp, Q_FUNC_INFO, "Cannot access parent");
             if (m_setActions.isEmpty())
             {
                 if (sims.isFSX())
                 {
-                    QAction *a = new QAction(CIcons::appModels16(), "FSX models", this);
+                    auto *a = new QAction(CIcons::appModels16(), "FSX models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
@@ -526,7 +523,7 @@ namespace swift::gui::components
                 }
                 if (sims.isP3D())
                 {
-                    QAction *a = new QAction(CIcons::appModels16(), "P3D models", this);
+                    auto *a = new QAction(CIcons::appModels16(), "P3D models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
@@ -542,7 +539,7 @@ namespace swift::gui::components
                 }
                 if (sims.isFS9())
                 {
-                    QAction *a = new QAction(CIcons::appModels16(), "FS9 models", this);
+                    auto *a = new QAction(CIcons::appModels16(), "FS9 models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
@@ -558,7 +555,7 @@ namespace swift::gui::components
                 }
                 if (sims.isXPlane())
                 {
-                    QAction *a = new QAction(CIcons::appModels16(), "XPlane models", this);
+                    auto *a = new QAction(CIcons::appModels16(), "XPlane models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
@@ -574,7 +571,7 @@ namespace swift::gui::components
                 }
                 if (sims.isFG())
                 {
-                    QAction *a = new QAction(CIcons::appModels16(), "FG models", this);
+                    auto *a = new QAction(CIcons::appModels16(), "FG models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FG));
@@ -590,7 +587,7 @@ namespace swift::gui::components
                 }
                 if (sims.isMSFS())
                 {
-                    QAction *a = new QAction(CIcons::appModels16(), "MSFS models", this);
+                    auto *a = new QAction(CIcons::appModels16(), "MSFS models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS));
@@ -606,7 +603,7 @@ namespace swift::gui::components
                 }
                 if (sims.isMSFS2024())
                 {
-                    QAction *a = new QAction(CIcons::appModels16(), "MSFS2024 models", this);
+                    auto *a = new QAction(CIcons::appModels16(), "MSFS2024 models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS2024));
@@ -621,7 +618,7 @@ namespace swift::gui::components
                     m_setNewActions.append(a);
                 }
 
-                QAction *a = new QAction(CIcons::appDistributors16(), "Apply distributor preferences", this);
+                auto *a = new QAction(CIcons::appDistributors16(), "Apply distributor preferences", this);
                 connect(a, &QAction::triggered, ownModelSetComp,
                         &CDbOwnModelSetComponent::distributorPreferencesChanged, Qt::QueuedConnection);
                 m_setActions.append(a);

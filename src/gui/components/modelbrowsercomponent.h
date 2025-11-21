@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CModelBrowserComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CModelBrowserComponent() override;
+        ~CModelBrowserComponent() override;
 
         //! Browser has been closed
         void close();

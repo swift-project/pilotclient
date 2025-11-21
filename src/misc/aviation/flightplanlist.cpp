@@ -7,7 +7,5 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CFlightPlan, CFlightPlanList
 
 namespace swift::misc::aviation
 {
-    CFlightPlanList::CFlightPlanList() {}
-
     CFlightPlanList::CFlightPlanList(const CSequence<CFlightPlan> &other) : CSequence<CFlightPlan>(other) {}
 } // namespace swift::misc::aviation

@@ -11,7 +11,6 @@
 using namespace swift::gui::models;
 using namespace swift::gui::filters;
 using namespace swift::misc::simulation;
-using namespace swift::misc::network;
 
 namespace swift::gui::filters
 {
@@ -25,7 +24,7 @@ namespace swift::gui::filters
         connect(ui->filter_Models, &CAircraftModelFilterBar::rejectDialog, this, &CAircraftModelFilterDialog::reject);
     }
 
-    CAircraftModelFilterDialog::~CAircraftModelFilterDialog() {}
+    CAircraftModelFilterDialog::~CAircraftModelFilterDialog() = default;
 
     std::unique_ptr<IModelFilter<CAircraftModelList>> CAircraftModelFilterDialog::createModelFilter() const
     {

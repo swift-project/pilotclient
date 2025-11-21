@@ -21,7 +21,7 @@ namespace swift::gui::components
         connect(this, &CDbLiveryColorSearchDialog::accepted, this, &CDbLiveryColorSearchDialog::onAccepted);
     }
 
-    CDbLiveryColorSearchDialog::~CDbLiveryColorSearchDialog() {}
+    CDbLiveryColorSearchDialog::~CDbLiveryColorSearchDialog() = default;
 
     const CLivery &CDbLiveryColorSearchDialog::getLivery() const { return m_foundLivery; }
 

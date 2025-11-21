@@ -30,7 +30,7 @@ namespace swift::misc::simulation::settings
         };
 
         //! Default constructor
-        CSwiftPluginSettings();
+        CSwiftPluginSettings() = default;
 
         //! Emulated simualtor
         CSimulatorInfo getEmulatedSimulator() const { return m_emulatedSimulator; }

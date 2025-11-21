@@ -4,6 +4,7 @@
 #ifndef SWIFT_MISC_SIMULATION_SETTINGS_CXSWIFTBUSSETTINGSQTFREE_H
 #define SWIFT_MISC_SIMULATION_SETTINGS_CXSWIFTBUSSETTINGSQTFREE_H
 
+#include <algorithm>
 #include <chrono>
 #include <string>
 
@@ -19,10 +20,10 @@ namespace swift::misc::simulation::settings
     {
     protected:
         //! Constructor.
-        CXSwiftBusSettingsQtFree() {}
+        CXSwiftBusSettingsQtFree() = default;
 
         //! Destructor.
-        virtual ~CXSwiftBusSettingsQtFree() {}
+        virtual ~CXSwiftBusSettingsQtFree() = default;
 
     public:
         //! DBus server
@@ -63,7 +64,7 @@ namespace swift::misc::simulation::settings
                                  int freqRgb, int privRgb, int servRgb, int statRgb, int supRgb)
         {
             if (topPx >= 0) { bottomPx = -1; }
-            if (lines < 3) { lines = 3; }
+            lines = std::max(lines, 3);
             this->setMessageBoxValues(
                 std::to_string(leftPx) + ";" + std::to_string(topPx) + ";" + std::to_string(rightPx) + ";" +
                 std::to_string(bottomPx) + ";" + std::to_string(lines) + ";" + std::to_string(durationMs) + ";" +

@@ -56,7 +56,7 @@ namespace swift::misc::simulation
     {
     public:
         //! Default ctor, needed for QMap/QHash
-        CInterpolatorMultiWrapper();
+        CInterpolatorMultiWrapper() = default;
 
         //! Constructor
         CInterpolatorMultiWrapper(const aviation::CCallsign &callsign, ISimulationEnvironmentProvider *p1,

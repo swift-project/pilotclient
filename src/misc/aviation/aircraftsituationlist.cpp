@@ -74,11 +74,9 @@ namespace swift::misc::aviation
 
     bool CAircraftSituationList::areAllOnGroundDetailsSame(COnGroundInfo::OnGroundDetails details) const
     {
-        for (const CAircraftSituation &situation : *this)
-        {
-            if (situation.getOnGroundInfo().getGroundDetails() != details) { return false; }
-        }
-        return true;
+        return std::all_of(cbegin(), cend(), [&](const CAircraftSituation &situation) {
+            return situation.getOnGroundInfo().getGroundDetails() == details;
+        });
     }
 
     bool CAircraftSituationList::isConstOnGround() const
@@ -183,10 +181,7 @@ namespace swift::misc::aviation
     QPair<bool, COnGroundInfo::IsOnGround>
     CAircraftSituationList::isGndFlagStableChanging(bool alreadySortedLatestFirst) const
     {
-        if (this->size() < 2)
-        {
-            return QPair<bool, COnGroundInfo::IsOnGround>(false, COnGroundInfo::OnGroundSituationUnknown);
-        }
+        if (this->size() < 2) { return { false, COnGroundInfo::OnGroundSituationUnknown }; }
 
         const CAircraftSituationList sorted(alreadySortedLatestFirst ? (*this) : this->getSortedAdjustedLatestFirst());
         const COnGroundInfo::IsOnGround f = sorted.front().getOnGroundInfo().getOnGround();
@@ -245,11 +240,9 @@ namespace swift::misc::aviation
 
     bool CAircraftSituationList::containsPushBack() const
     {
-        for (const CAircraftSituation &situation : *this)
-        {
-            if (situation.getGroundSpeed().isNegativeWithEpsilonConsidered()) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(), [](const CAircraftSituation &situation) {
+            return situation.getGroundSpeed().isNegativeWithEpsilonConsidered();
+        });
     }
 
     int CAircraftSituationList::countOnGround(COnGroundInfo::IsOnGround og) const
@@ -316,7 +309,7 @@ namespace swift::misc::aviation
 
     CAircraftSituationList CAircraftSituationList::withoutFrontSituation() const
     {
-        if (this->empty()) { return CAircraftSituationList(); }
+        if (this->empty()) { return {}; }
         CAircraftSituationList copy(*this);
         copy.pop_front();
         return copy;
@@ -366,17 +359,17 @@ namespace swift::misc::aviation
     CSpeedPair CAircraftSituationList::groundSpeedStandardDeviationAndMean() const
     {
         const QList<double> gsValues = this->groundSpeedValues(CSpeedUnit::kts());
-        if (gsValues.size() != this->size()) { return QPair<CSpeed, CSpeed>(CSpeed::null(), CSpeed::null()); }
+        if (gsValues.size() != this->size()) { return { CSpeed::null(), CSpeed::null() }; }
         const QPair<double, double> gsKts = CMathUtils::standardDeviationAndMean(gsValues);
-        return CSpeedPair(CSpeed(gsKts.first, CSpeedUnit::kts()), CSpeed(gsKts.second, CSpeedUnit::kts()));
+        return { CSpeed(gsKts.first, CSpeedUnit::kts()), CSpeed(gsKts.second, CSpeedUnit::kts()) };
     }
 
     CAnglePair CAircraftSituationList::pitchStandardDeviationAndMean() const
     {
         const QList<double> pitchValues = this->pitchValues(CAngleUnit::deg());
-        if (pitchValues.size() != this->size()) { return QPair<CAngle, CAngle>(CAngle::null(), CAngle::null()); }
+        if (pitchValues.size() != this->size()) { return { CAngle::null(), CAngle::null() }; }
         const QPair<double, double> pitchDeg = CMathUtils::standardDeviationAndMean(pitchValues);
-        return CAnglePair(CAngle(pitchDeg.first, CAngleUnit::deg()), CAngle(pitchDeg.second, CAngleUnit::deg()));
+        return { CAngle(pitchDeg.first, CAngleUnit::deg()), CAngle(pitchDeg.second, CAngleUnit::deg()) };
     }
 
     int CAircraftSituationList::transferElevationForward(const CLength &radius)
@@ -421,6 +414,6 @@ namespace swift::misc::aviation
         static const double MaxDevFt = CAircraftSituation::allowedAltitudeDeviation().value(CLengthUnit::ft());
         const QPair<double, double> elvStdDevMean = CMathUtils::standardDeviationAndMean(valuesInFt);
         if (elvStdDevMean.first > MaxDevFt) { return CElevationPlane::null(); }
-        return CElevationPlane(reference, elvStdDevMean.second, CElevationPlane::singlePointRadius());
+        return { reference, elvStdDevMean.second, CElevationPlane::singlePointRadius() };
     }
 } // namespace swift::misc::aviation

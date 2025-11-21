@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    PlaneInfoRequest::PlaneInfoRequest() : MessageBase() {}
-
     PlaneInfoRequest::PlaneInfoRequest(const QString &sender, const QString &receiver) : MessageBase(sender, receiver)
     {}
 
@@ -28,6 +26,6 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<PlaneInfoRequest *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         };
-        return PlaneInfoRequest(tokens[0], tokens[1]);
+        return { tokens[0], tokens[1] };
     }
 } // namespace swift::core::fsd

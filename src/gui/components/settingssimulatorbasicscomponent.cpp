@@ -58,7 +58,7 @@ namespace swift::gui::components
         this->onSimulatorChanged();
     }
 
-    CSettingsSimulatorBasicsComponent::~CSettingsSimulatorBasicsComponent() {}
+    CSettingsSimulatorBasicsComponent::~CSettingsSimulatorBasicsComponent() = default;
 
     void CSettingsSimulatorBasicsComponent::hideSelector(bool show) { ui->comp_SimulatorSelector->setVisible(show); }
 
@@ -170,8 +170,8 @@ namespace swift::gui::components
 
         // override if values are not empty
         const CSpecializedSimulatorSettings ss = m_settings.getSpecializedSettings(simulator);
-        const QString sd = CFileUtils::fixWindowsUncPath(
-            CFileUtils::normalizeFilePathToQtStandard(ss.defaultSimulatorDirectory(simulator)));
+        const QString sd = CFileUtils::fixWindowsUncPath(CFileUtils::normalizeFilePathToQtStandard(
+            CSpecializedSimulatorSettings::defaultSimulatorDirectory(simulator)));
         if (!sd.isEmpty())
         {
             ui->le_SimulatorDirectory->setText(sd);
@@ -185,7 +185,7 @@ namespace swift::gui::components
             m_unsavedChanges = true;
         }
 
-        const QStringList excludes(ss.defaultModelExcludeDirectoryPatterns(simulator));
+        const QStringList excludes(CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(simulator));
         if (!excludes.isEmpty())
         {
             this->displayExcludeDirectoryPatterns(excludes);
@@ -287,7 +287,7 @@ namespace swift::gui::components
     QStringList CSettingsSimulatorBasicsComponent::parseDirectories(const QString &rawString) const
     {
         const QString raw = rawString.trimmed();
-        if (raw.isEmpty()) { return QStringList(); }
+        if (raw.isEmpty()) { return {}; }
         QStringList dirs;
         thread_local const QRegularExpression regExp("\n|\r\n|\r");
         const QStringList rawLines = raw.split(regExp);

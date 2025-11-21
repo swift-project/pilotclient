@@ -27,7 +27,7 @@ namespace swift::gui::components
                 &CInterpolationComponent::displayInterpolationMessages);
     }
 
-    CInterpolationComponent::~CInterpolationComponent() {}
+    CInterpolationComponent::~CInterpolationComponent() = default;
 
     void CInterpolationComponent::displayInterpolationMessages()
     {

@@ -18,8 +18,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::fscommon, CVPilotModelR
 
 namespace swift::misc::simulation::fscommon
 {
-    CVPilotModelRule::CVPilotModelRule() {}
-
     CVPilotModelRule::CVPilotModelRule(const QString &modelName, const QString &folder, const QString &typeCode,
                                        const QString &callsignPrefix, qint64 updated)
         : ITimestampBased(updated), m_modelName(modelName.trimmed().toUpper()), m_folder(folder.trimmed().toUpper()),
@@ -48,7 +46,7 @@ namespace swift::misc::simulation::fscommon
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexModelName: return QVariant::fromValue(this->m_modelName);
@@ -71,7 +69,7 @@ namespace swift::misc::simulation::fscommon
             ITimestampBased::setPropertyByIndex(index, variant);
             return;
         }
-        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexModelName: this->setModelName(variant.value<QString>()); break;

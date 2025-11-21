@@ -27,7 +27,7 @@ namespace swift::gui::components
         connect(this->getLogComponent(), &CLogComponent::requestAttention, this, &CMainInfoAreaComponent::selectLog);
     }
 
-    CMainInfoAreaComponent::~CMainInfoAreaComponent() {}
+    CMainInfoAreaComponent::~CMainInfoAreaComponent() = default;
 
     CAtcStationComponent *CMainInfoAreaComponent::getAtcStationComponent() { return ui->comp_AtcStations; }
 
@@ -78,7 +78,7 @@ namespace swift::gui::components
 
     QSize CMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaCockpit:
@@ -91,9 +91,9 @@ namespace swift::gui::components
         case InfoAreaInterpolation:
         case InfoAreaSettings:
         case InfoAreaTextMessages:
-        case InfoAreaRadar: return QSize(600, 400);
-        case InfoAreaFlightPlan: return QSize(800, 600);
-        default: return QSize(600, 400);
+        case InfoAreaRadar: return { 600, 400 };
+        case InfoAreaFlightPlan: return { 800, 600 };
+        default: return { 600, 400 };
         }
     }
 
@@ -111,7 +111,7 @@ namespace swift::gui::components
 
     const QPixmap &CMainInfoAreaComponent::indexToPixmap(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaCockpit: return CIcons::appCockpit16();

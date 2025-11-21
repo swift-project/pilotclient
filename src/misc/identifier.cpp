@@ -214,7 +214,7 @@ namespace swift::misc
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
 
         switch (i)
         {
@@ -235,7 +235,7 @@ namespace swift::misc
     {
         if (index.isMyself()) { return Compare::compare(m_processId, compareValue.m_processId); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
 
         switch (i)
         {

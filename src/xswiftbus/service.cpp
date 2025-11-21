@@ -95,6 +95,7 @@ namespace XSwiftBus
         m_framePeriodSampler->show();
     }
 
+    // Explicitly in cpp file to allow use of forward declaration
     CService::~CService() = default;
 
     void CService::onAircraftModelChanged()

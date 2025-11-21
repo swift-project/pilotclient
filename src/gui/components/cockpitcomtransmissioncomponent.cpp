@@ -18,10 +18,7 @@ namespace swift::gui::components
         connect(ui->pb_Com2Save, &QPushButton::released, this, &CCockpitComTransmissionComponent::onSave);
     }
 
-    CCockpitComTransmissionComponent::~CCockpitComTransmissionComponent()
-    {
-        // void
-    }
+    CCockpitComTransmissionComponent::~CCockpitComTransmissionComponent() = default;
 
     void CCockpitComTransmissionComponent::updateComSystem(CComSystem &comSystem, CComSystem::ComUnit comUnit) const
     {

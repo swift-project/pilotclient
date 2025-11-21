@@ -412,7 +412,7 @@ namespace swift::misc::json
 {
     QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat)
     {
-        if (json.isEmpty()) { return QJsonObject(); }
+        if (json.isEmpty()) { return {}; }
 
         QJsonParseError error {};
         const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8(), &error));
@@ -430,7 +430,7 @@ namespace swift::misc::json
 
     QJsonArray jsonArrayFromString(const QString &json)
     {
-        if (json.isEmpty()) { return QJsonArray(); }
+        if (json.isEmpty()) { return {}; }
         const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
         return jsonDoc.array();
     }
@@ -639,10 +639,10 @@ namespace swift::misc::json
     {
         QStringList sl;
         if (array.isEmpty()) { return sl; }
-        for (int i = 0; i < array.size(); i++)
+        for (const auto &i : array)
         {
-            if (!array.at(i).isString()) { continue; }
-            sl.push_back(array.at(i).toString());
+            if (!i.isString()) { continue; }
+            sl.push_back(i.toString());
         }
         return sl;
     }

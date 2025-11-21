@@ -7,8 +7,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CEcosystem, CEcosystemList)
 
 namespace swift::misc::network
 {
-    CEcosystemList::CEcosystemList() {}
-
     CEcosystemList::CEcosystemList(const CSequence &other) : CSequence<CEcosystem>(other) {}
 
     QStringList CEcosystemList::allSystemStrings() const

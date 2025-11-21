@@ -7,8 +7,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CUrlLog, CUrlLogList)
 
 namespace swift::misc::network
 {
-    CUrlLogList::CUrlLogList() {}
-
     CUrlLogList::CUrlLogList(const CSequence &other) : CSequence<CUrlLog>(other) {}
 
     int CUrlLogList::addPendingUrl(const CUrl &url, int maxNumber)
@@ -30,7 +28,7 @@ namespace swift::misc::network
 
     CUrlLogList CUrlLogList::findOutdatedPending(int outdatedOffsetMs) const
     {
-        if (this->isEmpty()) { return CUrlLogList(); }
+        if (this->isEmpty()) { return {}; }
         return this->findPending().findBeforeNowMinusOffset(outdatedOffsetMs);
     }
 
@@ -82,7 +80,7 @@ namespace swift::misc::network
     bool CUrlLogList::markAsReceived(const QNetworkReply *nwReply, bool success)
     {
         Q_ASSERT_X(nwReply, Q_FUNC_INFO, "missing reply");
-        bool ok;
+        bool ok {};
         const int id = nwReply->property(CUrlLog::propertyNameId()).toInt(&ok);
         return (ok && id >= 0) ? this->markAsReceived(id, success) : false;
     }
@@ -95,7 +93,7 @@ namespace swift::misc::network
         for (const CUrlLog &rl : *this)
         {
             if (rl.isPending()) { continue; }
-            if (rl.getResponseTimeMs() > max) { max = rl.getResponseTimeMs(); }
+            max = std::max(rl.getResponseTimeMs(), max);
         }
         return max;
     }
@@ -107,7 +105,7 @@ namespace swift::misc::network
         for (const CUrlLog &rl : *this)
         {
             if (rl.isPending()) { continue; }
-            if (rl.getResponseTimeMs() < min) { min = rl.getResponseTimeMs(); }
+            min = std::min(rl.getResponseTimeMs(), min);
         }
         return min;
     }

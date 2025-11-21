@@ -13,10 +13,6 @@ using namespace swift::misc;
 
 namespace swift::gui
 {
-    CDropBase::CDropBase() {}
-
-    CDropBase::~CDropBase() {}
-
     void CDropBase::setAcceptedMetaTypeIds(const QList<int> &ids) { m_acceptedMetaTypes = ids; }
 
     void CDropBase::addAcceptedMetaTypeId(int id) { m_acceptedMetaTypes.append(id); }

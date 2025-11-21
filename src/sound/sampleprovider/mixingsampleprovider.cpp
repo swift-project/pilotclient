@@ -31,9 +31,8 @@ namespace swift::sound::sample_provider
         int outputLen = 0;
 
         QVector<ISampleProvider *> finishedProviders;
-        for (int i = 0; i < m_sources.size(); i++)
+        for (auto sampleProvider : m_sources)
         {
-            ISampleProvider *sampleProvider = m_sources.at(i);
             QVector<float> sourceBuffer;
 
             const int len = sampleProvider->readSamples(sourceBuffer, count);

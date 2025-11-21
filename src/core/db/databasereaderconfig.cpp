@@ -110,7 +110,7 @@ namespace swift::core::db
                 if (config.getEntities() == entities) { return config; }
             }
         }
-        return CDatabaseReaderConfig(); // not found
+        return {}; // not found
     }
 
     void CDatabaseReaderConfigList::markAsDbDown()
@@ -125,56 +125,43 @@ namespace swift::core::db
 
     bool CDatabaseReaderConfigList::possiblyReadsFromSwiftDb() const
     {
-        for (const CDatabaseReaderConfig &config : *this)
-        {
-            if (config.possiblyReadsFromSwiftDb()) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(),
+                           [](const CDatabaseReaderConfig &config) { return config.possiblyReadsFromSwiftDb(); });
     }
 
     bool CDatabaseReaderConfigList::possiblyWritesToSwiftDb() const
     {
-        for (const CDatabaseReaderConfig &config : *this)
-        {
-            if (config.possiblyWritesToSwiftDb()) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(),
+                           [](const CDatabaseReaderConfig &config) { return config.possiblyWritesToSwiftDb(); });
     }
 
     bool CDatabaseReaderConfigList::needsSharedInfoObjects(CEntityFlags::Entity entities) const
     {
-        for (const CDatabaseReaderConfig &config : *this)
-        {
-            if (!config.supportsEntities(entities)) { continue; }
-            if (config.needsSharedInfoFile()) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(), [&](const CDatabaseReaderConfig &config) {
+            return config.supportsEntities(entities) && config.needsSharedInfoFile();
+        });
     }
 
     bool CDatabaseReaderConfigList::needsSharedInfoFile(CEntityFlags::Entity entities) const
     {
-        for (const CDatabaseReaderConfig &config : *this)
-        {
-            if (!config.supportsEntities(entities)) { continue; }
-            if (config.needsSharedInfoFile()) { return true; }
-        }
-        return false;
+        return std::any_of(cbegin(), cend(), [&](const CDatabaseReaderConfig &config) {
+            return config.supportsEntities(entities) && config.needsSharedInfoFile();
+        });
     }
 
     bool CDatabaseReaderConfigList::needsSharedInfoObjectsIfCachesEmpty(CEntityFlags::Entity entities,
                                                                         CEntityFlags::Entity cachedEntities) const
     {
-        for (const CDatabaseReaderConfig &config : *this)
-        {
-            if (!config.supportsEntities(entities)) { continue; }
-            if (!config.needsSharedInfoFile()) { continue; }
-            if (!config.getRetrievalMode().testFlag(CDbFlags::Cached)) { return true; } // does not support caching
+        return std::any_of(this->begin(), this->end(),
+                           [&entities, &cachedEntities](const CDatabaseReaderConfig &config) {
+                               if (!config.supportsEntities(entities)) return false;
+                               if (!config.needsSharedInfoFile()) return false;
+                               if (!config.getRetrievalMode().testFlag(CDbFlags::Cached)) return true;
 
-            const CEntityFlags::Entity configEntities = config.getEntities();
-            const CEntityFlags::Entity configEntitiesNotCached = configEntities & ~cachedEntities;
-            if (configEntitiesNotCached != CEntityFlags::NoEntity) { return true; } // we have entities not yet cached
-        }
-        return false;
+                               const CEntityFlags::Entity configEntities = config.getEntities();
+                               const CEntityFlags::Entity configEntitiesNotCached = configEntities & ~cachedEntities;
+                               return configEntitiesNotCached != CEntityFlags::NoEntity;
+                           });
     }
 
     CEntityFlags::Entity CDatabaseReaderConfigList::getEntitesCachedOrReadFromDB() const

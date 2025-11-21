@@ -186,7 +186,7 @@ namespace swift::gui
 
     QString CStyleSheetUtility::style(const QString &fileName) const
     {
-        if (!this->containsStyle(fileName)) { return QString(); }
+        if (!this->containsStyle(fileName)) { return {}; }
         return m_styleSheets[fileName.toLower()].trimmed();
     }
 
@@ -415,7 +415,7 @@ namespace swift::gui
         //    usedWidget->style()->drawPrimitive(element, &opt, &p, usedWidget);
         // 2) With viewport based widgets viewport has to be used
         // see http://stackoverflow.com/questions/37952348/enable-own-widget-for-stylesheet
-        QAbstractScrollArea *sa = qobject_cast<QAbstractScrollArea *>(usedWidget);
+        auto *sa = qobject_cast<QAbstractScrollArea *>(usedWidget);
         QStylePainter p(sa ? sa->viewport() : usedWidget);
         if (!p.isActive()) { return false; }
 

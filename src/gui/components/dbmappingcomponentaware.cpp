@@ -21,7 +21,7 @@ namespace swift::gui::components
         // if we get a mapping component we use it
         if (!parent) { return; }
         if (!parent->isWidgetType()) { return; }
-        CDbMappingComponent *m = qobject_cast<CDbMappingComponent *>(parent);
+        auto *m = qobject_cast<CDbMappingComponent *>(parent);
         if (!m) { return; }
         m_mappingComponent = m;
     }

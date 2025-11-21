@@ -54,7 +54,7 @@ namespace swift::core::fsd
 
     private:
         //! Ctor
-        ServerError();
+        ServerError() = default;
     };
 
     //! Equal to operator

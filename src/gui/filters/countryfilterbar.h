@@ -41,19 +41,18 @@ namespace swift::gui::filters
         explicit CCountryFilterBar(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CCountryFilterBar() override;
+        ~CCountryFilterBar() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CCountryList>>
-        createModelFilter() const override;
+        std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::CCountryList>> createModelFilter() const override;
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged
-        virtual void onRowCountChanged(int count, bool withFilter) override;
+        void onRowCountChanged(int count, bool withFilter) override;
 
     protected:
         //! Clear form
-        virtual void clearForm() override;
+        void clearForm() override;
 
     private:
         QScopedPointer<Ui::CCountryFilterBar> ui;

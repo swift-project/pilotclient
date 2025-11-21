@@ -32,7 +32,7 @@ namespace swift::gui::editors
                 &CAircraftPartsForm::changeAircraftParts); // force change signal
     }
 
-    CAircraftPartsForm::~CAircraftPartsForm() {}
+    CAircraftPartsForm::~CAircraftPartsForm() = default;
 
     void CAircraftPartsForm::setReadOnly(bool readonly)
     {
@@ -75,7 +75,7 @@ namespace swift::gui::editors
         }
         catch (const CJsonException &ex)
         {
-            CLogMessage(this).preformatted(CStatusMessage::fromJsonException(ex, this, "Parse error"));
+            CLogMessage::preformatted(CStatusMessage::fromJsonException(ex, this, "Parse error"));
             return parts;
         }
         return parts;

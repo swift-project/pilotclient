@@ -30,7 +30,7 @@ namespace swift::gui::components
         explicit CApplicationCloseDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CApplicationCloseDialog();
+        ~CApplicationCloseDialog() override;
 
     private:
         QScopedPointer<Ui::CApplicationCloseDialog> ui;

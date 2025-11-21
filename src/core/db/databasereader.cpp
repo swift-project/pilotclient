@@ -493,7 +493,7 @@ namespace swift::core::db
 
     CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
     {
-        if (!sApp || sApp->isShuttingDown()) { return CUrl(); }
+        if (!sApp || sApp->isShuttingDown()) { return {}; }
         switch (mode)
         {
         case CDbFlags::DbReading: return this->getDbServiceBaseUrl().withAppendedPath("/service");
@@ -501,7 +501,7 @@ namespace swift::core::db
         case CDbFlags::Shared: return sApp->getGlobalSetup().getSharedDbDataDirectoryUrl();
         default: qFatal("Wrong mode"); break;
         }
-        return CUrl();
+        return {};
     }
 
     bool CDatabaseReader::isChangedUrl(const CUrl &oldUrl, const CUrl &currentUrl)
@@ -819,7 +819,7 @@ namespace swift::core::db
         if (started.isValid() && started.canConvert<qint64>())
         {
             const qint64 now = QDateTime::currentMSecsSinceEpoch();
-            const qint64 start = started.value<qint64>();
+            const auto start = started.value<qint64>();
             this->setLoadTimeMs(now - start);
             m_requestStarted = start;
             m_responseReceived = now;

@@ -24,7 +24,7 @@ namespace swift::sound::sample_provider
         ISampleProvider(QObject *parent = nullptr) : QObject(parent) {}
 
         //! Dtor
-        virtual ~ISampleProvider() override {}
+        ~ISampleProvider() override = default;
 
         //! Read samples
         virtual int readSamples(QVector<float> &samples, qint64 count) = 0;

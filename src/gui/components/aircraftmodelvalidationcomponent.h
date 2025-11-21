@@ -41,7 +41,7 @@ namespace swift::gui::components
         explicit CAircraftModelValidationComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftModelValidationComponent() override;
+        ~CAircraftModelValidationComponent() override;
 
         //! Validated a model set
         //! \remark coming from swift::misc::simulation::CBackgroundValidation

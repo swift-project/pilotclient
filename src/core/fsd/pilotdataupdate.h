@@ -49,7 +49,7 @@ namespace swift::core::fsd
         //! @}
 
     private:
-        PilotDataUpdate();
+        PilotDataUpdate() = default;
     };
 
     //! Equal to operator

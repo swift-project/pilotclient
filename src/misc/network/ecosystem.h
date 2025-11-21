@@ -39,7 +39,7 @@ namespace swift::misc::network
         };
 
         //! Default constructor
-        CEcosystem() {}
+        CEcosystem() = default;
 
         //! Constructor
         CEcosystem(System s) : m_system(static_cast<int>(s)) {}

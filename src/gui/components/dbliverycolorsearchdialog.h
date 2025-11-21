@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CDbLiveryColorSearchDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbLiveryColorSearchDialog();
+        ~CDbLiveryColorSearchDialog() override;
 
         //! Found livery if any, otherwise default
         const swift::misc::aviation::CLivery &getLivery() const;

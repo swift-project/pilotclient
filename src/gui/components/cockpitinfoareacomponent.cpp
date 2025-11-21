@@ -24,18 +24,18 @@ namespace swift::gui::components
         this->toggleTabBarLocked(true);
     }
 
-    CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent() {}
+    CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent() = default;
 
     QSize CCockpitInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
         // see also CMainInfoAreaComponent::getPreferredSizeWhenFloating
         Q_UNUSED(areaIndex)
-        return QSize(600, 400);
+        return { 600, 400 };
     }
 
     const QPixmap &CCockpitInfoAreaComponent::indexToPixmap(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaAudio: return CIcons::appAudio16();

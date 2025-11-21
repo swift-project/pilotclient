@@ -46,7 +46,7 @@ namespace swift::misc::aviation
     {
     public:
         //! Ctor
-        CFlightPlanRemarks();
+        CFlightPlanRemarks() = default;
 
         //! Ctor
         CFlightPlanRemarks(const QString &remarks, bool parse = true);

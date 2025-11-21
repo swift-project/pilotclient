@@ -1134,7 +1134,7 @@ namespace swift::misc
     {
         QImage imgSource(icon.pixmap(targetsize).toImage());
         QImage destBackgroundImg(changeImageBackgroundColor(imgSource, backgroundColor));
-        return QIcon(QPixmap::fromImage(destBackgroundImg));
+        return { QPixmap::fromImage(destBackgroundImg) };
     }
 } // namespace swift::misc
 

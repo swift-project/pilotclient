@@ -52,7 +52,7 @@ namespace swift::gui::filters
         this->clearForm();
     }
 
-    CAircraftIcaoFilterBar::~CAircraftIcaoFilterBar() {}
+    CAircraftIcaoFilterBar::~CAircraftIcaoFilterBar() = default;
 
     std::unique_ptr<swift::gui::models::IModelFilter<CAircraftIcaoCodeList>>
     CAircraftIcaoFilterBar::createModelFilter() const

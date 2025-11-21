@@ -46,7 +46,7 @@ namespace swift::misc::aviation
         };
 
         //! Default constructor
-        CAircraftParts() {}
+        CAircraftParts() = default;
 
         //! Default constructor
         CAircraftParts(int flapsPercent);

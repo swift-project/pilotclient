@@ -27,7 +27,7 @@ namespace swift::gui::views
         explicit CAircraftModelStatisticsDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftModelStatisticsDialog();
+        ~CAircraftModelStatisticsDialog() override;
 
         //! Set and analyze the models
         void analyzeModels(const swift::misc::simulation::CAircraftModelList &models);

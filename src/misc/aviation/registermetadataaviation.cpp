@@ -41,54 +41,50 @@
 #include "misc/aviation/track.h"
 #include "misc/aviation/transponder.h"
 
-namespace swift::misc
+namespace swift::misc::aviation
 {
-    namespace aviation
+    void registerMetadata()
     {
-        void registerMetadata()
-        {
-            CAircraftEngine::registerMetadata();
-            CAircraftEngineList::registerMetadata();
-            CAircraftIcaoCode::registerMetadata();
-            CAircraftIcaoCodeList::registerMetadata();
-            CAircraftCategory::registerMetadata();
-            CAircraftCategoryList::registerMetadata();
-            CAircraftLights::registerMetadata();
-            CAircraftParts::registerMetadata();
-            CAircraftPartsList::registerMetadata();
-            CAircraftSituation::registerMetadata();
-            CAircraftSituationChange::registerMetadata();
-            CAircraftSituationList::registerMetadata();
-            CAircraftVelocity::registerMetadata();
-            CAirlineIcaoCode::registerMetadata();
-            CAirlineIcaoCodeList::registerMetadata();
-            CAirportIcaoCode::registerMetadata();
-            CAirport::registerMetadata();
-            CAirportList::registerMetadata();
-            CAltitude::registerMetadata();
-            CAtcStation::registerMetadata();
-            CAtcStationList::registerMetadata();
-            CCallsign::registerMetadata();
-            CCallsignSet::registerMetadata();
-            CComSystem::registerMetadata();
-            CSsrEquipment::registerMetadata();
-            CComNavEquipment::registerMetadata();
-            CWakeTurbulenceCategory::registerMetadata();
-            CFlightPlan::registerMetadata();
-            CFlightPlanAircraftInfo::registerMetadata();
-            CFlightPlanList::registerMetadata();
-            CSimBriefData::registerMetadata();
-            CFlightPlanRemarks::registerMetadata();
-            CHeading::registerMetadata();
-            CInformationMessage::registerMetadata();
-            CLivery::registerMetadata();
-            CLiveryList::registerMetadata();
-            CNavSystem::registerMetadata();
-            CSelcal::registerMetadata();
-            CTrack::registerMetadata();
-            CTransponder::registerMetadata();
-            COnGroundInfo::registerMetadata();
-        }
-    } // namespace aviation
-
-} // namespace swift::misc
+        CAircraftEngine::registerMetadata();
+        CAircraftEngineList::registerMetadata();
+        CAircraftIcaoCode::registerMetadata();
+        CAircraftIcaoCodeList::registerMetadata();
+        CAircraftCategory::registerMetadata();
+        CAircraftCategoryList::registerMetadata();
+        CAircraftLights::registerMetadata();
+        CAircraftParts::registerMetadata();
+        CAircraftPartsList::registerMetadata();
+        CAircraftSituation::registerMetadata();
+        CAircraftSituationChange::registerMetadata();
+        CAircraftSituationList::registerMetadata();
+        CAircraftVelocity::registerMetadata();
+        CAirlineIcaoCode::registerMetadata();
+        CAirlineIcaoCodeList::registerMetadata();
+        CAirportIcaoCode::registerMetadata();
+        CAirport::registerMetadata();
+        CAirportList::registerMetadata();
+        CAltitude::registerMetadata();
+        CAtcStation::registerMetadata();
+        CAtcStationList::registerMetadata();
+        CCallsign::registerMetadata();
+        CCallsignSet::registerMetadata();
+        CComSystem::registerMetadata();
+        CSsrEquipment::registerMetadata();
+        CComNavEquipment::registerMetadata();
+        CWakeTurbulenceCategory::registerMetadata();
+        CFlightPlan::registerMetadata();
+        CFlightPlanAircraftInfo::registerMetadata();
+        CFlightPlanList::registerMetadata();
+        CSimBriefData::registerMetadata();
+        CFlightPlanRemarks::registerMetadata();
+        CHeading::registerMetadata();
+        CInformationMessage::registerMetadata();
+        CLivery::registerMetadata();
+        CLiveryList::registerMetadata();
+        CNavSystem::registerMetadata();
+        CSelcal::registerMetadata();
+        CTrack::registerMetadata();
+        CTransponder::registerMetadata();
+        COnGroundInfo::registerMetadata();
+    }
+} // namespace swift::misc::aviation

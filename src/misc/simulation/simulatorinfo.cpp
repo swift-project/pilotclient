@@ -27,8 +27,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CSimulatorInfo)
 
 namespace swift::misc::simulation
 {
-    CSimulatorInfo::CSimulatorInfo() {}
-
     CSimulatorInfo::CSimulatorInfo(const QString &identifierString)
         : m_simulator(identifierToSimulator(identifierString))
     {}
@@ -418,14 +416,14 @@ namespace swift::misc::simulation
     {
         switch (internalIndex)
         {
-        case 0: return CSimulatorInfo(CSimulatorInfo::FSX);
-        case 1: return CSimulatorInfo(CSimulatorInfo::P3D);
-        case 2: return CSimulatorInfo(CSimulatorInfo::FS9);
-        case 3: return CSimulatorInfo(CSimulatorInfo::XPLANE);
-        case 4: return CSimulatorInfo(CSimulatorInfo::FG);
-        case 5: return CSimulatorInfo(CSimulatorInfo::MSFS);
-        case 6: return CSimulatorInfo(CSimulatorInfo::MSFS2024);
-        default: return CSimulatorInfo(CSimulatorInfo::None);
+        case 0: return { CSimulatorInfo::FSX };
+        case 1: return { CSimulatorInfo::P3D };
+        case 2: return { CSimulatorInfo::FS9 };
+        case 3: return { CSimulatorInfo::XPLANE };
+        case 4: return { CSimulatorInfo::FG };
+        case 5: return { CSimulatorInfo::MSFS };
+        case 6: return { CSimulatorInfo::MSFS2024 };
+        default: return { CSimulatorInfo::None };
         }
     }
 } // namespace swift::misc::simulation

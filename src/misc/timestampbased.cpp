@@ -12,8 +12,6 @@
 
 namespace swift::misc
 {
-    ITimestampBased::ITimestampBased() {}
-
     ITimestampBased::ITimestampBased(qint64 msSincePoch) : m_timestampMSecsSinceEpoch(msSincePoch) {}
 
     ITimestampBased::ITimestampBased(const QDateTime &timestamp)
@@ -22,7 +20,7 @@ namespace swift::misc
 
     QDateTime ITimestampBased::getUtcTimestamp() const
     {
-        if (m_timestampMSecsSinceEpoch < 0) { return QDateTime(); }
+        if (m_timestampMSecsSinceEpoch < 0) { return {}; }
         return QDateTime::fromMSecsSinceEpoch(m_timestampMSecsSinceEpoch);
     }
 
@@ -154,7 +152,7 @@ namespace swift::misc
     {
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexUtcTimestamp: return QVariant::fromValue(this->getUtcTimestamp());
@@ -178,7 +176,7 @@ namespace swift::misc
     {
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexUtcTimestamp: this->setUtcTimestamp(variant.toDateTime()); return;
@@ -271,7 +269,7 @@ namespace swift::misc
         if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexOffsetMs:
@@ -291,7 +289,7 @@ namespace swift::misc
         }
         const QString m = QStringLiteral("Cannot handle index %1").arg(index.toQString());
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable(m));
-        return QVariant();
+        return {};
     }
 
     void ITimestampWithOffsetBased::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
@@ -303,7 +301,7 @@ namespace swift::misc
         }
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexOffsetMs:
@@ -329,7 +327,7 @@ namespace swift::misc
         }
         if (!index.isEmpty())
         {
-            const ColumnIndex i = index.frontCasted<ColumnIndex>();
+            const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexOffsetWithUnit:

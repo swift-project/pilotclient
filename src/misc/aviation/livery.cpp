@@ -25,8 +25,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CLivery)
 
 namespace swift::misc::aviation
 {
-    CLivery::CLivery() {}
-
     CLivery::CLivery(const QString &combinedCode, const CAirlineIcaoCode &airline, const QString &description)
         : CLivery(-1, combinedCode, airline, description, "", "", false)
     {}
@@ -203,7 +201,7 @@ namespace swift::misc::aviation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CLivery();
+            return {};
         }
 
         const QString combinedCode(json.value(prefix % u"combinedcode").toString());
@@ -238,7 +236,7 @@ namespace swift::misc::aviation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CLivery();
+            return {};
         }
 
         const QString combinedCode(json.value(prefix % u"combinedcode").toString());
@@ -340,7 +338,7 @@ namespace swift::misc::aviation
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAirlineIcaoCode: return m_airline.propertyByIndex(index.copyFrontRemoved());
@@ -365,7 +363,7 @@ namespace swift::misc::aviation
             IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDescription: m_description = variant.toString(); break;
@@ -385,7 +383,7 @@ namespace swift::misc::aviation
         {
             return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDescription: return m_description.compare(compareValue.getDescription(), Qt::CaseInsensitive);

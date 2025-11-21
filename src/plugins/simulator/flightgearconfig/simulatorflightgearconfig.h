@@ -34,7 +34,7 @@ namespace swift::simplugin::flightgear
         CSimulatorFlightgearConfig(QObject *parent = nullptr);
 
         //! Dtor
-        virtual ~CSimulatorFlightgearConfig() {}
+        ~CSimulatorFlightgearConfig() override = default;
 
         //! \copydoc swift::gui::IPluginConfig::createConfigWindow()
         swift::gui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;

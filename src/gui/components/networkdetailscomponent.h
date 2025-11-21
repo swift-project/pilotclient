@@ -37,7 +37,7 @@ namespace swift::gui::components
         explicit CNetworkDetailsComponent(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CNetworkDetailsComponent() override;
+        ~CNetworkDetailsComponent() override;
 
         //! Login mode
         swift::misc::network::CLoginMode getLoginMode() const;

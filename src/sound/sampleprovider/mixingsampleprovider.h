@@ -25,7 +25,7 @@ namespace swift::sound::sample_provider
         void addMixerInput(ISampleProvider *provider);
 
         //! \copydoc ISampleProvider::readSamples
-        virtual int readSamples(QVector<float> &samples, qint64 count) override;
+        int readSamples(QVector<float> &samples, qint64 count) override;
 
     private:
         QVector<ISampleProvider *> m_sources;

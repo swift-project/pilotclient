@@ -54,7 +54,7 @@ namespace swift::gui::editors
             { qMetaTypeId<CAircraftIcaoCode>(), qMetaTypeId<CAircraftIcaoCodeList>() });
     }
 
-    CAircraftIcaoForm::~CAircraftIcaoForm() {}
+    CAircraftIcaoForm::~CAircraftIcaoForm() = default;
 
     bool CAircraftIcaoForm::setValue(const swift::misc::aviation::CAircraftIcaoCode &icao)
     {
@@ -90,7 +90,7 @@ namespace swift::gui::editors
             CVariant jsonVariant;
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
             if (!jsonVariant.canConvert<CAircraftIcaoCodeList>()) { return; }
-            const CAircraftIcaoCodeList icaos = jsonVariant.value<CAircraftIcaoCodeList>();
+            const auto icaos = jsonVariant.value<CAircraftIcaoCodeList>();
             if (!icaos.isEmpty()) { this->setValue(icaos.front()); }
         }
         catch (const CJsonException &ex)
@@ -124,7 +124,7 @@ namespace swift::gui::editors
         const QString family(ui->le_Family->text().trimmed().toUpper());
         const QString wtc(ui->cb_Wtc->currentText().left(1));
         const QString combined(ui->combined_TypeSelector->getCombinedType());
-        bool ok;
+        bool ok {};
         int rank = ui->cb_Rank->currentText().toInt(&ok);
         if (!ok) { rank = 10; }
         bool legacy = ui->cb_Legacy->isChecked();
@@ -196,7 +196,7 @@ namespace swift::gui::editors
         if (variantDropped.canConvert<CAircraftIcaoCode>()) { icao = variantDropped.value<CAircraftIcaoCode>(); }
         else if (variantDropped.canConvert<CAircraftIcaoCodeList>())
         {
-            const CAircraftIcaoCodeList icaoList(variantDropped.value<CAircraftIcaoCodeList>());
+            const auto icaoList(variantDropped.value<CAircraftIcaoCodeList>());
             if (icaoList.isEmpty()) { return; }
             icao = icaoList.front();
         }

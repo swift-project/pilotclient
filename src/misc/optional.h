@@ -117,8 +117,8 @@ namespace swift::misc
         }
         union Data
         {
-            Data() {}
-            ~Data() {}
+            Data() {} // NOLINT(modernize-use-equals-default)
+            ~Data() {} // NOLINT(modernize-use-equals-default)
             char bytes[sizeof(T)];
             T object;
         };

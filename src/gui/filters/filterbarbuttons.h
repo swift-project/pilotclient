@@ -41,7 +41,7 @@ namespace swift::gui::filters
         explicit CFilterBarButtons(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CFilterBarButtons();
+        ~CFilterBarButtons() override;
 
         //! Show the counter
         void displayCount(bool show);

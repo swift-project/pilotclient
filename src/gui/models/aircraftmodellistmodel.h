@@ -47,7 +47,7 @@ namespace swift::gui::models
         explicit CAircraftModelListModel(AircraftModelMode mode, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftModelListModel() override {}
+        ~CAircraftModelListModel() override = default;
 
         //! Mode
         void setAircraftModelMode(CAircraftModelListModel::AircraftModelMode stationMode);
@@ -71,10 +71,10 @@ namespace swift::gui::models
         void setHighlightColor(const QBrush &brush) { m_highlightColor = brush; }
 
         //! \copydoc CListModelBaseNonTemplate::clearHighlighting
-        virtual void clearHighlighting() override;
+        void clearHighlighting() override;
 
         //! \copydoc CListModelBaseNonTemplate::hasHighlightedRows
-        virtual bool hasHighlightedRows() const override;
+        bool hasHighlightedRows() const override;
 
         //! Model strings
         QStringList getModelStrings(bool sort) const;
@@ -83,10 +83,10 @@ namespace swift::gui::models
         void replaceOrAddByModelString(const swift::misc::simulation::CAircraftModelList &models);
 
         //! \copydoc QAbstractItemModel::data
-        virtual QVariant data(const QModelIndex &index, int role) const override;
+        QVariant data(const QModelIndex &index, int role) const override;
 
         //! \copydoc swift::gui::models::CListModelBaseNonTemplate::isOrderable
-        virtual bool isOrderable() const override { return true; }
+        bool isOrderable() const override { return true; }
 
     private:
         AircraftModelMode m_mode = NotSet; //!< current mode

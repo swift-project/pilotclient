@@ -93,12 +93,12 @@ namespace swift::misc::aviation
     QVariant CAirport::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIcao: return m_icao.propertyByIndex(index.copyFrontRemoved());
-        case IndexLocation: return QVariant(m_location);
-        case IndexDescriptiveName: return QVariant(m_descriptiveName);
+        case IndexLocation: return { m_location };
+        case IndexDescriptiveName: return { m_descriptiveName };
         case IndexPosition: return m_position.propertyByIndex(index.copyFrontRemoved());
         case IndexElevation: return this->getElevation().propertyByIndex(index.copyFrontRemoved());
         case IndexOperating: return QVariant::fromValue(this->isOperating());
@@ -116,7 +116,7 @@ namespace swift::misc::aviation
             (*this) = variant.value<CAirport>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIcao: m_icao.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
@@ -140,7 +140,7 @@ namespace swift::misc::aviation
         {
             return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIcao: return m_icao.comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getIcao());

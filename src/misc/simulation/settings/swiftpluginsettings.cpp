@@ -9,8 +9,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation::settings, CSwiftPluginS
 
 namespace swift::misc::simulation::settings
 {
-    CSwiftPluginSettings::CSwiftPluginSettings() {}
-
     void CSwiftPluginSettings::setEmulatedSimulator(const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "need single simulator");
@@ -28,7 +26,7 @@ namespace swift::misc::simulation::settings
     QVariant CSwiftPluginSettings::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEmulatedSimulator: return this->m_emulatedSimulator.propertyByIndex(index.copyFrontRemoved());
@@ -46,7 +44,7 @@ namespace swift::misc::simulation::settings
             (*this) = variant.value<CSwiftPluginSettings>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexEmulatedSimulator:

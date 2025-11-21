@@ -286,7 +286,7 @@ namespace swift::misc::aviation
     int CCallsign::getFlightNumberInt() const
     {
         if (this->isAtcCallsign()) { return -1; }
-        bool ok;
+        bool ok {};
         const int fn = this->getFlightNumber().toInt(&ok);
         return ok ? fn : -1;
     }
@@ -310,13 +310,13 @@ namespace swift::misc::aviation
     QVariant CCallsign::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
-        case IndexCallsignString: return QVariant(this->asString());
-        case IndexCallsignStringAsSet: return QVariant(this->getStringAsSet());
-        case IndexTelephonyDesignator: return QVariant(this->getTelephonyDesignator());
-        case IndexSuffix: return QVariant(this->getSuffix());
+        case IndexCallsignString: return { this->asString() };
+        case IndexCallsignStringAsSet: return { this->getStringAsSet() };
+        case IndexTelephonyDesignator: return { this->getTelephonyDesignator() };
+        case IndexSuffix: return { this->getSuffix() };
         default: return CValueObject::propertyByIndex(index);
         }
     }
@@ -328,7 +328,7 @@ namespace swift::misc::aviation
             (*this) = variant.value<CCallsign>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsignString: m_callsign = unifyCallsign(variant.toString()); break;
@@ -341,7 +341,7 @@ namespace swift::misc::aviation
     int CCallsign::comparePropertyByIndex(CPropertyIndexRef index, const CCallsign &compareValue) const
     {
         if (index.isMyself()) { return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexCallsignString: return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
@@ -402,11 +402,7 @@ namespace swift::misc::aviation
     {
         if (!callsign.contains("_")) { return false; }
         const QStringView uc = callsign.toUpper();
-
-        for (const QString &r : CCallsign::atcAlikeCallsignSuffixes())
-        {
-            if (uc.endsWith(r)) { return true; }
-        }
-        return false;
+        return std::any_of(CCallsign::atcAlikeCallsignSuffixes().cbegin(), CCallsign::atcAlikeCallsignSuffixes().cend(),
+                           [&](const QString &r) { return uc.endsWith(r); });
     }
 } // namespace swift::misc::aviation

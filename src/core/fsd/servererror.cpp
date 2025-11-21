@@ -9,8 +9,6 @@
 
 namespace swift::core::fsd
 {
-    ServerError::ServerError() {}
-
     ServerError::ServerError(const QString &sender, const QString &receiver, ServerErrorCode errorCode,
                              const QString &causingParameter, const QString &description)
         : MessageBase(sender, receiver), m_errorNumber(errorCode), m_causingParameter(causingParameter),
@@ -28,8 +26,7 @@ namespace swift::core::fsd
             ServerErrorCode::AuthTimeout,
         };
 
-        if (fatalErrors.contains(m_errorNumber)) { return true; }
-        else { return false; }
+        return fatalErrors.contains(m_errorNumber);
     }
 
     QStringList ServerError::toTokens() const
@@ -50,6 +47,6 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<ServerError *>(nullptr)).debug(u"Wrong number of arguments.");
             return {};
         }
-        return ServerError(tokens[0], tokens[1], static_cast<ServerErrorCode>(tokens[2].toInt()), tokens[3], tokens[4]);
+        return { tokens[0], tokens[1], static_cast<ServerErrorCode>(tokens[2].toInt()), tokens[3], tokens[4] };
     }
 } // namespace swift::core::fsd

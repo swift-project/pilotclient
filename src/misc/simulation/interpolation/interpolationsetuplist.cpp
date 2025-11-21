@@ -8,8 +8,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::simulation, CInterpolationAndRendering
 
 namespace swift::misc::simulation
 {
-    CInterpolationSetupList::CInterpolationSetupList() {}
-
     CInterpolationSetupList::CInterpolationSetupList(const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
         this->push_back(setup);

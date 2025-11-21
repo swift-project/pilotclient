@@ -36,7 +36,7 @@ namespace swift::gui::components
         ui->le_CombinedType->setValidator(new CUpperCaseValidator(this));
     }
 
-    CAircraftCombinedTypeSelector::~CAircraftCombinedTypeSelector() {}
+    CAircraftCombinedTypeSelector::~CAircraftCombinedTypeSelector() = default;
 
     void CAircraftCombinedTypeSelector::setCombinedType(const QString &combinedCode)
     {

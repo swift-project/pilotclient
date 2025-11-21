@@ -13,9 +13,9 @@ namespace swift::misc::aviation
     CAircraftEngineList::CAircraftEngineList(std::initializer_list<bool> enginesOnOff)
     {
         int no = 1; // engines 1 based
-        for (auto it = enginesOnOff.begin(); it != enginesOnOff.end(); ++it)
+        for (bool it : enginesOnOff)
         {
-            CAircraftEngine engine(no++, *it);
+            CAircraftEngine engine(no++, it);
             this->push_back(engine);
         }
     }

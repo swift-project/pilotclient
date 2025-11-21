@@ -37,7 +37,7 @@ namespace swift::misc::simulation::xplane
     {
     public:
         //! Default constructor.
-        CNavDataReference();
+        CNavDataReference() = default;
 
         //! Construct from a navdata reference ID and position.
         CNavDataReference(int id, const geo::CLatitude &latitude, const geo::CLongitude &longitude);
@@ -48,14 +48,11 @@ namespace swift::misc::simulation::xplane
         //! Return the navdata reference ID.
         int id() const { return m_id; }
 
-        virtual geo::CLatitude latitude() const override { return m_position.latitude(); }
-        virtual geo::CLongitude longitude() const override { return m_position.longitude(); }
-        virtual const aviation::CAltitude &geodeticHeight() const override { return m_position.geodeticHeight(); }
-        virtual QVector3D normalVector() const override { return m_position.normalVector(); }
-        virtual std::array<double, 3> normalVectorDouble() const override
-        {
-            return this->m_position.normalVectorDouble();
-        }
+        geo::CLatitude latitude() const override { return m_position.latitude(); }
+        geo::CLongitude longitude() const override { return m_position.longitude(); }
+        const aviation::CAltitude &geodeticHeight() const override { return m_position.geodeticHeight(); }
+        QVector3D normalVector() const override { return m_position.normalVector(); }
+        std::array<double, 3> normalVectorDouble() const override { return this->m_position.normalVectorDouble(); }
 
         //! \copydoc swift::misc::mixin::Index::propertyByIndex
         QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;
@@ -89,7 +86,7 @@ namespace swift::misc::simulation::xplane
         using CSequence::CSequence;
 
         //! Default constructor.
-        CNavDataReferenceList();
+        CNavDataReferenceList() = default;
 
         //! Construct from a base class object.
         CNavDataReferenceList(const CSequence<CNavDataReference> &other);

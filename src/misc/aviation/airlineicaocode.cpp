@@ -177,7 +177,7 @@ namespace swift::misc::aviation
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAirlineDesignator: return QVariant::fromValue(m_designator);
@@ -209,7 +209,7 @@ namespace swift::misc::aviation
             IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAirlineDesignator: this->setDesignator(variant.value<QString>()); break;
@@ -234,7 +234,7 @@ namespace swift::misc::aviation
         {
             return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAirlineDesignator: return m_designator.compare(compareValue.getDesignator());
@@ -280,8 +280,7 @@ namespace swift::misc::aviation
         // allow 2 chars for special codes like "VV"
         if (airline.length() < 2 || airline.length() > 5) { return false; }
         const auto chars = makeRange(airline.begin(), airline.end());
-        if (chars.containsBy([](QChar c) { return !c.isUpper() && !c.isDigit(); })) { return false; }
-        return true;
+        return !chars.containsBy([](QChar c) { return !c.isUpper() && !c.isDigit(); });
     }
 
     bool CAirlineIcaoCode::isValidIataCode(const QString &iataCode)
@@ -444,7 +443,7 @@ namespace swift::misc::aviation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null (e.g. for color liveries)
-            return CAirlineIcaoCode();
+            return {};
         }
 
         QString designator(json.value(prefix % u"designator").toString());

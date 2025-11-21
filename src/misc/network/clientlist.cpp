@@ -9,7 +9,5 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CClient, CClientList)
 
 namespace swift::misc::network
 {
-    CClientList::CClientList() {}
-
     CClientList::CClientList(const CSequence &other) : CSequence<CClient>(other) {}
 } // namespace swift::misc::network

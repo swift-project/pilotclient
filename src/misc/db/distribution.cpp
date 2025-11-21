@@ -14,8 +14,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::db, CDistribution)
 
 namespace swift::misc::db
 {
-    CDistribution::CDistribution() {}
-
     CDistribution::CDistribution(const QString &channel, int stability, bool restricted)
         : m_channel(channel.trimmed().toUpper()), m_stability(stability), m_restricted(restricted)
     {}
@@ -64,7 +62,7 @@ namespace swift::misc::db
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexChannel: return QVariant::fromValue(m_channel);
@@ -88,7 +86,7 @@ namespace swift::misc::db
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexChannel: this->setChannel(variant.value<QString>()); break;

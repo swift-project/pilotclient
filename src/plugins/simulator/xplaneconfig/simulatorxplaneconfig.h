@@ -34,7 +34,7 @@ namespace swift::simplugin::xplane
         CSimulatorXPlaneConfig(QObject *parent = nullptr);
 
         //! Dtor
-        virtual ~CSimulatorXPlaneConfig() override {}
+        ~CSimulatorXPlaneConfig() override = default;
 
         //! \copydoc swift::gui::IPluginConfig::createConfigWindow()
         swift::gui::CPluginConfigWindow *createConfigWindow(QWidget *parent) override;

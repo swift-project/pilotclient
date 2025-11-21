@@ -32,7 +32,7 @@ namespace swift::simplugin::flightgear
         connect(ui->bb_OkCancel, &QDialogButtonBox::rejected, this, &CSimulatorFlightgearConfigWindow::close);
     }
 
-    CSimulatorFlightgearConfigWindow::~CSimulatorFlightgearConfigWindow() {}
+    CSimulatorFlightgearConfigWindow::~CSimulatorFlightgearConfigWindow() = default;
 
     CFGSwiftBusSettings CSimulatorFlightgearConfigWindow::getSettingsFromUI() const
     {

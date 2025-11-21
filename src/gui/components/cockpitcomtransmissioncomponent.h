@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CCockpitComTransmissionComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CCockpitComTransmissionComponent() override;
+        ~CCockpitComTransmissionComponent() override;
 
         //! Update given COM system
         void updateComSystem(swift::misc::aviation::CComSystem &comSystem,

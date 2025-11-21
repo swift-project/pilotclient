@@ -52,7 +52,7 @@ namespace swift::misc::input
     QVariant CActionHotkey::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIdentifier: return QVariant::fromValue(m_identifier);
@@ -72,7 +72,7 @@ namespace swift::misc::input
             (*this) = variant.value<CActionHotkey>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAction:

@@ -30,7 +30,7 @@ namespace swift::gui::components
         CDbMappingComponentAware(QObject *parent);
 
         //! Destructor
-        virtual ~CDbMappingComponentAware() {}
+        virtual ~CDbMappingComponentAware() = default;
 
         //! Copy constructor
         CDbMappingComponentAware(const CDbMappingComponentAware &) = default;

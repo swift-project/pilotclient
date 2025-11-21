@@ -33,9 +33,9 @@ namespace swift::gui::filters
         this->clearForm();
     }
 
-    void CStatusMessageFilterBar::displayCount(bool show) { ui->filter_Buttons->displayCount(show); }
+    CStatusMessageFilterBar::~CStatusMessageFilterBar() = default;
 
-    CStatusMessageFilterBar::~CStatusMessageFilterBar() {}
+    void CStatusMessageFilterBar::displayCount(bool show) { ui->filter_Buttons->displayCount(show); }
 
     void CStatusMessageFilterBar::useRadioButtonDescriptiveIcons(bool oneCharacterText)
     {

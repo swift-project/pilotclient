@@ -15,7 +15,7 @@ namespace swift::gui::components
         this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
 
-    CAutoPublishDialog::~CAutoPublishDialog() {}
+    CAutoPublishDialog::~CAutoPublishDialog() = default;
 
     int CAutoPublishDialog::readFiles() { return ui->comp_AutoPublish->readFiles(); }
 

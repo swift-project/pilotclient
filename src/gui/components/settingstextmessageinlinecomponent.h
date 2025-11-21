@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CSettingsTextMessageInlineComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsTextMessageInlineComponent();
+        ~CSettingsTextMessageInlineComponent() override;
 
     private:
         //! Settings have been changed

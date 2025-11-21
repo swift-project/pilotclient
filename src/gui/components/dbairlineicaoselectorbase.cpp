@@ -52,7 +52,7 @@ namespace swift::gui::components
         }
     }
 
-    CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase() {}
+    CDbAirlineIcaoSelectorBase::~CDbAirlineIcaoSelectorBase() = default;
 
     bool CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
     {
@@ -104,13 +104,13 @@ namespace swift::gui::components
         {
             if (valueVariant.canConvert<CAirlineIcaoCode>())
             {
-                const CAirlineIcaoCode icao(valueVariant.value<CAirlineIcaoCode>());
+                const auto icao(valueVariant.value<CAirlineIcaoCode>());
                 if (!icao.hasValidDbKey()) { return; }
                 this->setAirlineIcao(icao);
             }
             else if (valueVariant.canConvert<CAirlineIcaoCodeList>())
             {
-                const CAirlineIcaoCodeList icaos(valueVariant.value<CAirlineIcaoCodeList>());
+                const auto icaos(valueVariant.value<CAirlineIcaoCodeList>());
                 if (icaos.isEmpty()) { return; }
                 this->setAirlineIcao(icaos.front());
             }

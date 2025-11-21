@@ -24,39 +24,39 @@ namespace swift::core::context
 
     public slots:
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
-        virtual swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const override
+        swift::misc::simulation::CSimulatedAircraft getOwnAircraft() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::simulation::CSimulatedAircraft();
+            return {};
         }
 
         //! \copydoc IContextOwnAircraft::getOwnComSystem
-        virtual swift::misc::aviation::CComSystem
+        swift::misc::aviation::CComSystem
         getOwnComSystem(swift::misc::aviation::CComSystem::ComUnit unit) const override
         {
             Q_UNUSED((unit);)
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CComSystem();
+            return {};
         }
 
         //! \copydoc IContextOwnAircraft::getOwnTransponder()
-        virtual swift::misc::aviation::CTransponder getOwnTransponder() const override
+        swift::misc::aviation::CTransponder getOwnTransponder() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CTransponder();
+            return {};
         }
 
         //! \copydoc IContextOwnAircraft::getOwnAircraftSituation()
-        virtual swift::misc::aviation::CAircraftSituation getOwnAircraftSituation() const override
+        swift::misc::aviation::CAircraftSituation getOwnAircraftSituation() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return swift::misc::aviation::CAircraftSituation();
+            return {};
         }
 
         //! \copydoc IContextOwnAircraft::updateOwnPosition
-        virtual bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position,
-                                       const swift::misc::aviation::CAltitude &altitude,
-                                       const swift::misc::aviation::CAltitude &pressureAltitude) override
+        bool updateOwnPosition(const swift::misc::geo::CCoordinateGeodetic &position,
+                               const swift::misc::aviation::CAltitude &altitude,
+                               const swift::misc::aviation::CAltitude &pressureAltitude) override
         {
             Q_UNUSED(position);
             Q_UNUSED(altitude);
@@ -66,10 +66,9 @@ namespace swift::core::context
         }
 
         //! \copydoc IContextOwnAircraft::updateCockpit
-        virtual bool updateCockpit(const swift::misc::aviation::CComSystem &com1,
-                                   const swift::misc::aviation::CComSystem &com2,
-                                   const swift::misc::aviation::CTransponder &transponder,
-                                   const swift::misc::CIdentifier &originator) override
+        bool updateCockpit(const swift::misc::aviation::CComSystem &com1, const swift::misc::aviation::CComSystem &com2,
+                           const swift::misc::aviation::CTransponder &transponder,
+                           const swift::misc::CIdentifier &originator) override
         {
             Q_UNUSED(com1);
             Q_UNUSED(com2);
@@ -80,8 +79,8 @@ namespace swift::core::context
         }
 
         //! \copydoc IContextOwnAircraft::updateTransponderMode
-        virtual bool updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode,
-                                           const swift::misc::CIdentifier &originator) override
+        bool updateTransponderMode(const swift::misc::aviation::CTransponder::TransponderMode &transponderMode,
+                                   const swift::misc::CIdentifier &originator) override
         {
             Q_UNUSED(transponderMode);
             Q_UNUSED(originator);
@@ -90,9 +89,9 @@ namespace swift::core::context
         }
 
         //! \copydoc IContextOwnAircraft::updateActiveComFrequency
-        virtual bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
-                                              swift::misc::aviation::CComSystem::ComUnit comUnit,
-                                              const swift::misc::CIdentifier &originator) override
+        bool updateActiveComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
+                                      swift::misc::aviation::CComSystem::ComUnit comUnit,
+                                      const swift::misc::CIdentifier &originator) override
         {
             Q_UNUSED(frequency);
             Q_UNUSED(comUnit);
@@ -102,7 +101,7 @@ namespace swift::core::context
         }
 
         //! \copydoc IContextOwnAircraft::updateOwnAircraftPilot
-        virtual bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override
+        bool updateOwnAircraftPilot(const swift::misc::network::CUser &pilot) override
         {
             Q_UNUSED(pilot);
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -110,8 +109,8 @@ namespace swift::core::context
         }
 
         //! \copydoc IContextOwnAircraft::updateSelcal
-        virtual bool updateSelcal(const swift::misc::aviation::CSelcal &selcal,
-                                  const swift::misc::CIdentifier &originator) override
+        bool updateSelcal(const swift::misc::aviation::CSelcal &selcal,
+                          const swift::misc::CIdentifier &originator) override
         {
             Q_UNUSED(selcal);
             Q_UNUSED(originator);
@@ -120,7 +119,7 @@ namespace swift::core::context
         }
 
         //! \copydoc IContextOwnAircraft::updateOwnCallsign
-        virtual bool updateOwnCallsign(const swift::misc::aviation::CCallsign &callsign) override
+        bool updateOwnCallsign(const swift::misc::aviation::CCallsign &callsign) override
         {
             Q_UNUSED(callsign);
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -128,8 +127,8 @@ namespace swift::core::context
         }
 
         //! \copydoc IContextOwnAircraft::updateOwnIcaoCodes
-        virtual bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
-                                        const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override
+        bool updateOwnIcaoCodes(const swift::misc::aviation::CAircraftIcaoCode &aircraftIcaoCode,
+                                const swift::misc::aviation::CAirlineIcaoCode &airlineIcaoCode) override
         {
             Q_UNUSED(aircraftIcaoCode);
             Q_UNUSED(airlineIcaoCode);
@@ -138,10 +137,10 @@ namespace swift::core::context
         }
 
         //! \copydoc IContextOwnAircraft::toggleTransponderMode
-        virtual void toggleTransponderMode() override { logEmptyContextWarning(Q_FUNC_INFO); }
+        void toggleTransponderMode() override { logEmptyContextWarning(Q_FUNC_INFO); }
 
         //! \copydoc IContextOwnAircraft::setTransponderMode
-        virtual bool setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode) override
+        bool setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode) override
         {
             Q_UNUSED(mode);
             logEmptyContextWarning(Q_FUNC_INFO);
@@ -149,7 +148,7 @@ namespace swift::core::context
         }
 
         //! \copydoc IContextOwnAircraft::parseCommandLine
-        virtual bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override
+        bool parseCommandLine(const QString &commandLine, const swift::misc::CIdentifier &originator) override
         {
             Q_UNUSED(commandLine);
             Q_UNUSED(originator);

@@ -24,7 +24,7 @@ namespace swift::gui::filters
         connect(ui->filter_Messages, &CStatusMessageFilterBar::rejectDialog, this, &CStatusMessageFilterDialog::reject);
     }
 
-    CStatusMessageFilterDialog::~CStatusMessageFilterDialog() {}
+    CStatusMessageFilterDialog::~CStatusMessageFilterDialog() = default;
 
     std::unique_ptr<IModelFilter<CStatusMessageList>> CStatusMessageFilterDialog::createModelFilter() const
     {

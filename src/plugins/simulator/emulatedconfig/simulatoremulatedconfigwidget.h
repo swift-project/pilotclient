@@ -28,7 +28,7 @@ namespace swift::simplugin::emulated
         explicit CSimulatorEmulatedConfigWidget(QWidget *parent = nullptr);
 
         //! Dtor
-        virtual ~CSimulatorEmulatedConfigWidget();
+        ~CSimulatorEmulatedConfigWidget() override;
 
     private:
         QScopedPointer<Ui::CSimulatorEmulatedConfigWidget> ui;

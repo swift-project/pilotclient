@@ -46,7 +46,7 @@ namespace swift::misc::db
         };
 
         //! Default constructor
-        CArtifact();
+        CArtifact() = default;
 
         //! Constructor
         CArtifact(const QString &name, const QString &version, const QString &md5, ArtifactType type, int size,

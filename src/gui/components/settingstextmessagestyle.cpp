@@ -36,7 +36,7 @@ namespace swift::gui::components
         //        &CSettingsTextMessageStyle::fontSizePlus);
     }
 
-    CSettingsTextMessageStyle::~CSettingsTextMessageStyle() {}
+    CSettingsTextMessageStyle::~CSettingsTextMessageStyle() = default;
 
     QStringList CSettingsTextMessageStyle::getFamilySizeStyle() const
     {
@@ -54,7 +54,7 @@ namespace swift::gui::components
             m_fontSettingsDialog->setWithColorSelection(false);
         }
 
-        const QDialog::DialogCode r = static_cast<QDialog::DialogCode>(m_fontSettingsDialog->exec());
+        const auto r = static_cast<QDialog::DialogCode>(m_fontSettingsDialog->exec());
         if (r == QDialog::Accepted)
         {
             const QStringList familySizeStyle = this->getFamilySizeStyle();
@@ -72,7 +72,7 @@ namespace swift::gui::components
         }
 
         m_textEditDialog->textEdit()->setPlainText(m_style);
-        const QDialog::DialogCode r = static_cast<QDialog::DialogCode>(m_textEditDialog->exec());
+        const auto r = static_cast<QDialog::DialogCode>(m_textEditDialog->exec());
         if (r == QDialog::Accepted)
         {
             m_style = m_textEditDialog->textEdit()->toPlainText();
@@ -94,7 +94,7 @@ namespace swift::gui::components
     void CSettingsTextMessageStyle::replaceTableStyle(const QString &newTableStyle)
     {
         QString style = m_style;
-        thread_local const QRegularExpression re("table\\s*\\{.*\\}");
+        thread_local const QRegularExpression re(R"(table\s*\{.*\})");
         style.replace(re, newTableStyle);
         m_style = style;
     }
@@ -112,12 +112,12 @@ namespace swift::gui::components
     bool CSettingsTextMessageStyle::changeFontSize(bool increase)
     {
         QString style = m_style;
-        thread_local const QRegularExpression re("table\\s*\\{.*:\\s*(\\d{1,2}).*\\}");
+        thread_local const QRegularExpression re(R"(table\s*\{.*:\s*(\d{1,2}).*\})");
         const QRegularExpressionMatch match = re.match(style);
         const QStringList matches = match.capturedTexts();
         if (matches.size() != 2) { return false; }
 
-        bool ok;
+        bool ok {};
         int ptSize = matches.last().toInt(&ok);
         if (!ok) { return false; }
         if (increase)

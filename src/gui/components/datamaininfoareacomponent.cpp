@@ -43,7 +43,7 @@ namespace swift::gui::components
         ui->comp_Log->showFilterBar();
     }
 
-    CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent() {}
+    CDataMainInfoAreaComponent::~CDataMainInfoAreaComponent() = default;
 
     CLogComponent *CDataMainInfoAreaComponent::getLogComponent() const { return ui->comp_Log; }
 
@@ -68,20 +68,20 @@ namespace swift::gui::components
 
     QSize CDataMainInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaData:
         case InfoAreaMapping:
         case InfoAreaSettings:
         case InfoAreaLog:
-        default: return QSize(800, 600);
+        default: return { 800, 600 };
         }
     }
 
     const QPixmap &CDataMainInfoAreaComponent::indexToPixmap(int areaIndex) const
     {
-        const InfoArea area = static_cast<InfoArea>(areaIndex);
+        const auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaData: return CIcons::appDatabase16();

@@ -58,7 +58,7 @@ namespace swift::gui::components
         m_headingTimer.start(50);
     }
 
-    CRadarComponent::~CRadarComponent() {}
+    CRadarComponent::~CRadarComponent() = default;
 
     bool CRadarComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
     {
@@ -87,11 +87,11 @@ namespace swift::gui::components
     {
         QPen pen(Qt::white, 1);
         pen.setCosmetic(true);
-        QGraphicsLineItem *lix = new QGraphicsLineItem { QLineF(-5.0, 0.0, 5.0, 0.0), &m_center };
+        auto *lix = new QGraphicsLineItem { QLineF(-5.0, 0.0, 5.0, 0.0), &m_center };
         lix->setFlags(QGraphicsItem::ItemIgnoresTransformations);
         lix->setPen(pen);
 
-        QGraphicsLineItem *liy = new QGraphicsLineItem(QLineF(0.0, -5.0, 0.0, 5.0), &m_center);
+        auto *liy = new QGraphicsLineItem(QLineF(0.0, -5.0, 0.0, 5.0), &m_center);
         liy->setFlags(QGraphicsItem::ItemIgnoresTransformations);
         liy->setPen(pen);
     }
@@ -104,8 +104,7 @@ namespace swift::gui::components
         // Macro graticule, drawn as full line at every 10 nm
         for (int range = 10; range <= 100; range += 10)
         {
-            QGraphicsEllipseItem *circle =
-                new QGraphicsEllipseItem(-range, -range, 2.0 * range, 2.0 * range, &m_macroGraticule);
+            auto *circle = new QGraphicsEllipseItem(-range, -range, 2.0 * range, 2.0 * range, &m_macroGraticule);
             circle->setPen(pen);
         }
         pen = QPen(Qt::gray, 1, Qt::DashLine);
@@ -114,7 +113,7 @@ namespace swift::gui::components
         // Micro graticule, drawn as dash line at every 2.5 nm
         for (qreal range = 1; range <= 3; ++range)
         {
-            QGraphicsEllipseItem *circle =
+            auto *circle =
                 new QGraphicsEllipseItem(-range * 2.5, -range * 2.5, 5.0 * range, 5.0 * range, &m_microGraticule);
             circle->setPen(pen);
         }
@@ -128,7 +127,7 @@ namespace swift::gui::components
         for (int angle = 0; angle < 360; angle += 30)
         {
             const QLineF line({ 0.0, 0.0 }, polarPoint(1000.0, qDegreesToRadians(static_cast<qreal>(angle))));
-            QGraphicsLineItem *li = new QGraphicsLineItem(line, &m_radials);
+            auto *li = new QGraphicsLineItem(line, &m_radials);
             li->setFlags(QGraphicsItem::ItemIgnoresTransformations);
             li->setPen(pen);
         }
@@ -153,13 +152,13 @@ namespace swift::gui::components
 
                     QPointF position(polarPoint(distanceNM, bearingRad));
 
-                    QGraphicsEllipseItem *dot = new QGraphicsEllipseItem(-2.0, -2.0, 4.0, 4.0, &m_radarTargets);
+                    auto *dot = new QGraphicsEllipseItem(-2.0, -2.0, 4.0, 4.0, &m_radarTargets);
                     dot->setPos(position);
                     dot->setPen(m_radarTargetPen);
                     dot->setBrush(m_radarTargetPen.color());
                     dot->setFlags(QGraphicsItem::ItemIgnoresTransformations);
 
-                    QGraphicsTextItem *tag = new QGraphicsTextItem(&m_radarTargets);
+                    auto *tag = new QGraphicsTextItem(&m_radarTargets);
                     QString tagText;
                     if (ui->cb_Callsign->isChecked()) { tagText += sa.getCallsignAsString() % u"\n"; }
                     if (ui->cb_Altitude->isChecked())
@@ -184,7 +183,7 @@ namespace swift::gui::components
                         const double headingRad = sa.getHeading().value(CAngleUnit::rad());
                         QPen pen(Qt::green, 1);
                         pen.setCosmetic(true);
-                        QGraphicsLineItem *li =
+                        auto *li =
                             new QGraphicsLineItem(QLineF({ 0.0, 0.0 }, polarPoint(5.0, headingRad)), &m_radarTargets);
                         li->setPos(position);
                         li->setPen(pen);

@@ -45,7 +45,7 @@ namespace swift::misc
         static bool canHandleIndex(CPropertyIndexRef index);
 
         //! Constructor
-        IOrderable();
+        IOrderable() = default;
 
         //! Constructor
         IOrderable(int order);

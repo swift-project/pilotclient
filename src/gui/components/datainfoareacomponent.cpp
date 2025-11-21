@@ -43,7 +43,7 @@ namespace swift::gui::components
         this->setTabBarPosition(QTabWidget::North);
     }
 
-    CDataInfoAreaComponent::~CDataInfoAreaComponent() {}
+    CDataInfoAreaComponent::~CDataInfoAreaComponent() = default;
 
     CDbModelComponent *CDataInfoAreaComponent::getModelComponent() const { return ui->comp_DbModels; }
 
@@ -101,7 +101,7 @@ namespace swift::gui::components
 
     QSize CDataInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
     {
-        InfoArea area = static_cast<InfoArea>(areaIndex);
+        auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaAircraftIcao:
@@ -110,13 +110,13 @@ namespace swift::gui::components
         case InfoAreaModels:
         case InfoAreaCountries:
         case InfoAreaAircraftCategories:
-        default: return QSize(800, 600);
+        default: return { 800, 600 };
         }
     }
 
     const QPixmap &CDataInfoAreaComponent::indexToPixmap(int areaIndex) const
     {
-        InfoArea area = static_cast<InfoArea>(areaIndex);
+        auto area = static_cast<InfoArea>(areaIndex);
         switch (area)
         {
         case InfoAreaAircraftIcao: return CIcons::appAircraftIcao16();

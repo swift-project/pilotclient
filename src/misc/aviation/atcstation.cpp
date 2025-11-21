@@ -25,8 +25,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAtcStation)
 
 namespace swift::misc::aviation
 {
-    CAtcStation::CAtcStation() {}
-
     CAtcStation::CAtcStation(const QString &callsign) : m_callsign(callsign) { m_callsign.setTypeHint(CCallsign::Atc); }
 
     CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency,
@@ -179,7 +177,7 @@ namespace swift::misc::aviation
     QVariant CAtcStation::propertyByIndex(CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexLogoffTime: return QVariant::fromValue(m_logoffTimeUtc);
@@ -211,7 +209,7 @@ namespace swift::misc::aviation
             (*this) = variant.value<CAtcStation>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexLogoffTime: this->setLogoffTimeUtc(variant.value<QDateTime>()); break;
@@ -248,7 +246,7 @@ namespace swift::misc::aviation
         {
             return this->getCallsign().comparePropertyByIndex(CPropertyIndexRef::empty(), compareValue.getCallsign());
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexLogoffTime: return Compare::compare(this->getLogoffTimeUtc(), compareValue.getLogoffTimeUtc());

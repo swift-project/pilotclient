@@ -62,7 +62,7 @@ namespace swift::misc::simulation
     QVariant CSimulatorInternals::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
         if (index.isMyself()) { return QVariant::fromValue(*this); }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexData: return QVariant::fromValue(m_data);
@@ -77,7 +77,7 @@ namespace swift::misc::simulation
             (*this) = variant.value<CSimulatorInternals>();
             return;
         }
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexData: m_data = variant.value<CNameVariantPairList>(); break;

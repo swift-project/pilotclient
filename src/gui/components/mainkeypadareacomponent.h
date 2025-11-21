@@ -40,7 +40,7 @@ namespace swift::gui::components
         explicit CMainKeypadAreaComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CMainKeypadAreaComponent() override;
+        ~CMainKeypadAreaComponent() override;
 
         //! Main info area changed
         void onMainInfoAreaChanged(int currentTabIndex, const QList<int> &dockedIndexes,

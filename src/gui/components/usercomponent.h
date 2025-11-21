@@ -34,7 +34,7 @@ namespace swift::gui::components
         explicit CUserComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CUserComponent() override;
+        ~CUserComponent() override;
 
         //! Number of clients
         int countClients() const;

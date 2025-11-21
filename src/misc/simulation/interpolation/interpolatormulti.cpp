@@ -28,7 +28,7 @@ namespace swift::misc::simulation
         default: break;
         }
 
-        return CInterpolationResult();
+        return {};
     }
 
     const CAircraftSituation &
@@ -78,8 +78,6 @@ namespace swift::misc::simulation
         }
         return ("Illegal mode");
     }
-
-    CInterpolatorMultiWrapper::CInterpolatorMultiWrapper() {}
 
     CInterpolatorMultiWrapper::CInterpolatorMultiWrapper(const aviation::CCallsign &callsign,
                                                          ISimulationEnvironmentProvider *p1,

@@ -41,21 +41,21 @@ namespace swift::gui::filters
         explicit CAircraftModelFilterBar(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftModelFilterBar() override;
+        ~CAircraftModelFilterBar() override;
 
         //! Show count
         void displayCount(bool show);
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<models::IModelFilter<swift::misc::simulation::CAircraftModelList>>
+        std::unique_ptr<models::IModelFilter<swift::misc::simulation::CAircraftModelList>>
         createModelFilter() const override;
 
         //! \copydoc CFilterWidget::onRowCountChanged
-        virtual void onRowCountChanged(int count, bool withFilter) override;
+        void onRowCountChanged(int count, bool withFilter) override;
 
     protected:
         //! \copydoc CFilterWidget::clearForm
-        virtual void clearForm() override;
+        void clearForm() override;
 
     private:
         //! Simulator selection changed

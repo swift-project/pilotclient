@@ -135,7 +135,7 @@ namespace swift::misc::network
 
     bool CNetworkUtils::isValidPort(const QString &port)
     {
-        bool success;
+        bool success {};
         int p = port.toInt(&success);
         if (!success) return false;
         return (p >= 1 && p <= 65535);
@@ -205,7 +205,7 @@ namespace swift::misc::network
         {
             return lastModifiedQv.value<QDateTime>();
         }
-        return QDateTime();
+        return {};
     }
 
     qint64 CNetworkUtils::lastModifiedSinceNow(const QNetworkReply *nwReply)
@@ -222,7 +222,7 @@ namespace swift::misc::network
         if (started.isValid() && started.canConvert<qint64>())
         {
             const qint64 now = QDateTime::currentMSecsSinceEpoch();
-            const qint64 start = started.value<qint64>();
+            const auto start = started.value<qint64>();
             return (now - start);
         }
         return -1;
@@ -246,9 +246,9 @@ namespace swift::misc::network
 
     QUrl CNetworkUtils::getHttpRedirectUrl(QNetworkReply *nwReply)
     {
-        if (!nwReply) { return QUrl(); }
+        if (!nwReply) { return {}; }
         const QVariant possibleRedirectUrl = nwReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-        if (!possibleRedirectUrl.isValid()) { return QUrl(); }
+        if (!possibleRedirectUrl.isValid()) { return {}; }
         QUrl redirectUrl = possibleRedirectUrl.toUrl();
         if (redirectUrl.isRelative()) { redirectUrl = nwReply->url().resolved(redirectUrl); }
         return redirectUrl;
@@ -265,8 +265,7 @@ namespace swift::misc::network
     bool CNetworkUtils::looksLikePhpErrorMessage(const QString &errorMessage)
     {
         if (errorMessage.length() < 50) { return false; }
-        if (errorMessage.contains("xdebug", Qt::CaseInsensitive)) { return true; }
-        return false;
+        return errorMessage.contains("xdebug", Qt::CaseInsensitive);
     }
 
     const QString &CNetworkUtils::networkOperationToString(QNetworkAccessManager::Operation operation)

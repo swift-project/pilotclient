@@ -16,8 +16,6 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::simulation, CDistributor)
 
 namespace swift::misc::simulation
 {
-    CDistributor::CDistributor() {}
-
     CDistributor::CDistributor(const QString &key) { this->setDbKey(unifyKeyOrAlias(key)); }
 
     CDistributor::CDistributor(const QString &id, const QString &description, const QString &alias1,
@@ -65,7 +63,7 @@ namespace swift::misc::simulation
         }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAlias1: return QVariant::fromValue(m_alias1);
@@ -94,7 +92,7 @@ namespace swift::misc::simulation
             return;
         }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAlias1: m_alias1 = variant.value<QString>(); break;
@@ -113,7 +111,7 @@ namespace swift::misc::simulation
         }
         if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
 
-        const ColumnIndex i = index.frontCasted<ColumnIndex>();
+        const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexAlias1: return m_alias1.compare(compareValue.m_alias1, Qt::CaseInsensitive);
@@ -175,7 +173,7 @@ namespace swift::misc::simulation
         if (!existsKey(json, prefix))
         {
             // when using relationship, this can be null
-            return CDistributor();
+            return {};
         }
 
         const QString description(json.value(prefix % u"description").toString());

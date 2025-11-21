@@ -107,7 +107,7 @@ namespace swift::gui::components
         ui->le_NavComEquipment->setReadOnly(true);
         ui->le_SsrEquipment->setReadOnly(true);
 
-        CUpperCaseEventFilter *ef = new CUpperCaseEventFilter(ui->pte_Route);
+        auto *ef = new CUpperCaseEventFilter(ui->pte_Route);
         ui->pte_Route->installEventFilter(ef);
         ef = new CUpperCaseEventFilter(ui->pte_Remarks);
         ui->pte_Remarks->installEventFilter(ef);
@@ -221,7 +221,7 @@ namespace swift::gui::components
         });
     }
 
-    CFlightPlanComponent::~CFlightPlanComponent() {}
+    CFlightPlanComponent::~CFlightPlanComponent() = default;
 
     void CFlightPlanComponent::loginDataSet()
     {
@@ -775,7 +775,7 @@ namespace swift::gui::components
     CAircraftIcaoCode CFlightPlanComponent::getAircraftIcaoCode() const
     {
         const QString designator(ui->le_AircraftType->text());
-        if (!CAircraftIcaoCode::isValidDesignator(designator)) { return CAircraftIcaoCode(); }
+        if (!CAircraftIcaoCode::isValidDesignator(designator)) { return {}; }
         if (sApp && sApp->hasWebDataServices())
         {
             const CAircraftIcaoCode designatorFromDb =
@@ -822,7 +822,7 @@ namespace swift::gui::components
     {
         if (!m_altitudeDialog) { m_altitudeDialog = new CAltitudeDialog(this); }
 
-        const QDialog::DialogCode ret = static_cast<QDialog::DialogCode>(m_altitudeDialog->exec());
+        const auto ret = static_cast<QDialog::DialogCode>(m_altitudeDialog->exec());
         if (ret != QDialog::Accepted) { return; }
 
         if (!m_altitudeDialog->getAltitudeString().isEmpty())
@@ -1073,7 +1073,7 @@ namespace swift::gui::components
     {
         if (!sGui || !sGui->hasWebDataServices()) { return; }
         const QStringList aircraft(sGui->getWebDataServices()->getAircraftIcaoCodes().allDesignators().values());
-        QCompleter *aircraftCompleter = new QCompleter(aircraft, this);
+        auto *aircraftCompleter = new QCompleter(aircraft, this);
         aircraftCompleter->setMaxVisibleItems(10);
         const int w5chars1 = aircraftCompleter->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
         aircraftCompleter->popup()->setMinimumWidth(w5chars1 * 5);
@@ -1082,7 +1082,7 @@ namespace swift::gui::components
         ui->le_AircraftType->setCompleter(aircraftCompleter);
 
         const QStringList airports = sGui->getWebDataServices()->getAirports().allIcaoCodes(true);
-        QCompleter *airportCompleter = new QCompleter(airports, this);
+        auto *airportCompleter = new QCompleter(airports, this);
         airportCompleter->setMaxVisibleItems(10);
         const int w5chars2 = airportCompleter->popup()->fontMetrics().size(Qt::TextSingleLine, "FooBa").width();
         airportCompleter->popup()->setMinimumWidth(w5chars2 * 5);

@@ -21,7 +21,7 @@ namespace swift::simplugin::flightgear
                                                                  InterfaceName(), connection, this);
         if (!dummy)
         {
-            bool s;
+            bool s {};
             s = connection.connect(
                 QString(), "/fgswiftbus/service", "org.swift_project.fgswiftbus.service", "aircraftModelChanged", this,
                 SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));

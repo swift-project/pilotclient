@@ -31,13 +31,13 @@ namespace swift::gui::editors
         explicit CAircraftPartsForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftPartsForm() override;
+        ~CAircraftPartsForm() override;
 
         //! \name Form class implementations
         //! @{
-        virtual void setReadOnly(bool readonly) override;
-        virtual void setSelectOnly() override;
-        virtual swift::misc::CStatusMessageList validate(bool nested = false) const override;
+        void setReadOnly(bool readonly) override;
+        void setSelectOnly() override;
+        swift::misc::CStatusMessageList validate(bool nested = false) const override;
         //! @}
 
         //! Get the parts

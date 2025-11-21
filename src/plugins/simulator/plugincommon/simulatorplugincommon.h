@@ -28,11 +28,11 @@ namespace swift::simplugin::common
 
     public:
         //! Destructor
-        virtual ~CSimulatorPluginCommon() override;
+        ~CSimulatorPluginCommon() override;
 
         // --------- ISimulator implementations ------------
-        virtual void unload() override;
-        virtual bool disconnectFrom() override;
+        void unload() override;
+        bool disconnectFrom() override;
 
     protected:
         //! Constructor
@@ -45,7 +45,7 @@ namespace swift::simplugin::common
         //! <pre>
         //! .drv intdisplay interpolation log display
         //! </pre>
-        virtual bool parseDetails(const swift::misc::CSimpleCommandParser &parser) override;
+        bool parseDetails(const swift::misc::CSimpleCommandParser &parser) override;
 
         //! Register help
         static void registerHelp();

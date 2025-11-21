@@ -41,7 +41,7 @@ namespace swift::gui::editors
                 Qt::QueuedConnection);
     }
 
-    CMatchingForm::~CMatchingForm() {}
+    CMatchingForm::~CMatchingForm() = default;
 
     void CMatchingForm::setReadOnly(bool readonly)
     {
@@ -86,7 +86,7 @@ namespace swift::gui::editors
     CStatusMessageList CMatchingForm::validate(bool withNestedForms) const
     {
         Q_UNUSED(withNestedForms)
-        return CStatusMessageList();
+        return {};
     }
 
     void CMatchingForm::setValue(const CAircraftMatcherSetup &setup)

@@ -12,8 +12,6 @@ using namespace swift::misc::aviation;
 
 namespace swift::core::fsd
 {
-    PilotDataUpdate::PilotDataUpdate() : MessageBase() {}
-
     PilotDataUpdate::PilotDataUpdate(CTransponder::TransponderMode transponderMode, const QString &sender,
                                      int transponderCode, PilotRating rating, double latitude, double longitude,
                                      int altitudeTrue, int altitudePressure, int groundSpeed, double pitch, double bank,
@@ -26,7 +24,7 @@ namespace swift::core::fsd
 
     QStringList PilotDataUpdate::toTokens() const
     {
-        std::uint32_t pbh;
+        std::uint32_t pbh {};
         packPBH(m_pitch, m_bank, m_heading, m_onGround, pbh);
 
         QStringList tokens;
@@ -57,9 +55,18 @@ namespace swift::core::fsd
         bool onGround = false;
         unpackPBH(tokens[8].toUInt(), pitch, bank, heading, onGround);
 
-        return PilotDataUpdate(fromQString<CTransponder::TransponderMode>(tokens[0]), tokens[1], tokens[2].toInt(),
-                               fromQString<PilotRating>(tokens[3]), tokens[4].toDouble(), tokens[5].toDouble(),
-                               tokens[6].toInt(), tokens[6].toInt() + tokens[9].toInt(), tokens[7].toInt(), pitch, bank,
-                               heading, onGround);
+        return { fromQString<CTransponder::TransponderMode>(tokens[0]),
+                 tokens[1],
+                 tokens[2].toInt(),
+                 fromQString<PilotRating>(tokens[3]),
+                 tokens[4].toDouble(),
+                 tokens[5].toDouble(),
+                 tokens[6].toInt(),
+                 tokens[6].toInt() + tokens[9].toInt(),
+                 tokens[7].toInt(),
+                 pitch,
+                 bank,
+                 heading,
+                 onGround };
     }
 } // namespace swift::core::fsd

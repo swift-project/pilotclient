@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    ClientIdentification::ClientIdentification() : MessageBase() {}
-
     ClientIdentification::ClientIdentification(const QString &sender, quint16 clientId, const QString &clientName,
                                                int clientVersionMajor, int clientVersionMinor, const QString &userCid,
                                                const QString &sysUid, const QString &initialChallenge)

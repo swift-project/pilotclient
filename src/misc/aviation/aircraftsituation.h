@@ -104,7 +104,7 @@ namespace swift::misc
             };
 
             //! Default constructor.
-            CAircraftSituation();
+            CAircraftSituation() = default;
 
             //! Constructor with callsign
             CAircraftSituation(const CCallsign &correspondingCallsign);
@@ -143,7 +143,7 @@ namespace swift::misc
             bool isPositionOrAltitudeNull() const { return this->isPositionNull() || this->getAltitude().isNull(); }
 
             //! Null situation
-            virtual bool isNull() const override;
+            bool isNull() const override;
 
             //! Is given info better (more accurate)?
             bool isOtherElevationInfoBetter(GndElevationInfo otherInfo, bool transferred) const;
@@ -171,10 +171,10 @@ namespace swift::misc
             void setPosition(const geo::CCoordinateGeodetic &position) { m_position = position; }
 
             //! \copydoc geo::ICoordinateGeodetic::latitude()
-            virtual geo::CLatitude latitude() const override { return m_position.latitude(); }
+            geo::CLatitude latitude() const override { return m_position.latitude(); }
 
             //! \copydoc geo::ICoordinateGeodetic::longitude()
-            virtual geo::CLongitude longitude() const override { return m_position.longitude(); }
+            geo::CLongitude longitude() const override { return m_position.longitude(); }
 
             //! Is on ground?
             bool isOnGround() const { return m_onGroundInfo.getOnGround() == COnGroundInfo::OnGround; }
@@ -210,13 +210,10 @@ namespace swift::misc
             const CAltitude &geodeticHeight() const override { return m_position.geodeticHeight(); }
 
             //! \copydoc geo::ICoordinateGeodetic::normalVector
-            virtual QVector3D normalVector() const override { return m_position.normalVector(); }
+            QVector3D normalVector() const override { return m_position.normalVector(); }
 
             //! \copydoc geo::ICoordinateGeodetic::normalVectorDouble
-            virtual std::array<double, 3> normalVectorDouble() const override
-            {
-                return m_position.normalVectorDouble();
-            }
+            std::array<double, 3> normalVectorDouble() const override { return m_position.normalVectorDouble(); }
 
             //! Elevation of the ground directly beneath
             const CAltitude &getGroundElevation() const { return m_groundElevationPlane.getAltitude(); }

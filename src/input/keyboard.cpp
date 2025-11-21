@@ -3,7 +3,7 @@
 
 #include "keyboard.h"
 
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
 #    include "win/keyboardwindows.h"
 #elif defined(Q_OS_LINUX)
 #    include "linux/keyboardlinux.h"
@@ -19,7 +19,7 @@ namespace swift::input
 
     std::unique_ptr<IKeyboard> IKeyboard::create(QObject *parent)
     {
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
         std::unique_ptr<IKeyboard> ptr(new CKeyboardWindows(parent));
 #elif defined(Q_OS_LINUX)
         std::unique_ptr<IKeyboard> ptr(new CKeyboardLinux(parent));

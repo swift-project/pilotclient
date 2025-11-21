@@ -37,7 +37,7 @@ namespace swift::misc::simulation
         };
 
         //! Default constructor
-        CSimulatorInternals() {}
+        CSimulatorInternals() = default;
 
         //! All values
         swift::misc::CNameVariantPairList getData() const { return this->m_data; }

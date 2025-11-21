@@ -35,7 +35,7 @@ namespace swift::misc::network
         using CSequence::CSequence;
 
         //! Default constructor.
-        CTextMessageList();
+        CTextMessageList() = default;
 
         //! Constructor, single private message
         CTextMessageList(const QString &message, const aviation::CCallsign &recipientCallsign);

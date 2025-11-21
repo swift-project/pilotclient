@@ -30,7 +30,7 @@ namespace swift::misc
         using CSequence::CSequence;
 
         //! Default constructor.
-        CNameVariantPairList();
+        CNameVariantPairList() = default;
 
         //! Construct from a base class object.
         CNameVariantPairList(const CSequence<CNameVariantPair> &other);

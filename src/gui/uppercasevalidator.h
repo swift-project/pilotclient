@@ -38,10 +38,10 @@ namespace swift::gui
         void setAllowedCharacters09AZ();
 
         //! \copydoc QValidator::validate
-        virtual State validate(QString &input, int &pos) const override;
+        State validate(QString &input, int &pos) const override;
 
         //! \copydoc QValidator::fixup
-        virtual void fixup(QString &input) const override;
+        void fixup(QString &input) const override;
 
     private:
         bool m_optionalValue = false; //!< allow empty

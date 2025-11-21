@@ -35,9 +35,9 @@ namespace swift::gui::editors
         connect(ui->pb_SetOwnAircraft, &QPushButton::released, this, &CPbhsForm::changeValues);
     }
 
-    CPbhsForm::~CPbhsForm() {}
+    CPbhsForm::~CPbhsForm() = default;
 
-    CAngle CPbhsForm::getBankAngle() const { return CAngle(getBankAngleDegrees(), CAngleUnit::deg()); }
+    CAngle CPbhsForm::getBankAngle() const { return { getBankAngleDegrees(), CAngleUnit::deg() }; }
 
     void CPbhsForm::setBankAngle(const CAngle &angle)
     {
@@ -49,13 +49,13 @@ namespace swift::gui::editors
     double CPbhsForm::getBankAngleDegrees() const
     {
         const QString v(ui->le_Bank->text().replace(',', '.'));
-        bool ok;
+        bool ok {};
         double vd = v.toDouble(&ok);
         if (!ok) { vd = 0.0; }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
-    CAngle CPbhsForm::getPitchAngle() const { return CAngle(getPitchAngleDegrees(), CAngleUnit::deg()); }
+    CAngle CPbhsForm::getPitchAngle() const { return { getPitchAngleDegrees(), CAngleUnit::deg() }; }
 
     void CPbhsForm::setPitchAngle(const CAngle &angle)
     {
@@ -67,15 +67,15 @@ namespace swift::gui::editors
     double CPbhsForm::getPitchAngleDegrees() const
     {
         const QString v(ui->le_Pitch->text().replace(',', '.'));
-        bool ok;
+        bool ok {};
         double vd = v.toDouble(&ok);
         if (!ok) { vd = 0.0; }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
-    CAngle CPbhsForm::getHeadingAngle() const { return CAngle(getHeadingAngleDegrees(), CAngleUnit::deg()); }
+    CAngle CPbhsForm::getHeadingAngle() const { return { getHeadingAngleDegrees(), CAngleUnit::deg() }; }
 
-    CHeading CPbhsForm::getHeading() const { return CHeading(this->getHeadingAngle(), CHeading::True); }
+    CHeading CPbhsForm::getHeading() const { return { this->getHeadingAngle(), CHeading::True }; }
 
     void CPbhsForm::setHeadingAngle(const CAngle &angle)
     {
@@ -87,7 +87,7 @@ namespace swift::gui::editors
     double CPbhsForm::getHeadingAngleDegrees() const
     {
         const QString v(ui->le_Heading->text().replace(',', '.'));
-        bool ok;
+        bool ok {};
         double vd = v.toDouble(&ok);
         if (!ok) { vd = 0.0; }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
@@ -96,7 +96,7 @@ namespace swift::gui::editors
     CSpeed CPbhsForm::getGroundSpeed() const
     {
         const int gsKts = ui->sb_GsKts->value();
-        return CSpeed(gsKts, CSpeedUnit::kts());
+        return { static_cast<double>(gsKts), CSpeedUnit::kts() };
     }
 
     void CPbhsForm::setSituation(const CAircraftSituation &situation)

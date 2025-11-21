@@ -13,8 +13,6 @@ using namespace swift::misc::simulation;
 
 namespace swift::simplugin::flightgear
 {
-    CFlightgearMPAircraft::CFlightgearMPAircraft() {}
-
     CFlightgearMPAircraft::CFlightgearMPAircraft(const CSimulatedAircraft &aircraft, ISimulator *simulator,
                                                  CInterpolationLogger *logger)
         : m_aircraft(aircraft),
@@ -57,7 +55,7 @@ namespace swift::simplugin::flightgear
         return this->getInterpolator() ? this->getInterpolator()->getInterpolationMessages(mode) : CStatusMessageList();
     }
 
-    CCallsignSet CFlightgearMPAircraftObjects::getAllCallsigns() const { return CCallsignSet(this->keys()); }
+    CCallsignSet CFlightgearMPAircraftObjects::getAllCallsigns() const { return { this->keys() }; }
 
     QStringList CFlightgearMPAircraftObjects::getAllCallsignStrings(bool sorted) const
     {

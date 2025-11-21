@@ -15,7 +15,6 @@
 using namespace swift::gui;
 using namespace swift::gui::models;
 using namespace swift::misc;
-using namespace swift::misc::network;
 
 namespace swift::gui::filters
 {
@@ -26,14 +25,14 @@ namespace swift::gui::filters
         connect(ui->le_IsoCode, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
         connect(ui->le_Name, &QLineEdit::returnPressed, this, &CFilterWidget::triggerFilter);
 
-        CUpperCaseValidator *ucv = new CUpperCaseValidator(this);
+        auto *ucv = new CUpperCaseValidator(this);
         ui->le_IsoCode->setValidator(ucv);
 
         // reset form
         this->clearForm();
     }
 
-    CCountryFilterBar::~CCountryFilterBar() {}
+    CCountryFilterBar::~CCountryFilterBar() = default;
 
     std::unique_ptr<swift::gui::models::IModelFilter<CCountryList>> CCountryFilterBar::createModelFilter() const
     {

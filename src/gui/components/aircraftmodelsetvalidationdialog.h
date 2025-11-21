@@ -39,7 +39,7 @@ namespace swift::gui::components
         explicit CAircraftModelSetValidationDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CAircraftModelSetValidationDialog() override;
+        ~CAircraftModelSetValidationDialog() override;
 
         //! \copydoc CAircraftModelValidationComponent::validatedModelSet
         void validatedModelSet(const swift::misc::simulation::CSimulatorInfo &simulator,

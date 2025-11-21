@@ -43,7 +43,7 @@ namespace swift::gui
             explicit CDbAirlineIcaoComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbAirlineIcaoComponent();
+            ~CDbAirlineIcaoComponent() override;
 
             //! Get the view
             swift::gui::views::CAirlineIcaoCodeView *view() const;

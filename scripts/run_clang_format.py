@@ -8,7 +8,8 @@ import subprocess
 
 
 def should_file_formatted(file) -> bool:
-    return file.endswith(".cpp") or file.endswith(".h")
+    excluded_filenames = ["datarefs.inc"]
+    return file not in excluded_filenames and (file.endswith(".cpp") or file.endswith(".h") or file.endswith(".inc"))
 
 
 def get_formattable_files(folder_name):

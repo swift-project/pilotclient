@@ -14,8 +14,6 @@ SWIFT_DEFINE_COLLECTION_MIXINS(swift::misc, CPlatform, CPlatformSet)
 
 namespace swift::misc
 {
-    CPlatformSet::CPlatformSet() {}
-
     CPlatformSet::CPlatformSet(const CCollection<CPlatform> &other) : CCollection<CPlatform>(other) {}
 
     QStringList CPlatformSet::getPlatformNames() const

@@ -31,7 +31,7 @@ namespace swift::sound::sample_provider
 
         for (int n = 0; n < samplesRead; n++)
         {
-            for (int band = 0; band < m_filters.size(); band++) { samples[n] = m_filters[band].transform(samples[n]); }
+            for (auto &filter : m_filters) { samples[n] = filter.transform(samples[n]); }
             samples[n] *= static_cast<float>(m_outputGain);
         }
         return samplesRead;

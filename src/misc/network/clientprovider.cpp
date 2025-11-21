@@ -17,7 +17,7 @@ namespace swift::misc::network
             QReadLocker l(&m_lockClient);
             clients = m_clients.values();
         }
-        return CClientList(clients);
+        return { clients };
     }
 
     void CClientProvider::setClients(const CClientList &clients)
@@ -46,7 +46,7 @@ namespace swift::misc::network
             QReadLocker l(&m_lockClient);
             if (m_clients.contains(callsign)) { return m_clients.value(callsign); }
         }
-        return CClient();
+        return {};
     }
 
     bool CClientProvider::setOtherClient(const CClient &client)
@@ -124,7 +124,7 @@ namespace swift::misc::network
     bool CClientProvider::setClientGndCapability(const CCallsign &callsign, bool supportGndFlag)
     {
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
-        if (callsign.isEmpty()) { return 0; }
+        if (callsign.isEmpty()) { return false; }
 
         CClient client = this->getClientOrDefaultForCallsign(callsign);
 
@@ -152,13 +152,13 @@ namespace swift::misc::network
     CClientList CClientAware::getClients() const
     {
         if (this->provider()) { return this->provider()->getClients(); }
-        return CClientList();
+        return {};
     }
 
     CClient CClientAware::getClientOrDefaultForCallsign(const aviation::CCallsign &callsign) const
     {
         if (this->provider()) { return this->provider()->getClientOrDefaultForCallsign(callsign); }
-        return CClient();
+        return {};
     }
 
     bool CClientAware::hasClientInfo(const CCallsign &callsign) const
@@ -206,7 +206,7 @@ namespace swift::misc::network
 
     CClientProviderDummy *CClientProviderDummy::instance()
     {
-        static CClientProviderDummy *dummy = new CClientProviderDummy();
+        static auto dummy = new CClientProviderDummy();
         return dummy;
     }
 } // namespace swift::misc::network

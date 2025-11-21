@@ -30,12 +30,12 @@ namespace swift::misc::shared_state
         CDataLinkLocal(QObject *parent = nullptr);
 
         //! Destructor.
-        virtual ~CDataLinkLocal() override;
+        ~CDataLinkLocal() override;
 
-        virtual void publish(const CPassiveMutator *mutator) override;
-        virtual void publish(const CActiveMutator *mutator) override;
-        virtual void subscribe(const CPassiveObserver *observer) override;
-        virtual void subscribe(const CActiveObserver *observer) override;
+        void publish(const CPassiveMutator *mutator) override;
+        void publish(const CActiveMutator *mutator) override;
+        void subscribe(const CPassiveObserver *observer) override;
+        void subscribe(const CActiveObserver *observer) override;
 
     private:
         struct Channel

@@ -132,22 +132,20 @@ namespace swift::misc::aviation
         bool hasValidIcaoCode() const { return !this->getIcao().isEmpty(); }
 
         //! NULL airport?
-        virtual bool isNull() const override;
+        bool isNull() const override;
 
         //! \copydoc geo::ICoordinateGeodetic::latitude
-        virtual swift::misc::geo::CLatitude latitude() const override { return this->getPosition().latitude(); }
+
+        swift::misc::geo::CLatitude latitude() const override { return this->getPosition().latitude(); }
 
         //! \copydoc geo::ICoordinateGeodetic::longitude
-        virtual swift::misc::geo::CLongitude longitude() const override { return this->getPosition().longitude(); }
+        swift::misc::geo::CLongitude longitude() const override { return this->getPosition().longitude(); }
 
         //! \copydoc geo::ICoordinateGeodetic::normalVector
-        virtual QVector3D normalVector() const override { return this->getPosition().normalVector(); }
+        QVector3D normalVector() const override { return this->getPosition().normalVector(); }
 
         //! \copydoc geo::ICoordinateGeodetic::normalVectorDouble
-        virtual std::array<double, 3> normalVectorDouble() const override
-        {
-            return this->getPosition().normalVectorDouble();
-        }
+        std::array<double, 3> normalVectorDouble() const override { return this->getPosition().normalVectorDouble(); }
 
         //! \copydoc swift::misc::mixin::Index::propertyByIndex
         QVariant propertyByIndex(swift::misc::CPropertyIndexRef index) const;

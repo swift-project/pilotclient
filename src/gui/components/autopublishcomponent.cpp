@@ -41,7 +41,7 @@ namespace swift::gui::components
         }
     }
 
-    CAutoPublishComponent::~CAutoPublishComponent() {}
+    CAutoPublishComponent::~CAutoPublishComponent() = default;
 
     int CAutoPublishComponent::readFiles()
     {

@@ -34,7 +34,7 @@ namespace swift::gui::components
         explicit CDbLoadDataDialog(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CDbLoadDataDialog();
+        ~CDbLoadDataDialog() override;
 
         //! Newer or empty entities detected
         bool newerOrEmptyEntitiesDetected(swift::misc::network::CEntityFlags::Entity loadEntities);

@@ -34,7 +34,7 @@ namespace swift::core::vatsim
         };
 
         //! Default constructor.
-        CReaderSettings();
+        CReaderSettings() = default;
 
         //! Simplified constructor
         CReaderSettings(const swift::misc::physical_quantities::CTime &initialTime,
@@ -152,7 +152,7 @@ namespace swift::core::vatsim
         };
 
         //! Default constructor.
-        CRawFsdMessageSettings();
+        CRawFsdMessageSettings() = default;
 
         //! Simplified constructor
         CRawFsdMessageSettings(bool enabled, const QString &fileDir);

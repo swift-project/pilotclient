@@ -13,7 +13,7 @@ namespace swift::misc::simulation
 {
     CRemoteAircraftProviderDummy *CRemoteAircraftProviderDummy::instance()
     {
-        static CRemoteAircraftProviderDummy *dummy = new CRemoteAircraftProviderDummy();
+        static auto dummy = new CRemoteAircraftProviderDummy();
         return dummy;
     }
 
@@ -45,8 +45,5 @@ namespace swift::misc::simulation
         }
     }
 
-    CAirspaceAircraftSnapshot CRemoteAircraftProviderDummy::getLatestAirspaceAircraftSnapshot() const
-    {
-        return CAirspaceAircraftSnapshot();
-    }
+    CAirspaceAircraftSnapshot CRemoteAircraftProviderDummy::getLatestAirspaceAircraftSnapshot() const { return {}; }
 } // namespace swift::misc::simulation

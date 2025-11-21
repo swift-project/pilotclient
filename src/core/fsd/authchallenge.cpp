@@ -7,8 +7,6 @@
 
 namespace swift::core::fsd
 {
-    AuthChallenge::AuthChallenge() : MessageBase() {}
-
     AuthChallenge::AuthChallenge(const QString &sender, const QString &target, const QString &challengeKey)
         : MessageBase(sender, target), m_challengeKey(challengeKey)
     {}
@@ -29,6 +27,6 @@ namespace swift::core::fsd
             swift::misc::CLogMessage(static_cast<AuthChallenge *>(nullptr)).warning(u"Wrong number of arguments.");
             return {};
         }
-        return AuthChallenge(tokens[0], tokens[1], tokens[2]);
+        return { tokens[0], tokens[1], tokens[2] };
     }
 } // namespace swift::core::fsd

@@ -9,8 +9,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::db, CDistribution, CDistributionList)
 
 namespace swift::misc::db
 {
-    CDistributionList::CDistributionList() {}
-
     CDistributionList::CDistributionList(const CSequence<CDistribution> &other) : CSequence<CDistribution>(other) {}
 
     QStringList CDistributionList::getChannels() const
@@ -85,7 +83,7 @@ namespace swift::misc::db
 
     CDistributionList CDistributionList::fromDatabaseJson(const QString &json)
     {
-        if (json.isEmpty()) { return CDistributionList(); }
+        if (json.isEmpty()) { return {}; }
         return CDistributionList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
 } // namespace swift::misc::db

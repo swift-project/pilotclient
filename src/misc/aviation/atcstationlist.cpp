@@ -19,8 +19,6 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAtcStation, CAtcStationList
 
 namespace swift::misc::aviation
 {
-    CAtcStationList::CAtcStationList() {}
-
     CAtcStationList::CAtcStationList(const CSequence<CAtcStation> &other) : CSequence<CAtcStation>(other) {}
 
     CAtcStationList CAtcStationList::findIfComUnitTunedInChannelSpacing(const CComSystem &comUnit) const
@@ -37,7 +35,7 @@ namespace swift::misc::aviation
 
     CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency)
     {
-        if (frequency.isNull()) { return CAtcStationList(); }
+        if (frequency.isNull()) { return {}; }
         return this->findBy([&](const CAtcStation &atcStation) { return atcStation.isAtcStationFrequency(frequency); });
     }
 
@@ -113,7 +111,7 @@ namespace swift::misc::aviation
 
     QHash<QString, CAtcStationList> CAtcStationList::splitPerSuffix(bool sort) const
     {
-        if (this->isEmpty()) { return QHash<QString, CAtcStationList>(); }
+        if (this->isEmpty()) { return {}; }
         const CAtcStationList stations = sort ? this->sortedByAtcSuffixSortOrderAndDistance() : *this;
 
         QString suffix;

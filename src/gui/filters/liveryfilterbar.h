@@ -14,6 +14,7 @@
 #include "gui/filters/filterwidget.h"
 #include "gui/models/modelfilter.h"
 #include "gui/swiftguiexport.h"
+#include "misc/aviation/liverylist.h"
 #include "misc/rgbcolor.h"
 
 namespace Ui
@@ -23,7 +24,6 @@ namespace Ui
 namespace swift::misc::aviation
 {
     class CLivery;
-    class CLiveryList;
 } // namespace swift::misc::aviation
 namespace swift::gui::filters
 {
@@ -41,10 +41,10 @@ namespace swift::gui::filters
         explicit CLiveryFilterBar(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLiveryFilterBar() override;
+        ~CLiveryFilterBar() override;
 
         //! \copydoc models::IModelFilterProvider::createModelFilter
-        virtual std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::aviation::CLiveryList>>
+        std::unique_ptr<swift::gui::models::IModelFilter<swift::misc::aviation::CLiveryList>>
         createModelFilter() const override;
 
         //! Filter by livery values
@@ -55,11 +55,11 @@ namespace swift::gui::filters
 
     public slots:
         //! \copydoc CFilterWidget::onRowCountChanged
-        virtual void onRowCountChanged(int count, bool withFilter) override;
+        void onRowCountChanged(int count, bool withFilter) override;
 
     protected:
         //! Clear form
-        virtual void clearForm() override;
+        void clearForm() override;
 
     private:
         //! Color changed

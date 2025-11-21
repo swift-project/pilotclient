@@ -21,14 +21,14 @@ namespace swift::gui::models
 
     QVariant CListModelBaseNonTemplate::headerData(int section, Qt::Orientation orientation, int role) const
     {
-        if (orientation != Qt::Horizontal) { return QVariant(); }
+        if (orientation != Qt::Horizontal) { return {}; }
         const bool handled = (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == Qt::InitialSortOrderRole);
-        if (!handled) { return QVariant(); }
-        if (section < 0 || section >= m_columns.size()) { return QVariant(); }
+        if (!handled) { return {}; }
+        if (section < 0 || section >= m_columns.size()) { return {}; }
 
-        if (role == Qt::DisplayRole) { return QVariant(m_columns.at(section).getColumnName()); }
-        if (role == Qt::ToolTipRole) { return QVariant(m_columns.at(section).getColumnToolTip()); }
-        return QVariant();
+        if (role == Qt::DisplayRole) { return { m_columns.at(section).getColumnName() }; }
+        if (role == Qt::ToolTipRole) { return { m_columns.at(section).getColumnToolTip() }; }
+        return {};
     }
 
     QModelIndex CListModelBaseNonTemplate::index(int row, int column, const QModelIndex &parent) const
@@ -40,7 +40,7 @@ namespace swift::gui::models
     QModelIndex CListModelBaseNonTemplate::parent(const QModelIndex &child) const
     {
         Q_UNUSED(child)
-        return QModelIndex();
+        return {};
     }
 
     CPropertyIndex CListModelBaseNonTemplate::columnToPropertyIndex(int column) const
@@ -94,7 +94,7 @@ namespace swift::gui::models
 
     bool CListModelBaseNonTemplate::hasValidSortColumn() const
     {
-        if (!(m_sortColumn >= 0 && m_sortColumn < m_columns.size())) { return false; }
+        if (m_sortColumn < 0 || m_sortColumn >= m_columns.size()) { return false; }
         return m_columns.isSortable(m_sortColumn);
     }
 
@@ -150,7 +150,7 @@ namespace swift::gui::models
         const int columns = columnCount();
         const int rows = rowCount();
         if (columns < 1) { return; }
-        if (startRowIndex < 0) { startRowIndex = 0; }
+        startRowIndex = std::max(startRowIndex, 0);
         if (endRowIndex >= rows) { endRowIndex = rows - 1; }
         const QModelIndex topLeft(createIndex(startRowIndex, 0));
         const QModelIndex bottomRight(createIndex(endRowIndex, columns - 1));
@@ -158,7 +158,7 @@ namespace swift::gui::models
     }
 
     CListModelBaseNonTemplate::CListModelBaseNonTemplate(const QString &translationContext, QObject *parent)
-        : QStandardItemModel(parent), m_columns(translationContext), m_sortColumn(-1), m_sortOrder(Qt::AscendingOrder)
+        : QStandardItemModel(parent), m_columns(translationContext)
     {
         // non unique default name, set translation context as default
         this->setObjectName(translationContext);

@@ -35,7 +35,7 @@ namespace swift::gui::components
         m_updateTimer.start();
     }
 
-    CRegisterComponent::~CRegisterComponent() {}
+    CRegisterComponent::~CRegisterComponent() = default;
 
     void CRegisterComponent::update()
     {

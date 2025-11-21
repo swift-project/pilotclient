@@ -28,7 +28,7 @@ namespace swift::gui
         explicit CShowHideBar(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CShowHideBar();
+        ~CShowHideBar() override;
 
         //! Is shown?
         bool isShown() const;

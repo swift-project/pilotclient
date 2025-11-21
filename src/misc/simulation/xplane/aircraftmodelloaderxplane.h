@@ -36,11 +36,11 @@ namespace swift::misc
             CAircraftModelLoaderXPlane(QObject *parent = nullptr);
 
             //! Virtual destructor
-            virtual ~CAircraftModelLoaderXPlane() override;
+            ~CAircraftModelLoaderXPlane() override;
 
             //! \name Interface functions
             //! @{
-            virtual bool isLoadingFinished() const override;
+            bool isLoadingFinished() const override;
             //! @}
 
             //! Parsed or injected models
@@ -49,8 +49,8 @@ namespace swift::misc
         protected:
             //! \name Interface functions
             //! @{
-            virtual void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
-                                              const QStringList &modelDirectories) override;
+            void startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
+                                      const QStringList &modelDirectories) override;
             //! @}
 
         private:

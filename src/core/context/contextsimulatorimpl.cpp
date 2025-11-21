@@ -205,7 +205,7 @@ namespace swift::core::context
     CSimulatorInternals CContextSimulator::getSimulatorInternals() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CSimulatorInternals(); }
+        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return {}; }
         return m_simulatorPlugin.second->getSimulatorInternals();
     }
 
@@ -213,7 +213,7 @@ namespace swift::core::context
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
         const CSimulatorInfo simulator = this->getModelSetLoaderSimulator();
-        if (!simulator.isSingleSimulator()) { return CAircraftModelList(); }
+        if (!simulator.isSingleSimulator()) { return {}; }
 
         CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
         return CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
@@ -321,7 +321,7 @@ namespace swift::core::context
     CAircraftModelList CContextSimulator::getDisabledModelsForMatching() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CAircraftModelList(); }
+        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return {}; }
         return m_aircraftMatcher.getDisabledModelsForMatching();
     }
 
@@ -354,7 +354,7 @@ namespace swift::core::context
         {
             CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << modelString;
         }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CAircraftModelList(); }
+        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return {}; }
 
         return this->getModelSet().findModelsStartingWith(modelString);
     }
@@ -369,7 +369,7 @@ namespace swift::core::context
     CInterpolationSetupList CContextSimulator::getInterpolationAndRenderingSetupsPerCallsign() const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CInterpolationSetupList(); }
+        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return {}; }
         return m_simulatorPlugin.second->getInterpolationSetupsPerCallsign();
     }
 
@@ -377,10 +377,7 @@ namespace swift::core::context
     CContextSimulator::getInterpolationAndRenderingSetupPerCallsignOrDefault(const CCallsign &callsign) const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified())
-        {
-            return CInterpolationAndRenderingSetupPerCallsign();
-        }
+        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return {}; }
         return m_simulatorPlugin.second->getInterpolationSetupPerCallsignOrDefault(callsign);
     }
 
@@ -408,8 +405,8 @@ namespace swift::core::context
     CStatusMessageList CContextSimulator::getInterpolationMessages(const CCallsign &callsign) const
     {
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (callsign.isEmpty()) { return CStatusMessageList(); }
-        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return CStatusMessageList(); }
+        if (callsign.isEmpty()) { return {}; }
+        if (!m_simulatorPlugin.second || m_simulatorPlugin.first.isUnspecified()) { return {}; }
         return m_simulatorPlugin.second->getInterpolationMessages(callsign);
     }
 

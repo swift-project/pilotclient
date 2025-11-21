@@ -13,7 +13,7 @@
  * Export a class or function from the library
  */
 #ifndef WITH_STATIC
-#    if defined(BUILD_SWIFT_GUI_LIB)
+#    ifdef BUILD_SWIFT_GUI_LIB
 #        define SWIFT_GUI_EXPORT Q_DECL_EXPORT
 #    else
 #        define SWIFT_GUI_EXPORT Q_DECL_IMPORT

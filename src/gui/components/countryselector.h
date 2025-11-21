@@ -29,7 +29,7 @@ namespace swift::gui::components
         explicit CCountrySelector(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CCountrySelector();
+        ~CCountrySelector() override;
 
         //! Set country
         void setCountry(const swift::misc::CCountry &country);

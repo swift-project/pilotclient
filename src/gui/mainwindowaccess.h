@@ -29,7 +29,7 @@ namespace swift::gui
         virtual ~IMainWindowAccess();
 
         //! Ctor
-        IMainWindowAccess() {}
+        IMainWindowAccess() = default;
 
         //! Copy constructor
         IMainWindowAccess(const IMainWindowAccess &) = delete;

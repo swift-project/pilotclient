@@ -32,7 +32,7 @@ namespace swift::gui::editors
         explicit CForm(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CForm() override;
+        ~CForm() override;
 
         //! Set editable
         virtual void setReadOnly(bool readOnly) = 0;
@@ -77,7 +77,7 @@ namespace swift::gui::editors
         explicit CFormDbUser(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CFormDbUser() override;
+        ~CFormDbUser() override;
 
         //! Authenticated DB user
         swift::misc::network::CAuthenticatedUser getSwiftDbUser() const;

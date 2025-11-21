@@ -30,7 +30,7 @@ namespace swift::gui::components
         CSettingsAdvancedComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CSettingsAdvancedComponent();
+        ~CSettingsAdvancedComponent() override;
 
     private:
         void crashDumpUploadEnabledChanged(Qt::CheckState state);

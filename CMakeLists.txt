@@ -6,8 +6,16 @@ cmake_policy(VERSION 3.21)
 cmake_minimum_required(VERSION 3.26)
 
 if(APPLE)
-    set(CMAKE_OSX_ARCHITECTURES "x86_64")
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
+    if (NOT DEFINED CMAKE_OSX_ARCHITECTURES)
+        # by default use x86 as currently only xswiftbus works on ARM/Apple Silicon
+        set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    endif()
+    if(CMAKE_OSX_ARCHITECTURES MATCHES "arm64")
+        # arm64 only supported since 11.0
+        set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0")
+    else()
+        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
+    endif()
 endif()
 
 set(SWIFT_LANGUAGES C CXX)
@@ -48,8 +56,27 @@ option(SWIFT_BUILD_EMULATED_PLUGIN "Build Emulated plugin" ON)
 cmake_dependent_option(SWIFT_BUILD_MSFS_PLUGIN "Build MSFS plugin" ON WIN32 OFF)
 cmake_dependent_option(SWIFT_BUILD_MSFS2024_PLUGIN "Build MSFS2024 plugin" ON WIN32 OFF)
 option(SWIFT_MINIFY_DEBUG_SYMBOLS "Minify debug symbols" OFF)
+option(SWIFT_ONLY_XSWIFTBUS_WORKAROUND "Only build xswiftbus (useful when compiling on ARM)" OFF)
 
 option(SWIFT_USE_CRASHPAD "Use crashpad" OFF)
+option(SWIFT_USE_PCH "Use precompiled headers" ON)
+
+
+# Shortcut to only build xswiftbus
+if (SWIFT_ONLY_XSWIFTBUS_WORKAROUND)
+    set(CMAKE_AUTOMOC OFF)
+    set(CMAKE_AUTORCC OFF)
+    set(CMAKE_AUTOUIC OFF)
+
+    find_package(DBus1 REQUIRED)
+    find_package(XPSDK REQUIRED)
+    find_package(Libevent REQUIRED)
+    find_package(nlohmann_json REQUIRED)
+
+    add_subdirectory(src/xswiftbus)
+    return()
+endif()
+
 
 # VATSIM related options
 option(SWIFT_VATSIM_SUPPORT "Build with VATSIM support" ON)

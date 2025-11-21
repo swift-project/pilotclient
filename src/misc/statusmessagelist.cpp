@@ -177,7 +177,7 @@ namespace swift::misc
 
     CStatusMessage CStatusMessageList::toSingleMessage() const
     {
-        if (this->isEmpty()) { return CStatusMessage(); }
+        if (this->isEmpty()) { return {}; }
         if (this->size() == 1) { return this->front(); }
         QStringList newMsgs;
         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
@@ -187,7 +187,7 @@ namespace swift::misc
             if (msg.isEmpty()) { continue; }
             newMsgs.append(msg.getMessage());
             CStatusMessage::StatusSeverity ms = msg.getSeverity();
-            if (s < ms) { s = ms; }
+            s = std::max(s, ms);
             cats.push_back(msg.getCategories());
         }
         const CStatusMessage newMsg(cats, s, newMsgs.join(", "));

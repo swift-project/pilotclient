@@ -47,7 +47,7 @@ namespace swift::gui
             explicit CDbDistributorComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            virtual ~CDbDistributorComponent() override;
+            ~CDbDistributorComponent() override;
 
             //! Get the view
             swift::gui::views::CDistributorView *view() const;

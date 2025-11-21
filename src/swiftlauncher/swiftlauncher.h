@@ -66,7 +66,7 @@ public:
     CSwiftLauncher(bool installerMode, QWidget *parent = nullptr);
 
     //! Destructor
-    virtual ~CSwiftLauncher() override;
+    ~CSwiftLauncher() override;
 
     //! Executable (to be started)
     const QString &getExecutable() const { return m_executable; }
@@ -87,9 +87,9 @@ public:
 protected:
     //! Mouse events for frameless window
     //! @{
-    virtual void mousePressEvent(QMouseEvent *event) override;
-    virtual void mouseMoveEvent(QMouseEvent *event) override;
-    virtual void mouseReleaseEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
     //! @}
 
 private slots:

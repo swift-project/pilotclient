@@ -11,20 +11,18 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc, CCountry, CCountryList)
 
 namespace swift::misc
 {
-    CCountryList::CCountryList() {}
-
     CCountryList::CCountryList(const CSequence<CCountry> &other) : CSequence<CCountry>(other) {}
 
     CCountry CCountryList::findByIsoCode(const QString &isoCode) const
     {
         const QString iso(isoCode.trimmed().toUpper());
-        if (!CCountry::isValidIsoCode(iso)) { return CCountry(); }
+        if (!CCountry::isValidIsoCode(iso)) { return {}; }
         return IDatastoreObjectList::findByKey(isoCode);
     }
 
     CCountry CCountryList::findBestMatchByCountryName(const QString &candidate) const
     {
-        if (candidate.isEmpty()) { return CCountry(); }
+        if (candidate.isEmpty()) { return {}; }
 
         thread_local const QRegularExpression reg("^[a-z]+", QRegularExpression::CaseInsensitiveOption);
         const QRegularExpressionMatch match = reg.match(candidate);
@@ -47,13 +45,13 @@ namespace swift::misc
 
     CCountry CCountryList::findFirstByAlias(const QString &alias) const
     {
-        if (alias.isEmpty()) { return CCountry(); }
+        if (alias.isEmpty()) { return {}; }
         const QString a(alias.toUpper().trimmed());
         for (const CCountry &country : (*this))
         {
             if (country.matchesAlias(a)) { return country; }
         }
-        return CCountry();
+        return {};
     }
 
     QStringList CCountryList::toIsoNameList(bool sorted) const
