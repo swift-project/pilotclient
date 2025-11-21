@@ -211,7 +211,7 @@ namespace swift::misc
             QString getAllModelStringsAliasesAndDbKey() const;
 
             //! Get model string and Livery
-            QString getMsfs2024Modelstring();
+            QString getMsfs2024ModelString();
 
             //! Model string alias
             void setModelStringAlias(const QString &alias) { m_modelStringAlias = alias.trimmed().toUpper(); }

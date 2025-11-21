@@ -49,7 +49,7 @@ namespace swift::core
         }
         else
         {
-            if (!options.testFlag(ShowAllInstalledModells))
+            if (!options.testFlag(ShowAllInstalledModels))
                 // without any information we can not use them
                 modelSet = modelSet.findWithKnownAircraftDesignator();
         }

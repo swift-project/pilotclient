@@ -17,8 +17,8 @@
 
 // clang-format off
 #include <Windows.h>
-//#include <SimConnect.h>
-#include "../third_party/externals/common/include/simconnect/P3D-v4/SimConnect.h"
+#include <SimConnect.h>
+//#include "../third_party/externals/common/include/simconnect/P3D-v4/SimConnect.h"
 
 // clang-format on
 

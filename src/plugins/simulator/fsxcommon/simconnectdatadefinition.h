@@ -344,9 +344,6 @@ namespace swift::simplugin::fsxcommon
 
         //! Initialize data definition for MSFS transponder
         static HRESULT initMSFSTransponder(const HANDLE hSimConnect);
-
-        //! Initialize data definition for MSFS transponder
-        // static HRESULT initMSFS2024Transponder(const HANDLE hSimConnect);
     };
 } // namespace swift::simplugin::fsxcommon
 

@@ -260,7 +260,7 @@ namespace swift::simplugin::msfs2024common
                     CAircraftModel model(dataDefinitionModel->title, dataDefinitionModel->livery,
                                          CAircraftModel::TypeOwnSimulatorModel);
 
-                    simulatorMsfs2024->reverseLookupAndUpdateOwnAircraftModel(model.getMsfs2024Modelstring());
+                    simulatorMsfs2024->reverseLookupAndUpdateOwnAircraftModel(model.getMsfs2024ModelString());
                 }
                 break;
             }

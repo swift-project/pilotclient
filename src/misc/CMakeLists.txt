@@ -682,7 +682,7 @@ add_library(misc SHARED
         weather/windlayer.h
         weather/windlayerlist.cpp
         weather/windlayerlist.h
-        )
+)
 
 if(APPLE)
     target_sources(misc PRIVATE

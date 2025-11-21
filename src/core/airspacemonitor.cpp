@@ -787,10 +787,6 @@ namespace swift::core
         }
     }
 
-    // for request
-    // #SBBER750:DAL483:FSIPIR:0:BER:A320:::::L2J:PMDG 737-800 AIRBERLIN (D-ABKM)
-    // and also for information
-    // #SBFSC751 : BER636 : FSIPI : 0 ::EC35:: :: : H2T : AIRBUS H135 NORSK LUFTAMBULANSE
     void CAirspaceMonitor::onCustomFSInnPacketReceived(const CCallsign &callsign, const QString &airlineIcaoDesignator,
                                                        const QString &aircraftIcaoDesignator,
                                                        const QString &combinedAircraftType, const QString &modelString)
@@ -865,16 +861,15 @@ namespace swift::core
             // in order not to override swift livery string data, we ignore those
             if (!usedModelString.isEmpty())
             {
-                const CSimulatedAircraft aircraft = this->addOrUpdateAircraftInRange(
-                    callsign, aircraftIcaoDesignator, airlineIcaoDesignator, QString(), usedModelString,
-                    CAircraftModel::TypeFSInnData, pReverseLookupMessages);
+                this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, QString(),
+                                                 usedModelString, CAircraftModel::TypeFSInnData,
+                                                 pReverseLookupMessages);
                 this->addReverseLookupMessages(callsign, reverseLookupMessages);
             }
             this->sendReadyForModelMatching(callsign, ReceivedFsInnPacket); // from FSInn
         }
     }
 
-    // #SBDAL483:BER636:PI:GEN:EQUIPMENT=B738:AIRLINE=DAL:LIVERY=swift_l1855a1787m13853
     void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator,
                                                const QString &airlineIcaoDesignator, const QString &livery)
     {
@@ -1227,14 +1222,6 @@ namespace swift::core
             // we do not change manually assigned models (msfs2024)
             if (!aircraft.getModel().hasValidDbKey() && aircraft.getModelType() != CAircraftModel::TypeManuallySet)
             {
-
-                CLogMessage(this).warning(u"CAirspaceMonitor::reverseLookupModelWithFlightplanData "
-                                          u"aircraft.getModelType %1 "
-                                          u"callsign %2 "
-                                          u"aircraftIcao %3 "
-                                          u"incomming modelType %4 ")
-                    << aircraft.getModelType() << callsign.toQString() << aircraftIcao << modelType;
-
                 CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao,
                                                                                   livery, modelString, modelType, log);
                 model.updateMissingParts(aircraft.getModel());

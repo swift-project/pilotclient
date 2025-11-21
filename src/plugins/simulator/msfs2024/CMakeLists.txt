@@ -16,8 +16,8 @@ add_library(simulatormsfs2024 SHARED
         simconnectdatadefinitionmsfs2024.cpp 
         simconnectdatadefinitionmsfs2024.h
         simulatormsfs2024simconnectproc.cpp
-        msfs2024export.h)
-
+        msfs2024export.h
+)
 
 set_target_properties(simulatormsfs2024 PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 set_target_properties(simulatormsfs2024 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)

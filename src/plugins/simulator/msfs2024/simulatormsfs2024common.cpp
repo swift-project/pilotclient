@@ -508,7 +508,7 @@ namespace swift::simplugin::msfs2024common
             bool incremnental = false;
             bool sortByDistributor = true;
             bool consolidateWithDb = false;
-            bool ShowAllInstalledModells = true; // msfs20424 always show all installed models
+            bool ShowAllInstalledModels = true; // msfs20424 always show all installed models
 
             if (gui_application)
             {
@@ -516,7 +516,7 @@ namespace swift::simplugin::msfs2024common
                 dbDataOnly = m_generic.getPropertyWithDbEntry();
                 incremnental = false;
                 consolidateWithDb = true;
-                ShowAllInstalledModells = true;
+                ShowAllInstalledModels = true;
             }
 
             // CDistributorList distributorList;
@@ -531,7 +531,7 @@ namespace swift::simplugin::msfs2024common
             if (incremnental) { options |= CModelSetBuilder::Incremental; }
             if (sortByDistributor) { options |= CModelSetBuilder::SortByDistributors; }
             if (consolidateWithDb) { options |= CModelSetBuilder::ConsolidateWithDb; }
-            if (ShowAllInstalledModells) { options |= CModelSetBuilder::ShowAllInstalledModells; }
+            if (ShowAllInstalledModels) { options |= CModelSetBuilder::ShowAllInstalledModels; }
             const CSimulatorInfo &simulator = this->getSimulatorInfo();
 
             CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
