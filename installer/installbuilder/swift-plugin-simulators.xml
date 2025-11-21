@@ -78,12 +78,12 @@
       </shouldPackRuleList>
     </component>
     <component>
-      <name>msfs</name>
-      <description>MSFS: Flight Sim 2020</description>
+      <name>msfs2020</name>
+      <description>MSFS2020: Flight Sim 2020</description>
       <canBeEdited>1</canBeEdited>
       <detailedDescription>
         MS Flight Simulator 2020 Simulator Plugin
-        This plugin acts as the interface between swift and MSFS.
+        This plugin acts as the interface between swift and MSFS2020.
       </detailedDescription>
       <selected>1</selected>
       <show>1</show>
@@ -95,7 +95,7 @@
           <platforms>windows</platforms>
           <distributionFileList>
             <distributionFile>
-              <origin>../../dist/bin/plugins/simulator/simulatormsfs.dll</origin>
+              <origin>../../dist/bin/plugins/simulator/simulatormsfs2020.dll</origin>
             </distributionFile>
            </distributionFileList>
         </folder>

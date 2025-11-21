@@ -61,9 +61,13 @@ namespace swift::core::application
         //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const QStringList &pluginIdentifiers, QString &)
         {
-            return std::all_of(pluginIdentifiers.cbegin(), pluginIdentifiers.cend(), [](const auto &pluginIdentifier) {
-                return misc::simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier);
-            });
+            bool allPositiveNonEmpty = true;
+            return (
+                allPositiveNonEmpty =
+                    !pluginIdentifiers.empty() &&
+                    std::all_of(pluginIdentifiers.cbegin(), pluginIdentifiers.cend(), [](const auto &pluginIdentifier) {
+                        return misc::simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier);
+                    }));
         }
     };
 
@@ -82,6 +86,23 @@ namespace swift::core::application
 
         //! \copydoc swift::misc::TSettingTrait::defaultValue
         static bool defaultValue() { return false; }
+    };
+
+    //! Selected configuration options
+    struct TEnabledConfigOptions : misc::TSettingTrait<QStringList>
+    {
+        //! \copydoc swift::misc::TSettingTrait::key
+        static const char *key() { return "application/enabledconfigoptions"; }
+
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
+        static const QString &humanReadable()
+        {
+            static const QString name("Config Settings");
+            return name;
+        }
+
+        //! \copydoc swift::misc::TSettingTrait::defaultValue
+        static const QStringList &defaultValue() { return QStringList {}; }
     };
 } // namespace swift::core::application
 

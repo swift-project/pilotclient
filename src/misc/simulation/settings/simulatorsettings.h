@@ -121,9 +121,9 @@ namespace swift::misc::simulation::settings
         bool setRecordedGndRadius(const swift::misc::physical_quantities::CLength &radius);
 
         //! Reads the settings for automatic loading when starting swiftgui
-        bool getPropertyWithDbEntry() { return m_withDbEntry; }
-        bool getPropertyModelSet() { return m_modelSet; }
-        bool getPropertyDistributorFiltered() { return m_distributorFiltered; }
+        bool getPropertyWithDbEntry() const { return m_withDbEntry; }
+        bool getPropertyModelSet() const { return m_modelSet; }
+        bool getPropertyDistributorFiltered() const { return m_distributorFiltered; }
 
         //! Reset the paths
         void resetPaths();
@@ -358,15 +358,15 @@ namespace swift::misc::simulation::settings
     };
 
     //! Trait for simulator settings
-    struct TSimulatorMsfs : public TSettingTrait<CSimulatorSettings>
+    struct TSimulatorMsfs2020 : public TSettingTrait<CSimulatorSettings>
     {
         //! \copydoc swift::misc::TSettingTrait::key
-        static const char *key() { return "settingssimulatormsfs"; }
+        static const char *key() { return "settingssimulatormsfs2020"; }
 
         //! \copydoc swift::misc::TSettingTrait::humanReadable
         static const QString &humanReadable()
         {
-            static const QString name("MSFS settings");
+            static const QString name("MSFS2020 settings");
             return name;
         }
     };
@@ -573,13 +573,13 @@ namespace swift::misc::simulation::settings
                                                    &CMultiSimulatorSettings::onFs9SettingsChanged }; //!< FS9 settings
         CSetting<TSimulatorP3D> m_simSettingsP3D { this,
                                                    &CMultiSimulatorSettings::onP3DSettingsChanged }; //!< P3D settings
-        CSetting<TSimulatorMsfs> m_simSettingsMsfs {
-            this, &CMultiSimulatorSettings::onMsfsSettingsChanged
-        }; //!< MSFS settings
+        CSetting<TSimulatorXP> m_simSettingsXP { this, &CMultiSimulatorSettings::onXPSettingsChanged }; //!< XP settings
+        CSetting<TSimulatorMsfs2020> m_simSettingsMsfs2020 {
+            this, &CMultiSimulatorSettings::onMsfs2020SettingsChanged
+        }; //!< MSFS2020 settings
         CSetting<TSimulatorMsfs2024> m_simSettingsMsfs2024 {
             this, &CMultiSimulatorSettings::onMsfs2024SettingsChanged
-        }; //!< MSFS settings
-        CSetting<TSimulatorXP> m_simSettingsXP { this, &CMultiSimulatorSettings::onXPSettingsChanged }; //!< XP settings
+        }; //!< MSFS2024 settings
         CSetting<TSimulatorFG> m_simSettingsFG { this, &CMultiSimulatorSettings::onFGSettingsChanged }; //!< FG settings
 
         //! @{
@@ -587,7 +587,7 @@ namespace swift::misc::simulation::settings
         void onFsxSettingsChanged();
         void onFs9SettingsChanged();
         void onP3DSettingsChanged();
-        void onMsfsSettingsChanged();
+        void onMsfs2020SettingsChanged();
         void onMsfs2024SettingsChanged();
         void onXPSettingsChanged();
         void onFGSettingsChanged();

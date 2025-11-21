@@ -80,8 +80,17 @@ namespace swift::gui::components
                          !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorFsx.getFilename()));
         readOnlyCheckbox(ui->cb_SettingsSimulatorP3D,
                          !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorP3D.getFilename()));
+
         readOnlyCheckbox(ui->cb_SettingsSimulatorXPlane, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
                                                              info, m_settingsSimulatorXPlane.getFilename()));
+
+        readOnlyCheckbox(ui->cb_SettingsSimulatorFG,
+                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorFG.getFilename()));
+
+        readOnlyCheckbox(ui->cb_SettingsSimulatorMSFS2020, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
+                                                               info, m_settingsSimulatorMSFS2020.getFilename()));
+        readOnlyCheckbox(ui->cb_SettingsSimulatorMSFS2024, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
+                                                               info, m_settingsSimulatorMSFS2024.getFilename()));
 
         readOnlyCheckbox(ui->cb_SettingsActionHotkeys, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
                                                            info, m_settingsActionHotkeys.getFilename()));
@@ -133,6 +142,9 @@ namespace swift::gui::components
         ui->cb_SettingsSimulatorFSX->setText(checkBoxText(TSimulatorFsx::humanReadable(), true));
         ui->cb_SettingsSimulatorP3D->setText(checkBoxText(TSimulatorP3D::humanReadable(), true));
         ui->cb_SettingsSimulatorXPlane->setText(checkBoxText(TSimulatorXP::humanReadable(), true));
+        ui->cb_SettingsSimulatorFG->setText(checkBoxText(TSimulatorFG::humanReadable(), true));
+        ui->cb_SettingsSimulatorMSFS2020->setText(checkBoxText(TSimulatorMsfs2020::humanReadable(), true));
+        ui->cb_SettingsSimulatorMSFS2024->setText(checkBoxText(TSimulatorMsfs2024::humanReadable(), true));
     }
 
     void CCopySettingsAndCachesComponent::initMisc()
@@ -148,6 +160,8 @@ namespace swift::gui::components
         ui->cb_SettingsConsolidation->setText(checkBoxText(TBackgroundConsolidation::humanReadable(), true));
     }
 
+    // after copying, we have to reload settings in the application. Otherwise, the changes won't take effect until the
+    // next restart.
     int CCopySettingsAndCachesComponent::copy()
     {
         ui->le_Status->clear();
@@ -364,6 +378,53 @@ namespace swift::gui::components
                 if (this->parsingMessage(success, errMsg, m_settingsSimulatorXPlane.getKey()))
                 {
                     this->displayStatusMessage(m_settingsSimulatorXPlane.setAndSave(settings),
+                                               settings.toQString(true));
+                }
+                copied++;
+            }
+        }
+
+        if (ui->cb_SettingsSimulatorFG->isChecked())
+        {
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsSimulatorFG.getFilename());
+            if (!joStr.isEmpty())
+            {
+                const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                if (this->parsingMessage(success, errMsg, m_settingsSimulatorFG.getKey()))
+                {
+                    this->displayStatusMessage(m_settingsSimulatorFG.setAndSave(settings), settings.toQString(true));
+                }
+                copied++;
+            }
+        }
+
+        if (ui->cb_SettingsSimulatorMSFS2020->isChecked())
+        {
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsSimulatorMSFS2020.getFilename());
+            if (!joStr.isEmpty())
+            {
+                const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                if (this->parsingMessage(success, errMsg, m_settingsSimulatorMSFS2020.getKey()))
+                {
+                    this->displayStatusMessage(m_settingsSimulatorMSFS2020.setAndSave(settings),
+                                               settings.toQString(true));
+                }
+                copied++;
+            }
+        }
+
+        if (ui->cb_SettingsSimulatorMSFS2024->isChecked())
+        {
+            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
+                otherVersionInfo, m_settingsSimulatorMSFS2024.getFilename());
+            if (!joStr.isEmpty())
+            {
+                const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
+                if (this->parsingMessage(success, errMsg, m_settingsSimulatorMSFS2024.getKey()))
+                {
+                    this->displayStatusMessage(m_settingsSimulatorMSFS2024.setAndSave(settings),
                                                settings.toQString(true));
                 }
                 copied++;

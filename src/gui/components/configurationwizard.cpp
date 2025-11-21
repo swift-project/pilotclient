@@ -23,19 +23,25 @@ namespace swift::gui::components
         this->setWindowFlags(windowFlags() | Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint |
                              Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
 
-        ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
-        ui->wp_CopySettingsAndCaches->setConfigComponent(ui->comp_CopySettingsAndCachesComponent);
-        ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
-        ui->wp_SimulatorSpecific->setConfigComponent(ui->comp_InstallXSwiftBus, ui->comp_InstallFsxTerrainProbe);
-        ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);
-        ui->wp_Hotkeys->setConfigComponent(ui->comp_Hotkeys);
         ui->wp_Legal->setConfigComponent(ui->comp_LegalInformation);
+
+        ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);
+        ui->wp_CopySettingsAndCaches->setConfigComponent(ui->comp_CopySettingsAndCachesComponent);
+        ui->wp_SelectSimulator->setConfigComponent(ui->comp_SelectSimulator);
+        ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
+        ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
+
+        ui->wp_SimulatorSpecific->setConfigComponent(ui->comp_InstallXSwiftBus, ui->comp_InstallFsxTerrainProbe);
+        ui->wp_Hotkeys->setConfigComponent(ui->comp_Hotkeys);
+        ui->wp_Finish->setConfigComponent(ui->comp_FinishWizard);
+
         ui->comp_Hotkeys->registerDummyPttEntry();
+
         this->setButtonText(CustomButton1, "skip");
 
         // no other versions, skip copy pages
         // disabled afetr discussion with RP as it is confusing
-        // if (!CApplicationInfoList::hasOtherSwiftDataDirectories()) { this->setStartId(ConfigSimulator); }
+        // if (!CApplicationInfoList::hasOtherSwiftDataDirectories()) { this->setStartId(SelectSimulator); }
 
         ui->tb_SimulatorSpecific->setCurrentWidget(ui->comp_InstallXSwiftBus);
 
@@ -46,6 +52,7 @@ namespace swift::gui::components
 
         connect(this, &QWizard::currentIdChanged, this, &CConfigurationWizard::wizardCurrentIdChanged);
         connect(this, &QWizard::customButtonClicked, this, &CConfigurationWizard::clickedCustomButton);
+
         connect(this, &QWizard::rejected, this, &CConfigurationWizard::ended);
         connect(this, &QWizard::accepted, this, &CConfigurationWizard::ended);
 
@@ -73,15 +80,97 @@ namespace swift::gui::components
 
     void CConfigurationWizard::wizardCurrentIdChanged(int id)
     {
+        // Remember previous ID
         const int previousId = m_previousId;
-        const bool backward = id < previousId;
-        const bool skipped = m_skipped;
-        m_previousId = id; // update
-        m_skipped = false; // reset
-        Q_UNUSED(skipped);
-        Q_UNUSED(backward);
 
+        // Update state: Save previous ID, determine forward
+        m_previousId = id;
+        m_forward = (id > previousId);
+
+        // reset skipped flag
+        m_skipped = false;
+
+        // Load selected simulators and activated options
+        const swift::misc::simulation::CSimulatorInfo selectedSims = ui->comp_SelectSimulator->getSelectedSimulators();
+
+        bool showModelGenerationPage = false;
+        bool showPttPage = false;
+        QStringList enabledOptions = m_enabledConfigOptions.get(); // force reload
+        if (!enabledOptions.isEmpty())
+        {
+            showModelGenerationPage = enabledOptions.takeFirst().contains("true");
+            if (!enabledOptions.isEmpty()) { showPttPage = enabledOptions.first().contains("true"); }
+        }
+
+        // display semi-transparent
         this->setParentOpacity(0.5);
+
+        // If no other data directories exist, skip certain pages.
+        if (!CApplicationInfoList::hasOtherSwiftDataDirectories() && (id == 2 || id == 3))
+        {
+            if (!m_forward)
+            {
+                id = DataLoad;
+                m_previousId = SelectSimulator;
+            }
+            else
+            {
+                id = SelectSimulator;
+                m_previousId = DataLoad;
+            }
+        }
+
+        // If we have just passed SelectSimulator, make sure a simulator is selected.
+        if (previousId == SelectSimulator && id > SelectSimulator)
+        {
+            if (!selectedSims.isAnySimulator())
+            {
+                // return to selection, validation message and cancel
+                id = SelectSimulator;
+                m_previousId = SelectSimulator;
+                this->setCurrentId(SelectSimulator);
+                static const CStatusMessage msg = CStatusMessage().validationError(
+                    u"Please select at least one simulator to continue the configuration.");
+                CLogMessage::preformatted(msg);
+            }
+        }
+
+        // Skip AutoModelSet if disabled
+        if (id == AutoModelSet && !showModelGenerationPage) { ++id; }
+
+        if (id == XSwiftBus && !selectedSims.isXPlane())
+        {
+            if (m_forward)
+            {
+                id = ConfigHotkeys;
+                m_previousId = AutoModelSet;
+            }
+            else
+            {
+                id = AutoModelSet;
+                m_previousId = ConfigHotkeys;
+            }
+        }
+
+        // Skip ConfigHotkeys when PTT is disabled
+        if (id == ConfigHotkeys && !showPttPage)
+        {
+            if (m_forward)
+            {
+                id = FinshWizard;
+                m_previousId = XSwiftBus;
+            }
+            else
+            {
+                id = XSwiftBus;
+                m_previousId = FinshWizard;
+            }
+        }
+
+        // final adjustments
+        // jump to a specific page
+        this->setCurrentId(id);
+
         const QWizardPage *page = this->currentPage();
         Q_UNUSED(page);
 
@@ -90,7 +179,8 @@ namespace swift::gui::components
 
     void CConfigurationWizard::clickedCustomButton(int which)
     {
-        if (which == static_cast<int>(CustomButton1))
+
+        if (which == static_cast<int>(CustomButton1)) // skip
         {
             m_skipped = true;
             this->next();
@@ -125,4 +215,5 @@ namespace swift::gui::components
         const int h = qMin(750, calcH);
         this->resize(w, h);
     }
+
 } // namespace swift::gui::components

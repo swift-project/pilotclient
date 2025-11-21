@@ -38,6 +38,12 @@ namespace swift::gui::components
 
     CCopyModelsFromOtherSwiftVersionsComponent::~CCopyModelsFromOtherSwiftVersionsComponent() = default;
 
+    void CCopyModelsFromOtherSwiftVersionsComponent::load()
+    {
+        CSimulatorInfo sims = this->m_enabledSimulators.get();
+        ui->comp_SimulatorSelector->setSimulatorVisible(sims);
+    }
+
     void CCopyModelsFromOtherSwiftVersionsComponent::copy()
     {
         using namespace std::chrono_literals;
@@ -201,7 +207,11 @@ namespace swift::gui::components
     void CCopyModelsFromOtherSwiftVersionsWizardPage::initializePage()
     {
         // force reload as the other version could be changed
-        if (m_copyModels) { m_copyModels->reloadOtherVersions(1000); }
+        if (m_copyModels)
+        {
+            m_copyModels->reloadOtherVersions(1000);
+            m_copyModels->load();
+        }
     }
 
     bool CCopyModelsFromOtherSwiftVersionsWizardPage::validatePage()

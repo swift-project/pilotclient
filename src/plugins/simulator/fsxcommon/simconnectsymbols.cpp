@@ -339,7 +339,7 @@ bool loadAndResolveMSFSimConnect()
             return false;
         }
 
-        CLogMessage(CLogCategories::driver()).info(u"Loaded and resolved MSFS symbols from SimConnect.dll: '%1'")
+        CLogMessage(CLogCategories::driver()).info(u"Loaded and resolved MSFS2020 symbols from SimConnect.dll: '%1'")
             << simConnectFileName;
         return resolvedCommon;
     }

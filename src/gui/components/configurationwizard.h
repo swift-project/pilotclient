@@ -32,10 +32,12 @@ namespace swift::gui::components
             DataLoad,
             CopyModels,
             CopySettingsAndCaches,
+            SelectSimulator,
             ConfigSimulator,
-            FirstModelSet,
+            AutoModelSet,
             XSwiftBus,
-            ConfigHotkeys
+            ConfigHotkeys,
+            FinshWizard
         };
 
         //! Constructor
@@ -71,6 +73,9 @@ namespace swift::gui::components
         int m_minId = -1;
         int m_maxId = -1;
         bool m_skipped = false;
+        bool m_forward = true;
+
+        swift::misc::CSetting<swift::core::application::TEnabledConfigOptions> m_enabledConfigOptions { this };
     };
 } // namespace swift::gui::components
 #endif // SWIFT_GUI_COMPONENTS_CONFIGURATIONWIZARD_H

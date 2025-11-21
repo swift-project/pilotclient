@@ -514,7 +514,7 @@ namespace swift::simplugin::fsxcommon
         //! \threadsafe
         void updateTransponderMode(const misc::aviation::CTransponder::TransponderMode xpdrMode);
 
-        //! Update transponder mode from MSFS
+        //! Update transponder mode from MSFS2020
         void updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode);
 
         //! An AI aircraft was added in the simulator

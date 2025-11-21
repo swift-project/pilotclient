@@ -361,6 +361,7 @@ namespace swift::misc
         return status;
     }
 
+
     CStatusMessage CValueCache::saveToFiles(const QString &dir, const CVariantMap &values,
                                             const QString &keysMessage) const
     {
@@ -378,6 +379,10 @@ namespace swift::misc
             {
                 return CStatusMessage(this).error(u"Failed to create directory '%1'") << QFileInfo(file).path();
             }
+
+            // TODO TZ
+            CLogMessage(this).info(u"Read data '%1' ") << QFile::Text;
+
             if (!file.open(QFile::ReadWrite | QFile::Text))
             {
                 return CStatusMessage(this).error(u"Failed to open %1: %2") << file.fileName() << file.errorString();
@@ -420,6 +425,9 @@ namespace swift::misc
             return CStatusMessage(this).error(u"Failed to read from directory '%1'") << dir;
         }
 
+        // TODO TZ
+        CLogMessage(this).info(u"Read data '%1' ") << dir;
+
         QMap<QString, QStringList> keysInFiles;
         for (const auto &key : keys)
         {
@@ -435,6 +443,10 @@ namespace swift::misc
         {
             QFile file(QDir(dir).absoluteFilePath(it.key()));
             if (!file.exists()) { continue; }
+
+            // TODO TZ
+            CLogMessage(this).info(u"Read data '%1' ") << QFile::Text;
+
             if (!file.open(QFile::ReadOnly | QFile::Text))
             {
                 return CStatusMessage(this).error(u"Failed to open %1: %2") << file.fileName() << file.errorString();

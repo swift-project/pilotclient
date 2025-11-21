@@ -252,7 +252,7 @@ namespace swift::misc::simulation
 
     const QString &CDistributor::standardMsfs()
     {
-        static const QString k("MSFS");
+        static const QString k("MSFS2020");
         return k;
     }
 

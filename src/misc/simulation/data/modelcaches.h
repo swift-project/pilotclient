@@ -67,11 +67,11 @@ namespace swift::misc::simulation::data
         static const char *key() { return "modelcachefg"; }
     };
 
-    //! MSFS
-    struct TModelCacheMsfs : public TModelCache
+    //! MSFS2020
+    struct TModelCacheMsfs2020 : public TModelCache
     {
         //! Key in data cache
-        static const char *key() { return "modelcachemsfs"; }
+        static const char *key() { return "modelcachemsfs2020"; }
     };
 
     //! MSFS2024
@@ -133,11 +133,11 @@ namespace swift::misc::simulation::data
         static const char *key() { return "modelsetfg"; }
     };
 
-    //! MSFS
-    struct TModelSetCacheMsfs : public TModelCache
+    //! MSFS2020
+    struct TModelSetCacheMsfs2020 : public TModelCache
     {
         //! Key in data cache
-        static const char *key() { return "modelsetmsfs"; }
+        static const char *key() { return "modelsetmsfs2020"; }
     };
 
     //! MSFS2024
@@ -309,7 +309,7 @@ namespace swift::misc::simulation::data
         void changedP3D() { this->emitCacheChanged(CSimulatorInfo::p3d()); }
         void changedXP() { this->emitCacheChanged(CSimulatorInfo::xplane()); }
         void changedFG() { this->emitCacheChanged(CSimulatorInfo::fg()); }
-        void changedMsfs() { this->emitCacheChanged(CSimulatorInfo::msfs()); }
+        void changedMsfs2020() { this->emitCacheChanged(CSimulatorInfo::msfs2020()); }
         void changedMsfs2024() { this->emitCacheChanged(CSimulatorInfo::msfs2024()); }
         //! @}
 
@@ -328,7 +328,7 @@ namespace swift::misc::simulation::data
         std::atomic_bool m_syncFS9 { false };
         std::atomic_bool m_syncFG { false };
         std::atomic_bool m_syncXPlane { false };
-        std::atomic_bool m_syncMsfs { false };
+        std::atomic_bool m_syncMsfs2020 { false };
         std::atomic_bool m_syncMsfs2024 { false };
         //! @}
     };
@@ -365,7 +365,7 @@ namespace swift::misc::simulation::data
         CData<TModelCacheP3D> m_modelCacheP3D { this, &CModelCaches::changedP3D }; //!< P3D cache
         CData<TModelCacheXP> m_modelCacheXP { this, &CModelCaches::changedXP }; //!< XP cache
         CData<TModelCacheFG> m_modelCacheFG { this, &CModelCaches::changedFG }; //!< XP cache
-        CData<TModelCacheMsfs> m_modelCacheMsfs { this, &CModelCaches::changedMsfs }; //!< MSFS cache
+        CData<TModelCacheMsfs2020> m_modelCacheMsfs2020 { this, &CModelCaches::changedMsfs2020 }; //!< MSFS2020 cache
         CData<TModelCacheMsfs2024> m_modelCacheMsfs2024 { this, &CModelCaches::changedMsfs2024 }; //!< MSFS2024 cache
 
         //! Non virtual version (can be used in ctor)
@@ -408,7 +408,7 @@ namespace swift::misc::simulation::data
         CData<TModelSetCacheP3D> m_modelCacheP3D { this, &CModelSetCaches::changedP3D }; //!< P3D cache
         CData<TModelSetCacheXP> m_modelCacheXP { this, &CModelSetCaches::changedXP }; //!< XP cache
         CData<TModelSetCacheFG> m_modelCacheFG { this, &CModelSetCaches::changedFG }; //!< FG cache
-        CData<TModelSetCacheMsfs> m_modelCacheMsfs { this, &CModelSetCaches::changedMsfs }; //!< MSFS cache
+        CData<TModelSetCacheMsfs2020> m_modelCacheMsfs2020 { this, &CModelSetCaches::changedMsfs2020 }; //!< MSFS2020 cache
         CData<TModelSetCacheMsfs2024> m_modelCacheMsfs2024 { this,
                                                              &CModelSetCaches::changedMsfs2024 }; //!< MSFS2024 cache
 

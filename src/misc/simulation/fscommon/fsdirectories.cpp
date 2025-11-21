@@ -93,7 +93,7 @@ namespace swift::misc::simulation::fscommon
         return dir;
     }
 
-    static QString msfsDirImpl()
+    static QString msfs2020DirImpl()
     {
         // first we look for a standard installation
         const QStringList locations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
@@ -120,17 +120,17 @@ namespace swift::misc::simulation::fscommon
         return {};
     }
 
-    const QString &CFsDirectories::msfsDir()
+    const QString &CFsDirectories::msfs2020Dir()
     {
-        static const QString dir(msfsDirImpl());
+        static const QString dir(msfs2020DirImpl());
         return dir;
     }
 
-    QString msfsPackagesDirImpl()
+    QString msfs2020PackagesDirImpl()
     {
         QString userCfg = "";
 
-        QString msfsDirectory(CFsDirectories::msfsDir());
+        QString msfsDirectory(CFsDirectories::msfs2020Dir());
 
         // for Steam edition
         if (msfsDirectory.contains("Roaming", Qt::CaseInsensitive))
@@ -164,9 +164,9 @@ namespace swift::misc::simulation::fscommon
         return {};
     }
 
-    const QString &CFsDirectories::msfsPackagesDir()
+    const QString &CFsDirectories::msfs2020PackagesDir()
     {
-        static const QString dir(msfsPackagesDirImpl());
+        static const QString dir(msfs2020PackagesDirImpl());
         return dir;
     }
 
@@ -267,9 +267,9 @@ namespace swift::misc::simulation::fscommon
 
     QString msfsSimObjectsDirImpl()
     {
-        QString dir(CFsDirectories::msfsDir());
+        QString dir(CFsDirectories::msfs2020Dir());
         if (dir.isEmpty()) { return {}; }
-        return CFileUtils::normalizeFilePathToQtStandard(msfsPackagesDirImpl());
+        return CFileUtils::normalizeFilePathToQtStandard(msfs2020PackagesDirImpl());
     }
 
     QString msfs2024SimObjectsDirImpl()
@@ -285,7 +285,7 @@ namespace swift::misc::simulation::fscommon
         return dir;
     }
 
-    const QString &CFsDirectories::msfsSimObjectsDir()
+    const QString &CFsDirectories::msfs2020SimObjectsDir()
     {
         static const QString dir(msfsSimObjectsDirImpl());
         return dir;
@@ -309,7 +309,7 @@ namespace swift::misc::simulation::fscommon
         return exclude;
     }
 
-    const QStringList &CFsDirectories::msfs20SimObjectsExcludeDirectoryPatterns()
+    const QStringList &CFsDirectories::msfs2020SimObjectsExcludeDirectoryPatterns()
     {
         static const QStringList exclude {
             "OneStore/asobo-discovery",
@@ -441,10 +441,10 @@ namespace swift::misc::simulation::fscommon
         return allPaths;
     }
 
-    QStringList CFsDirectories::msfsSimObjectsDirPath(const QString &simObjectsDir)
+    QStringList CFsDirectories::msfs2020SimObjectsDirPath(const QString &simObjectsDir)
     {
         Q_UNUSED(simObjectsDir);
-        static const QStringList Path { CFsDirectories::msfsSimObjectsDir() };
+        static const QStringList Path { CFsDirectories::msfs2020SimObjectsDir() };
         return Path;
     }
 
@@ -758,12 +758,12 @@ namespace swift::misc::simulation::fscommon
         return paths;
     }
 
-    QSet<QString> CFsDirectories::msfsSimObjectsPaths(const QStringList &msfsFiles, bool checked)
+    QSet<QString> CFsDirectories::msfs2020SimObjectsPaths(const QStringList &msfsFiles, bool checked)
     {
         QSet<QString> paths;
         for (const QString &msfsFile : msfsFiles)
         {
-            paths.unite(CFsDirectories::msfsSimObjectsPaths(msfsFile, checked));
+            paths.unite(CFsDirectories::msfs2020SimObjectsPaths(msfsFile, checked));
         }
         return paths;
     }
@@ -834,7 +834,7 @@ namespace swift::misc::simulation::fscommon
         return paths;
     }
 
-    QSet<QString> CFsDirectories::msfsSimObjectsPaths(const QString &msfsFile, bool checked)
+    QSet<QString> CFsDirectories::msfs2020SimObjectsPaths(const QString &msfsFile, bool checked)
     {
         const QString fileContent = CFileUtils::readFileToString(msfsFile);
         if (fileContent.isEmpty()) { return {}; }
@@ -854,7 +854,7 @@ namespace swift::misc::simulation::fscommon
             const QStringView path = line.mid(i2 + 1);
             QString soPath = QDir::fromNativeSeparators(path.toString());
 
-            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS SimObjects path checked: '%1' in '%2'")
+            CLogMessage(static_cast<CFsDirectories *>(nullptr)).info(u"MSFS2020 SimObjects path checked: '%1' in '%2'")
                 << line << msfsFile;
 
             // ignore exclude patterns

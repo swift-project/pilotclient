@@ -39,7 +39,7 @@ namespace swift::gui::components
         ~CSettingsSimulatorBasicsComponent() override;
 
         //! Show / hide selector
-        void hideSelector(bool show);
+        void hideSelector(swift::misc::simulation::CSimulatorInfo sims);
 
         //! Any values filled in
         bool hasAnyValues() const;
@@ -138,6 +138,9 @@ namespace swift::gui::components
 
         //! Simulator directory either from input or settings or default
         QString getFileBrowserSimulatorDirectory() const;
+
+        //! Last simulator displayed
+        swift::misc::simulation::CSimulatorInfo m_lastsim;
     };
 } // namespace swift::gui::components
 

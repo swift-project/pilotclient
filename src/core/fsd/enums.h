@@ -52,7 +52,7 @@ namespace swift::core::fsd
         MSCFS3, /*!< MS Combat Flight Simulator 3 */
         MSFS2004, /*!< MS Flight Simulator 2004 */
         MSFSX, /*!< MS Flight Simulator X */
-        MSFS, /*!< MS Flight Simulator 2020 */
+        MSFS2020, /*!< MS Flight Simulator 2020 */
         MSFS2024, /*!< MS Flight Simulator 2024 */
         XPLANE8, /*!< X-Plane 8 */
         XPLANE9, /*!< X-Plane 9 */

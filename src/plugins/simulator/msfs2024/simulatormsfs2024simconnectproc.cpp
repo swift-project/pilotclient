@@ -288,7 +288,7 @@ namespace swift::simplugin::msfs2024common
                 simulatorMsfs2024->updateOwnAircraftFromSimulator(*ownAircaft);
                 break;
             }
-            case CSimConnectDefinitions::RequestMSFSTransponder:
+            case CSimConnectDefinitions::RequestMSFS2024Transponder:
             {
                 const DataDefinitionMSFSTransponderMode *transponderMode =
                     reinterpret_cast<const DataDefinitionMSFSTransponderMode *>(&pObjData->dwData);

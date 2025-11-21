@@ -4,6 +4,8 @@
 #include "misc/fileutils.h"
 
 #include <algorithm>
+#include <fstream>
+#include <iostream>
 
 #include <QCoreApplication>
 #include <QDateTime>
@@ -18,6 +20,7 @@
 #include <QtGlobal>
 
 #include "config/buildconfig.h"
+#include "misc/logmessage.h"
 #include "misc/setbuilder.h"
 #include "misc/stringutils.h"
 
@@ -68,6 +71,9 @@ namespace swift::misc
     QString CFileUtils::readFileToString(const QString &fileNameAndPath)
     {
         QFile file(fileNameAndPath);
+        const QString filePathNormalized = CFileUtils::normalizeFilePathToQtStandard(fileNameAndPath);
+        printf("Reading file: '%s'\n", filePathNormalized.toUtf8().constData());
+
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) { return {}; }
         QTextStream stream(&file);
         const QString content(stream.readAll());

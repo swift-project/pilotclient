@@ -3,35 +3,41 @@
 
 //! \file
 
-#ifndef SWIFT_GUI_COMPONENTS_CONFIGSIMULATORCOMPONENT_H
-#define SWIFT_GUI_COMPONENTS_CONFIGSIMULATORCOMPONENT_H
+#ifndef SWIFT_GUI_COMPONENTS_SELECTSIMULATORCOMPONENT_H
+#define SWIFT_GUI_COMPONENTS_SELECTSIMULATORCOMPONENT_H
 
 #include <QFrame>
 #include <QScopedPointer>
 #include <QWizardPage>
 
+#include "core/actionbind.h"
 #include "core/application/applicationsettings.h"
+#include "gui/models/actionhotkeylistmodel.h"
+#include "gui/swiftguiexport.h"
+#include "misc/icons.h"
+#include "misc/identifierlist.h"
+#include "misc/settingscache.h"
 #include "misc/simulation/data/modelcaches.h"
 
 namespace Ui
 {
-    class CConfigSimulatorComponent;
+    class CSelectSimulatorComponent;
 }
 namespace swift::gui::components
 {
     /*!
      * Simulator configuration
      */
-    class CConfigSimulatorComponent : public QFrame
+    class CSelectSimulatorComponent : public QFrame
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        explicit CConfigSimulatorComponent(QWidget *parent = nullptr);
+        explicit CSelectSimulatorComponent(QWidget *parent = nullptr);
 
         //! Destructor
-        ~CConfigSimulatorComponent() override;
+        ~CSelectSimulatorComponent() override;
 
         //! Save data
         void save();
@@ -45,22 +51,34 @@ namespace swift::gui::components
         //! Reset the flag
         void resetUnsavedChanges();
 
+        swift::misc::simulation::CSimulatorInfo getSelectedSimulators();
+
     private:
         //! Preselect simulators
         void preselectSimulators();
 
+        void preselectOptions();
+
         //! Get the plugin ids
         QStringList selectedSimsToPluginIds();
 
+        //! Get selected options
+        QStringList selectedOptions();
+
+        bool m_GenerateModelsets = false;
+        bool m_PTT = false;
+        bool m_SetExportMode = false;
+
         swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_enabledSimulators { this };
+        swift::misc::CSetting<swift::core::application::TEnabledConfigOptions> m_enabledConfigOptions { this };
         swift::misc::simulation::data::CModelSetCaches m_modelSets { true, this };
-        QScopedPointer<Ui::CConfigSimulatorComponent> ui;
+        QScopedPointer<Ui::CSelectSimulatorComponent> ui;
     };
 
     /*!
      * Wizard page for CConfigSimulatorComponent
      */
-    class CConfigSimulatorWizardPage : public QWizardPage
+    class CSelectSimulatorWizardPage : public QWizardPage
     {
         Q_OBJECT
 
@@ -68,8 +86,12 @@ namespace swift::gui::components
         //! Constructors
         using QWizardPage::QWizardPage;
 
+        explicit CSelectSimulatorWizardPage(CSelectSimulatorComponent *config, QWidget *parent = nullptr)
+            : QWizardPage(parent), m_config(config)
+        {}
+
         //! Set config
-        void setConfigComponent(CConfigSimulatorComponent *config) { m_config = config; }
+        void setConfigComponent(CSelectSimulatorComponent *config) { m_config = config; }
 
         //! \copydoc QWizardPage::initializePage
         void initializePage() override;
@@ -78,7 +100,7 @@ namespace swift::gui::components
         bool validatePage() override;
 
     private:
-        CConfigSimulatorComponent *m_config = nullptr;
+        CSelectSimulatorComponent *m_config = nullptr;
     };
 } // namespace swift::gui::components
-#endif // SWIFT_GUI_COMPONENTS_CONFIGSIMULATORCOMPONENT_H
+#endif // SWIFT_GUI_COMPONENTS_SELECTSIMULATORCOMPONENT_H

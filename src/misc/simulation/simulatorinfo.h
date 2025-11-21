@@ -49,11 +49,11 @@ namespace swift::misc::simulation
             XPLANE = 1 << 2,
             P3D = 1 << 3,
             FG = 1 << 4,
-            MSFS = 1 << 5,
+            MSFS2020 = 1 << 5,
             MSFS2024 = 1 << 6,
             FSX_P3D = FSX | P3D,
-            AllFsFamily = FSX | FS9 | P3D | MSFS | MSFS2024,
-            All = FSX | FS9 | XPLANE | P3D | FG | MSFS | MSFS2024
+            AllFsFamily = FSX | FS9 | P3D | MSFS2020 | MSFS2024,
+            All = FSX | FS9 | XPLANE | P3D | FG | MSFS2020 | MSFS2024
         };
         Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
@@ -76,7 +76,7 @@ namespace swift::misc::simulation
         CSimulatorInfo(int flagsAsInt);
 
         //! Constructor
-        CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs, bool msfs2024);
+        CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs2020, bool msfs2024);
 
         //! Unspecified simulator
         bool isUnspecified() const;
@@ -97,7 +97,7 @@ namespace swift::misc::simulation
         bool isFG() const;
 
         //! MSFS?
-        bool isMSFS() const;
+        bool isMSFS2020() const;
 
         //! MSFS2024?
         bool isMSFS2024() const;
@@ -176,7 +176,7 @@ namespace swift::misc::simulation
         CStatusMessage validateSimulatorsForModel() const;
 
         //! Bool flags to enum
-        static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs, bool msfs2024);
+        static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs2020, bool msfs2024);
 
         //! Identifer, as provided by plugin
         static Simulator identifierToSimulator(const QString &identifier);
@@ -229,9 +229,9 @@ namespace swift::misc::simulation
             static const CSimulatorInfo s(XPLANE);
             return s;
         }
-        static const CSimulatorInfo &msfs()
+        static const CSimulatorInfo &msfs2020()
         {
-            static const CSimulatorInfo s(MSFS);
+            static const CSimulatorInfo s(MSFS2020);
             return s;
         }
         static const CSimulatorInfo &msfs2024()

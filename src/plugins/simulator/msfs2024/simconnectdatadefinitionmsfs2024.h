@@ -267,7 +267,7 @@ namespace swift::simplugin::msfs2024common
         QString toQString() const;
     };
 
-    //! Data structure for MSFS transponder mode information
+    //! Data structure for MSFS2024 transponder mode information
     struct DataDefinitionMSFSTransponderMode
     {
         double transponderMode = 1; //!< transponder state simvar
@@ -311,7 +311,7 @@ namespace swift::simplugin::msfs2024common
             RequestOwnAircraftTitle,
             RequestOwnAircraftLivery,
             RequestSbData, //!< SB client area / XPDR mode
-            RequestMSFSTransponder, //!< MSFS XPDR mode/ident
+            RequestMSFS2024Transponder, //!< MSFS XPDR mode/ident
             RequestFacility,
             RequestEndMarker, //!< free request ids can start here
 
@@ -380,10 +380,10 @@ namespace swift::simplugin::msfs2024common
         //! Initialize the SB data are
         static HRESULT initSbDataArea(const HANDLE hSimConnect);
 
-        //! Initialize data definition for MSFS transponder
+        //! Initialize data definition for MSFS2024 transponder
         // static HRESULT initMSFSTransponder(const HANDLE hSimConnect);
 
-        //! Initialize data definition for MSFS transponder
+        //! Initialize data definition for MSFS2024 transponder
         static HRESULT initMSFS2024Transponder(const HANDLE hSimConnect);
     };
 } // namespace swift::simplugin::msfs2024common

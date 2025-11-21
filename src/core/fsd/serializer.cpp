@@ -168,7 +168,7 @@ namespace swift::core::fsd
         case SimType::MSCFS3: return "7";
         case SimType::MSFS2004: return "8";
         case SimType::MSFSX: return "9";
-        case SimType::MSFS: return "10";
+        case SimType::MSFS2020: return "10";
         case SimType::MSFS2024: return "11";
         case SimType::XPLANE8: return "12";
         case SimType::XPLANE9: return "13";
@@ -217,7 +217,7 @@ namespace swift::core::fsd
         else if (str == "9")
             return SimType::MSFSX;
         else if (str == "10")
-            return SimType::MSFS;
+            return SimType::MSFS2020;
         else if (str == "11")
             return SimType::MSFS2024;
         else if (str == "12")

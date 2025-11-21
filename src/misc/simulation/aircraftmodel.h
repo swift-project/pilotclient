@@ -186,7 +186,7 @@ namespace swift::misc
             //! Model key, either queried or loaded from simulator model
             const QString &getModelString() const { return m_modelString; }
 
-            //! Model Livery, part of model string in MSFS 2024
+            //! Model Livery, part of model string in MSFS2024
             const QString &getModelLivery() const { return m_modelLivery; }
 
             //! Model string and DB key (if available)

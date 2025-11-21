@@ -60,7 +60,10 @@ namespace swift::gui::components
 
     CSettingsSimulatorBasicsComponent::~CSettingsSimulatorBasicsComponent() = default;
 
-    void CSettingsSimulatorBasicsComponent::hideSelector(bool show) { ui->comp_SimulatorSelector->setVisible(show); }
+    void CSettingsSimulatorBasicsComponent::hideSelector(CSimulatorInfo sims)
+    {
+        ui->comp_SimulatorSelector->setSimulatorVisible(sims);
+    }
 
     bool CSettingsSimulatorBasicsComponent::hasAnyValues() const
     {
@@ -229,10 +232,20 @@ namespace swift::gui::components
 
     void CSettingsSimulatorBasicsComponent::onSimulatorChanged()
     {
+        if (m_unsavedChanges)
+        {
+            // heare we could prompt to save changes
+            ui->comp_SimulatorSelector->setValue(m_lastsim); // restore previous selection
+            this->showOverlayHTMLMessage("There are unsaved changes.", std::chrono::seconds(2));
+            return;
+        }
+
         const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
+        m_settings.getSettings(simulator);
+        m_lastsim = ui->comp_SimulatorSelector->getValue(); // to restore the selection properly
         this->displaySettings(simulator);
 
-        // special handling for MSFS 2024 only visual changes
+        // special handling for MSFS2024 only visual changes
         if (simulator == CSimulatorInfo::msfs2024())
         {
             ui->gb_ModelSet->setVisible(true);
@@ -265,13 +278,17 @@ namespace swift::gui::components
             ui->lbl_ModelDirsInfo->setText(html);
         }
 
-        this->displayDefaultValuesAsPlaceholder(simulator);
+        // this->displayDefaultValuesAsPlaceholder(simulator);
     }
 
     void CSettingsSimulatorBasicsComponent::onSimulatorSettingsChanged(const CSimulatorInfo &simulator)
     {
         const CSimulatorInfo selectedSimulator(ui->comp_SimulatorSelector->getValue());
-        if (selectedSimulator == simulator) { this->displaySettings(simulator); }
+        if (selectedSimulator == simulator)
+        {
+            m_settings.getSettings(simulator);
+            this->displaySettings(simulator);
+        }
     }
 
     QStringList CSettingsSimulatorBasicsComponent::parseModelDirectories() const
@@ -351,9 +368,10 @@ namespace swift::gui::components
         QStringList cleanedDirs(dirs);
         cleanedDirs.removeDuplicates();
         cleanedDirs.sort(m_fileCaseSensitivity);
+
         const QString d = cleanedDirs.join("\n");
         ui->pte_ModelDirectories->setPlainText(d);
-        this->displayDefaultValuesAsPlaceholder(ui->comp_SimulatorSelector->getValue());
+        // this->displayDefaultValuesAsPlaceholder(ui->comp_SimulatorSelector->getValue());
     }
 
     CSpecializedSimulatorSettings CSettingsSimulatorBasicsComponent::getSettings(const CSimulatorInfo &simulator) const
@@ -364,33 +382,37 @@ namespace swift::gui::components
 
     void CSettingsSimulatorBasicsComponent::displaySettings(const CSimulatorInfo &simulator)
     {
-        // if (simulator.isMSFS2024())
-        //{
+        const CSimulatorSettings s = m_settings.getSettings(simulator);
+        const QString es = s.getSimulatorDirectory();
 
-        //    //CSpecializedSimulatorSettings settings = this->getSimulatorSettings(simulator.isMSFS2024());
-        //    //CSimulatorSettings m_generic = settings.getGenericSettings();
-        //    //QStringList excludePatterns = m_generic.getModelExcludeDirectoryPatterns();
-        //    //QStringList filterPatterns = m_generic.getModelDirectories();
+        ui->pte_ModelDirectories->clear();
+        ui->pte_ExcludeDirectories->clear();
 
-        //    //const CSimulatorSettings s = m_settings.getSettings(simulator);
-        //    //const QString es = s.getSimulatorDirectory();
-        //    ui->pte_ModelDirectories->clear();
-        //    ui->pte_ExcludeDirectories->clear();
+        if (simulator.isMSFS2024())
+        {
+            CSpecializedSimulatorSettings settings = this->getSimulatorSettings(simulator);
+            CSimulatorSettings m_generic = settings.getGenericSettings();
+            QStringList excludePatterns = m_generic.getModelExcludeDirectoryPatterns();
+            QStringList filterPatterns = m_generic.getModelDirectories();
 
-        //    //this->displayModelDirectories(excludePatterns);
-        //    //this->displayExcludeDirectoryPatterns(filterPatterns);
-        //}
-        // else
-        //{
-        //    this->displayModelDirectories(m_settings.getModelDirectoriesIfNotDefault(simulator));
-        //    this->displayExcludeDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsIfNotDefault(simulator));
-        //}
+            ui->le_SimulatorDirectory->setText(s.getSimulatorDirectory());
+            this->displayModelDirectories(filterPatterns);
+            this->displayExcludeDirectoryPatterns(excludePatterns);
+        }
+        else
+        {
+            ui->le_SimulatorDirectory->setText(s.getSimulatorDirectory());
+
+            this->displayModelDirectories(s.getModelDirectories());
+            // this->displayModelDirectories(m_settings.getModelDirectoriesIfNotDefault(simulator));
+            this->displayExcludeDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsIfNotDefault(simulator));
+        }
 
         // ui->le_SimulatorDirectory->setText(m_settings.getSimulatorDirectoryIfNotDefault(simulator));
         // based on discussion here, always display:
         // https://discordapp.com/channels/539048679160676382/594962359441948682/700483609361907842
-        const CSimulatorSettings s = m_settings.getSettings(simulator);
-        ui->le_SimulatorDirectory->setText(s.getSimulatorDirectory());
+        // const CSimulatorSettings s = m_settings.getSettings(simulator);
+        // ui->le_SimulatorDirectory->setText(s.getSimulatorDirectory());
     }
 
     void CSettingsSimulatorBasicsComponent::displayDefaultValuesAsPlaceholder(const CSimulatorInfo &simulator)
@@ -435,6 +457,7 @@ namespace swift::gui::components
         else
         {
             const QStringList m = settings.getModelDirectoriesFromSimulatorDirectoryOrDefault();
+            ui->pte_ModelDirectories->clear();
             if (m.isEmpty()) { ui->pte_ModelDirectories->setPlaceholderText("Model directories"); }
             else
             {
@@ -443,6 +466,7 @@ namespace swift::gui::components
             }
 
             const QStringList e = settings.getDefaultModelExcludePatterns();
+            ui->pte_ExcludeDirectories->clear();
             if (e.isEmpty()) { ui->pte_ExcludeDirectories->setPlaceholderText("Exclude directories"); }
             else
             {

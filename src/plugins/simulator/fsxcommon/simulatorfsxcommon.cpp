@@ -200,7 +200,7 @@ namespace swift::simplugin::fsxcommon
                 }
                 changed = true;
             }
-            else if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+            else if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2020())
             {
                 DataDefinitionMSFSTransponderMode t;
                 t.transponderMode = (newTransponder.isInStandby() ? 1 : 4);
@@ -212,7 +212,7 @@ namespace swift::simplugin::fsxcommon
                                                     SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
                                                     sizeof(DataDefinitionMSFSTransponderMode), &t);
 
-                if (isFailure(hr)) { CLogMessage(this).warning(u"Setting transponder mode failed (MSFS)"); }
+                if (isFailure(hr)) { CLogMessage(this).warning(u"Setting transponder mode failed (MSFS2020)"); }
 
                 changed = true;
             }
@@ -509,10 +509,10 @@ namespace swift::simplugin::fsxcommon
         const CFsxP3DSettings settings = m_detailsSettings.getSettings(this->getSimulatorInfo());
         m_useAddSimulatedObj = settings.isAddingAsSimulatedObjectEnabled();
         m_useSbOffsets = settings.isSbOffsetsEnabled();
-        if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS() ||
+        if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2020() ||
             this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
         {
-            m_useSbOffsets = false; // Always disable SbOffsets for MSFS. Using new transponder mode property directly
+            m_useSbOffsets = false; // Always disable SbOffsets for MSFS2020. Using new transponder mode property directly
         }
 
         HRESULT hr = s_ok();
@@ -528,7 +528,7 @@ namespace swift::simplugin::fsxcommon
                                               SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
             "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS() &&
+        if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2020() &&
             !this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
         {
             // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to
@@ -548,7 +548,7 @@ namespace swift::simplugin::fsxcommon
                                                   CSimConnectDefinitions::DataTransponderModeMSFS,
                                                   SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME,
                                                   SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-                "Cannot request MSFS transponder data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+                "Cannot request MSFS2020 transponder data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
         }
 
         if (isFailure(hr)) { return; }
@@ -3015,7 +3015,7 @@ namespace swift::simplugin::fsxcommon
             return connectedSimName.contains("fsx") || connectedSimName.contains("microsoft") ||
                    connectedSimName.contains("simulator x");
         }
-        else if (pluginSim.isMSFS())
+        else if (pluginSim.isMSFS2020())
         {
             // MSFS 2020 drivers only works with MSFS
             return connectedSimName.contains("kittyhawk");

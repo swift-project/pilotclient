@@ -65,6 +65,9 @@ add_library(gui SHARED
         components/audionotificationcomponent.cpp
         components/audionotificationcomponent.h
         components/audionotificationcomponent.ui
+        components/automodelsetcomponent.cpp
+        components/automodelsetcomponent.h
+        components/automodelsetcomponent.ui
         components/autopublishcomponent.cpp
         components/autopublishcomponent.h
         components/autopublishcomponent.ui
@@ -249,6 +252,9 @@ add_library(gui SHARED
         components/downloaddialog.cpp
         components/downloaddialog.h
         components/downloaddialog.ui
+        components/finishwizardcomponent.cpp
+        components/finishwizardcomponent.h
+        components/finishwizardcomponent.ui
         components/firstmodelsetcomponent.cpp
         components/firstmodelsetcomponent.h
         components/firstmodelsetcomponent.ui
@@ -381,6 +387,9 @@ add_library(gui SHARED
         components/selcalcodeselector.cpp
         components/selcalcodeselector.h
         components/selcalcodeselector.ui
+        components/selectsimulatorcomponent.cpp
+        components/selectsimulatorcomponent.h
+        components/selectsimulatorcomponent.ui
         components/serverlistselector.cpp
         components/serverlistselector.h
         components/settingsadvancedcomponent.cpp
