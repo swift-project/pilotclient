@@ -46,6 +46,9 @@ namespace swift::gui::components
         //! How to display
         void setMode(Mode mode, bool forced = false);
 
+        //! Set visible simulators
+        void setSimulatorVisible(swift::misc::simulation::CSimulatorInfo sims);
+
         //! Get mode
         Mode getMode() { return m_mode; }
 
@@ -111,6 +114,8 @@ namespace swift::gui::components
         void changed(const swift::misc::simulation::CSimulatorInfo &simulator);
 
     private:
+        swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_enabledSimulators { this };
+
         //! Radio button changed
         void radioButtonChanged(bool checked);
 

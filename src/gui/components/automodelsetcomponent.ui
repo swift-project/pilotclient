@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+  <class>CAutoModelSetComponent</class>
+  <widget class="QFrame" name="CAutoModelSetComponent">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>481</width>
+        <height>279</height>
+      </rect>
+    </property>
+    <property name="windowTitle">
+      <string>Configure a 1st model set</string>
+    </property>
+    <layout class="QVBoxLayout" name="vl_AutoModelSetComponent">
+      <item alignment="Qt::AlignTop">
+        <widget class="QFrame" name="fr_Info">
+          <layout class="QHBoxLayout" name="hl_Info" >
+            <item alignment="Qt::AlignLeft">
+              <widget class="QPushButton" name="pb_CreateAutoModelSet">
+                <property name="text">
+                  <string>  Yes, please generate the model sets automatically now!  </string>
+                </property>
+              </widget>
+            </item>
+            <item alignment="Qt::AlignLeft">
+              <widget class="QPushButton" name="pb_ShowExpertMode">
+                <property name="text">
+                  <string>  I am an expert and would like to customize.  </string>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+      <item>
+        <widget class="QFrame" name="gl_AutoModelSet">
+          <layout class="QVBoxLayout" name="vl_AutoModelSet">
+            <property name="leftMargin">
+              <number>5</number>
+            </property>
+            <property name="topMargin">
+              <number>5</number>
+            </property>
+            <property name="rightMargin">
+              <number>5</number>
+            </property>
+            <property name="bottomMargin">
+              <number>5</number>
+            </property>
+            <item>
+              <widget class="QFrame" name="fr_ModelsAndSimulator">
+                <layout class="QGridLayout" name="gl_ModelsAndSimulator">
+                  <property name="leftMargin">
+                    <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                    <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                    <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                    <number>0</number>
+                  </property>
+                  <item row="0" column="0">
+                    <widget class="QGroupBox" name="gb_Simulator">
+                      <property name="title">
+                        <string>Simulator</string>
+                      </property>
+                      <layout class="QHBoxLayout" name="hl_Simulator">
+                        <item alignment="Qt::AlignLeft">
+                          <widget class="swift::gui::components::CSimulatorSelector" name="comp_SimulatorSelector">
+                            <property name="minimumSize">
+                              <size>
+                                <width>100</width>
+                                <height>0</height>
+                              </size>
+                            </property>
+                          </widget>
+                        </item>
+                      </layout>
+                    </widget>
+                  </item>
+                  <item row="1" column="0">
+                    <widget class="QGroupBox" name="gb_Selection">
+                      <property name="title">
+                        <string>Selection</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="vl_Selection">
+                        <item>
+                          <widget class="QCheckBox" name="cb_DbDataOnly">
+                            <property name="text">
+                              <string>with DB data only</string>
+                            </property>
+                            <property name="checked">
+                              <bool>true</bool>
+                            </property>
+                          </widget>
+                        </item>
+                      </layout>
+                    </widget>
+                  </item>
+                  <item row="0" column="1" rowspan="2">
+                    <widget class="QGroupBox" name="gb_Models">
+                      <property name="title">
+                        <string>Models</string>
+                      </property>
+                      <layout class="QGridLayout" name="gl_Models">
+                        <item row="0" column="1">
+                          <widget class="QLineEdit" name="le_ModelDirectories">
+                            <property name="readOnly">
+                              <bool>true</bool>
+                            </property>
+                            <property name="placeholderText">
+                              <string>model directory from settings</string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="1" column="0">
+                          <widget class="QLabel" name="lbl_Models">
+                            <property name="text">
+                              <string>Models:</string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="2" column="0">
+                          <widget class="QLabel" name="lbl_ModelSet">
+                            <property name="text">
+                              <string>Model set</string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="0" column="0">
+                          <widget class="QLabel" name="lbl_ModelDirectories">
+                            <property name="text">
+                              <string>Model dir.:</string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="0" column="2">
+                          <widget class="QPushButton" name="pb_ClearModelDir">
+                            <property name="toolTip">
+                              <string>clear directory or multiple directories</string>
+                            </property>
+                            <property name="text">
+                              <string>clear</string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="2" column="2">
+                          <widget class="QPushButton" name="pb_ModelSet">
+                            <property name="minimumSize">
+                              <size>
+                                <width>100</width>
+                                <height>0</height>
+                              </size>
+                            </property>
+                            <property name="text">
+                              <string>display</string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="1" column="2">
+                          <widget class="QPushButton" name="pb_Models">
+                            <property name="text">
+                              <string>display</string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="2" column="3">
+                          <widget class="QPushButton" name="pb_CreateModelSet">
+                            <property name="text">
+                              <string>create</string>
+                            </property>
+                            <property name="icon">
+                              <iconset resource="../../misc/misc.qrc">
+                                <normaloff>:/diagona/icons/diagona/icons/tick-white.png</normaloff>:/diagona/icons/diagona/icons/tick-white.png
+                              </iconset>
+                            </property>
+                            <property name="flat">
+                              <bool>false</bool>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="1" column="1">
+                          <widget class="QLineEdit" name="le_ModelsInfo">
+                            <property name="readOnly">
+                              <bool>true</bool>
+                            </property>
+                            <property name="placeholderText">
+                              <string>model info</string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="2" column="1">
+                          <widget class="QLineEdit" name="le_ModelSetInfo">
+                            <property name="readOnly">
+                              <bool>true</bool>
+                            </property>
+                            <property name="placeholderText">
+                              <string>model set info</string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="1" column="3">
+                          <widget class="QPushButton" name="pb_ModelsTriggerReload">
+                            <property name="text">
+                              <string> reload </string>
+                            </property>
+                          </widget>
+                        </item>
+                        <item row="0" column="3">
+                          <widget class="QPushButton" name="pb_ChangeModelDir">
+                            <property name="text">
+                              <string>change</string>
+                            </property>
+                          </widget>
+                        </item>
+                      </layout>
+                    </widget>
+                  </item>
+                </layout>
+              </widget>
+            </item>
+            <item>
+              <widget class="QGroupBox" name="gb_Distributors">
+                <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
+                </property>
+                <property name="title">
+                  <string>Distributions</string>
+                </property>
+                <layout class="QVBoxLayout" name="vl_Distributors">
+                  <item>
+                    <widget class="swift::gui::components::CDbDistributorComponent" name="comp_Distributors"/>
+                  </item>
+                </layout>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <customwidgets>
+    <customwidget>
+      <class>swift::gui::components::CSimulatorSelector</class>
+      <extends>QFrame</extends>
+      <header>gui/components/simulatorselector.h</header>
+      <container>1</container>
+    </customwidget>
+    <customwidget>
+      <class>swift::gui::components::CDbDistributorComponent</class>
+      <extends>QFrame</extends>
+      <header>gui/components/dbdistributorcomponent.h</header>
+      <container>1</container>
+    </customwidget>
+  </customwidgets>
+  <tabstops>
+    <tabstop>le_ModelDirectories</tabstop>
+    <tabstop>pb_ClearModelDir</tabstop>
+    <tabstop>pb_ChangeModelDir</tabstop>
+    <tabstop>le_ModelsInfo</tabstop>
+    <tabstop>pb_Models</tabstop>
+    <tabstop>pb_ModelsTriggerReload</tabstop>
+    <tabstop>cb_DbDataOnly</tabstop>
+    <tabstop>le_ModelSetInfo</tabstop>
+    <tabstop>pb_ModelSet</tabstop>
+    <tabstop>pb_CreateModelSet</tabstop>
+  </tabstops>
+  <resources>
+    <include location="../../misc/misc.qrc"/>
+  </resources>
+  <connections/>
+</ui>

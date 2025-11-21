@@ -155,7 +155,7 @@ namespace swift::misc::simulation::fscommon
         QDir dir(directory, NoNameFilter, QDir::Name, QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
 
         // for MSFS2020   we only need aircraft.cfg
-        dir.setNameFilters(fileNameFilters(getSimulator().isMSFS()));
+        dir.setNameFilters(fileNameFilters(getSimulator().isMSFS2020()));
         if (!dir.exists())
         {
             return {}; // can happen if there are shortcuts or linked dirs not available

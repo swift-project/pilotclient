@@ -663,6 +663,7 @@ namespace swift::simplugin::msfs2024common
     bool CSimulatorMsfs2024::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation,
                                                        const CAircraftParts &parts)
     {
+        Q_UNUSED(situation);
         if (!m_simConnectObjects.contains(callsign)) { return false; }
         CSimConnectObject simObject = m_simConnectObjects.value(callsign);
         int u = 0;
@@ -742,7 +743,7 @@ namespace swift::simplugin::msfs2024common
         m_useSbOffsets = settings.isSbOffsetsEnabled();
         if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
         {
-            m_useSbOffsets = false; // Always disable SbOffsets for MSFS. Using new transponder mode property directly
+            m_useSbOffsets = false; // Always disable SbOffsets for MSFS2024. Using new transponder mode property directly
         }
 
         HRESULT hr = s_ok();
@@ -759,10 +760,10 @@ namespace swift::simplugin::msfs2024common
             "Cannot request title and livery", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObjectType");
 
         hr += this->logAndTraceSendId(SimConnect_RequestDataOnSimObject(
-                                          m_hSimConnect, CSimConnectDefinitions::RequestMSFSTransponder,
+                                          m_hSimConnect, CSimConnectDefinitions::RequestMSFS2024Transponder,
                                           CSimConnectDefinitions::DataTransponderModeMSFS, SIMCONNECT_OBJECT_ID_USER,
                                           SIMCONNECT_PERIOD_VISUAL_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-                                      "Cannot request MSFS transponder data", Q_FUNC_INFO,
+                                      "Cannot request MSFS2024 transponder data", Q_FUNC_INFO,
                                       "SimConnect_RequestDataOnSimObject");
 
         if (isFailure(hr)) { return; }
@@ -2595,7 +2596,7 @@ namespace swift::simplugin::msfs2024common
             position.Altitude = alt.value(CLengthUnit::ft());
         }
 
-        // MSFS has inverted pitch and bank angles
+        // MSFS2024 has inverted pitch and bank angles
         position.Pitch = -situation.getPitch().value(CAngleUnit::deg());
         position.Bank = -situation.getBank().value(CAngleUnit::deg());
         position.Heading = situation.getHeading().value(CAngleUnit::deg());
@@ -2652,7 +2653,7 @@ namespace swift::simplugin::msfs2024common
 
     SIMCONNECT_DATA_PBH CSimulatorMsfs2024::aircraftSituationToFsxPBH(const CAircraftSituation &situation)
     {
-        // MSFS has inverted pitch and bank angles
+        // MSFS2024 has inverted pitch and bank angles
         SIMCONNECT_DATA_PBH pbh;
         pbh.Pitch = -situation.getPitch().value(CAngleUnit::deg());
         pbh.Bank = -situation.getBank().value(CAngleUnit::deg());

@@ -270,10 +270,10 @@ namespace swift::misc
             //! Find duplicate model strings and return those models with at least 1 duplicate model string
             CAircraftModelList findDuplicateModelStrings() const;
 
-            //! All models of the FS (FSX, P3D, FS9, MSFS) family
+            //! All models of the FS (FSX, P3D, FS9, MSFS2020, MSFS2024) family
             CAircraftModelList findFsFamilyModels() const;
 
-            //! All models NOT of the FS (FSX, P3D, FS9, MSFS) family
+            //! All models NOT of the FS (FSX, P3D, FS9, MSFS2020, MSFS2024) family
             CAircraftModelList findNonFsFamilyModels() const;
 
             //! @{

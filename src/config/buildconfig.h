@@ -27,8 +27,8 @@ namespace swift::config
         //! with FG support?
         static constexpr bool isCompiledWithFGSupport(); // defined in buildconfig_gen.inc.in
 
-        //! with MSFS support?
-        static constexpr bool isCompiledWithMSFSSupport(); // defined in buildconfig_gen.inc.in
+        //! with MSFS2020 support?
+        static constexpr bool isCompiledWithMSFS2020Support(); // defined in buildconfig_gen.inc.in
 
         //! with MSFS2024 support?
         static constexpr bool isCompiledWithMSFS2024Support(); // defined in buildconfig_gen.inc.in
@@ -36,7 +36,7 @@ namespace swift::config
         //! with FSUIPC support?
         static constexpr bool isCompiledWithFsuipcSupport(); // defined in buildconfig_gen.inc.in
 
-        //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9, MSFS, MSFS24)
+        //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9, MSFS2020, MSFS24)
         static constexpr bool isCompiledWithMsFlightSimulatorSupport();
 
         //! with XPlane support?

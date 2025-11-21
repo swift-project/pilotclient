@@ -220,7 +220,7 @@ namespace swift::misc::simulation
         this->insert("testModelString4", CSimulatorInfo::p3d());
         this->insert("testModelString5", CSimulatorInfo::fsx());
         this->insert("testModelString6", CSimulatorInfo::fsx());
-        this->insert("testModelString7", CSimulatorInfo::msfs());
+        this->insert("testModelString7", CSimulatorInfo::msfs2020());
         this->insert("testModelString8", CSimulatorInfo::msfs2024());
     }
 

@@ -42,11 +42,11 @@ namespace swift::misc::simulation::data
 
     QString IMultiSimulatorModelCaches::getInfoStringFsFamily() const
     {
-        static const QString is("FSX: %1, P3D: %2, FS9: %3, MSFS: %4, MSFS2024: %5");
+        static const QString is("FSX: %1, P3D: %2, FS9: %3, MSFS2020: %4, MSFS2024: %5");
         return is.arg(this->getCachedModelsCount(CSimulatorInfo::FSX))
             .arg(this->getCachedModelsCount(CSimulatorInfo::P3D))
             .arg(this->getCachedModelsCount(CSimulatorInfo::FS9))
-            .arg(this->getCachedModelsCount(CSimulatorInfo::MSFS))
+            .arg(this->getCachedModelsCount(CSimulatorInfo::MSFS2020))
             .arg(this->getCachedModelsCount(CSimulatorInfo::MSFS2024));
     }
 
@@ -72,7 +72,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: m_syncP3D = synchronized; break;
         case CSimulatorInfo::XPLANE: m_syncXPlane = synchronized; break;
         case CSimulatorInfo::FG: m_syncFG = synchronized; break;
-        case CSimulatorInfo::MSFS: m_syncMsfs = synchronized; break;
+        case CSimulatorInfo::MSFS2020: m_syncMsfs2020 = synchronized; break;
         case CSimulatorInfo::MSFS2024: m_syncMsfs2024 = synchronized; break;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
@@ -103,7 +103,10 @@ namespace swift::misc::simulation::data
         if (this->hasOtherVersionFile(info, CSimulatorInfo::fs9())) { sim.addSimulator(CSimulatorInfo::fs9()); }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::fg())) { sim.addSimulator(CSimulatorInfo::fg()); }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::xplane())) { sim.addSimulator(CSimulatorInfo::xplane()); }
-        if (this->hasOtherVersionFile(info, CSimulatorInfo::msfs())) { sim.addSimulator(CSimulatorInfo::msfs()); }
+        if (this->hasOtherVersionFile(info, CSimulatorInfo::msfs2020()))
+        {
+            sim.addSimulator(CSimulatorInfo::msfs2020());
+        }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::msfs2024()))
         {
             sim.addSimulator(CSimulatorInfo::msfs2024());
@@ -119,7 +122,7 @@ namespace swift::misc::simulation::data
             this->getFilename(CSimulatorInfo::P3D),
             this->getFilename(CSimulatorInfo::XPLANE),
             this->getFilename(CSimulatorInfo::FG),
-            this->getFilename(CSimulatorInfo::MSFS),
+            this->getFilename(CSimulatorInfo::MSFS2020),
             this->getFilename(CSimulatorInfo::MSFS2024),
         });
     }
@@ -213,7 +216,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.get();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.get();
         case CSimulatorInfo::FG: return m_modelCacheFG.get();
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.get();
+        case CSimulatorInfo::MSFS2020: return m_modelCacheMsfs2020.get();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.get();
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
@@ -233,7 +236,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: msg = m_modelCacheP3D.set(setModels); break;
         case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(setModels); break;
         case CSimulatorInfo::FG: msg = m_modelCacheFG.set(setModels); break;
-        case CSimulatorInfo::MSFS: msg = m_modelCacheMsfs.set(setModels); break;
+        case CSimulatorInfo::MSFS2020: msg = m_modelCacheMsfs2020.set(setModels); break;
         case CSimulatorInfo::MSFS2024: msg = m_modelCacheMsfs2024.set(setModels); break;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
@@ -257,7 +260,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_syncP3D;
         case CSimulatorInfo::XPLANE: return m_syncXPlane;
         case CSimulatorInfo::FG: return m_syncFG;
-        case CSimulatorInfo::MSFS: return m_syncMsfs;
+        case CSimulatorInfo::MSFS2020: return m_syncMsfs2020;
         case CSimulatorInfo::MSFS2024: return m_syncMsfs2024;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
@@ -290,7 +293,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.getAvailableTimestamp();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getAvailableTimestamp();
         case CSimulatorInfo::FG: return m_modelCacheFG.getAvailableTimestamp();
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getAvailableTimestamp();
+        case CSimulatorInfo::MSFS2020: return m_modelCacheMsfs2020.getAvailableTimestamp();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.getAvailableTimestamp();
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
@@ -310,7 +313,8 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::FG: return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.set(m_modelCacheMsfs.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::MSFS2020:
+            return m_modelCacheMsfs2020.set(m_modelCacheMsfs2020.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::MSFS2024:
             return m_modelCacheMsfs2024.set(m_modelCacheMsfs2024.get(), ts.toMSecsSinceEpoch());
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
@@ -332,7 +336,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.getFilename();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getFilename();
         case CSimulatorInfo::FG: return m_modelCacheFG.getFilename();
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getFilename();
+        case CSimulatorInfo::MSFS2020: return m_modelCacheMsfs2020.getFilename();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.getFilename();
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
@@ -349,7 +353,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.isSaved();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.isSaved();
         case CSimulatorInfo::FG: return m_modelCacheFG.isSaved();
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.isSaved();
+        case CSimulatorInfo::MSFS2020: return m_modelCacheMsfs2020.isSaved();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.isSaved();
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
@@ -368,7 +372,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: m_modelCacheP3D.synchronize(); break;
         case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize(); break;
         case CSimulatorInfo::FG: m_modelCacheFG.synchronize(); break;
-        case CSimulatorInfo::MSFS: m_modelCacheMsfs.synchronize(); break;
+        case CSimulatorInfo::MSFS2020: m_modelCacheMsfs2020.synchronize(); break;
         case CSimulatorInfo::MSFS2024: m_modelCacheMsfs2024.synchronize(); break;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
@@ -388,7 +392,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: m_modelCacheP3D.admit(); break;
         case CSimulatorInfo::XPLANE: m_modelCacheXP.admit(); break;
         case CSimulatorInfo::FG: m_modelCacheFG.admit(); break;
-        case CSimulatorInfo::MSFS: m_modelCacheMsfs.admit(); break;
+        case CSimulatorInfo::MSFS2020: m_modelCacheMsfs2020.admit(); break;
         case CSimulatorInfo::MSFS2024: m_modelCacheMsfs2024.admit(); break;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); break;
         }
@@ -430,7 +434,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.get();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.get();
         case CSimulatorInfo::FG: return m_modelCacheFG.get();
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.get();
+        case CSimulatorInfo::MSFS2020: return m_modelCacheMsfs2020.get();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.get();
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
@@ -461,7 +465,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: msg = m_modelCacheP3D.set(orderedModels); break;
         case CSimulatorInfo::XPLANE: msg = m_modelCacheXP.set(orderedModels); break;
         case CSimulatorInfo::FG: msg = m_modelCacheFG.set(orderedModels); break;
-        case CSimulatorInfo::MSFS: msg = m_modelCacheMsfs.set(orderedModels); break;
+        case CSimulatorInfo::MSFS2020: msg = m_modelCacheMsfs2020.set(orderedModels); break;
         case CSimulatorInfo::MSFS2024: msg = m_modelCacheMsfs2024.set(orderedModels); break;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "wrong simulator"); return {};
         }
@@ -479,7 +483,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.getAvailableTimestamp();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getAvailableTimestamp();
         case CSimulatorInfo::FG: return m_modelCacheFG.getAvailableTimestamp();
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getAvailableTimestamp();
+        case CSimulatorInfo::MSFS2020: return m_modelCacheMsfs2020.getAvailableTimestamp();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.getAvailableTimestamp();
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); return {};
         }
@@ -499,7 +503,8 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.set(m_modelCacheP3D.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.set(m_modelCacheXP.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::FG: return m_modelCacheFG.set(m_modelCacheFG.get(), ts.toMSecsSinceEpoch());
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.set(m_modelCacheMsfs.get(), ts.toMSecsSinceEpoch());
+        case CSimulatorInfo::MSFS2020:
+            return m_modelCacheMsfs2020.set(m_modelCacheMsfs2020.get(), ts.toMSecsSinceEpoch());
         case CSimulatorInfo::MSFS2024:
             return m_modelCacheMsfs2024.set(m_modelCacheMsfs2024.get(), ts.toMSecsSinceEpoch());
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
@@ -521,7 +526,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.getFilename();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.getFilename();
         case CSimulatorInfo::FG: return m_modelCacheFG.getFilename();
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.getFilename();
+        case CSimulatorInfo::MSFS2020: return m_modelCacheMsfs2020.getFilename();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.getFilename();
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
@@ -538,7 +543,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: return m_modelCacheP3D.isSaved();
         case CSimulatorInfo::XPLANE: return m_modelCacheXP.isSaved();
         case CSimulatorInfo::FG: return m_modelCacheFG.isSaved();
-        case CSimulatorInfo::MSFS: return m_modelCacheMsfs.isSaved();
+        case CSimulatorInfo::MSFS2020: return m_modelCacheMsfs2020.isSaved();
         case CSimulatorInfo::MSFS2024: return m_modelCacheMsfs2024.isSaved();
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
@@ -557,7 +562,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: m_modelCacheP3D.synchronize(); break;
         case CSimulatorInfo::XPLANE: m_modelCacheXP.synchronize(); break;
         case CSimulatorInfo::FG: m_modelCacheFG.synchronize(); break;
-        case CSimulatorInfo::MSFS: m_modelCacheMsfs.synchronize(); break;
+        case CSimulatorInfo::MSFS2020: m_modelCacheMsfs2020.synchronize(); break;
         case CSimulatorInfo::MSFS2024: m_modelCacheMsfs2024.synchronize(); break;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }
@@ -577,7 +582,7 @@ namespace swift::misc::simulation::data
         case CSimulatorInfo::P3D: m_modelCacheP3D.admit(); break;
         case CSimulatorInfo::XPLANE: m_modelCacheXP.admit(); break;
         case CSimulatorInfo::FG: m_modelCacheFG.admit(); break;
-        case CSimulatorInfo::MSFS: m_modelCacheMsfs.admit(); break;
+        case CSimulatorInfo::MSFS2020: m_modelCacheMsfs2020.admit(); break;
         case CSimulatorInfo::MSFS2024: m_modelCacheMsfs2024.admit(); break;
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;
         }

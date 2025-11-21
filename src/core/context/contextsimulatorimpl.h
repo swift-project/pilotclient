@@ -415,6 +415,10 @@ namespace swift::core
             swift::misc::CSettingReadOnly<swift::misc::simulation::settings::TSimulatorMessages> m_messageSettings {
                 this
             }; //!< settings for messages (all simulators)
+
+            swift::misc::CSettingReadOnly<application::TEnabledConfigOptions> m_enabledConfigOptions {
+                this
+            }; //!< genearal enabled config options
         };
     } // namespace context
 } // namespace swift::core

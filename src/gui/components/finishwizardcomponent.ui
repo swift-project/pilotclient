@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CFinishWizardComponent</class>
+ <widget class="QFrame" name="CFinishWizardComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>542</width>
+    <height>285</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>swift finish information</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QFrame" name="fr_Tip">
+     <layout class="QHBoxLayout" name="hl_Tp" stretch="0,1">
+      <item>
+       <widget class="QLabel" name="lbl_Icon">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../../misc/misc.qrc">:/pastel/icons/pastel/32/exclamation.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_Tip">
+        <property name="text">
+         <string>HINT: Click here for our online documentation</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Loading the setup file (bootstrap.json) has failed!&lt;/span&gt; This file is required for &lt;span style=&quot; font-style:italic;&quot;&gt;swift&lt;/span&gt; to work properly. Fix the errors mentioned below and restart swift. You can also replace your bootstrap.json with the latest version available &lt;a href=&quot;https://swift-project.org/;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;from GitHub.&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+    <item>
+      <widget class="QWidget" name="pg_Start">
+        <property name="geometry">
+          <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>467</width>
+            <height>134</height>
+          </rect>
+        </property>
+        <attribute name="label">
+          <string>Start application</string>
+        </attribute>
+        <layout class="QGridLayout" name="gl_Start">
+          <property name="leftMargin">
+            <number>3</number>
+          </property>
+          <property name="topMargin">
+            <number>3</number>
+          </property>
+          <property name="rightMargin">
+            <number>3</number>
+          </property>
+          <property name="bottomMargin">
+            <number>3</number>
+          </property>
+          <property name="verticalSpacing">
+            <number>1</number>
+          </property>
+          <item row="1" column="0">
+            <widget class="QToolButton" name="tb_SwiftGui">
+              <property name="toolTip">
+                <string>start swift GUI</string>
+              </property>
+              <property name="text">
+                <string>swift GUI</string>
+              </property>
+              <property name="icon">
+                <iconset resource="../misc/misc.qrc">
+                  <normaloff>:/own/icons/own/swift3D/sw3DBlue-256.png</normaloff>:/own/icons/own/swift3D/sw3DBlue-256.png
+                </iconset>
+              </property>
+              <property name="iconSize">
+                <size>
+                  <width>64</width>
+                  <height>64</height>
+                </size>
+              </property>
+            </widget>
+          </item>
+          <property name="verticalSpacing">
+            <number>1</number>
+          </property>
+          <item row="2" column="0">
+            <widget class="QToolButton" name="tb_SwiftCore">
+              <property name="toolTip">
+                <string>start swift core</string>
+              </property>
+              <property name="text">
+                <string>swift core</string>
+              </property>
+              <property name="icon">
+                <iconset resource="../misc/misc.qrc">
+                  <normaloff>:/own/icons/own/swift3D/sw3DOrange-256.png</normaloff>:/own/icons/own/swift3D/sw3DOrange-256.png
+                </iconset>
+              </property>
+              <property name="iconSize">
+                <size>
+                  <width>64</width>
+                  <height>64</height>
+                </size>
+              </property>
+            </widget>
+          </item>
+          <property name="verticalSpacing">
+            <number>1</number>
+          </property>
+          <item row="3" column="0">
+            <widget class="QToolButton" name="tb_SwiftMappingTool">
+              <property name="toolTip">
+                <string>start swift data (the mapping tool)</string>
+              </property>
+              <property name="text">
+                <string>mapping tool</string>
+              </property>
+              <property name="icon">
+                <iconset resource="../misc/misc.qrc">
+                  <normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png</normaloff>:/own/icons/own/swift3D/sw3DGreen-256.png
+                </iconset>
+              </property>
+              <property name="iconSize">
+                <size>
+                  <width>64</width>
+                  <height>64</height>
+                </size>
+              </property>
+            </widget>
+          </item>
+          <property name="verticalSpacing">
+            <number>1</number>
+          </property>
+          <item row="4" column="0">
+            <widget class="QToolButton" name="tb_ConfigTool">
+              <property name="toolTip">
+                <string>start swift launcher </string>
+              </property>
+              <property name="text">
+                <string>config tool</string>
+              </property>
+              <property name="icon">
+                <iconset resource="../misc/misc.qrc">
+                  <normaloff>:/own/icons/own/swift3D/sw3DBlack-256.png</normaloff>:/own/icons/own/swift3D/sw3DBlack-256.png
+                </iconset>
+              </property>
+              <property name="iconSize">
+                <size>
+                  <width>64</width>
+                  <height>64</height>
+                </size>
+              </property>
+            </widget>
+          </item>
+
+          
+
+          <item row="1" column="1">
+            <widget class="QLabel" name="lbl_SwiftGui">
+              <property name="text">
+                <string>GUI the link between simulation and network during the online connection</string>
+              </property>
+            </widget>
+          </item>
+          <item row="2" column="1">
+            <widget class="QLabel" name="lbl_SwiftCore">
+              <property name="text">
+                <string>core component for networked computers</string>
+              </property>
+            </widget>
+          </item>
+          <item row="3" column="1">
+            <widget class="QLabel" name="lbl_SwiftData">
+              <property name="text">
+                <string>mapping tool for creating customized model sets</string>
+              </property>
+            </widget>
+          </item>
+          <item row="4" column="1">
+            <widget class="QLabel" name="lbl_Wizard">
+              <property name="text">
+                <string>config tool to adjust basic settings</string>
+              </property>
+            </widget>
+          </item>
+          
+        </layout>
+      </widget>
+    </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../misc/misc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

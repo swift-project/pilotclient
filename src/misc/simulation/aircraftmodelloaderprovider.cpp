@@ -67,9 +67,9 @@ namespace swift::misc::simulation
             if (!m_loaderFG) { m_loaderFG = this->initLoader(CSimulatorInfo::fg()); }
             return m_loaderFG;
         }
-        case CSimulatorInfo::MSFS:
+        case CSimulatorInfo::MSFS2020:
         {
-            if (!m_loaderMsfs) { m_loaderMsfs = this->initLoader(CSimulatorInfo::msfs()); }
+            if (!m_loaderMsfs) { m_loaderMsfs = this->initLoader(CSimulatorInfo::msfs2020()); }
             return m_loaderMsfs;
         }
         case CSimulatorInfo::MSFS2024:

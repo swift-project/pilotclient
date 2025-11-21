@@ -181,7 +181,28 @@
               </property>
              </widget>
             </item>
-           </layout>
+ 		    <item>
+			 <widget class="QCheckBox" name="cb_SettingsSimulatorFG">
+			  <property name="text">
+			   <string>FG</string>
+			  </property>
+			 </widget>
+		   </item>
+           <item>
+  			 <widget class="QCheckBox" name="cb_SettingsSimulatorMSFS2020">
+			  <property name="text">
+				<string>MSFS2020</string>
+			  </property>
+			 </widget>
+			</item>
+			<item>
+			 <widget class="QCheckBox" name="cb_SettingsSimulatorMSFS2024">
+			  <property name="text">
+				<string>MSFS2024</string>
+			  </property>
+			 </widget>
+			</item>
+		   </layout>
           </widget>
          </item>
         </layout>
@@ -340,6 +361,9 @@
   <tabstop>cb_SettingsSimulatorP3D</tabstop>
   <tabstop>cb_SettingsSimulatorFSX</tabstop>
   <tabstop>cb_SettingsSimulatorXPlane</tabstop>
+  <tabstop>cb_SettingsSimulatorFG</tabstop>
+  <tabstop>cb_SettingsSimulatorMSFS2020</tabstop>
+  <tabstop>cb_SettingsSimulatorMSFS2020</tabstop>
   <tabstop>cb_SettingsModel</tabstop>
   <tabstop>cb_SettingsConsolidation</tabstop>
   <tabstop>cb_SettingsActionHotkeys</tabstop>

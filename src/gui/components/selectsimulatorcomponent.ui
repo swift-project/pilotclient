@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+	<class>CSelectSimulatorComponent</class>
+	<widget class="QFrame" name="CSelectSimulatorComponent">
+		<property name="geometry">
+			<rect>
+				<x>0</x>
+				<y>0</y>
+				<width>640</width>
+				<height>480</height>
+			</rect>
+		</property>
+		<property name="windowTitle">
+			<string>Frame</string>
+		</property>
+		<layout class="QVBoxLayout" name="vl_SelectSimulator">
+			<property name="leftMargin">
+				<number>4</number>
+			</property>
+			<property name="topMargin">
+				<number>4</number>
+			</property>
+			<property name="rightMargin">
+				<number>4</number>
+			</property>
+			<property name="bottomMargin">
+				<number>4</number>
+			</property>
+			<item>
+				<widget class="QLabel" name="lbl_SimulatorHint">
+					<property name="text">
+						<string>To keep the configuration simple, please select only the simulators you have installed and for which you want to configure swift.</string>
+					</property>
+					<property name="wordWrap">
+						<bool>true</bool>
+					</property>
+				</widget>
+			</item>
+			<item>
+				<widget class="QGroupBox" name="gb_Simulator">
+					<property name="title">
+						<string>Select your simulator(s)</string>
+					</property>
+					<layout class="QGridLayout" name="gl_Simulator">
+						<property name="leftMargin">
+							<number>4</number>
+						</property>
+						<property name="topMargin">
+							<number>4</number>
+						</property>
+						<property name="rightMargin">
+							<number>4</number>
+						</property>
+						<property name="bottomMargin">
+							<number>4</number>
+						</property>
+						<item row="1" column="0" alignment="Qt::AlignLeft">
+							<widget class="QCheckBox" name="cb_FS9">
+								<property name="text">
+									<string>FS9 (32-bit)</string>
+								</property>
+								<property name="iconSize">
+									<size>
+										<width>64</width>
+										<height>64</height>
+									</size>
+								</property>
+							</widget>
+						</item>
+
+						<item row="3" column="0" alignment="Qt::AlignLeft">
+							<widget class="QCheckBox" name="cb_FSX">
+								<property name="text">
+									<string>FSX (32-bit)</string>
+								</property>
+							</widget>
+						</item>
+						<item row="5" column="0" alignment="Qt::AlignLeft">
+							<widget class="QCheckBox" name="cb_P3D">
+								<property name="text">
+									<string>P3D (64-bit)</string>
+								</property>
+							</widget>
+						</item>
+						<item row="7" column="0" alignment="Qt::AlignLeft">
+							<widget class="QCheckBox" name="cb_XP">
+								<property name="text">
+									<string>XPlane (32,64-bit)</string>
+								</property>
+							</widget>
+						</item>
+						<item row="9" column="0" alignment="Qt::AlignLeft">
+							<widget class="QCheckBox" name="cb_FG">
+								<property name="text">
+									<string>FlightGear (64-bit)</string>
+								</property>
+							</widget>
+						</item>
+						<item row="11" column="0" alignment="Qt::AlignLeft">
+							<widget class="QCheckBox" name="cb_MSFS2020">
+								<property name="text">
+									<string>MSFS2020 (64-bit)</string>
+								</property>
+							</widget>
+						</item>
+						<item row="13" column="0" alignment="Qt::AlignLeft">
+							<widget class="QCheckBox" name="cb_MSFS2024">
+								<property name="text">
+									<string>MSFS2024 (64-bit)</string>
+								</property>
+							</widget>
+						</item>
+					</layout>
+				</widget>
+			</item>
+
+
+			
+			<item>
+				<widget class="QLabel" name="lbl_SimulatorHint1">
+					<property name="text">
+						<string>Please select your options to keep the configuration simple.</string>
+					</property>
+					<property name="wordWrap">
+						<bool>true</bool>
+					</property>
+				</widget>
+			</item>
+
+
+			<item>
+				<widget class="QGroupBox" name="gb_PttConfig">
+					<property name="title">
+						<string>Choose your options</string>
+					</property>
+					<layout class="QGridLayout" name="gl_PttConfig">
+						<property name="leftMargin">
+							<number>4</number>
+						</property>
+						<property name="topMargin">
+							<number>4</number>
+						</property>
+						<property name="rightMargin">
+							<number>4</number>
+						</property>
+						<property name="bottomMargin">
+							<number>4</number>
+						</property>
+						
+						<item row="1" column="0" alignment="Qt::AlignLeft">
+							<widget class="QCheckBox" name="cb_PTT">
+								<property name="text">
+									<string>I want to assign a button for PTT (push-to-talk). You can do that later. If you are not flying on the VATSIM network, you do not need this option.</string>
+								</property>
+								<property name="toolTip">
+									<string>If you are flying on the VATSIM network, you can assign a PTT (push to talk) button.</string>
+								</property>
+								<property name="iconSize">
+									<size>
+										<width>64</width>
+										<height>64</height>
+									</size>
+								</property>
+							</widget>
+						</item>
+						
+						<item row="2" column="0" alignment="Qt::AlignLeft">
+							<widget class="QCheckBox" name="cb_GenerateModelsets">
+								<property name="text">
+									<string>Create first model sets.</string>
+								</property>
+								<property name="toolTip">
+									<string>If you have already imported model sets from an existing installation, you can skip this step.</string>
+								</property>
+								<property name="iconSize">
+									<size>
+										<width>64</width>
+										<height>64</height>
+									</size>
+								</property>
+							</widget>
+						</item>
+
+            <item row="3" column="0" alignment="Qt::AlignLeft">
+              <widget class="QCheckBox" name="cb_SetExportMode">
+                <property name="text">
+                  <string>I want to use swift in expert mode.</string>
+                </property>
+                <property name="toolTip">
+                  <string>This will activate control options that may make the user interface appear cluttered!.</string>
+                </property>
+                <property name="iconSize">
+                  <size>
+                    <width>64</width>
+                    <height>64</height>
+                  </size>
+                </property>
+              </widget>
+            </item>
+          </layout>
+				</widget>
+			</item>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<item>
+				<spacer name="vs_SimulatorComponent">
+					<property name="orientation">
+						<enum>Qt::Vertical</enum>
+					</property>
+					<property name="sizeHint" stdset="0">
+						<size>
+							<width>20</width>
+							<height>40</height>
+						</size>
+					</property>
+				</spacer>
+			</item>
+		</layout>
+	</widget>
+
+	<tabstops>
+		<tabstop>cb_P3D</tabstop>
+		<tabstop>cb_FSX</tabstop>
+		<tabstop>cb_FS9</tabstop>
+		<tabstop>cb_XP</tabstop>
+		<tabstop>cb_FG</tabstop>
+		<tabstop>cb_MSFS2020</tabstop>
+		<tabstop>cb_MSFS2024</tabstop>
+	</tabstops>
+	<resources/>
+	<connections/>
+</ui>

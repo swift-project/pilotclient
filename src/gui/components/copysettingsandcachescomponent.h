@@ -135,6 +135,16 @@ namespace swift::gui::components
         swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorXP> m_settingsSimulatorXPlane {
             this
         }; //!< XP settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorFG> m_settingsSimulatorFG {
+            this
+        }; //!< XP settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorMsfs2020> m_settingsSimulatorMSFS2020 {
+            this
+        }; //!< MSFS2020 settings
+        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorMsfs2024> m_settingsSimulatorMSFS2024 {
+            this
+        }; //!< MSFS2024 settings
+
         swift::misc::CSetting<swift::misc::simulation::settings::TModel> m_settingsModel { this }; //!< model setting
 
         swift::misc::CData<swift::core::data::TVatsimLastServer> m_cacheLastVatsimServer {

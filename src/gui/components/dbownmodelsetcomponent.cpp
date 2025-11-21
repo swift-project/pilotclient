@@ -585,19 +585,19 @@ namespace swift::gui::components
                     });
                     m_setNewActions.append(a);
                 }
-                if (sims.isMSFS())
+                if (sims.isMSFS2020())
                 {
-                    auto *a = new QAction(CIcons::appModels16(), "MSFS models", this);
+                    auto *a = new QAction(CIcons::appModels16(), "MSFS2020 models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
-                        ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS));
+                        ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS2020));
                     });
                     m_setActions.append(a);
 
-                    a = new QAction(CIcons::appModels16(), "New set MSFS models", this);
+                    a = new QAction(CIcons::appModels16(), "New set MSFS2020 models", this);
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
-                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::MSFS));
+                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::MSFS2020));
                     });
                     m_setNewActions.append(a);
                 }

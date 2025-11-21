@@ -84,7 +84,7 @@ namespace swift::misc::simulation
         static const QString &fgPluginIdentifier();
 
         //! Plugin identifier (MSFS 2020)
-        static const QString &msfsPluginIdentifier();
+        static const QString &msfs2020PluginIdentifier();
 
         //! Plugin identifier (MSFS 2024)
         static const QString &msfs2024PluginIdentifier();

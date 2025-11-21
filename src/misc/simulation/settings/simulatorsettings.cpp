@@ -152,15 +152,9 @@ namespace swift::misc::simulation::settings
         }
     }
 
-    void CSimulatorSettings::setPropertyModelSet(bool value) { value ? m_modelSet = true : m_modelSet = false; }
-    void CSimulatorSettings::setPropertyWithDbEntry(bool value)
-    {
-        value ? m_withDbEntry = true : m_withDbEntry = false;
-    }
-    void CSimulatorSettings::setPropertyDistributorFiltered(bool value)
-    {
-        value ? m_distributorFiltered = true : m_distributorFiltered = false;
-    }
+    void CSimulatorSettings::setPropertyModelSet(bool value) { m_modelSet = value; }
+    void CSimulatorSettings::setPropertyWithDbEntry(bool value) { m_withDbEntry = value; }
+    void CSimulatorSettings::setPropertyDistributorFiltered(bool value) { m_distributorFiltered = value; }
 
     void CSimulatorSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
@@ -204,7 +198,7 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::FS9: return m_simSettingsFs9.get();
         case CSimulatorInfo::FSX: return m_simSettingsFsx.get();
         case CSimulatorInfo::P3D: return m_simSettingsP3D.get();
-        case CSimulatorInfo::MSFS: return m_simSettingsMsfs.get();
+        case CSimulatorInfo::MSFS2020: return m_simSettingsMsfs2020.get();
         case CSimulatorInfo::MSFS2024: return m_simSettingsMsfs2024.get();
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.get();
 
@@ -228,7 +222,7 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::FS9: return m_simSettingsFs9.set(settings);
         case CSimulatorInfo::FSX: return m_simSettingsFsx.set(settings);
         case CSimulatorInfo::P3D: return m_simSettingsP3D.set(settings);
-        case CSimulatorInfo::MSFS: return m_simSettingsMsfs.set(settings);
+        case CSimulatorInfo::MSFS2020: return m_simSettingsMsfs2020.set(settings);
         case CSimulatorInfo::MSFS2024: return m_simSettingsMsfs2024.set(settings);
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.set(settings);
         default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
@@ -266,7 +260,7 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::FS9: break;
         case CSimulatorInfo::FSX: break;
         case CSimulatorInfo::P3D: break;
-        case CSimulatorInfo::MSFS: break;
+        case CSimulatorInfo::MSFS2020: break;
         case CSimulatorInfo::MSFS2024: break;
         case CSimulatorInfo::XPLANE:
         {
@@ -292,7 +286,7 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::FS9: return m_simSettingsFs9.setAndSave(settings);
         case CSimulatorInfo::FSX: return m_simSettingsFsx.setAndSave(settings);
         case CSimulatorInfo::P3D: return m_simSettingsP3D.setAndSave(settings);
-        case CSimulatorInfo::MSFS: return m_simSettingsMsfs.setAndSave(settings);
+        case CSimulatorInfo::MSFS2020: return m_simSettingsMsfs2020.setAndSave(settings);
         case CSimulatorInfo::MSFS2024: return m_simSettingsMsfs2024.setAndSave(settings);
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.setAndSave(settings);
         default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
@@ -315,7 +309,7 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::FS9: return m_simSettingsFs9.save();
         case CSimulatorInfo::FSX: return m_simSettingsFsx.save();
         case CSimulatorInfo::P3D: return m_simSettingsP3D.save();
-        case CSimulatorInfo::MSFS: return m_simSettingsMsfs.save();
+        case CSimulatorInfo::MSFS2020: return m_simSettingsMsfs2020.save();
         case CSimulatorInfo::MSFS2024: return m_simSettingsMsfs2024.save();
         case CSimulatorInfo::XPLANE: return m_simSettingsXP.save();
         default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
@@ -385,7 +379,7 @@ namespace swift::misc::simulation::settings
 
     void CMultiSimulatorSettings::onFs9SettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::fs9()); }
 
-    void CMultiSimulatorSettings::onMsfsSettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::msfs()); }
+    void CMultiSimulatorSettings::onMsfs2020SettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::msfs2020()); }
 
     void CMultiSimulatorSettings::onMsfs2024SettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::msfs2024()); }
 
@@ -599,7 +593,7 @@ namespace swift::misc::simulation::settings
         }
         break;
         case CSimulatorInfo::XPLANE: dirs = QStringList({ CXPlaneUtil::modelDirectoriesFromSimDir(s) }); break;
-        case CSimulatorInfo::MSFS: dirs = QStringList({ CFsDirectories::msfsSimObjectsDir() }); break;
+        case CSimulatorInfo::MSFS2020: dirs = QStringList({ CFsDirectories::msfs2020SimObjectsDir() }); break;
         case CSimulatorInfo::MSFS2024: dirs = QStringList({ CFsDirectories::msfs2024SimObjectsDir() }); break;
         default: break;
         }
@@ -693,11 +687,12 @@ namespace swift::misc::simulation::settings
             static const QStringList md = CFsDirectories::p3dSimObjectsDirPlusAddOnXmlSimObjectsPaths(p3d, versionHint);
             return md;
         }
-        case CSimulatorInfo::MSFS:
+        case CSimulatorInfo::MSFS2020:
         {
-            static const QString msfs = CFileUtils::normalizeFilePathToQtStandard(CFsDirectories::msfsPackagesDir());
-            if (msfs.isEmpty()) { return e; }
-            static const QStringList md { msfs };
+            static const QString msfs2020 =
+                CFileUtils::normalizeFilePathToQtStandard(CFsDirectories::msfs2020PackagesDir());
+            if (msfs2020.isEmpty()) { return e; }
+            static const QStringList md { msfs2020 };
             return md;
         }
         case CSimulatorInfo::MSFS2024:
@@ -727,7 +722,7 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::FS9: return CFsDirectories::fs9Dir();
         case CSimulatorInfo::FSX: return CFsDirectories::fsxDir();
         case CSimulatorInfo::P3D: return CFsDirectories::p3dDir();
-        case CSimulatorInfo::MSFS: return CFsDirectories::msfsDir();
+        case CSimulatorInfo::MSFS2020: return CFsDirectories::msfs2020Dir();
         case CSimulatorInfo::MSFS2024: return CFsDirectories::msfs2024Dir();
         case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneRootDir();
         default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
@@ -747,7 +742,7 @@ namespace swift::misc::simulation::settings
         case CSimulatorInfo::FSX: return CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns();
         case CSimulatorInfo::P3D: return CFsDirectories::p3dSimObjectsExcludeDirectoryPatterns();
         case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelExcludeDirectoryPatterns();
-        case CSimulatorInfo::MSFS: return CFsDirectories::msfs20SimObjectsExcludeDirectoryPatterns();
+        case CSimulatorInfo::MSFS2020: return CFsDirectories::msfs2020SimObjectsExcludeDirectoryPatterns();
         case CSimulatorInfo::MSFS2024: return CFsDirectories::msfs2024SimObjectsExcludeDirectoryPatterns();
         default: Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator"); break;
         }

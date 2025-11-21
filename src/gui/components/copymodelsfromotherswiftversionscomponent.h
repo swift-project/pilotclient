@@ -37,6 +37,9 @@ namespace swift::gui::components
         //! Reload other versions
         void reloadOtherVersions(int deferMs = -1);
 
+        //! Load enabled sims
+        void load();
+
     private:
         //! Copy as per UI settings
         void copy();
@@ -57,6 +60,7 @@ namespace swift::gui::components
         // caches will be explicitly initialized in copy
         swift::misc::simulation::data::CModelCaches m_modelCaches { false, this };
         swift::misc::simulation::data::CModelSetCaches m_modelSetCaches { false, this };
+        swift::misc::CSetting<swift::core::application::TEnabledSimulators> m_enabledSimulators { this };
     };
 
     /*!

@@ -26,82 +26,7 @@
    <property name="bottomMargin">
     <number>4</number>
    </property>
-   <item>
-    <widget class="QGroupBox" name="gb_Simulator">
-     <property name="title">
-      <string>Select your simulator(s)</string>
-     </property>
-     <layout class="QGridLayout" name="gl_Simulator">
-      <property name="leftMargin">
-       <number>4</number>
-      </property>
-      <property name="topMargin">
-       <number>4</number>
-      </property>
-      <property name="rightMargin">
-       <number>4</number>
-      </property>
-      <property name="bottomMargin">
-       <number>4</number>
-      </property>
-      <item row="1" column="3" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_XP">
-        <property name="text">
-         <string>XPlane (32,64-bit)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_P3D">
-        <property name="text">
-         <string>P3D (64-bit)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FSX">
-        <property name="text">
-         <string>FSX (32-bit)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FS9">
-        <property name="text">
-         <string>FS9 (32-bit)</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>64</width>
-          <height>64</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FG">
-        <property name="text">
-         <string>FlightGear (64-bit)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5" alignment="Qt::AlignHCenter">
-        <widget class="QCheckBox" name="cb_MSFS">
-            <property name="text">
-              <string>MSFS (64-bit)</string>
-          </property>
-        </widget>
-      </item>
-       <item row="1" column="6" alignment="Qt::AlignHCenter">
-         <widget class="QCheckBox" name="cb_MSFS2024">
-           <property name="text">
-             <string>MSFS2024 (64-bit)</string>
-           </property>
-         </widget>
-       </item>
-     </layout>
-    </widget>
-   </item>
+   
    <item>
     <widget class="QGroupBox" name="gb_SimulatorSetup">
      <property name="title">
@@ -166,13 +91,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>cb_P3D</tabstop>
-  <tabstop>cb_FSX</tabstop>
-  <tabstop>cb_FS9</tabstop>
-  <tabstop>cb_XP</tabstop>
-  <tabstop>cb_FG</tabstop>
- </tabstops>
- <resources/>
+  <resources/>
  <connections/>
 </ui>

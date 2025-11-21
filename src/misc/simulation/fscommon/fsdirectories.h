@@ -36,7 +36,7 @@ namespace swift::misc::simulation::fscommon
         static const QString &fsxSimObjectsDir();
 
         //! MSFS's simobject dir, resolved from multiple sources
-        static const QString &msfsSimObjectsDir();
+        static const QString &msfs2020SimObjectsDir();
 
         //! MSFS's simobject dir, resolved from multiple sources
         static const QString &msfs2024SimObjectsDir();
@@ -48,7 +48,7 @@ namespace swift::misc::simulation::fscommon
         static const QStringList &fsxSimObjectsExcludeDirectoryPatterns();
 
         //! Exclude directories for simObjects
-        static const QStringList &msfs20SimObjectsExcludeDirectoryPatterns();
+        static const QStringList &msfs2020SimObjectsExcludeDirectoryPatterns();
 
         //! Exclude directories for simObjects
         static const QStringList &msfs2024SimObjectsExcludeDirectoryPatterns();
@@ -57,7 +57,7 @@ namespace swift::misc::simulation::fscommon
         static QStringList fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(const QString &simObjectsDir = "");
 
         //! MSFS's simObject dir and the add on dirs
-        static QStringList msfsSimObjectsDirPath(const QString &simObjectsDir = "");
+        static QStringList msfs2020SimObjectsDirPath(const QString &simObjectsDir = "");
 
         //! MSFS2024's simObject dir and the add on dirs
         static QStringList msfs2024SimObjectsDirPath(const QString &simObjectsDir = "");
@@ -88,10 +88,10 @@ namespace swift::misc::simulation::fscommon
         static const QStringList &p3dSimObjectsExcludeDirectoryPatterns();
 
         //! MSFS directory from different sources
-        static const QString &msfsDir();
+        static const QString &msfs2020Dir();
 
         //! MSFS's packages dir
-        static const QString &msfsPackagesDir();
+        static const QString &msfs2020PackagesDir();
 
         //! MSFS directory from different sources
         static const QString &msfs2024Dir();
@@ -151,7 +151,7 @@ namespace swift::misc::simulation::fscommon
 
         //! Get all the SimObjects paths from msfs.cfg
         // SimObjectPaths.0=SimObjects\Airplanes
-        static QSet<QString> msfsSimObjectsPaths(const QStringList &msfsFiles, bool checked);
+        static QSet<QString> msfs2020SimObjectsPaths(const QStringList &msfsFiles, bool checked);
 
         //! Get all the SimObjects files from fsx.cfg
         // SimObjectPaths.0=SimObjects\Airplanes
@@ -159,7 +159,7 @@ namespace swift::misc::simulation::fscommon
 
         //! Get all the SimObjects files from fsx.cfg
         // SimObjectPaths.0=SimObjects\Airplanes
-        static QSet<QString> msfsSimObjectsPaths(const QString &msfsFile, bool checked);
+        static QSet<QString> msfs2020SimObjectsPaths(const QString &msfsFile, bool checked);
 
         //! .air file filter
         static const QString &airFileFilter();

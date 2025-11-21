@@ -25,7 +25,7 @@ constexpr bool swift::config::CBuildConfig::isCompiledWithFsxSupport()
 
 constexpr bool swift::config::CBuildConfig::isCompiledWithFsuipcSupport()
 {
-    return isCompiledWithFsxSupport() || isCompiledWithP3DSupport() || isCompiledWithFs9Support() || isCompiledWithMSFSSupport() || isCompiledWithMSFS2024Support();
+    return isCompiledWithFsxSupport() || isCompiledWithP3DSupport() || isCompiledWithFs9Support() || isCompiledWithMSFS2020Support() || isCompiledWithMSFS2024Support();
 }
 
 constexpr bool swift::config::CBuildConfig::isCompiledWithXPlaneSupport()
@@ -38,7 +38,7 @@ constexpr bool swift::config::CBuildConfig::isCompiledWithFGSupport()
     return SWIFTCONFIG_${SWIFT_BUILD_FLIGHTGEAR_PLUGIN};
 }
 
-constexpr bool swift::config::CBuildConfig::isCompiledWithMSFSSupport()
+constexpr bool swift::config::CBuildConfig::isCompiledWithMSFS2020Support()
 {
     return SWIFTCONFIG_${SWIFT_BUILD_MSFS_PLUGIN};
 }
