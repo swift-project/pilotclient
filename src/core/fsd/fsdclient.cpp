@@ -2433,9 +2433,9 @@ namespace swift::core::fsd
                 //! \fixme: Anything better as this stupid code here?
                 thread_local const QRegularExpression RegExp(R"([\n\t\r])");
                 const QString test = fixed.toLower().remove(RegExp);
-                if (test == "z") return;
-                if (test.startsWith("z") && test.length() == 2) return; // z1, z2, ..
-                if (test.length() == 1) return; // sometimes just z
+                if (test == "z") continue;
+                if (test.startsWith("z") && test.length() == 2) continue; // z1, z2, ..
+                if (test.length() == 1) continue; // sometimes just z
 
                 // append
                 if (!atisMessage.isEmpty()) atisMessage.appendMessage("\n");
