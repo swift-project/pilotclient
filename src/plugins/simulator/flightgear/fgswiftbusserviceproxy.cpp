@@ -26,12 +26,6 @@ namespace swift::simplugin::flightgear
                 QString(), "/fgswiftbus/service", "org.swift_project.fgswiftbus.service", "aircraftModelChanged", this,
                 SIGNAL(aircraftModelChanged(QString, QString, QString, QString, QString, QString, QString)));
             Q_ASSERT(s);
-
-            s = connection.connect(
-                QString(), "/fgswiftbus/service", "org.swift_project.fgswiftbus.service", "airportsInRangeUpdated",
-                this,
-                SIGNAL(airportsInRangeUpdated(QStringList, QStringList, QList<double>, QList<double>, QList<double>)));
-            Q_ASSERT(s);
         }
     }
 
