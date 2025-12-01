@@ -85,7 +85,7 @@ namespace swift::misc::simulation::msfs2024
 
             // TODO TZ need help: simplify, we don't need directories in this->performParsing for MSFS2024
             m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderMsfs2024::performParsing",
-                                               [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]() {
+                                               [this, modelConsolidation]() {
                                                    auto models = this->performParsing();
                                                    if (modelConsolidation) { modelConsolidation(models, true); }
                                                    return models;
