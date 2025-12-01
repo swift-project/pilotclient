@@ -29,7 +29,6 @@ namespace swift::misc::simulation::msfs2024
     bool CAircraftModelLoaderMsfs2024::isLoadingFinished() const
     {
         return !m_parserWorker || m_parserWorker->isFinished();
-     
     }
 
     CAircraftModelLoaderMsfs2024::CAircraftModelLoaderMsfs2024(QObject *parent)
@@ -84,12 +83,12 @@ namespace swift::misc::simulation::msfs2024
             emit this->diskLoadingStarted(simulator, mode);
 
             // TODO TZ need help: simplify, we don't need directories in this->performParsing for MSFS2024
-            m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderMsfs2024::performParsing",
-                                               [this, modelConsolidation]() {
-                                                   auto models = this->performParsing();
-                                                   if (modelConsolidation) { modelConsolidation(models, true); }
-                                                   return models;
-                                               });
+            m_parserWorker =
+                CWorker::fromTask(this, "CAircraftModelLoaderMsfs2024::performParsing", [this, modelConsolidation]() {
+                    auto models = this->performParsing();
+                    if (modelConsolidation) { modelConsolidation(models, true); }
+                    return models;
+                });
             m_parserWorker->thenWithResult<CAircraftModelList>(this, [=](const auto &models) {
                 this->updateInstalledModels(models);
                 m_loadingMessages.freezeOrder();
