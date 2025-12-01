@@ -152,14 +152,14 @@ namespace swift::misc::simulation::settings
         }
     }
 
-    void CSimulatorSettings::setPropertyModelSet(bool value) { value ? m_modelSet = true : m_modelSet = false; }
+    void CSimulatorSettings::setPropertyModelSet(bool value) {  m_modelSet = value; }
     void CSimulatorSettings::setPropertyWithDbEntry(bool value)
     {
-        value ? m_withDbEntry = true : m_withDbEntry = false;
+         m_withDbEntry = value;
     }
     void CSimulatorSettings::setPropertyDistributorFiltered(bool value)
     {
-        value ? m_distributorFiltered = true : m_distributorFiltered = false;
+        m_distributorFiltered = value;
     }
 
     void CSimulatorSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
