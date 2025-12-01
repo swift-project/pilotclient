@@ -245,7 +245,7 @@ namespace swift::misc::simulation
         return this->getAllModelStringsAndAliases() % " " % this->getDbKeyAsStringInParentheses();
     }
 
-    QString CAircraftModel::getMsfs2024Modelstring()
+    QString CAircraftModel::getMsfs2024ModelString()
     {
         m_modelString = m_modelString.trimmed().toUpper() % u" " % m_modelLivery.trimmed().toUpper();
         return m_modelString;
