@@ -29,7 +29,7 @@ namespace swift::misc::simulation::msfs2024
     bool CAircraftModelLoaderMsfs2024::isLoadingFinished() const
     {
         return !m_parserWorker || m_parserWorker->isFinished();
-        ;
+     
     }
 
     CAircraftModelLoaderMsfs2024::CAircraftModelLoaderMsfs2024(QObject *parent)
