@@ -121,9 +121,9 @@ namespace swift::misc::simulation::settings
         bool setRecordedGndRadius(const swift::misc::physical_quantities::CLength &radius);
 
         //! Reads the settings for automatic loading when starting swiftgui
-        bool getPropertyWithDbEntry() { return m_withDbEntry; }
-        bool getPropertyModelSet() { return m_modelSet; }
-        bool getPropertyDistributorFiltered() { return m_distributorFiltered; }
+        bool getPropertyWithDbEntry() const { return m_withDbEntry; }
+        bool getPropertyModelSet() const { return m_modelSet; }
+        bool getPropertyDistributorFiltered() const { return m_distributorFiltered; }
 
         //! Reset the paths
         void resetPaths();
