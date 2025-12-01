@@ -277,10 +277,10 @@ namespace swift::gui::components
     {
         QMessageBox msgBox(QMessageBox::Question, "Reload models from disk",
                            QStringLiteral("Completely reload '%1' models from disk?").arg(simulator.toQString(true)),
-                           QMessageBox::Ok | QMessageBox::Cancel, this);
+                           QMessageBox::Yes | QMessageBox::No, this);
         msgBox.setDefaultButton(QMessageBox::Cancel);
         const auto reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
-        if (reply != QMessageBox::Ok) { return; }
+        if (reply != QMessageBox::Yes) { return; }
 
         this->requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundNoCache);
     }
@@ -330,6 +330,22 @@ namespace swift::gui::components
     {
         if (!m_modelLoader) { return; }
         ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->getOwnModels());
+    }
+
+    // TODO TZ this is a stub for SimConnect loading
+    void CDbOwnModelsComponent::loadInstalledModelsSimConnect(const CSimulatorInfo &simulator,
+                                                              IAircraftModelLoader::LoadMode mode,
+                                                              const QStringList &modelDirectories)
+    {
+        Q_UNUSED(mode);
+        Q_UNUSED(modelDirectories);
+
+        using namespace std::chrono_literals;
+        const CStatusMessage msg = CLogMessage(this).info(u"Triiger loading models for %1 from SimConnect")
+                                   << simulator.toQString();
+        this->showOverlayHTMLMessage(msg, 2s);
+
+        return;
     }
 
     void CDbOwnModelsComponent::loadInstalledModels(const CSimulatorInfo &simulator,
@@ -512,6 +528,9 @@ namespace swift::gui::components
                                                        IAircraftModelLoader::LoadMode mode,
                                                        const QStringList &modelDirectories)
     {
+        // TODO TZ add SimConnect loading
+        if (simulator.isMSFS2024()) this->loadInstalledModelsSimConnect(simulator, mode, modelDirectories);
+
         this->loadInstalledModels(simulator, mode, modelDirectories);
     }
 

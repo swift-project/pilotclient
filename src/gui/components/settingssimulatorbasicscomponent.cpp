@@ -138,12 +138,16 @@ namespace swift::gui::components
         s.setSimulatorDirectory(simulatorDir);
         s.setModelDirectories(modelDirs);
         s.setModelExcludeDirectories(relativeDirs);
+        s.setPropertyModelSet(ui->cb_LoadNewModelset->isChecked());
+        s.setPropertyWithDbEntry(ui->cb_WithDbEntry->isChecked());
+        s.setPropertyDistributorFiltered(ui->cb_DistributorFiltered->isChecked());
+
         const CStatusMessageList msgs = m_settings.setAndValidateSettings(s, simulator);
         if (msgs.isSuccess())
         {
             const CStatusMessage m = m_settings.setAndSaveSettings(s, simulator);
             if (!m.isEmpty()) { CLogMessage::preformatted(m); }
-            if (m.isSuccess()) { this->showOverlayHTMLMessage("Saved settings", 5s); }
+            if (m.isSuccess()) { this->showOverlayHTMLMessage("Saved settings", 2s); }
             else { this->showOverlayMessage(m); }
             m_unsavedChanges = m_unsavedChanges && !m.isSuccess(); // reset if success, but only if there were changes
 
@@ -227,6 +231,40 @@ namespace swift::gui::components
     {
         const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
         this->displaySettings(simulator);
+
+        // special handling for MSFS 2024 only visual changes
+        if (simulator == CSimulatorInfo::msfs2024())
+        {
+            ui->gb_ModelSet->setVisible(true);
+            ui->lbl_ExcludeDirectories->setText(QStringLiteral("modelstring exclude patterns:"));
+            ui->lbl_ModelDirectory->setText(QStringLiteral("modelstring filter patterns:"));
+            ui->lbl_ModelDirectory->setToolTip(
+                QStringLiteral("If the field is not empty, these patterns are used as a filter for the model string."));
+            ui->pb_AdjustModelDirectory->setVisible(false);
+            ui->pb_ExcludeFileDialog->setVisible(false);
+            ui->pb_ModelFileDialog->setVisible(false);
+            const QString html =
+                "<html><head/><body><p><img src=':/diagona/icons/diagona/icons/exclamation--frame.png'/>&quot;These "
+                "filter settings are applied to the model string passed from the flight simulator to swift. If the "
+                "effect is unclear, start with the default settings!&quot;.</p></body></html>";
+            ui->lbl_ModelDirsInfo->setText(html);
+        }
+        else
+        {
+            ui->gb_ModelSet->setVisible(false);
+            ui->lbl_ExcludeDirectories->setText(QStringLiteral("Exclude directory patterns:"));
+            ui->lbl_ModelDirectory->setText(QStringLiteral("Model directories:"));
+            ui->lbl_ModelDirectory->setToolTip(QStringLiteral("remove redundant directories, fix file paths .."));
+            ui->pb_AdjustModelDirectory->setVisible(true);
+            ui->pb_ExcludeFileDialog->setVisible(true);
+            ui->pb_ModelFileDialog->setVisible(true);
+            const QString html =
+                "<html><head/><body><p><img "
+                "src=':/diagona/icons/diagona/icons/exclamation--frame.png'/>&quot;If you change the model "
+                "directories, you must update your model set. See documentation. &quot;.</p></body></html>";
+            ui->lbl_ModelDirsInfo->setText(html);
+        }
+
         this->displayDefaultValuesAsPlaceholder(simulator);
     }
 
@@ -326,8 +364,27 @@ namespace swift::gui::components
 
     void CSettingsSimulatorBasicsComponent::displaySettings(const CSimulatorInfo &simulator)
     {
-        this->displayExcludeDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsIfNotDefault(simulator));
-        this->displayModelDirectories(m_settings.getModelDirectoriesIfNotDefault(simulator));
+        // if (simulator.isMSFS2024())
+        //{
+
+        //    //CSpecializedSimulatorSettings settings = this->getSimulatorSettings(simulator.isMSFS2024());
+        //    //CSimulatorSettings m_generic = settings.getGenericSettings();
+        //    //QStringList excludePatterns = m_generic.getModelExcludeDirectoryPatterns();
+        //    //QStringList filterPatterns = m_generic.getModelDirectories();
+
+        //    //const CSimulatorSettings s = m_settings.getSettings(simulator);
+        //    //const QString es = s.getSimulatorDirectory();
+        //    ui->pte_ModelDirectories->clear();
+        //    ui->pte_ExcludeDirectories->clear();
+
+        //    //this->displayModelDirectories(excludePatterns);
+        //    //this->displayExcludeDirectoryPatterns(filterPatterns);
+        //}
+        // else
+        //{
+        //    this->displayModelDirectories(m_settings.getModelDirectoriesIfNotDefault(simulator));
+        //    this->displayExcludeDirectoryPatterns(m_settings.getModelExcludeDirectoryPatternsIfNotDefault(simulator));
+        //}
 
         // ui->le_SimulatorDirectory->setText(m_settings.getSimulatorDirectoryIfNotDefault(simulator));
         // based on discussion here, always display:
@@ -339,26 +396,59 @@ namespace swift::gui::components
     void CSettingsSimulatorBasicsComponent::displayDefaultValuesAsPlaceholder(const CSimulatorInfo &simulator)
     {
         const QString simDir = this->getFileBrowserSimulatorDirectory();
-        ui->le_SimulatorDirectory->setPlaceholderText(simDir.isEmpty() ? "Simulator directory" : simDir);
+
+        // only real placeholder shut set as placeholder
+        simDir.isEmpty() ? (ui->le_SimulatorDirectory->setPlaceholderText("Simulator directory")) :
+                           (ui->le_SimulatorDirectory->setText(simDir));
 
         // we take the settings and update to latest sim.directory
         CSpecializedSimulatorSettings settings = m_settings.getSpecializedSettings(simulator);
         settings.setSimulatorDirectory(simDir);
 
-        const QStringList m = settings.getModelDirectoriesFromSimulatorDirectoryOrDefault();
-        if (m.isEmpty()) { ui->pte_ModelDirectories->setPlaceholderText("Model directories"); }
-        else
-        {
-            const QString ms = m.join("\n");
-            ui->pte_ModelDirectories->setPlaceholderText(ms);
-        }
+        CSimulatorSettings m_generic = settings.getGenericSettings();
 
-        const QStringList e = settings.getDefaultModelExcludeDirectoryPatterns();
-        if (e.isEmpty()) { ui->pte_ExcludeDirectories->setPlaceholderText("Exclude directories"); }
+        // this setting is only visable for msfs2024 but we set it always to keep code simple. the checkbox is hidden in
+        // other simulators this settings are used to load/not load the modelset when starting swiftgui
+        ui->cb_WithDbEntry->setChecked(m_generic.getPropertyWithDbEntry());
+        ui->cb_DistributorFiltered->setChecked(m_generic.getPropertyDistributorFiltered());
+        ui->cb_LoadNewModelset->setChecked(m_generic.getPropertyModelSet());
+
+        // Storeable content should be displayed as planetext so that it is actually saved.
+        if (simulator.isMSFS2024())
+        {
+            QStringList m = m_generic.getModelDirectories();
+            if (m.isEmpty()) { ui->pte_ModelDirectories->setPlainText("*"); }
+            else
+            {
+                const QString ms = m.join("\n");
+                ui->pte_ModelDirectories->setPlainText(ms);
+            }
+
+            QStringList e = m_generic.getModelExcludeDirectoryPatterns();
+            if (e.isEmpty()) { ui->pte_ExcludeDirectories->setPlainText("PassiveAircraft\nSTUB\nZZZZ"); }
+            else
+            {
+                const QString es = e.join("\n");
+                ui->pte_ExcludeDirectories->setPlainText(es);
+            }
+        }
         else
         {
-            const QString es = e.join("\n");
-            ui->pte_ExcludeDirectories->setPlaceholderText(es);
+            const QStringList m = settings.getModelDirectoriesFromSimulatorDirectoryOrDefault();
+            if (m.isEmpty()) { ui->pte_ModelDirectories->setPlaceholderText("Model directories"); }
+            else
+            {
+                const QString ms = m.join("\n");
+                ui->pte_ModelDirectories->setPlainText(ms);
+            }
+
+            const QStringList e = settings.getDefaultModelExcludePatterns();
+            if (e.isEmpty()) { ui->pte_ExcludeDirectories->setPlaceholderText("Exclude directories"); }
+            else
+            {
+                const QString es = e.join("\n");
+                ui->pte_ExcludeDirectories->setPlainText(es);
+            }
         }
     }
 
