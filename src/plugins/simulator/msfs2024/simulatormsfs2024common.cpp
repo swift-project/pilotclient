@@ -857,18 +857,18 @@ namespace swift::simplugin::msfs2024common
     }
 
     // TODO TZ check if nessesary in MSFS2024
-    void CSimulatorMsfs2024::removeCamera(CSimConnectObject &simObject)
-    {
-        // not in FSX
-        Q_UNUSED(simObject)
-    }
+    // void CSimulatorMsfs2024::removeCamera(CSimConnectObject &simObject)
+    //{
+    //    // not in FSX
+    //    Q_UNUSED(simObject)
+    //}
 
     // TODO TZ check if nessesary in MSFS2024
-    void CSimulatorMsfs2024::removeObserver(CSimConnectObject &simObject)
-    {
-        // not in FSX
-        Q_UNUSED(simObject)
-    }
+    // void CSimulatorMsfs2024::removeObserver(CSimConnectObject &simObject)
+    //{
+    //    // not in FSX
+    //    Q_UNUSED(simObject)
+    //}
 
     bool CSimulatorMsfs2024::triggerAutoTraceSendId(qint64 traceTimeMs)
     {
@@ -2065,8 +2065,8 @@ namespace swift::simplugin::msfs2024common
 
         // call in SIM
         const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectRemove);
-        this->removeCamera(simObject);
-        this->removeObserver(simObject);
+        // this->removeCamera(simObject);
+        // this->removeObserver(simObject);
         const HRESULT result = SimConnect_AIRemoveObject(
             m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), requestId);
         if (isOk(result))
@@ -2341,7 +2341,6 @@ namespace swift::simplugin::msfs2024common
         return ok;
     }
 
-    // TODO TZ under investigation, flaps retracting to 0 again and other issues
     bool CSimulatorMsfs2024::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject,
                                                                 const CAircraftParts &parts)
     {
@@ -2367,7 +2366,7 @@ namespace swift::simplugin::msfs2024common
                     traceId, simObject, "Failed so set parts", Q_FUNC_INFO,
                     "SimConnect_SetDataOnSimObject::ddRemoteAircraftPartsWithoutLights");
 
-        // Sim variable version, not working, setting the value, but flaps retracting to 0 again
+        // TODO TZ handle flaps more precisely
         // Sets flap handle to closest increment (0 to 16383)
         const DWORD flapsDw = static_cast<DWORD>(qMin(16383, qRound((parts.getFlapsPercent() / 100.0) * 16383)));
         const HRESULT hr2 = this->logAndTraceSendId(
@@ -2480,104 +2479,6 @@ namespace swift::simplugin::msfs2024common
         // done
         return isOk(hr);
     }
-
-    // TODO TZ under investigation, toggling lights seems to be unreliable. The settings mentioned above can be used
-    // directly. void CSimulatorMsfs2024::sendToggledLightsToSimulator(const CSimConnectObject &simObj,
-    //                                                      const CAircraftLights &lightsWanted, bool force)
-    //{
-    //    if (!simObj.isReadyToSend()) { return; } // stale
-
-    //    const CAircraftLights lightsIsState = simObj.getCurrentLightsInSimulator();
-    //    if (lightsWanted == lightsIsState) { return; }
-    //    if (!force && lightsWanted == simObj.getLightsAsSent()) { return; }
-    //    const CCallsign callsign(simObj.getCallsign());
-
-    //    // Update data
-    //    if (m_simConnectObjects.contains(callsign))
-    //    {
-    //        CSimConnectObject &simObjToUpdate = m_simConnectObjects[callsign];
-    //        simObjToUpdate.setLightsAsSent(lightsWanted);
-    //    }
-
-    //    // state available, then I can toggle
-    //    if (!lightsIsState.isNull())
-    //    {
-    //        const DWORD objectId = simObj.getObjectId();
-    //        const bool trace = this->isTracingSendId();
-
-    //        if (lightsWanted.isTaxiOn() != lightsIsState.isTaxiOn())
-    //        {
-    //            this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleTaxiLights,
-    //                                                                   0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-    //                                                                   SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-    //                                    trace, simObj, "Toggle taxi lights", Q_FUNC_INFO, "EventToggleTaxiLights");
-    //        }
-    //        if (lightsWanted.isNavOn() != lightsIsState.isNavOn())
-    //        {
-    //            this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleNavLights,
-    //                                                                   0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-    //                                                                   SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-    //                                    trace, simObj, "Toggle nav.lights", Q_FUNC_INFO, "EventToggleNavLights");
-    //        }
-    //        if (lightsWanted.isBeaconOn() != lightsIsState.isBeaconOn())
-    //        {
-    //            this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId,
-    //            EventToggleBeaconLights,
-    //                                                                   0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-    //                                                                   SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-    //                                    trace, simObj, "Toggle becon lights", Q_FUNC_INFO, "EventToggleBeaconLights");
-    //        }
-    //        if (lightsWanted.isLogoOn() != lightsIsState.isLogoOn())
-    //        {
-    //            this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleLogoLights,
-    //                                                                   0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-    //                                                                   SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-    //                                    trace, simObj, "Toggle logo lights", Q_FUNC_INFO, "EventToggleLogoLights");
-    //        }
-    //        if (lightsWanted.isRecognitionOn() != lightsIsState.isRecognitionOn())
-    //        {
-    //            this->logAndTraceSendId(
-    //                SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleRecognitionLights, 0.0,
-    //                                               SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-    //                                               SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-    //                trace, simObj, "Toggle recognition lights", Q_FUNC_INFO, "EventToggleRecognitionLights");
-    //        }
-    //        if (lightsWanted.isCabinOn() != lightsIsState.isCabinOn())
-    //        {
-    //            this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId,
-    //            EventToggleCabinLights,
-    //                                                                   0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-    //                                                                   SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-    //                                    trace, simObj, "Toggle cabin lights", Q_FUNC_INFO, "EventToggleCabinLights");
-    //        }
-    //        return;
-    //    }
-
-    //    // missing lights info from simulator so far
-    //    if (this->showDebugLogMessage())
-    //    {
-    //        this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("Missing light state in simulator for '%1', model '%2'")
-    //                                               .arg(callsign.asString(), simObj.getAircraftModelString()));
-    //    }
-
-    //    const QPointer<CSimulatorMsfs2024> myself(this);
-    //    QTimer::singleShot(DeferResendingLights, this, [=] {
-    //        if (!myself) { return; }
-    //        if (!m_simConnectObjects.contains(callsign)) { return; }
-    //        const CSimConnectObject currentSimObject = m_simConnectObjects[callsign];
-    //        if (!currentSimObject.isReadyToSend()) { return; } // stale
-    //        if (lightsWanted != currentSimObject.getLightsAsSent())
-    //        {
-    //            return;
-    //        } // changed in between, so another call sendToggledLightsToSimulator is pending
-    //        if (this->showDebugLogMessage())
-    //        {
-    //            this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("Resending light state for '%1', model '%2'")
-    //                                                   .arg(callsign.asString(), simObj.getAircraftModelString()));
-    //        }
-    //        this->sendToggledLightsToSimulator(currentSimObject, lightsWanted, true);
-    //    });
-    //}
 
     SIMCONNECT_DATA_INITPOSITION
     CSimulatorMsfs2024::aircraftSituationToPosition(const CAircraftSituation &situation, bool sendGnd,

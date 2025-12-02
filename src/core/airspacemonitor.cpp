@@ -548,11 +548,6 @@ namespace swift::core
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
-        // TODO TZ remove when testing is done
-        // CLogMessage(this).info(u"CAirspaceMonitor::sendReadyForModelMatching "
-        //                       u"callsign %1 Flag %2 ")
-        //    << callsign << rf;
-
         CStatusMessageList reverseLookupMessages;
         CCallsign::addLogDetailsToList(&reverseLookupMessages, callsign,
                                        QStringLiteral("CAirspaceMonitor::sendReadyForModelMatching Flag: %1").arg(rf),
@@ -679,13 +674,6 @@ namespace swift::core
         // normally we should never get here
         CLogMessage(this).info(u"Verified '%1' again, has ICAO codes, ready for matching!") << callsign;
 
-        // TODO TZ remove when testing is done
-        CStatusMessageList reverseLookupMessages;
-        CCallsign::addLogDetailsToList(&reverseLookupMessages, callsign,
-                                       QStringLiteral("CAirspaceMonitor::verifyReceivedIcaoData"),
-                                       CAirspaceMonitor::getLogCategories());
-        // end TZ remove
-
         this->sendReadyForModelMatching(callsign, Verified);
     }
 
@@ -791,15 +779,6 @@ namespace swift::core
                                                        const QString &aircraftIcaoDesignator,
                                                        const QString &combinedAircraftType, const QString &modelString)
     {
-        // TODO TZ remove when testing is done
-        CLogMessage(this).info(u"CAirspaceMonitor::onCustomFSInnPacketReceived CHECK:"
-                               u"callsign %1 "
-                               u"airlineIcaoDesignator %2 "
-                               u"aircraftIcaoDesignator %3 "
-                               u"combinedAircraftType %4 "
-                               u"modelString %5 ")
-            << callsign << airlineIcaoDesignator << aircraftIcaoDesignator << combinedAircraftType << modelString;
-
         // it can happen this is called before any queries
         // ES sends FsInn packets for callsigns such as ACCGER1, which are hard to distinguish
         // 1) checking if they are already in the list checks again ATC position which is safe
@@ -873,15 +852,6 @@ namespace swift::core
     void CAirspaceMonitor::onIcaoCodesReceived(const CCallsign &callsign, const QString &aircraftIcaoDesignator,
                                                const QString &airlineIcaoDesignator, const QString &livery)
     {
-        // TODO TZ remove logmessage when testing is done
-        CLogMessage(this).info(u"CAirspaceMonitor::onIcaoCodesReceived CHECK:"
-                               u"callsign %1 "
-                               u"aircraftIcaoDesignator %2 "
-                               u"airlineIcaoDesignator %3 "
-                               u"livery %4 ")
-            << callsign << aircraftIcaoDesignator << airlineIcaoDesignator << livery;
-        // End TODO TZ
-
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "not in main thread");
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         if (CBuildConfig::isLocalDeveloperDebugBuild())

@@ -305,10 +305,10 @@ namespace swift::simplugin::msfs2024common
         bool removeSimObjectForTrace(const TraceFsxSendId &trace);
 
         //! Remove camera if any
-        virtual void removeCamera(CSimConnectObject &simObject);
+        // virtual void removeCamera(CSimConnectObject &simObject);
 
         //! Remove observer if any
-        virtual void removeObserver(CSimConnectObject &simObject);
+        // virtual void removeObserver(CSimConnectObject &simObject);
 
         //! Trace if required, log errors
         HRESULT logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName,
@@ -471,13 +471,6 @@ namespace swift::simplugin::msfs2024common
 
         //! Send ATC data (callsign etc.) to simulator
         bool sendRemoteAircraftAtcDataToSimulator(const CSimConnectObject &simObject);
-
-        //! Send lights to simulator (those which have to be toggled)
-        //! \remark challenge here is that I can only sent those value if I have already obtained the current light
-        //! state from simulator \param force send lights even if they appear to be the same
-        // void sendToggledLightsToSimulator(const CSimConnectObject &simObject,
-        //                                   const swift::misc::aviation::CAircraftLights &lightsWanted,
-        //                                   bool force = false);
 
         //! Call CSimulatorFsxCommon::updateRemoteAircraftFromSimulator asynchronously
         //! \remark do not to send SimConnect data in event loop

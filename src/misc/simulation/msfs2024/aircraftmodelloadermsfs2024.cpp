@@ -82,7 +82,6 @@ namespace swift::misc::simulation::msfs2024
             if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
             emit this->diskLoadingStarted(simulator, mode);
 
-            // TODO TZ need help: simplify, we don't need directories in this->performParsing for MSFS2024
             m_parserWorker =
                 CWorker::fromTask(this, "CAircraftModelLoaderMsfs2024::performParsing", [this, modelConsolidation]() {
                     auto models = this->performParsing();
