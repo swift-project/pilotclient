@@ -219,6 +219,12 @@ namespace swift::simplugin::xplane
         CSimulatorPluginCommon::setFlightNetworkConnected(connected);
     }
 
+    void CSimulatorXPlane::setOwnCallsign(const CCallsign &callsign)
+    {
+        m_serviceProxy->setOwnCallsign(callsign.asString());
+        CSimulatorPluginCommon::setOwnCallsign(callsign);
+    }
+
     bool CSimulatorXPlane::isSuspiciousTerrainValue(const CElevationPlane &elevation)
     {
         if (!elevation.hasMSLGeodeticHeight()) { return true; }

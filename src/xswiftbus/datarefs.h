@@ -9,8 +9,10 @@
 #include <XPLM/XPLMDataAccess.h>
 #include <XPLM/XPLMUtilities.h>
 
+#include <algorithm>
 #include <array>
 #include <cassert>
+#include <cstring>
 #include <string>
 
 // Avoid checking large auto-generated header with cppcheck
@@ -223,8 +225,13 @@ namespace XSwiftBus
         XPLMDataRef m_ref;
     };
 
+    /* Helper to conditionally fail compilation if no matching constexpr if case is found */
+    template <class...>
+    constexpr bool dependent_false = false;
+
     /*!
      * Class providing a custom variable + dataref
+     * \hint Currently only readable int and std::string datarefs are supported
      * \tparam DataRefTraits The trait class representing the dataref.
      */
     template <class DataRefTraits>
@@ -236,10 +243,17 @@ namespace XSwiftBus
         {
             if constexpr (std::is_same_v<typename DataRefTraits::type, int>)
             {
-                m_ref = XPLMRegisterDataAccessor(DataRefTraits::name(), xplmType_Int, 0, read, NULL, NULL, NULL, NULL,
-                                                 NULL, NULL, NULL, NULL, NULL, NULL, NULL, this, NULL);
+                m_ref = XPLMRegisterDataAccessor(DataRefTraits::name(), xplmType_Int, 0, readInt, nullptr, nullptr,
+                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+                                                 nullptr, this, nullptr);
             }
-            else { XPLMDebugString("Unsupported custom dataref type\n"); }
+            else if constexpr (std::is_same_v<typename DataRefTraits::type, std::string>)
+            {
+                m_ref = XPLMRegisterDataAccessor(DataRefTraits::name(), xplmType_Data, 0, nullptr, nullptr, nullptr,
+                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+                                                 readData, nullptr, this, nullptr);
+            }
+            else { static_assert(dependent_false<typename DataRefTraits::type>, "Unsupported custom dataref type"); }
             if (!m_ref)
             {
                 XPLMDebugString("Missing dataref:");
@@ -257,9 +271,25 @@ namespace XSwiftBus
             if (m_ref) { XPLMUnregisterDataAccessor(m_ref); }
         }
 
-        static typename DataRefTraits::type read(void *refcon)
+        static typename DataRefTraits::type readInt(void *refcon)
         {
             return reinterpret_cast<CustomDataRef *>(refcon)->get();
+        }
+
+        static int readData(void *refcon, void *out, int offset, int max_length)
+        {
+            if constexpr (std::is_same_v<typename DataRefTraits::type, std::string>)
+            {
+                std::string_view sv(reinterpret_cast<CustomDataRef *>(refcon)->get());
+                const size_t start = std::clamp<size_t>(offset, 0, sv.size());
+                const size_t remaining_length = sv.size() - start;
+                const auto len = std::min(static_cast<size_t>(max_length), remaining_length);
+                sv = sv.substr(start, len);
+                std::memcpy(out, sv.data(), len);
+                return static_cast<int>(len);
+            }
+
+            return -1; // should never be reached
         }
 
         //! True if the dataref exists
@@ -269,7 +299,7 @@ namespace XSwiftBus
         void set(typename DataRefTraits::type val) { m_datarefVal = val; }
 
         //! Get the value
-        typename DataRefTraits::type get() const { return m_datarefVal; }
+        const typename DataRefTraits::type &get() const { return m_datarefVal; }
 
         XPLMDataRef m_ref;
         typename DataRefTraits::type m_datarefVal;

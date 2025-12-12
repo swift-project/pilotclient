@@ -150,6 +150,7 @@ namespace swift::simplugin::xplane
                                                 const swift::misc::aviation::CCallsign &callsign,
                                                 bool isWater) override;
         void setFlightNetworkConnected(bool connected) override;
+        void setOwnCallsign(const swift::misc::aviation::CCallsign &callsign) override;
         //! @}
 
         //! \copydoc swift::misc::simulation::ISimulationEnvironmentProvider::requestElevation

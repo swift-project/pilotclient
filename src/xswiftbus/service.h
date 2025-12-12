@@ -123,6 +123,9 @@ namespace XSwiftBus
         //! Set the current connection state
         void setFlightNetworkConnected(bool connected);
 
+        //! Set the current own callsign
+        void setOwnCallsign(const std::string &callsign);
+
         //! Get aircraft latitude in degrees
         double getLatitudeDeg() const { return m_latitude.get(); }
 
@@ -354,6 +357,7 @@ namespace XSwiftBus
         int m_sceneryWasLoading = 0;
 
         CustomDataRef<TSwiftNetworkConnected> m_swiftNetworkConnected;
+        CustomDataRef<TSwiftCallsign> m_swiftCallsign;
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;
         StringDataRef<xplane::data::sim::aircraft::view::acf_descrip> m_descrip;

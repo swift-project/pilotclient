@@ -11,12 +11,17 @@ namespace XSwiftBus
     {
         //! Dataref name
         static constexpr const char *name() { return "org/swift-project/xswiftbus/connected"; }
-        //! Can be written to?
-        static constexpr bool writable = false;
         //! Dataref type
         using type = int;
-        //! Not an array dataref
-        static constexpr bool is_array = false;
+    };
+
+    //! Current callsign
+    struct TSwiftCallsign
+    {
+        //! Dataref name
+        static constexpr const char *name() { return "org/swift-project/xswiftbus/callsign"; }
+        //! Dataref type
+        using type = std::string;
     };
 
 } // namespace XSwiftBus

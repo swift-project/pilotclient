@@ -802,12 +802,15 @@ namespace swift::core::context
     {
         Q_UNUSED(from)
         SWIFT_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
+        SWIFT_VERIFY_X(this->getIContextOwnAircraft(), Q_FUNC_INFO, "Missing own aircraft context");
         if (to.isConnected() && this->getIContextNetwork())
         {
             m_networkSessionId = this->getIContextNetwork()->getConnectedServer().getServerSessionId(false);
             if (m_simulatorPlugin.second) // check in case the plugin has been unloaded
             {
                 m_simulatorPlugin.second->setFlightNetworkConnected(true);
+                m_simulatorPlugin.second->setOwnCallsign(
+                    this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
             }
         }
         else if (to.isDisconnected())
@@ -821,6 +824,7 @@ namespace swift::core::context
             {
                 m_simulatorPlugin.second->removeAllRemoteAircraft(); // also removes aircraft
                 m_simulatorPlugin.second->setFlightNetworkConnected(false);
+                m_simulatorPlugin.second->setOwnCallsign({});
             }
         }
     }

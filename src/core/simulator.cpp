@@ -119,6 +119,12 @@ namespace swift::core
 
     void ISimulator::setFlightNetworkConnected(bool connected) { m_networkConnected = connected; }
 
+    void ISimulator::setOwnCallsign(const CCallsign &callsign)
+    {
+        Q_UNUSED(callsign)
+        // void
+    }
+
     void ISimulator::clearAllRemoteAircraftData()
     {
         // rendering related stuff

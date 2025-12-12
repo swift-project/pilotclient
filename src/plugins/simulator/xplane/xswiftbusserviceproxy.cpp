@@ -363,6 +363,11 @@ namespace swift::simplugin::xplane
         m_dbusInterface->callDBus(QLatin1String("setFlightNetworkConnected"), connected);
     }
 
+    void CXSwiftBusServiceProxy::setOwnCallsign(const QString &callsign)
+    {
+        m_dbusInterface->callDBus(QLatin1String("setOwnCallsign"), callsign);
+    }
+
     double CXSwiftBusServiceProxy::getLatitudeDeg() const
     {
         return m_dbusInterface->callDBusRet<double>(QLatin1String("getLatitudeDeg"));

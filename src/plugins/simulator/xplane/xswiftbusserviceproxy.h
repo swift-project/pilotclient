@@ -215,6 +215,9 @@ namespace swift::simplugin::xplane
         //! \copydoc XSwiftBus::CService::setFlightNetworkConnected
         void setFlightNetworkConnected(bool connected);
 
+        //! \copydoc XSwiftBus::CService::setOwnCallsign
+        void setOwnCallsign(const QString &callsign);
+
         //! @{
         //! \copydoc XSwiftBus::CService::getLatitudeDeg
         double getLatitudeDeg() const;

@@ -94,6 +94,7 @@ namespace XSwiftBus
         this->updateMessageBoxFromSettings();
         m_framePeriodSampler->show();
         m_swiftNetworkConnected.set(0);
+        m_swiftCallsign.set("");
     }
 
     // Explicitly in cpp file to allow use of forward declaration
@@ -138,6 +139,8 @@ namespace XSwiftBus
     }
 
     void CService::setFlightNetworkConnected(bool connected) { m_swiftNetworkConnected.set(connected); }
+
+    void CService::setOwnCallsign(const std::string &callsign) { m_swiftCallsign.set(callsign); }
 
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)
     {
@@ -519,6 +522,14 @@ namespace XSwiftBus
                 message.beginArgumentRead();
                 message.getArgument(connected);
                 queueDBusCall([=]() { setFlightNetworkConnected(connected); });
+            }
+            else if (message.getMethodName() == "setOwnCallsign")
+            {
+                maybeSendEmptyDBusReply(wantsReply, sender, serial);
+                std::string callsign;
+                message.beginArgumentRead();
+                message.getArgument(callsign);
+                queueDBusCall([=]() { setOwnCallsign(callsign); });
             }
             else if (message.getMethodName() == "getLatitudeDeg")
             {

@@ -116,6 +116,9 @@ R"XML(<node>
     <method name="setFlightNetworkConnected">
       <arg type="b" direction="in"/>
     </method>
+    <method name="setOwnCallsign">
+      <arg type="s" direction="in"/>
+    </method>
     <method name="getLatitudeDeg">
       <arg type="d" direction="out"/>
     </method>

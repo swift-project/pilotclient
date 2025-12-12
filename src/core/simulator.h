@@ -152,6 +152,9 @@ namespace swift::core
         //! \sa ISimulator::isFlightNetworkConnected
         virtual void setFlightNetworkConnected(bool connected);
 
+        //! Own callsign has changed
+        virtual void setOwnCallsign(const swift::misc::aviation::CCallsign &callsign);
+
         //! Is the flight network connected
         bool isFlightNetworkConnected() const { return m_networkConnected; }
 
