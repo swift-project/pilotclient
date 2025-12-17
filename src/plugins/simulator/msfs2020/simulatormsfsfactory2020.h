@@ -18,7 +18,7 @@ namespace swift::simplugin::msfs
     class CSimulatorMsFsFactory : public QObject, public swift::core::ISimulatorFactory
     {
         Q_OBJECT
-        Q_PLUGIN_METADATA(IID "org.swift-project.swift_core.simulatorinterface" FILE "simulatormsfs.json")
+        Q_PLUGIN_METADATA(IID "org.swift-project.swift_core.simulatorinterface" FILE "simulatormsfs2020.json")
         Q_INTERFACES(swift::core::ISimulatorFactory)
 
     public:

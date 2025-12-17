@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "simulatormsfsfactory.h"
+#include "simulatormsfsfactory2020.h"
 
-#include "simulatormsfs.h"
+#include "simulatormsfs2020.h"
 
 #include "misc/simulation/simulatorplugininfo.h"
 

@@ -424,13 +424,6 @@ namespace swift::gui::components
         CSimulatorInfo sims = this->m_enabledSimulators.get();
         unsigned int number = sims.toInt();
 
-        // iterate
-        // for (const auto &simInfo : number)
-        //{
-        //    m_simulator = simInfo;
-        //    // this->createModelSet();
-        //}
-
         const int totalBits = sizeof(number) * 8;
         for (int i = 0; i < totalBits; ++i)
         {

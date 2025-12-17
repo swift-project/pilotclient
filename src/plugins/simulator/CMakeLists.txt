@@ -36,7 +36,7 @@ if(SWIFT_BUILD_P3D_PLUGIN)
 endif()
 
 if(SWIFT_BUILD_MSFS2020_PLUGIN)
-    add_subdirectory(msfs)
+    add_subdirectory(msfs2020)
  endif()
 
 if(SWIFT_BUILD_MSFS2024_PLUGIN)

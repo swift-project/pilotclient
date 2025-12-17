@@ -52,5 +52,3 @@ cmake-build-*/
 /dist/
 CMakeUserPresets.json
 /third_party/externals
-/src/plugins/simulator/msfs2024/simulatormsfs2024.cpp_
-/src/plugins/simulator/msfs2024/simulatormsfs2024.h_
