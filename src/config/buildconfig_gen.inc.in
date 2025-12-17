@@ -40,7 +40,7 @@ constexpr bool swift::config::CBuildConfig::isCompiledWithFGSupport()
 
 constexpr bool swift::config::CBuildConfig::isCompiledWithMSFS2020Support()
 {
-    return SWIFTCONFIG_${SWIFT_BUILD_MSFS_PLUGIN};
+    return SWIFTCONFIG_${SWIFT_BUILD_MSFS2020_PLUGIN};
 }
 
 constexpr bool swift::config::CBuildConfig::isCompiledWithMSFS2024Support()
