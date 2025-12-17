@@ -508,6 +508,12 @@
       <header>gui/components/finishwizardcomponent.h</header>
       <container>1</container>
     </customwidget>
+    <customwidget>
+      <class>swift::gui::components::CFinishWizardComponent</class>
+      <extends>QFrame</extends>
+      <header>gui/components/finishwizardcomponent.h</header>
+      <container>1</container>
+    </customwidget>
   </customwidgets>
   <resources/>
   <connections>
