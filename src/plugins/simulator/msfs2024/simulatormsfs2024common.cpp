@@ -743,7 +743,8 @@ namespace swift::simplugin::msfs2024common
         m_useSbOffsets = settings.isSbOffsetsEnabled();
         if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
         {
-            m_useSbOffsets = false; // Always disable SbOffsets for MSFS2024. Using new transponder mode property directly
+            m_useSbOffsets =
+                false; // Always disable SbOffsets for MSFS2024. Using new transponder mode property directly
         }
 
         HRESULT hr = s_ok();

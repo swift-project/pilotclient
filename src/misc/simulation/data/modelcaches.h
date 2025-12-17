@@ -408,7 +408,8 @@ namespace swift::misc::simulation::data
         CData<TModelSetCacheP3D> m_modelCacheP3D { this, &CModelSetCaches::changedP3D }; //!< P3D cache
         CData<TModelSetCacheXP> m_modelCacheXP { this, &CModelSetCaches::changedXP }; //!< XP cache
         CData<TModelSetCacheFG> m_modelCacheFG { this, &CModelSetCaches::changedFG }; //!< FG cache
-        CData<TModelSetCacheMsfs2020> m_modelCacheMsfs2020 { this, &CModelSetCaches::changedMsfs2020 }; //!< MSFS2020 cache
+        CData<TModelSetCacheMsfs2020> m_modelCacheMsfs2020 { this,
+                                                             &CModelSetCaches::changedMsfs2020 }; //!< MSFS2020 cache
         CData<TModelSetCacheMsfs2024> m_modelCacheMsfs2024 { this,
                                                              &CModelSetCaches::changedMsfs2024 }; //!< MSFS2024 cache
 
