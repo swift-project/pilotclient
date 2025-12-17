@@ -502,13 +502,21 @@ namespace swift::simplugin::msfs2024common
 
             m_simulatorInfo = this->getSimulatorInfo();
 
-            bool givenDistributorsOnly = false;
-            bool dbDataOnly = false;
-            bool dbIcaoOnly = false;
-            bool incremnental = false;
-            bool sortByDistributor = true;
-            bool consolidateWithDb = false;
-            bool ShowAllInstalledModells = true; // msfs20424 always show all installed models
+            bool givenDistributorsOnly = true;
+            bool dbDataOnly = true;
+            bool dbIcaoOnly = true;
+            bool incremnental = true;
+            bool sortByDistributor = false;
+            bool consolidateWithDb = true;
+            bool ShowAllInstalledModells = false; // msfs20424 always show all installed models
+
+            givenDistributorsOnly = false;
+            dbDataOnly = false;
+            dbIcaoOnly = false;
+            incremnental = false;
+            sortByDistributor = true;
+            consolidateWithDb = false;
+            ShowAllInstalledModells = true; // msfs20424 always show all installed models
 
             if (gui_application)
             {

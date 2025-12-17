@@ -102,7 +102,11 @@ namespace swift::core::application
         }
 
         //! \copydoc swift::misc::TSettingTrait::defaultValue
-        static const QStringList &defaultValue() { return QStringList {}; }
+        static const QStringList &defaultValue()
+        {
+            static const QStringList emptyList;
+            return emptyList;
+        }
     };
 } // namespace swift::core::application
 

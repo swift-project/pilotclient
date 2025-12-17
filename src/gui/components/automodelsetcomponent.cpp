@@ -422,9 +422,9 @@ namespace swift::gui::components
 
         // loop for all enabled simulators
         CSimulatorInfo sims = this->m_enabledSimulators.get();
-        unsigned int number = 96;
+        unsigned int number = sims.toInt();
 
-        // Iteriere
+        // iterate
         // for (const auto &simInfo : number)
         //{
         //    m_simulator = simInfo;
@@ -435,7 +435,7 @@ namespace swift::gui::components
         for (int i = 0; i < totalBits; ++i)
         {
             if (number & (1u << i))
-            { // Prüfen, ob Bit i gesetzt ist
+            { // check, if bit i is set
                 m_simulator = std::pow(2.0, i);
                 this->createModelSet();
             }

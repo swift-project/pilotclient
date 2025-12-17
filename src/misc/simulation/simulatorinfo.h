@@ -129,6 +129,8 @@ namespace swift::misc::simulation
         //! Number simulators selected
         int numberSimulators() const;
 
+        int toInt() const { return m_simulator; }
+
         //! Matches all simulators
         bool matchesAll(const CSimulatorInfo &otherInfo) const;
 

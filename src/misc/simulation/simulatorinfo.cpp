@@ -304,7 +304,7 @@ namespace swift::misc::simulation
         const bool xp = jxp.isBool() ? jxp.toBool() : CDatastoreUtility::dbBoolStringToBool(jxp.toString());
         const bool p3d = jp3d.isBool() ? jp3d.toBool() : CDatastoreUtility::dbBoolStringToBool(jp3d.toString());
         const bool fg = jfg.isBool() ? jfg.toBool() : CDatastoreUtility::dbBoolStringToBool(jfg.toString());
-        const bool msfs =
+        const bool msfs2020 =
             jmsfs2020.isBool() ? jmsfs2020.toBool() : CDatastoreUtility::dbBoolStringToBool(jmsfs2020.toString());
         const bool msfs2024 =
             jmsfs2024.isBool() ? jmsfs2024.toBool() : CDatastoreUtility::dbBoolStringToBool(jmsfs2024.toString());
