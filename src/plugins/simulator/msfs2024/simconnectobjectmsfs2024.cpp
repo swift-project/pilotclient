@@ -243,7 +243,6 @@ namespace swift::simplugin::msfs2024common
     {
         static const QString a1("aircraft (non ATC)");
         static const QString a2("aircraft (sim.object)");
-        // static const QString p("probe");
         static const QString u("unknown");
         switch (type)
         {
@@ -382,18 +381,6 @@ namespace swift::simplugin::msfs2024common
         const int c = this->remove(otherSimObj.getCallsign());
         return c > 0;
     }
-
-    // int CSimConnectObjects::removeAllProbes()
-    //{
-    //     const QList<CSimConnectObject> probes = this->getProbes();
-    //     int c = 0;
-    //     for (const CSimConnectObject &probe : probes)
-    //     {
-    //         this->remove(probe.getCallsign());
-    //         c++;
-    //     }
-    //     return c;
-    // }
 
     bool CSimConnectObjects::containsPendingAdded() const
     {
