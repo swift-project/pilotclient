@@ -3,6 +3,8 @@
 
 #include "simconnectobjectmsfs2024.h"
 
+#include <misc/logmessage.h>
+
 #include "simulatormsfs2024common.h"
 
 #include "config/buildconfig.h"
@@ -395,10 +397,17 @@ namespace swift::simplugin::msfs2024common
 
     bool CSimConnectObjects::containsPendingAdded() const
     {
+        bool cont = false;
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.isPendingAdded()) { return true; }
+            if (simObject.isPendingAdded())
+            {
+
+                CLogMessage(this).info(u"containsPendingAdded  %1 ") << simObject.getCallsign();
+                cont = true;
+            }
         }
+        if (cont) return true;
         return false;
     }
 

@@ -85,7 +85,7 @@ namespace swift::simplugin::msfs2024common
                                                     // 4294967295/0xFFFFFFFF means unknown, 0 means also UNKNOWN INDEX
             const DWORD data = cbData;
             const TraceFsxSendId trace = simulatorMsfs2024->getSendIdTrace(sendId);
-            bool logGenericExceptionInfo = true;
+            bool logGenericExceptionInfo = false;
 
             switch (exceptionId)
             {
@@ -93,6 +93,9 @@ namespace swift::simplugin::msfs2024common
             case SIMCONNECT_EXCEPTION_UNRECOGNIZED_ID:
                 break; // Specifies that the client event, request ID, data definition ID, or object ID was not
                        // recognized
+            case SIMCONNECT_EXCEPTION_DATA_ERROR:
+                logGenericExceptionInfo = true;
+                break; // data error, can happen during data request
             case SIMCONNECT_EXCEPTION_CREATE_OBJECT_FAILED:
             {
                 if (trace.isValid())
@@ -104,6 +107,8 @@ namespace swift::simplugin::msfs2024common
                     {
                         if (simObject.isAircraft())
                         {
+                            CLogMessage(simulatorMsfs2024).warning(u"Adding Aircraft failed: %1 %2")
+                                << simObject.getCallsign().asString() << simObject.getAircraftModelString();
                             simulatorMsfs2024->addingAircraftFailed(simObject);
                             logGenericExceptionInfo = false;
                         }
@@ -119,7 +124,7 @@ namespace swift::simplugin::msfs2024common
                 } // trace
             } // SIMCONNECT_EXCEPTION_CREATE_OBJECT_FAILED:
             break;
-            default: break;
+            default: logGenericExceptionInfo = true; break;
             } // switch exception id
 
             // generic exception warning

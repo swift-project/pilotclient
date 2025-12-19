@@ -609,7 +609,7 @@ namespace swift::simplugin::msfs2024common
             static_cast<int>(CSimConnectDefinitions::SimObjectEndMarker) * MaxSimObjAircraft;
 
         // times
-        static constexpr int AddPendingAircraftIntervalMs = 20 * 1000;
+        static constexpr int AddPendingAircraftIntervalMs = 10 * 1000;
         static constexpr int DispatchIntervalMs = 10; //!< how often with run the FSX event queue
         static constexpr int DeferSimulatingFlagMs =
             1500; //!< simulating can jitter at startup (simulating->stopped->simulating, multiple start events), so we

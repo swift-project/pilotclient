@@ -663,6 +663,7 @@ namespace swift::simplugin::msfs2024common
     bool CSimulatorMsfs2024::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation,
                                                        const CAircraftParts &parts)
     {
+        Q_UNUSED(situation);
         if (!m_simConnectObjects.contains(callsign)) { return false; }
         CSimConnectObject simObject = m_simConnectObjects.value(callsign);
         int u = 0;
@@ -1238,12 +1239,25 @@ namespace swift::simplugin::msfs2024common
         if (this->isShuttingDownOrDisconnected()) { return true; } // pretend everything is fine
         const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectId);
         const CCallsign callsign(simObject.getCallsign());
-        if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty()) { return false; }
+
+        CLogMessage(this).info(u"simulatorReportedObjectAdded 1 %1 %2 %3")
+            << callsign.asString() << objectId << this->isSimulating();
+
+        if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty())
+        {
+            CLogMessage(this).error(u"simulatorReportedObjectAdded 1 %1 %2 %3")
+                << callsign.asString() << objectId << this->isSimulating();
+
+            return false;
+        }
 
         // we know the object has been created. But it can happen it is directly removed afterwards
         const CSimulatedAircraft verifyAircraft(simObject.getAircraft());
         const QPointer<CSimulatorMsfs2024> myself(this);
-        QTimer::singleShot(1000, this, [=] {
+
+        // TODO TZ check: Why 1000ms? Is this required in MSFS2024?
+        // QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(100, this, [=] {
             // verify aircraft and also triggers new add if required
             // do not do this in the event loop, so we do this deferred
             if (!myself || this->isShuttingDownOrDisconnected()) { return; }
@@ -1255,6 +1269,8 @@ namespace swift::simplugin::msfs2024common
     void CSimulatorMsfs2024::verifyAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraftIn)
     {
         if (this->isShuttingDownOrDisconnected()) { return; }
+
+        CLogMessage(this).info(u"verifyAddedRemoteAircraft 1 %1") << remoteAircraftIn.getCallsign();
 
         CStatusMessage msg;
         CSimulatedAircraft remoteAircraft = remoteAircraftIn;
@@ -1318,9 +1334,14 @@ namespace swift::simplugin::msfs2024common
             this->requestModelInfoForSimObject(simObject);
 
             this->removeFromAddPendingAndAddAgainAircraft(callsign); // no longer try to add
+            if (m_addPendingAircraft.contains(callsign))
+            {
+                CLogMessage(this).info(u"removeFromAddPendingAndAddAgainAircraft failed 1 %1") << callsign;
+            }
             const bool updated = this->updateAircraftRendered(callsign, true);
             if (updated)
             {
+                CLogMessage(this).info(u"updateAircraftRendered 1 %1") << callsign;
                 static const QString debugMsg("CS: '%1' model: '%2' verified, request/object id: %3 %4");
                 if (this->showDebugLogMessage())
                 {
@@ -1490,9 +1511,13 @@ namespace swift::simplugin::msfs2024common
 
     void CSimulatorMsfs2024::addPendingAircraft(AircraftAddMode mode)
     {
-        if (m_addPendingAircraft.isEmpty()) { return; }
+        if (m_addPendingAircraft.isEmpty())
+        {
+            CLogMessage(this).warning(u"addPendingAircraft is Empty");
+            return;
+        }
         const CCallsignSet aircraftCallsignsInRange(this->getAircraftInRangeCallsigns());
-        CSimulatedAircraftList toBeAddedAircraft; // aircraft still to be added
+        // CSimulatedAircraftList toBeAddedAircraft; // aircraft still to be added
         CCallsignSet toBeRemovedCallsigns;
 
         for (const CSimConnectObject &pendingSimObj : std::as_const(m_addPendingAircraft))
@@ -1503,11 +1528,12 @@ namespace swift::simplugin::msfs2024common
         }
 
         // no longer required to be added
-        m_addPendingAircraft.removeCallsigns(toBeRemovedCallsigns);
+        // TOTO TZ
+        // m_addPendingAircraft.removeCallsigns(toBeRemovedCallsigns);
         m_addAgainAircraftWhenRemoved.removeByCallsigns(toBeRemovedCallsigns);
 
         // add aircraft, but "non blocking"
-        if (!toBeAddedAircraft.isEmpty())
+        if (!m_addPendingAircraft.isEmpty())
         {
             const CSimConnectObject oldestSimObject = m_addPendingAircraft.getOldestObject();
             const CSimulatedAircraft nextPendingAircraft = oldestSimObject.getAircraft();
@@ -1532,12 +1558,19 @@ namespace swift::simplugin::msfs2024common
         CSimConnectObject simObjectOld;
         if (callsign.isEmpty()) { return simObjectOld; }
 
+        CLogMessage(this).info(u"removeFromAddPendingAndAddAgainAircraft 1 %1") << callsign;
+
         m_addAgainAircraftWhenRemoved.removeByCallsign(callsign);
         if (m_addPendingAircraft.contains(callsign))
         {
+            CLogMessage(this).info(
+                u"removeFromAddPendingAndAddAgainAircraft  m_addPendingAircraft.contains(callsign) 2 %1")
+                << callsign;
             simObjectOld = m_addPendingAircraft[callsign];
             m_addPendingAircraft.remove(callsign);
         }
+        CLogMessage(this).info(u"removeFromAddPendingAndAddAgainAircraft 3 %1  m_addPendingAircraft.count: %2")
+            << simObjectOld.getCallsignAsString() << m_addPendingAircraft.count();
         return simObjectOld;
     }
 
@@ -1789,6 +1822,8 @@ namespace swift::simplugin::msfs2024common
     {
         const CCallsign callsign(newRemoteAircraft.getCallsign());
 
+        CLogMessage(this).info(u"physicallyAddRemoteAircraftImpl %1") << callsign.asString();
+
         // entry checks
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
@@ -1823,9 +1858,12 @@ namespace swift::simplugin::msfs2024common
         const bool hasPendingAdded = m_simConnectObjects.containsPendingAdded();
         bool canAdd = this->isSimulating() && !hasPendingAdded;
 
+        CLogMessage(this).info(u"TEST 1 %1 %2 %3 %4")
+            << callsign.asString() << canAdd << this->isSimulating() << hasPendingAdded;
+
         Q_ASSERT_X(!hasPendingAdded || m_simConnectObjects.countPendingAdded() < 2, Q_FUNC_INFO,
                    "There must be only 0..1 pending objects");
-        if (this->showDebugLogMessage())
+        if (this->showDebugLogMessage() && true)
         {
             this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("CS: '%1' mode: '%2' model: '%3'")
                                                    .arg(newRemoteAircraft.getCallsignAsString(), modeToString(addMode),
@@ -1841,6 +1879,8 @@ namespace swift::simplugin::msfs2024common
         // this handles changed model strings or an update of the model
         if (m_simConnectObjects.contains(callsign))
         {
+            CLogMessage(this).info(u"TEST 2 m_simConnectObjects.contains %1 ") << callsign.asString();
+
             const CSimConnectObject simObject = m_simConnectObjects[callsign];
             const QString newModelString(newRemoteAircraft.getModelString());
             const QString simObjModelString(simObject.getAircraftModelString());
@@ -1876,6 +1916,7 @@ namespace swift::simplugin::msfs2024common
         CAircraftSituation situation(newRemoteAircraft.getSituation());
         if (canAdd && situation.isPositionOrAltitudeNull())
         {
+            CLogMessage(this).info(u"TEST 3 situation.isPositionOrAltitudeNull %1 ") << callsign.asString();
             // invalid position because position or altitude is null
             const CAircraftSituationList situations(this->remoteAircraftSituations(callsign));
             if (situations.isEmpty())
@@ -1901,11 +1942,15 @@ namespace swift::simplugin::msfs2024common
         }
 
         // check if we can add, do not add if simulator is stopped or other objects pending
+
         if (!canAdd)
         {
+            CLogMessage(this).info(u"TEST 4 !canAdd %1 ") << callsign.asString();
+
             CSimConnectObject &addPendingObj = m_addPendingAircraft[newRemoteAircraft.getCallsign()];
             addPendingObj.setAircraft(newRemoteAircraft);
             addPendingObj.resetTimestampToNow();
+            m_addPendingAircraft.insert(addPendingObj, true); // insert removed objects and update ts
             return false;
         }
 
@@ -1920,6 +1965,7 @@ namespace swift::simplugin::msfs2024common
             return false;
         }
 
+        CLogMessage(this).info(u"TEST 5 CInterpolationAndRenderingSetupPerCallsign %1 ") << callsign.asString();
         // setup
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupConsolidated(callsign, true);
@@ -2355,16 +2401,18 @@ namespace swift::simplugin::msfs2024common
 
         // in case we sent, we sent everything
         const bool simObjectAircraftType = simObject.isAircraftSimulatedObject(); // no real aircraft type
-        const HRESULT hr1 =
-            simObjectAircraftType ?
-                S_OK :
-                this->logAndTraceSendId(
-                    SimConnect_SetDataOnSimObject(
-                        m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
-                        static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
-                        sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights),
-                    traceId, simObject, "Failed so set parts", Q_FUNC_INFO,
-                    "SimConnect_SetDataOnSimObject::ddRemoteAircraftPartsWithoutLights");
+        const HRESULT hr1 = S_OK;
+        // TODO TZ re-enable if checked
+        // const HRESULT hr1 =
+        //    simObjectAircraftType ?
+        //        S_OK :
+        //        this->logAndTraceSendId(
+        //            SimConnect_SetDataOnSimObject(
+        //                m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
+        //                static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
+        //                sizeof(DataDefinitionRemoteAircraftPartsWithoutLights), &ddRemoteAircraftPartsWithoutLights),
+        //            traceId, simObject, "Failed so set parts", Q_FUNC_INFO,
+        //            "SimConnect_SetDataOnSimObject::ddRemoteAircraftPartsWithoutLights");
 
         // TODO TZ handle flaps more precisely
         // Sets flap handle to closest increment (0 to 16383)
