@@ -12,6 +12,7 @@ add_library(simulatorfsx SHARED
 set_target_properties(simulatorfsx PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 set_target_properties(simulatorfsx PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 
+force_asserts(simulatorfsx)
 target_include_directories(simulatorfsx PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(simulatorfsx

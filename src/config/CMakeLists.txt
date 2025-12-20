@@ -12,6 +12,7 @@ add_library(config STATIC
         ${CMAKE_CURRENT_BINARY_DIR}/buildconfig_gen.cpp
         )
 
+force_asserts(config)
 target_link_libraries(config PUBLIC Qt::Core)
 
 target_include_directories(config

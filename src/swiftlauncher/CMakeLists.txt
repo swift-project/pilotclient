@@ -14,7 +14,7 @@ if(WIN32)
 endif()
 
 target_include_directories(swiftlauncher PUBLIC ${PROJECT_SOURCE_DIR}/src)
-
+force_asserts(swiftlauncher)
 target_link_libraries(swiftlauncher
         PUBLIC
         Qt::Core

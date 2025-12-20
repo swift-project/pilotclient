@@ -60,6 +60,7 @@ option(SWIFT_ONLY_XSWIFTBUS_WORKAROUND "Only build xswiftbus (useful when compil
 
 option(SWIFT_USE_CRASHPAD "Use crashpad" OFF)
 option(SWIFT_USE_PCH "Use precompiled headers" ON)
+option(SWIFT_FORCE_ASSERTS "Force Qt asserts also in release mode" ON)
 
 
 # Shortcut to only build xswiftbus

@@ -12,6 +12,7 @@ add_library(simulatormsfs2024 SHARED
 set_target_properties(simulatormsfs2024 PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 set_target_properties(simulatormsfs2024 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 
+force_asserts(simulatormsfs2024)
 target_include_directories(simulatormsfs2024 PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(simulatormsfs2024

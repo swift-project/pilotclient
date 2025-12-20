@@ -245,7 +245,7 @@ add_library(core SHARED
         webreaderflags.h
 )
 
-
+force_asserts(core)
 target_include_directories(core PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(core

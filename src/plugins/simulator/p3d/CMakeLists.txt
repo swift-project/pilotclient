@@ -12,6 +12,7 @@ add_library(simulatorp3d SHARED
 set_target_properties(simulatorp3d PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 set_target_properties(simulatorp3d PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 
+force_asserts(simulatorp3d)
 target_include_directories(simulatorp3d PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(simulatorp3d

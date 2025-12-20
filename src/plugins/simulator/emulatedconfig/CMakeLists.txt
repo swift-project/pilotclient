@@ -13,6 +13,7 @@ add_library(simulatoremulatedconfig SHARED
 set_target_properties(simulatoremulatedconfig PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 set_target_properties(simulatoremulatedconfig PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 
+force_asserts(simulatoremulatedconfig)
 target_include_directories(simulatoremulatedconfig PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(simulatoremulatedconfig

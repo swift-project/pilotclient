@@ -13,7 +13,7 @@ set_target_properties(simulatorxplaneconfig PROPERTIES LIBRARY_OUTPUT_DIRECTORY 
 set_target_properties(simulatorxplaneconfig PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 
 target_include_directories(simulatorxplaneconfig PUBLIC ${PROJECT_SOURCE_DIR}/src)
-
+force_asserts(simulatorxplaneconfig)
 target_link_libraries(simulatorxplaneconfig
         PUBLIC
         gui

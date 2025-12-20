@@ -868,6 +868,7 @@ add_custom_command(TARGET gui
                     COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different share ${PROJECT_BINARY_DIR}/out/share
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+force_asserts(gui)
 target_include_directories(gui PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(gui

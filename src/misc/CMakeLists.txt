@@ -687,6 +687,7 @@ if(APPLE)
     )
 endif()
 
+force_asserts(misc)
 target_include_directories(misc PUBLIC ${PROJECT_SOURCE_DIR}/src)
 target_compile_definitions(misc PRIVATE BUILD_SWIFT_MISC_LIB)
 

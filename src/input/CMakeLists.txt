@@ -37,6 +37,7 @@ else()
     )
 endif()
 
+force_asserts(input)
 target_include_directories(input PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(input
