@@ -1495,12 +1495,13 @@ namespace swift::simplugin::msfs2024common
         const CCallsignSet aircraftCallsignsInRange(this->getAircraftInRangeCallsigns());
         CCallsignSet toBeRemovedCallsigns;
 
-        for (const CSimConnectObject &pendingSimObj : std::as_const(m_addPendingAircraft))
-        {
-            SWIFT_VERIFY_X(pendingSimObj.hasCallsign(), Q_FUNC_INFO, "missing callsign");
-            if (!pendingSimObj.hasCallsign()) { continue; }
-            else { toBeRemovedCallsigns.push_back(pendingSimObj.getCallsign()); }
-        }
+        // TODO TZ this removed the pending aircraft from the list, even they are not added yet
+        // for (const CSimConnectObject &pendingSimObj : std::as_const(m_addPendingAircraft))
+        //{
+        //    SWIFT_VERIFY_X(pendingSimObj.hasCallsign(), Q_FUNC_INFO, "missing callsign");
+        //    if (!pendingSimObj.hasCallsign()) { continue; }
+        //    else { toBeRemovedCallsigns.push_back(pendingSimObj.getCallsign()); }
+        //}
 
         // no longer required to be added
         // TOTO TZ
