@@ -30,6 +30,7 @@ add_library(simulatorfs9 SHARED
 set_target_properties(simulatorfs9 PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 set_target_properties(simulatorfs9 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)
 
+force_asserts(simulatorfs9)
 target_include_directories(simulatorfs9 PUBLIC ${PROJECT_SOURCE_DIR}/src)
 
 target_link_libraries(simulatorfs9

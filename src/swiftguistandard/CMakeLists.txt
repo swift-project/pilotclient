@@ -28,6 +28,8 @@ target_link_libraries(swiftguistd
         sound
         )
 
+force_asserts(swiftguistd)
+
 if(APPLE)
     target_link_libraries(swiftguistd PUBLIC input)
 

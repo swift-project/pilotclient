@@ -11,6 +11,7 @@ add_library(fscommon SHARED
         fscommonexport.h
 )
 
+force_asserts(fscommon)
 target_compile_definitions(fscommon PRIVATE BUILD_FSCOMMON_LIB)
 
 target_link_libraries(fscommon

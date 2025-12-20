@@ -13,6 +13,7 @@ if(WIN32)
 endif()
 
 target_include_directories(swiftcore PUBLIC ${PROJECT_SOURCE_DIR}/src)
+force_asserts(swiftcore)
 
 target_link_libraries(swiftcore
         PUBLIC

@@ -43,6 +43,7 @@ target_link_libraries(fsxcommon
             config
 )
 
+force_asserts(fsxcommon)
 target_compile_definitions(fsxcommon PRIVATE BUILD_FSXCOMMON_LIB)
 
 install(TARGETS fsxcommon

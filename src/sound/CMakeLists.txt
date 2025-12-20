@@ -53,6 +53,7 @@ add_custom_command(TARGET sound
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_compile_definitions(sound PRIVATE BUILD_SWIFT_SOUND_LIB)
+force_asserts(sound)
 
 target_include_directories(sound PUBLIC ${PROJECT_SOURCE_DIR}/src)
 

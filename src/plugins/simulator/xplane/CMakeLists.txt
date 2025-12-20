@@ -16,6 +16,8 @@ add_library(simulatorxplane SHARED
 include(${PROJECT_SOURCE_DIR}/cmake/xswiftbus_tools.cmake)
 
 get_xswiftbus_commit_id()
+
+force_asserts(simulatorxplane)
 target_compile_definitions(simulatorxplane PRIVATE XSWIFTBUS_COMMIT="${XSWIFTBUS_COMMIT_ID}")
 
 set_target_properties(simulatorxplane PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin/plugins/simulator)

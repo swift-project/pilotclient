@@ -16,6 +16,7 @@ if(WIN32)
 endif()
 
 target_include_directories(swiftdata PUBLIC ${PROJECT_SOURCE_DIR}/src)
+force_asserts(swiftdata)
 
 target_link_libraries(swiftdata
         PUBLIC
