@@ -310,6 +310,7 @@ namespace swift::simplugin::msfs2024common
             RequestOwnAircraft,
             RequestOwnAircraftTitle,
             RequestOwnAircraftLivery,
+            RequestSimEnvironment,
             RequestSbData, //!< SB client area / XPDR mode
             RequestMSFSTransponder, //!< MSFS XPDR mode/ident
             RequestFacility,

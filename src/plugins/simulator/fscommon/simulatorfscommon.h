@@ -54,6 +54,9 @@ namespace swift::simplugin::fscommon
             0; //!< own aircraft updates, even with 50 updates/sec long enough even for 32bit
         int m_skipCockpitUpdateCycles = 0; //!< skip some update cycles to allow changes in simulator cockpit to be set
         bool m_simPaused = false; //!< simulator paused?
+        bool m_simTimeSynced = false; //!< time synchronized?
+        swift::misc::physical_quantities::CTime m_syncTimeOffset; //!< time offset
+        swift::misc::aviation::CAirportList m_airportsInRangeFromSimulator; //!< airports in range of own aircraft
 
         // cockpit as set in SIM
         swift::misc::aviation::CComSystem m_simCom1; //!< cockpit COM1 state in simulator

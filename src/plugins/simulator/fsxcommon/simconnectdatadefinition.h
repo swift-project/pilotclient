@@ -209,6 +209,15 @@ namespace swift::simplugin::fsxcommon
         bool isOnGround() const { return this->aboveGroundFt() < 1.0; }
     };
 
+    //! Data struct simulator environment
+    struct DataDefinitionSimEnvironment
+    {
+        qint32 zuluTimeSeconds; //!< Simulator zulu (GMT) time in secs.
+        qint32 zuluYear; //!< Simulator zulu (GMT) year.
+        qint32 zuluMonth; //!< Simulator zulu (GMT) month.
+        qint32 zuluDayOfMonth; //!< Simulator zulu (GMT) day of the month.
+    };
+
     //! The whole SB data area
     //! \remark vPilot SB area https://forums.vatsim.net/viewtopic.php?p=519580
     //! \remark SB offsets http://www.squawkbox.ca/doc/sdk/fsuipc.php
@@ -291,6 +300,7 @@ namespace swift::simplugin::fsxcommon
         {
             RequestOwnAircraft,
             RequestOwnAircraftTitle,
+            RequestSimEnvironment,
             RequestSbData, //!< SB client area / XPDR mode
             RequestMSFSTransponder, //!< MSFS XPDR mode/ident
             RequestFacility,

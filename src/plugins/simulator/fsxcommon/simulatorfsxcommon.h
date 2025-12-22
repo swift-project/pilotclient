@@ -461,6 +461,12 @@ namespace swift::simplugin::fsxcommon
         bool updateRemoteAircraftParts(const CSimConnectObject &simObject,
                                        const swift::misc::simulation::CInterpolationResult &result, bool forcedUpdate);
 
+        //! Calling CSimulatorFsxCommon::updateAirports
+        void triggerUpdateAirports(const swift::misc::aviation::CAirportList &airports);
+
+        //! Update airports from simulator
+        void updateAirports(const swift::misc::aviation::CAirportList &airports);
+
         //! Send parts to simulator
         //! \remark does not send if there is no change
         bool sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject,
@@ -542,6 +548,9 @@ namespace swift::simplugin::fsxcommon
 
         //! The SimConnect object for idxs
         CSimConnectObject getSimObjectForObjectId(DWORD objectId) const;
+
+        //! Sync time with user's computer
+        void synchronizeTime(const DataDefinitionSimEnvironment *simEnv);
 
         //! Request data for a CSimConnectObject (aka remote aircraft)
         bool requestPositionDataForSimObject(const CSimConnectObject &simObject,
@@ -642,6 +651,7 @@ namespace swift::simplugin::fsxcommon
         qint64 m_traceAutoUntilTs = -1; //!< allows to automatically trace for some time
         qint64 m_simulatingChangedTs = -1; //!< timestamp, when simulating changed (used to avoid jitter)
         int m_sbDataReceived = 0; //!< SB3 area data received
+        int m_syncTimeDeferredCounter = 0; //!< Set when synchronized, used to wait some time
 
         // tracing dispatch performance
         int m_dispatchErrors = 0; //!< number of dispatched failed, \sa dispatch

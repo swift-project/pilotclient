@@ -759,6 +759,12 @@ namespace swift::simplugin::msfs2024common
                                                   SIMCONNECT_SIMOBJECT_TYPE_USER),
             "Cannot request title and livery", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObjectType");
 
+        hr += this->logAndTraceSendId(
+            SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestSimEnvironment,
+                                              CSimConnectDefinitions::DataSimEnvironment, SIMCONNECT_OBJECT_ID_USER,
+                                              SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
+            "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+
         hr += this->logAndTraceSendId(SimConnect_RequestDataOnSimObject(
                                           m_hSimConnect, CSimConnectDefinitions::RequestMSFSTransponder,
                                           CSimConnectDefinitions::DataTransponderModeMSFS, SIMCONNECT_OBJECT_ID_USER,
