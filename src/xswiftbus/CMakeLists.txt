@@ -128,7 +128,7 @@ target_compile_definitions(xswiftbus PUBLIC XPLM200=1 XPLM210=1 XPLM300=1 XPLM_D
 
 target_compile_definitions(xswiftbus PUBLIC XPMP_CLIENT_NAME="xswiftbus")
 target_compile_definitions(xswiftbus PUBLIC XPMP_CLIENT_LONGNAME="xswiftbus")
-target_compile_definitions(xswiftbus PUBLIC XSWIFTBUS_VERSION="${swift_version_major}.${swift_version_minor}.${swift_rev_count}")
+target_compile_definitions(xswiftbus PUBLIC XSWIFTBUS_VERSION="${SWIFT_VERSION_MAJOR}.${SWIFT_VERSION_MINOR}.${SWIFT_VERSION_REVISION}")
 
 if(APPLE)
     set_target_properties(xswiftbus PROPERTIES INSTALL_RPATH @loader_path/)
