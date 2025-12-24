@@ -225,13 +225,13 @@ namespace XSwiftBus
         XPLMDataRef m_ref;
     };
 
-    /* Helper to conditionally fail compilation if no matching constexpr if case is found */
+    /*! Helper to conditionally fail compilation if no matching constexpr if case is found */
     template <class...>
     constexpr bool dependent_false = false;
 
     /*!
      * Class providing a custom variable + dataref
-     * \hint Currently only readable int and std::string datarefs are supported
+     * Currently only readable int and std::string datarefs are supported
      * \tparam DataRefTraits The trait class representing the dataref.
      */
     template <class DataRefTraits>
@@ -271,11 +271,13 @@ namespace XSwiftBus
             if (m_ref) { XPLMUnregisterDataAccessor(m_ref); }
         }
 
+        //! Read integer
         static typename DataRefTraits::type readInt(void *refcon)
         {
             return reinterpret_cast<CustomDataRef *>(refcon)->get();
         }
 
+        //! Read data/string
         static int readData(void *refcon, void *out, int offset, int max_length)
         {
             if constexpr (std::is_same_v<typename DataRefTraits::type, std::string>)
@@ -301,7 +303,10 @@ namespace XSwiftBus
         //! Get the value
         const typename DataRefTraits::type &get() const { return m_datarefVal; }
 
+        //! X-Plane dataref
         XPLMDataRef m_ref;
+
+        //! Dataref content
         typename DataRefTraits::type m_datarefVal;
     };
 
