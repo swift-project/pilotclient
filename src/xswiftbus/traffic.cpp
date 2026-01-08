@@ -819,7 +819,9 @@ namespace XSwiftBus
             Plane *plane = pair.second;
             interpolatePosition(plane);
             interpolateGear(plane);
-            m_updates.push_back({ plane->id, &plane->positions[3], &plane->surfaces, &plane->surveillance });
+            XPMPUpdate_t update = { plane->id, &plane->positions[3], &plane->surfaces, &plane->surveillance,
+                                    plane->isOnGround };
+            m_updates.push_back(update);
         }
         XPMPUpdatePlanes(m_updates.data(), sizeof(XPMPUpdate_t), m_updates.size());
 
