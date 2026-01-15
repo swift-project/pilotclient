@@ -19,6 +19,7 @@
 
 #include "config/buildconfig.h"
 #include "core/application.h"
+#include "core/context/contextsimulator.h"
 #include "core/modelsetbuilder.h"
 #include "core/webdataservices.h"
 #include "core/webdataservicesms.h"
@@ -47,6 +48,7 @@
 #include "misc/worker.h"
 
 using namespace swift::config;
+using namespace swift::core::context;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
@@ -538,24 +540,15 @@ namespace swift::simplugin::msfs2024common
             currentSet = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
 
             NewSet = builder.buildModelSet(simulator, newModelList, currentSet, options, distributorList);
-
-            CAircraftMatcher matcher;
-            swift::misc::simulation::CAircraftMatcherSetup mSetup = matcher.getSetup();
-
             NewSet.setSimulatorInfo(simulator);
-            matcher.setModelSet(NewSet, m_simulatorInfo, true);
-
-            const QDateTime latestDbModelsTs =
-                NewSet.isEmpty() ? sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity) :
-                                   NewSet.latestTimestamp();
-            if (!latestDbModelsTs.isValid()) { return; }
 
             // for swiftgui it is enough to set the cache here
             if (gui_application)
                 CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setModelsForSimulator(NewSet,
                                                                                                           simulator);
-
             CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().setCachedModels(NewSet, simulator);
+
+            sGui->getIContextSimulator()->setModelSetLoaderSimulator(simulator);
 
             const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo,
                                                     u"Loading SimObjects and Liveries from the Simulator completed");
