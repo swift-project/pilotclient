@@ -383,8 +383,8 @@ namespace swift::simplugin::msfs2024common
         default: break;
         }
 
-        // sSimmobjectLoadedState.bHotAirLoaded
-        if (sSimmobjectLoadedState.bAirplaneLoaded && sSimmobjectLoadedState.bHelicopterLoaded)
+        if (sSimmobjectLoadedState.bAirplaneLoaded && sSimmobjectLoadedState.bHelicopterLoaded &&
+            sSimmobjectLoadedState.bHotAirLoaded)
         {
             sSimmobjectLoadedState.bLoadStarted = false;
             size_t countmodels = vSimObjectsAndLiveries.size();
