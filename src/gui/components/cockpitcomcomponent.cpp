@@ -64,8 +64,6 @@ namespace swift::gui::components
         // Relay COM form signals
         connect(ui->editor_Com, &CCockpitComForm::transponderModeChanged, this,
                 &CCockpitComComponent::transponderModeChanged);
-        connect(ui->editor_Com, &CCockpitComForm::transponderStateIdentEnded, this,
-                &CCockpitComComponent::transponderStateIdentEnded);
 
         // hook up with changes from own aircraft context
         if (sGui)
@@ -149,8 +147,18 @@ namespace swift::gui::components
         // unavailable context during shutdown possible
         // mostly when client runs with DBus, but DBus is down
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return false; }
-        return sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(),
-                                                             ownAircraft.getTransponder(), identifier());
+
+        // The CockpitComForm triggering this slot only includes frequencies and transponder mode/code.
+        // Everything else is left as default default (especially radio volume and TX/RX state).
+        CComSystem com1 = sGui->getIContextOwnAircraft()->getOwnAircraft().getCom1System();
+        CComSystem com2 = sGui->getIContextOwnAircraft()->getOwnAircraft().getCom2System();
+        com1.setFrequencyActive(ownAircraft.getCom1System().getFrequencyActive());
+        com1.setFrequencyStandby(ownAircraft.getCom1System().getFrequencyStandby());
+        com2.setFrequencyActive(ownAircraft.getCom2System().getFrequencyActive());
+        com2.setFrequencyStandby(ownAircraft.getCom2System().getFrequencyStandby());
+
+        return sGui->getIContextOwnAircraft()->updateCockpit(com1, com2,
+                                                            ownAircraft.getTransponder(), identifier());
     }
 
     void CCockpitComComponent::forceCockpitUpdateFromOwnAircraftContext()

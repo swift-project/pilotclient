@@ -76,9 +76,11 @@ namespace swift::simplugin::fsxcommon
         double rotationVelocityBodyX; //!< Rotation Velocity Body X
         double rotationVelocityBodyY; //!< Rotation Velocity Body Y
         double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
-        // 44
-        double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
-        // 45
+        double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, MSFS)
+        double transponderMode; //!< transponder state (MSFS)
+        double ident; //!< ident (MSFS)
+        double com1Volume; //!< COM1 volume (MSFS)
+        double com2Volume; //!< COM2 volume (MSFS)
     };
 
     //! Data struct of aircraft position
@@ -253,8 +255,8 @@ namespace swift::simplugin::fsxcommon
     struct DataDefinitionMSFSTransponderMode
     {
         double transponderMode = 1; //!< transponder state simvar
-        double ident = 0; //!< ident
     };
+
 
     //! Client areas
     enum ClientAreaId
@@ -293,7 +295,6 @@ namespace swift::simplugin::fsxcommon
             RequestOwnAircraft,
             RequestOwnAircraftTitle,
             RequestSbData, //!< SB client area / XPDR mode
-            RequestMSFSTransponder, //!< MSFS XPDR mode/ident
             RequestFacility,
             RequestEndMarker //!< free request ids can start here
         };
@@ -345,9 +346,6 @@ namespace swift::simplugin::fsxcommon
 
         //! Initialize data definition for MSFS transponder
         static HRESULT initMSFSTransponder(const HANDLE hSimConnect);
-
-        //! Initialize data definition for MSFS transponder
-        static HRESULT initMSFS2024Transponder(const HANDLE hSimConnect);
     };
 } // namespace swift::simplugin::fsxcommon
 
