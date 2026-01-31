@@ -42,11 +42,8 @@ enum class MessageType
     Pong,
     ServerError,
     ServerHeartbeat,
-    RegistrationInfo, // IVAO only
     TextMessage,
     PilotClientCom,
-    RevBClientParts, // IVAO only
-    RevBPilotDescription, // -PD IVAO only not handled in swift
     Rehost,
     Mute,
 };
