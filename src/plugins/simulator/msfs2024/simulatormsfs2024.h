@@ -6,12 +6,12 @@
 #ifndef SWIFT_SIMPLUGIN_MSFS_SIMULATORMSFS2024_H
 #define SWIFT_SIMPLUGIN_MSFS_SIMULATORMSFS2024_H
 
-#include "../fsxcommon/simulatorfsxcommon.h"
+#include "../msfs2024/simulatormsfs2024common.h"
 
 namespace swift::simplugin::msfs2024
 {
-    //! FSX simulator implementation
-    class CSimulatorMsFs2024 : public swift::simplugin::fsxcommon::CSimulatorFsxCommon
+    //! MSFS2024 simulator implementation
+    class CSimulatorMsFs2024 : public swift::simplugin::msfs2024common::CSimulatorMsfs2024
     {
         Q_OBJECT
 
@@ -27,19 +27,19 @@ namespace swift::simplugin::msfs2024
         virtual bool connectTo() override;
         //! @}
 
-        virtual void
-        setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation,
-                        const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
+        virtual void setTrueAltitude(
+            swift::misc::aviation::CAircraftSituation &aircraftSituation,
+            const swift::simplugin::msfs2024common::DataDefinitionOwnAircraft &simulatorOwnAircraft) override;
     };
 
     //! Listener for MSFS2024
-    class CSimulatorMsFs2024Listener : public fsxcommon::CSimulatorFsxCommonListener
+    class CSimulatorMsFs2024Listener : public swift::simplugin::msfs2024common::CSimulatorMsfs2024Listener
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        using CSimulatorFsxCommonListener::CSimulatorFsxCommonListener;
+        using CSimulatorMsfs2024Listener::CSimulatorMsfs2024Listener;
 
     protected:
         virtual void startImpl() override;

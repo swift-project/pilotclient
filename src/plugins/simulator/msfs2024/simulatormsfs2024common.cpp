@@ -1,8 +1,12 @@
-// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
+﻿// SPDX-FileCopyrightText: Copyright (C) 2013 swift Project Community / Contributors
 // SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-#include "simulatorfsxcommon.h"
+#include "simulatormsfs2024common.h"
 
+#include <core/aircraftmatcher.h>
+
+#include <fstream>
+#include <iostream>
 #include <type_traits>
 
 #include <QElapsedTimer>
@@ -11,10 +15,17 @@
 #include <QTimer>
 
 #include "../fscommon/simulatorfscommonfunctions.h"
-#include "simconnectsymbols.h"
+#include "simconnectsymbolsmsfs2024.h"
 
 #include "config/buildconfig.h"
 #include "core/application.h"
+#include "core/context/contextsimulator.h"
+#include "core/modelsetbuilder.h"
+#include "core/webdataservices.h"
+#include "core/webdataservicesms.h"
+#include "gui/components/dbmappingcomponent.h"
+#include "gui/guiapplication.h"
+#include "gui/models/distributorlistmodel.h"
 #include "misc/aviation/airportlist.h"
 #include "misc/country.h"
 #include "misc/geo/elevationplane.h"
@@ -22,18 +33,22 @@
 #include "misc/math/mathutils.h"
 #include "misc/network/textmessage.h"
 #include "misc/simulation/aircraftmodel.h"
+#include "misc/simulation/data/modelcaches.h"
+#include "misc/simulation/distributorlist.h"
 #include "misc/simulation/fscommon/aircraftcfgparser.h"
 #include "misc/simulation/fscommon/bcdconversions.h"
 #include "misc/simulation/fscommon/fscommonutil.h"
-#include "misc/simulation/fsx/simconnectutilities.h"
 #include "misc/simulation/interpolation/interpolatormulti.h"
+#include "misc/simulation/msfs2024/simconnectutilities.h"
 #include "misc/simulation/settings/simulatorsettings.h"
 #include "misc/simulation/simulatorplugininfo.h"
 #include "misc/statusmessagelist.h"
 #include "misc/threadutils.h"
 #include "misc/verify.h"
+#include "misc/worker.h"
 
 using namespace swift::config;
+using namespace swift::core::context;
 using namespace swift::misc;
 using namespace swift::misc::aviation;
 using namespace swift::misc::physical_quantities;
@@ -41,18 +56,23 @@ using namespace swift::misc::geo;
 using namespace swift::misc::network;
 using namespace swift::misc::math;
 using namespace swift::misc::simulation;
+using namespace swift::misc::simulation::data;
 using namespace swift::misc::simulation::fscommon;
-using namespace swift::misc::simulation::fsx;
+using namespace swift::misc::simulation::msfs2024;
 using namespace swift::misc::simulation::settings;
 using namespace swift::core;
+using namespace swift::core::db;
 using namespace swift::simplugin::fscommon;
+using namespace swift::gui;
+using namespace swift::gui::models;
+using namespace swift::gui::components;
 
-namespace swift::simplugin::fsxcommon
+namespace swift::simplugin::msfs2024common
 {
-    CSimulatorFsxCommon::CSimulatorFsxCommon(const CSimulatorPluginInfo &info,
-                                             IOwnAircraftProvider *ownAircraftProvider,
-                                             IRemoteAircraftProvider *remoteAircraftProvider,
-                                             IClientProvider *clientProvider, QObject *parent)
+
+    CSimulatorMsfs2024::CSimulatorMsfs2024(const CSimulatorPluginInfo &info, IOwnAircraftProvider *ownAircraftProvider,
+                                           IRemoteAircraftProvider *remoteAircraftProvider,
+                                           IClientProvider *clientProvider, QObject *parent)
         : CSimulatorFsCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
         Q_ASSERT_X(ownAircraftProvider, Q_FUNC_INFO, "Missing provider");
@@ -62,17 +82,19 @@ namespace swift::simplugin::fsxcommon
         m_simObjectTimer.setInterval(AddPendingAircraftIntervalMs);
         // default model will be set in derived class
 
-        CSimulatorFsxCommon::registerHelp();
-        connect(&m_simObjectTimer, &QTimer::timeout, this, &CSimulatorFsxCommon::timerBasedObjectAddOrRemove);
+        CSimulatorMsfs2024::registerHelp();
+        connect(&m_simObjectTimer, &QTimer::timeout, this, &CSimulatorMsfs2024::timerBasedObjectAddOrRemove);
+
+        // m_distributorPreferences = std::make_shared<swift::misc::simulation::CDistributorListPreferences>();
     }
 
-    CSimulatorFsxCommon::~CSimulatorFsxCommon() { this->disconnectFrom(); }
+    CSimulatorMsfs2024::~CSimulatorMsfs2024() { this->disconnectFrom(); }
 
-    bool CSimulatorFsxCommon::isConnected() const { return m_simConnected && m_hSimConnect; }
+    bool CSimulatorMsfs2024::isConnected() const { return m_simConnected && m_hSimConnect; }
 
-    bool CSimulatorFsxCommon::isSimulating() const { return m_simSimulating && this->isConnected(); }
+    bool CSimulatorMsfs2024::isSimulating() const { return m_simSimulating && this->isConnected(); }
 
-    bool CSimulatorFsxCommon::connectTo()
+    bool CSimulatorMsfs2024::connectTo()
     {
         if (this->isConnected()) { return true; }
         this->reset();
@@ -96,7 +118,7 @@ namespace swift::simplugin::fsxcommon
         return true;
     }
 
-    bool CSimulatorFsxCommon::disconnectFrom()
+    bool CSimulatorMsfs2024::disconnectFrom()
     {
         if (!m_simConnected) { return true; }
         m_simSimulating = false; // thread as stopped, just setting the flag here avoids overhead of on onSimStopped
@@ -115,14 +137,14 @@ namespace swift::simplugin::fsxcommon
         return CSimulatorFsCommon::disconnectFrom();
     }
 
-    bool CSimulatorFsxCommon::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
+    bool CSimulatorMsfs2024::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
     {
         this->logAddingAircraftModel(newRemoteAircraft);
         return this->physicallyAddRemoteAircraftImpl(newRemoteAircraft, ExternalCall);
     }
 
-    bool CSimulatorFsxCommon::updateCOMFromSwiftToSimulator(const CFrequency &newFreq, const CFrequency &lastSimFreq,
-                                                            CFrequency &last25kHzSimFreq, EventIds id)
+    bool CSimulatorMsfs2024::updateCOMFromSwiftToSimulator(const CFrequency &newFreq, const CFrequency &lastSimFreq,
+                                                           CFrequency &last25kHzSimFreq, EventIds id)
     {
         if (newFreq == lastSimFreq) { return false; }
 
@@ -148,8 +170,8 @@ namespace swift::simplugin::fsxcommon
         return false;
     }
 
-    bool CSimulatorFsxCommon::updateOwnSimulatorCockpit(const CSimulatedAircraft &ownAircraft,
-                                                        const CIdentifier &originator)
+    bool CSimulatorMsfs2024::updateOwnSimulatorCockpit(const CSimulatedAircraft &ownAircraft,
+                                                       const CIdentifier &originator)
     {
         if (originator == this->identifier()) { return false; }
         if (!this->isSimulating()) { return false; }
@@ -200,7 +222,7 @@ namespace swift::simplugin::fsxcommon
                 }
                 changed = true;
             }
-            else if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+            else if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
             {
                 DataDefinitionMSFSTransponderMode t;
                 t.transponderMode = (newTransponder.isInStandby() ? 1 : 4);
@@ -212,7 +234,7 @@ namespace swift::simplugin::fsxcommon
                                                     SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
                                                     sizeof(DataDefinitionMSFSTransponderMode), &t);
 
-                if (isFailure(hr)) { CLogMessage(this).warning(u"Setting transponder mode failed (MSFS)"); }
+                if (isFailure(hr)) { CLogMessage(this).warning(u"Setting transponder mode failed (MSFS2024)"); }
 
                 changed = true;
             }
@@ -225,7 +247,7 @@ namespace swift::simplugin::fsxcommon
         return changed;
     }
 
-    bool CSimulatorFsxCommon::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
+    bool CSimulatorMsfs2024::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
     {
         if (originator == this->identifier()) { return false; }
         if (!this->isSimulating()) { return false; }
@@ -236,7 +258,7 @@ namespace swift::simplugin::fsxcommon
         return false;
     }
 
-    void CSimulatorFsxCommon::displayStatusMessage(const CStatusMessage &message) const
+    void CSimulatorMsfs2024::displayStatusMessage(const CStatusMessage &message) const
     {
         QByteArray m = message.getMessage().toLatin1().constData();
         m.append('\0');
@@ -254,7 +276,7 @@ namespace swift::simplugin::fsxcommon
         Q_UNUSED(hr)
     }
 
-    void CSimulatorFsxCommon::displayTextMessage(const CTextMessage &message) const
+    void CSimulatorMsfs2024::displayTextMessage(const CTextMessage &message) const
     {
         QByteArray m = message.asString(true, true).toLatin1().constData();
         m.append('\0');
@@ -269,12 +291,12 @@ namespace swift::simplugin::fsxcommon
         Q_UNUSED(hr)
     }
 
-    bool CSimulatorFsxCommon::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
+    bool CSimulatorMsfs2024::isPhysicallyRenderedAircraft(const CCallsign &callsign) const
     {
         return m_simConnectObjects.contains(callsign);
     }
 
-    CCallsignSet CSimulatorFsxCommon::physicallyRenderedAircraft() const
+    CCallsignSet CSimulatorMsfs2024::physicallyRenderedAircraft() const
     {
         CCallsignSet callsigns(m_simConnectObjects.keys());
         callsigns.push_back(
@@ -284,7 +306,7 @@ namespace swift::simplugin::fsxcommon
         return CCallsignSet(m_simConnectObjects.keys());
     }
 
-    CStatusMessageList CSimulatorFsxCommon::debugVerifyStateAfterAllAircraftRemoved() const
+    CStatusMessageList CSimulatorMsfs2024::debugVerifyStateAfterAllAircraftRemoved() const
     {
         CStatusMessageList msgs;
         if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
@@ -307,7 +329,7 @@ namespace swift::simplugin::fsxcommon
         return msgs;
     }
 
-    QString CSimulatorFsxCommon::getStatisticsSimulatorSpecific() const
+    QString CSimulatorMsfs2024::getStatisticsSimulatorSpecific() const
     {
         static const QString specificInfo(
             "dispatch #: %1 %2 times (cur/max): %3ms (%4ms) %5ms (%6ms) %7 %8 simData#: %9");
@@ -322,35 +344,240 @@ namespace swift::simplugin::fsxcommon
             .arg(m_requestSimObjectDataCount);
     }
 
-    bool CSimulatorFsxCommon::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &aircraftCallsign)
+    void CSimulatorMsfs2024::CacheSimObjectAndLiveries(const SIMCONNECT_RECV_ENUMERATE_SIMOBJECT_AND_LIVERY_LIST *msg)
     {
-        // this is the 32bit FSX version, the P3D x64 is overridden!
+        for (unsigned i = 0; i < msg->dwArraySize; ++i)
+        {
+            const SIMCONNECT_ENUMERATE_SIMOBJECT_LIVERY &element = msg->rgData[i];
 
-        if (this->isShuttingDownOrDisconnected()) { return false; }
-        if (!this->isUsingFsxTerrainProbe()) { return false; }
-        if (reference.isNull()) { return false; }
-        const CSimConnectObject simObject = m_simConnectObjects.getOldestNotPendingProbe(); // probes round robin
-        if (!simObject.isConfirmedAdded()) { return false; }
-        m_simConnectObjects[simObject.getCallsign()].resetTimestampToNow(); // mark probe as just used
+            // combine aircraft title and livery name for database search
+            // const QString combined = QString(element.AircraftTitle) + " " + QString(element.LiveryName);
 
-        CCoordinateGeodetic pos(reference);
-        pos.setGeodeticHeight(terrainProbeAltitude());
+            vSimObjectsAndLiveries.push_back(
+                { QString("%1 %2").arg(element.AircraftTitle, element.LiveryName).trimmed(),
+                  QString::fromUtf8(element.AircraftTitle), QString::fromUtf8(element.LiveryName) });
+        }
 
-        SIMCONNECT_DATA_INITPOSITION position = this->coordinateToFsxPosition(pos);
-        const HRESULT hr = this->logAndTraceSendId(
-            SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
-                                          simObject.getObjectId(), 0, 0, sizeof(SIMCONNECT_DATA_INITPOSITION),
-                                          &position),
-            simObject, "Cannot request AI elevation", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+        if (!sSimmobjectLoadedState.bLoadStarted)
+        {
+            sSimmobjectLoadedState.bLoadStarted = true;
+            CLogMessage(this).info(u"Start loading SimObjects and liverys from simulator");
 
-        if (isFailure(hr)) { return false; }
+            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo,
+                                                    u"Start loading SimObjects and liverys from simulator");
+        }
 
-        const bool ok = this->requestTerrainProbeData(simObject, aircraftCallsign);
-        if (ok) { emit this->requestedElevation(aircraftCallsign); }
-        return ok;
+        // Check the result set to detect the end of the transmission
+        switch (msg->dwRequestID)
+        {
+        case CSimConnectDefinitions::REQUEST_AIRPLANE:
+            if (msg->dwArraySize < 79) sSimmobjectLoadedState.bAirplaneLoaded = true;
+            break;
+        case CSimConnectDefinitions::REQUEST_HELICOPTER:
+            if (msg->dwArraySize < 79) sSimmobjectLoadedState.bHelicopterLoaded = true;
+            break;
+        case CSimConnectDefinitions::REQUEST_HOT_AIR:
+            if (msg->dwArraySize < 79) sSimmobjectLoadedState.bHotAirLoaded = true;
+            break;
+
+        default: break;
+        }
+
+        if (sSimmobjectLoadedState.bAirplaneLoaded && sSimmobjectLoadedState.bHelicopterLoaded &&
+            sSimmobjectLoadedState.bHotAirLoaded)
+        {
+            sSimmobjectLoadedState.bLoadStarted = false;
+            size_t countmodels = vSimObjectsAndLiveries.size();
+            CLogMessage(this).info(u"%1 SimObjects and Liveries loaded from SimConnect") << countmodels;
+
+            // now we try to create a new temporary model list
+            setSimObjectAndLiveries();
+
+            CLogMessage(this).info(u"finished new model set");
+        }
     }
 
-    bool CSimulatorFsxCommon::isTracingSendId() const
+    void CSimulatorMsfs2024::setSimObjectAndLiveries()
+    {
+        CLogMessage(this).info(u"%1 SimObjects and Liveries in vSimObjectsAndLiveries")
+            << vSimObjectsAndLiveries.size();
+
+        auto *worker = CWorker::fromTask(this, "createNewModelList", [=]() {
+            this->createNewModelList();
+            return QVariant(); // void-Result
+        });
+
+        // TODO TZ need help: Where can a message be placed indicating that loading is complete?
+        worker->then(this, [=] { CLogMessage(this).info(u"SimObjects and Liveries in vSimObjectsAndLiveries ready"); });
+    }
+
+    void CSimulatorMsfs2024::createNewModelList()
+    {
+
+        const CSpecializedSimulatorSettings settings = this->getSimulatorSettings();
+        CSimulatorSettings m_generic = settings.getGenericSettings();
+        QStringList excludePatterns = m_generic.getModelExcludeDirectoryPatterns();
+        QStringList filterList = m_generic.getModelDirectories();
+
+        bool gui_application = true;
+        bool useFilterList = true;
+        bool matchFilter = false;
+
+        QString guiName = sGui->getApplicationName();
+        if (guiName.contains("mapping")) gui_application = false;
+
+        const CAircraftMatcherSetup setup = m_matchingSettings.get();
+        bool skipExcluded = setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ExcludeNoExcluded);
+
+        CAircraftModelList newModels;
+
+        for (int i = 0; i < static_cast<int>(vSimObjectsAndLiveries.size()); ++i)
+        {
+            const sSimObjectLivery &modelLivery = vSimObjectsAndLiveries[i];
+
+            CAircraftModel model;
+            CAircraftModel modelFromDb =
+                sGui->getWebDataServices()->getModelForModelString(modelLivery.szSimObjectCombinedTitle.trimmed());
+
+            // model is marked as excluded in the database, so skip it
+            if (modelFromDb.getModelMode() == CAircraftModel::Exclude && skipExcluded && gui_application) { continue; }
+
+            // If the model is in the database, there is a DbKey
+            int modelkey = modelFromDb.getDbKey();
+            if (modelkey) model = modelFromDb; // copy all data from db
+
+            // we need the combined string of the model for further processing
+            model.setModelString(modelLivery.szSimObjectCombinedTitle);
+            model.setModelLivery(modelLivery.szLiveryName);
+            model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
+            if (!modelkey) model.setModelType(CAircraftModel::TypeManuallySet);
+            model.setSimulator(this->getSimulatorInfo());
+
+            bool excluded = false;
+            for (const QString &rawPattern : excludePatterns)
+            {
+                const QString pattern = rawPattern.trimmed();
+                if (pattern.isEmpty()) continue;
+                if (model.getModelString().contains(pattern, Qt::CaseInsensitive))
+                {
+                    excluded = true;
+                    break;
+                }
+            }
+            if (excluded) continue; // skip adding this model
+
+            if (useFilterList)
+            {
+                matchFilter = false;
+                for (const QString &rawFilter : filterList)
+                {
+                    if (rawFilter.trimmed().contains("*"))
+                    {
+                        // wildcard found, disable filter list
+                        useFilterList = false;
+                        continue;
+                    }
+                    const QString filter = rawFilter.trimmed();
+                    if (model.getModelString().contains(filter, Qt::CaseInsensitive))
+                    {
+                        matchFilter = true;
+                        break;
+                    }
+                }
+            }
+            if (useFilterList && !matchFilter) continue; // skip adding this model
+
+            newModels.replaceOrAddModelWithString(model, Qt::CaseInsensitive);
+        }
+
+        CAircraftModelList newModelList;
+        CAircraftModelList currentSet;
+        CAircraftModelList NewSet;
+
+        // store the model in the new list
+        newModelList.replaceOrAddModelsWithString(newModels, Qt::CaseInsensitive);
+
+        CLogMessage(this).info(u"%1 SimObjects and Liveries in newModelList") << newModelList.size();
+
+        if (!newModelList.isEmpty())
+        {
+
+            m_simulatorInfo = this->getSimulatorInfo();
+
+            bool givenDistributorsOnly = false;
+            bool dbDataOnly = false;
+            bool dbIcaoOnly = false;
+            bool incremnental = false;
+            bool sortByDistributor = true;
+            bool consolidateWithDb = false;
+            bool ShowAllInstalledModels = true; // msfs20424 always show all installed models
+
+            if (gui_application)
+            {
+                givenDistributorsOnly = m_generic.getPropertyDistributorFiltered();
+                dbDataOnly = m_generic.getPropertyWithDbEntry();
+                incremnental = false;
+                consolidateWithDb = true;
+                ShowAllInstalledModels = true;
+            }
+
+            // CDistributorList distributorList;
+            // for (const QString &name : distributorNames) { distributorList.push_back(CDistributor(name)); }
+            CDistributorList distributorList = sGui->getWebDataServices()->getDistributors();
+
+            CModelSetBuilder builder(nullptr);
+            CModelSetBuilder::Builder options =
+                givenDistributorsOnly ? CModelSetBuilder::GivenDistributorsOnly : CModelSetBuilder::NoOptions;
+            if (dbDataOnly) { options |= CModelSetBuilder::OnlyDbData; }
+            if (dbIcaoOnly) { options |= CModelSetBuilder::OnlyDbIcaoCodes; }
+            if (incremnental) { options |= CModelSetBuilder::Incremental; }
+            if (sortByDistributor) { options |= CModelSetBuilder::SortByDistributors; }
+            if (consolidateWithDb) { options |= CModelSetBuilder::ConsolidateWithDb; }
+            if (ShowAllInstalledModels) { options |= CModelSetBuilder::ShowAllInstalledModels; }
+            const CSimulatorInfo &simulator = this->getSimulatorInfo();
+
+            CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().synchronizeCache(simulator);
+            currentSet = CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().getCachedModels(simulator);
+
+            NewSet = builder.buildModelSet(simulator, newModelList, currentSet, options, distributorList);
+            NewSet.setSimulatorInfo(simulator);
+
+            // for swiftgui it is enough to set the cache here
+            if (gui_application)
+                CCentralMultiSimulatorModelSetCachesProvider::modelCachesInstance().setModelsForSimulator(NewSet,
+                                                                                                          simulator);
+            CCentralMultiSimulatorModelCachesProvider::modelCachesInstance().setCachedModels(NewSet, simulator);
+
+            sGui->getIContextSimulator()->setModelSetLoaderSimulator(simulator);
+
+            const CStatusMessage m = CStatusMessage(this, CStatusMessage::SeverityInfo,
+                                                    u"Loading SimObjects and Liveries from the Simulator completed");
+
+            CLogMessage(this).info(u"%1 SimObjects and Liveries in DbModelList") << NewSet.size();
+
+            // TODO TZ can used only for debugging
+            // int cstoremodels = writeSimObjectsAndLiveriesToFile(NewSet);
+        }
+    }
+
+    int CSimulatorMsfs2024::writeSimObjectsAndLiveriesToFile(CAircraftModelList Modelset)
+    {
+
+        int counter = 0;
+        const std::string dateiname = "aircraftlist.txt";
+        std::ofstream datei(dateiname, std::ios::out);
+        if (!datei) return 0;
+        for (int i = 0; i < static_cast<int>(Modelset.size()); ++i)
+        {
+            datei << Modelset[i].getShortModelString().toStdString()
+                  << "::" << Modelset[i].getModelLivery().toStdString() << "::" << Modelset[i].getDbKey() << std::endl;
+            ++counter;
+        }
+        datei.close();
+        return counter;
+    }
+
+    bool CSimulatorMsfs2024::isTracingSendId() const
     {
         if (m_traceSendId) { return true; } // explicit
         if (m_traceAutoUntilTs < 0) { return false; } // no auto
@@ -359,13 +586,13 @@ namespace swift::simplugin::fsxcommon
         return trace;
     }
 
-    void CSimulatorFsxCommon::setTractingSendId(bool trace)
+    void CSimulatorMsfs2024::setTractingSendId(bool trace)
     {
         m_traceSendId = trace;
         m_traceAutoUntilTs = -1;
     }
 
-    void CSimulatorFsxCommon::setAddingAsSimulatedObjectEnabled(bool enabled)
+    void CSimulatorMsfs2024::setAddingAsSimulatedObjectEnabled(bool enabled)
     {
         m_useAddSimulatedObj = enabled;
         const CSimulatorInfo sim = this->getSimulatorInfo();
@@ -374,7 +601,7 @@ namespace swift::simplugin::fsxcommon
         m_detailsSettings.setSettings(settings, sim);
     }
 
-    void CSimulatorFsxCommon::setUsingSbOffsetValues(bool enabled)
+    void CSimulatorMsfs2024::setUsingSbOffsetValues(bool enabled)
     {
         m_useSbOffsets = enabled;
         const CSimulatorInfo sim = this->getSimulatorInfo();
@@ -383,7 +610,7 @@ namespace swift::simplugin::fsxcommon
         m_detailsSettings.setSettings(settings, sim);
     }
 
-    void CSimulatorFsxCommon::resetAircraftStatistics()
+    void CSimulatorMsfs2024::resetAircraftStatistics()
     {
         m_dispatchProcCount = 0;
         m_dispatchProcEmptyCount = 0;
@@ -399,7 +626,7 @@ namespace swift::simplugin::fsxcommon
         CSimulatorPluginCommon::resetAircraftStatistics();
     }
 
-    void CSimulatorFsxCommon::setFlightNetworkConnected(bool connected)
+    void CSimulatorMsfs2024::setFlightNetworkConnected(bool connected)
     {
         // toggled?
         if (connected == !this->isFlightNetworkConnected())
@@ -418,7 +645,7 @@ namespace swift::simplugin::fsxcommon
         ISimulator::setFlightNetworkConnected(connected);
     }
 
-    CStatusMessageList CSimulatorFsxCommon::getInterpolationMessages(const CCallsign &callsign) const
+    CStatusMessageList CSimulatorMsfs2024::getInterpolationMessages(const CCallsign &callsign) const
     {
         if (!m_simConnectObjects.contains(callsign)) { return CStatusMessageList(); }
         const CInterpolationAndRenderingSetupPerCallsign setup =
@@ -426,9 +653,10 @@ namespace swift::simplugin::fsxcommon
         return (m_simConnectObjects[callsign]).getInterpolationMessages(setup.getInterpolatorMode());
     }
 
-    bool CSimulatorFsxCommon::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation,
-                                                        const CAircraftParts &parts)
+    bool CSimulatorMsfs2024::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation,
+                                                       const CAircraftParts &parts)
     {
+        Q_UNUSED(situation);
         if (!m_simConnectObjects.contains(callsign)) { return false; }
         CSimConnectObject simObject = m_simConnectObjects.value(callsign);
         int u = 0;
@@ -437,44 +665,41 @@ namespace swift::simplugin::fsxcommon
             this->sendRemoteAircraftPartsToSimulator(simObject, parts);
             u++;
         }
-        if (!situation.isNull())
-        {
-            SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(situation, true);
-            const bool traceSendId = this->isTracingSendId();
-            const HRESULT hr = this->logAndTraceSendId(
-                SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
-                                              static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0,
-                                              sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
-                traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
-            if (hr == S_OK) { u++; }
-        }
+        // TODO TZ check: The function call destroys the configured simulation.
+        // if (!situation.isNull())
+        //{
+        //    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToPosition(situation, true);
+        //    const bool traceSendId = this->isTracingSendId();
+        //    const HRESULT hr = this->logAndTraceSendId(
+        //        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
+        //                                      static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0,
+        //                                      sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
+        //        traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+        //    if (hr == S_OK) { u++; }
+        //}
         return u > 0;
     }
 
-    CSimConnectDefinitions::SimObjectRequest CSimulatorFsxCommon::requestToSimObjectRequest(DWORD requestId)
+    CSimConnectDefinitions::SimObjectRequest CSimulatorMsfs2024::requestToSimObjectRequest(DWORD requestId)
     {
         DWORD v = static_cast<DWORD>(CSimConnectDefinitions::SimObjectEndMarker);
         if (isRequestForSimObjAircraft(requestId)) { v = (requestId - RequestSimObjAircraftStart) / MaxSimObjAircraft; }
-        else if (isRequestForSimObjTerrainProbe(requestId))
-        {
-            v = (requestId - RequestSimObjTerrainProbeStart) / MaxSimObjProbes;
-        }
         Q_ASSERT_X(v <= CSimConnectDefinitions::SimObjectEndMarker, Q_FUNC_INFO, "Invalid value");
         return static_cast<CSimConnectDefinitions::SimObjectRequest>(v);
     }
 
-    bool CSimulatorFsxCommon::stillDisplayReceiveExceptions()
+    bool CSimulatorMsfs2024::stillDisplayReceiveExceptions()
     {
         m_receiveExceptionCount++;
         return m_receiveExceptionCount < IgnoreReceiveExceptions;
     }
 
-    CSimConnectObject CSimulatorFsxCommon::getSimObjectForObjectId(DWORD objectId) const
+    CSimConnectObject CSimulatorMsfs2024::getSimObjectForObjectId(DWORD objectId) const
     {
         return this->getSimConnectObjects().getSimObjectForObjectId(objectId);
     }
 
-    void CSimulatorFsxCommon::setSimConnected()
+    void CSimulatorMsfs2024::setSimConnected()
     {
         m_simConnected = true;
         this->initSimulatorInternals();
@@ -482,16 +707,16 @@ namespace swift::simplugin::fsxcommon
 
         // Internals depends on simulator data which take a while to be read
         // this is a trick and I re-init again after a while (which is not really expensive)
-        const QPointer<CSimulatorFsxCommon> myself(this);
+        const QPointer<CSimulatorMsfs2024> myself(this);
         QTimer::singleShot(2500, this, [myself] {
             if (!myself) { return; }
             myself->initSimulatorInternals();
         });
     }
 
-    void CSimulatorFsxCommon::onSimRunning()
+    void CSimulatorMsfs2024::onSimRunning()
     {
-        const QPointer<CSimulatorFsxCommon> myself(this);
+        const QPointer<CSimulatorMsfs2024> myself(this);
         QTimer::singleShot(DeferSimulatingFlagMs, this, [=] {
             if (!myself) { return; }
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
@@ -499,7 +724,7 @@ namespace swift::simplugin::fsxcommon
         });
     }
 
-    void CSimulatorFsxCommon::onSimRunningDeferred(qint64 referenceTs)
+    void CSimulatorMsfs2024::onSimRunningDeferred(qint64 referenceTs)
     {
         if (m_simSimulating) { return; } // already simulatig
         if (referenceTs != m_simulatingChangedTs) { return; } // changed, so no longer valid
@@ -509,7 +734,7 @@ namespace swift::simplugin::fsxcommon
         const CFsxP3DSettings settings = m_detailsSettings.getSettings(this->getSimulatorInfo());
         m_useAddSimulatedObj = settings.isAddingAsSimulatedObjectEnabled();
         m_useSbOffsets = settings.isSbOffsetsEnabled();
-        if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS())
+        if (this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
         {
             m_useSbOffsets = false; // Always disable SbOffsets for MSFS. Using new transponder mode property directly
         }
@@ -522,39 +747,29 @@ namespace swift::simplugin::fsxcommon
             "Cannot request own aircraft data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
         hr += this->logAndTraceSendId(
-            SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraftTitle,
-                                              CSimConnectDefinitions::DataOwnAircraftTitle, SIMCONNECT_OBJECT_ID_USER,
-                                              SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-            "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+            SimConnect_RequestDataOnSimObjectType(m_hSimConnect, CSimConnectDefinitions::RequestOwnAircraftTitle,
+                                                  CSimConnectDefinitions::DataOwnAircraftTitle, 0,
+                                                  SIMCONNECT_SIMOBJECT_TYPE_USER),
+            "Cannot request title and livery", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObjectType");
 
-        if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS() &&
-            !this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
-        {
-            // Request the data from SB only when its changed and only ONCE so we don't have to run a 1sec event to
-            // get/set this info ;) there was a bug with SIMCONNECT_CLIENT_DATA_PERIOD_ON_SET, see
-            // https://www.prepar3d.com/forum/viewtopic.php?t=124789
-            hr += this->logAndTraceSendId(SimConnect_RequestClientData(m_hSimConnect, ClientAreaSquawkBox,
-                                                                       CSimConnectDefinitions::RequestSbData,
-                                                                       CSimConnectDefinitions::DataClientAreaSb,
-                                                                       SIMCONNECT_CLIENT_DATA_PERIOD_SECOND,
-                                                                       SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
-                                          "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
-        }
-        else
-        {
-            hr += this->logAndTraceSendId(
-                SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestMSFSTransponder,
-                                                  CSimConnectDefinitions::DataTransponderModeMSFS,
-                                                  SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME,
-                                                  SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-                "Cannot request MSFS transponder data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
-        }
+        hr += this->logAndTraceSendId(
+            SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestSimEnvironment,
+                                              CSimConnectDefinitions::DataSimEnvironment, SIMCONNECT_OBJECT_ID_USER,
+                                              SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
+            "Cannot request sim.env.", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
+
+        hr += this->logAndTraceSendId(SimConnect_RequestDataOnSimObject(
+                                          m_hSimConnect, CSimConnectDefinitions::RequestMSFSTransponder,
+                                          CSimConnectDefinitions::DataTransponderModeMSFS, SIMCONNECT_OBJECT_ID_USER,
+                                          SIMCONNECT_PERIOD_VISUAL_FRAME, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
+                                      "Cannot request MSFS transponder data", Q_FUNC_INFO,
+                                      "SimConnect_RequestDataOnSimObject");
 
         if (isFailure(hr)) { return; }
         this->emitSimulatorCombinedStatus(); // force sending status
     }
 
-    void CSimulatorFsxCommon::onSimStopped()
+    void CSimulatorMsfs2024::onSimStopped()
     {
         // stopping events in FSX: Load menu, weather and season
         CLogMessage(this).info(u"Simulator stopped: %1") << this->getSimulatorDetails();
@@ -564,10 +779,10 @@ namespace swift::simplugin::fsxcommon
         this->emitSimulatorCombinedStatus(oldStatus);
     }
 
-    void CSimulatorFsxCommon::onSimFrame()
+    void CSimulatorMsfs2024::onSimFrame()
     {
         if (m_updateRemoteAircraftInProgress) { return; }
-        QPointer<CSimulatorFsxCommon> myself(this);
+        QPointer<CSimulatorMsfs2024> myself(this);
         QTimer::singleShot(0, this, [=] {
             // run decoupled from simconnect event queue
             if (!myself) { return; }
@@ -575,7 +790,7 @@ namespace swift::simplugin::fsxcommon
         });
     }
 
-    void CSimulatorFsxCommon::onSimExit()
+    void CSimulatorMsfs2024::onSimExit()
     {
         CLogMessage(this).info(u"Simulator exit: %1") << this->getSimulatorDetails();
 
@@ -584,28 +799,21 @@ namespace swift::simplugin::fsxcommon
         this->safeKillTimer();
 
         // if called from dispatch function, avoid that SimConnectProc disconnects itself while in SimConnectProc
-        QPointer<CSimulatorFsxCommon> myself(this);
+        QPointer<CSimulatorMsfs2024> myself(this);
         QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             this->disconnectFrom();
         });
     }
 
-    SIMCONNECT_DATA_REQUEST_ID CSimulatorFsxCommon::obtainRequestIdForSimObjAircraft()
+    SIMCONNECT_DATA_REQUEST_ID CSimulatorMsfs2024::obtainRequestIdForSimObjAircraft()
     {
         const SIMCONNECT_DATA_REQUEST_ID id = m_requestIdSimObjAircraft++;
         if (id > RequestSimObjAircraftEnd) { m_requestIdSimObjAircraft = RequestSimObjAircraftStart; }
         return id;
     }
 
-    SIMCONNECT_DATA_REQUEST_ID CSimulatorFsxCommon::obtainRequestIdForSimObjTerrainProbe()
-    {
-        const SIMCONNECT_DATA_REQUEST_ID id = m_requestIdSimObjTerrainProbe++;
-        if (id > RequestSimObjTerrainProbeEnd) { m_requestIdSimObjTerrainProbe = RequestSimObjTerrainProbeStart; }
-        return id;
-    }
-
-    bool CSimulatorFsxCommon::releaseAIControl(const CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId)
+    bool CSimulatorMsfs2024::releaseAIControl(const CSimConnectObject &simObject, SIMCONNECT_DATA_REQUEST_ID requestId)
     {
         const SIMCONNECT_OBJECT_ID objectId = simObject.getObjectId();
         const HRESULT hr1 =
@@ -630,7 +838,7 @@ namespace swift::simplugin::fsxcommon
         return isOk(hr1, hr2, hr3, hr4);
     }
 
-    bool CSimulatorFsxCommon::isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const
+    bool CSimulatorMsfs2024::isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const
     {
         if (!simObject.hasValidRequestAndObjectId()) { return false; }
         if (simObject.isPendingRemoved()) { return false; }
@@ -638,29 +846,17 @@ namespace swift::simplugin::fsxcommon
         return true;
     }
 
-    CSimConnectObject CSimulatorFsxCommon::getSimObjectForTrace(const TraceFsxSendId &trace) const
+    CSimConnectObject CSimulatorMsfs2024::getSimObjectForTrace(const TraceFsxSendId &trace) const
     {
         return m_simConnectObjects.getSimObjectForOtherSimObject(trace.simObject);
     }
 
-    bool CSimulatorFsxCommon::removeSimObjectForTrace(const TraceFsxSendId &trace)
+    bool CSimulatorMsfs2024::removeSimObjectForTrace(const TraceFsxSendId &trace)
     {
         return m_simConnectObjects.removeByOtherSimObject(trace.simObject);
     }
 
-    void CSimulatorFsxCommon::removeCamera(CSimConnectObject &simObject)
-    {
-        // not in FSX
-        Q_UNUSED(simObject)
-    }
-
-    void CSimulatorFsxCommon::removeObserver(CSimConnectObject &simObject)
-    {
-        // not in FSX
-        Q_UNUSED(simObject)
-    }
-
-    bool CSimulatorFsxCommon::triggerAutoTraceSendId(qint64 traceTimeMs)
+    bool CSimulatorMsfs2024::triggerAutoTraceSendId(qint64 traceTimeMs)
     {
         if (m_traceSendId) { return false; } // no need
         if (this->isShuttingDownOrDisconnected()) { return false; }
@@ -671,8 +867,8 @@ namespace swift::simplugin::fsxcommon
 
         static const QString format("hh:mm:ss.zzz");
         const QString untilString = QDateTime::fromMSecsSinceEpoch(traceUntil).toString(format);
-        CLogMessage(this).info(u"Triggered FSX/P3D auto trace until %1") << untilString;
-        const QPointer<CSimulatorFsxCommon> myself(this);
+        CLogMessage(this).info(u"Triggered MSFS2024 auto trace until %1") << untilString;
+        const QPointer<CSimulatorMsfs2024> myself(this);
         QTimer::singleShot(traceTimeMs * 1.2, this, [=] {
             // triggered by mself (ts check), otherwise ignore
             if (!myself) { return; }
@@ -684,14 +880,14 @@ namespace swift::simplugin::fsxcommon
         return true;
     }
 
-    void CSimulatorFsxCommon::setTrueAltitude(CAircraftSituation &aircraftSituation,
-                                              const DataDefinitionOwnAircraft &simulatorOwnAircraft)
+    void CSimulatorMsfs2024::setTrueAltitude(CAircraftSituation &aircraftSituation,
+                                             const DataDefinitionOwnAircraft &simulatorOwnAircraft)
     {
         aircraftSituation.setAltitude(
             CAltitude(simulatorOwnAircraft.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
     }
 
-    void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
+    void CSimulatorMsfs2024::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
     {
         const qint64 ts = QDateTime::currentMSecsSinceEpoch();
 
@@ -702,13 +898,13 @@ namespace swift::simplugin::fsxcommon
 
         if (simulatorOwnAircraft.pitchDeg < -90.0 || simulatorOwnAircraft.pitchDeg >= 90.0)
         {
-            CLogMessage(this).warning(u"FSX: Pitch value (own aircraft) out of limits: %1")
+            CLogMessage(this).warning(u"MSFS2024: Pitch value (own aircraft) out of limits: %1")
                 << simulatorOwnAircraft.pitchDeg;
         }
         CAircraftSituation aircraftSituation;
         aircraftSituation.setMSecsSinceEpoch(ts);
         aircraftSituation.setPosition(position);
-        // MSFS has inverted pitch and bank angles
+        // MSFS2024 has inverted pitch and bank angles
         aircraftSituation.setPitch(CAngle(-simulatorOwnAircraft.pitchDeg, CAngleUnit::deg()));
         aircraftSituation.setBank(CAngle(-simulatorOwnAircraft.bankDeg, CAngleUnit::deg()));
         aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeadingDeg, CHeading::True, CAngleUnit::deg()));
@@ -734,13 +930,18 @@ namespace swift::simplugin::fsxcommon
 
         const CAircraftLights lights(dtb(simulatorOwnAircraft.lightStrobe), dtb(simulatorOwnAircraft.lightLanding),
                                      dtb(simulatorOwnAircraft.lightTaxi), dtb(simulatorOwnAircraft.lightBeacon),
-                                     dtb(simulatorOwnAircraft.lightNav), dtb(simulatorOwnAircraft.lightLogo));
+                                     dtb(simulatorOwnAircraft.lightNav), dtb(simulatorOwnAircraft.lightLogo),
+                                     dtb(simulatorOwnAircraft.lightRecognition), dtb(simulatorOwnAircraft.lightCabin),
+                                     dtb(simulatorOwnAircraft.lightWing)
+
+        );
 
         CAircraftEngineList engines;
-        const QList<bool> helperList { dtb(simulatorOwnAircraft.engine1Combustion),
-                                       dtb(simulatorOwnAircraft.engine2Combustion),
-                                       dtb(simulatorOwnAircraft.engine3Combustion),
-                                       dtb(simulatorOwnAircraft.engine4Combustion) };
+        const QList<bool> helperList {
+            dtb(simulatorOwnAircraft.engine1Combustion), dtb(simulatorOwnAircraft.engine2Combustion),
+            dtb(simulatorOwnAircraft.engine3Combustion), dtb(simulatorOwnAircraft.engine4Combustion),
+            dtb(simulatorOwnAircraft.engine5Combustion), dtb(simulatorOwnAircraft.engine6Combustion)
+        };
 
         for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
         {
@@ -768,16 +969,16 @@ namespace swift::simplugin::fsxcommon
             // updates:
             // https://www.fsdeveloper.com/forum/threads/com-unit-receiving-status-com-transmit-x-com-test-1-and-volume.445187/
             // COM: If you're set to transmit on a unit, you WILL receive that unit.
-            // Otherwise if you're NOT set to transmit on a unit, then it will only receive if COM RECEIVE ALL is true.
-            // There is no control of COM volume.
+            // Otherwise if you're NOT set to transmit on a unit, then it will only receive if COM RECEIVE ALL is
+            // true. There is no control of COM volume.
             com1.setFrequencyActive(CFrequency(simulatorOwnAircraft.com1ActiveMHz, CFrequencyUnit::MHz()));
             com1.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com1StandbyMHz, CFrequencyUnit::MHz()));
             const bool comReceiveAll = dtb(simulatorOwnAircraft.comReceiveAll);
             const bool com1Test = dtb(simulatorOwnAircraft.comTest1);
             const bool com1Transmit = dtb(simulatorOwnAircraft.comTransmit1);
             const int com1Status =
-                qRound(simulatorOwnAircraft.comStatus1); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2
-                                                         // = No electricity 3 = Failed
+                qRound(simulatorOwnAircraft.comStatus1); // Radio status flag : -1 =Invalid 0 = OK 1 =
+                                                         // Does not exist 2 = No electricity 3 = Failed
             com1.setTransmitEnabled(com1Status == 0 && com1Transmit);
             com1.setReceiveEnabled(com1Status == 0 && (comReceiveAll || com1Transmit));
 
@@ -805,8 +1006,8 @@ namespace swift::simplugin::fsxcommon
             const bool com2Test = dtb(simulatorOwnAircraft.comTest2);
             const bool com2Transmit = dtb(simulatorOwnAircraft.comTransmit2);
             const int com2Status =
-                qRound(simulatorOwnAircraft.comStatus2); // Radio status flag : -1 =Invalid 0 = OK 1 = Does not exist 2
-                                                         // = No electricity 3 = Failed
+                qRound(simulatorOwnAircraft.comStatus2); // Radio status flag : -1 =Invalid 0 = OK 1 =
+                                                         // Does not exist 2 = No electricity 3 = Failed
             com2.setTransmitEnabled(com2Status == 0 && com2Transmit);
             com2.setReceiveEnabled(com2Status == 0 && (comReceiveAll || com2Transmit));
             const bool changedCom2Active =
@@ -845,15 +1046,10 @@ namespace swift::simplugin::fsxcommon
         }
         else { --m_skipCockpitUpdateCycles; }
 
+        // TODO TZ check this entire function for msfs2024
         // slower updates
         if (m_ownAircraftUpdateCycles % 10 == 0)
         {
-            // init terrain probes here has the advantage we can also switch it on/off at runtime
-            if (m_useFsxTerrainProbe && !m_initFsxTerrainProbes)
-            {
-                this->physicallyInitAITerrainProbes(position, 2); // init probe
-            }
-
             // SB3 offsets updating
             m_simulatorInternals.setValue(QStringLiteral("fsx/sb3"), boolToEnabledDisabled(m_useSbOffsets));
             m_simulatorInternals.setValue(QStringLiteral("fsx/sb3packets"), m_useSbOffsets ?
@@ -873,30 +1069,31 @@ namespace swift::simplugin::fsxcommon
         m_ownAircraftUpdateCycles++; // with 50 updates/sec long enough even for 32bit
     }
 
-    void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
-                                                                       const DataDefinitionPosData &remoteAircraftData)
+    void CSimulatorMsfs2024::triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
+                                                                      const DataDefinitionPosData &remoteAircraftData)
     {
         if (this->isShuttingDownOrDisconnected()) { return; }
-        QPointer<CSimulatorFsxCommon> myself(this);
+        QPointer<CSimulatorMsfs2024> myself(this);
         QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             myself->updateRemoteAircraftFromSimulator(simObject, remoteAircraftData);
         });
     }
 
-    void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(
+    void CSimulatorMsfs2024::triggerUpdateRemoteAircraftFromSimulator(
         const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftModel &remoteAircraftModel)
     {
         if (this->isShuttingDownOrDisconnected()) { return; }
-        QPointer<CSimulatorFsxCommon> myself(this);
+        QPointer<CSimulatorMsfs2024> myself(this);
         QTimer::singleShot(0, this, [=] {
             if (!myself) { return; }
             myself->updateRemoteAircraftFromSimulator(simObject, remoteAircraftModel);
         });
     }
 
-    void CSimulatorFsxCommon::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
-                                                                const DataDefinitionPosData &remoteAircraftData)
+    // called decoupled from simconnect event queue very fast
+    void CSimulatorMsfs2024::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
+                                                               const DataDefinitionPosData &remoteAircraftData)
     {
         if (this->isShuttingDownOrDisconnected()) { return; }
 
@@ -947,16 +1144,20 @@ namespace swift::simplugin::fsxcommon
         }
     }
 
+    // called decoupled from simconnect event queue
     void
-    CSimulatorFsxCommon::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
-                                                           const DataDefinitionRemoteAircraftModel &remoteAircraftModel)
+    CSimulatorMsfs2024::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
+                                                          const DataDefinitionRemoteAircraftModel &remoteAircraftModel)
     {
         const CCallsign cs(simObject.getCallsign());
         if (!m_simConnectObjects.contains(cs)) { return; } // no longer existing
         CSimConnectObject &so = m_simConnectObjects[cs];
         if (so.isPendingRemoved()) { return; }
 
-        const QString modelString(remoteAircraftModel.title);
+        QString combinedModelstring =
+            QString::fromUtf8(remoteAircraftModel.title) + " " + QString::fromUtf8(remoteAircraftModel.livery);
+        const QString modelString(combinedModelstring.trimmed());
+
         const CLength cg(remoteAircraftModel.cgToGroundFt, CLengthUnit::ft());
         so.setAircraftCG(cg);
         so.setAircraftModelString(modelString);
@@ -967,15 +1168,15 @@ namespace swift::simplugin::fsxcommon
         this->updateCGAndModelString(cs, cg, modelString); // remote aircraft provider
     }
 
-    void CSimulatorFsxCommon::updateProbeFromSimulator(const CCallsign &callsign,
-                                                       const DataDefinitionPosData &remoteAircraftData)
+    void CSimulatorMsfs2024::updateProbeFromSimulator(const CCallsign &callsign,
+                                                      const DataDefinitionPosData &remoteAircraftData)
     {
         const CElevationPlane elevation(remoteAircraftData.latitudeDeg, remoteAircraftData.longitudeDeg,
                                         remoteAircraftData.elevationFt, CElevationPlane::singlePointRadius());
         this->callbackReceivedRequestedElevation(elevation, callsign, false);
     }
 
-    void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)
+    void CSimulatorMsfs2024::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)
     {
         if (m_skipCockpitUpdateCycles > 0) { return; }
 
@@ -996,7 +1197,7 @@ namespace swift::simplugin::fsxcommon
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->identifier());
     }
 
-    void CSimulatorFsxCommon::updateTransponderMode(const CTransponder::TransponderMode xpdrMode)
+    void CSimulatorMsfs2024::updateTransponderMode(const CTransponder::TransponderMode xpdrMode)
     {
         if (m_skipCockpitUpdateCycles > 0) { return; }
         const CSimulatedAircraft myAircraft(this->getOwnAircraft());
@@ -1007,7 +1208,7 @@ namespace swift::simplugin::fsxcommon
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), myXpdr, this->identifier());
     }
 
-    void CSimulatorFsxCommon::updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode)
+    void CSimulatorMsfs2024::updateMSFS2024TransponderMode(const DataDefinitionMSFSTransponderMode transponderMode)
     {
         auto mode = CTransponder::StateIdent;
         if (!transponderMode.ident)
@@ -1018,16 +1219,28 @@ namespace swift::simplugin::fsxcommon
         this->updateTransponderMode(mode);
     }
 
-    bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
+    bool CSimulatorMsfs2024::simulatorReportedObjectAdded(DWORD objectId)
     {
         if (this->isShuttingDownOrDisconnected()) { return true; } // pretend everything is fine
         const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectId);
         const CCallsign callsign(simObject.getCallsign());
-        if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty()) { return false; }
+
+        CLogMessage(this).info(u"simulatorReportedObjectAdded 1 %1 %2 %3")
+            << callsign.asString() << objectId << this->isSimulating();
+
+        if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty())
+        {
+            CLogMessage(this).error(u"simulatorReportedObjectAdded 1 %1 %2 %3")
+                << callsign.asString() << objectId << this->isSimulating();
+
+            return false;
+        }
 
         // we know the object has been created. But it can happen it is directly removed afterwards
         const CSimulatedAircraft verifyAircraft(simObject.getAircraft());
-        const QPointer<CSimulatorFsxCommon> myself(this);
+        const QPointer<CSimulatorMsfs2024> myself(this);
+
+        // QTimer::singleShot(1000, this, [=] {
         QTimer::singleShot(1000, this, [=] {
             // verify aircraft and also triggers new add if required
             // do not do this in the event loop, so we do this deferred
@@ -1037,14 +1250,11 @@ namespace swift::simplugin::fsxcommon
         return true;
     }
 
-    void CSimulatorFsxCommon::verifyAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraftIn)
+    void CSimulatorMsfs2024::verifyAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraftIn)
     {
         if (this->isShuttingDownOrDisconnected()) { return; }
-        if (remoteAircraftIn.isTerrainProbe())
-        {
-            this->verifyAddedTerrainProbe(remoteAircraftIn);
-            return;
-        }
+
+        CLogMessage(this).info(u"verifyAddedRemoteAircraft 1 %1") << remoteAircraftIn.getCallsign();
 
         CStatusMessage msg;
         CSimulatedAircraft remoteAircraft = remoteAircraftIn;
@@ -1153,7 +1363,7 @@ namespace swift::simplugin::fsxcommon
         if (!m_addPendingAircraft.isEmpty()) { this->addPendingAircraftAfterAdded(); }
     }
 
-    void CSimulatorFsxCommon::addingAircraftFailed(const CSimConnectObject &simObject)
+    void CSimulatorMsfs2024::addingAircraftFailed(const CSimConnectObject &simObject)
     {
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
@@ -1167,9 +1377,10 @@ namespace swift::simplugin::fsxcommon
 
         CLogMessage(this).warning(u"Model failed to be added: '%1' details: %2")
             << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
-        CStatusMessage verifyMsg;
-        const bool verifiedAircraft = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
-        if (!verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
+        // CStatusMessage verifyMsg;
+        // const bool verifiedAircraft = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
+        const bool verifiedAircraft = true;
+        // if (!verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
 
         CSimConnectObject simObjAddAgain(simObject);
         simObjAddAgain.increaseAddingExceptions();
@@ -1188,6 +1399,7 @@ namespace swift::simplugin::fsxcommon
                         << simObjAddAgain.getAddingExceptions() :
                     CLogMessage(this).warning(u"Model '%1' %2 failed verification and will be disabled")
                         << simObjAddAgain.getAircraftModelString() << simObjAddAgain.toQString();
+
             this->updateAircraftEnabled(simObjAddAgain.getCallsign(), false); // disable
             emit this->physicallyAddingRemoteModelFailed(simObjAddAgain.getAircraft(), true, true,
                                                          msg); // verify failed
@@ -1196,7 +1408,7 @@ namespace swift::simplugin::fsxcommon
         {
             CLogMessage(this).info(u"Will try '%1' again, aircraft: %2")
                 << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
-            QPointer<CSimulatorFsxCommon> myself(this);
+            QPointer<CSimulatorMsfs2024> myself(this);
             QTimer::singleShot(2000, this, [=] {
                 if (!myself) { return; }
                 if (this->isShuttingDownOrDisconnected()) { return; }
@@ -1205,8 +1417,7 @@ namespace swift::simplugin::fsxcommon
         }
     }
 
-    bool CSimulatorFsxCommon::verifyFailedAircraftInfo(const CSimConnectObject &simObject,
-                                                       CStatusMessage &details) const
+    bool CSimulatorMsfs2024::verifyFailedAircraftInfo(const CSimConnectObject &simObject, CStatusMessage &details) const
     {
         CAircraftModel model = simObject.getAircraftModel();
 
@@ -1258,7 +1469,7 @@ namespace swift::simplugin::fsxcommon
         return canBeUsed;
     }
 
-    bool CSimulatorFsxCommon::logVerifyFailedAircraftInfo(const CSimConnectObject &simObject) const
+    bool CSimulatorMsfs2024::logVerifyFailedAircraftInfo(const CSimConnectObject &simObject) const
     {
         CStatusMessage m;
         const bool r = verifyFailedAircraftInfo(simObject, m);
@@ -1266,80 +1477,46 @@ namespace swift::simplugin::fsxcommon
         return r;
     }
 
-    void CSimulatorFsxCommon::verifyAddedTerrainProbe(const CSimulatedAircraft &remoteAircraftIn)
-    {
-        bool verified = false;
-        CCallsign cs;
-
-        // no simObject reference outside that block, because it will be deleted
-        {
-            CSimConnectObject &simObject = m_simConnectObjects[remoteAircraftIn.getCallsign()];
-            simObject.setConfirmedAdded(true); // terrain probe
-            simObject.resetTimestampToNow();
-            cs = simObject.getCallsign();
-            CLogMessage(this).info(u"Probe: '%1' '%2' confirmed, %3")
-                << simObject.getCallsignAsString() << simObject.getAircraftModelString() << simObject.toQString();
-
-            // fails for probe
-            // SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjTerrainProbe();
-            // verified = this->releaseAIControl(simObject, requestId); // release probe
-            verified = true;
-        }
-
-        if (!verified) // cppcheck-suppress knownConditionTrueFalse
-        {
-            CLogMessage(this).info(u"Disable probes: '%1' failed to relase control") << cs.asString();
-            m_useFsxTerrainProbe = false;
-        }
-
-        // trigger new adding from pending if any
-        if (!m_addPendingAircraft.isEmpty()) { this->addPendingAircraftAfterAdded(); }
-    }
-
-    void CSimulatorFsxCommon::timerBasedObjectAddOrRemove()
+    void CSimulatorMsfs2024::timerBasedObjectAddOrRemove()
     {
         this->addPendingAircraft(AddByTimer);
         if (!this->isTestMode()) { this->physicallyRemoveAircraftNotInProvider(); }
     }
 
-    void CSimulatorFsxCommon::addPendingAircraftAfterAdded()
+    void CSimulatorMsfs2024::addPendingAircraftAfterAdded()
     {
         this->addPendingAircraft(AddAfterAdded); // addPendingAircraft is already "non blocking"
     }
 
-    void CSimulatorFsxCommon::addPendingAircraft(AircraftAddMode mode)
+    void CSimulatorMsfs2024::addPendingAircraft(AircraftAddMode mode)
     {
         if (m_addPendingAircraft.isEmpty()) { return; }
         const CCallsignSet aircraftCallsignsInRange(this->getAircraftInRangeCallsigns());
-        CSimulatedAircraftList toBeAddedAircraft; // aircraft still to be added
         CCallsignSet toBeRemovedCallsigns;
 
-        for (const CSimConnectObject &pendingSimObj : std::as_const(m_addPendingAircraft))
-        {
-            SWIFT_VERIFY_X(pendingSimObj.hasCallsign(), Q_FUNC_INFO, "missing callsign");
-            if (!pendingSimObj.hasCallsign()) { continue; }
-            if (pendingSimObj.isTerrainProbe() || aircraftCallsignsInRange.contains(pendingSimObj.getCallsign()))
-            {
-                toBeAddedAircraft.push_back(pendingSimObj.getAircraft());
-            }
-            else { toBeRemovedCallsigns.push_back(pendingSimObj.getCallsign()); }
-        }
+        // TODO TZ this removed the pending aircraft from the list, even they are not added yet
+        // for (const CSimConnectObject &pendingSimObj : std::as_const(m_addPendingAircraft))
+        //{
+        //    SWIFT_VERIFY_X(pendingSimObj.hasCallsign(), Q_FUNC_INFO, "missing callsign");
+        //    if (!pendingSimObj.hasCallsign()) { continue; }
+        //    else { toBeRemovedCallsigns.push_back(pendingSimObj.getCallsign()); }
+        //}
 
         // no longer required to be added
+        // TOTO TZ
         m_addPendingAircraft.removeCallsigns(toBeRemovedCallsigns);
         m_addAgainAircraftWhenRemoved.removeByCallsigns(toBeRemovedCallsigns);
 
         // add aircraft, but "non blocking"
-        if (!toBeAddedAircraft.isEmpty())
+        if (!m_addPendingAircraft.isEmpty())
         {
             const CSimConnectObject oldestSimObject = m_addPendingAircraft.getOldestObject();
             const CSimulatedAircraft nextPendingAircraft = oldestSimObject.getAircraft();
             if (nextPendingAircraft.hasModelString())
             {
-                const QPointer<CSimulatorFsxCommon> myself(this);
+                const QPointer<CSimulatorMsfs2024> myself(this);
                 QTimer::singleShot(100, this, [=] {
                     if (!myself) { return; }
-                    if (this->isShuttingDownDisconnectedOrNoAircraft(nextPendingAircraft.isTerrainProbe())) { return; }
                     this->physicallyAddRemoteAircraftImpl(nextPendingAircraft, mode, oldestSimObject);
                 });
             }
@@ -1351,7 +1528,7 @@ namespace swift::simplugin::fsxcommon
         }
     }
 
-    CSimConnectObject CSimulatorFsxCommon::removeFromAddPendingAndAddAgainAircraft(const CCallsign &callsign)
+    CSimConnectObject CSimulatorMsfs2024::removeFromAddPendingAndAddAgainAircraft(const CCallsign &callsign)
     {
         CSimConnectObject simObjectOld;
         if (callsign.isEmpty()) { return simObjectOld; }
@@ -1362,10 +1539,14 @@ namespace swift::simplugin::fsxcommon
             simObjectOld = m_addPendingAircraft[callsign];
             m_addPendingAircraft.remove(callsign);
         }
+        // TODO TZ check if required
+        CLogMessage(this).info(u"removeFromAddPendingAndAddAgainAircraft 3 %1  m_addPendingAircraft.count: %2")
+            << simObjectOld.getCallsignAsString() << m_addPendingAircraft.count();
+
         return simObjectOld;
     }
 
-    bool CSimulatorFsxCommon::simulatorReportedObjectRemoved(DWORD objectID)
+    bool CSimulatorMsfs2024::simulatorReportedObjectRemoved(DWORD objectID)
     {
         if (this->isShuttingDownOrDisconnected()) { return false; }
         CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectID);
@@ -1438,7 +1619,7 @@ namespace swift::simplugin::fsxcommon
         {
             const CSimulatedAircraft aircraftAddAgain = m_addAgainAircraftWhenRemoved.findFirstByCallsign(callsign);
             m_addAgainAircraftWhenRemoved.removeByCallsign(callsign);
-            QPointer<CSimulatorFsxCommon> myself(this);
+            QPointer<CSimulatorMsfs2024> myself(this);
             QTimer::singleShot(2500, this, [=] {
                 if (!myself) { return; }
                 if (this->isShuttingDownOrDisconnected()) { return; }
@@ -1448,35 +1629,35 @@ namespace swift::simplugin::fsxcommon
         return removedAny;
     }
 
-    bool CSimulatorFsxCommon::setSimConnectObjectId(DWORD requestId, DWORD objectId)
+    bool CSimulatorMsfs2024::setSimConnectObjectId(DWORD requestId, DWORD objectId)
     {
         return m_simConnectObjects.setSimConnectObjectIdForRequestId(requestId, objectId);
     }
 
-    bool CSimulatorFsxCommon::setCurrentLights(const CCallsign &callsign, const CAircraftLights &lights)
+    bool CSimulatorMsfs2024::setCurrentLights(const CCallsign &callsign, const CAircraftLights &lights)
     {
         if (!m_simConnectObjects.contains(callsign)) { return false; }
         m_simConnectObjects[callsign].setCurrentLightsInSimulator(lights);
         return true;
     }
 
-    bool CSimulatorFsxCommon::setLightsAsSent(const CCallsign &callsign, const CAircraftLights &lights)
+    bool CSimulatorMsfs2024::setLightsAsSent(const CCallsign &callsign, const CAircraftLights &lights)
     {
         if (!m_simConnectObjects.contains(callsign)) { return false; }
         m_simConnectObjects[callsign].setLightsAsSent(lights);
         return true;
     }
 
-    void CSimulatorFsxCommon::timerEvent(QTimerEvent *event)
+    void CSimulatorMsfs2024::timerEvent(QTimerEvent *event)
     {
         Q_UNUSED(event)
         if (this->isShuttingDown()) { return; }
         this->dispatch();
     }
 
-    HRESULT CSimulatorFsxCommon::initEventsP3D() { return s_ok(); }
+    HRESULT CSimulatorMsfs2024::initEventsP3D() { return s_ok(); }
 
-    bool CSimulatorFsxCommon::parseDetails(const CSimpleCommandParser &parser)
+    bool CSimulatorMsfs2024::parseDetails(const CSimpleCommandParser &parser)
     {
         // .driver sendid on|off
         if (parser.matchesPart(1, "sendid") && parser.hasPart(2))
@@ -1509,9 +1690,10 @@ namespace swift::simplugin::fsxcommon
         return CSimulatorFsCommon::parseDetails(parser);
     }
 
-    void CSimulatorFsxCommon::registerHelp()
+    void CSimulatorMsfs2024::registerHelp()
     {
-        if (CSimpleCommandParser::registered("swift::simplugin::fsxcommon::CSimulatorFsxCommon::CSimulatorFsxCommon"))
+        if (CSimpleCommandParser::registered(
+                "swift::simplugin::msfs2024common::CSimulatorMsfs2024::CSimulatorMsfs2024"))
         {
             return;
         }
@@ -1521,14 +1703,7 @@ namespace swift::simplugin::fsxcommon
         CSimpleCommandParser::registerCommand({ ".drv sblog on|off", "SB offsets logging on|off" });
     }
 
-    CCallsign CSimulatorFsxCommon::getCallsignForPendingProbeRequests(DWORD requestId, bool remove)
-    {
-        const CCallsign cs = m_pendingProbeRequests.value(requestId);
-        if (remove) { m_pendingProbeRequests.remove(requestId); }
-        return cs;
-    }
-
-    const QString &CSimulatorFsxCommon::modeToString(CSimulatorFsxCommon::AircraftAddMode mode)
+    const QString &CSimulatorMsfs2024::modeToString(CSimulatorMsfs2024::AircraftAddMode mode)
     {
         static const QString e("external call");
         static const QString pt("add pending by timer");
@@ -1547,9 +1722,9 @@ namespace swift::simplugin::fsxcommon
         return dontKnow;
     }
 
-    void CSimulatorFsxCommon::dispatch()
+    void CSimulatorMsfs2024::dispatch()
     {
-        // call CSimulatorFsxCommon::SimConnectProc or specialized P3D version
+        // call CSimulatorMsfs2024::SimConnectProc
         Q_ASSERT_X(m_dispatchProc, Q_FUNC_INFO, "Missing DispatchProc");
 
         // statistics
@@ -1606,12 +1781,11 @@ namespace swift::simplugin::fsxcommon
         m_dispatchErrors = 0;
     }
 
-    bool CSimulatorFsxCommon::physicallyAddRemoteAircraftImpl(const CSimulatedAircraft &newRemoteAircraft,
-                                                              CSimulatorFsxCommon::AircraftAddMode addMode,
-                                                              const CSimConnectObject &correspondingSimObject)
+    bool CSimulatorMsfs2024::physicallyAddRemoteAircraftImpl(const CSimulatedAircraft &newRemoteAircraft,
+                                                             CSimulatorMsfs2024::AircraftAddMode addMode,
+                                                             const CSimConnectObject &correspondingSimObject)
     {
         const CCallsign callsign(newRemoteAircraft.getCallsign());
-        const bool probe = newRemoteAircraft.isTerrainProbe();
 
         // entry checks
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
@@ -1636,7 +1810,8 @@ namespace swift::simplugin::fsxcommon
             {
                 const CStatusMessage msg = CStatusMessage(this).warning(
                     msgText.arg(simObjOutdated.getCallsign().asString(), simObjOutdated.toQString()));
-                emit this->physicallyAddingRemoteModelFailed(simObjOutdated.getAircraft(), true, true, msg); // outdated
+                emit this->physicallyAddingRemoteModelFailed(simObjOutdated.getAircraft(), true, true,
+                                                             msg); // outdated
             }
 
             // if this aircraft is also outdated, ignore
@@ -1648,7 +1823,7 @@ namespace swift::simplugin::fsxcommon
 
         Q_ASSERT_X(!hasPendingAdded || m_simConnectObjects.countPendingAdded() < 2, Q_FUNC_INFO,
                    "There must be only 0..1 pending objects");
-        if (this->showDebugLogMessage())
+        if (this->showDebugLogMessage() && true)
         {
             this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("CS: '%1' mode: '%2' model: '%3'")
                                                    .arg(newRemoteAircraft.getCallsignAsString(), modeToString(addMode),
@@ -1724,11 +1899,13 @@ namespace swift::simplugin::fsxcommon
         }
 
         // check if we can add, do not add if simulator is stopped or other objects pending
+
         if (!canAdd)
         {
             CSimConnectObject &addPendingObj = m_addPendingAircraft[newRemoteAircraft.getCallsign()];
             addPendingObj.setAircraft(newRemoteAircraft);
             addPendingObj.resetTimestampToNow();
+            m_addPendingAircraft.insert(addPendingObj, true); // insert removed objects and update ts
             return false;
         }
 
@@ -1736,7 +1913,8 @@ namespace swift::simplugin::fsxcommon
         const CSimConnectObject removedPendingObj = this->removeFromAddPendingAndAddAgainAircraft(callsign);
 
         // create AI after crosschecking it
-        if (!probe && !this->isAircraftInRangeOrTestMode(callsign))
+        // if (!probe && !this->isAircraftInRangeOrTestMode(callsign))
+        if (!this->isAircraftInRangeOrTestMode(callsign))
         {
             CLogMessage(this).info(u"Skipping adding of '%1' since it is no longer in range") << callsign.asString();
             return false;
@@ -1747,10 +1925,8 @@ namespace swift::simplugin::fsxcommon
             this->getInterpolationSetupConsolidated(callsign, true);
         const bool sendGround = setup.isSendingGndFlagToSimulator();
 
-        // FSX/P3D adding
         bool adding = false; // will be added flag
-        const SIMCONNECT_DATA_REQUEST_ID requestId =
-            probe ? this->obtainRequestIdForSimObjTerrainProbe() : this->obtainRequestIdForSimObjAircraft();
+        const SIMCONNECT_DATA_REQUEST_ID requestId = this->obtainRequestIdForSimObjAircraft();
 
         // Initial situation, if possible from interpolation
         CAircraftSituation initialSituation = newRemoteAircraft.getSituation(); // default
@@ -1766,52 +1942,50 @@ namespace swift::simplugin::fsxcommon
             }
         }
 
-        // under flow can cause a model not to be added
-        // FSX: underflow and NO(!) gnd flag can cause adding/remove issue
-        // P3D: underflow did not cause such issue
+        // TODO TZ handle underflow properly
         CStatusMessage underflowStatus;
         const SIMCONNECT_DATA_INITPOSITION initialPosition =
-            CSimulatorFsxCommon::aircraftSituationToFsxPosition(initialSituation, sendGround, true, &underflowStatus);
+            CSimulatorMsfs2024::aircraftSituationToPosition(initialSituation, sendGround, true, &underflowStatus);
 
-        const QString modelString(newRemoteAircraft.getModelString());
+        QString modelString(newRemoteAircraft.getShortModelString());
+        const QString modelLiveryString(newRemoteAircraft.getLiveryString());
+
         if (this->showDebugLogMessage())
         {
-            this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("CS: '%1' model: '%2' request: %3, init pos: %4")
-                                                   .arg(callsign.toQString(), modelString)
-                                                   .arg(requestId)
-                                                   .arg(fsxPositionToString(initialPosition)));
+            this->debugLogMessage(Q_FUNC_INFO,
+                                  QStringLiteral("CS: '%1' model: '%2' livery: %3 request: %4, init pos: %5")
+                                      .arg(callsign.toQString(), modelString, modelLiveryString)
+                                      .arg(requestId)
+                                      .arg(fsxPositionToString(initialPosition)));
         }
 
-        const QByteArray modelStringBa = toFsxChar(modelString);
+        const QByteArray modelStringBa = toFsxChar(modelString).trimmed();
+        const QByteArray modelLiveryBa = toFsxChar(modelLiveryString).trimmed();
         const QByteArray csBa = toFsxChar(callsign.toQString().left(12));
         CSimConnectObject::SimObjectType type = CSimConnectObject::AircraftNonAtc;
         HRESULT hr = S_OK;
 
-        if (probe)
+        if (this->isAddingAsSimulatedObjectEnabled() && correspondingSimObject.hasCallsign() &&
+            correspondingSimObject.getAddingExceptions() > 0 &&
+            correspondingSimObject.getType() == CSimConnectObject::AircraftNonAtc)
         {
-            hr = SimConnect_AICreateSimulatedObject(m_hSimConnect, modelStringBa.constData(), initialPosition,
-                                                    requestId);
-            type = CSimConnectObject::TerrainProbe;
+            CStatusMessage(this).warning(
+                u"Model '%1' for '%2' failed %3 time(s) before, using SimConnect_AICreateSimulatedObject_EX1 now")
+                << newRemoteAircraft.getModelString() << callsign.toQString()
+                << correspondingSimObject.getAddingExceptions();
+
+            hr = SimConnect_AICreateSimulatedObject_EX1(m_hSimConnect, modelStringBa.constData(),
+                                                        modelLiveryBa.constData(), initialPosition, requestId);
+
+            type = CSimConnectObject::AircraftSimulatedObject;
         }
         else
         {
-            if (this->isAddingAsSimulatedObjectEnabled() && correspondingSimObject.hasCallsign() &&
-                correspondingSimObject.getAddingExceptions() > 0 &&
-                correspondingSimObject.getType() == CSimConnectObject::AircraftNonAtc)
-            {
-                CStatusMessage(this).warning(
-                    u"Model '%1' for '%2' failed %1 time(s) before, using AICreateSimulatedObject now")
-                    << newRemoteAircraft.getModelString() << callsign.toQString();
-                hr = SimConnect_AICreateSimulatedObject(m_hSimConnect, modelStringBa.constData(), initialPosition,
-                                                        requestId);
-                type = CSimConnectObject::AircraftSimulatedObject;
-            }
-            else
-            {
-                hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, modelStringBa.constData(), csBa.constData(),
-                                                       initialPosition, requestId);
-                type = CSimConnectObject::AircraftNonAtc;
-            }
+            hr = SimConnect_AICreateNonATCAircraft_EX1(m_hSimConnect, modelStringBa.constData(),
+                                                       modelLiveryBa.constData(), csBa.constData(), initialPosition,
+                                                       requestId);
+
+            type = CSimConnectObject::AircraftNonAtc;
         }
 
         if (!underflowStatus.isEmpty())
@@ -1834,59 +2008,13 @@ namespace swift::simplugin::fsxcommon
             const CSimConnectObject simObject =
                 this->insertNewSimConnectObject(newRemoteAircraft, requestId, type, removedPendingObj);
             this->traceSendId(simObject, Q_FUNC_INFO,
-                              QStringLiteral("mode: %1").arg(CSimulatorFsxCommon::modeToString(addMode)), true);
+                              QStringLiteral("mode: %1").arg(CSimulatorMsfs2024::modeToString(addMode)), true);
             adding = true;
         }
         return adding;
     }
 
-    bool CSimulatorFsxCommon::physicallyAddAITerrainProbe(const ICoordinateGeodetic &coordinate, int number)
-    {
-        if (coordinate.isNull()) { return false; }
-        if (!this->isUsingFsxTerrainProbe()) { return false; }
-        Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
-
-        // static const QString modelString("OrcaWhale");
-        // static const QString modelString("Water Drop"); // not working on P3Dx86/FSX, no requests on that id possible
-        // static const QString modelString("A321ACA");
-        // static const QString modelString("AI_Tracker_Object_0");
-        // static const QString modelString("Piper Cub"); // P3Dv86 works as nonATC/SimulatedObject
-        // static const QString modelString("Discovery Spaceshuttle"); // P3Dx86 works as nonATC/SimulatedObject
-        static const QString modelString("swiftTerrainProbe0");
-        static const QString pseudoCallsign("PROBE%1"); // max 12 chars
-        static const CCountry ctry("SW", "SWIFT");
-        static const CAirlineIcaoCode swiftAirline("SWI", "swift probe", ctry, "SWIFT", false, false);
-        static const CLivery swiftLivery(CLivery::getStandardCode(swiftAirline), swiftAirline, "swift probe");
-
-        const CCallsign cs(pseudoCallsign.arg(number));
-        const CAircraftModel model(modelString, CAircraftModel::TypeTerrainProbe, QStringLiteral("swift terrain probe"),
-                                   CAircraftIcaoCode::unassignedIcao(), swiftLivery);
-        CAircraftSituation situation(cs, coordinate);
-        situation.setAltitude(terrainProbeAltitude());
-        situation.setZeroPBH();
-        const CSimulatedAircraft pseudoAircraft(cs, model, CUser("123456", "swift", cs), situation);
-        return this->physicallyAddRemoteAircraftImpl(pseudoAircraft, ExternalCall);
-    }
-
-    int CSimulatorFsxCommon::physicallyInitAITerrainProbes(const ICoordinateGeodetic &coordinate, int number)
-    {
-        if (number < 1) { return 0; }
-        if (m_initFsxTerrainProbes) { return m_addedProbes; }
-        m_initFsxTerrainProbes = true; // no multiple inits
-        this->triggerAutoTraceSendId();
-
-        int c = 0;
-        for (int n = 0; n < number; ++n)
-        {
-            if (this->physicallyAddAITerrainProbe(coordinate, n)) { c++; }
-        }
-
-        CLogMessage(this).info(u"Adding %1 FSX terrain probes") << number;
-        m_addedProbes = c;
-        return c;
-    }
-
-    bool CSimulatorFsxCommon::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
+    bool CSimulatorMsfs2024::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
     {
         // only remove from sim
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "wrong thread");
@@ -1899,7 +2027,6 @@ namespace swift::simplugin::fsxcommon
         if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
         CSimConnectObject &simObject = m_simConnectObjects[callsign];
         if (simObject.isPendingRemoved()) { return true; }
-        if (simObject.isTerrainProbe()) { return false; }
 
         // check for pending objects
         m_addPendingAircraft.remove(callsign); // just in case still in list of pending aircraft
@@ -1914,7 +2041,7 @@ namespace swift::simplugin::fsxcommon
                 << callsign.asString() << boolToYesNo(pendingAdded) << boolToYesNo(stillWaitingForLights)
                 << simObject.toQString();
             simObject.setRemovedWhileAdding(true); // next time kill
-            QPointer<CSimulatorFsxCommon> myself(this);
+            QPointer<CSimulatorMsfs2024> myself(this);
             QTimer::singleShot(2000, this, [=] {
                 if (!myself) { return; }
                 CLogMessage(this).info(u"Next trial to remove '%1'") << callsign.asString();
@@ -1938,8 +2065,8 @@ namespace swift::simplugin::fsxcommon
 
         // call in SIM
         const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectRemove);
-        this->removeCamera(simObject);
-        this->removeObserver(simObject);
+        // this->removeCamera(simObject);
+        // this->removeObserver(simObject);
         const HRESULT result = SimConnect_AIRemoveObject(
             m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), requestId);
         if (isOk(result))
@@ -1964,7 +2091,7 @@ namespace swift::simplugin::fsxcommon
         return CSimulatorPluginCommon::physicallyRemoveRemoteAircraft(callsign);
     }
 
-    int CSimulatorFsxCommon::physicallyRemoveAllRemoteAircraft()
+    int CSimulatorMsfs2024::physicallyRemoveAllRemoteAircraft()
     {
         // make sure they are not added again
         // cleaning here is somewhat redundant, but double checks
@@ -1983,10 +2110,11 @@ namespace swift::simplugin::fsxcommon
         return r;
     }
 
-    HRESULT CSimulatorFsxCommon::initEvents()
+    HRESULT CSimulatorMsfs2024::initEvents()
     {
         HRESULT hr = s_ok();
-        // System events, see http://msdn.microsoft.com/en-us/library/cc526983.aspx#SimConnect_SubscribeToSystemEvent
+        // System events, see
+        // http://msdn.microsoft.com/en-us/library/cc526983.aspx#SimConnect_SubscribeToSystemEvent
         hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventSimStatus, "Sim");
         hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectAdded, "ObjectAdded");
         hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectRemoved, "ObjectRemoved");
@@ -1995,7 +2123,7 @@ namespace swift::simplugin::fsxcommon
         hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventFlightLoaded, "FlightLoaded");
         if (isFailure(hr))
         {
-            CLogMessage(this).error(u"FSX plugin error: %1") << "SimConnect_SubscribeToSystemEvent failed";
+            CLogMessage(this).error(u"MSFS2024 plugin error: %1") << "SimConnect_SubscribeToSystemEvent failed";
             return hr;
         }
 
@@ -2021,31 +2149,34 @@ namespace swift::simplugin::fsxcommon
         hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluHours, "ZULU_HOURS_SET");
         hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluMinutes, "ZULU_MINUTES_SET");
 
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventLandingLightsOff, "LANDING_LIGHTS_OFF");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventLandinglightsOn, "LANDING_LIGHTS_ON");
+        // hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventLandingLightsOff, "LANDING_LIGHTS_OFF");
+        // hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventLandinglightsOn, "LANDING_LIGHTS_ON");
         hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventLandingLightsSet, "LANDING_LIGHTS_SET");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventLandingLightsToggle, "LANDING_LIGHTS_TOGGLE");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPanelLightsOff, "PANEL_LIGHTS_OFF");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPanelLightsOn, "PANEL_LIGHTS_ON");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPanelLightsSet, "PANEL_LIGHTS_SET");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventStrobesOff, "STROBES_OFF");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventStrobesOn, "STROBES_ON");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventStrobesSet, "STROBES_SET");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventStrobesToggle, "STROBES_TOGGLE");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleBeaconLights, "TOGGLE_BEACON_LIGHTS");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleCabinLights, "TOGGLE_CABIN_LIGHTS");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleLogoLights, "TOGGLE_LOGO_LIGHTS");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleNavLights, "TOGGLE_NAV_LIGHTS");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleRecognitionLights,
-                                                  "TOGGLE_RECOGNITION_LIGHTS");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleTaxiLights, "TOGGLE_TAXI_LIGHTS");
-        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventToggleWingLights, "TOGGLE_WING_LIGHTS");
+        // hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventLandingLightsToggle, "LANDING_LIGHTS_TOGGLE");
 
+        // hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPanelLightsOff, "PANEL_LIGHTS_OFF");
+        // hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPanelLightsOn, "PANEL_LIGHTS_ON");
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPanelLightsSet, "PANEL_LIGHTS_SET");
+
+        // hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventStrobesOff, "STROBES_OFF");
+        // hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventStrobesOn, "STROBES_ON");
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventStrobesSet, "STROBES_SET");
+        // hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventStrobesToggle, "STROBES_TOGGLE");
+
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventBeaconLightsSet, "BEACON_LIGHTS_SET");
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventCabinLightsSet, "CABIN_LIGHTS_SET");
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventLogoLightsSet, "LOGO_LIGHTS_SET");
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventNavLightsSet, "NAV_LIGHTS_SET");
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventRecognitionLightsSet, "RECOGNITION_LIGHTS_SET");
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventTaxiLightsSet, "TAXI_LIGHTS_SET");
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventWingLightsSet, "WING_LIGHTS_SET");
+
+        hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventGearSet, "GEAR_SET");
         hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFlapsSet, "FLAPS_SET");
 
         if (isFailure(hr))
         {
-            CLogMessage(this).error(u"FSX plugin error: %1") << "SimConnect_MapClientEventToSimEvent failed";
+            CLogMessage(this).error(u"MSFS2024 plugin error: %1") << "SimConnect_MapClientEventToSimEvent failed";
             return hr;
         }
 
@@ -2061,20 +2192,21 @@ namespace swift::simplugin::fsxcommon
         return hr;
     }
 
-    HRESULT CSimulatorFsxCommon::initDataDefinitionsWhenConnected()
+    HRESULT CSimulatorMsfs2024::initDataDefinitionsWhenConnected()
     {
+
         return CSimConnectDefinitions::initDataDefinitionsWhenConnected(
             m_hSimConnect, this->getSimulatorPluginInfo().getSimulatorInfo());
     }
 
-    HRESULT CSimulatorFsxCommon::initWhenConnected()
+    HRESULT CSimulatorMsfs2024::initWhenConnected()
     {
         // called when connected
 
         HRESULT hr = this->initEvents();
         if (isFailure(hr))
         {
-            CLogMessage(this).error(u"FSX plugin: initEvents failed");
+            CLogMessage(this).error(u"MSFS2024 plugin: initEvents failed");
             return hr;
         }
 
@@ -2082,16 +2214,16 @@ namespace swift::simplugin::fsxcommon
         hr += this->initDataDefinitionsWhenConnected();
         if (isFailure(hr))
         {
-            CLogMessage(this).error(u"FSX plugin: initDataDefinitionsWhenConnected failed");
+            CLogMessage(this).error(u"MSFS2024 plugin: initDataDefinitionsWhenConnected failed");
             return hr;
         }
 
         return hr;
     }
 
-    void CSimulatorFsxCommon::updateRemoteAircraft()
+    void CSimulatorMsfs2024::updateRemoteAircraft()
     {
-        static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 10,
+        static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 12,
                       "DataDefinitionRemoteAircraftPartsWithoutLights has an incorrect size.");
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
 
@@ -2156,7 +2288,7 @@ namespace swift::simplugin::fsxcommon
                     situation.setAltitude({ situation.getAltitude() + m_altitudeDelta * altitudeDeltaWeight,
                                             situation.getAltitude().getReferenceDatum() });
 
-                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(situation, sendGround);
+                    SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToPosition(situation, sendGround);
                     const HRESULT hr = this->logAndTraceSendId(
                         SimConnect_SetDataOnSimObject(m_hSimConnect,
                                                       CSimConnectDefinitions::DataRemoteAircraftSetPosition,
@@ -2185,8 +2317,8 @@ namespace swift::simplugin::fsxcommon
         this->finishUpdateRemoteAircraftAndSetStatistics(currentTimestamp);
     }
 
-    bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject,
-                                                        const CInterpolationResult &result, bool forcedUpdate)
+    bool CSimulatorMsfs2024::updateRemoteAircraftParts(const CSimConnectObject &simObject,
+                                                       const CInterpolationResult &result, bool forcedUpdate)
     {
         if (!simObject.hasValidRequestAndObjectId()) { return false; }
         if (!simObject.isConfirmedAdded()) { return false; }
@@ -2209,8 +2341,8 @@ namespace swift::simplugin::fsxcommon
         return ok;
     }
 
-    bool CSimulatorFsxCommon::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject,
-                                                                 const CAircraftParts &parts)
+    bool CSimulatorMsfs2024::sendRemoteAircraftPartsToSimulator(const CSimConnectObject &simObject,
+                                                                const CAircraftParts &parts)
     {
         Q_ASSERT(m_hSimConnect);
         if (!simObject.isReadyToSend()) { return false; }
@@ -2234,44 +2366,98 @@ namespace swift::simplugin::fsxcommon
                     traceId, simObject, "Failed so set parts", Q_FUNC_INFO,
                     "SimConnect_SetDataOnSimObject::ddRemoteAircraftPartsWithoutLights");
 
-        // Sim variable version, not working, setting the value, but flaps retracting to 0 again
+        // TODO TZ handle flaps more precisely
+        // is already handled in parts definition above
         // Sets flap handle to closest increment (0 to 16383)
-        const DWORD flapsDw = static_cast<DWORD>(qMin(16383, qRound((parts.getFlapsPercent() / 100.0) * 16383)));
-        const HRESULT hr2 = this->logAndTraceSendId(
-            SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFlapsSet, flapsDw,
+        // const DWORD flapsDw = static_cast<DWORD>(qMin(16383, qRound((parts.getFlapsPercent() / 100.0) * 16383)));
+        const HRESULT hr2 = S_OK;
+        // const HRESULT hr2 = this->logAndTraceSendId(
+        //     SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventFlapsSet, flapsDw,
+        //                                    SIMCONNECT_GROUP_PRIORITY_HIGHEST,
+        //                                    SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+        //     traceId, simObject, "Failed so set flaps", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventFlapsSet");
+
+        const HRESULT hr3 = this->logAndTraceSendId(
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventGearSet, parts.isFixedGearDown() ? 1.0 : 0.0,
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST,
                                            SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-            traceId, simObject, "Failed so set flaps", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventFlapsSet");
+            traceId, simObject, "Failed so set gears", Q_FUNC_INFO, "SimConnect_TransmitClientEvent::EventGearSet");
+
+        const CAircraftLights lightsIsState = simObject.getCurrentLightsInSimulator();
+        if (lights == lightsIsState) { return isOk(hr1, hr2, hr3); }
 
         // lights we can set directly
-        const HRESULT hr3 = this->logAndTraceSendId(
+        const HRESULT hr4 = this->logAndTraceSendId(
             SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventLandingLightsSet,
                                            lights.isLandingOn() ? 1.0 : 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
                                            SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
             traceId, simObject, "Failed so set landing lights", Q_FUNC_INFO,
             "SimConnect_TransmitClientEvent::EventLandingLightsSet");
 
-        const HRESULT hr4 =
+        const HRESULT hr5 =
             this->logAndTraceSendId(SimConnect_TransmitClientEvent(
                                         m_hSimConnect, objectId, EventStrobesSet, lights.isStrobeOn() ? 1.0 : 0.0,
                                         SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
                                     traceId, simObject, "Failed to set strobe lights", Q_FUNC_INFO,
                                     "SimConnect_TransmitClientEvent::EventStrobesSet");
 
-        // lights we need to toggle
-        // (potential risk with quickly changing values that we accidentally toggle back, also we need the light state
-        // before we can toggle)
-        this->sendToggledLightsToSimulator(simObject, lights);
+        const HRESULT hr6 =
+            this->logAndTraceSendId(SimConnect_TransmitClientEvent(
+                                        m_hSimConnect, objectId, EventTaxiLightsSet, lights.isTaxiOn() ? 1.0 : 0.0,
+                                        SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    traceId, simObject, "Failed to set taxi lights", Q_FUNC_INFO,
+                                    "SimConnect_TransmitClientEvent::EventTaxiLightsSet");
+
+        const HRESULT hr7 =
+            this->logAndTraceSendId(SimConnect_TransmitClientEvent(
+                                        m_hSimConnect, objectId, EventNavLightsSet, lights.isNavOn() ? 1.0 : 0.0,
+                                        SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    traceId, simObject, "Failed to set nav lights", Q_FUNC_INFO,
+                                    "SimConnect_TransmitClientEvent::EventNavLightsSet");
+
+        const HRESULT hr8 =
+            this->logAndTraceSendId(SimConnect_TransmitClientEvent(
+                                        m_hSimConnect, objectId, EventLogoLightsSet, lights.isLogoOn() ? 1.0 : 0.0,
+                                        SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    traceId, simObject, "Failed to set logo lights", Q_FUNC_INFO,
+                                    "SimConnect_TransmitClientEvent::EventLogoLightsSet");
+
+        const HRESULT hr9 = this->logAndTraceSendId(
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventRecognitionLightsSet,
+                                           lights.isRecognitionOn() ? 1.0 : 0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
+                                           SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+            traceId, simObject, "Failed to set recognitione lights", Q_FUNC_INFO,
+            "SimConnect_TransmitClientEvent::EventRecognitionLightsSet");
+
+        const HRESULT hr10 =
+            this->logAndTraceSendId(SimConnect_TransmitClientEvent(
+                                        m_hSimConnect, objectId, EventCabinLightsSet, lights.isCabinOn() ? 1.0 : 0.0,
+                                        SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    traceId, simObject, "Failed to set cabin lights", Q_FUNC_INFO,
+                                    "SimConnect_TransmitClientEvent::EventCabinLightsSet");
+
+        const HRESULT hr11 =
+            this->logAndTraceSendId(SimConnect_TransmitClientEvent(
+                                        m_hSimConnect, objectId, EventBeaconLightsSet, lights.isBeaconOn() ? 1.0 : 0.0,
+                                        SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    traceId, simObject, "Failed to set beacon lights", Q_FUNC_INFO,
+                                    "SimConnect_TransmitClientEvent::EventBeaconLightsSet");
+
+        const HRESULT hr12 =
+            this->logAndTraceSendId(SimConnect_TransmitClientEvent(
+                                        m_hSimConnect, objectId, EventWingLightsSet, lights.isWingOn() ? 1.0 : 0.0,
+                                        SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
+                                    traceId, simObject, "Failed to set wing lights", Q_FUNC_INFO,
+                                    "SimConnect_TransmitClientEvent::EventWingLightsSet");
 
         // done
-        return isOk(hr1, hr2, hr3, hr4);
+        return isOk(hr1, hr2, hr3, (hr4 & hr5 & hr6 & hr7 & hr8 & hr9 & hr10 & hr11 & hr12));
     }
 
-    bool CSimulatorFsxCommon::sendRemoteAircraftAtcDataToSimulator(const CSimConnectObject &simObject)
+    bool CSimulatorMsfs2024::sendRemoteAircraftAtcDataToSimulator(const CSimConnectObject &simObject)
     {
         if (!simObject.isReadyToSend()) { return false; }
-        if (simObject.isTerrainProbe()) { return false; }
-        // if (simObject.getType() != CSimConnectObject::AircraftNonAtc) { return false; } // otherwise errors
+        if (simObject.getType() != CSimConnectObject::AircraftNonAtc) { return false; } // otherwise errors
 
         const DWORD objectId = simObject.getObjectId();
         const bool traceId = this->isTracingSendId();
@@ -2296,111 +2482,16 @@ namespace swift::simplugin::fsxcommon
         return isOk(hr);
     }
 
-    void CSimulatorFsxCommon::sendToggledLightsToSimulator(const CSimConnectObject &simObj,
-                                                           const CAircraftLights &lightsWanted, bool force)
-    {
-        if (!simObj.isReadyToSend()) { return; } // stale
-
-        const CAircraftLights lightsIsState = simObj.getCurrentLightsInSimulator();
-        if (lightsWanted == lightsIsState) { return; }
-        if (!force && lightsWanted == simObj.getLightsAsSent()) { return; }
-        const CCallsign callsign(simObj.getCallsign());
-
-        // Update data
-        if (m_simConnectObjects.contains(callsign))
-        {
-            CSimConnectObject &simObjToUpdate = m_simConnectObjects[callsign];
-            simObjToUpdate.setLightsAsSent(lightsWanted);
-        }
-
-        // state available, then I can toggle
-        if (!lightsIsState.isNull())
-        {
-            const DWORD objectId = simObj.getObjectId();
-            const bool trace = this->isTracingSendId();
-
-            if (lightsWanted.isTaxiOn() != lightsIsState.isTaxiOn())
-            {
-                this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleTaxiLights,
-                                                                       0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-                                                                       SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-                                        trace, simObj, "Toggle taxi lights", Q_FUNC_INFO, "EventToggleTaxiLights");
-            }
-            if (lightsWanted.isNavOn() != lightsIsState.isNavOn())
-            {
-                this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleNavLights,
-                                                                       0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-                                                                       SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-                                        trace, simObj, "Toggle nav.lights", Q_FUNC_INFO, "EventToggleNavLights");
-            }
-            if (lightsWanted.isBeaconOn() != lightsIsState.isBeaconOn())
-            {
-                this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleBeaconLights,
-                                                                       0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-                                                                       SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-                                        trace, simObj, "Toggle becon lights", Q_FUNC_INFO, "EventToggleBeaconLights");
-            }
-            if (lightsWanted.isLogoOn() != lightsIsState.isLogoOn())
-            {
-                this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleLogoLights,
-                                                                       0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-                                                                       SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-                                        trace, simObj, "Toggle logo lights", Q_FUNC_INFO, "EventToggleLogoLights");
-            }
-            if (lightsWanted.isRecognitionOn() != lightsIsState.isRecognitionOn())
-            {
-                this->logAndTraceSendId(
-                    SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleRecognitionLights, 0.0,
-                                                   SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-                                                   SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-                    trace, simObj, "Toggle recognition lights", Q_FUNC_INFO, "EventToggleRecognitionLights");
-            }
-            if (lightsWanted.isCabinOn() != lightsIsState.isCabinOn())
-            {
-                this->logAndTraceSendId(SimConnect_TransmitClientEvent(m_hSimConnect, objectId, EventToggleCabinLights,
-                                                                       0.0, SIMCONNECT_GROUP_PRIORITY_HIGHEST,
-                                                                       SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY),
-                                        trace, simObj, "Toggle cabin lights", Q_FUNC_INFO, "EventToggleCabinLights");
-            }
-            return;
-        }
-
-        // missing lights info from simulator so far
-        if (this->showDebugLogMessage())
-        {
-            this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("Missing light state in simulator for '%1', model '%2'")
-                                                   .arg(callsign.asString(), simObj.getAircraftModelString()));
-        }
-
-        const QPointer<CSimulatorFsxCommon> myself(this);
-        QTimer::singleShot(DeferResendingLights, this, [=] {
-            if (!myself) { return; }
-            if (!m_simConnectObjects.contains(callsign)) { return; }
-            const CSimConnectObject currentSimObject = m_simConnectObjects[callsign];
-            if (!currentSimObject.isReadyToSend()) { return; } // stale
-            if (lightsWanted != currentSimObject.getLightsAsSent())
-            {
-                return;
-            } // changed in between, so another call sendToggledLightsToSimulator is pending
-            if (this->showDebugLogMessage())
-            {
-                this->debugLogMessage(Q_FUNC_INFO, QStringLiteral("Resending light state for '%1', model '%2'")
-                                                       .arg(callsign.asString(), simObj.getAircraftModelString()));
-            }
-            this->sendToggledLightsToSimulator(currentSimObject, lightsWanted, true);
-        });
-    }
-
     SIMCONNECT_DATA_INITPOSITION
-    CSimulatorFsxCommon::aircraftSituationToFsxPosition(const CAircraftSituation &situation, bool sendGnd,
-                                                        bool forceUnderflowDetection, CStatusMessage *details)
+    CSimulatorMsfs2024::aircraftSituationToPosition(const CAircraftSituation &situation, bool sendGnd,
+                                                    bool forceUnderflowDetection, CStatusMessage *details)
     {
         Q_ASSERT_X(!situation.isGeodeticHeightNull(), Q_FUNC_INFO, "Missing height (altitude)");
         Q_ASSERT_X(!situation.isPositionNull(), Q_FUNC_INFO, "Missing position");
 
         // lat/Lng, NO PBH
         CAircraftSituation::AltitudeCorrection altCorrection = CAircraftSituation::UnknownCorrection;
-        SIMCONNECT_DATA_INITPOSITION position = CSimulatorFsxCommon::coordinateToFsxPosition(situation);
+        SIMCONNECT_DATA_INITPOSITION position = CSimulatorMsfs2024::coordinateToFsxPosition(situation);
         if (forceUnderflowDetection)
         {
             const CAltitude alt = situation.getCorrectedAltitude(true, &altCorrection);
@@ -2444,7 +2535,7 @@ namespace swift::simplugin::fsxcommon
                     position.OnGround = 1U;
                     if (details)
                     {
-                        *details = CStatusMessage(static_cast<CSimulatorFsxCommon *>(nullptr))
+                        *details = CStatusMessage(static_cast<CSimulatorMsfs2024 *>(nullptr))
                                        .warning(u"Force GND flag for underflow protection");
                     }
                     break;
@@ -2456,13 +2547,13 @@ namespace swift::simplugin::fsxcommon
         // crosscheck
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
-            SWIFT_VERIFY_X(isValidFsxPosition(position), Q_FUNC_INFO, "Invalid FSX pos.");
+            SWIFT_VERIFY_X(isValidFsxPosition(position), Q_FUNC_INFO, "Invalid MSFS2024 pos.");
         }
 
         return position;
     }
 
-    SIMCONNECT_DATA_PBH CSimulatorFsxCommon::aircraftSituationToFsxPBH(const CAircraftSituation &situation)
+    SIMCONNECT_DATA_PBH CSimulatorMsfs2024::aircraftSituationToFsxPBH(const CAircraftSituation &situation)
     {
         // MSFS has inverted pitch and bank angles
         SIMCONNECT_DATA_PBH pbh;
@@ -2472,7 +2563,8 @@ namespace swift::simplugin::fsxcommon
         return pbh;
     }
 
-    SIMCONNECT_DATA_INITPOSITION CSimulatorFsxCommon::coordinateToFsxPosition(const ICoordinateGeodetic &coordinate)
+    SIMCONNECT_DATA_INITPOSITION
+    CSimulatorMsfs2024::coordinateToFsxPosition(const ICoordinateGeodetic &coordinate)
     {
         SIMCONNECT_DATA_INITPOSITION position;
         position.Latitude = coordinate.latitude().value(CAngleUnit::deg());
@@ -2487,7 +2579,7 @@ namespace swift::simplugin::fsxcommon
         return position;
     }
 
-    SIMCONNECT_DATA_LATLONALT CSimulatorFsxCommon::coordinateToFsxLatLonAlt(const ICoordinateGeodetic &coordinate)
+    SIMCONNECT_DATA_LATLONALT CSimulatorMsfs2024::coordinateToFsxLatLonAlt(const ICoordinateGeodetic &coordinate)
     {
         SIMCONNECT_DATA_LATLONALT lla;
         lla.Latitude = coordinate.latitude().value(CAngleUnit::deg());
@@ -2497,7 +2589,7 @@ namespace swift::simplugin::fsxcommon
         return lla;
     }
 
-    bool CSimulatorFsxCommon::isValidFsxPosition(const SIMCONNECT_DATA_INITPOSITION &fsxPos)
+    bool CSimulatorMsfs2024::isValidFsxPosition(const SIMCONNECT_DATA_INITPOSITION &fsxPos)
     {
         // double  Latitude;   // degrees | double  Longitude;  // degrees | double  Altitude;   // feet
         // double  Pitch;      // degrees | double  Bank;       // degrees | double  Heading;    // degrees
@@ -2512,8 +2604,8 @@ namespace swift::simplugin::fsxcommon
         return true;
     }
 
-    bool CSimulatorFsxCommon::requestPositionDataForSimObject(const CSimConnectObject &simObject,
-                                                              SIMCONNECT_PERIOD period)
+    bool CSimulatorMsfs2024::requestPositionDataForSimObject(const CSimConnectObject &simObject,
+                                                             SIMCONNECT_PERIOD period)
     {
         if (this->isShuttingDownOrDisconnected()) { return false; }
         if (!simObject.hasValidRequestAndObjectId()) { return false; }
@@ -2539,24 +2631,7 @@ namespace swift::simplugin::fsxcommon
         return false;
     }
 
-    bool CSimulatorFsxCommon::requestTerrainProbeData(const CSimConnectObject &simObject,
-                                                      const CCallsign &aircraftCallsign)
-    {
-        static const QString w("Cannot request terrain probe data for id '%1'");
-        const SIMCONNECT_DATA_REQUEST_ID requestId =
-            simObject.getRequestId(CSimConnectDefinitions::SimObjectPositionData);
-        const DWORD objectId = simObject.getObjectId();
-        const HRESULT result = this->logAndTraceSendId(
-            SimConnect_RequestDataOnSimObject(m_hSimConnect, static_cast<SIMCONNECT_DATA_REQUEST_ID>(requestId),
-                                              CSimConnectDefinitions::DataRemoteAircraftGetPosition,
-                                              static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_PERIOD_ONCE),
-            simObject, w.arg(requestId), Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
-        const bool ok = isOk(result);
-        if (ok) { m_pendingProbeRequests.insert(requestId, aircraftCallsign); }
-        return ok;
-    }
-
-    bool CSimulatorFsxCommon::requestLightsForSimObject(const CSimConnectObject &simObject)
+    bool CSimulatorMsfs2024::requestLightsForSimObject(const CSimConnectObject &simObject)
     {
         if (!this->isValidSimObjectNotPendingRemoved(simObject)) { return false; }
         if (!m_hSimConnect) { return false; }
@@ -2571,7 +2646,7 @@ namespace swift::simplugin::fsxcommon
         return isOk(result);
     }
 
-    bool CSimulatorFsxCommon::requestModelInfoForSimObject(const CSimConnectObject &simObject)
+    bool CSimulatorMsfs2024::requestModelInfoForSimObject(const CSimConnectObject &simObject)
     {
         if (!this->isValidSimObjectNotPendingRemoved(simObject)) { return false; }
         if (!m_hSimConnect) { return false; }
@@ -2586,7 +2661,7 @@ namespace swift::simplugin::fsxcommon
         return isOk(result);
     }
 
-    bool CSimulatorFsxCommon::stopRequestingDataForSimObject(const CSimConnectObject &simObject)
+    bool CSimulatorMsfs2024::stopRequestingDataForSimObject(const CSimConnectObject &simObject)
     {
         if (!simObject.hasValidRequestAndObjectId()) { return false; }
         if (!m_hSimConnect) { return false; }
@@ -2608,13 +2683,13 @@ namespace swift::simplugin::fsxcommon
         return isOk(hr1, hr2);
     }
 
-    void CSimulatorFsxCommon::initSimulatorInternals()
+    void CSimulatorMsfs2024::initSimulatorInternals()
     {
         CSimulatorFsCommon::initSimulatorInternals();
         m_simulatorInternals.setValue("fsx/simConnectVersion", m_simConnectVersion);
     }
 
-    void CSimulatorFsxCommon::reset()
+    void CSimulatorMsfs2024::reset()
     {
         this->safeKillTimer();
 
@@ -2634,42 +2709,25 @@ namespace swift::simplugin::fsxcommon
         m_requestIdSimObjAircraft = static_cast<SIMCONNECT_DATA_REQUEST_ID>(RequestSimObjAircraftStart);
         m_dispatchErrors = 0;
         m_receiveExceptionCount = 0;
-        m_addedProbes = 0;
-        m_initFsxTerrainProbes = false;
         m_sendIdTraces.clear();
     }
 
-    void CSimulatorFsxCommon::clearAllRemoteAircraftData()
+    void CSimulatorMsfs2024::clearAllRemoteAircraftData()
     {
-        const bool reinitProbe =
-            m_useFsxTerrainProbe && m_initFsxTerrainProbes; // re-init if enabled and was initialized
-        this->removeAllProbes();
-
         // m_addAgainAircraftWhenRemoved cleared below
         CSimulatorFsCommon::clearAllRemoteAircraftData(); // also removes aircraft
         m_simConnectObjects.clear();
         m_addPendingAircraft.clear();
         m_simConnectObjectsPositionAndPartsTraces.clear();
-
-        if (reinitProbe)
-        {
-            // if we are still alive we re-init the probes
-            QPointer<CSimulatorFsxCommon> myself(this);
-            QTimer::singleShot(2000, this, [=] {
-                // Shutdown or unloaded
-                if (this->isShuttingDown() || !myself) { return; }
-                m_initFsxTerrainProbes = false; // probes will re-init
-            });
-        }
     }
 
-    void CSimulatorFsxCommon::onOwnModelChanged(const CAircraftModel &newModel)
+    void CSimulatorMsfs2024::onOwnModelChanged(const CAircraftModel &newModel)
     {
         m_sbDataReceived = 0;
         CSimulatorFsCommon::onOwnModelChanged(newModel);
     }
 
-    QString CSimulatorFsxCommon::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
+    QString CSimulatorMsfs2024::fsxPositionToString(const SIMCONNECT_DATA_INITPOSITION &position)
     {
         static const QString positionStr(
             "Lat: %1deg lng: %2deg alt: %3ft pitch: %4deg bank: %5deg hdg: %6deg airspeed: %7kts onGround: %8");
@@ -2683,7 +2741,7 @@ namespace swift::simplugin::fsxcommon
             .arg(position.OnGround);
     }
 
-    CCallsignSet CSimulatorFsxCommon::getCallsignsMissingInProvider() const
+    CCallsignSet CSimulatorMsfs2024::getCallsignsMissingInProvider() const
     {
         if (m_simConnectObjects.isEmpty()) { return CCallsignSet(); }
         const CCallsignSet simObjectCallsigns(m_simConnectObjects.getAllCallsigns(true));
@@ -2691,8 +2749,8 @@ namespace swift::simplugin::fsxcommon
         return simObjectCallsigns.difference(providerCallsigns);
     }
 
-    void CSimulatorFsxCommon::traceSendId(const CSimConnectObject &simObject, const QString &functionName,
-                                          const QString &details, bool forceTrace)
+    void CSimulatorMsfs2024::traceSendId(const CSimConnectObject &simObject, const QString &functionName,
+                                         const QString &details, bool forceTrace)
     {
         if (!forceTrace && !this->isTracingSendId()) { return; }
         if (MaxSendIdTraces < 1) { return; } // cppcheck-suppress knownConditionTrueFalse
@@ -2705,24 +2763,24 @@ namespace swift::simplugin::fsxcommon
         m_sendIdTraces.push_front(trace);
     }
 
-    HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName,
-                                                   const QString &functionDetails)
+    HRESULT CSimulatorMsfs2024::logAndTraceSendId(HRESULT hr, const QString &warningMsg, const QString &functionName,
+                                                  const QString &functionDetails)
     {
         const CSimConnectObject empty;
         return this->logAndTraceSendId(hr, empty, warningMsg, functionName, functionDetails);
     }
 
-    HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, const CSimConnectObject &simObject,
-                                                   const QString &warningMsg, const QString &functionName,
-                                                   const QString &functionDetails)
+    HRESULT CSimulatorMsfs2024::logAndTraceSendId(HRESULT hr, const CSimConnectObject &simObject,
+                                                  const QString &warningMsg, const QString &functionName,
+                                                  const QString &functionDetails)
     {
         return this->logAndTraceSendId(hr, this->isTracingSendId(), simObject, warningMsg, functionName,
                                        functionDetails);
     }
 
-    HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject,
-                                                   const QString &warningMsg, const QString &functionName,
-                                                   const QString &functionDetails)
+    HRESULT CSimulatorMsfs2024::logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject,
+                                                  const QString &warningMsg, const QString &functionName,
+                                                  const QString &functionDetails)
     {
         if (traceSendId) { this->traceSendId(simObject, functionName, functionDetails); }
         if (isOk(hr)) { return hr; }
@@ -2731,9 +2789,9 @@ namespace swift::simplugin::fsxcommon
         return hr;
     }
 
-    QByteArray CSimulatorFsxCommon::toFsxChar(const QString &string) { return string.toLatin1(); }
+    QByteArray CSimulatorMsfs2024::toFsxChar(const QString &string) { return string.toLatin1(); }
 
-    TraceFsxSendId CSimulatorFsxCommon::getSendIdTrace(DWORD sendId) const
+    TraceFsxSendId CSimulatorMsfs2024::getSendIdTrace(DWORD sendId) const
     {
         for (const TraceFsxSendId &trace : m_sendIdTraces)
         {
@@ -2742,14 +2800,14 @@ namespace swift::simplugin::fsxcommon
         return TraceFsxSendId::invalid();
     }
 
-    QString CSimulatorFsxCommon::getSendIdTraceDetails(DWORD sendId) const
+    QString CSimulatorMsfs2024::getSendIdTraceDetails(DWORD sendId) const
     {
         const TraceFsxSendId trace = this->getSendIdTrace(sendId);
         if (trace.sendId == sendId) { return this->getSendIdTraceDetails(trace); }
         return {};
     }
 
-    QString CSimulatorFsxCommon::getSendIdTraceDetails(const TraceFsxSendId &trace) const
+    QString CSimulatorMsfs2024::getSendIdTraceDetails(const TraceFsxSendId &trace) const
     {
         static const QString d("Send id: %1 obj.id.: %2 SimObj: %3 | '%4'");
         if (trace.isInvalid()) { return QString(); }
@@ -2759,34 +2817,9 @@ namespace swift::simplugin::fsxcommon
         return d.arg(trace.sendId).arg(simObject.getObjectId()).arg(simObject.toQString(), trace.comment);
     }
 
-    int CSimulatorFsxCommon::removeAllProbes()
-    {
-        if (!m_hSimConnect) { return 0; } // already disconnected
-        const QList<CSimConnectObject> probes = m_simConnectObjects.getProbes();
-
-        int c = 0;
-        for (const CSimConnectObject &probeSimObject : probes)
-        {
-            if (!probeSimObject.isConfirmedAdded()) { continue; }
-            const SIMCONNECT_DATA_REQUEST_ID requestId =
-                probeSimObject.getRequestId(CSimConnectDefinitions::SimObjectRemove);
-            const HRESULT result = SimConnect_AIRemoveObject(
-                m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(probeSimObject.getObjectId()), requestId);
-            if (isOk(result)) { c++; }
-            else
-            {
-                CLogMessage(this).warning(u"Removing probe '%1' from simulator failed") << probeSimObject.getObjectId();
-            }
-        }
-        m_simConnectObjects.removeAllProbes();
-        m_pendingProbeRequests.clear();
-        return c;
-    }
-
-    CSimConnectObject CSimulatorFsxCommon::insertNewSimConnectObject(const CSimulatedAircraft &aircraft,
-                                                                     DWORD requestId,
-                                                                     CSimConnectObject::SimObjectType type,
-                                                                     const CSimConnectObject &removedPendingObject)
+    CSimConnectObject CSimulatorMsfs2024::insertNewSimConnectObject(const CSimulatedAircraft &aircraft, DWORD requestId,
+                                                                    CSimConnectObject::SimObjectType type,
+                                                                    const CSimConnectObject &removedPendingObject)
     {
         if (m_simConnectObjects.contains(aircraft.getCallsign()))
         {
@@ -2819,18 +2852,12 @@ namespace swift::simplugin::fsxcommon
         return simObject;
     }
 
-    const CAltitude &CSimulatorFsxCommon::terrainProbeAltitude()
-    {
-        static const CAltitude alt(50000, CLengthUnit::ft());
-        return alt;
-    }
-
-    QString CSimulatorFsxCommon::fsxCharToQString(const char *fsxChar, int size)
+    QString CSimulatorMsfs2024::fsxCharToQString(const char *fsxChar, int size)
     {
         return QString::fromLatin1(fsxChar, size);
     }
 
-    QString CSimulatorFsxCommon::requestIdToString(DWORD requestId)
+    QString CSimulatorMsfs2024::requestIdToString(DWORD requestId)
     {
         if (requestId <= CSimConnectDefinitions::RequestEndMarker)
         {
@@ -2846,16 +2873,12 @@ namespace swift::simplugin::fsxcommon
             .arg(CSimConnectDefinitions::simObjectRequestToString(simRequest));
     }
 
-    DWORD CSimulatorFsxCommon::unitTestRequestId(CSimConnectObject::SimObjectType type)
+    DWORD CSimulatorMsfs2024::unitTestRequestId(CSimConnectObject::SimObjectType type)
     {
         int start;
         int end;
         switch (type)
         {
-        case CSimConnectObject::TerrainProbe:
-            start = RequestSimObjTerrainProbeStart;
-            end = RequestSimObjTerrainProbeEnd;
-            break;
         case CSimConnectObject::AircraftNonAtc:
         case CSimConnectObject::AircraftSimulatedObject:
         default:
@@ -2868,7 +2891,7 @@ namespace swift::simplugin::fsxcommon
         return static_cast<DWORD>(id);
     }
 
-    CCallsignSet CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider()
+    CCallsignSet CSimulatorMsfs2024::physicallyRemoveAircraftNotInProvider()
     {
         const CCallsignSet callsignsToBeRemoved(this->getCallsignsMissingInProvider());
         if (callsignsToBeRemoved.isEmpty()) { return callsignsToBeRemoved; }
@@ -2882,24 +2905,23 @@ namespace swift::simplugin::fsxcommon
         return callsignsToBeRemoved;
     }
 
-    void CSimulatorFsxCommon::physicallyRemoveAircraftNotInProviderAsync()
+    void CSimulatorMsfs2024::physicallyRemoveAircraftNotInProviderAsync()
     {
-        const QPointer<CSimulatorFsxCommon> myself(this);
+        const QPointer<CSimulatorMsfs2024> myself(this);
         QTimer::singleShot(100, this, [=] {
             if (!myself || this->isShuttingDown()) { return; }
-            CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider();
+            CSimulatorMsfs2024::physicallyRemoveAircraftNotInProvider();
         });
     }
 
-    CSimulatorFsxCommonListener::CSimulatorFsxCommonListener(const CSimulatorPluginInfo &info)
-        : ISimulatorListener(info)
+    CSimulatorMsfs2024Listener::CSimulatorMsfs2024Listener(const CSimulatorPluginInfo &info) : ISimulatorListener(info)
     {
         m_timer.setInterval(MinQueryIntervalMs);
         m_timer.setObjectName(this->objectName().append(":m_timer"));
-        connect(&m_timer, &QTimer::timeout, this, &CSimulatorFsxCommonListener::checkConnection);
+        connect(&m_timer, &QTimer::timeout, this, &CSimulatorMsfs2024Listener::checkConnection);
     }
 
-    void CSimulatorFsxCommonListener::startImpl()
+    void CSimulatorMsfs2024Listener::startImpl()
     {
         m_simulatorVersion.clear();
         m_simConnectVersion.clear();
@@ -2909,18 +2931,18 @@ namespace swift::simplugin::fsxcommon
         m_timer.start();
     }
 
-    void CSimulatorFsxCommonListener::stopImpl()
+    void CSimulatorMsfs2024Listener::stopImpl()
     {
         m_timer.stop();
         this->disconnectFromSimulator();
     }
 
-    void CSimulatorFsxCommonListener::checkImpl()
+    void CSimulatorMsfs2024Listener::checkImpl()
     {
         if (!m_timer.isActive()) { return; }
         if (this->isShuttingDown()) { return; }
 
-        QPointer<CSimulatorFsxCommonListener> myself(this);
+        QPointer<CSimulatorMsfs2024Listener> myself(this);
         QTimer::singleShot(0, this, [=] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
             this->checkConnection();
@@ -2930,13 +2952,13 @@ namespace swift::simplugin::fsxcommon
         m_timer.start();
     }
 
-    QString CSimulatorFsxCommonListener::backendInfo() const
+    QString CSimulatorMsfs2024Listener::backendInfo() const
     {
         if (m_simulatorName.isEmpty()) { return ISimulatorListener::backendInfo(); }
         return m_simulatorDetails;
     }
 
-    void CSimulatorFsxCommonListener::checkConnection()
+    void CSimulatorMsfs2024Listener::checkConnection()
     {
         Q_ASSERT_X(!CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Expect to run in background");
 
@@ -2958,7 +2980,7 @@ namespace swift::simplugin::fsxcommon
             // check if we have the right sim.
             // this check on a remote FSX/P3D not running/existing might TAKE LONG!
             const HRESULT result =
-                SimConnect_CallDispatch(m_hSimConnect, CSimulatorFsxCommonListener::SimConnectProc, this);
+                SimConnect_CallDispatch(m_hSimConnect, CSimulatorMsfs2024Listener::SimConnectProc, this);
 
             // make sure we did not stop in meantime
             if (this->isShuttingDown() || this->thread()->isInterruptionRequested())
@@ -2976,7 +2998,7 @@ namespace swift::simplugin::fsxcommon
         if (check) { emit this->simulatorStarted(this->getPluginInfo()); }
     }
 
-    void CSimulatorFsxCommonListener::adjustTimerInterval(qint64 checkTimeMs)
+    void CSimulatorMsfs2024Listener::adjustTimerInterval(qint64 checkTimeMs)
     {
         const QString sim = this->getPluginInfo().getSimulatorInfo().toQString(true);
         CLogMessage(this).debug(u"Checked sim.'%1' connection in %2ms") << sim << checkTimeMs;
@@ -2996,30 +3018,13 @@ namespace swift::simplugin::fsxcommon
         m_timer.start();
     }
 
-    bool CSimulatorFsxCommonListener::checkVersionAndSimulator() const
+    bool CSimulatorMsfs2024Listener::checkVersionAndSimulator() const
     {
         const CSimulatorInfo pluginSim(getPluginInfo().getIdentifier());
         const QString connectedSimName = m_simulatorName.toLower().trimmed();
 
         if (connectedSimName.isEmpty()) { return false; }
-        if (pluginSim.isP3D())
-        {
-            // P3D drivers only works with P3D
-            return connectedSimName.contains("lockheed") || connectedSimName.contains("martin") ||
-                   connectedSimName.contains("p3d") || connectedSimName.contains("prepar");
-        }
-        else if (pluginSim.isFSX())
-        {
-            // FSX drivers only works with FSX
-            return connectedSimName.contains("fsx") || connectedSimName.contains("microsoft") ||
-                   connectedSimName.contains("simulator x");
-        }
-        else if (pluginSim.isMSFS())
-        {
-            // MSFS 2020 drivers only works with MSFS
-            return connectedSimName.contains("kittyhawk");
-        }
-        else if (pluginSim.isMSFS2024())
+        if (pluginSim.isMSFS2024())
         {
             // MSFS2024 drivers only works with MSFS2024
             return connectedSimName.contains("sunrise");
@@ -3027,14 +3032,14 @@ namespace swift::simplugin::fsxcommon
         return false;
     }
 
-    bool CSimulatorFsxCommonListener::checkSimConnectDll() const
+    bool CSimulatorMsfs2024Listener::checkSimConnectDll() const
     {
         static const CWinDllUtils::DLLInfo simConnectInfo = CSimConnectUtilities::simConnectDllInfo();
         if (!simConnectInfo.errorMsg.isEmpty()) { return false; }
         return true;
     }
 
-    bool CSimulatorFsxCommonListener::connectToSimulator()
+    bool CSimulatorMsfs2024Listener::connectToSimulator()
     {
         if (m_simConnected) { return true; }
         const HRESULT result = SimConnect_Open(&m_hSimConnect, sApp->swiftVersionChar(), nullptr, 0, nullptr, 0);
@@ -3043,7 +3048,7 @@ namespace swift::simplugin::fsxcommon
         return ok;
     }
 
-    bool CSimulatorFsxCommonListener::disconnectFromSimulator()
+    bool CSimulatorMsfs2024Listener::disconnectFromSimulator()
     {
         if (!m_simConnected) { return false; }
         SimConnect_Close(m_hSimConnect);
@@ -3052,10 +3057,10 @@ namespace swift::simplugin::fsxcommon
         return true;
     }
 
-    void CSimulatorFsxCommonListener::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
+    void CSimulatorMsfs2024Listener::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
     {
         Q_UNUSED(cbData)
-        CSimulatorFsxCommonListener *simListener = static_cast<CSimulatorFsxCommonListener *>(pContext);
+        CSimulatorMsfs2024Listener *simListener = static_cast<CSimulatorMsfs2024Listener *>(pContext);
         switch (pData->dwID)
         {
         case SIMCONNECT_RECV_ID_OPEN:
@@ -3071,7 +3076,7 @@ namespace swift::simplugin::fsxcommon
                                                    .arg(event->dwSimConnectVersionMinor)
                                                    .arg(event->dwSimConnectBuildMajor)
                                                    .arg(event->dwSimConnectBuildMinor);
-            simListener->m_simulatorName = CSimulatorFsxCommon::fsxCharToQString(event->szApplicationName);
+            simListener->m_simulatorName = CSimulatorMsfs2024::fsxCharToQString(event->szApplicationName);
             simListener->m_simulatorDetails = QStringLiteral("Name: '%1' Version: %2 SimConnect: %3")
                                                   .arg(simListener->m_simulatorName, simListener->m_simulatorVersion,
                                                        simListener->m_simConnectVersion);
@@ -3090,4 +3095,4 @@ namespace swift::simplugin::fsxcommon
         default: break;
         }
     }
-} // namespace swift::simplugin::fsxcommon
+} // namespace swift::simplugin::msfs2024common

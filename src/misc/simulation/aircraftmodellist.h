@@ -334,7 +334,8 @@ namespace swift::misc
 
             //! Remove those models with given model strings
             //! \return number of elements removed
-            bool removeModelWithString(const QString &modelString, Qt::CaseSensitivity sensitivity);
+            bool removeModelWithString(const QString &modelString, const QString &modelLivery,
+                                       Qt::CaseSensitivity sensitivity);
 
             //! Remove those models with given model strings
             //! \return number of elements removed
