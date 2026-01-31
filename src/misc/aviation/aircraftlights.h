@@ -150,6 +150,7 @@ namespace swift::misc::aviation
         bool m_cabinOn = false; //!< not supported by aircraft config (VATSIM)
         bool m_wingOn = false; //!< not supported by aircraft config (VATSIM)
 
+        // TODO TZ check if disabled lights can be activated. for testing we keep them enabled in JSON
         SWIFT_METACLASS(
             CAircraftLights,
             SWIFT_METAMEMBER(isNull, 0, DisabledForJson), // disable since JSON is used for network
@@ -159,9 +160,12 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER_NAMED(beaconOn, "beacon_on"),
             SWIFT_METAMEMBER_NAMED(navOn, "nav_on"),
             SWIFT_METAMEMBER_NAMED(logoOn, "logo_on"),
-            SWIFT_METAMEMBER(recognitionOn, 0, DisabledForJson), // disable since JSON is used for network
-            SWIFT_METAMEMBER(cabinOn, 0, DisabledForJson) // disable since JSON is used for network
-            SWIFT_METAMEMBER(wingOn, 0, DisabledForJson) // disable since JSON is used for network
+            SWIFT_METAMEMBER_NAMED(recognitionOn,"recognition_on"),
+            SWIFT_METAMEMBER_NAMED(cabinOn, "cabin_on"),
+            SWIFT_METAMEMBER_NAMED(wingOn, "wing_on")
+            //SWIFT_METAMEMBER(recognitionOn, 0, DisabledForJson), // disable since JSON is used for network
+            //SWIFT_METAMEMBER(cabinOn, 0, DisabledForJson), // disable since JSON is used for network
+            //SWIFT_METAMEMBER(wingOn, 0, DisabledForJson) // disable since JSON is used for network
         );
     };
 } // namespace swift::misc::aviation
