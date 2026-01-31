@@ -100,6 +100,9 @@ namespace swift::gui::editors
         ui->cb_AircraftPartsLightsBeacon->setChecked(on);
         ui->cb_AircraftPartsLightsNav->setChecked(on);
         ui->cb_AircraftPartsLightsLogo->setChecked(on);
+        ui->cb_AircraftPartsLightsWing->setChecked(on);
+        ui->cb_AircraftPartsLightsRecognition->setChecked(on);
+        ui->cb_AircraftPartsLightsCabin->setChecked(on);
     }
 
     void CAircraftPartsForm::setAllEngines()
@@ -118,7 +121,9 @@ namespace swift::gui::editors
         const CAircraftLights lights(
             ui->cb_AircraftPartsLightsStrobe->isChecked(), ui->cb_AircraftPartsLightsLanding->isChecked(),
             ui->cb_AircraftPartsLightsTaxi->isChecked(), ui->cb_AircraftPartsLightsBeacon->isChecked(),
-            ui->cb_AircraftPartsLightsNav->isChecked(), ui->cb_AircraftPartsLightsLogo->isChecked());
+            ui->cb_AircraftPartsLightsNav->isChecked(), ui->cb_AircraftPartsLightsLogo->isChecked(),
+            ui->cb_AircraftPartsLightsRecognition->isChecked(), ui->cb_AircraftPartsLightsCabin->isChecked(),
+            ui->cb_AircraftPartsLightsWing->isChecked());
         const CAircraftEngineList engines(
             { ui->cb_AircraftPartsEngine1->isChecked(), ui->cb_AircraftPartsEngine2->isChecked(),
               ui->cb_AircraftPartsEngine3->isChecked(), ui->cb_AircraftPartsEngine4->isChecked(),
@@ -143,6 +148,7 @@ namespace swift::gui::editors
         ui->cb_AircraftPartsLightsNav->setChecked(lights.isNavOn());
         ui->cb_AircraftPartsLightsStrobe->setChecked(lights.isStrobeOn());
         ui->cb_AircraftPartsLightsTaxi->setChecked(lights.isTaxiOn());
+        ui->cb_AircraftPartsLightsWing->setChecked(lights.isWingOn());
 
         const CAircraftEngineList engines = parts.getEngines();
         ui->cb_AircraftPartsEngine1->setChecked(engines.isEngineOn(1));
