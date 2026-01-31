@@ -86,16 +86,16 @@ namespace swift::misc::aviation
         void setLogoOn(bool on) { m_logoOn = on; }
 
         //! Recognition lights on?
-        bool isRecognitionOn() const { return m_recognition; }
+        bool isRecognitionOn() const { return m_recognitionOn; }
 
         //! Set recognition lights
-        void setRecognitionOn(bool on) { m_recognition = on; }
+        void setRecognitionOn(bool on) { m_recognitionOn = on; }
 
         //! Cabin lights on?
-        bool isCabinOn() const { return m_cabin; }
+        bool isCabinOn() const { return m_cabinOn; }
 
         //! Set cabin lights
-        void setCabinOn(bool on) { m_cabin = on; }
+        void setCabinOn(bool on) { m_cabinOn = on; }
 
         //! All on
         void setAllOn();
@@ -135,8 +135,8 @@ namespace swift::misc::aviation
         bool m_beaconOn = false;
         bool m_navOn = false;
         bool m_logoOn = false;
-        bool m_recognition = false; //!< not supported by aircraft config (VATSIM)
-        bool m_cabin = false; //!< not supported by aircraft config (VATSIM)
+        bool m_recognitionOn = false; //!< not supported by aircraft config (VATSIM)
+        bool m_cabinOn = false; //!< not supported by aircraft config (VATSIM)
 
         SWIFT_METACLASS(
             CAircraftLights,
@@ -147,8 +147,8 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER_NAMED(beaconOn, "beacon_on"),
             SWIFT_METAMEMBER_NAMED(navOn, "nav_on"),
             SWIFT_METAMEMBER_NAMED(logoOn, "logo_on"),
-            SWIFT_METAMEMBER(recognition, 0, DisabledForJson), // disable since JSON is used for network
-            SWIFT_METAMEMBER(cabin, 0, DisabledForJson) // disable since JSON is used for network
+            SWIFT_METAMEMBER(recognitionOn, 0, DisabledForJson), // disable since JSON is used for network
+            SWIFT_METAMEMBER(cabinOn, 0, DisabledForJson) // disable since JSON is used for network
         );
     };
 } // namespace swift::misc::aviation

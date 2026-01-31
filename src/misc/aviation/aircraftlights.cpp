@@ -20,7 +20,7 @@ namespace swift::misc::aviation
     CAircraftLights::CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn,
                                      bool recognition, bool cabin)
         : m_strobeOn(strobeOn), m_landingOn(landingOn), m_taxiOn(taxiOn), m_beaconOn(beaconOn), m_navOn(navOn),
-          m_logoOn(logoOn), m_recognition(recognition), m_cabin(cabin)
+          m_logoOn(logoOn), m_recognitionOn(recognition), m_cabinOn(cabin)
     {}
 
     CAircraftLights CAircraftLights::allLightsOn()
@@ -39,7 +39,7 @@ namespace swift::misc::aviation
         const QString s = u"strobe: " % boolToYesNo(m_strobeOn) % u" landing: " % boolToYesNo(m_landingOn) %
                           u" taxi: " % boolToYesNo(m_taxiOn) % u" beacon: " % boolToYesNo(m_beaconOn) % u" nav: " %
                           boolToYesNo(m_navOn) % u" logo: " % boolToYesNo(m_logoOn) % u" recognition: " %
-                          boolToYesNo(m_recognition) % u" cabin: " % boolToYesNo(m_cabin);
+                          boolToYesNo(m_recognitionOn) % u" cabin: " % boolToYesNo(m_cabinOn);
         return s;
     }
 
@@ -57,8 +57,8 @@ namespace swift::misc::aviation
         case IndexNav: return QVariant::fromValue(m_navOn);
         case IndexStrobe: return QVariant::fromValue(m_strobeOn);
         case IndexTaxi: return QVariant::fromValue(m_taxiOn);
-        case IndexRecognition: return QVariant::fromValue(m_recognition);
-        case IndexCabin: return QVariant::fromValue(m_cabin);
+        case IndexRecognition: return QVariant::fromValue(m_recognitionOn);
+        case IndexCabin: return QVariant::fromValue(m_cabinOn);
         default: return CValueObject::propertyByIndex(index);
         }
     }
@@ -81,8 +81,8 @@ namespace swift::misc::aviation
         case IndexNav: m_navOn = variant.toBool(); break;
         case IndexStrobe: m_strobeOn = variant.toBool(); break;
         case IndexTaxi: m_taxiOn = variant.toBool(); break;
-        case IndexCabin: m_cabin = variant.toBool(); break;
-        case IndexRecognition: m_recognition = variant.toBool(); break;
+        case IndexCabin: m_cabinOn = variant.toBool(); break;
+        case IndexRecognition: m_recognitionOn = variant.toBool(); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }
@@ -99,8 +99,8 @@ namespace swift::misc::aviation
         case IndexNav: return Compare::compare(m_navOn, compareValue.isNavOn());
         case IndexStrobe: return Compare::compare(m_strobeOn, compareValue.isStrobeOn());
         case IndexTaxi: return Compare::compare(m_taxiOn, compareValue.isTaxiOn());
-        case IndexCabin: return Compare::compare(m_cabin, compareValue.isCabinOn());
-        case IndexRecognition: return Compare::compare(m_recognition, compareValue.isRecognitionOn());
+        case IndexCabin: return Compare::compare(m_cabinOn, compareValue.isCabinOn());
+        case IndexRecognition: return Compare::compare(m_recognitionOn, compareValue.isRecognitionOn());
         default: break;
         }
         return 0;
@@ -114,8 +114,8 @@ namespace swift::misc::aviation
         m_navOn = true;
         m_strobeOn = true;
         m_taxiOn = true;
-        m_cabin = true;
-        m_recognition = true;
+        m_cabinOn = true;
+        m_recognitionOn = true;
     }
 
     void CAircraftLights::setAllOff()
@@ -126,7 +126,7 @@ namespace swift::misc::aviation
         m_navOn = false;
         m_strobeOn = false;
         m_taxiOn = false;
-        m_recognition = false;
-        m_cabin = false;
+        m_recognitionOn = false;
+        m_cabinOn = false;
     }
 } // namespace swift::misc::aviation
