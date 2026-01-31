@@ -393,6 +393,9 @@ namespace swift::misc
             //! Model strings
             QStringList getModelStringList(bool sort = true) const;
 
+            //! Model strings and Livery codes
+            QStringList getModelStringAndLiveryList(bool sort = true) const;
+
             //! Model strings as set
             QSet<QString> getModelStringSet() const;
 

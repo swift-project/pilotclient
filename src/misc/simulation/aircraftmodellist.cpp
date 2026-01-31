@@ -901,6 +901,18 @@ namespace swift::misc::simulation
         return ms;
     }
 
+    QStringList CAircraftModelList::getModelStringAndLiveryList(bool sort) const
+    {
+        QStringList ms;
+        for (const CAircraftModel &model : *this)
+        {
+            if (!model.hasModelString()) { continue; }
+            ms.append(model.getModelString() + "{" + model.getModelLivery() + "}");
+        }
+        if (sort) { ms.sort(Qt::CaseInsensitive); }
+        return ms;
+    }
+
     QSet<QString> CAircraftModelList::getModelStringSet() const
     {
         CSetBuilder<QString> ms;
