@@ -35,10 +35,13 @@ namespace swift::core::fsd
 
     PlaneInformationFsinn PlaneInformationFsinn::fromTokens(const QStringList &tokens)
     {
-        if (tokens.size() != 12)
+        // TODO TZ
+        // in same cases we found 13 tokens
+        if (tokens.size() < 12)
         {
             swift::misc::CLogMessage(static_cast<PlaneInformationFsinn *>(nullptr))
-                .debug(u"Wrong number of arguments.");
+                    .debug(u"PlaneInformationFsinn::fromTokens Wrong number of arguments %1.")
+                << tokens.size();
             return {};
         };
 
