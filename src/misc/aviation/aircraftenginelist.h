@@ -57,10 +57,14 @@ namespace swift::misc::aviation
         void setEngines(const CAircraftEngine &engine, int engineNumber);
 
         //! Init some engines
-        void initEngines(int engineNumber, bool on);
+        void initEngines(int engineNumber, bool on, int enginePercentage);
 
         //! Is any engine on?
         bool isAnyEngineOn() const;
+
+        void setEnginePower(int engineNumber, int percentage);
+
+        int getEnginePower(int engineNumber) const;
 
         //! \copydoc swift::misc::mixin::JsonByMetaClass::toJson
         QJsonObject toJson() const;

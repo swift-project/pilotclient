@@ -3,8 +3,8 @@
 
 //! \file
 
-#ifndef SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
-#define SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
+#ifndef SWIFT_SIMPLUGIN_MSFS2024COMMON_SIMCONNECT_DATADEFINITION_H
+#define SWIFT_SIMPLUGIN_MSFS2024COMMON_SIMCONNECT_DATADEFINITION_H
 
 #include <algorithm>
 
@@ -13,14 +13,15 @@
 
 #include "misc/aviation/aircraftlights.h"
 #include "misc/simulation/simulatorinfo.h"
-#include "plugins/simulator/fsxcommon/fsxcommonexport.h"
-#include "plugins/simulator/fsxcommon/simconnectwindows.h"
+#include "plugins/simulator/msfs2024/msfs2024export.h"
+#include "plugins/simulator/msfs2024/simconnectsymbolsmsfs2024.h"
+#include "plugins/simulator/msfs2024/simconnectwindowsmsfs2024.h"
 
 namespace swift::misc::aviation
 {
     class CAircraftParts;
 }
-namespace swift::simplugin::fsxcommon
+namespace swift::simplugin::msfs2024common
 {
     //! Data struct of our own aircraft
     //! \sa SimConnect variables http://msdn.microsoft.com/en-us/library/cc526981.aspx
@@ -46,7 +47,10 @@ namespace swift::simplugin::fsxcommon
         double lightBeacon; //!< Is beacon light on?
         double lightNav; //!< Is nav light on?
         double lightLogo; //!< Is logo light on?
-        // 18
+        double lightRecognition;
+        double lightCabin; //!< Is cabin light on?
+        double lightWing; //!< Is wing light on?
+        // 21
         double transponderCode; //!< Transponder Code
         double com1ActiveMHz; //!< COM1 active frequency
         double com2ActiveMHz; //!< COM2 active frequency
@@ -59,11 +63,11 @@ namespace swift::simplugin::fsxcommon
         double comTest2; //!< COM2 test
         double comStatus1; //!< COM1 status
         double comStatus2; //!< COM2 status
-        // 30
+        // 33
         double flapsHandlePosition; //!< Flaps handle position in percent
         double spoilersHandlePosition; //!< Spoilers out? (flag)
         double gearHandlePosition; //!< Gear handle position (flag)
-        // 33
+        // 36
         double numberOfEngines; //!< Number of engines
         double engine1Combustion; //!< Engine 1 combustion flag
         double engine2Combustion; //!< Engine 2 combustion flag
@@ -73,16 +77,16 @@ namespace swift::simplugin::fsxcommon
         double engine6Combustion; //!< Engine 6 combustion flag
         double engine7Combustion; //!< Engine 7 combustion flag
         double engine8Combustion; //!< Engine 8 combustion flag
-        // 42
+        // 46
         double velocityWorldX; //!< Velocity World X
         double velocityWorldY; //!< Velocity World Y
         double velocityWorldZ; //!< Velocity World Z
         double rotationVelocityBodyX; //!< Rotation Velocity Body X
         double rotationVelocityBodyY; //!< Rotation Velocity Body Y
         double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
-        // 48
+        // 52
         double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
-        // 49
+        // 53
         double engine1Power; //!< Engine 1 power
         double engine2Power; //!< Engine 2 power
         double engine3Power; //!< Engine 3 power
@@ -91,16 +95,25 @@ namespace swift::simplugin::fsxcommon
         double engine6Power; //!< Engine 6 power
         double engine7Power; //!< Engine 7 power
         double engine8Power; //!< Engine 8 power
-        // 57
+        // 61
     };
 
     //! Data struct of aircraft position
     struct DataDefinitionOwnAircraftModel
     {
         char title[256]; //!< Aircraft model string
+        char livery[256]; //!< Aircraft livery string msfs2024
     };
 
     //! Data struct of aircraft model data
+
+    // struct DataDefinitionOwnAircraftLivery
+    //{
+    //     char livery[256]; //!< Aircraft model string
+    // };
+
+    ////! Data struct of aircraft model livery
+
     struct DataDefinitionRemoteAircraftModel
     {
         double cgToGroundFt; //!< Static CG to ground (ft)
@@ -110,6 +123,7 @@ namespace swift::simplugin::fsxcommon
         char atcAirlineNumber[64]; //!< airline number
         char atcFlightNumber[8]; //!< flight number (168)
         char title[256]; //!< Aircraft model string
+        char livery[256]; //!< Aircraft livery string msfs2024
     };
 
     //! Data struct of aircraft data (setable)
@@ -149,7 +163,7 @@ namespace swift::simplugin::fsxcommon
     };
 
     //! Data struct of remote aircraft parts
-    struct FSXCOMMON_EXPORT DataDefinitionRemoteAircraftPartsWithoutLights
+    struct MSFS2024_EXPORT DataDefinitionRemoteAircraftPartsWithoutLights
     {
         double flapsLeadingEdgeLeftPercent; //!< Leading edge  left in percent  0..1
         double flapsLeadingEdgeRightPercent; //!< Leading edge  right in percent 0..1
@@ -203,7 +217,7 @@ namespace swift::simplugin::fsxcommon
     };
 
     //! Data for aircraft lighs
-    struct FSXCOMMON_EXPORT DataDefinitionRemoteAircraftLights
+    struct MSFS2024_EXPORT DataDefinitionRemoteAircraftLights
     {
         double lightStrobe; //!< Is strobe light on?
         double lightLanding; //!< Is landing light on?
@@ -213,7 +227,7 @@ namespace swift::simplugin::fsxcommon
         double lightLogo; //!< Is logo light on?
         double lightRecognition; //!< Is recognition light on
         double lightCabin; //!< Is cabin light on
-
+        double lightWing; //!< Is cabin light on
         //! Convert to lights
         swift::misc::aviation::CAircraftLights toLights() const;
     };
@@ -287,8 +301,8 @@ namespace swift::simplugin::fsxcommon
         ClientAreaSquawkBox
     };
 
-    //! Handles SimConnect data definitions
-    class FSXCOMMON_EXPORT CSimConnectDefinitions
+    //! Handles SimConnect data definitions for MSFS2024
+    class MSFS2024_EXPORT CSimConnectDefinitions
     {
     public:
         //! SimConnect definiton IDs
@@ -316,10 +330,13 @@ namespace swift::simplugin::fsxcommon
         {
             RequestOwnAircraft,
             RequestOwnAircraftTitle,
+            RequestOwnAircraftLivery,
+            RequestSimEnvironment,
             RequestSbData, //!< SB client area / XPDR mode
             RequestMSFSTransponder, //!< MSFS XPDR mode/ident
             RequestFacility,
-            RequestEndMarker //!< free request ids can start here
+            RequestEndMarker, //!< free request ids can start here
+
         };
 
         //! SimObject requests used for AI aircraft and probes
@@ -335,6 +352,21 @@ namespace swift::simplugin::fsxcommon
             SimObjectEndMarker //!< end marker, do NOT remove, also means invalid
         };
 
+        enum REQUEST_ID
+        {
+            REQUEST_NONE = 0,
+            REQUEST_POSITION_USER = 50,
+            REQUEST_CREATE = 100,
+            REQUEST_ALL = 1000,
+            REQUEST_USER,
+            REQUEST_AIRPLANE,
+            REQUEST_HELICOPTER,
+            REQUEST_GROUND,
+            REQUEST_ANIMAL,
+            REQUEST_HOT_AIR,
+            REQUEST_BOAT,
+        };
+
         //! Request to string
         static const QString &requestToString(Request request);
 
@@ -347,6 +379,9 @@ namespace swift::simplugin::fsxcommon
         //! Initialize all data definitions
         static HRESULT initDataDefinitionsWhenConnected(const HANDLE hSimConnect,
                                                         const swift::misc::simulation::CSimulatorInfo &simInfo);
+
+        //! Initialize data retrieval for model list
+        static HRESULT initOwnAircraftList(const HANDLE hSimConnect);
 
     private:
         //! Initialize data definition for our own aircraft
@@ -368,8 +403,11 @@ namespace swift::simplugin::fsxcommon
         static HRESULT initSbDataArea(const HANDLE hSimConnect);
 
         //! Initialize data definition for MSFS transponder
-        static HRESULT initMSFSTransponder(const HANDLE hSimConnect);
-    };
-} // namespace swift::simplugin::fsxcommon
+        // static HRESULT initMSFSTransponder(const HANDLE hSimConnect);
 
-#endif // SWIFT_SIMPLUGIN_FSXCOMMON_SIMCONNECT_DATADEFINITION_H
+        //! Initialize data definition for MSFS transponder
+        static HRESULT initMSFS2024Transponder(const HANDLE hSimConnect);
+    };
+} // namespace swift::simplugin::msfs2024common
+
+#endif // SWIFT_SIMPLUGIN_MSFS2024COMMON_SIMCONNECT_DATADEFINITION_H

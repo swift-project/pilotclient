@@ -281,7 +281,8 @@ namespace swift::simplugin::flightgear
                 // Engine number start counting at 1
                 // We consider the engine running when N1 is bigger than 5 %
                 CAircraftEngine engine { engineNumber + 1,
-                                         m_flightgearData.enginesN1Percentage.at(engineNumber) > 5.0 };
+                                         m_flightgearData.enginesN1Percentage.at(engineNumber) > 5.0,
+                                         static_cast<int>(m_flightgearData.enginesN1Percentage.at(engineNumber)) };
                 engines.push_back(engine);
             }
 

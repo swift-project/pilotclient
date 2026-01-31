@@ -153,6 +153,8 @@ namespace swift::gui
             void ownModelsSimulatorChanged(const swift::misc::simulation::CSimulatorInfo &simulator);
 
         private:
+            static constexpr std::chrono::milliseconds OverlayMsgTimeout { 5000 }; //!< how long overlay is displayed
+
             QScopedPointer<Ui::CDbOwnModelsComponent> ui;
             swift::misc::simulation::IAircraftModelLoader *m_modelLoader =
                 nullptr; //!< read own aircraft models, aka models on disk
@@ -167,7 +169,12 @@ namespace swift::gui
             //! Request own models
             void requestOwnModelsUpdate();
 
-            //! Load the models
+            //! Load the models via SimConnect
+            void loadInstalledModelsSimConnect(const swift::misc::simulation::CSimulatorInfo &simulator,
+                                               swift::misc::simulation::IAircraftModelLoader::LoadMode mode,
+                                               const QStringList &modelDirectories = {});
+
+            //! Load the models via disk
             void loadInstalledModels(const swift::misc::simulation::CSimulatorInfo &simulator,
                                      swift::misc::simulation::IAircraftModelLoader::LoadMode mode,
                                      const QStringList &modelDirectories = {});

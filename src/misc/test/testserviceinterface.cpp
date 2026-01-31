@@ -89,7 +89,7 @@ namespace swift::misc::test
         ok = pingCompare(lights, lightsPing, out, verbose, errors);
         if (verbose) { out << "Pinged lights via interface" << errorInfo(ok) << Qt::endl; }
 
-        const CAircraftEngine engine(2, false);
+        const CAircraftEngine engine(2, false, 0);
         const CAircraftEngine enginePing = testServiceInterface.pingAircraftEngine(engine);
         ok = pingCompare(engine, enginePing, out, verbose, errors);
         if (verbose) { out << "Pinged engine via interface" << errorInfo(ok) << Qt::endl; }

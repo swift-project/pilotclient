@@ -26,7 +26,9 @@ namespace swift::misc::aviation
 
         //! Constructor
         //! \remark numbers are 1 based!
-        CAircraftEngine(int number, bool on);
+        // CAircraftEngine(int number, bool on);
+
+        CAircraftEngine(int number, bool on, int enginePower);
 
         //! Get engine number
         //! \remark numbers are 1 based!
@@ -42,17 +44,23 @@ namespace swift::misc::aviation
         //! Set to on/off
         void setOn(bool on) { m_on = on; }
 
+        //! Set engine percentage (0..100)
+        void setEnginePower(double percentage);
+        double getEnginePower() const { return m_power; }
+
         //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
     private:
         int m_number = 1;
         bool m_on = true;
+        double m_power = 0.0;
 
         SWIFT_METACLASS(
             CAircraftEngine,
             SWIFT_METAMEMBER(number, 0, DisabledForJson),
-            SWIFT_METAMEMBER(on));
+            SWIFT_METAMEMBER(on),
+            SWIFT_METAMEMBER(power));
     };
 } // namespace swift::misc::aviation
 

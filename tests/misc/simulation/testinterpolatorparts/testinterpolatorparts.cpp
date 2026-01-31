@@ -163,7 +163,8 @@ namespace MiscTest
     CAircraftParts CTestInterpolatorParts::createTestParts(int number, qint64 ts, qint64 deltaT, bool onGround)
     {
         CAircraftLights l(true, false, true, false, true, false);
-        CAircraftEngineList e({ CAircraftEngine(1, true), CAircraftEngine(2, false), CAircraftEngine(3, true) });
+        CAircraftEngineList e(
+            { CAircraftEngine(1, true, 100), CAircraftEngine(2, false, 0), CAircraftEngine(3, true, 100) });
         CAircraftParts p(l, true, 20, true, e, false);
         p.setMSecsSinceEpoch(ts - deltaT * number); // values in past
         p.setTimeOffsetMs(0);

@@ -114,6 +114,16 @@ namespace swift::gui::editors
         ui->cb_AircraftPartsEngine4->setChecked(on);
         ui->cb_AircraftPartsEngine5->setChecked(on);
         ui->cb_AircraftPartsEngine6->setChecked(on);
+        ui->cb_AircraftPartsEngine7->setChecked(on);
+        ui->cb_AircraftPartsEngine8->setChecked(on);
+        ui->sb_AircraftPartsEngine1Percentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine2Percentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine3Percentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine4Percentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine5Percentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine6Percentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine7Percentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine8Percentage->setValue(on ? 80 : 0);
     }
 
     aviation::CAircraftParts CAircraftPartsForm::guiToAircraftParts() const
@@ -124,10 +134,48 @@ namespace swift::gui::editors
             ui->cb_AircraftPartsLightsNav->isChecked(), ui->cb_AircraftPartsLightsLogo->isChecked(),
             ui->cb_AircraftPartsLightsRecognition->isChecked(), ui->cb_AircraftPartsLightsCabin->isChecked(),
             ui->cb_AircraftPartsLightsWing->isChecked());
-        const CAircraftEngineList engines(
-            { ui->cb_AircraftPartsEngine1->isChecked(), ui->cb_AircraftPartsEngine2->isChecked(),
-              ui->cb_AircraftPartsEngine3->isChecked(), ui->cb_AircraftPartsEngine4->isChecked(),
-              ui->cb_AircraftPartsEngine5->isChecked(), ui->cb_AircraftPartsEngine6->isChecked() });
+
+        CAircraftEngineList engines;
+        engines.initEngines(8, false, 0); // 6 Engines, alle off, 0%
+
+        // engines.push_back(CAircraftEngine(1, ui->cb_AircraftPartsEngine1->isChecked(),
+        //                                   ui->sb_AircraftPartsEngine1Percentage->value()));
+        // engines.push_back(CAircraftEngine(2, ui->cb_AircraftPartsEngine2->isChecked(),
+        //                                   ui->sb_AircraftPartsEngine2Percentage->value()));
+        // engines.push_back(CAircraftEngine(3, ui->cb_AircraftPartsEngine3->isChecked(),
+        //                                   ui->sb_AircraftPartsEngine3Percentage->value()));
+        // engines.push_back(CAircraftEngine(4, ui->cb_AircraftPartsEngine4->isChecked(),
+        //                                   ui->sb_AircraftPartsEngine4Percentage->value()));
+        // engines.push_back(CAircraftEngine(5, ui->cb_AircraftPartsEngine5->isChecked(),
+        //                                   ui->sb_AircraftPartsEngine5Percentage->value()));
+        // engines.push_back(CAircraftEngine(6, ui->cb_AircraftPartsEngine6->isChecked(),
+        //                                   ui->sb_AircraftPartsEngine6Percentage->value()));
+        // engines.push_back(CAircraftEngine(6, ui->cb_AircraftPartsEngine6->isChecked(),
+        //                                   ui->sb_AircraftPartsEngine6Percentage->value()));
+        // engines.push_back(CAircraftEngine(7, ui->cb_AircraftPartsEngine7->isChecked(),
+        //                                   ui->sb_AircraftPartsEngine7Percentage->value()));
+        // engines.push_back(CAircraftEngine(8, ui->cb_AircraftPartsEngine8->isChecked(),
+        //                                   ui->sb_AircraftPartsEngine8Percentage->value()));
+        //  Set On/Off Status
+        engines.setEngineOn(1, ui->cb_AircraftPartsEngine1->isChecked());
+        engines.setEngineOn(2, ui->cb_AircraftPartsEngine2->isChecked());
+        engines.setEngineOn(3, ui->cb_AircraftPartsEngine3->isChecked());
+        engines.setEngineOn(4, ui->cb_AircraftPartsEngine4->isChecked());
+        engines.setEngineOn(5, ui->cb_AircraftPartsEngine5->isChecked());
+        engines.setEngineOn(6, ui->cb_AircraftPartsEngine6->isChecked());
+        engines.setEngineOn(7, ui->cb_AircraftPartsEngine7->isChecked());
+        engines.setEngineOn(8, ui->cb_AircraftPartsEngine8->isChecked());
+
+        // Setze Prozentsätze
+        engines.setEnginePower(1, ui->sb_AircraftPartsEngine1Percentage->value());
+        engines.setEnginePower(2, ui->sb_AircraftPartsEngine2Percentage->value());
+        engines.setEnginePower(3, ui->sb_AircraftPartsEngine3Percentage->value());
+        engines.setEnginePower(4, ui->sb_AircraftPartsEngine4Percentage->value());
+        engines.setEnginePower(5, ui->sb_AircraftPartsEngine5Percentage->value());
+        engines.setEnginePower(6, ui->sb_AircraftPartsEngine6Percentage->value());
+        engines.setEnginePower(7, ui->sb_AircraftPartsEngine7Percentage->value());
+        engines.setEnginePower(8, ui->sb_AircraftPartsEngine8Percentage->value());
+
         const CAircraftParts parts(
             lights, ui->cb_AircraftPartsGearDown->isChecked(), ui->sb_AircraftPartsFlapsPercentage->value(),
             ui->cb_AircraftPartsSpoilers->isChecked(), engines, ui->cb_AircraftPartsIsOnGround->isChecked());
@@ -157,6 +205,16 @@ namespace swift::gui::editors
         ui->cb_AircraftPartsEngine4->setChecked(engines.isEngineOn(4));
         ui->cb_AircraftPartsEngine5->setChecked(engines.isEngineOn(5));
         ui->cb_AircraftPartsEngine6->setChecked(engines.isEngineOn(6));
+        ui->cb_AircraftPartsEngine7->setChecked(engines.isEngineOn(7));
+        ui->cb_AircraftPartsEngine8->setChecked(engines.isEngineOn(8));
+        ui->sb_AircraftPartsEngine1Percentage->setValue(engines.getEnginePower(1));
+        ui->sb_AircraftPartsEngine2Percentage->setValue(engines.getEnginePower(2));
+        ui->sb_AircraftPartsEngine3Percentage->setValue(engines.getEnginePower(3));
+        ui->sb_AircraftPartsEngine4Percentage->setValue(engines.getEnginePower(4));
+        ui->sb_AircraftPartsEngine5Percentage->setValue(engines.getEnginePower(5));
+        ui->sb_AircraftPartsEngine6Percentage->setValue(engines.getEnginePower(6));
+        ui->sb_AircraftPartsEngine7Percentage->setValue(engines.getEnginePower(7));
+        ui->sb_AircraftPartsEngine8Percentage->setValue(engines.getEnginePower(8));
     }
 
     void CAircraftPartsForm::guiToJson()

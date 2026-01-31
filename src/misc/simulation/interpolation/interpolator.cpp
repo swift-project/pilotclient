@@ -494,7 +494,7 @@ namespace swift::misc::simulation
             do {
                 // set some reasonable values
                 const bool isOnGround = situation.isOnGround();
-                engines.initEngines(engineCount, !isOnGround || situation.isMoving());
+                engines.initEngines(engineCount, !isOnGround || situation.isMoving(), (!isOnGround || situation.isMoving()) ? 100 : 0);
                 parts.setGearDown(isOnGround);
                 parts.setSpoilersOut(false);
                 parts.setEngines(engines);
@@ -530,7 +530,7 @@ namespace swift::misc::simulation
             if (details) { *details = QStringLiteral("no ground info"); }
 
             // no idea if on ground or not
-            engines.initEngines(engineCount, true);
+            engines.initEngines(engineCount, true , 100);
             parts.setEngines(engines);
             parts.setGearDown(true);
             parts.setSpoilersOut(false);

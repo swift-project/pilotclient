@@ -77,7 +77,7 @@ namespace MiscTest
     {
         const CAircraftLights lights = CAircraftLights::allLightsOn();
         CAircraftEngineList engines;
-        engines.initEngines(4, true);
+        engines.initEngines(4, true, 100);
         const bool onGround = true;
         CAircraftParts ap(lights, true, 0, false, engines, onGround);
         return ap;

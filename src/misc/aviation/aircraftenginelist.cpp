@@ -15,7 +15,10 @@ namespace swift::misc::aviation
         int no = 1; // engines 1 based
         for (bool it : enginesOnOff)
         {
-            CAircraftEngine engine(no++, it);
+            CAircraftEngine engine;
+            engine.setNumber(no++);
+            engine.setOn(it);
+            engine.setEnginePower(it ? 80 : 0);
             this->push_back(engine);
         }
     }
@@ -60,14 +63,33 @@ namespace swift::misc::aviation
         }
     }
 
-    void CAircraftEngineList::initEngines(int engineNumber, bool on)
+    void CAircraftEngineList::initEngines(int engineNumber, bool on, int enginePercentage)
     {
         this->clear();
         for (int e = 0; e < engineNumber; e++)
         {
-            const CAircraftEngine engine(e + 1, on);
+            const CAircraftEngine engine(e + 1, on, enginePercentage);
             this->push_back(engine);
         }
+    }
+
+    void CAircraftEngineList::setEnginePower(int engineNumber, int percentage)
+    {
+        Q_ASSERT(engineNumber > 0);
+        for (CAircraftEngine &engine : *this)
+        {
+            if (engine.getNumber() == engineNumber)
+            {
+                engine.setEnginePower(percentage);
+                break;
+            }
+        }
+    }
+
+    int CAircraftEngineList::getEnginePower(int engineNumber) const
+    {
+        Q_ASSERT(engineNumber > 0);
+        return this->getEngine(engineNumber).getEnginePower();
     }
 
     bool CAircraftEngineList::isAnyEngineOn() const { return this->contains(&CAircraftEngine::isOn, true); }

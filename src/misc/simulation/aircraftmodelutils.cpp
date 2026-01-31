@@ -167,9 +167,13 @@ namespace swift::misc::simulation
                                           QStringLiteral("Some of the excluded models are: '%1'").arg(ms), true));
         }
 
-        // specific checks for FSX/XPlane/FG
+        // specific checks for FSX/XPlane/FG/MSFS
         CStatusMessageList specificTests;
-        if (simulator.isMicrosoftOrPrepare3DSimulator() || models.isLikelyFsFamilyModelList())
+        if (simulator.isMSFS2024())
+        {
+            // Placeholder, nothing to do
+        }
+        else if (simulator.isMicrosoftOrPrepare3DSimulator() || models.isLikelyFsFamilyModelList())
         {
             const CStatusMessageList specificTests1 = fscommon::CFsCommonUtil::validateAircraftConfigFiles(
                 models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped);
@@ -190,12 +194,6 @@ namespace swift::misc::simulation
             else if (simulator.isMSFS())
             {
                 const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateMSFSSimObjectsPath(
-                    models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
-                specificTests.push_back(specificTests2);
-            }
-            else if (simulator.isMSFS2024())
-            {
-                const CStatusMessageList specificTests2 = fscommon::CFsCommonUtil::validateMSFS2024SimObjectsPath(
                     models, validModels, invalidModels, ignoreEmpty, stopAtFailedFiles, wasStopped, simulatorDir);
                 specificTests.push_back(specificTests2);
             }
