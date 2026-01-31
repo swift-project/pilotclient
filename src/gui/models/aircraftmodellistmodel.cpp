@@ -81,7 +81,7 @@ namespace swift::gui::models
 
         case OwnAircraftModelMappingTool:
         case StashModel:
-            m_columns.addColumn(CColumn::standardString("model", CAircraftModel::IndexModelString));
+            m_columns.addColumn(CColumn::standardString("model", { CAircraftModel::IndexModelString }));
             m_columns.addColumn(
                 CColumn("DB", "DB metadata", CAircraftModel::IndexDatabaseIcon, new CPixmapFormatter()));
             if (mode == StashModel)

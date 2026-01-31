@@ -816,7 +816,7 @@ namespace swift::core
                 usedModelString.clear();
                 CCallsign::addLogDetailsToList(
                     pReverseLookupMessages, callsign,
-                    QStringLiteral("FsInn modelstring '%1' ignored because of setuo").arg(modelString));
+                    QStringLiteral("FsInn modelstring '%1' ignored because of setup").arg(modelString));
             }
             else if (!CAircraftMatcher::isKnownModelString(modelString, callsign, pReverseLookupMessages))
             {

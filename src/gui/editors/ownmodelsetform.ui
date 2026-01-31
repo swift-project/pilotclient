@@ -164,6 +164,9 @@
         <property name="text">
          <string>all shown below</string>
         </property>
+         <property name="checked">
+           <bool>true</bool>
+         </property>
         <attribute name="buttonGroup">
          <string notr="true">bg_Distributors</string>
         </attribute>
@@ -193,9 +196,6 @@
        <widget class="QRadioButton" name="rb_DistributorsAll">
         <property name="text">
          <string>all distributors</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
         </property>
         <attribute name="buttonGroup">
          <string notr="true">bg_Distributors</string>
