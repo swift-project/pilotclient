@@ -277,10 +277,10 @@ namespace swift::gui::components
     {
         QMessageBox msgBox(QMessageBox::Question, "Reload models from disk",
                            QStringLiteral("Completely reload '%1' models from disk?").arg(simulator.toQString(true)),
-                           QMessageBox::Ok | QMessageBox::Cancel, this);
+                           QMessageBox::Yes | QMessageBox::No, this);
         msgBox.setDefaultButton(QMessageBox::Cancel);
         const auto reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
-        if (reply != QMessageBox::Ok) { return; }
+        if (reply != QMessageBox::Yes) { return; }
 
         this->requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundNoCache);
     }
