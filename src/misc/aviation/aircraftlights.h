@@ -33,7 +33,8 @@ namespace swift::misc::aviation
             IndexNav,
             IndexLogo,
             IndexRecognition,
-            IndexCabin
+            IndexCabin,
+            IndexWing,
         };
 
         //! Default constructor
@@ -48,6 +49,10 @@ namespace swift::misc::aviation
         //! Constructor
         CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn,
                         bool recognition, bool cabin);
+
+        //! Constructor
+        CAircraftLights(bool strobeOn, bool landingOn, bool taxiOn, bool beaconOn, bool navOn, bool logoOn,
+                        bool recognitionOn, bool cabin, bool wingOn);
 
         //! Strobes lights on?
         bool isStrobeOn() const { return m_strobeOn; }
@@ -97,6 +102,12 @@ namespace swift::misc::aviation
         //! Set cabin lights
         void setCabinOn(bool on) { m_cabinOn = on; }
 
+        //! Wing light on?
+        bool isWingOn() const { return m_wingOn; }
+
+        //! Set wing lights
+        void setWingOn(bool on) { m_wingOn = on; }
+
         //! All on
         void setAllOn();
 
@@ -137,6 +148,7 @@ namespace swift::misc::aviation
         bool m_logoOn = false;
         bool m_recognitionOn = false; //!< not supported by aircraft config (VATSIM)
         bool m_cabinOn = false; //!< not supported by aircraft config (VATSIM)
+        bool m_wingOn = false; //!< not supported by aircraft config (VATSIM)
 
         SWIFT_METACLASS(
             CAircraftLights,
@@ -149,6 +161,7 @@ namespace swift::misc::aviation
             SWIFT_METAMEMBER_NAMED(logoOn, "logo_on"),
             SWIFT_METAMEMBER(recognitionOn, 0, DisabledForJson), // disable since JSON is used for network
             SWIFT_METAMEMBER(cabinOn, 0, DisabledForJson) // disable since JSON is used for network
+            SWIFT_METAMEMBER(wingOn, 0, DisabledForJson) // disable since JSON is used for network
         );
     };
 } // namespace swift::misc::aviation
