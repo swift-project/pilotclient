@@ -22,7 +22,7 @@ namespace swift::simplugin::msfs2024
                                            IClientProvider *clientProvider, QObject *parent)
         : CSimulatorFsxCommon(info, ownAircraftProvider, remoteAircraftProvider, clientProvider, parent)
     {
-        this->setDefaultModel({ "Airbus A320 Neo Asobo", CAircraftModel::TypeModelMatchingDefaultModel,
+        this->setDefaultModel({ "A320NEO V2", CAircraftModel::TypeModelMatchingDefaultModel,
                                 "Airbus A320 default model", CAircraftIcaoCode("A320", "L2J") });
     }
 
