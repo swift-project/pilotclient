@@ -42,6 +42,7 @@ if(UNIX AND NOT APPLE)
     installLib(${QT_INSTALL_LIBS} libQt6Gui.so.6)
     installLib(${QT_INSTALL_LIBS} libQt6Multimedia.so.6)
     installLib(${QT_INSTALL_LIBS} libQt6MultimediaWidgets.so.6)
+    installLib(${QT_INSTALL_LIBS} libQt6Concurrent.so.6) # see https://github.com/swift-project/pilotclient/issues/385
     installLib(${QT_INSTALL_LIBS} libQt6Network.so.6)
     installLib(${QT_INSTALL_LIBS} libQt6OpenGL.so.6)
     installLib(${QT_INSTALL_LIBS} libQt6Qml.so.6)
