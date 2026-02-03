@@ -547,6 +547,12 @@ namespace swift::core
         if (!this->isConnectedAndNotShuttingDown()) { return; }
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
+        CStatusMessageList reverseLookupMessages;
+        CCallsign::addLogDetailsToList(&reverseLookupMessages, callsign,
+                                       QStringLiteral("CAirspaceMonitor::sendReadyForModelMatching Flag: %1").arg(rf),
+                                       CAirspaceMonitor::getLogCategories());
+        // TODO remove
+
         // set flag and init ts
         Readiness &readiness = this->addMatchingReadinessFlag(callsign, rf);
 
@@ -863,13 +869,18 @@ namespace swift::core
                                        CAirspaceMonitor::getLogCategories());
 
         const CClient client = this->getClientOrDefaultForCallsign(callsign);
-        this->addOrUpdateAircraftInRange(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery,
-                                         client.getQueriedModelString(), CAircraftModel::TypeQueriedFromNetwork,
-                                         pReverseLookupMessages);
-        this->addReverseLookupMessages(callsign, reverseLookupMessages);
-        this->sendReadyForModelMatching(callsign, ReceivedIcaoCodes); // ICAO codes received
+        const CSimulatedAircraft aircraft = this->addOrUpdateAircraftInRange(
+            callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery, client.getQueriedModelString(),
+            CAircraftModel::TypeQueriedFromNetwork, pReverseLookupMessages);
 
-        emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
+        // we do not change manually assigned models
+        if (aircraft.getModel().getModelType() != CAircraftModel::TypeManuallySet)
+        {
+            this->addReverseLookupMessages(callsign, reverseLookupMessages);
+            this->sendReadyForModelMatching(callsign, ReceivedIcaoCodes); // ICAO codes received
+
+            emit this->requestedNewAircraft(callsign, aircraftIcaoDesignator, airlineIcaoDesignator, livery);
+        }
     }
 
     CAircraftModel CAirspaceMonitor::reverseLookupModelWithFlightplanData(
@@ -1176,8 +1187,8 @@ namespace swift::core
         const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
         if (aircraft.hasValidCallsign())
         {
-            // only if we do not have a DB model yet
-            if (!aircraft.getModel().hasValidDbKey())
+            // we do not change manually assigned models (msfs2024)
+            if (!aircraft.getModel().hasValidDbKey() && aircraft.getModelType() != CAircraftModel::TypeManuallySet)
             {
                 CAircraftModel model = this->reverseLookupModelWithFlightplanData(callsign, aircraftIcao, airlineIcao,
                                                                                   livery, modelString, modelType, log);

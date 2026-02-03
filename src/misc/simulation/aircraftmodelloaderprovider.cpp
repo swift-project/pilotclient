@@ -13,6 +13,7 @@
 #include "misc/mixin/mixincompare.h"
 #include "misc/simulation/flightgear/aircraftmodelloaderflightgear.h"
 #include "misc/simulation/fscommon/aircraftcfgparser.h"
+#include "misc/simulation/msfs2024/aircraftmodelloadermsfs2024.h"
 #include "misc/simulation/xplane/aircraftmodelloaderxplane.h"
 #include "misc/simulation/xplane/xplaneutil.h"
 
@@ -22,6 +23,7 @@ using namespace swift::misc::simulation::settings;
 using namespace swift::misc::simulation::fscommon;
 using namespace swift::misc::simulation::flightgear;
 using namespace swift::misc::simulation::xplane;
+using namespace swift::misc::simulation::msfs2024;
 
 namespace swift::misc::simulation
 {
@@ -31,6 +33,7 @@ namespace swift::misc::simulation
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
         if (simulator.isXPlane()) { return new CAircraftModelLoaderXPlane(parent); }
         if (simulator.isFG()) { return new CAircraftModelLoaderFlightgear(parent); }
+        if (simulator.isMSFS2024()) { return new CAircraftModelLoaderMsfs2024(parent); }
         return CAircraftCfgParser::createModelLoader(simulator, parent);
     }
 
