@@ -53,7 +53,7 @@ namespace swift::misc::aviation
 
     private:
         int m_number = 1;
-        bool m_on = true;
+        bool m_on = false;
         double m_power = 0.0;
 
         SWIFT_METACLASS(

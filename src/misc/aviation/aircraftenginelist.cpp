@@ -63,7 +63,7 @@ namespace swift::misc::aviation
         }
     }
 
-    void CAircraftEngineList::initEngines(int engineNumber, bool on, int enginePercentage)
+    void CAircraftEngineList::initEngines(int engineNumber, bool on, double enginePercentage)
     {
         this->clear();
         for (int e = 0; e < engineNumber; e++)
@@ -73,7 +73,7 @@ namespace swift::misc::aviation
         }
     }
 
-    void CAircraftEngineList::setEnginePower(int engineNumber, int percentage)
+    void CAircraftEngineList::setEnginePower(int engineNumber, double percentage)
     {
         Q_ASSERT(engineNumber > 0);
         for (CAircraftEngine &engine : *this)
@@ -86,7 +86,7 @@ namespace swift::misc::aviation
         }
     }
 
-    int CAircraftEngineList::getEnginePower(int engineNumber) const
+    double CAircraftEngineList::getEnginePower(int engineNumber) const
     {
         Q_ASSERT(engineNumber > 0);
         return this->getEngine(engineNumber).getEnginePower();

@@ -46,7 +46,10 @@ namespace swift::simplugin::fsxcommon
         double lightBeacon; //!< Is beacon light on?
         double lightNav; //!< Is nav light on?
         double lightLogo; //!< Is logo light on?
-        // 18
+        double lightRecognition;
+        double lightCabin; //!< Is cabin light on?
+        double lightWing; //!< Is wing light on?
+        // 21
         double transponderCode; //!< Transponder Code
         double com1ActiveMHz; //!< COM1 active frequency
         double com2ActiveMHz; //!< COM2 active frequency
@@ -59,11 +62,11 @@ namespace swift::simplugin::fsxcommon
         double comTest2; //!< COM2 test
         double comStatus1; //!< COM1 status
         double comStatus2; //!< COM2 status
-        // 30
+        // 33
         double flapsHandlePosition; //!< Flaps handle position in percent
         double spoilersHandlePosition; //!< Spoilers out? (flag)
         double gearHandlePosition; //!< Gear handle position (flag)
-        // 33
+        // 36
         double numberOfEngines; //!< Number of engines
         double engine1Combustion; //!< Engine 1 combustion flag
         double engine2Combustion; //!< Engine 2 combustion flag
@@ -73,16 +76,7 @@ namespace swift::simplugin::fsxcommon
         double engine6Combustion; //!< Engine 6 combustion flag
         double engine7Combustion; //!< Engine 7 combustion flag
         double engine8Combustion; //!< Engine 8 combustion flag
-        // 42
-        double velocityWorldX; //!< Velocity World X
-        double velocityWorldY; //!< Velocity World Y
-        double velocityWorldZ; //!< Velocity World Z
-        double rotationVelocityBodyX; //!< Rotation Velocity Body X
-        double rotationVelocityBodyY; //!< Rotation Velocity Body Y
-        double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
-        // 48
-        double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
-        // 49
+        // 45
         double engine1Power; //!< Engine 1 power
         double engine2Power; //!< Engine 2 power
         double engine3Power; //!< Engine 3 power
@@ -91,7 +85,16 @@ namespace swift::simplugin::fsxcommon
         double engine6Power; //!< Engine 6 power
         double engine7Power; //!< Engine 7 power
         double engine8Power; //!< Engine 8 power
-        // 57
+        // 53
+        double velocityWorldX; //!< Velocity World X
+        double velocityWorldY; //!< Velocity World Y
+        double velocityWorldZ; //!< Velocity World Z
+        double rotationVelocityBodyX; //!< Rotation Velocity Body X
+        double rotationVelocityBodyY; //!< Rotation Velocity Body Y
+        double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
+        // 59
+        double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
+        // 60
     };
 
     //! Data struct of aircraft position

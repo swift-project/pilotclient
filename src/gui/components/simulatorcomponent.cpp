@@ -209,6 +209,22 @@ namespace swift::gui::components
                                         iconRadio);
         this->addOrUpdateLiveDataByName(QStringLiteral("Transponder"), ownAircraft.getTransponderCodeFormatted(),
                                         iconRadio);
+
+        // TODO TZ
+        const int engineCount = sGui->getISimulator()->getOwnAircraftParts().getEngines().getEngineCount();
+
+        for (int count = 0; count < engineCount; ++count)
+        {
+            const int engNum = count + 1;
+            const int engof = sGui->getISimulator()->getOwnAircraftParts().getEngines().isEngineOn(engNum);
+            this->addOrUpdateLiveDataByName(QStringLiteral("ENG%1OnOff").arg(engNum),
+                                            engof < 0 ? QStringLiteral("N/A") : QString::number(engof, 'd', 1),
+                                            CIcon(CIcons::ApplicationSimulator));
+            const double engpwr = sGui->getISimulator()->getOwnAircraftParts().getEngines().getEnginePower(engNum);
+            this->addOrUpdateLiveDataByName(QStringLiteral("ENG%1Pwr").arg(engNum),
+                                            engpwr < 0 ? QStringLiteral("N/A") : QString::number(engpwr, 'f', 1),
+                                            CIcon(CIcons::ApplicationSimulator));
+        }
     }
 
     void CSimulatorComponent::onSimulatorStatusChanged(int status)

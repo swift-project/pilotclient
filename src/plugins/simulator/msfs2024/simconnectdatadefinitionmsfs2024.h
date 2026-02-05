@@ -77,16 +77,7 @@ namespace swift::simplugin::msfs2024common
         double engine6Combustion; //!< Engine 6 combustion flag
         double engine7Combustion; //!< Engine 7 combustion flag
         double engine8Combustion; //!< Engine 8 combustion flag
-        // 46
-        double velocityWorldX; //!< Velocity World X
-        double velocityWorldY; //!< Velocity World Y
-        double velocityWorldZ; //!< Velocity World Z
-        double rotationVelocityBodyX; //!< Rotation Velocity Body X
-        double rotationVelocityBodyY; //!< Rotation Velocity Body Y
-        double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
-        // 52
-        double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
-        // 53
+        // 45
         double engine1Power; //!< Engine 1 power
         double engine2Power; //!< Engine 2 power
         double engine3Power; //!< Engine 3 power
@@ -95,7 +86,16 @@ namespace swift::simplugin::msfs2024common
         double engine6Power; //!< Engine 6 power
         double engine7Power; //!< Engine 7 power
         double engine8Power; //!< Engine 8 power
-        // 61
+        // 53
+        double velocityWorldX; //!< Velocity World X
+        double velocityWorldY; //!< Velocity World Y
+        double velocityWorldZ; //!< Velocity World Z
+        double rotationVelocityBodyX; //!< Rotation Velocity Body X
+        double rotationVelocityBodyY; //!< Rotation Velocity Body Y
+        double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
+        // 59
+        double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
+        // 60
     };
 
     //! Data struct of aircraft position

@@ -114,6 +114,7 @@ namespace swift::simplugin::fsxcommon
                                              "Feet");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "SIM ON GROUND",
                                              "Bool");
+        // 12
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT STROBE",
                                              "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT LANDING",
@@ -131,6 +132,7 @@ namespace swift::simplugin::fsxcommon
             SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT CABIN", "Bool");
         hr +=
             SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "LIGHT WING", "Bool");
+        // 21
 
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "TRANSPONDER CODE:1",
                                              nullptr);
@@ -156,15 +158,17 @@ namespace swift::simplugin::fsxcommon
                                              "Enum");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "COM STATUS:2",
                                              "Enum");
+        // 33
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "FLAPS HANDLE PERCENT", "Percent Over 100");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "SPOILERS HANDLE POSITION", "Percent Over 100");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "GEAR HANDLE POSITION", "Bool");
+        // 36
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "NUMBER OF ENGINES",
                                              "Number");
-        // Simconnect supports index 1 - 4
+
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "GENERAL ENG COMBUSTION:1", "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
@@ -181,7 +185,7 @@ namespace swift::simplugin::fsxcommon
                                              "GENERAL ENG COMBUSTION:7", "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "GENERAL ENG COMBUSTION:8", "Bool");
-
+        // 45
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "GENERAL ENG THROTTLE LEVER POSITION:1", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
@@ -198,7 +202,7 @@ namespace swift::simplugin::fsxcommon
                                              "GENERAL ENG THROTTLE LEVER POSITION:7", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "GENERAL ENG THROTTLE LEVER POSITION:8", "percent");
-
+        // 53
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD X",
                                              "Feet per second");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD Y",
@@ -214,6 +218,7 @@ namespace swift::simplugin::fsxcommon
         // FS2020
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "INDICATED ALTITUDE CALIBRATED", "Feet");
+        // 60
 
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE",
                                              nullptr, SIMCONNECT_DATATYPE_STRING256);

@@ -607,7 +607,7 @@ namespace swift::core
 
     const CCallsign &ISimulator::getTestCallsign()
     {
-        static const CCallsign cs("SWIFT");
+        static const CCallsign cs("SWT2026");
         return cs;
     }
 

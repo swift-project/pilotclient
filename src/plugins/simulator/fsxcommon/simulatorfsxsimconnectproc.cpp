@@ -245,7 +245,7 @@ namespace swift::simplugin::fsxcommon
             {
             case CSimConnectDefinitions::RequestOwnAircraft:
             {
-                static_assert(sizeof(DataDefinitionOwnAircraft) == 57 * sizeof(double),
+                static_assert(sizeof(DataDefinitionOwnAircraft) == 60 * sizeof(double),
                               "DataDefinitionOwnAircraft has an incorrect size.");
                 const DataDefinitionOwnAircraft *ownAircaft =
                     reinterpret_cast<const DataDefinitionOwnAircraft *>(&pObjData->dwData);

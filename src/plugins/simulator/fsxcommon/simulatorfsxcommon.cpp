@@ -740,14 +740,20 @@ namespace swift::simplugin::fsxcommon
                                      dtb(simulatorOwnAircraft.lightNav), dtb(simulatorOwnAircraft.lightLogo));
 
         CAircraftEngineList engines;
-        const QList<bool> helperList { dtb(simulatorOwnAircraft.engine1Combustion),
-                                       dtb(simulatorOwnAircraft.engine2Combustion),
-                                       dtb(simulatorOwnAircraft.engine3Combustion),
-                                       dtb(simulatorOwnAircraft.engine4Combustion) };
+        const QList<bool> helperList {
+            dtb(simulatorOwnAircraft.engine1Combustion), dtb(simulatorOwnAircraft.engine2Combustion),
+            dtb(simulatorOwnAircraft.engine3Combustion), dtb(simulatorOwnAircraft.engine4Combustion),
+            dtb(simulatorOwnAircraft.engine5Combustion), dtb(simulatorOwnAircraft.engine6Combustion),
+            dtb(simulatorOwnAircraft.engine7Combustion), dtb(simulatorOwnAircraft.engine8Combustion)
+        };
+        const QList<double> powerList { simulatorOwnAircraft.engine1Power, simulatorOwnAircraft.engine2Power,
+                                        simulatorOwnAircraft.engine3Power, simulatorOwnAircraft.engine4Power,
+                                        simulatorOwnAircraft.engine5Power, simulatorOwnAircraft.engine6Power,
+                                        simulatorOwnAircraft.engine7Power, simulatorOwnAircraft.engine8Power };
 
         for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
         {
-            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, true), 100));
+            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, false), powerList.value(index, 0)));
         }
 
         const CAircraftParts parts(lights, dtb(simulatorOwnAircraft.gearHandlePosition),
