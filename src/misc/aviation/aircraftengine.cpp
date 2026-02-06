@@ -12,7 +12,7 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::aviation, CAircraftEngine)
 namespace swift::misc::aviation
 {
     CAircraftEngine::CAircraftEngine(int number, bool on, int enginePercentage)
-        : m_number(number), m_on(on), m_power(enginePercentage)
+        : m_number(number), m_on(on), m_rpm_pct(enginePercentage)
     {
         Q_ASSERT_X(number > 0, "CAircraftEngine", "Engine numbers have to be > 1");
     }
@@ -25,10 +25,10 @@ namespace swift::misc::aviation
 
     void CAircraftEngine::setEnginePower(double power)
     {
-        m_power = power;
-        if (!m_on) m_power = 0;
-        if (m_power > 100) m_power = 100;
-        if (m_power < 0) m_power = 0;
+        m_rpm_pct = power;
+        if (!m_on) m_rpm_pct = 0;
+        if (m_rpm_pct > 100) m_rpm_pct = 100;
+        if (m_rpm_pct < 0) m_rpm_pct = 0;
     }
 
     QString CAircraftEngine::convertToQString(bool i18n) const
