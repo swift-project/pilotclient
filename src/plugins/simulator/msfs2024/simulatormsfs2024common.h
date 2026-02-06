@@ -499,6 +499,9 @@ namespace swift::simplugin::msfs2024common
         setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation,
                         const swift::simplugin::msfs2024common::DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
+        double calcEngineFactor(int engineType);
+
+
         //! Called when data about our own aircraft are received
         void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
 

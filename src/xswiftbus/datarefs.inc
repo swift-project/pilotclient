@@ -27689,10 +27689,10 @@ namespace xplane
                     };
 
                     //! Switch, 0 or 1. This is to turn COM1 on to get a clearance without turning the rest of the avionics on. (boolean)
-                    struct gnd_com_power_on
+                    struct gnd_com_rpm_pct_on
                     {
                         //! Dataref name
-                        static constexpr const char *name() { return "sim/cockpit2/switches/gnd_com_power_on"; }
+                        static constexpr const char *name() { return "sim/cockpit2/switches/gnd_com_rpm_pct_on"; }
                         //! Can be written to?
                         static constexpr bool writable = true;
                         //! Dataref type

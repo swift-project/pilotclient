@@ -221,7 +221,7 @@ namespace swift::gui::components
                                             engof < 0 ? QStringLiteral("N/A") : QString::number(engof, 'd', 1),
                                             CIcon(CIcons::ApplicationSimulator));
             const double engpwr = sGui->getISimulator()->getOwnAircraftParts().getEngines().getEnginePower(engNum);
-            this->addOrUpdateLiveDataByName(QStringLiteral("ENG%1Pwr").arg(engNum),
+            this->addOrUpdateLiveDataByName(QStringLiteral("ENG%1PwrPct").arg(engNum),
                                             engpwr < 0 ? QStringLiteral("N/A") : QString::number(engpwr, 'f', 1),
                                             CIcon(CIcons::ApplicationSimulator));
         }

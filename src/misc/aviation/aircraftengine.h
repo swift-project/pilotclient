@@ -46,7 +46,7 @@ namespace swift::misc::aviation
 
         //! Set engine percentage (0..100)
         void setEnginePower(double percentage);
-        double getEnginePower() const { return m_power; }
+        double getEnginePower() const { return m_rpm_pct; }
 
         //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
@@ -54,14 +54,15 @@ namespace swift::misc::aviation
     private:
         int m_number = 1;
         bool m_on = false;
-        double m_power = 0.0;
+        double m_rpm_pct = 0.0;
 
         SWIFT_METACLASS(
             CAircraftEngine,
             SWIFT_METAMEMBER(number, 0, DisabledForJson),
             SWIFT_METAMEMBER(on),
-            SWIFT_METAMEMBER(power));
+            SWIFT_METAMEMBER(rpm_pct));
     };
+
 } // namespace swift::misc::aviation
 
 Q_DECLARE_METATYPE(swift::misc::aviation::CAircraftEngine)

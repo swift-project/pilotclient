@@ -374,7 +374,7 @@
                   <number>100</number>
                 </property>
                 <property name="singleStep">
-                  <number>11</number>
+                  <number>12</number>
                 </property>
               </widget>
             </item>
@@ -384,7 +384,7 @@
                   <number>100</number>
                 </property>
                 <property name="singleStep">
-                  <number>11</number>
+                  <number>13</number>
                 </property>
               </widget>
             </item>

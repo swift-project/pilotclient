@@ -888,6 +888,26 @@ namespace swift::simplugin::msfs2024common
         aircraftSituation.setAltitude(
             CAltitude(simulatorOwnAircraft.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
     }
+    
+    double CSimulatorMsfs2024::calcEngineFactor(int engineType)
+    {
+        // this is a bit of a guess, but it seems that idle is around 30% in the sim, so
+        // I use that as 0% for better resolution
+        // because we read "GENERAL ENG PCT MAX RPM" and send "GENERAL ENG THROTTLE LEVER POSITION"
+        double factor = 30.0; // default factor, keep 30% as 0% for better resolution
+        switch (engineType)
+        {
+        case 0: factor = 25.0; break; // piston, seems to be around 30% at idle
+        case 1: factor = 40.0; break; // jet, seems to be around 55% at idle
+        case 2: factor = 25.0; break; // none, seems to be around 0% at idle
+        case 3: factor = 80.0; break; // helo, seems to be around 99% at idle
+        case 4: factor = 30.0; break; // unsupported, seems to be around 30% at idle
+        case 5: factor = 40.0; break; // turboprop, seems to be around 40% at idle
+        case 6: factor = 1.0; break; // electric, seems to be around 0% at idle
+        default: factor = 30.0; break; // default, keep 30% factor
+        }
+        return factor;
+    }
 
     void CSimulatorMsfs2024::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
     {
@@ -951,9 +971,13 @@ namespace swift::simplugin::msfs2024common
                                         simulatorOwnAircraft.engine5Power, simulatorOwnAircraft.engine6Power,
                                         simulatorOwnAircraft.engine7Power, simulatorOwnAircraft.engine8Power };
 
+        DOUBLE factor = this->calcEngineFactor(static_cast<int>(simulatorOwnAircraft.engineType)); // clears all pending aircraft etc
+
         for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
         {
-            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, false), powerList.value(index, 0)));
+            DOUBLE engine_rpm = (powerList.value(index, 0) - factor) * 100 / (100 - factor);
+            if (engine_rpm < 0) engine_rpm = 0;
+            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, false), engine_rpm));
         }
 
         const CAircraftParts parts(lights, dtb(simulatorOwnAircraft.gearHandlePosition),

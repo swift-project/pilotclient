@@ -753,7 +753,13 @@ namespace swift::simplugin::fsxcommon
 
         for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
         {
-            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, false), powerList.value(index, 0)));
+            // this is a bit of a guess, but it seems that idle is around 30% in the sim, so
+            // I use that as 0% for better resolution
+            // because we read "GENERAL ENG PCT MAX RPM" and send "GENERAL ENG THROTTLE LEVER POSITION"
+            CONST DOUBLE factor = 30.0;
+            DOUBLE engine_rpm = (powerList.value(index, 0) - factor) * 100 / (100 - factor);
+            if (engine_rpm < 0) engine_rpm = 0;
+            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, false), engine_rpm));
         }
 
         const CAircraftParts parts(lights, dtb(simulatorOwnAircraft.gearHandlePosition),
