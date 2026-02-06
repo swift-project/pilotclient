@@ -753,7 +753,9 @@ namespace swift::simplugin::fsxcommon
 
         for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
         {
-            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, false), powerList.value(index, 0)));
+            CONST DOUBLE engine_rpm = (powerList.value(index) - 20) * 100 /
+                                      20; // convert to 0-100% range, -20 is idle power, 20 is max power, so 40 range
+            engines.push_back(CAircraftEngine(index + 1, helperList.value(index, false), engine_rpm));
         }
 
         const CAircraftParts parts(lights, dtb(simulatorOwnAircraft.gearHandlePosition),

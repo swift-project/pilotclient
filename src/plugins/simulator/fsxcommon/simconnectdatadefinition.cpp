@@ -187,21 +187,21 @@ namespace swift::simplugin::fsxcommon
                                              "GENERAL ENG COMBUSTION:8", "Bool");
         // 45
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
-                                             "GENERAL ENG THROTTLE LEVER POSITION:1", "percent");
+                                             "GENERAL ENG PCT MAX RPM:1", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
-                                             "GENERAL ENG THROTTLE LEVER POSITION:2", "percent");
+                                             "GENERAL ENG PCT MAX RPM:2", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
-                                             "GENERAL ENG THROTTLE LEVER POSITION:3", "percent");
+                                             "GENERAL ENG PCT MAX RPM:3", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
-                                             "GENERAL ENG THROTTLE LEVER POSITION:4", "percent");
+                                             "GENERAL ENG PCT MAX RPM:4", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
-                                             "GENERAL ENG THROTTLE LEVER POSITION:5", "percent");
+                                             "GENERAL ENG PCT MAX RPM:5", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
-                                             "GENERAL ENG THROTTLE LEVER POSITION:6", "percent");
+                                             "GENERAL ENG PCT MAX RPM:6", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
-                                             "GENERAL ENG THROTTLE LEVER POSITION:7", "percent");
+                                             "GENERAL ENG PCT MAX RPM:7", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
-                                             "GENERAL ENG THROTTLE LEVER POSITION:8", "percent");
+                                             "GENERAL ENG PCT MAX RPM:8", "percent");
         // 53
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD X",
                                              "Feet per second");
