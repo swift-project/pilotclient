@@ -247,6 +247,22 @@ namespace swift::misc
         return s;
     }
 
+    const QString &CSwiftDirectories::translationsDirectory()
+    {
+        static const QString s = [] {
+            // Prefer <share>/translations/ next to the binary's share directory
+            const QString shareDir = CSwiftDirectories::shareDirectory();
+            if (!shareDir.isEmpty())
+            {
+                const QString candidate = QDir::cleanPath(shareDir + QDir::separator() + "translations");
+                if (QDir(candidate).exists()) { return candidate; }
+            }
+            // Fall back to <bindir>/translations/
+            return QDir::cleanPath(CSwiftDirectories::binDirectory() + QDir::separator() + "translations");
+        }();
+        return s;
+    }
+
     QString getHtmlDirImpl()
     {
         const QString d(CSwiftDirectories::shareDirectory());

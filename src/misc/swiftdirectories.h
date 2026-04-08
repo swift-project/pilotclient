@@ -86,6 +86,9 @@ namespace swift::misc
         //! Where qss files are located
         static const QString &stylesheetsDirectory();
 
+        //! Where .qm translation files are located
+        static const QString &translationsDirectory();
+
         //! Where HTML files are located
         static const QString &htmlDirectory();
 

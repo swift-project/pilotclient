@@ -51,6 +51,9 @@ namespace swift::gui::components
         //! Widget style has changed
         void widgetStyleChanged(int index);
 
+        //! UI language has changed
+        void languageChanged(int index);
+
         QScopedPointer<Ui::CSettingsGuiComponent> ui;
         swift::misc::CSetting<settings::TGeneralGui> m_guiSettings { this, &CSettingsGuiComponent::guiSettingsChanged };
     };

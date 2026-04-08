@@ -34,10 +34,16 @@ namespace swift::gui::settings
         this->m_preferredSelection = static_cast<int>(selection);
     }
 
+    void CGeneralGuiSettings::setUiLanguage(const QString &locale)
+    {
+        // Normalize: accept "zh_CN", "de_DE", "de", "DE" etc.
+        m_uiLanguage = locale.trimmed();
+    }
+
     QString CGeneralGuiSettings::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        return QStringLiteral("Widget style: %1").arg(this->m_widgetStyle);
+        return QStringLiteral("Widget style: %1, Language: %2").arg(m_widgetStyle, m_uiLanguage);
     }
 
     QVariant CGeneralGuiSettings::propertyByIndex(swift::misc::CPropertyIndexRef index) const
@@ -48,6 +54,7 @@ namespace swift::gui::settings
         {
         case IndexWidgetStyle: return QVariant::fromValue(this->m_widgetStyle);
         case IndexPreferredSelection: return QVariant::fromValue(this->m_preferredSelection);
+        case IndexUiLanguage: return QVariant::fromValue(this->m_uiLanguage);
         default: return CValueObject::propertyByIndex(index);
         }
     }
@@ -64,6 +71,7 @@ namespace swift::gui::settings
         {
         case IndexWidgetStyle: this->setWidgetStyle(variant.toString()); break;
         case IndexPreferredSelection: this->m_preferredSelection = variant.toInt(); break;
+        case IndexUiLanguage: this->setUiLanguage(variant.toString()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
     }

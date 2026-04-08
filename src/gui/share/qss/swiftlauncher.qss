@@ -4,29 +4,38 @@
  */
 
 /**
-Works around two issues on Mac OS
- 1. The launcher dialog was entirely transparent
- 2. Transparency caused the QToolBox labels to be broken
+ Works around two issues on Mac OS
+  1. The launcher dialog was entirely transparent
+  2. Transparency caused the QToolBox labels to be broken
 **/
 QStackedWidget#sw_SwiftLauncher {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  background-color: #252d3d;
 }
 
 /** special effects for start buttons **/
 #pg_Start QToolButton {
-  border: 1px solid green;
-  border-radius: 5px;
+  border: 1px solid #3a4560;
+  border-radius: 6px;
+  background-color: rgba(74, 158, 255, 0.12);
+  color: #e0e6f0;
+  padding: 4px 8px;
 }
 
 #pg_Start QToolButton:hover {
-  border: 5px solid green;
-  border-radius: 5px;
+  border: 2px solid #4a9eff;
+  border-radius: 6px;
+  background-color: rgba(74, 158, 255, 0.28);
   min-width: 30px;
   min-height: 30px;
 }
 
+#pg_Start QToolButton:pressed {
+  background-color: rgba(74, 158, 255, 0.45);
+}
+
 #pg_start QToolTip {
-  color: #ffffff;
-  background-color: #2a82da;
-  border: 1px solid white;
+  color: #e0e6f0;
+  background-color: #252d3d;
+  border: 1px solid #4a9eff;
+  border-radius: 4px;
 }

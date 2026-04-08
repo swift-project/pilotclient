@@ -9,14 +9,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
-    <height>600</height>
+    <width>800</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>700</width>
-    <height>600</height>
+    <width>750</width>
+    <height>620</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
    <bool>true</bool>
   </property>
   <property name="wizardStyle">
-   <enum>QWizard::ClassicStyle</enum>
+   <enum>QWizard::ModernStyle</enum>
   </property>
   <property name="options">
    <set>QWizard::HaveCustomButton1</set>

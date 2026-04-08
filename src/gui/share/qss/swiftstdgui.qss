@@ -3,45 +3,15 @@
  * SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
  */
 
-/*
-Resources:
-http://qt-project.org/doc/qt-5.3/stylesheet-examples.html
-http://web.forret.com/tools/color.asp?RGB=2F4F4F&name=Dark+slate+gray
-
-Remarks:
-1) there is no opacity with background image, so we need semitransparent images
-2) use -- instead of :: for namespaces
-
-Used dynamic properties
-framelessMainWindow (infobar.qss , here)
-*/
-
-/* fix scroll areas */
-
-/* in flight plan */
-/**
-QAbstractScrollArea #qw_FlightPlanTabMain { background-color: transparent; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
-QAbstractScrollArea #qw_RemarksGenerator  { background-color: transparent; background-image: url(:/textures/icons/textures/texture-inner.jpg); }
-**/
-
-/* in log component */
-/**
-QAbstractScrollArea #pg_StatusPageMessages { background-color: black; }
-QAbstractScrollArea #pg_StatusPageConsole  { background-color: black; }
-**/
-
 /* main GUI parts */
 
 /* style when main window is frameless */
 #wi_CentralWidgetOutside[framelessMainWindow="true"] {
-  background-image: url(:/textures/icons/textures/texture-outer.jpg);
-  background-color: darkslategray;
+  background-color: #1e2433;
   margin: 0px;
-  border: 2px solid green;
-  border-radius: 20px;
+  border: 2px solid #3a4560;
+  border-radius: 14px;
 }
-
-/* dw_InfoBarStatus has its own style sheet */
 
 #fr_CentralFrameInside {
   margin-right: 5px;
@@ -56,9 +26,9 @@ QAbstractScrollArea #pg_StatusPageConsole  { background-color: black; }
 
 #sw_MainMiddle {
   padding: 3px;
-  border: 1px solid green;
-  border-radius: 10px;
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  border: 1px solid #3a4560;
+  border-radius: 8px;
+  background-color: #252d3d;
 }
 
 /* close button with frameless windows */
@@ -72,76 +42,82 @@ QAbstractScrollArea #pg_StatusPageConsole  { background-color: black; }
 
 /* for FontDialog etc. */
 #comp_Settings QToolButton {
-  background-color: rgba(0, 0, 255, 128);
+  background-color: rgba(74, 158, 255, 0.22);
   border-style: none;
-  border-radius:3px;
-  color: yellow;
+  border-radius: 3px;
+  color: #e0e6f0;
 }
 
 #wi_MainKeypadArea QPushButton {
-  background-color: black;
-  color: white;
+  background-color: #1e2433;
+  color: #e0e6f0;
   border-style: solid;
   border-width: 1px;
-  border-radius:6px;
-  border-color: green;
-  max-height:20px;
+  border-radius: 6px;
+  border-color: #3a4560;
+  max-height: 20px;
   min-width: 60px;
-  min-height:20px;
+  min-height: 20px;
 }
 
 #wi_MainKeypadArea QPushButton:checked {
   border-style: solid;
-  border-color: green;
+  border-color: #4a9eff;
+  border-width: 2px;
   font: bold;
-  color: yellow;
+  color: #e0e6f0;
 }
 
 #wi_MainKeypadArea QPushButton#pb_Connect:checked {
-  background-color: green;
-  color: white;
+  background-color: rgba(62, 207, 142, 0.28);
+  border-color: #3ecf8e;
+  color: #e0e6f0;
 }
 
 #wi_MainKeypadArea QPushButton:pressed {
-  background-color: lightblue;
+  background-color: rgba(74, 158, 255, 0.35);
+}
+
+#wi_MainKeypadArea QPushButton:hover {
+  border-color: #4a9eff;
+  background-color: rgba(74, 158, 255, 0.15);
 }
 
 /* cockpit needs to come after sw_MainMiddle */
 #comp_CockpitComComponent QPushButton {
   background-color: transparent;
   border-style: solid;
-  border-radius:3px;
+  border-radius: 3px;
   border-width: 0px;
-  border-color: blue;
-  color: yellow;
+  border-color: #3a4560;
+  color: #4a9eff;
   padding: 1px;
   margin: 2px;
 }
 
 /* fixes scroll area for audio setup and inner background */
-#sa_AudioSetup { background-color: black; }
+#sa_AudioSetup { background-color: #1e2433; }
 #sa_AudioComponentInner {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-  background-color: black;
+  background-color: #252d3d;
 }
 
 /* COM panel */
 #wip_CockpitComPanelShowHideBar QPushButton {
   background-color: transparent;
   border-style: solid;
-  border-radius:3px;
+  border-radius: 3px;
   border-width: 0px;
-  border-color: blue;
+  border-color: #3a4560;
 }
 
 #lep_CommandLineInput {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-  background: black;
+  background: #1e2433;
   margin-bottom: 5px;
   padding: 3px;
+  border: 1px solid #4a9eff;
   border-radius: 5px;
 }
 
 #gb_hotkey #gb_action #gb_machine {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  background-color: #252d3d;
 }

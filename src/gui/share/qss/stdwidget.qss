@@ -4,17 +4,26 @@
  */
 
 /*
-Resources:
-http://qt-project.org/doc/qt-5.3/stylesheet-examples.html
-http://web.forret.com/tools/color.asp?RGB=2F4F4F&name=Dark+slate+gray
-
-Remarks:
-1) there is no opacity with background image, so we need semitransparent images
-2) use -- instead of :: for namespaces
-
-Used dynamic properties
-framelessMainWindow (infobar.qss , here)
-*/
+ * Design tokens
+ * Background:  #1e2433  (dark navy)
+ * Surface:     #252d3d  (panel/card)
+ * Surface2:    #2c3448  (elevated panel)
+ * Border:      #3a4560  (subtle divider)
+ * Accent:      #4a9eff  (blue)
+ * Accent-dim:  rgba(74,158,255,0.20)
+ * Text:        #e0e6f0
+ * Text-dim:    #8a96a8
+ * Error:       #e05c5c
+ * Warning:     #f0b429
+ * Success:     #3ecf8e
+ *
+ * Used dynamic properties:
+ *   framelessMainWindow  (infobar.qss, swiftstdgui.qss)
+ *   readOnly             (QLineEdit, QCheckBox)
+ *   validation           (QLineEdit: error/warning/ok)
+ *   blinkOn              (QPushButton)
+ *   supervisormsg        (QTabBar, QTextEdit)
+ */
 
 QFrame {
   border-style: solid;
@@ -23,22 +32,22 @@ QFrame {
 }
 
 QCheckBox {
-  border: 0px solid green; /* also borders label */
+  border: 0px;
   background: transparent;
 }
 
-/* CGuiUtility::checkBoxReadOnly */
-/* used for read-only checkboxes */
-/* QCheckBox[readOnly="true"] { background: rgb(40,40,40); } */
-
 QCheckBox::indicator {
-  color: #b1b1b1;
-  border: 1px solid #7f7f7f;
-  width: 15px;
-  height: 15px;
+  color: #8a96a8;
+  border: 1px solid #3a4560;
+  background: #1e2433;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
 }
 
 QCheckBox::indicator:checked {
+  background: #4a9eff;
+  border-color: #4a9eff;
   image: url(:/diagona/icons/diagona/icons/tick.png);
 }
 
@@ -48,78 +57,56 @@ QCheckBox::indicator:indeterminate {
 
 /* Main window */
 QMainWindow {
-  background-image: url(:/textures/icons/textures/texture-outer.jpg);
-  background-color: darkslategray;
+  background-color: #1e2433;
 }
 
-/* separator between info areas and rest */
-/* this hides them */
 QMainWindow::separator {
   background: transparent;
-  width: 0px;  /* when vertical */
-  height: 0px; /* when horizontal */
+  width: 0px;
+  height: 0px;
 }
 
 QMainWindow::separator:hover {
   background: transparent;
 }
 
-/* Dialog, sometimes main window */
+/* Dialog */
 QDialog {
-  background-image: url(:/textures/icons/textures/texture-outer.jpg);
-  background-color: darkslategray;
+  background-color: #1e2433;
 }
 
-/* separator between info areas and rest */
-/* this hides them */
 QDialog::separator {
   background: transparent;
-  width: 0px;  /* when vertical */
-  height: 0px; /* when horizontal */
+  width: 0px;
+  height: 0px;
 }
 
 QDialog::separator:hover {
   background: transparent;
 }
 
-/* setup load dialog details frame */
-/*
-swift--gui--Components--CSetupLoadingDialog #fr_Details {
-  background-image: url(:/textures/icons/textures/texture-outer.jpg);
-  background-color: darkslategray;
-}
-*/
-
 QFileDialog #sidebar {
-  background: black;
+  background: #1e2433;
 }
 
 QFileDialog QToolButton {
   background: inherit;
 }
 
-/*
-  Required when dock widget is floating
-  1) background-image not working on QDockWidget, so I use direct children for that
-  2) seems to have only effect as normal (floating) window
-  3) Borders between this widget and the inner child are the margins defined in dockwidget
-*/
 swift--gui--CDockWidgetInfoArea {
-  background-color: green; /* Use green or red here to adjust the borders */
+  background-color: #4a9eff; /* use accent for border strip */
 }
 
 /* outer widget in dock widget */
 swift--gui--CDockWidgetInfoArea > QWidget[dockwidget="outerwidget"] {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  background: #252d3d;
 }
 
-/* this is the first widget in the dock area */
-/* all dock widgets shall have this QWidget as container */
+/* inner frame in frameless dock widget */
 swift--gui--CDockWidgetInfoArea[framelessDockWidget="true"] > QWidget > QFrame[dockwidget="innerwidget"] {
   margin: 0px;
   padding: 3px;
-  border: 2px solid green;
+  border: 2px solid #4a9eff;
   border-radius: 10px;
 }
 
@@ -127,23 +114,20 @@ swift--gui--CDockWidgetInfoArea[framelessDockWidget="false"] > QWidget > QFrame[
   /* void */
 }
 
-/* required when info area is not floating */
 swift--gui--CInfoArea {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  background: #252d3d;
 }
 
 /* Overlay messages */
 swift--gui--COverlayMessages {
-  background: transparent; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
-  border: 5px solid rgba(100, 100, 100, 90%);
+  background-color: rgba(30, 36, 51, 0.93);
+  border: 1px solid #3a4560;
   border-radius: 10px;
 }
 
 swift--gui--CDropSite {
-  color: grey;
-  border: 2px dashed grey;
+  color: #8a96a8;
+  border: 2px dashed #3a4560;
   border-radius: 5px;
   min-height: 18px;
   max-height: 18px;
@@ -153,21 +137,20 @@ swift--gui--CDropSite {
 
 /* Validator bar */
 swift--gui--Editors--CValidationIndicator {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  background: #252d3d;
 }
 
 swift--gui--CPluginDetailsWindow,
 swift--gui--CPluginConfigWindow {
-  background: black;
+  background: #1e2433;
 }
 
 swift--gui--Components--CDBusServerAddressSelector::disabled {
-  background: rgba(4, 105, 105, 105);
+  background: rgba(30, 36, 51, 0.65);
 }
 
 swift--gui--Components--CSimulatorSelector::disabled {
-  background: rgba(4, 105, 105, 105);
+  background: rgba(30, 36, 51, 0.65);
 }
 
 swift--gui--Components--CAircraftModelSetValidationDialog,
@@ -192,18 +175,29 @@ swift--gui--Components--CDbDistributorComponent,
 swift--gui--Components--CLegalInfoComponent,
 swift--gui--Components--CStringListDialog
 {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  background: #252d3d;
 }
 
 swift--gui--Components--CCockpitComComponent {
   min-height: 7em;
 }
 
-/* default for buttons */
+/* --- Buttons --- */
+
 QToolButton {
-  background-color: rgba(0, 0, 255, 128);
-  border: 0px;
+  background-color: rgba(74, 158, 255, 0.18);
+  border: 1px solid #3a4560;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+QToolButton:hover {
+  background-color: rgba(74, 158, 255, 0.30);
+  border-color: #4a9eff;
+}
+
+QToolButton:pressed {
+  background-color: rgba(74, 158, 255, 0.45);
 }
 
 #tb_AtcStationsAtisReload,
@@ -211,79 +205,89 @@ QToolButton {
 #tb_Audio,
 #tb_TextMessageOverlay,
 QPushButton {
-  background-color: rgba(0, 0, 255, 128);
-  border-style: 1px solid yellow;
-  border-radius:3px;
-  color: yellow;  /* font color */
-  padding: 0px 0.25em 0px 0.25em;
-  margin-right: 5px;
-  min-width:  25px;
-  min-height: 20px;
+  background-color: rgba(74, 158, 255, 0.22);
+  border: 1px solid #4a9eff;
+  border-radius: 6px;
+  color: #e0e6f0;
+  padding: 3px 10px;
+  margin-right: 4px;
+  min-width: 55px;
+  min-height: 22px;
 }
 
-QPushButton::disabled {
-  background-color: rgba(77, 88, 99, 128); /* slated gray if a channel) */
-  border-style: none;
-  border-radius: 3px;
-  color: white;
-  padding: 0px;
-  margin-right: 5px;
-  qproperty-textElideMode: ElideMiddle;
+QPushButton:hover {
+  background-color: rgba(74, 158, 255, 0.38);
+  border-color: #7ab8ff;
 }
 
-QPushButton:pressed{ background-color: lightblue; }
+QPushButton:pressed {
+  background-color: rgba(74, 158, 255, 0.55);
+}
 
-// Button blinks on to catch the user's attention
+QPushButton:disabled {
+  background-color: rgba(58, 69, 96, 0.45);
+  border: 1px solid #3a4560;
+  color: #8a96a8;
+  padding: 3px 10px;
+  margin-right: 4px;
+}
+
 QPushButton[blinkOn="true"] {
-  background-color: yellow;
-  color: black;
+  background-color: #f0b429;
+  color: #1e2433;
+  border-color: #f0b429;
 }
 
-/**
-KEYPAD area buttons are in swift GUI stylesheet
-
-QPushButton:checked{ background-color: blue; }
-QPushButton:focus:pressed{ background-color: black; }
-QPushButton:focus{ background-color: green; }
-QPushButton:hover{ background-color: red; }
-**/
+/* --- Progress bar --- */
 
 QProgressBar {
-  border: 1px solid green;
+  border: 1px solid #3a4560;
   border-radius: 5px;
-  background-color: black;
+  background-color: #1e2433;
   text-align: center;
   padding: 0px;
   height: 16px;
+  color: #e0e6f0;
 }
 
 QProgressBar::chunk {
-  background-color: darkblue;
-  width: 10px;
-  margin: 0.5px;
+  background-color: #4a9eff;
+  border-radius: 4px;
+  margin: 1px;
 }
 
-QTabWidget::pane { /* The tab widget frame */
-  border: none;
+/* --- Tabs --- */
+
+QTabWidget::pane {
+  border: 1px solid #3a4560;
+  border-radius: 4px;
 }
 
-QTabWidget::tab-bar  {
-  left: 5px; /* move to the right by 5px */
+QTabWidget::tab-bar {
+  left: 5px;
 }
 
 QTabBar::tab {
-  border: 1px solid green;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  background: #1e2433;
+  border: 1px solid #3a4560;
+  border-bottom: none;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   min-width: 30px;
-  padding: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
-  margin-right: 3px;
+  padding: 4px 8px;
+  margin-right: 2px;
+  color: #8a96a8;
 }
 
-QTabBar::tab::selected {
-  background-color: rgba(0, 0, 255, 128);
+QTabBar::tab:selected {
+  background-color: #252d3d;
+  color: #e0e6f0;
+  border-bottom-color: #252d3d;
+}
+
+QTabBar::tab:hover {
+  background: #2c3448;
+  color: #e0e6f0;
 }
 
 QTabBar::tear {
@@ -291,10 +295,12 @@ QTabBar::tear {
   max-width: 1px;
 }
 
-QTabBar QToolButton { /* the scroll buttons are tool buttons */
-  background-color: rgba(0, 0, 255, 200);
-  border: 1px solid green;
+QTabBar QToolButton {
+  background-color: rgba(74, 158, 255, 0.25);
+  border: 1px solid #3a4560;
 }
+
+/* --- Splitter --- */
 
 QSplitter {
   margin: 0px;
@@ -303,207 +309,243 @@ QSplitter {
 }
 
 QSplitter::handle {
-  background-color: rgba(0, 0, 255, 200);
+  background-color: #3a4560;
   margin-top: 1px;
   margin-bottom: 1px;
   height: 1px;
 }
 
 QSplitter::handle:pressed {
-  background-color: rgba(0, 255, 255, 255);
+  background-color: #4a9eff;
 }
 
-/*
-QSplitter::handle:horizontal { width: 1px; }
-QSplitter::handle:vertical { height: 1px; }
-*/
+/* --- Labels --- */
 
 QLabel {
   background: transparent;
 }
 
+/* --- Input fields --- */
+
 QLineEdit {
-  background: transparent;
-  border: 1px solid green;
+  background: #252d3d;
+  border: 1px solid #3a4560;
   border-radius: 5px;
+  padding: 2px 6px;
+  color: #e0e6f0;
+}
+
+QLineEdit:focus {
+  border-color: #4a9eff;
 }
 
 QLineEdit[readOnly="true"] {
-  background: rgb(40,40,40);
-  border: 1px solid rgb(50,50,50);
+  background: #1e2433;
+  border-color: #2c3448;
+  color: #8a96a8;
 }
 
 QLineEdit:disabled {
-  background: rgb(40,40,40);
-  border: 1px solid rgb(50,50,50);
+  background: #1e2433;
+  border-color: #2c3448;
+  color: #8a96a8;
 }
 
-QLineEdit[validation="error"]   { border: 2px solid red; }
-QLineEdit[validation="warning"] { border: 2px solid yellow; }
-QLineEdit[validation="ok"]      { border: 2px solid green; }
+QLineEdit[validation="error"]   { border: 2px solid #e05c5c; }
+QLineEdit[validation="warning"] { border: 2px solid #f0b429; }
+QLineEdit[validation="ok"]      { border: 2px solid #3ecf8e; }
 
 QTextEdit {
-  border: 1px solid green;
-  background: transparent;
+  border: 1px solid #3a4560;
+  background: #252d3d;
   border-radius: 5px;
+  color: #e0e6f0;
+}
+
+QTextEdit:focus {
+  border-color: #4a9eff;
 }
 
 QPlainTextEdit {
-  border: 1px solid green;
-  background: transparent;
+  border: 1px solid #3a4560;
+  background: #252d3d;
   border-radius: 5px;
+  color: #e0e6f0;
 }
+
+QPlainTextEdit:focus {
+  border-color: #4a9eff;
+}
+
+/* --- Group boxes --- */
 
 QGroupBox {
-  border: 1px solid green;
-  margin-top: 1.0em; /* leave space at the top for the title */
+  border: 1px solid #3a4560;
+  margin-top: 1.1em;
   padding-top: 0.5em;
-  border-radius: 5px;
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  border-radius: 6px;
+  background: #252d3d;
 }
 
-QGroupBox::disabled {
-  background: rgba(4, 105, 105, 105);
+QGroupBox:disabled {
+  background: rgba(30, 36, 51, 0.50);
 }
 
-/* QGroupBox::flat { border: 0px; } */
 QGroupBox::unchecked { border: 0px; }
 
 QGroupBox::title {
   top: 2px;
   left: 1em;
   subcontrol-origin: margin;
-  subcontrol-position: middle left; /* position at the top center */
-  padding: 0px 2em 0px 2em;
-  min-width: 10em;
-  background-color: darkblue;
-  border: 1px solid green;
-  border-radius: 5px;
+  subcontrol-position: top left;
+  padding: 0px 6px;
+  background-color: #252d3d;
+  color: #4a9eff;
+  border: none;
+  border-radius: 3px;
 }
+
+/* --- Tool boxes --- */
 
 QToolBox::tab {
-  border: 1px solid green;
-  border-radius: 6px;
-  min-width: 30px;
-  padding: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
+  border: 1px solid #3a4560;
+  border-radius: 5px;
+  padding: 4px 8px;
+  background: #1e2433;
+  color: #8a96a8;
 }
 
-QToolBox::tab::selected {
-  color: rgba(255, 255, 0, 255);
-  background-color: rgba(0, 0, 255, 128);
+QToolBox::tab:selected {
+  color: #e0e6f0;
+  background-color: rgba(74, 158, 255, 0.22);
+  border-color: #4a9eff;
 }
 
-QToolBox::tab::!selected {
-  background-color: rgba(0, 0, 255, 48);
+QToolBox::tab:!selected {
+  background-color: rgba(74, 158, 255, 0.08);
 }
 
-/* no border on page */
 QToolBox > QWidget {
   border: 0px;
 }
 
+/* --- Combo boxes --- */
+
 QComboBox {
-  border: 1px solid green;
+  border: 1px solid #3a4560;
   border-radius: 5px;
-  padding: 1px;
-  background: transparent;
-  selection-background-color: #3f98ff;
+  padding: 2px 6px;
+  background: #252d3d;
+  color: #e0e6f0;
+  selection-background-color: #4a9eff;
+}
+
+QComboBox:focus {
+  border-color: #4a9eff;
 }
 
 QComboBox:disabled {
-  background: rgb(40,40,40);
-  border: 1px solid rgb(50,50,50);
+  background: #1e2433;
+  border-color: #2c3448;
+  color: #8a96a8;
 }
 
-/* drop down list */
+QComboBox::drop-down {
+  border: none;
+  width: 20px;
+}
+
 QComboBox QAbstractItemView {
-  background-color: black;
-  color: lightgray;
-  qproperty-textElideMode: ElideMiddle;
+  background-color: #252d3d;
+  color: #e0e6f0;
+  border: 1px solid #3a4560;
+  selection-background-color: #4a9eff;
 }
 
-/**
-QComboBox::drop-down { background-color: yellow; }
-QComboBox QListView { }
-**/
-
+/* --- Spin boxes --- */
 
 QDoubleSpinBox {
-  border: 1px solid green;
+  border: 1px solid #3a4560;
   border-radius: 5px;
-  padding: 1px;
-  background: transparent;
+  padding: 2px 4px;
+  background: #252d3d;
+  color: #e0e6f0;
 }
+
+QDoubleSpinBox:focus { border-color: #4a9eff; }
 
 QSpinBox {
-  border: 1px solid green;
+  border: 1px solid #3a4560;
   border-radius: 5px;
-  padding: 1px;
-  background: transparent;
+  padding: 2px 4px;
+  background: #252d3d;
+  color: #e0e6f0;
 }
+
+QSpinBox:focus { border-color: #4a9eff; }
+
+/* --- Color / menu dialogs --- */
 
 QColorDialog {
-  background-image: url(:/textures/icons/textures/texture-outer.jpg);
-  background-color: darkslategray;
+  background-color: #1e2433;
 }
 
+/* --- Menu bar --- */
+
 QMenuBar {
-  background-image: url(:/textures/icons/textures/texture-outer.jpg);
-  background-color: darkslategray;
-  padding: 5px 0px 0px 10px;
-  margin: 0px 0px 30px 0px; /* removes overlapping bar in frameless mode, why bottom margin helps here, no idea, bug? */
+  background-color: #1e2433;
+  padding: 4px 0px 0px 8px;
+  margin: 0px 0px 30px 0px;
 }
 
 QMenuBar::item {
-  spacing: 5px; /* spacing between menu bar items */
-  padding: 3px 3px;
+  spacing: 5px;
+  padding: 3px 6px;
   background: transparent;
   border-radius: 4px;
+  color: #e0e6f0;
 }
 
-/* when selected using mouse or keyboard */
 QMenuBar::item:selected {
-  background: black;
+  background: #252d3d;
 }
 
 QMenuBar::item:pressed {
-  background: black;
+  background: #3a4560;
 }
 
 swift--gui--CDockWidgetInfoArea > QMenu > QMenuWidget {
-  border: 0px; /* reserve space for selection border */
+  border: 0px;
 }
 
-/* reset menu style */
+/* reset menu style for pop-up menus */
 QMenu {
-  color: black;
-  background-color: white;
+  color: #1e2433;
+  background-color: #f0f0f0;
   font-style: normal;
   font-weight: normal;
-  padding: 5px;
+  padding: 4px;
+  border: 1px solid #c0c0c0;
+  border-radius: 4px;
 }
 
-/* until Qt 5.12 needed, now since Qt 5.12 causing issue
-QMenu::item { padding: 4px 25px 4px 20px; }
-**/
-
-/* fix margin style */
 QMenu > QFrame {
-  color: black;
+  color: #1e2433;
 }
 
 swift--gui--Components--CMarginsInput QLineEdit {
-  color: black;
+  color: #1e2433;
 }
 
+/* --- Radio buttons --- */
+
 QRadioButton::indicator:checked, QRadioButton::indicator:unchecked {
-  color: #b1b1b1;
-  background-color: #000000;
-  border: 1px solid #b1b1b1;
+  color: #8a96a8;
+  background-color: #1e2433;
+  border: 1px solid #3a4560;
   border-radius: 7px;
+  width: 13px;
+  height: 13px;
 }
 
 QRadioButton::indicator:checked {
@@ -511,112 +553,101 @@ QRadioButton::indicator:checked {
     cx: 0.5, cy: 0.5,
     fx: 0.5, fy: 0.5,
     radius: 1.0,
-    stop: 0.25 #32cd32,
-    stop: 0.3 #000000
+    stop: 0.25 #4a9eff,
+    stop: 0.3 #1e2433
   );
+  border-color: #4a9eff;
 }
 
-QRadioButton::disabled {
-  background: rgba(4, 105, 105, 105);
-  color: darkgray;
+QRadioButton:disabled {
+  background: transparent;
+  color: #8a96a8;
   border: 0px;
 }
 
+/* --- Scroll areas --- */
+
 QScrollArea {
-  border: 1px solid green;
+  border: 1px solid #3a4560;
   border-radius: 5px;
 }
 
-/* have to set background on widget in scroll area, cannot set directly on scroll area */
-/* The inner widget I want to modify is on 2nd level. QScrollArea > QWidget selects too many */
-/* http://doc.qt.io/qt-4.8/stylesheet-syntax.html */
 QScrollArea > * > QWidget {
-  background: black; /* background is background color here */
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+  background: #252d3d;
 }
 
 QScrollArea QMenu {
-  border: 1px solid darkslategray; /* reserve space for selection border */
-  background: lightgray;
-  color: black;
+  border: 1px solid #3a4560;
+  background: #f0f0f0;
+  color: #1e2433;
   padding: 0px;
 }
 
+/* --- Scrollbars (modern flat style) --- */
+
 QScrollBar:horizontal {
-  border: 2px solid gray;
-  background: slategray;
-  height: 10px;
-  margin: 0px 5px 0px 5px;
+  border: none;
+  background: #1e2433;
+  height: 8px;
+  margin: 0;
 }
 
 QScrollBar:vertical {
-  border: 2px solid gray;
-  background: slategray;
-  width: 10px;
-  margin: 5px 0px 5px 0px;
+  border: none;
+  background: #1e2433;
+  width: 8px;
+  margin: 0;
 }
 
 QScrollBar::handle:horizontal {
-  background: rgba(0, 0, 0, 128);
-  min-width: 15px;
+  background: #3a4560;
+  border-radius: 4px;
+  min-width: 24px;
+}
+
+QScrollBar::handle:horizontal:hover {
+  background: #4a9eff;
 }
 
 QScrollBar::handle:vertical {
-  background: rgba(0, 0, 0, 128);
-  min-height: 15px;
+  background: #3a4560;
+  border-radius: 4px;
+  min-height: 24px;
 }
 
-QScrollBar::add-line:horizontal {
-  border: 2px solid gray;
-  background: lightblue;
-  width: 5px;
-  subcontrol-position: right;
-  subcontrol-origin: margin;
+QScrollBar::handle:vertical:hover {
+  background: #4a9eff;
 }
 
-QScrollBar::sub-line:horizontal {
-  border: 2px solid gray;
-  background: lightblue;
-  width: 5px;
-  subcontrol-position: left;
-  subcontrol-origin: margin;
-}
-
-QScrollBar::add-line:vertical {
-  border: 2px solid gray;
-  background: lightblue;
-  height: 5px;
-  subcontrol-position: bottom;
-  subcontrol-origin: margin;
-}
-
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal,
+QScrollBar::add-line:vertical,
 QScrollBar::sub-line:vertical {
-  border: 2px solid gray;
-  background: lightblue;
-  height: 5px;
-  subcontrol-position: top;
-  subcontrol-origin: margin;
+  width: 0;
+  height: 0;
+  background: none;
+  border: none;
 }
+
+/* --- Table/Tree/List views --- */
 
 QHeaderView::section {
-  border: 1px solid black;
-  background-color: darkslategray;
-  color: white; /* font */
-  padding: 1px;
+  border: 1px solid #1e2433;
+  background-color: #2c3448;
+  color: #e0e6f0;
+  padding: 3px 4px;
   margin: 0px;
 }
 
 QHeaderView {
   border-width: 0px;
-  background-color: darkslategray;
+  background-color: #2c3448;
 }
 
-/* the corner between horizontal and vertical header */
 QTableView QTableCornerButton::section {
-  background-color: darkslategray;
+  background-color: #2c3448;
 }
 
-/* style the sort indicator */
 QHeaderView::down-arrow {
   image: url(:/diagona/icons/diagona/icons/arrow-270-small.png);
   subcontrol-position: bottom left;
@@ -628,30 +659,25 @@ QHeaderView::up-arrow {
 }
 
 QTableView, QTreeView, QListView {
-  border: 1px solid green; /** outer border **/
+  border: 1px solid #3a4560;
   border-radius: 5px;
-  background-color: transparent;
-  alternate-background-color: darkslategray;
-  /** in order to enable alternate color it must be also set to true on view **/
-  /** this can be done in code or UI builder **/
-  selection-background-color: blue;
-  margin-left: 2px;
-  margin-right: 2px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  padding: 1px;
+  background-color: #1e2433;
+  alternate-background-color: #252d3d;
+  selection-background-color: rgba(74, 158, 255, 0.35);
+  selection-color: #e0e6f0;
   gridline-color: transparent;
+  margin: 2px;
+  padding: 1px;
 }
 
-/** explicitly setting font color avoids black when pressing CTRL-S **/
 QTableView::item:selected {
-  background-color: blue;
-  color: white;
+  background-color: rgba(74, 158, 255, 0.35);
+  color: #e0e6f0;
 }
 
 QListView::item:selected {
-  background-color: blue;
-  color: white;
+  background-color: rgba(74, 158, 255, 0.35);
+  color: #e0e6f0;
 }
 
 QTreeView {
@@ -660,15 +686,15 @@ QTreeView {
 
 QTreeView::item {
   border: 0px;
-  padding: 2px 2px 2px 2px;
+  padding: 2px;
 }
 
 QTreeView::item:hover {
-  background: green;
+  background: rgba(74, 158, 255, 0.15);
 }
 
 QTreeView::item:selected {
-  background: blue;
+  background: rgba(74, 158, 255, 0.35);
 }
 
 QTreeView::branch:open:has-children {
@@ -679,22 +705,25 @@ QTreeView::branch:closed:has-children {
   image: url(:/diagona/icons/diagona/icons/toggle-expand.png);
 }
 
+/* --- Slider --- */
+
 QSlider {
   min-height: 2em;
 }
 
 QSlider::groove:horizontal {
-  border: 1px solid gray;
-  height: 4px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
-  background: darkslategray;
+  border: 1px solid #3a4560;
+  height: 4px;
+  background: #252d3d;
+  border-radius: 2px;
 }
 
 QSlider::handle:horizontal {
-  background: lightgray;
-  border: 1px solid darkslategray;
-  width: 18px;
-  margin: -2px 0; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
-  border-radius: 3px;
+  background: #4a9eff;
+  border: 1px solid #3a4560;
+  width: 16px;
+  margin: -6px 0;
+  border-radius: 8px;
 }
 
 QSizeGrip {
@@ -703,6 +732,8 @@ QSizeGrip {
   width: 16px;
   height: 16px;
 }
+
+/* --- Status bar --- */
 
 QStatusBar {
   background: transparent;
@@ -719,30 +750,71 @@ QStatusBar QLabel {
 }
 
 #btn_StatusBarWarnsb_MainStatusBar {
-  background-color: yellow;
-  color: black;
+  background-color: #f0b429;
+  color: #1e2433;
 }
 
 #btn_StatusBarErrorsb_MainStatusBar {
-  background-color: red;
-  color: white;
+  background-color: #e05c5c;
+  color: #ffffff;
 }
+
+/* --- Tooltip --- */
 
 QToolTip {
-  color: black;
-  background-color: darkgray;
-  border: 1px solid white;
+  color: #e0e6f0;
+  background-color: #252d3d;
+  border: 1px solid #4a9eff;
+  border-radius: 4px;
+  padding: 3px 6px;
 }
 
+/* --- Level meter --- */
+
 swift--gui--CLevelMeter {
-  qproperty-lowColor: lightgray;
-  border: 1px solid grey;
+  qproperty-lowColor: #8a96a8;
+  border: 1px solid #3a4560;
   border-radius: 5px;
   padding: 1px;
   height: 1em;
 }
 
-/** T506 supervisor messages **/
-QTabBar::tab[supervisormsg=true] { background-color: red; }
-QTextEdit[supervisormsg=true] { border: 2px solid red; margin: 2px; }
-QTabBar QToolButton[supervisormsg=true] { background-color: red; }
+/* --- Supervisor messages --- */
+
+QTabBar::tab[supervisormsg=true] { background-color: #e05c5c; color: #ffffff; }
+QTextEdit[supervisormsg=true] { border: 2px solid #e05c5c; margin: 2px; }
+QTabBar QToolButton[supervisormsg=true] { background-color: #e05c5c; }
+
+/* --- Config Wizard --- */
+
+QWizard {
+  background-color: #1e2433;
+}
+
+QWizardPage {
+  background-color: #252d3d;
+}
+
+#pb_WizardNext,
+#pb_WizardFinish {
+  background-color: rgba(62, 207, 142, 0.30);
+  border-color: #3ecf8e;
+  color: #e0e6f0;
+  min-width: 80px;
+}
+
+#pb_WizardNext:hover,
+#pb_WizardFinish:hover {
+  background-color: rgba(62, 207, 142, 0.50);
+}
+
+#pb_WizardSkip {
+  background-color: rgba(58, 69, 96, 0.50);
+  color: #8a96a8;
+  border-color: #3a4560;
+}
+
+#pb_WizardSkip:hover {
+  background-color: rgba(58, 69, 96, 0.80);
+  color: #e0e6f0;
+}

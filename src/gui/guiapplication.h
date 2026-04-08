@@ -14,6 +14,7 @@
 #include <QScopedPointer>
 #include <QScreen>
 #include <QString>
+#include <QTranslator>
 #include <Qt>
 
 #include "core/application.h"
@@ -262,6 +263,11 @@ namespace swift::gui
         //! Bring any modal dialog to front
         static void modalWindowToFront();
 
+        //! Load and install a Qt translator for the given locale code (e.g. "de", "fr", "zh_CN").
+        //! Empty string or "en" removes any installed translator (uses built-in English strings).
+        //! Returns true if a translation file was successfully loaded.
+        bool loadTranslator(const QString &locale);
+
     signals:
         //! Style sheet changed
         void styleSheetsChanged();
@@ -304,6 +310,8 @@ namespace swift::gui
         QCommandLineOption m_cmdWindowMode { "emptyWindowMode" }; //!< window mode (flags: frameless ...)
         QCommandLineOption m_cmdWindowSizeReset { "emptySizeReset" }; //!< window size reset
         CStyleSheetUtility m_styleSheetUtility { this }; //!< style sheet utility
+        QTranslator m_appTranslator; //!< swift application translator
+        QTranslator m_qtBaseTranslator; //!< Qt built-in strings translator
         bool m_uiSetupCompleted = false; //!< ui setup completed
         bool m_saveMainWidgetState = true; //!< save/restore main widget's state
         bool m_frontBack = true; //!< for front/back toggle

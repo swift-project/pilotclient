@@ -14,6 +14,8 @@
 #include <QGuiApplication>
 #include <QIcon>
 #include <QKeySequence>
+#include <QLibraryInfo>
+#include <QLocale>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
@@ -23,6 +25,7 @@
 #include <QStyle>
 #include <QStyleFactory>
 #include <QToolBar>
+#include <QTranslator>
 #include <QUrl>
 #include <QWhatsThis>
 #include <QWidget>
@@ -115,7 +118,7 @@ namespace swift::gui
             CApplication::init(false); // base class without metadata
             CGuiApplication::adjustPalette();
             CGuiApplication::setWindowIcon(icon);
-            this->settingsChanged();
+            this->settingsChanged(); // also calls loadTranslator
             this->setCurrentFontValues(); // most likely the default font and not any stylesheet font at this time
             sGui = this;
 
@@ -1027,6 +1030,32 @@ namespace swift::gui
         }
     }
 
+    bool CGuiApplication::loadTranslator(const QString &locale)
+    {
+        // Remove any previously installed swift translators
+        QCoreApplication::removeTranslator(&m_appTranslator);
+        QCoreApplication::removeTranslator(&m_qtBaseTranslator);
+
+        // "en" is the source language — no translation file needed
+        if (locale.isEmpty() || locale.startsWith(QLatin1String("en"), Qt::CaseInsensitive)) { return true; }
+
+        // Load Qt built-in translations (standard dialog buttons, etc.)
+        m_qtBaseTranslator.load(QLocale(locale), QStringLiteral("qtbase"), QStringLiteral("_"),
+                                QLibraryInfo::path(QLibraryInfo::TranslationsPath));
+        QCoreApplication::installTranslator(&m_qtBaseTranslator);
+
+        // Load swift application translations from the translations directory
+        const QString translationsDir = CSwiftDirectories::translationsDirectory();
+        if (m_appTranslator.load(QLocale(locale), QStringLiteral("swift"), QStringLiteral("_"), translationsDir))
+        {
+            QCoreApplication::installTranslator(&m_appTranslator);
+            CLogMessage(this).info(u"Loaded translation for locale '%1' from '%2'") << locale << translationsDir;
+            return true;
+        }
+        CLogMessage(this).warning(u"No translation file found for locale '%1' in '%2'") << locale << translationsDir;
+        return false;
+    }
+
     void CGuiApplication::settingsChanged()
     {
         // changing widget style is slow, so I try to prevent setting it when nothing changed
@@ -1058,6 +1087,9 @@ namespace swift::gui
                 }
             } // valid style
         }
+
+        // Language translator
+        this->loadTranslator(m_guiSettings.get().getUiLanguage());
     }
 
     void CGuiApplication::checkNewVersionMenu() { this->checkNewVersion(false); }

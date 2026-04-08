@@ -25,7 +25,8 @@ namespace swift::gui::settings
         enum ColumnIndex
         {
             IndexWidgetStyle = swift::misc::CPropertyIndexRef::GlobalIndexCGeneralGuiSettings,
-            IndexPreferredSelection
+            IndexPreferredSelection,
+            IndexUiLanguage
         };
 
         //! Default constructor
@@ -46,6 +47,12 @@ namespace swift::gui::settings
         //! Preferred selection
         void setPreferredSelection(QAbstractItemView::SelectionMode selection);
 
+        //! UI language locale code, e.g. "en", "de", "fr", "es", "zh_CN". Empty = system default.
+        const QString &getUiLanguage() const { return m_uiLanguage; }
+
+        //! Set UI language locale code
+        void setUiLanguage(const QString &locale);
+
         //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
@@ -58,11 +65,13 @@ namespace swift::gui::settings
     private:
         QString m_widgetStyle { "Fusion" };
         int m_preferredSelection = static_cast<int>(QAbstractItemView::ExtendedSelection);
+        QString m_uiLanguage {}; // empty = system default
 
         SWIFT_METACLASS(
             CGeneralGuiSettings,
             SWIFT_METAMEMBER(widgetStyle),
-            SWIFT_METAMEMBER(preferredSelection));
+            SWIFT_METAMEMBER(preferredSelection),
+            SWIFT_METAMEMBER(uiLanguage));
     };
 
     //! General GUI settings

@@ -23,6 +23,13 @@ namespace swift::gui::components
         this->setWindowFlags(windowFlags() | Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint |
                              Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
 
+        // Use ModernStyle (sidebar page list) on all platforms except macOS
+#ifdef Q_OS_MAC
+        this->setWizardStyle(QWizard::MacStyle);
+#else
+        this->setWizardStyle(QWizard::ModernStyle);
+#endif
+
         ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
         ui->wp_CopySettingsAndCaches->setConfigComponent(ui->comp_CopySettingsAndCachesComponent);
         ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
@@ -31,7 +38,14 @@ namespace swift::gui::components
         ui->wp_Hotkeys->setConfigComponent(ui->comp_Hotkeys);
         ui->wp_Legal->setConfigComponent(ui->comp_LegalInformation);
         ui->comp_Hotkeys->registerDummyPttEntry();
-        this->setButtonText(CustomButton1, "skip");
+        this->setButtonText(CustomButton1, tr("Skip"));
+
+        // Name wizard buttons so the QSS can target them
+        this->button(QWizard::NextButton)->setObjectName(QStringLiteral("pb_WizardNext"));
+        this->button(QWizard::BackButton)->setObjectName(QStringLiteral("pb_WizardBack"));
+        this->button(QWizard::FinishButton)->setObjectName(QStringLiteral("pb_WizardFinish"));
+        this->button(QWizard::CancelButton)->setObjectName(QStringLiteral("pb_WizardCancel"));
+        this->button(CustomButton1)->setObjectName(QStringLiteral("pb_WizardSkip"));
 
         // no other versions, skip copy pages
         // disabled afetr discussion with RP as it is confusing

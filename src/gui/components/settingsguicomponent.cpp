@@ -28,10 +28,21 @@ namespace swift::gui::components
         ui->cb_SettingsGuiWidgetStyle->clear();
         ui->cb_SettingsGuiWidgetStyle->insertItems(0, QStyleFactory::keys());
 
+        // Language selector
+        ui->cb_SettingsGuiLanguage->clear();
+        ui->cb_SettingsGuiLanguage->addItem(tr("System default"),       QString());
+        ui->cb_SettingsGuiLanguage->addItem(tr("English"),              QStringLiteral("en"));
+        ui->cb_SettingsGuiLanguage->addItem(tr("Deutsch (German)"),     QStringLiteral("de"));
+        ui->cb_SettingsGuiLanguage->addItem(tr("Français (French)"),    QStringLiteral("fr"));
+        ui->cb_SettingsGuiLanguage->addItem(tr("Español (Spanish)"),    QStringLiteral("es"));
+        ui->cb_SettingsGuiLanguage->addItem(tr("简体中文 (Simplified Chinese)"), QStringLiteral("zh_CN"));
+
         // Widget style
         connect(ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsGuiComponent::changedWindowsOpacity);
         connect(ui->cb_SettingsGuiWidgetStyle, qOverload<int>(&QComboBox::currentIndexChanged), this,
                 &CSettingsGuiComponent::widgetStyleChanged, Qt::QueuedConnection);
+        connect(ui->cb_SettingsGuiLanguage, qOverload<int>(&QComboBox::currentIndexChanged), this,
+                &CSettingsGuiComponent::languageChanged, Qt::QueuedConnection);
 
         ui->comp_SettingsFonts->setStyleSheetDefaultColor();
 
@@ -70,18 +81,48 @@ namespace swift::gui::components
     void CSettingsGuiComponent::guiSettingsChanged()
     {
         const CGeneralGuiSettings settings(m_guiSettings.getThreadLocal());
-        const int index = ui->cb_SettingsGuiWidgetStyle->findText(settings.getWidgetStyle());
-        if (index != ui->cb_SettingsGuiWidgetStyle->currentIndex())
+
+        // Widget style
+        const int styleIndex = ui->cb_SettingsGuiWidgetStyle->findText(settings.getWidgetStyle());
+        if (styleIndex != ui->cb_SettingsGuiWidgetStyle->currentIndex())
         {
-            ui->cb_SettingsGuiWidgetStyle->setCurrentIndex(index);
+            ui->cb_SettingsGuiWidgetStyle->setCurrentIndex(styleIndex);
         }
 
+        // Language
+        const int langIndex = ui->cb_SettingsGuiLanguage->findData(settings.getUiLanguage());
+        const int langTarget = (langIndex < 0) ? 0 : langIndex;
+        if (langTarget != ui->cb_SettingsGuiLanguage->currentIndex())
+        {
+            ui->cb_SettingsGuiLanguage->setCurrentIndex(langTarget);
+        }
+
+        // Selection mode
         switch (settings.getPreferredSelection())
         {
         case QAbstractItemView::ExtendedSelection: ui->rb_PreferExtendedSelection->setChecked(true); break;
         case QAbstractItemView::MultiSelection: ui->rb_PreferMultiSelection->setChecked(true); break;
         default: break;
         }
+    }
+
+    void CSettingsGuiComponent::languageChanged(int index)
+    {
+        const QString lang = ui->cb_SettingsGuiLanguage->itemData(index).toString();
+        if (lang == m_guiSettings.getThreadLocal().getUiLanguage()) { return; }
+
+        const int ret = QMessageBox::information(this, tr("Change language?"),
+                                                 tr("Changing the UI language requires a restart.\n"
+                                                    "Changes will be visible at the next start.\n"
+                                                    "Do you want to save your changes?"),
+                                                 QMessageBox::Ok | QMessageBox::Cancel);
+        if (ret != QMessageBox::Ok)
+        {
+            this->guiSettingsChanged(); // revert combo to saved value
+            return;
+        }
+        const CStatusMessage m = m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexUiLanguage, lang);
+        CLogMessage::preformatted(m);
     }
 
     void CSettingsGuiComponent::widgetStyleChanged(int index)

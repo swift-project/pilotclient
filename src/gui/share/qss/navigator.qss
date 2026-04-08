@@ -4,7 +4,7 @@
  */
 
 QDialog {
-  background: lightgrey;
+  background: #1e2433;
 }
 
 /*
