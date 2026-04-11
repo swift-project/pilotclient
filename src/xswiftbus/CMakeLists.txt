@@ -1,10 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
-if(SWIFT_WIN32)
-    message(FATAL_ERROR "xswiftbus only available in 64 bit environments")
-endif()
-
 add_library(xswiftbus SHARED
         org.swift_project.xswiftbus.service.xml
         org.swift_project.xswiftbus.traffic.xml
@@ -92,7 +88,7 @@ target_include_directories(xswiftbus PUBLIC
         xplanemp2/src)
 
 
-if(SWIFT_WIN64)
+if(WIN32)
     target_link_libraries(xswiftbus PUBLIC XPSDK::XPLM XPSDK::XPWidgets)
 elseif(APPLE)
     target_link_libraries(xswiftbus PRIVATE XPSDK::XPLM XPSDK::XPWidgets "-framework Cocoa" "-framework CoreFoundation")

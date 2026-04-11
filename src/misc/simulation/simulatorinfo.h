@@ -44,16 +44,15 @@ namespace swift::misc::simulation
         enum SimulatorFlag
         {
             None = 0,
-            FSX = 1 << 0,
-            FS9 = 1 << 1,
+            FSX_DEPRECATED = 1 << 0, // kept for backwards compatibility
+            FS9_DEPRECATED = 1 << 1, // kepts for backwards compatibility
             XPLANE = 1 << 2,
             P3D = 1 << 3,
             FG = 1 << 4,
             MSFS = 1 << 5,
             MSFS2024 = 1 << 6,
-            FSX_P3D = FSX | P3D,
-            AllFsFamily = FSX | FS9 | P3D | MSFS | MSFS2024,
-            All = FSX | FS9 | XPLANE | P3D | FG | MSFS | MSFS2024
+            AllFsFamily = P3D | MSFS | MSFS2024,
+            All = XPLANE | P3D | FG | MSFS | MSFS2024
         };
         Q_DECLARE_FLAGS(Simulator, SimulatorFlag)
 
@@ -76,16 +75,10 @@ namespace swift::misc::simulation
         CSimulatorInfo(int flagsAsInt);
 
         //! Constructor
-        CSimulatorInfo(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs, bool msfs2024);
+        CSimulatorInfo(bool xp, bool isP3D, bool fg, bool msfs, bool msfs2024);
 
         //! Unspecified simulator
         bool isUnspecified() const;
-
-        //! FSX?
-        bool isFSX() const;
-
-        //! FS9?
-        bool isFS9() const;
 
         //! XPlane
         bool isXPlane() const;
@@ -176,7 +169,7 @@ namespace swift::misc::simulation
         CStatusMessage validateSimulatorsForModel() const;
 
         //! Bool flags to enum
-        static Simulator boolToFlag(bool isFSX, bool isFS9, bool xp, bool isP3D, bool fg, bool msfs, bool msfs2024);
+        static Simulator boolToFlag(bool xp, bool isP3D, bool fg, bool msfs, bool msfs2024);
 
         //! Identifer, as provided by plugin
         static Simulator identifierToSimulator(const QString &identifier);
@@ -209,19 +202,9 @@ namespace swift::misc::simulation
             static const CSimulatorInfo s(FG);
             return s;
         }
-        static const CSimulatorInfo &fsx()
-        {
-            static const CSimulatorInfo s(FSX);
-            return s;
-        }
         static const CSimulatorInfo &p3d()
         {
             static const CSimulatorInfo s(P3D);
-            return s;
-        }
-        static const CSimulatorInfo &fs9()
-        {
-            static const CSimulatorInfo s(FS9);
             return s;
         }
         static const CSimulatorInfo &xplane()

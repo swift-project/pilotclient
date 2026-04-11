@@ -71,8 +71,6 @@ namespace swift::config
     {
         static QString infoShort;
         QStringList sl;
-        if constexpr (CBuildConfig::isCompiledWithFs9Support()) { sl << "FS9"; }
-        if constexpr (CBuildConfig::isCompiledWithFsxSupport()) { sl << "FSX"; }
         if constexpr (CBuildConfig::isCompiledWithMSFSSupport()) { sl << "MSFS2020"; }
         if constexpr (CBuildConfig::isCompiledWithMSFS2024Support()) { sl << "MSFS2024"; }
         if constexpr (CBuildConfig::isCompiledWithXPlaneSupport()) { sl << "XPlane"; }

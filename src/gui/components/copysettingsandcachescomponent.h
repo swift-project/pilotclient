@@ -123,12 +123,6 @@ namespace swift::gui::components
         swift::misc::CSetting<swift::misc::audio::TSettings> m_settingsAudio { this };
         swift::misc::CSetting<swift::misc::settings::TDirectorySettings> m_settingsDirectories { this };
         swift::misc::CSetting<swift::misc::network::settings::TTrafficServers> m_settingsNetworkServers { this };
-        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorFsx> m_settingsSimulatorFsx {
-            this
-        }; //!< FSX settings
-        swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorFs9> m_settingsSimulatorFs9 {
-            this
-        }; //!< FS9 settings
         swift::misc::CSetting<swift::misc::simulation::settings::TSimulatorP3D> m_settingsSimulatorP3D {
             this
         }; //!< P3D settings

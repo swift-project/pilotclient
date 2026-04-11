@@ -214,12 +214,9 @@ namespace swift::misc::simulation
         this->insert("testModelString2", cg2);
         this->insert("testModelString3", cg3);
 
-        this->insert("testModelString1", CSimulatorInfo::fs9());
         this->insert("testModelString2", CSimulatorInfo::xplane());
         this->insert("testModelString3", CSimulatorInfo::fg());
         this->insert("testModelString4", CSimulatorInfo::p3d());
-        this->insert("testModelString5", CSimulatorInfo::fsx());
-        this->insert("testModelString6", CSimulatorInfo::fsx());
         this->insert("testModelString7", CSimulatorInfo::msfs());
         this->insert("testModelString8", CSimulatorInfo::msfs2024());
     }

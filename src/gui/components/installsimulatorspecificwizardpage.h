@@ -13,7 +13,6 @@
 namespace swift::gui::components
 {
     class CInstallXSwiftBusComponent;
-    class CInstallFsxTerrainProbeComponent;
 
     /*!
      * Simulator specific installation
@@ -27,18 +26,13 @@ namespace swift::gui::components
         using COverlayMessagesWizardPage::COverlayMessagesWizardPage;
 
         //! Set config
-        void setConfigComponent(CInstallXSwiftBusComponent *config, CInstallFsxTerrainProbeComponent *fsxTerrainProbe)
-        {
-            m_xSwiftBusConfig = config;
-            m_fsxTerrainProbe = fsxTerrainProbe;
-        }
+        void setConfigComponent(CInstallXSwiftBusComponent *config) { m_xSwiftBusConfig = config; }
 
         //! \copydoc QWizardPage::validatePage
         bool validatePage() override { return true; }
 
     private:
         CInstallXSwiftBusComponent *m_xSwiftBusConfig = nullptr;
-        CInstallFsxTerrainProbeComponent *m_fsxTerrainProbe = nullptr;
     };
 } // namespace swift::gui::components
 #endif // SWIFT_GUI_COMPONENTS_INSTALLSIMULATORSPECIFICCOMPONENT_H

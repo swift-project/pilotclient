@@ -27,7 +27,7 @@ if (NOT EXISTS "${XP_SDK_PATH}/CHeaders" OR NOT EXISTS "${XP_SDK_PATH}/Libraries
 endif ()
 
 
-if (SWIFT_WIN64 OR APPLE)
+if (WIN32 OR APPLE)
     add_library(XPSDK::XPLM STATIC IMPORTED GLOBAL)
     add_library(XPSDK::XPWidgets STATIC IMPORTED GLOBAL)
 elseif (UNIX)
@@ -38,7 +38,7 @@ endif ()
 target_include_directories(XPSDK::XPLM INTERFACE ${XP_SDK_PATH}/CHeaders ${XP_SDK_PATH}/CHeaders/XPLM)
 target_include_directories(XPSDK::XPWidgets INTERFACE ${XP_SDK_PATH}/CHeaders ${XP_SDK_PATH}/CHeaders/Widgets)
 
-if (SWIFT_WIN64)
+if (WIN32)
     set_target_properties(XPSDK::XPLM PROPERTIES IMPORTED_LOCATION ${XP_SDK_PATH}/Libraries/Win/XPLM_64.lib)
     set_target_properties(XPSDK::XPWidgets PROPERTIES IMPORTED_LOCATION ${XP_SDK_PATH}/Libraries/Win/XPWidgets_64.lib)
 

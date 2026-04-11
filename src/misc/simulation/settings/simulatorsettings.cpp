@@ -191,8 +191,6 @@ namespace swift::misc::simulation::settings
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FG: return m_simSettingsFG.get();
-        case CSimulatorInfo::FS9: return m_simSettingsFs9.get();
-        case CSimulatorInfo::FSX: return m_simSettingsFsx.get();
         case CSimulatorInfo::P3D: return m_simSettingsP3D.get();
         case CSimulatorInfo::MSFS: return m_simSettingsMsfs.get();
         case CSimulatorInfo::MSFS2024: return m_simSettingsMsfs2024.get();
@@ -215,8 +213,6 @@ namespace swift::misc::simulation::settings
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FG: return m_simSettingsFG.set(settings);
-        case CSimulatorInfo::FS9: return m_simSettingsFs9.set(settings);
-        case CSimulatorInfo::FSX: return m_simSettingsFsx.set(settings);
         case CSimulatorInfo::P3D: return m_simSettingsP3D.set(settings);
         case CSimulatorInfo::MSFS: return m_simSettingsMsfs.set(settings);
         case CSimulatorInfo::MSFS2024: return m_simSettingsMsfs2024.set(settings);
@@ -253,8 +249,6 @@ namespace swift::misc::simulation::settings
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FG: break;
-        case CSimulatorInfo::FS9: break;
-        case CSimulatorInfo::FSX: break;
         case CSimulatorInfo::P3D: break;
         case CSimulatorInfo::MSFS: break;
         case CSimulatorInfo::MSFS2024: break;
@@ -279,8 +273,6 @@ namespace swift::misc::simulation::settings
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FG: return m_simSettingsFG.setAndSave(settings);
-        case CSimulatorInfo::FS9: return m_simSettingsFs9.setAndSave(settings);
-        case CSimulatorInfo::FSX: return m_simSettingsFsx.setAndSave(settings);
         case CSimulatorInfo::P3D: return m_simSettingsP3D.setAndSave(settings);
         case CSimulatorInfo::MSFS: return m_simSettingsMsfs.setAndSave(settings);
         case CSimulatorInfo::MSFS2024: return m_simSettingsMsfs2024.setAndSave(settings);
@@ -302,8 +294,6 @@ namespace swift::misc::simulation::settings
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FG: return m_simSettingsFG.save();
-        case CSimulatorInfo::FS9: return m_simSettingsFs9.save();
-        case CSimulatorInfo::FSX: return m_simSettingsFsx.save();
         case CSimulatorInfo::P3D: return m_simSettingsP3D.save();
         case CSimulatorInfo::MSFS: return m_simSettingsMsfs.save();
         case CSimulatorInfo::MSFS2024: return m_simSettingsMsfs2024.save();
@@ -369,11 +359,7 @@ namespace swift::misc::simulation::settings
         return CSpecializedSimulatorSettings::defaultModelDirectories(simulator);
     }
 
-    void CMultiSimulatorSettings::onFsxSettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::fsx()); }
-
     void CMultiSimulatorSettings::onP3DSettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::p3d()); }
-
-    void CMultiSimulatorSettings::onFs9SettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::fs9()); }
 
     void CMultiSimulatorSettings::onMsfsSettingsChanged() { this->emitSettingsChanged(CSimulatorInfo::msfs()); }
 
@@ -576,11 +562,6 @@ namespace swift::misc::simulation::settings
         switch (m_simulator.getSimulator())
         {
         case CSimulatorInfo::FG: dirs = QStringList(CFlightgearUtil::modelDirectoriesFromSimDir(s)); break;
-        case CSimulatorInfo::FS9: dirs = QStringList({ CFsDirectories::fs9AircraftDirFromSimDir(s) }); break;
-        case CSimulatorInfo::FSX:
-            dirs = CFsDirectories::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths(
-                CFsDirectories::fsxSimObjectsDirFromSimDir(s));
-            break;
         case CSimulatorInfo::P3D:
         {
             const QString versionHint = CFsDirectories::guessP3DVersion(s);
@@ -663,18 +644,6 @@ namespace swift::misc::simulation::settings
         {
             return CFlightgearUtil::flightgearModelDirectories();
         }
-        case CSimulatorInfo::FS9:
-        {
-            if (CFsDirectories::fs9AircraftDir().isEmpty()) { return e; }
-            static const QStringList md({ CFsDirectories::fs9AircraftDir() });
-            return md;
-        }
-        case CSimulatorInfo::FSX:
-        {
-            if (CFsDirectories::fsxSimObjectsDir().isEmpty()) { return e; }
-            static const QStringList md = CFsDirectories::fsxSimObjectsDirPlusAddOnXmlSimObjectsPaths();
-            return md;
-        }
         case CSimulatorInfo::P3D:
         {
             static const QString p3d = CFsDirectories::p3dSimObjectsDir();
@@ -714,8 +683,6 @@ namespace swift::misc::simulation::settings
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FG: return CFlightgearUtil::flightgearRootDir();
-        case CSimulatorInfo::FS9: return CFsDirectories::fs9Dir();
-        case CSimulatorInfo::FSX: return CFsDirectories::fsxDir();
         case CSimulatorInfo::P3D: return CFsDirectories::p3dDir();
         case CSimulatorInfo::MSFS: return CFsDirectories::msfsDir();
         case CSimulatorInfo::MSFS2024: return CFsDirectories::msfs2024Dir();
@@ -733,8 +700,6 @@ namespace swift::misc::simulation::settings
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::FG: return CFlightgearUtil::flightgearModelExcludeDirectoryPatterns();
-        case CSimulatorInfo::FS9: return CFsDirectories::fs9AircraftObjectsExcludeDirectoryPatterns();
-        case CSimulatorInfo::FSX: return CFsDirectories::fsxSimObjectsExcludeDirectoryPatterns();
         case CSimulatorInfo::P3D: return CFsDirectories::p3dSimObjectsExcludeDirectoryPatterns();
         case CSimulatorInfo::XPLANE: return CXPlaneUtil::xplaneModelExcludeDirectoryPatterns();
         case CSimulatorInfo::MSFS: return CFsDirectories::msfs20SimObjectsExcludeDirectoryPatterns();

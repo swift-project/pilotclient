@@ -71,6 +71,6 @@ namespace swift::simplugin::fsxp3d
 } // namespace swift::simplugin::fsxp3d
 
 //! main
-SWIFTTEST_MAIN(SwiftSimPluginFsxP3D::CSimPluginFsxP3d);
+SWIFTTEST_MAIN(swift::simplugin::fsxp3d::CSimPluginFsxP3d);
 
 //! \endcond

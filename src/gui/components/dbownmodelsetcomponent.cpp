@@ -505,22 +505,6 @@ namespace swift::gui::components
             Q_ASSERT_X(ownModelSetComp, Q_FUNC_INFO, "Cannot access parent");
             if (m_setActions.isEmpty())
             {
-                if (sims.isFSX())
-                {
-                    auto *a = new QAction(CIcons::appModels16(), "FSX models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
-                        Q_UNUSED(checked)
-                        ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FSX));
-                    });
-                    m_setActions.append(a);
-
-                    a = new QAction(CIcons::appModels16(), "New set FSX models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
-                        Q_UNUSED(checked)
-                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FSX));
-                    });
-                    m_setNewActions.append(a);
-                }
                 if (sims.isP3D())
                 {
                     auto *a = new QAction(CIcons::appModels16(), "P3D models", this);
@@ -534,22 +518,6 @@ namespace swift::gui::components
                     connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
                         Q_UNUSED(checked)
                         ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::P3D));
-                    });
-                    m_setNewActions.append(a);
-                }
-                if (sims.isFS9())
-                {
-                    auto *a = new QAction(CIcons::appModels16(), "FS9 models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
-                        Q_UNUSED(checked)
-                        ownModelSetComp->setSimulator(CSimulatorInfo(CSimulatorInfo::FS9));
-                    });
-                    m_setActions.append(a);
-
-                    a = new QAction(CIcons::appModels16(), "New set FS9 models", this);
-                    connect(a, &QAction::triggered, ownModelSetComp, [ownModelSetComp](bool checked) {
-                        Q_UNUSED(checked)
-                        ownModelSetComp->setModelSet(CAircraftModelList(), CSimulatorInfo(CSimulatorInfo::FS9));
                     });
                     m_setNewActions.append(a);
                 }

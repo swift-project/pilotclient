@@ -39,11 +39,6 @@ namespace swift::misc::simulation
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FSX:
-        {
-            if (!m_loaderFsx) { m_loaderFsx = this->initLoader(CSimulatorInfo::fsx()); }
-            return m_loaderFsx;
-        }
         case CSimulatorInfo::P3D:
         {
             if (!m_loaderP3D) { m_loaderP3D = this->initLoader(CSimulatorInfo::p3d()); }
@@ -53,11 +48,6 @@ namespace swift::misc::simulation
         {
             if (!m_loaderXP) { m_loaderXP = this->initLoader(CSimulatorInfo::xplane()); }
             return m_loaderXP;
-        }
-        case CSimulatorInfo::FS9:
-        {
-            if (!m_loaderFS9) { m_loaderFS9 = this->initLoader(CSimulatorInfo::fs9()); }
-            return m_loaderFS9;
         }
         case CSimulatorInfo::FG:
         {

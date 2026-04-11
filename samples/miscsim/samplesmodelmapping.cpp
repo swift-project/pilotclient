@@ -48,8 +48,7 @@ namespace swift::sample
                                                               QStringLiteral("C:/Flight Simulator 9/Aircraft") },
                                                             streamOut, streamIn);
 
-        const CSimulatorInfo sim =
-            fsDir.contains("simobjects", Qt::CaseInsensitive) ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
+        const CSimulatorInfo sim = CSimulatorInfo::MSFS;
         CMultiSimulatorSettings multiSettings;
         const CSimulatorSettings originalSettings = multiSettings.getSettings(sim);
         CSimulatorSettings newSettings(originalSettings);
@@ -65,7 +64,7 @@ namespace swift::sample
 
         // sync definitions, remove redundant ones
         CAircraftMatcher matcher;
-        matcher.setModelSet(vpRulesReader.getAsModelsFromCache(), CSimulatorInfo::FSX, true);
+        matcher.setModelSet(vpRulesReader.getAsModelsFromCache(), CSimulatorInfo::MSFS, true);
 
         const CAircraftIcaoCode icao("C172");
         streamOut << "Searching for " << icao << Qt::endl;

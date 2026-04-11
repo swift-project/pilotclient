@@ -39,17 +39,13 @@ namespace swift::misc::simulation
 
     CSimulatorInfo::CSimulatorInfo(Simulator simulator) : m_simulator(static_cast<int>(simulator)) {}
 
-    CSimulatorInfo::CSimulatorInfo(bool fsx, bool fs9, bool xp, bool p3d, bool fg, bool msfs, bool msfs2024)
-        : m_simulator(boolToFlag(fsx, fs9, xp, p3d, fg, msfs, msfs2024))
+    CSimulatorInfo::CSimulatorInfo(bool xp, bool p3d, bool fg, bool msfs, bool msfs2024)
+        : m_simulator(boolToFlag(xp, p3d, fg, msfs, msfs2024))
     {}
 
     CSimulatorInfo::CSimulatorInfo(int flagsAsInt) : m_simulator(flagsAsInt) {}
 
     bool CSimulatorInfo::isUnspecified() const { return m_simulator < 1; }
-
-    bool CSimulatorInfo::isFSX() const { return getSimulator().testFlag(FSX); }
-
-    bool CSimulatorInfo::isFS9() const { return getSimulator().testFlag(FS9); }
 
     bool CSimulatorInfo::isXPlane() const { return getSimulator().testFlag(XPLANE); }
 
@@ -61,10 +57,7 @@ namespace swift::misc::simulation
 
     bool CSimulatorInfo::isMSFS2024() const { return getSimulator().testFlag(MSFS2024); }
 
-    bool CSimulatorInfo::isAnySimulator() const
-    {
-        return isFSX() || isFS9() || isXPlane() || isP3D() || isFG() || isMSFS() || isMSFS2024();
-    }
+    bool CSimulatorInfo::isAnySimulator() const { return isXPlane() || isP3D() || isFG() || isMSFS() || isMSFS2024(); }
 
     bool CSimulatorInfo::isSingleSimulator() const { return this->numberSimulators() == 1; }
 
@@ -72,22 +65,17 @@ namespace swift::misc::simulation
 
     bool CSimulatorInfo::isMultipleSimulators() const { return this->numberSimulators() > 1; }
 
-    bool CSimulatorInfo::isAllSimulators() const
-    {
-        return isFSX() && isFS9() && isXPlane() && isP3D() && isFG() && isMSFS() && isMSFS2024();
-    }
+    bool CSimulatorInfo::isAllSimulators() const { return isXPlane() && isP3D() && isFG() && isMSFS() && isMSFS2024(); }
 
-    bool CSimulatorInfo::isMicrosoftSimulator() const { return isFSX() || isFS9() || isMSFS() || isMSFS2024(); }
+    bool CSimulatorInfo::isMicrosoftSimulator() const { return isMSFS() || isMSFS2024(); }
 
     bool CSimulatorInfo::isMicrosoftOrPrepare3DSimulator() const { return isMicrosoftSimulator() || isP3D(); }
 
-    bool CSimulatorInfo::isFsxP3DFamily() const { return isFSX() || isP3D() || isMSFS() || isMSFS2024(); }
+    bool CSimulatorInfo::isFsxP3DFamily() const { return isP3D() || isMSFS() || isMSFS2024(); }
 
     int CSimulatorInfo::numberSimulators() const
     {
-        int c = isFS9() ? 1 : 0;
-        if (isFSX()) { c++; }
-        if (isXPlane()) { c++; }
+        int c = isXPlane() ? 1 : 0;
         if (isP3D()) { c++; }
         if (isFG()) { c++; }
         if (isMSFS()) { c++; }
@@ -121,9 +109,7 @@ namespace swift::misc::simulation
     {
         Q_UNUSED(i18n)
         const Simulator s = getSimulator();
-        const QString str = (s.testFlag(FSX) ? QStringLiteral("FSX ") : QString()) %
-                            (s.testFlag(FS9) ? QStringLiteral("FS9 ") : QString()) %
-                            (s.testFlag(P3D) ? QStringLiteral("P3D ") : QString()) %
+        const QString str = (s.testFlag(P3D) ? QStringLiteral("P3D ") : QString()) %
                             (s.testFlag(XPLANE) ? QStringLiteral("XPlane ") : QString()) %
                             (s.testFlag(FG) ? QStringLiteral("FG ") : QString()) %
                             (s.testFlag(MSFS) ? QStringLiteral("MSFS ") : QString()) %
@@ -147,8 +133,6 @@ namespace swift::misc::simulation
     QSet<CSimulatorInfo> CSimulatorInfo::asSingleSimulatorSet() const
     {
         QSet<CSimulatorInfo> set;
-        if (m_simulator & FSX) { set.insert(CSimulatorInfo(FSX)); }
-        if (m_simulator & FS9) { set.insert(CSimulatorInfo(FS9)); }
         if (m_simulator & P3D) { set.insert(CSimulatorInfo(P3D)); }
         if (m_simulator & FG) { set.insert(CSimulatorInfo(FG)); }
         if (m_simulator & XPLANE) { set.insert(CSimulatorInfo(XPLANE)); }
@@ -178,12 +162,9 @@ namespace swift::misc::simulation
         return m.info(u"Simulators OK for model");
     }
 
-    CSimulatorInfo::Simulator CSimulatorInfo::boolToFlag(bool fsx, bool fs9, bool xp, bool p3d, bool fg, bool msfs,
-                                                         bool msfs2024)
+    CSimulatorInfo::Simulator CSimulatorInfo::boolToFlag(bool xp, bool p3d, bool fg, bool msfs, bool msfs2024)
     {
-        Simulator s = fsx ? FSX : None;
-        if (fs9) { s |= FS9; }
-        if (xp) { s |= XPLANE; }
+        Simulator s = xp ? XPLANE : None;
         if (p3d) { s |= P3D; }
         if (fg) { s |= FG; }
         if (msfs) { s |= MSFS; }
@@ -197,8 +178,6 @@ namespace swift::misc::simulation
         if (i.isEmpty()) { return None; }
 
         Simulator s = None;
-        if (i.contains("fsx") || i.contains("fs10")) { s |= FSX; }
-        if (i.contains("fs9") || i.contains("2004")) { s |= FS9; }
         if (i.contains("plane") || i.contains("xp")) { s |= XPLANE; }
         if (i.contains("gear") || stringCompare(QStringLiteral("fg"), identifier, Qt::CaseInsensitive)) { s |= FG; }
         if (i.contains("3d") || i.contains("prepar") || i.contains("martin") || i.contains("lm") || i.contains("lock"))
@@ -247,8 +226,6 @@ namespace swift::misc::simulation
     CSimulatorInfo CSimulatorInfo::getLocallyInstalledSimulators()
     {
         CSimulatorInfo sim;
-        bool fs9 = false;
-        bool fsx = false;
         bool p3d = false;
         bool fg = false;
         bool msfs = false;
@@ -256,8 +233,6 @@ namespace swift::misc::simulation
 
         if (CBuildConfig::isRunningOnWindowsNtPlatform())
         {
-            fs9 = !CFsDirectories::fs9AircraftDir().isEmpty() && !CFsDirectories::fs9Dir().isEmpty();
-            fsx = !CFsDirectories::fsxSimObjectsDir().isEmpty() && !CFsDirectories::fsxDir().isEmpty();
             p3d = !CFsDirectories::p3dDir().isEmpty() && !CFsDirectories::p3dSimObjectsDir().isEmpty();
             msfs = !CFsDirectories::msfsDir().isEmpty() && !CFsDirectories::msfsPackagesDir().isEmpty();
             msfs2024 = !CFsDirectories::msfs2024Dir().isEmpty() && !CFsDirectories::msfs2024PackagesDir().isEmpty();
@@ -265,7 +240,7 @@ namespace swift::misc::simulation
 
         const bool xp = !CXPlaneUtil::xplaneRootDir().isEmpty();
 
-        sim.setSimulator(CSimulatorInfo::boolToFlag(fsx, fs9, xp, p3d, fg, msfs, msfs2024));
+        sim.setSimulator(CSimulatorInfo::boolToFlag(xp, p3d, fg, msfs, msfs2024));
         return sim;
     }
 
@@ -278,8 +253,6 @@ namespace swift::misc::simulation
             return CSimulatorInfo::xplane();
         }
         if (locallyInstalled.isP3D()) { return CSimulatorInfo::p3d(); }
-        if (locallyInstalled.isFSX()) { return CSimulatorInfo::fsx(); }
-        if (locallyInstalled.isFS9()) { return CSimulatorInfo::fs9(); }
 
         // fallback
         return CSimulatorInfo::p3d();
@@ -294,8 +267,6 @@ namespace swift::misc::simulation
 
     CSimulatorInfo CSimulatorInfo::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
     {
-        const QJsonValue jfsx = json.value(prefix % u"simfsx");
-        const QJsonValue jfs9 = json.value(prefix % u"simfs9");
         const QJsonValue jxp = json.value(prefix % u"simxplane");
         const QJsonValue jp3d = json.value(prefix % u"simp3d");
         const QJsonValue jfg = json.value(prefix % u"simfg");
@@ -303,8 +274,6 @@ namespace swift::misc::simulation
         const QJsonValue jmsfs2024 = json.value(prefix % u"simmsfs2024");
 
         // we handle bool JSON values and bool as string
-        const bool fsx = jfsx.isBool() ? jfsx.toBool() : CDatastoreUtility::dbBoolStringToBool(jfsx.toString());
-        const bool fs9 = jfs9.isBool() ? jfs9.toBool() : CDatastoreUtility::dbBoolStringToBool(jfs9.toString());
         const bool xp = jxp.isBool() ? jxp.toBool() : CDatastoreUtility::dbBoolStringToBool(jxp.toString());
         const bool p3d = jp3d.isBool() ? jp3d.toBool() : CDatastoreUtility::dbBoolStringToBool(jp3d.toString());
         const bool fg = jfg.isBool() ? jfg.toBool() : CDatastoreUtility::dbBoolStringToBool(jfg.toString());
@@ -312,7 +281,7 @@ namespace swift::misc::simulation
         const bool msfs2024 =
             jmsfs2024.isBool() ? jmsfs2024.toBool() : CDatastoreUtility::dbBoolStringToBool(jmsfs2024.toString());
 
-        const CSimulatorInfo simInfo(fsx, fs9, xp, p3d, fg, msfs, msfs2024);
+        const CSimulatorInfo simInfo(xp, p3d, fg, msfs, msfs2024);
         return simInfo;
     }
 
@@ -334,15 +303,14 @@ namespace swift::misc::simulation
 
     int CCountPerSimulator::getCountForFsFamilySimulators() const
     {
-        return this->getCount(CSimulatorInfo::fsx()) + this->getCount(CSimulatorInfo::p3d()) +
-               this->getCount(CSimulatorInfo::fs9()) + this->getCount(CSimulatorInfo::msfs()) +
+        return this->getCount(CSimulatorInfo::p3d()) + this->getCount(CSimulatorInfo::msfs()) +
                this->getCount(CSimulatorInfo::msfs2024());
     }
 
     int CCountPerSimulator::getCountForFsxFamilySimulators() const
     {
-        return this->getCount(CSimulatorInfo::fsx()) + this->getCount(CSimulatorInfo::p3d()) +
-               this->getCount(CSimulatorInfo::msfs()) + this->getCount(CSimulatorInfo::msfs2024());
+        return this->getCount(CSimulatorInfo::p3d()) + this->getCount(CSimulatorInfo::msfs()) +
+               this->getCount(CSimulatorInfo::msfs2024());
     }
 
     int CCountPerSimulator::getMaximum() const { return *std::min_element(m_counts.begin(), m_counts.end()); }
@@ -368,8 +336,7 @@ namespace swift::misc::simulation
 
     QString CCountPerSimulator::toQString() const
     {
-        return u"FSX: " % QString::number(m_counts[0]) % u" P3D: " % QString::number(m_counts[1]) % u" FS9: " %
-               QString::number(m_counts[2]) % u" XPlane: " % QString::number(m_counts[3]) % u" FG: " %
+        return u" P3D: " % QString::number(m_counts[1]) % u" XPlane: " % QString::number(m_counts[3]) % u" FG: " %
                QString::number(m_counts[4]) % u" MSFS: " % QString::number(m_counts[5]) % u" MSFS2024: " %
                QString::number(m_counts[6]);
     }
@@ -387,9 +354,7 @@ namespace swift::misc::simulation
             m_counts[6]++;
             return;
         }
-        if (simulator.isFSX()) { m_counts[0]++; }
         if (simulator.isP3D()) { m_counts[1]++; }
-        if (simulator.isFS9()) { m_counts[2]++; }
         if (simulator.isXPlane()) { m_counts[3]++; }
         if (simulator.isFG()) { m_counts[4]++; }
         if (simulator.isMSFS()) { m_counts[5]++; }
@@ -401,9 +366,9 @@ namespace swift::misc::simulation
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
         switch (simulator.getSimulator())
         {
-        case CSimulatorInfo::FSX: return 0;
+        // 0 => FSX
         case CSimulatorInfo::P3D: return 1;
-        case CSimulatorInfo::FS9: return 2;
+        // 2 => FS9
         case CSimulatorInfo::XPLANE: return 3;
         case CSimulatorInfo::FG: return 4;
         case CSimulatorInfo::MSFS: return 5;
@@ -416,9 +381,7 @@ namespace swift::misc::simulation
     {
         switch (internalIndex)
         {
-        case 0: return { CSimulatorInfo::FSX };
         case 1: return { CSimulatorInfo::P3D };
-        case 2: return { CSimulatorInfo::FS9 };
         case 3: return { CSimulatorInfo::XPLANE };
         case 4: return { CSimulatorInfo::FG };
         case 5: return { CSimulatorInfo::MSFS };

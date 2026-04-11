@@ -99,24 +99,6 @@ namespace swift::misc::simulation::fscommon
         //! MSFS's packages dir
         static const QString &msfs2024PackagesDir();
 
-        //! FS9 directory obtained from registry
-        static const QString &fs9DirFromRegistry();
-
-        //! FS9 directory obtained from multiple sources
-        static const QString &fs9Dir();
-
-        //! FS9's aircraft directory from registry
-        static const QString &fs9AircraftDirFromRegistry();
-
-        //! FS9's aircraft directory
-        static const QString &fs9AircraftDir();
-
-        //! FS9 aircraft dir, relative to simulator directory
-        static QString fs9AircraftDirFromSimDir(const QString &simDir);
-
-        //! Exclude directories for aircraft objects
-        static const QStringList &fs9AircraftObjectsExcludeDirectoryPatterns();
-
         //! Find the config files (add-ons.cfg)
         //! \note "C:/Users/Joe Doe/AppData/Roaming/Lockheed Martin/Prepar3D v4"
         //! \param versionHint like "v5"

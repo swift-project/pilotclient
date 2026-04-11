@@ -3018,12 +3018,6 @@ namespace swift::simplugin::fsxcommon
             return connectedSimName.contains("lockheed") || connectedSimName.contains("martin") ||
                    connectedSimName.contains("p3d") || connectedSimName.contains("prepar");
         }
-        else if (pluginSim.isFSX())
-        {
-            // FSX drivers only works with FSX
-            return connectedSimName.contains("fsx") || connectedSimName.contains("microsoft") ||
-                   connectedSimName.contains("simulator x");
-        }
         else if (pluginSim.isMSFS())
         {
             // MSFS 2020 drivers only works with MSFS

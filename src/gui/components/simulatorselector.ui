@@ -52,20 +52,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="cb_FSX">
-        <property name="text">
-         <string>FSX</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="cb_FS9">
-        <property name="text">
-         <string>FS9</string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QCheckBox" name="cb_XPlane">
         <property name="toolTip">
          <string>XPlane</string>
@@ -127,26 +113,6 @@
        <widget class="QRadioButton" name="rb_P3D">
         <property name="text">
          <string>P3D</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="rb_FSX">
-        <property name="text">
-         <string>FSX</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="rb_FS9">
-        <property name="text">
-         <string>FS9</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -218,13 +184,9 @@
  </widget>
  <tabstops>
   <tabstop>cb_P3D</tabstop>
-  <tabstop>cb_FSX</tabstop>
-  <tabstop>cb_FS9</tabstop>
   <tabstop>cb_XPlane</tabstop>
   <tabstop>cb_FG</tabstop>
   <tabstop>rb_P3D</tabstop>
-  <tabstop>rb_FSX</tabstop>
-  <tabstop>rb_FS9</tabstop>
   <tabstop>rb_XPlane</tabstop>
   <tabstop>rb_FG</tabstop>
   <tabstop>cb_Simulators</tabstop>

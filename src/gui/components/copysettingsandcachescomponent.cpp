@@ -76,8 +76,6 @@ namespace swift::gui::components
 
         readOnlyCheckbox(ui->cb_SettingsEnabledSimulators, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
                                                                info, m_settingsEnabledSimulators.getFilename()));
-        readOnlyCheckbox(ui->cb_SettingsSimulatorFSX,
-                         !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorFsx.getFilename()));
         readOnlyCheckbox(ui->cb_SettingsSimulatorP3D,
                          !CCacheSettingsUtils::hasOtherVersionSettingsFile(info, m_settingsSimulatorP3D.getFilename()));
         readOnlyCheckbox(ui->cb_SettingsSimulatorXPlane, !CCacheSettingsUtils::hasOtherVersionSettingsFile(
@@ -130,7 +128,6 @@ namespace swift::gui::components
     void CCopySettingsAndCachesComponent::initSimulator()
     {
         ui->cb_SettingsEnabledSimulators->setText(checkBoxText(TEnabledSimulators::humanReadable(), true));
-        ui->cb_SettingsSimulatorFSX->setText(checkBoxText(TSimulatorFsx::humanReadable(), true));
         ui->cb_SettingsSimulatorP3D->setText(checkBoxText(TSimulatorP3D::humanReadable(), true));
         ui->cb_SettingsSimulatorXPlane->setText(checkBoxText(TSimulatorXP::humanReadable(), true));
     }
@@ -321,21 +318,6 @@ namespace swift::gui::components
                                                enabledSims.join(", "));
                     copied++;
                 }
-            }
-        }
-
-        if (ui->cb_SettingsSimulatorFSX->isChecked())
-        {
-            const QString joStr = CCacheSettingsUtils::otherVersionSettingsFileContent(
-                otherVersionInfo, m_settingsSimulatorFsx.getFilename());
-            if (!joStr.isEmpty())
-            {
-                const CSimulatorSettings settings = CSimulatorSettings::fromJsonNoThrow(joStr, true, success, errMsg);
-                if (this->parsingMessage(success, errMsg, m_settingsSimulatorFsx.getKey()))
-                {
-                    this->displayStatusMessage(m_settingsSimulatorFsx.setAndSave(settings), settings.toQString(true));
-                }
-                copied++;
             }
         }
 
