@@ -31,7 +31,11 @@ include(cmake/tools.cmake)
 include(cmake/pch_config.cmake)
 include(CMakeDependentOption)
 get_version_number()
-configure_target_platform()
+
+# Fast-fail for Windows 32 bit builds
+if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+    message(FATAL_ERROR "32-bit builds are not supported. Please use a 64-bit generator.")
+endif()
 
 # CMake config
 set(CMAKE_CXX_STANDARD 17)
@@ -46,11 +50,9 @@ option(SWIFT_BUILD_SAMPLES "Build samples" ON)
 option(SWIFT_BUILD_UNIT_TESTS "Build unit tests" ON)
 option(SWIFT_BUILD_DOCUMENTATION "Build documentation" ON)
 
-cmake_dependent_option(SWIFT_BUILD_FS9_PLUGIN "Build FS9 plugin" ON SWIFT_WIN32 OFF)
-cmake_dependent_option(SWIFT_BUILD_FSX_PLUGIN "Build FSX plugin" ON SWIFT_WIN32 OFF)
 cmake_dependent_option(SWIFT_BUILD_P3D_PLUGIN "Build P3D plugin" ON WIN32 OFF)
 option(SWIFT_BUILD_XPLANE_PLUGIN "Build X-Plane plugin" ON)
-cmake_dependent_option(SWIFT_BUILD_XSWIFTBUS "Build xswiftbus" ON "NOT SWIFT_WIN32" OFF)
+option(SWIFT_BUILD_XSWIFTBUS "Build xswiftbus" ON)
 option(SWIFT_BUILD_FLIGHTGEAR_PLUGIN "Build Flightgear plugin" ON)
 option(SWIFT_BUILD_EMULATED_PLUGIN "Build Emulated plugin" ON)
 cmake_dependent_option(SWIFT_BUILD_MSFS_PLUGIN "Build MSFS plugin" ON WIN32 OFF)
@@ -109,11 +111,7 @@ if(MSVC)
     # see https://gitlab.kitware.com/cmake/cmake/-/issues/17725
     set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION vcredist)
     include(InstallRequiredSystemLibraries)
-    if (SWIFT_WIN32)
-        install(FILES ${MSVC_REDIST_DIR}/vc_redist.x86.exe DESTINATION vcredist)
-    else()
-        install(FILES ${MSVC_REDIST_DIR}/vc_redist.x64.exe DESTINATION vcredist)
-    endif()
+    install(FILES ${MSVC_REDIST_DIR}/vc_redist.x64.exe DESTINATION vcredist)
 endif()
 
 # Find dependencies
@@ -212,24 +210,17 @@ endif()
 # TODO This should be put into the corresponding targets responsible for these files and may use TARGET_RUNTIME_DLLS
 if(WIN32)
     add_custom_target(copy_externals_to_build_dir)
-    if(SWIFT_WIN32)
-        set(ARCH_DIR 32)
-    elseif(SWIFT_WIN64)
-            set(ARCH_DIR 64)
-    endif()
     add_custom_command(TARGET copy_externals_to_build_dir
             POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different third_party/externals/win32-msvc/${ARCH_DIR}/bin ${PROJECT_BINARY_DIR}/out/bin
+            COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different third_party/externals/win32-msvc/64/bin ${PROJECT_BINARY_DIR}/out/bin
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
     add_custom_command(TARGET copy_externals_to_build_dir
             POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different third_party/externals/win32-msvc/${ARCH_DIR}/lib ${PROJECT_BINARY_DIR}/out/bin
+            COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different third_party/externals/win32-msvc/64/lib ${PROJECT_BINARY_DIR}/out/bin
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
 message(STATUS "Simulators:")
-message(STATUS "\t FS9: ${SWIFT_BUILD_FS9_PLUGIN}")
-message(STATUS "\t FSX: ${SWIFT_BUILD_FSX_PLUGIN}")
 message(STATUS "\t P3D: ${SWIFT_BUILD_P3D_PLUGIN}")
 message(STATUS "\t MSFS: ${SWIFT_BUILD_MSFS_PLUGIN}")
 message(STATUS "\t MSFS2024: ${SWIFT_BUILD_MSFS2024_PLUGIN}")
