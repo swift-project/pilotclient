@@ -44,7 +44,7 @@
       <property name="bottomMargin">
        <number>4</number>
       </property>
-      <item row="1" column="3" alignment="Qt::AlignHCenter">
+      <item row="1" column="1" alignment="Qt::AlignHCenter">
        <widget class="QCheckBox" name="cb_XP">
         <property name="text">
          <string>XPlane (32,64-bit)</string>
@@ -58,41 +58,21 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FSX">
-        <property name="text">
-         <string>FSX (32-bit)</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="2" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cb_FS9">
-        <property name="text">
-         <string>FS9 (32-bit)</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>64</width>
-          <height>64</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4" alignment="Qt::AlignHCenter">
        <widget class="QCheckBox" name="cb_FG">
         <property name="text">
          <string>FlightGear (64-bit)</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="5" alignment="Qt::AlignHCenter">
+      <item row="1" column="3" alignment="Qt::AlignHCenter">
         <widget class="QCheckBox" name="cb_MSFS">
             <property name="text">
               <string>MSFS (64-bit)</string>
           </property>
         </widget>
       </item>
-       <item row="1" column="6" alignment="Qt::AlignHCenter">
+       <item row="1" column="4" alignment="Qt::AlignHCenter">
          <widget class="QCheckBox" name="cb_MSFS2024">
            <property name="text">
              <string>MSFS2024 (64-bit)</string>
@@ -168,8 +148,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>cb_P3D</tabstop>
-  <tabstop>cb_FSX</tabstop>
-  <tabstop>cb_FS9</tabstop>
   <tabstop>cb_XP</tabstop>
   <tabstop>cb_FG</tabstop>
  </tabstops>

@@ -195,21 +195,9 @@ namespace swift::misc::simulation
         return distributor;
     }
 
-    const QString &CDistributor::standardFSX()
-    {
-        static const QString k("FSX");
-        return k;
-    }
-
     const QString &CDistributor::standardP3D()
     {
         static const QString k("P3D");
-        return k;
-    }
-
-    const QString &CDistributor::standardFS9()
-    {
-        static const QString k("FS9");
         return k;
     }
 
@@ -227,8 +215,7 @@ namespace swift::misc::simulation
 
     const QSet<QString> &CDistributor::standardAllFsFamily()
     {
-        static const QSet<QString> fsFamily(
-            { standardFS9(), standardFSX(), standardP3D(), standardMsfs(), standardMsfs2024() });
+        static const QSet<QString> fsFamily({ standardP3D(), standardMsfs(), standardMsfs2024() });
         return fsFamily;
     }
 

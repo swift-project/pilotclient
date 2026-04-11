@@ -15,12 +15,6 @@ namespace swift::config
     class CBuildConfig
     {
     public:
-        //! with FS9 support?
-        static constexpr bool isCompiledWithFs9Support(); // defined in buildconfig_gen.inc.in
-
-        //! with FSX support?
-        static constexpr bool isCompiledWithFsxSupport(); // defined in buildconfig_gen.inc.in
-
         //! with P3D support?
         static constexpr bool isCompiledWithP3DSupport(); // defined in buildconfig_gen.inc.in
 
@@ -33,10 +27,7 @@ namespace swift::config
         //! with MSFS2024 support?
         static constexpr bool isCompiledWithMSFS2024Support(); // defined in buildconfig_gen.inc.in
 
-        //! with FSUIPC support?
-        static constexpr bool isCompiledWithFsuipcSupport(); // defined in buildconfig_gen.inc.in
-
-        //! Compiled with any MS Flight Simulator support (P3D, FSX, FS9, MSFS, MSFS24)
+        //! Compiled with any MS Flight Simulator support (P3D, MSFS, MSFS24)
         static constexpr bool isCompiledWithMsFlightSimulatorSupport();
 
         //! with XPlane support?

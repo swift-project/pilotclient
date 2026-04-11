@@ -59,8 +59,6 @@ namespace swift::misc::simulation
         static const QString e;
         if (!simInfo.isSingleSimulator()) { return e; }
         const CSimulatorInfo::Simulator s = simInfo.getSimulator();
-        if (s.testFlag(CSimulatorInfo::FSX)) { return CSimulatorPluginInfo::fsxPluginIdentifier(); }
-        if (s.testFlag(CSimulatorInfo::FS9)) { return CSimulatorPluginInfo::fs9PluginIdentifier(); }
         if (s.testFlag(CSimulatorInfo::P3D)) { return CSimulatorPluginInfo::p3dPluginIdentifier(); }
         if (s.testFlag(CSimulatorInfo::XPLANE)) { return CSimulatorPluginInfo::xplanePluginIdentifier(); }
         if (s.testFlag(CSimulatorInfo::FG)) { return CSimulatorPluginInfo::fgPluginIdentifier(); }
@@ -70,21 +68,9 @@ namespace swift::misc::simulation
         return e;
     }
 
-    const QString &CSimulatorPluginInfo::fsxPluginIdentifier()
-    {
-        static const QString s("org.swift-project.plugins.simulator.fsx");
-        return s;
-    }
-
     const QString &CSimulatorPluginInfo::p3dPluginIdentifier()
     {
         static const QString s("org.swift-project.plugins.simulator.p3d");
-        return s;
-    }
-
-    const QString &CSimulatorPluginInfo::fs9PluginIdentifier()
-    {
-        static const QString s("org.swift-project.plugins.simulator.fs9");
         return s;
     }
 
@@ -120,9 +106,9 @@ namespace swift::misc::simulation
 
     const QStringList &CSimulatorPluginInfo::allIdentifiers()
     {
-        static const QStringList identifiers({ fsxPluginIdentifier(), p3dPluginIdentifier(), xplanePluginIdentifier(),
-                                               fs9PluginIdentifier(), emulatedPluginIdentifier(), fgPluginIdentifier(),
-                                               msfsPluginIdentifier(), msfs2024PluginIdentifier() });
+        static const QStringList identifiers({ p3dPluginIdentifier(), xplanePluginIdentifier(),
+                                               emulatedPluginIdentifier(), fgPluginIdentifier(), msfsPluginIdentifier(),
+                                               msfs2024PluginIdentifier() });
         return identifiers;
     }
 
@@ -135,8 +121,8 @@ namespace swift::misc::simulation
         }
 
         return QStringList {
-            fsxPluginIdentifier(),    msfsPluginIdentifier(), p3dPluginIdentifier(),
-            xplanePluginIdentifier(), fgPluginIdentifier(),   msfs2024PluginIdentifier(),
+            msfsPluginIdentifier(), p3dPluginIdentifier(),      xplanePluginIdentifier(),
+            fgPluginIdentifier(),   msfs2024PluginIdentifier(),
         };
     }
 } // namespace swift::misc::simulation

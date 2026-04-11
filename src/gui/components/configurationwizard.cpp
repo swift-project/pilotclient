@@ -26,7 +26,7 @@ namespace swift::gui::components
         ui->wp_CopyModels->setConfigComponent(ui->comp_CopyModels);
         ui->wp_CopySettingsAndCaches->setConfigComponent(ui->comp_CopySettingsAndCachesComponent);
         ui->wp_Simulator->setConfigComponent(ui->comp_Simulator);
-        ui->wp_SimulatorSpecific->setConfigComponent(ui->comp_InstallXSwiftBus, ui->comp_InstallFsxTerrainProbe);
+        ui->wp_SimulatorSpecific->setConfigComponent(ui->comp_InstallXSwiftBus);
         ui->wp_DataLoad->setConfigComponent(ui->comp_DataLoad);
         ui->wp_Hotkeys->setConfigComponent(ui->comp_Hotkeys);
         ui->wp_Legal->setConfigComponent(ui->comp_LegalInformation);

@@ -273,9 +273,6 @@ add_library(gui SHARED
         components/initialdataloadcomponent.cpp
         components/initialdataloadcomponent.h
         components/initialdataloadcomponent.ui
-        components/installfsxterrainprobecomponent.cpp
-        components/installfsxterrainprobecomponent.h
-        components/installfsxterrainprobecomponent.ui
         components/installsimulatorspecificwizardpage.h
         components/installxswiftbuscomponent.cpp
         components/installxswiftbuscomponent.h

@@ -32,16 +32,12 @@ namespace swift::gui::components
         this->addComboxBoxValues();
         this->setMode(CheckBoxes, true);
 
-        connect(ui->rb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
-        connect(ui->rb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
         connect(ui->rb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
         connect(ui->rb_FG, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
         connect(ui->rb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
         connect(ui->rb_MSFS, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
         connect(ui->rb_MSFS2024, &QRadioButton::toggled, this, &CSimulatorSelector::radioButtonChanged);
 
-        connect(ui->cb_FS9, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
-        connect(ui->cb_FSX, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
         connect(ui->cb_P3D, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
         connect(ui->cb_FG, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
         connect(ui->cb_XPlane, &QRadioButton::toggled, this, &CSimulatorSelector::checkBoxChanged);
@@ -80,13 +76,11 @@ namespace swift::gui::components
         {
         default:
         case CheckBoxes:
-            return { ui->cb_FSX->isChecked(),     ui->cb_FS9->isChecked(), ui->cb_XPlane->isChecked(),
-                     ui->cb_P3D->isChecked(),     ui->cb_FG->isChecked(),  ui->cb_MSFS->isChecked(),
-                     ui->cb_MSFS2024->isChecked() };
+            return { ui->cb_XPlane->isChecked(), ui->cb_P3D->isChecked(), ui->cb_FG->isChecked(),
+                     ui->cb_MSFS->isChecked(), ui->cb_MSFS2024->isChecked() };
         case RadioButtons:
-            return { ui->rb_FSX->isChecked(),     ui->rb_FS9->isChecked(), ui->rb_XPlane->isChecked(),
-                     ui->rb_P3D->isChecked(),     ui->rb_FG->isChecked(),  ui->rb_MSFS->isChecked(),
-                     ui->rb_MSFS2024->isChecked() };
+            return { ui->rb_XPlane->isChecked(), ui->rb_P3D->isChecked(), ui->rb_FG->isChecked(),
+                     ui->rb_MSFS->isChecked(), ui->rb_MSFS2024->isChecked() };
         case ComboBox: return { ui->cb_Simulators->currentText() };
         }
     }
@@ -97,8 +91,6 @@ namespace swift::gui::components
         if (simulator == current) { return; } // avoid unnecessary signals
 
         // checkboxes
-        ui->cb_FSX->setChecked(simulator.isFSX());
-        ui->cb_FS9->setChecked(simulator.isFS9());
         ui->cb_XPlane->setChecked(simulator.isXPlane());
         ui->cb_P3D->setChecked(simulator.isP3D());
         ui->cb_FG->setChecked(simulator.isFG());
@@ -109,16 +101,6 @@ namespace swift::gui::components
         ui->cb_Simulators->setCurrentText(simulator.toQString(true));
 
         // radio buttons
-        if (simulator.isFSX())
-        {
-            ui->rb_FSX->setChecked(simulator.isFSX());
-            return;
-        }
-        if (simulator.isFS9())
-        {
-            ui->rb_FS9->setChecked(simulator.isFS9());
-            return;
-        }
         if (simulator.isXPlane())
         {
             ui->rb_XPlane->setChecked(simulator.isXPlane());
@@ -196,10 +178,8 @@ namespace swift::gui::components
 
     void CSimulatorSelector::setFsxP3DOnly()
     {
-        ui->cb_FS9->setVisible(false);
         ui->cb_XPlane->setVisible(false);
         ui->cb_FG->setVisible(false);
-        ui->rb_FS9->setVisible(false);
         ui->rb_XPlane->setVisible(false);
         ui->rb_FG->setVisible(false);
     }
@@ -215,8 +195,6 @@ namespace swift::gui::components
     void CSimulatorSelector::checkAll()
     {
         // checkboxes
-        ui->cb_FSX->setChecked(true);
-        ui->cb_FS9->setChecked(true);
         ui->cb_XPlane->setChecked(true);
         ui->cb_P3D->setChecked(true);
         ui->cb_FG->setChecked(true);
@@ -230,8 +208,6 @@ namespace swift::gui::components
     void CSimulatorSelector::uncheckAll()
     {
         // checkboxes
-        ui->cb_FSX->setChecked(false);
-        ui->cb_FS9->setChecked(false);
         ui->cb_XPlane->setChecked(false);
         ui->cb_P3D->setChecked(false);
         ui->cb_FG->setChecked(false);
@@ -246,14 +222,12 @@ namespace swift::gui::components
         {
         default:
         case CheckBoxes:
-            c = ui->cb_FSX->isChecked() || ui->cb_FS9->isChecked() || ui->cb_XPlane->isChecked() ||
-                ui->cb_P3D->isChecked() || ui->cb_FG->isChecked() || ui->cb_MSFS->isChecked() ||
-                ui->cb_MSFS2024->isChecked();
+            c = ui->cb_XPlane->isChecked() || ui->cb_P3D->isChecked() || ui->cb_FG->isChecked() ||
+                ui->cb_MSFS->isChecked() || ui->cb_MSFS2024->isChecked();
             break;
         case RadioButtons:
-            c = ui->rb_FSX->isChecked() || ui->rb_FS9->isChecked() || ui->rb_XPlane->isChecked() ||
-                ui->rb_P3D->isChecked() || ui->rb_FG->isChecked() || ui->rb_MSFS->isChecked() ||
-                ui->rb_MSFS2024->isChecked();
+            c = ui->rb_XPlane->isChecked() || ui->rb_P3D->isChecked() || ui->rb_FG->isChecked() ||
+                ui->rb_MSFS->isChecked() || ui->rb_MSFS2024->isChecked();
             break;
         case ComboBox:
             const int i = ui->cb_Simulators->currentIndex();
@@ -270,9 +244,8 @@ namespace swift::gui::components
         {
         default:
         case CheckBoxes:
-            c = ui->cb_FSX->isChecked() && ui->cb_FS9->isChecked() && ui->cb_XPlane->isChecked() &&
-                ui->cb_P3D->isChecked() && ui->cb_FG->isChecked() && ui->cb_MSFS->isChecked() &&
-                ui->cb_MSFS2024->isChecked();
+            c = ui->cb_XPlane->isChecked() && ui->cb_P3D->isChecked() && ui->cb_FG->isChecked() &&
+                ui->cb_MSFS->isChecked() && ui->cb_MSFS2024->isChecked();
             break;
         case RadioButtons:
             // actually this should never be true
@@ -313,8 +286,6 @@ namespace swift::gui::components
     void CSimulatorSelector::setReadOnly(bool readOnly)
     {
         CGuiUtility::checkBoxesReadOnly(this, readOnly);
-        ui->rb_FSX->setEnabled(!readOnly);
-        ui->rb_FS9->setEnabled(!readOnly);
         ui->rb_XPlane->setEnabled(!readOnly);
         ui->rb_P3D->setEnabled(!readOnly);
         ui->rb_FG->setEnabled(!readOnly);
@@ -407,8 +378,6 @@ namespace swift::gui::components
     {
         int cbi = 0;
         ui->cb_Simulators->clear();
-        ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fs9().toQString());
-        ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fsx().toQString());
         ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::p3d().toQString());
         ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::xplane().toQString());
         ui->cb_Simulators->insertItem(cbi++, CSimulatorInfo::fg().toQString());

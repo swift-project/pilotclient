@@ -699,7 +699,7 @@ namespace swift::sample
                 "A" + QString::number(i),
                 CAirlineIcaoCode("A" + QString::number(i), "Foo", CCountry("DE", "Germany"), "Foo", false, false),
                 "Foo", "red", "blue", false));
-            distributors.push_back(CDistributor(QString::number(i), "Foo", {}, {}, CSimulatorInfo::FSX));
+            distributors.push_back(CDistributor(QString::number(i), "Foo", {}, {}, CSimulatorInfo::MSFS));
         }
 
         CAircraftModelList models;
@@ -708,7 +708,7 @@ namespace swift::sample
             const auto &aircraftIcao = aircraftIcaos[CMathUtils::randomInteger(0, numberOfMemoParts - 1)];
             const auto &livery = liveries[CMathUtils::randomInteger(0, numberOfMemoParts - 1)];
             const auto &distributor = distributors[CMathUtils::randomInteger(0, numberOfMemoParts - 1)];
-            models.push_back(CAircraftModel(QString::number(i), CAircraftModel::TypeUnknown, CSimulatorInfo::FSX,
+            models.push_back(CAircraftModel(QString::number(i), CAircraftModel::TypeUnknown, CSimulatorInfo::MSFS,
                                             QString::number(i), QString::number(i), aircraftIcao, livery));
             models.back().setDistributor(distributor);
         }

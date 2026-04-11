@@ -68,14 +68,8 @@ namespace swift::misc::simulation
         //! Simulator info to plugin indentifier, empty string if not single simulator
         static const QString &identifierFromSimulatorInfo(const CSimulatorInfo &);
 
-        //! Plugin identifier (FSX)
-        static const QString &fsxPluginIdentifier();
-
         //! Plugin identifier (P3D)
         static const QString &p3dPluginIdentifier();
-
-        //! Plugin identifier (FS9)
-        static const QString &fs9PluginIdentifier();
 
         //! Plugin identifier (XPlane)
         static const QString &xplanePluginIdentifier();

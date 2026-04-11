@@ -536,11 +536,6 @@ namespace swift::core
         CSimpleCommandParser::registerCommand({ ".drv aircraft readd all", "add again (re-add) all aircraft" });
         CSimpleCommandParser::registerCommand(
             { ".drv aircraft rm callsign", "remove a given callsign from simulator" });
-
-        if (CBuildConfig::isCompiledWithFsuipcSupport())
-        {
-            CSimpleCommandParser::registerCommand({ ".drv fsuipc on|off", "enable/disable FSUIPC (if applicable)" });
-        }
     }
 
     QString ISimulator::statusToString(SimulatorStatus status)

@@ -47,9 +47,7 @@ namespace swift::misc::simulation
         QString convertToQString(bool i18n = false) const;
 
     private:
-        CDistributorList m_distributorsFsx;
         CDistributorList m_distributorsP3d;
-        CDistributorList m_distributorsFs9;
         CDistributorList m_distributorsXPlane;
         CDistributorList m_distributorsFG;
         CDistributorList m_distributorsMsfs;
@@ -58,9 +56,7 @@ namespace swift::misc::simulation
 
         SWIFT_METACLASS(
             CDistributorListPreferences,
-            SWIFT_METAMEMBER(distributorsFsx),
             SWIFT_METAMEMBER(distributorsP3d),
-            SWIFT_METAMEMBER(distributorsFs9),
             SWIFT_METAMEMBER(distributorsXPlane),
             SWIFT_METAMEMBER(distributorsFG),
             SWIFT_METAMEMBER(distributorsMsfs),

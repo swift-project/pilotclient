@@ -98,11 +98,11 @@ namespace swift::misc::simulation
 
         // sims
         const CSimulatorInfo sim(getSimulator());
-        QString flag = CDatastoreUtility::boolToDbYN(sim.isFSX());
+        QString flag = "N";
         obj.insert("simfsx", QJsonValue(flag));
         flag = CDatastoreUtility::boolToDbYN(sim.isP3D());
         obj.insert("simp3d", QJsonValue(flag));
-        flag = CDatastoreUtility::boolToDbYN(sim.isFS9());
+        flag = "N";
         obj.insert("simfs9", QJsonValue(flag));
         flag = CDatastoreUtility::boolToDbYN(sim.isMSFS());
         obj.insert("simmsfs", QJsonValue(flag));

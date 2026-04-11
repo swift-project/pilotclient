@@ -161,13 +161,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="cb_SettingsSimulatorFSX">
-              <property name="text">
-               <string>FSX</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QCheckBox" name="cb_SettingsSimulatorP3D">
               <property name="text">
                <string>P3D</string>
@@ -338,7 +331,6 @@
   <tabstop>cb_CacheLastVatsimServer</tabstop>
   <tabstop>cb_SettingsEnabledSimulators</tabstop>
   <tabstop>cb_SettingsSimulatorP3D</tabstop>
-  <tabstop>cb_SettingsSimulatorFSX</tabstop>
   <tabstop>cb_SettingsSimulatorXPlane</tabstop>
   <tabstop>cb_SettingsModel</tabstop>
   <tabstop>cb_SettingsConsolidation</tabstop>

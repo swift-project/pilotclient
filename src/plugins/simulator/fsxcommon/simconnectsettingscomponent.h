@@ -44,7 +44,7 @@ namespace swift::simplugin::fsxcommon
         //! The P3D version has been changed
         void onP3DVersionChanged(const QString &version);
 
-        swift::misc::simulation::CSimulatorInfo m_simulator { swift::misc::simulation::CSimulatorInfo::FSX };
+        swift::misc::simulation::CSimulatorInfo m_simulator { swift::misc::simulation::CSimulatorInfo::MSFS };
         swift::misc::CSetting<swift::misc::simulation::settings::TP3DVersion> m_p3dVersion { this };
         QScopedPointer<Ui::CSimConnectSettingsComponent> ui;
         bool m_p3d64bit = false;

@@ -39,20 +39,6 @@ namespace swift::misc::simulation::data
         static const char *key() { return "modelcachexp"; }
     };
 
-    //! FSX
-    struct TModelCacheFsx : public TModelCache
-    {
-        //! Key in data cache
-        static const char *key() { return "modelcachefsx"; }
-    };
-
-    //! FS9
-    struct TModelCacheFs9 : public TModelCache
-    {
-        //! Key in data cache
-        static const char *key() { return "modelcachefs9"; }
-    };
-
     //! P3D
     struct TModelCacheP3D : public TModelCache
     {
@@ -103,20 +89,6 @@ namespace swift::misc::simulation::data
     {
         //! Key in data cache
         static const char *key() { return "modelsetxp"; }
-    };
-
-    //! FSX
-    struct TModelSetCacheFsx : public TModelCache
-    {
-        //! Key in data cache
-        static const char *key() { return "modelsetfsx"; }
-    };
-
-    //! FS9
-    struct TModelSetCacheFs9 : public TModelCache
-    {
-        //! Key in data cache
-        static const char *key() { return "modelsetfs9"; }
     };
 
     //! P3D
@@ -304,8 +276,6 @@ namespace swift::misc::simulation::data
 
         //! Cache has been changed. This will only detect changes elsewhere, owned caches will not signal local changes
         //! @{
-        void changedFsx() { this->emitCacheChanged(CSimulatorInfo::fsx()); }
-        void changedFs9() { this->emitCacheChanged(CSimulatorInfo::fs9()); }
         void changedP3D() { this->emitCacheChanged(CSimulatorInfo::p3d()); }
         void changedXP() { this->emitCacheChanged(CSimulatorInfo::xplane()); }
         void changedFG() { this->emitCacheChanged(CSimulatorInfo::fg()); }
@@ -323,9 +293,7 @@ namespace swift::misc::simulation::data
     private:
         //! @{
         //! Cache synchronized flag
-        std::atomic_bool m_syncFsx { false };
         std::atomic_bool m_syncP3D { false };
-        std::atomic_bool m_syncFS9 { false };
         std::atomic_bool m_syncFG { false };
         std::atomic_bool m_syncXPlane { false };
         std::atomic_bool m_syncMsfs { false };
@@ -360,8 +328,6 @@ namespace swift::misc::simulation::data
         //! @}
 
     private:
-        CData<TModelCacheFsx> m_modelCacheFsx { this, &CModelCaches::changedFsx }; //!< FSX cache
-        CData<TModelCacheFs9> m_modelCacheFs9 { this, &CModelCaches::changedFs9 }; //!< FS9 cache
         CData<TModelCacheP3D> m_modelCacheP3D { this, &CModelCaches::changedP3D }; //!< P3D cache
         CData<TModelCacheXP> m_modelCacheXP { this, &CModelCaches::changedXP }; //!< XP cache
         CData<TModelCacheFG> m_modelCacheFG { this, &CModelCaches::changedFG }; //!< XP cache
@@ -403,8 +369,6 @@ namespace swift::misc::simulation::data
         //! @}
 
     private:
-        CData<TModelSetCacheFsx> m_modelCacheFsx { this, &CModelSetCaches::changedFsx }; //!< FSX cache
-        CData<TModelSetCacheFs9> m_modelCacheFs9 { this, &CModelSetCaches::changedFs9 }; //!< FS9 cache
         CData<TModelSetCacheP3D> m_modelCacheP3D { this, &CModelSetCaches::changedP3D }; //!< P3D cache
         CData<TModelSetCacheXP> m_modelCacheXP { this, &CModelSetCaches::changedXP }; //!< XP cache
         CData<TModelSetCacheFG> m_modelCacheFG { this, &CModelSetCaches::changedFG }; //!< FG cache

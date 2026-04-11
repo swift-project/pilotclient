@@ -59,13 +59,6 @@ namespace swift::simplugin::fsxcommon
             const QString v = m_p3dVersion.get();
             this->setComboBox(v);
         }
-        else
-        {
-            const CWinDllUtils::DLLInfo SimConnectInfo = CSimConnectUtilities::simConnectDllInfo();
-            ui->pte_SimConnectInfo->setPlainText(SimConnectInfo.summary());
-            m_simulator = CSimulatorInfo(CSimulatorInfo::FSX);
-            m_p3d64bit = false;
-        }
 
         ui->lbl_P3DVersion->setVisible(m_p3d64bit);
         ui->cb_P3DVersion->setVisible(m_p3d64bit);

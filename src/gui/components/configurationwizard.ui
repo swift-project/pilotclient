@@ -233,7 +233,7 @@
     <string>Simulator specific installations</string>
    </property>
    <property name="subTitle">
-    <string>Install xswiftbus (X-Plane only) or swift terrain probe (FSX/P3D only)</string>
+    <string>Install xswiftbus (X-Plane only)</string>
    </property>
    <layout class="QVBoxLayout" name="vl_SimulatorSpecific">
     <item>
@@ -241,31 +241,6 @@
       <property name="currentIndex">
        <number>1</number>
       </property>
-      <widget class="QWidget" name="pg_InstallFsxTerrainProbe">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>89</width>
-         <height>64</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string extracomment="FSX/P3D: Needed with the x86 legacy 32bit SimConnect">Install FSX terrain probe</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="vl_P3DFsx">
-        <item alignment="Qt::AlignTop">
-         <widget class="swift::gui::components::CInstallFsxTerrainProbeComponent" name="comp_InstallFsxTerrainProbe">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>50</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="pg_InstallXSwiftBus">
        <property name="geometry">
         <rect>
@@ -431,12 +406,6 @@
    <class>swift::gui::components::CInstallSimulatorSpecificWizardPage</class>
    <extends>QWizardPage</extends>
    <header>gui/components/installsimulatorspecificwizardpage.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>swift::gui::components::CInstallFsxTerrainProbeComponent</class>
-   <extends>QFrame</extends>
-   <header>gui/components/installfsxterrainprobecomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

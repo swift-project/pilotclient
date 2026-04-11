@@ -43,8 +43,7 @@ namespace swift::sample
             return;
         }
 
-        const CSimulatorInfo sim =
-            fsDir.contains("simobjects", Qt::CaseInsensitive) ? CSimulatorInfo::FSX : CSimulatorInfo::FS9;
+        const CSimulatorInfo sim = CSimulatorInfo::MSFS;
         CMultiSimulatorSettings multiSettings;
         const CSimulatorSettings originalSettings = multiSettings.getSettings(sim);
         CSimulatorSettings newSettings(originalSettings);

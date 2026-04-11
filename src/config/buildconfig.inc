@@ -14,8 +14,7 @@ namespace swift::config
 {
     constexpr bool CBuildConfig::isCompiledWithMsFlightSimulatorSupport()
     {
-        return CBuildConfig::isCompiledWithFs9Support() || CBuildConfig::isCompiledWithFsxSupport() ||
-               CBuildConfig::isCompiledWithP3DSupport() || isCompiledWithMSFSSupport() ||
+        return CBuildConfig::isCompiledWithP3DSupport() || isCompiledWithMSFSSupport() ||
                isCompiledWithMSFS2024Support();
     }
 

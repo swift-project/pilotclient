@@ -12,7 +12,7 @@
 
 #include "test.h"
 
-namespace SwiftSimPluginFsxP3D
+namespace swift::simplugin::fsxp3d
 {
     //! FSX/P3D common tests
     class CSimPluginFsxP3d : public QObject
@@ -30,7 +30,7 @@ namespace SwiftSimPluginFsxP3D
         //! Request IDs
         void requestIds();
     };
-} // namespace SwiftSimPluginFsxP3D
+} // namespace swift::simplugin::fsxp3d
 
 //! \endcond
 

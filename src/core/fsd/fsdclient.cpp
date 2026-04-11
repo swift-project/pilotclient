@@ -201,9 +201,7 @@ namespace swift::core::fsd
         QWriteLocker l(&m_lockUserClientBuffered);
         switch (simulator)
         {
-        case CSimulatorInfo::FSX: m_simType = SimType::MSFSX; break;
         case CSimulatorInfo::P3D: m_simType = SimType::P3Dv4; break;
-        case CSimulatorInfo::FS9: m_simType = SimType::MSFS2004; break;
         case CSimulatorInfo::FG: m_simType = SimType::FlightGear; break;
         case CSimulatorInfo::XPLANE: m_simType = SimType::XPLANE11; break;
         case CSimulatorInfo::MSFS: m_simType = SimType::MSFS; break;
