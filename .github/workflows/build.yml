@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Get version number
@@ -63,7 +63,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: '0'
       - name: Install gitlint
@@ -118,7 +118,7 @@ jobs:
           fi
       - name: Checkout repository
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: '0'
           submodules: 'true'
@@ -136,7 +136,7 @@ jobs:
           pip3 install requests conan
       - name: Checkout externals
         if: ${{ env.use_externals == 'true' && steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -182,7 +182,7 @@ jobs:
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/installbuilder.run
           key: installbuilder-${{ env.bitrock_version }}-linux-x64
@@ -205,13 +205,13 @@ jobs:
           sudo apt-get -y install dbus-x11 libglu1-mesa-dev libpulse-dev libdbus-1-dev ninja-build
           pip3 install requests conan
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
         if: ${{ env.use_externals == 'true' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -296,7 +296,7 @@ jobs:
           extra: --archives qtbase
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: C:\installbuilder.exe
           key: installbuilder-${{ env.bitrock_version }}-windows-x64
@@ -320,13 +320,13 @@ jobs:
         run: |
           pip install requests PyInstaller conan
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
         if: ${{ env.use_externals == 'true' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -399,7 +399,7 @@ jobs:
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/installbuilder.dmg
           key: installbuilder-${{ env.bitrock_version }}-osx
@@ -424,13 +424,13 @@ jobs:
         run: |
           pip3 install requests conan
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
         if: ${{ env.use_externals == 'true' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -566,7 +566,7 @@ jobs:
         run: |
           sudo apt-get -y install jo jq
       - name: Query GitHub annotations
-        uses: octokit/request-action@v2.x
+        uses: octokit/request-action@v3.x
         id: checkruns
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
