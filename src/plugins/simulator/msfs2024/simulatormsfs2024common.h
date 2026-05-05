@@ -501,7 +501,6 @@ namespace swift::simplugin::msfs2024common
 
         double calcEngineFactor(int engineType);
 
-
         //! Called when data about our own aircraft are received
         void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
 

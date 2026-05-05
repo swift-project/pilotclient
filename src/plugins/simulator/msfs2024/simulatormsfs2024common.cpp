@@ -888,7 +888,7 @@ namespace swift::simplugin::msfs2024common
         aircraftSituation.setAltitude(
             CAltitude(simulatorOwnAircraft.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
     }
-    
+
     double CSimulatorMsfs2024::calcEngineFactor(int engineType)
     {
         // this is a bit of a guess, but it seems that idle is around 30% in the sim, so
@@ -971,7 +971,8 @@ namespace swift::simplugin::msfs2024common
                                         simulatorOwnAircraft.engine5Power, simulatorOwnAircraft.engine6Power,
                                         simulatorOwnAircraft.engine7Power, simulatorOwnAircraft.engine8Power };
 
-        DOUBLE factor = this->calcEngineFactor(static_cast<int>(simulatorOwnAircraft.engineType)); // clears all pending aircraft etc
+        DOUBLE factor = this->calcEngineFactor(
+            static_cast<int>(simulatorOwnAircraft.engineType)); // clears all pending aircraft etc
 
         for (int index = 0; index < simulatorOwnAircraft.numberOfEngines; ++index)
         {
