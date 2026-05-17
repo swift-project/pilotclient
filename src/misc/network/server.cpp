@@ -21,7 +21,7 @@ namespace swift::misc::network
     const QList<int> &CServer::allServerTypes()
     {
         static const QList<int> all(
-            { FSDServerVatsim, VoiceServerVatsim, FSDServer, VoiceServer, WebService, Unspecified });
+            { FSDServerVatsim, FSDServer, Unspecified });
         return all;
     }
 
@@ -65,7 +65,7 @@ namespace swift::misc::network
     {
         static const CServer s =
             CServer("ES Tower", "Euroscope Tower view", "localhost", 6809, CUser(), CFsdSetup::vatsimStandard(),
-                    CEcosystem(CEcosystem::vatsim()), CServer::VoiceServerVatsim);
+                    CEcosystem(CEcosystem::vatsim()), CServer::FSDServer);
         return s;
     }
 
@@ -91,7 +91,6 @@ namespace swift::misc::network
 
         // cross dependency
         if (ecosystem.isSystem(CEcosystem::VATSIM)) { m_serverType = FSDServerVatsim; }
-        if (ecosystem.isSystem(CEcosystem::SwiftTest)) { m_serverType = FSDServerVatsim; }
         return true;
     }
 
@@ -247,19 +246,13 @@ namespace swift::misc::network
     const QString &CServer::serverTypeToString(CServer::ServerType server)
     {
         static const QString fsdVatsim("FSD [VATSIM]");
-        static const QString voiceVatsim("voice [VATSIM]");
         static const QString fsdLegacy("FSD (legacy)");
-        static const QString voice("voice");
-        static const QString webService("web service");
         static const QString unspecified("unspecified");
 
         switch (server)
         {
         case FSDServerVatsim: return fsdVatsim;
-        case VoiceServerVatsim: return voiceVatsim;
         case FSDServer: return fsdLegacy;
-        case VoiceServer: return voice;
-        case WebService: return webService;
         case Unspecified:
         default: return unspecified;
         }

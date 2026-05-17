@@ -29,18 +29,6 @@ namespace swift::misc::network
         return e;
     }
 
-    const CEcosystem &CEcosystem::swift()
-    {
-        static const CEcosystem e(Swift);
-        return e;
-    }
-
-    const CEcosystem &CEcosystem::swiftTest()
-    {
-        static const CEcosystem e(SwiftTest);
-        return e;
-    }
-
     const CEcosystem &CEcosystem::privateFsd()
     {
         static const CEcosystem e(PrivateFSD);
@@ -51,16 +39,12 @@ namespace swift::misc::network
     {
         static const QString u("unknown");
         static const QString v("VATSIM");
-        static const QString s("swift");
-        static const QString st("swift (testing)");
         static const QString fsd("FSD (private)");
         static const QString no("no system");
 
         switch (this->getSystem())
         {
         case VATSIM: return v;
-        case Swift: return s;
-        case SwiftTest: return st;
         case PrivateFSD: return fsd;
         case NoSystem: return no;
         case Unspecified:

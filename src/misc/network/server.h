@@ -48,9 +48,6 @@ namespace swift::misc::network
             Unspecified,
             FSDServerVatsim,
             FSDServer,
-            VoiceServerVatsim,
-            VoiceServer,
-            WebService,
         };
 
         //! Allows to iterate over all ServerType
