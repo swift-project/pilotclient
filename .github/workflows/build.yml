@@ -92,6 +92,7 @@ jobs:
         with:
           version: ${{ env.qt_version }}
           no-qt-binaries: true
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           documentation: true
           cache: true
       - name: Run doxygen
@@ -128,6 +129,7 @@ jobs:
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
       - name: Install dependencies
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
@@ -179,6 +181,7 @@ jobs:
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
@@ -285,12 +288,14 @@ jobs:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
           arch: win64_msvc2022_64
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
       - name: Install Qt debug info
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2022_64
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
           modules: debug_info
           extra: --archives qtbase
@@ -396,6 +401,7 @@ jobs:
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
