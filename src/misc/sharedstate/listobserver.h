@@ -74,10 +74,10 @@ namespace swift::misc::shared_state
         }
 
         //! Set filter to choose list elements.
-        void setFilter(const U &filter) { CGenericListObserver::setFilter(CVariant::from(filter)); }
+        void setFilter(const U &filter) { CGenericListObserver::setFilter(CVariant::fromValue(filter)); }
 
         //! Get list value containing all elements matching the filter.
-        T allValues() const { return CVariant::from(CGenericListObserver::allValues()).template to<T>(); }
+        T allValues() const { return CVariant::fromValue(CGenericListObserver::allValues()).template value<T>(); }
 
         //! Called when an element matching the filter is added to the list.
         virtual void onElementAdded(const typename T::value_type &value) = 0;
@@ -86,7 +86,11 @@ namespace swift::misc::shared_state
         virtual void onElementsReplaced(const T &values) = 0;
 
     private:
-        void onGenericElementAdded(const CVariant &value) final { onElementAdded(value.to<typename T::value_type>()); }
+        void onGenericElementAdded(const CVariant &value) final
+        {
+            onElementAdded(value.value<typename T::value_type>());
+        }
+
         void onGenericElementsReplaced(const CVariantList &values) final { onElementsReplaced(values.to<T>()); }
     };
 } // namespace swift::misc::shared_state

@@ -203,7 +203,7 @@ namespace swift::gui::components
                 if (msgSettings.popupSelcalMessages())
                 {
                     CStatusMessage msg = CLogMessage(this).info(u"SELCAL received");
-                    this->emitDisplayInInfoWindow(CVariant::from(msg), 3s);
+                    this->emitDisplayInInfoWindow(CVariant::fromValue(msg), 3s);
                 }
                 continue;
             }
@@ -300,7 +300,7 @@ namespace swift::gui::components
                 {
                     if (msgSettings.popup(message, ownAircraft))
                     {
-                        this->emitDisplayInInfoWindow(CVariant::from(message), 15s);
+                        this->emitDisplayInInfoWindow(CVariant::fromValue(message), 15s);
                     }
                 }
             } // message

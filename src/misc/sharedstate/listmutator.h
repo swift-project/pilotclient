@@ -54,7 +54,10 @@ namespace swift::misc::shared_state
 
     public:
         //! Add list element.
-        void addElement(const typename T::value_type &value) { CGenericListMutator::addElement(CVariant::from(value)); }
+        void addElement(const typename T::value_type &value)
+        {
+            CGenericListMutator::addElement(CVariant::fromValue(value));
+        }
     };
 } // namespace swift::misc::shared_state
 

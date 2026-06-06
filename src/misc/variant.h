@@ -84,7 +84,7 @@ namespace swift::misc
         //! Move-construct from a QVariant.
         CVariant(QVariant &&var) noexcept : m_v(std::move(var)) {}
 
-        //! Avoid unexpected implicit cast to QVariant::Type. (Use CVariant::from() instead.)
+        //! Avoid unexpected implicit cast to QVariant::Type. (Use CVariant::fromValue() instead.)
         CVariant(int) = delete;
 
         //! Implicit conversion from QString.
@@ -139,14 +139,6 @@ namespace swift::misc
             return CVariant(QVariant::fromValue(std::forward<T>(value)));
         }
 
-        //! Synonym for fromValue().
-        template <typename T>
-        static CVariant from(T &&value)
-        {
-            static_assert(!std::is_same_v<CVariant, std::decay_t<T>>, "CVariant is an illegal type!");
-            return CVariant(QVariant::fromValue(std::forward<T>(value)));
-        }
-
         //! Change the value.
         template <typename T>
         void setValue(T &&value)
@@ -154,23 +146,9 @@ namespace swift::misc
             m_v.setValue(std::forward<T>(value));
         }
 
-        //! Synonym for setValue().
-        template <typename T>
-        void set(T &&value)
-        {
-            m_v.setValue(std::forward<T>(value));
-        }
-
         //! Return the value converted to the type T.
         template <typename T>
         T value() const
-        {
-            return to(tag<T>());
-        }
-
-        //! Synonym for value().
-        template <typename T>
-        T to() const
         {
             return to(tag<T>());
         }
@@ -398,10 +376,10 @@ namespace swift::misc::private_ns
             }
 
             QMetaType::registerConverter<T, QVector<CVariant>>([](const T &list) -> QVector<CVariant> {
-                return list.transform([](const typename T::value_type &v) { return CVariant::from(v); });
+                return list.transform([](const typename T::value_type &v) { return CVariant::fromValue(v); });
             });
             QMetaType::registerConverter<QVector<CVariant>, T>([](const QVector<CVariant> &list) -> T {
-                return makeRange(list).transform([](const CVariant &v) { return v.to<typename T::value_type>(); });
+                return makeRange(list).transform([](const CVariant &v) { return v.value<typename T::value_type>(); });
             });
         }
     }

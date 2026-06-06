@@ -36,9 +36,9 @@ namespace swift::misc::test
 
     const CVariantList &CTestData::getCVariantList()
     {
-        static const CVariantList vl({ CVariant::from(CLength(100, CLengthUnit::m())),
-                                       CVariant::from(CSpeed(200, CSpeedUnit::m_s())),
-                                       CVariant::from(CTestData::getCoordinateMunichTower()) });
+        static const CVariantList vl({ CVariant::fromValue(CLength(100, CLengthUnit::m())),
+                                       CVariant::fromValue(CSpeed(200, CSpeedUnit::m_s())),
+                                       CVariant::fromValue(CTestData::getCoordinateMunichTower()) });
         return vl;
     }
 

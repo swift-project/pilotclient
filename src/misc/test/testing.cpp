@@ -54,17 +54,17 @@ namespace swift::misc::test
         CAtcStation station;
         if (byPropertyIndex)
         {
-            station.setPropertyByIndex(CAtcStation::IndexCallsign, CVariant::from(CCallsign(cs)));
-            station.setPropertyByIndex(CAtcStation::IndexController, CVariant::from(user));
+            station.setPropertyByIndex(CAtcStation::IndexCallsign, CVariant::fromValue(CCallsign(cs)));
+            station.setPropertyByIndex(CAtcStation::IndexController, CVariant::fromValue(user));
             station.setPropertyByIndex(CAtcStation::IndexFrequency,
-                                       CVariant::from(CFrequency(f, CFrequencyUnit::MHz())));
-            station.setPropertyByIndex(CAtcStation::IndexRange, CVariant::from(CLength(50, CLengthUnit::km())));
-            station.setPropertyByIndex(CAtcStation::IndexPosition, CVariant::from(geoPos));
-            station.setPropertyByIndex(CAtcStation::IndexIsOnline, CVariant::from(false));
+                                       CVariant::fromValue(CFrequency(f, CFrequencyUnit::MHz())));
+            station.setPropertyByIndex(CAtcStation::IndexRange, CVariant::fromValue(CLength(50, CLengthUnit::km())));
+            station.setPropertyByIndex(CAtcStation::IndexPosition, CVariant::fromValue(geoPos));
+            station.setPropertyByIndex(CAtcStation::IndexIsOnline, CVariant::fromValue(false));
             station.setPropertyByIndex(CAtcStation::IndexRelativeDistance,
-                                       CVariant::from(CLength(index + 1, CLengthUnit::NM())));
-            station.setPropertyByIndex(CAtcStation::IndexAtis, CVariant::from(atis));
-            station.setPropertyByIndex(CAtcStation::IndexMetar, CVariant::from(metar));
+                                       CVariant::fromValue(CLength(index + 1, CLengthUnit::NM())));
+            station.setPropertyByIndex(CAtcStation::IndexAtis, CVariant::fromValue(atis));
+            station.setPropertyByIndex(CAtcStation::IndexMetar, CVariant::fromValue(metar));
         }
         else
         {

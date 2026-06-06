@@ -318,7 +318,7 @@ namespace swift::gui::views
 
         const int currentRows = this->rowCount();
         const ContainerType selected(this->selectedObjects());
-        const CVariant deletedObjsVariant = CVariant::from(selected);
+        const CVariant deletedObjsVariant = CVariant::fromValue(selected);
         int delta = 0;
 
         if (!this->hasFilter() && currentRows == this->selectedRowCount())
@@ -619,7 +619,7 @@ namespace swift::gui::views
     template <class T>
     int CViewBase<T>::performUpdateContainer(const swift::misc::CVariant &variant, bool sort, bool resize)
     {
-        auto c(variant.to<ContainerType>());
+        auto c(variant.value<ContainerType>());
         return this->updateContainer(c, sort, resize);
     }
 
@@ -808,7 +808,7 @@ namespace swift::gui::views
         if (!this->hasSelection()) { return; }
         const ContainerType selection = this->selectedObjects();
         if (selection.isEmpty()) { return; }
-        const CVariant copyJson = CVariant::from(selection);
+        const CVariant copyJson = CVariant::fromValue(selection);
         const QString json = copyJson.toJsonString();
         clipboard->setText(json);
     }

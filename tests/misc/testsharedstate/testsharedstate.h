@@ -26,7 +26,7 @@ namespace MiscTest
     public:
         bool matches(const swift::misc::CVariant &value) const
         {
-            return value.canConvert<unsigned>() && (value.to<unsigned>() & m_mask);
+            return value.canConvert<unsigned>() && (value.value<unsigned>() & m_mask);
         }
         QString convertToQString(bool = false) const { return QString::number(m_mask); }
         CTestFilter(unsigned mask = ~0u) : m_mask(mask) {}

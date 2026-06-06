@@ -232,8 +232,8 @@ namespace swift::gui::models
         CBoolTextFormatter(int alignment = alignDefault(), const QString &trueName = "true",
                            const QString &falseName = "false", const QList<int> &supportedRoles = roleDisplay())
             : CDefaultFormatter(alignment, false, supportedRoles),
-              m_trueNameVariant(swift::misc::CVariant::from(trueName)),
-              m_falseNameVariant(swift::misc::CVariant::from(falseName))
+              m_trueNameVariant(swift::misc::CVariant::fromValue(trueName)),
+              m_falseNameVariant(swift::misc::CVariant::fromValue(falseName))
         {}
 
         //! \copydoc CDefaultFormatter::displayRole

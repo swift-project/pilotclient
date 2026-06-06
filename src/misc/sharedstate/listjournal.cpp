@@ -13,7 +13,7 @@ namespace swift::misc::shared_state
     {
         dataLink->publish(m_mutator.data());
         dataLink->subscribe(m_observer.data());
-        m_observer->setEventSubscription(CVariant::from(CAnyMatch()));
+        m_observer->setEventSubscription(CVariant::fromValue(CAnyMatch()));
     }
 
     CVariant CGenericListJournal::handleRequest(const CVariant &filter)
@@ -23,7 +23,7 @@ namespace swift::misc::shared_state
         {
             copy.removeIf([&filter](const CVariant &v) { return !filter.matches(v); });
         }
-        return CVariant::from(copy);
+        return CVariant::fromValue(copy);
     }
 
     void CGenericListJournal::handleEvent(const CVariant &param) { m_value.push_back(param); }

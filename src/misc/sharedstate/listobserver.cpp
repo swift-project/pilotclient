@@ -27,7 +27,7 @@ namespace swift::misc::shared_state
     {
         m_observer->requestAsync(m_observer->eventSubscription(), [this](const CVariant &list) {
             QMutexLocker lock(&m_listMutex);
-            m_list = list.to<CVariantList>();
+            m_list = list.value<CVariantList>();
             lock.unlock();
             onGenericElementsReplaced(allValues());
         });

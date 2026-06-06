@@ -98,7 +98,7 @@ namespace swift::misc
         bool match(const CStatusMessage &message) const;
 
         //! This class acts as a SharedState filter when stored in a CVariant.
-        bool matches(const CVariant &message) const { return match(message.to<CStatusMessage>()); }
+        bool matches(const CVariant &message) const { return match(message.value<CStatusMessage>()); }
 
         //! Technical category names matched by this pattern.
         QSet<QString> getCategoryStrings() const { return m_strings; }

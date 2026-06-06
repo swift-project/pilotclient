@@ -373,8 +373,8 @@ namespace swift::misc
         CCached(CValueCache *cache, const QString &key, const QString &name, F validator, const T &defaultValue,
                 U *owner)
             : m_page(&private_ns::CValuePage::getPageFor(owner, cache)),
-              m_element(
-                  &m_page->createElement(key, name, qMetaTypeId<T>(), wrap(validator), CVariant::from(defaultValue)))
+              m_element(&m_page->createElement(key, name, qMetaTypeId<T>(), wrap(validator),
+                                               CVariant::fromValue(defaultValue)))
         {
             if (isInitialized()) { cache->setHumanReadableName(getKey(), name); }
         }
@@ -410,13 +410,13 @@ namespace swift::misc
         //! Write a new value. Must be called from the thread in which the owner lives.
         CStatusMessage set(const T &value, qint64 timestamp = 0)
         {
-            return m_page->setValue(*m_element, CVariant::from(value), timestamp);
+            return m_page->setValue(*m_element, CVariant::fromValue(value), timestamp);
         }
 
         //! Write and save in the same step. Must be called from the thread in which the owner lives.
         CStatusMessage setAndSave(const T &value, qint64 timestamp = 0)
         {
-            return m_page->setValue(*m_element, CVariant::from(value), timestamp, true);
+            return m_page->setValue(*m_element, CVariant::fromValue(value), timestamp, true);
         }
 
         //! Save using the currently set value. Must be called from the thread in which the owner lives.
@@ -474,7 +474,7 @@ namespace swift::misc
         template <typename F>
         static private_ns::CValuePage::Validator wrap(F func)
         {
-            return [func](const CVariant &value, QString &reason) -> bool { return func(value.to<T>(), reason); };
+            return [func](const CVariant &value, QString &reason) -> bool { return func(value.value<T>(), reason); };
         }
         static private_ns::CValuePage::Validator wrap(std::nullptr_t) { return {}; }
 

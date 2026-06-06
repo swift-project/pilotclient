@@ -47,14 +47,14 @@ namespace swift::misc
         template <typename T>
         T to() const
         {
-            return CVariant::from(*this).template to<T>();
+            return CVariant::fromValue(*this).template value<T>();
         }
 
         //! Convert from a sequence type by converting all elements.
         template <typename T>
         static CVariantList from(const T &list)
         {
-            return CVariant::from(list).template to<CVariantList>();
+            return CVariant::fromValue(list).template value<CVariantList>();
         }
 
         //! \copydoc swift::misc::CValueObject::registerMetadata

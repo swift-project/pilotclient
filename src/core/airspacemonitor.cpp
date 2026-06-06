@@ -466,7 +466,7 @@ namespace swift::core
     {
         if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) { return; }
         const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
-        CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::from(clientCaps));
+        CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::fromValue(clientCaps));
         vm.addValue({ CClient::IndexVoiceCapabilities }, voiceCaps);
         this->updateOrAddClient(callsign, vm, false);
 
@@ -1433,7 +1433,7 @@ namespace swift::core
 
         // update
         const CPropertyIndexVariantMap vm({ CSimulatedAircraft::IndexCom1System, CComSystem::IndexActiveFrequency },
-                                          CVariant::from(frequency));
+                                          CVariant::fromValue(frequency));
         this->updateAircraftInRange(callsign, vm);
     }
 

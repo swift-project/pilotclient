@@ -50,55 +50,55 @@ namespace swift::misc::physical_quantities
         if (CMeasurementUnit::isValidUnitSymbol<CAccelerationUnit>(unit))
         {
             const CAcceleration pq(numberD, CMeasurementUnit::unitFromSymbol<CAccelerationUnit>(unit, false));
-            return CVariant::from(pq);
+            return CVariant::fromValue(pq);
         }
 
         if (CMeasurementUnit::isValidUnitSymbol<CAngleUnit>(unit))
         {
             const CAngle pq(numberD, CMeasurementUnit::unitFromSymbol<CAngleUnit>(unit, false));
-            return CVariant::from(pq);
+            return CVariant::fromValue(pq);
         }
 
         if (CMeasurementUnit::isValidUnitSymbol<CFrequencyUnit>(unit))
         {
             const CFrequency pq(numberD, CMeasurementUnit::unitFromSymbol<CFrequencyUnit>(unit, false));
-            return CVariant::from(pq);
+            return CVariant::fromValue(pq);
         }
 
         if (CMeasurementUnit::isValidUnitSymbol<CLengthUnit>(unit))
         {
             const CLength pq(numberD, CMeasurementUnit::unitFromSymbol<CLengthUnit>(unit, false));
-            return CVariant::from(pq);
+            return CVariant::fromValue(pq);
         }
 
         if (CMeasurementUnit::isValidUnitSymbol<CMassUnit>(unit))
         {
             const CMass pq(numberD, CMeasurementUnit::unitFromSymbol<CMassUnit>(unit, false));
-            return CVariant::from(pq);
+            return CVariant::fromValue(pq);
         }
 
         if (CMeasurementUnit::isValidUnitSymbol<CPressureUnit>(unit))
         {
             const CPressure pq(numberD, CMeasurementUnit::unitFromSymbol<CPressureUnit>(unit, false));
-            return CVariant::from(pq);
+            return CVariant::fromValue(pq);
         }
 
         if (CMeasurementUnit::isValidUnitSymbol<CSpeedUnit>(unit))
         {
             const CSpeed pq(numberD, CMeasurementUnit::unitFromSymbol<CSpeedUnit>(unit, false));
-            return CVariant::from(pq);
+            return CVariant::fromValue(pq);
         }
 
         if (CMeasurementUnit::isValidUnitSymbol<CTimeUnit>(unit))
         {
             const CTime pq(numberD, CMeasurementUnit::unitFromSymbol<CTimeUnit>(unit, false));
-            return CVariant::from(pq);
+            return CVariant::fromValue(pq);
         }
 
         if (CMeasurementUnit::isValidUnitSymbol<CTemperatureUnit>(unit))
         {
             const CTemperature pq(numberD, CMeasurementUnit::unitFromSymbol<CTemperatureUnit>(unit, false));
-            return CVariant::from(pq);
+            return CVariant::fromValue(pq);
         }
         return v;
     }

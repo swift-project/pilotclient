@@ -57,24 +57,24 @@ namespace swift::gui::models
         if (type == QMetaType::QImage)
         {
             const auto img = dataCVariant.value<QImage>();
-            return CVariant::from(QPixmap::fromImage(img));
+            return CVariant::fromValue(QPixmap::fromImage(img));
         }
 
         // Our CIcon class
         if (dataCVariant.canConvert<CIcon>())
         {
             const auto i = dataCVariant.value<CIcon>();
-            return CVariant::from(i.toPixmap());
+            return CVariant::fromValue(i.toPixmap());
         }
 
         // nope
-        return CVariant::from(QPixmap());
+        return CVariant::fromValue(QPixmap());
     }
 
     CVariant CDefaultFormatter::alignmentRole() const
     {
-        if (this->hasAlignment()) { return CVariant::from(m_alignment); }
-        return CVariant::from(alignDefault()); // default
+        if (this->hasAlignment()) { return CVariant::fromValue(m_alignment); }
+        return CVariant::fromValue(alignDefault()); // default
     }
 
     CVariant CDefaultFormatter::checkStateRole(const CVariant &value) const
@@ -127,13 +127,13 @@ namespace swift::gui::models
 
     const CVariant &CDefaultFormatter::emptyStringVariant()
     {
-        static const CVariant e = CVariant::from(QString());
+        static const CVariant e = CVariant::fromValue(QString());
         return e;
     }
 
     const CVariant &CDefaultFormatter::emptyPixmapVariant()
     {
-        static const CVariant e = CVariant::from(QPixmap());
+        static const CVariant e = CVariant::fromValue(QPixmap());
         return e;
     }
 
@@ -275,7 +275,7 @@ namespace swift::gui::models
             static const CVariant iv("invalid");
             return iv;
         }
-        return CVariant::from(QStringLiteral("Invalid type: '%1'").arg(dataCVariant.typeName()));
+        return CVariant::fromValue(QStringLiteral("Invalid type: '%1'").arg(dataCVariant.typeName()));
     }
 
     Qt::ItemFlags CDelegateFormatter::flags(Qt::ItemFlags flags, bool editable) const
@@ -376,7 +376,7 @@ namespace swift::gui::models
 
     CVariant CAltitudeFormatter::displayRole(const CVariant &altitude) const
     {
-        auto alt(altitude.to<CAltitude>());
+        auto alt(altitude.value<CAltitude>());
         if (m_flightLevel) { alt.toFlightLevel(); }
         else { alt.switchUnit(m_unit); }
         return alt.toQString(m_useI18n);
@@ -395,7 +395,7 @@ namespace swift::gui::models
 
     CVariant CColorFormatter::decorationRole(const CVariant &dataCVariant) const
     {
-        const auto rgbColor(dataCVariant.to<CRgbColor>());
+        const auto rgbColor(dataCVariant.value<CRgbColor>());
         if (!rgbColor.isValid()) { return emptyPixmapVariant(); }
         return CVariant::fromValue(rgbColor.toPixmap());
     }
@@ -403,7 +403,7 @@ namespace swift::gui::models
     CVariant CColorFormatter::tooltipRole(const CVariant &dataCVariant) const
     {
         static const CVariant empty(CVariant::fromValue(QPixmap()));
-        const auto rgbColor(dataCVariant.to<CRgbColor>());
+        const auto rgbColor(dataCVariant.value<CRgbColor>());
         if (!rgbColor.isValid()) { return emptyStringVariant(); }
         return rgbColor.hex(true);
     }
