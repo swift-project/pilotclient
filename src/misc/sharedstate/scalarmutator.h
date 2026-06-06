@@ -54,7 +54,7 @@ namespace swift::misc::shared_state
 
     public:
         //! Set scalar value.
-        void setValue(const T &value) { CGenericScalarMutator::setValue(CVariant::from(value)); }
+        void setValue(const T &value) { CGenericScalarMutator::setValue(CVariant::fromValue(value)); }
     };
 } // namespace swift::misc::shared_state
 

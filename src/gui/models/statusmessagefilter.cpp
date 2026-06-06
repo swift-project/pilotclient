@@ -54,9 +54,10 @@ namespace swift::gui::models
         {
             if (CLogPattern::allHumanReadableNames().contains(m_category))
             {
-                return CVariant::from(CLogPattern::fromHumanReadableName(m_category).withSeverityAtOrAbove(m_severity));
+                return CVariant::fromValue(
+                    CLogPattern::fromHumanReadableName(m_category).withSeverityAtOrAbove(m_severity));
             }
-            return CVariant::from(CLogPattern::exactMatch(m_category).withSeverityAtOrAbove(m_severity));
+            return CVariant::fromValue(CLogPattern::exactMatch(m_category).withSeverityAtOrAbove(m_severity));
         }
 
         CLogCategoryList categories = CLogCategoryList::fromQStringList(CLogCategories::allSpecialCategories());
@@ -71,6 +72,6 @@ namespace swift::gui::models
             return strings.isEmpty() ? QString {} : *strings.begin();
         });
 
-        return CVariant::from(CLogPattern::anyOf(categories.join(humanCats)).withSeverityAtOrAbove(m_severity));
+        return CVariant::fromValue(CLogPattern::anyOf(categories.join(humanCats)).withSeverityAtOrAbove(m_severity));
     }
 } // namespace swift::gui::models

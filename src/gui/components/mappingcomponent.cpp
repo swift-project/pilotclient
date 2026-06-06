@@ -240,7 +240,7 @@ namespace swift::gui::components
     void CMappingComponent::onChangedSimulatedAircraftInView(const CVariant &object, const CPropertyIndex &index)
     {
         if (!index.contains(CSimulatedAircraft::IndexEnabled)) { return; } // we only deal with enabled/disabled here
-        const auto sa = object.to<CSimulatedAircraft>(); // changed in GUI
+        const auto sa = object.value<CSimulatedAircraft>(); // changed in GUI
         const CSimulatedAircraft saFromBackend =
             sGui->getIContextNetwork()->getAircraftInRangeForCallsign(sa.getCallsign());
         if (!saFromBackend.hasValidCallsign()) { return; } // obviously deleted

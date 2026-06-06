@@ -531,7 +531,7 @@ namespace swift::misc::simulation
                                                       const CIdentifier &originator)
     {
         if (CIdentifiable::isMyIdentifier(originator)) { return false; }
-        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::from(model));
+        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::fromValue(model));
         const int c = this->updateAircraftInRange(callsign, vm);
         return c > 0;
     }
@@ -540,7 +540,7 @@ namespace swift::misc::simulation
                                                              const CIdentifier &originator)
     {
         if (CIdentifiable::isMyIdentifier(originator)) { return false; }
-        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexNetworkModel, CVariant::from(model));
+        const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexNetworkModel, CVariant::fromValue(model));
         const int c = this->updateAircraftInRange(callsign, vm);
         return c > 0;
     }

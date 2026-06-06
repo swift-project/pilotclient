@@ -82,6 +82,6 @@ namespace swift::gui::models
         if (rowIndex < 0) { return false; }
         QModelIndex i = this->index(rowIndex, 0);
         const CNameVariantPair cv = this->at(i);
-        return value == CVariant::from(cv);
+        return value == CVariant::fromValue(cv);
     }
 } // namespace swift::gui::models

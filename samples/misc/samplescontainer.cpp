@@ -69,7 +69,7 @@ namespace swift::sample
         atcList.push_back(station1);
         CAtcStation station1Cpy(station1);
         CFrequency changedFrequency(118.25, CFrequencyUnit::MHz());
-        CPropertyIndexVariantMap vm(CAtcStation::IndexFrequency, CVariant::from(changedFrequency));
+        CPropertyIndexVariantMap vm(CAtcStation::IndexFrequency, CVariant::fromValue(changedFrequency));
 
         // demonstration apply
         CPropertyIndexList changedProperties;

@@ -12,7 +12,7 @@ namespace swift::misc::shared_state
     void CGenericScalarObserver::initialize(IDataLink *dataLink)
     {
         dataLink->subscribe(m_observer.data());
-        m_observer->setEventSubscription(CVariant::from(CAnyMatch()));
+        m_observer->setEventSubscription(CVariant::fromValue(CAnyMatch()));
         connect(dataLink->watcher(), &CDataLinkConnectionWatcher::connected, this,
                 &CGenericScalarObserver::reconstruct);
         if (dataLink->watcher()->isConnected()) { reconstruct(); }

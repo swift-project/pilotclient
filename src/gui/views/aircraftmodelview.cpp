@@ -80,21 +80,21 @@ namespace swift::gui::views
     int CAircraftModelView::applyToSelected(const CLivery &livery)
     {
         if (!hasSelection()) { return 0; }
-        const int c = this->updateSelected(CVariant::from(livery), CAircraftModel::IndexLivery);
+        const int c = this->updateSelected(CVariant::fromValue(livery), CAircraftModel::IndexLivery);
         return c;
     }
 
     int CAircraftModelView::applyToSelected(const CAircraftIcaoCode &icao)
     {
         if (!hasSelection()) { return 0; }
-        const int c = this->updateSelected(CVariant::from(icao), CAircraftModel::IndexAircraftIcaoCode);
+        const int c = this->updateSelected(CVariant::fromValue(icao), CAircraftModel::IndexAircraftIcaoCode);
         return c;
     }
 
     int CAircraftModelView::applyToSelected(const CDistributor &distributor)
     {
         if (!hasSelection()) { return 0; }
-        const int c = this->updateSelected(CVariant::from(distributor), CAircraftModel::IndexDistributor);
+        const int c = this->updateSelected(CVariant::fromValue(distributor), CAircraftModel::IndexDistributor);
         return c;
     }
 

@@ -61,13 +61,13 @@ namespace swift::misc::shared_state
 
     public:
         //! Get scalar value.
-        T value() const { return CGenericScalarObserver::value().template to<T>(); }
+        T value() const { return CGenericScalarObserver::value().template value<T>(); }
 
     private:
         //! Called when the scalar value changes.
         virtual void onValueChanged(const T &value) = 0;
 
-        void onGenericValueChanged(const CVariant &value) final { onValueChanged(value.to<T>()); }
+        void onGenericValueChanged(const CVariant &value) final { onValueChanged(value.value<T>()); }
     };
 } // namespace swift::misc::shared_state
 

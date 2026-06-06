@@ -101,14 +101,14 @@ namespace MiscTest
 
     void CTestValueCache::insertAndGet()
     {
-        CVariantMap testData { { "value1", CVariant::from(1) },
-                               { "value2", CVariant::from(2) },
-                               { "value3", CVariant::from(3) } };
-        CVariantMap testData2 { { "value2", CVariant::from(42) }, { "value4", CVariant::from(4) } };
-        CVariantMap testDataCombined { { "value1", CVariant::from(1) },
-                                       { "value2", CVariant::from(42) },
-                                       { "value3", CVariant::from(3) },
-                                       { "value4", CVariant::from(4) } };
+        CVariantMap testData { { "value1", CVariant::fromValue(1) },
+                               { "value2", CVariant::fromValue(2) },
+                               { "value3", CVariant::fromValue(3) } };
+        CVariantMap testData2 { { "value2", CVariant::fromValue(42) }, { "value4", CVariant::fromValue(4) } };
+        CVariantMap testDataCombined { { "value1", CVariant::fromValue(1) },
+                                       { "value2", CVariant::fromValue(42) },
+                                       { "value3", CVariant::fromValue(3) },
+                                       { "value4", CVariant::fromValue(4) } };
 
         CValueCache cache(1);
         QVERIFY(cache.getAllValues() == CVariantMap());
@@ -243,12 +243,12 @@ namespace MiscTest
 
     void CTestValueCache::json()
     {
-        QJsonObject testJson { { "value1", CVariant::from(1).toJson() },
-                               { "value2", CVariant::from(2).toJson() },
-                               { "value3", CVariant::from(3).toJson() } };
-        CVariantMap testData { { "value1", CVariant::from(1) },
-                               { "value2", CVariant::from(2) },
-                               { "value3", CVariant::from(3) } };
+        QJsonObject testJson { { "value1", CVariant::fromValue(1).toJson() },
+                               { "value2", CVariant::fromValue(2).toJson() },
+                               { "value3", CVariant::fromValue(3).toJson() } };
+        CVariantMap testData { { "value1", CVariant::fromValue(1) },
+                               { "value2", CVariant::fromValue(2) },
+                               { "value3", CVariant::fromValue(3) } };
 
         CValueCache cache(1);
         cache.loadFromJson(testJson);
@@ -260,11 +260,11 @@ namespace MiscTest
     {
         CSimulatedAircraftList aircraft({ CSimulatedAircraft("BAW001", {}, {}) });
         CAtcStationList atcStations({ CAtcStation("EGLL_TWR") });
-        const CVariantMap testData { { "namespace1/value1", CVariant::from(1) },
-                                     { "namespace1/value2", CVariant::from(2) },
-                                     { "namespace1/value3", CVariant::from(3) },
-                                     { "namespace2/aircraft", CVariant::from(aircraft) },
-                                     { "namespace2/atcstations", CVariant::from(atcStations) } };
+        const CVariantMap testData { { "namespace1/value1", CVariant::fromValue(1) },
+                                     { "namespace1/value2", CVariant::fromValue(2) },
+                                     { "namespace1/value3", CVariant::fromValue(3) },
+                                     { "namespace2/aircraft", CVariant::fromValue(aircraft) },
+                                     { "namespace2/atcstations", CVariant::fromValue(atcStations) } };
         CValueCache cache(1);
         cache.insertValues({ testData, QDateTime::currentMSecsSinceEpoch() });
 

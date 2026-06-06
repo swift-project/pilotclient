@@ -13,7 +13,7 @@ namespace swift::misc::shared_state
     {
         dataLink->publish(m_mutator.data());
         dataLink->subscribe(m_observer.data());
-        m_observer->setEventSubscription(CVariant::from(CAnyMatch()));
+        m_observer->setEventSubscription(CVariant::fromValue(CAnyMatch()));
         m_mutator->postEvent(m_value);
     }
 
