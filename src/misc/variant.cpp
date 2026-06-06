@@ -70,7 +70,7 @@ namespace swift::misc
                 else if (m_v.canConvert<QVariantList>())
                 {
                     QVector<CVariant> vec;
-                    const auto seqit = m_v.value<QSequentialIterable>();
+                    const auto seqit = m_v.value<QMetaSequence::Iterable>();
                     vec.reserve(seqit.size());
                     for (auto it = seqit.begin(); it != seqit.end(); ++it) { vec.push_back(*it); }
                     m_v.setValue(vec);
