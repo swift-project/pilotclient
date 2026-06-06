@@ -114,8 +114,6 @@ namespace swift::misc::physical_quantities
         };
         using MetersToMeters = One;
 
-        virtual void anchor();
-
     public:
         //! Base type
         using base_type = CMeasurementUnit;
@@ -343,8 +341,6 @@ namespace swift::misc::physical_quantities
 
         using HertzToHertz = One;
 
-        virtual void anchor();
-
     public:
         //! Base type
         using base_type = CMeasurementUnit;
@@ -443,8 +439,6 @@ namespace swift::misc::physical_quantities
         {
             static double factor() { return 0.45359237; }
         };
-
-        virtual void anchor();
 
     public:
         //! Base type
@@ -558,8 +552,6 @@ namespace swift::misc::physical_quantities
         {
             static double factor() { return 860.142806; }
         };
-
-        virtual void anchor();
 
     public:
         //! Base type
@@ -693,8 +685,6 @@ namespace swift::misc::physical_quantities
             static double offset() { return 32.0; }
         };
 
-        virtual void anchor();
-
     public:
         //! Base type
         using base_type = CMeasurementUnit;
@@ -795,8 +785,6 @@ namespace swift::misc::physical_quantities
         {
             static double factor() { return 0.3048 / 60.0; }
         };
-
-        virtual void anchor();
 
     public:
         //! Base type
@@ -1066,8 +1054,6 @@ namespace swift::misc::physical_quantities
         {
             static double factor() { return 0.3048; }
         };
-
-        virtual void anchor();
 
     public:
         //! Base type
