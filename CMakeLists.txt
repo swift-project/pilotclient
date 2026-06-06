@@ -10,12 +10,8 @@ if(APPLE)
         # by default use x86 as currently only xswiftbus works on ARM/Apple Silicon
         set(CMAKE_OSX_ARCHITECTURES "x86_64")
     endif()
-    if(CMAKE_OSX_ARCHITECTURES MATCHES "arm64")
-        # arm64 only supported since 11.0
-        set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0")
-    else()
-        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
-    endif()
+     # Minimum requirements for Qt 6.11
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "13.0")
 endif()
 
 set(SWIFT_LANGUAGES C CXX)
