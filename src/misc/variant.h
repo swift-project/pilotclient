@@ -12,9 +12,9 @@
 #include <QDBusArgument>
 #include <QDateTime>
 #include <QJsonObject>
+#include <QMetaSequence>
 #include <QMetaType>
 #include <QPixmap>
-#include <QSequentialIterable>
 #include <QString>
 #include <QVariant>
 #include <QtGlobal>
@@ -373,7 +373,7 @@ namespace swift::misc
             }
             else
             {
-                for (const auto &v : m_v.value<QSequentialIterable>()) { result.push_back(v.value<VT>()); }
+                for (const auto &v : m_v.value<QMetaSequence::Iterable>()) { result.push_back(v.value<VT>()); }
             }
             return result;
         }
