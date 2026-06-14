@@ -135,7 +135,7 @@ jobs:
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
         run: |
           sudo apt-get -y install dbus-x11 libglu1-mesa-dev libpulse-dev libdbus-1-dev ninja-build
-          pip3 install requests conan
+          pip3 install requests conan==2.29.1
       - name: Checkout externals
         if: ${{ env.use_externals == 'true' && steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
         uses: actions/checkout@v6
@@ -206,7 +206,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get -y install dbus-x11 libglu1-mesa-dev libpulse-dev libdbus-1-dev ninja-build
-          pip3 install requests conan
+          pip3 install requests conan==2.29.1
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
@@ -323,7 +323,7 @@ jobs:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
       - name: Install dependencies
         run: |
-          pip install requests PyInstaller conan
+          pip install requests PyInstaller conan==2.29.1
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
@@ -430,7 +430,7 @@ jobs:
           python-version: '3.13'
       - name: Install dependencies
         run: |
-          pip3 install requests conan
+          pip3 install requests conan==2.29.1
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
