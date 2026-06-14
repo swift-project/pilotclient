@@ -135,7 +135,7 @@ namespace swift::simplugin::xplane
     void CXSwiftBusTrafficProxy::getRemoteAircraftData(const QStringList &callsigns,
                                                        const RemoteAircraftDataCallback &setter) const
     {
-        std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
+        std::function<void(QDBusPendingCallWatcher *)> callback = [=, this](QDBusPendingCallWatcher *watcher) {
             QDBusPendingReply<QStringList, QList<double>, QList<double>, QList<double>, QList<bool>, QList<double>>
                 reply = *watcher;
             if (!reply.isError())

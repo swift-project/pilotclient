@@ -35,7 +35,7 @@ namespace swift::gui::filters
 
         // connect deferred, avoid to filter during the UI "swing in period"
         QPointer<CDistributorFilterBar> myself(this);
-        QTimer::singleShot(2500, this, [=] {
+        QTimer::singleShot(2500, this, [=, this] {
             if (!myself) { return; }
             this->connectTriggerFilterSignals();
         });

@@ -145,7 +145,7 @@ namespace swift::gui::components
     void CDistributorPreferencesComponent::triggerDeferredSimulatorChange()
     {
         QPointer<CDistributorPreferencesComponent> myself(this);
-        QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(1000, this, [=, this] {
             if (!myself) { return; }
             if (!sApp || sApp->isShuttingDown()) { return; }
             const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();

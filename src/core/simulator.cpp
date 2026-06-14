@@ -823,7 +823,7 @@ namespace swift::core
             // decouple, follow up of signal can include unloading
             // simulator so this should happen strictly asynchronously (which is like forcing Qt::QueuedConnection)
             QPointer<ISimulator> myself(this);
-            QTimer::singleShot(0, this, [=] {
+            QTimer::singleShot(0, this, [=, this] {
                 if (!myself || !sApp || sApp->isShuttingDown()) { return; }
 
                 // now simulating
@@ -841,7 +841,7 @@ namespace swift::core
     void ISimulator::emitInterpolationSetupChanged()
     {
         QPointer<ISimulator> myself(this);
-        QTimer::singleShot(5, this, [=] {
+        QTimer::singleShot(5, this, [=, this] {
             if (!myself) { return; }
             emit this->interpolationAndRenderingSetupChanged();
         });
@@ -974,7 +974,7 @@ namespace swift::core
         this->logicallyRemoveRemoteAircraft(callsign);
         if (!this->isAircraftInRange(callsign)) { return false; }
         const QPointer<ISimulator> myself(this);
-        QTimer::singleShot(2500, this, [=] {
+        QTimer::singleShot(2500, this, [=, this] {
             if (myself.isNull()) { return; }
             if (this->isShuttingDown()) { return; }
             if (!this->isAircraftInRange(callsign)) { return; }
@@ -1002,7 +1002,7 @@ namespace swift::core
         // return this->changeRemoteAircraftEnabled(aircraft);
 
         const QPointer<ISimulator> myself(this);
-        QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(1000, this, [=, this] {
             if (!myself) { return; }
             if (this->isAircraftInRange(callsign)) { this->changeRemoteAircraftEnabled(aircraft); }
         });
@@ -1202,7 +1202,7 @@ namespace swift::core
 
         const int t = CMathUtils::randomInteger(4500, 5500); // makes sure not always using the same time difference
         const QPointer<ISimulator> myself(this);
-        QTimer::singleShot(t, this, [=] {
+        QTimer::singleShot(t, this, [=, this] {
             if (!myself || myself->isShuttingDown()) { return; }
             this->displayLoggedSituationInSimulator(cs, stopLogging, times - 1);
         });
@@ -1233,7 +1233,7 @@ namespace swift::core
             {
                 // we wait for the data
                 connect(sApp->getWebDataServices(), &CWebDataServices::swiftDbModelMatchingEntitiesRead, this,
-                        [=] { this->reverseLookupAndUpdateOwnAircraftModel(model); });
+                        [=, this] { this->reverseLookupAndUpdateOwnAircraftModel(model); });
             }
         }
     }
@@ -1275,7 +1275,7 @@ namespace swift::core
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
-            QTimer::singleShot(0, this, [=] {
+            QTimer::singleShot(0, this, [=, this] {
                 if (myself) { this->start(); }
             });
             return;
@@ -1292,7 +1292,7 @@ namespace swift::core
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
-            QTimer::singleShot(0, this, [=] {
+            QTimer::singleShot(0, this, [=, this] {
                 if (myself) { this->stop(); }
             });
             return;
@@ -1309,7 +1309,7 @@ namespace swift::core
         {
             // call in correct thread
             QPointer<ISimulatorListener> myself(this);
-            QTimer::singleShot(0, this, [=] {
+            QTimer::singleShot(0, this, [=, this] {
                 if (myself) { this->check(); }
             });
             return;

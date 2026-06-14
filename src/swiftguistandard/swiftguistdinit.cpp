@@ -188,7 +188,7 @@ void SwiftGuiStd::init()
 
     // more checks
     QPointer<SwiftGuiStd> myself(this);
-    QTimer::singleShot(5000, this, [=] {
+    QTimer::singleShot(5000, this, [=, this] {
         if (!myself) { return; }
         this->verifyPrerequisites();
     });

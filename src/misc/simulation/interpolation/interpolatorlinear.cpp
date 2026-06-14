@@ -125,7 +125,7 @@ namespace swift::misc::simulation
 
             // find the first situation earlier than the current time
             const auto pivot =
-                std::partition_point(m_currentSituations.begin(), m_currentSituations.end(), [=](auto &&s) {
+                std::partition_point(m_currentSituations.begin(), m_currentSituations.end(), [=, this](auto &&s) {
                     return s.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch;
                 });
             const auto situationsNewer = makeRange(m_currentSituations.begin(), pivot);

@@ -40,7 +40,7 @@ namespace swift::gui::components
     void CDownloadDialog::showAndStartDownloading()
     {
         const QPointer<CDownloadDialog> guard(this);
-        QTimer::singleShot(0, this, [=] {
+        QTimer::singleShot(0, this, [=, this] {
             if (guard.isNull()) { return; }
             ui->comp_Download->triggerDownloadingOfFiles(2500);
         });

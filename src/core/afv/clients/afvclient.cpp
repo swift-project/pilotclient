@@ -53,7 +53,7 @@ namespace swift::core::afv::clients
         connect(m_voiceServerTimer, &QTimer::timeout, this, &CAfvClient::onTimerUpdate);
 
         // deferred init - use swift::misc:: singleShot to call in correct thread, "myself" NOT needed
-        swift::misc::singleShot(1000, this, [=] { this->deferredInit(); });
+        swift::misc::singleShot(1000, this, [=, this] { this->deferredInit(); });
     }
 
     QString CAfvClient::getCallsign() const
@@ -120,7 +120,7 @@ namespace swift::core::afv::clients
         {
             // Method needs to be executed in the context thread
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(sApp->getIContextSimulator(), [=]() {
+            QMetaObject::invokeMethod(sApp->getIContextSimulator(), [=, this]() {
                 if (myself) { this->fetchSimulatorSettings(); }
             });
             return;
@@ -140,7 +140,7 @@ namespace swift::core::afv::clients
         {
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(this, [=]() {
+            QMetaObject::invokeMethod(this, [=, this]() {
                 if (myself) { connectTo(cid, password, callsign, client); }
             });
             return;
@@ -154,7 +154,7 @@ namespace swift::core::afv::clients
         if (!this->isConnected() && m_retryConnectAttempt == 0)
         {
             // check if connect simply did NOT receive an answer
-            QTimer::singleShot(20 * 1000, this, [=] {
+            QTimer::singleShot(20 * 1000, this, [=, this] {
                 if (!myself) { return; }
                 if (m_retryConnectAttempt > 0) { return; } // already handled
 
@@ -171,7 +171,7 @@ namespace swift::core::afv::clients
             m_connection->connectTo(
                 cid, password, callsign, client,
                 { // this is the callback when the connection has been established
-                  this, [=](bool authenticated) {
+                  this, [=, this](bool authenticated) {
                       if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
 
                       // HF stations aliased
@@ -208,7 +208,7 @@ namespace swift::core::afv::clients
         {
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(this, [=]() {
+            QMetaObject::invokeMethod(this, [=, this]() {
                 if (myself) { disconnectFrom(stop); }
             });
             return;
@@ -272,7 +272,7 @@ namespace swift::core::afv::clients
         {
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(this, [=]() {
+            QMetaObject::invokeMethod(this, [=, this]() {
                 if (myself) { startAudio(inputDevice, outputDevice); }
             });
             return;
@@ -363,7 +363,7 @@ namespace swift::core::afv::clients
         {
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
-            QMetaObject::invokeMethod(this, [=]() {
+            QMetaObject::invokeMethod(this, [=, this]() {
                 if (myself) stopAudio();
             });
             return;
@@ -1076,7 +1076,7 @@ namespace swift::core::afv::clients
         if (this->isConnected()) { this->disconnectFrom(false); }
 
         QPointer<CAfvClient> myself(this);
-        QTimer::singleShot(5 * 1000, this, [=] {
+        QTimer::singleShot(5 * 1000, this, [=, this] {
             if (!myself) { return; }
             const QString reason = QStringLiteral("Heartbeat failed %1 times").arg(failures);
             this->retryConnectTo(un, pw, cs, client, reason);
@@ -1284,7 +1284,7 @@ namespace swift::core::afv::clients
         }
 
         QPointer<CAfvClient> myself(this);
-        QTimer::singleShot(delayMs, this, [=] {
+        QTimer::singleShot(delayMs, this, [=, this] {
             if (!myself) { return; }
             if (myself->isConnected()) { return; }
             this->connectTo(cid, password, callsign, client);

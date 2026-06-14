@@ -188,7 +188,7 @@ namespace swift::gui::components
 
         if (!sGui || sGui->isShuttingDown()) { return; }
         QPointer<CSimulatorSelector> myself(this);
-        QTimer::singleShot(deferredMs, this, [=] {
+        QTimer::singleShot(deferredMs, this, [=, this] {
             if (!sGui || sGui->isShuttingDown() || !myself) { return; }
             this->setToConnectedSimulator(makeReadOnly);
         });
@@ -390,7 +390,7 @@ namespace swift::gui::components
     void CSimulatorSelector::triggerSetToLastSelection()
     {
         QPointer<CSimulatorSelector> myself(this);
-        QTimer::singleShot(100, this, [=] {
+        QTimer::singleShot(100, this, [=, this] {
             if (!myself) { return; }
             this->setToLastSelection();
         });

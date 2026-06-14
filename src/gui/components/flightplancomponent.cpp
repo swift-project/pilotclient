@@ -205,7 +205,7 @@ namespace swift::gui::components
 
         // prefill some data derived from what was used last
         const QPointer<CFlightPlanComponent> myself(this);
-        QTimer::singleShot(2500, this, [=] {
+        QTimer::singleShot(2500, this, [=, this] {
             if (!sGui || sGui->isShuttingDown() || !myself) { return; }
 
             this->loadTemplateFromDisk();
@@ -754,7 +754,7 @@ namespace swift::gui::components
         const CAircraftIcaoCode icao = this->getAircraftIcaoCode();
         if (!icao.isLoadedFromDb()) { return; }
         QPointer<CFlightPlanComponent> myself(this);
-        QTimer::singleShot(25, this, [=] {
+        QTimer::singleShot(25, this, [=, this] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             updateWakeTurbulenceCategorySelector(icao.getWtc());
         });

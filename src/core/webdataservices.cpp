@@ -1079,7 +1079,7 @@ namespace swift::core
 
         // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(0, this, [=]() {
+        QTimer::singleShot(0, this, [=, this]() {
             if (!myself || m_shuttingDown) { return; }
             if (!sApp || sApp->isShuttingDown()) { return; }
             m_vatsimStatusReader->readInBackgroundThread();
@@ -1098,7 +1098,7 @@ namespace swift::core
 
         // run single shot in main loop, so readInBackgroundThread is not called before initReaders completes
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(0, this, [=]() {
+        QTimer::singleShot(0, this, [=, this]() {
             if (!myself || m_shuttingDown) { return; }
             if (!sApp || sApp->isShuttingDown()) { return; }
             m_vatsimServerFileReader->readInBackgroundThread();
@@ -1198,7 +1198,7 @@ namespace swift::core
         if (!CThreadUtils::isInThisThread(this))
         {
             const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(0, this, [=] {
+            QTimer::singleShot(0, this, [=, this] {
                 if (!myself || m_shuttingDown) { return; }
                 if (!sApp || sApp->isShuttingDown()) { return; }
                 this->initDbInfoObjectReaderAndTriggerRead();
@@ -1225,7 +1225,7 @@ namespace swift::core
             m_dbInfoDataReader->start(QThread::LowPriority);
 
             const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(25, m_dbInfoDataReader, [=]() {
+            QTimer::singleShot(25, m_dbInfoDataReader, [=, this]() {
                 if (!myself || m_shuttingDown) { return; }
                 if (!sApp || sApp->isShuttingDown()) { return; }
                 m_dbInfoDataReader->readInfoData(); // trigger read of info objects
@@ -1240,7 +1240,7 @@ namespace swift::core
         if (!CThreadUtils::isInThisThread(this))
         {
             const QPointer<CWebDataServices> myself(this);
-            QTimer::singleShot(0, this, [=] {
+            QTimer::singleShot(0, this, [=, this] {
                 if (!myself || m_shuttingDown) { return; }
                 this->initSharedInfoObjectReaderAndTriggerRead();
             });
@@ -1266,7 +1266,7 @@ namespace swift::core
 
         // and trigger read
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(0, m_sharedInfoDataReader, [=]() {
+        QTimer::singleShot(0, m_sharedInfoDataReader, [=, this]() {
             if (!myself || m_shuttingDown) { return; }
             m_sharedInfoDataReader->readInfoData();
         });
@@ -1426,7 +1426,7 @@ namespace swift::core
         if (m_shuttingDown) { return; }
         if (entities == CEntityFlags::NoEntity) { return; }
         const QPointer<CWebDataServices> myself(this);
-        QTimer::singleShot(0, [=]() // clazy:exclude=connect-3arg-lambda
+        QTimer::singleShot(0, [=, this]() // clazy:exclude=connect-3arg-lambda
                            {
                                if (!myself || m_shuttingDown) { return; }
                                this->readInBackground(entities); // deferred

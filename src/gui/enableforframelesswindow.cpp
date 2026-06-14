@@ -240,7 +240,7 @@ namespace swift::gui
             // still tool, force normal window
             // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
 
-            QTimer::singleShot(0, m_widget, [=] {
+            QTimer::singleShot(0, m_widget, [=, this] {
                 if (!widgetSelf) { return; }
                 this->showMinimizedModeChecked();
             });
@@ -249,7 +249,7 @@ namespace swift::gui
         {
             // not tool, force tool window
             // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
-            QTimer::singleShot(0, m_widget, [=] {
+            QTimer::singleShot(0, m_widget, [=, this] {
                 if (!widgetSelf) { return; }
                 this->showNormalModeChecked();
             });

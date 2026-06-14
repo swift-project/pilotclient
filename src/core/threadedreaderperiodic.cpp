@@ -14,7 +14,7 @@ namespace swift::core
     void CThreadedReaderPeriodic::startReader()
     {
         Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Thread was not started yet!");
-        QTimer::singleShot(m_initialTime.load(), this, [=] { this->doWork(); });
+        QTimer::singleShot(m_initialTime.load(), this, [=, this] { this->doWork(); });
     }
 
     void CThreadedReaderPeriodic::setInitialAndPeriodicTime(std::chrono::milliseconds initialTime,

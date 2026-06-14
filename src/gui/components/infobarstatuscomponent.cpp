@@ -90,7 +90,7 @@ namespace swift::gui::components
         }
 
         QPointer<CInfoBarStatusComponent> myself(this);
-        QTimer::singleShot(5000, this, [=] {
+        QTimer::singleShot(5000, this, [=, this] {
             if (!sGui || sGui->isShuttingDown() || !myself) { return; }
             this->updateValues();
         });

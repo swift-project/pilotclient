@@ -120,7 +120,7 @@ namespace swift::misc
     {
         if (!object) { return; }
         QObject::connect(object, &QObject::objectNameChanged, object,
-                         [=](const QString &name) { this->appendName(name); });
+                         [=, this](const QString &name) { this->appendName(name); });
     }
 
     QByteArray CIdentifier::getMachineId() const

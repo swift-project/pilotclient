@@ -47,7 +47,7 @@ namespace swift::core::db
         if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
 
         QPointer<CAirportDataReader> myself(this);
-        QTimer::singleShot(0, this, [=]() {
+        QTimer::singleShot(0, this, [=, this]() {
             if (!myself) { return; }
             const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
             if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }

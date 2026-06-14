@@ -36,7 +36,7 @@ namespace swift::gui::components
         // it takes a moment until the settings are sychronized
         // this is leading to undesired "save settings" messages and played sounds
         QPointer<CAudioNotificationComponent> myself(this);
-        QTimer::singleShot(2500, this, [=] {
+        QTimer::singleShot(2500, this, [=, this] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             this->init();
         });

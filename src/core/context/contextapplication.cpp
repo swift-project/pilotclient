@@ -52,7 +52,7 @@ namespace swift::core::context
         QPointer<IContextApplication> myself(this);
 
         connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, this,
-                [=](const CValueCachePacket &settings) {
+                [=, this](const CValueCachePacket &settings) {
                     if (!myself) { return; }
                     this->changeSettings(settings, {});
                 });
@@ -65,7 +65,7 @@ namespace swift::core::context
 
         Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
         bool s = connect(sApp->getInputManager(), &CInputManager::hotkeyActionRegistered, this,
-                         [=](const QStringList &actions) {
+                         [=, this](const QStringList &actions) {
                              if (!myself) { return; }
                              this->registerHotkeyActions(actions, {});
                          });
@@ -82,7 +82,7 @@ namespace swift::core::context
 
         s = connect(
             sApp->getInputManager(), &CInputManager::remoteActionFromLocal, this,
-            [=](const QString &action, bool argument) {
+            [=, this](const QString &action, bool argument) {
                 if (!myself) { return; }
                 this->callHotkeyActionRemotely(action, argument, {});
             },

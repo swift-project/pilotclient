@@ -221,7 +221,7 @@ namespace swift::core::db
                 if (validInCacheEntities != CEntityFlags::NoEntity)
                 {
                     QPointer<CDatabaseReader> myself(this);
-                    QTimer::singleShot(0, this, [=] {
+                    QTimer::singleShot(0, this, [=, this] {
                         if (!myself) { return; }
                         if (!sApp || sApp->isShuttingDown()) { return; }
                         emit this->dataRead(validInCacheEntities, CEntityFlags::ReadFinished, 0, {});
@@ -245,7 +245,7 @@ namespace swift::core::db
         if (entities == CEntityFlags::NoEntity) { return; }
 
         QPointer<CDatabaseReader> myself(this);
-        QTimer::singleShot(0, this, [=] {
+        QTimer::singleShot(0, this, [=, this] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }
             this->read(entities, mode, newerThan);
         });

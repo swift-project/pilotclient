@@ -47,7 +47,7 @@ namespace swift::gui::components
         connect(ui->tb_DialogDownloadDir, &QToolButton::pressed, this, &CDownloadComponent::selectDownloadDirectory);
         connect(ui->tb_ResetDownloadDir, &QToolButton::pressed, this, &CDownloadComponent::resetDownloadDir);
         connect(ui->tb_CancelDownload, &QToolButton::pressed, this, &CDownloadComponent::cancelOngoingDownloads);
-        connect(ui->pb_Download, &QPushButton::pressed, [=] { this->triggerDownloadingOfFiles(); });
+        connect(ui->pb_Download, &QPushButton::pressed, [=, this] { this->triggerDownloadingOfFiles(); });
         connect(ui->pb_OpenDownloadDir, &QPushButton::pressed, this, &CDownloadComponent::openDownloadDir);
         connect(ui->pb_Launch, &QPushButton::pressed, this, &CDownloadComponent::startDownloadedExecutable);
     }
@@ -102,7 +102,7 @@ namespace swift::gui::components
         if (delayMs > 0)
         {
             const QPointer<CDownloadComponent> myself(this);
-            QTimer::singleShot(delayMs, this, [=] {
+            QTimer::singleShot(delayMs, this, [=, this] {
                 if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                 this->triggerDownloadingOfFiles();
             });
@@ -201,7 +201,7 @@ namespace swift::gui::components
             if (reply != QMessageBox::Yes)
             {
                 const QPointer<CDownloadComponent> myself(this);
-                QTimer::singleShot(10, this, [=] {
+                QTimer::singleShot(10, this, [=, this] {
                     if (!myself || !sGui || sGui->isShuttingDown()) { return; }
                     this->downloadedFile(CStatusMessage(this).info(u"File was already downloaded"));
                 });
@@ -255,7 +255,7 @@ namespace swift::gui::components
     void CDownloadComponent::lastFileDownloaded()
     {
         const QPointer<CDownloadComponent> myself(this);
-        QTimer::singleShot(0, this, [=] {
+        QTimer::singleShot(0, this, [=, this] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             myself->ui->pb_Download->setEnabled(true);
             myself->ui->pb_Launch->setEnabled(true);
