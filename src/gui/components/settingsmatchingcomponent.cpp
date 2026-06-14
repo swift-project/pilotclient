@@ -85,7 +85,7 @@ namespace swift::gui::components
         else
         {
             QPointer<CSettingsMatchingComponent> myself(this);
-            QTimer::singleShot(deferMs, this, [=] {
+            QTimer::singleShot(deferMs, this, [=, this] {
                 if (!myself) { return; }
                 this->deferredReload(0);
             });

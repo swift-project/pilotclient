@@ -74,7 +74,7 @@ namespace swift::gui::components
     void CUpdateInfoComponent::triggerDownload()
     {
         QPointer<CUpdateInfoComponent> myself(this);
-        QTimer::singleShot(10, this, [=] {
+        QTimer::singleShot(10, this, [=, this] {
             if (!myself) { return; }
             ui->pb_DownloadInstaller->click();
         });

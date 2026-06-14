@@ -96,7 +96,7 @@ namespace swift::gui::components
         if (this->getSimulator() == simulator) { return false; }
         m_currentSimulator = simulator;
         QPointer<CAircraftModelStringCompleter> myself(this);
-        QTimer::singleShot(100, this, [=] {
+        QTimer::singleShot(100, this, [=, this] {
             if (!myself) { return; }
             this->setCompleter(true);
         });

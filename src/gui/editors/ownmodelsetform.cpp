@@ -38,7 +38,7 @@ namespace swift::gui::editors
                 &COwnModelSetForm::changeDistributorDisplay);
 
         QPointer<COwnModelSetForm> myself(this);
-        QTimer::singleShot(1250, [=] {
+        QTimer::singleShot(1250, [=, this] {
             if (!myself) { return; }
             this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
         });

@@ -15,7 +15,7 @@ namespace swift::misc
         {
             // call in correct thread
             const QPointer<CDigestSignal> myself(this);
-            QTimer::singleShot(0, this, [=] {
+            QTimer::singleShot(0, this, [=, this] {
                 if (!myself) { return; }
                 this->inputSignal();
             });

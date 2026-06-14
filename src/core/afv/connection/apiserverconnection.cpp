@@ -60,7 +60,7 @@ namespace swift::core::afv::connection
 
         // posted in QAM thread, reply is nullptr if called from another thread
         sApp->postToNetwork(request, CApplication::NoLogRequestId, QJsonDocument(obj).toJson(),
-                            { this, [=](QNetworkReply *nwReply) {
+                            { this, [=, this](QNetworkReply *nwReply) {
                                  // called in "this" thread
                                  const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
                                  if (!myself || isShuttingDown()) // cppcheck-suppress knownConditionTrueFalse
@@ -161,7 +161,7 @@ namespace swift::core::afv::connection
 
         // posted in QAM thread, reply is nullptr if called from another thread
         sApp->getFromNetwork(request,
-                             { this, [=, &receivedData](QNetworkReply *nwReply) {
+                             { this, [=, &receivedData, this](QNetworkReply *nwReply) {
                                   const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
 
                                   // called in "this" thread
@@ -187,7 +187,7 @@ namespace swift::core::afv::connection
 
         // posted in QAM thread, reply is nullptr if called from another thread
         sApp->postToNetwork(request, CApplication::NoLogRequestId, data,
-                            { this, [=, &receivedData](QNetworkReply *nwReply) {
+                            { this, [=, &receivedData, this](QNetworkReply *nwReply) {
                                  const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
 
                                  // called in "this" thread
@@ -217,7 +217,7 @@ namespace swift::core::afv::connection
 
         // posted in QAM thread, reply is nullptr if called from another thread
         sApp->postToNetwork(request, CApplication::NoLogRequestId, json.toJson(),
-                            { this, [=](QNetworkReply *nwReply) {
+                            { this, [=, this](QNetworkReply *nwReply) {
                                  // called in "this" thread
                                  const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(nwReply);
                                  if (isShuttingDown()) { return; }
@@ -241,7 +241,7 @@ namespace swift::core::afv::connection
 
         // posted in QAM thread
         sApp->deleteResourceFromNetwork(request, CApplication::NoLogRequestId,
-                                        { this, [=](QNetworkReply *nwReply) {
+                                        { this, [=, this](QNetworkReply *nwReply) {
                                              // called in "this" thread
                                              const QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> reply(
                                                  nwReply);
@@ -260,7 +260,7 @@ namespace swift::core::afv::connection
         {
             QPointer<CApiServerConnection> myself(this);
             this->connectTo(m_username, m_password, m_client, m_networkVersion,
-                            { this, [=](bool authenticated) {
+                            { this, [=, this](bool authenticated) {
                                  if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
                                  CLogMessage(this).info(u"API server authenticated '%1': %2")
                                      << m_username << boolToYesNo(authenticated);

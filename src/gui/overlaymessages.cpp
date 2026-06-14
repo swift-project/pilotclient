@@ -463,7 +463,7 @@ namespace swift::gui
         {
             // defer message
             QPointer<COverlayMessages> myself(this);
-            m_pendingMessageCalls.push_back([=]() {
+            m_pendingMessageCalls.push_back([=, this]() {
                 if (!myself) { return; }
                 this->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage, okLambda,
                                                           defaultButton, timeout);

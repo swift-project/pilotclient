@@ -110,7 +110,7 @@ namespace swift::gui::components
 
         // init by settings
         const QPointer<CTextMessageComponent> myself(this);
-        QTimer::singleShot(2000, this, [=] {
+        QTimer::singleShot(2000, this, [=, this] {
             // init decoupled when sub components are fully init
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             this->onSettingsChanged(); // init

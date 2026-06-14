@@ -51,7 +51,7 @@ namespace swift::gui::components
         // 1st init when running in distributed environment
         QPointer<CAircraftModelValidationComponent> myself(this);
         const qint64 lastResults = m_lastResults;
-        QTimer::singleShot(2500, this, [=] {
+        QTimer::singleShot(2500, this, [=, this] {
             if (!myself || !sGui || sGui->isShuttingDown()) { return; }
             if (m_lastResults > lastResults) { return; } // values received in meantime
             myself->requestLastResults();

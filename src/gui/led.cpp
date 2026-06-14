@@ -229,7 +229,7 @@ namespace swift::gui
         if (resetTimeMs > 0)
         {
             QPointer<CLedWidget> myself(this);
-            QTimer::singleShot(resetTimeMs, this, [=] {
+            QTimer::singleShot(resetTimeMs, this, [=, this] {
                 if (!myself) { return; }
                 this->resetState();
             });

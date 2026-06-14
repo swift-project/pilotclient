@@ -48,7 +48,7 @@ namespace swift::core::afv::connection
         m_apiServerConnection->connectTo(
             userName, password, client, m_networkVersion,
             { // callback called when connected
-              this, [=](bool authenticated) {
+              this, [=, this](bool authenticated) {
                   // callback when connection has been established
                   if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
 

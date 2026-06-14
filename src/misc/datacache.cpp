@@ -75,7 +75,7 @@ namespace swift::misc
         }
 
         connect(this, &CValueCache::valuesChangedByLocal, this, &CDataCache::saveToStoreAsync);
-        connect(this, &CValueCache::valuesChangedByLocal, this, [=](CValueCachePacket values) {
+        connect(this, &CValueCache::valuesChangedByLocal, this, [=, this](CValueCachePacket values) {
             values.setSaved();
             changeValuesFromRemote(values, CIdentifier());
         });

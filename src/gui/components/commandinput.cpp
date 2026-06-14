@@ -27,7 +27,7 @@ namespace swift::gui::components
         if (this->placeholderText().isEmpty()) { this->setPlaceholderText(".dot commands"); }
 
         const QPointer<CCommandInput> myself(this);
-        QTimer::singleShot(5000, this, [=] {
+        QTimer::singleShot(5000, this, [=, this] {
             if (!myself) { return; }
             m_dsCommandTooltip.inputSignal();
         });

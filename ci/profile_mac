@@ -5,7 +5,9 @@
 arch=x86_64
 build_type=RelWithDebInfo
 compiler=apple-clang
-compiler.cppstd=gnu17
+compiler.cppstd=gnu20
 compiler.libcxx=libc++
-compiler.version=15
+compiler.version=21
 os=Macos
+# Minimum Deploy Version
+os.version=13.0

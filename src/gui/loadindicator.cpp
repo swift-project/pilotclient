@@ -60,7 +60,7 @@ namespace swift::gui
         const int stopId = m_currentId++; // copy
         if (timeout > 0ms)
         {
-            QTimer::singleShot(timeout, this, [=] {
+            QTimer::singleShot(timeout, this, [=, this] {
                 if (!myself) { return; }
 
                 // only timeout myself id

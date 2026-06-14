@@ -105,7 +105,13 @@ namespace swift::misc
         ~LockFreeUniqueWriter()
         {
             if (m_ptr.use_count() == 0) { return; } // *this has been moved from
+
+#ifdef __cpp_lib_atomic_shared_ptr // atomic shared pointer is currently not supported by clang
+            bool success = m_now->compare_exchange_strong(m_old, std::shared_ptr<const T>(m_ptr));
+#else
             bool success = std::atomic_compare_exchange_strong(m_now, &m_old, std::shared_ptr<const T>(m_ptr));
+#endif
+
             Q_ASSERT_X(success, Q_FUNC_INFO, "UniqueWriter detected simultaneous writes");
             Q_UNUSED(success);
         }
@@ -113,99 +119,19 @@ namespace swift::misc
     private:
         friend class LockFree<T>;
 
+#ifdef __cpp_lib_atomic_shared_ptr
+        LockFreeUniqueWriter(std::shared_ptr<const T> ptr, std::atomic<std::shared_ptr<const T>> *now)
+#else
         LockFreeUniqueWriter(std::shared_ptr<const T> ptr, std::shared_ptr<const T> *now)
+#endif
             : m_old(ptr), m_now(now), m_ptr(std::make_shared<T>(*m_old))
         {}
         std::shared_ptr<const T> m_old;
+#ifdef __cpp_lib_atomic_shared_ptr
+        std::atomic<std::shared_ptr<const T>> *m_now;
+#else
         std::shared_ptr<const T> *m_now;
-        std::shared_ptr<T> m_ptr;
-    };
-
-    /*!
-     * Return value of LockFree::sharedWrite(). Allows any one thread to safely write to the lock-free object.
-     */
-    template <typename T>
-    class LockFreeSharedWriter
-    {
-    public:
-        //! @{
-        //! The value can be modified through the returned reference. The modification is applied by evaluating in a
-        //! bool context.
-        T &get() { return *m_ptr; }
-        T *operator->() { return m_ptr.get(); }
-        T &operator*() { return *m_ptr; }
-        operator T &() { return *m_ptr; }
-        //! @}
-
-        //! Replace the stored value by copying from a T. The change is applied by evaluating in a bool context.
-        LockFreeSharedWriter &operator=(const T &other)
-        {
-            *m_ptr = other;
-            return *this;
-        }
-
-        //! Replace the stored value by moving from a T. The change is applied by evaluating in a bool context.
-        LockFreeSharedWriter &operator=(T &&other) noexcept(std::is_nothrow_move_assignable_v<T>)
-        {
-            *m_ptr = std::move(other);
-            return *this;
-        }
-
-        //! Try to overwrite the original object with the new one stored in the writer, and return false on success.
-        //! If true is returned, then the caller must try again. This would happen if another simultaneous write had
-        //! occurred.
-        bool operator!() { return !operator bool(); }
-
-        //! Try to overwrite the original object with the new one stored in the writer, and return true on success.
-        //! If false is returned, then the caller must try again. This would happen if another simultaneous write had
-        //! occurred.
-        operator bool()
-        {
-            Q_ASSERT_X(m_ptr.use_count() > 0, Q_FUNC_INFO, "SharedWriter tried to commit changes twice");
-            if (std::atomic_compare_exchange_strong(m_now, &m_old, std::shared_ptr<const T>(m_ptr)))
-            {
-                m_ptr.reset();
-                return true;
-            }
-            QThread::msleep(1);
-            m_old = std::atomic_load(m_now);
-            m_ptr = std::make_shared<T>(*m_old);
-            return false;
-        }
-
-        //! Destructor. The writer's changes must be committed before this is called.
-        ~LockFreeSharedWriter()
-        {
-            Q_ASSERT_X(m_ptr.use_count() == 0, Q_FUNC_INFO, "SharedWriter destroyed without committing changes");
-        }
-
-        //! @{
-        //! LockFreeSharedWriter cannot be copied.
-        LockFreeSharedWriter(const LockFreeSharedWriter &) = delete;
-        LockFreeSharedWriter &operator=(const LockFreeSharedWriter &) = delete;
-        //! @}
-
-        //! Move constructor.
-        LockFreeSharedWriter(LockFreeSharedWriter &&other) noexcept
-            : m_old(std::move(other.m_old)), m_now(std::move(other.m_now)), m_ptr(std::move(other.m_ptr))
-        {}
-
-        //! Move assignment operator.
-        LockFreeSharedWriter &operator=(LockFreeSharedWriter &&other) noexcept
-        {
-            std::tie(m_old, m_now, m_ptr) =
-                std::forward_as_tuple(std::move(other.m_old), std::move(other.m_now), std::move(other.m_ptr));
-            return *this;
-        }
-
-    private:
-        friend class LockFree<T>;
-
-        LockFreeSharedWriter(std::shared_ptr<const T> ptr, std::shared_ptr<const T> *now)
-            : m_old(ptr), m_now(now), m_ptr(std::make_shared<T>(*m_old))
-        {}
-        std::shared_ptr<const T> m_old;
-        std::shared_ptr<const T> *m_now;
+#endif
         std::shared_ptr<T> m_ptr;
     };
 
@@ -238,13 +164,18 @@ namespace swift::misc
         //! @}
 
         //! Return an object which can read the current value.
+#ifdef __cpp_lib_atomic_shared_ptr
+        LockFreeReader<const T> read() const { return { m_ptr.load() }; }
+#else
         LockFreeReader<const T> read() const { return { std::atomic_load(&m_ptr) }; }
+#endif
 
         //! Return an object which can write a new value, as long as there are no other writes.
+#ifdef __cpp_lib_atomic_shared_ptr
+        LockFreeUniqueWriter<T> uniqueWrite() { return { m_ptr.load(), &m_ptr }; }
+#else
         LockFreeUniqueWriter<T> uniqueWrite() { return { std::atomic_load(&m_ptr), &m_ptr }; }
-
-        //! Return an object which can write a new value, even if there are other writes.
-        LockFreeSharedWriter<T> sharedWrite() { return { std::atomic_load(&m_ptr), &m_ptr }; }
+#endif
 
         //! Pass the current value to the functor inspector, and return whatever inspector returns.
         template <typename F>
@@ -260,20 +191,12 @@ namespace swift::misc
             std::forward<F>(mutator)(uniqueWrite().get());
         }
 
-        //! Pass a modifiable reference to the functor mutator. Safe if there are multiple writers.
-        //! The mutator may be called multiple times.
-        template <typename F>
-        void sharedWrite(F &&mutator)
-        {
-            auto writer = sharedWrite();
-            do {
-                std::forward<F>(mutator)(writer.get());
-            }
-            while (!writer);
-        }
-
     private:
+#ifdef __cpp_lib_atomic_shared_ptr
+        std::atomic<std::shared_ptr<const T>> m_ptr = std::make_shared<const T>();
+#else
         std::shared_ptr<const T> m_ptr = std::make_shared<const T>();
+#endif
     };
 
     /*!
@@ -351,18 +274,6 @@ namespace swift::misc
     {
         return writer->end();
     }
-
-    template <typename T>
-    typename T::iterator begin(const LockFreeSharedWriter<T> &writer)
-    {
-        return writer->begin();
-    }
-
-    template <typename T>
-    typename T::iterator end(const LockFreeSharedWriter<T> &writer)
-    {
-        return writer->end();
-    }
     //! @}
 
     //! @{
@@ -382,12 +293,6 @@ namespace swift::misc
 
     template <typename T>
     typename T::iterator end(const LockFreeUniqueWriter<T> &&) = delete;
-
-    template <typename T>
-    typename T::iterator begin(const LockFreeSharedWriter<T> &&) = delete;
-
-    template <typename T>
-    typename T::iterator end(const LockFreeSharedWriter<T> &&) = delete;
     //! @}
 
 } // namespace swift::misc

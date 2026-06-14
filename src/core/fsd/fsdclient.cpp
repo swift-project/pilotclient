@@ -230,7 +230,7 @@ namespace swift::core::fsd
     {
         if (!CThreadUtils::isInThisThread(this))
         {
-            QMetaObject::invokeMethod(this, [=] {
+            QMetaObject::invokeMethod(this, [=, this] {
                 if (sApp && !sApp->isShuttingDown()) { connectToServer(); }
             });
             return;
@@ -250,7 +250,7 @@ namespace swift::core::fsd
         const qint64 timerMs = qRound(PendingConnectionTimeoutMs * 1.25);
 
         const QPointer<CFSDClient> myself(this);
-        QTimer::singleShot(timerMs, this, [=] {
+        QTimer::singleShot(timerMs, this, [=, this] {
             if (!myself || !sApp || sApp->isShuttingDown()) { return; }
             this->pendingTimeoutCheck();
         });
@@ -264,7 +264,7 @@ namespace swift::core::fsd
     {
         if (!CThreadUtils::isInThisThread(this))
         {
-            QMetaObject::invokeMethod(this, [=] {
+            QMetaObject::invokeMethod(this, [=, this] {
                 if (sApp && !sApp->isShuttingDown()) { disconnectFromServer(); }
             });
             return;
@@ -493,7 +493,7 @@ namespace swift::core::fsd
         if (queryType == ClientQueryType::Unknown) { return; }
         if (!CThreadUtils::isInThisThread(this))
         {
-            QMetaObject::invokeMethod(this, [=] {
+            QMetaObject::invokeMethod(this, [=, this] {
                 if (sApp && !sApp->isShuttingDown()) { sendClientQuery(queryType, receiver, queryData); }
             });
             return;
@@ -569,7 +569,7 @@ namespace swift::core::fsd
         if (messages.isEmpty()) { return; }
         if (!CThreadUtils::isInThisThread(this))
         {
-            QMetaObject::invokeMethod(this, [=] {
+            QMetaObject::invokeMethod(this, [=, this] {
                 if (sApp && !sApp->isShuttingDown()) { sendTextMessages(messages); }
             });
             return;
@@ -621,7 +621,7 @@ namespace swift::core::fsd
         if (message.isEmpty()) { return; }
         if (!CThreadUtils::isInThisThread(this))
         {
-            QMetaObject::invokeMethod(this, [=] {
+            QMetaObject::invokeMethod(this, [=, this] {
                 if (sApp && !sApp->isShuttingDown()) { sendTextMessage(receiverGroup, message); }
             });
             return;
@@ -669,7 +669,7 @@ namespace swift::core::fsd
     {
         if (!CThreadUtils::isInThisThread(this))
         {
-            QMetaObject::invokeMethod(this, [=] {
+            QMetaObject::invokeMethod(this, [=, this] {
                 if (sApp && !sApp->isShuttingDown()) { sendFlightPlan(flightPlan); }
             });
             return;
@@ -719,7 +719,7 @@ namespace swift::core::fsd
     {
         if (!CThreadUtils::isInThisThread(this))
         {
-            QMetaObject::invokeMethod(this, [=] {
+            QMetaObject::invokeMethod(this, [=, this] {
                 if (sApp && !sApp->isShuttingDown()) { sendPlaneInfoRequest(receiver); }
             });
             return;
@@ -734,7 +734,7 @@ namespace swift::core::fsd
     {
         if (!CThreadUtils::isInThisThread(this))
         {
-            QMetaObject::invokeMethod(this, [=] {
+            QMetaObject::invokeMethod(this, [=, this] {
                 if (sApp && !sApp->isShuttingDown()) { sendPlaneInfoRequestFsinn(callsign); }
             });
             return;
@@ -1007,7 +1007,7 @@ namespace swift::core::fsd
         const QJsonObject jsonRequest { { "cid", cid }, { "password", password } };
 
         sApp->postToNetwork(nwRequest, CApplication::NoLogRequestId, QJsonDocument(jsonRequest).toJson(),
-                            { this, [=](QNetworkReply *nwReply) {
+                            { this, [=, this](QNetworkReply *nwReply) {
                                  const QByteArray data = nwReply->readAll();
                                  const QJsonObject json = QJsonDocument::fromJson(data).object();
 
@@ -1658,7 +1658,7 @@ namespace swift::core::fsd
         const quint16 port = rehostingSocket ? m_socket->peerPort() : static_cast<quint16>(getServer().getPort());
         // NOLINTEND(cppcoreguidelines-init-variables)
 
-        resolveLoadBalancing(host, [=](const QString &host) {
+        resolveLoadBalancing(host, [=, this](const QString &host) {
             socket->connectToHost(host, port);
             if (!rehostingSocket) { this->startPositionTimers(); }
         });

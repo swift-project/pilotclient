@@ -62,7 +62,7 @@ namespace swift::simplugin::emulated
     bool CSimulatorEmulated::connectTo()
     {
         const QPointer<CSimulatorEmulated> myself(this);
-        QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(1000, this, [=, this] {
             if (myself.isNull() || !sGui || sGui->isShuttingDown()) { return; }
             this->emitSimulatorCombinedStatus();
             m_monitorWidget->show();
@@ -213,7 +213,7 @@ namespace swift::simplugin::emulated
         else { elv.setGeodeticHeight(m_pseudoElevation); }
 
         QPointer<CSimulatorEmulated> myself(this);
-        QTimer::singleShot(444, this, [=] {
+        QTimer::singleShot(444, this, [=, this] {
             if (!myself) { return; }
 
             // updates in providers and emits signal
@@ -440,7 +440,7 @@ namespace swift::simplugin::emulated
         //! \fixme signal name not hardcoded would be nice
         m_connectionGuard.append(connect(
             this, &ISimulator::simulatorStatusChanged, this,
-            [=](SimulatorStatus status) {
+            [=, this](SimulatorStatus status) {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("simulatorStatusChanged",
                                                    CSimulatorEmulated::statusToString(status));
@@ -449,7 +449,7 @@ namespace swift::simplugin::emulated
 
         m_connectionGuard.append(connect(
             this, &ISimulator::ownAircraftModelChanged, this,
-            [=](const CAircraftModel &model) {
+            [=, this](const CAircraftModel &model) {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("ownAircraftModelChanged", model.toQString());
             },
@@ -457,7 +457,7 @@ namespace swift::simplugin::emulated
 
         m_connectionGuard.append(connect(
             this, &ISimulator::renderRestrictionsChanged, this,
-            [=](bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance) {
+            [=, this](bool restricted, bool enabled, int maxAircraft, const CLength &maxRenderedDistance) {
                 if (!m_monitorWidget) return;
                 static const QString params("restricted: %1 enabled: %2 max aircraft: %3");
                 m_monitorWidget->appendSendingCall(
@@ -469,7 +469,7 @@ namespace swift::simplugin::emulated
 
         m_connectionGuard.append(connect(
             this, &ISimulator::interpolationAndRenderingSetupChanged, this,
-            [=]() {
+            [=, this]() {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("interpolationAndRenderingSetupChanged");
             },
@@ -477,7 +477,7 @@ namespace swift::simplugin::emulated
 
         m_connectionGuard.append(connect(
             this, &ISimulator::aircraftRenderingChanged, this,
-            [=](const CSimulatedAircraft &aircraft) {
+            [=, this](const CSimulatedAircraft &aircraft) {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("aircraftRenderingChanged", aircraft.toQString());
             },
@@ -485,7 +485,7 @@ namespace swift::simplugin::emulated
 
         m_connectionGuard.append(connect(
             this, &ISimulator::physicallyAddingRemoteModelFailed, this,
-            [=](const CSimulatedAircraft &aircraft) {
+            [=, this](const CSimulatedAircraft &aircraft) {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("physicallyAddingRemoteModelFailed", aircraft.toQString());
             },
@@ -493,7 +493,7 @@ namespace swift::simplugin::emulated
 
         m_connectionGuard.append(connect(
             this, &ISimulator::airspaceSnapshotHandled, this,
-            [=] {
+            [=, this] {
                 if (!m_monitorWidget) return;
                 m_monitorWidget->appendSendingCall("airspaceSnapshotHandled");
             },
@@ -533,7 +533,7 @@ namespace swift::simplugin::emulated
     {
         if (this->isShuttingDown()) { return; }
         const QPointer<CSimulatorEmulatedListener> myself(this);
-        QTimer::singleShot(2000, this, [=] {
+        QTimer::singleShot(2000, this, [=, this] {
             if (!myself) { return; }
             Q_ASSERT_X(this->getPluginInfo().isValid(), Q_FUNC_INFO, "Invalid plugin");
             emit this->simulatorStarted(this->getPluginInfo());

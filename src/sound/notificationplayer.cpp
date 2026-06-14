@@ -35,7 +35,7 @@ namespace swift::sound
 
                 // used for too long or hanging sounds
                 QPointer<CNotificationPlayer> myself(this);
-                QTimer::singleShot(3000, effect, [=] {
+                QTimer::singleShot(3000, effect, [=, this] {
                     if (!myself || !m_playingEffect) { return; }
                     if (currentEffect != m_playingEffectCounter) { return; }
                     m_playingEffect->stop();

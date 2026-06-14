@@ -309,7 +309,7 @@ namespace swift::gui::components
 
         // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
         const QPointer<CAtcStationComponent> myself(this);
-        QTimer::singleShot(1000, this, [=] {
+        QTimer::singleShot(1000, this, [=, this] {
             if (!sApp || sApp->isShuttingDown() || !myself) { return; }
             this->update();
         });
