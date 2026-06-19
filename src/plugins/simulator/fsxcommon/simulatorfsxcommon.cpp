@@ -204,7 +204,6 @@ namespace swift::simplugin::fsxcommon
             {
                 DataDefinitionMSFSTransponderMode t;
                 t.transponderMode = (newTransponder.isInStandby() ? 1 : 4);
-                t.ident = newTransponder.isIdentifying();
 
                 HRESULT hr = s_ok();
 
@@ -528,7 +527,6 @@ namespace swift::simplugin::fsxcommon
                                               SIMCONNECT_PERIOD_SECOND, SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
             "Cannot request title", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
 
-        // TODO TZ use MSFS2024 FSUIPC?
         if (!this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS() &&
             !this->getSimulatorPluginInfo().getSimulatorInfo().isMSFS2024())
         {
@@ -541,15 +539,6 @@ namespace swift::simplugin::fsxcommon
                                                                        SIMCONNECT_CLIENT_DATA_PERIOD_SECOND,
                                                                        SIMCONNECT_CLIENT_DATA_REQUEST_FLAG_CHANGED),
                                           "Cannot request client data", Q_FUNC_INFO, "SimConnect_RequestClientData");
-        }
-        else
-        {
-            hr += this->logAndTraceSendId(
-                SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::RequestMSFSTransponder,
-                                                  CSimConnectDefinitions::DataTransponderModeMSFS,
-                                                  SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME,
-                                                  SIMCONNECT_DATA_REQUEST_FLAG_CHANGED),
-                "Cannot request MSFS transponder data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
         }
 
         if (isFailure(hr)) { return; }
@@ -693,6 +682,20 @@ namespace swift::simplugin::fsxcommon
             CAltitude(simulatorOwnAircraft.altitudeFt, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
     }
 
+    void CSimulatorFsxCommon::setTransponderMode(
+        [[maybe_unused]] swift::misc::aviation::CTransponder &transponder,
+                                    [[maybe_unused]] const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft)
+    { /* Do not modify the transponder mode by default. Only MSFS allows to read it from SimVars */ }
+
+    void CSimulatorFsxCommon::setComVolume(
+        [[maybe_unused]] swift::misc::aviation::CComSystem &com,
+        [[maybe_unused]] const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft,
+        [[maybe_unused]] swift::misc::aviation::CComSystem::ComUnit unit)
+    {
+        /* Do not modify the COM volume by default. Only MSFS allows to read it from SimVars */
+    }
+
+
     void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft)
     {
         const qint64 ts = QDateTime::currentMSecsSinceEpoch();
@@ -797,6 +800,8 @@ namespace swift::simplugin::fsxcommon
             if (!changedCom1Standby) { com1.setFrequencyStandby(myAircraft.getCom1System().getFrequencyStandby()); }
             else { m_lastCom1Standby.setNull(); }
 
+            setComVolume(com1, simulatorOwnAircraft, CComSystem::Com1);
+
             const bool changedCom1 = myAircraft.getCom1System() != com1;
 
             m_simCom1 = com1;
@@ -825,6 +830,8 @@ namespace swift::simplugin::fsxcommon
             if (!changedCom2Standby) { com2.setFrequencyStandby(myAircraft.getCom2System().getFrequencyStandby()); }
             else { m_lastCom2Standby.setNull(); }
 
+            setComVolume(com2, simulatorOwnAircraft, CComSystem::Com2);
+
             const bool changedCom2 = myAircraft.getCom2System() != com2;
 
             m_simCom2 = com2;
@@ -832,12 +839,13 @@ namespace swift::simplugin::fsxcommon
 
             CTransponder transponder(myAircraft.getTransponder());
             transponder.setTransponderCode(qRound(simulatorOwnAircraft.transponderCode));
+            setTransponderMode(transponder, simulatorOwnAircraft);
             m_simTransponder = transponder;
 
             // if the simulator ever sends SELCAL, add it here.
             // m_selcal SELCAL sync.would go here
 
-            const bool changedXpr = (myAircraft.getTransponderCode() != transponder.getTransponderCode());
+            const bool changedXpr = (myAircraft.getTransponder() != transponder);
 
             if (changedCom1 || changedCom2 || changedXpr)
             {
@@ -1007,17 +1015,6 @@ namespace swift::simplugin::fsxcommon
         CTransponder myXpdr = myAircraft.getTransponder();
         myXpdr.setTransponderMode(xpdrMode);
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), myXpdr, this->identifier());
-    }
-
-    void CSimulatorFsxCommon::updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode)
-    {
-        auto mode = CTransponder::StateIdent;
-        if (!transponderMode.ident)
-        {
-            qRound(transponderMode.transponderMode) >= 3 ? mode = CTransponder::ModeC :
-                                                           mode = CTransponder::StateStandby;
-        }
-        this->updateTransponderMode(mode);
     }
 
     bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)

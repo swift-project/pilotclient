@@ -37,8 +37,6 @@ namespace swift::gui::editors
         // XPDR
         connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this,
                 &CCockpitComForm::transponderModeChanged);
-        connect(ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this,
-                &CCockpitComForm::transponderStateIdentEnded);
 
         // COM GUI events
         connect(ui->tb_ComPanelCom1Toggle, &QPushButton::clicked, this, &CCockpitComForm::onGuiChangedCockpitValues);

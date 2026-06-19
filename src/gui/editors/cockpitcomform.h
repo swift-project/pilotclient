@@ -64,9 +64,6 @@ namespace swift::gui::editors
         //! \copydoc swift::gui::components::CTransponderModeSelector::transponderModeChanged
         void transponderModeChanged(swift::misc::aviation::CTransponder::TransponderMode newMode);
 
-        //! \copydoc swift::gui::components::CTransponderModeSelector::transponderStateIdentEnded
-        void transponderStateIdentEnded();
-
         //! Request to test SELCAL
         void testSelcal();
 

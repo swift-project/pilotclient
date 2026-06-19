@@ -503,6 +503,17 @@ namespace swift::simplugin::fsxcommon
         setTrueAltitude(swift::misc::aviation::CAircraftSituation &aircraftSituation,
                         const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
+        //! Customization point for changing the transponder mode
+        virtual void
+        setTransponderMode(swift::misc::aviation::CTransponder &transponder,
+                        const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft);
+
+        //! Customization point for changing the COM volume
+        virtual void
+        setComVolume(swift::misc::aviation::CComSystem &com,
+                                  const swift::simplugin::fsxcommon::DataDefinitionOwnAircraft &simulatorOwnAircraft,
+                                  swift::misc::aviation::CComSystem::ComUnit unit);
+
         //! Called when data about our own aircraft are received
         void updateOwnAircraftFromSimulator(const DataDefinitionOwnAircraft &simulatorOwnAircraft);
 
@@ -513,9 +524,6 @@ namespace swift::simplugin::fsxcommon
         //! Update transponder mode
         //! \threadsafe
         void updateTransponderMode(const misc::aviation::CTransponder::TransponderMode xpdrMode);
-
-        //! Update transponder mode from MSFS
-        void updateMSFSTransponderMode(const DataDefinitionMSFSTransponderMode transponderMode);
 
         //! An AI aircraft was added in the simulator
         bool simulatorReportedObjectAdded(DWORD objectId);
