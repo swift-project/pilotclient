@@ -26,7 +26,7 @@ namespace swift::misc::aviation
 
         //! Constructor
         //! \remark numbers are 1 based!
-        CAircraftEngine(int number, bool on);
+        CAircraftEngine(int number, bool on, int engineRpmPct);
 
         //! Get engine number
         //! \remark numbers are 1 based!
@@ -42,17 +42,27 @@ namespace swift::misc::aviation
         //! Set to on/off
         void setOn(bool on) { m_on = on; }
 
+        //! Set engine RPM percentage (0..100+)
+        //! \remark Percentage can be larger 100 if for example using afterburn
+        void setEngineRpmPct(int percentage);
+
+        //! Get engine RPM percentage (0..100+)
+        //! \remark Percentage can be larger 100 if for example using afterburn
+        int getEngineRpmPct() const { return m_rpmPct; }
+
         //! \copydoc swift::misc::mixin::String::toQString
         QString convertToQString(bool i18n = false) const;
 
     private:
         int m_number = 1;
         bool m_on = true;
+        int m_rpmPct = 0;
 
         SWIFT_METACLASS(
             CAircraftEngine,
             SWIFT_METAMEMBER(number, 0, DisabledForJson),
-            SWIFT_METAMEMBER(on));
+            SWIFT_METAMEMBER(on),
+            SWIFT_METAMEMBER_NAMED(rpmPct, "rpm_pct"));
     };
 } // namespace swift::misc::aviation
 
