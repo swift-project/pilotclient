@@ -10,12 +10,12 @@ SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::aviation, CAircraftEngine, CAircraftEn
 
 namespace swift::misc::aviation
 {
-    CAircraftEngineList::CAircraftEngineList(std::initializer_list<bool> enginesOnOff)
+    CAircraftEngineList::CAircraftEngineList(std::initializer_list<std::pair<bool, int>> enginesOnOff)
     {
         int no = 1; // engines 1 based
-        for (bool it : enginesOnOff)
+        for (const auto [on, engineRpmPct] : enginesOnOff)
         {
-            CAircraftEngine engine(no++, it);
+            CAircraftEngine engine(no++, on, engineRpmPct);
             this->push_back(engine);
         }
     }
@@ -60,14 +60,33 @@ namespace swift::misc::aviation
         }
     }
 
-    void CAircraftEngineList::initEngines(int engineNumber, bool on)
+    void CAircraftEngineList::initEngines(int engineNumber, bool on, int engineRpmPercentage)
     {
         this->clear();
         for (int e = 0; e < engineNumber; e++)
         {
-            const CAircraftEngine engine(e + 1, on);
+            const CAircraftEngine engine(e + 1, on, engineRpmPercentage);
             this->push_back(engine);
         }
+    }
+
+    void CAircraftEngineList::setEngineRpmPct(int engineNumber, int percentage)
+    {
+        Q_ASSERT(engineNumber > 0);
+        for (CAircraftEngine &engine : *this)
+        {
+            if (engine.getNumber() == engineNumber)
+            {
+                engine.setEngineRpmPct(percentage);
+                break;
+            }
+        }
+    }
+
+    int CAircraftEngineList::getEngineRpmPct(int engineNumber) const
+    {
+        Q_ASSERT(engineNumber > 0);
+        return this->getEngine(engineNumber).getEngineRpmPct();
     }
 
     bool CAircraftEngineList::isAnyEngineOn() const { return this->contains(&CAircraftEngine::isOn, true); }

@@ -35,8 +35,8 @@ namespace swift::misc::aviation
         //! Default constructor.
         CAircraftEngineList() = default;
 
-        //! Construct by bool values for engines 1,2 ...
-        CAircraftEngineList(std::initializer_list<bool> enginesOnOff);
+        //! Construct by bool (on/off) and RPM percentage values for engines 1,2 ...
+        CAircraftEngineList(std::initializer_list<std::pair<bool, int>> enginesOnOff);
 
         //! Construct from a base class object.
         CAircraftEngineList(const CSequence<CAircraftEngine> &other);
@@ -57,10 +57,18 @@ namespace swift::misc::aviation
         void setEngines(const CAircraftEngine &engine, int engineNumber);
 
         //! Init some engines
-        void initEngines(int engineNumber, bool on);
+        void initEngines(int engineNumber, bool on, int engineRpmPercentage);
 
         //! Is any engine on?
         bool isAnyEngineOn() const;
+
+        //! Set engine RPM percentage (0..100+)
+        //! \remark Percentage can be larger 100 if for example using afterburn
+        void setEngineRpmPct(int engineNumber, int percentage);
+
+        //! Get engine RPM percentage (0..100+)
+        //! \remark Percentage can be larger 100 if for example using afterburn
+        int getEngineRpmPct(int engineNumber) const;
 
         //! \copydoc swift::misc::mixin::JsonByMetaClass::toJson
         QJsonObject toJson() const;

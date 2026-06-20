@@ -167,6 +167,14 @@ namespace swift::simplugin::fsxcommon
                                              "GENERAL ENG COMBUSTION:3", "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
                                              "GENERAL ENG COMBUSTION:4", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "GENERAL ENG PCT MAX RPM:1", "percent");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "GENERAL ENG PCT MAX RPM:2", "percent");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "GENERAL ENG PCT MAX RPM:3", "percent");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "GENERAL ENG PCT MAX RPM:4", "percent");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD X",
                                              "Feet per second");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "VELOCITY WORLD Y",
