@@ -152,6 +152,10 @@ namespace swift::simplugin::fsxcommon
         double engine2Combustion; //!< Engine 2 combustion flag
         double engine3Combustion; //!< Engine 3 combustion flag
         double engine4Combustion; //!< Engine 4 combustion flag
+        double engine1RpmPct; //!< Engine 1 RPM [%]
+        double engine2RpmPct; //!< Engine 2 RPM [%]
+        double engine3RpmPct; //!< Engine 3 RPM [%]
+        double engine4RpmPct; //!< Engine 4 RPM [%]
 
         //! Ctor
         DataDefinitionRemoteAircraftPartsWithoutLights();
@@ -163,10 +167,10 @@ namespace swift::simplugin::fsxcommon
         bool operator==(const DataDefinitionRemoteAircraftPartsWithoutLights &rhs) const;
 
         //! All engines on/off
-        void setAllEngines(bool on);
+        void setAllEngines(bool on, double engineRpmPct);
 
         //! Set given engine
-        void setEngine(int number1based, bool on);
+        void setEngine(int number1based, bool on, double engineRpmPct);
 
         //! Reset all flaps
         void resetAllFlaps();
