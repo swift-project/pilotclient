@@ -114,6 +114,12 @@ namespace swift::gui::editors
         ui->cb_AircraftPartsEngine4->setChecked(on);
         ui->cb_AircraftPartsEngine5->setChecked(on);
         ui->cb_AircraftPartsEngine6->setChecked(on);
+        ui->sb_AircraftPartsEngine1RpmPercentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine2RpmPercentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine3RpmPercentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine4RpmPercentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine5RpmPercentage->setValue(on ? 80 : 0);
+        ui->sb_AircraftPartsEngine6RpmPercentage->setValue(on ? 80 : 0);
     }
 
     aviation::CAircraftParts CAircraftPartsForm::guiToAircraftParts() const
@@ -125,9 +131,12 @@ namespace swift::gui::editors
             ui->cb_AircraftPartsLightsRecognition->isChecked(), ui->cb_AircraftPartsLightsCabin->isChecked(),
             ui->cb_AircraftPartsLightsWing->isChecked());
         const CAircraftEngineList engines(
-            { ui->cb_AircraftPartsEngine1->isChecked(), ui->cb_AircraftPartsEngine2->isChecked(),
-              ui->cb_AircraftPartsEngine3->isChecked(), ui->cb_AircraftPartsEngine4->isChecked(),
-              ui->cb_AircraftPartsEngine5->isChecked(), ui->cb_AircraftPartsEngine6->isChecked() });
+            { { ui->cb_AircraftPartsEngine1->isChecked(), ui->sb_AircraftPartsEngine1RpmPercentage->value() },
+              { ui->cb_AircraftPartsEngine2->isChecked(), ui->sb_AircraftPartsEngine2RpmPercentage->value() },
+              { ui->cb_AircraftPartsEngine3->isChecked(), ui->sb_AircraftPartsEngine3RpmPercentage->value() },
+              { ui->cb_AircraftPartsEngine4->isChecked(), ui->sb_AircraftPartsEngine4RpmPercentage->value() },
+              { ui->cb_AircraftPartsEngine5->isChecked(), ui->sb_AircraftPartsEngine5RpmPercentage->value() },
+              { ui->cb_AircraftPartsEngine6->isChecked(), ui->sb_AircraftPartsEngine6RpmPercentage->value() } });
         const CAircraftParts parts(
             lights, ui->cb_AircraftPartsGearDown->isChecked(), ui->sb_AircraftPartsFlapsPercentage->value(),
             ui->cb_AircraftPartsSpoilers->isChecked(), engines, ui->cb_AircraftPartsIsOnGround->isChecked());
@@ -157,6 +166,12 @@ namespace swift::gui::editors
         ui->cb_AircraftPartsEngine4->setChecked(engines.isEngineOn(4));
         ui->cb_AircraftPartsEngine5->setChecked(engines.isEngineOn(5));
         ui->cb_AircraftPartsEngine6->setChecked(engines.isEngineOn(6));
+        ui->sb_AircraftPartsEngine1RpmPercentage->setValue(engines.getEngineRpmPct(1));
+        ui->sb_AircraftPartsEngine2RpmPercentage->setValue(engines.getEngineRpmPct(2));
+        ui->sb_AircraftPartsEngine3RpmPercentage->setValue(engines.getEngineRpmPct(3));
+        ui->sb_AircraftPartsEngine4RpmPercentage->setValue(engines.getEngineRpmPct(4));
+        ui->sb_AircraftPartsEngine5RpmPercentage->setValue(engines.getEngineRpmPct(5));
+        ui->sb_AircraftPartsEngine6RpmPercentage->setValue(engines.getEngineRpmPct(6));
     }
 
     void CAircraftPartsForm::guiToJson()
