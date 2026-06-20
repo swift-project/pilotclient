@@ -2101,7 +2101,7 @@ namespace swift::simplugin::fsxcommon
 
     void CSimulatorFsxCommon::updateRemoteAircraft()
     {
-        static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 10,
+        static_assert(sizeof(DataDefinitionRemoteAircraftPartsWithoutLights) == sizeof(double) * 14,
                       "DataDefinitionRemoteAircraftPartsWithoutLights has an incorrect size.");
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
 

@@ -236,6 +236,14 @@ namespace swift::simplugin::fsxcommon
                                              "GENERAL ENG COMBUSTION:3", "Bool");
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
                                              "GENERAL ENG COMBUSTION:4", "Bool");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
+                                             "GENERAL ENG THROTTLE LEVER POSITION:1", "percent");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
+                                             "GENERAL ENG THROTTLE LEVER POSITION:2", "percent");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
+                                             "GENERAL ENG THROTTLE LEVER POSITION:3", "percent");
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataRemoteAircraftPartsWithoutLights,
+                                             "GENERAL ENG THROTTLE LEVER POSITION:4", "percent");
 
         // Lights (other definition)
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE",
@@ -470,23 +478,39 @@ namespace swift::simplugin::fsxcommon
                         rhs.engine4Combustion);
     }
 
-    void DataDefinitionRemoteAircraftPartsWithoutLights::setAllEngines(bool on)
+    void DataDefinitionRemoteAircraftPartsWithoutLights::setAllEngines(bool on, double engineRpmPct)
     {
         engine1Combustion = on ? 1 : 0;
         engine2Combustion = on ? 1 : 0;
         engine3Combustion = on ? 1 : 0;
         engine4Combustion = on ? 1 : 0;
+        engine1RpmPct = engineRpmPct;
+        engine2RpmPct = engineRpmPct;
+        engine3RpmPct = engineRpmPct;
+        engine4RpmPct = engineRpmPct;
     }
 
-    void DataDefinitionRemoteAircraftPartsWithoutLights::setEngine(int number1based, bool on)
+    void DataDefinitionRemoteAircraftPartsWithoutLights::setEngine(int number1based, bool on, double engineRpmPct)
     {
         double v = on ? 1.0 : 0.0;
         switch (number1based)
         {
-        case 1: engine1Combustion = v; break;
-        case 2: engine2Combustion = v; break;
-        case 3: engine3Combustion = v; break;
-        case 4: engine4Combustion = v; break;
+        case 1:
+            engine1Combustion = v;
+            engine1RpmPct = engineRpmPct;
+            break;
+        case 2:
+            engine2Combustion = v;
+            engine2RpmPct = engineRpmPct;
+            break;
+        case 3:
+            engine3Combustion = v;
+            engine3RpmPct = engineRpmPct;
+            break;
+        case 4:
+            engine4Combustion = v;
+            engine4RpmPct = engineRpmPct;
+            break;
         default: break;
         }
     }
@@ -513,6 +537,10 @@ namespace swift::simplugin::fsxcommon
         engine2Combustion = -1;
         engine3Combustion = -1;
         engine4Combustion = -1;
+        engine1RpmPct = -1;
+        engine2RpmPct = -1;
+        engine3RpmPct = -1;
+        engine4RpmPct = -1;
     }
 
     void DataDefinitionRemoteAircraftPartsWithoutLights::initFromParts(const CAircraftParts &parts)
@@ -525,10 +553,13 @@ namespace swift::simplugin::fsxcommon
         flapsLeadingEdgeLeftPercent = lead;
         flapsLeadingEdgeRightPercent = lead;
         spoilersHandlePosition = parts.isSpoilersOut() ? 1.0 : 0.0;
-        this->setAllEngines(false); // init
+        this->setAllEngines(false, 0.0); // init
 
         int e = 1;
-        for (const CAircraftEngine &engine : parts.getEngines()) { this->setEngine(e++, engine.isOn()); }
+        for (const CAircraftEngine &engine : parts.getEngines())
+        {
+            this->setEngine(e++, engine.isOn(), engine.getEngineRpmPct());
+        }
     }
 
     CAircraftLights DataDefinitionRemoteAircraftLights::toLights() const
