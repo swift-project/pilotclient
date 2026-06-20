@@ -70,15 +70,19 @@ namespace swift::simplugin::fsxcommon
         double engine3Combustion; //!< Engine 3 combustion flag
         double engine4Combustion; //!< Engine 4 combustion flag
         // 38
+        double engine1RpmPct; //!< Engine 1 RPM [%]
+        double engine2RpmPct; //!< Engine 2 RPM [%]
+        double engine3RpmPct; //!< Engine 3 RPM [%]
+        double engine4RpmPct; //!< Engine 4 RPM [%]g
         double velocityWorldX; //!< Velocity World X
         double velocityWorldY; //!< Velocity World Y
         double velocityWorldZ; //!< Velocity World Z
         double rotationVelocityBodyX; //!< Rotation Velocity Body X
         double rotationVelocityBodyY; //!< Rotation Velocity Body Y
         double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
-        // 44
+        // 48
         double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
-        // 45
+        // 49
     };
 
     //! Data struct of aircraft position

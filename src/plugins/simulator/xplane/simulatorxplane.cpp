@@ -402,7 +402,8 @@ namespace swift::simplugin::xplane
                 // Engine number start counting at 1
                 // We consider the engine running when N1 is bigger than 5 %
                 const CAircraftEngine engine { engineNumber + 1,
-                                               m_xplaneData.enginesN1Percentage.at(engineNumber) > 5.0 };
+                                               m_xplaneData.enginesN1Percentage.at(engineNumber) > 5.0,
+                                               static_cast<int>(m_xplaneData.enginesN1Percentage.at(engineNumber)) };
                 engines.push_back(engine);
             }
 
