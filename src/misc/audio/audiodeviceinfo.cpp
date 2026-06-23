@@ -51,11 +51,13 @@ namespace swift::misc::audio
 
     CAudioDeviceInfo CAudioDeviceInfo::getDefaultOutputDevice()
     {
+        if (QMediaDevices::defaultAudioOutput().isNull()) return { Unknown, "" };
         return { OutputDevice, QMediaDevices::defaultAudioOutput().description() };
     }
 
     CAudioDeviceInfo CAudioDeviceInfo::getDefaultInputDevice()
     {
+        if (QMediaDevices::defaultAudioInput().isNull()) return { Unknown, "" };
         return { InputDevice, QMediaDevices::defaultAudioInput().description() };
     }
 
