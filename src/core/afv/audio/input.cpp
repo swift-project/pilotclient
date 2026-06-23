@@ -96,21 +96,21 @@ namespace swift::core::afv::audio
         inputFormat.setSampleFormat(QAudioFormat::Int16);
 
         QAudioDevice selectedDevice = getLowestLatencyDevice(inputDevice, inputFormat);
-        
+
         if (selectedDevice.isNull())
         {
             CLogMessage(this).error(u"No suitable audio input device found for '%1'. Required format: %2")
                 << inputDevice.getName() << toQString(inputFormat);
             return;
         }
-        
+
         if (!selectedDevice.isFormatSupported(inputFormat))
         {
             CLogMessage(this).error(u"Selected device '%1' does not support required format: %2")
                 << selectedDevice.description() << toQString(inputFormat);
             return;
         }
-        
+
         m_inputFormat = inputFormat;
         m_audioInput.reset(new QAudioSource(selectedDevice, m_inputFormat));
         if (!m_audioInputBuffer) { m_audioInputBuffer = new CAudioInputBuffer(this); }
