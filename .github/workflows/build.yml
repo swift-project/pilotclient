@@ -520,50 +520,22 @@ jobs:
         with:
           name: xswiftbus-thin-*
 
-  release:
+  releaseDocs:
     runs-on: ubuntu-24.04
     needs: [preBuild, postBuild]
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    outputs:
-      id: ${{ steps.create.outputs.release_id }}
     permissions:
       id-token: write
-      contents: write
       pages: write
     environment: github-pages
 
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v8
-      - name: Flatten directories
-        run: |
-          mv swiftinstaller-*/* .
-          mv xswiftbus-*/* .
-          mkdir swiftsymbols
-          mv swiftsymbols-*/* swiftsymbols
-      - name: Create release
-        uses: swift-project/github-release@2.0-connreset-retry
-        id: create
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ needs.preBuild.outputs.version }}
-          commitish: ${{ github.sha }}
-          body: Version ${{ needs.preBuild.outputs.version }}
-          draft: true
-          prerelease: true
-          gzip: folders
-          files: >
-            swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}.run
-            swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}.exe
-            swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}.dmg
-            xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.zip
-            swiftsymbols-allos-${{ needs.preBuild.outputs.version }}:swiftsymbols
       - name: Publish doxygen
         uses: actions/deploy-pages@v5
 
   notify:
     runs-on: ubuntu-24.04
-    needs: [preBuild, checks, buildLinux, buildWin64, buildMacOS, postBuild, release]
+    needs: [preBuild, checks, buildLinux, buildWin64, buildMacOS, postBuild, releaseDocs]
     if: always()
 
     steps:
@@ -598,30 +570,12 @@ jobs:
         env:
           CHECK_RUNS: ${{ join(fromJson(steps.checkruns.outputs.data).check_runs.*.id, ' ') }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Prepare Discord release message
-        uses: octokit/request-action@v3.x
-        if: ${{ needs.release.result == 'success' }}
-        id: release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          route: GET /repos/swift-project/pilotclient/releases/${{ needs.release.outputs.id }}
       - name: Send Discord build message
         run: |
           cat >message <<EOF
           > :${{ env.emoji }}: \`${{ github.ref }}\`
           > **${{ env.result }}** (triggered by ${{ github.event_name }})
           > <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
-          EOF
-          jo content=@message | curl -i -H "Accept: application/json" -H "Content-Type: application/json" $WEBHOOK -d @-
-        env:
-          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Send Discord release message
-        if: ${{ needs.release.result == 'success' }}
-        run: |
-          cat >message <<EOF
-          > :package: Created draft release \`v${{ needs.preBuild.outputs.version }}\`
-          > <${{ fromJson(steps.release.outputs.data).html_url }}>
           EOF
           jo content=@message | curl -i -H "Accept: application/json" -H "Content-Type: application/json" $WEBHOOK -d @-
         env:
