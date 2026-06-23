@@ -69,6 +69,7 @@ namespace swift::sound
 
     QAudioDevice getLowestLatencyDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
     {
+        Q_ASSERT_X(device.getType() != CAudioDeviceInfo::Unknown, Q_FUNC_INFO, "Device type must not be unknown");
         if (device.isDefault() || !device.isValid())
         {
             const QAudioDevice defDevice =

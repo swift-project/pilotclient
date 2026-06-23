@@ -283,9 +283,14 @@ namespace swift::core::afv::clients
         const CAudioDeviceInfo useOutputDevice =
             outputDevice.isValid() ? outputDevice : CAudioDeviceInfo::getDefaultOutputDevice();
 
-        SWIFT_VERIFY_X(useInputDevice.isValid() && useInputDevice.isInputDevice(), Q_FUNC_INFO, "Wrong input device");
-        SWIFT_VERIFY_X(useOutputDevice.isValid() && useOutputDevice.isOutputDevice(), Q_FUNC_INFO,
-                       "Wrong output device");
+        if (!useOutputDevice.isValid() || !useOutputDevice.isOutputDevice())
+        {
+            CLogMessage(this).error(u"No audio output device found. Audio For VATSIM (AFV) "
+                                    "is disabled");
+            return;
+        }
+
+        // The input device is allowed to be invalid as AFV is also usable with "receive only".
 
         if (m_isStarted)
         {
@@ -325,7 +330,13 @@ namespace swift::core::afv::clients
                 QMutexLocker lock(&m_mutex);
 
                 m_output->start(useOutputDevice, m_outputSampleProvider);
-                m_input->start(useInputDevice);
+
+                if (useInputDevice.getType() != CAudioDeviceInfo::Unknown) { m_input->start(useInputDevice); }
+                else
+                {
+                    CLogMessage(this).warning(
+                        u"No audio input device was found. Audio for VATSIM (AFV) will run in receive-only mode.");
+                }
 
                 // runs in correct thread
                 m_voiceServerTimer->start(PositionUpdatesMs); // start for preset values
