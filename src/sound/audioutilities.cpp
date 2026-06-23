@@ -82,39 +82,7 @@ namespace swift::sound
 
             if (!defDevice.isFormatSupported(format))
             {
-                // Try to find a supported format
-                QAudioFormat adjustedFormat = defDevice.preferredFormat();
-
-                // Try to keep as many original settings as possible
-                adjustedFormat.setSampleRate(format.sampleRate());
-                adjustedFormat.setChannelCount(format.channelCount());
-                adjustedFormat.setSampleFormat(format.sampleFormat());
-
-                if (defDevice.isFormatSupported(adjustedFormat))
-                {
-                    format = adjustedFormat;
-                    return defDevice;
-                }
-
-                // Fallback: Try with preferred format's sample rate but keep other settings
-                adjustedFormat = defDevice.preferredFormat();
-                adjustedFormat.setChannelCount(format.channelCount());
-                adjustedFormat.setSampleFormat(format.sampleFormat());
-
-                if (defDevice.isFormatSupported(adjustedFormat))
-                {
-                    format = adjustedFormat;
-                    return defDevice;
-                }
-
-                // Last resort: Use the device's preferred format entirely
-                if (defDevice.isFormatSupported(defDevice.preferredFormat()))
-                {
-                    format = defDevice.preferredFormat();
-                    return defDevice;
-                }
-
-                // Device doesn't support any reasonable format
+                // Device doesn't support the required format
                 return {};
             }
             return defDevice;
