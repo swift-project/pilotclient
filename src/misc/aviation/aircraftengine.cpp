@@ -13,12 +13,12 @@ namespace swift::misc::aviation
 {
     CAircraftEngine::CAircraftEngine(int number, bool on) : m_number(number), m_on(on)
     {
-        Q_ASSERT_X(number > 0, "CAircraftEngine", "Engine numbers have to be > 1");
+        Q_ASSERT_X(number > 0, "CAircraftEngine", "Engine numbers have to be >= 1");
     }
 
     void CAircraftEngine::setNumber(int number)
     {
-        Q_ASSERT_X(number > 0, "setNumber", "Engine numbers have to be > 1");
+        Q_ASSERT_X(number > 0, "setNumber", "Engine numbers have to be >= 1");
         m_number = number;
     }
 
