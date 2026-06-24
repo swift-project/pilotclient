@@ -170,8 +170,11 @@ namespace swift::core::afv::audio
             if (value < std::numeric_limits<qint16>::min()) value = std::numeric_limits<qint16>::min();
             sample = static_cast<qint16>(value);
 
-            qint16 sampleInput = qAbs(sample);
-            m_maxSampleInput = qMax(sampleInput, m_maxSampleInput); // qAbs entfernt!
+            // qAbs(qint16::min()) would assert because +32768 cannot be represented
+            // as a qint16. For peak detection, saturate this edge case to qint16::max().
+            const qint16 sampleInput =
+                sample != std::numeric_limits<qint16>::min() ? qAbs(sample) : std::numeric_limits<qint16>::max();
+            m_maxSampleInput = qMax(sampleInput, m_maxSampleInput);
         }
 
         int length {};
