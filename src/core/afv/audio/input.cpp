@@ -171,7 +171,7 @@ namespace swift::core::afv::audio
             sample = static_cast<qint16>(value);
 
             qint16 sampleInput = qAbs(sample);
-            m_maxSampleInput = qMax(qAbs(sampleInput), m_maxSampleInput);
+            m_maxSampleInput = qMax(sampleInput, m_maxSampleInput); // qAbs entfernt!
         }
 
         int length {};
