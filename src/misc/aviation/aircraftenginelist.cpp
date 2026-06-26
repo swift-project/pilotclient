@@ -13,7 +13,7 @@ namespace swift::misc::aviation
     CAircraftEngineList::CAircraftEngineList(std::initializer_list<std::pair<bool, int>> enginesOnOff)
     {
         int no = 1; // engines 1 based
-        for (const auto [on, engineRpmPct] : enginesOnOff)
+        for (const auto &[on, engineRpmPct] : enginesOnOff)
         {
             CAircraftEngine engine(no++, on, engineRpmPct);
             this->push_back(engine);
