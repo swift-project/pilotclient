@@ -106,7 +106,7 @@ jobs:
           DOXY_TAGFILES: ${{ runner.workspace }}/Qt/Docs/Qt-${{ env.qt_version }}
       - name: Upload doxygen
         if: ${{ env.do_doxygen == 'true' }}
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs/html/
       - name: Check if clang-tidy analysis is required
