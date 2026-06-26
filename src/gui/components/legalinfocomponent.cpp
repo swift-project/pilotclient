@@ -29,7 +29,6 @@ namespace swift::gui::components
 
         const bool crashDumpUploadEnabled = m_crashDumpUploadEnabled.getThreadLocal();
         ui->cb_CrashDumps->setChecked(crashDumpUploadEnabled);
-        ui->cb_Agree->setChecked(CBuildConfig::isLocalDeveloperDebugBuild());
 
         connect(ui->cb_CrashDumps, &QCheckBox::toggled, this, &CLegalInfoComponent::onAllowCrashDumps);
     }
