@@ -87,6 +87,7 @@ if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "CMAKE_BUILD_TYPE not defined. Falling back to Debug")
     set(CMAKE_BUILD_TYPE Debug)
 endif()
+message(STATUS "BUILD TYPE: ${CMAKE_BUILD_TYPE}")
 
 if(SWIFT_MINIFY_DEBUG_SYMBOLS)
     if(MSVC)
