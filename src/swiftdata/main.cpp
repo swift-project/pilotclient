@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
         a.splashScreen(CIcons::swiftDatabase256());
         a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders,
                                       CDatabaseReaderConfigList::forMappingTool());
-        a.startCoreFacadeWithoutContexts();
+
         if (!a.start())
         {
             a.gracefulShutdown();
