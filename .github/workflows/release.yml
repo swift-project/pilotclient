@@ -1,0 +1,79 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
+name: Release swift
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: version
+        run: echo "version=$(python3 -u scripts/utils.py --version)" >> $GITHUB_OUTPUT
+
+      - name: Find merge queue build for this commit
+        id: find_run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in $(seq 1 10); do
+            RUN_ID=$(gh api \
+              "/repos/${{ github.repository }}/actions/runs" \
+              -f head_sha=${{ github.sha }} \
+              -f workflow_file_name=check_and_build.yml \
+              -f status=success \
+              --jq '.workflow_runs[0].id // empty')
+            if [ -n "$RUN_ID" ]; then
+              echo "run_id=$RUN_ID" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            echo "Attempt $i: Artifact not found yet, retrying in 30s..."
+            sleep 30
+          done
+          echo "::error::No successful build found for SHA ${{ github.sha }}"
+          exit 1
+
+      - name: Download artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api \
+            "/repos/${{ github.repository }}/actions/runs/${{ steps.find_run.outputs.run_id }}/artifacts" \
+            --jq '.artifacts[] | .name + " " + .archive_download_url' \
+          | while read name url; do
+              gh api "$url" > "${name}.zip"
+              unzip -o "${name}.zip" -d "${name}"
+            done
+      - name: Flatten directories
+        run: |
+          mv swiftinstaller-*/* .
+          mv xswiftbus-*/* .
+          mkdir swiftsymbols
+          mv swiftsymbols-*/* swiftsymbols
+      - name: Create release
+        uses: swift-project/github-release@2.0-connreset-retry
+        id: create
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ steps.version.outputs.version }}
+          commitish: ${{ github.sha }}
+          body: Version ${{ steps.version.outputs.version }}
+          draft: true
+          prerelease: true
+          gzip: folders
+          files: >
+            swiftinstaller-linux-64-${{ steps.version.outputs.version }}.run
+            swiftinstaller-windows-64-${{ steps.version.outputs.version }}.exe
+            swiftinstaller-macos-64-${{ steps.version.outputs.version }}.dmg
+            xswiftbus-fat-allos-${{ steps.version.outputs.version }}.zip
+            swiftsymbols-allos-${{ steps.version.outputs.version }}:swiftsymbols

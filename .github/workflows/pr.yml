@@ -1,0 +1,66 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
+name: Pull request validation
+
+on:
+  pull_request:
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  qt_version:    &qt_version 6.11.1
+
+jobs:
+  checks:
+    uses: ./.github/workflows/reusable_checks.yml
+
+  doxygen:
+    uses: ./.github/workflows/reusable_doxygen.yml
+    with:
+      upload_doxygen: false
+      qt_version: *qt_version
+
+  changelog:
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: read
+      issues: read
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: '0'
+      - name: Check for CHANGELOG or no-changelog label
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+
+          echo "Checking changed files..."
+
+          if git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -qx "CHANGELOG.md"; then
+            echo "✅ CHANGELOG.md was modified."
+            exit 0
+          fi
+
+          echo "CHANGELOG.md not modified. Checking labels..."
+
+          LABELS=$(gh api \
+            repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels \
+            --jq '.[].name')
+
+          if echo "$LABELS" | grep -qx "no-changelog"; then
+            echo "✅ no-changelog label found."
+            exit 0
+          fi
+
+          echo "::error::This PR must either modify CHANGELOG.md or have the 'no-changelog' label."
+          exit 1

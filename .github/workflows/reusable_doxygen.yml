@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
+name: Doxygen
+
+on:
+  workflow_call:
+    inputs:
+      upload_doxygen:
+        type: boolean
+        default: false
+      qt_version:
+        type: string
+        required: true
+
+jobs:
+  build_doxygen:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Install Qt docs
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ inputs.qt_version }}
+          no-qt-binaries: true
+          documentation: true
+          cache: true
+      - name: Run doxygen
+        working-directory: docs
+        run: |
+          sudo apt-get -y install doxygen graphviz
+          doxygen Doxyfile
+        env:
+          DOXY_SRC_ROOT: ..
+          DOXY_TAGFILES: ${{ runner.workspace }}/Qt/Docs/Qt-${{ inputs.qt_version }}
+
+      - uses: actions/upload-artifact@v4
+        if: inputs.upload_doxygen
+        with:
+          name: doxygen
+          path: docs/html/
+          retention-days: 1
