@@ -1017,7 +1017,8 @@ namespace swift::core::fsd
                                      const QString error = json.value("error_msg").isString() ?
                                                                json.value("error_msg").toString() :
                                                                nwReply->errorString();
-                                     CLogMessage(this).error(u"VATSIM auth token endpoint: %1") << error;
+                                     CLogMessage(this).error(u"Connecting to VATSIM with CID %1 failed: %2")
+                                         << cid << error;
                                      disconnectFromServer();
                                  }
                                  nwReply->deleteLater();
@@ -1557,7 +1558,7 @@ namespace swift::core::fsd
         case ServerErrorCode::CallsignInUse: CLogMessage(this).error(u"The requested callsign is already taken"); break;
         case ServerErrorCode::InvalidCallsign: CLogMessage(this).error(u"The requested callsign is not valid"); break;
         case ServerErrorCode::InvalidCidPassword:
-            CLogMessage(this).error(u"Wrong user ID or password, inactive account");
+            CLogMessage(this).error(u"Wrong user ID (%1) or password") << m_server.getUser().getId();
             break;
         case ServerErrorCode::InvalidRevision:
             CLogMessage(this).error(u"This server does not support our protocol version");
