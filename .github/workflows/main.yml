@@ -1,0 +1,48 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
+name: Main
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  qt_version:    &qt_version 6.11.1
+
+# This job just publishes the latest Doxygen documentation to GitHub pages.
+# Building and releasing the application is done in the check_and_build (merge queue)
+# and release workflow
+jobs:
+
+  build_doxygen:
+    uses: ./.github/workflows/reusable_doxygen.yml
+    with:
+      upload_doxygen: true
+      qt_version: *qt_version
+
+  publish_doxygen:
+    needs: build_doxygen
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+      pages: write
+    environment: github-pages
+
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          name: doxygen
+          path: docs/html/
+
+      - name: Upload doxygen
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs/html/
+
+      - name: Publish doxygen
+        uses: actions/deploy-pages@v5

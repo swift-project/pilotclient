@@ -1,0 +1,40 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
+name: Checks
+
+on:
+  workflow_call:
+
+jobs:
+  checks:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install gitlint
+        run: pip install gitlint==0.19.1
+
+      - name: Run gitlint
+        run: gitlint --commits d789f61044e63e1a00d8e9f1d4d49c8d9ffc42a9..HEAD
+
+      - name: Install REUSE
+        run: pip install reuse==4.0.3
+
+      - name: Run REUSE lint
+        run: reuse lint
+
+      - name: Run clang-format
+        run: scripts/run_clang_format.py
+      - uses: swift-project/setup-cpp@df5d21a5dd12577254a9748fddf23e075a4a7ddc
+      - name: Run cppcheck
+        run: |
+          sudo apt-get -y install cppcheck
+          cppcheck --template=gcc --inline-suppr --std=c++17 \
+                   --enable=style,unusedFunction \
+                   -i src/plugins/weatherdata/gfs/g2clib \
+                   -DCPPCHECK --force \
+                   --suppressions-list=cppcheck.supp \
+                   --library=qt.cfg --library=posix.cfg .

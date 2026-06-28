@@ -4,22 +4,17 @@
 name: Build swift
 
 on:
-  push:
-    branches-ignore:
-      - stable/**
-      - nobuild/**
-  pull_request:
+  merge_group:
+    branches: [main]
+  workflow_dispatch: # manually triggered
 
 concurrency:
-  group:         ${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
-  do_vatsim_key: ${{ github.event_name == 'push' }}
-  do_symbols:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-  do_doxygen:    ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-  do_static_analysis: ${{ github.event_name == 'push' && github.ref != 'refs/heads/main' }}
-  qt_version:    6.11.1
+  do_symbols:    ${{ github.event_name == 'merge_group' }}
+  qt_version:    &qt_version 6.11.1
   bitrock_version: qt-professional-25.10.1
   bitrock_url:     https://releases.installbuilder.com/installbuilder
   installbuilder_hash_win: f92b1741c78b8f024473f55057b26107c8ed9cc1ca583eb9323d0023a8024e00
@@ -27,13 +22,11 @@ env:
   installbuilder_hash_macos: bffa8b2663c6e9aaaa1ed7cdb41a874d34ff89f22adfab419e172915f8f4ce57
   externals: swift-project/externals
   externals_sha: e1f1743ba159e11b0c065ea8f1ae1a0e91e3bf39
-  use_externals: ${{ secrets.EXTERNALS_PAT != '' }}
 
 jobs:
 
   preBuild:
     runs-on: ubuntu-24.04
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository }}
     outputs:
       version: ${{ steps.version.outputs.value }}
 
@@ -58,57 +51,21 @@ jobs:
           warnIfNotFound: false
 
   checks:
-    runs-on: ubuntu-22.04
-    needs: preBuild
+    uses: ./.github/workflows/reusable_checks.yml
 
+  doxygen:
+    uses: ./.github/workflows/reusable_doxygen.yml
+    with:
+      qt_version: *qt_version
+      upload_doxygen: false
+
+  clang-tidy:
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: '0'
-      - name: Install gitlint
-        run: |
-          pip install gitlint==0.19.1
-      - name: Run gitlint
-        run: gitlint --commits d789f61044e63e1a00d8e9f1d4d49c8d9ffc42a9..HEAD
-      - name: Install REUSE
-        run: |
-          pip install reuse==4.0.3
-      - name: Run REUSE lint
-        run: reuse lint
-      - name: Run clang-format
-        run: |
-          scripts/run_clang_format.py
-      - uses: swift-project/setup-cpp@swift
-      - name: Run cppcheck
-        run: |
-          sudo apt-get -y install cppcheck
-          cppcheck --template=gcc --inline-suppr --std=c++17 --enable=style,unusedFunction \
-                   -i src/plugins/weatherdata/gfs/g2clib -DCPPCHECK --force --suppressions-list=cppcheck.supp \
-                   --library=qt.cfg --library=posix.cfg .
-      - name: Install Qt docs
-        if: ${{ env.do_doxygen == 'true' }}
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.qt_version }}
-          no-qt-binaries: true
-          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
-          documentation: true
-          cache: true
-      - name: Run doxygen
-        if: ${{ env.do_doxygen == 'true' }}
-        working-directory: docs
-        run: |
-          sudo apt-get -y install doxygen graphviz
-          doxygen Doxyfile
-        env:
-          DOXY_SRC_ROOT: ..
-          DOXY_TAGFILES: ${{ runner.workspace }}/Qt/Docs/Qt-${{ env.qt_version }}
-      - name: Upload doxygen
-        if: ${{ env.do_doxygen == 'true' }}
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs/html/
       - name: Check if clang-tidy analysis is required
         id: check_need_clang_tidy
         run: |
@@ -137,7 +94,7 @@ jobs:
           sudo apt-get -y install dbus-x11 libglu1-mesa-dev libpulse-dev libdbus-1-dev ninja-build
           pip3 install requests conan==2.29.1
       - name: Checkout externals
-        if: ${{ env.use_externals == 'true' && steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
+        if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
         uses: actions/checkout@v6
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
@@ -168,7 +125,7 @@ jobs:
 
   buildLinux:
     runs-on: ubuntu-24.04
-    needs: [preBuild, checks]
+    needs: [preBuild, checks, clang-tidy, doxygen]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
@@ -212,7 +169,6 @@ jobs:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
-        if: ${{ env.use_externals == 'true' }}
         uses: actions/checkout@v6
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
@@ -237,7 +193,6 @@ jobs:
           eval $(cat session.sh)
           echo "DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >>$GITHUB_ENV
       - name: Create Vatsim key file
-        if: ${{ env.do_vatsim_key == 'true' }}
         run: |
           cat >vatsim.json <<EOF
           { "vatsim": { "id": "$VATSIM_ID", "key": "$VATSIM_KEY" } }
@@ -273,7 +228,7 @@ jobs:
 
   buildWin64:
     runs-on: windows-2025-vs2026
-    needs: [preBuild, checks]
+    needs: [preBuild, checks, clang-tidy, doxygen]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
@@ -328,7 +283,6 @@ jobs:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
-        if: ${{ env.use_externals == 'true' }}
         uses: actions/checkout@v6
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
@@ -348,7 +302,6 @@ jobs:
           conan remote login swift "$ARTIFACTORY_USER" --password "$ARTIFACTORY_TOKEN"
           conan install . --output-folder=build_conan --deployer=full_deploy -pr:h=ci/profile_win -pr:b=ci/profile_win
       - name: Create Vatsim key file
-        if: ${{ env.do_vatsim_key == 'true' }}
         run: |
           echo >vatsim.json @"
           { "vatsim": { "id": "$env:VATSIM_ID", "key": "$env:VATSIM_KEY" } }
@@ -386,7 +339,7 @@ jobs:
 
   buildMacOS:
     runs-on: macos-26
-    needs: [preBuild, checks]
+    needs: [preBuild, checks, clang-tidy, doxygen]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
@@ -435,7 +388,6 @@ jobs:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
-        if: ${{ env.use_externals == 'true' }}
         uses: actions/checkout@v6
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
@@ -460,7 +412,6 @@ jobs:
           # https://doc.qt.io/qt-6/macos-issues.html#d-bus-and-macos
           conan install --requires=dbus/1.15.8 --output-folder build_conan_dbus_shared --deployer=full_deploy -o "dbus/*:shared=True" -o "dbus/*:message_bus=True" -pr:h=ci/profile_mac -pr:b=ci/profile_mac_arm
       - name: Create Vatsim key file
-        if: ${{ env.do_vatsim_key == 'true' }}
         run: |
           cat >vatsim.json <<EOF
           { "vatsim": { "id": "$VATSIM_ID", "key": "$VATSIM_KEY" } }
@@ -496,7 +447,7 @@ jobs:
 
   postBuild:
     runs-on: ubuntu-24.04
-    needs: [preBuild, checks, buildLinux, buildWin64, buildMacOS]
+    needs: [preBuild, checks, clang-tidy, doxygen, buildLinux, buildWin64, buildMacOS]
 
     steps:
       - name: Download xswiftbus-thin
@@ -520,22 +471,9 @@ jobs:
         with:
           name: xswiftbus-thin-*
 
-  releaseDocs:
-    runs-on: ubuntu-24.04
-    needs: [preBuild, postBuild]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    permissions:
-      id-token: write
-      pages: write
-    environment: github-pages
-
-    steps:
-      - name: Publish doxygen
-        uses: actions/deploy-pages@v5
-
   notify:
     runs-on: ubuntu-24.04
-    needs: [preBuild, checks, buildLinux, buildWin64, buildMacOS, postBuild, releaseDocs]
+    needs: [preBuild, checks, clang-tidy, doxygen, buildLinux, buildWin64, buildMacOS, postBuild]
     if: always()
 
     steps:
