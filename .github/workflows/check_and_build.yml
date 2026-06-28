@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           fetch-depth: 0
       - name: Get version number
@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           fetch-depth: '0'
       - name: Check if clang-tidy analysis is required
@@ -76,13 +76,13 @@ jobs:
           fi
       - name: Checkout repository
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           fetch-depth: '0'
           submodules: 'true'
       - name: Install Qt
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
-        uses: jurplel/install-qt-action@v4
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
@@ -95,7 +95,7 @@ jobs:
           pip3 install requests conan==2.29.1
       - name: Checkout externals
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -133,7 +133,7 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v4
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
@@ -141,7 +141,7 @@ jobs:
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
         with:
           path: ~/installbuilder.run
           key: installbuilder-${{ env.bitrock_version }}-linux-x64
@@ -164,12 +164,12 @@ jobs:
           sudo apt-get -y install dbus-x11 libglu1-mesa-dev libpulse-dev libdbus-1-dev ninja-build
           pip3 install requests conan==2.29.1
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -210,18 +210,18 @@ jobs:
         run: |
           python3 -u scripts/build.py -w 64 -t gcc --upload-symbols
       - name: Upload installer
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: xswiftbus-thin-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -236,7 +236,7 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v4
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
@@ -244,7 +244,7 @@ jobs:
           aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
       - name: Install Qt debug info
-        uses: jurplel/install-qt-action@v4
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2022_64
@@ -254,7 +254,7 @@ jobs:
           extra: --archives qtbase
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
         with:
           path: C:\installbuilder.exe
           key: installbuilder-${{ env.bitrock_version }}-windows-x64
@@ -278,12 +278,12 @@ jobs:
         run: |
           pip install requests PyInstaller conan==2.29.1
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -321,18 +321,18 @@ jobs:
         run: |
           build_conan\\build\\RelWithDebInfo\\generators\\conanrun.bat && python -u scripts/build.py -w 64 -t msvc --upload-symbols
       - name: Upload installer
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: xswiftbus-thin-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -347,7 +347,7 @@ jobs:
 
     steps:
       - name: Install Qt
-        uses: jurplel/install-qt-action@v4
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
@@ -355,7 +355,7 @@ jobs:
           cache: true
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
         with:
           path: ~/installbuilder.dmg
           key: installbuilder-${{ env.bitrock_version }}-osx
@@ -376,19 +376,19 @@ jobs:
           EOF
         env:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: '3.13'
       - name: Install dependencies
         run: |
           pip3 install requests conan==2.29.1
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
-        uses: actions/checkout@v6
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -429,18 +429,18 @@ jobs:
         run: |
           python3 -u scripts/build.py -w 64 -t clang --upload-symbols
       - name: Upload installer
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: xswiftbus-thin-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -451,7 +451,7 @@ jobs:
 
     steps:
       - name: Download xswiftbus-thin
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           pattern: xswiftbus-thin-*
           merge-multiple: true
@@ -462,7 +462,7 @@ jobs:
           unzip -o xswiftbus-macos-64-*.zip
           zip -r -9 xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.zip xswiftbus
       - name: Upload xswiftbus-fat
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}
           path: xswiftbus-fat-allos-*
@@ -481,7 +481,7 @@ jobs:
         run: |
           sudo apt-get -y install jo jq
       - name: Query GitHub annotations
-        uses: octokit/request-action@v3.x
+        uses: octokit/request-action@3d6703deef41a82916a2e5ca87096f93035cef66
         id: checkruns
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

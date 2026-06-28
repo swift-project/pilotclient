@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           fetch-depth: 0
 
@@ -61,7 +61,7 @@ jobs:
           mkdir swiftsymbols
           mv swiftsymbols-*/* swiftsymbols
       - name: Create release
-        uses: swift-project/github-release@2.0-connreset-retry
+        uses: swift-project/github-release@d88dab5178ec976b657e7ebfba172bc62250734b
         id: create
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
