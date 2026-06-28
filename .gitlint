@@ -8,3 +8,7 @@ contrib=contrib-title-conventional-commits
 ### Configuring rules ###
 [title-max-length]
 line-length=100
+
+[ignore-by-author-name]
+regex=dependabot
+ignore=all
