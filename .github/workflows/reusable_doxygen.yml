@@ -17,11 +17,11 @@ jobs:
   build_doxygen:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
           fetch-depth: 0
       - name: Install Qt docs
-        uses: jurplel/install-qt-action@v4
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
         with:
           version: ${{ inputs.qt_version }}
           no-qt-binaries: true
@@ -36,7 +36,7 @@ jobs:
           DOXY_SRC_ROOT: ..
           DOXY_TAGFILES: ${{ runner.workspace }}/Qt/Docs/Qt-${{ inputs.qt_version }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: inputs.upload_doxygen
         with:
           name: doxygen
