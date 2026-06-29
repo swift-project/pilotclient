@@ -28,9 +28,10 @@ jobs:
         run: |
           for i in $(seq 1 10); do
             RUN_ID=$(gh api \
+              --method GET \
               "/repos/${{ github.repository }}/actions/runs" \
               -f head_sha=${{ github.sha }} \
-              -f workflow_file_name=check_and_build.yml \
+              -f event=merge_group \
               -f status=success \
               --jq '.workflow_runs[0].id // empty')
             if [ -n "$RUN_ID" ]; then
