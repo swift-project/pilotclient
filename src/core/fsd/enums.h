@@ -81,7 +81,8 @@ namespace swift::core::fsd
         INF, /*!< Supervisor Privileged Information Request. */
         FP, /*!< Send Cached Flight Plan. Response by SERVER. */
         AircraftConfig, /*!< Aircraft Configuration */
-        EuroscopeSimData /*!< Broadcast to announce we request SIMDATA packets. */
+        EuroscopeSimData, /*!< Broadcast to announce we request SIMDATA packets. */
+        Acars /*!< Broadcast to announce we request ACARS packets. */
         // There are many more which are only relevant to ATC clients.
     };
 

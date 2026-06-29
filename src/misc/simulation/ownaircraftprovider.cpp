@@ -62,6 +62,12 @@ namespace swift::misc::simulation
         return this->provider()->getOwnAircraftParts();
     }
 
+    CAircraftAcars COwnAircraftAware::getOwnAircraftAcars() const
+    {
+        Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+        return this->provider()->getOwnAircraftAcars();
+    }
+
     CAircraftModel COwnAircraftAware::getOwnAircraftModel() const
     {
         Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
@@ -116,6 +122,12 @@ namespace swift::misc::simulation
     {
         Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
         return this->provider()->updateOwnParts(parts);
+    }
+
+    bool COwnAircraftAware::updateOwnAcars(const CAircraftAcars &acars)
+    {
+        Q_ASSERT_X(this->provider(), Q_FUNC_INFO, "No object available");
+        return this->provider()->updateOwnAcars(acars);
     }
 
     bool COwnAircraftAware::updateOwnCG(const CLength &cg)

@@ -17,6 +17,8 @@ add_library(misc SHARED
         audio/registermetadataaudio.h
 
         # Aviation
+        aviation/aircraftacars.cpp
+        aviation/aircraftacars.h
         aviation/aircraftcategory.cpp
         aviation/aircraftcategory.h
         aviation/aircraftcategorylist.cpp
@@ -678,7 +680,7 @@ add_library(misc SHARED
         weather/windlayer.h
         weather/windlayerlist.cpp
         weather/windlayerlist.h
-)
+ )
 
 if(APPLE)
     target_sources(misc PRIVATE

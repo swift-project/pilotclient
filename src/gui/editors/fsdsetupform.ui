@@ -36,6 +36,15 @@
      </property>
     </widget>
    </item>
+
+    <item row="1" column="1">
+      <widget class="QLabel" name="lbl_FsdSendAcars">
+        <property name="text">
+          <string>send ACARS:</string>
+        </property>
+      </widget>
+    </item>
+    
    <item row="5" column="1">
     <widget class="QCheckBox" name="cb_AircraftPartsSend">
      <property name="text">
@@ -57,6 +66,15 @@
      </property>
     </widget>
    </item>
+
+    <item row="1" column="2">
+      <widget class="QCheckBox" name="cb_FsdSendAcars">
+        <property name="text">
+          <string>send ACARS information over private networks</string>
+        </property>
+      </widget>
+    </item>
+    
    <item row="4" column="1">
     <widget class="QLabel" name="lbl_AircraftParts">
      <property name="toolTip">

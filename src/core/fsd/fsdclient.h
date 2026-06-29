@@ -10,6 +10,7 @@
 #include "core/fsd/messagebase.h"
 #include "core/swiftcoreexport.h"
 #include "core/vatsim/vatsimsettings.h"
+#include "misc/aviation/aircraftacars.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/atcstationlist.h"
 #include "misc/aviation/callsign.h"
@@ -365,6 +366,7 @@ namespace swift::core::fsd
         //
         void sendMessageString(const QString &message);
         void sendQueuedMessage();
+        void sendAcarsMessage();
         //! @}
 
         //! @{
@@ -389,6 +391,14 @@ namespace swift::core::fsd
         //! Message send to FSD
         template <class T>
         void sendDirectMessage(const T &message)
+        {
+            if (!message.isValid()) { return; }
+            this->sendMessageString(messageToFSDString(message));
+        }
+
+        //! Acars Message send to FSD
+        template <class T>
+        void sendAcarsMessage(const T &message)
         {
             if (!message.isValid()) { return; }
             this->sendMessageString(messageToFSDString(message));
@@ -517,6 +527,7 @@ namespace swift::core::fsd
         bool isInterimPositionSendingEnabledForServer() const;
         bool isInterimPositionReceivingEnabledForServer() const;
         bool isVisualPositionSendingEnabledForServer() const;
+        bool isAcarsSendEnabled() const;
         const swift::misc::network::CFsdSetup &getSetupForServer() const;
 
         //! Handles ATIS replies from non-VATSIM servers. If the conditions are not met,
@@ -590,6 +601,9 @@ namespace swift::core::fsd
         mutable QReadWriteLock m_lockConnectionStatus { QReadWriteLock::Recursive };
 
         swift::misc::aviation::CAircraftParts m_sentAircraftConfig; //!< aircraft parts sent
+        swift::misc::aviation::CAircraftAcars m_sentAcars; //!< aircraft ACARS sent
+        int m_sentAcarsCount = 0; //!< how many ACARS messages sent
+
         swift::misc::CTokenBucket m_tokenBucket; //!< used with aircraft parts messages
         swift::misc::aviation::CCallsignSet m_interimPositionReceivers; //!< all aircraft receiving interim positions
         swift::misc::network::CTextMessageList m_textMessagesToConsolidate; //!< waiting for new messages
@@ -633,6 +647,7 @@ namespace swift::core::fsd
         QTimer m_interimPositionUpdateTimer { this }; //!< sending interim positions
         QTimer m_visualPositionUpdateTimer { this }; //!< sending visual positions
         QTimer m_fsdSendMessageTimer { this }; //!< FSD message sending
+        QTimer m_fsdSendAcarsTimer { this }; //!< ACARS message sending
 
         qint64 m_additionalOffsetTime = 0; //!< additional offset time
 
@@ -696,6 +711,7 @@ namespace swift::core::fsd
         static int constexpr c_updateVisualPositionIntervalMsec =
             200; //!< interval for the VATSIM visual position updates (send our position and 6DOF velocity)
         static int constexpr c_sendFsdMsgIntervalMsec = 10; //!< interval for FSD send messages
+        static int constexpr c_sendAcarsIntervalMsec = 1000; //!< interval for ACARS messages
         bool m_stoppedSendingVisualPositions = false; //!< for when velocity drops to zero
         bool m_serverWantsVisualPositions = false; //!< there are interested clients in range
         unsigned m_visualPositionUpdateSentCount = 0; //!< for choosing when to send a periodic (slowfast) packet

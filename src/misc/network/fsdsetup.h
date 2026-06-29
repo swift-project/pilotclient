@@ -44,6 +44,7 @@ namespace swift::misc::network
             SendVisualPositions = 1 << 7, //!< visual positions out
             ReceiveEuroscopeSimData = 1 << 8, //!< euroscope SIMDATA in
             SendFplWithIcaoEquipment = 1 << 9, //!< send flightplan with ICAO equipment code instead of FAA code
+            SendAcars = 1 << 10, //!< send ACARS information over private networks
             AllSending = SendAircraftParts | SendInterimPositions | SendVisualPositions | SendGndFlag, //!< all out
             AllReceive = ReceiveAircraftParts | ReceiveInterimPositions | ReceiveGndFlag, //!< all in
             All = AllReceive | AllSending, //!< all
@@ -94,7 +95,7 @@ namespace swift::misc::network
         //! Set send / receive details
         void setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive, bool interimSend,
                                    bool interimReceive, bool visualSend, bool euroscopeSimDataReceive,
-                                   bool icaoEquipment);
+                                   bool icaoEquipmentm, bool sendAcars);
 
         //! @{
         //! FSD setup flags

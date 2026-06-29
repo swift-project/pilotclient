@@ -17,6 +17,7 @@
 #include "core/context/contextownaircraft.h"
 #include "core/corefacadeconfig.h"
 #include "core/swiftcoreexport.h"
+#include "misc/aviation/aircraftacars.h"
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/aircraftsituationlist.h"
 #include "misc/aviation/airlineicaocode.h"
@@ -88,6 +89,10 @@ namespace swift::core
             //! \ingroup ownaircraftprovider
             swift::misc::aviation::CAircraftParts getOwnAircraftParts() const override;
 
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnAircraftAcars
+            //! \ingroup ownaircraftprovider
+            swift::misc::aviation::CAircraftAcars getOwnAircraftAcars() const override;
+
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::getOwnAircraftModel
             //! \ingroup ownaircraftprovider
             swift::misc::simulation::CAircraftModel getOwnAircraftModel() const override;
@@ -109,6 +114,10 @@ namespace swift::core
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnParts
             //! \ingroup ownaircraftprovider
             bool updateOwnParts(const swift::misc::aviation::CAircraftParts &parts) override;
+
+            //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnAcars
+            //! \ingroup ownaircraftprovider
+            bool updateOwnAcars(const swift::misc::aviation::CAircraftAcars &acars) override;
 
             //! \copydoc swift::misc::simulation::IOwnAircraftProvider::updateOwnParts
             //! \ingroup ownaircraftprovider

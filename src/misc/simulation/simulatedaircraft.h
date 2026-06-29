@@ -13,6 +13,7 @@
 #include <QVector3D>
 #include <QtGlobal>
 
+#include "misc/aviation/aircraftacars.h"
 #include "misc/aviation/aircraftlights.h"
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/aircraftsituation.h"
@@ -349,6 +350,9 @@ namespace swift::misc
             //! Get aircraft parts
             const aviation::CAircraftParts &getParts() const { return m_parts; }
 
+            //! Get aircraft acars
+            const aviation::CAircraftAcars &getAcars() const { return m_acars; }
+
             //! Number of engines
             int getEnginesCount() const;
 
@@ -357,6 +361,9 @@ namespace swift::misc
 
             //! Set aircraft parts
             void setParts(const aviation::CAircraftParts &parts);
+
+            //! Set aircraft acars
+            void setAcars(const aviation::CAircraftAcars &acars);
 
             //! Set aircraft lights
             void setLights(aviation::CAircraftLights &lights);
@@ -493,6 +500,7 @@ namespace swift::misc
             aviation::CComSystem m_com2system;
             aviation::CTransponder m_transponder;
             aviation::CAircraftParts m_parts;
+            aviation::CAircraftAcars m_acars;
             aviation::CSelcal m_selcal;
             CAircraftModelList m_models = {
                 { CAircraftModel(), CAircraftModel() }
@@ -515,6 +523,7 @@ namespace swift::misc
                 SWIFT_METAMEMBER(com2system),
                 SWIFT_METAMEMBER(transponder),
                 SWIFT_METAMEMBER(parts),
+                SWIFT_METAMEMBER(acars),
                 SWIFT_METAMEMBER(selcal),
                 SWIFT_METAMEMBER(models),
                 SWIFT_METAMEMBER(enabled),

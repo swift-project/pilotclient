@@ -10,6 +10,7 @@
 #include "../fscommon/simulatorfscommonfunctions.h"
 #include "simconnectsymbols.h"
 
+#include "misc/aviation/aircraftacars.h"
 #include "misc/aviation/aircraftenginelist.h"
 #include "misc/aviation/aircraftparts.h"
 #include "misc/logmessage.h"
@@ -185,6 +186,13 @@ namespace swift::simplugin::fsxcommon
 
         hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraftTitle, "TITLE",
                                              nullptr, SIMCONNECT_DATATYPE_STRING256);
+
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft,
+                                             "FUEL TOTAL QUANTITY", "Gallons");
+
+        hr += SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDefinitions::DataOwnAircraft, "SIMULATION RATE",
+                                             "Number");
+
         if (isFailure(hr))
         {
             CLogMessage(static_cast<CSimConnectDefinitions *>(nullptr)).error(u"SimConnect error: initOwnAircraft %1")

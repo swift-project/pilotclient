@@ -280,6 +280,8 @@ namespace swift::misc::simulation
 
     void CSimulatedAircraft::setParts(const CAircraftParts &parts) { m_parts = parts; }
 
+    void CSimulatedAircraft::setAcars(const CAircraftAcars &acars) { m_acars = acars; }
+
     void CSimulatedAircraft::setLights(CAircraftLights &lights) { m_parts.setLights(lights); }
 
     void CSimulatedAircraft::setAllLightsOn() { m_parts.setAllLightsOn(); }

@@ -52,6 +52,7 @@ namespace swift::misc
             GlobalIndexCComSystem = 3100,
             GlobalIndexCModulator = 3200,
             GlobalIndexCTransponder = 3300,
+            GlobalIndexCAircraftAcars = 3400,
             GlobalIndexCAircraftCategory = 3500,
             GlobalIndexCAircraftIcaoCode = 3600,
             GlobalIndexCAirlineIcaoCode = 3700,

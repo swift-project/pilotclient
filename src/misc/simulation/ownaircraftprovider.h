@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QtGlobal>
 
+#include "misc/aviation/aircraftacars.h"
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/callsign.h"
@@ -65,6 +66,10 @@ namespace swift::misc
             //! \threadsafe
             virtual aviation::CAircraftParts getOwnAircraftParts() const = 0;
 
+            //! Own aircraft's parts
+            //! \threadsafe
+            virtual aviation::CAircraftAcars getOwnAircraftAcars() const = 0;
+
             //! Own aircraft model
             //! \threadsafe
             virtual swift::misc::simulation::CAircraftModel getOwnAircraftModel() const = 0;
@@ -92,6 +97,9 @@ namespace swift::misc
 
             //! Update own parts
             virtual bool updateOwnParts(const aviation::CAircraftParts &parts) = 0;
+
+            //! Update own acars
+            virtual bool updateOwnAcars(const aviation::CAircraftAcars &acars) = 0;
 
             //! Update own aircraft's CG (aka vertical offset)
             virtual bool updateOwnCG(const physical_quantities::CLength &cg) = 0;
@@ -153,6 +161,9 @@ namespace swift::misc
             //! \copydoc IOwnAircraftProvider::getOwnAircraftParts
             aviation::CAircraftParts getOwnAircraftParts() const;
 
+            //! \copydoc IOwnAircraftProvider::getOwnAircraftAcars
+            aviation::CAircraftAcars getOwnAircraftAcars() const;
+
             //! \copydoc IOwnAircraftProvider::getOwnAircraftModel
             swift::misc::simulation::CAircraftModel getOwnAircraftModel() const;
 
@@ -195,6 +206,9 @@ namespace swift::misc
 
             //! \copydoc IOwnAircraftProvider::updateOwnParts
             bool updateOwnParts(const aviation::CAircraftParts &parts);
+
+            //! \copydoc IOwnAircraftProvider::updateOwnAcars
+            bool updateOwnAcars(const aviation::CAircraftAcars &acars);
 
             //! \copydoc IOwnAircraftProvider::updateOwnCG
             bool updateOwnCG(const physical_quantities::CLength &cg);

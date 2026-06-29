@@ -79,6 +79,10 @@ namespace swift::simplugin::fsxcommon
         // 44
         double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
         // 45
+        double fuelTotalCapacity; //!< Altitude without temperature effect (ft, FS2020)
+        // 46
+        double simulationRate; //!< Simulation rate (FS2020)
+        // 47
     };
 
     //! Data struct of aircraft position

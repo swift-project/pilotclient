@@ -115,6 +115,12 @@ namespace swift::core::context
         return m_ownAircraft.getParts();
     }
 
+    CAircraftAcars CContextOwnAircraft::getOwnAircraftAcars() const
+    {
+        QReadLocker l(&m_lockAircraft);
+        return m_ownAircraft.getAcars();
+    }
+
     CAircraftModel CContextOwnAircraft::getOwnAircraftModel() const
     {
         QReadLocker l(&m_lockAircraft);
@@ -239,6 +245,15 @@ namespace swift::core::context
         const bool changed = (m_ownAircraft.getParts() != parts);
         if (!changed) { return false; }
         m_ownAircraft.setParts(parts);
+        return true;
+    }
+
+    bool CContextOwnAircraft::updateOwnAcars(const CAircraftAcars &acars)
+    {
+        QWriteLocker l(&m_lockAircraft);
+        const bool changed = (m_ownAircraft.getAcars() != acars);
+        if (!changed) { return false; }
+        m_ownAircraft.setAcars(acars);
         return true;
     }
 

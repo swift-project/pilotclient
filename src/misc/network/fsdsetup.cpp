@@ -51,7 +51,7 @@ namespace swift::misc::network
 
     void CFsdSetup::setSendReceiveDetails(bool partsSend, bool partsReceive, bool gndSend, bool gndReceive,
                                           bool interimSend, bool interimReceive, bool visualSend,
-                                          bool euroscopeSimDataReceive, bool icaoEquipment)
+                                          bool euroscopeSimDataReceive, bool icaoEquipment, bool sendAcars)
     {
         SendReceiveDetails s = Nothing;
         if (partsSend) { s |= SendAircraftParts; }
@@ -63,6 +63,7 @@ namespace swift::misc::network
         if (visualSend) { s |= SendVisualPositions; }
         if (euroscopeSimDataReceive) { s |= ReceiveEuroscopeSimData; }
         if (icaoEquipment) { s |= SendFplWithIcaoEquipment; }
+        if (sendAcars) { s |= SendAcars; }
         this->setSendReceiveDetails(s);
     }
 

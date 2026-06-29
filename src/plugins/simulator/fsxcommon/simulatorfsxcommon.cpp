@@ -754,9 +754,14 @@ namespace swift::simplugin::fsxcommon
                                    dtb(simulatorOwnAircraft.spoilersHandlePosition), engines,
                                    dtb(simulatorOwnAircraft.simOnGround), ts);
 
+        // TODO TZ s
+        const CAircraftAcars acars(qRound(simulatorOwnAircraft.simulationRate),
+                                   qRound(simulatorOwnAircraft.fuelTotalCapacity * 100), ts);
+
         // set values
         this->updateOwnSituationAndGroundElevation(aircraftSituation);
         this->updateOwnParts(parts);
+        this->updateOwnAcars(acars);
 
         // When I change cockpit values in the sim (from GUI to simulator, not originating from simulator)
         // it takes a little while before these values are set in the simulator.

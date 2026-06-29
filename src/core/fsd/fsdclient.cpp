@@ -110,6 +110,9 @@ namespace swift::core::fsd
         m_fsdSendMessageTimer.setObjectName(this->objectName().append(":m_fsdSendMessageTimer"));
         connect(&m_fsdSendMessageTimer, &QTimer::timeout, this, [this]() { this->sendQueuedMessage(); });
 
+        m_fsdSendAcarsTimer.setObjectName(this->objectName().append(":m_fsdSendAcarsTimer"));
+        connect(&m_fsdSendAcarsTimer, &QTimer::timeout, this, [this]() { this->sendAcarsMessage(); });
+
         fsdMessageSettingsChanged();
 
         if (!m_statistics &&
@@ -818,6 +821,53 @@ namespace swift::core::fsd
         }
     }
 
+    void CFSDClient::sendAcarsMessage()
+    {
+        // TODO TZ
+        if (getServer().getEcosystem().isSystem(CEcosystem::VATSIM)) return;
+
+        if (this->getConnectionStatus().isDisconnected() && !m_unitTestMode) { return; }
+
+        if (m_loginMode == CLoginMode::Observer)
+        {
+            return; // observers don't send ACARS
+        }
+        else
+        {
+            if (this->isAcarsSendEnabled())
+            {
+                // TODO TZ
+                const CAircraftAcars currentAcars(this->getOwnAircraftAcars());
+                const QJsonObject previousAcars = m_sentAcars.toJson();
+                const QJsonObject currentAcarsJson = currentAcars.toJson();
+                const QJsonObject incrementalAcars = getIncrementalObject(previousAcars, currentAcarsJson);
+
+                m_sentAcarsCount++;
+                QString dataStr = "";
+
+                if (m_sentAcarsCount > 59)
+                {
+                    dataStr = convertToUnicodeEscaped(
+                        QJsonDocument(QJsonObject { { "full", currentAcarsJson } }).toJson(QJsonDocument::Compact));
+                    m_sentAcarsCount = 0;
+                }
+                else
+                {
+                    // If it hasn't changed, return
+                    if (m_sentAcars == currentAcars) { return; }
+                    dataStr = convertToUnicodeEscaped(QJsonDocument(QJsonObject { { "incremental", incrementalAcars } })
+                                                          .toJson(QJsonDocument::Compact));
+                }
+
+                const QString receiver = "SERVER";
+                const ClientQuery clientQuery(getOwnCallsignAsString(), receiver, ClientQueryType::Acars, { dataStr });
+                sendQueuedMessage(clientQuery);
+
+                m_sentAcars = currentAcars;
+            }
+        }
+    }
+
     void CFSDClient::sendFsdMessage(const QString &message)
     {
         // UNIT tests
@@ -1026,6 +1076,8 @@ namespace swift::core::fsd
 
     void CFSDClient::sendIncrementalAircraftConfig()
     {
+        // TODO TZ hier abschreiben
+
         if (!m_unitTestMode && (!this->isConnected() || !this->getSetupForServer().sendAircraftParts())) { return; }
         const CAircraftParts currentParts(this->getOwnAircraftParts());
 
@@ -1948,6 +2000,7 @@ namespace swift::core::fsd
         m_atcStations.clear();
         m_queuedFsdMessages.clear();
         m_sentAircraftConfig = CAircraftParts::null();
+        m_sentAcars = CAircraftAcars::null();
         m_loginSince = -1;
     }
 
@@ -1998,6 +2051,12 @@ namespace swift::core::fsd
     {
         const CFsdSetup::SendReceiveDetails d = this->getSetupForServer().getSendReceiveDetails();
         return (d & CFsdSetup::SendVisualPositions);
+    }
+
+    bool CFSDClient::isAcarsSendEnabled() const
+    {
+        const CFsdSetup::SendReceiveDetails d = this->getSetupForServer().getSendReceiveDetails();
+        return (d & CFsdSetup::SendAcars);
     }
 
     const CFsdSetup &CFSDClient::getSetupForServer() const { return m_server.getFsdSetup(); }
@@ -2336,6 +2395,7 @@ namespace swift::core::fsd
         m_positionUpdateTimer.start(c_updatePositionIntervalMsec);
         m_scheduledConfigUpdate.start(c_processingIntervalMsec);
         m_fsdSendMessageTimer.start(c_sendFsdMsgIntervalMsec);
+        m_fsdSendAcarsTimer.start(c_sendAcarsIntervalMsec);
         m_queuedFsdMessages.clear(); // clear everything before the timer is started
 
         // interim positions

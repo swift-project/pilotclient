@@ -309,6 +309,7 @@ namespace swift::core::fsd
         case ClientQueryType::INF: return "INF";
         case ClientQueryType::FP: return "FP";
         case ClientQueryType::AircraftConfig: return "ACC";
+        case ClientQueryType::Acars: return "ACARS";
         case ClientQueryType::EuroscopeSimData: return "SIMDATA";
         case ClientQueryType::Unknown: return "Unknown query type";
         }

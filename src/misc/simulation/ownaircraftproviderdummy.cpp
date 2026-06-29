@@ -52,6 +52,13 @@ namespace swift::misc::simulation
         return m_ownAircraft.getParts();
     }
 
+    CAircraftAcars COwnAircraftProviderDummy::getOwnAircraftAcars() const
+    {
+        // TODO TZ: implement this properly, for now just return parts as a placeholder
+        QReadLocker l(&m_lock);
+        return m_ownAircraft.getAcars();
+    }
+
     CAircraftModel COwnAircraftProviderDummy::getOwnAircraftModel() const
     {
         QReadLocker l(&m_lock);
@@ -114,6 +121,13 @@ namespace swift::misc::simulation
     {
         QWriteLocker l(&m_lock);
         m_ownAircraft.setParts(parts);
+        return true;
+    }
+
+    bool COwnAircraftProviderDummy::updateOwnAcars(const CAircraftAcars &acars)
+    {
+        QWriteLocker l(&m_lock);
+        m_ownAircraft.setAcars(acars);
         return true;
     }
 

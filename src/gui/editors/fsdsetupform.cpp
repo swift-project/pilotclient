@@ -35,7 +35,7 @@ namespace swift::gui::editors
                                 ui->cb_GndFlagSend->isChecked(), ui->cb_GndFlagReceive->isChecked(),
                                 ui->cb_FastPositionSend->isChecked(), ui->cb_FastPositionReceive->isChecked(),
                                 ui->cb_VisualPositionSend->isChecked(), ui->cb_EuroscopeSimData->isChecked(),
-                                ui->cb_IcaoEquipment->isChecked());
+                                ui->cb_IcaoEquipment->isChecked(), ui->cb_FsdSendAcars->isChecked());
         s.setForce3LetterAirlineCodes(ui->cb_3LetterAirlineICAO->isChecked());
         return s;
     }
@@ -58,6 +58,7 @@ namespace swift::gui::editors
         ui->cb_3LetterAirlineICAO->setChecked(setup.force3LetterAirlineCodes());
         ui->cb_EuroscopeSimData->setChecked(d & CFsdSetup::ReceiveEuroscopeSimData);
         ui->cb_IcaoEquipment->setChecked(d & CFsdSetup::SendFplWithIcaoEquipment);
+        ui->cb_FsdSendAcars->setChecked(d & CFsdSetup::SendAcars);
     }
 
     void CFsdSetupForm::setAlwaysAllowOverride(bool allow)

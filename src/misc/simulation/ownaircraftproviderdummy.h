@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QReadWriteLock>
 
+#include "misc/aviation/aircraftacars.h"
 #include "misc/aviation/aircraftparts.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/comsystem.h"
@@ -67,6 +68,9 @@ namespace swift::misc
             //! \copydoc IOwnAircraftProvider::getOwnAircraftParts
             swift::misc::aviation::CAircraftParts getOwnAircraftParts() const override;
 
+            //! \copydoc IOwnAircraftProvider::getOwnAircraftAcars
+            swift::misc::aviation::CAircraftAcars getOwnAircraftAcars() const override;
+
             //! \copydoc IOwnAircraftProvider::getOwnAircraftModel
             swift::misc::simulation::CAircraftModel getOwnAircraftModel() const override;
 
@@ -105,6 +109,9 @@ namespace swift::misc
 
             //! \copydoc IOwnAircraftProvider::updateOwnParts
             bool updateOwnParts(const swift::misc::aviation::CAircraftParts &parts) override;
+
+            //! \copydoc IOwnAircraftProvider::updateOwnAcars
+            bool updateOwnAcars(const swift::misc::aviation::CAircraftAcars &acars) override;
 
             //! \copydoc IOwnAircraftProvider::updateOwnCG
             bool updateOwnCG(const swift::misc::physical_quantities::CLength &cg) override;
