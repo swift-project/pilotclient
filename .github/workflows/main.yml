@@ -15,7 +15,7 @@ env:
   qt_version:    &qt_version 6.11.1
 
 # This job just publishes the latest Doxygen documentation to GitHub pages.
-# Building and releasing the application is done in the check_and_build (merge queue)
+# Building and releasing the application is done in the merge queue
 # and release workflow
 jobs:
 
