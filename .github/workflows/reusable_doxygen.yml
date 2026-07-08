@@ -17,7 +17,7 @@ jobs:
   build_doxygen:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
         with:
           fetch-depth: 0
       - name: Install Qt docs
