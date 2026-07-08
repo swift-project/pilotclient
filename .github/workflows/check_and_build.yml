@@ -130,7 +130,13 @@ jobs:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
       BITROCK_BUILDER: ~/installbuilder/bin/builder
-
+      SCCACHE_BUCKET: ${{ vars.SCCACHE_BUCKET }}
+      SCCACHE_ENDPOINT: ${{ vars.SCCACHE_ENDPOINT }}
+      SCCACHE_REGION: ${{ vars.SCCACHE_REGION }}
+      AWS_EC2_METADATA_DISABLED: true
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      SCCACHE_S3_NO_CREDENTIALS: false
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
@@ -139,6 +145,9 @@ jobs:
           modules: 'qtmultimedia'
           aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
+      - uses: cargo-bins/cargo-binstall@732870f031d2fb36309d0deaf36abcc704a7be65
+        with:
+          version: "1.20.1"
       - name: Cache InstallBuilder
         id: cache-bitrock
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
@@ -163,6 +172,10 @@ jobs:
         run: |
           sudo apt-get -y install dbus-x11 libglu1-mesa-dev libpulse-dev libdbus-1-dev ninja-build
           pip3 install requests conan==2.29.1
+          cargo binstall sccache
+      - name: Start sccache
+        run: |
+           sccache --start-server
       - name: Checkout repository
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
@@ -209,6 +222,9 @@ jobs:
         if: ${{ env.do_symbols == 'true' }}
         run: |
           python3 -u scripts/build.py -w 64 -t gcc --upload-symbols
+      - name: Stop sccache
+        run: |
+           sccache --stop-server
       - name: Upload installer
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -233,7 +249,14 @@ jobs:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
       BITROCK_BUILDER: "~/installbuilder/bin/builder-cli.exe"
-
+      SCCACHE_BUCKET: ${{ vars.SCCACHE_BUCKET }}
+      SCCACHE_ENDPOINT: ${{ vars.SCCACHE_ENDPOINT }}
+      SCCACHE_REGION: ${{ vars.SCCACHE_REGION }}
+      AWS_EC2_METADATA_DISABLED: true
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      SCCACHE_S3_NO_CREDENTIALS: false
+      SCCACHE_LOG: debug
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
@@ -252,6 +275,9 @@ jobs:
           cache: true
           modules: debug_info
           extra: --archives qtbase
+      - uses: cargo-bins/cargo-binstall@732870f031d2fb36309d0deaf36abcc704a7be65
+        with:
+          version: "1.20.1"
       - name: Cache InstallBuilder
         id: cache-bitrock
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
@@ -277,6 +303,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip install requests PyInstaller conan==2.29.1
+          cargo binstall sccache
+      - name: Start sccache
+        run: |
+           sccache --start-server
       - name: Checkout repository
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
@@ -320,6 +350,9 @@ jobs:
         shell: cmd
         run: |
           build_conan\\build\\RelWithDebInfo\\generators\\conanrun.bat && python -u scripts/build.py -w 64 -t msvc --upload-symbols
+      - name: Stop sccache
+        run: |
+           sccache --stop-server
       - name: Upload installer
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -344,6 +377,14 @@ jobs:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
       BITROCK_BUILDER: /Applications/installbuilder/bin/Builder.app/Contents/MacOS/installbuilder.sh
+      SCCACHE_BUCKET: ${{ vars.SCCACHE_BUCKET }}
+      SCCACHE_ENDPOINT: ${{ vars.SCCACHE_ENDPOINT }}
+      SCCACHE_REGION: ${{ vars.SCCACHE_REGION }}
+      AWS_EC2_METADATA_DISABLED: true
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      SCCACHE_S3_NO_CREDENTIALS: false
+      SCCACHE_LOG: debug
 
     steps:
       - name: Install Qt
@@ -353,6 +394,9 @@ jobs:
           modules: 'qtmultimedia'
           aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
+      - uses: cargo-bins/cargo-binstall@732870f031d2fb36309d0deaf36abcc704a7be65
+        with:
+          version: "1.20.1"
       - name: Cache InstallBuilder
         id: cache-bitrock
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
@@ -382,6 +426,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip3 install requests conan==2.29.1
+          cargo binstall sccache
+      - name: Start sccache
+        run: |
+           sccache --start-server
       - name: Checkout repository
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
         with:
@@ -428,6 +476,9 @@ jobs:
         if: ${{ env.do_symbols == 'true' }}
         run: |
           python3 -u scripts/build.py -w 64 -t clang --upload-symbols
+      - name: Stop sccache
+        run: |
+           sccache --stop-server
       - name: Upload installer
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:

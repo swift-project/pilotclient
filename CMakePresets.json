@@ -27,7 +27,10 @@
         "rhs": "Windows"
       },
       "cacheVariables": {
-        "SWIFT_USE_CRASHPAD": "OFF"
+        "SWIFT_USE_CRASHPAD": "OFF",
+        "CMAKE_C_COMPILER_LAUNCHER": "sccache",
+        "CMAKE_CXX_COMPILER_LAUNCHER": "sccache",
+        "SWIFT_USE_PCH": "OFF"
       }
     },
     {
@@ -42,7 +45,9 @@
       },
       "cacheVariables": {
         "SWIFT_USE_CRASHPAD": "OFF",
-        "CMAKE_OSX_ARCHITECTURES": "x86_64"
+        "CMAKE_OSX_ARCHITECTURES": "x86_64",
+        "CMAKE_C_COMPILER_LAUNCHER": "sccache",
+        "CMAKE_CXX_COMPILER_LAUNCHER": "sccache"
       }
     },
     {
@@ -60,7 +65,9 @@
         "SWIFT_USE_CRASHPAD": "OFF",
         "SWIFT_ONLY_XSWIFTBUS_WORKAROUND": "ON",
         "CMAKE_OSX_ARCHITECTURES": "arm64",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist_arm"
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist_arm",
+        "CMAKE_C_COMPILER_LAUNCHER": "sccache",
+        "CMAKE_CXX_COMPILER_LAUNCHER": "sccache"
       }
     },
     {
@@ -74,7 +81,9 @@
         "rhs": "Linux"
       },
       "cacheVariables": {
-        "SWIFT_USE_CRASHPAD": "OFF"
+        "SWIFT_USE_CRASHPAD": "OFF",
+        "CMAKE_C_COMPILER_LAUNCHER": "sccache",
+        "CMAKE_CXX_COMPILER_LAUNCHER": "sccache"
       }
     },
     {
