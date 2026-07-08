@@ -53,12 +53,6 @@ jobs:
   checks:
     uses: ./.github/workflows/reusable_checks.yml
 
-  doxygen:
-    uses: ./.github/workflows/reusable_doxygen.yml
-    with:
-      qt_version: *qt_version
-      upload_doxygen: false
-
   clang-tidy:
     runs-on: ubuntu-22.04
     steps:
@@ -125,7 +119,7 @@ jobs:
 
   buildLinux:
     runs-on: ubuntu-24.04
-    needs: [preBuild, checks, clang-tidy, doxygen]
+    needs: [preBuild, checks, clang-tidy]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
@@ -244,7 +238,7 @@ jobs:
 
   buildWin64:
     runs-on: windows-2025-vs2026
-    needs: [preBuild, checks, clang-tidy, doxygen]
+    needs: [preBuild, checks, clang-tidy]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
@@ -372,7 +366,7 @@ jobs:
 
   buildMacOS:
     runs-on: macos-26
-    needs: [preBuild, checks, clang-tidy, doxygen]
+    needs: [preBuild, checks, clang-tidy]
     env:
       BACKTRACE_SYMBOL_TOKEN: ${{ secrets.BACKTRACE_SYMBOL_TOKEN }}
       BACKTRACE_MINIDUMP_TOKEN: ${{ secrets.BACKTRACE_MINIDUMP_TOKEN }}
@@ -498,7 +492,7 @@ jobs:
 
   postBuild:
     runs-on: ubuntu-24.04
-    needs: [preBuild, checks, clang-tidy, doxygen, buildLinux, buildWin64, buildMacOS]
+    needs: [preBuild, checks, clang-tidy, buildLinux, buildWin64, buildMacOS]
 
     steps:
       - name: Download xswiftbus-thin
@@ -524,7 +518,7 @@ jobs:
 
   notify:
     runs-on: ubuntu-24.04
-    needs: [preBuild, checks, clang-tidy, doxygen, buildLinux, buildWin64, buildMacOS, postBuild]
+    needs: [preBuild, checks, clang-tidy, buildLinux, buildWin64, buildMacOS, postBuild]
     if: always()
 
     steps:
