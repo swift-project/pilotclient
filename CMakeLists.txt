@@ -145,6 +145,10 @@ if(MSVC)
 
     # Debug iterators used by Qt 5
     add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+
+    # For sccache
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
+    cmake_policy(SET CMP0141 NEW)
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
     add_compile_options(-Wall -Wextra)
     add_compile_options("$<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Woverloaded-virtual;-Wzero-as-null-pointer-constant;-Wsuggest-override>")
