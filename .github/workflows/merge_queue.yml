@@ -144,7 +144,7 @@ jobs:
           version: "1.20.1"
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~/installbuilder.run
           key: installbuilder-${{ env.bitrock_version }}-linux-x64
@@ -274,7 +274,7 @@ jobs:
           version: "1.20.1"
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: C:\installbuilder.exe
           key: installbuilder-${{ env.bitrock_version }}-windows-x64
@@ -393,7 +393,7 @@ jobs:
           version: "1.20.1"
       - name: Cache InstallBuilder
         id: cache-bitrock
-        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ~/installbuilder.dmg
           key: installbuilder-${{ env.bitrock_version }}-osx
