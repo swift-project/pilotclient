@@ -152,6 +152,10 @@ namespace swift::misc::simulation::settings
         }
     }
 
+    void CSimulatorSettings::setPropertyModelSet(bool value) { m_modelSet = value; }
+    void CSimulatorSettings::setPropertyWithDbEntry(bool value) { m_withDbEntry = value; }
+    void CSimulatorSettings::setPropertyDistributorFiltered(bool value) { m_distributorFiltered = value; }
+
     void CSimulatorSettings::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
         if (index.isMyself())
@@ -617,7 +621,7 @@ namespace swift::misc::simulation::settings
         return m_genericSettings.getModelDirectories();
     }
 
-    const QStringList &CSpecializedSimulatorSettings::getDefaultModelExcludeDirectoryPatterns() const
+    const QStringList &CSpecializedSimulatorSettings::getDefaultModelExcludePatterns() const
     {
         return CSpecializedSimulatorSettings::defaultModelExcludeDirectoryPatterns(m_simulator);
     }
@@ -692,9 +696,9 @@ namespace swift::misc::simulation::settings
         }
         case CSimulatorInfo::MSFS2024:
         {
-            static const QString msfs2024 =
-                CFileUtils::normalizeFilePathToQtStandard(CFsDirectories::msfs2024PackagesDir());
-            if (msfs2024.isEmpty()) { return e; }
+            // msfs2024 uses no model directories but uses the field "packages directory" for filtering modelstrings
+            // Asterix stands for everything == no filtering
+            static const QString msfs2024 = "*";
             static const QStringList md { msfs2024 };
             return md;
         }

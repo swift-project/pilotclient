@@ -406,6 +406,12 @@ namespace swift::misc
             //! Get model string
             const QString &getModelString() const { return m_models[CurrentModel].getModelString(); }
 
+            //! Get model Livery MSFS2024
+            const QString &getLiveryString() const { return m_models[CurrentModel].getModelLivery(); }
+
+            //! Get short model string (without livery msfs2024)
+            const QString getShortModelString() const { return m_models[CurrentModel].getShortModelString(); }
+
             //! Set model string
             void setModelString(const QString &modelString);
 
@@ -482,6 +488,9 @@ namespace swift::misc
 
             //! \copydoc swift::misc::mixin::Icon::toIcon()
             CIcons::IconIndex toIcon() const { return m_callsign.toIcon(); }
+
+            //! Get model type
+            int getModelType() const { return m_models[CurrentModel].getModelType(); }
 
         private:
             static constexpr int CurrentModel = 0; //!< m_models

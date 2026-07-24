@@ -34,7 +34,8 @@ namespace swift::core
             OnlyDbIcaoCodes = 1 << 2,
             Incremental = 1 << 3,
             SortByDistributors = 1 << 4,
-            ConsolidateWithDb = 1 << 5
+            ConsolidateWithDb = 1 << 5,
+            ShowAllInstalledModels = 1 << 6,
         };
         Q_DECLARE_FLAGS(Builder, BuilderFlag)
 

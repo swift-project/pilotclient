@@ -75,6 +75,7 @@ namespace swift::core::db
             dbModelModified.updateMissingParts(model);
             dbModelModified.setDistributorOrder(distributorOrder);
             dbModelModified.setSimulator(dbModel.getSimulator()); // DB simulator settings have priority
+            dbModelModified.setModelLivery(model.getModelLivery()); // keep local livery settings msfs2024
             return dbModelModified;
         }
 
@@ -88,6 +89,7 @@ namespace swift::core::db
             {
                 if (modified) { *modified = true; }
                 consolidatedModel.setLivery(dbLivery);
+                consolidatedModel.setModelLivery(model.getModelLivery()); // keep local livery settings msfs2024
             }
         }
         if (!consolidatedModel.getAircraftIcaoCode().hasValidDbKey() && consolidatedModel.hasAircraftDesignator())
@@ -99,6 +101,7 @@ namespace swift::core::db
             {
                 if (modified) { *modified = true; }
                 consolidatedModel.setAircraftIcaoCode(dbIcao);
+                consolidatedModel.setModelLivery(model.getModelLivery()); // keep local livery settings msfs2024
             }
         }
 
@@ -108,6 +111,7 @@ namespace swift::core::db
         {
             if (modified) { *modified = true; }
             consolidatedModel.setDistributor(dbDistributor);
+            consolidatedModel.setModelLivery(model.getModelLivery()); // keep local livery settings msfs2024
         }
         consolidatedModel.updateLocalFileNames(model);
         consolidatedModel.setDistributorOrder(distributorOrder);

@@ -1657,7 +1657,10 @@ namespace swift::core
         if (modelsCleaned.isEmpty())
         {
             // error to force popup
-            CLogMessage(this).error(u"No models for matching ('%1'), swift without a model set will not work!")
+            // TODO TZ extend commend
+            CLogMessage(this).error(
+                u"No models for matching ('%1'), swift without a model set will not work! Note: If you are using "
+                u"MSFS2024 and starting the GUI for the first time, it may take some time for the model set to load.")
                 << simulator.toQString();
         }
         else if (!duplicateModels.isEmpty())
