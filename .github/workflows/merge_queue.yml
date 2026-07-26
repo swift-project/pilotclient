@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
       - name: Get version number
@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: '0'
       - name: Check if clang-tidy analysis is required
@@ -88,7 +88,7 @@ jobs:
           sudo wg-quick up wg0
       - name: Checkout repository
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: '0'
           submodules: 'true'
@@ -107,7 +107,7 @@ jobs:
           pip3 install requests conan==2.29.1
       - name: Checkout externals
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -209,12 +209,12 @@ jobs:
         run: |
            sccache --start-server
       - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -374,12 +374,12 @@ jobs:
         run: |
            sccache --start-server
       - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
@@ -514,12 +514,12 @@ jobs:
         run: |
            sccache --start-server
       - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           submodules: true
           fetch-depth: 0
       - name: Checkout externals
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         env:
           EXTERNALS_PAT: ${{ secrets.EXTERNALS_PAT }}
         with:
