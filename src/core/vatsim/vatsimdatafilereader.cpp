@@ -199,7 +199,6 @@ namespace swift::core::vatsim
             if (jsonDoc.isEmpty()) { return; }
 
             // build on local vars for thread safety
-            CServerList fsdServers;
             CAtcStationList atcStations;
             CSimulatedAircraftList aircraft;
             QMap<CCallsign, CFlightPlanRemarks> flightPlanRemarksMap;
@@ -241,9 +240,6 @@ namespace swift::core::vatsim
                 }
                 atcStations.push_back(parseController(atis.toObject()));
             }
-
-            // Setup for VATSIM servers and sorting for comparison
-            fsdServers.sortBy(&CServer::getName, &CServer::getDescription);
 
             // this part needs to be synchronized
             {
