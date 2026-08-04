@@ -125,15 +125,6 @@ namespace swift::core::vatsim
         void doWorkImpl() override;
 
     private:
-        //! Section in file
-        enum Section
-        {
-            SectionNone,
-            SectionFsdServers,
-            SectionVoiceServers,
-            SectionClients,
-            SectionGeneral
-        };
 
         swift::misc::aviation::CAtcStationList m_atcStations;
         swift::misc::simulation::CSimulatedAircraftList m_aircraft;
