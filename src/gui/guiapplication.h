@@ -160,6 +160,9 @@ namespace swift::gui
         //! Show help page (online help)
         void showHelp(const QString &subpath = {}) const;
 
+        //! Show changelog popup
+        void showChangelog() const;
+
         //! Style sheet handling
         const CStyleSheetUtility &getStyleSheetUtility() const;
 
