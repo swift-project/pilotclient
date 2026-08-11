@@ -304,9 +304,6 @@ namespace swift::core
         for (const CAtcStation &station : stations)
         {
             const CCallsign cs = station.getCallsign();
-
-            // changed to staggered version
-            // m_network->sendAtisQuery(cs); // for each online station
             if (!m_queryAtis.contains(cs)) { m_queryAtis.enqueue(cs); }
         }
     }

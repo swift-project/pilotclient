@@ -1524,11 +1524,6 @@ namespace swift::core::fsd
         }
         else if (clientResponse.m_queryType == ClientQueryType::ATIS)
         {
-            if (responseData1.isEmpty())
-            {
-                // networkLog(vatSeverityDebug, "VatFsdClient::handleClientQueryResponse", "ATIS line type cannot be
-                // empty!");
-            }
             updateAtisMap(clientResponse.sender(), fromQString<AtisLineType>(responseData1), responseData2);
         }
         else if (clientResponse.m_queryType == ClientQueryType::PublicIP)
@@ -2390,27 +2385,15 @@ namespace swift::core::fsd
         m_mapAtisMessages[callsign].m_lineCount++;
 
         const CCallsign cs(callsign, CCallsign::Atc);
-        // emit atisVoiceRoomReplyReceived(cs, m_mapAtisMessages[callsign].voiceRoom);
         emit atisLogoffTimeReplyReceived(cs, m_mapAtisMessages[callsign].m_zuluLogoff);
 
         CInformationMessage atisMessage(CInformationMessage::ATIS);
         for (const QString &tm : std::as_const(m_mapAtisMessages[callsign].m_textLines))
         {
             const QString fixed = tm.trimmed();
-            if (!fixed.isEmpty())
-            {
-                //  detect the stupid z1, z2, z3 placeholders
-                //! \fixme: Anything better as this stupid code here?
-                thread_local const QRegularExpression RegExp(R"([\n\t\r])");
-                const QString test = fixed.toLower().remove(RegExp);
-                if (test == "z") return;
-                if (test.startsWith("z") && test.length() == 2) return; // z1, z2, ..
-                if (test.length() == 1) return; // sometimes just z
-
-                // append
-                if (!atisMessage.isEmpty()) atisMessage.appendMessage("\n");
-                atisMessage.appendMessage(fixed);
-            }
+            // append
+            if (!atisMessage.isEmpty()) atisMessage.appendMessage("\n");
+            atisMessage.appendMessage(fixed);
         }
 
         emit this->atisReplyReceived(cs, atisMessage);
