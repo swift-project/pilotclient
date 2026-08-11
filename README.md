@@ -37,13 +37,13 @@ Resources
 Contributing
 ============
 
-_swift_ is written in modern C++17 using the Qt framework.
+_swift_ is written in modern C++20 using the Qt framework.
 
 
 We are open to any contribution! More information can be found [here](https://swift-project.org/home/getting_involved/).
 
 
-[![Development version](https://img.shields.io/badge/version-0.15-blue)](.)
+[![Development version](https://img.shields.io/badge/version-0.16-blue)](.)
 [![Build status](https://img.shields.io/github/actions/workflow/status/swift-project/pilotclient/build.yml?branch=main)][3]
 
 [3]: https://github.com/swift-project/pilotclient/actions
