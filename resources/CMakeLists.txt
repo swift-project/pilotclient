@@ -8,4 +8,10 @@ add_custom_command(TARGET resources
         COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different share/ ${PROJECT_BINARY_DIR}/out/share/
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+add_custom_command(TARGET resources
+        PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${PROJECT_SOURCE_DIR}/CHANGELOG.md
+                ${PROJECT_BINARY_DIR}/out/share/CHANGELOG.md)
+
 install(DIRECTORY share/ DESTINATION ${CMAKE_INSTALL_PREFIX}/share)
+install(FILES ${PROJECT_SOURCE_DIR}/CHANGELOG.md DESTINATION ${CMAKE_INSTALL_PREFIX}/share)

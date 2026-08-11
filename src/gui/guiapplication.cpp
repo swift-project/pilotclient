@@ -8,6 +8,7 @@
 #include <QCloseEvent>
 #include <QCommandLineParser>
 #include <QDesktopServices>
+#include <QDialogButtonBox>
 #include <QDir>
 #include <QEventLoop>
 #include <QFont>
@@ -22,9 +23,11 @@
 #include <QStringList>
 #include <QStyle>
 #include <QStyleFactory>
+#include <QTextBrowser>
 #include <QToolBar>
 #include <QUrl>
 #include <QWhatsThis>
+#include <QVBoxLayout>
 #include <QWidget>
 #include <Qt>
 #include <QtGlobal>
@@ -765,6 +768,11 @@ namespace swift::gui
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
         Q_UNUSED(c)
 
+        a = menu.addAction(QApplication::windowIcon(), "Changelog");
+        c = connect(a, &QAction::triggered, this, [=, this]() { this->showChangelog(); });
+        Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
+        Q_UNUSED(c)
+
         // https://joekuan.wordpress.com/2015/09/23/list-of-qt-icons/
         a = menu.addAction(QApplication::style()->standardIcon(QStyle::SP_TitleBarMenuButton), "About Qt");
         c = connect(a, &QAction::triggered, this, []() { QApplication::aboutQt(); });
@@ -778,6 +786,40 @@ namespace swift::gui
         const CGlobalSetup gs = this->getGlobalSetup();
         const CUrl helpPage = gs.getHelpPageUrl().withAppendedPath(subpath);
         QDesktopServices::openUrl(helpPage);
+    }
+
+    void CGuiApplication::showChangelog() const
+    {
+        if (this->isShuttingDown()) { return; }
+
+        QWidget *parent = CGuiApplication::mainApplicationWidget();
+        if (!parent) { return; }
+
+        const QString changelogPath = CFileUtils::appendFilePaths(CSwiftDirectories::shareDirectory(), "CHANGELOG.md");
+        const QString changelog = CFileUtils::readFileToString(changelogPath);
+        if (changelog.isEmpty())
+        {
+            QMessageBox::warning(parent, QGuiApplication::applicationDisplayName(),
+                                 QStringLiteral("Unable to load changelog from %1").arg(changelogPath));
+            return;
+        }
+
+        QDialog dialog(parent);
+        dialog.setWindowTitle(QStringLiteral("Changelog"));
+        dialog.setWindowFlags(dialog.windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+        auto *layout = new QVBoxLayout(&dialog);
+        auto *browser = new QTextBrowser(&dialog);
+        browser->setMarkdown(changelog);
+        browser->setOpenExternalLinks(true);
+        layout->addWidget(browser);
+
+        auto *buttons = new QDialogButtonBox(QDialogButtonBox::Ok, &dialog);
+        connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+        layout->addWidget(buttons);
+
+        dialog.resize(900, 700);
+        dialog.exec();
     }
 
     const CStyleSheetUtility &CGuiApplication::getStyleSheetUtility() const { return m_styleSheetUtility; }
