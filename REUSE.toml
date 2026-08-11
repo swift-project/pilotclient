@@ -238,3 +238,9 @@ path = "src/sound/share/sounds/supervisormessage.wav"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Notification.wav by finn.appleton -- https://freesound.org/s/560880/ -- License: Creative Commons 0; Modified by swift contributors"
 SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "CHANGELOG.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Copyright (C) swift Project Community / Contributors"
+SPDX-License-Identifier = "GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1"
