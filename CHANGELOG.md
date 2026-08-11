@@ -13,3 +13,11 @@
 - Use engine RPM from other users to control engine sound (MSFS20/24 only)
 - Display CID on failed logins
 
+### Fixes
+
+- ATIS messages of ATC stations now update automatically correctly
+
+### Contributors
+
+- @ltoenning
+- @tzobler
