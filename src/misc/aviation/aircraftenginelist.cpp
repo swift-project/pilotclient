@@ -108,10 +108,16 @@ namespace swift::misc::aviation
         this->clear();
         for (const auto &e : json.keys())
         {
-            CAircraftEngine engine;
-            const int number = e.toInt();
+            bool ok{false};
+            const int number = e.toInt(&ok);
+            if (!ok || number <= 0)
+            {
+                // skip invalid JSON entries 
+                return;
+            }
             CJsonScope scope(e);
             Q_UNUSED(scope);
+            CAircraftEngine engine;
             engine.convertFromJson(json.value(e).toObject());
             engine.setNumber(number);
             push_back(engine);
