@@ -184,7 +184,7 @@ namespace swift::gui::components
         if (!this->canAccessContext()) { return; }
         Q_ASSERT(ui->tvp_AtcStationsOnline);
 
-        // check if component is visible, if we have already data then skip udpate
+        // check if component is visible, if we have already data then skip update
         const bool hasData = this->countOnlineStations() > 0;
         if (hasData && !this->isVisibleWidget())
         {
@@ -200,20 +200,12 @@ namespace swift::gui::components
             if (m_timestampOnlineStationsChanged > m_timestampLastReadOnlineStations)
             {
                 CAtcStationList onlineStations = sGui->getIContextNetwork()->getAtcStationsOnline(true);
-                const int allStationsCount = onlineStations.sizeInt();
                 const int stationsCount = onlineStations.sizeInt();
                 ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(onlineStations);
                 m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                 m_timestampOnlineStationsChanged = m_timestampLastReadOnlineStations;
                 this->updateTreeView();
-                this->setOnlineTabs(allStationsCount, stationsCount);
-
-                if (stationsCount < 1 && allStationsCount > 0)
-                {
-                    const QString msg = QStringLiteral("All %1 ATC stations are filtered").arg(allStationsCount);
-                    ui->tvp_AtcStationsOnline->showOverlayHTMLMessage(msg, 5s);
-                    ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage(msg, 5s);
-                }
+                this->setOnlineTabs(stationsCount);
 
                 if (stationsCount < 1) { m_selectedCallsign.clear(); }
                 else if (!m_selectedCallsign.isEmpty() && onlineStations.containsCallsign(m_selectedCallsign))
@@ -236,7 +228,7 @@ namespace swift::gui::components
             m_selectedCallsign.clear();
             ui->tvp_AtcStationsOnline->clear();
             this->updateTreeView();
-            this->setOnlineTabs(0, 0);
+            this->setOnlineTabs(0);
         }
     }
 
@@ -316,17 +308,15 @@ namespace swift::gui::components
         Q_UNUSED(index)
     }
 
-    void CAtcStationComponent::setOnlineTabs(int count, int filtered)
+    void CAtcStationComponent::setOnlineTabs(int count)
     {
         const int io = ui->tw_Atc->indexOf(ui->tb_AtcStationsOnline);
         const int it = ui->tw_Atc->indexOf(ui->tb_AtcStationsOnlineTree);
         static const QString o = ui->tw_Atc->tabBar()->tabText(io);
         static const QString t = ui->tw_Atc->tabBar()->tabText(it);
-        const bool isFiltered = filtered < count && filtered >= 0;
-        const QString filteredInfo =
-            isFiltered ? QStringLiteral(" (%1 of %2)").arg(filtered).arg(count) : QStringLiteral(" (%1)").arg(count);
-        ui->tw_Atc->tabBar()->setTabText(io, o % filteredInfo);
-        ui->tw_Atc->tabBar()->setTabText(it, t % filteredInfo);
+        const QString info = QStringLiteral(" (%1)").arg(count);
+        ui->tw_Atc->tabBar()->setTabText(io, o % info);
+        ui->tw_Atc->tabBar()->setTabText(it, t % info);
     }
 
     void CAtcStationComponent::setComFrequency(const physical_quantities::CFrequency &frequency,
