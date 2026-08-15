@@ -118,7 +118,7 @@ namespace swift::gui
             void infoAreaTabBarChanged(int index);
 
             //! Online tab info
-            void setOnlineTabs(int count, int filtered);
+            void setOnlineTabs(int count);
 
             //! Set COM frequency
             void setComFrequency(const swift::misc::physical_quantities::CFrequency &frequency,
