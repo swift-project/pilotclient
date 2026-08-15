@@ -80,10 +80,6 @@ namespace swift::gui::components
             // connect(sGui->getIContextAudio(), &IContextAudio::changedVoiceRooms, this,
             // &CCockpitComComponent::updateVoiceRoomStatusFromContext, Qt::QueuedConnection);
 
-            // network
-            connect(sGui->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this,
-                    &CCockpitComComponent::onAtcStationsChanged, Qt::QueuedConnection);
-
             QPointer<CCockpitComComponent> myself(this);
             QTimer::singleShot(10 * 1000, this, [=, this] {
                 if (!sGui || sGui->isShuttingDown() || !myself) { return; }
@@ -159,11 +155,6 @@ namespace swift::gui::components
         const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
         this->updateCockpitFromContext(ownAircraft,
                                        CIdentifier("dummyInitialValues")); // intentionally different name here
-    }
-
-    void CCockpitComComponent::onAtcStationsChanged()
-    {
-        // void
     }
 
     void CCockpitComComponent::updateSelcalInContext(const CSelcal &selcal)

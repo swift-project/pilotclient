@@ -89,9 +89,6 @@ namespace swift::gui::components
         //! Update the cockpit from aircraft context
         void forceCockpitUpdateFromOwnAircraftContext();
 
-        //! Stations changed
-        void onAtcStationsChanged();
-
         QScopedPointer<Ui::CCockpitComComponent> ui;
     };
 } // namespace swift::gui::components
