@@ -585,8 +585,11 @@ jobs:
   postBuild:
     runs-on: ubuntu-24.04
     needs: [preBuild, checks, clang-tidy, buildLinux, buildWin64, buildMacOS]
-
+    if: always()
     steps:
+      - name: Fail if any dependency failed # to avoid merging failing PRs
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
       - name: Download xswiftbus-thin
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
