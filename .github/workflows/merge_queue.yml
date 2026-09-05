@@ -68,6 +68,24 @@ jobs:
           else
             echo "should_run_clang_tidy=true" >> $GITHUB_OUTPUT
           fi
+      - name: Setup WireGuard
+        if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y wireguard
+          umask 077
+          sudo mkdir -p /etc/wireguard
+          echo "${{ secrets.WG_PRIVATE_KEY_LINUX }}" | sudo tee /etc/wireguard/wg0.key >/dev/null
+          sudo tee /etc/wireguard/wg0.conf >/dev/null <<EOF
+          [Interface]
+          Address = 10.99.0.3/32
+          PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
+
+          [Peer]
+          PublicKey = ${{ secrets.WG_SERVER_PUBLIC_KEY }}
+          Endpoint = ${{ secrets.WG_SERVER_ENDPOINT }}
+          AllowedIPs = 10.99.0.1/32
+          EOF
+          sudo wg-quick up wg0
       - name: Checkout repository
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
@@ -116,6 +134,9 @@ jobs:
           cmake .. --preset ci-build-linux-no-pch
           popd
           python3 scripts/run_static_analysis.py --clang-tidy --build-path build --changed-files-ci
+      - name: Teardown WireGuard
+        if: always()
+        run: sudo wg-quick down wg0 || true
 
   buildLinux:
     runs-on: ubuntu-24.04
@@ -132,6 +153,23 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       SCCACHE_S3_NO_CREDENTIALS: false
     steps:
+      - name: Setup WireGuard
+        run: |
+          sudo apt-get update && sudo apt-get install -y wireguard
+          umask 077
+          sudo mkdir -p /etc/wireguard
+          echo "${{ secrets.WG_PRIVATE_KEY_LINUX }}" | sudo tee /etc/wireguard/wg0.key >/dev/null
+          sudo tee /etc/wireguard/wg0.conf >/dev/null <<EOF
+          [Interface]
+          Address = 10.99.0.3/32
+          PrivateKey = $(sudo cat /etc/wireguard/wg0.key)
+
+          [Peer]
+          PublicKey = ${{ secrets.WG_SERVER_PUBLIC_KEY }}
+          Endpoint = ${{ secrets.WG_SERVER_ENDPOINT }}
+          AllowedIPs = 10.99.0.1/32
+          EOF
+          sudo wg-quick up wg0
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
         with:
@@ -235,6 +273,9 @@ jobs:
         with:
           name: xswiftbus-thin-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
+      - name: Teardown WireGuard
+        if: always()
+        run: sudo wg-quick down wg0 || true
 
   buildWin64:
     runs-on: windows-2025-vs2026
@@ -252,6 +293,37 @@ jobs:
       SCCACHE_S3_NO_CREDENTIALS: false
       SCCACHE_LOG: debug
     steps:
+      - name: Setup WireGuard
+        shell: pwsh
+        run: |
+          $installerPath = "$env:TEMP\wireguard-installer.exe"
+          curl.exe -L -o $installerPath https://download.wireguard.com/windows-client/wireguard-installer.exe
+
+          $expectedHash = "6962b6f42bc442e2a822608817222c93c7ef03f34476337608b170d4d76fd5f3"
+          $actualHash = (Get-FileHash -Path $installerPath -Algorithm SHA256).Hash
+
+          if ($actualHash -ne $expectedHash) {
+              Write-Error "Hash mismatch! Expected $expectedHash, got $actualHash"
+              exit 1
+          }
+
+          Start-Process -FilePath $installerPath -ArgumentList "/quicksilent" -Wait
+
+
+          $config = @"
+          [Interface]
+          Address = 10.99.0.4/32
+          PrivateKey = ${{ secrets.WG_PRIVATE_KEY_WIN }}
+
+          [Peer]
+          PublicKey = ${{ secrets.WG_SERVER_PUBLIC_KEY }}
+          Endpoint = ${{ secrets.WG_SERVER_ENDPOINT }}
+          AllowedIPs = 10.99.0.1/32
+          "@
+          $config | Out-File -FilePath "$env:TEMP\wg0.conf" -Encoding ASCII
+
+          & "C:\Program Files\WireGuard\wireguard.exe" /installtunnelservice "$env:TEMP\wg0.conf"
+          Start-Sleep -Seconds 5
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
         with:
@@ -381,6 +453,23 @@ jobs:
       SCCACHE_LOG: debug
 
     steps:
+      - name: Setup WireGuard
+        run: |
+          brew install wireguard-tools
+          umask 077
+          sudo mkdir -p /etc/wireguard
+          cat > /tmp/wg0.conf <<EOF
+          [Interface]
+          Address = 10.99.0.5/32
+          PrivateKey = ${{ secrets.WG_PRIVATE_KEY_MAC }}
+
+          [Peer]
+          PublicKey = ${{ secrets.WG_SERVER_PUBLIC_KEY }}
+          Endpoint = ${{ secrets.WG_SERVER_ENDPOINT }}
+          AllowedIPs = 10.99.0.1/32
+          EOF
+          sudo cp /tmp/wg0.conf /etc/wireguard/wg0.conf
+          sudo wg-quick up wg0
       - name: Install Qt
         uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
         with:
@@ -489,6 +578,9 @@ jobs:
         with:
           name: xswiftbus-thin-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
+      - name: Teardown WireGuard
+        if: always()
+        run: sudo wg-quick down wg0 || true
 
   postBuild:
     runs-on: ubuntu-24.04
