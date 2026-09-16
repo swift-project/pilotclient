@@ -532,6 +532,10 @@ add_library(misc SHARED
         simulation/flightgear/aircraftmodelloaderflightgear.h
         simulation/flightgear/flightgearutil.cpp
         simulation/flightgear/flightgearutil.h
+        simulation/msfs2024/aircraftmodelloadermsfs2024.cpp
+        simulation/msfs2024/aircraftmodelloadermsfs2024.h
+        simulation/msfs2024/simconnectutilities.cpp
+        simulation/msfs2024/simconnectutilities.h
         simulation/fscommon/aircraftcfgentries.cpp
         simulation/fscommon/aircraftcfgentries.h
         simulation/fscommon/aircraftcfgentrieslist.cpp

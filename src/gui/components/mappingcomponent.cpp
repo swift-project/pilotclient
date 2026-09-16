@@ -333,6 +333,8 @@ namespace swift::gui::components
         }
         const CCallsign callsign(this->validateRenderedCallsign());
         if (callsign.isEmpty()) { return; }
+
+        // Because of msfs2024, the model string contains the combination of title and livery.
         const QString modelString = ui->completer_ModelStrings->getModelString();
         if (modelString.isEmpty())
         {
@@ -375,6 +377,7 @@ namespace swift::gui::components
             }
 
             CAircraftModel model(models.front());
+            // found more than one model?
             if (models.size() > 1)
             {
                 if (models.containsModelString(modelString))
@@ -391,8 +394,10 @@ namespace swift::gui::components
             model.setModelType(CAircraftModel::TypeManuallySet);
             CLogMessage(this).info(u"Requesting changes for '%1'") << callsign.asString();
 
-            // enable in any case
+            // rendering-flag enable in any case
             sGui->getIContextNetwork()->updateAircraftEnabled(aircraftFromBackend.getCallsign(), true);
+
+            // trigger model change
             changed =
                 sGui->getIContextNetwork()->updateAircraftModel(aircraftFromBackend.getCallsign(), model, identifier());
         }

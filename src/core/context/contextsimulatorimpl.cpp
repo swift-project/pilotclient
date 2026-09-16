@@ -241,7 +241,7 @@ namespace swift::core::context
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
         if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
-        if (this->isSimulatorAvailable()) { return; } // if a plugin is loaded, do ignore this
+        if (this->isSimulatorAvailable() && !simulator.isMSFS2024()) return; // if a plugin is loaded, do ignore this
         m_modelSetSimulator.set(simulator);
         const CAircraftModelList models = this->getModelSet(); // cache synced
         m_aircraftMatcher.setModelSet(models, simulator, false);
