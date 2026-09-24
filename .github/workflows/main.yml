@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  qt_version:    &qt_version 6.11.1
+  qt_version:    &qt_version 6.11.2
 
 # This job just publishes the latest Doxygen documentation to GitHub pages.
 # Building and releasing the application is done in the merge queue
