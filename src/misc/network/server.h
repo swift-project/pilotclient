@@ -23,7 +23,7 @@ SWIFT_DECLARE_VALUEOBJECT_MIXINS(swift::misc::network, CServer)
 
 namespace swift::misc::network
 {
-    //! Value object encapsulating information of a server
+    //! Value object encapsulating information of a FSD server
     class SWIFT_MISC_EXPORT CServer : public CValueObject<CServer>, public ITimestampBased
     {
     public:
@@ -38,43 +38,20 @@ namespace swift::misc::network
             IndexFsdSetup,
             IndexEcosystem,
             IndexIsAcceptingConnections,
-            IndexServerType,
-            IndexServerTypeAsString
         };
-
-        //! Server Type
-        enum ServerType
-        {
-            Unspecified,
-            FSDServerVatsim,
-            FSDServer,
-            VoiceServerVatsim,
-            VoiceServer,
-            WebService,
-        };
-
-        //! Allows to iterate over all ServerType
-        static const QList<int> &allServerTypes();
-
-        //! Enum to string
-        static const QString &serverTypeToString(ServerType server);
 
         //! Default constructor.
         CServer() = default;
 
         //! Constructor.
         CServer(const QString &name, const QString &description, const QString &address, int port, const CUser &user,
-                const CFsdSetup &fsdSetup, const CEcosystem &ecosytem, ServerType serverType,
-                bool isAcceptingConnections = true);
+                const CFsdSetup &fsdSetup, const CEcosystem &ecosytem, bool isAcceptingConnections = true);
 
         //! Constructor (minimal for testing)
         CServer(const QString &address, int port, const CUser &user);
 
         //! Constructor by ecosystem
         CServer(const CEcosystem &ecosystem);
-
-        //! Constructor by server type
-        CServer(ServerType serverType);
 
         //! Get address.
         const QString &getAddress() const { return m_address; }
@@ -122,7 +99,7 @@ namespace swift::misc::network
         const CEcosystem &getEcosystem() const { return m_ecosystem; }
 
         //! Set the ecosystem
-        bool setEcosystem(const CEcosystem &ecosystem);
+        void setEcosystem(const CEcosystem &ecosystem);
 
         //! Server is accepting connections (allows to disable server temporarily or generally)
         bool isAcceptingConnections() const { return m_isAcceptingConnections; }
@@ -153,21 +130,6 @@ namespace swift::misc::network
         {
             m_fsdSetup.removeSendReceiveDetails(sendReceive);
         }
-
-        //! A FSD server?
-        bool isFsdServer() const;
-
-        //! Set server type
-        bool setServerType(ServerType serverType);
-
-        //! Get server type
-        ServerType getServerType() const { return static_cast<ServerType>(m_serverType); }
-
-        //! Unspecified?
-        bool hasUnspecifiedServerType() const;
-
-        //! Get server type as string
-        const QString &getServerTypeAsString() const;
 
         //! Connected since
         QDateTime getConnectedSince() const { return this->getUtcTimestamp(); }
@@ -215,7 +177,6 @@ namespace swift::misc::network
         int m_port = -1;
         CUser m_user;
         CEcosystem m_ecosystem;
-        int m_serverType = static_cast<int>(Unspecified);
         bool m_isAcceptingConnections = true; //!< disable server for connections
         CFsdSetup m_fsdSetup;
 
@@ -228,13 +189,11 @@ namespace swift::misc::network
             SWIFT_METAMEMBER(user),
             SWIFT_METAMEMBER(fsdSetup),
             SWIFT_METAMEMBER(ecosystem),
-            SWIFT_METAMEMBER(serverType),
             SWIFT_METAMEMBER(isAcceptingConnections),
             SWIFT_METAMEMBER(timestampMSecsSinceEpoch, 0, DisabledForJson | DisabledForComparison));
     };
 } // namespace swift::misc::network
 
 Q_DECLARE_METATYPE(swift::misc::network::CServer)
-Q_DECLARE_METATYPE(swift::misc::network::CServer::ServerType)
 
 #endif // SWIFT_MISC_NETWORK_SERVER_H

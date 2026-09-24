@@ -30,7 +30,7 @@ namespace swift::misc::test
     {
         static const CServer trafficServer("fooserver", "a foo server", "localhost", 1234,
                                            CUser("112233", "Some real name", "email@xyz.com", "secret"), CFsdSetup(),
-                                           CEcosystem(CEcosystem::VATSIM), CServer::FSDServerVatsim);
+                                           CEcosystem(CEcosystem::VATSIM));
         return trafficServer;
     }
 

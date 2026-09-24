@@ -45,8 +45,7 @@ namespace swift::core::data
     {
         const CServer server(this->getLastServer());
         if (server.isNull()) { return false; }
-        return server.getEcosystem() == CEcosystem::privateFsd() || server.getEcosystem() == CEcosystem::swiftTest() ||
-               server.getEcosystem() == CEcosystem::swift();
+        return server.getEcosystem() == CEcosystem::privateFsd();
     }
 
     void CNetworkSetup::onSettingsChanged() { emit this->setupChanged(); }

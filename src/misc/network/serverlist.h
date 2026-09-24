@@ -49,9 +49,6 @@ namespace swift::misc::network
         //! Add if address not already exists
         void addIfAddressNotExists(const CServerList &servers);
 
-        //! Find all FSD servers
-        CServerList findFsdServers() const;
-
         //! Set FSD setup for all entries
         void setFsdSetup(const CFsdSetup &setup);
     };

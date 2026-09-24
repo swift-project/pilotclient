@@ -125,7 +125,6 @@ namespace swift::core::vatsim
         void doWorkImpl() override;
 
     private:
-
         swift::misc::aviation::CAtcStationList m_atcStations;
         swift::misc::simulation::CSimulatedAircraftList m_aircraft;
         swift::misc::CSettingReadOnly<swift::core::vatsim::TVatsimDataFile> m_settings {

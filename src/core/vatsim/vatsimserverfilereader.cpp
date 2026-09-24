@@ -138,7 +138,6 @@ namespace swift::core::vatsim
                  CUser("id", "real name", "email", "password"),
                  CFsdSetup::vatsimStandard(),
                  CEcosystem::VATSIM,
-                 CServer::FSDServerVatsim,
                  static_cast<bool>(server["clients_connection_allowed"].toInt()) };
     }
 

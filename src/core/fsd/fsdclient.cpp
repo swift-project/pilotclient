@@ -145,9 +145,8 @@ namespace swift::core::fsd
         const QString codecName(server.getFsdSetup().getTextCodec());
         auto codec = QStringDecoder::encodingForName(codecName);
         if (!codec.has_value()) { codec = QStringConverter::Utf8; }
-        const int protocolRev = (server.getServerType() == CServer::FSDServerVatsim) ?
-                                    PROTOCOL_REVISION_VATSIM_VELOCITY :
-                                    PROTOCOL_REVISION_CLASSIC;
+        const int protocolRev = (server.getEcosystem() == CEcosystem::vatsim()) ? PROTOCOL_REVISION_VATSIM_VELOCITY :
+                                                                                  PROTOCOL_REVISION_CLASSIC;
 
         QWriteLocker l(&m_lockUserClientBuffered);
         m_server = server;
@@ -1168,8 +1167,8 @@ namespace swift::core::fsd
             // * non-VATSIM server. VATSIM has a specific ATIS message
             // * Receiver callsign must be owner callsign and not any type of broadcast.
             // * We have requested the ATIS of this controller before.
-            if (m_server.getServerType() != CServer::FSDServerVatsim &&
-                m_ownCallsign.asString() == textMessage.receiver() && m_pendingAtisQueries.contains(sender))
+            if (m_server.getEcosystem() != CEcosystem::vatsim() && m_ownCallsign.asString() == textMessage.receiver() &&
+                m_pendingAtisQueries.contains(sender))
             {
                 maybeHandleAtisReply(sender, receiver, textMessage.m_message);
                 return;

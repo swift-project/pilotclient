@@ -18,8 +18,7 @@ namespace swift::misc::network
 
     const CEcosystemList &CEcosystemList::allKnownSystems()
     {
-        static const CEcosystemList s(
-            { CEcosystem::vatsim(), CEcosystem::swift(), CEcosystem::swiftTest(), CEcosystem::privateFsd() });
+        static const CEcosystemList s({ CEcosystem::vatsim(), CEcosystem::privateFsd() });
         return s;
     }
 } // namespace swift::misc::network
