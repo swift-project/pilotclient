@@ -37,7 +37,7 @@ Resources
 Contributing
 ============
 
-_swift_ is written in modern C++20 using the Qt framework version 6.11.1.
+_swift_ is written in modern C++20 using the Qt framework version 6.11.2.
 
 
 We are open to any contribution! More information can be found [here](https://swift-project.org/home/getting_involved/).
