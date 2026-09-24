@@ -49,16 +49,6 @@ namespace swift::misc::network
         for (const CServer &s : servers) { this->addIfAddressNotExists(s); }
     }
 
-    CServerList CServerList::findFsdServers() const
-    {
-        CServerList fsdServers;
-        for (const CServer &s : *this)
-        {
-            if (s.isFsdServer()) { fsdServers.push_back(s); }
-        }
-        return fsdServers;
-    }
-
     void CServerList::setFsdSetup(const CFsdSetup &setup)
     {
         for (CServer &s : *this) { s.setFsdSetup(setup); }

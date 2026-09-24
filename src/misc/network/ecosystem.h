@@ -33,8 +33,6 @@ namespace swift::misc::network
             Unspecified, //!< unspecified
             NoSystem, //!< no relevant ecosystem
             VATSIM, //!< VATSIM
-            SwiftTest, //!< swift test server
-            Swift, //!< Future usage
             PrivateFSD //!< Private FSD environment
         };
 
@@ -76,12 +74,6 @@ namespace swift::misc::network
 
         //! VATSIM eco system
         static const CEcosystem &vatsim();
-
-        //! swift eco system
-        static const CEcosystem &swift();
-
-        //! swift test eco system
-        static const CEcosystem &swiftTest();
 
         //! FSD private
         static const CEcosystem &privateFsd();

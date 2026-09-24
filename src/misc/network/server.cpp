@@ -18,19 +18,12 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::misc::network, CServer)
 
 namespace swift::misc::network
 {
-    const QList<int> &CServer::allServerTypes()
-    {
-        static const QList<int> all(
-            { FSDServerVatsim, VoiceServerVatsim, FSDServer, VoiceServer, WebService, Unspecified });
-        return all;
-    }
-
     CServer::CServer(const QString &name, const QString &description, const QString &address, int port,
-                     const CUser &user, const CFsdSetup &fsdSetup, const CEcosystem &ecosytem, ServerType serverType,
+                     const CUser &user, const CFsdSetup &fsdSetup, const CEcosystem &ecosytem,
                      bool isAcceptingConnections)
         : m_name(CObfuscation::decode(name)), m_description(CObfuscation::decode(description)),
           m_address(CObfuscation::decode(address)), m_port(port), m_user(user), m_ecosystem(ecosytem),
-          m_serverType(serverType), m_isAcceptingConnections(isAcceptingConnections), m_fsdSetup(fsdSetup)
+          m_isAcceptingConnections(isAcceptingConnections), m_fsdSetup(fsdSetup)
     {}
 
     CServer::CServer(const QString &address, int port, const CUser &user)
@@ -38,8 +31,6 @@ namespace swift::misc::network
     {}
 
     CServer::CServer(const CEcosystem &ecosystem) { this->setEcosystem(ecosystem); }
-
-    CServer::CServer(CServer::ServerType serverType) { this->setServerType(serverType); }
 
     QString CServer::convertToQString(bool i18n) const
     {
@@ -54,7 +45,7 @@ namespace swift::misc::network
     {
         static const CServer fsc = [] {
             CServer s = CServer("FSC", "FSC e.V.", "OBF:AwJIKfgkQDJEIRnno29DJlB+UK0=", 6809, CUser(), CFsdSetup(),
-                                CEcosystem(CEcosystem::privateFsd()), CServer::FSDServer);
+                                CEcosystem(CEcosystem::privateFsd()));
             s.removeSendReceiveDetails(CFsdSetup::AllInterimPositions);
             return s;
         }();
@@ -63,9 +54,8 @@ namespace swift::misc::network
 
     const CServer &CServer::esTowerView()
     {
-        static const CServer s =
-            CServer("ES Tower", "Euroscope Tower view", "localhost", 6809, CUser(), CFsdSetup::vatsimStandard(),
-                    CEcosystem(CEcosystem::vatsim()), CServer::VoiceServerVatsim);
+        static const CServer s = CServer("ES Tower", "Euroscope Tower view", "localhost", 6809, CUser(),
+                                         CFsdSetup::vatsimStandard(), CEcosystem(CEcosystem::vatsim()));
         return s;
     }
 
@@ -84,16 +74,7 @@ namespace swift::misc::network
         return m_address.length() == address.length() && m_address.startsWith(address, Qt::CaseInsensitive);
     }
 
-    bool CServer::setEcosystem(const CEcosystem &ecosystem)
-    {
-        if (m_ecosystem == ecosystem) { return false; } // avoid cross dependency
-        m_ecosystem = ecosystem;
-
-        // cross dependency
-        if (ecosystem.isSystem(CEcosystem::VATSIM)) { m_serverType = FSDServerVatsim; }
-        if (ecosystem.isSystem(CEcosystem::SwiftTest)) { m_serverType = FSDServerVatsim; }
-        return true;
-    }
+    void CServer::setEcosystem(const CEcosystem &ecosystem) { m_ecosystem = ecosystem; }
 
     bool CServer::isValidForLogin() const
     {
@@ -102,26 +83,9 @@ namespace swift::misc::network
 
     bool CServer::hasAddressAndPort() const { return m_port > 0 && !m_address.isEmpty(); }
 
-    bool CServer::isFsdServer() const
-    {
-        return (this->getServerType() == FSDServerVatsim || this->getServerType() == FSDServer);
-    }
-
-    bool CServer::setServerType(CServer::ServerType serverType)
-    {
-        if (m_serverType == serverType) { return false; } // avoid x-dependency
-        // disabled x-dependency
-        m_serverType = static_cast<int>(serverType);
-        return true;
-    }
-
-    bool CServer::hasUnspecifiedServerType() const { return this->getServerType() == Unspecified; }
-
-    const QString &CServer::getServerTypeAsString() const { return CServer::serverTypeToString(getServerType()); }
-
     bool CServer::isConnected() const { return m_timestampMSecsSinceEpoch >= 0; }
 
-    bool CServer::isNull() const { return this->hasUnspecifiedServerType() && !this->hasName() && m_port < 0; }
+    bool CServer::isNull() const { return m_ecosystem.isUnspecified() && !this->hasName() && m_port < 0; }
 
     CStatusMessageList CServer::validate() const
     {
@@ -178,8 +142,6 @@ namespace swift::misc::network
         case IndexFsdSetup: return m_fsdSetup.propertyByIndex(index.copyFrontRemoved());
         case IndexEcosystem: return m_ecosystem.propertyByIndex(index.copyFrontRemoved());
         case IndexIsAcceptingConnections: return QVariant::fromValue(m_isAcceptingConnections);
-        case IndexServerType: return QVariant::fromValue(m_serverType);
-        case IndexServerTypeAsString: return QVariant::fromValue(getServerTypeAsString());
         default: return CValueObject::propertyByIndex(index);
         }
     }
@@ -207,7 +169,6 @@ namespace swift::misc::network
         case IndexUser: m_user.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexFsdSetup: m_fsdSetup.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
         case IndexEcosystem: m_ecosystem.setPropertyByIndex(index.copyFrontRemoved(), variant); break;
-        case IndexServerType: this->setServerType(static_cast<ServerType>(variant.toInt())); break;
         case IndexIsAcceptingConnections: this->setIsAcceptingConnections(variant.value<bool>()); break;
         default: CValueObject::setPropertyByIndex(index, variant); break;
         }
@@ -235,34 +196,10 @@ namespace swift::misc::network
             return this->getEcosystem().comparePropertyByIndex(index.copyFrontRemoved(), compareValue.getEcosystem());
         case IndexIsAcceptingConnections:
             return Compare::compare(this->isAcceptingConnections(), compareValue.isAcceptingConnections());
-        case IndexServerType:
-        case IndexServerTypeAsString:
-            return this->getServerTypeAsString().compare(compareValue.getServerTypeAsString(), Qt::CaseInsensitive);
         default: break;
         }
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, qUtf8Printable("No comparison for index " + index.toQString()));
         return 0;
-    }
-
-    const QString &CServer::serverTypeToString(CServer::ServerType server)
-    {
-        static const QString fsdVatsim("FSD [VATSIM]");
-        static const QString voiceVatsim("voice [VATSIM]");
-        static const QString fsdLegacy("FSD (legacy)");
-        static const QString voice("voice");
-        static const QString webService("web service");
-        static const QString unspecified("unspecified");
-
-        switch (server)
-        {
-        case FSDServerVatsim: return fsdVatsim;
-        case VoiceServerVatsim: return voiceVatsim;
-        case FSDServer: return fsdLegacy;
-        case VoiceServer: return voice;
-        case WebService: return webService;
-        case Unspecified:
-        default: return unspecified;
-        }
     }
 
     void CServer::setAddress(const QString &address) { m_address = CObfuscation::decode(address); }

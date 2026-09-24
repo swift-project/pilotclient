@@ -299,10 +299,11 @@ namespace swift::gui::components
     {
         if (!m_updatePilotOnServerChanges) { return; }
         const bool vatsim = this->isVatsimNetworkTabSelected();
-        const CUser user =
-            server.getServerType() != CServer::FSDServer ? this->getCurrentVatsimServer().getUser() : server.getUser();
-        if ((vatsim && server.getServerType() != CServer::FSDServer) ||
-            (!vatsim && server.getServerType() == CServer::FSDServer))
+        const CUser user = server.getEcosystem() != CEcosystem::privateFsd() ?
+                               this->getCurrentVatsimServer().getUser() :
+                               server.getUser();
+        if ((vatsim && server.getEcosystem() != CEcosystem::privateFsd()) ||
+            (!vatsim && server.getEcosystem() == CEcosystem::privateFsd()))
             ui->form_Pilot->setUser(user);
     }
 

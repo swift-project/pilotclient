@@ -40,9 +40,6 @@ namespace swift::gui::editors
         //! Get server
         swift::misc::network::CServer getServer() const;
 
-        //! Get currently selected server type
-        swift::misc::network::CServer::ServerType getServerType() const;
-
         //! Reset to 1st tab
         void resetToFirstTab();
 
@@ -56,9 +53,6 @@ namespace swift::gui::editors
         void showPasswordField(bool show);
 
     private:
-        void initServerTypes();
-        void onChangedServerType(const QString &text);
-        void onChangedEcoSystem(const QString &text);
         void tempUnhidePassword();
 
         QScopedPointer<Ui::CNetworkServerForm> ui;

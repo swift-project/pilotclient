@@ -318,7 +318,7 @@ namespace MiscTest
 
         const CServer server1 =
             CServer("Testserver", "Client project testserver", "localhost", 6809, CUser("111111", "My Name", "", "123"),
-                    CFsdSetup(), CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+                    CFsdSetup(), CEcosystem(CEcosystem::vatsim()));
         const CServer server2(server1);
         QVERIFY2(server1 == server2, "server shall be equal");
 

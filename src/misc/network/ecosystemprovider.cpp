@@ -74,10 +74,6 @@ namespace swift::misc::network
     {
         if (!this->hasProvider()) { return false; }
         if (this->isCurrentEcosystemVATSIM()) { return false; }
-        if (this->isCurrentEcosystem(CEcosystem::swiftTest()))
-        {
-            return false;
-        } // our test server is supposed to be I VATSIM system
         return !this->getCurrentEcosystem().isUnspecified(); // other know system which is specified
     }
 

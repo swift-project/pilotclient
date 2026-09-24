@@ -21,10 +21,7 @@ namespace swift::gui::editors
     {
         ui->setupUi(this);
         ui->le_Port->setValidator(new QIntValidator(1, 65535, this));
-        this->initServerTypes();
 
-        connect(ui->cbp_Ecosystem, &CEcosystemComboBox::currentTextChanged, this, &CServerForm::onChangedEcoSystem);
-        connect(ui->cb_ServerType, &QComboBox::currentTextChanged, this, &CServerForm::onChangedServerType);
         connect(ui->tb_Unhide, &QToolButton::clicked, this, &CServerForm::tempUnhidePassword);
     }
 
@@ -36,7 +33,6 @@ namespace swift::gui::editors
         ui->le_NetworkId->setText(user.getId());
         ui->le_RealName->setText(user.getRealName());
         ui->le_Name->setText(server.getName());
-        ui->cb_ServerType->setCurrentText(server.getServerTypeAsString());
         ui->cbp_Ecosystem->setCurrentEcosystem(server.getEcosystem());
         ui->le_Password->setText(user.getPassword());
         ui->le_Description->setText(server.getDescription());
@@ -53,13 +49,8 @@ namespace swift::gui::editors
         const CServer server(ui->le_Name->text().trimmed().simplified(),
                              ui->le_Description->text().trimmed().simplified(), ui->le_Address->text().trimmed(),
                              ui->le_Port->text().trimmed().toInt(), user, fsdSetup,
-                             ui->cbp_Ecosystem->getSelectedEcosystem(), this->getServerType(), true);
+                             ui->cbp_Ecosystem->getSelectedEcosystem(), true);
         return server;
-    }
-
-    CServer::ServerType CServerForm::getServerType() const
-    {
-        return ui->cb_ServerType->currentData().value<CServer::ServerType>();
     }
 
     void CServerForm::resetToFirstTab() { ui->tw_ServerForm->setCurrentIndex(0); }
@@ -75,7 +66,6 @@ namespace swift::gui::editors
         ui->le_Address->setReadOnly(readOnly);
         ui->le_Port->setReadOnly(readOnly);
         ui->le_Password->setReadOnly(readOnly);
-        ui->cb_ServerType->setEnabled(!readOnly);
         ui->cbp_Ecosystem->setEnabled(!readOnly);
         ui->tb_Unhide->setVisible(!readOnly);
         this->forceStyleSheetUpdate();
@@ -87,38 +77,6 @@ namespace swift::gui::editors
         if (m_passwordNameLabel.isEmpty()) { m_passwordNameLabel = ui->lbl_IdPassword->text(); }
         ui->lbl_IdPassword->setText(show ? m_passwordNameLabel : "Id");
         ui->wi_Password->setVisible(show);
-    }
-
-    void CServerForm::initServerTypes()
-    {
-        // init all server type values
-        int c = 0;
-        ui->cb_ServerType->clear();
-        for (const int type : CServer::allServerTypes())
-        {
-            const auto st = static_cast<CServer::ServerType>(type);
-            ui->cb_ServerType->insertItem(c++, CServer::serverTypeToString(st), QVariant::fromValue(type));
-        }
-    }
-
-    void CServerForm::onChangedServerType(const QString &text)
-    {
-        Q_UNUSED(text);
-        const CServer::ServerType t = this->getServerType();
-        const CServer dummy(t);
-        const CEcosystem es = dummy.getEcosystem();
-        if (es.isUnspecified()) { return; }
-        if (es.isSystem(CEcosystem::NoSystem)) { return; }
-        ui->cbp_Ecosystem->setCurrentEcosystem(es);
-    }
-
-    void CServerForm::onChangedEcoSystem(const QString &text)
-    {
-        Q_UNUSED(text);
-        const CEcosystem es = ui->cbp_Ecosystem->getSelectedEcosystem();
-        const CServer dummy(es);
-        if (dummy.hasUnspecifiedServerType()) { return; }
-        ui->cb_ServerType->setCurrentText(dummy.getServerTypeAsString());
     }
 
     void CServerForm::tempUnhidePassword() { CGuiUtility::tempUnhidePassword(ui->le_Password); }

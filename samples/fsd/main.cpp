@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
     const CUser user("1234567", "Test user - EDDM", "", "123456");
     CServer server("fsd.swift-project.org", 6809, user);
-    server.setServerType(CServer::FSDServerVatsim);
+    server.setEcosystem(CEcosystem::vatsim());
     client.setServer(server);
     client.setSimType(CSimulatorInfo::xplane());
     client.setPilotRating(PilotRating::Student);

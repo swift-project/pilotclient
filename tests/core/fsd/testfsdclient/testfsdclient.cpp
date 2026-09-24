@@ -115,7 +115,7 @@ namespace SwiftFsdTest
     {
         static const CServer dvp("Testserver", "Client project testserver", "localhost", 6809,
                                  CUser("1234567", "Test User", "", "123456"), CFsdSetup(),
-                                 CEcosystem(CEcosystem::swiftTest()), CServer::FSDServerVatsim);
+                                 CEcosystem(CEcosystem::vatsim()));
         return dvp;
     }
 
