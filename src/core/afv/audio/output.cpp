@@ -97,6 +97,7 @@ namespace swift::core::afv::audio
         QAudioFormat outputFormat;
         outputFormat.setSampleRate(48000);
         outputFormat.setChannelCount(1);
+        outputFormat.setChannelConfig(QAudioFormat::ChannelConfigMono);
         outputFormat.setSampleFormat(QAudioFormat::Float);
         static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
 
