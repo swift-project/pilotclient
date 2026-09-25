@@ -39,16 +39,20 @@ namespace swift::core::afv::audio
         void outputVolumeStream(const OutputVolumeStreamArgs &args);
 
     protected:
-#ifdef Q_OS_WIN
         //! \copydoc QIODevice::bytesAvailable
         qint64 bytesAvailable() const override;
-#endif
 
         //! \copydoc QIODevice::readData
         qint64 readData(char *data, qint64 maxlen) override;
 
         //! \copydoc QIODevice::writeData
         qint64 writeData(const char *data, qint64 len) override;
+
+        //! \copydoc QIODevice::isSequential
+        bool isSequential() const override { return true; }
+
+        //! \copydoc QIODevice::atEnd
+        bool atEnd() const override { return false; }
 
     private:
         swift::sound::sample_provider::ISampleProvider *m_sampleProvider = nullptr; //!< related provider
