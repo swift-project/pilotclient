@@ -9,6 +9,6 @@ add_subdirectory(core)
 add_subdirectory(gui)
 add_subdirectory(misc)
 
-if(SWIFT_BUILD_FSX_PLUGIN)
+if(SWIFT_BUILD_P3D_PLUGIN OR SWIFT_BUILD_MSFS_PLUGIN OR SWIFT_BUILD_MSFS2024_PLUGIN)
     add_subdirectory(swiftsimpluginfsxp3d)
 endif()

@@ -8,19 +8,9 @@
 #define SWIFTCONFIG_ON true
 #define SWIFTCONFIG_OFF false
 
-constexpr bool swift::config::CBuildConfig::isCompiledWithFs9Support()
-{
-    return SWIFTCONFIG_${SWIFT_BUILD_FS9_PLUGIN};
-}
-
 constexpr bool swift::config::CBuildConfig::isCompiledWithP3DSupport()
 {
     return SWIFTCONFIG_${SWIFT_BUILD_P3D_PLUGIN};
-}
-
-constexpr bool swift::config::CBuildConfig::isCompiledWithFsxSupport()
-{
-    return SWIFTCONFIG_${SWIFT_BUILD_FSX_PLUGIN};
 }
 
 constexpr bool swift::config::CBuildConfig::isCompiledWithFsuipcSupport()

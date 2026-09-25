@@ -2,9 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
 
 add_library(fscommon SHARED
-#        fsuipc.h
-#        fsuipcdummy.cpp
-#        fsuipcimpl.cpp
         simulatorfscommon.cpp
         simulatorfscommon.h
         simulatorfscommonfunctions.h
