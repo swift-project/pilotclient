@@ -71,9 +71,6 @@ namespace swift::gui::components
         void setOutLevel(double value);
         //! @}
 
-        //! Info string
-        void setInfo(const QString &info);
-
     private:
         //! Init
         void init();
@@ -128,7 +125,7 @@ namespace swift::gui::components
         void onResetVolumeOutCom1();
         void onResetVolumeOutCom2();
 
-        void setAudioRunsWhere();
+        void showAudioRunsWhereDialog();
 
         bool isComIntegrated() const;
 
