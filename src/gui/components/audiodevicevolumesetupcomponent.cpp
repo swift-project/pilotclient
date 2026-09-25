@@ -6,6 +6,7 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QPointer>
 #include <QStringLiteral>
 #include <QToolButton>
@@ -69,6 +70,8 @@ namespace swift::gui::components
                 Qt::QueuedConnection);
         connect(ui->cb_2Rec, &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged,
                 Qt::QueuedConnection);
+
+        connect(ui->tb_Info, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::showAudioRunsWhereDialog);
 
         ui->hs_VolumeIn->setMaximum(CSettings::InMax);
         ui->hs_VolumeIn->setMinimum(CSettings::InMin);
@@ -136,7 +139,6 @@ namespace swift::gui::components
 
         if (audio)
         {
-            this->setAudioRunsWhere();
             this->initAudioDeviceLists();
 
             // default
@@ -287,12 +289,6 @@ namespace swift::gui::components
         if (value > 1.0) { value = 1.0; }
         else if (value < 0.0) { value = 0.0; }
         ui->wip_OutLevelMeter->levelChanged(value);
-    }
-
-    void CAudioDeviceVolumeSetupComponent::setInfo(const QString &info)
-    {
-        ui->le_Info->setText(info);
-        ui->le_Info->setToolTip(info);
     }
 
     void CAudioDeviceVolumeSetupComponent::setTransmitReceiveInUi(bool tx1, bool rec1, bool tx2, bool rec2,
@@ -451,11 +447,11 @@ namespace swift::gui::components
         ui->hs_VolumeOutCom2->setValue(ui->hs_VolumeOutCom2->maximum());
     }
 
-    void CAudioDeviceVolumeSetupComponent::setAudioRunsWhere()
+    void CAudioDeviceVolumeSetupComponent::showAudioRunsWhereDialog()
     {
         if (!this->hasAudio()) { return; }
         const QString ai = sGui->getCContextAudioBase()->audioRunsWhereInfo();
-        ui->le_Info->setPlaceholderText(ai);
+        QMessageBox::information(this, "Audio information", ai);
     }
 
     void CAudioDeviceVolumeSetupComponent::simulatorSettingsChanged()
@@ -507,14 +503,31 @@ namespace swift::gui::components
     void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const CCallsignSet &com1Callsigns,
                                                                        const CCallsignSet &com2Callsigns)
     {
-        const QString info =
-            (com1Callsigns.isEmpty() ? QString() : QStringLiteral("COM1: ") % com1Callsigns.getCallsignsAsString()) %
-            (!com1Callsigns.isEmpty() && !com2Callsigns.isEmpty() ? QStringLiteral(" | ") : QString()) %
-            (com2Callsigns.isEmpty() ? QString() : QStringLiteral("COM2: ") % com2Callsigns.getCallsignsAsString());
+        if (!com1Callsigns.empty())
+        {
+            ui->le_Com1->setText(QStringLiteral("COM1: ") % com1Callsigns.getCallsignsAsString());
+        }
+        else
+        {
+            if (!ui->le_Com1->text().isEmpty())
+            {
+                ui->le_Com1->setPlaceholderText(ui->le_Com1->text());
+                ui->le_Com1->clear();
+            }
+        }
 
-        ui->led_Rx1->setOn(!com1Callsigns.isEmpty());
-        ui->led_Rx2->setOn(!com2Callsigns.isEmpty());
-        this->setInfo(info);
+        if (!com2Callsigns.empty())
+        {
+            ui->le_Com2->setText(QStringLiteral("COM2: ") % com2Callsigns.getCallsignsAsString());
+        }
+        else
+        {
+            if (!ui->le_Com2->text().isEmpty())
+            {
+                ui->le_Com2->setPlaceholderText(ui->le_Com2->text());
+                ui->le_Com2->clear();
+            }
+        }
     }
 
     void CAudioDeviceVolumeSetupComponent::onUpdatedClientWithCockpitData()
@@ -553,12 +566,10 @@ namespace swift::gui::components
 
         ui->cb_SetupAudioInputDevice->setCurrentText(input.toQString(true));
         ui->cb_SetupAudioOutputDevice->setCurrentText(output.toQString(true));
-        this->setAudioRunsWhere();
     }
 
     void CAudioDeviceVolumeSetupComponent::onAudioStopped()
     {
-        this->setAudioRunsWhere();
         if (!afvClient()) { m_afvConnections.disconnectAll(); }
     }
 
@@ -567,7 +578,6 @@ namespace swift::gui::components
         if (m_cbDevices.hasSameDevices(devices)) { return false; } // avoid numerous follow up actions
         m_cbDevices = devices;
 
-        this->setAudioRunsWhere();
         ui->cb_SetupAudioOutputDevice->clear();
         ui->cb_SetupAudioInputDevice->clear();
 
