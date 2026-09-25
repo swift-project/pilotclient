@@ -27,18 +27,15 @@ namespace swift::core::afv::audio
         this->setObjectName(on);
     }
 
-#ifdef Q_OS_WIN
     qint64 CAudioOutputBuffer::bytesAvailable() const
     {
-        // Workaround to mimic the pre-Qt6 behavior.
-        // With Qt6, the QAudioSink on Windows uses the bytesAvailable function to trigger
-        // a call to readData() only when data is available. Other platforms still use a
-        // pull procedure that automatically calls readData() afer a specific period. Until
-        // a proper solution for the bytesAvailable() is implemented, this uses a fixed number.
-        // readData() will handle it itself if actually no data is available.
-        return 3840 + QIODevice::bytesAvailable();
+        // We can always generate output; report a fixed period's worth
+        // so audio backends that gate readData() calls on bytesAvailable()
+        // pull data periodically rather than treating us as starved (see #406)
+        constexpr qint64 bufferLengthMs = 20;
+        const qint64 bufferSize = m_outputFormat.bytesForDuration(bufferLengthMs * 1000); // microseconds
+        return bufferSize + QIODevice::bytesAvailable();
     }
-#endif
 
     qint64 CAudioOutputBuffer::readData(char *data, qint64 maxlen)
     {
