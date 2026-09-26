@@ -94,7 +94,7 @@ jobs:
           submodules: 'true'
       - name: Install Qt
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@bcb88e3bed2e992f5f9e24c0f9e364a231d278eb
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
@@ -171,7 +171,7 @@ jobs:
           EOF
           sudo wg-quick up wg0
       - name: Install Qt
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@bcb88e3bed2e992f5f9e24c0f9e364a231d278eb
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
@@ -324,7 +324,7 @@ jobs:
           & "C:\Program Files\WireGuard\wireguard.exe" /installtunnelservice "$env:TEMP\wg0.conf"
           Start-Sleep -Seconds 5
       - name: Install Qt
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@bcb88e3bed2e992f5f9e24c0f9e364a231d278eb
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
@@ -332,7 +332,7 @@ jobs:
           aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
       - name: Install Qt debug info
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@bcb88e3bed2e992f5f9e24c0f9e364a231d278eb
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2022_64
@@ -470,7 +470,7 @@ jobs:
           sudo cp /tmp/wg0.conf /etc/wireguard/wg0.conf
           sudo wg-quick up wg0
       - name: Install Qt
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@bcb88e3bed2e992f5f9e24c0f9e364a231d278eb
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
