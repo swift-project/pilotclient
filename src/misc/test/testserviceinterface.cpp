@@ -43,7 +43,7 @@ namespace swift::misc::test
         ok = pingCompare(ivm, ivmPing, out, verbose, errors);
         if (verbose) { out << "Pinged variant map via interface" << errorInfo(ok) << Qt::endl; }
 
-        const CSimulatorPluginInfo pluginInfo("fsx", "FSX Simulator", "FSX", "Flight Simulator X", true);
+        const CSimulatorPluginInfo pluginInfo("msfs24", "MSFS2024", "MSFS2024", "MSFS2024", true);
         const CSimulatorPluginInfo pluginInfoPing = testServiceInterface.pingPluginInfo(pluginInfo);
         ok = pingCompare(pluginInfo, pluginInfoPing, out, verbose, errors);
         if (verbose) { out << "Pinged info via interface" << errorInfo(ok) << Qt::endl; }
