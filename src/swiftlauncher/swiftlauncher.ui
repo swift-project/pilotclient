@@ -21,10 +21,10 @@
   </property>
   <widget class="QStackedWidget" name="sw_SwiftLauncher">
    <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
+    <enum>QFrame::Shape::StyledPanel</enum>
    </property>
    <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
+    <enum>QFrame::Shadow::Raised</enum>
    </property>
    <property name="currentIndex">
     <number>0</number>
@@ -81,8 +81,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>467</width>
-             <height>356</height>
+             <width>471</width>
+             <height>366</height>
             </rect>
            </property>
            <attribute name="label">
@@ -99,22 +99,22 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>467</width>
-             <height>356</height>
+             <width>471</width>
+             <height>366</height>
             </rect>
            </property>
            <attribute name="label">
             <string>&amp;Window type</string>
            </attribute>
            <layout class="QGridLayout" name="gl_WindowType">
-            <item row="1" column="1" alignment="Qt::AlignHCenter">
+            <item row="1" column="1" alignment="Qt::AlignmentFlag::AlignHCenter">
              <widget class="QRadioButton" name="rb_WindowFrameless">
               <property name="text">
                <string>Frameless</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0" alignment="Qt::AlignHCenter">
+            <item row="1" column="0" alignment="Qt::AlignmentFlag::AlignHCenter">
              <widget class="QRadioButton" name="rb_WindowNormal">
               <property name="text">
                <string>Normal window</string>
@@ -127,7 +127,7 @@
             <item row="4" column="0" colspan="2">
              <spacer name="vs_WindowType">
               <property name="orientation">
-               <enum>Qt::Vertical</enum>
+               <enum>Qt::Orientation::Vertical</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -137,7 +137,7 @@
               </property>
              </spacer>
             </item>
-            <item row="2" column="1" alignment="Qt::AlignHCenter">
+            <item row="2" column="1" alignment="Qt::AlignmentFlag::AlignHCenter">
              <widget class="QLabel" name="lbl_WindowFrameless">
               <property name="text">
                <string/>
@@ -147,7 +147,7 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0" alignment="Qt::AlignHCenter">
+            <item row="2" column="0" alignment="Qt::AlignmentFlag::AlignHCenter">
              <widget class="QLabel" name="lbl_WindowNormal">
               <property name="text">
                <string/>
@@ -164,8 +164,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>450</width>
-             <height>365</height>
+             <width>471</width>
+             <height>366</height>
             </rect>
            </property>
            <attribute name="label">
@@ -187,7 +187,7 @@
             <property name="spacing">
              <number>4</number>
             </property>
-            <item row="0" column="0" alignment="Qt::AlignHCenter">
+            <item row="0" column="0" alignment="Qt::AlignmentFlag::AlignHCenter">
              <widget class="QRadioButton" name="rb_SwiftStandalone">
               <property name="text">
                <string>standalone</string>
@@ -200,7 +200,7 @@
               </attribute>
              </widget>
             </item>
-            <item row="0" column="1" alignment="Qt::AlignHCenter">
+            <item row="0" column="1" alignment="Qt::AlignmentFlag::AlignHCenter">
              <widget class="QRadioButton" name="rb_SwiftDistributed">
               <property name="text">
                <string>GUI and core (distributed)</string>
@@ -213,7 +213,7 @@
             <item row="9" column="0" colspan="2">
              <spacer name="vs_CoreButtomSpace">
               <property name="orientation">
-               <enum>Qt::Vertical</enum>
+               <enum>Qt::Orientation::Vertical</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -262,7 +262,7 @@
               </layout>
              </widget>
             </item>
-            <item row="1" column="0" alignment="Qt::AlignHCenter">
+            <item row="1" column="0" alignment="Qt::AlignmentFlag::AlignHCenter">
              <widget class="QLabel" name="lbl_SwiftStandaloneIcon">
               <property name="text">
                <string/>
@@ -272,7 +272,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1" alignment="Qt::AlignHCenter">
+            <item row="1" column="1" alignment="Qt::AlignmentFlag::AlignHCenter">
              <widget class="QLabel" name="lbl_SwiftCoreIcon">
               <property name="text">
                <string/>
@@ -312,10 +312,10 @@
                   </size>
                  </property>
                  <property name="frameShape">
-                  <enum>QFrame::Panel</enum>
+                  <enum>QFrame::Shape::Panel</enum>
                  </property>
                  <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
+                  <enum>QFrame::Shadow::Raised</enum>
                  </property>
                 </widget>
                </item>
@@ -329,8 +329,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>467</width>
-             <height>356</height>
+             <width>471</width>
+             <height>366</height>
             </rect>
            </property>
            <attribute name="label">
@@ -411,8 +411,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>451</width>
-                    <height>160</height>
+                    <width>457</width>
+                    <height>182</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="vl_DataUpdatesScrollArea">
@@ -431,20 +431,20 @@
                    <item>
                     <widget class="swift::gui::components::CInfoBarWebReadersStatusSmallComponent" name="comp_InfoBar">
                      <property name="frameShape">
-                      <enum>QFrame::StyledPanel</enum>
+                      <enum>QFrame::Shape::StyledPanel</enum>
                      </property>
                      <property name="frameShadow">
-                      <enum>QFrame::Raised</enum>
+                      <enum>QFrame::Shadow::Raised</enum>
                      </property>
                     </widget>
                    </item>
                    <item>
                     <widget class="swift::gui::components::CDbLoadOverviewComponent" name="comp_DataUpdates">
                      <property name="frameShape">
-                      <enum>QFrame::StyledPanel</enum>
+                      <enum>QFrame::Shape::StyledPanel</enum>
                      </property>
                      <property name="frameShadow">
-                      <enum>QFrame::Raised</enum>
+                      <enum>QFrame::Shadow::Raised</enum>
                      </property>
                     </widget>
                    </item>
@@ -462,8 +462,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>467</width>
-             <height>356</height>
+             <width>471</width>
+             <height>366</height>
             </rect>
            </property>
            <attribute name="label">
@@ -485,7 +485,7 @@
             <item row="5" column="0">
              <spacer name="vs_Tools">
               <property name="orientation">
-               <enum>Qt::Vertical</enum>
+               <enum>Qt::Orientation::Vertical</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -568,7 +568,7 @@
           </widget>
          </widget>
         </item>
-        <item alignment="Qt::AlignBottom">
+        <item alignment="Qt::AlignmentFlag::AlignBottom">
          <widget class="QToolBox" name="tb_Start">
           <property name="minimumSize">
            <size>
@@ -584,8 +584,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>467</width>
-             <height>134</height>
+             <width>471</width>
+             <height>135</height>
             </rect>
            </property>
            <attribute name="label">
@@ -672,10 +672,14 @@
               <property name="text">
                <string>Config</string>
               </property>
+              <property name="icon">
+               <iconset resource="../misc/misc.qrc">
+                <normaloff>:/pastel/icons/pastel/48/cog-error.png</normaloff>:/pastel/icons/pastel/48/cog-error.png</iconset>
+              </property>
               <property name="iconSize">
                <size>
-                <width>48</width>
-                <height>48</height>
+                <width>64</width>
+                <height>64</height>
                </size>
               </property>
              </widget>
@@ -694,8 +698,8 @@
               </property>
               <property name="iconSize">
                <size>
-                <width>48</width>
-                <height>48</height>
+                <width>64</width>
+                <height>64</height>
                </size>
               </property>
              </widget>
@@ -705,12 +709,18 @@
               <property name="text">
                <string>GUI</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
              </widget>
             </item>
             <item row="2" column="1">
              <widget class="QLabel" name="lbl_SwiftCore">
               <property name="text">
                <string>core</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -719,6 +729,9 @@
               <property name="text">
                <string>mapping tool</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
              </widget>
             </item>
             <item row="2" column="3">
@@ -726,12 +739,18 @@
               <property name="text">
                <string>config</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
              </widget>
             </item>
             <item row="2" column="4">
              <widget class="QLabel" name="lbl_Database">
               <property name="text">
                <string>goto DB</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -768,10 +787,10 @@
      <item>
       <widget class="swift::gui::components::CLogComponent" name="comp_SwiftLauncherLog">
        <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
+        <enum>QFrame::Shape::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Shadow::Raised</enum>
        </property>
       </widget>
      </item>
