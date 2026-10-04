@@ -177,7 +177,7 @@ jobs:
           modules: 'qtmultimedia'
           aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
-      - uses: cargo-bins/cargo-binstall@b874e25ea559687bec77e281e9b271aa1367b624
+      - uses: cargo-bins/cargo-binstall@422f3094be6a0843857aa008b499caaf6bce0da8
         with:
           version: "1.20.1"
       - name: Cache InstallBuilder
@@ -340,7 +340,7 @@ jobs:
           cache: true
           modules: debug_info
           extra: --archives qtbase
-      - uses: cargo-bins/cargo-binstall@b874e25ea559687bec77e281e9b271aa1367b624
+      - uses: cargo-bins/cargo-binstall@422f3094be6a0843857aa008b499caaf6bce0da8
         with:
           version: "1.20.1"
       - name: Cache InstallBuilder
@@ -476,7 +476,7 @@ jobs:
           modules: 'qtmultimedia'
           aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
-      - uses: cargo-bins/cargo-binstall@b874e25ea559687bec77e281e9b271aa1367b624
+      - uses: cargo-bins/cargo-binstall@422f3094be6a0843857aa008b499caaf6bce0da8
         with:
           version: "1.20.1"
       - name: Cache InstallBuilder
