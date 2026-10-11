@@ -258,18 +258,18 @@ jobs:
         run: |
            sccache --stop-server
       - name: Upload installer
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: xswiftbus-thin-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -419,18 +419,18 @@ jobs:
         run: |
            sccache --stop-server
       - name: Upload installer
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: xswiftbus-thin-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -562,18 +562,18 @@ jobs:
         run: |
            sccache --stop-server
       - name: Upload installer
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: xswiftbus-thin-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -601,7 +601,7 @@ jobs:
           unzip -o xswiftbus-macos-64-*.zip
           zip -r -9 xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.zip xswiftbus
       - name: Upload xswiftbus-fat
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}
           path: xswiftbus-fat-allos-*
