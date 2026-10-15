@@ -56,7 +56,7 @@ namespace swift::sound
 
         QAudioFormat format;
         format.setSampleRate(44100);
-        format.setChannelCount(1);
+        format.setChannelCount(2);
         format.setSampleFormat(QAudioFormat::Int16);
         static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
 
