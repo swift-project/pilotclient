@@ -45,7 +45,7 @@ namespace swift::misc::aviation
 
     const QString &CSelcal::validCharacters()
     {
-        static const QString valid = "ABCDEFGHJKLMPQRS";
+        static const QString valid = "ABCDEFGHJKLMPQRSTUVWXYZ123456789";
         return valid;
     }
 
@@ -80,14 +80,22 @@ namespace swift::misc::aviation
     const QList<CFrequency> &CSelcal::audioFrequencyEquivalents()
     {
         static const QList<CFrequency> frequencies(
-            { CFrequency(312.7, CFrequencyUnit::Hz()), CFrequency(346.7, CFrequencyUnit::Hz()),
-              CFrequency(384.6, CFrequencyUnit::Hz()), CFrequency(426.6, CFrequencyUnit::Hz()),
-              CFrequency(473.2, CFrequencyUnit::Hz()), CFrequency(524.8, CFrequencyUnit::Hz()),
-              CFrequency(582.1, CFrequencyUnit::Hz()), CFrequency(645.7, CFrequencyUnit::Hz()),
-              CFrequency(716.1, CFrequencyUnit::Hz()), CFrequency(794.3, CFrequencyUnit::Hz()),
-              CFrequency(881.0, CFrequencyUnit::Hz()), CFrequency(977.2, CFrequencyUnit::Hz()),
+            { CFrequency(312.6, CFrequencyUnit::Hz()),  CFrequency(346.7, CFrequencyUnit::Hz()),
+              CFrequency(384.6, CFrequencyUnit::Hz()),  CFrequency(426.6, CFrequencyUnit::Hz()),
+              CFrequency(473.2, CFrequencyUnit::Hz()),  CFrequency(524.8, CFrequencyUnit::Hz()),
+              CFrequency(582.1, CFrequencyUnit::Hz()),  CFrequency(645.7, CFrequencyUnit::Hz()),
+              CFrequency(716.1, CFrequencyUnit::Hz()),  CFrequency(794.3, CFrequencyUnit::Hz()),
+              CFrequency(881.0, CFrequencyUnit::Hz()),  CFrequency(977.2, CFrequencyUnit::Hz()),
               CFrequency(1083.9, CFrequencyUnit::Hz()), CFrequency(1202.3, CFrequencyUnit::Hz()),
-              CFrequency(1333.5, CFrequencyUnit::Hz()), CFrequency(1479.1, CFrequencyUnit::Hz()) });
+              CFrequency(1333.5, CFrequencyUnit::Hz()), CFrequency(1479.1, CFrequencyUnit::Hz()),
+              CFrequency(329.2, CFrequencyUnit::Hz()),  CFrequency(365.2, CFrequencyUnit::Hz()),
+              CFrequency(405.0, CFrequencyUnit::Hz()),  CFrequency(449.3, CFrequencyUnit::Hz()),
+              CFrequency(498.3, CFrequencyUnit::Hz()),  CFrequency(552.7, CFrequencyUnit::Hz()),
+              CFrequency(613.1, CFrequencyUnit::Hz()),  CFrequency(680.0, CFrequencyUnit::Hz()),
+              CFrequency(754.2, CFrequencyUnit::Hz()),  CFrequency(836.6, CFrequencyUnit::Hz()),
+              CFrequency(927.9, CFrequencyUnit::Hz()),  CFrequency(1029.2, CFrequencyUnit::Hz()),
+              CFrequency(1141.6, CFrequencyUnit::Hz()), CFrequency(1266.2, CFrequencyUnit::Hz()),
+              CFrequency(1404.4, CFrequencyUnit::Hz()), CFrequency(1557.8, CFrequencyUnit::Hz()) });
         return frequencies;
     }
 
