@@ -36,7 +36,7 @@ jobs:
           DOXY_SRC_ROOT: ..
           DOXY_TAGFILES: ${{ runner.workspace }}/Qt/Docs/Qt-${{ inputs.qt_version }}
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: inputs.upload_doxygen
         with:
           name: doxygen
