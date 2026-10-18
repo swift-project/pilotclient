@@ -291,7 +291,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       SCCACHE_S3_NO_CREDENTIALS: false
-      SCCACHE_LOG: debug
     steps:
       - name: Setup WireGuard
         shell: pwsh
