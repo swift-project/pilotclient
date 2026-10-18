@@ -20,7 +20,6 @@
 
 #include "config/buildconfig.h"
 #include "core/context/contextapplicationproxy.h"
-#include "core/context/contextnetwork.h"
 #include "core/setupreader.h"
 #include "gui/components/configurationwizard.h"
 #include "gui/components/texteditdialog.h"
@@ -300,20 +299,7 @@ bool CSwiftLauncher::setSwiftCoreExecutable()
 bool CSwiftLauncher::setSwiftDataExecutable()
 {
     m_executable = CSwiftDirectories::executableFilePath(CBuildConfig::swiftDataExecutableName());
-
-    QStringList fsdArgs;
-#ifdef SWIFT_VATSIM_SUPPORT
-    int id = 0;
-    QString key;
-    if (IContextNetwork::getCmdLineClientIdAndKey(id, key))
-    {
-        // from cmd. line
-        fsdArgs << "--idAndKey";
-        fsdArgs << sApp->getParserValue("clientIdAndKey"); // as typed in
-    }
-#endif
-
-    m_executableArgs = sGui->argumentsJoined({}, fsdArgs);
+    m_executableArgs = sGui->argumentsJoined();
     return true;
 }
 

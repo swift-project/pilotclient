@@ -35,40 +35,22 @@ namespace swift::core::context
         }
     }
 
-    const QList<QCommandLineOption> &IContextNetwork::getCmdLineOptions()
-    {
-        static const QList<QCommandLineOption> e;
-        static const QList<QCommandLineOption> opts {
 #ifdef SWIFT_VATSIM_SUPPORT
-            QCommandLineOption({ "idAndKey", "clientIdAndKey" },
-                               QCoreApplication::translate("CContextNetwork",
-                                                           "Client id and key pair separated by ':', e.g. <id>:<key>."),
-                               "clientIdAndKey")
-#endif
-        };
-
-        // only in not officially shipped versions
-        return (CBuildConfig::isLocalDeveloperDebugBuild()) ? opts : e;
-    }
-
-#ifdef SWIFT_VATSIM_SUPPORT
-    bool IContextNetwork::getCmdLineClientIdAndKey(int &id, QString &key)
+    bool IContextNetwork::getEnvironmentClientIdAndKey(int &id, QString &key)
     {
         // init values
         id = 0;
         key = "";
 
-        // split parser values
-        if (IContextNetwork::getCmdLineOptions().isEmpty()) { return false; } // no such option, avoid warnings
-        if (!sApp) { return false; }
-        const QString clientIdAndKey = sApp->getParserValue("clientIdAndKey").toLower();
-        if (clientIdAndKey.isEmpty() || !clientIdAndKey.contains(':')) { return false; }
-        const QStringList stringList = clientIdAndKey.split(':');
-        const QString clientIdAsString = stringList[0];
+        // only allow overwrite via environment variable in dev builds
+        if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return false; }
+
+        const QString clientIdAsString = qEnvironmentVariable("SWIFT_VATSIM_CLIENT_ID");
         bool ok = true;
         id = clientIdAsString.toInt(&ok, 0); // base 0 means C convention
         if (!ok || id == 0) { return false; }
-        key = stringList[1];
+        key = qEnvironmentVariable("SWIFT_VATSIM_CLIENT_KEY").toLower();
+        if (key.isEmpty()) { return false; }
         return true;
     }
 #endif

@@ -381,12 +381,9 @@ namespace swift::core::context
         virtual QMetaObject::Connection
         connectRawFsdMessageSignal(QObject *receiver, RawFsdMessageReceivedSlot rawFsdMessageReceivedSlot) = 0;
 
-        //! Cmd.line arguments
-        static const QList<QCommandLineOption> &getCmdLineOptions();
-
 #ifdef SWIFT_VATSIM_SUPPORT
-        //! Client id and key from cmd.line
-        static bool getCmdLineClientIdAndKey(int &id, QString &key);
+        //! Client id and key from environment variables
+        static bool getEnvironmentClientIdAndKey(int &id, QString &key);
 #endif
 
     protected:

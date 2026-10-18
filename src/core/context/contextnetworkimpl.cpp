@@ -304,8 +304,9 @@ namespace swift::core::context
 #ifdef SWIFT_VATSIM_SUPPORT
         int clientId = 0;
         QString clientKey;
-        if (!getCmdLineClientIdAndKey(clientId, clientKey))
+        if (!getEnvironmentClientIdAndKey(clientId, clientKey))
         {
+            // if not set, use the default client id and key from build config
             clientId = CBuildConfig::vatsimClientId();
             clientKey = CBuildConfig::vatsimPrivateKey();
         }
