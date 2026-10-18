@@ -19,7 +19,6 @@ CSwiftDataApplication::CSwiftDataApplication()
 {
     // this->addParserOption(m_cmdFacadeMode);
     // this->addDBusAddressOption();
-    // this->addNetworkOptions();
     // this->addAudioOptions();
 }
 

@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
     CGuiApplication a(CApplicationInfo::swiftCore(), CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
     a.addWindowStateOption();
     a.addDBusAddressOption();
-    a.addNetworkOptions();
     a.addAudioOptions();
     if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
 

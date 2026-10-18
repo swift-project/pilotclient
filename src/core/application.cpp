@@ -933,8 +933,6 @@ namespace swift::core
         this->addParserOption(m_cmdDBusAddress);
     }
 
-    void CApplication::addNetworkOptions() { this->addParserOptions(IContextNetwork::getCmdLineOptions()); }
-
     void CApplication::addAudioOptions() { this->addParserOptions(CContextAudioBase::getCmdLineOptions()); }
 
     QString CApplication::getCmdDBusAddressValue() const
