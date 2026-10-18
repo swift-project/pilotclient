@@ -99,7 +99,7 @@ namespace swift::gui::components
         distributions.sortByStability(Qt::DescendingOrder);
 
         int i = 0;
-        ui->cb_Platforms->disconnect();
+        disconnect(ui->cb_Platforms, &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::platformChanged);
         ui->cb_Platforms->clear();
         for (const CPlatform &platform : platforms)
         {
@@ -112,7 +112,7 @@ namespace swift::gui::components
         }
 
         i = 0;
-        ui->cb_Channels->disconnect();
+        disconnect(ui->cb_Channels, &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::channelChanged);
         ui->cb_Channels->clear();
         for (const CDistribution &distribution : distributions)
         {
